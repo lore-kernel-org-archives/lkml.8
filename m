@@ -2,131 +2,95 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8900320724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2FF20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PEuhjXR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389036AbgFWWJQ (ORCPT
+        id S2389184AbgFWWJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:09:16 -0400
-Received: from smtprelay0042.hostedemail.com ([216.40.44.42]:59076 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388033AbgFWWJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:09:14 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 7D0FA837F24F;
-        Tue, 23 Jun 2020 22:09:12 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: queen47_191478726e3f
-X-Filterd-Recvd-Size: 4112
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 23 Jun 2020 22:09:11 +0000 (UTC)
-Message-ID: <b3c1299c40cfb76ef46d4967763afed2f7ad2d3d.camel@perches.com>
-Subject: Re: [PATCH 4.19 049/206] staging: rtl8712: fix multiline derefernce
- warnings
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Aiman Najjar <aiman.najjar@hurranet.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Tue, 23 Jun 2020 15:09:10 -0700
-In-Reply-To: <20200623195319.392375544@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-         <20200623195319.392375544@linuxfoundation.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Tue, 23 Jun 2020 18:09:56 -0400
+Received: from ozlabs.org ([203.11.71.1]:59913 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387840AbgFWWJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 18:09:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49s0nY6J7jz9sRR;
+        Wed, 24 Jun 2020 08:09:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592950194;
+        bh=lTqWkWzEvGsClGboMxdSrWRtqoctWYdl9TPvvCqLfZw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PEuhjXR+BLyxsOpbpi1jHeAEjgIGK5UW4QlHzslsJUBAbEdkAVAeHkydwwVYvS+MQ
+         ks5gMEC6LbTfk7hZCGOLJmYsNBn5/s8BX0+InrhhRpmren39BOY11lc4DawJQSMRGK
+         aid4bm4fJE4VEd3C2Mg6oeGLUzwr5eCk89yzM4BxmHYRMoYVI5Uux+gSKW/7MY0jlG
+         9pkQY0qt/Id1OBfXovQF2N3COSqAO3P/1pjHLV3qJnqSmoMlf8B4jxQmK9/yg9D+BQ
+         K/4N97/uBux4tnl1yW+9kIs7GxdnD6wMOht/4x4qPkW3f/kOXOo460aqRq2Ny++hQL
+         wPDTCHlDehH4Q==
+Date:   Wed, 24 Jun 2020 08:09:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Switching dmaengine tree to kernel.org
+Message-ID: <20200624080952.093d562c@canb.auug.org.au>
+In-Reply-To: <20200623144313.GS2324254@vkoul-mobl>
+References: <20200623144313.GS2324254@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/s3=nkInVYc8lAAGNaBnOH5C";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-23 at 21:56 +0200, Greg Kroah-Hartman wrote:
-> From: Aiman Najjar <aiman.najjar@hurranet.com>
-> 
-> [ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
-> 
-> This patch fixes remaining checkpatch warnings
-> in rtl871x_xmit.c:
+--Sig_/s3=nkInVYc8lAAGNaBnOH5C
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-IMO: unless necessary for another patch, these types
-of whitespace or renaming only conversions patches
-should not be applied to stable.
+Hi Vinod,
 
-> WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
-> 636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
-> +					      (u8)psecuritypriv->
-> +					      PrivacyKeyIndex);
-> 
-> WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-> 643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
-> +						   (u8)psecuritypriv->
-> +						   XGrpKeyid);
-> 
-> WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-> 652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
-> +						   (u8)psecuritypriv->
-> +						   XGrpKeyid);
-> 
-> Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
-> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-> index a8ae14ce66139..95d5c050a8947 100644
-> --- a/drivers/staging/rtl8712/rtl871x_xmit.c
-> +++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-> @@ -601,7 +601,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
->  	addr_t addr;
->  	u8 *pframe, *mem_start, *ptxdesc;
->  	struct sta_info		*psta;
-> -	struct security_priv	*psecuritypriv = &padapter->securitypriv;
-> +	struct security_priv	*psecpriv = &padapter->securitypriv;
->  	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
->  	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
->  	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
-> @@ -644,15 +644,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
->  				case _WEP40_:
->  				case _WEP104_:
->  					WEP_IV(pattrib->iv, psta->txpn,
-> -					       (u8)psecuritypriv->
-> -					       PrivacyKeyIndex);
-> +					       (u8)psecpriv->PrivacyKeyIndex);
->  					break;
->  				case _TKIP_:
->  					if (bmcst)
->  						TKIP_IV(pattrib->iv,
->  						    psta->txpn,
-> -						    (u8)psecuritypriv->
-> -						    XGrpKeyid);
-> +						    (u8)psecpriv->XGrpKeyid);
->  					else
->  						TKIP_IV(pattrib->iv, psta->txpn,
->  							0);
-> @@ -660,8 +658,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
->  				case _AES_:
->  					if (bmcst)
->  						AES_IV(pattrib->iv, psta->txpn,
-> -						    (u8)psecuritypriv->
-> -						    XGrpKeyid);
-> +						    (u8)psecpriv->XGrpKeyid);
->  					else
->  						AES_IV(pattrib->iv, psta->txpn,
->  						       0);
+On Tue, 23 Jun 2020 20:13:13 +0530 Vinod Koul <vkoul@kernel.org> wrote:
+>
+> I have switched dmaengine tree to kernel.org [1], please update your
+> database to new tree which can be found at [2]
+>=20
+> [1]: https://lore.kernel.org/dmaengine/20200623143729.781403-1-vkoul@kern=
+el.org/
+> [2]: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git
 
+OK, done.  I also renamed them from slave-dma{,-fixes} to dmaengine{,-fixes=
+).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/s3=nkInVYc8lAAGNaBnOH5C
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7yfbAACgkQAVBC80lX
+0GweNggAjshCfmtDZPPGM+Z8Wh0XV8CClZNIq7i66hCNt/GaF9Chl5qnJ0P9nnKv
+KS504Abh9S0fGsHFnj+P6GgHxXU/g5x2VCzribtxTIhBqZ138SIb2PIRGU9hWeJ0
+xBhKaGuG9iandO0ZV/MTSbCEFXkgu9k4WjK1hW2SdyotbXzGKccV6T/x/Z8rbEm0
+wqG1g1xAJwgBmLmXxqYO6Ug8xKWz+EOr4zfOFctal6pYQDoK9JXaMKb83lRopQLs
+NgFT2eaDC4rz5UM3TGp9/wiHVpKCzrtHLXCeIlOG0r2YJAYDfON7PTuLl7gzez6g
+1bTRPGeWuZl7Sn7blHZ9/TDcE3niRg==
+=GZe2
+-----END PGP SIGNATURE-----
+
+--Sig_/s3=nkInVYc8lAAGNaBnOH5C--
