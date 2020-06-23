@@ -2,129 +2,114 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A224DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B951C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CDA20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B1220724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SMdXrCDF"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="iZw5XTNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732790AbgFWNxe (ORCPT
+        id S1732811AbgFWNxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:53:34 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:65017 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732766AbgFWNx2 (ORCPT
+        Tue, 23 Jun 2020 09:53:39 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:64772 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732741AbgFWNxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:53:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592920408; x=1624456408;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=Wh8tlTmkeLmBURIATHl2HVTtETUBHTovyprw1YhBJSM=;
-  b=SMdXrCDFMmZVp3bb5Z5x1QczWxPpCryOKnOjKQ8sYF7MsyMG7KbwChWv
-   fGwf91boFgwKYuCSdQ6gkCMtHl64dyE4fX8orILhPyJcQoWNEPOHAlWUd
-   UN6Aq7y6bHK4WHqFDP6OxvkUaxFle4ozNain3uQDP0YKFMinJSnZO73z6
-   qz6t5z+ouvx3sYh9le45gPu36BlDJxUrpNXS528YO7mi6Hp/GyTc5lwY1
-   F8lJ8V/NBlb3l6QZoyINtU9sYNR19j9bdLbXX1M3ldxnolflFRzLZGBOK
-   rYd1rtTLtYA5qccP2P4QkFnE1SPH722LgaFipBZr8xp64rBkOfAIeszI/
-   Q==;
-IronPort-SDR: Hq1PluohMkhb19j9nTJJm20AtFbnzLD8gz48m6b5MdsUHRS/VsQMz2/eU3gp6WRbjRTlmIfWG8
- l6EztbvEEyQl/q8Ey00w82H6iIaiWVNRlYxzfBM9pUqWzG10mmNVZ9Zmgoxw1laDhW/EVCY4sG
- xon+qyF5ghrjG4FBnQacQicEChjGOxXMTVEgCzjmqgSvvq/wj8sC46ntVkOi1E/U7E3kKmTp7V
- vD1D7Gu8nKx9rsP8pX6Bq+117suOEQUaHH99ahxigiBndUKVkvrR2Knn+tjGzYvnr5gODwDXH7
- b5w=
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="81216978"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jun 2020 06:53:26 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 23 Jun 2020 06:53:14 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Tue, 23 Jun 2020 06:53:12 -0700
-References: <20200619113121.9984-1-lars.povlsen@microchip.com> <20200619113121.9984-4-lars.povlsen@microchip.com> <20200619121107.GE5396@sirena.org.uk> <87imfjxtrq.fsf@soft-dev15.microsemi.net> <20200622121706.GF4560@sirena.org.uk>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
-In-Reply-To: <20200622121706.GF4560@sirena.org.uk>
-Date:   Tue, 23 Jun 2020 15:53:22 +0200
-Message-ID: <878sgddh2l.fsf@soft-dev15.microsemi.net>
+        Tue, 23 Jun 2020 09:53:31 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NDfGge007439;
+        Tue, 23 Jun 2020 06:53:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=+JTCFi4YJVIQ2krpzozX+/noGByhk0i8mEY0aKhBdO0=;
+ b=iZw5XTNlTZ4bbDfa1bTVnC0IaYor1KeA7XqdmjAFJelzkgq0BznHDqDfQAxZ3v/c47tQ
+ jsZTEEm2Y/uZYbmKPQyzbxJJ5Clpd5gnVa3RX192Rm6DTUIW1De1hMUnUb7TAN+1tG7f
+ 4z5et4JiNEt/6zWgTjYtZqXqlHUuUOIDYCvkcaFkk6dlt6urQQzKMjd5PORJvzqT4hLa
+ /jdsEC3SZt88q86c65wyQdUN/WlQyn5tlI362eR8/OWF9qvjc4nXfCu7jN87cXiGh6k3
+ m6+8EZeOSgOu7SaLK86b/pkItzFwXq7g2PHy0igFGPGlW3yiQrXhNhduEZpDo5W5Uyk+ JA== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 31shynwjfe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 06:53:28 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
+ 2020 06:53:26 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Jun
+ 2020 06:53:26 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 23 Jun 2020 06:53:26 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.39.36])
+        by maili.marvell.com (Postfix) with ESMTP id 6DFB23F703F;
+        Tue, 23 Jun 2020 06:53:22 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "Denis Bolotin" <denis.bolotin@marvell.com>,
+        Tomer Tayar <tomer.tayar@marvell.com>,
+        Alexander Lobakin <alobakin@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 net 3/9] net: qede: stop adding events on an already destroyed workqueue
+Date:   Tue, 23 Jun 2020 16:51:31 +0300
+Message-ID: <20200623135136.3185-4-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200623135136.3185-1-alobakin@marvell.com>
+References: <20200623135136.3185-1-alobakin@marvell.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Set rdma_wq pointer to NULL after destroying the workqueue and check
+for it when adding new events to fix crashes on driver unload.
 
-Mark Brown writes:
+Fixes: cee9fbd8e2e9 ("qede: Add qedr framework")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Mon, Jun 22, 2020 at 12:46:33PM +0200, Lars Povlsen wrote:
->> On Fri, Jun 19, 2020 at 01:31:18PM +0200, Lars Povlsen wrote:
->
->> >> +	if (!nEnable) {
->> >> +		/* Ensure CS toggles, so start off all disabled */
->> >> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_VAL, ~0);
->> >> +		/* CS override drive enable */
->> >> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_ENA, 1);
->
->> >This should just be setting the value to whatever the core asked for it
->> >to be set to, the driver adding extra toggles is likely to disrupt
->> >things.
->
->> I will have a look at this again. But it was added for a reason. The
->> issue is that we have two different busses in front of the controller,
->> so we might need more settle time when switching interface.
->
->If there's a mux that needs to be handled specially that mux should be
->described in DT on the relevant boards, there shouldn't just be
->something hard coded in the controller driver.
-
-I have been able to change this into a straight setting - no
-toggling. Just needed a settle delay.
-
-I looked at the spi-mux driver, but that is more for muxing the CS's, as
-I understand - not the actual bus segment. I could use it, but it would
-require encoding the bus segment into the CS (double the normal
-range). Also, selecting the bus interface is tightly coupled to the
-controller - its not an externally constructed board mux.
-
-I feel the current implementation is more to the point, and easily
-understandable. It just adds the "microchip,spi-interface2" DT property.
-
-It might be that a better way exists using the spi-mux framework, and if
-you have some ideas for that I'd be all ears.
-
->
->BTW please do not CC subsystem patches to soc@kernel.org unless there's
->a specific reason to do so - there's no need for it, these patches won't
->get merged via there unless something is going wrong.  Generally the
->subsystem maintainers take patches for a given subsystem.
-
-Ok, duly noted.
-
-Thank you for the comments.
-
----Lars
-
-
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+index 2d873ae8a234..668ccc9d49f8 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -105,6 +105,7 @@ static void qede_rdma_destroy_wq(struct qede_dev *edev)
+ 
+ 	qede_rdma_cleanup_event(edev);
+ 	destroy_workqueue(edev->rdma_info.rdma_wq);
++	edev->rdma_info.rdma_wq = NULL;
+ }
+ 
+ int qede_rdma_dev_add(struct qede_dev *edev, bool recovery)
+@@ -325,7 +326,7 @@ static void qede_rdma_add_event(struct qede_dev *edev,
+ 	if (edev->rdma_info.exp_recovery)
+ 		return;
+ 
+-	if (!edev->rdma_info.qedr_dev)
++	if (!edev->rdma_info.qedr_dev || !edev->rdma_info.rdma_wq)
+ 		return;
+ 
+ 	/* We don't want the cleanup flow to start while we're allocating and
 -- 
-Lars Povlsen,
-Microchip
+2.25.1
+
