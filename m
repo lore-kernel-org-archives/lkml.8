@@ -2,129 +2,151 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC57EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B95AB20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D158E20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ASFYFZLD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F0tg31Kl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbgFWJMg (ORCPT
+        id S1731968AbgFWJRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731887AbgFWJMg (ORCPT
+        Tue, 23 Jun 2020 05:17:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33478 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731853AbgFWJRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:12:36 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B299C061796
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:12:36 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id t85so9218829ili.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:12:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ArED5WuE5vKbhzC135CloJUx+24YnwYK5ybAFszEdN0=;
-        b=ASFYFZLD4aP93JKRZIyA6O0H0NHUXDOOfNLHL/aMSsgdBZOsNnH3zT0gCrhdXgK8nW
-         UZDPqMRx5OCS70CZy1VvFgEANzq+vvMA9DkFdMTApsspNXbeKXUaS0QTHNEblOzMxoul
-         g+FdxpIqYFHTabKh1lUt2b2iybw5OvjuO7k6R7CoBft0DpYj3dsf39s5Kb0DNOOT3s9j
-         LDJTxdGAiwclMZ69BAQmr1FOsIRembCoClHnAnDybsAeZz+xxw/3EHmpT7OuiHsH1krE
-         eW/Q5gK2odDWFp6exLEKTP21ly+TvdRk4LNDDTmrHXsHbiKlZMNfOBHZCPU9i8aDsbAT
-         xxew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ArED5WuE5vKbhzC135CloJUx+24YnwYK5ybAFszEdN0=;
-        b=FPwwayPQ/FBM69k/HZFxo152y+awamDpRT+rM2UDZFpDohwrnzsTYZvLZwj+UlEgg2
-         GY2S37AgKoAtvItP/7xPOL3IritOHJwm7XWe4IxMlOF3+MxfuymhxP4ZPP0itRYfl9gM
-         IxzjFK9N9JioIzc2eOsm/1jyleZJi1Nxcsw4zxlBLMNS3g//z0D1HElhZ9j509UGPZT6
-         BSGs5UwySkBuBzHFaK6xfMty9IsKlAMbumCfAeqx8QFACEi/4rtr6N1W4+FnSaPFt9mw
-         dk75KZ9p2LQGMuRUZ8lq4qdKkrlv0DrU6Wh9N9NQbm8b9LkWDniXrlFlAt7ksh1qIjcn
-         aAWg==
-X-Gm-Message-State: AOAM531Tw9Sc0UIsdC+txkvHrOVv66H+7vTyu8MuaKGIkfGtEvHqGMF1
-        RixAPQxEckDfdbxl9IoDDA68zbrTfXROPC7mXXTyXQ==
-X-Google-Smtp-Source: ABdhPJxU72/5mqONl5oZETdKCZkVmtw1I/YvVqqrx1X4F9E+xx1C98ZJHbHv94J5cjJ0DUueC4XDcam6w5sx7T2+tmk=
-X-Received: by 2002:a92:c509:: with SMTP id r9mr21034414ilg.189.1592903555407;
- Tue, 23 Jun 2020 02:12:35 -0700 (PDT)
+        Tue, 23 Jun 2020 05:17:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592903849;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yiRnWHa9VVB1e8yxG1o2k5x8axs0i04jT/k6YjjG0Ms=;
+        b=F0tg31KlJEWsT8ByuvUPbpq2SI4IVldwNOxJHQzEkJmrhfgNly8KMPgFFUMCouaENj2Jz/
+        ylQAOyIt1lpSvyVR+rdOXFusNbnwWnlURHsJxW5URc/3onmtCYhy/bSkktmKIuDk2b7ln1
+        cxPW0kpfmw4JQ5fUltMeE90Ha6OrtFA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-BsDaQ65hNNuuXgpF2hlGSw-1; Tue, 23 Jun 2020 05:17:27 -0400
+X-MC-Unique: BsDaQ65hNNuuXgpF2hlGSw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68A0619057A0;
+        Tue, 23 Jun 2020 09:17:26 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12D887166D;
+        Tue, 23 Jun 2020 09:17:26 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH] KVM: x86: report sev_pin_memory errors with PTR_ERR
+Date:   Tue, 23 Jun 2020 05:17:25 -0400
+Message-Id: <20200623091725.271605-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <20200622100056.10151-1-brgl@bgdev.pl> <20200622100056.10151-4-brgl@bgdev.pl>
- <20200622154943.02782b5a@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200622154943.02782b5a@kicinski-fedora-PC1C0HJN>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 Jun 2020 11:12:24 +0200
-Message-ID: <CAMRc=MfF1RbQCJ62QhscFLu1HKYRc9M-2SMep1_vTJ2xhKjLAA@mail.gmail.com>
-Subject: Re: [PATCH 03/11] net: devres: relax devm_register_netdev()
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 cze 2020 o 00:49 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(a):
->
-> On Mon, 22 Jun 2020 12:00:48 +0200 Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This devres helper registers a release callback that only unregisters
-> > the net_device. It works perfectly fine with netdev structs that are
-> > not managed on their own. There's no reason to check this - drop the
-> > warning.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> I think the reasoning for this suggestion was to catch possible UAF
-> errors. The netdev doesn't necessarily has to be from devm_alloc_*
-> but it has to be part of devm-ed memory or memory which is freed
-> after driver's remove callback.
->
+Callers of sev_pin_memory() treat
+NULL differently:
 
-Yes I understand that UAF was the concern here, but this limitation is
-unnecessary. In its current form devm_register_netdev() only works for
-struct net_device allocated with devm_alloc_etherdev(). Meanwhile
-calling alloc_netdev() (which doesn't have its devm counterpart yet -
-I may look into it shortly), then registering a devm action with
-devm_add_action_or_reset() which would free this memory is a perfectly
-fine use case. This patch would make it possible.
+sev_launch_secret()/svm_register_enc_region() return -ENOMEM
+sev_dbg_crypt() returns -EFAULT.
 
-> Are there cases in practice where you've seen the netdev not being
-> devm allocated?
+Switching to ERR_PTR() preserves the error and enables cleaner reporting of
+different kinds of failures.
 
-As I said above - alloc_netdev() used by wireless, can, usb etc.
-drivers doesn't have a devres variant.
+Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/svm/sev.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-Bartosz
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index a893624b9275..2b4916ffa906 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -320,7 +320,7 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
+ 	unsigned long first, last;
+ 
+ 	if (ulen == 0 || uaddr + ulen < uaddr)
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	/* Calculate number of pages. */
+ 	first = (uaddr & PAGE_MASK) >> PAGE_SHIFT;
+@@ -331,11 +331,11 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
+ 	lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+ 	if (locked > lock_limit && !capable(CAP_IPC_LOCK)) {
+ 		pr_err("SEV: %lu locked pages exceed the lock limit of %lu.\n", locked, lock_limit);
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+ 	if (WARN_ON_ONCE(npages > INT_MAX))
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	/* Avoid using vmalloc for smaller buffers. */
+ 	size = npages * sizeof(struct page *);
+@@ -345,7 +345,7 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
+ 		pages = kmalloc(size, GFP_KERNEL_ACCOUNT);
+ 
+ 	if (!pages)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	/* Pin the user virtual address. */
+ 	npinned = pin_user_pages_fast(uaddr, npages, write ? FOLL_WRITE : 0, pages);
+@@ -360,11 +360,13 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
+ 	return pages;
+ 
+ err:
+-	if (npinned > 0)
++	if (npinned > 0) {
+ 		unpin_user_pages(pages, npinned);
++		npinned = -ENOMEM;
++	}
+ 
+ 	kvfree(pages);
+-	return NULL;
++	return ERR_PTR(npinned);
+ }
+ 
+ static void sev_unpin_memory(struct kvm *kvm, struct page **pages,
+@@ -864,8 +866,8 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 		return -EFAULT;
+ 
+ 	pages = sev_pin_memory(kvm, params.guest_uaddr, params.guest_len, &n, 1);
+-	if (!pages)
+-		return -ENOMEM;
++	if (IS_ERR(pages))
++		return PTR_ERR(pages);
+ 
+ 	/*
+ 	 * The secret must be copied into contiguous memory region, lets verify
+@@ -991,8 +993,8 @@ int svm_register_enc_region(struct kvm *kvm,
+ 		return -ENOMEM;
+ 
+ 	region->pages = sev_pin_memory(kvm, range->addr, range->size, &region->npages, 1);
+-	if (!region->pages) {
+-		ret = -ENOMEM;
++	if (IS_ERR(region->pages)) {
++		ret = PTR_ERR(region->pages);
+ 		goto e_free;
+ 	}
+ 
+-- 
+2.26.2
+
