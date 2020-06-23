@@ -2,61 +2,173 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5389CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED74C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABF920707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A943620707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592948084;
+	bh=R8XjNxWpSIzEbas4dzwJWPRJLJ09C2aTBITyqFatshA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eW7UCmodnR/A/TgYNID6A+1nY7KHOrUUGsYi1JmTVuIFiO3xa2OMiVviIXfTjVkV/
+	 lfOqm+JDzcsBQS/mIx3EV0JT1MDnBMqe2sb1xee0ycHHiy18OXA1Hcfj/qF0yUYsgq
+	 6JNRtHzbKouixTJoGvN+vSR7AEFgofKV/wDNvea0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393741AbgFWVee (ORCPT
+        id S2393594AbgFWVen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387680AbgFWVeb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:34:31 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7827C061573;
-        Tue, 23 Jun 2020 14:34:31 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5149D129428A8;
-        Tue, 23 Jun 2020 14:34:31 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 14:34:30 -0700 (PDT)
-Message-Id: <20200623.143430.794983681368540702.davem@davemloft.net>
-To:     Jisheng.Zhang@synaptics.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] net: phy: export phy_disable_interrupts()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200623154104.3ba15b4d@xhacker.debian>
-References: <20200623154031.736123a6@xhacker.debian>
-        <20200623154104.3ba15b4d@xhacker.debian>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jun 2020 14:34:31 -0700 (PDT)
+        Tue, 23 Jun 2020 17:34:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388839AbgFWUKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4142020EDD;
+        Tue, 23 Jun 2020 20:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592943050;
+        bh=R8XjNxWpSIzEbas4dzwJWPRJLJ09C2aTBITyqFatshA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NwnVxf1rEifrXHOIN2+BMscapCmeB52gy99gqfzNerMb8wuYWZ4QCBtrjrmvgYSy+
+         /dK8Ny/eaEO23gBfxoI7fexNMyhnp+Pb9D17OxxwuPru1FB3Lo2wFidn3Ui/em3PEL
+         WC6WfS67OqjJAknq+ZNnF9nn+6cs8wamorttsVBc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 209/477] PCI/PM: Assume ports without DLL Link Active train links in 100 ms
+Date:   Tue, 23 Jun 2020 21:53:26 +0200
+Message-Id: <20200623195417.459387347@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
+References: <20200623195407.572062007@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Date: Tue, 23 Jun 2020 15:41:04 +0800
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-> +EXPORT_SYMBOL_GPL(phy_disable_interrupts);
+[ Upstream commit ec411e02b7a2e785a4ed9ed283207cd14f48699d ]
 
-phy.o and phy_device.o are always linked together, therefore you don't
-need a module symbol export.
+Kai-Heng Feng reported that it takes a long time (> 1 s) to resume
+Thunderbolt-connected devices from both runtime suspend and system sleep
+(s2idle).
 
-If you plan to use it later in a device, submit the symbol export
-with the driver change that uses it.
+This was because some Downstream Ports that support > 5 GT/s do not also
+support Data Link Layer Link Active reporting.  Per PCIe r5.0 sec 6.6.1:
+
+  With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
+  software must wait a minimum of 100 ms after Link training completes
+  before sending a Configuration Request to the device immediately below
+  that Port. Software can determine when Link training completes by polling
+  the Data Link Layer Link Active bit or by setting up an associated
+  interrupt (see Section 6.7.3.3).
+
+Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
+at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
+JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
+
+Previously we tried to wait for Link training to complete, but since there
+was no DLL Link Active reporting, all we could do was wait the worst-case
+1000 ms, then another 100 ms.
+
+Instead of using the supported speeds to determine whether to wait for Link
+training, check whether the port supports DLL Link Active reporting.  The
+Ports in question do not, so we'll wait only the 100 ms required for Ports
+that support Link speeds <= 5 GT/s.
+
+This of course assumes these Ports always train the Link within 100 ms even
+if they are operating at > 5 GT/s, which is not required by the spec.
+
+[bhelgaas: commit log, comment]
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
+Link: https://lore.kernel.org/r/20200514133043.27429-1-mika.westerberg@linux.intel.com
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/pci.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 6d3234f756923..809f2584e3384 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4660,7 +4660,8 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+  * pcie_wait_for_link_delay - Wait until link is active or inactive
+  * @pdev: Bridge device
+  * @active: waiting for active or inactive?
+- * @delay: Delay to wait after link has become active (in ms)
++ * @delay: Delay to wait after link has become active (in ms). Specify %0
++ *	   for no delay.
+  *
+  * Use this to wait till link becomes active or inactive.
+  */
+@@ -4701,7 +4702,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+ 		msleep(10);
+ 		timeout -= 10;
+ 	}
+-	if (active && ret)
++	if (active && ret && delay)
+ 		msleep(delay);
+ 	else if (ret != active)
+ 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
+@@ -4822,17 +4823,28 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	if (!pcie_downstream_port(dev))
+ 		return;
+ 
+-	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+-		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+-		msleep(delay);
+-	} else {
+-		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
+-			delay);
+-		if (!pcie_wait_for_link_delay(dev, true, delay)) {
++	/*
++	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
++	 * speeds > 5 GT/s, we must wait for link training to complete
++	 * before the mandatory delay.
++	 *
++	 * We can only tell when link training completes via DLL Link
++	 * Active, which is required for downstream ports that support
++	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
++	 * devices do not implement Link Active reporting even when it's
++	 * required, so we'll check for that directly instead of checking
++	 * the supported link speed.  We assume devices without Link Active
++	 * reporting can train in 100 ms regardless of speed.
++	 */
++	if (dev->link_active_reporting) {
++		pci_dbg(dev, "waiting for link to train\n");
++		if (!pcie_wait_for_link_delay(dev, true, 0)) {
+ 			/* Did not train, no need to wait any further */
+ 			return;
+ 		}
+ 	}
++	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
++	msleep(delay);
+ 
+ 	if (!pci_device_is_present(child)) {
+ 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
+-- 
+2.25.1
+
+
+
