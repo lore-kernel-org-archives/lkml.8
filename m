@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C22AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF85420781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8E020786
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947616;
-	bh=pRlCKcbPiOyLt3Yp04rCos9CShPi6c//oSNruw22NmM=;
+	s=default; t=1592947625;
+	bh=sCCwyRLCF5aRjLCzuvDL6L0KBqXgD83So6ptPp8A6Lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZd9Y+YQsm+mgMtyj9JxSfr8tMTnp7bufKp5i4ZdBrkq5xiGIcWLXvUk5AhWdsPoa
-	 Ti/lUqlduohtni15Htlg8Gn0r14ovTtCH8DELF+bEUNOqO1/VLNYsdkUgt9MJxstXp
-	 VjLgyoNBfeMAguNOyGW9KRcavVlS95bOQG+wUho8=
+	b=cG3ozxJgS1Mwu27BU6vtPp6qnrWx1Zciur52yqYHULrJXUeBoTGOPGVrSH//W1G39
+	 ZPgoMgQ38ij0DDhVUmVFKIBa8DfJlbWL6PWTfQ8aOh9cBkspwwKRjyLN1FeaTz1Dwt
+	 LwBFVrosIc9vgUeoPOnWnV3+NxbsXzQg6yhdxsnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393482AbgFWV0y (ORCPT
+        id S2388961AbgFWURV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389540AbgFWURb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:31 -0400
+        id S2388879AbgFWURP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:17:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 698B92073E;
-        Tue, 23 Jun 2020 20:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B9D021473;
+        Tue, 23 Jun 2020 20:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943450;
-        bh=pRlCKcbPiOyLt3Yp04rCos9CShPi6c//oSNruw22NmM=;
+        s=default; t=1592943434;
+        bh=sCCwyRLCF5aRjLCzuvDL6L0KBqXgD83So6ptPp8A6Lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9oSiCRxUuEzAa2GpcLFAvn94FgPoB5YPib5kanEw5HgOyWWQBW61R1Isx2dxgmmt
-         b/5baFN/AuXDyZfAIKojbIMLWqyfisFkCJUFN/U0ddbmBFt7kfU14A+JL23oSrLAqR
-         6JDJ/G4sQLuWlsYHqGbyK1nC0fsYGA3QilI+nU1I=
+        b=LmSff8n79JDkZkAOAyeQnRqonNS2rXRjdsq4xOXyg1mj8n8NNt9j+ZnUHdT906o1k
+         lT2HW3r2K/VxNtPZ1UI0tJGt9p6v/I5QTLN6QoneSVGW3dULukoPEERT9KSZwosfdu
+         P7U7cHJYMfpj90u21gIj1pcLhr9mscKJYj4b8Prc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 396/477] afs: Set error flag rather than return error from file status decode
-Date:   Tue, 23 Jun 2020 21:56:33 +0200
-Message-Id: <20200623195426.244241445@linuxfoundation.org>
+Subject: [PATCH 5.7 390/477] crypto: marvell/octeontx - Fix a potential NULL dereference
+Date:   Tue, 23 Jun 2020 21:56:27 +0200
+Message-Id: <20200623195425.968545850@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,477 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 38355eec6a7d2b8f2f313f9174736dc877744e59 ]
+[ Upstream commit 1f5b07f5dd1748a6f9363fb1a76d599c74af8231 ]
 
-Set a flag in the call struct to indicate an unmarshalling error rather
-than return and handle an error from the decoding of file statuses.  This
-flag is checked on a successful return from the delivery function.
+Smatch reports that:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+    drivers/crypto/marvell/octeontx/otx_cptvf_algs.c:132 otx_cpt_aead_callback()
+    warn: variable dereferenced before check 'cpt_info' (see line 121)
+
+This function is called from process_pending_queue() as:
+
+drivers/crypto/marvell/octeontx/otx_cptvf_reqmgr.c
+   599                  /*
+   600                   * Call callback after current pending entry has been
+   601                   * processed, we don't do it if the callback pointer is
+   602                   * invalid.
+   603                   */
+   604                  if (callback)
+   605                          callback(res_code, areq, cpt_info);
+
+It does appear to me that "cpt_info" can be NULL so this could lead to
+a NULL dereference.
+
+Fixes: 10b4f09491bf ("crypto: marvell - add the Virtual Function driver for CPT")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/fsclient.c  | 88 +++++++++++++---------------------------------
- fs/afs/internal.h  |  1 +
- fs/afs/rxrpc.c     |  4 +++
- fs/afs/yfsclient.c | 85 +++++++++++++-------------------------------
- 4 files changed, 55 insertions(+), 123 deletions(-)
+ drivers/crypto/marvell/octeontx/otx_cptvf_algs.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index d2b3798c1932f..585b678a6f705 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -56,16 +56,15 @@ static void xdr_dump_bad(const __be32 *bp)
- /*
-  * decode an AFSFetchStatus block
-  */
--static int xdr_decode_AFSFetchStatus(const __be32 **_bp,
--				     struct afs_call *call,
--				     struct afs_status_cb *scb)
-+static void xdr_decode_AFSFetchStatus(const __be32 **_bp,
-+				      struct afs_call *call,
-+				      struct afs_status_cb *scb)
- {
- 	const struct afs_xdr_AFSFetchStatus *xdr = (const void *)*_bp;
- 	struct afs_file_status *status = &scb->status;
- 	bool inline_error = (call->operation_ID == afs_FS_InlineBulkStatus);
- 	u64 data_version, size;
- 	u32 type, abort_code;
--	int ret;
+diff --git a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
+index 06202bcffb33f..a370c99ecf4c9 100644
+--- a/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
++++ b/drivers/crypto/marvell/octeontx/otx_cptvf_algs.c
+@@ -118,6 +118,9 @@ static void otx_cpt_aead_callback(int status, void *arg1, void *arg2)
+ 	struct otx_cpt_req_info *cpt_req;
+ 	struct pci_dev *pdev;
  
- 	abort_code = ntohl(xdr->abort_code);
- 
-@@ -79,7 +78,7 @@ static int xdr_decode_AFSFetchStatus(const __be32 **_bp,
- 			 */
- 			status->abort_code = abort_code;
- 			scb->have_error = true;
--			goto good;
-+			goto advance;
- 		}
- 
- 		pr_warn("Unknown AFSFetchStatus version %u\n", ntohl(xdr->if_version));
-@@ -89,7 +88,7 @@ static int xdr_decode_AFSFetchStatus(const __be32 **_bp,
- 	if (abort_code != 0 && inline_error) {
- 		status->abort_code = abort_code;
- 		scb->have_error = true;
--		goto good;
-+		goto advance;
++	if (!cpt_info)
++		goto complete;
++
+ 	cpt_req = cpt_info->req;
+ 	if (!status) {
+ 		/*
+@@ -129,10 +132,10 @@ static void otx_cpt_aead_callback(int status, void *arg1, void *arg2)
+ 		    !cpt_req->is_enc)
+ 			status = validate_hmac_cipher_null(cpt_req);
  	}
- 
- 	type = ntohl(xdr->type);
-@@ -125,15 +124,13 @@ static int xdr_decode_AFSFetchStatus(const __be32 **_bp,
- 	data_version |= (u64)ntohl(xdr->data_version_hi) << 32;
- 	status->data_version = data_version;
- 	scb->have_status = true;
--good:
--	ret = 0;
- advance:
- 	*_bp = (const void *)*_bp + sizeof(*xdr);
--	return ret;
-+	return;
- 
- bad:
- 	xdr_dump_bad(*_bp);
--	ret = afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
- 	goto advance;
+-	if (cpt_info) {
+-		pdev = cpt_info->pdev;
+-		do_request_cleanup(pdev, cpt_info);
+-	}
++	pdev = cpt_info->pdev;
++	do_request_cleanup(pdev, cpt_info);
++
++complete:
+ 	if (areq)
+ 		areq->complete(areq, status);
  }
- 
-@@ -254,9 +251,7 @@ static int afs_deliver_fs_fetch_status_vnode(struct afs_call *call)
- 
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_AFSCallBack(&bp, call, call->out_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
-@@ -419,9 +414,7 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
- 			return ret;
- 
- 		bp = call->buffer;
--		ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--		if (ret < 0)
--			return ret;
-+		xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 		xdr_decode_AFSCallBack(&bp, call, call->out_scb);
- 		xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
-@@ -577,12 +570,8 @@ static int afs_deliver_fs_create_vnode(struct afs_call *call)
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
- 	xdr_decode_AFSFid(&bp, call->out_fid);
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_AFSCallBack(&bp, call, call->out_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
-@@ -691,9 +680,7 @@ static int afs_deliver_fs_dir_status_and_vol(struct afs_call *call)
- 
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -784,12 +771,8 @@ static int afs_deliver_fs_link(struct afs_call *call)
- 
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -878,12 +861,8 @@ static int afs_deliver_fs_symlink(struct afs_call *call)
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
- 	xdr_decode_AFSFid(&bp, call->out_fid);
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -986,16 +965,12 @@ static int afs_deliver_fs_rename(struct afs_call *call)
- 	if (ret < 0)
- 		return ret;
- 
-+	bp = call->buffer;
- 	/* If the two dirs are the same, we have two copies of the same status
- 	 * report, so we just decode it twice.
- 	 */
--	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_dir_scb);
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -1103,9 +1078,7 @@ static int afs_deliver_fs_store_data(struct afs_call *call)
- 
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -1283,9 +1256,7 @@ static int afs_deliver_fs_store_status(struct afs_call *call)
- 
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -1954,9 +1925,7 @@ static int afs_deliver_fs_fetch_status(struct afs_call *call)
- 
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_AFSCallBack(&bp, call, call->out_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
-@@ -2062,10 +2031,7 @@ static int afs_deliver_fs_inline_bulk_status(struct afs_call *call)
- 
- 		bp = call->buffer;
- 		scb = &call->out_scb[call->count];
--		ret = xdr_decode_AFSFetchStatus(&bp, call, scb);
--		if (ret < 0)
--			return ret;
--
-+		xdr_decode_AFSFetchStatus(&bp, call, scb);
- 		call->count++;
- 		if (call->count < call->count2)
- 			goto more_counts;
-@@ -2243,9 +2209,7 @@ static int afs_deliver_fs_fetch_acl(struct afs_call *call)
- 			return ret;
- 
- 		bp = call->buffer;
--		ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--		if (ret < 0)
--			return ret;
-+		xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 		xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 		call->unmarshall++;
-@@ -2326,9 +2290,7 @@ static int afs_deliver_fs_file_status_and_vol(struct afs_call *call)
- 		return ret;
- 
- 	bp = call->buffer;
--	ret = xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_AFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_AFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 80255513e2307..017d392c17940 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -161,6 +161,7 @@ struct afs_call {
- 	bool			upgrade;	/* T to request service upgrade */
- 	bool			have_reply_time; /* T if have got reply_time */
- 	bool			intr;		/* T if interruptible */
-+	bool			unmarshalling_error; /* T if an unmarshalling error occurred */
- 	u16			service_id;	/* Actual service ID (after upgrade) */
- 	unsigned int		debug_id;	/* Trace ID */
- 	u32			operation_ID;	/* operation ID for an incoming call */
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index 1ecc67da6c1a4..26f20cdd1a98e 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -540,6 +540,8 @@ static void afs_deliver_to_call(struct afs_call *call)
- 
- 		ret = call->type->deliver(call);
- 		state = READ_ONCE(call->state);
-+		if (ret == 0 && call->unmarshalling_error)
-+			ret = -EBADMSG;
- 		switch (ret) {
- 		case 0:
- 			afs_queue_call_work(call);
-@@ -963,5 +965,7 @@ noinline int afs_protocol_error(struct afs_call *call, int error,
- 				enum afs_eproto_cause cause)
- {
- 	trace_afs_protocol_error(call, error, cause);
-+	if (call)
-+		call->unmarshalling_error = true;
- 	return error;
- }
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index fe413e7a5cf42..f118daa5f33a4 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -179,21 +179,20 @@ static void xdr_dump_bad(const __be32 *bp)
- /*
-  * Decode a YFSFetchStatus block
-  */
--static int xdr_decode_YFSFetchStatus(const __be32 **_bp,
--				     struct afs_call *call,
--				     struct afs_status_cb *scb)
-+static void xdr_decode_YFSFetchStatus(const __be32 **_bp,
-+				      struct afs_call *call,
-+				      struct afs_status_cb *scb)
- {
- 	const struct yfs_xdr_YFSFetchStatus *xdr = (const void *)*_bp;
- 	struct afs_file_status *status = &scb->status;
- 	u32 type;
--	int ret;
- 
- 	status->abort_code = ntohl(xdr->abort_code);
- 	if (status->abort_code != 0) {
- 		if (status->abort_code == VNOVNODE)
- 			status->nlink = 0;
- 		scb->have_error = true;
--		goto good;
-+		goto advance;
- 	}
- 
- 	type = ntohl(xdr->type);
-@@ -221,15 +220,13 @@ static int xdr_decode_YFSFetchStatus(const __be32 **_bp,
- 	status->size		= xdr_to_u64(xdr->size);
- 	status->data_version	= xdr_to_u64(xdr->data_version);
- 	scb->have_status	= true;
--good:
--	ret = 0;
- advance:
- 	*_bp += xdr_size(xdr);
--	return ret;
-+	return;
- 
- bad:
- 	xdr_dump_bad(*_bp);
--	ret = afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
-+	afs_protocol_error(call, -EBADMSG, afs_eproto_bad_status);
- 	goto advance;
- }
- 
-@@ -348,9 +345,7 @@ static int yfs_deliver_fs_status_cb_and_volsync(struct afs_call *call)
- 
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_YFSCallBack(&bp, call, call->out_scb);
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 
-@@ -372,9 +367,7 @@ static int yfs_deliver_status_and_volsync(struct afs_call *call)
- 		return ret;
- 
- 	bp = call->buffer;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -534,9 +527,7 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
- 			return ret;
- 
- 		bp = call->buffer;
--		ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--		if (ret < 0)
--			return ret;
-+		xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
- 		xdr_decode_YFSCallBack(&bp, call, call->out_scb);
- 		xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 
-@@ -644,12 +635,8 @@ static int yfs_deliver_fs_create_vnode(struct afs_call *call)
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
- 	xdr_decode_YFSFid(&bp, call->out_fid);
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_YFSCallBack(&bp, call, call->out_scb);
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 
-@@ -802,14 +789,9 @@ static int yfs_deliver_fs_remove_file2(struct afs_call *call)
- 		return ret;
- 
- 	bp = call->buffer;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
--
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_YFSFid(&bp, &fid);
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
- 	/* Was deleted if vnode->status.abort_code == VNOVNODE. */
- 
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
-@@ -889,10 +871,7 @@ static int yfs_deliver_fs_remove(struct afs_call *call)
- 		return ret;
- 
- 	bp = call->buffer;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
--
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 	return 0;
- }
-@@ -974,12 +953,8 @@ static int yfs_deliver_fs_link(struct afs_call *call)
- 		return ret;
- 
- 	bp = call->buffer;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 	_leave(" = 0 [done]");
- 	return 0;
-@@ -1061,12 +1036,8 @@ static int yfs_deliver_fs_symlink(struct afs_call *call)
- 	/* unmarshall the reply once we've received all of it */
- 	bp = call->buffer;
- 	xdr_decode_YFSFid(&bp, call->out_fid);
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 
- 	_leave(" = 0 [done]");
-@@ -1154,13 +1125,11 @@ static int yfs_deliver_fs_rename(struct afs_call *call)
- 		return ret;
- 
- 	bp = call->buffer;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
--	if (ret < 0)
--		return ret;
--	ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--	if (ret < 0)
--		return ret;
--
-+	/* If the two dirs are the same, we have two copies of the same status
-+	 * report, so we just decode it twice.
-+	 */
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_dir_scb);
-+	xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
- 	xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 	_leave(" = 0 [done]");
- 	return 0;
-@@ -1845,9 +1814,7 @@ static int yfs_deliver_fs_inline_bulk_status(struct afs_call *call)
- 
- 		bp = call->buffer;
- 		scb = &call->out_scb[call->count];
--		ret = xdr_decode_YFSFetchStatus(&bp, call, scb);
--		if (ret < 0)
--			return ret;
-+		xdr_decode_YFSFetchStatus(&bp, call, scb);
- 
- 		call->count++;
- 		if (call->count < call->count2)
-@@ -2067,9 +2034,7 @@ static int yfs_deliver_fs_fetch_opaque_acl(struct afs_call *call)
- 		bp = call->buffer;
- 		yacl->inherit_flag = ntohl(*bp++);
- 		yacl->num_cleaned = ntohl(*bp++);
--		ret = xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
--		if (ret < 0)
--			return ret;
-+		xdr_decode_YFSFetchStatus(&bp, call, call->out_scb);
- 		xdr_decode_YFSVolSync(&bp, call->out_volsync);
- 
- 		call->unmarshall++;
 -- 
 2.25.1
 
