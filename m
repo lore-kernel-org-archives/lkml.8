@@ -2,98 +2,110 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5021C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D52C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 966EF207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226C1207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fwnsclrp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbDg03Rw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387453AbgFWS4X (ORCPT
+        id S2387485AbgFWS4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
+        Tue, 23 Jun 2020 14:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733188AbgFWS4W (ORCPT
+        with ESMTP id S1733170AbgFWS4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:56:22 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA68C061573;
-        Tue, 23 Jun 2020 11:56:22 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id 9so24641521ljv.5;
-        Tue, 23 Jun 2020 11:56:22 -0700 (PDT)
+        Tue, 23 Jun 2020 14:56:43 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D64C061573;
+        Tue, 23 Jun 2020 11:56:43 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id g13so5867475qtv.8;
+        Tue, 23 Jun 2020 11:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DLTbat6fieBqr/9/lL2FJCRZ8pEMlypsdp/zm9STPlI=;
-        b=Fwnsclrpa94+GqAeSwaeAmRiYo467rG+RNbAuZclgsZROzsPA+as+fnZlVd9NUJWfz
-         Ioiq6OkaTlihbsZf8bHePsQZIkPzv54IAOhUJwmQ73QT8tpqTWa8jpUvhfSl6bxwq9f5
-         fOjKqg7LlA8gjeU74wR7t6TFEjrK7qIsEkl3929JAV8p5zoSRR9SynA+h6vA8DNyritZ
-         CPBFha+YLuqjo8mrH0htk/vGC6VWOdJx1CTSlVd3zCtQujaCNbfcv4PlC6RxHfEBdEOQ
-         u600vnccDI4Q39CtJcgnN9eGQ/k9CcazytorOaDWwCj/TYIuc3Eox11Hc/Vytimu8Y7O
-         woJA==
+        bh=OdEs8XCWud6zPtKCCy3vVXXVB5i1Ldq4hr9kZhvUHzs=;
+        b=CbDg03Rw3Khmtv7g5GeHAndphb2mNm+XfR4XWnx1M/RRHpidXx/8PYSsnxunhAzexJ
+         bHoeZts7jcYNzfrNmApGAbROG1NO+CmZgdysN6G0kE39iqbpgkvaSQlof8BQJBvXHvsW
+         vvG3p/AreRkuyjOI3EZMrNfSwwGWFl7pZ5EmzndtM2ucfmp2Y9MAZwCSbNV1rInFG0So
+         sTiG6lh/jNIcMJ3SmaXXhPuybREMdImgq/SZ8NrLGe3GhiQGDe3zjTDSo+ZQl22kX7hv
+         MQlOk++74Z0TH8B33VRj5OJ/85SZkpsFrbcHOdTsnaJmD9D8gUFGfZIXqNXkjQTrTxbp
+         2hxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DLTbat6fieBqr/9/lL2FJCRZ8pEMlypsdp/zm9STPlI=;
-        b=aH3wHsg7ena3wUrB2ILSORsy5GRj09jQF+wPS2tvWxhmZu3qBubEKahiMv5IK4PPAd
-         /Qksup9ctbkzlsymlIafKfitQ/jj+BEsRLisRfx5yLAb5M3lXsQVef2WwOJFiTpqyfXA
-         EIuwz9SK9YT1TkBQlcatXPIHqfhFNB8YkB0cSFyo9AVGNef07GLxPQIfuAd9EcdVY3/D
-         TzH/wDxvlCYzj/hP3gHKocwxdKBgSEqdcT/ITKwHXXXNTpfJwo1aGc3wi/dEb4QHagEB
-         +PG5XVDOBSPacoFx0cnlWNGpeVFMH5wXn2oYkoAyDzmbEbppvN0DnjoGRm421WJZyLnD
-         iMJA==
-X-Gm-Message-State: AOAM532Soh6ZMnm5LpQuB15Pv2j/x0kSf1N/laK3lPMtoKwh3CaZB7KM
-        X5BI+Po/vP46SpqgJAHKYGOdbi4czlcPiSXQUr4=
-X-Google-Smtp-Source: ABdhPJybZLPt6wRDoJv7GJYMUP085xQpCVI0BG6DAAMBhrMAnofg+cnlM820I/CLO/Af7ZZ4yslao77jBmjWws6gPQY=
-X-Received: by 2002:a2e:b4eb:: with SMTP id s11mr12143822ljm.452.1592938580718;
- Tue, 23 Jun 2020 11:56:20 -0700 (PDT)
+        bh=OdEs8XCWud6zPtKCCy3vVXXVB5i1Ldq4hr9kZhvUHzs=;
+        b=DK0bNeQWQcUbcmlMxMSKz0JkeHGPB8mUetr++xa3uq2G+AuNm0ZgYBhYoU8nsU2yz5
+         T2F9YVMWiXvIMaeZ5qRG64pTgAhlByUhkJnBj/r1iqAE0x22oj0WmIXpGJ+FFb6FCrDC
+         lq0G5pyQ/mTNhxHv144qZTyuvghjhcTEh40bCwTD25wIxqfmFzhmAc7Z0jwraSiKJ5L7
+         kmeiGpnkbuPR5XwfY5JuCeEWGgFbLAyM0I7X0kBiIvOLQ5t/3qybDMrxI3gmQcrL9AoD
+         3P22+NphYNb7QFaVNS9qbZMEm4liyywgcYoCK0M+PIE/aEssqg7CPhIt3jDZe0Aflolt
+         n3KQ==
+X-Gm-Message-State: AOAM531iPewior+Gt+BYNyxET1Y9jLos5EMJksF0wmcU8wbnd2vBYuJc
+        +FdQx+V1+sjrGfRhk3AcC+E/xPgbJchKXAT6nqg=
+X-Google-Smtp-Source: ABdhPJwed26RlIXo4962AHM7Nsj9QZia6M/k2LQY7w0EvF6unDFzu6+Bfg7oj4Qt9lod5tgUi+Z9DOZvhnBUo5slbK8=
+X-Received: by 2002:ac8:4cc9:: with SMTP id l9mr8998102qtv.59.1592938602385;
+ Tue, 23 Jun 2020 11:56:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
- <CAOMZO5CbLvf_iV5K1zXZdYqgpBqrOZmTGR=NYyL+j73ojTGOnw@mail.gmail.com> <CAJ+vNU19ebj3xpOKxeHMzdMQjVdZoJCTFJ5DSYat7U4tpZTWvQ@mail.gmail.com>
-In-Reply-To: <CAJ+vNU19ebj3xpOKxeHMzdMQjVdZoJCTFJ5DSYat7U4tpZTWvQ@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 23 Jun 2020 15:56:09 -0300
-Message-ID: <CAOMZO5CENFuLmQ5rhs6EkXTTUVsOyX-NYwXABnS2ji_QpFYr+w@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] ARM: dts: imx6qdl-gw551x: fix audio SSI
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
+References: <20200623084207.149253-1-colin.king@canonical.com>
+In-Reply-To: <20200623084207.149253-1-colin.king@canonical.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 23 Jun 2020 11:56:31 -0700
+Message-ID: <CAEf4Bzbp8h9w0w56kHnaXW37+zoHapRR0Sjc7=vaH7i5ceF9fw@mail.gmail.com>
+Subject: Re: [PATCH][next] libbpf: fix spelling mistake "kallasyms" -> "kallsyms"
+To:     Colin King <colin.king@canonical.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
-
-On Tue, Jun 23, 2020 at 3:52 PM Tim Harvey <tharvey@gateworks.com> wrote:
-
-> Yes, it likely should as it fixes audio capture from 3117e851cef1b4e1.
-> I didn't think it would apply cleanly to stable but it looks like it
-> does.
+On Tue, Jun 23, 2020 at 1:43 AM Colin King <colin.king@canonical.com> wrote:
 >
-> I cc'd stable@vger.kernel.org. Should I submit a new revision with the
-> following?
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Cc: stable@vger.kernel.org
-> Fixes: 3117e851cef1b4e1 ("ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x")
+> There is a spelling mistake in a pr_warn message. Fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
 
-Yes, that would be better.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Please note that the commit ID used in the Fixes tag should be 12-digit long.
+>  tools/lib/bpf/libbpf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 18461deb1b19..deea27aadcef 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -5741,7 +5741,7 @@ static int bpf_object__read_kallsyms_file(struct bpf_object *obj)
+>                 if (ret == EOF && feof(f))
+>                         break;
+>                 if (ret != 3) {
+> -                       pr_warn("failed to read kallasyms entry: %d\n", ret);
+> +                       pr_warn("failed to read kallsyms entry: %d\n", ret);
+>                         err = -EINVAL;
+>                         goto out;
+>                 }
+> --
+> 2.27.0
+>
