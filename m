@@ -2,179 +2,229 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF417C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0A72072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A86120780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:41:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pnWx68KM";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="DQ8Rl6jS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A5bGfukW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733058AbgFWPky (ORCPT
+        id S1733011AbgFWPld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:40:54 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:19972 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733025AbgFWPkw (ORCPT
+        Tue, 23 Jun 2020 11:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732942AbgFWPlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:40:52 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NFcVsp025548;
-        Tue, 23 Jun 2020 08:40:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=5caL1xGeHeWMdf0XRjxLpgHj3qoN3pMugG92HrZ7twE=;
- b=pnWx68KMcXV+opmjSy/iC5a4ROVnRv6PymZsrb54QFvG1MVVTkImLPTWzXPAHoDKBGhv
- /wVDPduDM8vQTfBMa49YvgZ8qVlNBTbTV19Av0eCja+ATnyScIJp/YKFPUgVOPKIrIZx
- 44NthA1lo3YadCqcZe1nzjfX53jH9mK21KI= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31uk2ugga0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 23 Jun 2020 08:40:34 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 23 Jun 2020 08:40:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ie9R+Y9wniBX+q/N6rp21lhU50NugZuUixxpUjQRKxTLDTtCgSdeLEhr1WKSAze7+O/Q4aw6ZAmawmkHX5EDhn65yCmluhUIogtWXU2yhHsGjbAgYIM1W5JCrYWeUlYsZk/Nn43NLG2wfvx1/esZYcfCIDrdtxpGxOujufyUL7cRGuY7MtezQMoEjxwgDWy2tq18oAsE8lq/r+LyMGey299m3//5JkjZp9lNwv8fZj19lTaIBLT42KNQmBhmzbfp3dc+ngH3ofFJ9NixOFaAjFc/IGwA/BU5RJ2tS28iUq0DgjZ+gfl7Ujp760G9HhiCQFbA6TKg9w6j3AgBkjsOJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5caL1xGeHeWMdf0XRjxLpgHj3qoN3pMugG92HrZ7twE=;
- b=LpszEPD3Fb67Ul89XWJo/AW3FBbaRFOqyK8PGAPiDquPjABXsb2/QQTsNcxhMpEVI6H+REmMfidktrtIXQe6edaY6QgB7NLXrnTh47KCBNRm5rsq25KPVz904Tk77Ge6LJM0fi6rPWoYgitUZAtm9EdhyfqDwaSy+LGTHsFt7DUhKfyWl0CGvTXw6zjl7CexRnFL7a9Y/k91VdUoVKjC4VxRJ3w9DAGqkqvL9V5CZiigis6v3tpoTXQOPqtyjaIXKEMnhp6yaHWLVZeD6yI50mAEeTeyBr15BKXtIGpVY9zRaSPs/dbLNy0J1mhIIiRv6B4y/3JGpLHB6FzowjjuHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5caL1xGeHeWMdf0XRjxLpgHj3qoN3pMugG92HrZ7twE=;
- b=DQ8Rl6jS1r63F68DfE1jlwwV9ILSaPJX4cOyHtiLgb4CiFon3bD0pfdPRWOtDE4pNMC4HDyC8AVzlDqag2mPNU+wtgtNwMsKWBi8yzFWYjErz3fr0jbp1E0hNcZRHT4u8pG0udXEYMk1zFgdhAVYHu/1rjslX4cbtw0g+A7QOrI=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2392.namprd15.prod.outlook.com (2603:10b6:a02:8d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Tue, 23 Jun
- 2020 15:40:30 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 15:40:30 +0000
-Date:   Tue, 23 Jun 2020 08:40:27 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 09/19] mm: memcg/slab: charge individual slab objects
- instead of pages
-Message-ID: <20200623154027.GB345679@carbon.dhcp.thefacebook.com>
-References: <20200623015846.1141975-1-guro@fb.com>
- <20200623015846.1141975-10-guro@fb.com>
- <CALvZod4jchG_4gvigzb=iAoi1ytX6HVJe0xCp8b8=cc4NiXENg@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod4jchG_4gvigzb=iAoi1ytX6HVJe0xCp8b8=cc4NiXENg@mail.gmail.com>
-X-ClientProxiedBy: BYAPR05CA0036.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::49) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Tue, 23 Jun 2020 11:41:31 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43206C061795
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:41:31 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id m26so11927326lfo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8EW9CUhccL2ErdRx17qCssxvDAc9oVS3YR0zNYwgmvM=;
+        b=A5bGfukW4rEMApWGnfaVhV80isdADwT9ammeZZs1BkF0SjEY9oQg9qL7Aw87BfcNnM
+         m5IY/M4fYvEklKrIo5RsfkgXf3PBLYu9AcgJMAjJOP+LE2fxWQJgqteNmwP4tem95zTU
+         aWywfY17Q1iNKf3gPTDtpZaliftBv+tKV+J4SEFaApM3CafVBGCbdipijsHb3y2SeSFg
+         67EAnFX1ZNcMbZHKOhifYRogGhVqcaZslqLWIr/JgFOcU/gYTi9StSNVbUKl6t23OQES
+         jmcE1YaW5b1kmmIC3647hxG8RfLtaHIH3+9ce+75cz71Xw4mM2Gie7MyuE9mczZRGUAq
+         awCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8EW9CUhccL2ErdRx17qCssxvDAc9oVS3YR0zNYwgmvM=;
+        b=hel/1Qpb46g4eYBTkOEgnn5FaKFw1ZKpol7CU7pLhCarRzPYlu0cOzayWuL9mPGi/4
+         MWoUCgzYaoKvFw4LE2/9MtiaRrgLJVaNPPIt295hBcjGCuxMdDM/7gqtVBFqcsM95w1w
+         oBn3OZUzbqhfCWtc14gIOe7oPv5VfL6pNVfn9k9Ln5xcueVlsn0hpGqnDCBz+qaQmh4v
+         8lJ7ItytuFJM3t1vOYRxdyyzgToSQt3bZ1PZBCEuMWK93F9lI8zmjRb1Bck8p1ke+Feq
+         YJlhstfOjBvA5neohsYsOzQ1QBKQ4L3VfYCNaGHfVPX4SO6A+wju3uODt5U1Dl1g9WiN
+         U3xQ==
+X-Gm-Message-State: AOAM533oZivB63jkiOrV32TTyH99YAdflRPnZI4epZc6VHEKkSpVjfF5
+        ejg3GijPz/4T/hhkm9aueS9tHUZiM4OcDqWgg3PpMw==
+X-Google-Smtp-Source: ABdhPJwp6rdNidyFiB5JqWv4asQcgVnKzKjE4i/WkBWzySxCPSb1sK+tEffIUQpLss893LbfzHXAs9OQgaJOXLwFOKE=
+X-Received: by 2002:a05:6512:31c5:: with SMTP id j5mr13146327lfe.26.1592926889545;
+ Tue, 23 Jun 2020 08:41:29 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:161f) by BYAPR05CA0036.namprd05.prod.outlook.com (2603:10b6:a03:c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.13 via Frontend Transport; Tue, 23 Jun 2020 15:40:29 +0000
-X-Originating-IP: [2620:10d:c090:400::5:161f]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 43270aec-6903-4aee-be77-08d8178bc25d
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2392:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2392D271C7F86F90DEEC120EBE940@BYAPR15MB2392.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 04433051BF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 99a/szWyicSAdiEus2V5B7Fqc5Bpr2TLnioiASdDO9w3bPNo2y/Jv1g63GVL7xMK+MGeKCA47WXtzaYmQKl2UccxEg/DheYF2UDQXgXY+oaaKhtSTs02fztsdbiGKqZNdheooDE7lqaexcyrmw/XSpE/PLF7oX+deVrSsjL4Hsp297mf0i7VoBSEhHQqRlABfE2ycaf8sC6Xy/fe0z6hCZd3vpPKYNJXciMFkOWrnF6EePSx6Oc+eRNWPYMmPLP6X1DcqvHjwZkHERu3f7R/KCMCAGScMIv4bvY8CCZuVxhI/V2zM9bX5RAia7TuYe6p
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(39860400002)(346002)(136003)(376002)(55016002)(5660300002)(54906003)(1076003)(9686003)(86362001)(478600001)(66476007)(66556008)(6916009)(316002)(2906002)(66946007)(16526019)(52116002)(83380400001)(7696005)(186003)(6506007)(8936002)(33656002)(53546011)(8676002)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: d4GptY6JQzM02NzBSQdWMDN1COl7tdSymRR3HPDSYgLF0Og6f9lHKZl28oTNQFoSxVVXH6OuuHha3C8ty3iZ6vrpHBHZZQaqecVv9qioqPFchCjGFtEYOVcaAu43aj2hUd/eIedjUKuoXEpoKZyMqaaFCas9hcdklJRM2GTfu1rfKLvYJD6Fl+MZPLzZuCc5sJFrIu5vrNiik9p3dgRz0FJgFyk602zslVGH6prfcAX/yJguHdXmMtYVtccq4JMhnsDhK1oVu21uTLd0QY9VJb1oD346i5Y06s1vPSiMXFrNeldDlmyFo47rt8ik6cEYDwyOiBb7XhxztkD75ZXJRKRSZwmNF258XHT4/Hj6T973qOJfrfKnMR08vM85SaYuqV6fVC8HDOXsas8OUoMn9oUX1J4qhcypPBpkt+/suXipuIqMa5OpwbZqM9SsY0bvaF2NMLRk7JQ68UQ/gCE3tsIs8f8gkJAieMZdc0tslqGCzxzQoDkw4tPcBkc3JchaJsx0J+keCX4SOOM9Cv6BIw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43270aec-6903-4aee-be77-08d8178bc25d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 15:40:30.3872
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: arfhF0NnQ/KP2M1oCGlleHJe0txJUYmGNR8m6GN1RCc8UzceBC/5a0otZ+7L99oE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2392
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_10:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- bulkscore=0 priorityscore=1501 spamscore=0 malwarescore=0 suspectscore=1
- adultscore=0 clxscore=1015 phishscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230119
-X-FB-Internal: deliver
+References: <20200618011631.604574-1-sashal@kernel.org> <20200618011631.604574-219-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-219-sashal@kernel.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 23 Jun 2020 21:11:18 +0530
+Message-ID: <CA+G9fYsV1wWyKF3Gs9FwBRxCAgEGrmVjT0zmrrHj9x0WKLQPEw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.4 219/266] ovl: verify permissions in ovl_path_open()
+To:     Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        linux-unionfs@vger.kernel.org, lkft-triage@lists.linaro.org,
+        LTP List <ltp@lists.linux.it>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:19:25PM -0700, Shakeel Butt wrote:
-> On Mon, Jun 22, 2020 at 6:58 PM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > Switch to per-object accounting of non-root slab objects.
-> >
-> > Charging is performed using obj_cgroup API in the pre_alloc hook.
-> > Obj_cgroup is charged with the size of the object and the size of
-> > metadata: as now it's the size of an obj_cgroup pointer.  If the amount of
-> > memory has been charged successfully, the actual allocation code is
-> > executed.  Otherwise, -ENOMEM is returned.
-> >
-> > In the post_alloc hook if the actual allocation succeeded, corresponding
-> > vmstats are bumped and the obj_cgroup pointer is saved.  Otherwise, the
-> > charge is canceled.
-> >
-> > On the free path obj_cgroup pointer is obtained and used to uncharge the
-> > size of the releasing object.
-> >
-> > Memcg and lruvec counters are now representing only memory used by active
-> > slab objects and do not include the free space.  The free space is shared
-> > and doesn't belong to any specific cgroup.
-> >
-> > Global per-node slab vmstats are still modified from
-> > (un)charge_slab_page() functions.  The idea is to keep all slab pages
-> > accounted as slab pages on system level.
-> >
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> > ---
-> [snip]
-> > +static inline struct kmem_cache *memcg_slab_pre_alloc_hook(struct kmem_cache *s,
-> > +                                               struct obj_cgroup **objcgp,
-> > +                                               size_t objects, gfp_t flags)
-> > +{
-> > +       struct kmem_cache *cachep;
-> > +
-> > +       cachep = memcg_kmem_get_cache(s, objcgp);
-> > +       if (is_root_cache(cachep))
-> > +               return s;
-> > +
-> > +       if (obj_cgroup_charge(*objcgp, flags, objects * obj_full_size(s))) {
-> > +               memcg_kmem_put_cache(cachep);
-> 
-> I think you forgot to put obj_cgroup_put(*objcgp) here again.
+On Thu, 18 Jun 2020 at 06:51, Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Miklos Szeredi <mszeredi@redhat.com>
+>
+> [ Upstream commit 56230d956739b9cb1cbde439d76227d77979a04d ]
+>
+> Check permission before opening a real file.
+>
+> ovl_path_open() is used by readdir and copy-up routines.
+>
+> ovl_permission() theoretically already checked copy up permissions, but it
+> doesn't hurt to re-do these checks during the actual copy-up.
+>
+> For directory reading ovl_permission() only checks access to topmost
+> underlying layer.  Readdir on a merged directory accesses layers below the
+> topmost one as well.  Permission wasn't checked for these layers.
+>
+> Note: modifying ovl_permission() to perform this check would be far more
+> complex and hence more bug prone.  The result is less precise permissions
+> returned in access(2).  If this turns out to be an issue, we can revisit
+> this bug.
+>
+> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/overlayfs/util.c | 27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+> index f5678a3f8350..eb325322a893 100644
+> --- a/fs/overlayfs/util.c
+> +++ b/fs/overlayfs/util.c
+> @@ -475,7 +475,32 @@ bool ovl_is_whiteout(struct dentry *dentry)
+>
+>  struct file *ovl_path_open(struct path *path, int flags)
+>  {
+> -       return dentsteps to reproduce:
+          - cd /opt/ltp
+          - ./runltp -s execveat03ry_open(path, flags | O_NOATIME,
+current_cred());
+> +       struct inode *inode = d_inode(path->dentry);
+> +       int err, acc_mode;
+> +
+> +       if (flags & ~(O_ACCMODE | O_LARGEFILE))
+> +               BUG();
 
-Indeed. I've added it, but looks like I've lost it during one of rebases.
-Will put it back and resend. Good catch!
+This BUG: triggered on stable-rc 5.7, 5.4, 4.19 and 4.14 on arm64 architecture.
 
-Thank you!
+steps to reproduce:
+          - cd /opt/ltp
+          - ./runltp -s execveat03
+
+[  461.024389] ------------[ cut here ]------------
+[  461.029029] kernel BUG at fs/overlayfs/util.c:482!
+[  461.033832] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[  461.039328] Modules linked in: overlay rfkill tda998x
+drm_kms_helper drm crct10dif_ce fuse
+[  461.047637] CPU: 2 PID: 15049 Comm: execveat03 Not tainted
+5.4.49-rc1-00549-g1d94fa9fbd5f #1
+[  461.056093] Hardware name: ARM Juno development board (r2) (DT)
+[  461.062026] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  461.066879] pc : ovl_path_open+0xc4/0xc8 [overlay]
+[  461.071723] lr : ovl_path_open+0x2c/0xc8 [overlay]
+[  461.076521] sp : ffff0008d9d578d0
+[  461.079841] x29: ffff0008d9d578d0 x28: ffff00090821186c
+[  461.085167] x27: ffff000908211800 x26: ffff000902fc7000
+[  461.090493] x25: ffffa0000956e800 x24: ffff000902fc7540
+[  461.095818] x23: ffff0008d9d57b80 x22: ffff00091149c880
+[  461.101143] x21: ffff0008d9d57b80 x20: ffff0008dd24cb10
+[  461.106467] x19: 0000000000004000 x18: 0000000000000000
+[  461.111791] x17: 0000000000000000 x16: 0000000000000000
+[  461.117114] x15: 0000000000000000 x14: ffffa00010395a3c
+[  461.122439] x13: ffffa00010394ff0 x12: ffff80011baea816
+[  461.127763] x11: 1fffe0011baea815 x10: ffff80011baea815
+[  461.133087] x9 : dfffa00000000000 x8 : 0000000000000001
+[  461.138411] x7 : ffff0008dd7540a8 x6 : 00000000f1f1f1f1
+[  461.143735] x5 : 00000000f3000000 x4 : 000000000000002d
+[  461.149059] x3 : dfffa00000000000 x2 : 0000000000000007
+[  461.154383] x1 : 0000000000004000 x0 : 0000000000000000
+[  461.159706] Call trace:
+[  461.162201]  ovl_path_open+0xc4/0xc8 [overlay]
+[  461.166697]  ovl_check_d_type_supported+0x98/0x178 [overlay]
+[  461.172410]  ovl_fill_super+0x8b4/0x1c78 [overlay]
+[  461.177215]  mount_nodev+0x4c/0xb8
+[  461.180665]  ovl_mount+0x18/0x20 [overlay]
+[  461.184772]  legacy_get_tree+0x70/0xb8
+[  461.188531]  vfs_get_tree+0x48/0x158
+[  461.192116]  do_mount+0x6f8/0xb38
+[  461.195438]  ksys_mount+0x8c/0xe8
+[  461.198762]  __arm64_sys_mount+0x64/0x80
+[  461.202697]  el0_svc_common.constprop.0+0xa0/0x1d0
+[  461.207500]  el0_svc_handler+0x34/0x98
+[  461.211256]  el0_svc+0x8/0xc
+[  461.214150] Code: f94013f5 a8c37bfd d65f03c0 d4210000 (d4210000)
+[  461.220258] ---[ end trace 13147ca9b270cd0f ]---
+[  461.224884] note: execveat03[15049] exited with preempt_count 1
+[  461.233327] ------------[ cut here ]------------
+[  461.237984] WARNING: CPU: 2 PID: 0 at kernel/rcu/tree.c:569
+rcu_idle_enter+0xc4/0xd0
+[  461.245742] Modules linked in: overlay rfkill tda998x
+drm_kms_helper drm crct10dif_ce fuse
+[  461.254052] CPU: 2 PID: 0 Comm: swapper/2 Tainted: G      D
+  5.4.49-rc1-00549-g1d94fa9fbd5f #1
+[  461.263465] Hardware name: ARM Juno development board (r2) (DT)
+[  461.269397] pstate: 20000085 (nzCv daIf -PAN -UAO)
+[  461.274200] pc : rcu_idle_enter+0xc4/0xd0
+ [  461.278224] lr : rcu_idle_enter+0x30/0xd0
+[  461.282397] sp : ffff000935577e90
+[  461.285715] x29: ffff000935577e90 x28: 0000000000000000
+[  461.291202] x27: ffff00091330b800 x26: ffffa0001309e220
+Broadcast message from systemd-jo[  461.296528] x25: ffff00093554ba00
+x24: 1fffe00126aaefe4
+urnald@juno (Tue 2020-06-23 03:3[  461.304710] x23: ffffa00012227c38
+x22: ffffa0001309e1f8
+3:27 UTC):
+[  461.312810] x21: ffff0009366edc98 x20: ffffa00012231bc0
+[  461.319253] x19: ffff0009366edbc0 x18: 0000000000000000
+[  461.324576] x17: 0000000000000000 x16: 0000000000000000
+[  461.329973] x15: 0000000000000000 x14: ffffa0001009d8c0
+[  461.335298] x13: ffffa00010395afc x12: ffff800126cddb24
+[  461.340784] x11: 1fffe00126cddb23 x10: ffff800126cddb23
+kernel[310]: [  461.033832] Inter[  461.346109] x9 : dfffa00000000000
+x8 : 0000000000000001
+nal error: Oops - BUG: 0 [#1] PR[  461.354293] x7 : ffff0009366ed91b
+x6 : ffff0009366ed918
+EEMPT SMP
+[  461.362392] x5 : 00007ffed93224dd x4 : 000000000000002d
+[  461.368747] x3 : dfffa00000000000 x2 : 0000000000000007
+[  461.374071] x1 : 4000000000000002 x0 : 4000000000000000
+[  461.379468] Call trace:
+[  461.381922]  rcu_idle_enter+0xc4/0xd0
+[  461.385755]  do_idle+0x27c/0x320
+exit01      1  TPASS  :  exit() t[  461.388992]  cpu_startup_entry+0x20/0x40
+est PASSED[  461.395788]  secondary_start_kernel+0x250/0x2b8
+[  461.401184] ---[ end trace 13147ca9b270cd10 ]---
+
+test link,
+https://lkft.validation.linaro.org/scheduler/job/1516380#L3866
+
+metadata:
+  git branch: linux-5.4.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: 1d94fa9fbd5f0a775217d4180270dae8cede3f92
+  git describe: v5.4.47-549-g1d94fa9fbd5f
+  make_kernelversion: 5.4.49-rc1
+  kernel-config:
+https://builds.tuxbuild.com/-hEoWZbVgbGrYjKHXXPiuQ/kernel.config
+  build-url: https://gitlab.com/Linaro/lkft/kernel-runs/-/pipelines/158927561
+
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
