@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E466CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC86C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0D9B2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBCA20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943078;
-	bh=U5b0UBf7FMEr2zEPspBFgp7gEax7PArlSSw6xZKwkrc=;
+	s=default; t=1592943082;
+	bh=fzeiN6tsY2DADDxWEE9Al9nLMAgTcZwQITGuYd9DniQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DdZi97+WJ+6posqPK9sBuWLXpTIe/fbUYd+EJZ0BtfBYGlzvfP7MLbhu5I4fbsQiB
-	 2cmMdpHk+1ugLz7akXrxnzCraOioRdz4nw6CzZyJAcZaUkijDIBKdaQn3XSYYCLa90
-	 vFQCWyNTvju3TSOQtS9t9fiGNw6CmwKs5B4UpkBA=
+	b=ZyZAj2Zc3/PTkJzB5deBcIGX0esvRE4OyTAgrZqXGrQoVEU5mdsavJYiTzyfWOTXV
+	 hxDDqBgtp+7zmdmAnuAdRBgJ3pOlAZGOcvjJCOoaswpi98YLevjIVme9wYaZ5KPuks
+	 SGoWLiEjN9EFyEIiJIlQ7AjSvbgQpv1mchQKS49w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388238AbgFWULR (ORCPT
+        id S2387502AbgFWULU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388850AbgFWUKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:53 -0400
+        id S2388677AbgFWUK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05EC20E65;
-        Tue, 23 Jun 2020 20:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ABC120707;
+        Tue, 23 Jun 2020 20:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943053;
-        bh=U5b0UBf7FMEr2zEPspBFgp7gEax7PArlSSw6xZKwkrc=;
+        s=default; t=1592943055;
+        bh=fzeiN6tsY2DADDxWEE9Al9nLMAgTcZwQITGuYd9DniQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=svjegEs90Ldm74KvvflyBCax6pVlk8xP0lWNDH6UUzJBz7kRLrFGNp6uMPERRcGWB
-         VF/phc5HGXikesP6xZVa42UQhNDyqSsr0xIwMYrhn7XqFJM+/NJ5ZB+QFF6x++GhdD
-         yQT8/nQTVFNegYMbVVtSvUDMC5jhaU7nJCgESgVE=
+        b=IacAop2eN5Y2TRnH4+IaD3NqNfH41/YAvjtUQzvACldOEGteLX6ewspfFIGf4Fk34
+         3nE/JV9z3fT6PF+U1llhs+nLYZV8aIq4f+bCdbGkAduSuNkUJwRKZqaHrWO0hdk6ar
+         5cYyllwfdNhIvNHbZgEpjEc1EyDToj3YbfUj32oM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 200/477] clk: ti: composite: fix memory leak
-Date:   Tue, 23 Jun 2020 21:53:17 +0200
-Message-Id: <20200623195417.039611647@linuxfoundation.org>
+Subject: [PATCH 5.7 235/477] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
+Date:   Tue, 23 Jun 2020 21:53:52 +0200
+Message-Id: <20200623195418.681826694@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,36 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit c7c1cbbc9217ebb5601b88d138d4a5358548de9d ]
+[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
 
-The parent_names is never released for a component clock definition,
-causing some memory leak. Fix by releasing it once it is no longer
-needed.
+Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
+match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
+a proper fix for Exynos I2S driver is ready.
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200429131341.4697-2-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+This fixes the following synchronous abort issue revealed by the probe
+order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
+fwnode parsing when adding all top level devices")
+
+Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
+Hardware name: Samsung TM2E board (DT)
+Workqueue: events deferred_probe_work_func
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : samsung_i2s_probe+0x768/0x8f0
+lr : samsung_i2s_probe+0x688/0x8f0
+...
+Call trace:
+ samsung_i2s_probe+0x768/0x8f0
+ platform_drv_probe+0x50/0xa8
+ really_probe+0x108/0x370
+ driver_probe_device+0x54/0xb8
+ __device_attach_driver+0x90/0xc0
+ bus_for_each_drv+0x70/0xc8
+ __device_attach+0xdc/0x140
+ device_initial_probe+0x10/0x18
+ bus_probe_device+0x94/0xa0
+ deferred_probe_work_func+0x70/0xa8
+ process_one_work+0x2a8/0x718
+ worker_thread+0x48/0x470
+ kthread+0x134/0x160
+ ret_from_fork+0x10/0x1c
+Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
+---[ end trace ccf721c9400ddbd6 ]---
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/composite.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/samsung/clk-exynos5433.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
-index 6a89936ba03af..eaa43575cfa5e 100644
---- a/drivers/clk/ti/composite.c
-+++ b/drivers/clk/ti/composite.c
-@@ -196,6 +196,7 @@ cleanup:
- 		if (!cclk->comp_clks[i])
- 			continue;
- 		list_del(&cclk->comp_clks[i]->link);
-+		kfree(cclk->comp_clks[i]->parent_names);
- 		kfree(cclk->comp_clks[i]);
- 	}
- 
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index 4b1aa9382ad28..6f29ecd0442e1 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -1706,7 +1706,8 @@ static const struct samsung_gate_clock peric_gate_clks[] __initconst = {
+ 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
+ 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
+-			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
++			ENABLE_SCLK_PERIC, 6,
++			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
+ 			5, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
 -- 
 2.25.1
 
