@@ -4,62 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A84C20EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3235920CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942633;
-	bh=97ur8RLnc6uZV2ZwBva1Z/GnkPnVj4yOtOwXI3V349k=;
+	s=default; t=1592942637;
+	bh=hGt5jvVshFXEzuKSCI0ypKNX8m8Q+hiYVHQAKRJQ80Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvBeIa96c34ank15Tou1RqHpXVuxB/LtmfzJBTB/GvBOjUPQcPcnUDa1BGpup3jRj
-	 x58MWCl2dCexdA8PGXxBgYrcwpxjTLtZveVHkkPw7mCl76PdXxOUa8n4wXHdnga96R
-	 bfTYYVfI5DHS6oQKLfHB5QhQCIvhNtqH77MxUdlc=
+	b=KYIkG4kgl8mfZZMqjiEAYEOdV6FYexy+ScLC8jGgSwEHAGtPj2oX9zpZR1q+2OJUO
+	 v30tDlL2QF8GVnSwx+kCgXoAtu3kmdvA6+WvZ2vp63NTUtuKuwGtVz7Ce0ts1jQHU2
+	 cMKfmncG0LUTUjEmO6QAR5ZbjumfzpytkcXz4Bmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbgFWUDw (ORCPT
+        id S2388126AbgFWUD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388104AbgFWUDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:48 -0400
+        id S2387509AbgFWUDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D64E2206C3;
-        Tue, 23 Jun 2020 20:03:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31C1E20FC3;
+        Tue, 23 Jun 2020 20:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942627;
-        bh=97ur8RLnc6uZV2ZwBva1Z/GnkPnVj4yOtOwXI3V349k=;
+        s=default; t=1592942632;
+        bh=hGt5jvVshFXEzuKSCI0ypKNX8m8Q+hiYVHQAKRJQ80Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W3R8SorGbnp7S4FynSPjfO8zZdaFqqcj92WUvjGtXSGMoebZmQJ7wcTQEjOmZ9U0N
-         G/iQbCPjn4vXt2xJ5ftZ8Z8exxZA4ywM4tx5xPgYGcSB0hpTfyu4JJbje5tkXHjiJn
-         wfcNdLFd6gZ0Rn+wQ33ff1gkU/fbwC/dwC05F6QY=
+        b=cNI+32tBznJJTdbjwtcyFTWWtrKrANPJtz2lfYQ0SVRhIWwScTLn1M0PxyHfcL6yF
+         9J9yB9EdCS6nPf5jp6clE8/btM1O1ax8MFMH8DNKJfT11QjzjEx4Uf9dBzWkpFSerW
+         WwbUsUuHjyg3OCIzhT8ubkquwHZpmouFoKaUvsYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 042/477] serial: 8250: Fix max baud limit in generic 8250 port
-Date:   Tue, 23 Jun 2020 21:50:39 +0200
-Message-Id: <20200623195409.597252000@linuxfoundation.org>
+        stable@vger.kernel.org, Omer Shpigelman <oshpigelman@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 067/477] habanalabs: dont allow hard reset with open processes
+Date:   Tue, 23 Jun 2020 21:51:04 +0200
+Message-Id: <20200623195410.788341159@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -72,79 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Omer Shpigelman <oshpigelman@habana.ai>
 
-[ Upstream commit 7b668c064ec33f3d687c3a413d05e355172e6c92 ]
+[ Upstream commit 36fafe87edd636292a4ed6a3af9608f2c7d0d0fb ]
 
-Standard 8250 UART ports are designed in a way so they can communicate
-with baud rates up to 1/16 of a reference frequency. It's expected from
-most of the currently supported UART controllers. That's why the former
-version of serial8250_get_baud_rate() method called uart_get_baud_rate()
-with min and max baud rates passed as (port->uartclk / 16 / UART_DIV_MAX)
-and ((port->uartclk + tolerance) / 16) respectively. Doing otherwise, like
-it was suggested in commit ("serial: 8250_mtk: support big baud rate."),
-caused acceptance of bauds, which was higher than the normal UART
-controllers actually supported. As a result if some user-space program
-requested to set a baud greater than (uartclk / 16) it would have been
-permitted without truncation, but then serial8250_get_divisor(baud)
-(which calls uart_get_divisor() to get the reference clock divisor) would
-have returned a zero divisor. Setting zero divisor will cause an
-unpredictable effect varying from chip to chip. In case of DW APB UART the
-communications just stop.
+When the MMU is heavily used by the engines, unmapping might take a lot of
+time due to a full MMU cache invalidation done as part of the unmap flow.
+Hence we might not be able to kill all open processes before going to hard
+reset the device, as it involves unmapping of all user memory.
+In case of a failure in killing all open processes, we should stop the
+hard reset flow as it might lead to a kernel crash - one thread (killing
+of a process) is updating MMU structures that other thread (hard reset) is
+freeing.
+Stopping a hard reset flow leaves the device as nonoperational and the
+user can then initiate a hard reset via sysfs to reinitialize the device.
 
-Lets fix this problem by getting back the limitation of (uartclk +
-tolerance) / 16 maximum baud supported by the generic 8250 port. Mediatek
-8250 UART ports driver developer shouldn't have touched it in the first
-place  notably seeing he already provided a custom version of set_termios()
-callback in that glue-driver which took into account the extended baud
-rate values and accordingly updated the standard and vendor-specific
-divisor latch registers anyway.
-
-Fixes: 81bb549fdf14 ("serial: 8250_mtk: support big baud rate.")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Long Cheng <long.cheng@mediatek.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Link: https://lore.kernel.org/r/20200506233136.11842-2-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/device.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index f77bf820b7a30..4d83c85a7389b 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2615,6 +2615,8 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 					     struct ktermios *termios,
- 					     struct ktermios *old)
- {
-+	unsigned int tolerance = port->uartclk / 100;
-+
- 	/*
- 	 * Ask the core to calculate the divisor for us.
- 	 * Allow 1% tolerance at the upper limit so uart clks marginally
-@@ -2623,7 +2625,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 	 */
- 	return uart_get_baud_rate(port, termios, old,
- 				  port->uartclk / 16 / UART_DIV_MAX,
--				  port->uartclk);
-+				  (port->uartclk + tolerance) / 16);
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index aef4de36b7aae..6d9c298e02c73 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -718,7 +718,7 @@ disable_device:
+ 	return rc;
  }
  
- void
+-static void device_kill_open_processes(struct hl_device *hdev)
++static int device_kill_open_processes(struct hl_device *hdev)
+ {
+ 	u16 pending_total, pending_cnt;
+ 	struct hl_fpriv	*hpriv;
+@@ -771,9 +771,7 @@ static void device_kill_open_processes(struct hl_device *hdev)
+ 		ssleep(1);
+ 	}
+ 
+-	if (!list_empty(&hdev->fpriv_list))
+-		dev_crit(hdev->dev,
+-			"Going to hard reset with open user contexts\n");
++	return list_empty(&hdev->fpriv_list) ? 0 : -EBUSY;
+ }
+ 
+ static void device_hard_reset_pending(struct work_struct *work)
+@@ -894,7 +892,12 @@ again:
+ 		 * process can't really exit until all its CSs are done, which
+ 		 * is what we do in cs rollback
+ 		 */
+-		device_kill_open_processes(hdev);
++		rc = device_kill_open_processes(hdev);
++		if (rc) {
++			dev_crit(hdev->dev,
++				"Failed to kill all open processes, stopping hard reset\n");
++			goto out_err;
++		}
+ 
+ 		/* Flush the Event queue workers to make sure no other thread is
+ 		 * reading or writing to registers during the reset
+@@ -1375,7 +1378,9 @@ void hl_device_fini(struct hl_device *hdev)
+ 	 * can't really exit until all its CSs are done, which is what we
+ 	 * do in cs rollback
+ 	 */
+-	device_kill_open_processes(hdev);
++	rc = device_kill_open_processes(hdev);
++	if (rc)
++		dev_crit(hdev->dev, "Failed to kill all open processes\n");
+ 
+ 	hl_cb_pool_fini(hdev);
+ 
 -- 
 2.25.1
 
