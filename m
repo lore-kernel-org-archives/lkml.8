@@ -2,115 +2,138 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47389C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85565C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3273120767
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A702070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HFrX1kZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732518AbgFWA50 (ORCPT
+        id S1732532AbgFWA5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:57:26 -0400
-Received: from mga11.intel.com ([192.55.52.93]:30893 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732128AbgFWA5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:57:24 -0400
-IronPort-SDR: nFlfadgr5cqrVqDoqqR/1q/bs0GJoNyxnVD61gFaPcXbrDHOzkDv/TRUl4YN2L8St1EvX6WZwM
- tnVGdFHtCCXA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142185921"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="142185921"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 17:57:24 -0700
-IronPort-SDR: fh/T/rBhYv8jBfWtzVOYXuWy1O+CAFWwv2Z6gTXsvpG4TW5bIEPA8bvatN7NxTH7jN34mBBr5N
- glmwZTFxbFmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="275175309"
-Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
-  by orsmga003.jf.intel.com with ESMTP; 22 Jun 2020 17:57:19 -0700
-Date:   Tue, 23 Jun 2020 03:57:18 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stefan Berger <stefanb@linux.ibm.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-integrity@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v3] acpi: Extend TPM2 ACPI table with missing log fields
-Message-ID: <20200623005718.GE28795@linux.intel.com>
-References: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
- <20200401083729.GD17325@linux.intel.com>
- <CAJZ5v0gQ04h1+zN4wHj1vkwPvqu3RPfsY60VJ+GOtgUrvWuxLQ@mail.gmail.com>
- <20200402192145.GB10314@linux.intel.com>
- <dfd2d622-90cb-9621-7b7d-5282f5ee7359@linux.ibm.com>
- <CAJZ5v0isZCK8o6hopUV3SP25P5+BwZGSSRFtGQrunQ0n45t68g@mail.gmail.com>
+        Mon, 22 Jun 2020 20:57:40 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19117 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732144AbgFWA5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:57:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef153760001>; Mon, 22 Jun 2020 17:57:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 17:57:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 17:57:39 -0700
+Received: from [10.2.59.206] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jun
+ 2020 00:57:31 +0000
+Subject: Re: [RESEND PATCH 3/3] nouveau: make nvkm_vmm_ctor() and
+ nvkm_mmu_ptp_get() static
+To:     Ralph Campbell <rcampbell@nvidia.com>,
+        <nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+References: <20200622233854.10889-1-rcampbell@nvidia.com>
+ <20200622233854.10889-4-rcampbell@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <c4421e68-e585-30b4-a6c3-e78e9e15c27f@nvidia.com>
+Date:   Mon, 22 Jun 2020 17:57:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0isZCK8o6hopUV3SP25P5+BwZGSSRFtGQrunQ0n45t68g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200622233854.10889-4-rcampbell@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592873846; bh=xt/DdoBrc7yZMBZQe7V2Al8LVTlDZOsWZMnDlqU0wok=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=HFrX1kZHglfl1VvYBuoLqx22N0dETh2Vr8k2DJE6gl5LV9ujkobLDnbkPVN6dPZgr
+         BFOxjTfLAPEJZXB5vvaAH7MZMLItWJKYIagC7RXVMlDgABKww7sZt/cpG1Z4tszwC5
+         OasJ6bXWpHeJ84oshxjFQVD56tIJ+YpmI1RCawYuIbi0nnry6CkmkbVVcUQPgnC4hk
+         Yw6MemJ/1EQ6XXuOig0WTHsBUZv1KaKywMaKvNNVctioQbUa04cBP2D7EVLiHbXlJ6
+         YqT88zvzC1rZ+C5LNxlc7QOjzBiAjuGQN+EMw6FmDN7cfE5TjmXOlQrC4FftxUP0GK
+         aLUQHXWsAbmcA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 05:55:19PM +0200, Rafael J. Wysocki wrote:
-> On Fri, Jun 19, 2020 at 5:14 PM Stefan Berger <stefanb@linux.ibm.com> wrote:
-> >
-> > On 4/2/20 3:21 PM, Jarkko Sakkinen wrote:
-> > > On Wed, Apr 01, 2020 at 11:05:36AM +0200, Rafael J. Wysocki wrote:
-> > >> On Wed, Apr 1, 2020 at 10:37 AM Jarkko Sakkinen
-> > >> <jarkko.sakkinen@linux.intel.com> wrote:
-> > >>> On Tue, Mar 31, 2020 at 05:49:49PM -0400, Stefan Berger wrote:
-> > >>>> From: Stefan Berger <stefanb@linux.ibm.com>
-> > >>>>
-> > >>>> Recent extensions of the TPM2 ACPI table added 3 more fields
-> > >>>> including 12 bytes of start method specific parameters and Log Area
-> > >>>> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
-> > >>>> the existing structure with these fields to allow non-UEFI systems
-> > >>>> to access the TPM2's log.
-> > >>>>
-> > >>>> The specification that has the new fields is the following:
-> > >>>>    TCG ACPI Specification
-> > >>>>    Family "1.2" and "2.0"
-> > >>>>    Version 1.2, Revision 8
-> > >>>>
-> > >>>> Adapt all existing table size calculations to use
-> > >>>> offsetof(struct acpi_table_tpm2, start_method_specific)
-> > >>>> [where start_method_specific is a newly added field]
-> > >>>> rather than sizeof(struct acpi_table_tpm2) so that the addition
-> > >>>> of the new fields does not affect current systems that may not
-> > >>>> have them.
-> > >>>>
-> > >>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > >>>> Cc: linux-acpi@vger.kernel.org
-> > >>> I think I'm cool with this but needs an ack from ACPI maintainer.
-> > >>>
-> > >>> Rafael, given that this not an intrusive change in any possible means,
-> > >>> can I pick this patch and put it to my next pull request?
-> > >> Yes, please.
-> > >>
-> > >> Thanks!
-> > > Great, thanks Rafael.
-> > >
-> > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > >
-> > > Do you mind if I add your ack to the commit?
-> >
+On 2020-06-22 16:38, Ralph Campbell wrote:
+> The functions nvkm_vmm_ctor() and nvkm_mmu_ptp_get() are not called outside
+> of the file defining them so make them static.
 > 
-> It looks like I missed the previous message from Jarkko.
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> ---
+>   drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c | 2 +-
+>   drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c  | 2 +-
+>   drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h  | 3 ---
+>   3 files changed, 2 insertions(+), 5 deletions(-)
 > 
-> Yes, please, feel free to add my ACK to the patch, thanks!
+> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c
+> index ee11ccaf0563..de91e9a26172 100644
+> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c
+> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/base.c
+> @@ -61,7 +61,7 @@ nvkm_mmu_ptp_put(struct nvkm_mmu *mmu, bool force, struct nvkm_mmu_pt *pt)
+>   	kfree(pt);
+>   }
+>   
+> -struct nvkm_mmu_pt *
+> +static struct nvkm_mmu_pt *
+>   nvkm_mmu_ptp_get(struct nvkm_mmu *mmu, u32 size, bool zero)
+>   {
+>   	struct nvkm_mmu_pt *pt;
+> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
+> index 199f94e15c5f..67b00dcef4b8 100644
+> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
+> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
+> @@ -1030,7 +1030,7 @@ nvkm_vmm_ctor_managed(struct nvkm_vmm *vmm, u64 addr, u64 size)
+>   	return 0;
+>   }
+>   
+> -int
+> +static int
+>   nvkm_vmm_ctor(const struct nvkm_vmm_func *func, struct nvkm_mmu *mmu,
+>   	      u32 pd_header, bool managed, u64 addr, u64 size,
+>   	      struct lock_class_key *key, const char *name,
+> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
+> index d3f8f916d0db..a2b179568970 100644
+> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
+> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
+> @@ -163,9 +163,6 @@ int nvkm_vmm_new_(const struct nvkm_vmm_func *, struct nvkm_mmu *,
+>   		  u32 pd_header, bool managed, u64 addr, u64 size,
+>   		  struct lock_class_key *, const char *name,
+>   		  struct nvkm_vmm **);
+> -int nvkm_vmm_ctor(const struct nvkm_vmm_func *, struct nvkm_mmu *,
+> -		  u32 pd_header, bool managed, u64 addr, u64 size,
+> -		  struct lock_class_key *, const char *name, struct nvkm_vmm *);
+>   struct nvkm_vma *nvkm_vmm_node_search(struct nvkm_vmm *, u64 addr);
+>   struct nvkm_vma *nvkm_vmm_node_split(struct nvkm_vmm *, struct nvkm_vma *,
+>   				     u64 addr, u64 size);
+> 
 
-OK, this is great, thanks. I'll pick it to my tree then.
+Looks accurate: the order within vmm.c (now that there is no .h
+declaration) is still good, and I found no other uses of either function
+within the linux.git tree, so
 
-/Jarkko
+
+Reviewed-by: John Hubbard <jhubbard@nvidia.com
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
