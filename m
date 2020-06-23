@@ -2,172 +2,148 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A77C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3872073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6CE20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMOEp1t9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Djp5eFF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbgFWQEY (ORCPT
+        id S1732305AbgFWQE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41030 "EHLO
+        Tue, 23 Jun 2020 12:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732224AbgFWQEY (ORCPT
+        with ESMTP id S1728472AbgFWQE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:04:24 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC2AC061573;
-        Tue, 23 Jun 2020 09:04:24 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id e5so17100774ote.11;
-        Tue, 23 Jun 2020 09:04:24 -0700 (PDT)
+        Tue, 23 Jun 2020 12:04:59 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 130C2C061573;
+        Tue, 23 Jun 2020 09:04:59 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id u8so1651847pje.4;
+        Tue, 23 Jun 2020 09:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zaKtthY1nsaDasEOa6ucSdKyxIbtyGjeZUxtrpdMIv4=;
-        b=mMOEp1t9Nb/dq0osQpb8sxQmI9ZdqSvDHMOXatiXLujBaHx92mcFI9IrCFNk4f5qcL
-         xLEZn7m5xgEmb056pZLC6qlL2FItluG1LYc2bGg555/2LvmkJy2cmyz9okqluIJKmbyE
-         pVmDM8aDKDUGMghxrcCtyW/ALFG1q7C8UpA8R0Y96sAlfzPBFEReEwEXipHTEglfAXhk
-         zrFch7dfEO474YRUSrL73MFMDVvWZ0YD0F2VjbEZOywdPuSofBsqVLZxIl0eSoh4bQuB
-         Xhh8CGz4jYi8qLj+fjuA837ZtC5nYMQQ7iwYxUzqKzKR3P8LyFqZMBAN6Dm5cIUXlnvl
-         18Kw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=do86B9M5tGDDUUM7bCWck23OCEcGEf6z7sPQe5ReWXM=;
+        b=Djp5eFF2KkXJL5N4FbrLUF77gAhDcV09R7NzL5ZiUZr7l493GiFUA9Jc9AJumWB0JL
+         ob3ddMttwYvBHNdejMqGHn4zkWNutODfSMB1EYsuy7gK0ctmTFc2MucxUSEHeAx0FXRo
+         Kc1JsWyaBntbk3noEF/ZwfLnuWgOuxuAjUAJ3u2kdl9BDCczgLdYM1cAMaf1mGZVTDJR
+         1AZ/IpnFSy2MIaiM9hm44WqPnMmLUBPcaxrGp/M09wKoBVJ70nzZx3c9GzJPM6aiFMBt
+         2uKdTE+BtxVANIedKeQAVxL8ZgHHg5iw/HM72G98bbBmF0Oas6EoWDZUEfPaByY66sGa
+         waeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=zaKtthY1nsaDasEOa6ucSdKyxIbtyGjeZUxtrpdMIv4=;
-        b=dD2BMvjYLnvdczXVZBB/a854epKdKQKG0mAcd7nOTxWEKePCc7RHtOSIZjB33RbCVZ
-         7wsmg93fhAHtD5pyuW45kr4Zvf4L7LkUFmhWRTfF46gYQRuSFwZMOgcn4LwPn/bY2mYf
-         msuuS5M8cVE1G08bszwSiv/rtIVMY2AdseW4SictHm0Zyx6CjSFiOgVMsws2dcaXLdN5
-         POOlbHsPC2RddziAlUjd4lQWt5xZmWMXDaAMhvH/4gjBZQwr/p8ZXq0vom8JnDG23fPA
-         IZDWIM48LyOWizOCzuW1qn5VAIMQ56PctVvEaitNvV/9Uca3kgXAwqcLDVxIPHScPEnv
-         ln0w==
-X-Gm-Message-State: AOAM5312VdSpkJ1LN8DB7C1XZRy/ZxcWg5QUSnEKiOIDKH6PpZ0y62pG
-        BmTST8FVYoPcftHrlMOQcg==
-X-Google-Smtp-Source: ABdhPJwoC/Juun94t/+Y/w2TtWleh4zh2/D9umvQNUrCyHkT/ekhAUm2lkr7YduTB23ZxHkwuRRLPQ==
-X-Received: by 2002:a9d:754e:: with SMTP id b14mr3506738otl.112.1592928263536;
-        Tue, 23 Jun 2020 09:04:23 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.146.204])
-        by smtp.gmail.com with ESMTPSA id l2sm710153oti.67.2020.06.23.09.04.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 09:04:22 -0700 (PDT)
-Received: from t560.minyard.net (unknown [IPv6:2001:470:b8f6:1b:6d79:306:b4b0:35c1])
-        by serve.minyard.net (Postfix) with ESMTPA id D03C618003A;
-        Tue, 23 Jun 2020 16:04:21 +0000 (UTC)
-From:   minyard@acm.org
-To:     Xin Long <lucien.xin@gmail.com>,
-        Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH] sctp: Don't advertise IPv4 addresses if ipv6only is set on the socket
-Date:   Tue, 23 Jun 2020 11:04:17 -0500
-Message-Id: <20200623160417.12418-1-minyard@acm.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
-References: <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=do86B9M5tGDDUUM7bCWck23OCEcGEf6z7sPQe5ReWXM=;
+        b=SmGsIAvL9puj6f0otNmKbCB5YVO2b0VJBt4BJ+uN0iq1uJOPvvo4hb3cSmlHYv8N/C
+         jwyOdMs7ufcqVId7AimAedh6AZBzoU8gx0EbdQ34r3e/3YfjWRUHpeXpxK1OHO5svlkc
+         a5uM3uxvA+E6ao+6LAzek5Bp+eZb9oBvnx2cUpX63vLPzkrtmzf1x9uX3wxjZLugbyGw
+         gtFGwtDQBbDLJAs147qRsbhP+nVVriTFekC6Qg9Q77+Apd24G9uw0AJW4lMzht9o9JFY
+         cC4syvrG/pCK3CS41Hn20Te5bpHQnNmF9KrJbyM73Xok4KeaeB1duXPU/ImHiOr2PyF4
+         8PLg==
+X-Gm-Message-State: AOAM530byh2ur0PbYXaT5lsoAHcbLApePQTxWQ2SO5nra2o/ygcFQC7/
+        oGvOjYbgLyDokNzgytjZ2ZU=
+X-Google-Smtp-Source: ABdhPJyYsFWWdMFAKz+pYWcsYlvkUt6KuY+lCjjy9egaWFdNP/Yb85qwbsEGoOOjI/3ToguBhuO5zQ==
+X-Received: by 2002:a17:902:326:: with SMTP id 35mr24612675pld.301.1592928297950;
+        Tue, 23 Jun 2020 09:04:57 -0700 (PDT)
+Received: from cnn ([112.133.236.83])
+        by smtp.gmail.com with ESMTPSA id 25sm17287060pfi.7.2020.06.23.09.04.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jun 2020 09:04:54 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 21:34:44 +0530
+From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     miltonm@us.ibm.com, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        saipsdasari@fb.com, patrickw3@fb.com, vijaykhemka@fb.com,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH v6] hwmon:(adm1275) Enable adm1278 ADM1278_TEMP1_EN
+Message-ID: <20200623160444.GA8945@cnn>
+References: <20200622153727.GA9347@cnn>
+ <20200623140711.GA208792@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623140711.GA208792@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+On Tue, Jun 23, 2020 at 07:07:11AM -0700, Guenter Roeck wrote:
+> On Mon, Jun 22, 2020 at 09:07:27PM +0530, Manikandan Elumalai wrote:
+> > The adm1278 temp attribute need it for openbmc platform .
+> > This feature not enabled by default, so PMON_CONFIG needs to enable it.
+> > 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+> 
+> Applied.
 
-If a socket was set ipv6only, it would still send IPv4 addresses in the
-init and init ack packets.  So don't add IPv4 addresses to ipv6only
-sockets.
-
-Based on a patch by Xin Long <lucien.xin@gmail.com>
-
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
----
-I have tested this and it seem to fix the issue.  However, I'm wondering
-if it might be better to fix it where the addresses are put into the
-association as opposed to where they are put into the message.
-
- include/net/sctp/structs.h | 3 ++-
- net/sctp/bind_addr.c       | 7 ++++++-
- net/sctp/sm_make_chunk.c   | 5 +++--
- 3 files changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/include/net/sctp/structs.h b/include/net/sctp/structs.h
-index fb42c90348d3..1e839bf4eaa7 100644
---- a/include/net/sctp/structs.h
-+++ b/include/net/sctp/structs.h
-@@ -1190,7 +1190,8 @@ union sctp_addr *sctp_find_unmatch_addr(struct sctp_bind_addr	*bp,
- 					const union sctp_addr	*addrs,
- 					int			addrcnt,
- 					struct sctp_sock	*opt);
--union sctp_params sctp_bind_addrs_to_raw(const struct sctp_bind_addr *bp,
-+union sctp_params sctp_bind_addrs_to_raw(const struct sctp_association *asoc,
-+					 const struct sctp_bind_addr *bp,
- 					 int *addrs_len,
- 					 gfp_t gfp);
- int sctp_raw_to_bind_addrs(struct sctp_bind_addr *bp, __u8 *raw, int len,
-diff --git a/net/sctp/bind_addr.c b/net/sctp/bind_addr.c
-index 53bc61537f44..3f5b448f2127 100644
---- a/net/sctp/bind_addr.c
-+++ b/net/sctp/bind_addr.c
-@@ -202,7 +202,8 @@ int sctp_del_bind_addr(struct sctp_bind_addr *bp, union sctp_addr *del_addr)
-  *
-  * The second argument is the return value for the length.
-  */
--union sctp_params sctp_bind_addrs_to_raw(const struct sctp_bind_addr *bp,
-+union sctp_params sctp_bind_addrs_to_raw(const struct sctp_association *asoc,
-+					 const struct sctp_bind_addr *bp,
- 					 int *addrs_len,
- 					 gfp_t gfp)
- {
-@@ -214,6 +215,7 @@ union sctp_params sctp_bind_addrs_to_raw(const struct sctp_bind_addr *bp,
- 	struct sctp_sockaddr_entry *addr;
- 	struct list_head *pos;
- 	struct sctp_af *af;
-+	struct sock *sk = asoc->base.sk;
- 
- 	addrparms_len = 0;
- 	len = 0;
-@@ -238,6 +240,9 @@ union sctp_params sctp_bind_addrs_to_raw(const struct sctp_bind_addr *bp,
- 	addrparms = retval;
- 
- 	list_for_each_entry(addr, &bp->address_list, list) {
-+		if ((PF_INET6 == sk->sk_family) && inet_v6_ipv6only(sk) &&
-+		    (AF_INET == addr->a.sa.sa_family))
-+			continue;
- 		af = sctp_get_af_specific(addr->a.v4.sin_family);
- 		len = af->to_addr_param(&addr->a, &rawaddr);
- 		memcpy(addrparms.v, &rawaddr, len);
-diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-index 47910470e532..6e1a6af40779 100644
---- a/net/sctp/sm_make_chunk.c
-+++ b/net/sctp/sm_make_chunk.c
-@@ -230,7 +230,7 @@ struct sctp_chunk *sctp_make_init(const struct sctp_association *asoc,
- 	 */
- 
- 	/* Convert the provided bind address list to raw format. */
--	addrs = sctp_bind_addrs_to_raw(bp, &addrs_len, gfp);
-+	addrs = sctp_bind_addrs_to_raw(asoc, bp, &addrs_len, gfp);
- 
- 	init.init_tag		   = htonl(asoc->c.my_vtag);
- 	init.a_rwnd		   = htonl(asoc->rwnd);
-@@ -397,7 +397,8 @@ struct sctp_chunk *sctp_make_init_ack(const struct sctp_association *asoc,
- 	int addrs_len;
- 
- 	/* Note: there may be no addresses to embed. */
--	addrs = sctp_bind_addrs_to_raw(&asoc->base.bind_addr, &addrs_len, gfp);
-+	addrs = sctp_bind_addrs_to_raw(asoc, &asoc->base.bind_addr,
-+				       &addrs_len, gfp);
- 
- 	initack.init_tag	        = htonl(asoc->c.my_vtag);
- 	initack.a_rwnd			= htonl(asoc->rwnd);
--- 
-2.17.1
-
+    Thanks Guenter.
+> 
+> Thanks,
+> Guenter
+> 
+> > ---
+> > v5 -> v6: 
+> > add Reported-by in commit log
+> > align commit and change log as per guidelines.
+> > v4 -> v5: 
+> > align commit and change log. 
+> > v3 -> v4: 
+> > kernel test robot CI warning
+> > v2 -> v3: 
+> > fix invalid signed-off.
+> > removed checkpath warnings.
+> > write ADM1278_TEMP1_EN and ADM1278_VOUT_EN conf in single line operation.
+> > v1 -> v2: 
+> > add Signed-off-by.
+> > removed ADM1278_TEMP1_EN check.
+> > 
+> >  drivers/hwmon/pmbus/adm1275.c | 12 +++++-------
+> >  1 file changed, 5 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+> > index 5caa37fb..d4e1925 100644
+> > --- a/drivers/hwmon/pmbus/adm1275.c
+> > +++ b/drivers/hwmon/pmbus/adm1275.c
+> > @@ -666,11 +666,12 @@ static int adm1275_probe(struct i2c_client *client,
+> >  		tindex = 3;
+> >  
+> >  		info->func[0] |= PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT |
+> > -			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
+> > +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+> > +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+> >  
+> > -		/* Enable VOUT if not enabled (it is disabled by default) */
+> > -		if (!(config & ADM1278_VOUT_EN)) {
+> > -			config |= ADM1278_VOUT_EN;
+> > +		/* Enable VOUT & TEMP1 if not enabled (disabled by default) */
+> > +		if ((config & (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) != (ADM1278_VOUT_EN | ADM1278_TEMP1_EN)) {
+> > +			config |= ADM1278_VOUT_EN | ADM1278_TEMP1_EN;
+> >  			ret = i2c_smbus_write_byte_data(client,
+> >  							ADM1275_PMON_CONFIG,
+> >  							config);
+> > @@ -681,9 +682,6 @@ static int adm1275_probe(struct i2c_client *client,
+> >  			}
+> >  		}
+> >  
+> > -		if (config & ADM1278_TEMP1_EN)
+> > -			info->func[0] |=
+> > -				PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP;
+> >  		if (config & ADM1278_VIN_EN)
+> >  			info->func[0] |= PMBUS_HAVE_VIN;
+> >  		break;
