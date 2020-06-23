@@ -2,107 +2,128 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE78C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB6C220738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8ECC2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732539AbgFWMQl (ORCPT
+        id S1732556AbgFWMRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:16:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49116 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732458AbgFWMQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:16:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9D3BCAD5D;
-        Tue, 23 Jun 2020 12:16:38 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 14:16:38 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: linux-next: build failure after merge of the printk tree
-Message-ID: <20200623121637.GA8444@alley>
-References: <20200621131554.5a662afe@canb.auug.org.au>
- <20200623102655.6d16e610@canb.auug.org.au>
+        Tue, 23 Jun 2020 08:17:18 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:38865 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732421AbgFWMRR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:17:17 -0400
+Received: by mail-il1-f197.google.com with SMTP id c8so14363893ilm.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 05:17:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wlhuLVD4u+XXQ7HeSYAD3cLeISlYbuyy5YsqjwGO8Ac=;
+        b=niS8U/jLHjNirXf1K+0gFbNgaCtOg4VFFTl9W4Ruf5+FJJL3EEpBAU1AcZQiKnRmWT
+         ALU8MQa6BnA57TN1Wztl3N4opnwLRxlB3kidzBENSkJd5fsH9RgI+JsBtqoHs1O5+5hj
+         knBuFhhRDu3GijFSfYrSXrrL8iTbyg1s1S5oJ0mE976S9WT68QWt93whL3eoqG4JpY4a
+         jZ8s6LMAKsFIt/Kals7aUalnQulbP6P98xaNYSUQrYuWoSEopSPm8c8bsI3HOatLOgQD
+         vqw6AjqJZWBfq9pFJkx0Ef3m7EFXJSmPHU8KM+0gxPr9iDrCHvrADKmXRqdynlegGDJW
+         V/kw==
+X-Gm-Message-State: AOAM531erzbXsNIb2LJZlj8G7chZJ+tTKAttrQwy4xfTRC9njBgCXZFr
+        6OWOZ8a+UJD04KcKtuMjgbzzERzmF8SbTGhM0/63MPdLO1Td
+X-Google-Smtp-Source: ABdhPJyU4beGPn+n5GTW5K+FfN41A3Vtb/0AYshbsOeC1yWAFc6mdL777MAvP/4VCkWzyTUfevSP1uF075zX0wT6JKuF/ak8WPuo
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623102655.6d16e610@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:b984:: with SMTP id j126mr24459783iof.114.1592914635879;
+ Tue, 23 Jun 2020 05:17:15 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 05:17:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000077a6505a8bf57b2@google.com>
+Subject: KASAN: null-ptr-deref Read in kvm_arch_check_processor_compat
+From:   syzbot <syzbot+a99874f5323ce6088e53@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
+        x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-06-23 10:26:55, Stephen Rothwell wrote:
-> Hi Stephen,
-> 
-> On Sun, 21 Jun 2020 13:15:54 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi all,
-> > 
-> > After merging the printk tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > In file included from include/linux/printk.h:10,
-> >                  from include/linux/kernel.h:15,
-> >                  from include/linux/list.h:9,
-> >                  from include/linux/lockdep.h:43,
-> >                  from include/linux/spinlock_types.h:18,
-> >                  from include/linux/genalloc.h:32,
-> >                  from drivers/soc/fsl/qe/qe_common.c:16:
-> > include/linux/ratelimit_types.h:16:2: error: unknown type name 'raw_spinlock_t'
-> >    16 |  raw_spinlock_t lock;  /* protect the state */
-> >       |  ^~~~~~~~~~~~~~
-> > In file included from include/linux/wait.h:9,
-> >                  from include/linux/pid.h:6,
-> >                  from include/linux/sched.h:14,
-> >                  from include/linux/ratelimit.h:6,
-> >                  from include/linux/dev_printk.h:16,
-> >                  from include/linux/device.h:15,
-> >                  from include/linux/node.h:18,
-> >                  from include/linux/cpu.h:17,
-> >                  from include/linux/of_device.h:5,
-> >                  from drivers/soc/fsl/qe/qe_common.c:19:
-> > include/linux/ratelimit.h: In function 'ratelimit_state_init':
-> > include/linux/ratelimit.h:14:21: error: passing argument 1 of '__raw_spin_lock_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
-> >    14 |  raw_spin_lock_init(&rs->lock);
-> > include/linux/spinlock.h:102:24: note: in definition of macro 'raw_spin_lock_init'
-> >   102 |  __raw_spin_lock_init((lock), #lock, &__key, LD_WAIT_SPIN); \
-> >       |                        ^~~~
-> > include/linux/spinlock.h:95:52: note: expected 'raw_spinlock_t *' {aka 'struct raw_spinlock *'} but argument is of type 'int *'
-> >    95 |   extern void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
-> >       |                                    ~~~~~~~~~~~~~~~~^~~~
-> > 
-> > Caused by commit
-> > 
-> >   494c8512c90e ("printk: Make linux/printk.h self-contained")
-> > 
-> > changing include files is hadrer than it loooks :-(
-> > 
-> > I have used the printk tree from next-20200618 for today.
-> 
-> I am still getting this failure.
+Hello,
 
-I have removed the problematic commit for now. It tried to remove
-some cyclic dependencies from heavily used include files. It clearly
-needs more love.
+syzbot found the following crash on:
 
-I am sorry for the late reaction. I have semi-lost mails from last 4 days.
-I am still trying to recover them.
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=135e7235100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=a99874f5323ce6088e53
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14d001be100000
 
-Best Regards,
-Petr
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13a8e549100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1068e549100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a8e549100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a99874f5323ce6088e53@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: null-ptr-deref in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+BUG: KASAN: null-ptr-deref in kvm_arch_check_processor_compat+0x1f8/0x750 arch/x86/kvm/x86.c:9818
+Read of size 8 at addr 0000000000000060 by task syz-executor.2/8085
+
+CPU: 1 PID: 8085 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __kasan_report mm/kasan/report.c:517 [inline]
+ kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:192
+ test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+ kvm_arch_check_processor_compat+0x1f8/0x750 arch/x86/kvm/x86.c:9818
+ </IRQ>
+==================================================================
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 8085 Comm: syz-executor.2 Tainted: G    B             5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ end_report+0x4d/0x53 mm/kasan/report.c:104
+ __kasan_report mm/kasan/report.c:520 [inline]
+ kasan_report.cold+0xd/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:192
+ test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+ kvm_arch_check_processor_compat+0x1f8/0x750 arch/x86/kvm/x86.c:9818
+ </IRQ>
+Shutting down cpus with NMI
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
