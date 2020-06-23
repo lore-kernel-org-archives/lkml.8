@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF50C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E75EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE2D120720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F073420738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592873611;
-	bh=Nqe+8DuiAVCJwQv1C6+ZvslYr0CngL1ChkSEsGGUu6s=;
+	s=default; t=1592873615;
+	bh=uFSH6faDpro6amVZ/grq31h62yEoVX3R327HstULEew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HduVD+lBR9Lmz3kvObfV3MamP1ItMZ761lt3+FNqvsPqPZiVcKysoBjMNIaKdGmpv
-	 dfB+53qwM7bIcdqTVcOpHKRezZnh/5UYkCI9CBlc1sYQVLMJ0/6LOm/54UKKSS6uGM
-	 r5iIl5+X/fHd93qPVaJVl6d1ie4JSc3j1otZDogY=
+	b=Q4XpU2oCDTfS08ieLLtZBNbWTXk2wam++QYDnkCGpGgF4B4y7A1oKJeVh5LxsR4vW
+	 CZA9Q8KLHGhy0QFArlqKvZQANKUMcO88W2Vt70+sDFnsRGA3uX7ocybX5WMAPPTVBV
+	 mscVh/URVtlgRIJlCN++bNvJyT3qaDkeaV2bLl3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732508AbgFWAxa (ORCPT
+        id S1732513AbgFWAxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:53:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46528 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:53:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732378AbgFWAwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732383AbgFWAwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:52:34 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE44F2083B;
-        Tue, 23 Jun 2020 00:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783E820781;
+        Tue, 23 Jun 2020 00:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592873554;
-        bh=Nqe+8DuiAVCJwQv1C6+ZvslYr0CngL1ChkSEsGGUu6s=;
+        bh=uFSH6faDpro6amVZ/grq31h62yEoVX3R327HstULEew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dg+CC5E+nNHbtF4eTKHmNvixKZ3PFjqjn3spaZ607EkzYzvaen85/T8OyMAmK6Bu8
-         qnhWo/LkERQx0A7o3LDBKxxnfogWTNevIO9GpgR9Etr2jz6mO8NDhtgf3Lt5eaZW+v
-         740NQR/ar9C9z5au3y/6HNHcxW2DFUA0DAWNBUlY=
+        b=t2ueuzvFIHbbPNdJMg/HzMnzsrINpSMVD8zRn5c87DWx3br5tmRqT1fiF+s1R6hBD
+         s7z8p1MgQJgmus4WZmZUAS5t01kLro3eL9is4LnzAWEcqCOw2w4/mWewnXxEAjjfzj
+         WPMdaF+FpCj7WeNzhYcr3r1Ps8pkZlvSivxVutPU=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 05/14] MAINTAINERS: Update maintainers for new Documentation/litmus-tests
-Date:   Mon, 22 Jun 2020 17:52:22 -0700
-Message-Id: <20200623005231.27712-5-paulmck@kernel.org>
+        akiyks@gmail.com, "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 08/14] Documentation/litmus-tests/atomic: Add a test for atomic_set()
+Date:   Mon, 22 Jun 2020 17:52:25 -0700
+Message-Id: <20200623005231.27712-8-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623005152.GA27459@paulmck-ThinkPad-P72>
 References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
@@ -59,39 +57,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-This commit adds Joel Fernandes as official LKMM reviewer.
+We already use a litmus test in atomic_t.txt to describe the behavior of
+an atomic_set() with the an atomic RMW, so add it into atomic-tests
+directory to make it easily accessible for anyone who cares about the
+semantics of our atomic APIs.
 
-Acked-by: Boqun Feng <boqun.feng@gmail.com>
+Besides currently the litmus test "atomic-set" in atomic_t.txt has a few
+things to be improved:
+
+1)	The CPU/Processor numbers "P1,P2" are not only inconsistent with
+	the rest of the document, which uses "CPU0" and "CPU1", but also
+	unacceptable by the herd tool, which requires processors start
+	at "P0".
+
+2)	The initialization block uses a "atomic_set()", which is OK, but
+	it's better to use ATOMIC_INIT() to make clear this is an
+	initialization.
+
+3)	The return value of atomic_add_unless() is discarded
+	inexplicitly, which is OK for C language, but it will be helpful
+	to the herd tool if we use a void cast to make the discard
+	explicit.
+
+4)	The name and the paragraph describing the test need to be more
+	accurate and aligned with our wording in LKMM.
+
+Therefore fix these in both atomic_t.txt and the new added litmus test.
+
 Acked-by: Andrea Parri <parri.andrea@gmail.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-[ paulmck: Apply Joe Perches alphabetization feedback. ]
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/atomic_t.txt                         | 14 ++++++-------
+ ...Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++++++++++
+ Documentation/litmus-tests/atomic/README           |  7 +++++++
+ 3 files changed, 38 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 68f21d4..696a02f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9960,6 +9960,7 @@ M:	Luc Maranget <luc.maranget@inria.fr>
- M:	"Paul E. McKenney" <paulmck@kernel.org>
- R:	Akira Yokosawa <akiyks@gmail.com>
- R:	Daniel Lustig <dlustig@nvidia.com>
-+R:	Joel Fernandes <joel@joelfernandes.org>
- L:	linux-kernel@vger.kernel.org
- L:	linux-arch@vger.kernel.org
- S:	Supported
-@@ -9968,6 +9969,7 @@ F:	Documentation/atomic_bitops.txt
- F:	Documentation/atomic_t.txt
- F:	Documentation/core-api/atomic_ops.rst
- F:	Documentation/core-api/refcount-vs-atomic.rst
-+F:	Documentation/litmus-tests/
- F:	Documentation/memory-barriers.txt
- F:	tools/memory-model/
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index 0ab747e..67d1d99f 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -85,21 +85,21 @@ smp_store_release() respectively. Therefore, if you find yourself only using
+ the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+ and are doing it wrong.
  
+-A subtle detail of atomic_set{}() is that it should be observable to the RMW
+-ops. That is:
++A note for the implementation of atomic_set{}() is that it must not break the
++atomicity of the RMW ops. That is:
+ 
+-  C atomic-set
++  C Atomic-RMW-ops-are-atomic-WRT-atomic_set
+ 
+   {
+-    atomic_set(v, 1);
++    atomic_t v = ATOMIC_INIT(1);
+   }
+ 
+-  P1(atomic_t *v)
++  P0(atomic_t *v)
+   {
+-    atomic_add_unless(v, 1, 0);
++    (void)atomic_add_unless(v, 1, 0);
+   }
+ 
+-  P2(atomic_t *v)
++  P1(atomic_t *v)
+   {
+     atomic_set(v, 0);
+   }
+diff --git a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+new file mode 100644
+index 0000000..4938531
+--- /dev/null
++++ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+@@ -0,0 +1,24 @@
++C Atomic-RMW-ops-are-atomic-WRT-atomic_set
++
++(*
++ * Result: Never
++ *
++ * Test that atomic_set() cannot break the atomicity of atomic RMWs.
++ *)
++
++{
++	atomic_t v = ATOMIC_INIT(1);
++}
++
++P0(atomic_t *v)
++{
++	(void)atomic_add_unless(v, 1, 0);
++}
++
++P1(atomic_t *v)
++{
++	atomic_set(v, 0);
++}
++
++exists
++(v=2)
+diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
+index ae61201..a1b7241 100644
+--- a/Documentation/litmus-tests/atomic/README
++++ b/Documentation/litmus-tests/atomic/README
+@@ -2,3 +2,10 @@ This directory contains litmus tests that are typical to describe the semantics
+ of our atomic APIs. For more information about how to "run" a litmus test or
+ how to generate a kernel test module based on a litmus test, please see
+ tools/memory-model/README.
++
++============
++LITMUS TESTS
++============
++
++Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
++	Test that atomic_set() cannot break the atomicity of atomic RMWs.
 -- 
 2.9.5
 
