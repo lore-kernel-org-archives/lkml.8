@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA55C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E492078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896B12078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEJ8wcKT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW+HfY5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389250AbgFWWtY (ORCPT
+        id S2389314AbgFWWtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46982 "EHLO
+        Tue, 23 Jun 2020 18:49:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388728AbgFWWsh (ORCPT
+        with ESMTP id S2388769AbgFWWs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:48:37 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D04FC061795;
-        Tue, 23 Jun 2020 15:48:37 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id a6so3193574wmm.0;
-        Tue, 23 Jun 2020 15:48:37 -0700 (PDT)
+        Tue, 23 Jun 2020 18:48:29 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA09FC061795;
+        Tue, 23 Jun 2020 15:48:28 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id g18so273349wrm.2;
+        Tue, 23 Jun 2020 15:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lKyd8F2W1xHCpDv119KWmbZLzq20FtmSKAwayKh93KY=;
-        b=dEJ8wcKTV7PR2hoKmCsjF3tiiWrxgfN/Hw6k65qYJhN94eqwF6RBCaLwCi93ya5E18
-         h9OrHv7Rw0CwUKVMtH/wGJZlhPftuJ36zbmLrIx/4bvJqAhMQsrWGPlKZm4/u/XtDbSK
-         4mI92CMoygq7fbv3xvohHoI8kpG+TQG7q/0dRP+BuyoYPSiXRIShEIgM63r0lN+T9/ms
-         YUJxsjUKPC/weQ/JIkeB0/hy2Y8Nr9tx0utDjSc7zwv+Vt73GbY/HT7n/Y65OlAKlGSc
-         rdjrz/qxZ496oOuk7KwPvccs4KleNTXceADDsOxa62QkE9yK619h6tGc0w76KNbn+65Y
-         UjJg==
+        bh=Bw0AmxFMN1A8XctnpocFH+OiGgPLlOSm0R6C/XSlsWg=;
+        b=GW+HfY5TWijGo3e/Z4qrZWOZErt2nwimUGLz6YNCp3BPOqyUIwdwwOWlc9s159Obkt
+         tPhg4bfgjVcKXoH6A2dYJanrCh3XdN4xZun52Ltn5SagKBDYD4Ml89uQyfassY+vO0iH
+         QGezN6vNjSg3/KcahxwOL1W5JX9MD+qlVkb6qtqeCc5GXWaRRiZlvfh5rCWG4LS0iHPt
+         GWRBj8gVYuBf0bP5J5mOHWXgCJFBowOIaWM0N4kGloAA9zuo/YsG2y1O4q9GElr+WN29
+         /XL3/0EJCpKmbgL7w52fBg7myokCCYx/TWZSh6feF/Oiaq/YTThzmCqXRklZo/YFeRwL
+         RMQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lKyd8F2W1xHCpDv119KWmbZLzq20FtmSKAwayKh93KY=;
-        b=aRYcpwW1MGTJooYhmat0RKMuntD4Ao6Qehw3h680Ag/+Fn5TZ0S9tZ3dsqxgUITwOO
-         9JXiKZLELmi5cTaxYnT5/bg0JqJacS9wtr3WblP/j9SLv79of4XFYDbhAjL6LwZCvZPT
-         Nk8j4cXpoXNkJLce6YUo/kJkm/UMaCk+/NJ7KBjnTESQyMh5WPx9iak5/RDmttsNiB0w
-         B9XdNUzRACDNpANv2MVTosZc5QDGg7M7+VktZSbU+Uenzj1T6SBJ5IiFD4ydmqTXrUmo
-         NhyC1tMcpBQXoFU30LbHThHSRcJS4/YpxX82AAH+5g85Z4A1JrX/ZholvRSH1aMVHC1j
-         s2Nw==
-X-Gm-Message-State: AOAM530sA1prDlpvXMfz1/0fmT2sjS1j3yZEEwcCvjzzcclHg97rp5Pp
-        zV4E3Iq4KdxyghHwH8hc8O4=
-X-Google-Smtp-Source: ABdhPJylQIjj0BFQpfiwlHFSt1/GP4WYZz2ybVppg6vBUxqE/Cma0TnsGDEm3czbUogs+e9s0qxBNg==
-X-Received: by 2002:a05:600c:2152:: with SMTP id v18mr4851121wml.5.1592952516220;
-        Tue, 23 Jun 2020 15:48:36 -0700 (PDT)
+        bh=Bw0AmxFMN1A8XctnpocFH+OiGgPLlOSm0R6C/XSlsWg=;
+        b=fFMu0ddQRX9MXGk21RnIwR5nv/YHphsiL+Ua2gzn4C1EK4vcrTRNilZrUNzLBe23Mh
+         xkUlf27YCPK/Bjotn4/b2eNgs4R3DVQPuQJ7DgMQ3E9xiBcg6bX1c5/ACVPrgbWTM6p+
+         6G4cGViX3c1tn8q2AMi5QrWUcfMoRiFaW0W/h8h9fO4xlWx4PZIck0sfqSsk+JeqZxAZ
+         kL2ya999UWkCcWi77qgPr6i4hL+Csmm/LeAVSUCwMzf20TFRqg56Y6/Ga9xY6ewgmgRR
+         d+NUqrN/Bx8mibhQoK2CHET7ymgmcV4wwuYQdRW2BxCNQWfMZmRiZeVRDX17GtvR8H71
+         AVFA==
+X-Gm-Message-State: AOAM530XYIXbaCrrtenWbj2ygGRvIxNeEFCO/ekbkJXbi/8zZrcEPOCr
+        nHOKGHoQ6DiTWEGFWhpvd2s=
+X-Google-Smtp-Source: ABdhPJy9EB/bawh9AAQIIrmMTRJdAvSswAogr3LGk49QZBA9/0tS3riMNaI9xP1+c+CEhDgF9SExRw==
+X-Received: by 2002:adf:f745:: with SMTP id z5mr28893913wrp.128.1592952507700;
+        Tue, 23 Jun 2020 15:48:27 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.34
+        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 15:48:35 -0700 (PDT)
+        Tue, 23 Jun 2020 15:48:27 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 07/12] arm64: dts: qcom: msm8994: Add I2C, SPI and BLSP DMA nodes
-Date:   Wed, 24 Jun 2020 00:48:06 +0200
-Message-Id: <20200623224813.297077-8-konradybcio@gmail.com>
+Subject: [PATCH v2 04/12] arm64: dts: qcom: msm8994: Add support for SMD RPM
+Date:   Wed, 24 Jun 2020 00:48:03 +0200
+Message-Id: <20200623224813.297077-5-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623224813.297077-1-konradybcio@gmail.com>
 References: <20200623224813.297077-1-konradybcio@gmail.com>
@@ -84,189 +84,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for I2C and SPI buses to enable peripherals
-such as touchscreens or sensors. Also add DMA nodes,
-configuration and BLSP2 UART2 interface.
+Add support for SMD RPM, including pm8994 and pmi8994
+regulators.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8994.dtsi | 156 +++++++++++++++++++++++++-
- 1 file changed, 155 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 111 ++++++++++++++++++++++++++
+ 1 file changed, 111 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-index 838ffc0d9c16..8af01ebe73f7 100644
+index e7f4b06eb12c..a4edc3be7024 100644
 --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-@@ -365,14 +365,168 @@ sdhc1: sdhci@f9824900 {
- 			status = "disabled";
+@@ -159,9 +159,100 @@ smem_mem: smem_region@6a00000 {
+ 		};
+ 	};
+ 
++	smd {
++		compatible = "qcom,smd";
++		rpm {
++			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++			qcom,ipc = <&apcs 8 0>;
++			qcom,smd-edge = <15>;
++			qcom,local-pid = <0>;
++			qcom,remote-pid = <6>;
++
++			rpm-requests {
++				compatible = "qcom,rpm-msm8994";
++				qcom,smd-channels = "rpm_requests";
++
++				rpmcc: rpmcc {
++					compatible = "qcom,rpmcc-msm8994";
++					#clock-cells = <1>;
++				};
++
++				pm8994_regulators: pm8994-regulators {
++					compatible = "qcom,rpm-pm8994-regulators";
++					vdd_l1-supply = <&pm8994_s1>;
++					vdd_l2_26_28-supply = <&pm8994_s3>;
++					vdd_l3_11-supply = <&pm8994_s3>;
++					vdd_l4_27_31-supply = <&pm8994_s3>;
++					vdd_l5_7-supply = <&pm8994_s3>;
++					vdd_l6_12_32-supply = <&pm8994_s5>;
++					vdd_l8_16_30-supply = <&vreg_vph_pwr>;
++					vdd_l9_10_18_22-supply = <&vreg_vph_pwr>;
++					vdd_l13_19_23_24-supply = <&vreg_vph_pwr>;
++					vdd_l14_15-supply = <&pm8994_s5>;
++					vdd_l17_29-supply = <&vreg_vph_pwr>;
++					vdd_l20_21-supply = <&vreg_vph_pwr>;
++					vdd_l25-supply = <&pm8994_s5>;
++					vdd_lvs1_2 = <&pm8994_s4>;
++
++					pm8994_s1: s1 {};
++					pm8994_s2: s2 {};
++					pm8994_s3: s3 {};
++					pm8994_s4: s4 {};
++					pm8994_s5: s5 {};
++					pm8994_s6: s6 {};
++					pm8994_s7: s7 {};
++
++					pm8994_l1: l1 {};
++					pm8994_l2: l2 {};
++					pm8994_l3: l3 {};
++					pm8994_l4: l4 {};
++					pm8994_l6: l6 {};
++					pm8994_l8: l8 {};
++					pm8994_l9: l9 {};
++					pm8994_l10: l10 {};
++					pm8994_l11: l11 {};
++					pm8994_l12: l12 {};
++					pm8994_l13: l13 {};
++					pm8994_l14: l14 {};
++					pm8994_l15: l15 {};
++					pm8994_l16: l16 {};
++					pm8994_l17: l17 {};
++					pm8994_l18: l18 {};
++					pm8994_l19: l19 {};
++					pm8994_l20: l20 {};
++					pm8994_l21: l21 {};
++					pm8994_l22: l22 {};
++					pm8994_l23: l23 {};
++					pm8994_l24: l24 {};
++					pm8994_l25: l25 {};
++					pm8994_l26: l26 {};
++					pm8994_l27: l27 {};
++					pm8994_l28: l28 {};
++					pm8994_l29: l29 {};
++					pm8994_l30: l30 {};
++					pm8994_l31: l31 {};
++					pm8994_l32: l32 {};
++
++					pm8994_lvs1: lvs1 {};
++					pm8994_lvs2: lvs2 {};
++				};
++
++				pmi8994_regulators: pmi8994-regulators {
++					compatible = "qcom,rpm-pmi8994-regulators";
++
++					pmi8994_s1: s1 {};
++					pmi8994_s2: s2 {};
++					pmi8994_s3: s3 {};
++					pmi8994_bby: boost-bypass {};
++				};
++			};
++		};
++	};
++
+ 	smem {
+ 		compatible = "qcom,smem";
+ 		memory-region = <&smem_mem>;
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+ 		hwlocks = <&tcsr_mutex 3>;
+ 	};
+ 
+@@ -180,6 +271,11 @@ intc: interrupt-controller@f9000000 {
+ 				  <0xf9002000 0x1000>;
  		};
  
-+		blsp1_dma: dma@f9904000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0xf9904000 0x19000>;
-+			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
-+			qcom,controlled-remotely;
-+			num-channels = <18>;
-+			qcom,num-ees = <4>;
++		apcs: syscon@f900d000 {
++			compatible = "syscon";
++			reg = <0xf900d000 0x2000>;
 +		};
 +
- 		blsp1_uart2: serial@f991e000 {
- 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
- 			reg = <0xf991e000 0x1000>;
- 			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
--			status = "disabled";
- 			clock-names = "core", "iface";
- 			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
- 				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&blsp1_uart2_default>;
-+			pinctrl-1 = <&blsp1_uart2_sleep>;
-+			status = "disabled";
-+		};
-+
-+		blsp_i2c1: i2c@f9923000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9923000 0x500>;
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+						<&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <400000>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c1_default>;
-+			pinctrl-1 = <&i2c1_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_spi0: spi@f9923000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			reg = <0xf9923000 0x500>;
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
-+				 <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			spi-max-frequency = <19200000>;
-+			dmas = <&blsp1_dma 12>, <&blsp1_dma 13>;
-+			dma-names = "tx", "rx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&blsp1_spi0_default>;
-+			pinctrl-1 = <&blsp1_spi0_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp_i2c2: i2c@f9924000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9924000 0x500>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+						<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <355000>;
-+			dmas = <&blsp1_dma 14>, <&blsp1_dma 15>;
-+			dma-names = "tx", "rx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c2_default>;
-+			pinctrl-1 = <&i2c2_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		/* I2C3 doesn't exist */
-+
-+		blsp_i2c4: i2c@f9926000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9926000 0x500>;
-+			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+						<&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <355000>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c4_default>;
-+			pinctrl-1 = <&i2c4_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp2_dma: dma@f9944000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0xf9944000 0x19000>;
-+			interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP2_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
-+			qcom,controlled-remotely;
-+			num-channels = <18>;
-+			qcom,num-ees = <4>;
-+		};
-+
-+		/* According to downstream kernels, i2c6
-+		 * comes before i2c5 address-wise...
-+		 */
-+
-+		blsp_i2c6: i2c@f9928000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9928000 0x500>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+						<&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <355000>;
-+			dmas = <&blsp1_dma 22>, <&blsp1_dma 23>;
-+			dma-names = "tx", "rx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c6_default>;
-+			pinctrl-1 = <&i2c6_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		blsp2_uart2: serial@f995e000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0xf995e000 0x1000>;
-+			interrupts = <GIC_SPI 146 IRQ_TYPE_EDGE_FALLING>;
-+			clock-names = "core", "iface";
-+			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
-+					<&gcc GCC_BLSP2_AHB_CLK>;
-+			dmas = <&blsp2_dma 2>, <&blsp2_dma 3>;
-+			dma-names = "tx", "rx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&blsp2_uart2_default>;
-+			pinctrl-1 = <&blsp2_uart2_sleep>;
-+			status = "disabled";
-+		};
-+
-+		blsp_i2c5: i2c@f9967000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9967000 0x500>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP2_AHB_CLK>,
-+						<&gcc GCC_BLSP2_QUP5_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <355000>;
-+			dmas = <&blsp2_dma 20>, <&blsp2_dma 21>;
-+			dma-names = "tx", "rx";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c5_default>;
-+			pinctrl-1 = <&i2c5_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
+ 		timer@f9020000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -256,6 +352,11 @@ gcc: clock-controller@fc400000 {
+ 			reg = <0xfc400000 0x2000>;
  		};
  
- 		gcc: clock-controller@fc400000 {
++		rpm_msg_ram: memory@fc428000 {
++			compatible = "qcom,rpm-msg-ram";
++			reg = <0xfc428000 0x4000>;
++		};
++
+ 		restart@fc4ab000 {
+ 			compatible = "qcom,pshold";
+ 			reg = <0xfc4ab000 0x4>;
+@@ -473,5 +574,15 @@ timer {
+ 					<1 4 0xff08>,
+ 					<1 1 0xff08>;
+ 	};
++
++	vreg_vph_pwr: vreg-vph-pwr {
++		compatible = "regulator-fixed";
++		regulator-name = "vph-pwr";
++
++		regulator-min-microvolt = <3600000>;
++		regulator-max-microvolt = <3600000>;
++
++		regulator-always-on;
++	};
+ };
+ 
 -- 
 2.27.0
 
