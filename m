@@ -2,53 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE3BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6096CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21FEB20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3742520656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945902;
-	bh=Qvgl9A1UmkXe8yP07mEhSW1mjubiKOSHZWzEfNuVqEE=;
+	s=default; t=1592945906;
+	bh=mN4gSfA1BZ9tDTLJPfcnd7yd2OXQBhvuB2726QAx6WQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pisxpU7LutcXywNpQGHmCtwqi+obyxmCZuC/9UywYieshq7rXZG3r28y8xPY4B/6z
-	 jhIn/Hk1QpDOR7+JxtK1QqdoDWGC7jlkx8+guKKh/rI9MN5qbWoWs8VlX8S4c/Zfmo
-	 CHcGNChyVx04Hcgpu4oQqoz/OuT52lbKWU2aS32Q=
+	b=0iOfc5YkEGqUe2WXpZkxVXM6Vy957zV/6Ec0m5fFwiCIQl+UyRPpjoc3NNSWhfzq5
+	 JpVd++Cw2K66p+YrxPg7rVxhpJicdox36angVgOgGLmOlkLxtvyA2QA0fcupCwkedE
+	 tpnMM6I/wX3NJt8deSOT8OIy5H9EfSy+sreSOqH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392372AbgFWUlz (ORCPT
+        id S2404220AbgFWU6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38292 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403865AbgFWUlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:45 -0400
+        id S2392370AbgFWUlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B701F20702;
-        Tue, 23 Jun 2020 20:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15E3B2053B;
+        Tue, 23 Jun 2020 20:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944905;
-        bh=Qvgl9A1UmkXe8yP07mEhSW1mjubiKOSHZWzEfNuVqEE=;
+        s=default; t=1592944915;
+        bh=mN4gSfA1BZ9tDTLJPfcnd7yd2OXQBhvuB2726QAx6WQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivwoJWoxhZx0yYvLYCcLsVqyqT/iWEEf0HhzE0FxKHc9inlqensTyH2KdSs5x+X8H
-         xFfNG3Eq+Jvy7cZDLibZlnKIosvIzIK36G1wCKNqJjO81t4WZrzI7rVsESbcgHVEzw
-         Fjid4KouKw40vE4TvJX/KNmHThc3keig5AEAmzhE=
+        b=v4SbMgc4Way0GPvUdSyj2+LVTGS0lgZP5feWqPUur6MIv0XbHbp3qVQMgmlXzlLWV
+         ey4jlRtL09ZD50wivNzBJ2bB+fMTU+iTRI39NhD8/nSIhtW3yIxG5j4F/+aeKkJqw8
+         M7brIrE74CFwdfWLAbmedPFfYXjqnKYT5P8ydMKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Luis Machado <luis.machado@linaro.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 171/206] arm64: hw_breakpoint: Dont invoke overflow handler on uaccess watchpoints
-Date:   Tue, 23 Jun 2020 21:58:19 +0200
-Message-Id: <20200623195325.437958224@linuxfoundation.org>
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 4.19 175/206] drm/qxl: Use correct notify port address when creating cursor ring
+Date:   Tue, 23 Jun 2020 21:58:23 +0200
+Message-Id: <20200623195325.637864990@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,108 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit 24ebec25fb270100e252b19c288e21bd7d8cc7f7 ]
+commit 80e5f89da3ab949fbbf1cae01dfaea29f5483a75 upstream.
 
-Unprivileged memory accesses generated by the so-called "translated"
-instructions (e.g. STTR) at EL1 can cause EL0 watchpoints to fire
-unexpectedly if kernel debugging is enabled. In such cases, the
-hw_breakpoint logic will invoke the user overflow handler which will
-typically raise a SIGTRAP back to the current task. This is futile when
-returning back to the kernel because (a) the signal won't have been
-delivered and (b) userspace can't handle the thing anyway.
+The command ring and cursor ring use different notify port addresses
+definition: QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR. However, in
+qxl_device_init() we use QXL_IO_NOTIFY_CMD to create both command ring
+and cursor ring. This doesn't cause any problems now, because QEMU's
+behaviors on QXL_IO_NOTIFY_CMD and QXL_IO_NOTIFY_CURSOR are the same.
+However, QEMU's behavior may be change in future, so let's fix it.
 
-Avoid invoking the user overflow handler for watchpoints triggered by
-kernel uaccess routines, and instead single-step over the faulting
-instruction as we would if no overflow handler had been installed.
+P.S.: In the X.org QXL driver, the notify port address of cursor ring
+      is correct.
 
-(Fixes tag identifies the introduction of unprivileged memory accesses,
- which exposed this latent bug in the hw_breakpoint code)
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Cc: <stable@vger.kernel.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/1585635488-17507-1-git-send-email-chenhc@lemote.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Fixes: 57f4959bad0a ("arm64: kernel: Add support for User Access Override")
-Reported-by: Luis Machado <luis.machado@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/hw_breakpoint.c | 44 ++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/qxl/qxl_kms.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 7c0611f5d2ce7..9f105fe58595d 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -737,6 +737,27 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- 		return 0;
- }
+--- a/drivers/gpu/drm/qxl/qxl_kms.c
++++ b/drivers/gpu/drm/qxl/qxl_kms.c
+@@ -181,7 +181,7 @@ int qxl_device_init(struct qxl_device *q
+ 				&(qdev->ram_header->cursor_ring_hdr),
+ 				sizeof(struct qxl_command),
+ 				QXL_CURSOR_RING_SIZE,
+-				qdev->io_base + QXL_IO_NOTIFY_CMD,
++				qdev->io_base + QXL_IO_NOTIFY_CURSOR,
+ 				false,
+ 				&qdev->cursor_event);
  
-+static int watchpoint_report(struct perf_event *wp, unsigned long addr,
-+			     struct pt_regs *regs)
-+{
-+	int step = is_default_overflow_handler(wp);
-+	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
-+
-+	info->trigger = addr;
-+
-+	/*
-+	 * If we triggered a user watchpoint from a uaccess routine, then
-+	 * handle the stepping ourselves since userspace really can't help
-+	 * us with this.
-+	 */
-+	if (!user_mode(regs) && info->ctrl.privilege == AARCH64_BREAKPOINT_EL0)
-+		step = 1;
-+	else
-+		perf_bp_event(wp, regs);
-+
-+	return step;
-+}
-+
- static int watchpoint_handler(unsigned long addr, unsigned int esr,
- 			      struct pt_regs *regs)
- {
-@@ -746,7 +767,6 @@ static int watchpoint_handler(unsigned long addr, unsigned int esr,
- 	u64 val;
- 	struct perf_event *wp, **slots;
- 	struct debug_info *debug_info;
--	struct arch_hw_breakpoint *info;
- 	struct arch_hw_breakpoint_ctrl ctrl;
- 
- 	slots = this_cpu_ptr(wp_on_reg);
-@@ -784,25 +804,13 @@ static int watchpoint_handler(unsigned long addr, unsigned int esr,
- 		if (dist != 0)
- 			continue;
- 
--		info = counter_arch_bp(wp);
--		info->trigger = addr;
--		perf_bp_event(wp, regs);
--
--		/* Do we need to handle the stepping? */
--		if (is_default_overflow_handler(wp))
--			step = 1;
-+		step = watchpoint_report(wp, addr, regs);
- 	}
--	if (min_dist > 0 && min_dist != -1) {
--		/* No exact match found. */
--		wp = slots[closest_match];
--		info = counter_arch_bp(wp);
--		info->trigger = addr;
--		perf_bp_event(wp, regs);
- 
--		/* Do we need to handle the stepping? */
--		if (is_default_overflow_handler(wp))
--			step = 1;
--	}
-+	/* No exact match found? */
-+	if (min_dist > 0 && min_dist != -1)
-+		step = watchpoint_report(slots[closest_match], addr, regs);
-+
- 	rcu_read_unlock();
- 
- 	if (!step)
--- 
-2.25.1
-
 
 
