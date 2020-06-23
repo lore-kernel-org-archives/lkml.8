@@ -2,155 +2,89 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F43BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE47D20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02416207D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iijPksou"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPXs9lF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbgFWSju (ORCPT
+        id S2387421AbgFWSlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36796 "EHLO
+        Tue, 23 Jun 2020 14:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733291AbgFWSju (ORCPT
+        with ESMTP id S1733165AbgFWSlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:39:50 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A8BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:39:48 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id u23so17661950otq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 11:39:48 -0700 (PDT)
+        Tue, 23 Jun 2020 14:41:12 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5CDC061573;
+        Tue, 23 Jun 2020 11:41:11 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id i27so24581616ljb.12;
+        Tue, 23 Jun 2020 11:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Z9Mv0PSZMGpAWk3UqJDbiXv8a+JYzUxjPXY8KHbS/hU=;
-        b=iijPksoun5xx2rBmnB5BFGt7QhPEMrBBzcpBa53UdPi/WXfZ/RM1EwWz88xyVWE2tH
-         lwdxOx87PRLPbpqxCuOOUK6r4qg2SX2F9iko4RLnrBo0FD4CvqGpwtBCey4NdL8Xjt5P
-         z/NnaQi6MSAvf31tnlAtJrzALovM15et5mYRXuMhAJw5q2FITuXra+NWmr5TRqPOgM06
-         KwONwYXzjSpvXwJl/mh+EL8rEG6F7w8hbInt8Fz3w705HtjRqg2g4Ksq6vSEn5IOuF0U
-         cdu9ETDvCStOMf56Uap6OhWaQBZgf/egDwjw141wQrW1KNlJvmL5stDOzDwc1B7n74cA
-         PUrA==
+        bh=H/6YdGiBITKKzNIQbw47C6ji/hg1a8eKGH7oczoUcSo=;
+        b=sPXs9lF/lUUGcWy42QnCtmivc3p9nTsoNU3JnkrO63Fs8rlie/nhiK9nw72KXjwNqt
+         eKMltgtMswEI1J9XSeMF9QXdAhcML4e+zt+6YexIcWMXPhxSQdPL0b9xkzrA3R+w/Mxz
+         XlQwH4iq/Ge1T1S/1QCKBmNwn70Q7tw8i5jUx8r3EJM8iVWNLT5JuEA+GA/HtKEXB3ty
+         2nnkLWt2TVpNbnlpiL5UElQ0yX/KX2W0G1iiZ71W4F4V82I9jgaSKMcRiGN2eBlbu7vw
+         Go8D6SS6R0HsxALSor18b5NyZ5ykzynoKHTjxAmu7dr4sh9r7HCw/YlUnM/FZl1KoBqN
+         WWaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Z9Mv0PSZMGpAWk3UqJDbiXv8a+JYzUxjPXY8KHbS/hU=;
-        b=OQSm25ziB8DEvMord2qqiB5uO9fqqhJwEN7cjjNTJDQRoD07obeaeCG62bfBT3Yjaz
-         aQh1Ztw5nf3wIBFeXKaZM9JEWQ213nSm6wXJyRUGMRk2stzDCTJpV2A+1M634MC5p24i
-         aJOHHdzbKWm1DvpGEAPLVUQZYvKhDzc5QoZjLMk0AU45QRsMZ3w3FsA7tg2ZVKkj4DVJ
-         v4v3jf2cWHvTMw7jXCnjl8DSRWyCIQRUw1BLRRRyVhBw9d7QY9KUMW7kifUIdNziVoph
-         LP3/dhQTa6ehjyasetmDCql/GjXZ1CylnHti/3ifYBKp3OCb3I/EU9aF9Q/pYe8b5fZx
-         TbeA==
-X-Gm-Message-State: AOAM532tjvFju0mWaebD2GbyLp6hKjAICLGYBa0wdqqbxEKYeyQkYI4h
-        ePNQkXsxg09A6oahzIzJo+vXnfXCVXdqYk0tkteIJQ==
-X-Google-Smtp-Source: ABdhPJyQWmZXSz2iX0eZ/je4eHr1g9U0vu4eNfE0+KLA5wajMcXCN1n72CVKsQtNr7QxRx1XJy83ffFOLJyXsvgaaSo=
-X-Received: by 2002:a9d:58c9:: with SMTP id s9mr20833338oth.233.1592937587368;
- Tue, 23 Jun 2020 11:39:47 -0700 (PDT)
+        bh=H/6YdGiBITKKzNIQbw47C6ji/hg1a8eKGH7oczoUcSo=;
+        b=KbZs0+VjLhMIEjsyjkeO3Ge56p9GisQ17VmU/3iMC8BqaD9AO1Oet5JO0TwZTyNCTm
+         s/XngktxiQf8/+BtBi2G86EmEdIYSyramzOnK4wY2fhzMF5C10m4sNZjZqR4HC0Rjm2f
+         dtoAXzB7BryZJS95/uXu9NPSRF9iTDIS8eiF5x8oO8c5l//upmgPFxAF6pYitjN48E36
+         QUloxXRDQPY5yiMDIYpeDl7LoQ8zdXizYBRQ5QeRXwptBvYzsgEQNE1gvV4rn8pAT6Vb
+         WnpqpYLDqq6jleqUBV5XnW8v/+t/dXQG/aWSja8qcOjI+UKLUTDPQUNUychpApJu7q+1
+         qabA==
+X-Gm-Message-State: AOAM531Qw8crWF6h8urb8iUo0ROJh4U0uxwDnoFVrfdYyKwH3ypArdnV
+        UYQsrU3eFvynuL8Ej4L7jzW27MEp0EAjyZKAGBo=
+X-Google-Smtp-Source: ABdhPJxZW5hHQAEdPViFCb2ETcNyjjV7UMxxbY4S9UPHG7EKSjbfSWNf+LE7Jqd1cVCdCbHRsAKIA7KGLd+adlBYXSY=
+X-Received: by 2002:a2e:6c15:: with SMTP id h21mr12345490ljc.403.1592937670037;
+ Tue, 23 Jun 2020 11:41:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623083645.277342609@infradead.org> <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net> <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net> <20200623175957.GA106514@elver.google.com>
- <20200623181232.GB4800@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200623181232.GB4800@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 23 Jun 2020 20:39:35 +0200
-Message-ID: <CANpmjNMmYYa-mVo_Ao_n+9KzwxhGYcb6B6C72yCHyD9sZudDfA@mail.gmail.com>
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, bigeasy@linutronix.de,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
-        Qian Cai <cai@lca.pw>
+References: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <1592937087-8885-1-git-send-email-tharvey@gateworks.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 23 Jun 2020 15:40:58 -0300
+Message-ID: <CAOMZO5CbLvf_iV5K1zXZdYqgpBqrOZmTGR=NYyL+j73ojTGOnw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2] ARM: dts: imx6qdl-gw551x: fix audio SSI
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 at 20:13, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Jun 23, 2020 at 07:59:57PM +0200, Marco Elver wrote:
-> > On Tue, Jun 23, 2020 at 06:37PM +0200, Peter Zijlstra wrote:
-> > > On Tue, Jun 23, 2020 at 06:13:21PM +0200, Ahmed S. Darwish wrote:
-> > > > Well, freshly merged code is using it. For example, KCSAN:
-> > > >
-> > > >     => f1bc96210c6a ("kcsan: Make KCSAN compatible with lockdep")
-> > > >     => kernel/kcsan/report.c:
-> > > >
-> > > >     void kcsan_report(...)
-> > > >     {
-> > > >   ...
-> > > >         /*
-> > > >          * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
-> > > >          * we do not turn off lockdep here; this could happen due to recursion
-> > > >          * into lockdep via KCSAN if we detect a race in utilities used by
-> > > >          * lockdep.
-> > > >          */
-> > > >         lockdep_off();
-> > > >   ...
-> > > >     }
-> > >
-> > > Marco, do you remember what exactly happened there? Because I'm about to
-> > > wreck that. That is, I'm going to make TRACE_IRQFLAGS ignore
-> > > lockdep_off().
-> >
-> > Yeah, I was trying to squash any kind of recursion:
-> >
-> >       lockdep -> other libs ->
-> >               -> KCSAN
-> >               -> print report
-> >               -> dump stack, printk and friends
-> >               -> lockdep -> other libs
-> >                       -> KCSAN ...
-> >
-> > Some history:
-> >
-> > * Initial patch to fix:
-> >       https://lore.kernel.org/lkml/20200115162512.70807-1-elver@google.com/
->
-> That patch is weird; just :=n on lockdep.c should've cured that, the
-> rest is massive overkill.
->
-> > * KCSAN+lockdep+ftrace:
-> >       https://lore.kernel.org/lkml/20200214211035.209972-1-elver@google.com/
->
-> That doesn't really have anything useful..
->
-> > lockdep now has KCSAN_SANITIZE := n, but we still need to ensure that
-> > there are no paths out of lockdep, or the IRQ flags tracing code, that
-> > might lead through other libs, through KCSAN, libs used to generate a
-> > report, and back to lockdep.
-> >
-> > I never quite figured out the exact trace that led to corruption, but
-> > avoiding any kind of potential for recursion was the only thing that
-> > would avoid the check_flags() warnings.
->
-> Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
-> anything happens.
+Hi Tim,
 
-Thanks!
+On Tue, Jun 23, 2020 at 3:31 PM Tim Harvey <tharvey@gateworks.com> wrote:
+>
+> The audio codec on the GW551x routes to ssi1
+>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-This was happening with Qian Cai's (Cc'd) test cases. If the kernel or
-this patch changed things around so this doesn't happen anymore
-regardless, then I don't see a problem.
-
-Thanks,
--- Marco
+Shouldn't this have a Fixes tag, so that it could be backported to
+older stable kernels?
