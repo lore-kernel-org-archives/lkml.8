@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A336E2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB48820E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943084;
-	bh=6V4vzz0oIJXUMrbIGyFCbHZDXo0+skirALQNnZJy6BQ=;
+	s=default; t=1592943089;
+	bh=J5IhWaPMJFC7r14QlHmQaOchkBGc9LbyWQaCU3X9NnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PYUi1xSPa8IOhecy9ptxRsfNLoMbDpAxFvw6VfBxvqOsKJBT9Cn1tQ+CHTuRLeK8I
-	 clOnLQvrPjILlq7DPA5pZWGbW95VTBZxfMxLexJUH72NR76lDb6krActs3+qbKfCvH
-	 QBGtBuFHPS7OMsM46R/f7pEr7Sn6NHEThMJ9Fs4U=
+	b=nAQLa/e85SNgy3UCc94ghjqYhajyfVFjx4jMGuTo392TIeGoGuUSlNID8uDq3FPKt
+	 fW9/RDLp11hse1EE9YD2zYOD1mpf1UvZL+t8tJooh5VgTBUDzfvbTbofOtdlFbu8Y7
+	 dDzKMJP2jdYN64w9zswRnjQHlCOvSmrxZI+f7aTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbgFWULX (ORCPT
+        id S2388356AbgFWUL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:11:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52322 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388866AbgFWULE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:11:04 -0400
+        id S2388872AbgFWULG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:11:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE1F20E65;
-        Tue, 23 Jun 2020 20:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8407F20707;
+        Tue, 23 Jun 2020 20:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943063;
-        bh=6V4vzz0oIJXUMrbIGyFCbHZDXo0+skirALQNnZJy6BQ=;
+        s=default; t=1592943066;
+        bh=J5IhWaPMJFC7r14QlHmQaOchkBGc9LbyWQaCU3X9NnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYd+aHGxj8hvaPD0GbSOTogaYr0TmuA85BgypiCI8nOYPbjxtISbNHuZ2dnhP5+CI
-         Hv3boJ/aEFczBAFnsYteYIBnfKYFMjOZ+9/cUg8ZC2CwdUAZRTUgJPwm9lA5ajrlPb
-         TxISqiIqtv4aQCqk5MAMd01jRMhNcap5fdAsAh3k=
+        b=Nv3Vdyw9JhY7sP61TmTpHUDLxiLFTcstHGdJTXiCFubsOnXlZ8pK7U0olxMeepGYu
+         g449XUyDESfHiHeTQTscNC0lItQkD/aSf+AP9qX3Jmsp/we/SFUBqyXDVeQZgt76Kl
+         S1vXvNxn76EedC/DeZsRPuKqViwcXj/pWXmfxSXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 246/477] powerpc/64s/pgtable: fix an undefined behaviour
-Date:   Tue, 23 Jun 2020 21:54:03 +0200
-Message-Id: <20200623195419.198161828@linuxfoundation.org>
+Subject: [PATCH 5.7 247/477] powerpc/kasan: Fix error detection on memory allocation
+Date:   Tue, 23 Jun 2020 21:54:04 +0200
+Message-Id: <20200623195419.245753554@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,77 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit c2e929b18cea6cbf71364f22d742d9aad7f4677a ]
+[ Upstream commit d132443a73d7a131775df46f33000f67ed92de1e ]
 
-Booting a power9 server with hash MMU could trigger an undefined
-behaviour because pud_offset(p4d, 0) will do,
+In case (k_start & PAGE_MASK) doesn't equal (kstart), 'va' will never be
+NULL allthough 'block' is NULL
 
-0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
+Check the return of memblock_alloc() directly instead of
+the resulting address in the loop.
 
-Fix it by converting pud_index() and friends to static inline
-functions.
-
-UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
-shift exponent 34 is too large for 32-bit type 'int'
-CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
-Call Trace:
-dump_stack+0xf4/0x164 (unreliable)
-ubsan_epilogue+0x18/0x78
-__ubsan_handle_shift_out_of_bounds+0x160/0x21c
-walk_pagetables+0x2cc/0x700
-walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
-(inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
-ptdump_check_wx+0x8c/0xf0
-mark_rodata_ro+0x48/0x80
-kernel_init+0x74/0x194
-ret_from_kernel_thread+0x5c/0x74
-
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Qian Cai <cai@lca.pw>
+Fixes: 509cd3f2b473 ("powerpc/32: Simplify KASAN init")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20200306044852.3236-1-cai@lca.pw
+Link: https://lore.kernel.org/r/7cb8ca82042bfc45a5cfe726c921cd7e7eeb12a3.1589866984.git.christophe.leroy@csgroup.eu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h | 23 ++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 368b136517e04..2838b98bc6df2 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -998,10 +998,25 @@ extern struct page *pgd_page(pgd_t pgd);
- #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
- #define pgd_page_vaddr(pgd)	__va(pgd_val(pgd) & ~PGD_MASKED_BITS)
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 59e49c0e81543..b7c287adfd598 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -76,15 +76,14 @@ static int __init kasan_init_region(void *start, size_t size)
+ 		return ret;
  
--#define pgd_index(address) (((address) >> (PGDIR_SHIFT)) & (PTRS_PER_PGD - 1))
--#define pud_index(address) (((address) >> (PUD_SHIFT)) & (PTRS_PER_PUD - 1))
--#define pmd_index(address) (((address) >> (PMD_SHIFT)) & (PTRS_PER_PMD - 1))
--#define pte_index(address) (((address) >> (PAGE_SHIFT)) & (PTRS_PER_PTE - 1))
-+static inline unsigned long pgd_index(unsigned long address)
-+{
-+	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
-+}
-+
-+static inline unsigned long pud_index(unsigned long address)
-+{
-+	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-+}
-+
-+static inline unsigned long pmd_index(unsigned long address)
-+{
-+	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-+}
-+
-+static inline unsigned long pte_index(unsigned long address)
-+{
-+	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-+}
+ 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
++	if (!block)
++		return -ENOMEM;
  
- /*
-  * Find an entry in a page-table-directory.  We combine the address region
+ 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_ptr_k(k_cur);
+ 		void *va = block + k_cur - k_start;
+ 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
+ 
+-		if (!va)
+-			return -ENOMEM;
+-
+ 		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
+ 	}
+ 	flush_tlb_kernel_range(k_start, k_end);
 -- 
 2.25.1
 
