@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C44C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DDA2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CAC20E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942929;
-	bh=/CPyaLLZRU4Fh2P4fIpFjAZgAOMq5TubLnUNK5hB58U=;
+	s=default; t=1592942933;
+	bh=wt8kCI+s3aG4RgorKuXJxYc5Qcqx8+vsgRzxzHPuuQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p93nZ2r2JhyeDeJyryAXj5/7ftj9wsbx5MqDrEOwvew9OKtkrav7jRrF+/rJkCom/
-	 Zwki8881kkbHGVI/nKWp4BpX0T9Hap67njkEj3cRdpwCTJYWOWy6bwD0OEC5LD0JCf
-	 r7VM/IRDW6Ki4nfSVMoYA83ApZhdA8RGQbTxKKyY=
+	b=SAuVBObbUfjwFol06oY9crwU/lkjVvhl5IF/0aCbAd3nXmKOZ8wsGHtkWKKVlDWPZ
+	 iXBC+PqQjKVI5oZkmob49mMofzIoN4q8i/hqYY7Dxk6wzak5CMg90ig3ov2fGlJzET
+	 s/FN8ezIlpN4Ate9eZ0apMQrxl6E6slxojiI50IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbgFWUIr (ORCPT
+        id S2388277AbgFWUIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49118 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387878AbgFWUIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:10 -0400
+        id S2387911AbgFWUIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1836B20E65;
-        Tue, 23 Jun 2020 20:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E55E7206C3;
+        Tue, 23 Jun 2020 20:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942889;
-        bh=/CPyaLLZRU4Fh2P4fIpFjAZgAOMq5TubLnUNK5hB58U=;
+        s=default; t=1592942895;
+        bh=wt8kCI+s3aG4RgorKuXJxYc5Qcqx8+vsgRzxzHPuuQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MtrV1Mf5FfummDYTrM7EmhqBQ2xcetaUmE9u2/X6G7qHE2xMTwnUlg+2s/m1Z5BCq
-         cL5tFnz6e2+f5k7fc+Htm0JvZcdfilL8abdppgjYPnsI7C4KTFXroc25HFJbhdFgpy
-         8tDOru7TaXWGDhaX9R9AFzl7ZWbg5q7k9+g78fxw=
+        b=NTfMTZC026Svbk0rsLzTh5xOWWabuUYCkWcNBRknjmdeTnzlZOa1rFPZ/rPVkCGGM
+         zmmbo+dl3R2VKLsp/im91t/lkEMOU5ZxKNi3oZSfrMBIo3+L/oItn6vPmt+LLiP45U
+         4W+6KwWbFJBrYYeSnVHjUzRBadcDyBaAtzgX9vLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matej Dujava <mdujava@kocurkovo.cz>,
+        stable@vger.kernel.org, David Heidelberg <david@ixit.cz>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 168/477] staging: sm750fb: add missing case while setting FB_VISUAL
-Date:   Tue, 23 Jun 2020 21:52:45 +0200
-Message-Id: <20200623195415.526484292@linuxfoundation.org>
+Subject: [PATCH 5.7 178/477] power: supply: smb347-charger: IRQSTAT_D is volatile
+Date:   Tue, 23 Jun 2020 21:52:55 +0200
+Message-Id: <20200623195415.996140686@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,34 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matej Dujava <mdujava@kocurkovo.cz>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
+[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
 
-Switch statement does not contain all cases: 8, 16, 24, 32.
-This patch will add missing one (24)
+Fix failure when USB cable is connected:
+smb347 2-006a: reading IRQSTAT_D failed
 
-Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
-Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
-Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
+
+Tested-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/sm750fb/sm750.c | 1 +
+ drivers/power/supply/smb347-charger.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 59568d18ce230..5b72aa81d94c1 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -898,6 +898,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
- 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
- 		break;
- 	case 16:
-+	case 24:
- 	case 32:
- 		fix->visual = FB_VISUAL_TRUECOLOR;
- 		break;
+diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
+index c1d124b8be0c2..d102921b3ab2b 100644
+--- a/drivers/power/supply/smb347-charger.c
++++ b/drivers/power/supply/smb347-charger.c
+@@ -1138,6 +1138,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
+ 	switch (reg) {
+ 	case IRQSTAT_A:
+ 	case IRQSTAT_C:
++	case IRQSTAT_D:
+ 	case IRQSTAT_E:
+ 	case IRQSTAT_F:
+ 	case STAT_A:
 -- 
 2.25.1
 
