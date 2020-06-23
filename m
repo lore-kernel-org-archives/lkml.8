@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C96C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF924C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7607B2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5D82072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948334;
-	bh=9IyFQ1LxdVrwBZSwUEShij5X2ILrV9XEJsqS8gNrNjQ=;
+	s=default; t=1592948338;
+	bh=zd8QwwidP/Fw2PKn8mfAs/O6yh8KSv/Cgdz4cge526c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K+g8pOyo+dLMAAGDLLaVlANXCaTy2oOQS38AXYy7PHYBkrgLkaRnlyvR8hMCYRZNi
-	 OSQOh+oXeyjgk1R+idbfg0rmMB6tGgknJe/CJpsM7a1hdK0qGV7YVMzqPfKKTfK76k
-	 IgzRyz+A4Q8K4ugJ1F0vtUrkDVo4gKeSxyj2gRAE=
+	b=i3wmYccYAWRyrue8nguk/GEw60AeYtZNREqf15liwvgt5U2XsoeunJVkyJWXBleq5
+	 Bp3bZOacLxdNJphPyUlOlOeank0TtGC/jYAYX6kATHFknOkeyVX3EvewN9BtmCIvHY
+	 7NgY7ZSrCLve4HjBz/cBjrWb3sIST4nOdd+ijMNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391263AbgFWViw (ORCPT
+        id S2388628AbgFWUHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:38:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:07:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387862AbgFWUHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:43 -0400
+        id S2388564AbgFWUH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8FF02064B;
-        Tue, 23 Jun 2020 20:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 681162064B;
+        Tue, 23 Jun 2020 20:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942862;
-        bh=9IyFQ1LxdVrwBZSwUEShij5X2ILrV9XEJsqS8gNrNjQ=;
+        s=default; t=1592942846;
+        bh=zd8QwwidP/Fw2PKn8mfAs/O6yh8KSv/Cgdz4cge526c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iW5BYNsHP9+PEBJIpi6boq/XGOhmjvhrtcpQQJBiWZo2417SQa5uKB6JfCQpDREPg
-         WsaZ9xKW498CUwv/sJxH8SubaLq6R3y22pmH74V8wZjeyr8crROxzfzlsVpKnqX5YG
-         NooegOHpjUoSSMIcneovmd3Q2m6qT5Gu5EbnF7hw=
+        b=xvrgYmFL19+grRuPiBPW/cLn/jeVSQ8Z9e5eYSyZo6Kryq3rVritwK6T5msQDhMkw
+         niwBeVUN6Ah8AoP9YmVEpmblZKLY2Ata9kEEslh1FvDg6O8eLkWotRlfzgko4gpucQ
+         7P2zYLOHvMATpbJogWHUfn8Dc4Zn7xAzLGIq2Vec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 163/477] HID: intel-ish-hid: avoid bogus uninitialized-variable warning
-Date:   Tue, 23 Jun 2020 21:52:40 +0200
-Message-Id: <20200623195415.292043791@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 158/477] clk: meson: meson8b: Dont rely on u-boot to init all GP_PLL registers
+Date:   Tue, 23 Jun 2020 21:52:35 +0200
+Message-Id: <20200623195415.065193049@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,54 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 0b66fb3e6b7a53688f8e20945ac78cd3d832c65f ]
+[ Upstream commit a29ae8600d50ece1856b062a39ed296b8b952259 ]
 
-Older compilers like gcc-4.8 don't see that the variable is
-initialized when it is used:
+Not all u-boot versions initialize the HHI_GP_PLL_CNTL[2-5] registers.
+In that case all HHI_GPLL_PLL_CNTL[1-5] registers are 0x0 and when
+booting Linux the PLL fails to lock.
+The initialization sequence from u-boot is:
+- put the PLL into reset
+- write 0x59C88000 to HHI_GP_PLL_CNTL2
+- write 0xCA463823 to HHI_GP_PLL_CNTL3
+- write 0x0286A027 to HHI_GP_PLL_CNTL4
+- write 0x00003000 to HHI_GP_PLL_CNTL5
+- set M, N, OD and the enable bit
+- take the PLL out of reset
+- check if it has locked
+- disable the PLL
 
-In file included from include/linux/compiler_types.h:68:0,
-                 from <command-line>:0:
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c: In function 'load_fw_from_host':
-include/linux/compiler-gcc.h:75:45: warning: 'fw_info.ldr_capability.max_dma_buf_size' may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-                                             ^
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c:770:22: note: 'fw_info.ldr_capability.max_dma_buf_size' was declared here
-  struct shim_fw_info fw_info;
-                      ^
+In Linux we already initialize M, N, OD, the enable and the reset bits.
+Also the HHI_GP_PLL_CNTL[2-5] registers with these magic values (the
+exact meaning is unknown) so the PLL can lock when the vendor u-boot did
+not initialize these registers yet.
 
-Make sure to initialize it before returning an error from ish_query_loader_prop().
-
-Fixes: 91b228107da3 ("HID: intel-ish-hid: ISH firmware loader client driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: b882964b376f21 ("clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200501215717.735393-1-martin.blumenstingl@googlemail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/meson/meson8b.c | 9 +++++++++
+ drivers/clk/meson/meson8b.h | 4 ++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-index aa2dbed30fc36..6cf59fd26ad78 100644
---- a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-@@ -480,6 +480,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			    sizeof(ldr_xfer_query_resp));
- 	if (rv < 0) {
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return rv;
- 	}
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 5f375799ce46a..11f6b868cf2b5 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -1918,6 +1918,13 @@ static struct clk_regmap meson8b_mali = {
+ 	},
+ };
  
-@@ -489,6 +490,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			"data size %d is not equal to size of loader_xfer_query_response %zu\n",
- 			rv, sizeof(struct loader_xfer_query_response));
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return -EMSGSIZE;
- 	}
- 
++static const struct reg_sequence meson8m2_gp_pll_init_regs[] = {
++	{ .reg = HHI_GP_PLL_CNTL2,	.def = 0x59c88000 },
++	{ .reg = HHI_GP_PLL_CNTL3,	.def = 0xca463823 },
++	{ .reg = HHI_GP_PLL_CNTL4,	.def = 0x0286a027 },
++	{ .reg = HHI_GP_PLL_CNTL5,	.def = 0x00003000 },
++};
++
+ static const struct pll_params_table meson8m2_gp_pll_params_table[] = {
+ 	PLL_PARAMS(182, 3),
+ 	{ /* sentinel */ },
+@@ -1951,6 +1958,8 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
+ 			.width   = 1,
+ 		},
+ 		.table = meson8m2_gp_pll_params_table,
++		.init_regs = meson8m2_gp_pll_init_regs,
++		.init_count = ARRAY_SIZE(meson8m2_gp_pll_init_regs),
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "gp_pll_dco",
+diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+index c889fbeec30f0..c91fb07fcb657 100644
+--- a/drivers/clk/meson/meson8b.h
++++ b/drivers/clk/meson/meson8b.h
+@@ -20,6 +20,10 @@
+  * [0] http://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+  */
+ #define HHI_GP_PLL_CNTL			0x40  /* 0x10 offset in data sheet */
++#define HHI_GP_PLL_CNTL2		0x44  /* 0x11 offset in data sheet */
++#define HHI_GP_PLL_CNTL3		0x48  /* 0x12 offset in data sheet */
++#define HHI_GP_PLL_CNTL4		0x4C  /* 0x13 offset in data sheet */
++#define HHI_GP_PLL_CNTL5		0x50  /* 0x14 offset in data sheet */
+ #define HHI_VIID_CLK_DIV		0x128 /* 0x4a offset in data sheet */
+ #define HHI_VIID_CLK_CNTL		0x12c /* 0x4b offset in data sheet */
+ #define HHI_GCLK_MPEG0			0x140 /* 0x50 offset in data sheet */
 -- 
 2.25.1
 
