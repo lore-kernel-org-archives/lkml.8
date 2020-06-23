@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF4CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C18FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8CE02082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2098320EDD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942971;
-	bh=tPyHfWl8BlLb4l2Uoibi73YHYqzH6WdcwDwj4n4OQ5s=;
+	s=default; t=1592942978;
+	bh=soDd+QyUzhwN2rtXSi47bYrnlf+mZDpo7wt+h1PlRxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HFgCTWIj/uZwceXmjQ5YXnEVhi3yZe7Y9bSX/SZBDrL21qwyqDlw4B8LDv+JbAv79
-	 XvyK2oLsrHzuaApfvvoFOwJhjid41sEfEqiQeLC+mftg0AL9aFGITTO8VZ6Izv7BLp
-	 WuAHVKc9wcFns0unKc2A+4BI8eZ6vuEqUG/j6ezU=
+	b=i9Ff0x/8/bBILfu6iDxjKwHRgPXQ4v714d05NWQeapuKNeHdhDRaEI9ZGQS65sZa/
+	 L6VVoVXuo9Qu4jijqijEUICveJNoE/mDz23BkvCiThFxy1FFBZp3hR8dEojvwyJGDe
+	 aGZfe7uzEsuAgAznV+WLRBmpxG5EB7QVc7EmU+aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388720AbgFWUJa (ORCPT
+        id S2388740AbgFWUJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388282AbgFWUIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:54 -0400
+        id S2388300AbgFWUJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 898112078A;
-        Tue, 23 Jun 2020 20:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08B072064B;
+        Tue, 23 Jun 2020 20:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942933;
-        bh=tPyHfWl8BlLb4l2Uoibi73YHYqzH6WdcwDwj4n4OQ5s=;
+        s=default; t=1592942940;
+        bh=soDd+QyUzhwN2rtXSi47bYrnlf+mZDpo7wt+h1PlRxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IVajWki2aVAeahwwuPjGlptCcC3QnOgXQM988/E/N5ijyuUhtD8Qck5QdH8w9Ps/a
-         qwpNacuIm5NCUjJ7r1gpsWYmBVzU90Zlj7qUvmbxqwXjrSz8U88oqndRBxlCnqH+3S
-         1cX9XtB/sYnx5imix8xaWUL3lJYTvGf30g/BQN3Y=
+        b=wpzorop1QMSnlGYszKL8LrMr32jK7Ek1NgK/CComSn8oAjiM2/3HitfNve6LSw1vo
+         5erDP2pbgyAMQJ4EzIa4exo3ITjjQbOmyWsXzMu0oTvKkzuT5Effa0KZSATkaHX804
+         r4HrJHEakG6Sm3J7W424kJo8izdf8UjqMvirGjgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Peter Ujfalusi <peter.ujflausi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        clang-built-linux@googlegroups.com, Arnd Bergmann <arnd@arndb.de>,
+        David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 192/477] ASoC: ti: omap-mcbsp: Fix an error handling path in asoc_mcbsp_probe()
-Date:   Tue, 23 Jun 2020 21:53:09 +0200
-Message-Id: <20200623195416.665149657@linuxfoundation.org>
+Subject: [PATCH 5.7 195/477] dlm: remove BUG() before panic()
+Date:   Tue, 23 Jun 2020 21:53:12 +0200
+Message-Id: <20200623195416.806348964@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,68 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 03990fd58d2b7c8f7d53e514ba9b8749fac260f9 ]
+[ Upstream commit fe204591cc9480347af7d2d6029b24a62e449486 ]
 
-If an error occurs after the call to 'omap_mcbsp_init()', the reference to
-'mcbsp->fclk' must be decremented, as already done in the remove function.
+Building a kernel with clang sometimes fails with an objtool error in dlm:
 
-This can be achieved easily by using the devm_ variant of 'clk_get()'
-when the reference is taken in 'omap_mcbsp_init()'
+fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
 
-This fixes the leak in the probe and has the side effect to simplify both
-the error handling path of 'omap_mcbsp_init()' and the remove function.
+The problem is that BUG() never returns and the compiler knows
+that anything after it is unreachable, however the panic still
+emits some code that does not get fully eliminated.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Peter Ujfalusi <peter.ujflausi@ti.com>
-Link: https://lore.kernel.org/r/20200512134325.252073-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Having both BUG() and panic() is really pointless as the BUG()
+kills the current process and the subsequent panic() never hits.
+In most cases, we probably don't really want either and should
+replace the DLM_ASSERT() statements with WARN_ON(), as has
+been done for some of them.
+
+Remove the BUG() here so the user at least sees the panic message
+and we can reliably build randconfig kernels.
+
+Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/omap-mcbsp.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ fs/dlm/dlm_internal.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-index 3d41ca2238d48..4f33ddb7b4419 100644
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -686,7 +686,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- 	mcbsp->dma_data[1].addr = omap_mcbsp_dma_reg_params(mcbsp,
- 						SNDRV_PCM_STREAM_CAPTURE);
- 
--	mcbsp->fclk = clk_get(&pdev->dev, "fck");
-+	mcbsp->fclk = devm_clk_get(&pdev->dev, "fck");
- 	if (IS_ERR(mcbsp->fclk)) {
- 		ret = PTR_ERR(mcbsp->fclk);
- 		dev_err(mcbsp->dev, "unable to get fck: %d\n", ret);
-@@ -711,7 +711,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- 		if (ret) {
- 			dev_err(mcbsp->dev,
- 				"Unable to create additional controls\n");
--			goto err_thres;
-+			return ret;
- 		}
- 	}
- 
-@@ -724,8 +724,6 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- err_st:
- 	if (mcbsp->pdata->buffer_size)
- 		sysfs_remove_group(&mcbsp->dev->kobj, &additional_attr_group);
--err_thres:
--	clk_put(mcbsp->fclk);
- 	return ret;
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index 416d9de356791..4311d01b02a8b 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -97,7 +97,6 @@ do { \
+                __LINE__, __FILE__, #x, jiffies); \
+     {do} \
+     printk("\n"); \
+-    BUG(); \
+     panic("DLM:  Record message above and reboot.\n"); \
+   } \
  }
- 
-@@ -1442,8 +1440,6 @@ static int asoc_mcbsp_remove(struct platform_device *pdev)
- 
- 	omap_mcbsp_st_cleanup(pdev);
- 
--	clk_put(mcbsp->fclk);
--
- 	return 0;
- }
- 
 -- 
 2.25.1
 
