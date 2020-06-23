@@ -2,86 +2,97 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D411C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72CD620675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyWrRyvl"
+	by mail.kernel.org (Postfix) with ESMTP id 761A520675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbgFWBVS (ORCPT
+        id S1731879AbgFWBVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:21:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731572AbgFWBVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:21:18 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4E7C061573;
-        Mon, 22 Jun 2020 18:21:16 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t85so8422822ili.5;
-        Mon, 22 Jun 2020 18:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KhdGsndwHFxm5Fp3MmCQGP1IyrRRJHSC/HQA9VsGSeg=;
-        b=NyWrRyvlVt7C8BfTJYfvuvXPl8iLEwICqLIhEcVj2RVnhMnxArqfgIknGPbxUTwWao
-         iDHZ0YssBrCUnjki6osEE308QUMvFzhYPxpyzIS0PEI2Fgs+WGvt37viTne1VhL+PSHJ
-         FBRFjZxonJ36JMmI0guwKY2JAdW9j2FiONX/DGy4QeYxi4R8Ta128W2fOk0RQqexwT+d
-         ncO/M1lNiKWo3IzH/t8AHAVnK/hBHrIWDBhdEy69CaQygtWOdyWTxA58po/8IV1m+NVL
-         0DxdfqaRgybeUH21Veep3GQWAx999zHQoA0V7uE0C9K0Tpm/qGJ/Hljql+egFTy/UTH2
-         g2kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KhdGsndwHFxm5Fp3MmCQGP1IyrRRJHSC/HQA9VsGSeg=;
-        b=ZAlG/NjCTKPG1dZBcDflK17UmHErlyAdewZdFq9Rbk/gtm7rxKmygOeHqlEvoZSNzZ
-         e3iGFfOLgEmc2yQ/BIozhwMv4vAT9pCVHzZ5WfyDTWQMadxn123JwVx5nEW8vF7NbXCj
-         pWSp5G6Dx1tEQ6x2scT0r5Pq6ze8Fgt/nZShnGblbrfeBjQmPv09/nbMkEgneBxfvDLD
-         lmOtWGcAOYIz2lQMNR6RCuMMr+pBvT4VoJM+hWNpfnpwaNKCl2lqgPblQhU5V4ZR0wDG
-         YWuCcGCVfVR44/sJOCLqEB7Jwhhb3oiWN/gDXl51gA/Q1zJILvRAbLr5DiZjcmsIHkt9
-         CBmA==
-X-Gm-Message-State: AOAM530yiGGsenkpCv9LcUC/T5PbP+Lezp0w7ri4wNgwFIb6w36MbFYC
-        jhUuEqPfn+dG7TZRfUwm2TN1pxm6x6iCcIf4k5XO8A==
-X-Google-Smtp-Source: ABdhPJwUOYKyHRh+39pF9jFUDmuhLJaJg8Qk3hT27V1809kQadXBeResMx7Xf1RVRNeIGp8WoPZW4qIZTV2fZo2T8/Y=
-X-Received: by 2002:a92:849c:: with SMTP id y28mr4696835ilk.33.1592875275542;
- Mon, 22 Jun 2020 18:21:15 -0700 (PDT)
+        Mon, 22 Jun 2020 21:21:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:46212 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731572AbgFWBVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 21:21:36 -0400
+IronPort-SDR: IbRy4fJK4+YNZ70Y9w7GpQ6wQpsHZDZlGMCAdMRWxMxX1qn7faro/jFlaQ/fMYyqf6o/PwyPhC
+ uU/Qr4L5jIqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142981585"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="142981585"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 18:21:33 -0700
+IronPort-SDR: NJCoHCZ+AMJML+u+hGRiDYyfdvwTNoPe1ZJ4e13d6brq6k3Yk1liOi0KKov6DaPssxFSQpxlwQ
+ nwwB8i83hJQQ==
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="452039604"
+Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 18:21:30 -0700
+Subject: Re: [PATCH] KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jingqi Liu <jingqi.liu@intel.com>,
+        Tao Xu <tao3.xu@intel.com>
+References: <20200623005135.10414-1-sean.j.christopherson@intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <7e840f1c-d8e2-3374-5009-f2ab41a87386@intel.com>
+Date:   Tue, 23 Jun 2020 09:21:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200622220048.717073-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20200622220048.717073-1-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 22 Jun 2020 19:21:04 -0600
-Message-ID: <CAOCk7Noj5E19PPtSV34wnAyQG4qE-5NC3vbQW9egTUJNpm3+6g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm SM8250 pinctrl driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200623005135.10414-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 4:03 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The SM8250 pinctrl driver provides pin configuration, pin muxing and
-> GPIO pin control for many pins on the SM8250 SoC.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 6/23/2020 8:51 AM, Sean Christopherson wrote:
+> Remove support for context switching between the guest's and host's
+> desired UMWAIT_CONTROL.  Propagating the guest's value to hardware isn't
+> required for correct functionality, e.g. KVM intercepts reads and writes
+> to the MSR, and the latency effects of the settings controlled by the
+> MSR are not architecturally visible.
+> 
+> As a general rule, KVM should not allow the guest to control power
+> management settings unless explicitly enabled by userspace, e.g. see
+> KVM_CAP_X86_DISABLE_EXITS.  E.g. Intel's SDM explicitly states that C0.2
+> can improve the performance of SMT siblings.  A devious guest could
+> disable C0.2 so as to improve the performance of their workloads at the
+> detriment to workloads running in the host or on other VMs.
+> 
+> Wholesale removal of UMWAIT_CONTROL context switching also fixes a race
+> condition where updates from the host may cause KVM to enter the guest
+> with the incorrect value.  Because updates are are propagated to all
+> CPUs via IPI (SMP function callback), the value in hardware may be
+> stale with respect to the cached value and KVM could enter the guest
+> with the wrong value in hardware.  As above, the guest can't observe the
+> bad value, but it's a weird and confusing wart in the implementation.
+> 
+> Removal also fixes the unnecessary usage of VMX's atomic load/store MSR
+> lists.  Using the lists is only necessary for MSRs that are required for
+> correct functionality immediately upon VM-Enter/VM-Exit, e.g. EFER on
+> old hardware, or for MSRs that need to-the-uop precision, e.g. perf
+> related MSRs.  For UMWAIT_CONTROL, the effects are only visible in the
+> kernel via TPAUSE/delay(), and KVM doesn't do any form of delay in
+> vcpu_vmx_run(). 
 
-Looks sane to me.
+>Using the atomic lists is undesirable as they are more
+> expensive than direct RDMSR/WRMSR.
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Do you mean the extra handling of atomic list facility in kvm? Or just 
+mean vm-exit/-entry MSR-load/save in VMX hardware is expensive than 
+direct RDMSR/WRMSR instruction?
+
