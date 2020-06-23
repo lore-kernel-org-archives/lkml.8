@@ -2,54 +2,55 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB28CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC75C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F042098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5202098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944471;
-	bh=XtFeMb8kGk3fuqPFWEzobBSlX/FA3bh16zbM1mW+u2U=;
+	s=default; t=1592944475;
+	bh=3hHV1jtb2Ql+/V2fdM36+lpmCrBcLd9rMcBpsTVI68M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yfx/gsS+WuWYoIFPi49xk4uXJR4+CwHOhWCAFesewzruB/GbpBIHepqcS8IskXSWs
-	 YegDYFoLXJq9sj3ohNwl49tTgkKWxkXwvgQ60QZndkyOpV9MLzvyMz/3laE0xpQkv4
-	 ShwSK26wMeayWKGcgFoINUdTNTCuy4/RHkYXtEbU=
+	b=xm2Gj4cphNJ7TdTeL/vzLwnTWAupC+psywRzQd+xsBSx9yfYlXqa284E86NbTc2HH
+	 T/fhEAtMzC5DMD/A2IWMIQ1NhPqCQcEXbP692UyZokWIy1Upa5Tl/lfz7iD8xF67pM
+	 QezwG7JP0ah0hMPjZIizb99XOnMhsJo4D3bKzObE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391542AbgFWUe2 (ORCPT
+        id S2391548AbgFWUed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391508AbgFWUeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:14 -0400
+        id S2391514AbgFWUeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4661A206C3;
-        Tue, 23 Jun 2020 20:34:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C17342080C;
+        Tue, 23 Jun 2020 20:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944454;
-        bh=XtFeMb8kGk3fuqPFWEzobBSlX/FA3bh16zbM1mW+u2U=;
+        s=default; t=1592944457;
+        bh=3hHV1jtb2Ql+/V2fdM36+lpmCrBcLd9rMcBpsTVI68M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lon8or8hv8Gdn3auoQvG3lYDdhknOWiBzkn2V8qqetY0F9xT6Sz0/MnacXjBrCArd
-         1ksWmwuQbyH3+TozvKdoj127B46rM7cVpHYa9SVoflbaCckX3Eb/g/BUICmRqQLVYt
-         XlbzMBGGwkFnZ7rrVHxgH+Nelp3+y7nLQx6WXbE8=
+        b=ehypAUd9ej4vnTFf/YbmcD/j4Pb1X7fp8VgIqOAIZ12Kx+6wfzsBJc+OscAEK4F2N
+         8xgitsW4Ski5DNW2Q8LhakdOxb1kfsM87vXDJLCxtU7d7dRmHQZ5hRCgmEjnp0TIxl
+         bk9FTvPDD9dzcLERQKeA+TD619KU6TXutya/dAkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 5.4 312/314] pwm: jz4740: Enhance precision in calculation of duty cycle
-Date:   Tue, 23 Jun 2020 21:58:27 +0200
-Message-Id: <20200623195353.884541761@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 313/314] sched/rt, net: Use CONFIG_PREEMPTION.patch
+Date:   Tue, 23 Jun 2020 21:58:28 +0200
+Message-Id: <20200623195353.932589002@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,42 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 9017dc4fbd59c09463019ce494cfe36d654495a8 upstream.
+[ Upstream commit 2da2b32fd9346009e9acdb68c570ca8d3966aba7 ]
 
-Calculating the hardware value for the duty from the hardware value of
-the period resulted in a precision loss versus calculating it from the
-clock rate directly.
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-(Also remove a cast that doesn't really need to be here)
+Update the comment to use CONFIG_PREEMPTION.
 
-Fixes: f6b8a5700057 ("pwm: Add Ingenic JZ4740 support")
-Cc: <stable@vger.kernel.org>
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-[ukl: backport to v5.4.y and adapt commit log accordingly]
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: netdev@vger.kernel.org
+Link: https://lore.kernel.org/r/20191015191821.11479-22-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-jz4740.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -108,8 +108,8 @@ static int jz4740_pwm_apply(struct pwm_c
- 	if (prescaler == 6)
- 		return -EINVAL;
- 
--	tmp = (unsigned long long)period * state->duty_cycle;
--	do_div(tmp, state->period);
-+	tmp = (unsigned long long)rate * state->duty_cycle;
-+	do_div(tmp, NSEC_PER_SEC);
- 	duty = period - tmp;
- 
- 	if (duty >= period)
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 8552874e5aac1..b127f022d8bd9 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -819,7 +819,7 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
+  *
+  *	The use of raw_seqcount_begin() and cond_resched() before
+  *	retrying is required as we want to give the writers a chance
+- *	to complete when CONFIG_PREEMPT is not set.
++ *	to complete when CONFIG_PREEMPTION is not set.
+  */
+ int netdev_get_name(struct net *net, char *name, int ifindex)
+ {
+-- 
+2.25.1
+
 
 
