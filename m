@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85253C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B347C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E265207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79BB20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872700;
-	bh=I+NZCn0MAwuqXE0tzWF8t/GelpyWpqmRYj1vo4Id5+I=;
+	s=default; t=1592872703;
+	bh=E5BTfsexFc4oh65As9t//1pXobSpwnW5MPrv9R7gL+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwvKBF057Z9ftWKpRD+evRHLVTJntzscm58bi5p5SorJ0ukfwukiUUJczl9JeWyL1
-	 BG7SgB4VwlFevp1eypi15Db1o6XwB0n3UZrRBV5FjdP9T3iqEBvc+3C1xL7oB+FLXF
-	 jjAn61R9tbYdRRtbilaf2oEttpfGslwTdoUYypCo=
+	b=Md6+8e7ichM+qoCuHDYJzrDaybgZssAF5FfhDJG2Q5AIbZ2Ke9xejPw0aB7U9CMaV
+	 mYYvkpKi2Yw4Q6/1DsCzA796Y/ouEiZYcT1xG4ANYKuZ8oAo9QZbbQpOp+njR4R4sI
+	 qLLvCyecV3BDT78Myfcb5oh/bwrif2Fn0d13L0WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732177AbgFWAiA (ORCPT
+        id S1732217AbgFWAiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33540 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:38:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731637AbgFWAhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:37:55 -0400
+        id S1732168AbgFWAh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:37:58 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E34620890;
-        Tue, 23 Jun 2020 00:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3512F214F1;
+        Tue, 23 Jun 2020 00:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872674;
-        bh=I+NZCn0MAwuqXE0tzWF8t/GelpyWpqmRYj1vo4Id5+I=;
+        s=default; t=1592872678;
+        bh=E5BTfsexFc4oh65As9t//1pXobSpwnW5MPrv9R7gL+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w8QfaFPbW2abxRWYQ+MeW6brHvOXjkMyuk+iYDRPfXMzDjYkvLJJgDATxbwAEHF2X
-         cY1XP7TMX5HRL7f8ajp7N+3CLflw9zAIgBSLA/EEh3WXHdu6zDPz91GhFc72u5kFDp
-         BpaAO3jdDQWAkBsd4Z7hXDm8bjL278VWFv8zlcyk=
+        b=NEvkdc82MT4vwxvl5zDY9TfZ/kQ1EESvAHTVxULFhU6dIgmDO4vBgEY9eC3Zt7sGq
+         cKL8sXWJ6Exvqv5FtrB6hSu5R+FqzceP826Ls1oD3ge/z95amjuOcpnHL3UVqhgXGy
+         U459BI7MUORTurdxozc9B7PIluu+0MmKdYe/62Qk=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Zou Wei <zou_wei@huawei.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 03/23] locktorture: Use true and false to assign to bool variables
-Date:   Mon, 22 Jun 2020 17:37:32 -0700
-Message-Id: <20200623003752.26872-3-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 21/23] torture: Avoid duplicate specification of qemu command
+Date:   Mon, 22 Jun 2020 17:37:50 -0700
+Message-Id: <20200623003752.26872-21-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
 References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
@@ -60,88 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zou Wei <zou_wei@huawei.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit fixes the following coccicheck warnings:
+Currently, the qemu command is constructed twice, once to dump it
+to the qemu-cmd file and again to execute it.  This is of course an
+accident waiting to happen, but is done to ensure that the remainder
+of the script has an accurate idea of the running qemu command's PID.
+This commit therefore places both the qemu command and the PID capture
+into a new temporary file and sources that temporary file.  Thus the
+single construction of the qemu command into the qemu-cmd file suffices
+for both purposes.
 
-kernel/locking/locktorture.c:689:6-10: WARNING: Assignment of 0/1 to bool variable
-kernel/locking/locktorture.c:907:2-20: WARNING: Assignment of 0/1 to bool variable
-kernel/locking/locktorture.c:938:3-20: WARNING: Assignment of 0/1 to bool variable
-kernel/locking/locktorture.c:668:2-19: WARNING: Assignment of 0/1 to bool variable
-kernel/locking/locktorture.c:674:2-19: WARNING: Assignment of 0/1 to bool variable
-kernel/locking/locktorture.c:634:2-20: WARNING: Assignment of 0/1 to bool variable
-kernel/locking/locktorture.c:640:2-20: WARNING: Assignment of 0/1 to bool variable
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zou Wei <zou_wei@huawei.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/locking/locktorture.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
-index 5efbfc6..8ff6f50 100644
---- a/kernel/locking/locktorture.c
-+++ b/kernel/locking/locktorture.c
-@@ -631,13 +631,13 @@ static int lock_torture_writer(void *arg)
- 		cxt.cur_ops->writelock();
- 		if (WARN_ON_ONCE(lock_is_write_held))
- 			lwsp->n_lock_fail++;
--		lock_is_write_held = 1;
-+		lock_is_write_held = true;
- 		if (WARN_ON_ONCE(lock_is_read_held))
- 			lwsp->n_lock_fail++; /* rare, but... */
- 
- 		lwsp->n_lock_acquired++;
- 		cxt.cur_ops->write_delay(&rand);
--		lock_is_write_held = 0;
-+		lock_is_write_held = false;
- 		cxt.cur_ops->writeunlock();
- 
- 		stutter_wait("lock_torture_writer");
-@@ -665,13 +665,13 @@ static int lock_torture_reader(void *arg)
- 			schedule_timeout_uninterruptible(1);
- 
- 		cxt.cur_ops->readlock();
--		lock_is_read_held = 1;
-+		lock_is_read_held = true;
- 		if (WARN_ON_ONCE(lock_is_write_held))
- 			lrsp->n_lock_fail++; /* rare, but... */
- 
- 		lrsp->n_lock_acquired++;
- 		cxt.cur_ops->read_delay(&rand);
--		lock_is_read_held = 0;
-+		lock_is_read_held = false;
- 		cxt.cur_ops->readunlock();
- 
- 		stutter_wait("lock_torture_reader");
-@@ -686,7 +686,7 @@ static int lock_torture_reader(void *arg)
- static void __torture_print_stats(char *page,
- 				  struct lock_stress_stats *statp, bool write)
- {
--	bool fail = 0;
-+	bool fail = false;
- 	int i, n_stress;
- 	long max = 0, min = statp ? statp[0].n_lock_acquired : 0;
- 	long long sum = 0;
-@@ -904,7 +904,7 @@ static int __init lock_torture_init(void)
- 
- 	/* Initialize the statistics so that each run gets its own numbers. */
- 	if (nwriters_stress) {
--		lock_is_write_held = 0;
-+		lock_is_write_held = false;
- 		cxt.lwsa = kmalloc_array(cxt.nrealwriters_stress,
- 					 sizeof(*cxt.lwsa),
- 					 GFP_KERNEL);
-@@ -935,7 +935,7 @@ static int __init lock_torture_init(void)
- 		}
- 
- 		if (nreaders_stress) {
--			lock_is_read_held = 0;
-+			lock_is_read_held = false;
- 			cxt.lrsa = kmalloc_array(cxt.nrealreaders_stress,
- 						 sizeof(*cxt.lrsa),
- 						 GFP_KERNEL);
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+index 5ec095d..484445b 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
+@@ -161,8 +161,16 @@ then
+ 	touch $resdir/buildonly
+ 	exit 0
+ fi
++
++# Decorate qemu-cmd with redirection, backgrounding, and PID capture
++sed -e 's/$/ 2>\&1 \&/' < $resdir/qemu-cmd > $T/qemu-cmd
++echo 'echo $! > $resdir/qemu_pid' >> $T/qemu-cmd
++
++# In case qemu refuses to run...
+ echo "NOTE: $QEMU either did not run or was interactive" > $resdir/console.log
+-( $QEMU $qemu_args -m $TORTURE_QEMU_MEM -kernel $KERNEL -append "$qemu_append $boot_args" > $resdir/qemu-output 2>&1 & echo $! > $resdir/qemu_pid; wait `cat  $resdir/qemu_pid`; echo $? > $resdir/qemu-retval ) &
++
++# Attempt to run qemu
++( . $T/qemu-cmd; wait `cat  $resdir/qemu_pid`; echo $? > $resdir/qemu-retval ) &
+ commandcompleted=0
+ sleep 10 # Give qemu's pid a chance to reach the file
+ if test -s "$resdir/qemu_pid"
 -- 
 2.9.5
 
