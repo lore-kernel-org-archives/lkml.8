@@ -2,114 +2,172 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1338C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD08EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4C320724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:52:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="maQA3A/n"
+	by mail.kernel.org (Postfix) with ESMTP id A9C3E2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732586AbgFWMwb (ORCPT
+        id S1732604AbgFWMyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729504AbgFWMwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:52:31 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F3CAC061573;
-        Tue, 23 Jun 2020 05:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=LyGXCQbBjA1RL7EQ24/1+IBfI7cHxTXkkAPcsBmfZf4=; b=maQA3A/n4fXnwedsyFDIlCzshd
-        3P/+FfPylnGfzbb/LR6DWp0V05k/lUCN+MHXRqb0xn1bSpQnEiUR4/ZLFReWYZoHAPugDh+gBnrrn
-        Fam7mb61MDRG+GDY+s6D85u+S2yiGVQVuU0xht6f/6Dq2HmeIYGMaffZeXxcRT+OoeyKIHZkwb1yX
-        gumYwQjenmsiuQhTvIa3ESIXCcRkMszYMcmm5rSRkvjblLzqFfUJezUFGPQkhiQKXmKLCpmbsrX9S
-        XNkqILJIAAQIvhGB6fjzwcqinSZlgdIT2ON3w76tyiKcxteTqIKUjwErXAZAJ4o36Ygmelcn31Mi/
-        DVr4iJcw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jniPE-0002Zz-Fj; Tue, 23 Jun 2020 12:52:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 13AEB300F28;
-        Tue, 23 Jun 2020 14:52:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 04FE72370F7C3; Tue, 23 Jun 2020 14:52:02 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 14:52:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623125201.GG4817@hirez.programming.kicks-ass.net>
-References: <20200425191032.GK21900@8bytes.org>
- <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200428075512.GP30814@suse.de>
- <20200623110706.GB4817@hirez.programming.kicks-ass.net>
- <20200623113007.GH31822@suse.de>
- <20200623114818.GD4817@hirez.programming.kicks-ass.net>
- <20200623120433.GB14101@suse.de>
+        Tue, 23 Jun 2020 08:54:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20131 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732556AbgFWMyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:54:49 -0400
+IronPort-SDR: fZzGkRuGGeYFa8FAzpV+LLP3/5BH0MM6gqnneFPpWXhEGie5sXjJY/isWE86aCkY60eCwXd80W
+ 0p0fljiu4yNw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="162139394"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="162139394"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 05:54:48 -0700
+IronPort-SDR: RPaJpmVL97EyBC/925ojRjbbrHn1O6cCVkd4jphVgtdcBIRCeQLA+j2h1qH3G5v0B50YL8h1j5
+ 2Sn718mqCOYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="310451196"
+Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 23 Jun 2020 05:54:47 -0700
+Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jniRq-0000MW-CM; Tue, 23 Jun 2020 12:54:46 +0000
+Date:   Tue, 23 Jun 2020 20:54:16 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:lkmm] BUILD SUCCESS 3ce5d6935aa24b399e3485b76f4ab8479b3fe3fc
+Message-ID: <5ef1fb78.9Uivu47JK1I024nM%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623120433.GB14101@suse.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:04:33PM +0200, Joerg Roedel wrote:
-> On Tue, Jun 23, 2020 at 01:48:18PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 23, 2020 at 01:30:07PM +0200, Joerg Roedel wrote:
-> 
-> > But you cannot do a recursion check in #VC, because the NMI can happen
-> > on the first instruction of #VC, before we can increment our counter,
-> > and then the #VC can happen on NMI because the IST stack is a goner, and
-> > we're fscked again (or on a per-cpu variable we touch in our elaborate
-> > NMI setup, etc..).
-> 
-> No, the recursion check is fine, because overwriting an already used IST
-> stack doesn't matter (as long as it can be detected) if we are going to
-> panic anyway. It doesn't matter because the kernel will not leave the
-> currently running handler anymore.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm
+branch HEAD: 3ce5d6935aa24b399e3485b76f4ab8479b3fe3fc  docs: fix references for DMA*.txt files
 
-You only have that guarantee when any SNP #VC from kernel is an
-automatic panic. But in that case, what's the point of having the
-recursion count?
+elapsed time: 724m
 
-> > I'll keep repeating this, x86_64 exceptions are a trainwreck, and IST in
-> > specific is utter crap.
-> 
-> I agree, but don't forget the most prominent underlying reason for IST:
-> The SYSCALL gap. If SYSCALL would switch stacks most of those issues
-> would not exist. IST would still be needed because there are no task
-> gates in x86-64, but still...
+configs tested: 103
+configs skipped: 1
 
-We could all go back to int80 ;-) /me runs like heck
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+mips                        omega2p_defconfig
+powerpc                          g5_defconfig
+c6x                         dsk6455_defconfig
+arm                          tango4_defconfig
+powerpc                      ppc44x_defconfig
+m68k                             allyesconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200623
+i386                 randconfig-a002-20200623
+i386                 randconfig-a003-20200623
+i386                 randconfig-a001-20200623
+i386                 randconfig-a005-20200623
+i386                 randconfig-a004-20200623
+x86_64               randconfig-a012-20200623
+x86_64               randconfig-a011-20200623
+x86_64               randconfig-a013-20200623
+x86_64               randconfig-a014-20200623
+x86_64               randconfig-a015-20200623
+x86_64               randconfig-a016-20200623
+i386                 randconfig-a013-20200623
+i386                 randconfig-a016-20200623
+i386                 randconfig-a012-20200623
+i386                 randconfig-a014-20200623
+i386                 randconfig-a015-20200623
+i386                 randconfig-a011-20200623
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
