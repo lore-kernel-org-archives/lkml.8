@@ -2,82 +2,58 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B19C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BF220723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="RYlKqMV3"
+	by mail.kernel.org (Postfix) with ESMTP id 6C1E420723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732632AbgFWNLZ (ORCPT
+        id S1732638AbgFWNN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732610AbgFWNLY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:11:24 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20166C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:11:23 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a9so23342621ljn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mlmFSSdTWebFxD2gTR/U29ddRq9uUBP28CsLIBv6hs0=;
-        b=RYlKqMV3+NySqvFz+sBwz2KeTHKcjpS/dM0JwloCcBbV8uUEstmlFACm9YxX/NANg3
-         Ghx3BgLjT2+w8PE2V34IwjKR3CFsGFavuzjA0zPR6mPcmeOc/+x3Q/fCfqPbTUo4whNo
-         Sszc0p3cz8OpjPgoF8szHgCswA9YVRWOm7cH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mlmFSSdTWebFxD2gTR/U29ddRq9uUBP28CsLIBv6hs0=;
-        b=YcZ2uZK1dqGjk0hc15Ot/k8YaHssVuvF6TaMsPinf8/XcBO22NHt8tYesWnpI2dr5R
-         xGyiTQABqSiXROm+NP4FQT0FzJbn2FDUxyHA9ObxcxvqOWy4chbVoAHrCG00VzoDqqEs
-         AsJrRhmJtL4JUrw/PFRrK4B9hIVSTB9dfAfg9gSEQH5pq3VHgaYVogdBM8pfsaQ61Cr9
-         dztBExbvtrXr140f1ZElfdGqZwojn4OEqs6V6tGSQVRqoxJqcACiboHeyzymt7h6Ercg
-         2f4ijvusyhYLE4ye0THHo3m7B/7yX9pCKWukGLpPLuMFO+5NrMIHsd1Y0FsMOQRxPYix
-         PEFQ==
-X-Gm-Message-State: AOAM532xHDVgXXzP7dOFTeWOsVDq6CkzapCKshOxEfMV33P0dCQ2BLqg
-        udThvuggiwG3OmxTvd90idGrcQ==
-X-Google-Smtp-Source: ABdhPJxu21nt5X4UswcI9f1ogE/YOaFoaQd0pqW/XIjXnAoxz5Vlxfzpj+BU0iyXwf5ee3FamMHkaA==
-X-Received: by 2002:a2e:8847:: with SMTP id z7mr10509130ljj.300.1592917881527;
-        Tue, 23 Jun 2020 06:11:21 -0700 (PDT)
-Received: from [172.21.3.181] ([87.54.42.112])
-        by smtp.gmail.com with ESMTPSA id j12sm3288234ljg.15.2020.06.23.06.11.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 06:11:20 -0700 (PDT)
-Subject: Re: [PATCH v3 bpf-next 4/8] printk: add type-printing %pT format
- specifier which uses BTF
-To:     Alan Maguire <alan.maguire@oracle.com>, ast@kernel.org,
-        daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
-        arnaldo.melo@gmail.com
-Cc:     kafai@fb.com, songliubraving@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, joe@perches.com, pmladek@suse.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
- <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <9ff219a4-dcae-95a1-584b-054d0d5e4ebb@rasmusvillemoes.dk>
-Date:   Tue, 23 Jun 2020 15:11:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 09:13:27 -0400
+Received: from mga07.intel.com ([134.134.136.100]:17374 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgFWNN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:13:26 -0400
+IronPort-SDR: 7Gm3tEZV3EjtHMTJEzAfW3UctKMDaq6HGEZ6Et0EflnJbIxrZRnxqJnGW0dj4digaitFSkwXND
+ cuwvmINQM0bw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209263120"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="209263120"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 06:13:25 -0700
+IronPort-SDR: Le9ycPgGvDojUvw7Md80fDMLb9kacjWq24P/YjbEzwBrc835iCcDz4RWW5PN2U2USulevGAv+k
+ jX6e5y9up5jA==
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="452218159"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.174.20]) ([10.249.174.20])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 06:13:22 -0700
+Subject: Re: [PATCH v12 00/11] Guest Last Branch Recording Enabling
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, ak@linux.intel.com,
+        wei.w.wang@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200613080958.132489-1-like.xu@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <dc1c7ef1-5ab4-0f7b-5036-457193bc722c@linux.intel.com>
+Date:   Tue, 23 Jun 2020 21:13:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200613080958.132489-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,91 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 14.07, Alan Maguire wrote:
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index fc8f03c..8f8f5d2 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -618,4 +618,20 @@ static inline void print_hex_dump_debug(const char *prefix_str, int prefix_type,
->  #define print_hex_dump_bytes(prefix_str, prefix_type, buf, len)	\
->  	print_hex_dump_debug(prefix_str, prefix_type, 16, 1, buf, len, true)
->  
-> +/**
-> + * struct btf_ptr is used for %pT (typed pointer) display; the
-> + * additional type string/BTF id are used to render the pointer
-> + * data as the appropriate type.
-> + */
-> +struct btf_ptr {
-> +	void *ptr;
-> +	const char *type;
-> +	u32 id;
-> +};
-> +
-> +#define	BTF_PTR_TYPE(ptrval, typeval) \
-> +	(&((struct btf_ptr){.ptr = ptrval, .type = #typeval}))
-> +
-> +#define BTF_PTR_ID(ptrval, idval) \
-> +	(&((struct btf_ptr){.ptr = ptrval, .id = idval}))
+On 2020/6/13 16:09, Like Xu wrote:
+> Hi all,
+> 
+> Please help review this new version for the Kenrel 5.9 release.
+> 
+> Now, you may apply the last two qemu-devel patches to the upstream
+> qemu and try the guest LBR feature with '-cpu host' command line.
+> 
+> v11->v12 Changelog:
+> - apply "Signed-off-by" form PeterZ and his codes for the perf subsystem;
+> - add validity checks before expose LBR via MSR_IA32_PERF_CAPABILITIES;
+> - refactor MSR_IA32_DEBUGCTLMSR emulation with validity check;
+> - reorder "perf_event_attr" fields according to how they're declared;
+> - replace event_is_oncpu() with "event->state" check;
+> - make LBR emualtion specific to vmx rather than x86 generic;
+> - move pass-through LBR code to vmx.c instead of pmu_intel.c;
+> - add vmx_lbr_en/disable_passthrough layer to make code readable;
+> - rewrite pmu availability check with vmx_passthrough_lbr_msrs();
+> 
+> You may check more details in each commit.
+> 
+> Previous:
+> https://lore.kernel.org/kvm/20200514083054.62538-1-like.xu@linux.intel.com/
+> 
+> ---
+...
+> 
+> Wei Wang (1):
+>   perf/x86: Fix variable types for LBR registers > Like Xu (10):
+>    perf/x86/core: Refactor hw->idx checks and cleanup
+>    perf/x86/lbr: Add interface to get LBR information
+>    perf/x86: Add constraint to create guest LBR event without hw counter
+>    perf/x86: Keep LBR records unchanged in host context for guest usage
 
-Isn't there some better place to put this than printk.h? Anyway, you
-probably want the ptr member to be "const void*", to avoid "... discards
-const qualifier" warnings when somebody happens to have a "const struct
-foobar *".
+Hi Peter,
+Would you like to add "Acked-by" to the first three perf patches ?
 
->  #endif
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 259e558..c0d209d 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -44,6 +44,7 @@
->  #ifdef CONFIG_BLOCK
->  #include <linux/blkdev.h>
->  #endif
-> +#include <linux/btf.h>
->  
->  #include "../mm/internal.h"	/* For the trace_print_flags arrays */
->  
-> @@ -2092,6 +2093,87 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
->  	return widen_string(buf, buf - buf_start, end, spec);
->  }
->  
-> +#define btf_modifier_flag(c)	(c == 'c' ? BTF_SHOW_COMPACT :	\
-> +				 c == 'N' ? BTF_SHOW_NONAME :	\
-> +				 c == 'x' ? BTF_SHOW_PTR_RAW :	\
-> +				 c == 'u' ? BTF_SHOW_UNSAFE : \
-> +				 c == '0' ? BTF_SHOW_ZERO : 0)
-> +
-> +static noinline_for_stack
-> +char *btf_string(char *buf, char *end, void *ptr, struct printf_spec spec,
-> +		 const char *fmt)
-> +{
-> +	struct btf_ptr *bp = (struct btf_ptr *)ptr;
-> +	u8 btf_kind = BTF_KIND_TYPEDEF;
-> +	const struct btf_type *t;
-> +	const struct btf *btf;
-> +	char *buf_start = buf;
-> +	const char *btf_type;
-> +	u64 flags = 0, mod;
-> +	s32 btf_id;
-> +
-> +	if (check_pointer(&buf, end, ptr, spec))
-> +		return buf;
-> +
-> +	if (check_pointer(&buf, end, bp->ptr, spec))
-> +		return buf;
-> +
-> +	while (isalnum(*fmt)) {
-> +		mod = btf_modifier_flag(*fmt);
-> +		if (!mod)
-> +			break;
-> +		flags |= mod;
-> +		fmt++;
-> +	}
-> +
-> +	btf = bpf_get_btf_vmlinux();
+>    KVM: vmx/pmu: Expose LBR to guest via MSR_IA32_PERF_CAPABILITIES
+>    KVM: vmx/pmu: Unmask LBR fields in the MSR_IA32_DEBUGCTLMSR emualtion
+>    KVM: vmx/pmu: Pass-through LBR msrs when guest LBR event is scheduled
+>    KVM: vmx/pmu: Emulate legacy freezing LBRs on virtual PMI
+>    KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
+>    KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
+> 
 
-AFAICT, this function is only compiled if CONFIG_BPF=y and
-CONFIG_BPF_SYSCALL=y, and I don't see any static inline stub defined
-anywhere. Have you built the kernel with one or both of those turned off?
+Hi Paolo,
+Would you like to take a moment to review the KVM part for this feature ?
 
-Rasmus
+Thanks,
+Like Xu
+
+> 
+> Qemu-devel:
+>    target/i386: add -cpu,lbr=true support to enable guest LBR
+> 
+>   arch/x86/events/core.c            |  26 +--
+>   arch/x86/events/intel/core.c      | 109 ++++++++-----
+>   arch/x86/events/intel/lbr.c       |  51 +++++-
+>   arch/x86/events/perf_event.h      |   8 +-
+>   arch/x86/include/asm/perf_event.h |  34 +++-
+>   arch/x86/kvm/pmu.c                |  12 +-
+>   arch/x86/kvm/pmu.h                |   5 +
+>   arch/x86/kvm/vmx/capabilities.h   |  23 ++-
+>   arch/x86/kvm/vmx/pmu_intel.c      | 253 +++++++++++++++++++++++++++++-
+>   arch/x86/kvm/vmx/vmx.c            |  86 +++++++++-
+>   arch/x86/kvm/vmx/vmx.h            |  17 ++
+>   arch/x86/kvm/x86.c                |  13 --
+>   12 files changed, 559 insertions(+), 78 deletions(-)
+> 
+
