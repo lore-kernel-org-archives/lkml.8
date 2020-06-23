@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ADCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8812082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458E52078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942957;
-	bh=CeLhgvWLprxAbT6KatLMM/DFe6z/XMeYOLP479CQgU0=;
+	s=default; t=1592942961;
+	bh=OawpyKz8cvpjMBzYjkduS4+n6MkUnUmUoMX2bh1R1Os=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IgybQK7cRdip8F4jlj0WvLNiZKtmRBfYv4COl+TGDL/l/xl/ZeZxoiurAnaktGRh
-	 77YTuvsnHAmAXCAemLpqqPhlZi4j9vB1y+yVFt2glmXv0tmYELUERAoXo1CH1XEWEp
-	 17v24yZVP9puiSBFd6RFknHLCFrAtXcKuk2yajqY=
+	b=vlwyuusBX8rS9X6VCzhzoDDa+pQD/2k4dbhtKl0FPzpkL698hr62xRlfsVE8Dtb1Z
+	 Obffa3kaj37vxg4kw/hkbaAGtrwHCIPpv6kgtwhwce3MkKW5roaSZ7FSyKewzkGfzv
+	 i8CbfyfRZ89Xm4WlT/5NeWfua7AFWKxF774j58gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388692AbgFWUJQ (ORCPT
+        id S2388700AbgFWUJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387952AbgFWUIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:25 -0400
+        id S2387997AbgFWUI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4DDB206C3;
-        Tue, 23 Jun 2020 20:08:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418A02064B;
+        Tue, 23 Jun 2020 20:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942905;
-        bh=CeLhgvWLprxAbT6KatLMM/DFe6z/XMeYOLP479CQgU0=;
+        s=default; t=1592942907;
+        bh=OawpyKz8cvpjMBzYjkduS4+n6MkUnUmUoMX2bh1R1Os=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uI9S3pIMSGkKS/D8t0V6+Xy2PJ5xcLUS/lNZIpqdKcqZDjcIsZCpsLl+L9k8/uxcl
-         ytjg/5tSvrpCH8sdx1kA06NGKMVjQ9cnPXnv8cZRky3L0uYR+kOlzmyeJqkabX65RS
-         m+cwYSK++tIBnZR1s10qWUYvK3R7I2io5OPTOOGY=
+        b=pXJPencuUfomDRmJkVDkM9IhjbRAhoD8kTC6qivPh8M//nSLAdbwNHUQi0cTunldg
+         DJP4vMj2VTRwdmE0nQLRU9kR5uOK4bQvZlfEMGkax+HGFjp8Fl/wvpcUf8kyE085jD
+         SYKIDAjYQsTxbM9QZBEUkYvqPXQrKj/0xSmvAxqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 182/477] arm64: dts: msm8996: Fix CSI IRQ types
-Date:   Tue, 23 Jun 2020 21:52:59 +0200
-Message-Id: <20200623195416.188669837@linuxfoundation.org>
+Subject: [PATCH 5.7 183/477] scsi: target: loopback: Fix READ with data and sensebytes
+Date:   Tue, 23 Jun 2020 21:53:00 +0200
+Message-Id: <20200623195416.237301106@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,53 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit 4a4a26317ec8aba575f6b85789a42639937bc1a4 ]
+[ Upstream commit c68a56736c129f5dd1632856956f9c3e04bae200 ]
 
-Each IRQ_TYPE_NONE interrupt causes a warning at boot.
-Fix that by defining an appropriate type.
+We use tcm_loop with tape emulations running on tcmu.
 
-Fixes: e0531312e78f ("arm64: dts: qcom: msm8996: Add CAMSS support")
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Link: https://lore.kernel.org/r/1587470425-13726-1-git-send-email-loic.poulain@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+In case application reads a short tape block with a longer READ, or a long
+tape block with a short READ, according to SCC spec data has to be
+tranferred _and_ sensebytes with ILI set and information field containing
+the residual count. Similar problem also exists when using fixed block
+size in READ.
+
+Up to now tcm_loop is not prepared to handle sensebytes if input data is
+provided, as in tcm_loop_queue_data_in() it only sets SAM_STAT_GOOD and, if
+necessary, the residual count.
+
+To fix the bug, the same handling for sensebytes as present in
+tcm_loop_queue_status() must be done in tcm_loop_queue_data_in() also.
+
+After adding this handling, the two function now are nearly identical, so I
+created a single function with two wrappers.
+
+Link: https://lore.kernel.org/r/20200428182617.32726-1-bstroesser@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/target/loopback/tcm_loop.c | 36 +++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 98634d5c44405..d22c364b520ae 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -989,16 +989,16 @@
- 				"csi_clk_mux",
- 				"vfe0",
- 				"vfe1";
--			interrupts = <GIC_SPI 78 0>,
--				<GIC_SPI 79 0>,
--				<GIC_SPI 80 0>,
--				<GIC_SPI 296 0>,
--				<GIC_SPI 297 0>,
--				<GIC_SPI 298 0>,
--				<GIC_SPI 299 0>,
--				<GIC_SPI 309 0>,
--				<GIC_SPI 314 0>,
--				<GIC_SPI 315 0>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 80 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 296 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 297 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 298 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 299 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 309 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 314 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 315 IRQ_TYPE_EDGE_RISING>;
- 			interrupt-names = "csiphy0",
- 				"csiphy1",
- 				"csiphy2",
+diff --git a/drivers/target/loopback/tcm_loop.c b/drivers/target/loopback/tcm_loop.c
+index 3305b47fdf536..16d5a4e117a27 100644
+--- a/drivers/target/loopback/tcm_loop.c
++++ b/drivers/target/loopback/tcm_loop.c
+@@ -545,32 +545,15 @@ static int tcm_loop_write_pending(struct se_cmd *se_cmd)
+ 	return 0;
+ }
+ 
+-static int tcm_loop_queue_data_in(struct se_cmd *se_cmd)
++static int tcm_loop_queue_data_or_status(const char *func,
++		struct se_cmd *se_cmd, u8 scsi_status)
+ {
+ 	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
+ 				struct tcm_loop_cmd, tl_se_cmd);
+ 	struct scsi_cmnd *sc = tl_cmd->sc;
+ 
+ 	pr_debug("%s() called for scsi_cmnd: %p cdb: 0x%02x\n",
+-		 __func__, sc, sc->cmnd[0]);
+-
+-	sc->result = SAM_STAT_GOOD;
+-	set_host_byte(sc, DID_OK);
+-	if ((se_cmd->se_cmd_flags & SCF_OVERFLOW_BIT) ||
+-	    (se_cmd->se_cmd_flags & SCF_UNDERFLOW_BIT))
+-		scsi_set_resid(sc, se_cmd->residual_count);
+-	sc->scsi_done(sc);
+-	return 0;
+-}
+-
+-static int tcm_loop_queue_status(struct se_cmd *se_cmd)
+-{
+-	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
+-				struct tcm_loop_cmd, tl_se_cmd);
+-	struct scsi_cmnd *sc = tl_cmd->sc;
+-
+-	pr_debug("%s() called for scsi_cmnd: %p cdb: 0x%02x\n",
+-		 __func__, sc, sc->cmnd[0]);
++		 func, sc, sc->cmnd[0]);
+ 
+ 	if (se_cmd->sense_buffer &&
+ 	   ((se_cmd->se_cmd_flags & SCF_TRANSPORT_TASK_SENSE) ||
+@@ -581,7 +564,7 @@ static int tcm_loop_queue_status(struct se_cmd *se_cmd)
+ 		sc->result = SAM_STAT_CHECK_CONDITION;
+ 		set_driver_byte(sc, DRIVER_SENSE);
+ 	} else
+-		sc->result = se_cmd->scsi_status;
++		sc->result = scsi_status;
+ 
+ 	set_host_byte(sc, DID_OK);
+ 	if ((se_cmd->se_cmd_flags & SCF_OVERFLOW_BIT) ||
+@@ -591,6 +574,17 @@ static int tcm_loop_queue_status(struct se_cmd *se_cmd)
+ 	return 0;
+ }
+ 
++static int tcm_loop_queue_data_in(struct se_cmd *se_cmd)
++{
++	return tcm_loop_queue_data_or_status(__func__, se_cmd, SAM_STAT_GOOD);
++}
++
++static int tcm_loop_queue_status(struct se_cmd *se_cmd)
++{
++	return tcm_loop_queue_data_or_status(__func__,
++					     se_cmd, se_cmd->scsi_status);
++}
++
+ static void tcm_loop_queue_tm_rsp(struct se_cmd *se_cmd)
+ {
+ 	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
 -- 
 2.25.1
 
