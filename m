@@ -2,102 +2,165 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4543C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC14C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B058820716
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RmiiafxL"
+	by mail.kernel.org (Postfix) with ESMTP id 170F220771
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592890110;
+	bh=hXx1AoyMhAAH4V2F+L7ruURvcKfaPHtYRAUW+1pvx4k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MeVv/znlefpefP+5ssEHVlDcVgBIQcJNhvKEvrQoN6ZOLWS207h+rNBq3/duiBd7L
+	 YmF99oE/5m6fWsmgAmlAZHsXx/QcGt0NK6CCU3AcPIHOMd6WSoKHkoSC2VID2fk+jt
+	 mgM3CzjJGYvP2EwJmEHDON+z0JRSjUTuWr7M6ASY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgFWFZb (ORCPT
+        id S1728878AbgFWF22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:25:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgFWFZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:25:30 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68783C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:25:29 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id g2so10978457lfb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rJGdd4T1mBh6VgSImvcGDguOX2vlHVdKbQpgCLbiU9k=;
-        b=RmiiafxLLKP875OzgpqZ62/Lueewk4AOM3UHierW9MmyLuFOgunQuv2x7ggwJzDS7L
-         DqNGoKesY5Am1qhK++Bjesr+thJEeWpG84HNpPFd0faqO5GFMEDVBhZ1Lf2CaZ1USRfx
-         2xPufwx2D+kbwV3Q+dFzpaJWkMjW6uyJsdKAFqXba5DBffD2fXJfED/K0QUUY3X3Md34
-         3Ztm7/3pga7dWeEZZc7e5AmpDM9WpU7xcwhkCHKnMcypmeHY/AvNbpAQPmRxDtKBkZGM
-         u3ZTnFsaC+eJg9b1CORgGXjO1Ri2e3wCTT1gyC/uyyXGTTvNr4Dr9WCn481BkzJr+ATE
-         LgHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rJGdd4T1mBh6VgSImvcGDguOX2vlHVdKbQpgCLbiU9k=;
-        b=OPX6bGd3Qziay8ESh7DPlugp//YZBE9glcxkSlsiQ7oD7bJN6yadznXoDGJF0UKNDE
-         c7d3viww/0GlzuQcxjCp3wNPqNVIQPKHsW0GXKogKRmt8IvmZxKFFoWQB44oYOm+GZ7n
-         THt7ntMWAZ181hnbiMIT6axh5NmYbqiPQsSjsZcB0bU2hQClBlPQpRQv9I2NWNdnQvoE
-         pOqL2Ul7MC6g6o9gWFQsv6tOv94umhnwP87gvR9VT5my+D5WnOU+XFjew6r9WipZf5l+
-         5oAx723a3aDloZZ4pv2dctU7gPmJdojepqdncjfoiIEkxUNqLXv1yxCszhSFuu6bq3QX
-         nCVQ==
-X-Gm-Message-State: AOAM530BYJTgipw67lnZIAm1AjCRcKDS8Xu0eb/6nA/ejeay5gbQsTax
-        eUmox40zcFT9Y5CjNOFrqPHH6H6uYovD1TPitWqljw==
-X-Google-Smtp-Source: ABdhPJz9eBvD8p4BLTBmgJcnnsG76Z1d+HAQFe3qCicUvtbVRXv3IGAHF/rmFO0b3XgwG555GId3UUY2FgJSjUj1C6s=
-X-Received: by 2002:a19:11:: with SMTP id 17mr11756487lfa.125.1592889927504;
- Mon, 22 Jun 2020 22:25:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623015846.1141975-1-guro@fb.com> <20200623015846.1141975-18-guro@fb.com>
-In-Reply-To: <20200623015846.1141975-18-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 22 Jun 2020 22:25:16 -0700
-Message-ID: <CALvZod7B3Xw4n9jY-+m-z7-iQ+5uE_WKKOo9YHk4s+ebOyCk5g@mail.gmail.com>
-Subject: Re: [PATCH v7 17/19] mm: memcg/slab: use a single set of kmem_caches
- for all allocations
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Jun 2020 01:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728615AbgFWF21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:28:27 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6592E20716;
+        Tue, 23 Jun 2020 05:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592890107;
+        bh=hXx1AoyMhAAH4V2F+L7ruURvcKfaPHtYRAUW+1pvx4k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Me1WQehU/cJKvXiO6fvSIbp3GZeSa46KS8e+Iz/R0XIc6/NN7kUn5QjG4/yWNtq/Y
+         qgnXvP8f8egr6ramEu2OiNtvbeAP5a0BS6isi4LJPytVu0xr8U7KelPcXwZdHU7lTS
+         K2oQp90JdsMj1P2xnnuEk3eqs4X4qFhnhkI36r9w=
+Date:   Tue, 23 Jun 2020 14:28:22 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Ming Lei <tom.leiming@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: kprobe: __blkdev_put probe is missed
+Message-Id: <20200623142822.371012c66baf2cc7a631e6a3@kernel.org>
+In-Reply-To: <20200623093801.db9d2ca9c3bfef61ef6a2a58@kernel.org>
+References: <20200618125438.GA191266@T590>
+        <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
+        <20200618231901.GA196099@T590>
+        <20200619141239.56f6dda0976453b790190ff7@kernel.org>
+        <20200619072859.GA205278@T590>
+        <20200619081954.3d72a252@oasis.local.home>
+        <20200619133240.GA351476@T590>
+        <20200620003509.9521053fbd384f4f5d23408f@kernel.org>
+        <20200619232820.GE353853@T590>
+        <20200620103747.fb83f804083ef9956740acee@kernel.org>
+        <20200622002753.GC670933@T590>
+        <20200622090148.6e0f2ac9@oasis.local.home>
+        <20200623084706.e6e99e99d7da6690e7a6c199@kernel.org>
+        <20200623093801.db9d2ca9c3bfef61ef6a2a58@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 6:58 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Instead of having two sets of kmem_caches: one for system-wide and
-> non-accounted allocations and the second one shared by all accounted
-> allocations, we can use just one.
->
-> The idea is simple: space for obj_cgroup metadata can be allocated on
-> demand and filled only for accounted allocations.
->
-> It allows to remove a bunch of code which is required to handle kmem_cache
-> clones for accounted allocations.  There is no more need to create them,
-> accumulate statistics, propagate attributes, etc.  It's a quite
-> significant simplification.
->
-> Also, because the total number of slab_caches is reduced almost twice (not
-> all kmem_caches have a memcg clone), some additional memory savings are
-> expected.  On my devvm it additionally saves about 3.5% of slab memory.
->
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+On Tue, 23 Jun 2020 09:38:01 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> On Tue, 23 Jun 2020 08:47:06 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > On Mon, 22 Jun 2020 09:01:48 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > On Mon, 22 Jun 2020 08:27:53 +0800
+> > > Ming Lei <ming.lei@redhat.com> wrote:
+> > > 
+> > > > Can you kprobe guys improve the implementation for covering this case?
+> > > > For example, put probe on 3) in case the above situation is recognized.
+> > > 
+> > > To do so would require solving the halting problem.
+> > > 
+> > >   https://en.wikipedia.org/wiki/Halting_problem
+> > > 
+> > > Or perhaps reading the DWARF output of the compiler to determine if it
+> > > optimized the location you are looking for.
+> > 
+> > As far as I can see, gcc-9.3 doesn't generate this information :(
+> > Maybe the optimizer forgot to push the tail-call callsite information
+> > to dwarf generator when making a recursive tail-call to a loop.
+> > 
+> > > The first case is impossible to solve, the second would take a lot of
+> > > work, (are you going to fund it?)
+> > 
+> > What I can provide is "--skip-prologue" option for the perf-probe
+> > which will be similar to the "-P" option. If the compiler correctly
+> > generates the information, we can enable it automatically. But
+> > as far as I can see, it doesn't.
+> > 
+> > [OT] DWARF has its option(and GNU extension) but it seems not correctly
+> > implemented yet.
+> >  
+> > http://www.dwarfstd.org/ShowIssue.php?issue=100909.2
+> 
+> Oops, sorry, I missed the following sentences.
+> 
+> "Tail calls are jump-like instructions which transfer control to the start
+> of some subprogram, but the call site location address isn't visible in the
+> unwind information."
+> 
+> "Tail recursion is a call to the current function which is compiled as a
+> loop into the middle of the current function."
+> 
+> "The DW_TAG_call_site entries describe normal and tail calls."
+> 
+> This means, the gcc is correctly implemented and this __blkdev_put() case
+> is NOT covered by DT_TAG_call_site.
+> So we can not detect it from the debuginfo.
+
+Hmm, BTW, if optimization is further advanced, it is possible that
+the loop start position is not always at the beginning of the function.
+It is easy to provide --skip-prologue to perf probe but it doesn't
+ensure that works always as you expected.
+
+For example,
+
+func()
+{
+1:
+	{ /* block which doesn't executed in tail-recursion call */
+	...
+	}
+2:
+	{ /* block which always executed in tail-recursion call */
+	...
+	}
+	func()
+}
+
+In this case, it is natural that the optimizer put a jump to 2 instead
+of 1. Moreover, if the number of recursion is fixed, the optimizer
+can unroll the loop. In that case there are no jumps. 
+
+So, as Steve pointed, strictly speaking, the developer needs to understand
+what the source code was compiled into, before tracing/debuging it.
+
+For the perf-probe case, I'm now thinking it is better user to
+choose the line in the function explicitly. I wish I had another flag
+that there was a tail-recursion, then I can warn users...
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
