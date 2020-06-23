@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F54C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82598207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1C820738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872691;
-	bh=zJqCMZ7Nvc8+rI2tctx6dZY0axoJnmJdlEQSqbhmTpk=;
+	s=default; t=1592872692;
+	bh=A4vha9pyInfPaCLA6akZMwVrr7X6XKSlu00Tn4YD7JE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5W/k5OFFNw8HIw52/fQj4o8uH0TnHOlsa31wzTHacRvxeeDnqmw7LtdSyQUvSAuw
-	 Yf67dQU6y87tSIGI/NP/7X8LQa8WflJl1crAC9JBWKPhQBt8IOJkceviNjxvXSuR2h
-	 z130Zt0PMqR+3DgVV1a+pMHGnJbdVAK3/F85XPkk=
+	b=NdDcMURfYTDzFl9mXnTYA44LG9z6YEH8T4Zll7v7qPuqo5gNS1wLKi7LYh+RqeobT
+	 Do5JIkDspYRTk2lw9KUjG6wTtICzQHV7zuV2Vcg08CBdTwvRr8hAvl5vTDLgLYbVVV
+	 M4ISKNFV1ci8ri91OLJqrtamcv/7XxftyU+day/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731740AbgFWAiJ (ORCPT
+        id S1732201AbgFWAiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:38:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:38:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732146AbgFWAh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732149AbgFWAh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:37:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C7F20C56;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B43820E65;
         Tue, 23 Jun 2020 00:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592872676;
-        bh=zJqCMZ7Nvc8+rI2tctx6dZY0axoJnmJdlEQSqbhmTpk=;
+        bh=A4vha9pyInfPaCLA6akZMwVrr7X6XKSlu00Tn4YD7JE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ahFOjxIfCLHtG7RDM3lzKLWpWoMpPD4uY6gj6/l95/hTibep0p+fomaprQ2IdyqOh
-         Vv/oxdxXYACg2IQR4023AlL9dn06wVmHVV89BFwPYLmOxKWVVxPtmrp3gCoTtIr0EF
-         Vg68NpV3SSIiMGmn73jSww10dSp5pjELS3v/LGOs=
+        b=RN8+wrZk+rhP3TiLfjxaVsjUuU0Cml1bXb24T4i0Lb/cHgWcB3cxKunP0GFrZ+sLl
+         7Eqh7/8RueWQ+QtWLb8rTkrMRn//LcnPmoZ+51LVtTMG4jJsSSkj7ikBCF2npRRBpC
+         h+ehF3sA1EkbtQwn2WDMGD9RqulFiLkNwg5b6Q2M=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 12/23] torture: Add a stop-run capability
-Date:   Mon, 22 Jun 2020 17:37:41 -0700
-Message-Id: <20200623003752.26872-12-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 13/23] torture: Abstract out console-log error detection
+Date:   Mon, 22 Jun 2020 17:37:42 -0700
+Message-Id: <20200623003752.26872-13-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
 References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
@@ -61,108 +61,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-When bisecting RCU issues, it is often the case that the first error in
-an unsuccessful run will happen quickly, but that a successful run must
-go on for some time in order to obtain a sufficiently low false-negative
-error rate.  In many cases, a bisection requires multiple concurrent
-runs, in which case the first failure in any run indicates failure,
-pure and simple.  In such cases, it would speed things up greatly if
-the first failure terminated all runs.
-
-This commit therefore adds scripting that checks for a file named "STOP"
-in the top-level results directory, terminating the run when it appears.
-Note that in-progress builds will continue until completion, but future
-builds and all runs will be cut short.
+This commit pulls the simple pattern-based error detection from the
+console log into a new console-badness.sh file.  This will enable future
+commits to end a run on the first error.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/jitter.sh         |  6 ++++++
- tools/testing/selftests/rcutorture/bin/kvm-build.sh      |  6 ++++++
- tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 13 +++++++++++--
- tools/testing/selftests/rcutorture/bin/kvm.sh            |  2 ++
- 4 files changed, 25 insertions(+), 2 deletions(-)
+ .../testing/selftests/rcutorture/bin/console-badness.sh  | 16 ++++++++++++++++
+ tools/testing/selftests/rcutorture/bin/parse-console.sh  |  5 +----
+ 2 files changed, 17 insertions(+), 4 deletions(-)
+ create mode 100755 tools/testing/selftests/rcutorture/bin/console-badness.sh
 
-diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
-index 30cb5b2..188b864 100755
---- a/tools/testing/selftests/rcutorture/bin/jitter.sh
-+++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
-@@ -46,6 +46,12 @@ do
- 		exit 0;
+diff --git a/tools/testing/selftests/rcutorture/bin/console-badness.sh b/tools/testing/selftests/rcutorture/bin/console-badness.sh
+new file mode 100755
+index 0000000..0e4c0b2
+--- /dev/null
++++ b/tools/testing/selftests/rcutorture/bin/console-badness.sh
+@@ -0,0 +1,16 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Scan standard input for error messages, dumping any found to standard
++# output.
++#
++# Usage: console-badness.sh
++#
++# Copyright (C) 2020 Facebook, Inc.
++#
++# Authors: Paul E. McKenney <paulmck@kernel.org>
++
++egrep 'Badness|WARNING:|Warn|BUG|===========|Call Trace:|Oops:|detected stalls on CPUs/tasks:|self-detected stall on CPU|Stall ended before state dump start|\?\?\? Writer stall state|rcu_.*kthread starved for|!!!' |
++grep -v 'ODEBUG: ' |
++grep -v 'This means that this is a DEBUG kernel and it is' |
++grep -v 'Warning: unable to open an initial console'
+diff --git a/tools/testing/selftests/rcutorture/bin/parse-console.sh b/tools/testing/selftests/rcutorture/bin/parse-console.sh
+index 1c64ca8..98478e1 100755
+--- a/tools/testing/selftests/rcutorture/bin/parse-console.sh
++++ b/tools/testing/selftests/rcutorture/bin/parse-console.sh
+@@ -116,10 +116,7 @@ then
  	fi
+ fi | tee -a $file.diags
  
-+	# Check for stop request.
-+	if test -f "$TORTURE_STOPFILE"
-+	then
-+		exit 1;
-+	fi
-+
- 	# Set affinity to randomly selected online CPU
- 	if cpus=`grep 1 /sys/devices/system/cpu/*/online 2>&1 |
- 		 sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//'`
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-build.sh b/tools/testing/selftests/rcutorture/bin/kvm-build.sh
-index 18d6518..115e182 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-build.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-build.sh
-@@ -9,6 +9,12 @@
- #
- # Authors: Paul E. McKenney <paulmck@linux.ibm.com>
- 
-+if test -f "$TORTURE_STOPFILE"
-+then
-+	echo "kvm-build.sh early exit due to run STOP request"
-+	exit 1
-+fi
-+
- config_template=${1}
- if test -z "$config_template" -o ! -f "$config_template" -o ! -r "$config_template"
+-egrep 'Badness|WARNING:|Warn|BUG|===========|Call Trace:|Oops:|detected stalls on CPUs/tasks:|self-detected stall on CPU|Stall ended before state dump start|\?\?\? Writer stall state|rcu_.*kthread starved for' < $file |
+-grep -v 'ODEBUG: ' |
+-grep -v 'This means that this is a DEBUG kernel and it is' |
+-grep -v 'Warning: unable to open an initial console' > $T.diags
++console-badness.sh < $file > $T.diags
+ if test -s $T.diags
  then
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-index 064dd73..5ec095d 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-@@ -182,7 +182,7 @@ do
- 	kruntime=`gawk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
- 	if test -z "$qemu_pid" || kill -0 "$qemu_pid" > /dev/null 2>&1
- 	then
--		if test $kruntime -ge $seconds
-+		if test $kruntime -ge $seconds -o -f "$TORTURE_STOPFILE"
- 		then
- 			break;
- 		fi
-@@ -211,10 +211,19 @@ then
- fi
- if test $commandcompleted -eq 0 -a -n "$qemu_pid"
- then
--	echo Grace period for qemu job at pid $qemu_pid
-+	if ! test -f "$TORTURE_STOPFILE"
-+	then
-+		echo Grace period for qemu job at pid $qemu_pid
-+	fi
- 	oldline="`tail $resdir/console.log`"
- 	while :
- 	do
-+		if test -f "$TORTURE_STOPFILE"
-+		then
-+			echo "PID $qemu_pid killed due to run STOP request" >> $resdir/Warnings 2>&1
-+			kill -KILL $qemu_pid
-+			break
-+		fi
- 		kruntime=`gawk 'BEGIN { print systime() - '"$kstarttime"' }' < /dev/null`
- 		if kill -0 $qemu_pid > /dev/null 2>&1
- 		then
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
-index 7dbce7a..3578c85 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
-@@ -337,6 +337,8 @@ then
- 	mkdir -p "$resdir" || :
- fi
- mkdir $resdir/$ds
-+TORTURE_RESDIR="$resdir/$ds"; export TORTURE_RESDIR
-+TORTURE_STOPFILE="$resdir/$ds/STOP"; export TORTURE_STOPFILE
- echo Results directory: $resdir/$ds
- echo $scriptname $args
- touch $resdir/$ds/log
+ 	print_warning "Assertion failure in $file $title"
 -- 
 2.9.5
 
