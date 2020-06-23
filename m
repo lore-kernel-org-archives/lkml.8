@@ -2,130 +2,145 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26221C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 997AC20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="j0U2buWv"
+	by mail.kernel.org (Postfix) with ESMTP id 025A020772
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592892165;
+	bh=x3bd9T22dLZovGnPn6q+wbS6I/RZshP+fVHKJEby0w4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xOQmfwso5QHGP9N0PpET3LNUfVHVZ4SH85ugnzJ5rknv7MsbZ4sK8+q/tt1wh3zVn
+	 dmbQ5LNBCdxughJtil8h9pqUFFiIGMvRPAojKFaTPmVdUgIVrWYzacZ/cS1VGjQf3A
+	 5uKVgo6+Hz/ef2pIU0RxmJt2JEoQKIPd+XJ1LbiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgFWGBQ (ORCPT
+        id S1730502AbgFWGCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:01:16 -0400
-Received: from mail-eopbgr20045.outbound.protection.outlook.com ([40.107.2.45]:54054
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730149AbgFWGBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:01:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gaYKAgzM3sfcrQ7i1v8Unn34igBgCJrqhpDE84SzFKSQDppJtCBO5rvMnW3E+PpEWKGuBYJRlB07wAelwe4LMKo5qqhMmwtm26ZMqCHd2NdgwwanNZi8z2uvoT+QN11knXI+wqa7DOnQmPD6Zrt8KzXdGyE4+RuNGPNyvpSlFfzurPfIIvBODo4m9HBMnlLuxzU8iYOM9Va/7oBKq7safsHGKgwbV9URm+nGdXxSv3rVb0+T9IJTXtoKpO7zT4NioxpjQ4bt4ErdjNHSxuODFA0kumzgYl6QagYfg0cln9EIKOkIlVI0U1j1DDbdgIowBzGJ16f9gtIXlBGBecFrrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uh4UjRhhIBmUKolvOKbc3UFhQvGuCwxQsjYZq4xFLBM=;
- b=J7WB3Bl4Cq1O7HOPhU/jaLXk9Ht1Br4FC3bzpM54mdMLCDixHL9sMsbxVsCEvocDPtq9eN8N5Mg5hYtl6UxY0AeCVzf+VfoORt9YV7uWK/Ny0Ov1JrcXOeKfSONY4EBnSMQvHfojy97uLiOJgaRuUPMm0lhBwncelx3clkha5XAcATzM3FIWgKHVV3mbLPQ+ALF56jEvtBhHFvdz33MsMEGJD74qtpbKmutu8BR9pmHQXtFPcsGPh4kFr7wi7Oyl6jZgQ5ysuwnQDbYNRn8A6vzIFYGZdT8gUZKpkQYuRKtOz5FdFUaVspqa96XUTeMaGTnfzGgmQbPMlUWykvgfew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uh4UjRhhIBmUKolvOKbc3UFhQvGuCwxQsjYZq4xFLBM=;
- b=j0U2buWv4Kkv5/BCAyiLLYF0JAphDGlh2C89WYF8gO2dideqt5dBI1qOUP57onNu4X1AE6hb9xQTu15BD0//ig5zsIsJgSyzHiPmLHXVR3bJY9nZlI1vL1NvMuzdLR9J+Yoeu7ej2F5wdtdFjZ/EFQXwUxwJcGuzAtBz7PtKIz4=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6654.eurprd04.prod.outlook.com (2603:10a6:803:129::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Tue, 23 Jun
- 2020 06:01:12 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 06:01:12 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v1] regulator: pfuze100: add condition check for 'ramp_delay = 0'
-Date:   Tue, 23 Jun 2020 22:01:10 +0800
-Message-Id: <1592920870-12693-1-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0196.apcprd04.prod.outlook.com
- (2603:1096:4:14::34) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Tue, 23 Jun 2020 02:02:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728800AbgFWGCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:02:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF14520738;
+        Tue, 23 Jun 2020 06:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592892162;
+        bh=x3bd9T22dLZovGnPn6q+wbS6I/RZshP+fVHKJEby0w4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pY+2PLfuJR0CNNlu0VkLooa8HwaGUnpA6E73k1IKCI66P+z3Q/qeq4j4OnsM76pfs
+         BeCTfcSh22YxTRw9e8A2ZDplEHT+CIwNqLQVR5Q0ZM5WmaqDsDByJ8BGz345mTCnL/
+         cJLJ42FiTD4Gihi4ldIYl13BkYgKkE76Aeqsn3m0=
+Date:   Tue, 23 Jun 2020 08:02:36 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ian Kent <raven@themaw.net>
+Cc:     Tejun Heo <tj@kernel.org>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+Message-ID: <20200623060236.GA3818201@kroah.com>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+ <20200619153833.GA5749@mtj.thefacebook.com>
+ <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+ <20200619222356.GA13061@mtj.duckdns.org>
+ <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
+ <20200622174845.GB13061@mtj.duckdns.org>
+ <20200622180306.GA1917323@kroah.com>
+ <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR04CA0196.apcprd04.prod.outlook.com (2603:1096:4:14::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.27 via Frontend Transport; Tue, 23 Jun 2020 06:01:10 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 79fdb41e-b198-48d7-07d9-08d8173ad4a3
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6654:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB665415275B88E99C22EC281689940@VE1PR04MB6654.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
-X-Forefront-PRVS: 04433051BF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3HBlN/uasuXIu5x42jpqhTvSlq/76d4YoXOnJUNcNtVcR0BuO6Y13LrO21cnIY/KwtySjGyvu2Gk7LduWAbTjiLOaxx1yjotzFq5qhuEBHhc+nvlN1XiJ3Ep0axMM9DOOqfBU/ekJUsASJbdUDVPAP6vMesOlye48SofEVEg4pf+i59hRmlhgdRX6eBQE8De0iDst9fjeqAwHHBCkLM1O8aS6YwQgYALr2ADjjZWgVZyFzmcD/h9YBxM7Ukg+zANzSawlCQTE3eG8Ftw0V9zJKQx/6RxuZ/FSDzK0pwKktzb9+Y26HXgwe0Q9bhr64FBrmT9hkOi+SlabFwjzRXGyw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(6506007)(83380400001)(26005)(8676002)(6486002)(6512007)(316002)(2906002)(186003)(52116002)(16526019)(478600001)(5660300002)(66946007)(4326008)(66556008)(956004)(8936002)(36756003)(86362001)(2616005)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: pljGW0dxhuHZ70AQumNrl8ys6O+1+WDI90tFj2eF7Ch+fRpLvRuFqoXHq0lFBmm/jzHtLRCrBr6f5/LmyheGRpWXJTlERpXZiExxMjHMG9mkjZp93xgrbNFElnx1gUOsc8n4YOTm6c3rKGDTTCzPMqMd8m+48A1vn6pRU47tCrUUpvFmuDwDFtWExBvdgkHfH62Hg4C3cey7xvTHjuBDw/lHQ2zzt1vpHdLaP9u8+TXCpbxplmEyggfrYxxGYzSDQcugUED3HqBrKumYqQbeQbbid9mJtIJoMQYlrWg346FHUWoGJA83k2EywTx0+Wm7EJ7pYXPYDWHM3cNZFKAvpTIcNkNwmOpsJZJBFgB8C/txeSOH425vSYSvQUElhiXkMxJ6JM0B8Zx8X4W1avOdW3VSjpYWAuH7fjm7Fv4Q65MyLdU4ZJKsZ1gui8nQAihhl/RFTLOsO6fmpNRMVAuGXEJ0yNNjortE2dKfjzFwoDk=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79fdb41e-b198-48d7-07d9-08d8173ad4a3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 06:01:11.9769
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QwYDYlMvja5H8TrqhJ8FHcyKT5sDxNOtkmkXWhOtjDnUxzYFrmNUFoOHvE2if6pRsquCe19TzC0LJBefx3eDJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6654
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checking for 'ramp_delay = 0' to avoid Coverity warning report.
+On Tue, Jun 23, 2020 at 01:09:08PM +0800, Ian Kent wrote:
+> On Mon, 2020-06-22 at 20:03 +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Jun 22, 2020 at 01:48:45PM -0400, Tejun Heo wrote:
+> > > Hello, Ian.
+> > > 
+> > > On Sun, Jun 21, 2020 at 12:55:33PM +0800, Ian Kent wrote:
+> > > > > > They are used for hotplugging and partitioning memory. The
+> > > > > > size of
+> > > > > > the
+> > > > > > segments (and thus the number of them) is dictated by the
+> > > > > > underlying
+> > > > > > hardware.
+> > > > > 
+> > > > > This sounds so bad. There gotta be a better interface for that,
+> > > > > right?
+> > > > 
+> > > > I'm still struggling a bit to grasp what your getting at but ...
+> > > 
+> > > I was more trying to say that the sysfs device interface with per-
+> > > object
+> > > directory isn't the right interface for this sort of usage at all.
+> > > Are these
+> > > even real hardware pieces which can be plugged in and out? While
+> > > being a
+> > > discrete piece of hardware isn't a requirement to be a device model
+> > > device,
+> > > the whole thing is designed with such use cases on mind. It
+> > > definitely isn't
+> > > the right design for representing six digit number of logical
+> > > entities.
+> > > 
+> > > It should be obvious that representing each consecutive memory
+> > > range with a
+> > > separate directory entry is far from an optimal way of representing
+> > > something like this. It's outright silly.
+> > 
+> > I agree.  And again, Ian, you are just "kicking the problem down the
+> > road" if we accept these patches.  Please fix this up properly so
+> > that
+> > this interface is correctly fixed to not do looney things like this.
+> 
+> Fine, mitigating this problem isn't the end of the story, and you
+> don't want to do accept a change to mitigate it because that could
+> mean no further discussion on it and no further work toward solving
+> it.
+> 
+> But it seems to me a "proper" solution to this will cross a number
+> of areas so this isn't just "my" problem and, as you point out, it's
+> likely to become increasingly problematic over time.
+> 
+> So what are your ideas and recommendations on how to handle hotplug
+> memory at this granularity for this much RAM (and larger amounts)?
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- drivers/regulator/pfuze100-regulator.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+First off, this is not my platform, and not my problem, so it's funny
+you ask me :)
 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index 6895379..e75e61f 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -128,7 +128,7 @@ static int pfuze100_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- 	struct pfuze_chip *pfuze100 = rdev_get_drvdata(rdev);
- 	int id = rdev_get_id(rdev);
- 	bool reg_has_ramp_delay;
--	unsigned int ramp_bits;
-+	unsigned int ramp_bits = 0;
- 	int ret;
- 
- 	switch (pfuze100->chip_id) {
-@@ -149,8 +149,11 @@ static int pfuze100_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- 	}
- 
- 	if (reg_has_ramp_delay) {
--		ramp_delay = 12500 / ramp_delay;
--		ramp_bits = (ramp_delay >> 1) - (ramp_delay >> 3);
-+		if (ramp_delay > 0) {
-+			ramp_delay = 12500 / ramp_delay;
-+			ramp_bits = (ramp_delay >> 1) - (ramp_delay >> 3);
-+		}
-+
- 		ret = regmap_update_bits(pfuze100->regmap,
- 					 rdev->desc->vsel_reg + 4,
- 					 0xc0, ramp_bits << 6);
--- 
-2.7.4
+Anyway, as I have said before, my first guesses would be:
+	- increase the granularity size of the "memory chunks", reducing
+	  the number of devices you create.
+	- delay creating the devices until way after booting, or do it
+	  on a totally different path/thread/workqueue/whatever to
+	  prevent delay at booting
 
+And then there's always:
+	- don't create them at all, only only do so if userspace asks
+	  you to.
+
+You all have the userspace tools/users for this interface and know it
+best to know what will work for them.  If you don't, then hey, let's
+just delete the whole thing and see who screams :)
+
+thanks,
+
+greg k-h
