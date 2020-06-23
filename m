@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1BEF21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190282053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944944;
-	bh=z35iJVWZkC2NAMYRYw/X+fGLQhQF2nEGbNhYXl4tEGc=;
+	s=default; t=1592944950;
+	bh=ijW5Yi1DY4mGRUjFUUIM04zNiRTEubsYkWTWBhKw7Xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eohq07othcB22njsBy0rkviNJ0uM+Nve5Id/del9DPOVNhiCQblT+5kBhipn+uLEX
-	 XSLcGntCeijyudiOe6zQzwSsOVQirn0bJeKL6T3UNaccXCvPuv420ZqMEYP8hxS1h8
-	 I/A95cbcIx0KhGve6NL8R2C0QuQLQYBwerLx3pso=
+	b=nRwDaEnfYZ1HaBcGexts0rwgsPe+qho5E6H8LG8cEkoMIJBrFxCO/JD3q1mF0UO0f
+	 V9N0WayH1L141ejQgtkV2sNupegYQNcnn3r2IEFfugSteutIAZ90Rv3q9HmdkD/E3r
+	 PLBPLfkMPyR4NOwyU1SuqSUm0K+AERjNyZlU8z1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392417AbgFWUmW (ORCPT
+        id S2392419AbgFWUmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392392AbgFWUmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:11 -0400
+        id S2392401AbgFWUmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92CC82070E;
-        Tue, 23 Jun 2020 20:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D90572070E;
+        Tue, 23 Jun 2020 20:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944931;
-        bh=z35iJVWZkC2NAMYRYw/X+fGLQhQF2nEGbNhYXl4tEGc=;
+        s=default; t=1592944936;
+        bh=ijW5Yi1DY4mGRUjFUUIM04zNiRTEubsYkWTWBhKw7Xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+pyBYvcfl975TG+6gslMgbztNa0nysFh8RLAIhAu8gPtKsMPpnh0gctCniFGzWj1
-         UAjcyfGSKnoP8vtQQqRTntqAEO+eDbV4k6Or4gefsADCn/nEyfktHRzMB6KWZbmdYi
-         8ClLblYTozK/LzBCGjkAn8wpgObP+VmjJ6t7o7qk=
+        b=05S58+p/4dO1CR8eznfBhMrDjsBW6jz0Oy/ToDqAS4OiqKo4O3fDixG7gxuG8Ow7G
+         YJpSRPG4auZT4FViAKCjHNQnzxnWDARfwUcvJEli7vY42q1saIyPRrTrTfop9HYn/k
+         5E8ivPhScqNw9iz+a0GSCiVdb3P0mJi48nX/1R2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Sean Paul <sean@poorly.run>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 180/206] drm/dp_mst: Increase ACT retry timeout to 3s
-Date:   Tue, 23 Jun 2020 21:58:28 +0200
-Message-Id: <20200623195325.892939232@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 182/206] block: nr_sects_write(): Disable preemption on seqcount write
+Date:   Tue, 23 Jun 2020 21:58:30 +0200
+Message-Id: <20200623195325.989328764@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,130 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-[ Upstream commit 873a95e0d59ac06901ae261dda0b7165ffd002b8 ]
+[ Upstream commit 15b81ce5abdc4b502aa31dff2d415b79d2349d2f ]
 
-Currently we only poll for an ACT up to 30 times, with a busy-wait delay
-of 100µs between each attempt - giving us a timeout of 2900µs. While
-this might seem sensible, it would appear that in certain scenarios it
-can take dramatically longer then that for us to receive an ACT. On one
-of the EVGA MST hubs that I have available, I observed said hub
-sometimes taking longer then a second before signalling the ACT. These
-delays mostly seem to occur when previous sideband messages we've sent
-are NAKd by the hub, however it wouldn't be particularly surprising if
-it's possible to reproduce times like this simply by introducing branch
-devices with large LCTs since payload allocations have to take effect on
-every downstream device up to the payload's target.
+For optimized block readers not holding a mutex, the "number of sectors"
+64-bit value is protected from tearing on 32-bit architectures by a
+sequence counter.
 
-So, instead of just retrying 30 times we poll for the ACT for up to 3ms,
-and additionally use usleep_range() to avoid a very long and rude
-busy-wait. Note that the previous retry count of 30 appears to have been
-arbitrarily chosen, as I can't find any mention of a recommended timeout
-or retry count for ACTs in the DisplayPort 2.0 specification. This also
-goes for the range we were previously using for udelay(), although I
-suspect that was just copied from the recommended delay for link
-training on SST devices.
+Disable preemption before entering that sequence counter's write side
+critical section. Otherwise, the read side can preempt the write side
+section and spin for the entire scheduler tick. If the reader belongs to
+a real-time scheduling class, it can spin forever and the kernel will
+livelock.
 
-Changes since v1:
-* Use readx_poll_timeout() instead of open-coding timeout loop - Sean
-  Paul
-Changes since v2:
-* Increase poll interval to 200us - Sean Paul
-* Print status in hex when we timeout waiting for ACT - Sean Paul
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Cc: Sean Paul <sean@poorly.run>
-Cc: <stable@vger.kernel.org> # v3.17+
-Reviewed-by: Sean Paul <sean@poorly.run>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200406221253.1307209-4-lyude@redhat.com
+Fixes: c83f6bf98dc1 ("block: add partition resize function to blkpg ioctl")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 54 ++++++++++++++++-----------
- 1 file changed, 32 insertions(+), 22 deletions(-)
+ include/linux/genhd.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 70bffedfdcf5b..a0aafd9a37e60 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -29,6 +29,7 @@
- #include <linux/i2c.h>
- #include <drm/drm_dp_mst_helper.h>
- #include <drm/drmP.h>
-+#include <linux/iopoll.h>
- 
- #include <drm/drm_fixed.h>
- #include <drm/drm_atomic.h>
-@@ -2828,6 +2829,17 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
- 	return ret;
- }
- 
-+static int do_get_act_status(struct drm_dp_aux *aux)
-+{
-+	int ret;
-+	u8 status;
-+
-+	ret = drm_dp_dpcd_readb(aux, DP_PAYLOAD_TABLE_UPDATE_STATUS, &status);
-+	if (ret < 0)
-+		return ret;
-+
-+	return status;
-+}
- 
- /**
-  * drm_dp_check_act_status() - Check ACT handled status.
-@@ -2837,30 +2849,28 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
-  */
- int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index f13272d843320..f993bc86f3bac 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -729,9 +729,11 @@ static inline sector_t part_nr_sects_read(struct hd_struct *part)
+ static inline void part_nr_sects_write(struct hd_struct *part, sector_t size)
  {
--	int count = 0, ret;
--	u8 status;
--
--	do {
--		ret = drm_dp_dpcd_readb(mgr->aux,
--					DP_PAYLOAD_TABLE_UPDATE_STATUS,
--					&status);
--		if (ret < 0) {
--			DRM_DEBUG_KMS("failed to read payload table status %d\n",
--				      ret);
--			return ret;
--		}
--
--		if (status & DP_PAYLOAD_ACT_HANDLED)
--			break;
--		count++;
--		udelay(100);
--	} while (count < 30);
--
--	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
--		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
--			      status, count);
-+	/*
-+	 * There doesn't seem to be any recommended retry count or timeout in
-+	 * the MST specification. Since some hubs have been observed to take
-+	 * over 1 second to update their payload allocations under certain
-+	 * conditions, we use a rather large timeout value.
-+	 */
-+	const int timeout_ms = 3000;
-+	int ret, status;
-+
-+	ret = readx_poll_timeout(do_get_act_status, mgr->aux, status,
-+				 status & DP_PAYLOAD_ACT_HANDLED || status < 0,
-+				 200, timeout_ms * USEC_PER_MSEC);
-+	if (ret < 0 && status >= 0) {
-+		DRM_DEBUG_KMS("Failed to get ACT after %dms, last status: %02x\n",
-+			      timeout_ms, status);
- 		return -EINVAL;
-+	} else if (status < 0) {
-+		DRM_DEBUG_KMS("Failed to read payload table status: %d\n",
-+			      status);
-+		return status;
- 	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL(drm_dp_check_act_status);
+ #if BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_SMP)
++	preempt_disable();
+ 	write_seqcount_begin(&part->nr_sects_seq);
+ 	part->nr_sects = size;
+ 	write_seqcount_end(&part->nr_sects_seq);
++	preempt_enable();
+ #elif BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_PREEMPT)
+ 	preempt_disable();
+ 	part->nr_sects = size;
 -- 
 2.25.1
 
