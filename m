@@ -2,110 +2,124 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA59C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E319C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7F62073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A1E2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943391;
-	bh=ED7Xq0AwfAy+9nyXUotzKpXX9MDzfaoz5X1aK7Sr04c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cVe8gm4is9XWXGjgvoQW1XK8kW0nM9uJnQG3+atezTy9PlMOgHGlxEuxROmbk0QNp
-	 7DvCtVzBJl7UnD2vVZuv0XLwVTAbvY37/jfleYZwuvHSWYqZTQCoXRFfLIrOK9y7g/
-	 BI/0uFyxkOh+Y2aew+6udeC8BBNqeyBkp8TUVTM0=
+	s=default; t=1592943397;
+	bh=gDGnvZfZxG08b9wvGhCaBJiEgiArLyhOEhwuqh+/4Xg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ri/B56nzDTJ/WwlrgP/jJepkkf2NLwdRyZxQfX17fYPUhL9kaOiCVGCINA0nmV6Hq
+	 THHaM6PFunAxu18+9Z9mqB0qja1xfowtI9bz7nF8hg0teVXtNDr2/Rs9W8FPy7HX1O
+	 LAmEX3UeBgGBQE3MRz96LxQFs8f+n/zA9rpqS1Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389426AbgFWUQ2 (ORCPT
+        id S2389446AbgFWUQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59898 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:16:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389167AbgFWUQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2389427AbgFWUQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:31 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DE2D20E65;
-        Tue, 23 Jun 2020 20:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB322064B;
+        Tue, 23 Jun 2020 20:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943386;
-        bh=ED7Xq0AwfAy+9nyXUotzKpXX9MDzfaoz5X1aK7Sr04c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSXXW+aJYEc7RVotMjnqd+0B/YO2Uxf/45c2crr7KiQT6/UGgmvGWQVe4wpqpVilz
-         2PQdcc9l7n9/nGp2e0CS53gcrO/TkL9ptOPCAnCBelIHuXG5iP+e4KJUDYYP33MYS2
-         MEOtq+lAkDE/860apkbydtAXulLlJiIcdyHWU+wY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 341/477] NTB: ntb_tool: reading the link file should not end in a NULL byte
-Date:   Tue, 23 Jun 2020 21:55:38 +0200
-Message-Id: <20200623195423.658932726@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592943390;
+        bh=gDGnvZfZxG08b9wvGhCaBJiEgiArLyhOEhwuqh+/4Xg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Y9UwVHOwGJuOhYMiSxOJo8XDSMmeGgWKrc0Uz3JBUaLR4LA6LbHi7+Oi+JfJLfcaq
+         pKB2NjOEMM3KUgJf9UswWdLF53hl6JjKFdIhEfegfP+IvdJWnRd/j9XnlTSz2f0k02
+         fsulvyWw9rlpOsS0WvtokvCV2JlEajVWPOdNF6KA=
+Date:   Tue, 23 Jun 2020 13:16:28 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 03/11] net: devres: relax devm_register_netdev()
+Message-ID: <20200623131628.232ec75e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <CAMRc=MfF1RbQCJ62QhscFLu1HKYRc9M-2SMep1_vTJ2xhKjLAA@mail.gmail.com>
+References: <20200622100056.10151-1-brgl@bgdev.pl>
+        <20200622100056.10151-4-brgl@bgdev.pl>
+        <20200622154943.02782b5a@kicinski-fedora-PC1C0HJN>
+        <CAMRc=MfF1RbQCJ62QhscFLu1HKYRc9M-2SMep1_vTJ2xhKjLAA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+On Tue, 23 Jun 2020 11:12:24 +0200 Bartosz Golaszewski wrote:
+> wt., 23 cze 2020 o 00:49 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(a):
+> > On Mon, 22 Jun 2020 12:00:48 +0200 Bartosz Golaszewski wrote: =20
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > This devres helper registers a release callback that only unregisters
+> > > the net_device. It works perfectly fine with netdev structs that are
+> > > not managed on their own. There's no reason to check this - drop the
+> > > warning.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com> =20
+> >
+> > I think the reasoning for this suggestion was to catch possible UAF
+> > errors. The netdev doesn't necessarily has to be from devm_alloc_*
+> > but it has to be part of devm-ed memory or memory which is freed
+> > after driver's remove callback.
+> > =20
+>=20
+> Yes I understand that UAF was the concern here, but this limitation is
+> unnecessary. In its current form devm_register_netdev() only works for
+> struct net_device allocated with devm_alloc_etherdev(). Meanwhile
+> calling alloc_netdev() (which doesn't have its devm counterpart yet -
+> I may look into it shortly),
 
-[ Upstream commit 912e12813dd03c602e4922fc34709ec4d4380cf0 ]
+If resource managed alloc_netdev() is needed devm_alloc_netdev() can
+be created, and even reuse devm_free_netdev() so no changes to the
+warning are even necessary for such extension.
 
-When running ntb_test this warning is issued:
+> then registering a devm action with devm_add_action_or_reset() which
+> would free this memory is a perfectly fine use case. This patch would
+> make it possible.
 
-./ntb_test.sh: line 200: warning: command substitution: ignored null
-byte in input
+alloc_netdev() + devm_add_action makes no sense in the upstream kernel,
+just add the appropriate helper, we care little about out of tree code.
 
-This is caused by the kernel returning one more byte than is necessary
-when reading the link file.
-
-Reduce the number of bytes read back to 2 as it was before the
-commit that regressed this.
-
-Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ntb/test/ntb_tool.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
-index 9eaeb221d9802..b7bf3f863d79b 100644
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -504,7 +504,7 @@ static ssize_t tool_peer_link_read(struct file *filep, char __user *ubuf,
- 	buf[1] = '\n';
- 	buf[2] = '\0';
- 
--	return simple_read_from_buffer(ubuf, size, offp, buf, 3);
-+	return simple_read_from_buffer(ubuf, size, offp, buf, 2);
- }
- 
- static TOOL_FOPS_RDWR(tool_peer_link_fops,
-@@ -1690,4 +1690,3 @@ static void __exit tool_exit(void)
- 	debugfs_remove_recursive(tool_dbgfs_topdir);
- }
- module_exit(tool_exit);
--
--- 
-2.25.1
-
+> > Are there cases in practice where you've seen the netdev not being
+> > devm allocated? =20
+>=20
+> As I said above - alloc_netdev() used by wireless, can, usb etc.
+> drivers doesn't have a devres variant.
 
 
