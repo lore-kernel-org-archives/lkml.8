@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE806C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C23A520CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534BF20FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942639;
-	bh=CrgVa/Gc9vKnKaRjzNJoH5yqlCiMSJw0IgPSlPn42iM=;
+	s=default; t=1592942642;
+	bh=2MC5q5RSqVKgcx5B9gE5+mDpo3ta5TgsrmT7263qL1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jB+mefhQTGcVziuLI7y0CAgxR3fFurvS8zTfaFOoi3XCvSPHcfC0occf0KYTHte9d
-	 WdyMW4BPFMWrYR/cz8EnPblhXp0QMakek9RYk5hIXcB73LO2Cp4o+TAq3tUOpO9L7q
-	 Y2q2cFczqO7VBWh2DgfaJykW+NQqyBlS9qWqzfd0=
+	b=fcQQvEQ6ESsmBIKmHC/FqkHdmBvcjillDbGixwOfbI2nYHhBAN2DH3J2Yzzn/fcF5
+	 Q78puoMMXNNIId7GFj7UbYuxCpVE2M09HYoSnnzqDujw/R5pZyOPwYkr+UfoA1z/ll
+	 woCJgM0OmKHnX4j5HP3WKxYGRGIJk/codJKKbZyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387641AbgFWUD5 (ORCPT
+        id S2388143AbgFWUEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41780 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:04:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388111AbgFWUDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:50 -0400
+        id S2388134AbgFWUD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D49B20EDD;
-        Tue, 23 Jun 2020 20:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52DDE20FC3;
+        Tue, 23 Jun 2020 20:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942630;
-        bh=CrgVa/Gc9vKnKaRjzNJoH5yqlCiMSJw0IgPSlPn42iM=;
+        s=default; t=1592942637;
+        bh=2MC5q5RSqVKgcx5B9gE5+mDpo3ta5TgsrmT7263qL1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EggLVt0tyOUrFxzbtIYPUFyWlMSmOC5SX1363+2tLQRzaFvg3Dj2dmWXKbTHlMo5N
-         0oxLoYGcIQkWEAvxb/7WG3RXje6vLfFqL4Wg77iFWIMn3JgFIY3g0i6inb2EQlDHyl
-         BcQji47Hq6UZ3pSPnICzjij7DNBLIXiWAiQMxt+s=
+        b=Uod8DlG2ZDepmaVZ0uF/QkN4tc4xqoF9Ur/RmGNWN6EMPObqlVPgO77dmp3+ExBsr
+         Vquiy5wEgbRYfL6yDSxSumVYFXLrxhLAkDAuQ1kor/98gaYxYyEAXoqaV24AZJbqmS
+         vmESyNSIugtcK8J8LMUDJZAzie2UdLRVF+mIElsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Alain Volmat <avolmat@me.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 033/477] iio: bmp280: fix compensation of humidity
-Date:   Tue, 23 Jun 2020 21:50:30 +0200
-Message-Id: <20200623195409.164817493@linuxfoundation.org>
+Subject: [PATCH 5.7 077/477] clk: clk-flexgen: fix clock-critical handling
+Date:   Tue, 23 Jun 2020 21:51:14 +0200
+Message-Id: <20200623195411.261073802@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,48 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Klinger <ak@it-klinger.de>
+From: Alain Volmat <avolmat@me.com>
 
-[ Upstream commit dee2dabc0e4115b80945fe2c91603e634f4b4686 ]
+[ Upstream commit a403bbab1a73d798728d76931cab3ff0399b9560 ]
 
-Limit the output of humidity compensation to the range between 0 and 100
-percent.
+Fixes an issue leading to having all clocks following a critical
+clocks marked as well as criticals.
 
-Depending on the calibration parameters of the individual sensor it
-happens, that a humidity above 100 percent or below 0 percent is
-calculated, which don't make sense in terms of relative humidity.
-
-Add a clamp to the compensation formula as described in the datasheet of
-the sensor in chapter 4.2.3.
-
-Although this clamp is documented, it was never in the driver of the
-kernel.
-
-It depends on the circumstances (calibration parameters, temperature,
-humidity) if one can see a value above 100 percent without the clamp.
-The writer of this patch was working with this type of sensor without
-noting this error. So it seems to be a rare event when this bug occures.
-
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Link: https://lkml.kernel.org/r/20200322140740.3970-1-avolmat@me.com
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/bmp280-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/st/clk-flexgen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index 2540e7c2358c1..973264a088f98 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -271,6 +271,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
- 		+ (s32)2097152) * calib->H2 + 8192) >> 14);
- 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index 4413b6e04a8ec..55873d4b76032 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -375,6 +375,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 			break;
+ 		}
  
-+	var = clamp_val(var, 0, 419430400);
-+
- 	return var >> 12;
- };
++		flex_flags &= ~CLK_IS_CRITICAL;
+ 		of_clk_detect_critical(np, i, &flex_flags);
  
+ 		/*
 -- 
 2.25.1
 
