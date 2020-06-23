@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48211C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A03D2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D8F21531
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944753;
-	bh=SHAhC7DmFtppXWs7b0Kn01bV/vNSQiVgCjFt4xW8ddQ=;
+	s=default; t=1592944758;
+	bh=DrZu0NMmSZMIz0xH6G9+APbQxnDbr+G3aSdiLuebcDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJDMBKp66RSHJmXUyahW7PutaUShqXcYDeDff9L/xTLbex+K6KuIgr34/iaWjcSB1
-	 bhb1YM5nIKpAv1qHtzxFm9rWmgu/YXbgr93QG5313AMhR/dkzetUh9auIhr4OPcpmW
-	 tTRyefpmmwlFZwJd8y/P6Pwdj6a/1VQfXYF+vp0M=
+	b=N+Hx+DbI/T7b0kxUBS2uTQ7MvCSq9rYfnUGi9L4bzrmN4S7lxyQhVgdW3fhvRKQ8H
+	 h9N4aBx+cArS89hm5GlzOYKF2SuB5O3bxwuoXy2E2hgYqyNa1werytHvCVzsaOjDXl
+	 rWUlCfe3xY+SbAP+b1Cz+XtZdpGNeIf1Qyn7h1dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392024AbgFWUjL (ORCPT
+        id S2392035AbgFWUjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403844AbgFWUjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:05 -0400
+        id S2392021AbgFWUjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E8502080C;
-        Tue, 23 Jun 2020 20:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C7A221531;
+        Tue, 23 Jun 2020 20:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944745;
-        bh=SHAhC7DmFtppXWs7b0Kn01bV/vNSQiVgCjFt4xW8ddQ=;
+        s=default; t=1592944750;
+        bh=DrZu0NMmSZMIz0xH6G9+APbQxnDbr+G3aSdiLuebcDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gMxF6jZ+HE6SJEdPTvDc1rLKv9t8jryDyzhlscmcXWoNH+/2V4EdJFUHCF7Uy7vo9
-         GDLALBoQPCV/mgkoKUCGfzMRH+UQle63BU5i3faH3S/voDgPJkJCVc1I19VRzZP/3J
-         9lAVvlRGbPzc0w/GTW4oStXlumUqAPTKLe/lEtxc=
+        b=BI6sI5BAbHyBFm8mQgkgsTaROoP36XosPZSzSCAJZihkos2qMNnSR4VTE+BQzDS0k
+         cV0H/g8GkuVWm1qzWyElTCHCJdAR6xNwdOPbSsvrmS4Z7fFj+tOPm1llmnEYZYPTUr
+         1lbn3x4YitZwER/K8wdSJ6P/zr7PwzqB4ISLwPmk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/206] usb: gadget: fix potential double-free in m66592_probe.
-Date:   Tue, 23 Jun 2020 21:57:17 +0200
-Message-Id: <20200623195322.306819485@linuxfoundation.org>
+Subject: [PATCH 4.19 111/206] RDMA/iw_cxgb4: cleanup device debugfs entries on ULD remove
+Date:   Tue, 23 Jun 2020 21:57:19 +0200
+Message-Id: <20200623195322.404205831@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,36 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Potnuri Bharat Teja <bharat@chelsio.com>
 
-[ Upstream commit 44734a594196bf1d474212f38fe3a0d37a73278b ]
+[ Upstream commit 49ea0c036ede81f126f1a9389d377999fdf5c5a1 ]
 
-m66592_free_request() is called under label "err_add_udc"
-and "clean_up", and m66592->ep0_req is not set to NULL after
-first free, leading to a double-free. Fix this issue by
-setting m66592->ep0_req to NULL after the first free.
+Remove device specific debugfs entries immediately if LLD detaches a
+particular ULD device in case of fatal PCI errors.
 
-Fixes: 0f91349b89f3 ("usb: gadget: convert all users to the new udc infrastructure")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Link: https://lore.kernel.org/r/20200524190814.17599-1-bharat@chelsio.com
+Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/m66592-udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/cxgb4/device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
-index a8288df6aadf0..ea59b56e54023 100644
---- a/drivers/usb/gadget/udc/m66592-udc.c
-+++ b/drivers/usb/gadget/udc/m66592-udc.c
-@@ -1667,7 +1667,7 @@ static int m66592_probe(struct platform_device *pdev)
- 
- err_add_udc:
- 	m66592_free_request(&m66592->ep[0].ep, m66592->ep0_req);
--
-+	m66592->ep0_req = NULL;
- clean_up3:
- 	if (m66592->pdata->on_chip) {
- 		clk_disable(m66592->clk);
+diff --git a/drivers/infiniband/hw/cxgb4/device.c b/drivers/infiniband/hw/cxgb4/device.c
+index c13c0ba30f63e..af974a2570862 100644
+--- a/drivers/infiniband/hw/cxgb4/device.c
++++ b/drivers/infiniband/hw/cxgb4/device.c
+@@ -945,6 +945,7 @@ void c4iw_dealloc(struct uld_ctx *ctx)
+ static void c4iw_remove(struct uld_ctx *ctx)
+ {
+ 	pr_debug("c4iw_dev %p\n", ctx->dev);
++	debugfs_remove_recursive(ctx->dev->debugfs_root);
+ 	c4iw_unregister_device(ctx->dev);
+ 	c4iw_dealloc(ctx);
+ }
 -- 
 2.25.1
 
