@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C18FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2098320EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6CB20DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942978;
-	bh=soDd+QyUzhwN2rtXSi47bYrnlf+mZDpo7wt+h1PlRxc=;
+	s=default; t=1592942987;
+	bh=H6VJ9obbYArUMYvO6qBOQtEXRyWgkm6Xs/Q/wVa/QvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i9Ff0x/8/bBILfu6iDxjKwHRgPXQ4v714d05NWQeapuKNeHdhDRaEI9ZGQS65sZa/
-	 L6VVoVXuo9Qu4jijqijEUICveJNoE/mDz23BkvCiThFxy1FFBZp3hR8dEojvwyJGDe
-	 aGZfe7uzEsuAgAznV+WLRBmpxG5EB7QVc7EmU+aY=
+	b=Y7zmt1ceLUFh17NW99ca81mCu/XdXk3cpeaelMHxs3+CpqojC6qy6Sk3k7YfZc84h
+	 JrCTV72UW4sxIZN9KqicPixdXtuyjID3FvGSPDELDGl5letMb6hGFW/RKp9zK8bWWi
+	 XXvijUPQoIV186046syW8M6yStPOZNw4zLEfYV1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388740AbgFWUJg (ORCPT
+        id S2388297AbgFWUJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388300AbgFWUJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:09:01 -0400
+        id S2388130AbgFWUJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08B072064B;
-        Tue, 23 Jun 2020 20:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9983D206C3;
+        Tue, 23 Jun 2020 20:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942940;
-        bh=soDd+QyUzhwN2rtXSi47bYrnlf+mZDpo7wt+h1PlRxc=;
+        s=default; t=1592942948;
+        bh=H6VJ9obbYArUMYvO6qBOQtEXRyWgkm6Xs/Q/wVa/QvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpzorop1QMSnlGYszKL8LrMr32jK7Ek1NgK/CComSn8oAjiM2/3HitfNve6LSw1vo
-         5erDP2pbgyAMQJ4EzIa4exo3ITjjQbOmyWsXzMu0oTvKkzuT5Effa0KZSATkaHX804
-         r4HrJHEakG6Sm3J7W424kJo8izdf8UjqMvirGjgw=
+        b=CAslWfuPhSzE3wCdVod2wwCyLDIWVF/d4juPWBXE4ZpB/TcQxBsZOHHn3d81HkFl+
+         a72TqCKlopKnpU561C0D7LtqNJ2QUmbRmnrubcIffqQ62Zrf6JNyX/wWJUl4X+3qoB
+         bCiZS02qoFaSar+iOyz85tIfDdYmZvM6yrLuT6p4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        clang-built-linux@googlegroups.com, Arnd Bergmann <arnd@arndb.de>,
-        David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 195/477] dlm: remove BUG() before panic()
-Date:   Tue, 23 Jun 2020 21:53:12 +0200
-Message-Id: <20200623195416.806348964@linuxfoundation.org>
+Subject: [PATCH 5.7 197/477] USB: ohci-sm501: fix error return code in ohci_hcd_sm501_drv_probe()
+Date:   Tue, 23 Jun 2020 21:53:14 +0200
+Message-Id: <20200623195416.897284150@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,49 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit fe204591cc9480347af7d2d6029b24a62e449486 ]
+[ Upstream commit b919e077cccfbb77beb98809568b2fb0b4d113ec ]
 
-Building a kernel with clang sometimes fails with an objtool error in dlm:
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
-
-The problem is that BUG() never returns and the compiler knows
-that anything after it is unreachable, however the panic still
-emits some code that does not get fully eliminated.
-
-Having both BUG() and panic() is really pointless as the BUG()
-kills the current process and the subsequent panic() never hits.
-In most cases, we probably don't really want either and should
-replace the DLM_ASSERT() statements with WARN_ON(), as has
-been done for some of them.
-
-Remove the BUG() here so the user at least sees the panic message
-and we can reliably build randconfig kernels.
-
-Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Fixes: 7d9e6f5aebe8 ("usb: host: ohci-sm501: init genalloc for local memory")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200506135625.106910-1-weiyongjun1@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/dlm_internal.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/usb/host/ohci-sm501.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index 416d9de356791..4311d01b02a8b 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -97,7 +97,6 @@ do { \
-                __LINE__, __FILE__, #x, jiffies); \
-     {do} \
-     printk("\n"); \
--    BUG(); \
-     panic("DLM:  Record message above and reboot.\n"); \
-   } \
- }
+diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
+index c158cda9e4b9b..cff9652403270 100644
+--- a/drivers/usb/host/ohci-sm501.c
++++ b/drivers/usb/host/ohci-sm501.c
+@@ -157,9 +157,10 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
+ 	 * the call to usb_hcd_setup_local_mem() below does just that.
+ 	 */
+ 
+-	if (usb_hcd_setup_local_mem(hcd, mem->start,
+-				    mem->start - mem->parent->start,
+-				    resource_size(mem)) < 0)
++	retval = usb_hcd_setup_local_mem(hcd, mem->start,
++					 mem->start - mem->parent->start,
++					 resource_size(mem));
++	if (retval < 0)
+ 		goto err5;
+ 	retval = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (retval)
 -- 
 2.25.1
 
