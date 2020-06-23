@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57347C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD6620DD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436E2206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942854;
-	bh=kieshNiK2KrhBVzWgfcFix7J1eLM6mLChxPGjbdxttE=;
+	s=default; t=1592942863;
+	bh=0PpaNu8RzlsGxRiYtA+vUROVRH+FvdwpXWuaVUo73VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSDC75YZ/KNgC00RCQETIK4VrCQlY64YqwjZU+yAWk5xKzL39eKcibCfo7dAL0w0B
-	 zMso3knV+Z1E8IwVae8EIxqL7WenBGOF4VULCkdrJ3iDyLewCqBaDWO3bgd4HelErj
-	 wtv5GJp2GQdj/kmV22YDNZAoq+i6Itq5Wgjv+zx4=
+	b=ZyXyDsutP8nQbGw1U00j+FAnon4qGPo0tpxCzqZCp8LtllQVLGnnsq22eLZlNMk89
+	 VAlu88KB2zwD+VMjC8UZe7W25FSPbOa05uuJEXf825bSiPP4f1GhRgQbZtys+nxkB5
+	 JmJEX8IwnPjB/4gHvZJYTA3TDtvLD79UPpZ3MqMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388619AbgFWUHc (ORCPT
+        id S2388643AbgFWUHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:07:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:07:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387620AbgFWUHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:25 -0400
+        id S2388632AbgFWUHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AAEB2064B;
-        Tue, 23 Jun 2020 20:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84D0D2064B;
+        Tue, 23 Jun 2020 20:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942844;
-        bh=kieshNiK2KrhBVzWgfcFix7J1eLM6mLChxPGjbdxttE=;
+        s=default; t=1592942857;
+        bh=0PpaNu8RzlsGxRiYtA+vUROVRH+FvdwpXWuaVUo73VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XXIoZTqVJP7O+MSYJ+I1T8nPjRV8lpJl/lLQoJYdIf9FWY5BNLM19Tr36iqKrDIRG
-         58z3mQlbkt3hj3hxRmepfZPh8sFZMvWJQGRMOUC0bJuwt3+MZEDjhGuoo5Xw5cPjuD
-         V2VWPHh/Lmrk/dXHLAnG9Ow9iBjszjAlXSTy2Ee8=
+        b=ncPgxVi50Y9jHJb34m3lxeuR9pEpo2Yv8K5WHkWM5Cih3STjQOzsS8j9WudihxBc8
+         9gZiNxqh9TP1pU8YRq6RUzLAdYpbrvk/4IM0GZr808et+iAABGErUXKOcJgdUAB+Vt
+         yT63zwH332rDNn/fnzuQwV+H4tMjUL/4k+aTvG48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 157/477] ASoC: SOF: Update correct LED status at the first time usage of update_mute_led()
-Date:   Tue, 23 Jun 2020 21:52:34 +0200
-Message-Id: <20200623195415.020307515@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 162/477] ARM: dts: aspeed: Change KCS nodes to v2 binding
+Date:   Tue, 23 Jun 2020 21:52:39 +0200
+Message-Id: <20200623195415.253127044@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -63,71 +59,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Andrew Jeffery <andrew@aj.id.au>
 
-[ Upstream commit 49c22696348d6e7c8a2ecfd7e60fddfe188ded82 ]
+[ Upstream commit fa4c8ec6feaa3237f5d44cb8c6d0aa0dff6e1bcc ]
 
-At the first time update_mute_led() gets called, if channels are already
-muted, the temp value equals to led_value as 0, skipping the following
-LED setting.
+Fixes the following warnings for both g5 and g6 SoCs:
 
-So set led_value to -1 as an uninitialized state, to update the correct
-LED status at first time usage.
+    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning
+    (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node
+    has a unit name, but no reg property
 
-Fixes: 5d43001ae436 ("ASoC: SOF: acpi led support for switch controls")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Acked-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200430091139.7003-1-kai.heng.feng@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/control.c   | 4 ++--
- sound/soc/sof/sof-audio.h | 2 +-
- sound/soc/sof/topology.c  | 2 ++
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     |  4 ++--
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 24 +++++++++----------
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 23 +++++++++---------
+ 3 files changed, 26 insertions(+), 25 deletions(-)
 
-diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
-index dfc412e2d9565..6d63768d42aa1 100644
---- a/sound/soc/sof/control.c
-+++ b/sound/soc/sof/control.c
-@@ -19,8 +19,8 @@ static void update_mute_led(struct snd_sof_control *scontrol,
- 			    struct snd_kcontrol *kcontrol,
- 			    struct snd_ctl_elem_value *ucontrol)
- {
--	unsigned int temp = 0;
--	unsigned int mask;
-+	int temp = 0;
-+	int mask;
- 	int i;
- 
- 	mask = 1U << snd_ctl_get_ioffidx(kcontrol, &ucontrol->id);
-diff --git a/sound/soc/sof/sof-audio.h b/sound/soc/sof/sof-audio.h
-index bf65f31af8582..875a5fc132970 100644
---- a/sound/soc/sof/sof-audio.h
-+++ b/sound/soc/sof/sof-audio.h
-@@ -56,7 +56,7 @@ struct snd_sof_pcm {
- struct snd_sof_led_control {
- 	unsigned int use_led;
- 	unsigned int direction;
--	unsigned int led_value;
-+	int led_value;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 5d7cbd9164d41..669980c690f92 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -112,13 +112,13 @@
+ &kcs2 {
+ 	// BMC KCS channel 2
+ 	status = "okay";
+-	kcs_addr = <0xca8>;
++	aspeed,lpc-io-reg = <0xca8>;
  };
  
- /* ALSA SOF Kcontrol device */
-diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
-index fe8ba3e05e08b..ab2b69de1d4d7 100644
---- a/sound/soc/sof/topology.c
-+++ b/sound/soc/sof/topology.c
-@@ -1203,6 +1203,8 @@ static int sof_control_load(struct snd_soc_component *scomp, int index,
- 		return ret;
- 	}
+ &kcs3 {
+ 	// BMC KCS channel 3
+ 	status = "okay";
+-	kcs_addr = <0xca2>;
++	aspeed,lpc-io-reg = <0xca2>;
+ };
  
-+	scontrol->led_ctl.led_value = -1;
-+
- 	dobj->private = scontrol;
- 	list_add(&scontrol->list, &sdev->kcontrol_list);
- 	return ret;
+ &mac0 {
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index f12ec04d3cbca..bc92d3db7b786 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -426,22 +426,22 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x0 0x80>;
+ 
+-					kcs1: kcs1@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs1: kcs@24 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <1>;
+ 						status = "disabled";
+ 					};
+-					kcs2: kcs2@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs2: kcs@28 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <2>;
+ 						status = "disabled";
+ 					};
+-					kcs3: kcs3@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs3: kcs@2c {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <3>;
+ 						status = "disabled";
+ 					};
+ 				};
+@@ -455,10 +455,10 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
+-					kcs4: kcs4@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs4: kcs@94 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <4>;
+ 						status = "disabled";
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
+index fd0e483737a0f..a2d2ac720a511 100644
+--- a/arch/arm/boot/dts/aspeed-g6.dtsi
++++ b/arch/arm/boot/dts/aspeed-g6.dtsi
+@@ -435,22 +435,23 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x0 0x80>;
+ 
+-					kcs1: kcs1@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs1: kcs@24 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+ 						interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+ 						kcs_chan = <1>;
+ 						status = "disabled";
+ 					};
+-					kcs2: kcs2@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs2: kcs@28 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
+ 						interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <2>;
+ 						status = "disabled";
+ 					};
+-					kcs3: kcs3@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs3: kcs@2c {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
+ 						interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <3>;
+ 						status = "disabled";
+ 					};
+ 				};
+@@ -464,10 +465,10 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
+-					kcs4: kcs4@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs4: kcs@94 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
+ 						interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <4>;
+ 						status = "disabled";
+ 					};
+ 
 -- 
 2.25.1
 
