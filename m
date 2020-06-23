@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB39C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0885BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 336CA20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D523E2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 01:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iYV7XA4f"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="m1JQxHYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732215AbgFWB7Q (ORCPT
+        id S1732243AbgFWB7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 21:59:16 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:31206 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732069AbgFWB67 (ORCPT
+        Mon, 22 Jun 2020 21:59:22 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:26022 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732119AbgFWB7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 21:58:59 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05N1wWv4003759
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:58:57 -0700
+        Mon, 22 Jun 2020 21:59:05 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N1sRe1008333
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:59:04 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=3xrqEml6JFG1Qa1+blKuF+yOkDVEww+N7R6Knip8TAw=;
- b=iYV7XA4frESxEDBUsQpPhkV1412h/Or2CCHtpw1DIHGmohRh0fgUMnHr/DYzjqhKRNI+
- FwVRpptcaDgS5b8XDT3K7AsZjUIfWjJVld++nEuMiNSamnwawR2mm7ERnT8kk4aud1sp
- tlM9Q9szx/qNYYePPXZbeQoyZ7bCQZOUcME= 
+ bh=NC30MMASir90zciBGPekuyvv2UxhvAZ3YeVCLcrd3gI=;
+ b=m1JQxHYS4m2Q62O3Y4xmjGSZcEtoe9m/r3ZyKPHUzDkheuYTVvBwWYcWcgLYFD5KlCyE
+ UXVRUpkNu1AVLK7snVQQ/CpRLVZw4WAhVr/J9BRkgTcI4F2t+KHRQAEZZ5H6VSyZhdRG
+ pQHCyk4z8ATMHzlXeD+CPfnRAMNsdvx7Oz8= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 31se4nknfe-8
+        by mx0a-00082601.pphosted.com with ESMTP id 31u09s2bvc-3
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:58:57 -0700
-Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:108::8) by
- mail.thefacebook.com (2620:10d:c085:21d::5) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 18:59:04 -0700
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:108::8) by
+ mail.thefacebook.com (2620:10d:c085:11d::6) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 22 Jun 2020 18:58:54 -0700
+ 15.1.1979.3; Mon, 22 Jun 2020 18:59:03 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 93A0F26DD030; Mon, 22 Jun 2020 18:58:48 -0700 (PDT)
+        id AE5FD26DD03A; Mon, 22 Jun 2020 18:58:48 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -54,9 +54,9 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v7 11/19] mm: memcg/slab: move memcg_kmem_bypass() to memcontrol.h
-Date:   Mon, 22 Jun 2020 18:58:38 -0700
-Message-ID: <20200623015846.1141975-12-guro@fb.com>
+Subject: [PATCH v7 16/19] mm: memcg/slab: remove redundant check in memcg_accumulate_slabinfo()
+Date:   Mon, 22 Jun 2020 18:58:43 -0700
+Message-ID: <20200623015846.1141975-17-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200623015846.1141975-1-guro@fb.com>
 References: <20200623015846.1141975-1-guro@fb.com>
@@ -66,10 +66,10 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-22_16:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- impostorscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- cotscore=-2147483648 adultscore=0 suspectscore=0 classifier=spam adjust=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ phishscore=0 mlxscore=0 cotscore=-2147483648 suspectscore=0 adultscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 malwarescore=0
+ mlxlogscore=833 clxscore=1015 spamscore=0 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006230012
 X-FB-Internal: deliver
@@ -78,68 +78,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To make the memcg_kmem_bypass() function available outside of the
-memcontrol.c, let's move it to memcontrol.h.  The function is small and
-nicely fits into static inline sort of functions.
-
-It will be used from the slab code.
+memcg_accumulate_slabinfo() is never called with a non-root kmem_cache as
+a first argument, so the is_root_cache(s) check is redundant and can be
+removed without any functional change.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 Reviewed-by: Shakeel Butt <shakeelb@google.com>
 ---
- include/linux/memcontrol.h | 12 ++++++++++++
- mm/memcontrol.c            | 12 ------------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ mm/slab_common.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index b845e908e76e..83e2858aecf2 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1440,6 +1440,18 @@ static inline bool memcg_kmem_enabled(void)
- 	return static_branch_unlikely(&memcg_kmem_enabled_key);
- }
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 0618d3595c08..e546778030a2 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1087,9 +1087,6 @@ memcg_accumulate_slabinfo(struct kmem_cache *s, str=
+uct slabinfo *info)
+ 	struct kmem_cache *c;
+ 	struct slabinfo sinfo;
 =20
-+static inline bool memcg_kmem_bypass(void)
-+{
-+	if (in_interrupt())
-+		return true;
-+
-+	/* Allow remote memcg charging in kthread contexts. */
-+	if ((!current->mm || (current->flags & PF_KTHREAD)) &&
-+	     !current->active_memcg)
-+		return true;
-+	return false;
-+}
-+
- static inline int memcg_kmem_charge_page(struct page *page, gfp_t gfp,
- 					 int order)
- {
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ad43e5bc482b..2ad1ff0f0107 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2945,18 +2945,6 @@ static void memcg_schedule_kmem_cache_create(struc=
-t mem_cgroup *memcg,
- 	queue_work(memcg_kmem_cache_wq, &cw->work);
- }
-=20
--static inline bool memcg_kmem_bypass(void)
--{
--	if (in_interrupt())
--		return true;
+-	if (!is_root_cache(s))
+-		return;
 -
--	/* Allow remote memcg charging in kthread contexts. */
--	if ((!current->mm || (current->flags & PF_KTHREAD)) &&
--	     !current->active_memcg)
--		return true;
--	return false;
--}
--
- /**
-  * memcg_kmem_get_cache: select the correct per-memcg cache for allocati=
-on
-  * @cachep: the original global kmem cache
+ 	c =3D memcg_cache(s);
+ 	if (c) {
+ 		memset(&sinfo, 0, sizeof(sinfo));
 --=20
 2.26.2
 
