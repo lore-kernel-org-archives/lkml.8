@@ -2,43 +2,43 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C48620706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C55E20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592873579;
-	bh=/q3cj++oxVF9k04wu4Z42XEE1qa8NL6UhOOnVzj7v2o=;
+	s=default; t=1592873581;
+	bh=UwqLbPyoEJG5AkPmX45IhP98B37FqbQTLZHyPLb3D7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rufn1EQ8h8J+bDPlaF1AIyERyLOZduFkyhWjtMrePguDt1yHXPvuhTTW8Fz0cMzhg
-	 VjEYP4cvJvD0ewpyji2DY/38Ihy9ty7d0CdF4i2qKigDDMyIe0Bi3+a1NVx591hKXD
-	 XaQ4g233/AfA3t+at8u/jAPko9Q8f9u1+Ahdp/3s=
+	b=v8Z5+EYw6vXcWSZJXPcmwivhWbEI4RNe4Qg3ArdWQ0jGgQXDP4G5Ep6o+3aO/5+qc
+	 9RK3o449T27QWR5QVY9fdL6zi9bo5KCAMUmpy7yRz0og6bKQ4Oh2P8iKXEPZgnbS7m
+	 MVT3kDjxdFa15HJvJo1/vuw8baZJSKXvuWLmk0wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732437AbgFWAw5 (ORCPT
+        id S1732452AbgFWAxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46624 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732391AbgFWAwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:52:36 -0400
+        id S1732388AbgFWAwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:52:35 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6691920890;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B86C2083E;
         Tue, 23 Jun 2020 00:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592873555;
-        bh=/q3cj++oxVF9k04wu4Z42XEE1qa8NL6UhOOnVzj7v2o=;
+        bh=UwqLbPyoEJG5AkPmX45IhP98B37FqbQTLZHyPLb3D7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVmWW2HNn95bl2bVoDFX4BdeyPQAScOC/iC9FW8NtpDh9MkHBEA2UPm3tOy2df93r
-         5/n9F4Oy/oW3SdjqouKeWFLHpgHc0ZnZn47AVWSGJ2x2hO17KX4UHZX2KDAyMk7Sgz
-         hU1NwefU2++kNZFQkwbyDqTNSvEqFoHUba73+gyo=
+        b=hBZxIRIN3ZcvB+LFdMmwG/gJ3HWD19an84P0ak15Prt99qqX4ho/dfpKdbLKmyAR8
+         4GP9/1qQTA+z8A0RuQ/gkm8Yrlk53wMvJzKaS9jvoVkh1BKjXNTsfmqJpVdPH34yVr
+         NEefUYo3lVbPI04uZ4xvlstoyCGts/ZmhLvaeD18=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         kernel-team@fb.com, mingo@kernel.org
@@ -46,9 +46,9 @@ Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
         peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
         dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
         akiyks@gmail.com, "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 13/14] tools/memory-model/README: Expand dependency of klitmus7
-Date:   Mon, 22 Jun 2020 17:52:30 -0700
-Message-Id: <20200623005231.27712-13-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 11/14] Documentation/litmus-tests: Merge atomic's README into top-level one
+Date:   Mon, 22 Jun 2020 17:52:28 -0700
+Message-Id: <20200623005231.27712-11-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623005152.GA27459@paulmck-ThinkPad-P72>
 References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
@@ -59,75 +59,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Akira Yokosawa <akiyks@gmail.com>
 
-klitmus7 is independent of the memory model but depends on the
-build-target kernel release.
-It occasionally lost compatibility due to kernel API changes [1, 2, 3].
-It was remedied in a backwards-compatible manner respectively [4, 5, 6].
-
-Reflect this fact in README.
-
-[1]: b899a850431e ("compiler.h: Remove ACCESS_ONCE()")
-[2]: 0bb95f80a38f ("Makefile: Globally enable VLA warning")
-[3]: d56c0d45f0e2 ("proc: decouple proc from VFS with "struct proc_ops"")
-[4]: https://github.com/herd/herdtools7/commit/e87d7f9287d1
-     ("klitmus: Use WRITE_ONCE and READ_ONCE in place of deprecated ACCESS_ONCE")
-[5]: https://github.com/herd/herdtools7/commit/a0cbb10d02be
-     ("klitmus: Avoid variable length array")
-[6]: https://github.com/herd/herdtools7/commit/46b9412d3a58
-     ("klitmus: Linux kernel v5.6.x compat")
-
-NOTE: [5] was ahead of herdtools7 7.53, which did not make an
-official release.  Code generated by klitmus7 without [5] can still be
-built targeting Linux 4.20--5.5 if you don't care VLA warnings.
+Where Documentation/litmus-tests/README lists RCU litmus tests,
+Documentation/litmus-tests/atomic/README lists atomic litmus tests.
+For symmetry, merge the latter into former, with some context
+adjustment in the introduction.
 
 Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/memory-model/README | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ Documentation/litmus-tests/README        | 19 +++++++++++++++++++
+ Documentation/litmus-tests/atomic/README | 16 ----------------
+ 2 files changed, 19 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/litmus-tests/atomic/README
 
-diff --git a/tools/memory-model/README b/tools/memory-model/README
-index b9c562e..90af203 100644
---- a/tools/memory-model/README
-+++ b/tools/memory-model/README
-@@ -28,8 +28,34 @@ downloaded separately:
- See "herdtools7/INSTALL.md" for installation instructions.
+diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+index c4307ea..ac0b270 100644
+--- a/Documentation/litmus-tests/README
++++ b/Documentation/litmus-tests/README
+@@ -2,6 +2,25 @@
+ LITMUS TESTS
+ ============
  
- Note that although these tools usually provide backwards compatibility,
--this is not absolutely guaranteed.  Therefore, if a later version does
--not work, please try using the exact version called out above.
-+this is not absolutely guaranteed.
++Each subdirectory contains litmus tests that are typical to describe the
++semantics of respective kernel APIs.
++For more information about how to "run" a litmus test or how to generate
++a kernel test module based on a litmus test, please see
++tools/memory-model/README.
 +
-+For example, a future version of herd7 might not work with the model
-+in this release.  A compatible model will likely be made available in
-+a later release of Linux kernel.
 +
-+If you absolutely need to run the model in this particular release,
-+please try using the exact version called out above.
++atomic (/atomic derectory)
++--------------------------
 +
-+klitmus7 is independent of the model provided here.  It has its own
-+dependency on a target kernel release where converted code is built
-+and executed.  Any change in kernel APIs essential to klitmus7 will
-+necessitate an upgrade of klitmus7.
++Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
++    Test that an atomic RMW followed by a smp_mb__after_atomic() is
++    stronger than a normal acquire: both the read and write parts of
++    the RMW are ordered before the subsequential memory accesses.
 +
-+If you find any compatibility issues in klitmus7, please inform the
-+memory model maintainers.
++Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
++    Test that atomic_set() cannot break the atomicity of atomic RMWs.
 +
-+klitmus7 Compatibility Table
-+----------------------------
 +
-+	============  ==========
-+	target Linux  herdtools7
-+	------------  ----------
-+	     -- 4.18  7.48 --
-+	4.15 -- 4.19  7.49 --
-+	4.20 -- 5.5   7.54 --
-+	5.6  --       HEAD
-+	============  ==========
+ RCU (/rcu directory)
+ --------------------
  
- 
- ==================
+diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
+deleted file mode 100644
+index 714cf93..0000000
+--- a/Documentation/litmus-tests/atomic/README
++++ /dev/null
+@@ -1,16 +0,0 @@
+-This directory contains litmus tests that are typical to describe the semantics
+-of our atomic APIs. For more information about how to "run" a litmus test or
+-how to generate a kernel test module based on a litmus test, please see
+-tools/memory-model/README.
+-
+-============
+-LITMUS TESTS
+-============
+-
+-Atomic-RMW+mb__after_atomic-is-stronger-than-acquire
+-	Test that an atomic RMW followed by a smp_mb__after_atomic() is
+-	stronger than a normal acquire: both the read and write parts of
+-	the RMW are ordered before the subsequential memory accesses.
+-
+-Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+-	Test that atomic_set() cannot break the atomicity of atomic RMWs.
 -- 
 2.9.5
 
