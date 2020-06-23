@@ -2,111 +2,101 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5453C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C89AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE75A2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C2B2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbgFWMHn (ORCPT
+        id S1732582AbgFWMIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:07:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53122 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732333AbgFWMHm (ORCPT
+        Tue, 23 Jun 2020 08:08:15 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43219 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732333AbgFWMIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:07:42 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NC2K1K015116;
-        Tue, 23 Jun 2020 08:06:38 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uhcqr422-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 08:06:38 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NBuFk6001568;
-        Tue, 23 Jun 2020 12:06:38 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03wdc.us.ibm.com with ESMTP id 31sa38eywe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 12:06:38 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NC6bSD16122874
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 12:06:37 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B403212405A;
-        Tue, 23 Jun 2020 12:06:37 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9AE72124054;
-        Tue, 23 Jun 2020 12:06:37 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jun 2020 12:06:37 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Stefan Berger <stfeanb@linux.ibm.com>
-Subject: [PATCH v5 0/2] tpm2: Make TPM2 logs accessible for non-UEFI firmware
-Date:   Tue, 23 Jun 2020 08:06:34 -0400
-Message-Id: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 23 Jun 2020 08:08:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id u23so16293864otq.10;
+        Tue, 23 Jun 2020 05:08:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Re+WjjB1dMGkNf1EzZMfoTm0AtEm8gvJc3KpB0+MMw=;
+        b=iQjOmUUKOIWYO9ZuueIhSoE+mqvre9RCKCEvn8LuacTFmYlNZG0kpomMmMSOMickQK
+         igIarSl7Lvh5brYeF0DLMP/YXb9a2DXtU0j/CNWI3NuAbJ9HF7qcS4Q6W3CLooBQKsxT
+         E5DqO5VrP2/sAU1xx/0RX8QbOpVdzIGm4fKuFkmc8Xhm4sS+G1axRvw4EPXhyBikv7F9
+         5HmFMwQyq27rbapPQhPyonlK4+Z4cPlXmBiOksWig1Ar0BhUfnnkeIBIVUqz3eEVbzP1
+         ODjnYWFacs4llD+QEPeQ5Ami/7iNMusonspeLGc517HaQswDOZ5p3p67kXaqZojTtBRH
+         pF1w==
+X-Gm-Message-State: AOAM53127YeGEojQzy34YR7J2hIwxrZLQpJ9pQ9QQ2nl6VgPLXxEdvaw
+        tQVkjCguToTBPOVV6op9RAF0/nvW2TxdAiyiVIlNDVtV
+X-Google-Smtp-Source: ABdhPJwjtQvaDrr3eeGnXHD1JJmS3t1dYujqHaWWHyHw8nXgJiFN/bcBSRw0jwg3owzToimpYmcrIQbYXyhdJF9PQD0=
+X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr18196097otp.250.1592914093700;
+ Tue, 23 Jun 2020 05:08:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_06:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- suspectscore=0 mlxlogscore=715 spamscore=0 bulkscore=0 lowpriorityscore=0
- cotscore=-2147483648 mlxscore=0 priorityscore=1501 malwarescore=0
- clxscore=1011 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006230088
+References: <20200621054710.9915-1-dinghao.liu@zju.edu.cn> <44d7771e-5600-19c2-888a-dd226cbc4b50@nvidia.com>
+In-Reply-To: <44d7771e-5600-19c2-888a-dd226cbc4b50@nvidia.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 23 Jun 2020 14:08:02 +0200
+Message-ID: <CAMuHMdVu=Tm4UTN1GAc3_uy00UhYYJ7ZPyq1qPCXQ+iP3hksfg@mail.gmail.com>
+Subject: Re: [PATCH] [v4] dmaengine: tegra210-adma: Fix runtime PM imbalance
+ on error
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>, Kangjie Lu <kjlu@umn.edu>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stfeanb@linux.ibm.com>
+Hi Jon,
 
-This series of patches extends the existing TPM2 ACPI table with additional
-fields found in the TPM2 TCG ACPI specification (reference is in the patch)
-that allow access to the log's address and its size. We then modify the
-code that so far only enables access to a TPM 1.2's log for a TPM2 as well.
-This then enables access to the TPM2's log on non-UEFI system that for example
-run SeaBIOS.
+More stirring in the cesspool ;-)
 
-   Stefan
+On Tue, Jun 23, 2020 at 12:13 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+> On 21/06/2020 06:47, Dinghao Liu wrote:
+> > pm_runtime_get_sync() increments the runtime PM usage counter even
+> > when it returns an error code. Thus a pairing decrement is needed on
+> > the error handling path to keep the counter balanced.
+>
+> So you have not mentioned here why you are using _noidle and not _put.
+> Furthermore, in this patch [0] you are not using _noidle to fix the same
+> problem in another driver. We should fix this in a consistent manner
+> across all drivers, otherwise it leads to more confusion.
+>
+> Finally, Rafael mentions we should just use _put [0] and so I think we
+> should follow his recommendation.
+>
+> Jon
+>
+> [0] https://lkml.org/lkml/2020/5/21/601
 
-v4->v5:
- - Added R-bs and A-bs.
+"_noidle() is the simplest one and it is sufficient."
+https://lore.kernel.org/linux-i2c/CAJZ5v0i87NGcy9+kxubScdPDyByr8ypQWcGgBFn+V-wDd69BHQ@mail.gmail.com/
 
-v3->v4:
-  - Repost as one series
+You never know what additional things the other put* variants
+will start doing in the future...
 
-v2->v3:
-  - Split the series into two separate patches
-  - Added comments to ACPI table fields
-  - Added check for null pointer to log area and zero log size
+Gr{oetje,eeting}s,
 
-v1->v2:
-  - Repost of the series
+                        Geert
 
 
-Stefan Berger (2):
-  acpi: Extend TPM2 ACPI table with missing log fields
-  tpm: Add support for event log pointer found in TPM2 ACPI table
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
- drivers/char/tpm/eventlog/acpi.c | 56 ++++++++++++++++++++------------
- drivers/char/tpm/tpm_crb.c       | 13 ++++++--
- drivers/char/tpm/tpm_tis.c       |  4 ++-
- include/acpi/actbl3.h            |  5 +--
- 4 files changed, 51 insertions(+), 27 deletions(-)
-
--- 
-2.26.2
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
