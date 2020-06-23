@@ -2,120 +2,102 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4543C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D5C2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592889752;
-	bh=bRSmFiLcHDdUZV1lLofJRbU6hkCpvLtaGBck/D3vn9A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hzpr0P8qhBjpM1Bn/iQsssFBObK44QqkXk6fPDXgQQHnNN0sdTI3ry9M92cShZfiF
-	 exo8tvKkaVH7tYTGHvE9Dq76BQlqIBWg1HXGBQ2Zo7dvzIQa6c13vjMN8tK6rYfdiw
-	 rT2t0mvm96I1WgjncLQdmD2Fzy1Wry1O7u9Ly2V4=
+	by mail.kernel.org (Postfix) with ESMTP id B058820716
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RmiiafxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbgFWFWb (ORCPT
+        id S1728871AbgFWFZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgFWFWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:22:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E8DE20716;
-        Tue, 23 Jun 2020 05:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592889749;
-        bh=bRSmFiLcHDdUZV1lLofJRbU6hkCpvLtaGBck/D3vn9A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kGwhuJ3POJsHPXPg+IwKqyBkudr/5DcI6PTwz3rxY6d36unPPXRADtNrMfTZAr1VP
-         XmTJyDNr/dkfyLp2k6fe3mD2SVpLy/b25B/GtWXTJe/oiHlAPMMLkpfiavZs5Gf6zn
-         VK2Lk2BRO3X9FWi+uLxTx1hkP30cmh92jHXvvzPc=
-Date:   Tue, 23 Jun 2020 07:22:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Todd Kjos <tkjos@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Brauner <christian@brauner.io>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] binder: fix null deref of proc->context
-Message-ID: <20200623052224.GC2252466@kroah.com>
-References: <20200622200715.114382-1-tkjos@google.com>
- <20200622200955.unq7elx2ry2vrnfe@wittgenstein>
- <CAHRSSExVfUhkXzhuEUvUP-CTwSE7ExWwYCL8K_N+YABW9C1BzQ@mail.gmail.com>
- <CAHRSSEzms6-4zvTXDG6PTcgHx1vev343DRWXxV2kZDqpop1=GQ@mail.gmail.com>
+        Tue, 23 Jun 2020 01:25:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbgFWFZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:25:30 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68783C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:25:29 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id g2so10978457lfb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rJGdd4T1mBh6VgSImvcGDguOX2vlHVdKbQpgCLbiU9k=;
+        b=RmiiafxLLKP875OzgpqZ62/Lueewk4AOM3UHierW9MmyLuFOgunQuv2x7ggwJzDS7L
+         DqNGoKesY5Am1qhK++Bjesr+thJEeWpG84HNpPFd0faqO5GFMEDVBhZ1Lf2CaZ1USRfx
+         2xPufwx2D+kbwV3Q+dFzpaJWkMjW6uyJsdKAFqXba5DBffD2fXJfED/K0QUUY3X3Md34
+         3Ztm7/3pga7dWeEZZc7e5AmpDM9WpU7xcwhkCHKnMcypmeHY/AvNbpAQPmRxDtKBkZGM
+         u3ZTnFsaC+eJg9b1CORgGXjO1Ri2e3wCTT1gyC/uyyXGTTvNr4Dr9WCn481BkzJr+ATE
+         LgHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rJGdd4T1mBh6VgSImvcGDguOX2vlHVdKbQpgCLbiU9k=;
+        b=OPX6bGd3Qziay8ESh7DPlugp//YZBE9glcxkSlsiQ7oD7bJN6yadznXoDGJF0UKNDE
+         c7d3viww/0GlzuQcxjCp3wNPqNVIQPKHsW0GXKogKRmt8IvmZxKFFoWQB44oYOm+GZ7n
+         THt7ntMWAZ181hnbiMIT6axh5NmYbqiPQsSjsZcB0bU2hQClBlPQpRQv9I2NWNdnQvoE
+         pOqL2Ul7MC6g6o9gWFQsv6tOv94umhnwP87gvR9VT5my+D5WnOU+XFjew6r9WipZf5l+
+         5oAx723a3aDloZZ4pv2dctU7gPmJdojepqdncjfoiIEkxUNqLXv1yxCszhSFuu6bq3QX
+         nCVQ==
+X-Gm-Message-State: AOAM530BYJTgipw67lnZIAm1AjCRcKDS8Xu0eb/6nA/ejeay5gbQsTax
+        eUmox40zcFT9Y5CjNOFrqPHH6H6uYovD1TPitWqljw==
+X-Google-Smtp-Source: ABdhPJz9eBvD8p4BLTBmgJcnnsG76Z1d+HAQFe3qCicUvtbVRXv3IGAHF/rmFO0b3XgwG555GId3UUY2FgJSjUj1C6s=
+X-Received: by 2002:a19:11:: with SMTP id 17mr11756487lfa.125.1592889927504;
+ Mon, 22 Jun 2020 22:25:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHRSSEzms6-4zvTXDG6PTcgHx1vev343DRWXxV2kZDqpop1=GQ@mail.gmail.com>
+References: <20200623015846.1141975-1-guro@fb.com> <20200623015846.1141975-18-guro@fb.com>
+In-Reply-To: <20200623015846.1141975-18-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 22 Jun 2020 22:25:16 -0700
+Message-ID: <CALvZod7B3Xw4n9jY-+m-z7-iQ+5uE_WKKOo9YHk4s+ebOyCk5g@mail.gmail.com>
+Subject: Re: [PATCH v7 17/19] mm: memcg/slab: use a single set of kmem_caches
+ for all allocations
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 01:59:04PM -0700, Todd Kjos wrote:
-> On Mon, Jun 22, 2020 at 1:18 PM Todd Kjos <tkjos@google.com> wrote:
-> >
-> > On Mon, Jun 22, 2020 at 1:09 PM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> > >
-> > > On Mon, Jun 22, 2020 at 01:07:15PM -0700, Todd Kjos wrote:
-> > > > The binder driver makes the assumption proc->context pointer is invariant after
-> > > > initialization (as documented in the kerneldoc header for struct proc).
-> > > > However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-> > > > proc->context is set to NULL during binder_deferred_release().
-> > > >
-> > > > Another proc was in the middle of setting up a transaction to the dying
-> > > > process and crashed on a NULL pointer deref on "context" which is a local
-> > > > set to &proc->context:
-> > > >
-> > > >     new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
-> > > >
-> > > > Here's the stack:
-> > > >
-> > > > [ 5237.855435] Call trace:
-> > > > [ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
-> > > > [ 5237.855446] binder_inc_ref_for_node+0x140/0x280
-> > > > [ 5237.855451] binder_translate_binder+0x1d0/0x388
-> > > > [ 5237.855456] binder_transaction+0x2228/0x3730
-> > > > [ 5237.855461] binder_thread_write+0x640/0x25bc
-> > > > [ 5237.855466] binder_ioctl_write_read+0xb0/0x464
-> > > > [ 5237.855471] binder_ioctl+0x30c/0x96c
-> > > > [ 5237.855477] do_vfs_ioctl+0x3e0/0x700
-> > > > [ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
-> > > > [ 5237.855488] el0_svc_common+0xb4/0x194
-> > > > [ 5237.855493] el0_svc_handler+0x74/0x98
-> > > > [ 5237.855497] el0_svc+0x8/0xc
-> > > >
-> > > > The fix is to move the kfree of the binder_device to binder_free_proc()
-> > > > so the binder_device is freed when we know there are no references
-> > > > remaining on the binder_proc.
-> > > >
-> > > > Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-> > > > Signed-off-by: Todd Kjos <tkjos@google.com>
-> >
-> > Forgot to include stable. The issue was introduced in 5.6, so fix needed in 5.7.
-> > Cc: stable@vger.kernel.org # 5.7
-> 
-> Turns out the patch with the issue was also backported to 5.4.y, so
-> the fix is needed there too.
+On Mon, Jun 22, 2020 at 6:58 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Instead of having two sets of kmem_caches: one for system-wide and
+> non-accounted allocations and the second one shared by all accounted
+> allocations, we can use just one.
+>
+> The idea is simple: space for obj_cgroup metadata can be allocated on
+> demand and filled only for accounted allocations.
+>
+> It allows to remove a bunch of code which is required to handle kmem_cache
+> clones for accounted allocations.  There is no more need to create them,
+> accumulate statistics, propagate attributes, etc.  It's a quite
+> significant simplification.
+>
+> Also, because the total number of slab_caches is reduced almost twice (not
+> all kmem_caches have a memcg clone), some additional memory savings are
+> expected.  On my devvm it additionally saves about 3.5% of slab memory.
+>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-With the fixes tag in there and cc: stable, it will get to the proper
-trees no matter how far back it was backported :)
-
-thanks,
-
-greg k-h
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
