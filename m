@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76659C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA077C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53DD62080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A7C2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943893;
-	bh=P4si8H1SED+EKjaI6lFpz3kNayMuEC68QWo0fi1aWMA=;
+	s=default; t=1592943898;
+	bh=OSaB9pXS2XWzakEkR3smI6qRaC3vylNE9B80p2xakac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QDsCRjY6Mplx8qcBQlJqyn7y9KQLARtF6P9Zc5alZeogqaC4/sclkBWIWnBX4Rjcp
-	 AdjfUHm3qrAnoS5BcFP+kgIJSKAvC1rEaKSJ2wE+/Si8JOzpM/krpUmGKqklerorjn
-	 6AvsyVM/WSTjy8qB+uuy+eYuzt+5yDicaH8C9YnQ=
+	b=MSDxZLvSlabGuGQ8eaNY9YXuRylvSD+0Ofyuhihpji6yn5yo+6vZE+XjU39h/PpRL
+	 NXjN35xllrDzimTjCHbp4073p/AvlThBkIKtvLPQuhsnHdMvjBF3xrk26a+6V334zC
+	 j5mzepbu2qJlIRxvQ0nDzm85C9Tz1C5HUdI/328g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390466AbgFWUYp (ORCPT
+        id S2389572AbgFWUY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43310 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390180AbgFWUYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:36 -0400
+        id S2390484AbgFWUYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B175D206C3;
-        Tue, 23 Jun 2020 20:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5F022073E;
+        Tue, 23 Jun 2020 20:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943876;
-        bh=P4si8H1SED+EKjaI6lFpz3kNayMuEC68QWo0fi1aWMA=;
+        s=default; t=1592943889;
+        bh=OSaB9pXS2XWzakEkR3smI6qRaC3vylNE9B80p2xakac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qLi4/2QMsRP4SoN4rpmSLHDWA+F1oyB1kEBNs0EHL5U5XcB7Nk9WZI0KuBTdRGQku
-         tX0AYdG9LR9KthOpgngR85kkHITQr5VVsOHed0xur1EXyfwcpTlKRXqxJxu324z8jW
-         /RfBN+ZIAVEsjv0lb66YSIsTo0IrPwGrTn9Y4K+E=
+        b=cUG3iHxmb52UxKZk4vdylLkdqiaSfHVWcI+4USWJyGrehb9VaHNvNF68qm0gjprHa
+         Ie1Qeyo9a7d6PgJ80cECdVBNPBNXMpjL6WiTXNDL6LDQZ/n+pjGn0m2vqHNFJotj9c
+         rslZDfN+G3hFjwEIOr3X99STPG7JKv+kt8RF3zLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aiman Najjar <aiman.najjar@hurranet.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 085/314] staging: rtl8712: fix multiline derefernce warnings
-Date:   Tue, 23 Jun 2020 21:54:40 +0200
-Message-Id: <20200623195342.928743926@linuxfoundation.org>
+Subject: [PATCH 5.4 090/314] RDMA/mlx5: Fix udata response upon SRQ creation
+Date:   Tue, 23 Jun 2020 21:54:45 +0200
+Message-Id: <20200623195343.162400675@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,78 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aiman Najjar <aiman.najjar@hurranet.com>
+From: Yishai Hadas <yishaih@mellanox.com>
 
-[ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
+[ Upstream commit cf26deff9036cd3270af562dbec545239e5c7f07 ]
 
-This patch fixes remaining checkpatch warnings
-in rtl871x_xmit.c:
+Fix udata response upon SRQ creation to use the UAPI structure (i.e.
+mlx5_ib_create_srq_resp). It did not zero the reserved field in userspace.
 
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
-636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
-+					      (u8)psecuritypriv->
-+					      PrivacyKeyIndex);
-
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
-+						   (u8)psecuritypriv->
-+						   XGrpKeyid);
-
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
-+						   (u8)psecuritypriv->
-+						   XGrpKeyid);
-
-Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Link: https://lore.kernel.org/r/20200406173540.1466477-1-leon@kernel.org
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/mlx5/srq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-index cc5809e49e356..7a821921c0da1 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.c
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-@@ -590,7 +590,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 	addr_t addr;
- 	u8 *pframe, *mem_start, *ptxdesc;
- 	struct sta_info		*psta;
--	struct security_priv	*psecuritypriv = &padapter->securitypriv;
-+	struct security_priv	*psecpriv = &padapter->securitypriv;
- 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
- 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
- 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
-@@ -633,15 +633,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 				case _WEP40_:
- 				case _WEP104_:
- 					WEP_IV(pattrib->iv, psta->txpn,
--					       (u8)psecuritypriv->
--					       PrivacyKeyIndex);
-+					       (u8)psecpriv->PrivacyKeyIndex);
- 					break;
- 				case _TKIP_:
- 					if (bmcst)
- 						TKIP_IV(pattrib->iv,
- 						    psta->txpn,
--						    (u8)psecuritypriv->
--						    XGrpKeyid);
-+						    (u8)psecpriv->XGrpKeyid);
- 					else
- 						TKIP_IV(pattrib->iv, psta->txpn,
- 							0);
-@@ -649,8 +647,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 				case _AES_:
- 					if (bmcst)
- 						AES_IV(pattrib->iv, psta->txpn,
--						    (u8)psecuritypriv->
--						    XGrpKeyid);
-+						    (u8)psecpriv->XGrpKeyid);
- 					else
- 						AES_IV(pattrib->iv, psta->txpn,
- 						       0);
+diff --git a/drivers/infiniband/hw/mlx5/srq.c b/drivers/infiniband/hw/mlx5/srq.c
+index 4e7fde86c96b3..c29c1f7da4a14 100644
+--- a/drivers/infiniband/hw/mlx5/srq.c
++++ b/drivers/infiniband/hw/mlx5/srq.c
+@@ -310,12 +310,18 @@ int mlx5_ib_create_srq(struct ib_srq *ib_srq,
+ 	srq->msrq.event = mlx5_ib_srq_event;
+ 	srq->ibsrq.ext.xrc.srq_num = srq->msrq.srqn;
+ 
+-	if (udata)
+-		if (ib_copy_to_udata(udata, &srq->msrq.srqn, sizeof(__u32))) {
++	if (udata) {
++		struct mlx5_ib_create_srq_resp resp = {
++			.srqn = srq->msrq.srqn,
++		};
++
++		if (ib_copy_to_udata(udata, &resp, min(udata->outlen,
++				     sizeof(resp)))) {
+ 			mlx5_ib_dbg(dev, "copy to user failed\n");
+ 			err = -EFAULT;
+ 			goto err_core;
+ 		}
++	}
+ 
+ 	init_attr->attr.max_wr = srq->msrq.max - 1;
+ 
 -- 
 2.25.1
 
