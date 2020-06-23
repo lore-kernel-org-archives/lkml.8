@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57231C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60F3721527
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2D22078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943218;
-	bh=K/4JzaY+ILlY4OM95wmDtD1aA5+zt7bNidlRQvr0BaM=;
+	s=default; t=1592943222;
+	bh=kmCuUneOgrsaCjQY4XoQyOFfFUkVDN8JazHn6sETeRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jd5iURB1+ttj/igZ458bhPVHnK99dbHw6UUDsfMHlMWoSVwbRdKDeszttsqNxT9aB
-	 sKNHswvuo7ZT679HFqXk5LaZj7sX2hUqiG1SE8Az0p9XVGDXyT1W/2lA4f9NnoR8kI
-	 KBgLPaHlbQcq8ddd/wyXPxD8nrmhm64h40DxBv4E=
+	b=2hCLFZ41thCj7gWGELH0tYotOcVXZ/GCUPi09fSvPaAZfT7YQYWv7xAAxrxx6y4L7
+	 9fBkdabHMSE2tLEZlq0acbSo3oi+ccTyteMgc/34WP4yU/RLslI+qXJq72IIF3gkJn
+	 MVaPrrYRRdCb5dE+PashMvJG/v3+IXOZ4rpWPrGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387759AbgFWUNc (ORCPT
+        id S2389113AbgFWUNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55528 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389083AbgFWUN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:27 -0400
+        id S2388585AbgFWUNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A7A920707;
-        Tue, 23 Jun 2020 20:13:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7216820707;
+        Tue, 23 Jun 2020 20:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943206;
-        bh=K/4JzaY+ILlY4OM95wmDtD1aA5+zt7bNidlRQvr0BaM=;
+        s=default; t=1592943214;
+        bh=kmCuUneOgrsaCjQY4XoQyOFfFUkVDN8JazHn6sETeRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SYT5w9cNlIzZ+qOSr0g+A/NTWXYRR3VeXDgYcNCCOavr/E/RZBooAmmw/Z6MwAsa2
-         5py28qICi7gK7alEaa9LiO8pV/mH4CxUY7j1e+FednpR2vJHYrnSXOE3NdwkSEv+Wc
-         uPAKk2SWnGHH1WH3r9+jVu52Edqc8a7yXa3r7lPU=
+        b=RI9hFy+sdKk2USHnBwOrGP08MMYhYzF3otUEtlrdNDdPHXN/tbAUNNPJdKELn070Z
+         nNdAZKC/eLd7FxpZ/4jjwvk5SKYbv076yG8RDFTwrffl3y9UnfNNdjsPWMkcn0hG6X
+         DRgH7AEQuFa7cB2LbhzUH7Z16kAMcQsvL4eDFLWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 271/477] mfd: stmfx: Disable IRQ in suspend to avoid spurious interrupt
-Date:   Tue, 23 Jun 2020 21:54:28 +0200
-Message-Id: <20200623195420.372000784@linuxfoundation.org>
+Subject: [PATCH 5.7 274/477] powerpc/8xx: Drop CONFIG_8xx_COPYBACK option
+Date:   Tue, 23 Jun 2020 21:54:31 +0200
+Message-Id: <20200623195420.516308029@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,66 +61,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit 97eda5dcc2cde5dcc778bef7a9344db3b6bf8ef5 ]
+[ Upstream commit d3efcd38c0b99162d889e36a30425345a18edb33 ]
 
-When STMFX supply is stopped, spurious interrupt can occur. To avoid that,
-disable the interrupt in suspend before disabling the regulator and
-re-enable it at the end of resume.
+CONFIG_8xx_COPYBACK was there to help disabling copyback cache mode
+for debuging hardware. But nobody will design new boards with 8xx now.
 
-Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+All 8xx platforms select it, so make it the default and remove
+the option.
+
+Also remove the Mx_RESETVAL values which are pretty useless and hide
+the real value while reading code.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/bcc968cda075516eb76e2f25e09821f582c566b4.1589866984.git.christophe.leroy@csgroup.eu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/stmfx.c       | 6 ++++++
- include/linux/mfd/stmfx.h | 1 +
- 2 files changed, 7 insertions(+)
+ arch/powerpc/configs/adder875_defconfig      |  1 -
+ arch/powerpc/configs/ep88xc_defconfig        |  1 -
+ arch/powerpc/configs/mpc866_ads_defconfig    |  1 -
+ arch/powerpc/configs/mpc885_ads_defconfig    |  1 -
+ arch/powerpc/configs/tqm8xx_defconfig        |  1 -
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  2 --
+ arch/powerpc/kernel/head_8xx.S               | 15 +--------------
+ arch/powerpc/platforms/8xx/Kconfig           |  9 ---------
+ 8 files changed, 1 insertion(+), 30 deletions(-)
 
-diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
-index 1977fe95f876c..711979afd90a0 100644
---- a/drivers/mfd/stmfx.c
-+++ b/drivers/mfd/stmfx.c
-@@ -296,6 +296,8 @@ static int stmfx_irq_init(struct i2c_client *client)
- 	if (ret)
- 		goto irq_exit;
+diff --git a/arch/powerpc/configs/adder875_defconfig b/arch/powerpc/configs/adder875_defconfig
+index f55e23cb176cc..5326bc7392790 100644
+--- a/arch/powerpc/configs/adder875_defconfig
++++ b/arch/powerpc/configs/adder875_defconfig
+@@ -10,7 +10,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PPC_ADDER875=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_1000=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/ep88xc_defconfig b/arch/powerpc/configs/ep88xc_defconfig
+index 0e2e5e81a3595..f5c3e72da7196 100644
+--- a/arch/powerpc/configs/ep88xc_defconfig
++++ b/arch/powerpc/configs/ep88xc_defconfig
+@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PPC_EP88XC=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/mpc866_ads_defconfig b/arch/powerpc/configs/mpc866_ads_defconfig
+index 5320735395e7f..5c56d36cdfc5c 100644
+--- a/arch/powerpc/configs/mpc866_ads_defconfig
++++ b/arch/powerpc/configs/mpc866_ads_defconfig
+@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_MPC86XADS=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_1000=y
+ CONFIG_MATH_EMULATION=y
+diff --git a/arch/powerpc/configs/mpc885_ads_defconfig b/arch/powerpc/configs/mpc885_ads_defconfig
+index 82a008c04eaec..949ff9ccda5e7 100644
+--- a/arch/powerpc/configs/mpc885_ads_defconfig
++++ b/arch/powerpc/configs/mpc885_ads_defconfig
+@@ -11,7 +11,6 @@ CONFIG_EXPERT=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/tqm8xx_defconfig b/arch/powerpc/configs/tqm8xx_defconfig
+index eda8bfb2d0a3a..77857d5130223 100644
+--- a/arch/powerpc/configs/tqm8xx_defconfig
++++ b/arch/powerpc/configs/tqm8xx_defconfig
+@@ -15,7 +15,6 @@ CONFIG_MODULE_SRCVERSION_ALL=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_TQM8XX=y
+-CONFIG_8xx_COPYBACK=y
+ # CONFIG_8xx_CPU15 is not set
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+index 76af5b0cb16ec..26b7cee34dfe5 100644
+--- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+@@ -19,7 +19,6 @@
+ #define MI_RSV4I	0x08000000	/* Reserve 4 TLB entries */
+ #define MI_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
+ #define MI_IDXMASK	0x00001f00	/* TLB index to be loaded */
+-#define MI_RESETVAL	0x00000000	/* Value of register at reset */
  
-+	stmfx->irq = client->irq;
-+
- 	return 0;
+ /* These are the Ks and Kp from the PowerPC books.  For proper operation,
+  * Ks = 0, Kp = 1.
+@@ -95,7 +94,6 @@
+ #define MD_TWAM		0x04000000	/* Use 4K page hardware assist */
+ #define MD_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
+ #define MD_IDXMASK	0x00001f00	/* TLB index to be loaded */
+-#define MD_RESETVAL	0x04000000	/* Value of register at reset */
  
- irq_exit:
-@@ -486,6 +488,8 @@ static int stmfx_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
+ #define SPRN_M_CASID	793	/* Address space ID (context) to match */
+ #define MC_ASIDMASK	0x0000000f	/* Bits used for ASID value */
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index 073a651787df8..905205c79a25e 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -779,10 +779,7 @@ start_here:
+ initial_mmu:
+ 	li	r8, 0
+ 	mtspr	SPRN_MI_CTR, r8		/* remove PINNED ITLB entries */
+-	lis	r10, MD_RESETVAL@h
+-#ifndef CONFIG_8xx_COPYBACK
+-	oris	r10, r10, MD_WTDEF@h
+-#endif
++	lis	r10, MD_TWAM@h
+ 	mtspr	SPRN_MD_CTR, r10	/* remove PINNED DTLB entries */
  
-+	disable_irq(stmfx->irq);
-+
- 	if (stmfx->vdd)
- 		return regulator_disable(stmfx->vdd);
+ 	tlbia			/* Invalidate all TLB entries */
+@@ -857,17 +854,7 @@ initial_mmu:
+ 	mtspr	SPRN_DC_CST, r8
+ 	lis	r8, IDC_ENABLE@h
+ 	mtspr	SPRN_IC_CST, r8
+-#ifdef CONFIG_8xx_COPYBACK
+-	mtspr	SPRN_DC_CST, r8
+-#else
+-	/* For a debug option, I left this here to easily enable
+-	 * the write through cache mode
+-	 */
+-	lis	r8, DC_SFWT@h
+ 	mtspr	SPRN_DC_CST, r8
+-	lis	r8, IDC_ENABLE@h
+-	mtspr	SPRN_DC_CST, r8
+-#endif
+ 	/* Disable debug mode entry on breakpoints */
+ 	mfspr	r8, SPRN_DER
+ #ifdef CONFIG_PERF_EVENTS
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index e0fe670f06f60..b37de62d7e7f7 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -98,15 +98,6 @@ menu "MPC8xx CPM Options"
+ # 8xx specific questions.
+ comment "Generic MPC8xx Options"
  
-@@ -529,6 +533,8 @@ static int stmfx_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	enable_irq(stmfx->irq);
-+
- 	return 0;
- }
- #endif
-diff --git a/include/linux/mfd/stmfx.h b/include/linux/mfd/stmfx.h
-index 3c67983678ec7..744dce63946e0 100644
---- a/include/linux/mfd/stmfx.h
-+++ b/include/linux/mfd/stmfx.h
-@@ -109,6 +109,7 @@ struct stmfx {
- 	struct device *dev;
- 	struct regmap *map;
- 	struct regulator *vdd;
-+	int irq;
- 	struct irq_domain *irq_domain;
- 	struct mutex lock; /* IRQ bus lock */
- 	u8 irq_src;
+-config 8xx_COPYBACK
+-	bool "Copy-Back Data Cache (else Writethrough)"
+-	help
+-	  Saying Y here will cause the cache on an MPC8xx processor to be used
+-	  in Copy-Back mode.  If you say N here, it is used in Writethrough
+-	  mode.
+-
+-	  If in doubt, say Y here.
+-
+ config 8xx_GPIO
+ 	bool "GPIO API Support"
+ 	select GPIOLIB
 -- 
 2.25.1
 
