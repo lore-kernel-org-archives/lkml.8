@@ -2,95 +2,132 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE2FF20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A8D20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PEuhjXR+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O87y6dWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389184AbgFWWJ4 (ORCPT
+        id S2389334AbgFWWLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:09:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:59913 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387840AbgFWWJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:09:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49s0nY6J7jz9sRR;
-        Wed, 24 Jun 2020 08:09:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592950194;
-        bh=lTqWkWzEvGsClGboMxdSrWRtqoctWYdl9TPvvCqLfZw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PEuhjXR+BLyxsOpbpi1jHeAEjgIGK5UW4QlHzslsJUBAbEdkAVAeHkydwwVYvS+MQ
-         ks5gMEC6LbTfk7hZCGOLJmYsNBn5/s8BX0+InrhhRpmren39BOY11lc4DawJQSMRGK
-         aid4bm4fJE4VEd3C2Mg6oeGLUzwr5eCk89yzM4BxmHYRMoYVI5Uux+gSKW/7MY0jlG
-         9pkQY0qt/Id1OBfXovQF2N3COSqAO3P/1pjHLV3qJnqSmoMlf8B4jxQmK9/yg9D+BQ
-         K/4N97/uBux4tnl1yW+9kIs7GxdnD6wMOht/4x4qPkW3f/kOXOo460aqRq2Ny++hQL
-         wPDTCHlDehH4Q==
-Date:   Wed, 24 Jun 2020 08:09:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Switching dmaengine tree to kernel.org
-Message-ID: <20200624080952.093d562c@canb.auug.org.au>
-In-Reply-To: <20200623144313.GS2324254@vkoul-mobl>
-References: <20200623144313.GS2324254@vkoul-mobl>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/s3=nkInVYc8lAAGNaBnOH5C";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 23 Jun 2020 18:11:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387840AbgFWWLM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 18:11:12 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51599C061573;
+        Tue, 23 Jun 2020 15:11:12 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id d27so149875qtg.4;
+        Tue, 23 Jun 2020 15:11:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yz11ciyHBUyfQdsgqu8iMb/6aua6PZ+Q9S5NKvvlTbE=;
+        b=O87y6dWV1bPYh1LE87O3QzQm66UbzFCYARgqz4cN6sph6Vg91tcBeNs+4gYKKSSYYR
+         H/NrDtgVRafpykjTWfnNK1y8ZaeqdAvXeHl2v3dUPUWHv6HX0JAOWKZHOk9xvYdeU7cb
+         ieuOr7x/flNBFqW3hGpbDphUPM1RQMHQ67kYxUSNhghEVqGyR6WMphmfa3GclfRDBVFe
+         fwIqnuzlK0XWoLBWHd9i4G1PP94+HljznwWJvdVyzZA25rrZjzZULUvQRbZFhR4U6pz8
+         BCY9PhjP7eNzFSosL+Y0m03Qzq+Sy1+OGAfn4jneoU7HtkONsI0wJPw7lqC4mRrayrkY
+         Vd7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yz11ciyHBUyfQdsgqu8iMb/6aua6PZ+Q9S5NKvvlTbE=;
+        b=cRIZ9HR33yxPGNziGhhaAynFX4/jdh7BvM+KpF1zqQFl46yGFtV2nLTT4apk5r/k1D
+         AD8srfWcsDar46rfxpRB+nUQIbhCDG+gKy6r78jTsN9pXNnfNS2yqAZ6dsXDOuk2AfVZ
+         gOCAmYnI0SbXD+Gjxx7y2L/8NXg3MpH/uLbhm4IL3Of+bCzCO/qa3WWRNM6aXXMQ8xFp
+         XP7xkZwT891rAbkgUeBj/PRIcSXDVXnev2R7vUE3nYxRKlJAOk991+hLHjrqSqSQzVCk
+         45VK7ORXF3Myl8xYyDdfC0fzZPTB467pw/aMRWrIsSG1NZ366nzo/HiPkvXe/AWaEJLb
+         Igng==
+X-Gm-Message-State: AOAM531GUwybVYWrQrx1NSbigULJTmlNN7yVRFF+FtUygmr+e3Sw7BUZ
+        ikkiIvps9P3Iw402ia2Zbo8=
+X-Google-Smtp-Source: ABdhPJzXR2d0Y1jwkxVKARZz1HePUifurRj2yiAIpH9ks1hX2QFgQTL8nJ3mmI6wKmlJ08KCbN6FUg==
+X-Received: by 2002:aed:33c5:: with SMTP id v63mr23901443qtd.104.1592950271349;
+        Tue, 23 Jun 2020 15:11:11 -0700 (PDT)
+Received: from buszk-y710.fios-router.home (pool-108-54-206-188.nycmny.fios.verizon.net. [108.54.206.188])
+        by smtp.googlemail.com with ESMTPSA id b53sm1866464qtc.65.2020.06.23.15.11.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 15:11:10 -0700 (PDT)
+From:   Zekun Shen <bruceshenzk@gmail.com>
+Cc:     security@kernel.org, Zekun Shen <bruceshenzk@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ath10k: fix OOB: __ath10k_htt_rx_ring_fill_n
+Date:   Tue, 23 Jun 2020 18:11:05 -0400
+Message-Id: <20200623221105.3486-1-bruceshenzk@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/s3=nkInVYc8lAAGNaBnOH5C
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The idx in __ath10k_htt_rx_ring_fill_n function lives in
+consistent dma region writable by the device. Malfunctional
+or malicious device could manipulate such idx to have a OOB
+write. Either by
+    htt->rx_ring.netbufs_ring[idx] = skb;
+or by
+    ath10k_htt_set_paddrs_ring(htt, paddr, idx);
 
-Hi Vinod,
+The idx can also be negative as it's signed, giving a large
+memory space to write to.
 
-On Tue, 23 Jun 2020 20:13:13 +0530 Vinod Koul <vkoul@kernel.org> wrote:
->
-> I have switched dmaengine tree to kernel.org [1], please update your
-> database to new tree which can be found at [2]
->=20
-> [1]: https://lore.kernel.org/dmaengine/20200623143729.781403-1-vkoul@kern=
-el.org/
-> [2]: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git
+It's possibly exploitable by corruptting a legit pointer with
+a skb pointer. And then fill skb with payload as rougue object.
 
-OK, done.  I also renamed them from slave-dma{,-fixes} to dmaengine{,-fixes=
-).
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+---
+Part of the log here. Sometimes it appears as UAF when writing 
+to a freed memory by chance.
 
---=20
-Cheers,
-Stephen Rothwell
+ [   15.594376] BUG: unable to handle page fault for address: ffff887f5c1804f0
+ [   15.595483] #PF: supervisor write access in kernel mode
+ [   15.596250] #PF: error_code(0x0002) - not-present page
+ [   15.597013] PGD 0 P4D 0
+ [   15.597395] Oops: 0002 [#1] SMP KASAN PTI
+ [   15.597967] CPU: 0 PID: 82 Comm: kworker/u2:2 Not tainted 5.6.0 #69
+ [   15.598843] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
+ BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+ [   15.600438] Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
+ [   15.601389] RIP: 0010:__ath10k_htt_rx_ring_fill_n 
+ (linux/drivers/net/wireless/ath/ath10k/htt_rx.c:173) ath10k_core
 
---Sig_/s3=nkInVYc8lAAGNaBnOH5C
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ drivers/net/wireless/ath/ath10k/htt_rx.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
+index d787cbead..4e411b33a 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_rx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
+@@ -142,6 +142,14 @@ static int __ath10k_htt_rx_ring_fill_n(struct ath10k_htt *htt, int num)
+ 	BUILD_BUG_ON(HTT_RX_RING_FILL_LEVEL >= HTT_RX_RING_SIZE / 2);
+ 
+ 	idx = __le32_to_cpu(*htt->rx_ring.alloc_idx.vaddr);
++
++	if (idx < 0 || idx >= htt->rx_ring.size) {
++		ath10k_err(htt->ar, "idx OOB, firmware malfunctioning?\n");
++		idx &= htt->rx_ring.size_mask;
++		ret = -ENOMEM;
++		goto fail;
++	}
++
+ 	while (num > 0) {
+ 		skb = dev_alloc_skb(HTT_RX_BUF_SIZE + HTT_RX_DESC_ALIGN);
+ 		if (!skb) {
+-- 
+2.17.1
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7yfbAACgkQAVBC80lX
-0GweNggAjshCfmtDZPPGM+Z8Wh0XV8CClZNIq7i66hCNt/GaF9Chl5qnJ0P9nnKv
-KS504Abh9S0fGsHFnj+P6GgHxXU/g5x2VCzribtxTIhBqZ138SIb2PIRGU9hWeJ0
-xBhKaGuG9iandO0ZV/MTSbCEFXkgu9k4WjK1hW2SdyotbXzGKccV6T/x/Z8rbEm0
-wqG1g1xAJwgBmLmXxqYO6Ug8xKWz+EOr4zfOFctal6pYQDoK9JXaMKb83lRopQLs
-NgFT2eaDC4rz5UM3TGp9/wiHVpKCzrtHLXCeIlOG0r2YJAYDfON7PTuLl7gzez6g
-1bTRPGeWuZl7Sn7blHZ9/TDcE3niRg==
-=GZe2
------END PGP SIGNATURE-----
-
---Sig_/s3=nkInVYc8lAAGNaBnOH5C--
