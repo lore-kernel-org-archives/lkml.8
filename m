@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C37EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07D9021BE5
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BF721BE5
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945088;
-	bh=/9j2O4ndIpMwdAF1ANDZkBH6qIBFbszMf8SV8brBx6o=;
+	s=default; t=1592945095;
+	bh=ayWTO8VHzqz9p3VnbCd0mRbHFFuvyRKBUrFM+f6HTXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GdKxTAd2GMZ47XaCCI2fSAF27/fZmcdoOxr5uuLXqC0iOuE8Y/cx3NwiUs9pqWtDd
-	 kY6bAxRlwkRylHrfRiLzZjUfjqqETwFayQo9ag3HpswMDViJQuMwiox8rrQMDFXiy2
-	 z21m1sHZH1oJA0z2bmZhHgfbV2DsJpFCEy4S/ZmQ=
+	b=JJIxUTw3HQZ19USmSO6axoqLq/drCR9Kg3kVVgXvoksNDDNp4dzOBYko6TH1wG3Jq
+	 hYbAvOPmBH6TWUSidiW8NaUBzndlI5QR0HHUhyJlsp8Uq2bcjtkBo28iSeVZbtf3ac
+	 oHy1BAw10pi+IrcEugBELZmM7GiQzhHjl2YhDnEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392608AbgFWUop (ORCPT
+        id S2392616AbgFWUot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:44:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391022AbgFWUoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:44:39 -0400
+        id S2391610AbgFWUoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:44:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93D4E218AC;
-        Tue, 23 Jun 2020 20:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A29F121927;
+        Tue, 23 Jun 2020 20:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945080;
-        bh=/9j2O4ndIpMwdAF1ANDZkBH6qIBFbszMf8SV8brBx6o=;
+        s=default; t=1592945085;
+        bh=ayWTO8VHzqz9p3VnbCd0mRbHFFuvyRKBUrFM+f6HTXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Il2byrHGTqdbj9R0vk1pjzXsQoafaeAu8uHa1yf4YkWWLXXkWWh4KaEH7HND/ZrzG
-         d5mGh5+IEdGS/oofUhGwgZD5uYOonkgcqNPQO/IKVE1//J7d6+kg96A4rGkHHA3E0d
-         sBgqxJQQpMhLh/89B8SSyoL3SWEUYgKv6iDlg6Fs=
+        b=mKGmgKtGzoJDViCF58b4Rzp8CO5AAVEiSPaS/jjiT6hSoBW8Xj4CI4OccUFrBuFQQ
+         /AF1hBoayHp2w+FnWM8cDJ4iKcD2iBQOlP604/fvLLiNQCMY8KiR4pDFH9DdcJP7jM
+         gY8ycJiIcOKylYZyQPfmTTCgyP45i8YqhTwsC+LE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Adam Honse <calcprogrammer1@gmail.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 030/136] yam: fix possible memory leak in yam_init_driver
-Date:   Tue, 23 Jun 2020 21:58:06 +0200
-Message-Id: <20200623195305.169665860@linuxfoundation.org>
+Subject: [PATCH 4.14 005/136] i2c: piix4: Detect secondary SMBus controller on AMD AM4 chipsets
+Date:   Tue, 23 Jun 2020 21:57:41 +0200
+Message-Id: <20200623195303.885163523@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -61,34 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Adam Honse <calcprogrammer1@gmail.com>
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+[ Upstream commit f27237c174fd9653033330e4e532cd9d153ce824 ]
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
+The AMD X370 and other AM4 chipsets (A/B/X 3/4/5 parts) and Threadripper
+equivalents have a secondary SMBus controller at I/O port address
+0x0B20.  This bus is used by several manufacturers to control
+motherboard RGB lighting via embedded controllers.  I have been using
+this bus in my OpenRGB project to control the Aura RGB on many
+motherboards and ASRock also uses this bus for their Polychrome RGB
+controller.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+I am not aware of any CZ-compatible platforms which do not have the
+second SMBus channel.  All of AMD's AM4- and Threadripper- series
+chipsets that OpenRGB users have tested appear to have this secondary
+bus.  I also noticed this secondary bus is present on older AMD
+platforms including my FM1 home server.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202587
+Signed-off-by: Adam Honse <calcprogrammer1@gmail.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/yam.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-piix4.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index 16a6e11939122..b74c735a423dd 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1162,6 +1162,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index 4b81dc231b18f..5345b731bb7cc 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -960,7 +960,8 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	}
+ 
+ 	if (dev->vendor == PCI_VENDOR_ID_AMD &&
+-	    dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
++	    (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
++	     dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)) {
+ 		retval = piix4_setup_sb800(dev, id, 1);
+ 	}
+ 
 -- 
 2.25.1
 
