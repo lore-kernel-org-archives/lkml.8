@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70352C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C72320707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7800A20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947820;
-	bh=pIqGEiiYOAPthQ/PQLIKaUXsGbSSPmjyud+zQSSKwQY=;
+	s=default; t=1592947825;
+	bh=bD+I7ZFfP4wnV/brtaJCwqwEgn+sv5ZM40m+er/hkpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjPqvaGS58QUYcWAdVeiKWppP+OpQDTSNY1wQl3EzYv4SD7T1WwABLigXv62/xwCh
-	 zEOeIiMDnS7eaOdXlUAgfbbZZLF0UuKg4d8JxcByWLgISJ7JbKhLuQEvCkCGUhu8qj
-	 ZK1uq6KeepGCuD8kDkxg3bgZqM6gsPoy9MqbH3vo=
+	b=ORJi00ZfePKlfQQ3EwW/gZ5n6mCmZUUZhJHUJUynTlsGjLDK6DhqYu9YK0cC1zPT1
+	 DcVwi5WMVGjLVK9aOT6mBkhA2m7bGQ3p1US+79ul5VWJu2Qc2xJoqEG5lgdbW/Q5mO
+	 wfuJw9jWSRPnWi7Tcu+gULMJD1SS4clooY19Gt/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393595AbgFWVaR (ORCPT
+        id S2393610AbgFWVaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389160AbgFWUOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:08 -0400
+        id S2389147AbgFWUOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A50B3206C3;
-        Tue, 23 Jun 2020 20:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BA6B206C3;
+        Tue, 23 Jun 2020 20:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943248;
-        bh=pIqGEiiYOAPthQ/PQLIKaUXsGbSSPmjyud+zQSSKwQY=;
+        s=default; t=1592943242;
+        bh=bD+I7ZFfP4wnV/brtaJCwqwEgn+sv5ZM40m+er/hkpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y3fU2719ZJg+f70e5Ebl7HEay0SPx4f8hAoDZFpXxrkIOJGW4FWTo86G3ZvmVzp5J
-         ys8OR10TeMSCCyWweXol2PKrpzeEUL6a36zPaYjSDLYOEZtuBV6q7NeGRWZe2mLctF
-         CsdMvgcrY9HHnp7y85HhVfmK5jErRZGY6im1aCjI=
+        b=1ow1elfeqLK1UBT6QIXpJtpwctA911qTHuP+qv0u3zpuEK2Wd3VSb1oDAAzqew3Lb
+         qDhxyQjbhZCU89+DcRkIP/nb+SMAOBsum77dgJWidzcRt49GxgbsleX/G88H5qgcPu
+         6Ptss0debPkCaoysciWFnqs5UpAj3CcitskUuyN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 318/477] pinctrl: freescale: imx: Use devm_of_iomap() to avoid a resource leak in case of error in imx_pinctrl_probe()
-Date:   Tue, 23 Jun 2020 21:55:15 +0200
-Message-Id: <20200623195422.561156018@linuxfoundation.org>
+Subject: [PATCH 5.7 316/477] pinctrl: sirf: add missing put_device() call in sirfsoc_gpio_probe()
+Date:   Tue, 23 Jun 2020 21:55:13 +0200
+Message-Id: <20200623195422.467029626@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,47 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit ba403242615c2c99e27af7984b1650771a2cc2c9 ]
+[ Upstream commit 66339f2fba3fa05b0507e1887e4c6abcfc6228a3 ]
 
-Use 'devm_of_iomap()' instead 'of_iomap()' to avoid a resource leak in
-case of error.
+A coccicheck run provided information like the following:
 
-Update the error handling code accordingly.
+drivers/pinctrl/sirf/pinctrl-sirf.c:798:2-8: ERROR: missing put_device;
+call of_find_device_by_node on line 792, but without a corresponding
+object release within this function.
 
-Fixes: 26d8cde5260b ("pinctrl: freescale: imx: add shared input select reg support")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200602200626.677981-1-christophe.jaillet@wanadoo.fr
+Generated by: scripts/coccinelle/free/put_device.cocci
+
+Thus add a jump target to fix the exception handling for this
+function implementation.
+
+Fixes: 5130216265f6 ("PINCTRL: SiRF: add GPIO and GPIO irq support in CSR SiRFprimaII")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Link: https://lore.kernel.org/r/20200603013532.755220-1-yukuai3@huawei.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/pinctrl/sirf/pinctrl-sirf.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 1f81569c7ae3b..cb7e0f08d2cf4 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -824,12 +824,13 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 				return -EINVAL;
- 			}
+diff --git a/drivers/pinctrl/sirf/pinctrl-sirf.c b/drivers/pinctrl/sirf/pinctrl-sirf.c
+index 1ebcb957c6541..63a287d5795f0 100644
+--- a/drivers/pinctrl/sirf/pinctrl-sirf.c
++++ b/drivers/pinctrl/sirf/pinctrl-sirf.c
+@@ -794,13 +794,17 @@ static int sirfsoc_gpio_probe(struct device_node *np)
+ 		return -ENODEV;
  
--			ipctl->input_sel_base = of_iomap(np, 0);
-+			ipctl->input_sel_base = devm_of_iomap(&pdev->dev, np,
-+							      0, NULL);
- 			of_node_put(np);
--			if (!ipctl->input_sel_base) {
-+			if (IS_ERR(ipctl->input_sel_base)) {
- 				dev_err(&pdev->dev,
- 					"iomuxc input select base address not found\n");
--				return -ENOMEM;
-+				return PTR_ERR(ipctl->input_sel_base);
- 			}
- 		}
- 	}
+ 	sgpio = devm_kzalloc(&pdev->dev, sizeof(*sgpio), GFP_KERNEL);
+-	if (!sgpio)
+-		return -ENOMEM;
++	if (!sgpio) {
++		err = -ENOMEM;
++		goto out_put_device;
++	}
+ 	spin_lock_init(&sgpio->lock);
+ 
+ 	regs = of_iomap(np, 0);
+-	if (!regs)
+-		return -ENOMEM;
++	if (!regs) {
++		err = -ENOMEM;
++		goto out_put_device;
++	}
+ 
+ 	sgpio->chip.gc.request = sirfsoc_gpio_request;
+ 	sgpio->chip.gc.free = sirfsoc_gpio_free;
+@@ -824,8 +828,10 @@ static int sirfsoc_gpio_probe(struct device_node *np)
+ 	girq->parents = devm_kcalloc(&pdev->dev, SIRFSOC_GPIO_NO_OF_BANKS,
+ 				     sizeof(*girq->parents),
+ 				     GFP_KERNEL);
+-	if (!girq->parents)
+-		return -ENOMEM;
++	if (!girq->parents) {
++		err = -ENOMEM;
++		goto out_put_device;
++	}
+ 	for (i = 0; i < SIRFSOC_GPIO_NO_OF_BANKS; i++) {
+ 		bank = &sgpio->sgpio_bank[i];
+ 		spin_lock_init(&bank->lock);
+@@ -868,6 +874,8 @@ out_no_range:
+ 	gpiochip_remove(&sgpio->chip.gc);
+ out:
+ 	iounmap(regs);
++out_put_device:
++	put_device(&pdev->dev);
+ 	return err;
+ }
+ 
 -- 
 2.25.1
 
