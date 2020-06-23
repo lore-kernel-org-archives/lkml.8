@@ -2,145 +2,154 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83693C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1990B2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CEB920780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TsxNejoi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWus7F/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731775AbgFWCoW (ORCPT
+        id S1731706AbgFWCrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:44:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39377 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730456AbgFWCoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:44:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49rVwb07zfz9sRh;
-        Tue, 23 Jun 2020 12:44:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592880258;
-        bh=TC3tqLIz+n4OEref9BzGDWrFGTvbjQ0IM7oHwGCme0k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TsxNejoisspUBFYOHzYQfMU8Mtf+1lfGcCdvRbN5fEOZtuBNONJLbvZVi4z+/2g8F
-         Qm2vNnAkcpszF3ABMvyeJSVBsRJN9ecjVy9YnyUT8lnIBpVo2ytv/S89IvR824M0IN
-         pxYY4H6WLPhHfyajoKrgh60uvDMvMFwnZIdl4s70XhelYvmgYfqBjuwh0dfi5euaLU
-         /1XzOGi+03E6Y9kNIrqS2DvfbInsHX0tSM3R2GVpT9Lyub5LT4PTqDZK3Us11FZq60
-         cNgDFhC1sszvaABWUegsKfdnEM4E5/JRMK65sHVS+EUQkPnYBRLPrZi4JMgw/j1GEv
-         EJu+X4cEa+5Eg==
-Date:   Tue, 23 Jun 2020 12:44:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     syzbot <syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org, elver@google.com
-Subject: Re: linux-next build error (9)
-Message-ID: <20200623124413.08b2bd65@canb.auug.org.au>
-In-Reply-To: <20200622094923.GP576888@hirez.programming.kicks-ass.net>
-References: <000000000000c25ce105a8a8fcd9@google.com>
-        <20200622094923.GP576888@hirez.programming.kicks-ass.net>
+        Mon, 22 Jun 2020 22:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730456AbgFWCrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 22:47:09 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED5DC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:47:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t194so1602122wmt.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nO5X8az1iZdZpQgcucoRmbtaCiu8/dHvR/vuZisbGbg=;
+        b=ZWus7F/wJ5uGQya+5s5/T0SJ/pHOu6ysTi808P3JHesr4MkDHHBWSCTZWZHhFAWQ0i
+         kiHYEDyZOdgN48Iu28wFy9/I8HN9OM6RVX8iQqkDdzJtBB3iFmeipxarIHkTfvpaY3UM
+         C6NViwBAby8Ca5tt4udkIHQOtMSDHmwOzLD/Fqt123GRK+QyK5cmcbZ6zV8n/+jiTJDv
+         13D0YgnXySUirtY5wstCyg58sFZRXMVEhP+zam4kEMdP7N0gS35N3Ogg/VkF+lXGwX8N
+         zAD5YuVZSsrKDoZHsEX6Ai2+60GP6zXJl+tT5Obi3yeL9N4d7jTcg3QILNc4Z7ZAJcDf
+         OHgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nO5X8az1iZdZpQgcucoRmbtaCiu8/dHvR/vuZisbGbg=;
+        b=BQJalAmcAwvlS/hT8dheuIsVLcS0hVIHbY5fhf0x24CgOa9kbc1o5geTrnwHcXYlQQ
+         g31IluQwYHVk8lPEOQeJQ23AJIhM8qOkQB9h1Zg8KNizWh4FsR5a+pSUvOyKUKmC65bk
+         SeBjX/w+MmCZx9Sj1iRsYiIbPjzVrfglUFb/t67m0TZN6dBuyW18V9vo5YiOYlGI7ifT
+         QZNAcLLoqghLAnDufIZqpBV6KgjMrdzSZ7tS1jtXeuLnxpgkVvyDnn2yoarNl5o6N7et
+         cv+1ilOTUBtTu1V2efiXyCWC79jLK3eaK7CAotMIsoexVbxDp1BQSHZuAm3jHxGhGNyL
+         tphg==
+X-Gm-Message-State: AOAM530tghK7vxY2FN0vdv88uhELvEYVeqmWx0RhmB/ZBP2ZccYpiOAZ
+        Ap9FslKPySK6ivB2MVX1NpBHFJzdK5o8Vi35x2iaKQ==
+X-Google-Smtp-Source: ABdhPJwVhwBuznzaEXZC0Z8D79xNdvpGAAjV8U45ICfWzRKRdyWpqj9d6UN8PJvPV5l6xbkf9WzwPIIGOte4iLoo5wQ=
+X-Received: by 2002:a1c:750e:: with SMTP id o14mr21195505wmc.86.1592880426707;
+ Mon, 22 Jun 2020 19:47:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/e.qnKUb/HtDM9BzQZV5zrSJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
+In-Reply-To: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com>
+From:   David Gow <davidgow@google.com>
+Date:   Tue, 23 Jun 2020 10:46:54 +0800
+Message-ID: <CABVgOSkwZUAEjxrqO46kqj=uY5HDzr-E_LR9i04yXEKqjp91Og@mail.gmail.com>
+Subject: Re: RFC: KTAP documentation - expected messages
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/e.qnKUb/HtDM9BzQZV5zrSJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Peter,
-
-On Mon, 22 Jun 2020 11:49:23 +0200 Peter Zijlstra <peterz@infradead.org> wr=
-ote:
+On Mon, Jun 22, 2020 at 6:45 AM Frank Rowand <frowand.list@gmail.com> wrote:
 >
-> On Mon, Jun 22, 2020 at 02:37:12AM -0700, syzbot wrote:
-> > Hello,
-> >=20
-> > syzbot found the following crash on:
-> >=20
-> > HEAD commit:    27f11fea Add linux-next specific files for 20200622
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D138dc743100=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D41c659db5ca=
-da6f4
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3Ddbf8cf3717c8e=
-f4a90a0
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >=20
-> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
-it:
-> > Reported-by: syzbot+dbf8cf3717c8ef4a90a0@syzkaller.appspotmail.com
-> >=20
-> > ./arch/x86/include/asm/kvm_para.h:99:29: error: inlining failed in call=
- to always_inline 'kvm_handle_async_pf': function attribute mismatch
-> > ./arch/x86/include/asm/processor.h:824:29: error: inlining failed in ca=
-ll to always_inline 'prefetchw': function attribute mismatch
-> > ./arch/x86/include/asm/current.h:13:44: error: inlining failed in call =
-to always_inline 'get_current': function attribute mismatch
-> > arch/x86/mm/fault.c:1353:1: error: inlining failed in call to always_in=
-line 'handle_page_fault': function attribute mismatch
-> > ./arch/x86/include/asm/processor.h:576:29: error: inlining failed in ca=
-ll to always_inline 'native_swapgs': function attribute mismatch
-> > ./arch/x86/include/asm/fsgsbase.h:33:38: error: inlining failed in call=
- to always_inline 'rdgsbase': function attribute mismatch
-> > ./arch/x86/include/asm/irq_stack.h:40:29: error: inlining failed in cal=
-l to always_inline 'run_on_irqstack_cond': function attribute mismatch
-> > ./include/linux/debug_locks.h:15:28: error: inlining failed in call to =
-always_inline '__debug_locks_off': function attribute mismatch
-> > ./include/asm-generic/atomic-instrumented.h:70:1: error: inlining faile=
-d in call to always_inline 'atomic_add_return': function attribute mismatch
-> > kernel/locking/lockdep.c:396:29: error: inlining failed in call to alwa=
-ys_inline 'lockdep_recursion_finish': function attribute mismatch
-> > kernel/locking/lockdep.c:4725:5: error: inlining failed in call to alwa=
-ys_inline '__lock_is_held': function attribute mismatch =20
->=20
-> Hurmph, I though that was cured in GCC >=3D 8. Marco?
+> Tim Bird started a thread [1] proposing that he document the selftest result
+> format used by Linux kernel tests.
+>
+> [1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
+>
+> The issue of messages generated by the kernel being tested (that are not
+> messages directly created by the tests, but are instead triggered as a
+> side effect of the test) came up.  In this thread, I will call these
+> messages "expected messages".  Instead of sidetracking that thread with
+> a proposal to handle expected messages, I am starting this new thread.
 
-So what causes this? Because we got a couple of these in our s390 builds la=
-st night as well.
+Thanks for doing this: I think there are quite a few tests which could
+benefit from something like this.
 
-kernel/locking/lockdep.c:805:1: error: inlining failed in call to always_in=
-line 'look_up_lock_class': function attribute mismatch
-include/linux/debug_locks.h:15:28: error: inlining failed in call to always=
-_inline '__debug_locks_off': function attribute mismatch
+I think there were actually two separate questions: what do we do with
+unexpected messages (most of which I expect are useless, but some of
+which may end up being related to an unexpected test failure), and how
+to have tests "expect" a particular message to appear. I'll stick to
+talking about the latter for this thread, but even there there's two
+possible interpretations of "expected messages" we probably want to
+explicitly distinguish between: a message which must be present for
+the test to pass (which I think best fits the "expected message"
+name), and a message which the test is likely to produce, but which
+shouldn't alter the result (an "ignored message"). I don't see much
+use for the latter at present, but if we wanted to do more things with
+messages and had some otherwise very verbose tests, it could
+potentially be useful.
 
-s390-linux-gcc (GCC) 8.1.0 / GNU ld (GNU Binutils) 2.30
+The other thing I'd note here is that this proposal seems to be doing
+all of the actual message filtering in userspace, which makes a lot of
+sense for kselftest tests, but does mean that the kernel can't know if
+the test has passed or failed. There's definitely a tradeoff between
+trying to put too much needless string parsing in the kernel and
+having to have a userland tool determine the test results. The
+proposed KCSAN test suite[1] is using tracepoints to do this in the
+kernel. It's not the cleanest thing, but there's no reason KUnit or
+similar couldn't implement a nicer API around it.
 
---=20
+[1]: https://lkml.org/lkml/2020/6/22/1506
+
+> I implemented an API for expected messages that are triggered by tests
+> in the Devicetree unittest code, with the expectation that the specific
+> details may change when the Devicetree unittest code adapts the KUnit
+> API.  It seems appropriate to incorporate the concept of expected
+> messages in Tim's documentation instead of waiting to address the
+> subject when the Devicetree unittest code adapts the KUnit API, since
+> Tim's document may become the kernel selftest standard.
+
+Is having a nice way to handle expected messages the only thing
+holding up porting this to KUnit?
+
+> Instead of creating a very long email containing multiple objects,
+> I will reply to this email with a separate reply for each of:
+>
+>   The "expected messages" API implemention and use can be from
+>   drivers/of/unittest.c in the mainline kernel.
+>
+>   of_unittest_expect - A proof of concept perl program to filter console
+>                        output containing expected messages output
+>
+>                        of_unittest_expect is also available by cloning
+>                        https://github.com/frowand/dt_tools.git
+>
+>   An example raw console output with timestamps and expect messages.
+>
+>   An example of console output processed by filter program
+>   of_unittest_expect to be more human readable.  The expected
+>   messages are not removed, but are flagged.
+>
+>   An example of console output processed by filter program
+>   of_unittest_expect to be more human readable.  The expected
+>   messages are removed instead of being flagged.
+
 Cheers,
-Stephen Rothwell
-
---Sig_/e.qnKUb/HtDM9BzQZV5zrSJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7xbH4ACgkQAVBC80lX
-0Gz/HAf+OkoHJ0nxoaDWNvkmBAm4xhg1OB0dpRaoirjK5bk7n/fAbNs22/GQVAhs
-Zkqxme/IAehOEAWIEWlHiYEu8HfTLwB1lWWEojg8sJeIVzUi6Z6ssC6H0W/+IwtE
-ibSjUohWeekOrL7L9IPglcCOHPAtHNj4Zb2Vu1jj4v9FIHCQyD5asidXq1NFWOC8
-y7mLd49o0/qKWKmB+MdnpvYVeZcyFNp+HKijXGhGYR2LU+S2n9jIAeDFVybYdrKQ
-5A6rX6QyZ/0kqRP7n1oOlBSzwA8duHJklZmJWhULPGniLvoMKIA20R9h9DB/sYac
-OD/20J1gXckXBf56UngA6pm3rMH2xA==
-=RQtf
------END PGP SIGNATURE-----
-
---Sig_/e.qnKUb/HtDM9BzQZV5zrSJ--
+-- David
