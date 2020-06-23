@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFBB2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2B42080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942594;
-	bh=noT/ndaq04FfNDvkcR4+jGr6eoHVMEXPR6grHla+rLc=;
+	s=default; t=1592942599;
+	bh=uwUh5/OrFqhSFBCYY3qxb+EpDJjBqbblIZSvnht/7z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7e6Um4sF0PbJhPty1XCViBRP5fAz2iKvEigcaIeJQgCZuLFck12aZqaZjCbHj5Js
-	 OZxVxJC65uFGrMtAa6xUtm/X5iQZb+/awIKvaEpShjyMiKbiBa7s8756nbsW0OQh+z
-	 2ZpFMft75Tb2CKmOp1Odkiag8WAoNwWBPWCthJUE=
+	b=YPhnOQugEoxChVgdMpLlfdqBn4fCWkzKGxXTPRpJMBCOYwUm0nHeR6FYCK3bwIo8Z
+	 b7HSxTW3IcvuADwQUCvTXQhGm9kbOF44zAqNHChRAhGxbqzkoZeS9mCqJ0Psgkm2UV
+	 zTNs+ZZPkzFo0OyOyGxEUkwxnvuLrk00PESKHPPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387996AbgFWUDN (ORCPT
+        id S2388007AbgFWUDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387976AbgFWUDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:07 -0400
+        id S2387992AbgFWUDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07CB020FC3;
-        Tue, 23 Jun 2020 20:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34ACB20CC7;
+        Tue, 23 Jun 2020 20:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942586;
-        bh=noT/ndaq04FfNDvkcR4+jGr6eoHVMEXPR6grHla+rLc=;
+        s=default; t=1592942591;
+        bh=uwUh5/OrFqhSFBCYY3qxb+EpDJjBqbblIZSvnht/7z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrafEy8i2DIE4C9ZaaxQ/NXe60pKrNE//LKAdec5rtjZdFCIzqlb9ggZI3Cx9K8Ei
-         UFB1MNkn1AnLC51NBx13eOHsIiNHDt8KIJm+fDyAwqMe74KePI0+xDr0H52BTsk/pM
-         clBnjsjwuzM6OEIVyztcWv87s9wQjiB8wa1R+5NI=
+        b=SOuG742C68yGCswxR7XY+8Rc4rYWmaEX4MERVhhh8bB7NFBJIMK/EgbmhC51fO858
+         Y5Tt3d8N/yLNKGXdV12NtR6scl3A1fbMtrBc9W4LLQRqYRgFMpHCWkOoNjAQSN5UYg
+         W11oTDquz0QRvzSsD8VJTbvO4ItUgNRgVuJ0EIww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 056/477] PCI: aardvark: Dont blindly enable ASPM L0s and dont write to read-only register
-Date:   Tue, 23 Jun 2020 21:50:53 +0200
-Message-Id: <20200623195410.260083381@linuxfoundation.org>
+Subject: [PATCH 5.7 058/477] arm64: dts: fvp/juno: Fix node address fields
+Date:   Tue, 23 Jun 2020 21:50:55 +0200
+Message-Id: <20200623195410.355673190@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -63,63 +60,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
+[ Upstream commit bb5cce12ac717c7462217cd493ed701d12d6dbce ]
 
-Trying to change Link Status register does not have any effect as this
-is a read-only register. Trying to overwrite bits for Negotiated Link
-Width does not make sense.
+The Arm Ltd. boards were using an outdated address convention in the DT
+node names, by separating the high from the low 32-bits of an address by
+a comma.
 
-In future proper change of link width can be done via Lane Count Select
-bits in PCIe Control 0 register.
+Remove the comma from the node name suffix to be DT spec compliant.
 
-Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
-Control register is wrong. There should be at least some detection if
-endpoint supports L0s as isn't mandatory.
-
-Moreover ASPM Control bits in Link Control register are controlled by
-pcie/aspm.c code which sets it according to system ASPM settings,
-immediately after aardvark driver probes. So setting these bits by
-aardvark driver has no long running effect.
-
-Remove code which touches ASPM L0s bits from this driver and let
-kernel's ASPM implementation to set ASPM state properly.
-
-Some users are reporting issues that this code is problematic for some
-Intel wifi cards and removing it fixes them, see e.g.:
-https://bugzilla.kernel.org/show_bug.cgi?id=196339
-
-If problems with Intel wifi cards occur even after this commit, then
-pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
-for affected problematic cards.
-
-Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Link: https://lore.kernel.org/r/20200513103016.130417-3-andre.przywara@arm.com
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
+ arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
+ arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
+ arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
+ arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
+ 5 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 2a20b649f40cc..3a6d07dc0a385 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -353,10 +353,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+index 5c183483ec3b6..8010cdcdb37a0 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -31,7 +31,7 @@
+ 			#interrupt-cells = <1>;
+ 			ranges;
  
- 	advk_pcie_wait_for_link(pcie);
+-			nor_flash: flash@0,00000000 {
++			nor_flash: flash@0 {
+ 				compatible = "arm,vexpress-flash", "cfi-flash";
+ 				reg = <0 0x00000000 0x04000000>,
+ 				      <4 0x00000000 0x04000000>;
+@@ -41,13 +41,13 @@
+ 				};
+ 			};
  
--	reg = PCIE_CORE_LINK_L0S_ENTRY |
--		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
--
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
+-			psram@1,00000000 {
++			psram@100000000 {
+ 				compatible = "arm,vexpress-psram", "mtd-ram";
+ 				reg = <1 0x00000000 0x02000000>;
+ 				bank-width = <4>;
+ 			};
+ 
+-			ethernet@2,02000000 {
++			ethernet@202000000 {
+ 				compatible = "smsc,lan9118", "smsc,lan9115";
+ 				reg = <2 0x02000000 0x10000>;
+ 				interrupts = <15>;
+@@ -59,14 +59,14 @@
+ 				vddvario-supply = <&v2m_fixed_3v3>;
+ 			};
+ 
+-			usb@2,03000000 {
++			usb@203000000 {
+ 				compatible = "nxp,usb-isp1761";
+ 				reg = <2 0x03000000 0x20000>;
+ 				interrupts = <16>;
+ 				port1-otg;
+ 			};
+ 
+-			iofpga@3,00000000 {
++			iofpga@300000000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+index 60ec37d6c9d3c..e2da63f782980 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
++++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+@@ -151,7 +151,7 @@
+ 				<0 0 41 &gic 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+ 				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-		ethernet@2,02000000 {
++		ethernet@202000000 {
+ 			compatible = "smsc,lan91c111";
+ 			reg = <2 0x02000000 0x10000>;
+ 			interrupts = <15>;
+@@ -178,7 +178,7 @@
+ 			clock-output-names = "v2m:refclk32khz";
+ 		};
+ 
+-		iofpga@3,00000000 {
++		iofpga@300000000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+index e3983ded3c3c5..d5cefddde08c2 100644
+--- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+@@ -103,7 +103,7 @@
+ 				};
+ 			};
+ 
+-			flash@0,00000000 {
++			flash@0 {
+ 				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
+ 				compatible = "arm,vexpress-flash", "cfi-flash";
+ 				reg = <0 0x00000000 0x04000000>;
+@@ -120,7 +120,7 @@
+ 				};
+ 			};
+ 
+-			ethernet@2,00000000 {
++			ethernet@200000000 {
+ 				compatible = "smsc,lan9118", "smsc,lan9115";
+ 				reg = <2 0x00000000 0x10000>;
+ 				interrupts = <3>;
+@@ -133,7 +133,7 @@
+ 				vddvario-supply = <&mb_fixed_3v3>;
+ 			};
+ 
+-			iofpga@3,00000000 {
++			iofpga@300000000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
+index 60703b5763c6a..350cbf17e8b41 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
+@@ -9,7 +9,7 @@
+ 		motherboard {
+ 			arm,v2m-memory-map = "rs2";
+ 
+-			iofpga@3,00000000 {
++			iofpga@300000000 {
+ 				virtio-p9@140000 {
+ 					compatible = "virtio,mmio";
+ 					reg = <0x140000 0x200>;
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+index e333c8d2d0e4c..d1bfa62ca073e 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+@@ -17,14 +17,14 @@
+ 			#interrupt-cells = <1>;
+ 			ranges;
+ 
+-			flash@0,00000000 {
++			flash@0 {
+ 				compatible = "arm,vexpress-flash", "cfi-flash";
+ 				reg = <0 0x00000000 0x04000000>,
+ 				      <4 0x00000000 0x04000000>;
+ 				bank-width = <4>;
+ 			};
+ 
+-			ethernet@2,02000000 {
++			ethernet@202000000 {
+ 				compatible = "smsc,lan91c111";
+ 				reg = <2 0x02000000 0x10000>;
+ 				interrupts = <15>;
+@@ -51,7 +51,7 @@
+ 				clock-output-names = "v2m:refclk32khz";
+ 			};
+ 
+-			iofpga@3,00000000 {
++			iofpga@300000000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
 -- 
 2.25.1
 
