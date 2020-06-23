@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED170C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65241208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BA5204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872240;
-	bh=1veGT3UQhfKYOYux03q+oos70fj1Q5bSyqp9pTfmx8M=;
+	s=default; t=1592872242;
+	bh=nyQeh8flDROkmEBHFnAc9Eq59qY4dCjQxdLV3qah2e0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xo50jZR2fnZ0BwrtxFNlZra+W7jnQBY2ljW7aj8c5STx31pVyhhijYmse1nrA2UIY
-	 N9YoWpKSUwrm1eUVzDUkGyfZPEYYVwcgzJbtrhXI6y9nQTL1w1Y+xTFhoz+0GNHC4s
-	 uHFNOqQaGkOVCKoFr5EsL9ueaIDlIA5Zbv20okuM=
+	b=A7Had17wyqZ/w9SX+jXUA/S6sUKlHChGtVU8uYi74O9sSfmvVsfaTk6YZXTwvcSka
+	 ZuZk7J+arHL7MjX2bzAToZ5GqkCpXew5uiZ4IHb6PXhhl9F5plxie5hL3y0z9CteA6
+	 Liud2nJqDxEP0/Sx9MSWz+awBtpEifSqy4g10iKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgFWAae (ORCPT
+        id S1731697AbgFWAae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 22 Jun 2020 20:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731700AbgFWAaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:30:20 -0400
+        id S1731668AbgFWAaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:30:18 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C03208E4;
-        Tue, 23 Jun 2020 00:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06B5520857;
+        Tue, 23 Jun 2020 00:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872219;
-        bh=1veGT3UQhfKYOYux03q+oos70fj1Q5bSyqp9pTfmx8M=;
+        s=default; t=1592872218;
+        bh=nyQeh8flDROkmEBHFnAc9Eq59qY4dCjQxdLV3qah2e0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smdLsBMM4wYdtb1RNQqD2UdLdew6AuyAhJzFsw40C0S5QjlxVJ1bFyg6fzIwkT/GU
-         nmrN8PHhH1hFDKiM1uboqrqgJnxglNcfJ52uO915Di56VURpdNeUgyVRD2zFNKsYof
-         ii0QBguO2Xt4pbkoG8n7aTbgtafYQAF+zhuj3dAE=
+        b=hsqwPVg5yx/RCuesFx6eSikjWbGZRPo/d4MnxOZuZMUdHh9x0DCLNRVd6FGpHmsor
+         MtI0+NztI0tddqNAip1RXGnzFhMDsdXPgqJLhVI/m03ulV+LQG2rzHeOxxYZvtkOjr
+         8SVzmL+IxqU5ETmecyTVrk8+++kR2Y3qazGI4uhI=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 22/30] doc: Document rcuperf's module parameters
-Date:   Mon, 22 Jun 2020 17:30:05 -0700
-Message-Id: <20200623003013.26252-22-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 14/30] refperf: Convert reader_task structure's "start" field to int
+Date:   Mon, 22 Jun 2020 17:29:57 -0700
+Message-Id: <20200623003013.26252-14-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
 References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
@@ -61,61 +61,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds documentation for the rcuperf module parameters.
+This commit converts the reader_task structure's "start" field to int
+in order to demote a full barrier to an smp_load_acquire() and also to
+simplify the code a bit.  While in the area, and to enlist the compiler's
+help in ensuring that nothing was missed, the field's name was changed
+to start_reader.
+
+Also while in the area, change the main_func() store to use
+smp_store_release() to further fortify against wait/wake races.
 
 Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 36 +++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ kernel/rcu/refperf.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb95fad..20cd00b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4407,6 +4407,42 @@
- 			      reboot_cpu is s[mp]#### with #### being the processor
- 					to be used for rebooting.
+diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+index 8815ccf..2fd3ed1 100644
+--- a/kernel/rcu/refperf.c
++++ b/kernel/rcu/refperf.c
+@@ -80,7 +80,7 @@ torture_param(bool, shutdown, REFPERF_SHUTDOWN,
  
-+	refperf.holdoff= [KNL]
-+			Set test-start holdoff period.  The purpose of
-+			this parameter is to delay the start of the
-+			test until boot completes in order to avoid
-+			interference.
-+
-+	refperf.loops= [KNL]
-+			Set the number of loops over the synchronization
-+			primitive under test.  Increasing this number
-+			reduces noise due to loop start/end overhead,
-+			but the default has already reduced the per-pass
-+			noise to a handful of picoseconds on ca. 2020
-+			x86 laptops.
-+
-+	refperf.nreaders= [KNL]
-+			Set number of readers.  The default value of -1
-+			selects N, where N is roughly 75% of the number
-+			of CPUs.  A value of zero is an interesting choice.
-+
-+	refperf.nruns= [KNL]
-+			Set number of runs, each of which is dumped onto
-+			the console log.
-+
-+	refperf.readdelay= [KNL]
-+			Set the read-side critical-section duration,
-+			measured in microseconds.
-+
-+	refperf.shutdown= [KNL]
-+			Shut down the system at the end of the performance
-+			test.  This defaults to 1 (shut it down) when
-+			rcuperf is built into the kernel and to 0 (leave
-+			it running) when rcuperf is built as a module.
-+
-+	refperf.verbose= [KNL]
-+			Enable additional printk() statements.
-+
- 	relax_domain_level=
- 			[KNL, SMP] Set scheduler's default relax_domain_level.
- 			See Documentation/admin-guide/cgroup-v1/cpusets.rst.
+ struct reader_task {
+ 	struct task_struct *task;
+-	atomic_t start;
++	int start_reader;
+ 	wait_queue_head_t wq;
+ 	u64 last_duration_ns;
+ };
+@@ -243,7 +243,7 @@ ref_perf_reader(void *arg)
+ 	VERBOSE_PERFOUT("ref_perf_reader %ld: waiting to start next experiment on cpu %d", me, smp_processor_id());
+ 
+ 	// Wait for signal that this reader can start.
+-	wait_event(rt->wq, (atomic_read(&nreaders_exp) && atomic_read(&rt->start)) ||
++	wait_event(rt->wq, (atomic_read(&nreaders_exp) && smp_load_acquire(&rt->start_reader)) ||
+ 			   torture_must_stop());
+ 
+ 	if (torture_must_stop())
+@@ -252,8 +252,7 @@ ref_perf_reader(void *arg)
+ 	// Make sure that the CPU is affinitized appropriately during testing.
+ 	WARN_ON_ONCE(smp_processor_id() != me);
+ 
+-	smp_mb__before_atomic();
+-	atomic_dec(&rt->start);
++	WRITE_ONCE(rt->start_reader, 0);
+ 
+ 	VERBOSE_PERFOUT("ref_perf_reader %ld: experiment %d started", me, exp_idx);
+ 
+@@ -372,7 +371,7 @@ static int main_func(void *arg)
+ 		exp_idx = exp;
+ 
+ 		for (r = 0; r < nreaders; r++) {
+-			atomic_set(&reader_tasks[r].start, 1);
++			smp_store_release(&reader_tasks[r].start_reader, 1);
+ 			wake_up(&reader_tasks[r].wq);
+ 		}
+ 
 -- 
 2.9.5
 
