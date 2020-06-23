@@ -2,224 +2,364 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC40C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D892C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 013B720768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2103720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="OGwMD7h7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tzOayo1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732494AbgFWLfJ (ORCPT
+        id S1732476AbgFWLfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:35:09 -0400
-Received: from mail-eopbgr00054.outbound.protection.outlook.com ([40.107.0.54]:22289
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732383AbgFWLeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:34:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n6Jk7qPuLZ9xB956ojvlla1BihJ2jOHGAWfe/MAKzPs0Vj2pE8kZVZz9w7YxcKeykrgeFa9KOAzeWVV0/BEwc9YF6M0D0kCziAMRKYrqtr6l1B9Y3ooCPEaa4+iae1E7I41kIXX/yprmvWpnrP3s3HWb0kYYJnL0NnUneRPk3nQiEVhomlMtKKmxpae32itbyZYyGtOvlIdnSXf3iNuTtEcZLDMcyJvoxRjdzCTZwGMu2e5QwoRqkvrzVB0uJPJ+h2jmsBKZHvN/PIcvIcCnK1vWX+g5sC6333VzxjmHbouO7hptxtSKWJMjNggSR7+NFqSK0I8kaD4T1LhqTcbcIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/d50D3BY7IdVsv7PjKW8OSKb4KcfS2vi56zitjmwUuk=;
- b=JiBc59mTF9p2RT32tqAs6e3mKbxMneZx+h5Qfg8aod4dtt3bqBAYNMI0SikwYuIbsGUAR0MAnNgQF2lU0PYulR45obLk8G7R8Tx8/kHoxsPrF24U18SniasBkcUbM7Iyg0sxAeRBZNRHqTh85D96u2wUxhduLQFgBC8MI7Qo0FI5Hogpwo5n+pXL6hKrTVKy7lm0KbO8eiwg/4K9Na3iRiMCztb9x+vEOl15R/DThAipS7vC2MIfSi6x+INoy6bBRVepHmvkDos6gEp28n+gY6NV+51CRAPxyQOeQ+U5MWzhv3XYZytkjqWsX/N/Qf51GAURTjk2pvNeGi2xRdThOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/d50D3BY7IdVsv7PjKW8OSKb4KcfS2vi56zitjmwUuk=;
- b=OGwMD7h7kUN2fChVoG8ydquk4hWtmWYFTP0eg+qLnVADY4Mnjly1/r6I5N72OKRVqQiNqcQvUkaxwfRhcKP/M1eEJrzal0Y9QT1qu/pjRZy0i/XKi0sSJxURf+CCZdNGgtEYOyItFIGMvoQT5+SeTpg4Ke6v796gOLef4Y4f2Fw=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19) by VI1PR0401MB2558.eurprd04.prod.outlook.com
- (2603:10a6:800:5c::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Tue, 23 Jun
- 2020 11:33:33 +0000
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 11:33:33 +0000
-From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
-To:     khilman@kernel.org, ulf.hansson@linaro.org,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net
-Cc:     linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, alsa-devel@alsa-project.org
-Subject: [RESEND PATCH v2 2/2] ASoC: SOF: Use multi PM domains helpers
-Date:   Tue, 23 Jun 2020 14:33:01 +0300
-Message-Id: <20200623113301.631-3-daniel.baluta@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200623113301.631-1-daniel.baluta@oss.nxp.com>
-References: <20200623113301.631-1-daniel.baluta@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR06CA0131.eurprd06.prod.outlook.com
- (2603:10a6:208:ab::36) To VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19)
+        Tue, 23 Jun 2020 07:35:44 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:11505 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732459AbgFWLeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:34:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592912051; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ojMpDcyOcmVyb93+ClmEb0KwpIVbseVdym/zizyhRtA=; b=tzOayo1v5iL3txCg5t1w+hqNGwCIilhQHWvHRf9e1NyHRLOKzpa62eJ0bOcKs4BMofokrXF0
+ wKMtcaCHcBCELjjoNS44+TW+UGhka3Qupr5nvS8uUTgN2J4ktD+NR5VKYqhVC0SDK/PoEDNS
+ fTJzS1PKU2YaEKLUDvisUrJvP3I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5ef1e8b2f3deea03f338b80e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 11:34:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 201B8C433CA; Tue, 23 Jun 2020 11:34:10 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8258C433C6;
+        Tue, 23 Jun 2020 11:34:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8258C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+Subject: Re: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Cc:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <a83e7f0d-4e54-9848-4b58-e1acdbe06735@codeaurora.org>
+ <14063C7AD467DE4B82DEDB5C278E866301154BAE9E@FMSMSX108.amr.corp.intel.com>
+ <97f2313e-a690-b5ab-567d-6887384debf5@codeaurora.org>
+ <14063C7AD467DE4B82DEDB5C278E866301154C1A5E@FMSMSX108.amr.corp.intel.com>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Message-ID: <16cc8de2-9f91-c64a-2f36-759ceb7cf23d@codeaurora.org>
+Date:   Tue, 23 Jun 2020 17:04:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-103.ro-buh02.nxp.com (83.217.231.2) by AM0PR06CA0131.eurprd06.prod.outlook.com (2603:10a6:208:ab::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 11:33:32 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 314bd7e8-5a82-4b36-c18d-08d8176942d4
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2558:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB25588E552B0DD7444A465344B8940@VI1PR0401MB2558.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:525;
-X-Forefront-PRVS: 04433051BF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mZIh5UwZreaHzitr5hW/R0bmrE/qaJM1BXC6Ru8HKLCzlun5xUjy+4TDhmxMmZaXJuO/lJDxtv4Dik7ixtpmUj1+yY6sCwgGZuKt87w4Y/OqpIJ3YxMHXqerKwqNxqqOFMow0T8ZR70rrg8IdCdJHmTBU+SmF3IBqVYvfeaCnuTrPcXMECLgmd7wCMd86UfWNTPBuVUkMhTzqVIJghy/mxm7+rh9uVgsWLn1lkzli0xIeK72oTz9VPMokqiXo7RQlxa8Q4HkRVKRqaN4xJOtjHWAGW7dUYdCymC2ly0NPT3MUV9eLr4kjAB/d3A0FuDxGmub1+rEL6/1UvhnaHmPKg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66946007)(6506007)(4326008)(5660300002)(498600001)(44832011)(66476007)(8936002)(66556008)(956004)(86362001)(2616005)(6666004)(8676002)(6486002)(26005)(83380400001)(52116002)(186003)(2906002)(1076003)(16526019)(6512007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 4OtpC/pbnpEdRZ6cGkXwX585NoqwqYtg+qtt8N7E141jfKjwXH3ryMgkR8tv/jkhR1PKPHzxR5TDmi9DxYUhU4oOllaKAkDM/5VBja0FZSnfWqh2tOere4ai538YOMffs2gJYvIMU8Vx4Hv6dr0ZBLT/TqJPUvGga3T595s3CAksXPn0JAUqKFu59TqFxdBkeASCmx1bAXb3ykt7FMXfzQOGgRaEAqBGzISWdG/kQVwbqgiudwJHpOhRE+EF7qIjQgKGik39Qoec/GesQ5TtvqS05zJ1VJXx0Xm8dCs4mMt2xVsR1cSDX1OrD7lVSC9vPV6E+OkrpHgM3TMoqt6NtRzCsNBgnG7zcddZ5cvhPEWm7vL03/EDRAN+KuDn9B8lvqWA3ZM8yLElF6AVTXRhHtATYfRXkgYKLBpttDgGxd93H/Tsoill5BiC9ggSRTe9KdlIGXNHCEN96rT48YOw2Kwy7qhA8FSLsHD0qHFRFxc=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 314bd7e8-5a82-4b36-c18d-08d8176942d4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 11:33:33.5278
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fTbvkj0anU+lWtRDn8IwbtFDAKVCeSCPcV0R2stzsF+GymINUH699HIeHLhflzF9Xtfgx4fruuqenoYSr6VMoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2558
+In-Reply-To: <14063C7AD467DE4B82DEDB5C278E866301154C1A5E@FMSMSX108.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+Thanks Mike for the inputs.
 
-Use dev_multi_pm_attach / dev_multi_pm_detach instead of the hardcoded
-version.
+On 6/22/2020 5:10 PM, Ruhl, Michael J wrote:
+>> -----Original Message-----
+>> From: charante=codeaurora.org@mg.codeaurora.org
+>> <charante=codeaurora.org@mg.codeaurora.org> On Behalf Of Charan Teja
+>> Kalla
+>> Sent: Monday, June 22, 2020 5:26 AM
+>> To: Ruhl, Michael J <michael.j.ruhl@intel.com>; Sumit Semwal
+>> <sumit.semwal@linaro.org>; David.Laight@ACULAB.COM; open list:DMA
+>> BUFFER SHARING FRAMEWORK <linux-media@vger.kernel.org>; DRI mailing
+>> list <dri-devel@lists.freedesktop.org>
+>> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>; LKML <linux-
+>> kernel@vger.kernel.org>
+>> Subject: Re: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
+>>
+>> Hello Mike,
+>>
+>> On 6/19/2020 7:11 PM, Ruhl, Michael J wrote:
+>>>> -----Original Message-----
+>>>> From: charante=codeaurora.org@mg.codeaurora.org
+>>>> <charante=codeaurora.org@mg.codeaurora.org> On Behalf Of Charan
+>> Teja
+>>>> Kalla
+>>>> Sent: Friday, June 19, 2020 7:57 AM
+>>>> To: Sumit Semwal <sumit.semwal@linaro.org>; Ruhl, Michael J
+>>>> <michael.j.ruhl@intel.com>; David.Laight@ACULAB.COM; open list:DMA
+>>>> BUFFER SHARING FRAMEWORK <linux-media@vger.kernel.org>; DRI
+>> mailing
+>>>> list <dri-devel@lists.freedesktop.org>
+>>>> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>; LKML <linux-
+>>>> kernel@vger.kernel.org>
+>>>> Subject: [PATCH v2] dmabuf: use spinlock to access dmabuf->name
+>>>>
+>>>> There exists a sleep-while-atomic bug while accessing the dmabuf->name
+>>>> under mutex in the dmabuffs_dname(). This is caused from the SELinux
+>>>> permissions checks on a process where it tries to validate the inherited
+>>>> files from fork() by traversing them through iterate_fd() (which
+>>>> traverse files under spin_lock) and call
+>>>> match_file(security/selinux/hooks.c) where the permission checks
+>> happen.
+>>>> This audit information is logged using dump_common_audit_data() where
+>> it
+>>>> calls d_path() to get the file path name. If the file check happen on
+>>>> the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
+>>>> access dmabuf->name. The flow will be like below:
+>>>> flush_unauthorized_files()
+>>>>  iterate_fd()
+>>>>    spin_lock() --> Start of the atomic section.
+>>>>      match_file()
+>>>>        file_has_perm()
+>>>>          avc_has_perm()
+>>>>            avc_audit()
+>>>>              slow_avc_audit()
+>>>> 	        common_lsm_audit()
+>>>> 		  dump_common_audit_data()
+>>>> 		    audit_log_d_path()
+>>>> 		      d_path()
+>>>>                        dmabuffs_dname()
+>>>>                          mutex_lock()--> Sleep while atomic.
+>>>>
+>>>> Call trace captured (on 4.19 kernels) is below:
+>>>> ___might_sleep+0x204/0x208
+>>>> __might_sleep+0x50/0x88
+>>>> __mutex_lock_common+0x5c/0x1068
+>>>> __mutex_lock_common+0x5c/0x1068
+>>>> mutex_lock_nested+0x40/0x50
+>>>> dmabuffs_dname+0xa0/0x170
+>>>> d_path+0x84/0x290
+>>>> audit_log_d_path+0x74/0x130
+>>>> common_lsm_audit+0x334/0x6e8
+>>>> slow_avc_audit+0xb8/0xf8
+>>>> avc_has_perm+0x154/0x218
+>>>> file_has_perm+0x70/0x180
+>>>> match_file+0x60/0x78
+>>>> iterate_fd+0x128/0x168
+>>>> selinux_bprm_committing_creds+0x178/0x248
+>>>> security_bprm_committing_creds+0x30/0x48
+>>>> install_exec_creds+0x1c/0x68
+>>>> load_elf_binary+0x3a4/0x14e0
+>>>> search_binary_handler+0xb0/0x1e0
+>>>>
+>>>> So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
+>>>>
+>>>> Cc: <stable@vger.kernel.org> [5.3+]
+>>>> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+>>>> ---
+>>>>
+>>>> Changes in V2: Addressed review comments from Ruhl, Michael J
+>>>>
+>>>> Changes in V1: https://lore.kernel.org/patchwork/patch/1255055/
+>>>>
+>>>> drivers/dma-buf/dma-buf.c | 11 +++++++----
+>>>> include/linux/dma-buf.h   |  1 +
+>>>> 2 files changed, 8 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+>>>> index 01ce125..d81d298 100644
+>>>> --- a/drivers/dma-buf/dma-buf.c
+>>>> +++ b/drivers/dma-buf/dma-buf.c
+>>>> @@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry
+>> *dentry,
+>>>> char *buffer, int buflen)
+>>>> 	size_t ret = 0;
+>>>>
+>>>> 	dmabuf = dentry->d_fsdata;
+>>>> -	dma_resv_lock(dmabuf->resv, NULL);
+>>>> +	spin_lock(&dmabuf->name_lock);
+>>>> 	if (dmabuf->name)
+>>>> 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+>>>> -	dma_resv_unlock(dmabuf->resv);
+>>>> +	spin_unlock(&dmabuf->name_lock);
+>>>>
+>>>> 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+>>>> 			     dentry->d_name.name, ret > 0 ? name : "");
+>>>> @@ -341,8 +341,10 @@ static long dma_buf_set_name(struct dma_buf
+>>>> *dmabuf, const char __user *buf)
+>>>> 		kfree(name);
+>>>> 		goto out_unlock;
+>>>> 	}
+>>>> +	spin_lock(&dmabuf->name_lock);
+>>>> 	kfree(dmabuf->name);
+>>>> 	dmabuf->name = name;
+>>>> +	spin_unlock(&dmabuf->name_lock);
+>>>
+>>> While this code path is ok, I would have separated the protection of the
+>>> attachment list and the name manipulation.
+>>>
+>>> dma_resv_lock(resv)
+>>> if (!list_empty(attachment)
+>>> 	ret = -EBUSY
+>>> dma_resv_unlock(resv)
+>>>
+>>> if (ret) {
+>>> 	kfree(name)
+>>> 	return ret;
+>>> }
+>>
+>> Is it that the name should be visible before importer attaches to the
+>> dmabuf,(using dma_buf_attach()), thus _buf_set_name() is under the
+>> _resv_lock() as well?
+> 
+> That is the name that was being freed in the error path of the lock block.
+> Alternatively:
+> 
+> dma_resv_lock(resv)
+> if (!list_empty(attachment) {
+>  	ret = -EBUSY
+> 	kfree(name)
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- sound/soc/sof/imx/imx8.c | 60 ++++++----------------------------------
- 1 file changed, 9 insertions(+), 51 deletions(-)
+We can free this buffer even outside of the lock with out any issues.
+This is just a user passed name copied into local buffer yet to assign
+to dmabuf->name.
 
-diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-index b692752b2178..2e7635b697cf 100644
---- a/sound/soc/sof/imx/imx8.c
-+++ b/sound/soc/sof/imx/imx8.c
-@@ -51,10 +51,7 @@ struct imx8_priv {
- 	struct imx_sc_ipc *sc_ipc;
- 
- 	/* Power domain handling */
--	int num_domains;
--	struct device **pd_dev;
--	struct device_link **link;
--
-+	struct dev_multi_pm_domain_data *mpd;
- };
- 
- static void imx8_get_reply(struct snd_sof_dev *sdev)
-@@ -207,7 +204,6 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- 	struct resource res;
- 	u32 base, size;
- 	int ret = 0;
--	int i;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -218,45 +214,15 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- 	priv->sdev = sdev;
- 
- 	/* power up device associated power domains */
--	priv->num_domains = of_count_phandle_with_args(np, "power-domains",
--						       "#power-domain-cells");
--	if (priv->num_domains < 0) {
--		dev_err(sdev->dev, "no power-domains property in %pOF\n", np);
--		return priv->num_domains;
--	}
--
--	priv->pd_dev = devm_kmalloc_array(&pdev->dev, priv->num_domains,
--					  sizeof(*priv->pd_dev), GFP_KERNEL);
--	if (!priv->pd_dev)
--		return -ENOMEM;
--
--	priv->link = devm_kmalloc_array(&pdev->dev, priv->num_domains,
--					sizeof(*priv->link), GFP_KERNEL);
--	if (!priv->link)
--		return -ENOMEM;
--
--	for (i = 0; i < priv->num_domains; i++) {
--		priv->pd_dev[i] = dev_pm_domain_attach_by_id(&pdev->dev, i);
--		if (IS_ERR(priv->pd_dev[i])) {
--			ret = PTR_ERR(priv->pd_dev[i]);
--			goto exit_unroll_pm;
--		}
--		priv->link[i] = device_link_add(&pdev->dev, priv->pd_dev[i],
--						DL_FLAG_STATELESS |
--						DL_FLAG_PM_RUNTIME |
--						DL_FLAG_RPM_ACTIVE);
--		if (!priv->link[i]) {
--			ret = -ENOMEM;
--			dev_pm_domain_detach(priv->pd_dev[i], false);
--			goto exit_unroll_pm;
--		}
--	}
-+	priv->mpd = dev_multi_pm_attach(&pdev->dev);
-+	if (IS_ERR(priv->mpd))
-+		return PTR_ERR(priv->mpd);
- 
- 	ret = imx_scu_get_handle(&priv->sc_ipc);
- 	if (ret) {
- 		dev_err(sdev->dev, "Cannot obtain SCU handle (err = %d)\n",
- 			ret);
--		goto exit_unroll_pm;
-+		goto exit_detach_pm;
- 	}
- 
- 	priv->ipc_dev = platform_device_register_data(sdev->dev, "imx-dsp",
-@@ -264,7 +230,7 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- 						      pdev, sizeof(*pdev));
- 	if (IS_ERR(priv->ipc_dev)) {
- 		ret = PTR_ERR(priv->ipc_dev);
--		goto exit_unroll_pm;
-+		goto exit_detach_pm;
- 	}
- 
- 	priv->dsp_ipc = dev_get_drvdata(&priv->ipc_dev->dev);
-@@ -328,26 +294,18 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- 
- exit_pdev_unregister:
- 	platform_device_unregister(priv->ipc_dev);
--exit_unroll_pm:
--	while (--i >= 0) {
--		device_link_del(priv->link[i]);
--		dev_pm_domain_detach(priv->pd_dev[i], false);
--	}
--
-+exit_detach_pm:
-+	dev_multi_pm_detach(priv->mpd);
- 	return ret;
- }
- 
- static int imx8_remove(struct snd_sof_dev *sdev)
- {
- 	struct imx8_priv *priv = (struct imx8_priv *)sdev->private;
--	int i;
- 
- 	platform_device_unregister(priv->ipc_dev);
- 
--	for (i = 0; i < priv->num_domains; i++) {
--		device_link_del(priv->link[i]);
--		dev_pm_domain_detach(priv->pd_dev[i], false);
--	}
-+	dev_multi_pm_detach(priv->mpd);
- 
- 	return 0;
- }
+> }
+> dma_resv_unlock(resv)
+> 
+> if (ret)
+>  	return ret;
+> 
+> I was limiting what was happening in the lock block.
+> 
+> You have two distinct locks, that protect two distinct items:
+> 
+> dmabuf->attachment
+> dmabuf->name
+> 
+> Nesting the locking is ok, but if the code ever changes
+> you can get that nesting wrong, so:
+
+Your suggestion below looks clean, but what I am still not sure is that
+is there any condition like "there should be no attachments to the
+exported dmabuf before assigning the name" -- If yes, then _resv_lock
+and name_lock should be nested while assigning the name which otherwise
+breaks under below scenario:
+
+P1					P2
+
+buf_set_name() called and
+no attachments to this dmabuf
+yet.
+				attaches to the exported dmabuf by P1.
+
+				Say it tries to get the name with the
+				assumption that name is already set.
+Now it tries to
+change the name under
+just name_lock
+
+In the above case P2 didn't get any name of the exported dmabuf despite
+name is set.
+
+
+If not, then I can give V3 with the suggested changes..			
+
+> 
+> 	long ret = 0;
+> 
+> 	if (IS_ERR(name))
+> 		return PTR_ERR(name);
+> 
+> 	dma_resv_lock(dmabuf->resv, NULL);
+> 	if (!list_empty(&dmabuf->attachments)) {
+> 		ret = -EBUSY;
+> 		kfree(name);
+> 	}
+> 	dma_resv_unlock(dmabuf->resv);
+> 	if (ret)
+> 		return ret;
+> 
+> 	spinlock(dmabuf->name_lock)
+> 	kfree(dmabuf->name);
+> 	dmabuf->name = name;
+> 	spinunlock(dmabuf->name_lock)
+> 
+> 	return 0;
+> }
+> 
+> M
+> 
+>>
+>>>
+>>> spinlock(nam_lock)
+>>> ...
+>>>
+>>> Nesting locks  that don't need to be nested always makes me nervous
+>>> for future use that misses the lock/unlock pattern.
+>>>
+>>> However, this looks reasonable.
+>>>
+>>> With this current code, or if you update to the above pattern:
+>>>
+>>> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>>
+>> Thanks for the ACK.
+>>>
+>>> Mike
+>>>
+>>>
+>>>> out_unlock:
+>>>> 	dma_resv_unlock(dmabuf->resv);
+>>>> @@ -405,10 +407,10 @@ static void dma_buf_show_fdinfo(struct seq_file
+>>>> *m, struct file *file)
+>>>> 	/* Don't count the temporary reference taken inside procfs seq_show
+>>>> */
+>>>> 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
+>>>> 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
+>>>> -	dma_resv_lock(dmabuf->resv, NULL);
+>>>> +	spin_lock(&dmabuf->name_lock);
+>>>> 	if (dmabuf->name)
+>>>> 		seq_printf(m, "name:\t%s\n", dmabuf->name);
+>>>> -	dma_resv_unlock(dmabuf->resv);
+>>>> +	spin_unlock(&dmabuf->name_lock);
+>>>> }
+>>>>
+>>>> static const struct file_operations dma_buf_fops = {
+>>>> @@ -546,6 +548,7 @@ struct dma_buf *dma_buf_export(const struct
+>>>> dma_buf_export_info *exp_info)
+>>>> 	dmabuf->size = exp_info->size;
+>>>> 	dmabuf->exp_name = exp_info->exp_name;
+>>>> 	dmabuf->owner = exp_info->owner;
+>>>> +	spin_lock_init(&dmabuf->name_lock);
+>>>> 	init_waitqueue_head(&dmabuf->poll);
+>>>> 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
+>>>> 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
+>>>> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+>>>> index ab0c156..93108fd 100644
+>>>> --- a/include/linux/dma-buf.h
+>>>> +++ b/include/linux/dma-buf.h
+>>>> @@ -311,6 +311,7 @@ struct dma_buf {
+>>>> 	void *vmap_ptr;
+>>>> 	const char *exp_name;
+>>>> 	const char *name;
+>>>> +	spinlock_t name_lock;
+>>>> 	struct module *owner;
+>>>> 	struct list_head list_node;
+>>>> 	void *priv;
+>>>> --
+>>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>>>> Forum, a Linux Foundation Collaborative Project
+>>
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>> Forum, a Linux Foundation Collaborative Project
+
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation Collaborative Project
