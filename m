@@ -2,1116 +2,1210 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5006FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBB02078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3CB2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dTQ5GzLE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QoIsvqJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbgFWEDP (ORCPT
+        id S1732338AbgFWEDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 00:03:15 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:62532 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732255AbgFWEDI (ORCPT
+        Tue, 23 Jun 2020 00:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732284AbgFWEDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 00:03:08 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200623040302epoutp042057200b903e2764484f99c98303b180~bEHOtFad_0962009620epoutp04a
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 04:03:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200623040302epoutp042057200b903e2764484f99c98303b180~bEHOtFad_0962009620epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592884982;
-        bh=8DeZLBFBzWguDLMtujRMlFAynTF5hjGShewIM4bhZsI=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=dTQ5GzLEl0pUCcF4+/hZ+e5+T5RFDvFekAFttPJhldnIzR5wUUYecedt4CRirxHRe
-         eCeFELJgpyk4z15ybt4NG2GuZvJQcaMGJOvqG+MwUmU55HCB3t9KPgiB4QzWYmVo06
-         MWceuQ1dfUscsePH/Cjau2/+vvGeMNuO0raMR0U0=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200623040301epcas1p1d393cfdd468e5517ba37e0a041e84fbc~bEHOQXd3J1650516505epcas1p1c;
-        Tue, 23 Jun 2020 04:03:01 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [RFC PATCH v3 3/5] scsi: ufs: Introduce HPB module
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "huobean@gmail.com" <huobean@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <963815509.21592884502243.JavaMail.epsvc@epcpadp1>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01592884981694.JavaMail.epsvc@epcpadp2>
-Date:   Tue, 23 Jun 2020 12:56:42 +0900
-X-CMS-MailID: 20200623035642epcms2p6ab2e3f3ec3481fe60c2c969e986e17a6
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200623010201epcms2p11aebdf1fbc719b409968cba997507114
-References: <963815509.21592884502243.JavaMail.epsvc@epcpadp1>
-        <231786897.01592884381695.JavaMail.epsvc@epcpadp2>
-        <963815509.21592879582091.JavaMail.epsvc@epcpadp2>
-        <CGME20200623010201epcms2p11aebdf1fbc719b409968cba997507114@epcms2p6>
+        Tue, 23 Jun 2020 00:03:10 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC21C061573;
+        Mon, 22 Jun 2020 21:03:10 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k6so8542788pll.9;
+        Mon, 22 Jun 2020 21:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QxrWtkwzREnCbAijsvHAvzPeZlf+oy1xY1mUbYncNT0=;
+        b=QoIsvqJ9Yiy9bwm6b168EekzxPi2rB+p+FrHiUhNuckHqNb0ABkiGEsZ30UpUr4kxt
+         a/xYorpQTBPgxHWjlXUflHAAFwa+10S+n7ippU1DduLoiBME7A1iviazDqC9/ErU2m3K
+         aF+trv02RIXgOmyUjeHw8uMUBKSIIOP2kvprY9171JXI4BoJhd26J97zs5bt1zhukUB+
+         xB092rsyw0MJ1sBqx1z40WAggANjv9LgHALB8Gu0AD2tkajvQdBKq4CvyFMyzH9h7TI5
+         dMvYxfGce2viCTb6CD2asKnDa3aLtddNzI5V2y0NXYNiLW33ZfdaCAXQPY6SS3z8EwVI
+         1UDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QxrWtkwzREnCbAijsvHAvzPeZlf+oy1xY1mUbYncNT0=;
+        b=MZ51b7NEb4D+Y4P3qnVFj4Ca80C/O0rFvFGrovLckfZeKE2xwsLfk6eyc1NkruIRIE
+         TE5pEfiaOh7mfua2teB/sCwWSUVyYlJSkRYyee8qOQqUvRHbP0gvny92YuA1pA+55Ssw
+         0FgHxpje5+Xy0RYfb8i7UcMHLAE54tif7piG0sc5RtpHcbC6+q6APNtnn5HoyaRPZR3t
+         vj6VNOSwK6jUxlbJzyM/ngqWLPxXIGthyeLnXEJAaUSSeEFNSzkFCX5H/5yAIxthdEXT
+         126xTYNf4dWE/dsVzWYQkensPixRjowZeKTXHzVgtoj6t8acKiYswnDCzWocQcMeKZ8a
+         D6cw==
+X-Gm-Message-State: AOAM532G65Atd4UI7UgQfc71s/1JEySksKmYobUr5KR8+0itRkNR49WW
+        tevkmLhudgjfE9x40vpPlh8TQQci1n0=
+X-Google-Smtp-Source: ABdhPJywEaVMU1E4KhgAA3hyGKa5XjdsjzSW8j6eauC6jxQrvsxU2CmYjukEjTAEYOMECyRhbutF3w==
+X-Received: by 2002:a17:90a:2142:: with SMTP id a60mr21471784pje.234.1592884988764;
+        Mon, 22 Jun 2020 21:03:08 -0700 (PDT)
+Received: from sol.lan (220-235-126-59.dyn.iinet.net.au. [220.235.126.59])
+        by smtp.gmail.com with ESMTPSA id n64sm12442315pga.38.2020.06.22.21.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 21:03:08 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 16/22] gpiolib: cdev: add V2 uAPI implementation to parity with V1
+Date:   Tue, 23 Jun 2020 12:01:01 +0800
+Message-Id: <20200623040107.22270-17-warthog618@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623040107.22270-1-warthog618@gmail.com>
+References: <20200623040107.22270-1-warthog618@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for the HPB module.
-The HPB module queries UFS for device information during initialization.
-We added the export symbol to two functions in ufshcd.c to initialize
-the HPB module.
+Add implementation of the V2 uAPI up to parity with V1.
 
-The HPB module can be loaded or built-in as needed.
-The mininum size of the memory pool used in the HPB module is implemented
-as a module parameter, so that it can be configurable by the user.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-To gurantee a minimum memory pool size of 4MB:
-$ insmod ufshpb.ko ufshpb_host_map_kbytes=4096
-
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 ---
- drivers/scsi/ufs/Kconfig  |   9 +
- drivers/scsi/ufs/Makefile |   1 +
- drivers/scsi/ufs/ufshcd.c |   2 +
- drivers/scsi/ufs/ufshpb.c | 777 ++++++++++++++++++++++++++++++++++++++
- drivers/scsi/ufs/ufshpb.h | 162 ++++++++
- 5 files changed, 951 insertions(+)
- create mode 100644 drivers/scsi/ufs/ufshpb.c
- create mode 100644 drivers/scsi/ufs/ufshpb.h
 
-diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-index 8cd90262784d..588f75fc8c0d 100644
---- a/drivers/scsi/ufs/Kconfig
-+++ b/drivers/scsi/ufs/Kconfig
-@@ -172,3 +172,12 @@ config SCSI_UFS_EXYNOS
+This patch only covers the V2 functionality that is a direct analogue of
+the V1.  New V2 functionality is added in subsequent patches.
+
+The core of the implementation is the struct line, which is drawn from the
+existing struct linehandle_state implementation, but modified to deal with
+the V2 uAPI structs.
+
+The struct edge_detector provides the the edge detection functionality,
+and is drawn from the existing lineevent_state implementation.
+
+The two uAPI versions are mostly independent - other than where they both
+provide line info changes via reads on the chip fd.  As the info change
+structs differ between V1 and V2, the infowatch implementation tracks which
+version of the infowatch ioctl, either GPIO_GET_LINEINFO_WATCH_IOCTL or
+GPIO_GET_LINEINFO_WATCH_V2_IOCTL, initiates the initial watch and returns
+the corresponding info change struct to the read.  The version supported
+on that fd locks to that version on the first watch request, so subsequent
+watches from that process must use the same uAPI version.
+
+ drivers/gpio/gpiolib-cdev.c | 934 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 905 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index b6878fc87dfc..d4a22d78953f 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -1,7 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
  
- 	  Select this if you have UFS host controller on EXYNOS chipset.
- 	  If unsure, say N.
+ #include <linux/anon_inodes.h>
++#include <linux/atomic.h>
+ #include <linux/bitmap.h>
++#include <linux/build_bug.h>
+ #include <linux/cdev.h>
+ #include <linux/compat.h>
+ #include <linux/device.h>
+@@ -14,11 +16,13 @@
+ #include <linux/kernel.h>
+ #include <linux/kfifo.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/poll.h>
+ #include <linux/spinlock.h>
+ #include <linux/timekeeping.h>
+ #include <linux/uaccess.h>
++#include <linux/workqueue.h>
+ #include <uapi/linux/gpio.h>
+ 
+ #include "gpiolib.h"
+@@ -34,6 +38,7 @@
+  * GPIO line handle management
+  */
+ 
++#ifdef CONFIG_GPIO_CDEV_V1
+ /**
+  * struct linehandle_state - contains the state of a userspace handle
+  * @gdev: the GPIO device the handle pertains to
+@@ -377,6 +382,699 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 	put_device(&gdev->dev);
+ 	return ret;
+ }
++#endif /* CONFIG_GPIO_CDEV_V1 */
 +
-+config UFSHPB
-+        tristate "Support UFS Host Performance Booster"
-+        depends on SCSI_UFSHCD
-+	help
-+          A UFS HPB Feature improves random read performance. It caches
-+          L2P map of UFS to host DRAM. The driver uses HPB read command
-+          by piggybacking physical page number for bypassing FTL's L2P address
-+          translation.
-diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
-index 433b871badfa..aa901b92e9e7 100644
---- a/drivers/scsi/ufs/Makefile
-+++ b/drivers/scsi/ufs/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_SCSI_UFS_EXYNOS) += ufs-exynos.o
- obj-$(CONFIG_SCSI_UFSHCD) += ufshcd-core.o
- ufshcd-core-y				+= ufshcd.o ufs-sysfs.o ufsfeature.o
- ufshcd-core-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
-+obj-$(CONFIG_UFSHPB) += ufshpb.o
- obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
- obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
- obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 082dfca8e237..2218f19fa9f4 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2863,6 +2863,7 @@ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
- 	ufshcd_release(hba);
- 	return err;
- }
-+EXPORT_SYMBOL(ufshcd_query_flag);
- 
- /**
-  * ufshcd_query_attr - API function for sending attribute requests
-@@ -3061,6 +3062,7 @@ int ufshcd_query_descriptor_retry(struct ufs_hba *hba,
- 
- 	return err;
- }
-+EXPORT_SYMBOL(ufshcd_query_descriptor_retry);
- 
- /**
-  * ufshcd_map_desc_id_to_length - map descriptor IDN to its length
-diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
-new file mode 100644
-index 000000000000..84a9af2fdc80
---- /dev/null
-+++ b/drivers/scsi/ufs/ufshpb.c
-@@ -0,0 +1,777 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Universal Flash Storage Host Performance Booster
-+ *
-+ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
-+ *
-+ * Authors:
-+ *	Yongmyung Lee <ymhungry.lee@samsung.com>
-+ *	Jinyoung Choi <j-young.choi@samsung.com>
++/**
++ * struct edge_detector - contains the state of a line edge detector
++ * @line: the corresponding line request
++ * @irq: the interrupt triggered in response to events on this GPIO
++ * @timestamp: cache for the timestamp storing it between hardirq and IRQ
++ * thread, used to bring the timestamp close to the actual event
++ * @seqno: the seqno for the current edge event in the sequence of events
++ * for the corresponding line request. Ths is drawn from the @line.
++ * @line_seqno: the seqno for the current edge event in the sequence of
++ * events for this line.
 + */
++struct edge_detector {
++	struct line *line;
++	unsigned int irq;
++	/*
++	 * timestamp and seqno are shared by edge_irq_handler and
++	 * edge_irq_thread which are themselves mutually exclusive.
++	 */
++	u64 timestamp;
++	u32 seqno;
++	u32 line_seqno;
++};
 +
-+#include <asm/unaligned.h>
++/**
++ * struct line - contains the state of a userspace line request
++ * @gdev: the GPIO device the line request pertains to
++ * @label: consumer label used to tag descriptors
++ * @num_descs: the number of descriptors held in the descs array
++ * @edge_detection: the type of edge detection applied
++ * @wait: wait queue that handles blocking reads of events
++ * @events: KFIFO for the GPIO events
++ * @seqno: the sequence number for edge events generated on all lines in
++ * this line request.  Note that this is not used when @num_descs is 1, as
++ * the line_seqno is then the same and is cheaper to calculate.
++ * @config_mutex: mutex serializing GPIOLINE_SET_CONFIG_IOCTL ioctl() calls to
++ * ensure consistency of configuration changes.
++ * @edets: an array of edge detectors, of size @num_descs
++ * @descs: the GPIO descriptors held by this line request, with @num_descs
++ * elements.
++ */
++struct line {
++	struct gpio_device *gdev;
++	const char *label;
++	u32 num_descs;
++	enum gpioline_edge edge_detection;
++	wait_queue_head_t wait;
++	DECLARE_KFIFO_PTR(events, struct gpioline_event);
++	atomic_t seqno;
++	struct mutex config_mutex; /* serializes line_set_config calls */
++	struct edge_detector *edets;
++	/* descs must be last so it can be dynamically sized */
++	struct gpio_desc *descs[];
++};
 +
-+#include "ufshcd.h"
-+#include "ufshpb.h"
-+
-+static struct ufshpb_driver ufshpb_drv;
-+
-+static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *hpb);
-+
-+static inline int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
-+			     struct ufshpb_subregion *srgn)
++static inline struct gpio_desc *edge_detector_desc(
++		const struct edge_detector *edet)
 +{
-+	return rgn->rgn_state != HPB_RGN_INACTIVE &&
-+		srgn->srgn_state == HPB_SRGN_VALID;
++	return edet->line->descs[edet - &edet->line->edets[0]];
 +}
 +
-+static inline int ufshpb_get_state(struct ufshpb_lu *hpb)
++static irqreturn_t edge_irq_thread(int irq, void *p)
 +{
-+	return atomic_read(&hpb->hpb_state);
++	struct edge_detector *edet = p;
++	struct line *line = edet->line;
++	struct gpio_desc *desc = edge_detector_desc(edet);
++	struct gpioline_event le;
++	int ret;
++
++	/* Do not leak kernel stack to userspace */
++	memset(&le, 0, sizeof(le));
++
++	/*
++	 * We may be running from a nested threaded interrupt in which case
++	 * we didn't get the timestamp from edge_irq_handler().
++	 */
++	if (!edet->timestamp) {
++		le.timestamp = ktime_get_ns();
++		if (line->num_descs != 1)
++			edet->seqno = atomic_inc_return(&line->seqno);
++	} else {
++		le.timestamp = edet->timestamp;
++	}
++
++	edet->timestamp = 0;
++
++	if (line->edge_detection == GPIOLINE_EDGE_BOTH) {
++		int level = gpiod_get_value_cansleep(desc);
++
++		if (level)
++			/* Emit low-to-high event */
++			le.id = GPIOLINE_EVENT_RISING_EDGE;
++		else
++			/* Emit high-to-low event */
++			le.id = GPIOLINE_EVENT_FALLING_EDGE;
++	} else if (line->edge_detection == GPIOLINE_EDGE_RISING) {
++		/* Emit low-to-high event */
++		le.id = GPIOLINE_EVENT_RISING_EDGE;
++	} else if (line->edge_detection == GPIOLINE_EDGE_FALLING) {
++		/* Emit high-to-low event */
++		le.id = GPIOLINE_EVENT_FALLING_EDGE;
++	} else {
++		return IRQ_NONE;
++	}
++	edet->line_seqno++;
++	le.line_seqno = edet->line_seqno;
++	le.seqno = (line->num_descs == 1) ? le.line_seqno : edet->seqno;
++	le.offset = gpio_chip_hwgpio(desc);
++
++	ret = kfifo_in_spinlocked_noirqsave(&line->events, &le,
++					    1, &line->wait.lock);
++	if (ret)
++		wake_up_poll(&line->wait, EPOLLIN);
++	else
++		pr_debug_ratelimited("event FIFO is full - event dropped\n");
++
++	return IRQ_HANDLED;
 +}
 +
-+static inline void ufshpb_set_state(struct ufshpb_lu *hpb, int state)
++static irqreturn_t edge_irq_handler(int irq, void *p)
 +{
-+	atomic_set(&hpb->hpb_state, state);
++	struct edge_detector *edet = p;
++	struct line *line = edet->line;
++
++	/*
++	 * Just store the timestamp in hardirq context so we get it as
++	 * close in time as possible to the actual event.
++	 */
++	edet->timestamp = ktime_get_ns();
++
++	if (line->num_descs != 1)
++		edet->seqno = atomic_inc_return(&line->seqno);
++
++	return IRQ_WAKE_THREAD;
 +}
 +
-+static inline int ufshpb_lu_get_dev(struct ufshpb_lu *hpb)
++static int edge_detector_start(struct edge_detector *edet)
 +{
-+	if (get_device(&hpb->hpb_lu_dev))
-+		return 0;
++	int ret, irq, irqflags = 0;
++	struct gpio_desc *desc;
 +
-+	return -ENODEV;
-+}
++	desc = edge_detector_desc(edet);
++	irq = gpiod_to_irq(desc);
 +
-+static inline int ufshpb_lu_get(struct ufshpb_lu *hpb)
-+{
-+	if (!hpb || (ufshpb_get_state(hpb) != HPB_PRESENT))
++	if (irq <= 0)
 +		return -ENODEV;
 +
-+	if (ufshpb_lu_get_dev(hpb))
-+		return -ENODEV;
++	edet->seqno = 0;
++	edet->line_seqno = 0;
++
++	if (edet->line->edge_detection & GPIOLINE_EDGE_RISING)
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
++	if (edet->line->edge_detection & GPIOLINE_EDGE_FALLING)
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
++	irqflags |= IRQF_ONESHOT;
++
++	/* Request a thread to read the events */
++	ret = request_threaded_irq(irq,
++				   edge_irq_handler,
++				   edge_irq_thread,
++				   irqflags,
++				   edet->line->label,
++				   edet);
++	if (ret)
++		return ret;
++
++	edet->irq = irq;
++	return 0;
++}
++
++static void edge_detector_stop(struct edge_detector *edet)
++{
++	if (edet->irq) {
++		free_irq(edet->irq, edet);
++		edet->irq = 0;
++	}
++}
++
++static int edge_detector_setup(struct edge_detector *edet,
++			       struct gpioline_config *lc)
++{
++	if (lc->edge_detection)
++		return edge_detector_start(edet);
++	return 0;
++}
++
++static bool padding_not_zeroed(__u32 *padding, int pad_size)
++{
++	int i, sum = 0;
++
++	for (i = 0; i < pad_size; i++)
++		sum |= padding[i];
++
++	return sum;
++}
++
++#define GPIOLINE_CONFIG_VALID_FLAGS \
++	(GPIOLINE_FLAG_V2_ACTIVE_LOW | \
++	GPIOLINE_FLAG_V2_DIRECTION | \
++	GPIOLINE_FLAG_V2_DRIVE | \
++	GPIOLINE_FLAG_V2_BIAS | \
++	GPIOLINE_FLAG_V2_EDGE_DETECTION | \
++	GPIOLINE_FLAG_V2_DEBOUNCE)
++
++static int gpioline_config_validate(struct gpioline_config *config)
++{
++	u32 lflags = config->flags;
++
++	/* Return an error if an unknown flag is set */
++	if (lflags & ~GPIOLINE_CONFIG_VALID_FLAGS)
++		return -EINVAL;
++
++	/* Check ranges */
++	if (lflags & GPIOLINE_FLAG_V2_DIRECTION) {
++		if (config->direction > GPIOLINE_DIRECTION_OUTPUT)
++			return -EINVAL;
++	} else if (config->direction != 0) {
++		return -EINVAL;
++	}
++
++	if (lflags & GPIOLINE_FLAG_V2_DRIVE) {
++		if (config->drive > GPIOLINE_DRIVE_OPEN_SOURCE)
++			return -EINVAL;
++	} else if (config->drive != 0) {
++		return -EINVAL;
++	}
++
++	if (lflags & GPIOLINE_FLAG_V2_BIAS) {
++		if (config->bias > GPIOLINE_BIAS_PULL_DOWN)
++			return -EINVAL;
++	} else if (config->bias != 0) {
++		return -EINVAL;
++	}
++
++	if (lflags & GPIOLINE_FLAG_V2_EDGE_DETECTION) {
++		if (config->edge_detection > GPIOLINE_EDGE_BOTH)
++			return -EINVAL;
++	} else if (config->edge_detection != 0) {
++		return -EINVAL;
++	}
++
++	if (config->debounce_period && !(lflags & GPIOLINE_FLAG_V2_DEBOUNCE))
++		return -EINVAL;
++
++	/* Drive requires explicit output direction. */
++	if ((lflags & GPIOLINE_FLAG_V2_DRIVE) &&
++	    (!(lflags & GPIOLINE_FLAG_V2_DIRECTION) ||
++	      (config->direction != GPIOLINE_DIRECTION_OUTPUT)))
++		return -EINVAL;
++
++	/* Bias requires explicit direction. */
++	if ((lflags & GPIOLINE_FLAG_V2_BIAS) &&
++	    !(lflags & GPIOLINE_FLAG_V2_DIRECTION))
++		return -EINVAL;
++
++	/* Edge detection requires explicit input direction. */
++	if ((lflags & GPIOLINE_FLAG_V2_EDGE_DETECTION) &&
++	    (!(lflags & GPIOLINE_FLAG_V2_DIRECTION) ||
++	      (config->direction != GPIOLINE_DIRECTION_INPUT)))
++		return -EINVAL;
++
++	/* Debounce requires explicit input direction. */
++	if ((lflags & GPIOLINE_FLAG_V2_DEBOUNCE) &&
++	    (!(lflags & GPIOLINE_FLAG_V2_DIRECTION) ||
++	      (config->direction != GPIOLINE_DIRECTION_INPUT)))
++		return -EINVAL;
++
++	if (padding_not_zeroed(config->padding,	GPIOLINE_CONFIG_PAD_SIZE))
++		return -EINVAL;
 +
 +	return 0;
 +}
 +
-+static inline void ufshpb_lu_put(struct ufshpb_lu *hpb)
++static void gpioline_config_to_desc_flags(struct gpioline_config *lc,
++					  unsigned long *flagsp)
 +{
-+	put_device(&hpb->hpb_lu_dev);
-+}
-+
-+static void ufshpb_init_subregion_tbl(struct ufshpb_lu *hpb,
-+				      struct ufshpb_region *rgn)
-+{
-+	int srgn_idx;
-+
-+	for (srgn_idx = 0; srgn_idx < rgn->srgn_cnt; srgn_idx++) {
-+		struct ufshpb_subregion *srgn = rgn->srgn_tbl + srgn_idx;
-+
-+		srgn->rgn_idx = rgn->rgn_idx;
-+		srgn->srgn_idx = srgn_idx;
-+		srgn->srgn_state = HPB_SRGN_UNUSED;
++	assign_bit(FLAG_ACTIVE_LOW, flagsp,
++		   lc->flags & GPIOLINE_FLAG_V2_ACTIVE_LOW);
++	if (lc->flags & GPIOLINE_FLAG_V2_DRIVE) {
++		assign_bit(FLAG_OPEN_DRAIN, flagsp,
++			lc->drive == GPIOLINE_DRIVE_OPEN_DRAIN);
++		assign_bit(FLAG_OPEN_SOURCE, flagsp,
++			lc->drive == GPIOLINE_DRIVE_OPEN_SOURCE);
++	}
++	if (lc->flags & GPIOLINE_FLAG_V2_BIAS) {
++		assign_bit(FLAG_PULL_UP, flagsp,
++			lc->bias == GPIOLINE_BIAS_PULL_UP);
++		assign_bit(FLAG_PULL_DOWN, flagsp,
++			lc->bias == GPIOLINE_BIAS_PULL_DOWN);
++		assign_bit(FLAG_BIAS_DISABLE, flagsp,
++			lc->bias == GPIOLINE_BIAS_DISABLED);
 +	}
 +}
 +
-+static inline int ufshpb_alloc_subregion_tbl(struct ufshpb_lu *hpb,
-+					     struct ufshpb_region *rgn,
-+					     int srgn_cnt)
++static long line_set_config_locked(struct line *line,
++				   struct gpioline_config *lc)
 +{
-+	rgn->srgn_tbl = kvcalloc(srgn_cnt, sizeof(struct ufshpb_subregion),
-+				 GFP_KERNEL);
-+	if (!rgn->srgn_tbl)
-+		return -ENOMEM;
++	struct gpio_desc *desc;
++	unsigned long *vals;
++	int i, ret;
 +
-+	rgn->srgn_cnt = srgn_cnt;
-+	return 0;
-+}
++	/* disallow edge detection changes */
++	if (line->edge_detection != lc->edge_detection)
++		return -EINVAL;
 +
-+static void ufshpb_init_lu_parameter(struct ufs_hba *hba,
-+				     struct ufshpb_lu *hpb,
-+				     struct ufshpb_dev_info *hpb_dev_info,
-+				     struct ufshpb_lu_info *hpb_lu_info)
-+{
-+	u32 entries_per_rgn;
-+	u64 rgn_mem_size;
++	desc = line->descs[0];
 +
-+
-+	hpb->lu_pinned_start = hpb_lu_info->pinned_start;
-+	hpb->lu_pinned_end = hpb_lu_info->num_pinned ?
-+		(hpb_lu_info->pinned_start + hpb_lu_info->num_pinned - 1)
-+		: PINNED_NOT_SET;
-+
-+	rgn_mem_size = (1ULL << hpb_dev_info->rgn_size) * HPB_RGN_SIZE_UNIT
-+		/ HPB_ENTRY_BLOCK_SIZE * HPB_ENTRY_SIZE;
-+	hpb->srgn_mem_size = (1ULL << hpb_dev_info->srgn_size)
-+		* HPB_RGN_SIZE_UNIT / HPB_ENTRY_BLOCK_SIZE * HPB_ENTRY_SIZE;
-+
-+	entries_per_rgn = rgn_mem_size / HPB_ENTRY_SIZE;
-+	hpb->entries_per_rgn_shift = ilog2(entries_per_rgn);
-+	hpb->entries_per_rgn_mask = entries_per_rgn - 1;
-+
-+	hpb->entries_per_srgn = hpb->srgn_mem_size /  HPB_ENTRY_SIZE;
-+	hpb->entries_per_srgn_shift = ilog2(hpb->entries_per_srgn);
-+	hpb->entries_per_srgn_mask = hpb->entries_per_srgn - 1;
-+
-+	hpb->srgns_per_rgn = rgn_mem_size / hpb->srgn_mem_size;
-+
-+	hpb->rgns_per_lu = DIV_ROUND_UP(hpb_lu_info->num_blocks,
-+				(rgn_mem_size / HPB_ENTRY_SIZE));
-+	hpb->srgns_per_lu = DIV_ROUND_UP(hpb_lu_info->num_blocks,
-+				(hpb->srgn_mem_size / HPB_ENTRY_SIZE));
-+
-+	hpb->pages_per_srgn = hpb->srgn_mem_size / PAGE_SIZE;
-+
-+	dev_info(hba->dev, "ufshpb(%d): region memory size - %llu (bytes)\n",
-+		 hpb->lun, rgn_mem_size);
-+	dev_info(hba->dev, "ufshpb(%d): subregion memory size - %u (bytes)\n",
-+		 hpb->lun, hpb->srgn_mem_size);
-+	dev_info(hba->dev, "ufshpb(%d): total blocks per lu - %d\n",
-+		 hpb->lun, hpb_lu_info->num_blocks);
-+	dev_info(hba->dev, "ufshpb(%d): subregions per region - %d, regions per lu - %u",
-+		 hpb->lun, hpb->srgns_per_rgn, hpb->rgns_per_lu);
-+}
-+
-+
-+static int ufshpb_alloc_region_tbl(struct ufs_hba *hba, struct ufshpb_lu *hpb)
-+{
-+	struct ufshpb_region *rgn_table, *rgn;
-+	int rgn_idx, i;
-+	int ret = 0;
-+
-+	rgn_table = kvcalloc(hpb->rgns_per_lu, sizeof(struct ufshpb_region),
-+			    GFP_KERNEL);
-+	if (!rgn_table)
-+		return -ENOMEM;
-+
-+	hpb->rgn_tbl = rgn_table;
-+
-+	for (rgn_idx = 0; rgn_idx < hpb->rgns_per_lu; rgn_idx++) {
-+		int srgn_cnt = hpb->srgns_per_rgn;
-+
-+		rgn = rgn_table + rgn_idx;
-+		rgn->rgn_idx = rgn_idx;
-+
-+		if (rgn_idx == hpb->rgns_per_lu - 1)
-+			srgn_cnt = ((hpb->srgns_per_lu - 1) %
-+				    hpb->srgns_per_rgn) + 1;
-+
-+		ret = ufshpb_alloc_subregion_tbl(hpb, rgn, srgn_cnt);
-+		if (ret)
-+			goto release_srgn_table;
-+		ufshpb_init_subregion_tbl(hpb, rgn);
-+
-+		rgn->rgn_state = HPB_RGN_INACTIVE;
++	if (line->edge_detection != GPIOLINE_EDGE_NONE) {
++		/* disallow polarity changes */
++		if (test_bit(FLAG_ACTIVE_LOW, &desc->flags) !=
++		    ((lc->flags & GPIOLINE_FLAG_V2_ACTIVE_LOW) != 0))
++			return -EINVAL;
 +	}
 +
-+	return 0;
++	vals = (unsigned long *)lc->values.bitmap;
 +
-+release_srgn_table:
-+	for (i = 0; i < rgn_idx; i++) {
-+		rgn = rgn_table + i;
-+		if (rgn->srgn_tbl)
-+			kvfree(rgn->srgn_tbl);
-+	}
-+	kvfree(rgn_table);
-+	return ret;
-+}
++	for (i = 0; i < line->num_descs; i++) {
++		desc = line->descs[i];
++		gpioline_config_to_desc_flags(lc, &desc->flags);
++		/*
++		 * Lines have to be requested explicitly for input
++		 * or output, else the line will be treated "as is".
++		 */
++		if (lc->flags & GPIOLINE_FLAG_V2_DIRECTION) {
++			if (lc->direction == GPIOLINE_DIRECTION_OUTPUT) {
++				int val = test_bit(i, vals);
 +
-+static void ufshpb_destroy_subregion_tbl(struct ufshpb_lu *hpb,
-+					 struct ufshpb_region *rgn)
-+{
-+	int srgn_idx;
-+
-+	for (srgn_idx = 0; srgn_idx < rgn->srgn_cnt; srgn_idx++) {
-+		struct ufshpb_subregion *srgn;
-+
-+		srgn = rgn->srgn_tbl + srgn_idx;
-+		srgn->srgn_state = HPB_SRGN_UNUSED;
-+	}
-+}
-+
-+static void ufshpb_destroy_region_tbl(struct ufshpb_lu *hpb)
-+{
-+	int rgn_idx;
-+
-+	for (rgn_idx = 0; rgn_idx < hpb->rgns_per_lu; rgn_idx++) {
-+		struct ufshpb_region *rgn;
-+
-+		rgn = hpb->rgn_tbl + rgn_idx;
-+		if (rgn->rgn_state != HPB_RGN_INACTIVE) {
-+			rgn->rgn_state = HPB_RGN_INACTIVE;
-+
-+			ufshpb_destroy_subregion_tbl(hpb, rgn);
++				ret = gpiod_direction_output(desc, val);
++				if (ret)
++					return ret;
++			} else {
++				ret = gpiod_direction_input(desc);
++				if (ret)
++					return ret;
++			}
 +		}
 +
-+		kvfree(rgn->srgn_tbl);
++		atomic_notifier_call_chain(&desc->gdev->notifier,
++					   GPIOLINE_CHANGED_CONFIG, desc);
 +	}
-+
-+	kvfree(hpb->rgn_tbl);
++	return 0;
 +}
 +
-+static int ufshpb_lu_hpb_init(struct ufs_hba *hba, struct ufshpb_lu *hpb,
-+			      struct ufshpb_dev_info *hpb_dev_info)
++static long line_set_config(struct line *line, void __user *ip)
 +{
++	struct gpioline_config lc;
 +	int ret;
 +
-+	spin_lock_init(&hpb->hpb_state_lock);
++	if (copy_from_user(&lc, ip, sizeof(lc)))
++		return -EFAULT;
 +
-+	ret = ufshpb_alloc_region_tbl(hba, hpb);
-+
-+	ret = ufshpb_create_sysfs(hba, hpb);
++	ret = gpioline_config_validate(&lc);
 +	if (ret)
-+		goto release_rgn_table;
++		return ret;
 +
-+	return 0;
++	mutex_lock(&line->config_mutex);
 +
-+release_rgn_table:
-+	ufshpb_destroy_region_tbl(hpb);
++	ret = line_set_config_locked(line, &lc);
++
++	mutex_unlock(&line->config_mutex);
++
 +	return ret;
 +}
 +
-+static struct ufshpb_lu *ufshpb_alloc_hpb_lu(struct ufs_hba *hba, int lun,
-+				     struct ufshpb_dev_info *hpb_dev_info,
-+				     struct ufshpb_lu_info *hpb_lu_info)
++static long line_ioctl(struct file *file, unsigned int cmd,
++		       unsigned long arg)
 +{
-+	struct ufshpb_lu *hpb;
++	struct line *line = file->private_data;
++	void __user *ip = (void __user *)arg;
++	struct gpioline_values glv;
++	unsigned long *vals = (unsigned long *)glv.bitmap;
 +	int ret;
 +
-+	hpb = kzalloc(sizeof(struct ufshpb_lu), GFP_KERNEL);
-+	if (!hpb)
-+		return NULL;
-+
-+	hpb->ufsf = &hba->ufsf;
-+	hpb->lun = lun;
-+
-+	ufshpb_init_lu_parameter(hba, hpb, hpb_dev_info, hpb_lu_info);
-+
-+	ret = ufshpb_lu_hpb_init(hba, hpb, hpb_dev_info);
-+	if (ret) {
-+		dev_err(hba->dev, "hpb lu init failed. ret %d", ret);
-+		goto release_hpb;
-+	}
-+
-+	return hpb;
-+release_hpb:
-+	kfree(hpb);
-+	return NULL;
-+}
-+
-+static void ufshpb_lu_release(struct ufshpb_lu *hpb)
-+{
-+	ufshpb_destroy_region_tbl(hpb);
-+
-+	list_del_init(&hpb->list_hpb_lu);
-+}
-+
-+static void ufshpb_issue_hpb_reset_query(struct ufs_hba *hba)
-+{
-+	int err;
-+	int retries;
-+
-+	for (retries = 0; retries < HPB_RESET_REQ_RETRIES; retries++) {
-+		err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_SET_FLAG,
-+				QUERY_FLAG_IDN_HPB_RESET, 0, NULL);
-+		if (err)
-+			dev_dbg(hba->dev,
-+				"%s: failed with error %d, retries %d\n",
-+				__func__, err, retries);
-+		else
-+			break;
-+	}
-+
-+	if (err) {
-+		dev_err(hba->dev,
-+			"%s setting fHpbReset flag failed with error %d\n",
-+			__func__, err);
-+		return;
-+	}
-+}
-+
-+static void ufshpb_check_hpb_reset_query(struct ufs_hba *hba)
-+{
-+	int err;
-+	bool flag_res = true;
-+	int try = 0;
-+
-+	/* wait for the device to complete HPB reset query */
-+	do {
-+		if (++try == HPB_RESET_REQ_RETRIES)
-+			break;
-+
-+		dev_info(hba->dev,
-+			"%s start flag reset polling %d times\n",
-+			__func__, try);
-+
-+		/* Poll fHpbReset flag to be cleared */
-+		err = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,
-+				QUERY_FLAG_IDN_HPB_RESET, 0, &flag_res);
-+		usleep_range(1000, 1100);
-+	} while (flag_res);
-+
-+	if (err) {
-+		dev_err(hba->dev,
-+			"%s reading fHpbReset flag failed with error %d\n",
-+			__func__, err);
-+		return;
-+	}
-+
-+	if (flag_res) {
-+		dev_err(hba->dev,
-+			"%s fHpbReset was not cleared by the device\n",
-+			__func__);
-+	}
-+}
-+
-+static void ufshpb_reset(struct ufs_hba *hba)
-+{
-+	struct ufshpb_lu *hpb;
-+
-+	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
-+		if (ufshpb_lu_get_dev(hpb))
-+			continue;
-+
-+		ufshpb_set_state(hpb, HPB_PRESENT);
-+		ufshpb_lu_put(hpb);
-+	}
-+}
-+
-+static void ufshpb_reset_host(struct ufs_hba *hba)
-+{
-+	struct ufshpb_lu *hpb;
-+
-+	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
-+		if (ufshpb_lu_get(hpb))
-+			continue;
-+
-+		dev_info(&hpb->hpb_lu_dev, "ufshpb run reset_host");
-+
-+		ufshpb_set_state(hpb, HPB_RESET);
-+		ufshpb_lu_put(hpb);
-+	}
-+}
-+
-+static void ufshpb_suspend(struct ufs_hba *hba)
-+{
-+	struct ufshpb_lu *hpb;
-+
-+	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
-+		if (ufshpb_lu_get(hpb))
-+			continue;
-+
-+		dev_info(&hpb->hpb_lu_dev, "ufshpb goto suspend");
-+		ufshpb_set_state(hpb, HPB_SUSPEND);
-+
-+		ufshpb_lu_put(hpb);
-+	}
-+}
-+
-+static void ufshpb_resume(struct ufs_hba *hba)
-+{
-+	struct ufshpb_lu *hpb;
-+
-+	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
-+		if (ufshpb_lu_get_dev(hpb))
-+			continue;
-+
-+		dev_info(&hpb->hpb_lu_dev, "ufshpb resume");
-+		ufshpb_set_state(hpb, HPB_PRESENT);
-+		ufshpb_lu_put(hpb);
-+	}
-+}
-+
-+static void ufshpb_stat_init(struct ufshpb_lu *hpb)
-+{
-+	atomic_set(&hpb->stats.hit_cnt, 0);
-+	atomic_set(&hpb->stats.miss_cnt, 0);
-+	atomic_set(&hpb->stats.rb_noti_cnt, 0);
-+	atomic_set(&hpb->stats.rb_active_cnt, 0);
-+	atomic_set(&hpb->stats.rb_inactive_cnt, 0);
-+	atomic_set(&hpb->stats.map_req_cnt, 0);
-+}
-+
-+/* SYSFS functions */
-+#define ufshpb_sysfs_attr_show_func(__name)				\
-+static ssize_t __name##_show(struct device *dev,		\
-+					 struct device_attribute *attr,	\
-+					 char *buf)			\
-+{									\
-+	struct ufshpb_lu *hpb;						\
-+	hpb = container_of(dev, struct ufshpb_lu, hpb_lu_dev);		\
-+	return snprintf(buf, PAGE_SIZE, "%d\n",			\
-+			atomic_read(&hpb->stats.__name));		\
-+}
-+
-+ufshpb_sysfs_attr_show_func(hit_cnt);
-+ufshpb_sysfs_attr_show_func(miss_cnt);
-+ufshpb_sysfs_attr_show_func(rb_noti_cnt);
-+ufshpb_sysfs_attr_show_func(rb_active_cnt);
-+ufshpb_sysfs_attr_show_func(rb_inactive_cnt);
-+ufshpb_sysfs_attr_show_func(map_req_cnt);
-+
-+static DEVICE_ATTR_RO(hit_cnt);
-+static DEVICE_ATTR_RO(miss_cnt);
-+static DEVICE_ATTR_RO(rb_noti_cnt);
-+static DEVICE_ATTR_RO(rb_active_cnt);
-+static DEVICE_ATTR_RO(rb_inactive_cnt);
-+static DEVICE_ATTR_RO(map_req_cnt);
-+
-+static struct attribute *hpb_dev_attrs[] = {
-+	&dev_attr_hit_cnt.attr,
-+	&dev_attr_miss_cnt.attr,
-+	&dev_attr_rb_noti_cnt.attr,
-+	&dev_attr_rb_active_cnt.attr,
-+	&dev_attr_rb_inactive_cnt.attr,
-+	&dev_attr_map_req_cnt.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group ufshpb_sysfs_group = {
-+	.attrs = hpb_dev_attrs,
-+};
-+
-+static inline void ufshpb_dev_release(struct device *dev)
-+{
-+	struct ufs_hba *hba;
-+	struct ufsf_feature_info *ufsf;
-+	struct ufshpb_lu *hpb;
-+
-+	hpb = container_of(dev, struct ufshpb_lu, hpb_lu_dev);
-+	ufsf = hpb->ufsf;
-+	hba = container_of(ufsf, struct ufs_hba, ufsf);
-+
-+	ufshpb_lu_release(hpb);
-+	dev_info(dev, "%s: release success\n", __func__);
-+	put_device(dev->parent);
-+
-+	kfree(hpb);
-+}
-+
-+static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *hpb)
-+{
-+	int ret;
-+
-+	device_initialize(&hpb->hpb_lu_dev);
-+
-+	ufshpb_stat_init(hpb);
-+
-+	hpb->hpb_lu_dev.parent = get_device(&hba->ufsf.hpb_dev);
-+	hpb->hpb_lu_dev.release = ufshpb_dev_release;
-+	dev_set_name(&hpb->hpb_lu_dev, "ufshpb_lu%d", hpb->lun);
-+
-+	ret = device_add(&hpb->hpb_lu_dev);
-+	if (ret) {
-+		dev_err(hba->dev, "ufshpb(%d) device_add failed",
-+			hpb->lun);
-+		return -ENODEV;
-+	}
-+
-+	if (device_add_group(&hpb->hpb_lu_dev, &ufshpb_sysfs_group))
-+		dev_err(hba->dev, "ufshpb(%d) create file error\n",
-+			hpb->lun);
-+
-+	return 0;
-+}
-+
-+static int ufshpb_read_desc(struct ufs_hba *hba, u8 desc_id, u8 desc_index,
-+			  u8 selector, u8 *desc_buf)
-+{
-+	int err = 0;
-+	int size;
-+
-+	ufshcd_map_desc_id_to_length(hba, desc_id, &size);
-+
-+	pm_runtime_get_sync(hba->dev);
-+
-+	err = ufshcd_query_descriptor_retry(hba, UPIU_QUERY_OPCODE_READ_DESC,
-+					    desc_id, desc_index,
-+					    selector,
-+					    desc_buf, &size);
-+	if (err)
-+		dev_err(hba->dev, "read desc failed: %d, id %d, idx %d\n",
-+			err, desc_id, desc_index);
-+
-+	pm_runtime_put_sync(hba->dev);
-+
-+	return err;
-+}
-+
-+static int ufshpb_get_geo_info(struct ufs_hba *hba, u8 *geo_buf,
-+			       struct ufshpb_dev_info *hpb_dev_info)
-+{
-+	int hpb_device_max_active_rgns = 0;
-+	int hpb_num_lu;
-+
-+	hpb_num_lu = geo_buf[GEOMETRY_DESC_HPB_NUMBER_LU];
-+	if (hpb_num_lu == 0) {
-+		dev_err(hba->dev, "No HPB LU supported\n");
-+		return -ENODEV;
-+	}
-+
-+	hpb_dev_info->rgn_size = geo_buf[GEOMETRY_DESC_HPB_REGION_SIZE];
-+	hpb_dev_info->srgn_size = geo_buf[GEOMETRY_DESC_HPB_SUBREGION_SIZE];
-+	hpb_device_max_active_rgns =
-+		get_unaligned_be16(geo_buf +
-+			GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS);
-+
-+	if (hpb_dev_info->rgn_size == 0 || hpb_dev_info->srgn_size == 0 ||
-+	    hpb_device_max_active_rgns == 0) {
-+		dev_err(hba->dev, "No HPB supported device\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ufshpb_get_dev_info(struct ufs_hba *hba,
-+			       struct ufshpb_dev_info *hpb_dev_info,
-+			       u8 *desc_buf)
-+{
-+	int ret;
-+	int hpb_mode, version;
-+
-+	ret = ufshpb_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, 0, desc_buf);
-+	if (ret) {
-+		dev_err(hba->dev, "%s: idn: %d query request failed\n",
-+			__func__, QUERY_DESC_IDN_DEVICE);
-+		return -ENODEV;
-+	}
-+
-+	hpb_mode = get_unaligned_be16(desc_buf + DEVICE_DESC_PARAM_HPB_CONTROL);
-+	if (hpb_mode == HPB_HOST_CONTROL) {
-+		dev_err(hba->dev, "%s: host control mode is not supported.\n",
-+			__func__);
-+		return -ENODEV;
-+	}
-+
-+	version = get_unaligned_be16(desc_buf + DEVICE_DESC_PARAM_HPB_VER);
-+	if (version != HPB_SUPPORT_VERSION) {
-+		dev_err(hba->dev, "%s: HPB %x version is not supported.\n",
-+			__func__, version);
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Get the number of user logical unit to check whether all
-+	 * scsi_device finish initialization
-+	 */
-+	hpb_dev_info->num_lu = desc_buf[DEVICE_DESC_PARAM_NUM_LU];
-+
-+	ret = ufshpb_read_desc(hba, QUERY_DESC_IDN_GEOMETRY, 0, 0, desc_buf);
-+	if (ret) {
-+		dev_err(hba->dev, "%s: idn: %d query request failed\n",
-+			__func__, QUERY_DESC_IDN_DEVICE);
-+		return ret;
-+	}
-+
-+	ret = ufshpb_get_geo_info(hba, desc_buf, hpb_dev_info);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int ufshpb_get_lu_info(struct ufs_hba *hba, int lun,
-+				    struct ufshpb_lu_info *hpb_lu_info,
-+				    u8 *desc_buf)
-+{
-+	u16 max_active_rgns;
-+	u8 lu_enable;
-+	int ret;
-+
-+	ret = ufshpb_read_desc(hba, QUERY_DESC_IDN_UNIT, lun, 0, desc_buf);
-+	if (ret) {
-+		dev_err(hba->dev,
-+			"%s: idn: %d lun: %d  query request failed",
-+			__func__, QUERY_DESC_IDN_UNIT, lun);
-+		return ret;
-+	}
-+
-+	lu_enable = desc_buf[UNIT_DESC_PARAM_LU_ENABLE];
-+	if (lu_enable != LU_ENABLED_HPB_FUNC)
-+		return -ENODEV;
-+
-+	max_active_rgns = get_unaligned_be16(
-+			desc_buf + UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS);
-+	if (!max_active_rgns) {
-+		dev_err(hba->dev,
-+			"lun %d wrong number of max active regions\n", lun);
-+		return -ENODEV;
-+	}
-+
-+	hpb_lu_info->num_blocks = get_unaligned_be64(
-+			desc_buf + UNIT_DESC_PARAM_LOGICAL_BLK_COUNT);
-+	hpb_lu_info->pinned_start = get_unaligned_be16(
-+			desc_buf + UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET);
-+	hpb_lu_info->num_pinned = get_unaligned_be16(
-+			desc_buf + UNIT_DESC_HPB_LU_NUM_PIN_REGIONS);
-+	hpb_lu_info->max_active_rgns = max_active_rgns;
-+
-+	return 0;
-+}
-+
-+static void ufshpb_scan_hpb_lu(struct ufs_hba *hba,
-+			       struct ufshpb_dev_info *hpb_dev_info,
-+			       u8 *desc_buf)
-+{
-+	struct scsi_device *sdev;
-+	struct ufshpb_lu *hpb;
-+	int find_hpb_lu = 0;
-+	int ret;
-+
-+	INIT_LIST_HEAD(&ufshpb_drv.lh_hpb_lu);
-+
-+	shost_for_each_device(sdev, hba->host) {
-+		struct ufshpb_lu_info hpb_lu_info = { 0 };
-+		int lun = sdev->lun;
-+
-+		if (lun >= hba->dev_info.max_lu_supported)
-+			continue;
-+
-+		ret = ufshpb_get_lu_info(hba, lun, &hpb_lu_info, desc_buf);
++	if (cmd == GPIOLINE_GET_VALUES_IOCTL) {
++		/* NOTE: It's ok to read values of output lines. */
++		memset(&glv, 0, sizeof(glv));
++		ret = gpiod_get_array_value_complex(false,
++						    true,
++						    line->num_descs,
++						    line->descs,
++						    NULL,
++						    vals);
 +		if (ret)
-+			continue;
++			return ret;
 +
-+		hpb = ufshpb_alloc_hpb_lu(hba, lun, hpb_dev_info,
-+					  &hpb_lu_info);
-+		if (!hpb)
-+			continue;
++		if (copy_to_user(ip, &glv, sizeof(glv)))
++			return -EFAULT;
 +
-+		hpb->sdev_ufs_lu = sdev;
-+		sdev->hostdata = hpb;
++		return 0;
++	} else if (cmd == GPIOLINE_SET_VALUES_IOCTL) {
++		/*
++		 * All line descriptors were created at once with the same
++		 * flags so just check if the first one is really output.
++		 */
++		if (!test_bit(FLAG_IS_OUT, &line->descs[0]->flags))
++			return -EPERM;
 +
-+		list_add_tail(&hpb->list_hpb_lu, &ufshpb_drv.lh_hpb_lu);
-+		find_hpb_lu++;
++		if (copy_from_user(&glv, ip, sizeof(glv)))
++			return -EFAULT;
++
++		/* Reuse the array setting function */
++		return gpiod_set_array_value_complex(false,
++						     true,
++						     line->num_descs,
++						     line->descs,
++						     NULL,
++						     vals);
++	} else if (cmd == GPIOLINE_SET_CONFIG_IOCTL) {
++		return line_set_config(line, ip);
 +	}
-+
-+	if (!find_hpb_lu)
-+		return;
-+
-+	ufshpb_check_hpb_reset_query(hba);
-+	dev_set_drvdata(&hba->ufsf.hpb_dev, &ufshpb_drv);
-+
-+	list_for_each_entry(hpb, &ufshpb_drv.lh_hpb_lu, list_hpb_lu) {
-+		dev_info(&hpb->hpb_lu_dev, "set state to present\n");
-+		ufshpb_set_state(hpb, HPB_PRESENT);
-+	}
++	return -EINVAL;
 +}
 +
-+static int ufshpb_probe(struct device *dev)
++#ifdef CONFIG_COMPAT
++static long line_ioctl_compat(struct file *file, unsigned int cmd,
++			      unsigned long arg)
 +{
-+	struct ufs_hba *hba;
-+	struct ufsf_feature_info *ufsf;
-+	struct ufshpb_dev_info hpb_dev_info = { 0 };
-+	char *desc_buf;
++	return line_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
++static __poll_t line_poll(struct file *file,
++			  struct poll_table_struct *wait)
++{
++	struct line *line = file->private_data;
++	__poll_t events = 0;
++
++	poll_wait(file, &line->wait, wait);
++
++	if (!kfifo_is_empty_spinlocked_noirqsave(&line->events, &line->wait.lock))
++		events = EPOLLIN | EPOLLRDNORM;
++
++	return events;
++}
++
++static ssize_t line_read(struct file *file,
++			 char __user *buf,
++			 size_t count,
++			 loff_t *f_ps)
++{
++	struct line *line = file->private_data;
++	struct gpioline_event le;
++	ssize_t bytes_read = 0;
 +	int ret;
 +
-+	if (dev->type != &ufshpb_dev_type)
-+		return -ENODEV;
++	if (count < sizeof(le))
++		return -EINVAL;
 +
-+	ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
-+	hba = container_of(ufsf, struct ufs_hba, ufsf);
++	do {
++		spin_lock(&line->wait.lock);
++		if (kfifo_is_empty(&line->events)) {
++			if (bytes_read) {
++				spin_unlock(&line->wait.lock);
++				return bytes_read;
++			}
 +
-+	desc_buf = kzalloc(QUERY_DESC_MAX_SIZE, GFP_KERNEL);
-+	if (!desc_buf)
-+		goto release_desc_buf;
++			if (file->f_flags & O_NONBLOCK) {
++				spin_unlock(&line->wait.lock);
++				return -EAGAIN;
++			}
 +
-+	ret = ufshpb_get_dev_info(hba, &hpb_dev_info, desc_buf);
-+	if (ret)
-+		goto release_desc_buf;
++			ret = wait_event_interruptible_locked(line->wait,
++					!kfifo_is_empty(&line->events));
++			if (ret) {
++				spin_unlock(&line->wait.lock);
++				return ret;
++			}
++		}
 +
-+	/*
-+	 * Because HPB driver uses scsi_device data structure,
-+	 * we should wait at this point until finishing initialization of all
-+	 * scsi devices. Even if timeout occurs, HPB driver will search
-+	 * the scsi_device list on struct scsi_host (shost->__host list_head)
-+	 * and can find out HPB logical units in all scsi_devices
-+	 */
-+	wait_event_timeout(hba->ufsf.sdev_wait,
-+			   (atomic_read(&hba->ufsf.slave_conf_cnt)
-+				== hpb_dev_info.num_lu),
-+			   SDEV_WAIT_TIMEOUT);
++		ret = kfifo_out(&line->events, &le, 1);
++		spin_unlock(&line->wait.lock);
++		if (ret != 1) {
++			/*
++			 * This should never happen - we were holding the lock
++			 * from the moment we learned the fifo is no longer
++			 * empty until now.
++			 */
++			ret = -EIO;
++			break;
++		}
 +
-+	ufshpb_issue_hpb_reset_query(hba);
++		if (copy_to_user(buf + bytes_read, &le, sizeof(le)))
++			return -EFAULT;
++		bytes_read += sizeof(le);
++	} while (count >= bytes_read + sizeof(le));
 +
-+	dev_dbg(hba->dev, "ufshpb: slave count %d, lu count %d\n",
-+		atomic_read(&hba->ufsf.slave_conf_cnt), hpb_dev_info.num_lu);
-+
-+	ufshpb_scan_hpb_lu(hba, &hpb_dev_info, desc_buf);
-+
-+release_desc_buf:
-+	kfree(desc_buf);
-+	return 0;
++	return bytes_read;
 +}
 +
-+static int ufshpb_remove(struct device *dev)
++static void line_free(struct line *line)
 +{
-+	struct ufshpb_lu *hpb, *n_hpb;
-+	struct ufsf_feature_info *ufsf;
-+	struct scsi_device *sdev;
++	int i;
 +
-+	ufsf = container_of(dev, struct ufsf_feature_info, hpb_dev);
-+
-+	dev_set_drvdata(&ufsf->hpb_dev, NULL);
-+
-+	list_for_each_entry_safe(hpb, n_hpb, &ufshpb_drv.lh_hpb_lu,
-+				 list_hpb_lu) {
-+		ufshpb_set_state(hpb, HPB_FAILED);
-+
-+		sdev = hpb->sdev_ufs_lu;
-+		sdev->hostdata = NULL;
-+
-+		device_del(&hpb->hpb_lu_dev);
-+
-+		dev_info(&hpb->hpb_lu_dev, "hpb_lu_dev refcnt %d\n",
-+			 kref_read(&hpb->hpb_lu_dev.kobj.kref));
-+		put_device(&hpb->hpb_lu_dev);
++	for (i = 0; i < line->num_descs; i++) {
++		if (line->edets)
++			edge_detector_stop(&line->edets[i]);
++		if (line->descs[i])
++			gpiod_free(line->descs[i]);
 +	}
-+	dev_info(dev, "ufshpb: remove success\n");
++	kfifo_free(&line->events);
++	kfree(line->label);
++	kfree(line->edets);
++	kfree(line);
++	put_device(&line->gdev->dev);
++}
 +
++static int line_release(struct inode *inode, struct file *file)
++{
++	struct line *line = file->private_data;
++
++	line_free(line);
 +	return 0;
 +}
 +
-+static struct ufshpb_driver ufshpb_drv = {
-+	.drv = {
-+		.name = "ufshpb_driver",
-+		.owner = THIS_MODULE,
-+		.probe = ufshpb_probe,
-+		.remove = ufshpb_remove,
-+		.bus = &ufsf_bus_type,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.ufshpb_ops = {
-+		.reset = ufshpb_reset,
-+		.reset_host = ufshpb_reset_host,
-+		.suspend = ufshpb_suspend,
-+		.resume = ufshpb_resume,
-+	},
++static const struct file_operations line_fileops = {
++	.release = line_release,
++	.read = line_read,
++	.poll = line_poll,
++	.owner = THIS_MODULE,
++	.llseek = noop_llseek,
++	.unlocked_ioctl = line_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = line_ioctl_compat,
++#endif
 +};
 +
-+unsigned int ufshpb_host_map_kbytes = 1 * 1024;
-+module_param(ufshpb_host_map_kbytes, uint, 0644);
-+MODULE_PARM_DESC(ufshpb_host_map_kbytes,
-+	 "ufshpb host mapping memory kilo-bytes for ufshpb memory-pool");
-+
-+static int __init ufshpb_init(void)
++static int line_create(struct gpio_device *gdev, void __user *ip)
 +{
-+	int ret;
++	struct gpioline_request linereq;
++	struct line *line;
++	struct file *file;
++	int fd, i, ret, size;
++	struct gpioline_config *lc;
++	unsigned long *vals;
 +
-+	ret = driver_register(&ufshpb_drv.drv);
++	if (copy_from_user(&linereq, ip, sizeof(linereq)))
++		return -EFAULT;
++	if ((linereq.num_lines == 0) || (linereq.num_lines > GPIOLINES_MAX))
++		return -EINVAL;
++
++	if (padding_not_zeroed(linereq.padding, GPIOLINE_REQUEST_PAD_SIZE))
++		return -EINVAL;
++
++	lc = &linereq.config;
++	ret = gpioline_config_validate(lc);
 +	if (ret)
-+		pr_err("ufshpb: driver register failed\n");
++		return ret;
 +
++	/* event_buffer_size only valid with edge_detection */
++	if ((linereq.event_buffer_size) &&
++	    !(linereq.config.flags & GPIOLINE_FLAG_V2_EDGE_DETECTION))
++		return -EINVAL;
++
++	line = kzalloc(struct_size(line, descs, linereq.num_lines),
++		       GFP_KERNEL);
++	if (!line)
++		return -ENOMEM;
++
++	line->edets = kcalloc(linereq.num_lines, sizeof(*line->edets),
++			      GFP_KERNEL);
++	if (!line->edets)
++		return -ENOMEM;
++
++	for (i = 0; i < linereq.num_lines; i++)
++		line->edets[i].line = line;
++
++	line->gdev = gdev;
++	get_device(&gdev->dev);
++
++	/* Make sure this is terminated */
++	linereq.consumer[sizeof(linereq.consumer)-1] = '\0';
++	if (strlen(linereq.consumer)) {
++		line->label = kstrdup(linereq.consumer, GFP_KERNEL);
++		if (!line->label) {
++			ret = -ENOMEM;
++			goto out_free_line;
++		}
++	}
++
++	mutex_init(&line->config_mutex);
++	init_waitqueue_head(&line->wait);
++	if (lc->edge_detection) {
++		size = linereq.event_buffer_size;
++
++		if (size > GPIOLINES_MAX*16)
++			size = GPIOLINES_MAX*16;
++		else if (size == 0)
++			size = linereq.num_lines*16;
++
++		ret = kfifo_alloc(&line->events, size, GFP_KERNEL);
++		if (ret)
++			goto out_free_line;
++
++		line->edge_detection = lc->edge_detection;
++	}
++
++	atomic_set(&line->seqno, 0);
++	line->num_descs = linereq.num_lines;
++	vals = (unsigned long *)lc->values.bitmap;
++
++	/* Request each GPIO */
++	for (i = 0; i < linereq.num_lines; i++) {
++		u32 offset = linereq.offsets[i];
++		struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
++
++		if (IS_ERR(desc)) {
++			ret = PTR_ERR(desc);
++			goto out_free_line;
++		}
++
++		ret = gpiod_request(desc, line->label);
++		if (ret)
++			goto out_free_line;
++
++		line->descs[i] = desc;
++		gpioline_config_to_desc_flags(lc, &desc->flags);
++
++		ret = gpiod_set_transitory(desc, false);
++		if (ret < 0)
++			goto out_free_line;
++
++		/*
++		 * Lines have to be requested explicitly for input
++		 * or output, else the line will be treated "as is".
++		 */
++		if (lc->flags & GPIOLINE_FLAG_V2_DIRECTION) {
++			if (lc->direction == GPIOLINE_DIRECTION_OUTPUT) {
++				int val = test_bit(i, vals);
++
++				ret = gpiod_direction_output(desc, val);
++				if (ret)
++					goto out_free_line;
++			} else {
++				ret = gpiod_direction_input(desc);
++				if (ret)
++					goto out_free_line;
++				ret = edge_detector_setup(&line->edets[i], lc);
++				if (ret)
++					goto out_free_line;
++			}
++		}
++
++		atomic_notifier_call_chain(&desc->gdev->notifier,
++					   GPIOLINE_CHANGED_REQUESTED, desc);
++
++		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
++			offset);
++	}
++
++	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
++	if (fd < 0) {
++		ret = fd;
++		goto out_free_line;
++	}
++
++	file = anon_inode_getfile("gpio-line",
++				  &line_fileops,
++				  line,
++				  O_RDONLY | O_CLOEXEC);
++	if (IS_ERR(file)) {
++		ret = PTR_ERR(file);
++		goto out_put_unused_fd;
++	}
++
++	linereq.fd = fd;
++	if (copy_to_user(ip, &linereq, sizeof(linereq))) {
++		/*
++		 * fput() will trigger the release() callback, so do not go onto
++		 * the regular error cleanup path here.
++		 */
++		fput(file);
++		put_unused_fd(fd);
++		return -EFAULT;
++	}
++
++	fd_install(fd, file);
++
++	dev_dbg(&gdev->dev, "registered chardev handle for %d lines\n",
++		line->num_descs);
++
++	return 0;
++
++out_put_unused_fd:
++	put_unused_fd(fd);
++out_free_line:
++	line_free(line);
 +	return ret;
 +}
 +
-+static void __exit ufshpb_exit(void)
++#ifdef CONFIG_GPIO_CDEV_V1
+ 
+ /*
+  * GPIO line event management
+@@ -750,10 +1448,63 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	return ret;
+ }
+ 
++static void gpioline_info_v2_to_v1(struct gpioline_info_v2 *info_v2,
++				   struct gpioline_info *info_v1)
 +{
-+	driver_unregister(&ufshpb_drv.drv);
++	int flagsv2 = info_v2->config.flags;
++
++	strncpy(info_v1->name, info_v2->name, sizeof(info_v1->name));
++	strncpy(info_v1->consumer, info_v2->consumer,
++		sizeof(info_v1->consumer));
++	info_v1->line_offset = info_v2->offset;
++	info_v1->flags = 0;
++
++	if (flagsv2 & GPIOLINE_FLAG_V2_USED)
++		info_v1->flags |= GPIOLINE_FLAG_KERNEL;
++
++	if (info_v2->config.direction == GPIOLINE_DIRECTION_OUTPUT)
++		info_v1->flags |= GPIOLINE_FLAG_IS_OUT;
++
++	if (flagsv2 & GPIOLINE_FLAG_V2_ACTIVE_LOW)
++		info_v1->flags |= GPIOLINE_FLAG_ACTIVE_LOW;
++
++	if (flagsv2 & GPIOLINE_FLAG_V2_DRIVE) {
++		enum gpioline_drive drive = info_v2->config.drive;
++
++		if (drive == GPIOLINE_DRIVE_OPEN_DRAIN)
++			info_v1->flags |= GPIOLINE_FLAG_OPEN_DRAIN;
++		else if (drive == GPIOLINE_DRIVE_OPEN_SOURCE)
++			info_v1->flags |= GPIOLINE_FLAG_OPEN_SOURCE;
++	}
++
++	if (flagsv2 & GPIOLINE_FLAG_V2_BIAS) {
++		enum gpioline_bias bias = info_v2->config.bias;
++
++		if (bias == GPIOLINE_BIAS_PULL_UP)
++			info_v1->flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
++		else if (bias == GPIOLINE_BIAS_PULL_DOWN)
++			info_v1->flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
++		else if (bias == GPIOLINE_BIAS_DISABLED)
++			info_v1->flags |= GPIOLINE_FLAG_BIAS_DISABLE;
++	}
 +}
 +
-+MODULE_AUTHOR("Yongmyong Lee <ymhungry.lee@samsung.com>");
-+MODULE_AUTHOR("Jinyoung Choi <j-young.choi@samsung.com>");
-+MODULE_DESCRIPTION("UFS Host Performance Booster Driver");
++static void gpioline_info_changed_v2_to_v1(
++		struct gpioline_info_changed_v2 *lic_v2,
++		struct gpioline_info_changed *lic_v1)
++{
++	gpioline_info_v2_to_v1(&lic_v2->info, &lic_v1->info);
++	lic_v1->timestamp = lic_v2->timestamp;
++	lic_v1->event_type = lic_v2->event_type;
++}
 +
-+module_init(ufshpb_init);
-+module_exit(ufshpb_exit);
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/scsi/ufs/ufshpb.h b/drivers/scsi/ufs/ufshpb.h
-new file mode 100644
-index 000000000000..eaa4a3e035b1
---- /dev/null
-+++ b/drivers/scsi/ufs/ufshpb.h
-@@ -0,0 +1,162 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Universal Flash Storage Host Performance Booster
-+ *
-+ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
-+ *
-+ * Authors:
-+ *	Yongmyung Lee <ymhungry.lee@samsung.com>
-+ *	Jinyoung Choi <j-young.choi@samsung.com>
-+ */
++#endif /* CONFIG_GPIO_CDEV_V1 */
 +
-+#ifndef _UFSHPB_H_
-+#define _UFSHPB_H_
+ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+-				  struct gpioline_info *info)
++				  struct gpioline_info_v2 *info)
+ {
+ 	struct gpio_chip *gc = desc->gdev->chip;
++	struct gpioline_config *lc = &info->config;
+ 	bool ok_for_pinctrl;
+ 	unsigned long flags;
+ 
+@@ -765,7 +1516,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 	 * lock common to both frameworks?
+ 	 */
+ 	ok_for_pinctrl =
+-		pinctrl_gpio_can_use_line(gc->base + info->line_offset);
++		pinctrl_gpio_can_use_line(gc->base + info->offset);
+ 
+ 	spin_lock_irqsave(&gpio_lock, flags);
+ 
+@@ -783,34 +1534,46 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 		info->consumer[0] = '\0';
+ 	}
+ 
++	lc->flags = GPIOLINE_FLAG_V2_DIRECTION;
+ 	/*
+ 	 * Userspace only need to know that the kernel is using this GPIO so
+ 	 * it can't use it.
+ 	 */
+-	info->flags = 0;
+ 	if (test_bit(FLAG_REQUESTED, &desc->flags) ||
+ 	    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+ 	    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+ 	    test_bit(FLAG_EXPORT, &desc->flags) ||
+ 	    test_bit(FLAG_SYSFS, &desc->flags) ||
+ 	    !ok_for_pinctrl)
+-		info->flags |= GPIOLINE_FLAG_KERNEL;
+-	if (test_bit(FLAG_IS_OUT, &desc->flags))
+-		info->flags |= GPIOLINE_FLAG_IS_OUT;
++		lc->flags |= GPIOLINE_FLAG_V2_USED;
++	if (test_bit(FLAG_IS_OUT, &desc->flags)) {
++		lc->direction = GPIOLINE_DIRECTION_OUTPUT;
++		lc->flags |= GPIOLINE_FLAG_V2_DRIVE;
++		if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
++			lc->drive = GPIOLINE_DRIVE_OPEN_DRAIN;
++		else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
++			lc->drive = GPIOLINE_DRIVE_OPEN_SOURCE;
++		else
++			lc->drive = GPIOLINE_DRIVE_PUSH_PULL;
++	} else {
++		lc->direction = GPIOLINE_DIRECTION_INPUT;
++	}
 +
-+/* hpb response UPIU macro */
-+#define MAX_ACTIVE_NUM				2
-+#define MAX_INACTIVE_NUM			2
-+#define HPB_RSP_NONE				0x00
-+#define HPB_RSP_REQ_REGION_UPDATE		0x01
-+#define HPB_RSP_DEV_RESET			0x02
-+#define DEV_DATA_SEG_LEN			0x14
-+#define DEV_SENSE_SEG_LEN			0x12
-+#define DEV_DES_TYPE				0x80
-+#define DEV_ADDITIONAL_LEN			0x10
+ 	if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
+-		info->flags |= GPIOLINE_FLAG_ACTIVE_LOW;
+-	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
+-		info->flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
+-				GPIOLINE_FLAG_IS_OUT);
+-	if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
+-		info->flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
+-				GPIOLINE_FLAG_IS_OUT);
+-	if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
+-		info->flags |= GPIOLINE_FLAG_BIAS_DISABLE;
+-	if (test_bit(FLAG_PULL_DOWN, &desc->flags))
+-		info->flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
+-	if (test_bit(FLAG_PULL_UP, &desc->flags))
+-		info->flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
++		lc->flags |= GPIOLINE_FLAG_V2_ACTIVE_LOW;
 +
-+/* hpb map & entries macro */
-+#define HPB_RGN_SIZE_UNIT			512
-+#define HPB_ENTRY_BLOCK_SIZE			4096
-+#define HPB_ENTRY_SIZE				0x8
-+#define PINNED_NOT_SET				U32_MAX
++	if (test_bit(FLAG_BIAS_DISABLE, &desc->flags)) {
++		lc->flags |= GPIOLINE_FLAG_V2_BIAS;
++		lc->bias = GPIOLINE_BIAS_DISABLED;
++	} else if (test_bit(FLAG_PULL_DOWN, &desc->flags)) {
++		lc->flags |= GPIOLINE_FLAG_V2_BIAS;
++		lc->bias = GPIOLINE_BIAS_PULL_DOWN;
++	} else if (test_bit(FLAG_PULL_UP, &desc->flags)) {
++		lc->flags |= GPIOLINE_FLAG_V2_BIAS;
++		lc->bias = GPIOLINE_BIAS_PULL_UP;
++	}
 +
-+/* hpb support chunk size */
-+#define HPB_MULTI_CHUNK_HIGH			1
++	lc->edge_detection = 0;
+ 
+ 	spin_unlock_irqrestore(&gpio_lock, flags);
+ }
+@@ -818,11 +1581,62 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ struct gpio_chardev_data {
+ 	struct gpio_device *gdev;
+ 	wait_queue_head_t wait;
+-	DECLARE_KFIFO(events, struct gpioline_info_changed, 32);
++	DECLARE_KFIFO(events, struct gpioline_info_changed_v2, 32);
+ 	struct notifier_block lineinfo_changed_nb;
+ 	unsigned long *watched_lines;
++#ifdef CONFIG_GPIO_CDEV_V1
++	atomic_t watch_abi_version;
++#endif
+ };
+ 
++#ifdef CONFIG_GPIO_CDEV_V1
++static int lineinfo_ensure_abi_version(struct gpio_chardev_data *cdata,
++				       unsigned int version)
++{
++	int abiv = atomic_read(&cdata->watch_abi_version);
 +
-+/* hpb vender defined opcode */
-+#define UFSHPB_READ				0xF8
-+#define UFSHPB_READ_BUFFER			0xF9
-+#define UFSHPB_WRITE_BUFFER			0xFA
-+#define UFSHPB_READ_BUFFER_ID			0x01
-+#define UFSHPB_WRITE_BUFFER_ID			0x02
-+#define HPB_READ_BUFFER_CMD_LENGTH		10
-+#define LU_ENABLED_HPB_FUNC			0x02
++	if (abiv == 0) {
++		atomic_cmpxchg(&cdata->watch_abi_version, 0, version);
++		abiv = atomic_read(&cdata->watch_abi_version);
++	}
++	if (abiv != version)
++		return -EPERM;
++	return 0;
++}
++#endif
 +
-+#define SDEV_WAIT_TIMEOUT			(10 * HZ)
-+#define MAP_REQ_TIMEOUT				(30 * HZ)
-+#define HPB_RESET_REQ_RETRIES			10
-+#define HPB_RESET_REQ_MSLEEP			2
++static int lineinfo_get(struct gpio_chardev_data *gcdev, void __user *ip,
++			unsigned int cmd)
++{
++	struct gpio_desc *desc;
++	struct gpioline_info_v2 lineinfo;
 +
-+#define HPB_SUPPORT_VERSION			0x100
++	if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
++		return -EFAULT;
 +
-+enum UFSHPB_MODE {
-+	HPB_HOST_CONTROL,
-+	HPB_DEVICE_CONTROL,
-+};
++	if (padding_not_zeroed(lineinfo.padding, GPIOLINE_INFO_V2_PAD_SIZE))
++		return -EINVAL;
 +
-+enum UFSHPB_STATE {
-+	HPB_PRESENT = 1,
-+	HPB_SUSPEND,
-+	HPB_FAILED,
-+	HPB_RESET,
-+};
++	desc = gpiochip_get_desc(gcdev->gdev->chip, lineinfo.offset);
++	if (IS_ERR(desc))
++		return PTR_ERR(desc);
 +
-+enum HPB_RGN_STATE {
-+	HPB_RGN_INACTIVE,
-+	HPB_RGN_ACTIVE,
-+	/* pinned regions are always active */
-+	HPB_RGN_PINNED,
-+};
++	if (cmd == GPIO_GET_LINEINFO_WATCH_V2_IOCTL) {
++#ifdef CONFIG_GPIO_CDEV_V1
++		if (lineinfo_ensure_abi_version(gcdev, 2))
++			return -EPERM;
++#endif
++		if (test_and_set_bit(lineinfo.offset, gcdev->watched_lines))
++			return -EBUSY;
++	}
++	gpio_desc_to_lineinfo(desc, &lineinfo);
 +
-+enum HPB_SRGN_STATE {
-+	HPB_SRGN_UNUSED,
-+	HPB_SRGN_INVALID,
-+	HPB_SRGN_VALID,
-+	HPB_SRGN_ISSUED,
-+};
++	if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
++		return -EFAULT;
 +
-+/**
-+ * struct ufshpb_dev_info - UFSHPB device related info
-+ * @num_lu: the number of user logical unit to check whether all lu finished
-+ *          initialization
-+ * @rgn_size: device reported HPB region size
-+ * @srgn_size: device reported HPB sub-region size
-+ */
-+struct ufshpb_dev_info {
-+	int num_lu;
-+	int rgn_size;
-+	int srgn_size;
-+};
++	return 0;
++}
 +
-+/**
-+ * struct ufshpb_lu_info - UFSHPB logical unit related info
-+ * @num_blocks: the number of logical block
-+ * @pinned_start: the start region number of pinned region
-+ * @num_pinned: the number of pinned regions
-+ * @max_active_rgns: maximum number of active regions
-+ */
-+struct ufshpb_lu_info {
-+	int num_blocks;
-+	int pinned_start;
-+	int num_pinned;
-+	int max_active_rgns;
-+};
+ /*
+  * gpio_ioctl() - ioctl handler for the GPIO chardev
+  */
+@@ -855,8 +1669,10 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
+ 			return -EFAULT;
+ 		return 0;
++#ifdef CONFIG_GPIO_CDEV_V1
+ 	} else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
+ 		struct gpioline_info lineinfo;
++		struct gpioline_info_v2 lineinfo_v2;
+ 
+ 		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
+ 			return -EFAULT;
+@@ -866,7 +1682,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		if (IS_ERR(desc))
+ 			return PTR_ERR(desc);
+ 
+-		gpio_desc_to_lineinfo(desc, &lineinfo);
++		lineinfo_v2.offset = lineinfo.line_offset;
++		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
++		gpioline_info_v2_to_v1(&lineinfo_v2, &lineinfo);
+ 
+ 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+ 			return -EFAULT;
+@@ -877,6 +1695,7 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		return lineevent_create(gdev, ip);
+ 	} else if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
+ 		struct gpioline_info lineinfo;
++		struct gpioline_info_v2 lineinfo_v2;
+ 
+ 		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
+ 			return -EFAULT;
+@@ -886,15 +1705,26 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		if (IS_ERR(desc))
+ 			return PTR_ERR(desc);
+ 
++		if (lineinfo_ensure_abi_version(gcdev, 1))
++			return -EPERM;
 +
-+struct ufshpb_subregion {
-+	enum HPB_SRGN_STATE srgn_state;
-+	int rgn_idx;
-+	int srgn_idx;
-+};
+ 		if (test_and_set_bit(lineinfo.line_offset, gcdev->watched_lines))
+ 			return -EBUSY;
+ 
+-		gpio_desc_to_lineinfo(desc, &lineinfo);
++		lineinfo_v2.offset = lineinfo.line_offset;
++		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
++		gpioline_info_v2_to_v1(&lineinfo_v2, &lineinfo);
+ 
+ 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+ 			return -EFAULT;
+ 
+ 		return 0;
++#endif /* CONFIG_GPIO_CDEV_V1 */
++	} else if (cmd == GPIO_GET_LINEINFO_V2_IOCTL ||
++		   cmd == GPIO_GET_LINEINFO_WATCH_V2_IOCTL) {
++		return lineinfo_get(gcdev, ip, cmd);
++	} else if (cmd == GPIO_GET_LINE_IOCTL) {
++		return line_create(gdev, ip);
+ 	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
+ 		if (copy_from_user(&offset, ip, sizeof(offset)))
+ 			return -EFAULT;
+@@ -928,7 +1758,7 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
+ 				   unsigned long action, void *data)
+ {
+ 	struct gpio_chardev_data *gcdev = to_gpio_chardev_data(nb);
+-	struct gpioline_info_changed chg;
++	struct gpioline_info_changed_v2 chg;
+ 	struct gpio_desc *desc = data;
+ 	int ret;
+ 
+@@ -936,7 +1766,7 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
+ 		return NOTIFY_DONE;
+ 
+ 	memset(&chg, 0, sizeof(chg));
+-	chg.info.line_offset = gpio_chip_hwgpio(desc);
++	chg.info.offset = gpio_chip_hwgpio(desc);
+ 	chg.event_type = action;
+ 	chg.timestamp = ktime_get_ns();
+ 	gpio_desc_to_lineinfo(desc, &chg.info);
+@@ -969,12 +1799,16 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
+ 				   size_t count, loff_t *off)
+ {
+ 	struct gpio_chardev_data *gcdev = file->private_data;
+-	struct gpioline_info_changed event;
++	struct gpioline_info_changed_v2 event;
+ 	ssize_t bytes_read = 0;
+ 	int ret;
++	size_t event_size;
+ 
+-	if (count < sizeof(event))
++#ifndef CONFIG_GPIO_CDEV_V1
++	event_size = sizeof(struct gpioline_info_changed_v2);
++	if (count < event_size)
+ 		return -EINVAL;
++#endif
+ 
+ 	do {
+ 		spin_lock(&gcdev->wait.lock);
+@@ -996,7 +1830,17 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
+ 				return ret;
+ 			}
+ 		}
+-
++#ifdef CONFIG_GPIO_CDEV_V1
++		/* must be after kfifo check so watch_abi_version is set */
++		if (atomic_read(&gcdev->watch_abi_version) == 2)
++			event_size = sizeof(struct gpioline_info_changed_v2);
++		else
++			event_size = sizeof(struct gpioline_info_changed);
++		if (count < event_size) {
++			spin_unlock(&gcdev->wait.lock);
++			return -EINVAL;
++		}
++#endif
+ 		ret = kfifo_out(&gcdev->events, &event, 1);
+ 		spin_unlock(&gcdev->wait.lock);
+ 		if (ret != 1) {
+@@ -1005,9 +1849,23 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
+ 			/* We should never get here. See lineevent_read(). */
+ 		}
+ 
+-		if (copy_to_user(buf + bytes_read, &event, sizeof(event)))
++#ifdef CONFIG_GPIO_CDEV_V1
++		if (atomic_read(&gcdev->watch_abi_version) == 2) {
++			if (copy_to_user(buf + bytes_read, &event, event_size))
++				return -EFAULT;
++		} else {
++			struct gpioline_info_changed event_v1;
 +
-+struct ufshpb_region {
-+	struct ufshpb_subregion *srgn_tbl;
-+	enum HPB_RGN_STATE rgn_state;
-+	int rgn_idx;
-+	int srgn_cnt;
-+};
++			gpioline_info_changed_v2_to_v1(&event, &event_v1);
++			if (copy_to_user(buf + bytes_read, &event_v1,
++					 event_size))
++				return -EFAULT;
++		}
++#else
++		if (copy_to_user(buf + bytes_read, &event, event_size))
+ 			return -EFAULT;
+-		bytes_read += sizeof(event);
++#endif
++		bytes_read += event_size;
+ 	} while (count >= bytes_read + sizeof(event));
+ 
+ 	return bytes_read;
+@@ -1121,4 +1979,22 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+ void gpiolib_cdev_unregister(struct gpio_device *gdev)
+ {
+ 	cdev_device_del(&gdev->chrdev, &gdev->dev);
 +
-+struct ufshpb_stats {
-+	atomic_t hit_cnt;
-+	atomic_t miss_cnt;
-+	atomic_t rb_noti_cnt;
-+	atomic_t rb_active_cnt;
-+	atomic_t rb_inactive_cnt;
-+	atomic_t map_req_cnt;
-+};
++	/*
++	 * array sizes must be a multiple of 8 to ensure 64bit alignment and
++	 * to not create holes in the struct packing.
++	 */
++	BUILD_BUG_ON(GPIOLINES_MAX % 8);
++	BUILD_BUG_ON(GPIO_MAX_NAME_SIZE % 8);
 +
-+struct ufshpb_lu {
-+	int lun;
-+
-+	struct device hpb_lu_dev;
-+	struct scsi_device *sdev_ufs_lu;
-+
-+	struct ufshpb_region *rgn_tbl;
-+
-+	spinlock_t hpb_state_lock;
-+	atomic_t hpb_state; /* hpb_state_lock */
-+
-+	/* pinned region information */
-+	u32 lu_pinned_start;
-+	u32 lu_pinned_end;
-+
-+	/* HPB related configuration */
-+	u32 rgns_per_lu;
-+	u32 srgns_per_lu;
-+	int srgns_per_rgn;
-+	u32 srgn_mem_size;
-+	u32 entries_per_rgn_mask;
-+	u32 entries_per_rgn_shift;
-+	u32 entries_per_srgn;
-+	u32 entries_per_srgn_mask;
-+	u32 entries_per_srgn_shift;
-+	u32 pages_per_srgn;
-+
-+	struct ufshpb_stats stats;
-+
-+	struct ufsf_feature_info *ufsf;
-+	struct list_head list_hpb_lu;
-+};
-+
-+extern struct device_type ufshpb_dev_type;
-+extern struct bus_type ufsf_bus_type;
-+
-+#endif /* End of Header */
++	/*
++	 * check that uAPI structs are 64bit aligned for 32/64bit
++	 * compatibility
++	 */
++	BUILD_BUG_ON(sizeof(struct gpioline_config) % 8);
++	BUILD_BUG_ON(sizeof(struct gpioline_request) % 8);
++	BUILD_BUG_ON(sizeof(struct gpioline_info_v2) % 8);
++	BUILD_BUG_ON(sizeof(struct gpioline_info_changed_v2) % 8);
++	BUILD_BUG_ON(sizeof(struct gpioline_event) % 8);
++	BUILD_BUG_ON(sizeof(struct gpioline_values) % 8);
+ }
 -- 
-2.17.1
-
+2.27.0
 
