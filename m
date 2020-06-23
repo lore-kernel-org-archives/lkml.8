@@ -2,108 +2,86 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4560CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D50D20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B44206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732194AbgFWJpY (ORCPT
+        id S1732210AbgFWJpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:45:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45664 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731921AbgFWJpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:45:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 07763AE8C;
-        Tue, 23 Jun 2020 09:45:22 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 11:45:19 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623094519.GF31822@suse.de>
-References: <20200425191032.GK21900@8bytes.org>
- <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
+        Tue, 23 Jun 2020 05:45:51 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:25955
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732023AbgFWJpu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:45:50 -0400
+X-IronPort-AV: E=Sophos;i="5.75,270,1589234400"; 
+   d="scan'208";a="352454737"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 11:45:48 +0200
+Date:   Tue, 23 Jun 2020 11:45:48 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+cc:     Joe Perches <joe@perches.com>, trivial@kernel.org,
+        kernel-janitors@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] trivial: fix kerneldoc comments
+In-Reply-To: <20200623093228.GI4151@kadam>
+Message-ID: <alpine.DEB.2.22.394.2006231145350.2367@hadrien>
+References: <1592854669-20606-1-git-send-email-Julia.Lawall@inria.fr> <6b0649c53e853fd2a35e9996f13e702daa0d7e2f.camel@perches.com> <alpine.DEB.2.22.394.2006230954560.2367@hadrien> <20200623093228.GI4151@kadam>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
 
-On Mon, Apr 27, 2020 at 10:37:41AM -0700, Andy Lutomirski wrote:
-> 1. Use IST for #VC and deal with all the mess that entails.
 
-With the removal of IST shifting I wonder what you would suggest on how
-to best implement an NMI-safe IST handler with nesting support.
+On Tue, 23 Jun 2020, Dan Carpenter wrote:
 
-My current plan is to implement an IST handler which switches itself off
-the IST stack as soon as possible, freeing it for re-use.
+> On Tue, Jun 23, 2020 at 09:59:57AM +0200, Julia Lawall wrote:
+> > > > diff --git a/drivers/crypto/bcm/spu.c b/drivers/crypto/bcm/spu.c
+> > > []
+> > > > @@ -519,7 +519,7 @@ u32 spum_assoc_resp_len(enum spu_cipher_mode cipher_mode,
+> > > >   * spu_aead_ivlen() - Calculate the length of the AEAD IV to be included
+> > > >   * in a SPU request after the AAD and before the payload.
+> > > >   * @cipher_mode:  cipher mode
+> > > > - * @iv_ctr_len:   initialization vector length in bytes
+> > > > + * @iv_len:   initialization vector length in bytes
+> > > >   *
+> > > >   * In Linux ~4.2 and later, the assoc_data sg includes the IV. So no need
+> > > >   * to include the IV as a separate field in the SPU request msg.
+> > > > @@ -917,7 +917,7 @@ u16 spum_cipher_req_init(u8 *spu_hdr, struct spu_cipher_parms *cipher_parms)
+> > > >   * setkey() time in spu_cipher_req_init().
+> > > >   * @spu_hdr:         Start of the request message header (MH field)
+> > > >   * @spu_req_hdr_len: Length in bytes of the SPU request header
+> > > > - * @isInbound:       0 encrypt, 1 decrypt
+> > > > + * @is_inbound:       0 encrypt, 1 decrypt
+> > >
+> > > odd alignments
+> >
+> > Sorry to have missed these.
+> >
+> > > etc...
+> >
+> > Are there a lot of other such problems?  I did look through the whole
+> > patch several times by hand, but perhaps it is just too big to see
+> > everything.
+>
+> Probably the comments for spum_assoc_resp_len() could be tweaked.
+>
+> I had written an email about this one that Joe mentioned and
+> spum_assoc_resp_len() but then I decided that it wasn't enough to worry
+> about so I deleted the email instead of sending it.
 
-The flow would be roughly like this upon entering the handler;
+OK, thanks.
 
-	build_pt_regs();
-
-	RSP = pt_regs->sp;
-
-	if (RSP in VC_IST_stack)
-		error("unallowed nesting")
-
-	if (RSP in current_kernel_stack)
-		RSP = round_down_to_8(RSP)
-	else
-		RSP = current_top_of_stack() // non-ist kernel stack
-
-	copy_pt_regs(pt_regs, RSP);
-	switch_stack_to(RSP);
-
-To make this NMI safe, the NMI handler needs some logic too. Upon
-entering NMI, it needs to check the return RSP, and if it is in the #VC
-IST stack, it must do the above flow by itself and update the return RSP
-and RIP. It needs to take into account the case when PT_REGS is not
-fully populated on the return side.
-
-Alternativly the NMI handler could safe/restore the contents of the #VC
-IST stack or just switch to a special #VC-in-NMI IST stack.
-
-All in all it could get complicated, and imho shift_ist would have been
-simpler, but who am I anyway...
-
-Or maybe you have a better idea how to implement this, so I'd like to
-hear your opinion first before I spend too many days implementing
-something.
-
-Regards,
-
-	Joerg
+julia
