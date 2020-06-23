@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C46C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1882078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0272082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943714;
-	bh=Ty64d1vuBGkU61eNxazHWsARkzaUJEpcTE9bxj8RU1k=;
+	s=default; t=1592943717;
+	bh=AI/q5m10ZNR6F+ELrFPRFlW2+Pra5zR6fMJh0xqgZmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cHrlLfEv//4c5SbLrE4pYPaATJNUvPXEL2jFJ12UCH4A2fhTPKlyG32NqnBARBCe7
-	 yVwMF8gLc2Xk0+7aYysecUkAnScY0amx98Syd2fM6mSIwHjdeTsV7neWubo/p6Hc2U
-	 2hOo7omMiAoGMtvjVM0zZ5JIxvtq3KB0fkcwvxAs=
+	b=UcKQbtZAfLY0MLXKcr30KJVjTFWANsF7p1sk4M8oMKbVrBAj0XX7z1Wn8dDsZTccG
+	 2zYn/xbLbz9uz8q/YBLlyB9euesXrCSGk1ByzuH5J7Kx6XJnkSwI4ZBkZMOkghfMxR
+	 WYlPtYFKoFIxRpVP0ItEbG23iblRGDVAUio0ZlxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390097AbgFWUVw (ORCPT
+        id S2390104AbgFWUVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:21:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:21:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389502AbgFWUVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:21:49 -0400
+        id S2390075AbgFWUVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:21:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADCB3206C3;
-        Tue, 23 Jun 2020 20:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2545D2064B;
+        Tue, 23 Jun 2020 20:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943709;
-        bh=Ty64d1vuBGkU61eNxazHWsARkzaUJEpcTE9bxj8RU1k=;
+        s=default; t=1592943706;
+        bh=AI/q5m10ZNR6F+ELrFPRFlW2+Pra5zR6fMJh0xqgZmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vbIUkF1DbBCDFNutLnk6yLfgujG0Q0BOdA228usIWyNbIQCwsWTrhmymxfCqpHw7Z
-         hL/7hnIP28TDwDi3RtDnG9eM2opsKDGSYuTJNo+7oUFHCNU990TcNIE/bAxTnmHxCK
-         BSws3ENYg9jB1n8TPzip8xg64Lnyu91T2aNyRIco=
+        b=o6QLIKZIDxiRtnmOH6OpZwjnJUDnCoIkT3IhTookE4+X30ypRXOQTThMmIttM0NG+
+         fqg4Ty6M5pQLMEYtkGIYt61BjwE9Ml/WqUwRhb37mfGlwYrAt1PAexyE9pFyYGcWmy
+         nF4KTf1o0GE24HuFPuhyZHbIhNTH97Rjg5Urtb4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/314] clk: sunxi: Fix incorrect usage of round_down()
-Date:   Tue, 23 Jun 2020 21:53:17 +0200
-Message-Id: <20200623195338.889052929@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 019/314] ALSA: isa/wavefront: prevent out of bounds write in ioctl
+Date:   Tue, 23 Jun 2020 21:53:34 +0200
+Message-Id: <20200623195339.699963262@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,37 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ee25d9742dabed3fd18158b518f846abeb70f319 ]
+[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
 
-round_down() can only round to powers of 2. If round_down() is asked
-to round to something that is not a power of 2, incorrect results are
-produced. The incorrect results can be both too large and too small.
+The "header->number" comes from the ioctl and it needs to be clamped to
+prevent out of bounds writes.
 
-Instead, use rounddown() which can round to any number.
-
-Fixes: 6a721db180a2 ("clk: sunxi: Add A31 clocks support")
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi/clk-sunxi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 27201fd26e442..e1aa1fbac48a0 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -90,7 +90,7 @@ static void sun6i_a31_get_pll1_factors(struct factors_request *req)
- 	 * Round down the frequency to the closest multiple of either
- 	 * 6 or 16
- 	 */
--	u32 round_freq_6 = round_down(freq_mhz, 6);
-+	u32 round_freq_6 = rounddown(freq_mhz, 6);
- 	u32 round_freq_16 = round_down(freq_mhz, 16);
+diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
+index c5b1d5900eed2..d6420d224d097 100644
+--- a/sound/isa/wavefront/wavefront_synth.c
++++ b/sound/isa/wavefront/wavefront_synth.c
+@@ -1171,7 +1171,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 				      "alias for %d\n",
+ 				      header->number,
+ 				      header->hdr.a.OriginalSample);
+-    
++
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	munge_int32 (header->number, &alias_hdr[0], 2);
+ 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
+ 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
+@@ -1202,6 +1205,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 	int num_samples;
+ 	unsigned char *msample_hdr;
  
- 	if (round_freq_6 > round_freq_16)
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
+ 	if (! msample_hdr)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
