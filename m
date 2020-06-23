@@ -2,141 +2,64 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E651C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE15C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFCF8206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948150;
-	bh=d7SLT7FFzHKVdc1SzXZ/MYc+yN1sLb/a170PwuUqgug=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2dXOMCWfTx9X/qRlQNzb1zonA3tzngyO6TIz2Hi2EnQIGvqLQGERLtQqqyoLGO6yL
-	 hWAA6j/lSoBQpo3gAJgNHBvUNDBt7JZSSouPertT1mHkHLIQxQab7HwU7LEJQlhw1z
-	 pYZhHNlOU65IEn9yhU++1cf7V+RpVSFAE5vRgoN4=
+	by mail.kernel.org (Postfix) with ESMTP id 02C7D206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391317AbgFWVft (ORCPT
+        id S2393767AbgFWVfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:35:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388793AbgFWUKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022B420DD4;
-        Tue, 23 Jun 2020 20:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943009;
-        bh=d7SLT7FFzHKVdc1SzXZ/MYc+yN1sLb/a170PwuUqgug=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mzILsfor0QsUpjA9WLY13QjLH8H2ssQKkqmLd6yd+DClE8e7ahStoEFVPXY4uZnpk
-         Dsc7K441B5ove9E29AAc97EEuSxvFIznu7Yxt0qA68n8Zr1Ao/RT2oCTxV76VN3uLW
-         243AdeULyWkjSTwPVgSYOrO34IEFG7fov/UZ74DY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 223/477] powerpc/ps3: Fix kexec shutdown hang
-Date:   Tue, 23 Jun 2020 21:53:40 +0200
-Message-Id: <20200623195418.121254552@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
-References: <20200623195407.572062007@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 23 Jun 2020 17:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388793AbgFWVfu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 17:35:50 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5639AC061573;
+        Tue, 23 Jun 2020 14:35:50 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E5E4E129428AF;
+        Tue, 23 Jun 2020 14:35:47 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 14:35:47 -0700 (PDT)
+Message-Id: <20200623.143547.611766403397972374.davem@davemloft.net>
+To:     peterz@infradead.org
+Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        a.darwish@linutronix.de, rostedt@goodmis.org,
+        bigeasy@linutronix.de, sparclinux@vger.kernel.org,
+        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        heiko.carstens@de.ibm.com, linux-s390@vger.kernel.org,
+        linux@armlinux.org.uk
+Subject: Re: [PATCH v4 3/8] sparc64: Fix asm/percpu.h build error
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200623083721.277992771@infradead.org>
+References: <20200623083645.277342609@infradead.org>
+        <20200623083721.277992771@infradead.org>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jun 2020 14:35:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geoff Levand <geoff@infradead.org>
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Tue, 23 Jun 2020 10:36:48 +0200
 
-[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
+> In order to break a header dependency between lockdep and task_struct,
+> I need per-cpu stuff from lockdep.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
-are called very late in the shutdown via kexec's mmu_cleanup_all
-routine.  By the time mmu_cleanup_all runs it is too late to use
-udbg_printf, and calling it will cause PS3 systems to hang.
-
-Remove all debugging statements from ps3_mm_region_destroy() and
-ps3_mm_vas_destroy() and replace any error reporting with calls
-to lv1_panic.
-
-With this change builds with 'DEBUG' defined will not cause kexec
-reboots to hang, and builds with 'DEBUG' defined or not will end
-in lv1_panic if an error is encountered.
-
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
-index 423be34f0f5fb..f42fe4e86ce52 100644
---- a/arch/powerpc/platforms/ps3/mm.c
-+++ b/arch/powerpc/platforms/ps3/mm.c
-@@ -200,13 +200,14 @@ void ps3_mm_vas_destroy(void)
- {
- 	int result;
- 
--	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
--
- 	if (map.vas_id) {
- 		result = lv1_select_virtual_address_space(0);
--		BUG_ON(result);
--		result = lv1_destruct_virtual_address_space(map.vas_id);
--		BUG_ON(result);
-+		result += lv1_destruct_virtual_address_space(map.vas_id);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		map.vas_id = 0;
- 	}
- }
-@@ -304,19 +305,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
- 	int result;
- 
- 	if (!r->destroy) {
--		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
--			__func__, __LINE__, r->base, r->size);
- 		return;
- 	}
- 
--	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
--
- 	if (r->base) {
- 		result = lv1_release_memory(r->base);
--		BUG_ON(result);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		r->size = r->base = r->offset = 0;
- 		map.total = map.rm.size;
- 	}
-+
- 	ps3_mm_set_repository_highmem(NULL);
- }
- 
--- 
-2.25.1
-
-
-
+Acked-by: David S. Miller <davem@davemloft.net>
