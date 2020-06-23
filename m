@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ABAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18E70207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9223B207D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933770;
-	bh=nEt41+L6I/iykkT5L7QHCFrEli9hUrXRjbuM6cER2BY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aaGRtjCv1adcjr2ajSeT/orhCPHN4lWDxij47NSz1tL0l9PGKIPVFdH3RtuF3+T6q
-	 zTor42vX16qTp8RZR1ODc8J2JC38O5iTruDykFfoc4VIgjeOhaOf0w0Eb8ULKyflCO
-	 1cPXbODqfpiVh03/GdcoJrSlfXnn9ivIb9d+X+pM=
+	s=default; t=1592933772;
+	bh=st8tvTvng6DXutGq+gY2iLC2JlhQhMNE44kIf4yLIJE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D+flnC4yDDxcGG5wZiDLEYtWmBN15u8waziRGXzkNsLboKKte9HBcBHvF450JRyLR
+	 YWwMp6Z5aUs9WdaeUXMRGM5qUl784yn+4oEpCTI3N1yuEBGZvrvfrkulObXXAdxqv4
+	 sb1WQMueS8JACGd78sHwVF6sJWH1qH2r91wwZuRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387479AbgFWRgI (ORCPT
+        id S2387495AbgFWRgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60992 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387443AbgFWRgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:01 -0400
+        id S2387461AbgFWRgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 989C420780;
-        Tue, 23 Jun 2020 17:36:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDBD7207E8;
+        Tue, 23 Jun 2020 17:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933761;
-        bh=nEt41+L6I/iykkT5L7QHCFrEli9hUrXRjbuM6cER2BY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vXY2LqE1m5QSo0+lIpBrzJobQB6O1LZ818P2HByFAxoCm2X22xhAch9qWpzCuNYtI
-         CHJdvTgfz8GUHSMi37WsbGi56lOH2kJk59u2T1Ip+8ZKilnMYC8N63Gp/WANIdDZ/a
-         SsPAWoKOqJL8sbRtfFeQePQ1K4K5SHs7qP3xNPJg=
+        s=default; t=1592933763;
+        bh=st8tvTvng6DXutGq+gY2iLC2JlhQhMNE44kIf4yLIJE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ERTPHBhk83wGHF9bxawdKZ4pvM84JRGu9GEErQSjMLE6yK+VY5MQ1jfL+qfkIVwek
+         I2uaACdVpDXzgXEmybP6JU2QWMmg/tWfDrxLgCI4bH2lnElyoWoQVz7uHReBjpSLiw
+         f0fTL/lvaJ7EHDM/rNx1ByZGCxTBDo4SAT0RKhqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/24] sata_rcar: handle pm_runtime_get_sync failure cases
-Date:   Tue, 23 Jun 2020 13:35:36 -0400
-Message-Id: <20200623173559.1355728-1-sashal@kernel.org>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 03/24] drm/amd/display: Use kfree() to free rgb_user in calculate_user_regamma_ramp()
+Date:   Tue, 23 Jun 2020 13:35:38 -0400
+Message-Id: <20200623173559.1355728-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
+References: <20200623173559.1355728-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,66 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Denis Efremov <efremov@linux.com>
 
-[ Upstream commit eea1238867205b9e48a67c1a63219529a73c46fd ]
+[ Upstream commit 43a562774fceba867e8eebba977d7d42f8a2eac7 ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+Use kfree() instead of kvfree() to free rgb_user in
+calculate_user_regamma_ramp() because the memory is allocated with
+kcalloc().
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/sata_rcar.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-index 3495e1733a8e6..c35b7b993133e 100644
---- a/drivers/ata/sata_rcar.c
-+++ b/drivers/ata/sata_rcar.c
-@@ -905,7 +905,7 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0)
--		goto err_pm_disable;
-+		goto err_pm_put;
+diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+index 2d8f14b691174..9997382b0a025 100644
+--- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
++++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+@@ -1862,7 +1862,7 @@ bool calculate_user_regamma_ramp(struct dc_transfer_func *output_tf,
  
- 	host = ata_host_alloc(dev, 1);
- 	if (!host) {
-@@ -935,7 +935,6 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 
- err_pm_put:
- 	pm_runtime_put(dev);
--err_pm_disable:
- 	pm_runtime_disable(dev);
+ 	kfree(rgb_regamma);
+ rgb_regamma_alloc_fail:
+-	kvfree(rgb_user);
++	kfree(rgb_user);
+ rgb_user_alloc_fail:
  	return ret;
  }
-@@ -989,8 +988,10 @@ static int sata_rcar_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 
- 	if (priv->type == RCAR_GEN3_SATA) {
- 		sata_rcar_init_module(priv);
-@@ -1015,8 +1016,10 @@ static int sata_rcar_restore(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 
- 	sata_rcar_setup_port(host);
- 
 -- 
 2.25.1
 
