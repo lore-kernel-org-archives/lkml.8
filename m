@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2F0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3486C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A402053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA4F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944894;
-	bh=R2yDVzq7zJ6XMt70V3QRr7jjIJrA7VZsncxDTAAQA58=;
+	s=default; t=1592944899;
+	bh=ST7I5Qr5aRpP417BVZyF0nxV9j9clDaxUtqZypHbO90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P62cpfEcWu+gmT9E7Q8/vk1y0nfvD9fCL3NQ8dxx8MWn3qCvbnO1eZW7KHRs9choc
-	 P7Kz3d8UksFJgjix5IO1qXfppqiJZPE8OHp494aE+x2cfQlCJnj65CR6UmsUqFlWPo
-	 7tpOyWYs2SC6r9sAQlsGdOf3dhc9kkymgF/64rfg=
+	b=OTzp8OedIITTa1jm8G7dNwInblkXT/Czt8q8i6bRERJOL5DDyNXXyvfyZO8LBRq0d
+	 6U2snrY6fzyl0dF2QhIBLBgBuL8YV0CHnVhWIZPM6+/UMlLbwSHNMyJfZtrlbtfWZ1
+	 QtqkXdGIZS4yQ9YhO6/yYzthneuiNqaW8Bx/9A1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392337AbgFWUlc (ORCPT
+        id S2392355AbgFWUlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392173AbgFWUlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:14 -0400
+        id S2392328AbgFWUl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E8E320675;
-        Tue, 23 Jun 2020 20:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB1BF20702;
+        Tue, 23 Jun 2020 20:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944874;
-        bh=R2yDVzq7zJ6XMt70V3QRr7jjIJrA7VZsncxDTAAQA58=;
+        s=default; t=1592944887;
+        bh=ST7I5Qr5aRpP417BVZyF0nxV9j9clDaxUtqZypHbO90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=axqRB3o0tTim1jp/OcwfjYM29QDQp3gwyvngot0I892GS0f8xPocDEiqnPgEUWxTW
-         Ebn3qpxT28zHQ+LN0V3KxwvYqR+GSdkitKW6g/Rt07QF8IpwEzZyxsJBvbT2wEHyl6
-         /PtbnUSqxD24xMPDb1VqdbF/0Xhf8GkUpO1mreDk=
+        b=hCGeYNU8aOsuN1Yt+98uFYeyg0IgvoMT+ZFAwynfr89MVkRcYEb7KfjoonPuEsvUz
+         UEe7me66e/3a0qAALdKdc7y0s18bmpkIIsiS587SXOV8ShRGmQq3rz8rIGueddc5O4
+         Ondy2rI1oAw1nIfOW8fbIIbcju8mrxpFckkjGYdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 157/206] drm/sun4i: hdmi ddc clk: Fix size of m divider
-Date:   Tue, 23 Jun 2020 21:58:05 +0200
-Message-Id: <20200623195324.715353790@linuxfoundation.org>
+Subject: [PATCH 4.19 133/206] crypto: omap-sham - add proper load balancing support for multicore
+Date:   Tue, 23 Jun 2020 21:57:41 +0200
+Message-Id: <20200623195323.524648188@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,48 +60,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit 54e1e06bcf1cf6e7ac3f86daa5f7454add24b494 ]
+[ Upstream commit 281c377872ff5d15d80df25fc4df02d2676c7cde ]
 
-m divider in DDC clock register is 4 bits wide. Fix that.
+The current implementation of the multiple accelerator core support for
+OMAP SHA does not work properly. It always picks up the first probed
+accelerator core if this is available, and rest of the book keeping also
+gets confused if there are two cores available. Add proper load
+balancing support for SHA, and also fix any bugs related to the
+multicore support while doing it.
 
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200413095457.1176754-1-jernej.skrabec@siol.net
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi.h         | 2 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/omap-sham.c | 64 ++++++++++++++++++--------------------
+ 1 file changed, 31 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-index b685ee11623d1..a13e14dd7746a 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-@@ -152,7 +152,7 @@
- #define SUN4I_HDMI_DDC_CMD_IMPLICIT_WRITE	3
+diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
+index 0641185bd82f9..2faaa4069cdd8 100644
+--- a/drivers/crypto/omap-sham.c
++++ b/drivers/crypto/omap-sham.c
+@@ -168,8 +168,6 @@ struct omap_sham_hmac_ctx {
+ };
  
- #define SUN4I_HDMI_DDC_CLK_REG		0x528
--#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0x7) << 3)
-+#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0xf) << 3)
- #define SUN4I_HDMI_DDC_CLK_N(n)			((n) & 0x7)
+ struct omap_sham_ctx {
+-	struct omap_sham_dev	*dd;
+-
+ 	unsigned long		flags;
  
- #define SUN4I_HDMI_DDC_LINE_CTRL_REG	0x540
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-index e826da34e9191..14b6762567fbf 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-@@ -37,7 +37,7 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
- 	unsigned long best_rate = 0;
- 	u8 best_m = 0, best_n = 0, _m, _n;
+ 	/* fallback stuff */
+@@ -921,27 +919,35 @@ static int omap_sham_update_dma_stop(struct omap_sham_dev *dd)
+ 	return 0;
+ }
  
--	for (_m = 0; _m < 8; _m++) {
-+	for (_m = 0; _m < 16; _m++) {
- 		for (_n = 0; _n < 8; _n++) {
- 			unsigned long tmp_rate;
++struct omap_sham_dev *omap_sham_find_dev(struct omap_sham_reqctx *ctx)
++{
++	struct omap_sham_dev *dd;
++
++	if (ctx->dd)
++		return ctx->dd;
++
++	spin_lock_bh(&sham.lock);
++	dd = list_first_entry(&sham.dev_list, struct omap_sham_dev, list);
++	list_move_tail(&dd->list, &sham.dev_list);
++	ctx->dd = dd;
++	spin_unlock_bh(&sham.lock);
++
++	return dd;
++}
++
+ static int omap_sham_init(struct ahash_request *req)
+ {
+ 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+ 	struct omap_sham_ctx *tctx = crypto_ahash_ctx(tfm);
+ 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
+-	struct omap_sham_dev *dd = NULL, *tmp;
++	struct omap_sham_dev *dd;
+ 	int bs = 0;
+ 
+-	spin_lock_bh(&sham.lock);
+-	if (!tctx->dd) {
+-		list_for_each_entry(tmp, &sham.dev_list, list) {
+-			dd = tmp;
+-			break;
+-		}
+-		tctx->dd = dd;
+-	} else {
+-		dd = tctx->dd;
+-	}
+-	spin_unlock_bh(&sham.lock);
++	ctx->dd = NULL;
+ 
+-	ctx->dd = dd;
++	dd = omap_sham_find_dev(ctx);
++	if (!dd)
++		return -ENODEV;
+ 
+ 	ctx->flags = 0;
+ 
+@@ -1191,8 +1197,7 @@ err1:
+ static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
+ {
+ 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
+-	struct omap_sham_ctx *tctx = crypto_tfm_ctx(req->base.tfm);
+-	struct omap_sham_dev *dd = tctx->dd;
++	struct omap_sham_dev *dd = ctx->dd;
+ 
+ 	ctx->op = op;
+ 
+@@ -1202,7 +1207,7 @@ static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
+ static int omap_sham_update(struct ahash_request *req)
+ {
+ 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
+-	struct omap_sham_dev *dd = ctx->dd;
++	struct omap_sham_dev *dd = omap_sham_find_dev(ctx);
+ 
+ 	if (!req->nbytes)
+ 		return 0;
+@@ -1307,21 +1312,8 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
+ 	struct omap_sham_hmac_ctx *bctx = tctx->base;
+ 	int bs = crypto_shash_blocksize(bctx->shash);
+ 	int ds = crypto_shash_digestsize(bctx->shash);
+-	struct omap_sham_dev *dd = NULL, *tmp;
+ 	int err, i;
+ 
+-	spin_lock_bh(&sham.lock);
+-	if (!tctx->dd) {
+-		list_for_each_entry(tmp, &sham.dev_list, list) {
+-			dd = tmp;
+-			break;
+-		}
+-		tctx->dd = dd;
+-	} else {
+-		dd = tctx->dd;
+-	}
+-	spin_unlock_bh(&sham.lock);
+-
+ 	err = crypto_shash_setkey(tctx->fallback, key, keylen);
+ 	if (err)
+ 		return err;
+@@ -1339,7 +1331,7 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
+ 
+ 	memset(bctx->ipad + keylen, 0, bs - keylen);
+ 
+-	if (!test_bit(FLAGS_AUTO_XOR, &dd->flags)) {
++	if (!test_bit(FLAGS_AUTO_XOR, &sham.flags)) {
+ 		memcpy(bctx->opad, bctx->ipad, bs);
+ 
+ 		for (i = 0; i < bs; i++) {
+@@ -2142,6 +2134,7 @@ static int omap_sham_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	dd->flags |= dd->pdata->flags;
++	sham.flags |= dd->pdata->flags;
+ 
+ 	pm_runtime_use_autosuspend(dev);
+ 	pm_runtime_set_autosuspend_delay(dev, DEFAULT_AUTOSUSPEND_DELAY);
+@@ -2169,6 +2162,9 @@ static int omap_sham_probe(struct platform_device *pdev)
+ 	spin_unlock(&sham.lock);
+ 
+ 	for (i = 0; i < dd->pdata->algs_info_size; i++) {
++		if (dd->pdata->algs_info[i].registered)
++			break;
++
+ 		for (j = 0; j < dd->pdata->algs_info[i].size; j++) {
+ 			struct ahash_alg *alg;
+ 
+@@ -2220,9 +2216,11 @@ static int omap_sham_remove(struct platform_device *pdev)
+ 	list_del(&dd->list);
+ 	spin_unlock(&sham.lock);
+ 	for (i = dd->pdata->algs_info_size - 1; i >= 0; i--)
+-		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--)
++		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--) {
+ 			crypto_unregister_ahash(
+ 					&dd->pdata->algs_info[i].algs_list[j]);
++			dd->pdata->algs_info[i].registered--;
++		}
+ 	tasklet_kill(&dd->done_task);
+ 	pm_runtime_disable(&pdev->dev);
  
 -- 
 2.25.1
