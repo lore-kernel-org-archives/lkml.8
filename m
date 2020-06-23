@@ -2,68 +2,119 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81938C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92571C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59AF720716
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592896402;
-	bh=fMpof1t1tsVHjKLneM0RMY/Ezbl8LEqKmDA8dszw/Ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QWh5jAh9bTj+dHZcTYmWwhk3VjJFFhGcVLL5CZkWuhDHYeS+xKp1xiY4hoFqHCJSt
-	 KEEfc/jMcAIjRjvdTl3itePidEVbwyHf2EotdGS1E3d0kXKJOdcwBxeybNo1zWqWB2
-	 oXIIf4wEvZmbYwmECX7tjKZQYZjnqCV7GsojcV2M=
+	by mail.kernel.org (Postfix) with ESMTP id 73115206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 07:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOzWxCSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbgFWHNU (ORCPT
+        id S1731286AbgFWHPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730977AbgFWHNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:13:20 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 23 Jun 2020 03:15:53 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30250 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730781AbgFWHPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:15:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592896552;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HjkVUr/S/a3Xewkk0G7CYjpjGpF5YBjTPi+qkO5aYLE=;
+        b=dOzWxCSt1De9tmE1t9ZihGLvmfS3jXOufbS488aFatHOThBkk36RfsYPB780EOG3A95Mdq
+        KVmQAY8lWiIvbUj1insLFe9MiwM61cSatLtMMx4m4IEQ49Sm5chMnHviMH1mNn+AvNT6AY
+        5gOVErTYdTXpxHW9Hu4AP7OAGHdkZAA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-464-0YPiTuEgM8O-Zx2HigyzCw-1; Tue, 23 Jun 2020 03:15:48 -0400
+X-MC-Unique: 0YPiTuEgM8O-Zx2HigyzCw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88293206B7;
-        Tue, 23 Jun 2020 07:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592896400;
-        bh=fMpof1t1tsVHjKLneM0RMY/Ezbl8LEqKmDA8dszw/Ig=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VxsyUamE+mhQKKxN1K6z5hQbMAt2M8TVUu9V0y1453+/GN57AOXzF3yi/p2WoYmlE
-         tQ1XlR4DzYYc4YPjMxSIXJsFWOjlR7Qs3rQwJ1FFfBxsfv0/CjrhCXrs+AoNfxE2kX
-         wU9dfc/6JNcNoA3JkFg/24ydg5nUmIiSquEyDnHE=
-Date:   Tue, 23 Jun 2020 15:13:14 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com
-Subject: Re: [PATCH] soc: imx: scu: use devm_kasprintf
-Message-ID: <20200623071314.GU30139@dragon>
-References: <1591176572-9693-1-git-send-email-peng.fan@nxp.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 621081005512;
+        Tue, 23 Jun 2020 07:15:47 +0000 (UTC)
+Received: from [10.72.12.144] (ovpn-12-144.pek2.redhat.com [10.72.12.144])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E80E260F80;
+        Tue, 23 Jun 2020 07:15:41 +0000 (UTC)
+Subject: Re: [PATCH RFC v8 02/11] vhost: use batched get_vq_desc version
+To:     Eugenio Perez Martin <eperezma@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20200611113404.17810-1-mst@redhat.com>
+ <20200611113404.17810-3-mst@redhat.com>
+ <0332b0cf-cf00-9216-042c-e870efa33626@redhat.com>
+ <20200622115946-mutt-send-email-mst@kernel.org>
+ <c56cc86d-a420-79ca-8420-e99db91980fa@redhat.com>
+ <CAJaqyWc3C_Td_SpV97CuemkQH9vH+EL3sGgeWGE82E5gYxZNCA@mail.gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6715f515-3db6-1006-09dd-19464e3ff676@redhat.com>
+Date:   Tue, 23 Jun 2020 15:15:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591176572-9693-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAJaqyWc3C_Td_SpV97CuemkQH9vH+EL3sGgeWGE82E5gYxZNCA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 05:29:32PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Use devm_kasprintf to simplify code
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Applied, thanks.
+On 2020/6/23 下午3:00, Eugenio Perez Martin wrote:
+> On Tue, Jun 23, 2020 at 4:51 AM Jason Wang <jasowang@redhat.com> wrote:
+>>
+>> On 2020/6/23 上午12:00, Michael S. Tsirkin wrote:
+>>> On Wed, Jun 17, 2020 at 11:19:26AM +0800, Jason Wang wrote:
+>>>> On 2020/6/11 下午7:34, Michael S. Tsirkin wrote:
+>>>>>     static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+>>>>>     {
+>>>>>      kfree(vq->descs);
+>>>>> @@ -394,6 +400,9 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
+>>>>>      for (i = 0; i < dev->nvqs; ++i) {
+>>>>>              vq = dev->vqs[i];
+>>>>>              vq->max_descs = dev->iov_limit;
+>>>>> +           if (vhost_vq_num_batch_descs(vq) < 0) {
+>>>>> +                   return -EINVAL;
+>>>>> +           }
+>>>> This check breaks vdpa which set iov_limit to zero. Consider iov_limit is
+>>>> meaningless to vDPA, I wonder we can skip the test when device doesn't use
+>>>> worker.
+>>>>
+>>>> Thanks
+>>> It doesn't need iovecs at all, right?
+>>>
+>>> -- MST
+>>
+>> Yes, so we may choose to bypass the iovecs as well.
+>>
+>> Thanks
+>>
+> I think that the kmalloc_array returns ZERO_SIZE_PTR for all of them
+> in that case, so I didn't bother to skip the kmalloc_array parts.
+> Would you prefer to skip them all and let them NULL? Or have I
+> misunderstood what you mean?
+
+
+I'm ok with either approach, but my understanding is that Michael wants 
+to skip them all.
+
+Thanks
+
+
+>
+> Thanks!
+>
+
