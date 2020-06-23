@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A594C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21DC720656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6CB20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945944;
-	bh=DdeM3ZpabKSxL178gInYFG9o/1ytqfpbP4udhnBgMxM=;
+	s=default; t=1592945952;
+	bh=DqrUCMVWllPlXdsxEyymM/y1sBAdLF5qy2xISe8LlrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1Kykyq6B3QbVALfBon5D1zblkHdpl62I1cIm6gbm78HNqpSm2nHscs2YBNAP6MbY
-	 x7+Gg/TxSjhOosGaiWF1a+vBxDPhQCAVhfM37ZjgUutjiPhUr+CINx3ygZwlnsCUub
-	 TqnRyHZM/td7yWfKM7GmuTbb8Lj9tWH8PZsNnN90=
+	b=mNKqiay/F8gHpWrnznRC4hBr2ArtSnJDydsC51IQCcuReMa5quQHuCPC0wdXG7nur
+	 dJh/k3mjKpjXyXZa36TPK8JJgraFYrbEKnAYBpzgmjhDXXryLgfvNWLbb6KIk6SigI
+	 KPr4tykUTfRjYalpl5yClayT5RE7e+Wf6ggIsWQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403994AbgFWU66 (ORCPT
+        id S2392179AbgFWUlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:58:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388315AbgFWUlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:24 -0400
+        id S2392167AbgFWUlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4154420675;
-        Tue, 23 Jun 2020 20:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D112078A;
+        Tue, 23 Jun 2020 20:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944884;
-        bh=DdeM3ZpabKSxL178gInYFG9o/1ytqfpbP4udhnBgMxM=;
+        s=default; t=1592944866;
+        bh=DqrUCMVWllPlXdsxEyymM/y1sBAdLF5qy2xISe8LlrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7LqLGyzlFqDrcnwjdaLvPgxeMyIksngv9FKQEt2lFM6Rp9qpqpfbHezPLITpvVFi
-         KsWbzivLhOiyRM6SrAj6zuqUcbUuxCcdd1hMH8HRsUjL8x2ylXYkVfV1ybcyXW1MYX
-         DGIjeQYRY7J52AGwGVgycjtBI2DbzQbXUS5SSU0Y=
+        b=e4KLz4VHPhmpQZWIbhNpWW/FvJQVk3TO4H67dJxc4x2S9ULNKTn41m+Yqz+XX5OtR
+         2kDCSFUtxiWxO5MmgaGf5JQqn2trR9Ne04nkhSzKyn6QsXQrhNyyufsO4JW4hXR0sA
+         ajJ1ON94/YS4vPRxkOTx6kLntgFtl9TG5MQqYei0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 132/206] pinctrl: freescale: imx: Fix an error handling path in imx_pinctrl_probe()
-Date:   Tue, 23 Jun 2020 21:57:40 +0200
-Message-Id: <20200623195323.477086110@linuxfoundation.org>
+Subject: [PATCH 4.19 155/206] ASoC: Intel: bytcr_rt5640: Add quirk for Toshiba Encore WT10-A tablet
+Date:   Tue, 23 Jun 2020 21:58:03 +0200
+Message-Id: <20200623195324.619315788@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,71 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 11d8da5cabf7c6c3263ba2cd9c00260395867048 ]
+[ Upstream commit 199a5e8fda54ab3c8c6f6bf980c004e97ebf5ccb ]
 
-'pinctrl_unregister()' should not be called to undo
-'devm_pinctrl_register_and_init()', it is already handled by the framework.
+The Toshiba Encore WT10-A tablet almost fully works with the default
+settings for Bay Trail CR devices. The only issue is that it uses a
+digital mic. connected the the DMIC1 input instead of an analog mic.
 
-This simplifies the error handling paths of the probe function.
-The 'imx_free_resources()' can be removed as well.
+Add a quirk for this model using the default settings with the input-map
+replaced with BYT_RT5640_DMIC1_MAP.
 
-Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20200530204955.588962-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200608204634.93407-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index b04edc22dad76..90d414dd792cb 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -662,16 +662,6 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
- 	return 0;
- }
- 
--/*
-- * imx_free_resources() - free memory used by this driver
-- * @info: info driver instance
-- */
--static void imx_free_resources(struct imx_pinctrl *ipctl)
--{
--	if (ipctl->pctl)
--		pinctrl_unregister(ipctl->pctl);
--}
--
- int imx_pinctrl_probe(struct platform_device *pdev,
- 		      const struct imx_pinctrl_soc_info *info)
- {
-@@ -762,21 +752,16 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 					     &ipctl->pctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "could not register IMX pinctrl driver\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	ret = imx_pinctrl_probe_dt(pdev, ipctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "fail to probe dt properties\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	dev_info(&pdev->dev, "initialized IMX pinctrl driver\n");
- 
- 	return pinctrl_enable(ipctl->pctl);
--
--free:
--	imx_free_resources(ipctl);
--
--	return ret;
- }
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 5dfc17987b2b9..0dcd249877c55 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -724,6 +724,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_JD_NOT_INV |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Toshiba Encore WT10-A */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "TOSHIBA WT10-A-103"),
++		},
++		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
++					BYT_RT5640_JD_SRC_JD1_IN4P |
++					BYT_RT5640_OVCD_TH_2000UA |
++					BYT_RT5640_OVCD_SF_0P75 |
++					BYT_RT5640_SSP0_AIF2 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{	/* Catch-all for generic Insyde tablets, must be last */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
 -- 
 2.25.1
 
