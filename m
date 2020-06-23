@@ -5,26 +5,27 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8405A20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9536E206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbgFWOf2 (ORCPT
+        id S1732979AbgFWOfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:35:28 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:59737 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732892AbgFWOfV (ORCPT
+        Tue, 23 Jun 2020 10:35:30 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:35381 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732900AbgFWOfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:35:21 -0400
+        Tue, 23 Jun 2020 10:35:23 -0400
+X-Originating-IP: 90.76.143.236
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C22AA200012;
-        Tue, 23 Jun 2020 14:35:18 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 38BE860006;
+        Tue, 23 Jun 2020 14:35:19 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -32,9 +33,9 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next v4 8/8] MIPS: dts: ocelot: describe the load/save GPIO
-Date:   Tue, 23 Jun 2020 16:30:14 +0200
-Message-Id: <20200623143014.47864-9-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v4 1/8] net: phy: add support for a common probe between shared PHYs
+Date:   Tue, 23 Jun 2020 16:30:07 +0200
+Message-Id: <20200623143014.47864-2-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200623143014.47864-1-antoine.tenart@bootlin.com>
 References: <20200623143014.47864-1-antoine.tenart@bootlin.com>
@@ -45,75 +46,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
+Shared PHYs (PHYs in the same hardware package) may have shared
+registers and their drivers would usually need to share information.
+There is currently a way to have a shared (part of the) init, by using
+phy_package_init_once(). This patch extends the logic to share parts of
+the probe to allow sharing the initialization of locks or resources
+retrieval.
 
-This patch adds a description of the load/save GPIN pin, used in the
-VSC8584 PHY for timestamping operations. The related pinctrl description
-is also added.
-
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- arch/mips/boot/dts/mscc/ocelot_pcb120.dts | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ include/linux/phy.h | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/boot/dts/mscc/ocelot_pcb120.dts b/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
-index 33991fd209f5..897de5025d7f 100644
---- a/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
-+++ b/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
-@@ -3,6 +3,7 @@
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 9248dd2ce4ca..457489f1951c 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -244,7 +244,8 @@ struct phy_package_shared {
+ };
  
- /dts-v1/;
+ /* used as bit number in atomic bitops */
+-#define PHY_SHARED_F_INIT_DONE 0
++#define PHY_SHARED_F_INIT_DONE  0
++#define PHY_SHARED_F_PROBE_DONE 1
  
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/phy/phy-ocelot-serdes.h>
- #include "ocelot.dtsi"
-@@ -25,6 +26,11 @@ phy_int_pins: phy_int_pins {
- 		pins = "GPIO_4";
- 		function = "gpio";
- 	};
+ /*
+  * The Bus class for PHYs.  Devices which provide access to
+@@ -1558,14 +1559,25 @@ static inline int __phy_package_write(struct phy_device *phydev,
+ 	return __mdiobus_write(phydev->mdio.bus, shared->addr, regnum, val);
+ }
+ 
+-static inline bool phy_package_init_once(struct phy_device *phydev)
++static inline bool __phy_package_set_once(struct phy_device *phydev,
++					  unsigned int b)
+ {
+ 	struct phy_package_shared *shared = phydev->shared;
+ 
+ 	if (!shared)
+ 		return false;
+ 
+-	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
++	return !test_and_set_bit(b, &shared->flags);
++}
 +
-+	phy_load_save_pins: phy_load_save_pins {
-+		pins = "GPIO_10";
-+		function = "ptp2";
-+	};
- };
++static inline bool phy_package_init_once(struct phy_device *phydev)
++{
++	return __phy_package_set_once(phydev, PHY_SHARED_F_INIT_DONE);
++}
++
++static inline bool phy_package_probe_once(struct phy_device *phydev)
++{
++	return __phy_package_set_once(phydev, PHY_SHARED_F_PROBE_DONE);
+ }
  
- &mdio0 {
-@@ -34,27 +40,31 @@ &mdio0 {
- &mdio1 {
- 	status = "okay";
- 	pinctrl-names = "default";
--	pinctrl-0 = <&miim1>, <&phy_int_pins>;
-+	pinctrl-0 = <&miim1>, <&phy_int_pins>, <&phy_load_save_pins>;
- 
- 	phy7: ethernet-phy@0 {
- 		reg = <0>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- 	phy6: ethernet-phy@1 {
- 		reg = <1>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- 	phy5: ethernet-phy@2 {
- 		reg = <2>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- 	phy4: ethernet-phy@3 {
- 		reg = <3>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-parent = <&gpio>;
-+		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
- 	};
- };
- 
+ extern struct bus_type mdio_bus_type;
 -- 
 2.26.2
 
