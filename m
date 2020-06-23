@@ -2,222 +2,159 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E469C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F610C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 033F22053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945436;
-	bh=MfHV6n29EQkpR0iW3A+P0eGP/4sOVVAR6DlSWS+zrhU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcS4c7l+RkWqwcqx3cUbBxKL4Bqtrj7nuy+lMUHyzAB1odC7SnyCBTQlPEzw/mSAP
-	 v68a5u5uC17UOy0/Xz7DHAw6WDRv2d7tp64Y437UGtYaM8Hj3pqDfjUu4uOSthMZDf
-	 8ZwmiZjpZxfdk4SU4sg8Z4GskuNVsyHL76Sy0K4M=
+	by mail.kernel.org (Postfix) with ESMTP id 7C10F2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tK0NSCo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403965AbgFWUuF (ORCPT
+        id S2393159AbgFWUuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392963AbgFWUt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:49:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 730FB217A0;
-        Tue, 23 Jun 2020 20:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945367;
-        bh=MfHV6n29EQkpR0iW3A+P0eGP/4sOVVAR6DlSWS+zrhU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iX82BPOgICXmBHottmDyNzs75JhFSYXo3X4Xte32yF9NHoUM1gso1FnOXSceJAOvV
-         yG16AeOzKkBGWVpcjynW274MWKhteLT3ASWDWbOjERyIV+K22ICyxIn1yY9F6NI/Q0
-         W8nO+TLUS1qRPXfxcvL7ll5Wx4liMB95zM0ikUzE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.14 136/136] net: core: device_rename: Use rwsem instead of a seqcount
-Date:   Tue, 23 Jun 2020 21:59:52 +0200
-Message-Id: <20200623195310.673383038@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
-References: <20200623195303.601828702@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 16:50:37 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54833 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388016AbgFWUub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:50:31 -0400
+Received: from [IPv6:2601:646:8600:3281:793b:110b:9a95:572b] ([IPv6:2601:646:8600:3281:793b:110b:9a95:572b])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 05NKnsMA2994193
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Tue, 23 Jun 2020 13:49:59 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 05NKnsMA2994193
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020052301; t=1592945401;
+        bh=ZPhdAYw0DZqPh39NH3i9vcQbK+fMod7/4PWe2cDAUow=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=tK0NSCo5lz87kwexbz8w4k4xxP53yygNw6yw50FeH8gxO7t6R24X8Sudq073jIXrR
+         Cv2EAMR4/nESFO8mhlNay1uPywCxbHWaKCMWcpmJNi2wgL5RnozFeIfcD1krRv8YTq
+         UeYy6VuTu8pu+4UxCE33YGkSCI7+ts8j3EMRkLixnRn2303bvLYUL1fFQ+Bdqhv7D2
+         oOfrqtNMGrsjaypDOT5Eq2ZVSFJFVY+PvkcyjYG4Y8Ijh5QakFbo7v8SafiDPgWWye
+         8p8WyMlTiHPtj9CEDC4wO43Hm9UC9JhBffHILIEkfYIxTSmgbOrmfyAVVZQyJwnlRi
+         bsghPTlPA3nLA==
+Date:   Tue, 23 Jun 2020 13:49:47 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMzpN2jA3rdfCA-UYGEtRPrYCChK1wzHfVUhbrHiqGL3iL4PBA@mail.gmail.com>
+References: <20200616142315.375918-1-brgerst@gmail.com> <20200616142315.375918-2-brgerst@gmail.com> <CALCETrXUjM9g2e5v7chFXWoadvUO_7cqhGvuFn2s7YVpyff__Q@mail.gmail.com> <CAMzpN2jA3rdfCA-UYGEtRPrYCChK1wzHfVUhbrHiqGL3iL4PBA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] x86/x32: Use __x64 prefix for X32 compat syscalls
+To:     Brian Gerst <brgerst@gmail.com>, Andy Lutomirski <luto@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>
+From:   hpa@zytor.com
+Message-ID: <6D37758F-E61F-4DF9-9D86-C02DF91B4BDE@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmed S. Darwish <a.darwish@linutronix.de>
+On June 16, 2020 10:17:29 AM PDT, Brian Gerst <brgerst@gmail=2Ecom> wrote:
+>On Tue, Jun 16, 2020 at 12:49 PM Andy Lutomirski <luto@kernel=2Eorg>
+>wrote:
+>>
+>> On Tue, Jun 16, 2020 at 7:23 AM Brian Gerst <brgerst@gmail=2Ecom>
+>wrote:
+>> >
+>> > The ABI prefix for syscalls specifies the argument register
+>mapping, so
+>> > there is no specific reason to continue using the __x32 prefix for
+>the
+>> > compat syscalls=2E  This change will allow using native syscalls in
+>the X32
+>> > specific portion of the syscall table=2E
+>>
+>> Okay, I realize that the x86 syscall machinery is held together by
+>> duct tape and a lot of luck, but:
+>>
+>> >
+>> > Signed-off-by: Brian Gerst <brgerst@gmail=2Ecom>
+>> > ---
+>> >  arch/x86/entry/syscall_x32=2Ec           |  8 +++-----
+>> >  arch/x86/include/asm/syscall_wrapper=2Eh | 10 +++++-----
+>> >  2 files changed, 8 insertions(+), 10 deletions(-)
+>> >
+>> > diff --git a/arch/x86/entry/syscall_x32=2Ec
+>b/arch/x86/entry/syscall_x32=2Ec
+>> > index 3d8d70d3896c=2E=2Ef993e6254043 100644
+>> > --- a/arch/x86/entry/syscall_x32=2Ec
+>> > +++ b/arch/x86/entry/syscall_x32=2Ec
+>> > @@ -9,15 +9,13 @@
+>> >  #include <asm/syscall=2Eh>
+>> >
+>> >  #define __SYSCALL_64(nr, sym)
+>> > +#define __SYSCALL_COMMON(nr, sym) __SYSCALL_X32(nr, sym)
+>> >
+>> > -#define __SYSCALL_X32(nr, sym) extern long __x32_##sym(const
+>struct pt_regs *);
+>> > -#define __SYSCALL_COMMON(nr, sym) extern long __x64_##sym(const
+>struct pt_regs *);
+>> > +#define __SYSCALL_X32(nr, sym) extern long __x64_##sym(const
+>struct pt_regs *);
+>> >  #include <asm/syscalls_64=2Eh>
+>> >  #undef __SYSCALL_X32
+>> > -#undef __SYSCALL_COMMON
+>> >
+>> > -#define __SYSCALL_X32(nr, sym) [nr] =3D __x32_##sym,
+>> > -#define __SYSCALL_COMMON(nr, sym) [nr] =3D __x64_##sym,
+>> > +#define __SYSCALL_X32(nr, sym) [nr] =3D __x64_##sym,
+>> >
+>> >  asmlinkage const sys_call_ptr_t
+>x32_sys_call_table[__NR_x32_syscall_max+1] =3D {
+>> >         /*
+>> > diff --git a/arch/x86/include/asm/syscall_wrapper=2Eh
+>b/arch/x86/include/asm/syscall_wrapper=2Eh
+>> > index a84333adeef2=2E=2E267fae9904ff 100644
+>> > --- a/arch/x86/include/asm/syscall_wrapper=2Eh
+>> > +++ b/arch/x86/include/asm/syscall_wrapper=2Eh
+>> > @@ -17,7 +17,7 @@ extern long __ia32_sys_ni_syscall(const struct
+>pt_regs *regs);
+>> >   * __x64_sys_*()         - 64-bit native syscall
+>> >   * __ia32_sys_*()        - 32-bit native syscall or common compat
+>syscall
+>> >   * __ia32_compat_sys_*() - 32-bit compat syscall
+>>
+>> On a 64-bit kernel, an "ia32" compat syscall is __ia32_compat_sys_*,
+>but=2E=2E=2E
+>>
+>> > - * __x32_compat_sys_*()  - 64-bit X32 compat syscall
+>> > + * __x64_compat_sys_*()  - 64-bit X32 compat syscall
+>>
+>> Now an x32 compat syscall is __x64_compat?  This seems nonsensical=2E
+>
+>Again, think of it as how the registers are mapped, not which syscall
+>table it belongs to=2E  X32 and X64 are identical in that regard=2E
+>
+>> I'm also a bit confused as to how this is even necessary for your
+>> other patch=2E
+>
+>This came out of discussion on Cristoph's patch to combine compat
+>execve*() into the native version:
+>https://lore=2Ekernel=2Eorg/lkml/20200615141239=2EGA12951@lst=2Ede/
+>
+>The bottom line is that marking a syscall as X32-only in the syscall
+>table forces an __x32 prefix even if it's not a "compat" syscall=2E
+>This causes a link failure=2E  This is just another quirk caused by how
+>X32 was designed=2E  The solution is to make the prefix consistent for
+>the whole table=2E  The other alternative is to use __x32 for all the
+>common syscalls=2E
+>
+>The second patch isn't really necessary, but it makes more sense to
+>not have a compat syscall with no corresponding native version=2E
+>
+>--
+>Brian Gerst
 
-[ Upstream commit 11d6011c2cf29f7c8181ebde6c8bc0c4d83adcd7 ]
-
-Sequence counters write paths are critical sections that must never be
-preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
-
-Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
-netdev name retrieval.") handled a deadlock, observed with
-CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
-infinitely spinning: it got scheduled after the seqcount write side
-blocked inside its own critical section.
-
-To fix that deadlock, among other issues, the commit added a
-cond_resched() inside the read side section. While this will get the
-non-preemptible kernel eventually unstuck, the seqcount reader is fully
-exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
-
-The fix is also still broken: if the seqcount reader belongs to a
-real-time scheduling policy, it can spin forever and the kernel will
-livelock.
-
-Disabling preemption over the seqcount write side critical section will
-not work: inside it are a number of GFP_KERNEL allocations and mutex
-locking through the drivers/base/ :: device_rename() call chain.
-
->From all the above, replace the seqcount with a rwsem.
-
-Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
-Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
-Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
-Cc: <stable@vger.kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com> [ v1 missing up_read() on error exit ]
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com> [ v1 missing up_read() on error exit ]
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/core/dev.c | 40 ++++++++++++++++++----------------------
- 1 file changed, 18 insertions(+), 22 deletions(-)
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 9e4a00462f5c7..0aaa1426450fa 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -83,6 +83,7 @@
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
- #include <linux/mutex.h>
-+#include <linux/rwsem.h>
- #include <linux/string.h>
- #include <linux/mm.h>
- #include <linux/socket.h>
-@@ -194,7 +195,7 @@ static DEFINE_SPINLOCK(napi_hash_lock);
- static unsigned int napi_gen_id = NR_CPUS;
- static DEFINE_READ_MOSTLY_HASHTABLE(napi_hash, 8);
- 
--static seqcount_t devnet_rename_seq;
-+static DECLARE_RWSEM(devnet_rename_sem);
- 
- static inline void dev_base_seq_inc(struct net *net)
- {
-@@ -898,33 +899,28 @@ EXPORT_SYMBOL(dev_get_by_napi_id);
-  *	@net: network namespace
-  *	@name: a pointer to the buffer where the name will be stored.
-  *	@ifindex: the ifindex of the interface to get the name from.
-- *
-- *	The use of raw_seqcount_begin() and cond_resched() before
-- *	retrying is required as we want to give the writers a chance
-- *	to complete when CONFIG_PREEMPTION is not set.
-  */
- int netdev_get_name(struct net *net, char *name, int ifindex)
- {
- 	struct net_device *dev;
--	unsigned int seq;
-+	int ret;
- 
--retry:
--	seq = raw_seqcount_begin(&devnet_rename_seq);
-+	down_read(&devnet_rename_sem);
- 	rcu_read_lock();
-+
- 	dev = dev_get_by_index_rcu(net, ifindex);
- 	if (!dev) {
--		rcu_read_unlock();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto out;
- 	}
- 
- 	strcpy(name, dev->name);
--	rcu_read_unlock();
--	if (read_seqcount_retry(&devnet_rename_seq, seq)) {
--		cond_resched();
--		goto retry;
--	}
- 
--	return 0;
-+	ret = 0;
-+out:
-+	rcu_read_unlock();
-+	up_read(&devnet_rename_sem);
-+	return ret;
- }
- 
- /**
-@@ -1189,10 +1185,10 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 	if (dev->flags & IFF_UP)
- 		return -EBUSY;
- 
--	write_seqcount_begin(&devnet_rename_seq);
-+	down_write(&devnet_rename_sem);
- 
- 	if (strncmp(newname, dev->name, IFNAMSIZ) == 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return 0;
- 	}
- 
-@@ -1200,7 +1196,7 @@ int dev_change_name(struct net_device *dev, const char *newname)
- 
- 	err = dev_get_valid_name(net, dev, newname);
- 	if (err < 0) {
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return err;
- 	}
- 
-@@ -1215,11 +1211,11 @@ rollback:
- 	if (ret) {
- 		memcpy(dev->name, oldname, IFNAMSIZ);
- 		dev->name_assign_type = old_assign_type;
--		write_seqcount_end(&devnet_rename_seq);
-+		up_write(&devnet_rename_sem);
- 		return ret;
- 	}
- 
--	write_seqcount_end(&devnet_rename_seq);
-+	up_write(&devnet_rename_sem);
- 
- 	netdev_adjacent_rename_links(dev, oldname);
- 
-@@ -1240,7 +1236,7 @@ rollback:
- 		/* err >= 0 after dev_alloc_name() or stores the first errno */
- 		if (err >= 0) {
- 			err = ret;
--			write_seqcount_begin(&devnet_rename_seq);
-+			down_write(&devnet_rename_sem);
- 			memcpy(dev->name, oldname, IFNAMSIZ);
- 			memcpy(oldname, newname, IFNAMSIZ);
- 			dev->name_assign_type = old_assign_type;
--- 
-2.25.1
-
-
-
+Please don't use "x64" to mean anything other than x86-64, as some, ahem, =
+other OSes use those as synonyms=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
