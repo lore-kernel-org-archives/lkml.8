@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CECAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B7820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380DD20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946287;
-	bh=e5olAQa2168Y12AwxA8wag4NGC2SyeuofjYAZkfcgpE=;
+	s=default; t=1592946294;
+	bh=BE6oLgiUmzw6qzXLqDvqiekNe/aQEilmdlAAm27gsOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lZx5Vf7p1RItFwwDe0GK3r6HCqmGdENtGHg4Zd4r9rCqNtbQEE60RontxepMOW83N
-	 oSQH11cx3zG2KU8cy1zBapmqi3f2FOe9q6aMgTG9W7KJcsXhEx+2n0xMomj92hu287
-	 pz5OErF4XfUS/0MwzYQYaHj23uRZRI6oqw+aWc1M=
+	b=vkPTQWpuxX8tclcWl/T6Th4T/h34ilPrgPxFeNN39z33WSEGcZT45X6iH0Iqr6Jyw
+	 D+Ts+Jv2We5iO4WlZ2wrJEzRFmPcmAEBnwdSziBlvPHbEK9y/Q53Ml+QnNPXRyxJBh
+	 AhfNibVjrsxfgT6pmYebaeqJ31PflrtjPO0klw9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391887AbgFWUhr (ORCPT
+        id S2393020AbgFWVEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391869AbgFWUhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:37:34 -0400
+        id S2391885AbgFWUhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DA92080C;
-        Tue, 23 Jun 2020 20:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 391AA20836;
+        Tue, 23 Jun 2020 20:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944654;
-        bh=e5olAQa2168Y12AwxA8wag4NGC2SyeuofjYAZkfcgpE=;
+        s=default; t=1592944667;
+        bh=BE6oLgiUmzw6qzXLqDvqiekNe/aQEilmdlAAm27gsOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ui40uzQpDB/QIWVjIfr8/UgAAoJSGMK+cxfP8tmEZ74y3vEmiNmTkikLFMrgTCH5P
-         mxLEJAzqIJFzZaa4PR3XKVtMOGHqkWE0Zaw9ba6jLhamP8lxUC+ly5Q29enOc7okUh
-         OurQq1lgfrnYlfVh7C/lJgfIAx+ukUiqv9yvf8Ts=
+        b=JVrwwiWIgx1B6uRRz3YNTlvK0p5Sg/CnyiikPSl3j2u8cfZzZ8PuL5ho9h7kN5lw0
+         /lBDccUoMzgteg0iZxxVcS+HA58CDmaWvGq06T3OBIi25EnbUIz+2A5FbCQ2c8iNEJ
+         UJPum9S/YVc+EU0c7eRrg/P4toSZCaI8hK7SATGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/206] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Tue, 23 Jun 2020 21:56:42 +0200
-Message-Id: <20200623195320.585211060@linuxfoundation.org>
+Subject: [PATCH 4.19 079/206] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
+Date:   Tue, 23 Jun 2020 21:56:47 +0200
+Message-Id: <20200623195320.832856559@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,53 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+In function rockchip_dt_node_to_map, a new_map variable is
+allocated by:
 
-Remove this exclusion so we can enable ASPM on these links.
+new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+		       GFP_KERNEL);
 
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
+This uses devres and attaches new_map to the pinctrl driver.
+This cause a leak since new_map is not released when the probed
+driver is removed. Fix it by using kcalloc to allocate new_map
+and free it in `rockchip_dt_free_map`
 
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index db2efa219028c..6e50f84733b75 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -633,16 +633,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 8d83817935dae..005df24f5b3f1 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -507,8 +507,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	}
  
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
+ 	map_num += grp->npins;
+-	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+-								GFP_KERNEL);
++
++	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
+ 	if (!new_map)
+ 		return -ENOMEM;
  
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+@@ -518,7 +518,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	/* create mux map */
+ 	parent = of_get_parent(np);
+ 	if (!parent) {
+-		devm_kfree(pctldev->dev, new_map);
++		kfree(new_map);
+ 		return -EINVAL;
+ 	}
+ 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
+@@ -545,6 +545,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
+ 				    struct pinctrl_map *map, unsigned num_maps)
+ {
++	kfree(map);
+ }
+ 
+ static const struct pinctrl_ops rockchip_pctrl_ops = {
 -- 
 2.25.1
 
