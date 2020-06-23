@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE39FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC13C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA0B20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A182020706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933801;
-	bh=BXpjKMRjKVDNEazo5/y3JtFBbZ+zFAHaaJVS6tJxJAU=;
+	s=default; t=1592933810;
+	bh=+fjJTwtTffvmuCdEVZGk9qwlYddz6jrFPC0zOsFVzGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sq6DcY9fFUxLLEj3k7AqoWwX8gD3PRFaWcmi8BE/L5fl06a4H/3CGT5erg6pmDGWz
-	 twqM566lUzepo8eHhQDZhIJoRtdzXh5p5Sljs9vNCMh23N/wgjNnSSCWOdarWA/rPx
-	 K0k+zPwGEM9dHq4BrdD5GfCQery/8HTV5KnLh+I4=
+	b=f0fO5IPgpZXvj/lwAPMQ6/I4yQlFoOUm4IYawTJsZXG+8sGEIMaEaAcjuDOict2rk
+	 epE2fFc0nNfohj2XaK5bOQP2jYFra0t3K4RBVt5WKZKNkz0aLT4YjDq8AAJDmXcM+q
+	 HEC0vUch5uOg/AAMmgks47epaPchoTKkgEUsucl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387613AbgFWRgk (ORCPT
+        id S2387661AbgFWRgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387579AbgFWRg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:28 -0400
+        id S2387601AbgFWRgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 702F6207D0;
-        Tue, 23 Jun 2020 17:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA5E2078C;
+        Tue, 23 Jun 2020 17:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933788;
-        bh=BXpjKMRjKVDNEazo5/y3JtFBbZ+zFAHaaJVS6tJxJAU=;
+        s=default; t=1592933797;
+        bh=+fjJTwtTffvmuCdEVZGk9qwlYddz6jrFPC0zOsFVzGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=df4uIvQV8WHSzz9yTfCSUuW/6vc4BD6avJuNVgoL47JAS+4YtmVYzBH0DyN/S75sE
-         xl/Ew6HSHnBXWMbHylo0XwVRub/lzh1I535ENFhBu82W1nsQ8It+lSitCqKOSbEgk+
-         EQL3zA2JCGOidfTA/skZ2IDtgl0LK1nPbhwWVm7w=
+        b=S3REjEmFIajUxlFWnP3tnutwDccoOex/uymkJ6UkSf5JvNpP3XmjwLD/tMFL6yFof
+         dCfGzKIj59LmgCRijGfXTCDE5tzxk2eMeo5Oi5Ryr4rlIX9UdG4HMVAL9MitFfFzWN
+         Wd8cZbqTSfvibwhnnDTxqbgmyhmxyTw/rh0ejZm4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 23/24] block: update hctx map when use multiple maps
-Date:   Tue, 23 Jun 2020 13:35:58 -0400
-Message-Id: <20200623173559.1355728-23-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/15] hwrng: ks-sa - Fix runtime PM imbalance on error
+Date:   Tue, 23 Jun 2020 13:36:20 -0400
+Message-Id: <20200623173630.1355971-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
-References: <20200623173559.1355728-1-sashal@kernel.org>
+In-Reply-To: <20200623173630.1355971-1-sashal@kernel.org>
+References: <20200623173630.1355971-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,57 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiping Zhang <zhangweiping@didiglobal.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit fe35ec58f0d339221643287bbb7cee15c93a5389 ]
+[ Upstream commit 95459261c99f1621d90bc628c2a48e60b7cf9a88 ]
 
-There is an issue when tune the number for read and write queues,
-if the total queue count was not changed. The hctx->type cannot
-be updated, since __blk_mq_update_nr_hw_queues will return directly
-if the total queue count has not been changed.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-Reproduce:
-
-dmesg | grep "default/read/poll"
-[    2.607459] nvme nvme0: 48/0/0 default/read/poll queues
-cat /sys/kernel/debug/block/nvme0n1/hctx*/type | sort | uniq -c
-     48 default
-
-tune the write queues to 24:
-echo 24 > /sys/module/nvme/parameters/write_queues
-echo 1 > /sys/block/nvme0n1/device/reset_controller
-
-dmesg | grep "default/read/poll"
-[  433.547235] nvme nvme0: 24/24/0 default/read/poll queues
-
-cat /sys/kernel/debug/block/nvme0n1/hctx*/type | sort | uniq -c
-     48 default
-
-The driver's hardware queue mapping is not same as block layer.
-
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/char/hw_random/ks-sa-rng.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 0550366e25d8b..f1b930a300a38 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3279,7 +3279,9 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
- 
- 	if (set->nr_maps == 1 && nr_hw_queues > nr_cpu_ids)
- 		nr_hw_queues = nr_cpu_ids;
--	if (nr_hw_queues < 1 || nr_hw_queues == set->nr_hw_queues)
-+	if (nr_hw_queues < 1)
-+		return;
-+	if (set->nr_maps == 1 && nr_hw_queues == set->nr_hw_queues)
- 		return;
- 
- 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+diff --git a/drivers/char/hw_random/ks-sa-rng.c b/drivers/char/hw_random/ks-sa-rng.c
+index 62c6696c1dbd8..b6d7db362b217 100644
+--- a/drivers/char/hw_random/ks-sa-rng.c
++++ b/drivers/char/hw_random/ks-sa-rng.c
+@@ -216,6 +216,7 @@ static int ks_sa_rng_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to enable SA power-domain\n");
++		pm_runtime_put_noidle(dev);
+ 		pm_runtime_disable(dev);
+ 		return ret;
+ 	}
 -- 
 2.25.1
 
