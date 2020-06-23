@@ -2,111 +2,76 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B0FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95256C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27EF620874
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF1620720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592878049;
+	bh=GbdniXafrEcdmTW4VyCq93Ez9AnCcjcIK81Hhg5Zeto=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=W5rPRy++GiPYOeFAlM8phXOHlRWgAc55jaynYZNuwRmG9w1KpOGkemSQGA1LZCDaW
+	 Cj5LXEOITXwC9l5BsBNqjvTjQnxtukiFHpR/8SvQK4DKhgENxmmU/aln2q6FnLfZxm
+	 20u8nXb0Sb9LQ4YJcKkwb2RMSHFtL2wN2Q4OB9Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbgFWCHV convert rfc822-to-8bit (ORCPT
+        id S1731351AbgFWCH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:07:21 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2549 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730845AbgFWCHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:07:20 -0400
-Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id D1846DD068501499BC45;
-        Tue, 23 Jun 2020 10:07:17 +0800 (CST)
-Received: from DGGEMI422-HUB.china.huawei.com (10.1.199.151) by
- dggemi405-hub.china.huawei.com (10.3.17.143) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Tue, 23 Jun 2020 10:07:17 +0800
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
- dggemi422-hub.china.huawei.com ([10.1.199.151]) with mapi id 14.03.0487.000;
- Tue, 23 Jun 2020 10:07:15 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: RE: [PATCH] mm: cma: Return cma->name directly in cma_get_name
-Thread-Topic: [PATCH] mm: cma: Return cma->name directly in cma_get_name
-Thread-Index: AQHWSQHe9Q6zYWq9cEyE52thANJ/xKjlcxgA
-Date:   Tue, 23 Jun 2020 02:07:15 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD2516153@DGGEMI525-MBS.china.huawei.com>
-References: <20200623015840.621964-1-natechancellor@gmail.com>
-In-Reply-To: <20200623015840.621964-1-natechancellor@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.202.192]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 22 Jun 2020 22:07:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731319AbgFWCHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 22:07:25 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23F0420768;
+        Tue, 23 Jun 2020 02:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592878045;
+        bh=GbdniXafrEcdmTW4VyCq93Ez9AnCcjcIK81Hhg5Zeto=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=D7QR/ZXs/aoR3OtfdEuazL7m4FmnbErGBM6PgBHwGKdicrJmVD0dVccwXY0lWMO/7
+         LGNqXQJi1me6DIoi/Wa+p9YOZYgtsU+6ekvP1zKNhsUOO5pAvu2QVvpv7Pwg9vtOkV
+         y1rLIecf4ZCXuAvNywlR8+0nLisOcs9n5GHkNuDk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200603154329.31579-3-aford173@gmail.com>
+References: <20200603154329.31579-1-aford173@gmail.com> <20200603154329.31579-3-aford173@gmail.com>
+Subject: Re: [PATCH V3 3/3] clk: vc5: Enable addition output configurations of the Versaclock
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org
+Date:   Mon, 22 Jun 2020 19:07:24 -0700
+Message-ID: <159287804429.62212.3235888147816108649@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Nathan Chancellor [mailto:natechancellor@gmail.com]
-> Sent: Tuesday, June 23, 2020 1:59 PM
-> To: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org; linux-kernel@vger.kernel.org;
-> clang-built-linux@googlegroups.com; Song Bao Hua (Barry Song)
-> <song.bao.hua@hisilicon.com>; Nathan Chancellor
-> <natechancellor@gmail.com>
-> Subject: [PATCH] mm: cma: Return cma->name directly in cma_get_name
-> 
-> clang warns:
-> 
-> mm/cma.c:55:14: warning: address of array 'cma->name' will always
-> evaluate to 'true' [-Wpointer-bool-conversion]
->         return cma->name ? cma->name : "(undefined)";
->                ~~~~~^~~~ ~
-> 1 warning generated.
-> 
-> After commit e7f0557d7de9 ("mm: cma: fix the name of CMA areas"),
-> cma->name will be an array with some value worth printing so we do not
-> need to check for NULL.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1063
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Thanks!
-
-Acked-by: Barry Song <song.bao.hua@hisilicon.com>
-
+Quoting Adam Ford (2020-06-03 08:43:29)
+> The existing driver is expecting the Versaclock to be pre-programmed,
+> and only sets the output frequency.  Unfortunately, not all devices
+> are pre-programmed, and the Versaclock chip has more options beyond
+> just the frequency.
+>=20
+> This patch enables the following additional features:
+>=20
+>    - Programmable voltage: 1.8V, 2.5V, or 3.3V\u200b
+>    - Slew Percentage of normal: 85%, 90%, or 100%
+>    - Output Type: LVPECL, CMOS, HCSL, or LVDS
+>=20
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
->  mm/cma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/cma.c b/mm/cma.c
-> index 31a61d410c59..6cf08817bac6 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-> @@ -52,7 +52,7 @@ unsigned long cma_get_size(const struct cma *cma)
-> 
->  const char *cma_get_name(const struct cma *cma)
->  {
-> -	return cma->name ? cma->name : "(undefined)";
-> +	return cma->name;
->  }
-> 
->  static unsigned long cma_bitmap_aligned_mask(const struct cma *cma,
-> 
-> base-commit: 27f11fea33608cbd321a97cbecfa2ef97dcc1821
-> --
-> 2.27.0
 
+Applied to clk-next
