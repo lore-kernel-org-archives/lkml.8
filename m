@@ -1,217 +1,221 @@
-Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3976C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A324C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A3F20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LaeOybvg"
+	by mail.kernel.org (Postfix) with ESMTP id 4F3932073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbgFROoF (ORCPT
+        id S1732799AbgFWOc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgFROoA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:44:00 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A8EC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:00 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b16so2861247pfi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:reply-to:mime-version
-         :content-transfer-encoding;
-        bh=QtQZj6qHx4NyNp4faebxEBGjQhFGouVk8vIR/YM0OZ0=;
-        b=LaeOybvgVFUedJ618PM1GTEUXkMXPY3qF3zemK0oPI0t/5c3IyDHmKKjFSXMlllNpg
-         u4+VdHvZcEwrYY6QLxMvN9QNbcQkL40jfHhhwKnfjkRjaCBH/fdF2CXYNuGlJe/1qagv
-         GOuftdx/mhTGZ0CDkYYM/BzpHCtO3WgFPHV5MzKmJusZp3RHe6UsIOj2jqBaJqopy9w1
-         8dyb1/ZNKWuCGje3eaRAvZHyHC8hhvG7uaNyzR+WZLwsMfnWHwLZir4H4MXYeJ5kkTgv
-         S21Bzwg3kx7/cgMp23f6Z1a2ySJ2w9JTPWvpySOoRC3V8WNU7ZClsM3eXev1LkALavYt
-         hZcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=QtQZj6qHx4NyNp4faebxEBGjQhFGouVk8vIR/YM0OZ0=;
-        b=IA/0m5LKQI+XBNgfSa3aEAqxCfdd0IVXLIuhykiU8PxyK9oR2uuTpxOMRh7NV2tJ57
-         CwhkyD0TJRGLIvfVb3zb8wAHs9OdwQ2oHdP0QRNQ+EmBH+2daYW0+ift+OJ6YwZAK+fP
-         T3XxtLCMfWi9Se16aJJK3/nWr9kZUULouLvqbnnpAML9IsCiyQdJswf+4WWp1MbGl9NR
-         Vmzyu26U9gOMQERRTdQq3BkiC1d4rVhrzq2xpqYHJGETZsrEPizsaapei0j5khhigNBG
-         JgrHFtQo5ZfbfPE7J2M3ukxYbTlSv+s8E+0xSbL7Pe7QOe3hdUtu0RvwX1ajTqSCH9wq
-         Mcow==
-X-Gm-Message-State: AOAM532Qu9qIb+trqNe7QqZ6RSU9CMfhT2GG/gF732L1tQcOPrFLHrBS
-        Ik2L0y0IFty4CVi07ODOZc5VMg==
-X-Google-Smtp-Source: ABdhPJwVlCUbORgsthBtt/igrlr5i7l6tNK0VhZZRDtHj5c1nyTVCxDwaDg3pXHR9uxp5F9dJc2YrQ==
-X-Received: by 2002:a62:191:: with SMTP id 139mr3946645pfb.94.1592491439786;
-        Thu, 18 Jun 2020 07:43:59 -0700 (PDT)
-Received: from x1.localdomain ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id g9sm3127197pfm.151.2020.06.18.07.43.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 07:43:59 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Subject: 
-Date:   Thu, 18 Jun 2020 08:43:40 -0600
-Message-Id: <20200618144355.17324-1-axboe@kernel.dk>
-X-Mailer: git-send-email 2.27.0
-Reply-To: "[PATCHSET v7 0/15]"@vger.kernel.org, Add@vger.kernel.org,
-          support@vger.kernel.org, for@vger.kernel.org,
-          async@vger.kernel.org, buffered@vger.kernel.org,
-          reads@vger.kernel.org
+        Tue, 23 Jun 2020 10:32:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55089 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732730AbgFWOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 10:32:58 -0400
+IronPort-SDR: XlvIVJFRxEVcsDqphPxg7BIfqKu+OtOymrNXraMqEWG962vtcSKxdeTn4zHP7GydxI29ghMlw3
+ Gi/I1oT9ezpQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132488527"
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="132488527"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 07:32:57 -0700
+IronPort-SDR: XGxWnCjKu/7n+SsNBino2LCkS4z7BxUSo1KDZv9hAE+NQ+SJ0nHyc2evAPgwZaCHSMBplIcI56
+ T08ex4XTHmDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="384863507"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 23 Jun 2020 07:32:52 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 23 Jun 2020 17:32:52 +0300
+Date:   Tue, 23 Jun 2020 17:32:52 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@dell.com>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] thunderbolt: Add support for separating the flush
+ to SPI and authenticate
+Message-ID: <20200623143252.GD2795@lahna.fi.intel.com>
+References: <20200622185758.28145-1-mario.limonciello@dell.com>
+ <20200622185758.28145-2-mario.limonciello@dell.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622185758.28145-2-mario.limonciello@dell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We technically support this already through io_uring, but it's
-implemented with a thread backend to support cases where we would
-block. This isn't ideal.
+On Mon, Jun 22, 2020 at 01:57:57PM -0500, Mario Limonciello wrote:
+> This allows userspace to have a shorter period of time that the device
+> is unusable and to call it at a more convenient time.
+> 
+> For example flushing the image may happen while the user is using the
+> machine and authenticating/rebooting may happen while logging out.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> ---
+>  .../ABI/testing/sysfs-bus-thunderbolt         | 11 ++++-
+>  drivers/thunderbolt/nvm.c                     |  1 +
+>  drivers/thunderbolt/switch.c                  | 42 ++++++++++++-------
+>  drivers/thunderbolt/tb.h                      |  2 +
+>  4 files changed, 39 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> index bd504ed323e8..7d0500b4d58a 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
+> @@ -178,11 +178,18 @@ KernelVersion:	4.13
+>  Contact:	thunderbolt-software@lists.01.org
+>  Description:	When new NVM image is written to the non-active NVM
+>  		area (through non_activeX NVMem device), the
+> -		authentication procedure is started by writing 1 to
+> -		this file. If everything goes well, the device is
+> +		authentication procedure is started by writing to
+> +		this file.
+> +		If everything goes well, the device is
+>  		restarted with the new NVM firmware. If the image
+>  		verification fails an error code is returned instead.
+>  
+> +		This file will accept writing values "1" or "2"
+> +		- Writing "1" will flush the image to the storage
+> +		area and authenticate the image in one action.
+> +		- Writing "2" will run some basic validation on the image
+> +		and flush it to the storage area.
+> +
+>  		When read holds status of the last authentication
+>  		operation if an error occurred during the process. This
+>  		is directly the status value from the DMA configuration
+> diff --git a/drivers/thunderbolt/nvm.c b/drivers/thunderbolt/nvm.c
+> index 4c6aa06ab3d5..29de6d95c6e7 100644
+> --- a/drivers/thunderbolt/nvm.c
+> +++ b/drivers/thunderbolt/nvm.c
+> @@ -100,6 +100,7 @@ int tb_nvm_write_buf(struct tb_nvm *nvm, unsigned int offset, void *val,
+>  			return -ENOMEM;
+>  	}
+>  
+> +	nvm->flushed = false;
 
-After a few prep patches, the core of this patchset is adding support
-for async callbacks on page unlock. With this primitive, we can simply
-retry the IO operation. With io_uring, this works a lot like poll based
-retry for files that support it. If a page is currently locked and
-needed, -EIOCBQUEUED is returned with a callback armed. The callers
-callback is responsible for restarting the operation.
+This means every write invalidates the "flushed" state, right?
 
-With this callback primitive, we can add support for
-generic_file_buffered_read(), which is what most file systems end up
-using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
-trivial to add more.
+>  	nvm->buf_data_size = offset + bytes;
+>  	memcpy(nvm->buf + offset, val, bytes);
+>  	return 0;
+> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+> index 817c66c7adcf..bbfbfebeee7f 100644
+> --- a/drivers/thunderbolt/switch.c
+> +++ b/drivers/thunderbolt/switch.c
+> @@ -26,6 +26,11 @@ struct nvm_auth_status {
+>  	u32 status;
+>  };
+>  
+> +enum nvm_write_ops {
+> +	WRITE_AND_AUTHENTICATE = 1,
+> +	WRITE_ONLY = 2,
+> +};
+> +
+>  /*
+>   * Hold NVM authentication failure status per switch This information
+>   * needs to stay around even when the switch gets power cycled so we
+> @@ -155,8 +160,12 @@ static int nvm_validate_and_write(struct tb_switch *sw)
+>  	}
+>  
+>  	if (tb_switch_is_usb4(sw))
+> -		return usb4_switch_nvm_write(sw, 0, buf, image_size);
+> -	return dma_port_flash_write(sw->dma_port, 0, buf, image_size);
+> +		ret = usb4_switch_nvm_write(sw, 0, buf, image_size);
+> +	else
+> +		ret = dma_port_flash_write(sw->dma_port, 0, buf, image_size);
+> +	if (!ret)
+> +		sw->nvm->flushed = true;
+> +	return ret;
+>  }
+>  
+>  static int nvm_authenticate_host_dma_port(struct tb_switch *sw)
+> @@ -1488,7 +1497,7 @@ static ssize_t nvm_authenticate_store(struct device *dev,
+>  	struct device_attribute *attr, const char *buf, size_t count)
+>  {
+>  	struct tb_switch *sw = tb_to_switch(dev);
+> -	bool val;
+> +	int val;
+>  	int ret;
+>  
+>  	pm_runtime_get_sync(&sw->dev);
+> @@ -1504,25 +1513,28 @@ static ssize_t nvm_authenticate_store(struct device *dev,
+>  		goto exit_unlock;
+>  	}
+>  
+> -	ret = kstrtobool(buf, &val);
+> +	ret = kstrtoint(buf, 10, &val);
+>  	if (ret)
+>  		goto exit_unlock;
+>  
+>  	/* Always clear the authentication status */
+>  	nvm_clear_auth_status(sw);
+>  
+> -	if (val) {
+> -		if (!sw->nvm->buf) {
+> -			ret = -EINVAL;
+> -			goto exit_unlock;
+> -		}
+> -
+> -		ret = nvm_validate_and_write(sw);
+> -		if (ret)
+> -			goto exit_unlock;
+> +	if (val > 0) {
+> +		if (!sw->nvm->flushed) {
+> +			if (!sw->nvm->buf) {
+> +				ret = -EINVAL;
+> +				goto exit_unlock;
+> +			}
+>  
+> -		sw->nvm->authenticating = true;
+> -		ret = nvm_authenticate(sw);
+> +			ret = nvm_validate_and_write(sw);
+> +			if (ret || val == WRITE_ONLY)
+> +				goto exit_unlock;
+> +		}
+> +		if (val == WRITE_AND_AUTHENTICATE) {
+> +			sw->nvm->authenticating = true;
+> +			ret = nvm_authenticate(sw);
+> +		}
+>  	}
+>  
+>  exit_unlock:
+> diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+> index 736d1589c31e..43a8ca2eb3d8 100644
+> --- a/drivers/thunderbolt/tb.h
+> +++ b/drivers/thunderbolt/tb.h
+> @@ -42,6 +42,7 @@
+>   *
+>   * The user of this structure needs to handle serialization of possible
+>   * concurrent access.
+> + * @flushed: The image has been flushed to the storage area
 
-The file flags support for this by setting FMODE_BUF_RASYNC, similar
-to what we do for FMODE_NOWAIT. Open to suggestions here if this is
-the preferred method or not.
+This should go below the @authenticating description.
 
-In terms of results, I wrote a small test app that randomly reads 4G
-of data in 4K chunks from a file hosted by ext4. The app uses a queue
-depth of 32. If you want to test yourself, you can just use buffered=1
-with ioengine=io_uring with fio. No application changes are needed to
-use the more optimized buffered async read.
-
-preadv for comparison:
-	real    1m13.821s
-	user    0m0.558s
-	sys     0m11.125s
-	CPU	~13%
-
-Mainline:
-	real    0m12.054s
-	user    0m0.111s
-	sys     0m5.659s
-	CPU	~32% + ~50% == ~82%
-
-This patchset:
-	real    0m9.283s
-	user    0m0.147s
-	sys     0m4.619s
-	CPU	~52%
-
-The CPU numbers are just a rough estimate. For the mainline io_uring
-run, this includes the app itself and all the threads doing IO on its
-behalf (32% for the app, ~1.6% per worker and 32 of them). Context
-switch rate is much smaller with the patchset, since we only have the
-one task performing IO.
-
-Also ran a simple fio based test case, varying the queue depth from 1
-to 16, doubling every time:
-
-[buf-test]
-filename=/data/file
-direct=0
-ioengine=io_uring
-norandommap
-rw=randread
-bs=4k
-iodepth=${QD}
-randseed=89
-runtime=10s
-
-QD/Test		Patchset IOPS		Mainline IOPS
-1		9046			8294
-2		19.8k			18.9k
-4		39.2k			28.5k
-8		64.4k			31.4k
-16		65.7k			37.8k
-
-Outside of my usual environment, so this is just running on a virtualized
-NVMe device in qemu, using ext4 as the file system. NVMe isn't very
-efficient virtualized, so we run out of steam at ~65K which is why we
-flatline on the patched side (nvme_submit_cmd() eats ~75% of the test app
-CPU). Before that happens, it's a linear increase. Not shown is context
-switch rate, which is massively lower with the new code. The old thread
-offload adds a blocking thread per pending IO, so context rate quickly
-goes through the roof.
-
-The goal here is efficiency. Async thread offload adds latency, and
-it also adds noticable overhead on items such as adding pages to the
-page cache. By allowing proper async buffered read support, we don't
-have X threads hammering on the same inode page cache, we have just
-the single app actually doing IO.
-
-Been beating on this and it's solid for me, and I'm now pretty happy
-with how it all turned out. Not aware of any missing bits/pieces or
-code cleanups that need doing.
-
-Series can also be found here:
-
-https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.7
-
-or pull from:
-
-git://git.kernel.dk/linux-block async-buffered.7
-
- block/blk-core.c        |   6 +
- fs/block_dev.c          |   2 +-
- fs/btrfs/file.c         |   2 +-
- fs/ext4/file.c          |   2 +-
- fs/io_uring.c           | 336 ++++++++++++++++++++++++++++++++++------
- fs/xfs/xfs_file.c       |   2 +-
- include/linux/blkdev.h  |   1 +
- include/linux/fs.h      |  10 +-
- include/linux/pagemap.h |  75 +++++++++
- mm/filemap.c            | 110 ++++++++-----
- 10 files changed, 454 insertions(+), 92 deletions(-)
-
-Changes since v6:
-- Properly catch and resubmit requests that would have blocked in
-  submission.
-- Fix sqthread mm usage for async buffered retry
-- Fix a retry condition iter setup
-- Rebase on master + for-5.9/io_uring
-Changes since v5:
-- Correct commit message, iocb->private -> iocb->ki_waitq
-- Get rid of io_uring goto, use an iter read helper
-Changes since v3:
-- io_uring: don't retry if REQ_F_NOWAIT is set
-- io_uring: alloc req->io if the request type didn't already
-- Add iocb->ki_waitq instead of (ab)using iocb->private
-Changes since v2:
-- Get rid of unnecessary wait_page_async struct, just use wait_page_async
-- Add another prep handler, adding wake_page_match()
-- Use wake_page_match() in both callers
-Changes since v1:
-- Fix an issue with inline page locking
-- Fix a potential race with __wait_on_page_locked_async()
-- Fix a hang related to not setting page_match, thus missing a wakeup
-
--- 
-Jens Axboe
-
-
-
+>   */
+>  struct tb_nvm {
+>  	struct device *dev;
+> @@ -53,6 +54,7 @@ struct tb_nvm {
+>  	void *buf;
+>  	size_t buf_data_size;
+>  	bool authenticating;
+> +	bool flushed;
+>  };
+>  
+>  #define TB_SWITCH_KEY_SIZE		32
+> -- 
+> 2.25.1
