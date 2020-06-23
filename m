@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D868AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B491920706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165BC20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946841;
-	bh=J8gLyxuh7i1Ph5mKliRbbrUkmLcIN1tXAi/qcBYfNoE=;
+	s=default; t=1592946846;
+	bh=/jeMIeMAvV5mVKmzcCa+7ivUMMjbE+45PxVQ2In6AYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHjs9yoa1ZiMdliKRyKspvulcl15s6dXFbTNRzQBOoRT5TsNGpSMh0q7HkhWcSt63
-	 QPW6VI9fD1aArVUdgcIJbUZ9a78O0JbBawWFPQthx265bvYwEry/beyfvp5l9wHsAg
-	 wWnTXmDpDT1cWHA7/YB91HUErxf9frbtR80Vfh74=
+	b=O1nIJCM1O+NWL7diI5mbLmnhQ+5na+ERCE2yiNz9NuYfVtgv2UemCf6+AGklZb8cW
+	 kbsx6jvBUpaBRDIa4RiaLN4WhLhll7mHRmKeeQj//1oh22WhuuW7ggGUlD1XXgrVyB
+	 4BG927NWQaYcMol6KZ7lbJy1HSxFP8nDsMyCAaMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389322AbgFWUaC (ORCPT
+        id S2391015AbgFWVOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389797AbgFWU3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:29:54 -0400
+        id S2389977AbgFWU3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E31E7206EB;
-        Tue, 23 Jun 2020 20:29:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B20E206EB;
+        Tue, 23 Jun 2020 20:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944194;
-        bh=J8gLyxuh7i1Ph5mKliRbbrUkmLcIN1tXAi/qcBYfNoE=;
+        s=default; t=1592944184;
+        bh=/jeMIeMAvV5mVKmzcCa+7ivUMMjbE+45PxVQ2In6AYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OeFn1JZRMdnVNcFHEn2ZE0xEpY36WkulAII9ougbCA1s5UkBF/nD8zquDmyAswOqI
-         X/xmt88m0oTTPt2QOYzJyA+U87tqTsQMbSp+blIvpSpURK2lwlHSdLJUEs/v9z42f6
-         +fWVoyA3VoAl7Okf2PWoLMHhT9gEAxed4SLVsbQE=
+        b=aw+8J0tGsrVg6zlhlXB+CG91SvPVnyKO0PS/rchNKdnEeBmGQtqUElqrfInxjjY1P
+         WJWXNXiIeYnMauM5gQ6UcE7PBuQ/5khE0JHPO8HFd2pxAsYJhoN0E4x52UMAJ6/ucJ
+         MhzhAT1qXni/rqXNzU82tfO/QuYjvrnGO/YEciKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 210/314] ceph: dont return -ESTALE if theres still an open file
-Date:   Tue, 23 Jun 2020 21:56:45 +0200
-Message-Id: <20200623195348.934335976@linuxfoundation.org>
+Subject: [PATCH 5.4 206/314] mailbox: zynqmp-ipi: Fix NULL vs IS_ERR() check in zynqmp_ipi_mbox_probe()
+Date:   Tue, 23 Jun 2020 21:56:41 +0200
+Message-Id: <20200623195348.745935338@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,59 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 878dabb64117406abd40977b87544d05bb3031fc ]
+[ Upstream commit 445aeeb569f8d7904f8cf80b7c6826bb651ef80e ]
 
-Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
-a file handle to dentry"), this fixes another corner case with
-name_to_handle_at/open_by_handle_at.  The issue has been detected by
-xfstest generic/467, when doing:
+In case of error, the function devm_ioremap() returns NULL pointer not
+ERR_PTR(). So we should check whether the return value of devm_ioremap()
+is NULL instead of IS_ERR.
 
- - name_to_handle_at("/cephfs/myfile")
- - open("/cephfs/myfile")
- - unlink("/cephfs/myfile")
- - sync; sync;
- - drop caches
- - open_by_handle_at()
-
-The call to open_by_handle_at should not fail because the file hasn't been
-deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
-shall be returned only if i_nlink is 0 *and* i_count is 1.
-
-This patch also makes sure we have LINK caps before checking i_nlink.
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Acked-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 4981b82ba2ff ("mailbox: ZynqMP IPI mailbox controller")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/export.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/mailbox/zynqmp-ipi-mailbox.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index 79dc06881e78e..e088843a7734c 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -172,9 +172,16 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
- static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
- {
- 	struct inode *inode = __lookup_inode(sb, ino);
-+	int err;
-+
- 	if (IS_ERR(inode))
- 		return ERR_CAST(inode);
--	if (inode->i_nlink == 0) {
-+	/* We need LINK caps to reliably check i_nlink */
-+	err = ceph_do_getattr(inode, CEPH_CAP_LINK_SHARED, false);
-+	if (err)
-+		return ERR_PTR(err);
-+	/* -ESTALE if inode as been unlinked and no file is open */
-+	if ((inode->i_nlink == 0) && (atomic_read(&inode->i_count) == 1)) {
- 		iput(inode);
- 		return ERR_PTR(-ESTALE);
- 	}
+diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c b/drivers/mailbox/zynqmp-ipi-mailbox.c
+index 86887c9a349a0..f9cc674ba9b76 100644
+--- a/drivers/mailbox/zynqmp-ipi-mailbox.c
++++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
+@@ -504,10 +504,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->req_buf_size = resource_size(&res);
+ 		mchan->req_buf = devm_ioremap(mdev, res.start,
+ 					      mchan->req_buf_size);
+-		if (IS_ERR(mchan->req_buf)) {
++		if (!mchan->req_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->req_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s, %d.\n", name, ret);
+@@ -520,10 +519,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->resp_buf_size = resource_size(&res);
+ 		mchan->resp_buf = devm_ioremap(mdev, res.start,
+ 					       mchan->resp_buf_size);
+-		if (IS_ERR(mchan->resp_buf)) {
++		if (!mchan->resp_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->resp_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s.\n", name);
+@@ -543,10 +541,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->req_buf_size = resource_size(&res);
+ 		mchan->req_buf = devm_ioremap(mdev, res.start,
+ 					      mchan->req_buf_size);
+-		if (IS_ERR(mchan->req_buf)) {
++		if (!mchan->req_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->req_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s.\n", name);
+@@ -559,10 +556,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->resp_buf_size = resource_size(&res);
+ 		mchan->resp_buf = devm_ioremap(mdev, res.start,
+ 					       mchan->resp_buf_size);
+-		if (IS_ERR(mchan->resp_buf)) {
++		if (!mchan->resp_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->resp_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s.\n", name);
 -- 
 2.25.1
 
