@@ -2,203 +2,286 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76448C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD56C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3112078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:18:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="q5PXizvo"
+	by mail.kernel.org (Postfix) with ESMTP id E97C22078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:22:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733018AbgFWQSF (ORCPT
+        id S1732292AbgFWQWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732185AbgFWQSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:18:03 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5155C061795
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:18:02 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id o38so7141093qtf.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 09:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=SowX6r/DrbyMyIPo7bbmN6dCO4WOaZBpx8lXkNiYwRQ=;
-        b=q5PXizvouRcfNA2W9Djqc/Z84L8gq+5xyPGe7rkAVVUXYo0XRUHAEI4yVuKgTSfgc9
-         RoYCG4UkEgCC9vVO+IYyrz7JORXpNUWmlzMkIni2Vfw9kxBsp2K+YgamdfZElTJuJZTW
-         bbafUUDUQEhd51JcrBKUA9xHz8S+ZvnGFC/bx4j/zd/tIY4JT4nqabnA6jtnfro4Yx69
-         YevfddRvEKhgwHMyV0hQh6x3L1BXH3reCRQkEUr6zmcuCWOBikrw37RohUhW9xkrCqv7
-         nLIezDVzEaNlXEnFqrM5wDtOVHCyOyKL9todYtNNNUOatrNgrkdDPEXpNyPANNjAfT9T
-         s5yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=SowX6r/DrbyMyIPo7bbmN6dCO4WOaZBpx8lXkNiYwRQ=;
-        b=cDEXAX7a9F/KOnteo/6QtR1KTU+iTcJ4kWmHl009fG3Gj/SzYE2JizXbOT31UUH20m
-         583K7eQZnyLVbM2fGWU+Zj6DWJRqleY+HULBKxi/ogHK0zZN1dqXURBDmCScR5ACp9JK
-         sdjbvqBX5hCtVffc8H3zg7HJDa/LSQmGRocTEV648SgSgxYFuiwDFJvGin9I76KAWqkg
-         lo8h+Fa0NAHhrKtFUop0Tid2zed/ZokPBbt8LwpFBl7fiBRPd90DDbgL6IPqzUVBkU3P
-         yFlBv46pUR8C7m8tXkU/3IB/lwciHCWN4JvVT6cuUqoXYivehdOSYa0yKxKcF01cQ7Cc
-         +cRg==
-X-Gm-Message-State: AOAM533ncrikqeuQ9DgolaGagwWKcBPzy3hDKyNMrev4/7GM9KWXES5n
-        vMm7lNjurM2/h39K9OTDaVxwSQ==
-X-Google-Smtp-Source: ABdhPJy2/MUFYS3DJu96XPGFYPvGEfp9/cvT3JQEnV1SM172gUGWrPZ+0/Xawft3xZIbg4oUrttvEg==
-X-Received: by 2002:ac8:4448:: with SMTP id m8mr22935603qtn.4.1592929081912;
-        Tue, 23 Jun 2020 09:18:01 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d140sm966654qkc.22.2020.06.23.09.18.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 09:18:01 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 12:17:54 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas_os@shipmail.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] mm: Track mmu notifiers in fs_reclaim_acquire/release
-Message-ID: <20200623161754.GA1140@lca.pw>
-References: <20200604081224.863494-2-daniel.vetter@ffwll.ch>
- <20200610194101.1668038-1-daniel.vetter@ffwll.ch>
- <20200621174205.GB1398@lca.pw>
- <CAKMK7uFZAFVmceoYvqPovOifGw_Y8Ey-OMy6wioMjwPWhu9dDg@mail.gmail.com>
- <20200621200103.GV20149@phenom.ffwll.local>
+        Tue, 23 Jun 2020 12:22:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:60562 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732185AbgFWQWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:22:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E72B71F1;
+        Tue, 23 Jun 2020 09:22:08 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41F9F3F73C;
+        Tue, 23 Jun 2020 09:22:07 -0700 (PDT)
+Subject: Re: [PATCH 4/4] iommu/arm-smmu-v3: Remove cmpxchg() in
+ arm_smmu_cmdq_issue_cmdlist()
+To:     John Garry <john.garry@huawei.com>,
+        kernel test robot <lkp@intel.com>,
+        "will@kernel.org" <will@kernel.org>, rikard.falkeborn@gmail.com
+Cc:     "trivial@kernel.org" <trivial@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1592846920-45338-5-git-send-email-john.garry@huawei.com>
+ <202006230905.3HpPgtSC%lkp@intel.com>
+ <5ba2e240-b324-d316-c00c-38c03ee49baa@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <693bfa60-82cf-bcbb-5745-0d001f7d9f9e@arm.com>
+Date:   Tue, 23 Jun 2020 17:22:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <5ba2e240-b324-d316-c00c-38c03ee49baa@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200621200103.GV20149@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 10:01:03PM +0200, Daniel Vetter wrote:
-> On Sun, Jun 21, 2020 at 08:07:08PM +0200, Daniel Vetter wrote:
-> > On Sun, Jun 21, 2020 at 7:42 PM Qian Cai <cai@lca.pw> wrote:
-> > >
-> > > On Wed, Jun 10, 2020 at 09:41:01PM +0200, Daniel Vetter wrote:
-> > > > fs_reclaim_acquire/release nicely catch recursion issues when
-> > > > allocating GFP_KERNEL memory against shrinkers (which gpu drivers tend
-> > > > to use to keep the excessive caches in check). For mmu notifier
-> > > > recursions we do have lockdep annotations since 23b68395c7c7
-> > > > ("mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end").
-> > > >
-> > > > But these only fire if a path actually results in some pte
-> > > > invalidation - for most small allocations that's very rarely the case.
-> > > > The other trouble is that pte invalidation can happen any time when
-> > > > __GFP_RECLAIM is set. Which means only really GFP_ATOMIC is a safe
-> > > > choice, GFP_NOIO isn't good enough to avoid potential mmu notifier
-> > > > recursion.
-> > > >
-> > > > I was pondering whether we should just do the general annotation, but
-> > > > there's always the risk for false positives. Plus I'm assuming that
-> > > > the core fs and io code is a lot better reviewed and tested than
-> > > > random mmu notifier code in drivers. Hence why I decide to only
-> > > > annotate for that specific case.
-> > > >
-> > > > Furthermore even if we'd create a lockdep map for direct reclaim, we'd
-> > > > still need to explicit pull in the mmu notifier map - there's a lot
-> > > > more places that do pte invalidation than just direct reclaim, these
-> > > > two contexts arent the same.
-> > > >
-> > > > Note that the mmu notifiers needing their own independent lockdep map
-> > > > is also the reason we can't hold them from fs_reclaim_acquire to
-> > > > fs_reclaim_release - it would nest with the acquistion in the pte
-> > > > invalidation code, causing a lockdep splat. And we can't remove the
-> > > > annotations from pte invalidation and all the other places since
-> > > > they're called from many other places than page reclaim. Hence we can
-> > > > only do the equivalent of might_lock, but on the raw lockdep map.
-> > > >
-> > > > With this we can also remove the lockdep priming added in 66204f1d2d1b
-> > > > ("mm/mmu_notifiers: prime lockdep") since the new annotations are
-> > > > strictly more powerful.
-> > > >
-> > > > v2: Review from Thomas Hellstrom:
-> > > > - unbotch the fs_reclaim context check, I accidentally inverted it,
-> > > >   but it didn't blow up because I inverted it immediately
-> > > > - fix compiling for !CONFIG_MMU_NOTIFIER
-> > > >
-> > > > Cc: Thomas Hellstr�m (Intel) <thomas_os@shipmail.org>
-> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > Cc: Jason Gunthorpe <jgg@mellanox.com>
-> > > > Cc: linux-mm@kvack.org
-> > > > Cc: linux-rdma@vger.kernel.org
-> > > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > > > Cc: Christian K�nig <christian.koenig@amd.com>
-> > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > >
-> > > Replying the right patch here...
-> > >
-> > > Reverting this commit [1] fixed the lockdep warning below while applying
-> > > some memory pressure.
-> > >
-> > > [1] linux-next cbf7c9d86d75 ("mm: track mmu notifiers in fs_reclaim_acquire/release")
-> > 
-> > Hm, then I'm confused because
-> > - there's not mmut notifier lockdep map in the splat at a..
-> > - the patch is supposed to not change anything for fs_reclaim (but the
-> > interim version got that wrong)
-> > - looking at the paths it's kmalloc vs kswapd, both places I totally
-> > expect fs_reflaim to be used.
-> > 
-> > But you're claiming reverting this prevents the lockdep splat. If
-> > that's right, then my reasoning above is broken somewhere. Someone
-> > less blind than me having an idea?
-> > 
-> > Aside this is the first email I've typed, until I realized the first
-> > report was against the broken patch and that looked like a much more
-> > reasonable explanation (but didn't quite match up with the code
-> > paths).
+On 2020-06-23 10:21, John Garry wrote:
+> On 23/06/2020 02:07, kernel test robot wrote:
 > 
-> Below diff should undo the functional change in my patch. Can you pls test
-> whether the lockdep splat is really gone with that? Might need a lot of
-> testing and memory pressure to be sure, since all these reclaim paths
-> aren't very deterministic.
-
-No, this patch does not help but reverting the whole patch still fixed
-the splat.
-
-> -Daniel
+> + Rikard, as the GENMASK compile-time sanity checks were added recently
 > 
-> ---
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d807587c9ae6..27ea763c6155 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -4191,11 +4191,6 @@ void fs_reclaim_acquire(gfp_t gfp_mask)
->  		if (gfp_mask & __GFP_FS)
->  			__fs_reclaim_acquire();
->  
-> -#ifdef CONFIG_MMU_NOTIFIER
-> -		lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
-> -		lock_map_release(&__mmu_notifier_invalidate_range_start_map);
-> -#endif
-> -
->  	}
->  }
->  EXPORT_SYMBOL_GPL(fs_reclaim_acquire);
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+>> Hi John,
+>>
+>> I love your patch! Perhaps something to improve:
+>>
+>> [auto build test WARNING on iommu/next]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>> And when submitting patch, we suggest to use  as documented in
+>> https://git-scm.com/docs/git-format-patch]
+>>
+>> url:    
+>> https://github.com/0day-ci/linux/commits/John-Garry/iommu-arm-smmu-v3-Improve-cmdq-lock-efficiency/20200623-013438 
+>>
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git 
+>> next
+>> config: arm64-randconfig-c024-20200622 (attached as .config)
+>> compiler: aarch64-linux-gcc (GCC) 9.3.0
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>>
+>> In file included from include/linux/bits.h:23,
+>> from include/linux/ioport.h:15,
+>> from include/linux/acpi.h:12,
+>> from drivers/iommu/arm-smmu-v3.c:12:
+>> drivers/iommu/arm-smmu-v3.c: In function 'arm_smmu_cmdq_issue_cmdlist':
+>> include/linux/bits.h:26:28: warning: comparison of unsigned expression 
+>> < 0 is always false [-Wtype-limits]
+>> 26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> 
+> I'd say that GENMASK_INPUT_CHECK() should be able to handle a l=0 and 
+> h=unsigned value, so I doubt this warn.
+> 
+> Using GENMASK((int)cmdq->q.llq.max_n_shift, 0) resolves it, but it looks 
+> like GENMASK_INPUT_CHECK() could be improved.
+
+That said, I think this particular case might be even better off dodging
+GENMASK() entirely, by doing something like this first. Untested...
+
+Robin.
+
+----->8-----
+Subject: [PATCH] iommu/arm-smmu-v3: Streamline queue calculations
+
+Beyond the initial queue setup based on the log2 values from ID
+registers, the log2 queue size is only ever used in the form of
+(1 << max_n_shift) to repeatedly recalculate the number of queue
+elements. Simply storing it in that form leads to slightly more
+efficient code, particularly in the low-level queue accessors
+where it counts most:
+
+add/remove: 0/0 grow/shrink: 1/7 up/down: 4/-120 (-116)
+Function                                     old     new   delta
+arm_smmu_init_one_queue                      360     364      +4
+arm_smmu_priq_thread                         512     508      -4
+arm_smmu_evtq_thread                         300     292      -8
+__arm_smmu_cmdq_poll_set_valid_map.isra      296     288      -8
+queue_remove_raw                             180     164     -16
+arm_smmu_gerror_handler                      732     716     -16
+arm_smmu_device_probe                       4312    4284     -28
+arm_smmu_cmdq_issue_cmdlist                 1892    1852     -40
+Total: Before=20135, After=20019, chg -0.58%
+
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/iommu/arm-smmu-v3.c | 46 ++++++++++++++++++-------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index f578677a5c41..407cb9451a7a 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -185,8 +185,8 @@
+ #define ARM_SMMU_MEMATTR_DEVICE_nGnRE	0x1
+ #define ARM_SMMU_MEMATTR_OIWB		0xf
+ 
+-#define Q_IDX(llq, p)			((p) & ((1 << (llq)->max_n_shift) - 1))
+-#define Q_WRP(llq, p)			((p) & (1 << (llq)->max_n_shift))
++#define Q_IDX(llq, p)			((p) & ((llq)->max_n - 1))
++#define Q_WRP(llq, p)			((p) & (llq)->max_n)
+ #define Q_OVERFLOW_FLAG			(1U << 31)
+ #define Q_OVF(p)			((p) & Q_OVERFLOW_FLAG)
+ #define Q_ENT(q, p)			((q)->base +			\
+@@ -531,7 +531,7 @@ struct arm_smmu_ll_queue {
+ 		} atomic;
+ 		u8			__pad[SMP_CACHE_BYTES];
+ 	} ____cacheline_aligned_in_smp;
+-	u32				max_n_shift;
++	u32				max_n;
+ };
+ 
+ struct arm_smmu_queue {
+@@ -771,7 +771,7 @@ static bool queue_has_space(struct arm_smmu_ll_queue *q, u32 n)
+ 	cons = Q_IDX(q, q->cons);
+ 
+ 	if (Q_WRP(q, q->prod) == Q_WRP(q, q->cons))
+-		space = (1 << q->max_n_shift) - (prod - cons);
++		space = q->max_n - (prod - cons);
+ 	else
+ 		space = cons - prod;
+ 
+@@ -1164,8 +1164,8 @@ static void __arm_smmu_cmdq_poll_set_valid_map(struct arm_smmu_cmdq *cmdq,
+ {
+ 	u32 swidx, sbidx, ewidx, ebidx;
+ 	struct arm_smmu_ll_queue llq = {
+-		.max_n_shift	= cmdq->q.llq.max_n_shift,
+-		.prod		= sprod,
++		.max_n	= cmdq->q.llq.max_n,
++		.prod	= sprod,
+ 	};
+ 
+ 	ewidx = BIT_WORD(Q_IDX(&llq, eprod));
+@@ -1344,8 +1344,8 @@ static void arm_smmu_cmdq_write_entries(struct arm_smmu_cmdq *cmdq, u64 *cmds,
+ {
+ 	int i;
+ 	struct arm_smmu_ll_queue llq = {
+-		.max_n_shift	= cmdq->q.llq.max_n_shift,
+-		.prod		= prod,
++		.max_n	= cmdq->q.llq.max_n,
++		.prod	= prod,
+ 	};
+ 
+ 	for (i = 0; i < n; ++i) {
+@@ -1381,7 +1381,7 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+ 	bool owner;
+ 	struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
+ 	struct arm_smmu_ll_queue llq = {
+-		.max_n_shift = cmdq->q.llq.max_n_shift,
++		.max_n = cmdq->q.llq.max_n,
+ 	}, head = llq;
+ 	int ret = 0;
+ 
+@@ -3144,13 +3144,13 @@ static int arm_smmu_init_one_queue(struct arm_smmu_device *smmu,
+ 	size_t qsz;
+ 
+ 	do {
+-		qsz = ((1 << q->llq.max_n_shift) * dwords) << 3;
++		qsz = (q->llq.max_n * dwords) << 3;
+ 		q->base = dmam_alloc_coherent(smmu->dev, qsz, &q->base_dma,
+ 					      GFP_KERNEL);
+ 		if (q->base || qsz < PAGE_SIZE)
+ 			break;
+ 
+-		q->llq.max_n_shift--;
++		q->llq.max_n >>= 1;
+ 	} while (1);
+ 
+ 	if (!q->base) {
+@@ -3162,7 +3162,7 @@ static int arm_smmu_init_one_queue(struct arm_smmu_device *smmu,
+ 
+ 	if (!WARN_ON(q->base_dma & (qsz - 1))) {
+ 		dev_info(smmu->dev, "allocated %u entries for %s\n",
+-			 1 << q->llq.max_n_shift, name);
++			 q->llq.max_n, name);
+ 	}
+ 
+ 	q->prod_reg	= arm_smmu_page1_fixup(prod_off, smmu);
+@@ -3171,7 +3171,7 @@ static int arm_smmu_init_one_queue(struct arm_smmu_device *smmu,
+ 
+ 	q->q_base  = Q_BASE_RWA;
+ 	q->q_base |= q->base_dma & Q_BASE_ADDR_MASK;
+-	q->q_base |= FIELD_PREP(Q_BASE_LOG2SIZE, q->llq.max_n_shift);
++	q->q_base |= FIELD_PREP(Q_BASE_LOG2SIZE, ilog2(q->llq.max_n));
+ 
+ 	q->llq.prod = q->llq.cons = 0;
+ 	return 0;
+@@ -3187,13 +3187,12 @@ static int arm_smmu_cmdq_init(struct arm_smmu_device *smmu)
+ {
+ 	int ret = 0;
+ 	struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
+-	unsigned int nents = 1 << cmdq->q.llq.max_n_shift;
+ 	atomic_long_t *bitmap;
+ 
+ 	atomic_set(&cmdq->owner_prod, 0);
+ 	atomic_set(&cmdq->lock, 0);
+ 
+-	bitmap = (atomic_long_t *)bitmap_zalloc(nents, GFP_KERNEL);
++	bitmap = (atomic_long_t *)bitmap_zalloc(cmdq->q.llq.max_n, GFP_KERNEL);
+ 	if (!bitmap) {
+ 		dev_err(smmu->dev, "failed to allocate cmdq bitmap\n");
+ 		ret = -ENOMEM;
+@@ -3695,7 +3694,7 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+ 
+ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ {
+-	u32 reg;
++	u32 reg, max_n_shift;
+ 	bool coherent = smmu->features & ARM_SMMU_FEAT_COHERENCY;
+ 
+ 	/* IDR0 */
+@@ -3798,9 +3797,9 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ 	}
+ 
+ 	/* Queue sizes, capped to ensure natural alignment */
+-	smmu->cmdq.q.llq.max_n_shift = min_t(u32, CMDQ_MAX_SZ_SHIFT,
+-					     FIELD_GET(IDR1_CMDQS, reg));
+-	if (smmu->cmdq.q.llq.max_n_shift <= ilog2(CMDQ_BATCH_ENTRIES)) {
++	max_n_shift = min_t(u32, CMDQ_MAX_SZ_SHIFT, FIELD_GET(IDR1_CMDQS, reg));
++	smmu->cmdq.q.llq.max_n = 1 << max_n_shift;
++	if (smmu->cmdq.q.llq.max_n <= CMDQ_BATCH_ENTRIES) {
+ 		/*
+ 		 * We don't support splitting up batches, so one batch of
+ 		 * commands plus an extra sync needs to fit inside the command
+@@ -3812,10 +3811,11 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ 		return -ENXIO;
+ 	}
+ 
+-	smmu->evtq.q.llq.max_n_shift = min_t(u32, EVTQ_MAX_SZ_SHIFT,
+-					     FIELD_GET(IDR1_EVTQS, reg));
+-	smmu->priq.q.llq.max_n_shift = min_t(u32, PRIQ_MAX_SZ_SHIFT,
+-					     FIELD_GET(IDR1_PRIQS, reg));
++	max_n_shift = min_t(u32, EVTQ_MAX_SZ_SHIFT, FIELD_GET(IDR1_EVTQS, reg));
++	smmu->evtq.q.llq.max_n = 1 << max_n_shift;
++
++	max_n_shift = min_t(u32, PRIQ_MAX_SZ_SHIFT, FIELD_GET(IDR1_PRIQS, reg));
++	smmu->priq.q.llq.max_n = 1 << max_n_shift;
+ 
+ 	/* SID/SSID sizes */
+ 	smmu->ssid_bits = FIELD_GET(IDR1_SSIDSIZE, reg);
+-- 
+2.23.0.dirty
+
