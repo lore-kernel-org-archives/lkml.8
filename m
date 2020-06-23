@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 306812064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3602085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944441;
-	bh=b1LMwzWgnToHNsHu4GCbq7IDfPyY3D1u3I1WSG/sckg=;
+	s=default; t=1592944445;
+	bh=XwauqFNRoODA/WZXCoHKKjOuoIsjFMp1p3aBUa8Ss2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IHSMY4krvpjoPmo3WggcniKeDU+WkaADObfp3FiZNrleuVBpBMj8B+DNwYX4GE+D5
-	 1uZeQYCZN12cwvSZMYjOl7qquQkC1ctzFThNAjhMLZqHTbt61QGTk1tnMhlbmZARzs
-	 RYLFMK67363iofWPfaU+awNB7mguhBE1vROGtKv0=
+	b=bbc28gI6In6eXK3J3yFwLNKx48ZWz6gDxl8/pwbhW2IBRqWQrAXibPpMXKY4mebeQ
+	 QwzkDMq19dnIwnG+Ceuu4u93DbbhOHTZ0fOhkPECB5+MdSuCA3tHnWt+i3y/QoZQW1
+	 p5umq/ioSPk6FlYrxp6GZs9JgLgEoOv30Lf0YJFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389549AbgFWUd6 (ORCPT
+        id S2389148AbgFWUeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:33:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55298 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:34:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390930AbgFWUdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:47 -0400
+        id S2387641AbgFWUdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 432CE21473;
-        Tue, 23 Jun 2020 20:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6059320836;
+        Tue, 23 Jun 2020 20:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944426;
-        bh=b1LMwzWgnToHNsHu4GCbq7IDfPyY3D1u3I1WSG/sckg=;
+        s=default; t=1592944431;
+        bh=XwauqFNRoODA/WZXCoHKKjOuoIsjFMp1p3aBUa8Ss2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgFwfHHrkQPWiygesQTV/fXI+NXtl339iU4zmM6Wod+qed+qVMd27Ggd9voM8r1ip
-         7pwjWvuyUrqdU2qhJth2GyNq+xGLVqygtQ/6Z9cmKS6x6oMHHFJkw3QSXyVwO2xBVz
-         O6rrS5o668ix01Bk1YOjjDFvkojJgEDToBjg3Gko=
+        b=c7F01gtIngVthzuYlq3kijI+xvbz0XtpmHWHh+4HK0gSZd+Z/WCL8Tzkj6o/gPEX+
+         5mGuFD58xzcTgmGB833G5feEBI23mxh0haspPrSrjkyNTVfvN6zlrN+S8SL/1wr6f6
+         hM0qvrNYCEWyXVmbbo5tPQ4I2pGxnOFAz1OBj+/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Rosenberg <drosen@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.co.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 270/314] afs: Fix EOF corruption
-Date:   Tue, 23 Jun 2020 21:57:45 +0200
-Message-Id: <20200623195351.865288807@linuxfoundation.org>
+Subject: [PATCH 5.4 295/314] f2fs: avoid utf8_strncasecmp() with unstable name
+Date:   Tue, 23 Jun 2020 21:58:10 +0200
+Message-Id: <20200623195353.041110423@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -59,101 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 3f4aa981816368fe6b1d13c2bfbe76df9687e787 ]
+[ Upstream commit fc3bb095ab02b9e7d89a069ade2cead15c64c504 ]
 
-When doing a partial writeback, afs_write_back_from_locked_page() may
-generate an FS.StoreData RPC request that writes out part of a file when a
-file has been constructed from pieces by doing seek, write, seek, write,
-... as is done by ld.
+If the dentry name passed to ->d_compare() fits in dentry::d_iname, then
+it may be concurrently modified by a rename.  This can cause undefined
+behavior (possibly out-of-bounds memory accesses or crashes) in
+utf8_strncasecmp(), since fs/unicode/ isn't written to handle strings
+that may be concurrently modified.
 
-The FS.StoreData RPC is given the current i_size as the file length, but
-the server basically ignores it unless the data length is 0 (in which case
-it's just a truncate operation).  The revised file length returned in the
-result of the RPC may then not reflect what we suggested - and this leads
-to i_size getting moved backwards - which causes issues later.
+Fix this by first copying the filename to a stack buffer if needed.
+This way we get a stable snapshot of the filename.
 
-Fix the client to take account of this by ignoring the returned file size
-unless the data version number jumped unexpectedly - in which case we're
-going to have to clear the pagecache and reload anyway.
-
-This can be observed when doing a kernel build on an AFS mount.  The
-following pair of commands produce the issue:
-
-  ld -m elf_x86_64 -z max-page-size=0x200000 --emit-relocs \
-      -T arch/x86/realmode/rm/realmode.lds \
-      arch/x86/realmode/rm/header.o \
-      arch/x86/realmode/rm/trampoline_64.o \
-      arch/x86/realmode/rm/stack.o \
-      arch/x86/realmode/rm/reboot.o \
-      -o arch/x86/realmode/rm/realmode.elf
-  arch/x86/tools/relocs --realmode \
-      arch/x86/realmode/rm/realmode.elf \
-      >arch/x86/realmode/rm/realmode.relocs
-
-This results in the latter giving:
-
-	Cannot read ELF section headers 0/18: Success
-
-as the realmode.elf file got corrupted.
-
-The sequence of events can also be driven with:
-
-	xfs_io -t -f \
-		-c "pwrite -S 0x58 0 0x58" \
-		-c "pwrite -S 0x59 10000 1000" \
-		-c "close" \
-		/afs/example.com/scratch/a
-
-Fixes: 31143d5d515e ("AFS: implement basic file write support")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
+Cc: <stable@vger.kernel.org> # v5.4+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Daniel Rosenberg <drosen@google.com>
+Cc: Gabriel Krisman Bertazi <krisman@collabora.co.uk>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/inode.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ fs/f2fs/dir.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-index 46d2d7cb461da..a74e8e209454b 100644
---- a/fs/afs/inode.c
-+++ b/fs/afs/inode.c
-@@ -171,6 +171,7 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
- 	struct timespec64 t;
- 	umode_t mode;
- 	bool data_changed = false;
-+	bool change_size = false;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 594c9ad774d23..e9af46dc06f72 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -1063,11 +1063,27 @@ static int f2fs_d_compare(const struct dentry *dentry, unsigned int len,
+ 	const struct inode *dir = READ_ONCE(parent->d_inode);
+ 	const struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
+ 	struct qstr entry = QSTR_INIT(str, len);
++	char strbuf[DNAME_INLINE_LEN];
+ 	int res;
  
- 	BUG_ON(test_bit(AFS_VNODE_UNSET, &vnode->flags));
+ 	if (!dir || !IS_CASEFOLDED(dir))
+ 		goto fallback;
  
-@@ -226,6 +227,7 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
- 		} else {
- 			set_bit(AFS_VNODE_ZAP_DATA, &vnode->flags);
- 		}
-+		change_size = true;
- 	} else if (vnode->status.type == AFS_FTYPE_DIR) {
- 		/* Expected directory change is handled elsewhere so
- 		 * that we can locally edit the directory and save on a
-@@ -233,11 +235,19 @@ static void afs_apply_status(struct afs_fs_cursor *fc,
- 		 */
- 		if (test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
- 			data_changed = false;
-+		change_size = true;
- 	}
- 
- 	if (data_changed) {
- 		inode_set_iversion_raw(&vnode->vfs_inode, status->data_version);
--		afs_set_i_size(vnode, status->size);
++	/*
++	 * If the dentry name is stored in-line, then it may be concurrently
++	 * modified by a rename.  If this happens, the VFS will eventually retry
++	 * the lookup, so it doesn't matter what ->d_compare() returns.
++	 * However, it's unsafe to call utf8_strncasecmp() with an unstable
++	 * string.  Therefore, we have to copy the name into a temporary buffer.
++	 */
++	if (len <= DNAME_INLINE_LEN - 1) {
++		memcpy(strbuf, str, len);
++		strbuf[len] = 0;
++		entry.name = strbuf;
++		/* prevent compiler from optimizing out the temporary buffer */
++		barrier();
++	}
 +
-+		/* Only update the size if the data version jumped.  If the
-+		 * file is being modified locally, then we might have our own
-+		 * idea of what the size should be that's not the same as
-+		 * what's on the server.
-+		 */
-+		if (change_size)
-+			afs_set_i_size(vnode, status->size);
- 	}
- }
- 
+ 	res = utf8_strncasecmp(sbi->s_encoding, name, &entry);
+ 	if (res >= 0)
+ 		return res;
 -- 
 2.25.1
 
