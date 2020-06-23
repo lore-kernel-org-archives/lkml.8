@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A81C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4A7204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D5C204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946699;
-	bh=hx8BGee8MJDNYt9B91ooy0vDGgvzquB2ThITlU8Mj7o=;
+	s=default; t=1592946703;
+	bh=Z5+iae7O1IBaXzbp31Bv+xjUPxPHGzZmO/+WtcNA0ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGc7U4Z0IBJWITPKuH3CyafIzVSFZicVv56x7G/Doz/rYpirT+qnK65eF6wW8WF64
-	 uzITYhdtQTXVze3ctMWVDJKvYaIBzd1+MbFQp72Vwn4ZNSToMpFCRv2FXLqdRdbSGI
-	 5XICPocFK1v3mt0klBk+MZD54mfo6COzQqTnfT8E=
+	b=1n9wNWsma6CDsU5WrCPHSXe9vqOr413+PZ9HTbRAAaIWluo0xtPBrsp2Me6ru2Bn9
+	 MOGsYk6TLK+DQ+QYh8hGeCSzJguiOBBq5kt9BeRy4x08USV+e/KHHH0W/PEfTe0DWU
+	 8FS2AZwLmhQVs2tIX42m0oQ4AqxtGpLSNrPYJ8Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391092AbgFWUcN (ORCPT
+        id S2393280AbgFWVLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390959AbgFWUbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:31:55 -0400
+        id S2391281AbgFWUcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:32:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D57AF20702;
-        Tue, 23 Jun 2020 20:31:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37357206C3;
+        Tue, 23 Jun 2020 20:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944315;
-        bh=hx8BGee8MJDNYt9B91ooy0vDGgvzquB2ThITlU8Mj7o=;
+        s=default; t=1592944332;
+        bh=Z5+iae7O1IBaXzbp31Bv+xjUPxPHGzZmO/+WtcNA0ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qrh3NPJhwT/mogcEEqvM4hAJDILBuAdb87lYMgM6RWWM8GBMRqciMz4p2pCuyrLke
-         qp1aTqEZ/YmWMh4HTaMfDjbOy3rjNYwpVn4A6PxVB4V5E1wRsAIJFT9fXn1ruc9kZJ
-         EBC65akz7PfyA6rDNNzP1v9Za3p8KEM9brgoVc+g=
+        b=yqxh9A1vCG6Nj2bU8JbtZIwXRWRA82DM7hP0VZtDaFabHFXO16l8z9AgY94g9nNUL
+         y3Kkk0MFUDvL3MdNy8Cr+4fJRcqN83WUpiLEIz9SLorOh9EamZy6H5pWPI+lM8o5ME
+         i+Nq46UHrPcX3V27n7pQoMe09qv+vF9jARvIVzSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zheng Bin <zhengbin13@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 256/314] nfs: set invalid blocks after NFSv4 writes
-Date:   Tue, 23 Jun 2020 21:57:31 +0200
-Message-Id: <20200623195351.184939772@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 233/314] NTB: Revert the change to use the NTB device dev for DMA allocations
+Date:   Tue, 23 Jun 2020 21:57:08 +0200
+Message-Id: <20200623195350.066387227@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,112 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 3a39e778690500066b31fe982d18e2e394d3bce2 ]
+[ Upstream commit 40da7d9a93c8941737ef4a1208d32c13ce017fe1 ]
 
-Use the following command to test nfsv4(size of file1M is 1MB):
-mount -t nfs -o vers=4.0,actimeo=60 127.0.0.1/dir1 /mnt
-cp file1M /mnt
-du -h /mnt/file1M  -->0 within 60s, then 1M
+Commit 417cf39cfea9 ("NTB: Set dma mask and dma coherent mask to NTB
+devices") started using the NTB device for DMA allocations which was
+turns out was wrong. If the IOMMU is enabled, such alloctanions will
+always fail with messages such as:
 
-When write is done(cp file1M /mnt), will call this:
-nfs_writeback_done
-  nfs4_write_done
-    nfs4_write_done_cb
-      nfs_writeback_update_inode
-        nfs_post_op_update_inode_force_wcc_locked(change, ctime, mtime
-nfs_post_op_update_inode_force_wcc_locked
-   nfs_set_cache_invalid
-   nfs_refresh_inode_locked
-     nfs_update_inode
+  DMAR: Allocating domain for 0000:02:00.1 failed
 
-nfsd write response contains change, ctime, mtime, the flag will be
-clear after nfs_update_inode. Howerver, write response does not contain
-space_used, previous open response contains space_used whose value is 0,
-so inode->i_blocks is still 0.
+This is because the IOMMU has not setup the device for such use.
 
-nfs_getattr  -->called by "du -h"
-  do_update |= force_sync || nfs_attribute_cache_expired -->false in 60s
-  cache_validity = READ_ONCE(NFS_I(inode)->cache_validity)
-  do_update |= cache_validity & (NFS_INO_INVALID_ATTR    -->false
-  if (do_update) {
-        __nfs_revalidate_inode
-  }
+Change the tools back to using the PCI device for allocations seeing
+it doesn't make sense to add an IOMMU group for the non-physical NTB
+device. Also remove the code that sets the DMA mask as it no longer
+makes sense to do this.
 
-Within 60s, does not send getattr request to nfsd, thus "du -h /mnt/file1M"
-is 0.
-
-Add a NFS_INO_INVALID_BLOCKS flag, set it when nfsv4 write is done.
-
-Fixes: 16e143751727 ("NFS: More fine grained attribute tracking")
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/inode.c         | 14 +++++++++++---
- include/linux/nfs_fs.h |  1 +
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ drivers/ntb/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 3802c88e83720..6de41f7412808 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -826,6 +826,8 @@ int nfs_getattr(const struct path *path, struct kstat *stat,
- 		do_update |= cache_validity & NFS_INO_INVALID_ATIME;
- 	if (request_mask & (STATX_CTIME|STATX_MTIME))
- 		do_update |= cache_validity & NFS_INO_REVAL_PAGECACHE;
-+	if (request_mask & STATX_BLOCKS)
-+		do_update |= cache_validity & NFS_INO_INVALID_BLOCKS;
- 	if (do_update) {
- 		/* Update the attribute cache */
- 		if (!(server->flags & NFS_MOUNT_NOAC))
-@@ -1750,7 +1752,8 @@ out_noforce:
- 	status = nfs_post_op_update_inode_locked(inode, fattr,
- 			NFS_INO_INVALID_CHANGE
- 			| NFS_INO_INVALID_CTIME
--			| NFS_INO_INVALID_MTIME);
-+			| NFS_INO_INVALID_MTIME
-+			| NFS_INO_INVALID_BLOCKS);
- 	return status;
+diff --git a/drivers/ntb/core.c b/drivers/ntb/core.c
+index c9a0912b175fa..f8f75a504a581 100644
+--- a/drivers/ntb/core.c
++++ b/drivers/ntb/core.c
+@@ -311,4 +311,3 @@ static void __exit ntb_driver_exit(void)
+ 	bus_unregister(&ntb_bus);
  }
- 
-@@ -1857,7 +1860,8 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
- 			| NFS_INO_INVALID_ATIME
- 			| NFS_INO_REVAL_FORCED
--			| NFS_INO_REVAL_PAGECACHE);
-+			| NFS_INO_REVAL_PAGECACHE
-+			| NFS_INO_INVALID_BLOCKS);
- 
- 	/* Do atomic weak cache consistency updates */
- 	nfs_wcc_update_inode(inode, fattr);
-@@ -2019,8 +2023,12 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 		inode->i_blocks = nfs_calc_block_size(fattr->du.nfs3.used);
- 	} else if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
- 		inode->i_blocks = fattr->du.nfs2.blocks;
--	else
-+	else {
-+		nfsi->cache_validity |= save_cache_validity &
-+				(NFS_INO_INVALID_BLOCKS
-+				| NFS_INO_REVAL_FORCED);
- 		cache_revalidated = false;
-+	}
- 
- 	/* Update attrtimeo value if we're out of the unstable period */
- 	if (attr_changed) {
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 570a60c2f4f48..ad09c0cc54645 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -225,6 +225,7 @@ struct nfs4_copy_state {
- #define NFS_INO_INVALID_OTHER	BIT(12)		/* other attrs are invalid */
- #define NFS_INO_DATA_INVAL_DEFER	\
- 				BIT(13)		/* Deferred cache invalidation */
-+#define NFS_INO_INVALID_BLOCKS	BIT(14)         /* cached blocks are invalid */
- 
- #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
- 		| NFS_INO_INVALID_CTIME \
+ module_exit(ntb_driver_exit);
+-
 -- 
 2.25.1
 
