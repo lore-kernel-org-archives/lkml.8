@@ -2,262 +2,150 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E362C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4942020738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F24420723
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LC/Prwk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbgFWIzT convert rfc822-to-8bit (ORCPT
+        id S1731965AbgFWI4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:55:19 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:56496 "EHLO gloria.sntech.de"
+        Tue, 23 Jun 2020 04:56:04 -0400
+Received: from mout.web.de ([212.227.15.14]:45613 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731756AbgFWIzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:55:18 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jnehy-0007Pe-JR; Tue, 23 Jun 2020 10:55:10 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
-Date:   Tue, 23 Jun 2020 10:55:10 +0200
-Message-ID: <7555251.hpBSmtosxn@diego>
-In-Reply-To: <5d8101c2c9f6c4b965641dadbaf837e8@kernel.org>
-References: <20200613102435.1728299-1-maz@kernel.org> <3900410.KmKVo4a8Xk@diego> <5d8101c2c9f6c4b965641dadbaf837e8@kernel.org>
+        id S1731756AbgFWI4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:56:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592902554;
+        bh=3yqnrGafGbJ0tXimLwFGtJ2yGSF0QBxzZ4+10OuTalM=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=LC/Prwk8dbjEgxsm4IJZ9fqItzwKqZvDN35ht5TbW2gRt6V8ChJPwfXtGOul8CBgg
+         fK3INnhbbZdqoII6Jk3Z1RJXXaw0kMb+9eqefHB07XyEeXClplSJpeowXwrpLhWt7q
+         vevtIFbVcz2TdubuK6hdiSwRfWTCU9lKzruJ+DX0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.105.198]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lx73h-1ilRBb1EBV-016k8C; Tue, 23
+ Jun 2020 10:55:54 +0200
+Subject: Re: [PATCH v2 1/2] ASoC: fsl_mqs: Don't check clock is NULL before
+ calling clk API
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, Timur Tabi <timur@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <39ac8f24-3148-2a3d-3f8d-91567b3c4c9e@web.de>
+ <CAA+D8APR2NGAn9jRDSZzr1fgj5u0hAvH19VxZS+tj2A7j3PCuw@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <24be48d2-63de-b900-cec7-d21e83a89ca2@web.de>
+Date:   Tue, 23 Jun 2020 10:55:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <CAA+D8APR2NGAn9jRDSZzr1fgj5u0hAvH19VxZS+tj2A7j3PCuw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:/wu01VqnpeuiFKn6xE+qbTqm1uXYF9D06eNXdPHGH89BpcHzLjX
+ wrmopcETctrwEaIvACOqKCnGgB9drTAGMcPLhyMw0zaJZSkM8dyGJxpH16Z/L9fu+vsQJFf
+ r02r+mZTgngPx8K66LqVAD0EedxidxAjNk57VcWL2wJaz6ezZdpYqVNaRCGrgi7KA15RibC
+ IYcG6WZ5vV0f/r1rplPUA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y9JLtKPGUEo=:WfCSFhleUjpYZXkOnTO02/
+ t8edL5u2/HmrmOd5AkpLG48iDISWPtH4HNvhZApy1HqEbfe7K/WWzsdtatcho4icc26P7ZOvO
+ Rc/Q1rxmSV8aN5F0poCN4ZLh56C4ZYCaX84nVeZg6EcQKT0y/4OPappdrF30G0Sw/tsHobbT0
+ Tkn/ULdAdFfpgbzr9ebLuPh3fxb7zOz4Z/J0tEPKzIrwghnLzfRoOgvyI+csYCZfjXKGEEmrv
+ 4qId+ZFkkCZXm4Jy12/g+GdN/nAnKxIPQpVS+bLwovepas4zVz6SFbeOneHsq5zUKl9p/5zHQ
+ DrmMvO6z7kZT9c3RAbnpC0K1ZyImLlDL54R19Rsmbo7nJZ8Y+AcR2qUqHvKKxI/Coit8ukilx
+ QvtoeLSqPqFJecOys48hkGVaIcoH4h9XmEFGdW/RJmGJ3RG3M+pDxuaZ3rjSk4JaJm6Nc/Ri7
+ 5PsmC5ijz8foPMIIz6NehqssecK69I+ZRMQ/prXldLWvNJr8YHUMTMpAt2misYcLx5gTlA/Gm
+ /wFsqywt1tmaLIYvMLQa0Mm2v1MSBw6s8MzDLqfpHibNM6Nc3Z5/f1IuAeLw+TTUCKrGx05Ru
+ rDUEQc/oAEV736aLlkcEeNGEBkVdVEn9ky9RN371k5TJr3GxAjf5lCyfAnofoGONt22/41yKy
+ f7WgLSiEhmjKgZpjedXKBd0E1vaWk/Nh8qztyWranmjZqw1/1rnyJoS3Usv1QgFbKjMGBycT+
+ +BnNjhBS7DjonHMpEghqO+w0Nsn7GLK1kJkZIcbN+grOF9yJqxMIE3q59HKssaU8x57wcMBbj
+ RHwPvv8dvthEsB1RxKKCOwLaeeZbl4jBPP39Pzz3ZOYvhW0foOwMzLQ/Vax7wfsdO5oO/x6JU
+ QHtQwpLl/+WErzParkTXcanbyjLyHeLENhYv3DoJs6GNvhp7m7zBCsvq7E0kPd8InTxmyigxl
+ 7Z3H8/2rGhsNUkX6DPCyCd5ChrBSDmzvSVb4HHnRvG1T63opwNO8K3RzLgtcbAl7pIWAMm7/J
+ ah5h6ykrzMvVAXqzMzX1SC0sBKmOhkrzqXB8EBnjgh88MxHltUjxim3/kKfRNNlO0+dkp7XEx
+ uF1nbaJyKAVnQRkVso9wvFn6pWnhc6mdVaB97i0/nR7CI76/5fhL84h2rU3YN0Mrwzr9r80ay
+ 7BBr2N5wDVqjZ85e0dF8pVJwrjIm7Q59ipMuWgBd6gSYkRNXyE6DmZTxNe6aOJZXUjBTklYa7
+ UFk1xIm5y87O4J3cX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 22. Juni 2020, 17:07:52 CEST schrieb Marc Zyngier:
-> Hi Heiko,
-> 
-> On 2020-06-22 14:54, Heiko Stübner wrote:
-> > Hi Marc,
-> > 
-> > Am Montag, 22. Juni 2020, 15:31:55 CEST schrieb Marc Zyngier:
-> >> On Sat, 13 Jun 2020 11:24:35 +0100
-> >> Marc Zyngier <maz@kernel.org> wrote:
-> >> 
-> >> > Booting a recent kernel on a rk3399-based system (nanopc-t4),
-> >> > equipped with a recent u-boot and ATF results in the following:
-> >> >
-> >> > [    5.607431] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001e4
-> >> > [    5.608219] Mem abort info:
-> >> > [    5.608469]   ESR = 0x96000004
-> >> > [    5.608749]   EC = 0x25: DABT (current EL), IL = 32 bits
-> >> > [    5.609223]   SET = 0, FnV = 0
-> >> > [    5.609600]   EA = 0, S1PTW = 0
-> >> > [    5.609891] Data abort info:
-> >> > [    5.610149]   ISV = 0, ISS = 0x00000004
-> >> > [    5.610489]   CM = 0, WnR = 0
-> >> > [    5.610757] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000e62fb000
-> >> > [    5.611326] [00000000000001e4] pgd=0000000000000000, p4d=0000000000000000
-> >> > [    5.611931] Internal error: Oops: 96000004 [#1] SMP
-> >> > [    5.612363] Modules linked in: rockchip_thermal(E+) rk3399_dmc(E+) soundcore(E) dw_wdt(E) rockchip_dfi(E) nvmem_rockchip_efuse(E) pwm_rockchip(E) cfg80211(E+) rockchip_saradc(E) industrialio(E) rfkill(E) cpufreq_dt(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc32c_generic(E) crc16(E) mbcache(E) jbd2(E) realtek(E) nvme(E) nvme_core(E) t10_pi(E) xhci_plat_hcd(E) xhci_hcd(E) rtc_rk808(E) rk808_regulator(E) clk_rk808(E) dwc3(E) udc_core(E) roles(E) ulpi(E) rk808(E)
-> >> fan53555(E) rockchipdrm(E) analogix_dp(E) dw_hdmi(E) cec(E)
-> >> dw_mipi_dsi(E) fixed(E) dwc3_of_simple(E) phy_rockchip_emmc(E)
-> >> gpio_keys(E) drm_kms_helper(E) phy_rockchip_inno_usb2(E)
-> >> ehci_platform(E) dwmac_rk(E) stmmac_platform(E) phy_rockchip_pcie(E)
-> >> ohci_platform(E) ohci_hcd(E) rockchip_io_domain(E) stmmac(E)
-> >> phy_rockchip_typec(E) ehci_hcd(E) sdhci_of_arasan(E) mdio_xpcs(E)
-> >> sdhci_pltfm(E) cqhci(E) drm(E) sdhci(E) phylink(E) of_mdio(E)
-> >> usbcore(E) i2c_rk3x(E) dw_mmc_rockchip(E) dw_mmc_pltfm(E) dw_mmc(E)
-> >> fixed_phy(E) libphy(E)
-> >> > [    5.612454]  pl330(E)
-> >> > [    5.620255] CPU: 1 PID: 270 Comm: systemd-udevd Tainted: G            E     5.7.0-13692-g83ae758d8b22 #1157
-> >> > [    5.621110] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2020.07-rc4-00023-g10d4cafe0f 06/10/2020
-> >> > [    5.621947] pstate: 40000005 (nZcv daif -PAN -UAO BTYPE=--)
-> >> > [    5.622446] pc : regmap_read+0x1c/0x80
-> >> > [    5.622787] lr : rk3399_dmcfreq_probe+0x6a4/0x8c0 [rk3399_dmc]
-> >> > [    5.623299] sp : ffff8000126cb8a0
-> >> > [    5.623594] x29: ffff8000126cb8a0 x28: ffff8000126cbdb0
-> >> > [    5.624063] x27: ffff0000f22dac40 x26: ffff0000f6779800
-> >> > [    5.624533] x25: ffff0000f6779810 x24: 00000000ffffffea
-> >> > [    5.625002] x23: 00000000ffffffea x22: ffff0000f65b74c8
-> >> > [    5.625471] x21: ffff0000f783ca08 x20: ffff0000f65b7480
-> >> > [    5.625941] x19: 0000000000000000 x18: 0000000000000001
-> >> > [    5.626410] x17: 0000000000000000 x16: 0000000000000000
-> >> > [    5.626878] x15: ffff0000f22db138 x14: ffffffffffffffff
-> >> > [    5.627347] x13: 0000000000000018 x12: ffff80001106a8c7
-> >> > [    5.627817] x11: 0000000000000003 x10: 0101010101010101
-> >> > [    5.627861] systemd[1]: Found device SPCC M.2 PCIE SSD 3.
-> >> > [    5.628286] x9 : ffff800008d7c89c x8 : 7f7f7f7f7f7f7f7f
-> >> > [    5.629238] x7 : fefefeff646c606d x6 : 1c0e0e0ee3e8e9f0
-> >> > [    5.629709] x5 : 706968630e0e0e1c x4 : 8080808000000000
-> >> > [    5.630178] x3 : 937b1b5b1b434b80 x2 : ffff8000126cb944
-> >> > [    5.630648] x1 : 0000000000000308 x0 : 0000000000000000
-> >> > [    5.631119] Call trace:
-> >> > [    5.631346]  regmap_read+0x1c/0x80
-> >> > [    5.631654]  rk3399_dmcfreq_probe+0x6a4/0x8c0 [rk3399_dmc]
-> >> > [    5.632142]  platform_drv_probe+0x5c/0xb0
-> >> > [    5.632500]  really_probe+0xe4/0x448
-> >> > [    5.632819]  driver_probe_device+0xfc/0x168
-> >> > [    5.633191]  device_driver_attach+0x7c/0x88
-> >> > [    5.633567]  __driver_attach+0xac/0x178
-> >> > [    5.633914]  bus_for_each_dev+0x78/0xc8
-> >> > [    5.634261]  driver_attach+0x2c/0x38
-> >> > [    5.634582]  bus_add_driver+0x14c/0x230
-> >> > [    5.634925]  driver_register+0x6c/0x128
-> >> > [    5.635269]  __platform_driver_register+0x50/0x60
-> >> > [    5.635692]  rk3399_dmcfreq_driver_init+0x2c/0x1000 [rk3399_dmc]
-> >> > [    5.636226]  do_one_initcall+0x50/0x230
-> >> > [    5.636569]  do_init_module+0x60/0x248
-> >> > [    5.636902]  load_module+0x21f8/0x28d8
-> >> > [    5.637237]  __do_sys_finit_module+0xb0/0x118
-> >> > [    5.637627]  __arm64_sys_finit_module+0x28/0x38
-> >> > [    5.638031]  el0_svc_common.constprop.0+0x7c/0x1f8
-> >> > [    5.638456]  do_el0_svc+0x2c/0x98
-> >> > [    5.638754]  el0_svc+0x18/0x48
-> >> > [    5.639029]  el0_sync_handler+0x8c/0x2d4
-> >> > [    5.639378]  el0_sync+0x158/0x180
-> >> > [    5.639680] Code: a9bd7bfd 910003fd a90153f3 aa0003f3 (b941e400)
-> >> > [    5.640221] ---[ end trace 63675fe5d0021970 ]---
-> >> >
-> >> > This turns out to be due to the rk3399-dmc driver looking for
-> >> > an *undocumented* property (rockchip,pmu), and happily using
-> >> > a NULL pointer when the property isn't there.
-> >> >
-> >> > The very existence of this driver in the kernel is highly doubtful
-> >> > (I'd expect firmware to deal with this directly), but in the meantime
-> >> > let's prevent it from oopsing the kernel at probe time if this
-> >> > property isn't present.
-> > 
-> > TF-A is handling the actual frequency scaling, this driver is like a
-> > glorified wrapper around the TF-A interface ... and the dmc_clock it
-> > calls is just this firmware-interface (see 
-> > drivers/clk/rockchip/clk-ddr.c)
-> > 
-> > And I guess it also works around some missing Coreboot functionality.
-> > 
-> > On u-boot we have ddr-timings in the uboot-devicetree which
-> > _now_ after so many years finally also gets passed on to TF-A
-> > but coreboot uses a completely different system, so I guess ChromeOS
-> > used this to also tell TF-A about the actual ram configuration.
-> 
-> It is all very convoluted... :-/
-> 
-> >> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> >> > ---
-> >> >  drivers/devfreq/rk3399_dmc.c | 17 ++++++++++-------
-> >> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> >> >
-> >> > diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
-> >> > index 24f04f78285b..bee233a2e0ce 100644
-> >> > --- a/drivers/devfreq/rk3399_dmc.c
-> >> > +++ b/drivers/devfreq/rk3399_dmc.c
-> >> > @@ -371,13 +371,16 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
-> >> >  	}
-> >> >
-> >> >  	node = of_parse_phandle(np, "rockchip,pmu", 0);
-> >> > -	if (node) {
-> >> > -		data->regmap_pmu = syscon_node_to_regmap(node);
-> >> > -		of_node_put(node);
-> >> > -		if (IS_ERR(data->regmap_pmu)) {
-> >> > -			ret = PTR_ERR(data->regmap_pmu);
-> >> > -			goto err_edev;
-> >> > -		}
-> >> > +	if (!node) {
-> >> > +		ret = -ENODEV;
-> >> > +		goto err_edev;
-> >> > +	}
-> >> > +
-> >> > +	data->regmap_pmu = syscon_node_to_regmap(node);
-> >> > +	of_node_put(node);
-> >> > +	if (IS_ERR(data->regmap_pmu)) {
-> >> > +		ret = PTR_ERR(data->regmap_pmu);
-> >> > +		goto err_edev;
-> >> >  	}
-> >> >
-> >> >  	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-> >> 
-> >> 
-> >> Any opinion on this patch? I can't believe I'm the only one hitting
-> >> this.
-> > 
-> > Looking at my test-kernel-config, I don't seem to actually build this 
-> > driver
-> > though I'm also not using boards productively.
-> > 
-> > But looking deeper, I'm either blind or nothing really carries a 
-> > dt-node
-> > with a "rockchip,rk3399-dmc" compatible at all, so I'm wondering how 
-> > you
-> > could actually hit it yourself :-) .
-> 
-> maz@fine-girl:~$ sudo dtc -I dtb /sys/firmware/fdt 2>/dev/null | grep -A 
-> 5 dmc
-> 	dmc {
-> 		u-boot,dm-pre-reloc;
-> 		compatible = "rockchip,rk3399-dmc";
-> 		devfreq-events = <0xc8>;
-> 
-> [followed by a ton of timings...]
-> 
-> It is definitely coming from u-boot (I don't provide any DTB otherwise,
-> and you can find the corresponding node and timings in the u-boot tree).
+>     clk_prepare_enable and clk_disable_unprepare check the input
+>     clock parameter in the beginning of the function,
 
-which is probably the source of the problem :-) .
-
-I'm pretty sure the "reviewed" binding in the kernel doesn't match the
-dt-nodes used in uboot.
-
-While u-boot these days syncs the main devicetrees from Linux, the memory
-setup stuff is pretty specific to uboot (and lives in separate dtsi files).
-
-And I guess you're the only one feeding uboot's dtb to Linux directly, hence
-nobody else did encounter this before ;-) .
+These functions call further functions which perform null pointer checks.
 
 
-Heiko
+>                                                       if the parameter
+>     is NULL, clk_prepare_enable and clk_disable_unprepare will
+>     return immediately.
+
+The interpretation of these function implementations seems to be reasonable.
+Would you like to achieve any improvements for the corresponding software documentation?
 
 
-> > The change was introduced only last year with
-> > commit 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto
-> > power down parameters to TF-A.")
-> > 
-> > So adding that rockchip,pmu property should be optional to not break
-> > dt-bindings, so I guess instead of erroring out, the one regmap_read 
-> > below
-> > that (only one using the regmap) should actually just check for
-> > regmap_pmu != NULL?
-> 
-> But what does it mean then? Not finding the regmap means not finding
-> the DDR type, in which case the best you can do is to hit the default
-> case which errors out.
-> 
-> So I went ahead and made the whole of 9173c5ceb035 depend on the
-> regmap being available. I now get:
-> 
-> [    6.618548] rk3399-dmc-freq ffa80000.dmc: Invalid operating-points in 
-> device tree.
-> [    6.619256] rk3399-dmc-freq: probe of ffa80000.dmc failed with error 
-> -22
-> 
-> which suits me perfectly.
-> 
-> I'll post a new revision in a few minutes.
-> 
-> Thanks,
-> 
->          M.
-> 
+>     So Don't need to check input clock parameters before calling clk API.
 
+What do you find imperative in this wording?
 
+Another wording alternative:
+   Thus omit extra null pointer checks before four function calls.
 
-
+Regards,
+Markus
