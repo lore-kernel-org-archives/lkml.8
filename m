@@ -2,110 +2,70 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28075C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3D920768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C4D20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731914AbgFWIwg (ORCPT
+        id S1732049AbgFWIwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:52:36 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:41238 "EHLO loongson.cn"
+        Tue, 23 Jun 2020 04:52:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34788 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731811AbgFWIwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:52:22 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv2uFwvFecLBIAA--.12S2;
-        Tue, 23 Jun 2020 16:51:19 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Guo Ren <guoren@kernel.org>, Baruch Siach <baruch@tkos.co.il>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 0/7] Fix potential resource leaks and do some code cleanups about irqchip
-Date:   Tue, 23 Jun 2020 16:51:09 +0800
-Message-Id: <1592902276-3969-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxv2uFwvFecLBIAA--.12S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFy5GF48uFy7WrWfGr1Utrb_yoW8CrWDpF
-        47A39Ivr1fCay3Zr1fAr40yry3A3Z5Kay7K3yxt3sxXr95G34DWF1UAa4kXr97JrWxG3Wj
-        9F1rWFWUG3WUCF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
-        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
-        xVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-        fUeApeUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        id S1731840AbgFWIwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:52:36 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DB9081C1A8914FFD59C3;
+        Tue, 23 Jun 2020 16:52:33 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Tue, 23 Jun 2020
+ 16:52:27 +0800
+From:   Wang ShaoBo <bobo.shaobowang@huawei.com>
+CC:     <rostedt@goodmis.org>, <mingo@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <cj.chengjian@huawei.com>,
+        <xiexiuqi@huawei.com>, <bobo.shaobowang@huawei.com>
+Subject: [PATCH] tracing: Fix tracing buffer length in tracing_mark_write
+Date:   Tue, 23 Jun 2020 16:52:18 +0800
+Message-ID: <20200623085218.26426-1-bobo.shaobowang@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.27]
+X-CFilter-Loop: Reflected
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I test the irqchip code of Loongson, I read the related code of other
-chips in drivers/irqchip and I find some potential resource leaks in the
-error path, I think it is better to fix them. Additionally, do some code
-cleanups about Loongson to make it more clean and readable.
+__copy_from_user_inatomic() return the byte length that copied failed,
+tracing buffer should left this bytes.
 
-Tiezhu Yang (7):
-  irqchip: Fix potential resource leaks
-  irqchip/loongson-htpic: Remove redundant kfree operation
-  irqchip/loongson-htvec: Check return value of
-    irq_domain_translate_onecell()
-  irqchip/loongson-pch-pic: Check return value of
-    irq_domain_translate_twocell()
-  irqchip/loongson-pch-msi: Remove unneeded variable
-  irqchip/loongson-htpic: Remove unneeded select of I8259
-  dt-bindings: interrupt-controller: Fix typos in loongson,liointc.yaml
+Fixes: 656c7f0d2d2b ("tracing: Replace kmap with copy_from_user() in trace_marker writing")
+Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../interrupt-controller/loongson,liointc.yaml     |  4 ++--
- drivers/irqchip/Kconfig                            |  1 -
- drivers/irqchip/irq-ath79-misc.c                   |  3 +++
- drivers/irqchip/irq-csky-apb-intc.c                |  3 +++
- drivers/irqchip/irq-csky-mpintc.c                  | 26 +++++++++++++++++-----
- drivers/irqchip/irq-davinci-aintc.c                | 17 ++++++++++----
- drivers/irqchip/irq-davinci-cp-intc.c              | 17 +++++++++++---
- drivers/irqchip/irq-digicolor.c                    |  4 ++++
- drivers/irqchip/irq-dw-apb-ictl.c                  | 11 ++++++---
- drivers/irqchip/irq-loongson-htpic.c               |  6 ++---
- drivers/irqchip/irq-loongson-htvec.c               | 10 +++++++--
- drivers/irqchip/irq-loongson-pch-msi.c             |  7 +-----
- drivers/irqchip/irq-loongson-pch-pic.c             | 15 ++++++++-----
- drivers/irqchip/irq-ls1x.c                         |  4 +++-
- drivers/irqchip/irq-mscc-ocelot.c                  |  6 +++--
- drivers/irqchip/irq-nvic.c                         |  2 ++
- drivers/irqchip/irq-omap-intc.c                    |  4 +++-
- drivers/irqchip/irq-riscv-intc.c                   |  1 +
- drivers/irqchip/irq-s3c24xx.c                      | 20 ++++++++++++-----
- drivers/irqchip/irq-xilinx-intc.c                  |  1 +
- 20 files changed, 116 insertions(+), 46 deletions(-)
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 29615f15a820..ed5fe0f165e0 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6628,7 +6628,7 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 		written = -EFAULT;
+ 	} else
+ 		written = cnt;
+-	len = cnt;
++	cnt -= len;
+ 
+ 	if (tr->trace_marker_file && !list_empty(&tr->trace_marker_file->triggers)) {
+ 		/* do not add \n before testing triggers, but add \0 */
 -- 
-2.1.0
+2.17.1
 
