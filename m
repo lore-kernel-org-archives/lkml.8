@@ -2,52 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A147C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E577920724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E47B20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947436;
-	bh=6xG++iIvFQ0P9w0PQXIEtbxJNWBGcef1pHmStQxfyfU=;
+	s=default; t=1592947443;
+	bh=JU9sCxxkFFdsFCi4Fz5cEczvWYShzLwWuqXG+2gEuUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cY3/rE/ybAvwvcf1KdIiVSIWQoJUHnZPiMhyN0LR7v3zlb53TyR7yq50U254oxo7E
-	 01VAh4Qd/Xql50WiJhh3JOTv6cjsFsAtaddSIViDbbmsooimvJPg/JwNTtC0jzD3J8
-	 e0cCFFtHMLD1q7oY3ELdLGRaK4CXxnW+LS5d5czE=
+	b=aeBaGDsuImHW04B9sOb2aWWTCY1sjIz2u6YplrcEO9mgHCY2u21f5j6M5dkZ3zYzc
+	 H+7cyHfxZ1zmJtPb5zNyENqBky04n0GwSz1ciVITJyP7d7rnqiEKGMJd2wR4ypuw9q
+	 cJVGIhDK/k2eu0sCxrfkECi9ESbFa7f7IxGZE4I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390308AbgFWVXz (ORCPT
+        id S2393512AbgFWVYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38006 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389952AbgFWUUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:20:36 -0400
+        id S2389942AbgFWUU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65C462168B;
-        Tue, 23 Jun 2020 20:20:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AA742073E;
+        Tue, 23 Jun 2020 20:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943637;
-        bh=6xG++iIvFQ0P9w0PQXIEtbxJNWBGcef1pHmStQxfyfU=;
+        s=default; t=1592943628;
+        bh=JU9sCxxkFFdsFCi4Fz5cEczvWYShzLwWuqXG+2gEuUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsExLFsCkCsSY2CRl8bNJR3F3l/iQxfbFULXH2KQDWQAFjDiYhNQciunu1eNJEwcW
-         aL2pEFQZf0QGsIL8hCKjzRcq+5USKTv828s1fMLnm18iQgQAs0Ma+NtPMg4B/UQqhF
-         0j5txnlsrlQatz2vp0/ksz1gZeyEoxB84O6SPXdg=
+        b=NhaejGnHLWKvs5aO/xfdBmO/12pU4cmOtYKPpeUintzH8b6XDhX8WRKvXYGxec1oC
+         PaPdwTbHQ8SZolYfe0DghQBIxcKX14a8IYOFMnJWIiuCeGy0saglyQqg/61XwVwrfV
+         tv3Exw6+KnQZ7gzpvk2OTmEiscNKJDxiBRMYW61o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 438/477] net/mlx5: DR, Fix freeing in dr_create_rc_qp()
-Date:   Tue, 23 Jun 2020 21:57:15 +0200
-Message-Id: <20200623195428.235096926@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.7 465/477] tools/bootconfig: Fix to use correct quotes for value
+Date:   Tue, 23 Jun 2020 21:57:42 +0200
+Message-Id: <20200623195429.533035502@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,37 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 47a357de2b6b706af3c9471d5042f9ba8907031e ]
+commit 272da3279df191f028fd63d1683e5ecd56fcb13b upstream.
 
-Variable "in" in dr_create_rc_qp() is allocated with kvzalloc() and
-should be freed with kvfree().
+Fix bootconfig tool to select double or single quotes
+correctly according to the value.
 
-Fixes: 297cccebdc5a ("net/mlx5: DR, Expose an internal API to issue RDMA operations")
+If a bootconfig value includes a double quote character,
+we must use single-quotes to quote that value.
+
+Link: http://lkml.kernel.org/r/159230245697.65555.12444299015852932304.stgit@devnote2
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/bootconfig/main.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c
-index 18719acb7e547..eff8bb64899d6 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c
-@@ -181,7 +181,7 @@ static struct mlx5dr_qp *dr_create_rc_qp(struct mlx5_core_dev *mdev,
- 							 in, pas));
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -14,13 +14,18 @@
+ #include <linux/kernel.h>
+ #include <linux/bootconfig.h>
  
- 	err = mlx5_core_create_qp(mdev, &dr_qp->mqp, in, inlen);
--	kfree(in);
-+	kvfree(in);
+-static int xbc_show_array(struct xbc_node *node)
++static int xbc_show_value(struct xbc_node *node)
+ {
+ 	const char *val;
++	char q;
+ 	int i = 0;
  
- 	if (err) {
- 		mlx5_core_warn(mdev, " Can't create QP\n");
--- 
-2.25.1
-
+ 	xbc_array_for_each_value(node, val) {
+-		printf("\"%s\"%s", val, node->next ? ", " : ";\n");
++		if (strchr(val, '"'))
++			q = '\'';
++		else
++			q = '"';
++		printf("%c%s%c%s", q, val, q, node->next ? ", " : ";\n");
+ 		i++;
+ 	}
+ 	return i;
+@@ -48,10 +53,7 @@ static void xbc_show_compact_tree(void)
+ 			continue;
+ 		} else if (cnode && xbc_node_is_value(cnode)) {
+ 			printf("%s = ", xbc_node_get_data(node));
+-			if (cnode->next)
+-				xbc_show_array(cnode);
+-			else
+-				printf("\"%s\";\n", xbc_node_get_data(cnode));
++			xbc_show_value(cnode);
+ 		} else {
+ 			printf("%s;\n", xbc_node_get_data(node));
+ 		}
 
 
