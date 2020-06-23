@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C903AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8965FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B01120707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BD72137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943231;
-	bh=S3vdvrdQjZQyRMTQXQMaUocGwPJiZTZYDBCR1H5Zs0o=;
+	s=default; t=1592943235;
+	bh=a4LDfRtPIpYSvbxZeEpnaHT28+A9kx75ACWkZT9Qg7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KEwne5kF99UWYPjq+2u9naxveiPXln+MPWwa+GHqYfCzYRvWDACORvo8/tdSF4T2p
-	 45ZLLTQbCEaBLioSLJFPzeux8vs9Silm4nV9JfCx10EvKkHGWim62Yd0GlE6nLzZ8W
-	 2+cgiy1/1Y6gYwwOzkJMfoYZ7bWtfrqsfStHwk5A=
+	b=y95dzxGB8tc/vi/IZeJJXAaBlMCndOQkwlgV7h+Er9zihQkMsM1Q18BoZEEeBdxJS
+	 UOpaviTiHLJW7ZS7AMn5YMK8S8jmdRP5YysCMXb30cqmwIndm03VnTzGF3NE9mvIia
+	 zZEpUAxc9g8QHhuaHfohaLtUWJuDbRkjthzb0zGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389134AbgFWUNt (ORCPT
+        id S2389138AbgFWUNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:13:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388699AbgFWUNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:45 -0400
+        id S2388699AbgFWUNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 895A62078A;
-        Tue, 23 Jun 2020 20:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 900EF206C3;
+        Tue, 23 Jun 2020 20:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943225;
-        bh=S3vdvrdQjZQyRMTQXQMaUocGwPJiZTZYDBCR1H5Zs0o=;
+        s=default; t=1592943230;
+        bh=a4LDfRtPIpYSvbxZeEpnaHT28+A9kx75ACWkZT9Qg7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzB3hCFio7Qm9OvkhNd/lOL5XnU0iIYH5+QkXwJAFyIiUYwj1k01VIC3LihkUOLL3
-         RcEsC2vJi0lvMtX2pIDCP4mE7b0D/McM1yz4WL/fagN5eps9knne5Bprc2col4A08Y
-         Jtvc6JGMIT9QXjMiszN8FCXnvl+5+EUjD7q2sc90=
+        b=ZgWOooBL+8Qn6vasgHj82GCwAaizElL3E9BuEABbVmYAMuUCdVBu2D0y8WSKT/D8t
+         hulMAbAQNXwCK2KI5m0+tNjd9T+u0M1MaTgXst47ZroOE/WThSMxKWJCMyp2PLgi2O
+         Gc4DF+cRL7ni9ZUlDdn0OSsgw5jL3SpHLUkjAC7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 301/477] vfio/mdev: Fix reference count leak in add_mdev_supported_type
-Date:   Tue, 23 Jun 2020 21:54:58 +0200
-Message-Id: <20200623195421.777993112@linuxfoundation.org>
+Subject: [PATCH 5.7 311/477] gfs2: Allow lock_nolock mount to specify jid=X
+Date:   Tue, 23 Jun 2020 21:55:08 +0200
+Message-Id: <20200623195422.238455615@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,38 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit aa8ba13cae3134b8ef1c1b6879f66372531da738 ]
+[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Thus,
-replace kfree() by kobject_put() to fix this issue. Previous
-commit "b8eb718348b8" fixed a similar problem.
+Before this patch, a simple typo accidentally added \n to the jid=
+string for lock_nolock mounts. This made it impossible to mount a
+gfs2 file system with a journal other than journal0. Thus:
 
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
+
+Resulted in:
+mount: wrong fs type, bad option, bad superblock on <device>
+
+In most cases this is not a problem. However, for debugging and
+testing purposes we sometimes want to test the integrity of other
+journals. This patch removes the unnecessary \n and thus allows
+lock_nolock users to specify an alternate journal.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+ fs/gfs2/ops_fstype.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-index 8ad14e5c02bf8..917fd84c1c6f2 100644
---- a/drivers/vfio/mdev/mdev_sysfs.c
-+++ b/drivers/vfio/mdev/mdev_sysfs.c
-@@ -110,7 +110,7 @@ static struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
- 				   "%s-%s", dev_driver_string(parent->dev),
- 				   group->name);
- 	if (ret) {
--		kfree(type);
-+		kobject_put(&type->kobj);
- 		return ERR_PTR(ret);
- 	}
+diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+index e2b69ffcc6a84..094f5fe7c0090 100644
+--- a/fs/gfs2/ops_fstype.c
++++ b/fs/gfs2/ops_fstype.c
+@@ -880,7 +880,7 @@ fail:
+ }
+ 
+ static const match_table_t nolock_tokens = {
+-	{ Opt_jid, "jid=%d\n", },
++	{ Opt_jid, "jid=%d", },
+ 	{ Opt_err, NULL },
+ };
  
 -- 
 2.25.1
