@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A97D920656
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDEA20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945834;
-	bh=Xyq7Rd3xJ9lMMJTvTVShejbG5V6YJWXpQdHVzdJB8gQ=;
+	s=default; t=1592945838;
+	bh=dO13tl9zfoeK3NDXLaxwbhdiKE/Y+gJk4FrbYulXl54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gOPDULYNy0mMHe1d5IsF0PqyhbI2ydZ8LCK2lFzLNbDl3SvlMdXsF0wXroqAxdr4G
-	 Li63XdcsYFyVTfzKg4aMpmxX9YMu4b5rsGqVRcV38JoPhXZso44a9iZmKJse1PNZqb
-	 9IFZTSBq4E0xer9f8MW+XCP0m+Z1Y1+TJ4OsTI78=
+	b=KtCWVOAKW4piLmOtLBSDH6y0VfhU/GZefkL9Wslq26p8qYEJjDnUQW7MvmOYn91pw
+	 NkLPGHt6sJnzmA4DTUJsG9J0BvHHxihnuE40VCY50czrTaTuP0OTb0oYmMkagVLd6k
+	 BGptZ5POuxTZ0YtaQFfGviFUCGSa2tYThBxv0d64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392467AbgFWUm6 (ORCPT
+        id S2393112AbgFWU5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:42:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389956AbgFWUmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:52 -0400
+        id S2390256AbgFWUmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA60F2070E;
-        Tue, 23 Jun 2020 20:42:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E4D218AC;
+        Tue, 23 Jun 2020 20:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944972;
-        bh=Xyq7Rd3xJ9lMMJTvTVShejbG5V6YJWXpQdHVzdJB8gQ=;
+        s=default; t=1592944974;
+        bh=dO13tl9zfoeK3NDXLaxwbhdiKE/Y+gJk4FrbYulXl54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7grFQWUnVpcj5gBqOuvaBEup6/8X9CHp8YTdVcS64I3b+EwrsHY0xXCh6pppyAy1
-         UyT3caom8W4Mqpq2/kfR35jD/a+F8jO7zAcJkNhfJc0XN4Qxa/2yUroRP73h9K1Wnt
-         sBpugfNRQJYw72iAwOPxWZi1NfGQkbL6PMb0MCu4=
+        b=qCwmb+20c6xLPbybxLs13rTpcIJEBlZizH1Gmm7jYp1tIOkoAkAfYF/U+VFc7XdOR
+         JhYIzYqNu+yZy6CNWYZHH1Jl8TnymKWR+MWYuAyzhjES0UxNlQ43yoXY0PVNQDLzf1
+         /ANABMRZSv+7wBp+fklCJeZWLRMAmXcZ+eJ9fn9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 166/206] ext4: stop overwrite the errcode in ext4_setup_super
-Date:   Tue, 23 Jun 2020 21:58:14 +0200
-Message-Id: <20200623195325.173015774@linuxfoundation.org>
+Subject: [PATCH 4.19 167/206] bcache: fix potential deadlock problem in btree_gc_coalesce
+Date:   Tue, 23 Jun 2020 21:58:15 +0200
+Message-Id: <20200623195325.222463575@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,36 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 5adaccac46ea79008d7b75f47913f1a00f91d0ce ]
+[ Upstream commit be23e837333a914df3f24bf0b32e87b0331ab8d1 ]
 
-Now the errcode from ext4_commit_super will overwrite EROFS exists in
-ext4_setup_super. Actually, no need to call ext4_commit_super since we
-will return EROFS. Fix it by goto done directly.
+coccicheck reports:
+  drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
 
-Fixes: c89128a00838 ("ext4: handle errors on ext4_commit_super")
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200601073404.3712492-1-yangerkun@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+In btree_gc_coalesce func, if the coalescing process fails, we will goto
+to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
+Then, it will cause a deadlock when trying to acquire new_nodes[i]->
+write_lock for freeing new_nodes[i] before return.
+
+btree_gc_coalesce func details as follows:
+	if alloc new_nodes[i] fails:
+		goto out_nocoalesce;
+	// obtain new_nodes[i]->write_lock
+	mutex_lock(&new_nodes[i]->write_lock)
+	// main coalescing process
+	for (i = nodes - 1; i > 0; --i)
+		[snipped]
+		if coalescing process fails:
+			// Here, directly goto out_nocoalesce
+			 // tag will cause a deadlock
+			goto out_nocoalesce;
+		[snipped]
+	// release new_nodes[i]->write_lock
+	mutex_unlock(&new_nodes[i]->write_lock)
+	// coalesing succ, return
+	return;
+out_nocoalesce:
+	btree_node_free(new_nodes[i])	// free new_nodes[i]
+	// obtain new_nodes[i]->write_lock
+	mutex_lock(&new_nodes[i]->write_lock);
+	// set flag for reuse
+	clear_bit(BTREE_NODE_dirty, &ew_nodes[i]->flags);
+	// release new_nodes[i]->write_lock
+	mutex_unlock(&new_nodes[i]->write_lock);
+
+To fix the problem, we add a new tag 'out_unlock_nocoalesce' for
+releasing new_nodes[i]->write_lock before out_nocoalesce tag. If
+coalescing process fails, we will go to out_unlock_nocoalesce tag
+for releasing new_nodes[i]->write_lock before free new_nodes[i] in
+out_nocoalesce tag.
+
+(Coly Li helps to clean up commit log format.)
+
+Fixes: 2a285686c109816 ("bcache: btree locking rework")
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/bcache/btree.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 93c14ecac831e..affccf55294e9 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2249,6 +2249,7 @@ static int ext4_setup_super(struct super_block *sb, struct ext4_super_block *es,
- 		ext4_msg(sb, KERN_ERR, "revision level too high, "
- 			 "forcing read-only mode");
- 		err = -EROFS;
-+		goto done;
- 	}
- 	if (read_only)
- 		goto done;
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index bb40bd66a10e4..38a8f8d2a908d 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -1432,7 +1432,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
+ 			if (__set_blocks(n1, n1->keys + n2->keys,
+ 					 block_bytes(b->c)) >
+ 			    btree_blocks(new_nodes[i]))
+-				goto out_nocoalesce;
++				goto out_unlock_nocoalesce;
+ 
+ 			keys = n2->keys;
+ 			/* Take the key of the node we're getting rid of */
+@@ -1461,7 +1461,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
+ 
+ 		if (__bch_keylist_realloc(&keylist,
+ 					  bkey_u64s(&new_nodes[i]->key)))
+-			goto out_nocoalesce;
++			goto out_unlock_nocoalesce;
+ 
+ 		bch_btree_node_write(new_nodes[i], &cl);
+ 		bch_keylist_add(&keylist, &new_nodes[i]->key);
+@@ -1507,6 +1507,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
+ 	/* Invalidated our iterator */
+ 	return -EINTR;
+ 
++out_unlock_nocoalesce:
++	for (i = 0; i < nodes; i++)
++		mutex_unlock(&new_nodes[i]->write_lock);
++
+ out_nocoalesce:
+ 	closure_sync(&cl);
+ 	bch_keylist_free(&keylist);
 -- 
 2.25.1
 
