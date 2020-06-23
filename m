@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1905C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C000C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB8E2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132AC20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933813;
-	bh=Y+UfLkZNVxHu05Ixfv4l8PA8ebf5ntCkxmCcSgp/xK0=;
+	s=default; t=1592933818;
+	bh=q3h5egUTDUu4nchMMHNC5L2+LU1fvxivBpyhRBRbWHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ty8ij8C3VyPuGC3DaCq4OMaEg3cax9Os8985a7Y1lXJAvDaQCk/ELR0bMSMf7WG6q
-	 VCrDN9m8DuIlXymqV90zNgZ2Zmw5oHKQWd2itaUcHnppP9BkrDPp48bV8K1E6tNnqJ
-	 aUk1/AAYX5w5x12zh05dVq51fZrZnlhw95c+Y4gI=
+	b=yIZDSdum/Dv33kmNlN4nyAVkaJadlpW5TsVb8BEcqUuO6x55Q5MlBdkyx1Go0BIHz
+	 ZNB0PCT52fVoFwNkHdljnZ1FYrF8Zt86vwcRSE1K/4FqJLBCwhUfYbTaTtCDRgHcU0
+	 uVa4uNLGxzkIhZSQDtSyBzB+9TV6JuoJ5TcZ6RS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbgFWRgv (ORCPT
+        id S2387696AbgFWRg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733025AbgFWRgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:40 -0400
+        id S2387600AbgFWRgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FB0207D0;
-        Tue, 23 Jun 2020 17:36:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5258C20706;
+        Tue, 23 Jun 2020 17:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933799;
-        bh=Y+UfLkZNVxHu05Ixfv4l8PA8ebf5ntCkxmCcSgp/xK0=;
+        s=default; t=1592933804;
+        bh=q3h5egUTDUu4nchMMHNC5L2+LU1fvxivBpyhRBRbWHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHLQdCw153Hv+lCHnRvVydLW/D/a3dBiERi+tVreFHI9CNzZyzJjd/jO2ewsU/TIR
-         QwXsmqOShZJoA8uE32p+McEPFUm/3v7jmgkT8m1sl9RFxVVSWVXBW37KztxMynRXjd
-         tLOjQVBX9V1KrVQjiH8anQKBU/fWagwRebTSJkgs=
+        b=Ipd3N5HHlhy28yiUaEx3aOckdCLSJaLcWZz1VIrJ4ux8UPZYZqL8dk4cqeiie9Kub
+         qlgR0N+5I5tKrCP3S6AlDSAQNI/zD8RYBOKNtsAtQBPsf4Ssf3F2YdsE9HsJ0n/cW5
+         JJMLlBVyQwDK+FDYmoDwYHGIh8uLvu+/ZoLViG5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 07/15] ibmvnic: Harden device login requests
-Date:   Tue, 23 Jun 2020 13:36:22 -0400
-Message-Id: <20200623173630.1355971-7-sashal@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 11/15] s390/vdso: fix vDSO clock_getres()
+Date:   Tue, 23 Jun 2020 13:36:26 -0400
+Message-Id: <20200623173630.1355971-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173630.1355971-1-sashal@kernel.org>
 References: <20200623173630.1355971-1-sashal@kernel.org>
@@ -60,72 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit dff515a3e71dc8ab3b9dcc2e23a9b5fca88b3c18 ]
+[ Upstream commit 478237a595120a18e9b52fd2c57a6e8b7a01e411 ]
 
-The VNIC driver's "login" command sequence is the final step
-in the driver's initialization process with device firmware,
-confirming the available device queue resources to be utilized
-by the driver. Under high system load, firmware may not respond
-to the request in a timely manner or may abort the request. In
-such cases, the driver should reattempt the login command
-sequence. In case of a device error, the number of retries
-is bounded.
+clock_getres in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In particular, posix_get_hrtimer_res() does:
+    sec = 0;
+    ns = hrtimer_resolution;
+and hrtimer_resolution depends on the enablement of the high
+resolution timers that can happen either at compile or at run time.
+
+Fix the s390 vdso implementation of clock_getres keeping a copy of
+hrtimer_resolution in vdso data and using that directly.
+
+Link: https://lkml.kernel.org/r/20200324121027.21665-1-vincenzo.frascino@arm.com
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+[heiko.carstens@de.ibm.com: use llgf for proper zero extension]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ arch/s390/include/asm/vdso.h           |  1 +
+ arch/s390/kernel/asm-offsets.c         |  2 +-
+ arch/s390/kernel/time.c                |  1 +
+ arch/s390/kernel/vdso64/clock_getres.S | 10 +++++-----
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 645298628b6f7..5e9e45befc875 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -792,12 +792,13 @@ static int ibmvnic_login(struct net_device *netdev)
- 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
- 	unsigned long timeout = msecs_to_jiffies(30000);
- 	int retry_count = 0;
-+	int retries = 10;
- 	bool retry;
- 	int rc;
+diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
+index 169d7604eb804..f3ba84fa9bd18 100644
+--- a/arch/s390/include/asm/vdso.h
++++ b/arch/s390/include/asm/vdso.h
+@@ -36,6 +36,7 @@ struct vdso_data {
+ 	__u32 tk_shift;			/* Shift used for xtime_nsec	0x60 */
+ 	__u32 ts_dir;			/* TOD steering direction	0x64 */
+ 	__u64 ts_end;			/* TOD steering end		0x68 */
++	__u32 hrtimer_res;		/* hrtimer resolution		0x70 */
+ };
  
- 	do {
- 		retry = false;
--		if (retry_count > IBMVNIC_MAX_QUEUES) {
-+		if (retry_count > retries) {
- 			netdev_warn(netdev, "Login attempts exceeded\n");
- 			return -1;
- 		}
-@@ -812,11 +813,23 @@ static int ibmvnic_login(struct net_device *netdev)
+ struct vdso_per_cpu_data {
+diff --git a/arch/s390/kernel/asm-offsets.c b/arch/s390/kernel/asm-offsets.c
+index 66e830f1c7bfe..e9d09f6e81d25 100644
+--- a/arch/s390/kernel/asm-offsets.c
++++ b/arch/s390/kernel/asm-offsets.c
+@@ -75,6 +75,7 @@ int main(void)
+ 	OFFSET(__VDSO_TK_SHIFT, vdso_data, tk_shift);
+ 	OFFSET(__VDSO_TS_DIR, vdso_data, ts_dir);
+ 	OFFSET(__VDSO_TS_END, vdso_data, ts_end);
++	OFFSET(__VDSO_CLOCK_REALTIME_RES, vdso_data, hrtimer_res);
+ 	OFFSET(__VDSO_ECTG_BASE, vdso_per_cpu_data, ectg_timer_base);
+ 	OFFSET(__VDSO_ECTG_USER, vdso_per_cpu_data, ectg_user_time);
+ 	OFFSET(__VDSO_CPU_NR, vdso_per_cpu_data, cpu_nr);
+@@ -86,7 +87,6 @@ int main(void)
+ 	DEFINE(__CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
+ 	DEFINE(__CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
+ 	DEFINE(__CLOCK_THREAD_CPUTIME_ID, CLOCK_THREAD_CPUTIME_ID);
+-	DEFINE(__CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+ 	DEFINE(__CLOCK_COARSE_RES, LOW_RES_NSEC);
+ 	BLANK();
+ 	/* idle data offsets */
+diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
+index e8766beee5ad8..8ea9db599d38d 100644
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -310,6 +310,7 @@ void update_vsyscall(struct timekeeper *tk)
  
- 		if (!wait_for_completion_timeout(&adapter->init_done,
- 						 timeout)) {
--			netdev_warn(netdev, "Login timed out\n");
--			return -1;
-+			netdev_warn(netdev, "Login timed out, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			continue;
- 		}
- 
--		if (adapter->init_done_rc == PARTIALSUCCESS) {
-+		if (adapter->init_done_rc == ABORTED) {
-+			netdev_warn(netdev, "Login aborted, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			/* FW or device may be busy, so
-+			 * wait a bit before retrying login
-+			 */
-+			msleep(500);
-+		} else if (adapter->init_done_rc == PARTIALSUCCESS) {
- 			retry_count++;
- 			release_sub_crqs(adapter, 1);
- 
+ 	vdso_data->tk_mult = tk->tkr_mono.mult;
+ 	vdso_data->tk_shift = tk->tkr_mono.shift;
++	vdso_data->hrtimer_res = hrtimer_resolution;
+ 	smp_wmb();
+ 	++vdso_data->tb_update_count;
+ }
+diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
+index 081435398e0a1..0c79caa32b592 100644
+--- a/arch/s390/kernel/vdso64/clock_getres.S
++++ b/arch/s390/kernel/vdso64/clock_getres.S
+@@ -17,12 +17,14 @@
+ 	.type  __kernel_clock_getres,@function
+ __kernel_clock_getres:
+ 	CFI_STARTPROC
+-	larl	%r1,4f
++	larl	%r1,3f
++	lg	%r0,0(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME_COARSE
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC_COARSE
+ 	je	0f
+-	larl	%r1,3f
++	larl	%r1,_vdso_data
++	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC
+@@ -36,7 +38,6 @@ __kernel_clock_getres:
+ 	jz	2f
+ 0:	ltgr	%r3,%r3
+ 	jz	1f				/* res == NULL */
+-	lg	%r0,0(%r1)
+ 	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
+ 	stg	%r0,8(%r3)			/* store tp->tv_usec */
+ 1:	lghi	%r2,0
+@@ -45,6 +46,5 @@ __kernel_clock_getres:
+ 	svc	0
+ 	br	%r14
+ 	CFI_ENDPROC
+-3:	.quad	__CLOCK_REALTIME_RES
+-4:	.quad	__CLOCK_COARSE_RES
++3:	.quad	__CLOCK_COARSE_RES
+ 	.size	__kernel_clock_getres,.-__kernel_clock_getres
 -- 
 2.25.1
 
