@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A75EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35B0E2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DABF2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942684;
-	bh=ejEZqh1eLihEvR8qz0EAH2FGNdmKGoi+s0AiUyXYpmQ=;
+	s=default; t=1592942687;
+	bh=oWN/GHMJ1I/nfSKHPsEfpd0EtGfTOxA4OujpXXhXAN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FvJJBZsOo1iDJxT18QkeXN05ztS+jW/zSw87hMDKZlCvWB1V4pIfphjAPUprXHts4
-	 WkMKcHPgU6mWPoTftvHvHgxeBCTKmfEB3YB2eJt1y+ZT3HVCWIgnx/GiHlHCW3zkaH
-	 /6WqGCf4LigtIGT7UD7k1Ii6snnixPUruUUYz0SI=
+	b=L++oZs0L47KsUXK5WvKi6H3VjH+GG7ThVdiJUQcVKhT0crMx0Mr+mJ25w/DjiSBgE
+	 Yqfn9idH0FD/KVWPb/pQzsnsqVgZwmdJtMtA97BG+wrU2/jgSr+h+9T1xvmr6SQUWK
+	 hoUJdmA+DyisJ+pe/jzpLSG817pHLi4dgJWxmQhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388245AbgFWUEm (ORCPT
+        id S2388253AbgFWUEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:04:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43170 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388222AbgFWUEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:33 -0400
+        id S2388236AbgFWUEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8952080C;
-        Tue, 23 Jun 2020 20:04:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0E502080C;
+        Tue, 23 Jun 2020 20:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942673;
-        bh=ejEZqh1eLihEvR8qz0EAH2FGNdmKGoi+s0AiUyXYpmQ=;
+        s=default; t=1592942678;
+        bh=oWN/GHMJ1I/nfSKHPsEfpd0EtGfTOxA4OujpXXhXAN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h4jU6jp8i8um10n8kQOZ8DSxHAnGduFrxnHzI8GkXPOzSSlMYtaFuOHqalPiB41/q
-         oxj9h4jR8OSASEK2v4lH5UlUd5L2ObWTSy+f9ufF3RUMaaXbacG9eqSs/W/WMc6Z5V
-         2/BmtSH++voMA+cGFB1xNiVM/Yalx4Qya/Ja/GmU=
+        b=BDL82bVEr8NNXB3x0M8rdHRzC9Ms9KhLaIf23vG8t3YjaEA+CONZSZaliGmL/jWYx
+         4AoRiBxB5YX1J9M8CSEiaXMg8hR9VWDVwA8eu+g2IkUNnvReAPvY56aREA7XikV69o
+         FBZI9v7YBq4Gk9ANQNRxs1q9NX5E/AA2H+zMqHpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 090/477] crypto: omap-sham - huge buffer access fixes
-Date:   Tue, 23 Jun 2020 21:51:27 +0200
-Message-Id: <20200623195411.860807142@linuxfoundation.org>
+Subject: [PATCH 5.7 092/477] net: mdiobus: Disable preemption upon u64_stats update
+Date:   Tue, 23 Jun 2020 21:51:29 +0200
+Message-Id: <20200623195411.952647146@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,52 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Ahmed S. Darwish <a.darwish@linutronix.de>
 
-[ Upstream commit 6395166d7a19019d5e9574eb9ecdaf0028abb887 ]
+[ Upstream commit c7e261d81783387a0502878cd229327e7c54322e ]
 
-The ctx internal buffer can only hold buflen amount of data, don't try
-to copy over more than that. Also, initialize the context sg pointer
-if we only have data in the context internal buffer, this can happen
-when closing a hash with certain data amounts.
+The u64_stats mechanism uses sequence counters to protect against 64-bit
+values tearing on 32-bit architectures. Updating u64_stats is thus a
+sequence counter write side critical section where preemption must be
+disabled.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+For mdiobus_stats_acct(), disable preemption upon the u64_stats update.
+It is called from process context through mdiobus_read() and
+mdiobus_write().
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/omap-sham.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/net/phy/mdio_bus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
-index e4072cd385857..0cbf9c932a0f0 100644
---- a/drivers/crypto/omap-sham.c
-+++ b/drivers/crypto/omap-sham.c
-@@ -751,8 +751,15 @@ static int omap_sham_align_sgs(struct scatterlist *sg,
- 	int offset = rctx->offset;
- 	int bufcnt = rctx->bufcnt;
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 7a4eb3f2cb743..a1a4dee2a033a 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -757,6 +757,7 @@ EXPORT_SYMBOL(mdiobus_scan);
  
--	if (!sg || !sg->length || !nbytes)
-+	if (!sg || !sg->length || !nbytes) {
-+		if (bufcnt) {
-+			sg_init_table(rctx->sgl, 1);
-+			sg_set_buf(rctx->sgl, rctx->dd->xmit_buf, bufcnt);
-+			rctx->sg = rctx->sgl;
-+		}
-+
- 		return 0;
-+	}
+ static void mdiobus_stats_acct(struct mdio_bus_stats *stats, bool op, int ret)
+ {
++	preempt_disable();
+ 	u64_stats_update_begin(&stats->syncp);
  
- 	new_len = nbytes;
+ 	u64_stats_inc(&stats->transfers);
+@@ -771,6 +772,7 @@ static void mdiobus_stats_acct(struct mdio_bus_stats *stats, bool op, int ret)
+ 		u64_stats_inc(&stats->writes);
+ out:
+ 	u64_stats_update_end(&stats->syncp);
++	preempt_enable();
+ }
  
-@@ -896,7 +903,7 @@ static int omap_sham_prepare_request(struct ahash_request *req, bool update)
- 	if (hash_later < 0)
- 		hash_later = 0;
- 
--	if (hash_later) {
-+	if (hash_later && hash_later <= rctx->buflen) {
- 		scatterwalk_map_and_copy(rctx->buffer,
- 					 req->src,
- 					 req->nbytes - hash_later,
+ /**
 -- 
 2.25.1
 
