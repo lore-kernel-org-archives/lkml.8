@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C44C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8C920842
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF6720890
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872718;
-	bh=9I5Y27ZTrQcqUy9STDR0VsTK0ZGdaJ7BMzoY/xb3kxY=;
+	s=default; t=1592872721;
+	bh=Ydu2oBm0v1WiaUpnb+3/siqJX72BjmdCrHbn1bkGYeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjl5G41SA26FROPmbroLti/ysOOJ+JuIqzczjVh8+473RmmBmeLDgQWGcVRqPu0Oz
-	 9wtGSiYd6hZ7Q8j26oXmRZrr5n2U9+bvLslYCVthDCkfcApFZuY/hGJHTdoQtURAe6
-	 n0d95vgN1eBecNbG+A7S5mwFNNQm0Vg55bffKzRE=
+	b=emVt5UgHXFk5hoI94iMY/QNmEll++E7p1Z6VvE+h5E3/TMZS2+7aeO2TLzs3Ww8Cx
+	 VaxVGxBMze7mAYjAiEu98bYk6xARs/PCfxEx8QTrmVJCAXZijF6QBDjBqrwotAljME
+	 yWSYT4O9nePbB/YlVehVd/TNY4uDACeUl1Y1Ru7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732244AbgFWAih (ORCPT
+        id S1732251AbgFWAij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:38:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732160AbgFWAh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732161AbgFWAh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jun 2020 20:37:57 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6E32145D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DF0D21473;
         Tue, 23 Jun 2020 00:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592872677;
-        bh=9I5Y27ZTrQcqUy9STDR0VsTK0ZGdaJ7BMzoY/xb3kxY=;
+        bh=Ydu2oBm0v1WiaUpnb+3/siqJX72BjmdCrHbn1bkGYeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q4Y/I3gbmY4zViJgTtXf10veRE6ew/UhIVsRqUgFvjAdj/74jNrsmF0S3jMN6S1UL
-         oJibePoDe52q01F/iTo34EuGxKQZjFgC0a1Lfzyshd+TvQY2FlTG7dDr1NMK/dgRWn
-         E5UF6zsv3HMnEPh5wqRaHBjAaHfm47gSFzcZ6NPg=
+        b=X0Oas14gBB0UKOXnlZSq27adUvTbyhNK/30CdYOFhIHN/hs10SJX06vwkhX6pbZmQ
+         nafAnk5NM2tsHsVWJn80W9RTQswJbJz7aRIDi6pJ0lZIKU9DohYvz99Xf4MRnxqWI0
+         gMzdPtqgY4zRc9sx9BZWDh5TTZ+mrVeN2nj876IA=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 17/23] torture: Improve diagnostic for KCSAN-incapable compilers
-Date:   Mon, 22 Jun 2020 17:37:46 -0700
-Message-Id: <20200623003752.26872-17-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 18/23] torture: Add more tracing crib notes to kvm.sh
+Date:   Mon, 22 Jun 2020 17:37:47 -0700
+Message-Id: <20200623003752.26872-18-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
 References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
@@ -61,57 +61,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Using --kcsan when the compiler does not support KCSAN results in this:
+This commit adds a few more hints about how to use tracing as comments
+at the end of kvm.sh.
 
-:CONFIG_KCSAN=y: improperly set
-:CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-:CONFIG_KCSAN_VERBOSE=y: improperly set
-:CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
-
-This is a bit obtuse, so this commit adds checks resulting in this:
-
-:CONFIG_KCSAN=y: improperly set
-:CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-:CONFIG_KCSAN_VERBOSE=y: improperly set
-:CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-Compiler or architecture does not support KCSAN!
-Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
-
-Suggested-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Marco Elver <elver@google.com>
 ---
- tools/testing/selftests/rcutorture/bin/kvm-recheck.sh | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-index 357899c..840a467 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-@@ -44,7 +44,8 @@ do
- 			then
- 				echo QEMU killed
- 			fi
--			configcheck.sh $i/.config $i/ConfigFragment
-+			configcheck.sh $i/.config $i/ConfigFragment > $T 2>&1
-+			cat $T
- 			if test -r $i/Make.oldconfig.err
- 			then
- 				cat $i/Make.oldconfig.err
-@@ -73,7 +74,11 @@ do
- 	done
- 	if test -f "$rd/kcsan.sum"
- 	then
--		if test -s "$rd/kcsan.sum"
-+		if grep -q CONFIG_KCSAN=y $T
-+		then
-+			echo "Compiler or architecture does not support KCSAN!"
-+			echo Did you forget to switch your compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?
-+		elif test -s "$rd/kcsan.sum"
- 		then
- 			echo KCSAN summary in $rd/kcsan.sum
- 		else
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
+index 3578c85..bdfa0c0 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
+@@ -503,3 +503,7 @@ fi
+ # Tracing: trace_event=rcu:rcu_grace_period,rcu:rcu_future_grace_period,rcu:rcu_grace_period_init,rcu:rcu_nocb_wake,rcu:rcu_preempt_task,rcu:rcu_unlock_preempted_task,rcu:rcu_quiescent_state_report,rcu:rcu_fqs,rcu:rcu_callback,rcu:rcu_kfree_callback,rcu:rcu_batch_start,rcu:rcu_invoke_callback,rcu:rcu_invoke_kfree_callback,rcu:rcu_batch_end,rcu:rcu_torture_read,rcu:rcu_barrier
+ # Function-graph tracing: ftrace=function_graph ftrace_graph_filter=sched_setaffinity,migration_cpu_stop
+ # Also --kconfig "CONFIG_FUNCTION_TRACER=y CONFIG_FUNCTION_GRAPH_TRACER=y"
++# Control buffer size: --bootargs trace_buf_size=3k
++# Get trace-buffer dumps on all oopses: --bootargs ftrace_dump_on_oops
++# Ditto, but dump only the oopsing CPU: --bootargs ftrace_dump_on_oops=orig_cpu
++# Heavy-handed way to also dump on warnings: --bootargs panic_on_warn
 -- 
 2.9.5
 
