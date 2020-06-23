@@ -2,214 +2,646 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE22C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEFF207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D139A2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+y2HgSD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NYsT6g3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387586AbgFWTtV (ORCPT
+        id S2387457AbgFWTwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
+        Tue, 23 Jun 2020 15:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733258AbgFWTtU (ORCPT
+        with ESMTP id S2387416AbgFWTwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:49:20 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239DBC061573;
-        Tue, 23 Jun 2020 12:49:20 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id o5so25171105iow.8;
-        Tue, 23 Jun 2020 12:49:20 -0700 (PDT)
+        Tue, 23 Jun 2020 15:52:21 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9382BC061795
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:52:20 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id s21so19862988oic.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:52:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hAK/qguNrmk0Gm1APUEN0dntiivLtTinL6GSxp7o6Ow=;
-        b=B+y2HgSDU/5tRsw+WKTnUfx4ewuLBP1Z66CDJqZpdGGn/PNVQcD4gmWOR8yOObgEOx
-         yOsTCYAAoRDhLhYdPJRirf86Ti50iPIFK9dcBBzA1zm5n/xckUIAJ09KuCLvBss10tkl
-         9+oqb4lYyDGKk3Rioqrn5CQGUKV2Z4WRHxcFDnkMMBqZO1pdgCVXgpE2OBKIoEsrHomG
-         yqaau3D2o7z4Cq3uKAxybpAsyEGc2shjNcB62/uiBrZoBPyqi42MnFJeCjPrp0zgt3WL
-         z6mCU+3Jqu/pCzcFEJDugPptN9cbXij7c0BKhsp0pU1EFZsnt+uffD4XIc8wGzLCR2WE
-         9xOQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=havnKey+xczQp6J65CfGwV06i5BYDbOih2RtYs76p8Y=;
+        b=NYsT6g3UqzNrC8B6gIW/s3Mkb6FdI/OsArQy5Ry/GFT0hrXAIgOXaxwajQGTBVuRaR
+         tG4OybYREnsQAMIosrL+8BiLSw2y481mShy/S6+xp8bptK4CH0v4/riPTZf4cTAprnFD
+         NQDb8iwoQCCNhSn99x4Zj5NyntD46MH/PFQ0g81bkXuz2lU6w+ND/luYnVVZ7J5NruKB
+         0K8aWaF3gioKx3Y+n6+ctEbm4EGEEnnIMTON9R+Lm1BMZQwKa1zzz4JaNCmg2kAdMPCB
+         0eR2X3eg9T37efmYipJV8nkMh74gyf/UnJhqaRjmdI1Vj8oJcnw0U58dYUfD2UizgV6H
+         S7eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=hAK/qguNrmk0Gm1APUEN0dntiivLtTinL6GSxp7o6Ow=;
-        b=Uqq0s/1yNX42j6iirbFcsvnkJgHMS4CthAWknB5phayFmOd7Xx/x4RdBCaCeKo0IHg
-         /7Lr/JwEx8ZkuDosKEgU7CIdIROcDsDw0bYiGscq7RnmT2VwsGKBqKRicvlmUtygCKOk
-         RaqUu21WI9eeX0S8DY/MSEwmrpU5onmdBFkiklsewycUNFTY1ZyBvBoT0wJvZJm6BbsH
-         dYMQY/S8LtTp9AMfqwIQ+i1vhqNwi1ZuuxfaKBON3sWjLoKDpzUWARbXfaPsNPaKZld1
-         pTNmDbp86G7lDeQ/ujXL5XZoleeZHw1wumgs+hyJHYZU/VXxc8Zj9mJIJpJnc2cz9Bo4
-         XGsw==
-X-Gm-Message-State: AOAM530OhM6boXDk1eM4VkEe8DJgB/G6Z0WtahjgNMMlk+5xvW3flOEI
-        K7KBjFP72mTvKifg3jyBskI=
-X-Google-Smtp-Source: ABdhPJyuVMZyMj6yPM93Z62rBEasacSyFa5WqfLZLQhdF+FMcW4sbckkyiejtk99VWmebUAhCVWKHQ==
-X-Received: by 2002:a02:2417:: with SMTP id f23mr26618811jaa.28.1592941759511;
-        Tue, 23 Jun 2020 12:49:19 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k3sm6320722iot.42.2020.06.23.12.49.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 12:49:18 -0700 (PDT)
-Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
- registration
-To:     Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
- <20200622135106.GK4560@sirena.org.uk>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
-Date:   Tue, 23 Jun 2020 12:49:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=havnKey+xczQp6J65CfGwV06i5BYDbOih2RtYs76p8Y=;
+        b=uXmNfUJ1B/0GHMNN1ppFaZNjzRReI/mtzh3jvCvGP+FFajj/olvX6iJQ8+R5+vYUV1
+         dpFvM33SgixsdxokKwPlk5d7rbTdBB3ne2QVElY+z82rDs/zn5ukVUX9qTYmKn9ZJdnQ
+         m5voGwrG4A2EShaVKl2h6G2KV/CD390HcSCqtutof0xWgfo4Wl0SY8DkDN+Gnycbq6J6
+         YwhVLhByf2r0tgtkgB+1jiSiwCas2XtbZhC0K2VbBe998fLA0nStU4rO+t1TZPQBd6Ls
+         voZcngCFi3nhYPINrZaJNXAipSi7UVRxzPAAamvEfYRPluGuVe+htifJeuJdvCDyv69Y
+         MdpQ==
+X-Gm-Message-State: AOAM530Ww4C5lEs8aFkLjqFGfCHd0tAN8Iy6JoNThf11HGVk/WWDa2Wh
+        fc2zOWpsJX5L4aq2k3oFVtDlJQ==
+X-Google-Smtp-Source: ABdhPJxoEB57TKUglsi6t531IgEkMt86kVALAq0hd+PpnkqCCoTLgJLmcpeCsNlQvbRdqynDVSxHDw==
+X-Received: by 2002:aca:a847:: with SMTP id r68mr16942355oie.105.1592941939561;
+        Tue, 23 Jun 2020 12:52:19 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id n128sm4143918oih.33.2020.06.23.12.52.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 12:52:18 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 12:49:36 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, msavaliy@codeaurora.org,
+        saravanak@google.com, sspatil@google.com, tkjos@google.com,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V6] serial: msm_geni_serial_console : Add Earlycon support
+Message-ID: <20200623194936.GE128451@builder.lan>
+References: <1592820512-1225-1-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200622135106.GK4560@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592820512-1225-1-git-send-email-akashast@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/20 6:51 AM, Mark Brown wrote:
-> On Mon, Jun 22, 2020 at 03:39:40PM +0200, Andrew Lunn wrote:
-> 
->> The PHY subsystem cannot be the first to run into this problem, that
->> you need a device structure to make use of the regulator API, but you
->> need the regulator API to probe the device. How do other subsystems
->> work around this?
-> 
-> If the bus includes power management for the devices on the bus the
-> controller is generally responsible for that rather than the devices,
-> the devices access this via facilities provided by the bus if needed.
-> If the device is enumerated by firmware prior to being physically
-> enumerable then the bus will generally instantiate the device model
-> device and then arrange to wait for the physical device to appear and
-> get joined up with the device model device, typically in such situations
-> the physical device might appear and disappear dynamically at runtime
-> based on what the driver is doing anyway.
+On Mon 22 Jun 03:08 PDT 2020, Akash Asthana wrote:
 
-In premise there is nothing that prevents the MDIO bus from taking care
-of the regulators, resets, prior to probing the PHY driver, what is
-complicated here is that we do need to issue a read of the actual PHY to
-know its 32-bit unique identifier and match it with an appropriate
-driver. The way that we have worked around this with if you do not wish
-such a hardware access to be made, is to provide an Ethernet PHY node
-compatible string that encodes that 32-bit OUI directly. In premise the
-same challenges exist with PCI devices/endpoints as well as USB, would
-they have reset or regulator typically attached to them.
-
+> From: Mukesh Kumar Savaliya <msavaliy@codeaurora.org>
 > 
->> Maybe it is time to add a lower level API to the regulator framework?
-> 
-> I don't see any need for that here, this is far from the only thing
-> that's keyed off a struct device and having the device appear and
-> disappear at runtime can make things like runtime PM look really messy
-> to userspace.
-> 
-> We could use a pre-probe stage in the device model for hotpluggable
-> buses in embedded contexts where you might need to bring things out of
-> reset or power them up before they'll appear on the bus for enumeration
-> but buses have mostly handled that at their level.
+> This change enables earlyconsole support as static driver for geni
+> based UART. Kernel space UART console driver will be generic for
+> console and other usecases of UART.
 > 
 
-That sounds like a better solution, are there any subsystems currently
-implementing that, or would this be a generic Linux device driver model
-addition that needs to be done?
--- 
-Florian
+Is this hardware different from the qcom,geni-debug-uart which we
+already have EARLYCON support for?
+
+Why is this a separate driver?
+
+Regards,
+Bjorn
+
+> Signed-off-by: Mukesh Kumar Savaliya <msavaliy@codeaurora.org>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes In V2:
+>  - Fixed Makefile Typo issue.
+> 
+> Changes In V3:
+>  - Removed mb() calls as *_relaxed() should take care.
+> 
+> Changes In V4:
+>  - Minor change: space between offset and base addition.
+> 
+> Changes In V5:
+>  - Removed unlikely() macro.
+>  - root_freq() array taken as static.
+>  - Removed extra readback of the register having no meaning.
+> 
+> Changes in V6:
+>  - Drop SERIAL_MSM_GENI_HALF_SAMPLING config and support only
+>    QUP HW ver > 2.5. As of now no device with QUP ver < 2.5 is using this
+>    code for earlycon so it won't break them. I will post separate patch to
+>    resolve this limitation.
+> 
+> Sending patch on behalf of Mukesh Savaliya.
+> 
+>  drivers/tty/serial/Kconfig                   |   7 +
+>  drivers/tty/serial/Makefile                  |   1 +
+>  drivers/tty/serial/msm_geni_serial_console.c | 480 +++++++++++++++++++++++++++
+>  3 files changed, 488 insertions(+)
+>  create mode 100644 drivers/tty/serial/msm_geni_serial_console.c
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 780908d..47caaa6 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -956,6 +956,13 @@ config SERIAL_MSM_CONSOLE
+>  	select SERIAL_CORE_CONSOLE
+>  	select SERIAL_EARLYCON
+>  
+> +config SERIAL_MSM_GENI_EARLY_CONSOLE
+> +	bool "MSM on-chip GENI HW based early console support"
+> +	select SERIAL_MSM_GENI_HALF_SAMPLING
+> +	help
+> +	  Serial early console driver for Qualcomm Technologies Inc's GENI
+> +	  based QUP hardware.
+> +
+>  config SERIAL_QCOM_GENI
+>  	tristate "QCOM on-chip GENI based serial port support"
+>  	depends on ARCH_QCOM || COMPILE_TEST
+> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+> index d056ee6..7b6422e 100644
+> --- a/drivers/tty/serial/Makefile
+> +++ b/drivers/tty/serial/Makefile
+> @@ -55,6 +55,7 @@ obj-$(CONFIG_SERIAL_VR41XX) += vr41xx_siu.o
+>  obj-$(CONFIG_SERIAL_ATMEL) += atmel_serial.o
+>  obj-$(CONFIG_SERIAL_UARTLITE) += uartlite.o
+>  obj-$(CONFIG_SERIAL_MSM) += msm_serial.o
+> +obj-$(CONFIG_SERIAL_MSM_GENI_EARLY_CONSOLE) += msm_geni_serial_console.o
+>  obj-$(CONFIG_SERIAL_QCOM_GENI) += qcom_geni_serial.o
+>  obj-$(CONFIG_SERIAL_OMAP) += omap-serial.o
+>  obj-$(CONFIG_SERIAL_ALTERA_UART) += altera_uart.o
+> diff --git a/drivers/tty/serial/msm_geni_serial_console.c b/drivers/tty/serial/msm_geni_serial_console.c
+> new file mode 100644
+> index 0000000..80a7231
+> --- /dev/null
+> +++ b/drivers/tty/serial/msm_geni_serial_console.c
+> @@ -0,0 +1,480 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +#include <linux/console.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/serial_core.h>
+> +
+> +#define SE_UART_TX_TRANS_CFG		(0x25C)
+> +#define SE_UART_TX_WORD_LEN		(0x268)
+> +#define SE_UART_TX_STOP_BIT_LEN		(0x26C)
+> +#define SE_UART_TX_TRANS_LEN		(0x270)
+> +#define SE_UART_TX_PARITY_CFG		(0x2A4)
+> +/* SE_UART_TRANS_CFG */
+> +#define UART_CTS_MASK		(BIT(1))
+> +/* UART M_CMD OP codes */
+> +#define UART_START_TX		(0x1)
+> +
+> +#define UART_OVERSAMPLING	(32)
+> +#define DEF_FIFO_DEPTH_WORDS	(16)
+> +#define DEF_TX_WM		(2)
+> +#define DEF_FIFO_WIDTH_BITS	(32)
+> +
+> +#define GENI_FORCE_DEFAULT_REG		(0x20)
+> +#define GENI_OUTPUT_CTRL		(0x24)
+> +#define GENI_CGC_CTRL			(0x28)
+> +#define GENI_SER_M_CLK_CFG		(0x48)
+> +#define GENI_FW_REVISION_RO		(0x68)
+> +
+> +#define SE_GENI_TX_PACKING_CFG0		(0x260)
+> +#define SE_GENI_TX_PACKING_CFG1		(0x264)
+> +#define SE_GENI_M_CMD0			(0x600)
+> +#define SE_GENI_M_CMD_CTRL_REG		(0x604)
+> +#define SE_GENI_M_IRQ_STATUS		(0x610)
+> +#define SE_GENI_M_IRQ_EN		(0x614)
+> +#define SE_GENI_M_IRQ_CLEAR		(0x618)
+> +#define SE_GENI_TX_FIFOn		(0x700)
+> +#define SE_GENI_TX_WATERMARK_REG	(0x80C)
+> +
+> +#define SE_IRQ_EN			(0xE1C)
+> +#define SE_HW_PARAM_0			(0xE24)
+> +#define SE_HW_PARAM_1			(0xE28)
+> +
+> +/* GENI_OUTPUT_CTRL fields */
+> +#define DEFAULT_IO_OUTPUT_CTRL_MSK	(GENMASK(6, 0))
+> +
+> +/* GENI_FORCE_DEFAULT_REG fields */
+> +#define FORCE_DEFAULT	(BIT(0))
+> +
+> +/* GENI_CGC_CTRL fields */
+> +#define CFG_AHB_CLK_CGC_ON		(BIT(0))
+> +#define CFG_AHB_WR_ACLK_CGC_ON		(BIT(1))
+> +#define DATA_AHB_CLK_CGC_ON		(BIT(2))
+> +#define SCLK_CGC_ON			(BIT(3))
+> +#define TX_CLK_CGC_ON			(BIT(4))
+> +#define RX_CLK_CGC_ON			(BIT(5))
+> +#define EXT_CLK_CGC_ON			(BIT(6))
+> +#define PROG_RAM_HCLK_OFF		(BIT(8))
+> +#define PROG_RAM_SCLK_OFF		(BIT(9))
+> +#define DEFAULT_CGC_EN			(GENMASK(6, 0))
+> +
+> +/* GENI_STATUS fields */
+> +#define M_GENI_CMD_ACTIVE		(BIT(0))
+> +
+> +/* GENI_SER_M_CLK_CFG/GENI_SER_S_CLK_CFG */
+> +#define SER_CLK_EN			(BIT(0))
+> +#define CLK_DIV_MSK			(GENMASK(15, 4))
+> +#define CLK_DIV_SHFT			(4)
+> +
+> +/* CLK_CTRL_RO fields */
+> +
+> +/* FIFO_IF_DISABLE_RO fields */
+> +#define FIFO_IF_DISABLE			(BIT(0))
+> +
+> +/* FW_REVISION_RO fields */
+> +#define FW_REV_PROTOCOL_MSK	(GENMASK(15, 8))
+> +#define FW_REV_PROTOCOL_SHFT	(8)
+> +#define FW_REV_VERSION_MSK	(GENMASK(7, 0))
+> +
+> +/* GENI_CLK_SEL fields */
+> +#define CLK_SEL_MSK		(GENMASK(2, 0))
+> +
+> +/* SE_GENI_DMA_MODE_EN */
+> +#define GENI_DMA_MODE_EN	(BIT(0))
+> +
+> +/* GENI_M_CMD0 fields */
+> +#define M_OPCODE_MSK		(GENMASK(31, 27))
+> +#define M_OPCODE_SHFT		(27)
+> +#define M_PARAMS_MSK		(GENMASK(26, 0))
+> +
+> +/* GENI_M_CMD_CTRL_REG */
+> +#define M_GENI_CMD_CANCEL	BIT(2)
+> +#define M_GENI_CMD_ABORT	BIT(1)
+> +#define M_GENI_DISABLE		BIT(0)
+> +
+> +/* GENI_M_IRQ_EN fields */
+> +#define M_CMD_DONE_EN		(BIT(0))
+> +#define M_CMD_OVERRUN_EN	(BIT(1))
+> +#define M_ILLEGAL_CMD_EN	(BIT(2))
+> +#define M_CMD_FAILURE_EN	(BIT(3))
+> +#define M_CMD_CANCEL_EN		(BIT(4))
+> +#define M_CMD_ABORT_EN		(BIT(5))
+> +#define M_TIMESTAMP_EN		(BIT(6))
+> +#define M_GP_SYNC_IRQ_0_EN	(BIT(8))
+> +#define M_IO_DATA_DEASSERT_EN	(BIT(22))
+> +#define M_IO_DATA_ASSERT_EN	(BIT(23))
+> +#define M_TX_FIFO_RD_ERR_EN	(BIT(28))
+> +#define M_TX_FIFO_WR_ERR_EN	(BIT(29))
+> +#define M_TX_FIFO_WATERMARK_EN	(BIT(30))
+> +#define M_SEC_IRQ_EN		(BIT(31))
+> +#define M_COMMON_GENI_M_IRQ_EN	(GENMASK(6, 1) | \
+> +				M_IO_DATA_DEASSERT_EN | \
+> +				M_IO_DATA_ASSERT_EN | M_TX_FIFO_RD_ERR_EN | \
+> +				M_TX_FIFO_WR_ERR_EN)
+> +
+> +
+> +/* GENI_TX_FIFO_STATUS fields */
+> +#define TX_FIFO_WC		(GENMASK(27, 0))
+> +
+> +/* SE_IRQ_EN fields */
+> +#define GENI_M_IRQ_EN		(BIT(2))
+> +
+> +#define UART_PROTOCOL	2
+> +#define GET_DEV_PORT(uport) \
+> +		container_of(uport, struct msm_geni_serial_earlycon_port, uport)
+> +
+> +
+> +static int get_se_proto_earlycon(void __iomem *base)
+> +{
+> +	int proto;
+> +
+> +	proto = ((readl_relaxed(base + GENI_FW_REVISION_RO)
+> +			& FW_REV_PROTOCOL_MSK) >> FW_REV_PROTOCOL_SHFT);
+> +	return proto;
+> +}
+> +
+> +static void se_get_packing_config_earlycon(int bpw, int pack_words,
+> +	bool msb_to_lsb, unsigned long *cfg0, unsigned long *cfg1)
+> +{
+> +	u32 cfg[4] = {0};
+> +	int len, i;
+> +	int temp_bpw = bpw;
+> +	int idx_start = (msb_to_lsb ? (bpw - 1) : 0);
+> +	int idx_delta = (msb_to_lsb ? -BITS_PER_BYTE : BITS_PER_BYTE);
+> +	int ceil_bpw = ((bpw & (BITS_PER_BYTE - 1)) ?
+> +			((bpw & ~(BITS_PER_BYTE - 1)) + BITS_PER_BYTE) : bpw);
+> +	int iter = (ceil_bpw * pack_words) >> 3;
+> +	int idx = idx_start;
+> +
+> +	if (iter <= 0 || iter > 4) {
+> +		*cfg0 = 0;
+> +		*cfg1 = 0;
+> +		return;
+> +	}
+> +
+> +	for (i = 0; i < iter; i++) {
+> +		len = (temp_bpw < BITS_PER_BYTE) ?
+> +				(temp_bpw - 1) : BITS_PER_BYTE - 1;
+> +		cfg[i] = ((idx << 5) | (msb_to_lsb << 4) | (len << 1));
+> +		idx = ((temp_bpw - BITS_PER_BYTE) <= 0) ?
+> +				((i + 1) * BITS_PER_BYTE) + idx_start :
+> +				idx + idx_delta;
+> +		temp_bpw = ((temp_bpw - BITS_PER_BYTE) <= 0) ?
+> +				bpw : (temp_bpw - BITS_PER_BYTE);
+> +	}
+> +	cfg[iter - 1] |= 1;
+> +	*cfg0 = cfg[0] | (cfg[1] << 10);
+> +	*cfg1 = cfg[2] | (cfg[3] << 10);
+> +}
+> +
+> +static void se_geni_irq_en_earlycon(void __iomem *base)
+> +{
+> +	unsigned int common_geni_m_irq_en;
+> +
+> +	common_geni_m_irq_en = readl_relaxed(base + SE_GENI_M_IRQ_EN);
+> +	common_geni_m_irq_en |= M_COMMON_GENI_M_IRQ_EN;
+> +	writel_relaxed(common_geni_m_irq_en, base + SE_GENI_M_IRQ_EN);
+> +}
+> +
+> +static void se_io_set_mode_earlycon(void __iomem *base)
+> +{
+> +	unsigned int io_mode;
+> +
+> +	io_mode = readl_relaxed(base + SE_IRQ_EN);
+> +	io_mode |= (GENI_M_IRQ_EN);
+> +	writel_relaxed(io_mode, base + SE_IRQ_EN);
+> +}
+> +
+> +static void se_io_init_earlycon(void __iomem *base)
+> +{
+> +	unsigned int io_op_ctrl;
+> +	unsigned int geni_cgc_ctrl;
+> +
+> +	geni_cgc_ctrl = readl_relaxed(base + GENI_CGC_CTRL);
+> +	geni_cgc_ctrl |= DEFAULT_CGC_EN;
+> +	io_op_ctrl = DEFAULT_IO_OUTPUT_CTRL_MSK;
+> +	writel_relaxed(geni_cgc_ctrl, base + GENI_CGC_CTRL);
+> +
+> +	writel_relaxed(io_op_ctrl, base + GENI_OUTPUT_CTRL);
+> +	writel_relaxed(FORCE_DEFAULT, base + GENI_FORCE_DEFAULT_REG);
+> +}
+> +
+> +static void geni_se_select_fifo_mode_earlycon(void __iomem *base)
+> +{
+> +	unsigned int common_geni_m_irq_en;
+> +
+> +	writel_relaxed(0xFFFFFFFF, base + SE_GENI_M_IRQ_CLEAR);
+> +	writel_relaxed(0xFFFFFFFF, base + SE_IRQ_EN);
+> +
+> +	common_geni_m_irq_en = readl_relaxed(base + SE_GENI_M_IRQ_EN);
+> +	writel_relaxed(common_geni_m_irq_en, base + SE_GENI_M_IRQ_EN);
+> +}
+> +
+> +struct msm_geni_serial_earlycon_port {
+> +	struct uart_port uport;
+> +	unsigned int tx_fifo_depth;
+> +	unsigned int tx_fifo_width;
+> +	unsigned int tx_wm;
+> +	unsigned int xmit_size;
+> +	unsigned int cur_baud;
+> +};
+> +
+> +static int get_clk_cfg(unsigned long clk_freq, unsigned long *ser_clk)
+> +{
+> +	static unsigned long root_freq[] = {7372800, 14745600, 19200000,
+> +		29491200, 32000000, 48000000, 64000000, 80000000, 96000000,
+> +		 100000000, 102400000, 112000000, 120000000, 128000000};
+> +	int i;
+> +	int match = -1;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(root_freq); i++) {
+> +		if (clk_freq > root_freq[i])
+> +			continue;
+> +
+> +		if (!(root_freq[i] % clk_freq)) {
+> +			match = i;
+> +			break;
+> +		}
+> +	}
+> +	if (match != -1)
+> +		*ser_clk = root_freq[match];
+> +
+> +	return match;
+> +}
+> +
+> +
+> +static int get_clk_div_rate(unsigned int baud, unsigned long *desired_clk_rate)
+> +{
+> +	unsigned long ser_clk;
+> +	int dfs_index;
+> +	int clk_div = 0;
+> +
+> +	*desired_clk_rate = baud * UART_OVERSAMPLING;
+> +	dfs_index = get_clk_cfg(*desired_clk_rate, &ser_clk);
+> +	if (dfs_index < 0) {
+> +		clk_div = -EINVAL;
+> +		goto exit_get_clk_div_rate;
+> +	}
+> +
+> +	clk_div = ser_clk / *desired_clk_rate;
+> +	*desired_clk_rate = ser_clk;
+> +exit_get_clk_div_rate:
+> +	return clk_div;
+> +}
+> +
+> +
+> +static void msm_geni_serial_wr_char(struct uart_port *uport, int ch)
+> +{
+> +	writel_relaxed(ch, uport->membase + SE_GENI_TX_FIFOn);
+> +}
+> +
+> +static int msm_geni_serial_poll_bit(struct uart_port *uport,
+> +					int offset, int bit_field, bool set)
+> +{
+> +	int iter = 0;
+> +	bool met = false, cond = false;
+> +	unsigned int reg, baud = 115200, total_iter = 1000;
+> +	unsigned int fifo_bits = DEF_FIFO_DEPTH_WORDS * DEF_FIFO_WIDTH_BITS;
+> +	struct msm_geni_serial_earlycon_port *port = NULL;
+> +
+> +	if (uport->private_data && !uart_console(uport)) {
+> +		port = GET_DEV_PORT(uport);
+> +		baud = (port->cur_baud ? port->cur_baud : 115200);
+> +		fifo_bits = port->tx_fifo_depth * port->tx_fifo_width;
+> +		/*
+> +		 * Total polling iterations based on FIFO worth of bytes to be
+> +		 * sent at current baud. Add a little fluff to the wait.
+> +		 */
+> +		total_iter = ((fifo_bits * USEC_PER_SEC) / baud) / 10;
+> +		total_iter += 50;
+> +	}
+> +
+> +	while (iter < total_iter) {
+> +		reg = readl_relaxed(uport->membase + offset);
+> +		cond = reg & bit_field;
+> +		if (cond == set) {
+> +			met = true;
+> +			break;
+> +		}
+> +		udelay(10);
+> +		iter++;
+> +	}
+> +	return met;
+> +}
+> +
+> +static void msm_geni_serial_poll_cancel_tx(struct uart_port *uport)
+> +{
+> +	int done = 0;
+> +	unsigned int irq_clear = M_CMD_DONE_EN;
+> +
+> +	done = msm_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +						M_CMD_DONE_EN, true);
+> +	if (!done) {
+> +		writel_relaxed(M_GENI_CMD_ABORT,
+> +				uport->membase + SE_GENI_M_CMD_CTRL_REG);
+> +		irq_clear |= M_CMD_ABORT_EN;
+> +		msm_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +							M_CMD_ABORT_EN, true);
+> +	}
+> +	writel_relaxed(irq_clear, uport->membase + SE_GENI_M_IRQ_CLEAR);
+> +}
+> +
+> +static void msm_geni_serial_setup_tx(struct uart_port *uport,
+> +				unsigned int xmit_size)
+> +{
+> +	u32 m_cmd = 0;
+> +
+> +	writel_relaxed(xmit_size, uport->membase + SE_UART_TX_TRANS_LEN);
+> +	m_cmd |= (UART_START_TX << M_OPCODE_SHFT);
+> +	writel_relaxed(m_cmd, uport->membase + SE_GENI_M_CMD0);
+> +}
+> +
+> +
+> +static void
+> +__msm_geni_serial_console_write(struct uart_port *uport, const char *s,
+> +				unsigned int count)
+> +{
+> +	int new_line = 0;
+> +	int i;
+> +	int bytes_to_send = count;
+> +	int fifo_depth = DEF_FIFO_DEPTH_WORDS;
+> +	int tx_wm = DEF_TX_WM;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		if (s[i] == '\n')
+> +			new_line++;
+> +	}
+> +
+> +	bytes_to_send += new_line;
+> +	writel_relaxed(tx_wm, uport->membase + SE_GENI_TX_WATERMARK_REG);
+> +	msm_geni_serial_setup_tx(uport, bytes_to_send);
+> +	i = 0;
+> +	while (i < count) {
+> +		u32 chars_to_write = 0;
+> +		u32 avail_fifo_bytes = (fifo_depth - tx_wm);
+> +		/*
+> +		 * If the WM bit never set, then the Tx state machine is not
+> +		 * in a valid state, so break, cancel/abort any existing
+> +		 * command. Unfortunately the current data being written is
+> +		 * lost.
+> +		 */
+> +		while (!msm_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +						M_TX_FIFO_WATERMARK_EN, true))
+> +			break;
+> +		chars_to_write = min((unsigned int)(count - i),
+> +							avail_fifo_bytes);
+> +		if ((chars_to_write << 1) > avail_fifo_bytes)
+> +			chars_to_write = (avail_fifo_bytes >> 1);
+> +		uart_console_write(uport, (s + i), chars_to_write,
+> +					msm_geni_serial_wr_char);
+> +		writel_relaxed(M_TX_FIFO_WATERMARK_EN,
+> +			uport->membase + SE_GENI_M_IRQ_CLEAR);
+> +		i += chars_to_write;
+> +	}
+> +	msm_geni_serial_poll_cancel_tx(uport);
+> +}
+> +
+> +
+> +static void
+> +msm_geni_serial_early_console_write(struct console *con, const char *s,
+> +			unsigned int n)
+> +{
+> +	struct earlycon_device *dev = con->data;
+> +
+> +	__msm_geni_serial_console_write(&dev->port, s, n);
+> +}
+> +
+> +static int __init
+> +msm_geni_serial_earlycon_setup(struct earlycon_device *dev,
+> +		const char *opt)
+> +{
+> +	struct uart_port *uport = &dev->port;
+> +	int ret = 0;
+> +	u32 tx_trans_cfg = 0;
+> +	u32 tx_parity_cfg = 0;
+> +	u32 rx_trans_cfg = 0;
+> +	u32 rx_parity_cfg = 0;
+> +	u32 stop_bit = 0;
+> +	u32 rx_stale = 0;
+> +	u32 bits_per_char = 0;
+> +	u32 s_clk_cfg = 0;
+> +	u32 baud = 115200;
+> +	int clk_div;
+> +	unsigned long clk_rate;
+> +	unsigned long cfg0, cfg1;
+> +
+> +	if (!uport->membase) {
+> +		ret = -ENOMEM;
+> +		goto exit_geni_serial_earlyconsetup;
+> +	}
+> +
+> +	if (get_se_proto_earlycon(uport->membase) != UART_PROTOCOL) {
+> +		ret = -ENXIO;
+> +		goto exit_geni_serial_earlyconsetup;
+> +	}
+> +
+> +	/*
+> +	 * Ignore Flow control.
+> +	 * Disable Tx Parity.
+> +	 * Don't check Parity during Rx.
+> +	 * Disable Rx Parity.
+> +	 * n = 8.
+> +	 * Stop bit = 0.
+> +	 * Stale timeout in bit-time (3 chars worth).
+> +	 */
+> +	tx_trans_cfg |= UART_CTS_MASK;
+> +	tx_parity_cfg = 0;
+> +	rx_trans_cfg = 0;
+> +	rx_parity_cfg = 0;
+> +	bits_per_char = 0x8;
+> +	stop_bit = 0;
+> +	rx_stale = 0x18;
+> +	clk_div = get_clk_div_rate(baud, &clk_rate);
+> +	if (clk_div <= 0) {
+> +		ret = -EINVAL;
+> +		goto exit_geni_serial_earlyconsetup;
+> +	}
+> +	/* QUP HW ver > 2.5 needs 16 clock pulses to sample
+> +	 * 1 bit of data, instead of 32 clock pulses in older
+> +	 * QUP HW.
+> +	 * For now, support only QUP HW ver > 2.5. So reduce the
+> +	 * clk frequency to half by doubling the divider value.
+> +	 */
+> +	clk_div *= 2;
+> +
+> +	s_clk_cfg |= SER_CLK_EN;
+> +	s_clk_cfg |= (clk_div << CLK_DIV_SHFT);
+> +
+> +	/*
+> +	 * Make an unconditional cancel on the main sequencer to reset
+> +	 * it else we could end up in data loss scenarios.
+> +	 */
+> +	writel_relaxed(0x21, uport->membase + GENI_SER_M_CLK_CFG);
+> +	readl_relaxed(uport->membase + GENI_SER_M_CLK_CFG);
+> +
+> +	msm_geni_serial_poll_cancel_tx(uport);
+> +
+> +	se_get_packing_config_earlycon(8, 1, false, &cfg0, &cfg1);
+> +
+> +	se_io_init_earlycon(uport->membase);
+> +	se_io_set_mode_earlycon(uport->membase);
+> +	se_geni_irq_en_earlycon(uport->membase);
+> +
+> +	geni_se_select_fifo_mode_earlycon(uport->membase);
+> +	writel_relaxed(cfg0, uport->membase + SE_GENI_TX_PACKING_CFG0);
+> +	writel_relaxed(cfg1, uport->membase + SE_GENI_TX_PACKING_CFG1);
+> +	writel_relaxed(tx_trans_cfg, uport->membase + SE_UART_TX_TRANS_CFG);
+> +	writel_relaxed(tx_parity_cfg, uport->membase + SE_UART_TX_PARITY_CFG);
+> +	writel_relaxed(bits_per_char, uport->membase + SE_UART_TX_WORD_LEN);
+> +	writel_relaxed(stop_bit, uport->membase + SE_UART_TX_STOP_BIT_LEN);
+> +	writel_relaxed(s_clk_cfg, uport->membase + GENI_SER_M_CLK_CFG);
+> +
+> +	dev->con->write = msm_geni_serial_early_console_write;
+> +	dev->con->setup = NULL;
+> +exit_geni_serial_earlyconsetup:
+> +	return ret;
+> +}
+> +OF_EARLYCON_DECLARE(msm_geni_serial, "qcom,msm-geni-console",
+> +		msm_geni_serial_earlycon_setup);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> 
