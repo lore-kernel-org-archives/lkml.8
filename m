@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECB12064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8EE2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943924;
-	bh=meQbLYmN//tMPZmpwqNW5uUjQrbTyW/842tj/SRI8Yo=;
+	s=default; t=1592943928;
+	bh=Ydou3JAf9zArP0VfSPlqKoiKSwL2uJ7zPPbMfdmwPWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=anTjd/WKU31w8xGOc2fVtrj0rjoS+3BQlFeIbQITZ2r6yVIlcNgZLjuPSxwOlEVVG
-	 WClgimQMQZ7KQ5+klEe5yU5gMidW/pUje/fI07n8uqXY798+prpqvRAd1K6CFTykkW
-	 lVaEwnn3I1MFvM1o5FtQsWTNyruYpCaFYREE+YW4=
+	b=ilq8NqcA4UooDHt4ZNNBD/C79eslmez0ugu1wRxwyAq0EIG409h0SusTB+TtwSdyy
+	 9jUQAmtLpvVJnV3p79UBAxSGwoCq77P88npLe3592VCs1C3+jaL6tUtfLMSdirhgG2
+	 NRaIoJ81N5W43T2eSiKnZHBheqPfuATyBbT6D+nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389605AbgFWUZV (ORCPT
+        id S2387805AbgFWUZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390489AbgFWUZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:12 -0400
+        id S2390501AbgFWUZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:25:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B04A920723;
-        Tue, 23 Jun 2020 20:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C190F206EB;
+        Tue, 23 Jun 2020 20:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943912;
-        bh=meQbLYmN//tMPZmpwqNW5uUjQrbTyW/842tj/SRI8Yo=;
+        s=default; t=1592943917;
+        bh=Ydou3JAf9zArP0VfSPlqKoiKSwL2uJ7zPPbMfdmwPWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcAzIO+Yxf17Lo/F13b3wUx8xJpc7WbPqJjCcWvSgHtvq5QPbxWlpIIl/9ILix4dh
-         HpuKhDqDmdGFmaiygK2C6sD8IZ6oj4sITIN883lllS5MjTRbSRuiXqS31fsde23zGN
-         Z4ygKeuf6Wi06GvKBaddDGeRJCJs9SLD+OzHkgNI=
+        b=aQUrW+x0oHkt9hzgUTH6vlfwLabaTY8KBkSdviGYJS57nvTf1SVwONGFYCcbgjR3o
+         kTg8IXUGzjoGd1Tl5OUwbPhApSw8+e6x3CeonHlMpch9OQ0WHp9PycD+euyzDoFiGi
+         oINdPHrfBxuGzAqo32Crfx+e5S4QamKUFyO+ry7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/314] sparc32: mm: Dont try to free page-table pages if ctor() fails
-Date:   Tue, 23 Jun 2020 21:54:24 +0200
-Message-Id: <20200623195342.135415674@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 061/314] powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple hv-24x7 events run
+Date:   Tue, 23 Jun 2020 21:54:16 +0200
+Message-Id: <20200623195341.736465570@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,39 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Kajol Jain <kjain@linux.ibm.com>
 
-[ Upstream commit 454b0289c6b5f2c66164654b80212d15fbef7a03 ]
+[ Upstream commit b4ac18eead28611ff470d0f47a35c4e0ac080d9c ]
 
-The pages backing page-table allocations for SRMMU are allocated via
-memblock as part of the "nocache" region initialisation during
-srmmu_paging_init() and should not be freed even if a later call to
-pgtable_pte_page_ctor() fails.
+Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
+values")' added to print _change_ in the counter value rather then raw
+value for 24x7 counters. Incase of transactions, the event count
+is set to 0 at the beginning of the transaction. It also sets
+the event's prev_count to the raw value at the time of initialization.
+Because of setting event count to 0, we are seeing some weird behaviour,
+whenever we run multiple 24x7 events at a time.
 
-Remove the broken call to __free_page().
+For example:
 
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Fixes: 1ae9ae5f7df7 ("sparc: handle pgtable_page_ctor() fail")
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+	  		   -C 0 -I 1000 sleep 100
+
+     1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+
+Getting these large values in case we do -I.
+
+As we are setting event_count to 0, for interval case, overall event_count is not
+coming in incremental order. As we may can get new delta lesser then previous count.
+Because of which when we print intervals, we are getting negative value which create
+these large values.
+
+This patch removes part where we set event_count to 0 in function
+'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
+to the raw value at the time of initialization to print change value.
+
+With this patch
+In power9 platform
+
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+			   -C 0 -I 1000 sleep 100
+
+     1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+
+Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200525104308.9814-2-kjain@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/mm/srmmu.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/powerpc/perf/hv-24x7.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index cc3ad64479ac3..9e256d4d1f4cf 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -379,7 +379,6 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
- 		return NULL;
- 	page = pfn_to_page(__nocache_pa(pte) >> PAGE_SHIFT);
- 	if (!pgtable_pte_page_ctor(page)) {
--		__free_page(page);
- 		return NULL;
- 	}
- 	return page;
+diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+index 573e0b309c0ca..48e8f4b17b91b 100644
+--- a/arch/powerpc/perf/hv-24x7.c
++++ b/arch/powerpc/perf/hv-24x7.c
+@@ -1400,16 +1400,6 @@ static void h_24x7_event_read(struct perf_event *event)
+ 			h24x7hw = &get_cpu_var(hv_24x7_hw);
+ 			h24x7hw->events[i] = event;
+ 			put_cpu_var(h24x7hw);
+-			/*
+-			 * Clear the event count so we can compute the _change_
+-			 * in the 24x7 raw counter value at the end of the txn.
+-			 *
+-			 * Note that we could alternatively read the 24x7 value
+-			 * now and save its value in event->hw.prev_count. But
+-			 * that would require issuing a hcall, which would then
+-			 * defeat the purpose of using the txn interface.
+-			 */
+-			local64_set(&event->count, 0);
+ 		}
+ 
+ 		put_cpu_var(hv_24x7_reqb);
 -- 
 2.25.1
 
