@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F96221582
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43CF92085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944711;
-	bh=wicaoCAJNuk7XntjN2HU1xs0spmHSn5Q2EMQqELHpJM=;
+	s=default; t=1592944718;
+	bh=COwQQIq2BSo+YT3BW9YLmQpGpJRw2ZT/EEfScMxkGMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRByLbUtdUJ1bBoDFSVZjNTpKJoPot/PvzhogxUNSlv8/3P8KitQId9kQFgd7q5SD
-	 dsG79OAEJkj/xt4ueO/HmVTnE3YuxHhQ8Yu7j0olqXl1btrR0RvwZmhq7hWQ3C5hs0
-	 ZVBamwzadez2V9fhAYiol2oj5sfe26vlOOPibnK8=
+	b=GQLNrnl7mWayveNUuKG90qJ9TbPbKjvUpqnB9uWrqP4fZP8TmUKj8vF2Lf7aSJsIa
+	 tyaHTBtZbZMog3vAMXcA+gt3yQ+T4gYRGUNVk9q3cuwSOoNNvSY7NJm9Qfz4iXdHP+
+	 UoO8LtvGgDYROw+tek7lJubLWdTYBfcVFQXxUboo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391573AbgFWUi3 (ORCPT
+        id S2391969AbgFWUif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33858 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:38:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403775AbgFWUiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:38:21 -0400
+        id S2391644AbgFWUiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:38:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186B62085B;
-        Tue, 23 Jun 2020 20:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B31E621556;
+        Tue, 23 Jun 2020 20:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944701;
-        bh=wicaoCAJNuk7XntjN2HU1xs0spmHSn5Q2EMQqELHpJM=;
+        s=default; t=1592944704;
+        bh=COwQQIq2BSo+YT3BW9YLmQpGpJRw2ZT/EEfScMxkGMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1xYurlp41lKdSM6kqfbODjr/d3O33mjFQsm/8N8LRdx+eVOeS0s/fjuOJ9Z7FNVo4
-         H0Gb76hKZDL8tVwlM5qdwLcJ4TcOZkt8TbEgZqDBXnyw1J2iR/+OqoBgenSmJJ+3oG
-         /evBgVnCiyuCasihI7j9aH0DjRhVI7hPLNjYsGO0=
+        b=mPxoDc1PvovmBDwMwiHcnqTLBvpbo65zo6tIgAAvy8H86PkBoZwv6TervAZLDVWO+
+         rRb10rf17yTsKTl8K2w+GlRh4wLsgICiRIUYzkcywj2GeDwsecvgNMjSuPx0R8OBbv
+         mNUKU5LKcK/gjhVsol+sQxcMjuik+Mnv8E31B/Q0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Oliver Neukum <oneukum@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/206] vfio-pci: Mask cap zero
-Date:   Tue, 23 Jun 2020 21:56:58 +0200
-Message-Id: <20200623195321.376480316@linuxfoundation.org>
+Subject: [PATCH 4.19 091/206] usb/ohci-platform: Fix a warning when hibernating
+Date:   Tue, 23 Jun 2020 21:56:59 +0200
+Message-Id: <20200623195321.425222013@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,48 +64,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
+[ Upstream commit 1cb3b0095c3d0bb96912bfbbce4fc006d41f367c ]
 
-The PCI Code and ID Assignment Specification changed capability ID 0
-from reserved to a NULL capability in the v1.1 revision.  The NULL
-capability is defined to include only the 16-bit capability header,
-ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
-map of config space, where ID 0 is used to reserve the standard type
-0 header.  Finding an actual capability with this ID therefore results
-in a bogus range marked in that map and conflicts with subsequent
-capabilities.  As this seems to be a dummy capability anyway and we
-already support dropping capabilities, let's hide this one rather than
-delving into the potentially subtle dependencies within our map.
+The following warning was observed when attempting to suspend to disk
+using a USB flash as a swap device.
 
-Seen on an NVIDIA Tesla T4.
+[  111.779649] ------------[ cut here ]------------
+[  111.788382] URB (____ptrval____) submitted while active
+[  111.796646] WARNING: CPU: 3 PID: 365 at drivers/usb/core/urb.c:363 usb_submit_urb+0x3d8/0x590
+[  111.805417] Modules linked in:
+[  111.808584] CPU: 3 PID: 365 Comm: kworker/3:2 Not tainted 5.6.0-rc6-00002-gdfd1731f9a3e-dirty #545
+[  111.817796] Hardware name: ARM Juno development board (r2) (DT)
+[  111.823896] Workqueue: usb_hub_wq hub_event
+[  111.828217] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  111.833156] pc : usb_submit_urb+0x3d8/0x590
+[  111.837471] lr : usb_submit_urb+0x3d8/0x590
+[  111.841783] sp : ffff800018de38b0
+[  111.845205] x29: ffff800018de38b0 x28: 0000000000000003
+[  111.850682] x27: ffff000970530b20 x26: ffff8000133fd000
+[  111.856159] x25: ffff8000133fd000 x24: ffff800018de3b38
+[  111.861635] x23: 0000000000000004 x22: 0000000000000c00
+[  111.867112] x21: 0000000000000000 x20: 00000000fffffff0
+[  111.872589] x19: ffff0009704e7a00 x18: ffffffffffffffff
+[  111.878065] x17: 00000000a7c8f4bc x16: 000000002af33de8
+[  111.883542] x15: ffff8000133fda88 x14: 0720072007200720
+[  111.889019] x13: 0720072007200720 x12: 0720072007200720
+[  111.894496] x11: 0000000000000000 x10: 00000000a5286134
+[  111.899973] x9 : 0000000000000002 x8 : ffff000970c837a0
+[  111.905449] x7 : 0000000000000000 x6 : ffff800018de3570
+[  111.910926] x5 : 0000000000000001 x4 : 0000000000000003
+[  111.916401] x3 : 0000000000000000 x2 : ffff800013427118
+[  111.921879] x1 : 9d4e965b4b7d7c00 x0 : 0000000000000000
+[  111.927356] Call trace:
+[  111.929892]  usb_submit_urb+0x3d8/0x590
+[  111.933852]  hub_activate+0x108/0x7f0
+[  111.937633]  hub_resume+0xac/0x148
+[  111.941149]  usb_resume_interface.isra.10+0x60/0x138
+[  111.946265]  usb_resume_both+0xe4/0x140
+[  111.950225]  usb_runtime_resume+0x24/0x30
+[  111.954365]  __rpm_callback+0xdc/0x138
+[  111.958236]  rpm_callback+0x34/0x98
+[  111.961841]  rpm_resume+0x4a8/0x720
+[  111.965445]  rpm_resume+0x50c/0x720
+[  111.969049]  __pm_runtime_resume+0x4c/0xb8
+[  111.973276]  usb_autopm_get_interface+0x28/0x60
+[  111.977948]  hub_event+0x80/0x16d8
+[  111.981466]  process_one_work+0x2a4/0x748
+[  111.985604]  worker_thread+0x48/0x498
+[  111.989387]  kthread+0x13c/0x140
+[  111.992725]  ret_from_fork+0x10/0x18
+[  111.996415] irq event stamp: 354
+[  111.999756] hardirqs last  enabled at (353): [<ffff80001019ea1c>] console_unlock+0x504/0x5b8
+[  112.008441] hardirqs last disabled at (354): [<ffff8000100a95d0>] do_debug_exception+0x1a8/0x258
+[  112.017479] softirqs last  enabled at (350): [<ffff8000100818a4>] __do_softirq+0x4bc/0x568
+[  112.025984] softirqs last disabled at (343): [<ffff8000101145a4>] irq_exit+0x144/0x150
+[  112.034129] ---[ end trace dc96030b9cf6c8a3 ]---
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+The problem was tracked down to a missing call to
+pm_runtime_set_active() on resume in ohci-platform.
+
+Link: https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Tony Prisk <linux@prisktech.co.nz>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mathias Nyman <mathias.nyman@intel.com>
+CC: Oliver Neukum <oneukum@suse.de>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-usb@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20200518154931.6144-1-qais.yousef@arm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/usb/host/ohci-platform.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index c2d300bc37f64..36bc8f104e42e 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1464,7 +1464,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
- 		if (ret)
- 			return ret;
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+index 65a1c3fdc88c6..f40112c5920d1 100644
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -301,6 +301,11 @@ static int ohci_platform_resume(struct device *dev)
+ 	}
  
--		if (cap <= PCI_CAP_ID_MAX) {
-+		/*
-+		 * ID 0 is a NULL capability, conflicting with our fake
-+		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
-+		 * hidden for now.
-+		 */
-+		if (cap && cap <= PCI_CAP_ID_MAX) {
- 			len = pci_cap_length[cap];
- 			if (len == 0xFF) { /* Variable length */
- 				len = vfio_cap_len(vdev, cap, pos);
+ 	ohci_resume(hcd, false);
++
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	return 0;
+ }
+ #endif /* CONFIG_PM_SLEEP */
 -- 
 2.25.1
 
