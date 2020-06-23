@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1550BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03399C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D487C2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68532064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943410;
-	bh=++4hLab2dfX6iFcLJboIfTBBryg5D9wFHju90187m0A=;
+	s=default; t=1592943418;
+	bh=CGNGQ69P2nDlSfc0fd3TyOOnIjjJR6Zy/Va0CrJMWOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3IzSL64yPrjrsYq+HvhtlQqbTY8ZZOM4LrDTqBYN2l4Cb+xO5nkh9l1weeny3INo
-	 0oMQUCanfYHlifmkqYiD+o8PNYWoC9pQycdt9UxjMTdE1c7lQR9SSWTpcY46op7Vl4
-	 GAzJY+xzLgE+PjNpt86SxptV2DEi3TtA2IlveBCg=
+	b=G0YrOCoH+ClxA3TVQtdxjPY0RRfd46HheAM4MqTFtG5o0UpiHbnUETxaM6rMChupR
+	 HOyMhT9B0ceKXzrqj/g5NkC1go71S7fOEPjmQsO9VINegu5R7My1Ut5M6BdeaI5Yc2
+	 xpP6g/qanvGmXmKEhgEtm3nCoI3m+fBlzVCZkF8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389466AbgFWUQs (ORCPT
+        id S2389480AbgFWUQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60480 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389454AbgFWUQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:45 -0400
+        id S2389267AbgFWUQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:16:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE4A72073E;
-        Tue, 23 Jun 2020 20:16:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C5962064B;
+        Tue, 23 Jun 2020 20:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943404;
-        bh=++4hLab2dfX6iFcLJboIfTBBryg5D9wFHju90187m0A=;
+        s=default; t=1592943409;
+        bh=CGNGQ69P2nDlSfc0fd3TyOOnIjjJR6Zy/Va0CrJMWOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVX+Ge1StHVwFV5by+xskivW/C81Wuj36pMtQvBKqEvGuo17Kne+kRj+F6QnhFdRI
-         cTD78BQJ9LghMqXz5JOkLCxmo9TyrumjDvgm3Yzgk7q/4jYb/CSZFZFRduTajoDGKX
-         HeuAY1N/zc7Mn6rqq54AHXW7bn84N7ipMKWFtQpk=
+        b=mw2M4vAVXsdCgBRTjk7eFtmhFwDV1bTioWvRDaqlIlB+3wmFvoHG1+kj2ylHdUsJQ
+         1LDaGD4BFH6qZGp+p+MVT2eLaxcApvsarnYepE45efBgNCB18X4U+j9QwdEHujwnyS
+         +uPzQWTmfhMZ0yJi5YouwydKdzpwwHdmZ9DDE13E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Oliver Neukum <oneukum@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 379/477] libbpf: Support pre-initializing .bss global variables
-Date:   Tue, 23 Jun 2020 21:56:16 +0200
-Message-Id: <20200623195425.447785355@linuxfoundation.org>
+Subject: [PATCH 5.7 381/477] usb/xhci-plat: Set PM runtime as active on resume
+Date:   Tue, 23 Jun 2020 21:56:18 +0200
+Message-Id: <20200623195425.543026157@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,164 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit caf62492f479585296e9d636c798d5ac256b7b04 ]
+[ Upstream commit 79112cc3c29f4a8c73a21428fbcbcb0afb005e3e ]
 
-Remove invalid assumption in libbpf that .bss map doesn't have to be updated
-in kernel. With addition of skeleton and memory-mapped initialization image,
-.bss doesn't have to be all zeroes when BPF map is created, because user-code
-might have initialized those variables from user-space.
+Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
+resume.
 
-Fixes: eba9c5f498a1 ("libbpf: Refactor global data map initialization")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200612194504.557844-1-andriin@fb.com
+ohci-platform.c had a warning reported due to the missing
+pm_runtime_set_active() [1].
+
+[1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
+
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Tony Prisk <linux@prisktech.co.nz>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mathias Nyman <mathias.nyman@intel.com>
+CC: Oliver Neukum <oneukum@suse.de>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-usb@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20200518154931.6144-2-qais.yousef@arm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c                        |  4 --
- .../selftests/bpf/prog_tests/skeleton.c       | 45 ++++++++++++++++---
- .../selftests/bpf/progs/test_skeleton.c       | 19 ++++++--
- 3 files changed, 55 insertions(+), 13 deletions(-)
+ drivers/usb/host/xhci-plat.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 0c5b4fb553fbc..c417cff2cdaf4 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -3455,10 +3455,6 @@ bpf_object__populate_internal_map(struct bpf_object *obj, struct bpf_map *map)
- 	char *cp, errmsg[STRERR_BUFSIZE];
- 	int err, zero = 0;
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index ea460b9682d5f..ca82e2c61ddc0 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -409,7 +409,15 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
  
--	/* kernel already zero-initializes .bss map. */
--	if (map_type == LIBBPF_MAP_BSS)
--		return 0;
--
- 	err = bpf_map_update_elem(map->fd, &zero, map->mmaped, 0);
- 	if (err) {
- 		err = -errno;
-diff --git a/tools/testing/selftests/bpf/prog_tests/skeleton.c b/tools/testing/selftests/bpf/prog_tests/skeleton.c
-index 9264a27360182..fa153cf67b1bb 100644
---- a/tools/testing/selftests/bpf/prog_tests/skeleton.c
-+++ b/tools/testing/selftests/bpf/prog_tests/skeleton.c
-@@ -15,6 +15,8 @@ void test_skeleton(void)
- 	int duration = 0, err;
- 	struct test_skeleton* skel;
- 	struct test_skeleton__bss *bss;
-+	struct test_skeleton__data *data;
-+	struct test_skeleton__rodata *rodata;
- 	struct test_skeleton__kconfig *kcfg;
- 
- 	skel = test_skeleton__open();
-@@ -24,13 +26,45 @@ void test_skeleton(void)
- 	if (CHECK(skel->kconfig, "skel_kconfig", "kconfig is mmaped()!\n"))
- 		goto cleanup;
- 
-+	bss = skel->bss;
-+	data = skel->data;
-+	rodata = skel->rodata;
+-	return xhci_resume(xhci, 0);
++	ret = xhci_resume(xhci, 0);
++	if (ret)
++		return ret;
 +
-+	/* validate values are pre-initialized correctly */
-+	CHECK(data->in1 != -1, "in1", "got %d != exp %d\n", data->in1, -1);
-+	CHECK(data->out1 != -1, "out1", "got %d != exp %d\n", data->out1, -1);
-+	CHECK(data->in2 != -1, "in2", "got %lld != exp %lld\n", data->in2, -1LL);
-+	CHECK(data->out2 != -1, "out2", "got %lld != exp %lld\n", data->out2, -1LL);
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
 +
-+	CHECK(bss->in3 != 0, "in3", "got %d != exp %d\n", bss->in3, 0);
-+	CHECK(bss->out3 != 0, "out3", "got %d != exp %d\n", bss->out3, 0);
-+	CHECK(bss->in4 != 0, "in4", "got %lld != exp %lld\n", bss->in4, 0LL);
-+	CHECK(bss->out4 != 0, "out4", "got %lld != exp %lld\n", bss->out4, 0LL);
-+
-+	CHECK(rodata->in6 != 0, "in6", "got %d != exp %d\n", rodata->in6, 0);
-+	CHECK(bss->out6 != 0, "out6", "got %d != exp %d\n", bss->out6, 0);
-+
-+	/* validate we can pre-setup global variables, even in .bss */
-+	data->in1 = 10;
-+	data->in2 = 11;
-+	bss->in3 = 12;
-+	bss->in4 = 13;
-+	rodata->in6 = 14;
-+
- 	err = test_skeleton__load(skel);
- 	if (CHECK(err, "skel_load", "failed to load skeleton: %d\n", err))
- 		goto cleanup;
++	return 0;
+ }
  
--	bss = skel->bss;
--	bss->in1 = 1;
--	bss->in2 = 2;
-+	/* validate pre-setup values are still there */
-+	CHECK(data->in1 != 10, "in1", "got %d != exp %d\n", data->in1, 10);
-+	CHECK(data->in2 != 11, "in2", "got %lld != exp %lld\n", data->in2, 11LL);
-+	CHECK(bss->in3 != 12, "in3", "got %d != exp %d\n", bss->in3, 12);
-+	CHECK(bss->in4 != 13, "in4", "got %lld != exp %lld\n", bss->in4, 13LL);
-+	CHECK(rodata->in6 != 14, "in6", "got %d != exp %d\n", rodata->in6, 14);
-+
-+	/* now set new values and attach to get them into outX variables */
-+	data->in1 = 1;
-+	data->in2 = 2;
- 	bss->in3 = 3;
- 	bss->in4 = 4;
- 	bss->in5.a = 5;
-@@ -44,14 +78,15 @@ void test_skeleton(void)
- 	/* trigger tracepoint */
- 	usleep(1);
- 
--	CHECK(bss->out1 != 1, "res1", "got %d != exp %d\n", bss->out1, 1);
--	CHECK(bss->out2 != 2, "res2", "got %lld != exp %d\n", bss->out2, 2);
-+	CHECK(data->out1 != 1, "res1", "got %d != exp %d\n", data->out1, 1);
-+	CHECK(data->out2 != 2, "res2", "got %lld != exp %d\n", data->out2, 2);
- 	CHECK(bss->out3 != 3, "res3", "got %d != exp %d\n", (int)bss->out3, 3);
- 	CHECK(bss->out4 != 4, "res4", "got %lld != exp %d\n", bss->out4, 4);
- 	CHECK(bss->handler_out5.a != 5, "res5", "got %d != exp %d\n",
- 	      bss->handler_out5.a, 5);
- 	CHECK(bss->handler_out5.b != 6, "res6", "got %lld != exp %d\n",
- 	      bss->handler_out5.b, 6);
-+	CHECK(bss->out6 != 14, "res7", "got %d != exp %d\n", bss->out6, 14);
- 
- 	CHECK(bss->bpf_syscall != kcfg->CONFIG_BPF_SYSCALL, "ext1",
- 	      "got %d != exp %d\n", bss->bpf_syscall, kcfg->CONFIG_BPF_SYSCALL);
-diff --git a/tools/testing/selftests/bpf/progs/test_skeleton.c b/tools/testing/selftests/bpf/progs/test_skeleton.c
-index de03a90f78caa..77ae86f44db5d 100644
---- a/tools/testing/selftests/bpf/progs/test_skeleton.c
-+++ b/tools/testing/selftests/bpf/progs/test_skeleton.c
-@@ -10,16 +10,26 @@ struct s {
- 	long long b;
- } __attribute__((packed));
- 
--int in1 = 0;
--long long in2 = 0;
-+/* .data section */
-+int in1 = -1;
-+long long in2 = -1;
-+
-+/* .bss section */
- char in3 = '\0';
- long long in4 __attribute__((aligned(64))) = 0;
- struct s in5 = {};
- 
--long long out2 = 0;
-+/* .rodata section */
-+const volatile int in6 = 0;
-+
-+/* .data section */
-+int out1 = -1;
-+long long out2 = -1;
-+
-+/* .bss section */
- char out3 = 0;
- long long out4 = 0;
--int out1 = 0;
-+int out6 = 0;
- 
- extern bool CONFIG_BPF_SYSCALL __kconfig;
- extern int LINUX_KERNEL_VERSION __kconfig;
-@@ -36,6 +46,7 @@ int handler(const void *ctx)
- 	out3 = in3;
- 	out4 = in4;
- 	out5 = in5;
-+	out6 = in6;
- 
- 	bpf_syscall = CONFIG_BPF_SYSCALL;
- 	kern_ver = LINUX_KERNEL_VERSION;
+ static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
 -- 
 2.25.1
 
