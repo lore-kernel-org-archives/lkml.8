@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E6020EDD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C047820E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943515;
-	bh=PoNil7jr+30iVCj+zJ8Urou9pPiuYD7sNpCe1oXReJU=;
+	s=default; t=1592943518;
+	bh=NiNoKQsWrYuiM7i9TyVddiNvcbY15XcHo3EDEr0xVsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DxMkbcUMy5hd9I/AxI/sghpDpr/EB02hscXmaZePxUnyOluc3OhXoH+RcDnod/nm2
-	 3IBsGXa6OHdV85ircNDbZtoVSmkvbn28TXT70o3SPQ8MlScnb46Tvjp8vF68OrEWxV
-	 hg48R/vQJakEKU+2gtrcVdx0A9EutraMTHG84Qjo=
+	b=hVfuanoulusKnEYlfs3f0uVyotixHdV1jvpV0AYRpLMiXL0sXa0oAZOMEy7MwWX9i
+	 xIMqa9LuUhPrrCjX5O59+gfGjiAZC/aohvbU5WKjB8AlugsO54ceODe7fP/Lb7okMx
+	 PnRyYlo8Gjnq3edkfg1vsrYEZNR3xvi1zSaxfrHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389695AbgFWUSd (ORCPT
+        id S2389153AbgFWUSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35246 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389660AbgFWUSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:18:23 -0400
+        id S2389667AbgFWUS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 039CB21473;
-        Tue, 23 Jun 2020 20:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 928542080C;
+        Tue, 23 Jun 2020 20:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943503;
-        bh=PoNil7jr+30iVCj+zJ8Urou9pPiuYD7sNpCe1oXReJU=;
+        s=default; t=1592943506;
+        bh=NiNoKQsWrYuiM7i9TyVddiNvcbY15XcHo3EDEr0xVsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dMR+Cfqk4albqgFmcuo9+Fpbkg6y5RO8VPq+lWHnirkSWMYfHL4ldKsxTcj95GZP/
-         EuVD7qOf7K8u34v4a60aaDGjVRrZ6pLHyPveMD6bRfMJOKaldwBw2hHnT4EVqzYvfE
-         SqGEkQTzkm+dpvA1frAEDP/Nt342ngGiPkzDrEVM=
+        b=cI5tTV3/mkOGPy7mdwgpCO5XZwmpiNgO93EQCXCBIesTJU5s3f+9M3071OB8YasYu
+         BVobSmulr79ftqJ3OzX5RRC8Q6ZyA3mQzCz/rRW93eck+RRTmL4eTR2DEZX8MgwPLm
+         v+4sSY7b2AIiVq8UNE5o4bGV5RiQ43uYPBegHOLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        James Tai <james.tai@realtek.com>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 5.7 418/477] arm64: dts: realtek: rtd129x: Use reserved-memory for RPC regions
-Date:   Tue, 23 Jun 2020 21:56:55 +0200
-Message-Id: <20200623195427.287074940@linuxfoundation.org>
+Subject: [PATCH 5.7 419/477] arm64: dts: realtek: rtd129x: Carve out boot ROM from memory
+Date:   Tue, 23 Jun 2020 21:56:56 +0200
+Message-Id: <20200623195427.333741339@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,93 +62,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andreas Färber <afaerber@suse.de>
 
-commit 690677c22d5fa5dfdaa609a1739b75fdfb1c4a24 upstream.
+commit 3040e132beda2aee56e6ea9be8db69889bcb2e7a upstream.
 
-Move /reserved-memory node from RTD1295 to RTD129x DT.
-Convert RPC /memreserve/s into /reserved-memory nodes.
+Update DS418j, MeLE V9, PROBOX2 AVA, Zidoo X9S and DS418 /memory nodes
+to exclude 0..0x1efff from reg entry and update unit address to match.
+Add this region to /soc ranges and for now just update the /memreserve/s.
 
+Suggested-by: Rob Herring <robh@kernel.org>
 Fixes: 72a7786c0a0d ("ARM64: dts: Add Realtek RTD1295 and Zidoo X9S")
-Fixes: f8b3436dad5c ("arm64: dts: realtek: Factor out common RTD129x parts")
+Fixes: d938a964a966 ("arm64: dts: realtek: Add ProBox2 Ava")
+Fixes: a9ce6f854581 ("arm64: dts: realtek: Add MeLE V9")
+Fixes: cf976f660ee8 ("arm64: dts: realtek: Add RTD1293 and Synology DS418j")
+Fixes: 5133636e41a2 ("arm64: dts: realtek: Add RTD1296 and Synology DS418")
+Cc: James Tai <james.tai@realtek.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/realtek/rtd1295.dtsi |   13 +------------
- arch/arm64/boot/dts/realtek/rtd129x.dtsi |   23 ++++++++++++++++++++---
- 2 files changed, 21 insertions(+), 15 deletions(-)
+ arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts      |    6 +++---
+ arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts     |    6 +++---
+ arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts |    6 +++---
+ arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts   |    4 ++--
+ arch/arm64/boot/dts/realtek/rtd1296-ds418.dts       |    4 ++--
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi            |    9 +++++----
+ 6 files changed, 18 insertions(+), 17 deletions(-)
 
---- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-@@ -2,7 +2,7 @@
+--- a/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
  /*
-  * Realtek RTD1295 SoC
-  *
-- * Copyright (c) 2016-2017 Andreas Färber
-+ * Copyright (c) 2016-2019 Andreas Färber
+- * Copyright (c) 2017 Andreas Färber
++ * Copyright (c) 2017-2019 Andreas Färber
   */
  
- #include "rtd129x.dtsi"
-@@ -47,17 +47,6 @@
- 		};
+ /dts-v1/;
+@@ -11,9 +11,9 @@
+ 	compatible = "synology,ds418j", "realtek,rtd1293";
+ 	model = "Synology DiskStation DS418j";
+ 
+-	memory@0 {
++	memory@1f000 {
+ 		device_type = "memory";
+-		reg = <0x0 0x40000000>;
++		reg = <0x1f000 0x3ffe1000>; /* boot ROM to 1 GiB */
  	};
  
--	reserved-memory {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		tee@10100000 {
--			reg = <0x10100000 0xf00000>;
--			no-map;
--		};
--	};
--
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
+ 	aliases {
+--- a/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2017 Andreas Färber
++ * Copyright (c) 2017-2019 Andreas Färber
+  *
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+@@ -12,9 +12,9 @@
+ 	compatible = "mele,v9", "realtek,rtd1295";
+ 	model = "MeLE V9";
+ 
+-	memory@0 {
++	memory@1f000 {
+ 		device_type = "memory";
+-		reg = <0x0 0x80000000>;
++		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
+ 	};
+ 
+ 	aliases {
+--- a/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1295-probox2-ava.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2017 Andreas Färber
++ * Copyright (c) 2017-2019 Andreas Färber
+  *
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+@@ -12,9 +12,9 @@
+ 	compatible = "probox2,ava", "realtek,rtd1295";
+ 	model = "PROBOX2 AVA";
+ 
+-	memory@0 {
++	memory@1f000 {
+ 		device_type = "memory";
+-		reg = <0x0 0x80000000>;
++		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
+ 	};
+ 
+ 	aliases {
+--- a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
+@@ -11,9 +11,9 @@
+ 	compatible = "zidoo,x9s", "realtek,rtd1295";
+ 	model = "Zidoo X9S";
+ 
+-	memory@0 {
++	memory@1f000 {
+ 		device_type = "memory";
+-		reg = <0x0 0x80000000>;
++		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
+ 	};
+ 
+ 	aliases {
+--- a/arch/arm64/boot/dts/realtek/rtd1296-ds418.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1296-ds418.dts
+@@ -11,9 +11,9 @@
+ 	compatible = "synology,ds418", "realtek,rtd1296";
+ 	model = "Synology DiskStation DS418";
+ 
+-	memory@0 {
++	memory@1f000 {
+ 		device_type = "memory";
+-		reg = <0x0 0x80000000>;
++		reg = <0x1f000 0x7ffe1000>; /* boot ROM to 2 GiB */
+ 	};
+ 
+ 	aliases {
 --- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
 +++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-@@ -2,14 +2,12 @@
- /*
-  * Realtek RTD1293/RTD1295/RTD1296 SoC
-  *
-- * Copyright (c) 2016-2017 Andreas Färber
-+ * Copyright (c) 2016-2019 Andreas Färber
+@@ -5,8 +5,8 @@
+  * Copyright (c) 2016-2019 Andreas Färber
   */
  
- /memreserve/	0x0000000000000000 0x0000000000030000;
--/memreserve/	0x000000000001f000 0x0000000000001000;
- /memreserve/	0x0000000000030000 0x00000000000d0000;
+-/memreserve/	0x0000000000000000 0x0000000000030000;
+-/memreserve/	0x0000000000030000 0x00000000000d0000;
++/memreserve/	0x0000000000000000 0x000000000001f000;
++/memreserve/	0x000000000001f000 0x00000000000e1000;
  /memreserve/	0x0000000001b00000 0x00000000004be000;
--/memreserve/	0x0000000001ffe000 0x0000000000004000;
  
  #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/realtek,rtd1295.h>
-@@ -19,6 +17,25 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
+@@ -52,8 +52,9 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		/* Exclude up to 2 GiB of RAM */
+-		ranges = <0x80000000 0x80000000 0x80000000>;
++		ranges = <0x00000000 0x00000000 0x0001f000>, /* boot ROM */
++			 /* Exclude up to 2 GiB of RAM */
++			 <0x80000000 0x80000000 0x80000000>;
  
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		rpc_comm: rpc@1f000 {
-+			reg = <0x1f000 0x1000>;
-+		};
-+
-+		rpc_ringbuf: rpc@1ffe000 {
-+			reg = <0x1ffe000 0x4000>;
-+		};
-+
-+		tee: tee@10100000 {
-+			reg = <0x10100000 0xf00000>;
-+			no-map;
-+		};
-+	};
-+
- 	arm_pmu: arm-pmu {
- 		compatible = "arm,cortex-a53-pmu";
- 		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+ 		reset1: reset-controller@98000000 {
+ 			compatible = "snps,dw-low-reset";
 
 
