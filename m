@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1C1020675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BEF21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944940;
-	bh=kGRmZLItnQkLpbUnjXCwaWJEJgShGAHtqXcmb9eupoo=;
+	s=default; t=1592944944;
+	bh=z35iJVWZkC2NAMYRYw/X+fGLQhQF2nEGbNhYXl4tEGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFK5l43USVWxl9BwRwXJVoUUhH+wYFk6HxqbFRvG+LXP9MnK5kkkiY4S5Fzjga+k5
-	 upHj3nn6LJ8cT6NVhFelrRZ4uNXd1Q9JiWYKw9oruNkMLMDZbLTJbJ0VSTy9PhULpz
-	 pm/5eCfb6dYhx+0CqumlQw3SrC0cWxfTTmvku1to=
+	b=Eohq07othcB22njsBy0rkviNJ0uM+Nve5Id/del9DPOVNhiCQblT+5kBhipn+uLEX
+	 XSLcGntCeijyudiOe6zQzwSsOVQirn0bJeKL6T3UNaccXCvPuv420ZqMEYP8hxS1h8
+	 I/A95cbcIx0KhGve6NL8R2C0QuQLQYBwerLx3pso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392406AbgFWUmR (ORCPT
+        id S2392417AbgFWUmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:42:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38794 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392398AbgFWUmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:13 -0400
+        id S2392392AbgFWUmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3485320675;
-        Tue, 23 Jun 2020 20:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92CC82070E;
+        Tue, 23 Jun 2020 20:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944933;
-        bh=kGRmZLItnQkLpbUnjXCwaWJEJgShGAHtqXcmb9eupoo=;
+        s=default; t=1592944931;
+        bh=z35iJVWZkC2NAMYRYw/X+fGLQhQF2nEGbNhYXl4tEGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k7RWDqDeDms6oSTyG5DDk4rryo3iUHieHEOCnSfPIjN/WHbC4ofrOE8y+lIvhmeIb
-         pKV0T3beKV/LkbcwQfMVjVFupetsWY84zrbem4vpsuKbBOH+qMR6o92kldXaPn1/Im
-         NEUydLu6AEP8mxCC1p1gxM/iRpG3e9OrCzEdXpkw=
+        b=x+pyBYvcfl975TG+6gslMgbztNa0nysFh8RLAIhAu8gPtKsMPpnh0gctCniFGzWj1
+         UAjcyfGSKnoP8vtQQqRTntqAEO+eDbV4k6Or4gefsADCn/nEyfktHRzMB6KWZbmdYi
+         8ClLblYTozK/LzBCGjkAn8wpgObP+VmjJ6t7o7qk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 181/206] x86/boot/compressed: Relax sed symbol type regex for LLVM ld.lld
-Date:   Tue, 23 Jun 2020 21:58:29 +0200
-Message-Id: <20200623195325.942584567@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Sean Paul <sean@poorly.run>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 180/206] drm/dp_mst: Increase ACT retry timeout to 3s
+Date:   Tue, 23 Jun 2020 21:58:28 +0200
+Message-Id: <20200623195325.892939232@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,67 +59,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Lyude Paul <lyude@redhat.com>
 
-commit bc310baf2ba381c648983c7f4748327f17324562 upstream.
+[ Upstream commit 873a95e0d59ac06901ae261dda0b7165ffd002b8 ]
 
-The final build stage of the x86 kernel captures some symbol
-addresses from the decompressor binary and copies them into zoffset.h.
-It uses sed with a regular expression that matches the address, symbol
-type and symbol name, and mangles the captured addresses and the names
-of symbols of interest into #define directives that are added to
-zoffset.h
+Currently we only poll for an ACT up to 30 times, with a busy-wait delay
+of 100µs between each attempt - giving us a timeout of 2900µs. While
+this might seem sensible, it would appear that in certain scenarios it
+can take dramatically longer then that for us to receive an ACT. On one
+of the EVGA MST hubs that I have available, I observed said hub
+sometimes taking longer then a second before signalling the ACT. These
+delays mostly seem to occur when previous sideband messages we've sent
+are NAKd by the hub, however it wouldn't be particularly surprising if
+it's possible to reproduce times like this simply by introducing branch
+devices with large LCTs since payload allocations have to take effect on
+every downstream device up to the payload's target.
 
-The symbol type is indicated by a single letter, which we match
-strictly: only letters in the set 'ABCDGRSTVW' are matched, even
-though the actual symbol type is relevant and therefore ignored.
+So, instead of just retrying 30 times we poll for the ACT for up to 3ms,
+and additionally use usleep_range() to avoid a very long and rude
+busy-wait. Note that the previous retry count of 30 appears to have been
+arbitrarily chosen, as I can't find any mention of a recommended timeout
+or retry count for ACTs in the DisplayPort 2.0 specification. This also
+goes for the range we were previously using for udelay(), although I
+suspect that was just copied from the recommended delay for link
+training on SST devices.
 
-Commit bc7c9d620 ("efi/libstub/x86: Force 'hidden' visibility for
-extern declarations") made a change to the way external symbol
-references are classified, resulting in 'startup_32' now being
-emitted as a hidden symbol. This prevents the use of GOT entries to
-refer to this symbol via its absolute address, which recent toolchains
-(including Clang based ones) already avoid by default, making this
-change a no-op in the majority of cases.
+Changes since v1:
+* Use readx_poll_timeout() instead of open-coding timeout loop - Sean
+  Paul
+Changes since v2:
+* Increase poll interval to 200us - Sean Paul
+* Print status in hex when we timeout waiting for ACT - Sean Paul
 
-However, as it turns out, the LLVM linker classifies such hidden
-symbols as symbols with static linkage in fully linked ELF binaries,
-causing tools such as NM to output a lowercase 't' rather than an upper
-case 'T' for the type of such symbols. Since our sed expression only
-matches upper case letters for the symbol type, the line describing
-startup_32 is disregarded, resulting in a build error like the following
-
-  arch/x86/boot/header.S:568:18: error: symbol 'ZO_startup_32' can not be
-                                        undefined in a subtraction expression
-  init_size: .long (0x00000000008fd000 - ZO_startup_32 +
-                    (((0x0000000001f6361c + ((0x0000000001f6361c >> 8) + 65536)
-                     - 0x00000000008c32e5) + 4095) & ~4095)) # kernel initialization size
-
-Given that we are only interested in the value of the symbol, let's match
-any character in the set 'a-zA-Z' instead.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Sean Paul <sean@poorly.run>
+Cc: <stable@vger.kernel.org> # v3.17+
+Reviewed-by: Sean Paul <sean@poorly.run>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200406221253.1307209-4-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 54 ++++++++++++++++-----------
+ 1 file changed, 32 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index e2839b5c246c2..6539c50fb9aae 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -87,7 +87,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 70bffedfdcf5b..a0aafd9a37e60 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -29,6 +29,7 @@
+ #include <linux/i2c.h>
+ #include <drm/drm_dp_mst_helper.h>
+ #include <drm/drmP.h>
++#include <linux/iopoll.h>
  
- SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ #include <drm/drm_fixed.h>
+ #include <drm/drm_atomic.h>
+@@ -2828,6 +2829,17 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
+ 	return ret;
+ }
  
--sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
-+sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++static int do_get_act_status(struct drm_dp_aux *aux)
++{
++	int ret;
++	u8 status;
++
++	ret = drm_dp_dpcd_readb(aux, DP_PAYLOAD_TABLE_UPDATE_STATUS, &status);
++	if (ret < 0)
++		return ret;
++
++	return status;
++}
  
- quiet_cmd_zoffset = ZOFFSET $@
-       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+ /**
+  * drm_dp_check_act_status() - Check ACT handled status.
+@@ -2837,30 +2849,28 @@ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
+  */
+ int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
+ {
+-	int count = 0, ret;
+-	u8 status;
+-
+-	do {
+-		ret = drm_dp_dpcd_readb(mgr->aux,
+-					DP_PAYLOAD_TABLE_UPDATE_STATUS,
+-					&status);
+-		if (ret < 0) {
+-			DRM_DEBUG_KMS("failed to read payload table status %d\n",
+-				      ret);
+-			return ret;
+-		}
+-
+-		if (status & DP_PAYLOAD_ACT_HANDLED)
+-			break;
+-		count++;
+-		udelay(100);
+-	} while (count < 30);
+-
+-	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
+-		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
+-			      status, count);
++	/*
++	 * There doesn't seem to be any recommended retry count or timeout in
++	 * the MST specification. Since some hubs have been observed to take
++	 * over 1 second to update their payload allocations under certain
++	 * conditions, we use a rather large timeout value.
++	 */
++	const int timeout_ms = 3000;
++	int ret, status;
++
++	ret = readx_poll_timeout(do_get_act_status, mgr->aux, status,
++				 status & DP_PAYLOAD_ACT_HANDLED || status < 0,
++				 200, timeout_ms * USEC_PER_MSEC);
++	if (ret < 0 && status >= 0) {
++		DRM_DEBUG_KMS("Failed to get ACT after %dms, last status: %02x\n",
++			      timeout_ms, status);
+ 		return -EINVAL;
++	} else if (status < 0) {
++		DRM_DEBUG_KMS("Failed to read payload table status: %d\n",
++			      status);
++		return status;
+ 	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(drm_dp_check_act_status);
 -- 
 2.25.1
 
