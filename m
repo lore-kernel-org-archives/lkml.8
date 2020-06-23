@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514662078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3BF820707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947859;
-	bh=btPfLcs8y4gcEDSelOKoolX2l+jHZ0EikdJP1VWtmgE=;
+	s=default; t=1592947861;
+	bh=iEny6mrRqtcOg3jHBhUFOqhX0wJAG3lvG7YpYwL63H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H59fosKqWumiTUjhQ5V0QMml+itZbhLJ9XHbEfL5pcDVCV3Uhv6l/bCMGf8ZKAOND
-	 oRwONCwqeZu4USlm9SdSe36NfjKXfl47ebXuzQIFGWA9MLMLBQ97rTlKnIdGxODZ1c
-	 KHDnhTVh07dCmx0q99bPLqX4EUyIVqOSCdew2PHA=
+	b=mEc9Gcm0+l7FPS7BzKX/E2MjJ9NO+slBDn8bcH2weFap09AgAUEs7n5z7jKHadckr
+	 HlU2iRTWHFhW9wx54kUmR0HcwGvAMJAvPlYhZiYyX0wgFujVdGAvSNXXGUNNkRtcM1
+	 9ujEeCaDq/2yljjGyZCHs+8Rog8tBL85zPYcfclQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393620AbgFWVa6 (ORCPT
+        id S2393635AbgFWVbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389202AbgFWUO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:26 -0400
+        id S2389188AbgFWUOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34BF0206C3;
-        Tue, 23 Jun 2020 20:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6984F20E65;
+        Tue, 23 Jun 2020 20:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943265;
-        bh=btPfLcs8y4gcEDSelOKoolX2l+jHZ0EikdJP1VWtmgE=;
+        s=default; t=1592943257;
+        bh=iEny6mrRqtcOg3jHBhUFOqhX0wJAG3lvG7YpYwL63H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AV4Nto66bG49A5ELGgyoazBB8E2j8mApi8v1mo9fsfZ8OwnOob0A3wGUknR3jbnMJ
-         8/0sG+WC66nNWIRPDYgBC6BiWf8hqOMJYoQ3yOIFVUyxZN9o/oo01PUUfigfSktfpy
-         1PEHmCMRJqMJ7KT8BAnwws8IgFPE+FEFxid3cYho=
+        b=qVmhhk0eIgO9gW0mioaTGcYayt3LiTQar6Cv8RdQ9Keid8Zn5r9VMbBnEzKc+e4MW
+         OhjSKOtgnbA6WFbDRYTF+DcacmnXET7KwrzTncMeLULFAZQdsIxx3mQJ7HGKl41S8M
+         Sw+SLF7YbbrcL5Xx0HtOp/NtnZwPG0ufexjrE48M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 324/477] crypto: omap-sham - add proper load balancing support for multicore
-Date:   Tue, 23 Jun 2020 21:55:21 +0200
-Message-Id: <20200623195422.848834034@linuxfoundation.org>
+Subject: [PATCH 5.7 321/477] drm/amd/display: Revalidate bandwidth before commiting DC updates
+Date:   Tue, 23 Jun 2020 21:55:18 +0200
+Message-Id: <20200623195422.707100245@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,167 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit 281c377872ff5d15d80df25fc4df02d2676c7cde ]
+[ Upstream commit a24eaa5c51255b344d5a321f1eeb3205f2775498 ]
 
-The current implementation of the multiple accelerator core support for
-OMAP SHA does not work properly. It always picks up the first probed
-accelerator core if this is available, and rest of the book keeping also
-gets confused if there are two cores available. Add proper load
-balancing support for SHA, and also fix any bugs related to the
-multicore support while doing it.
+[Why]
+Whenever we switch between tiled formats without also switching pixel
+formats or doing anything else that recreates the DC plane state we
+can run into underflow or hangs since we're not updating the
+DML parameters before committing to the hardware.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[How]
+If the update type is FULL then call validate_bandwidth again to update
+the DML parmeters before committing the state.
+
+This is basically just a workaround and protective measure against
+update types being added DC where we could run into this issue in
+the future.
+
+We can only fully validate the state in advance before applying it to
+the hardware if we recreate all the plane and stream states since
+we can't modify what's currently in use.
+
+The next step is to update DM to ensure that we're creating the plane
+and stream states for whatever could potentially be a full update in
+DC to pre-emptively recreate the state for DC global validation.
+
+The workaround can stay until this has been fixed in DM.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/omap-sham.c | 64 ++++++++++++++++++--------------------
- 1 file changed, 31 insertions(+), 33 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
-index 0cbf9c932a0f0..a82a3596dca34 100644
---- a/drivers/crypto/omap-sham.c
-+++ b/drivers/crypto/omap-sham.c
-@@ -169,8 +169,6 @@ struct omap_sham_hmac_ctx {
- };
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 47431ca6986db..4a619328101ce 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -2517,6 +2517,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
  
- struct omap_sham_ctx {
--	struct omap_sham_dev	*dd;
--
- 	unsigned long		flags;
+ 	copy_stream_update_to_stream(dc, context, stream, stream_update);
  
- 	/* fallback stuff */
-@@ -933,27 +931,35 @@ static int omap_sham_update_dma_stop(struct omap_sham_dev *dd)
- 	return 0;
- }
- 
-+struct omap_sham_dev *omap_sham_find_dev(struct omap_sham_reqctx *ctx)
-+{
-+	struct omap_sham_dev *dd;
++	if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
++		DC_ERROR("Mode validation failed for stream update!\n");
++		dc_release_state(context);
++		return;
++	}
 +
-+	if (ctx->dd)
-+		return ctx->dd;
-+
-+	spin_lock_bh(&sham.lock);
-+	dd = list_first_entry(&sham.dev_list, struct omap_sham_dev, list);
-+	list_move_tail(&dd->list, &sham.dev_list);
-+	ctx->dd = dd;
-+	spin_unlock_bh(&sham.lock);
-+
-+	return dd;
-+}
-+
- static int omap_sham_init(struct ahash_request *req)
- {
- 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
- 	struct omap_sham_ctx *tctx = crypto_ahash_ctx(tfm);
- 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
--	struct omap_sham_dev *dd = NULL, *tmp;
-+	struct omap_sham_dev *dd;
- 	int bs = 0;
- 
--	spin_lock_bh(&sham.lock);
--	if (!tctx->dd) {
--		list_for_each_entry(tmp, &sham.dev_list, list) {
--			dd = tmp;
--			break;
--		}
--		tctx->dd = dd;
--	} else {
--		dd = tctx->dd;
--	}
--	spin_unlock_bh(&sham.lock);
-+	ctx->dd = NULL;
- 
--	ctx->dd = dd;
-+	dd = omap_sham_find_dev(ctx);
-+	if (!dd)
-+		return -ENODEV;
- 
- 	ctx->flags = 0;
- 
-@@ -1223,8 +1229,7 @@ err1:
- static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
- {
- 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
--	struct omap_sham_ctx *tctx = crypto_tfm_ctx(req->base.tfm);
--	struct omap_sham_dev *dd = tctx->dd;
-+	struct omap_sham_dev *dd = ctx->dd;
- 
- 	ctx->op = op;
- 
-@@ -1234,7 +1239,7 @@ static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
- static int omap_sham_update(struct ahash_request *req)
- {
- 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
--	struct omap_sham_dev *dd = ctx->dd;
-+	struct omap_sham_dev *dd = omap_sham_find_dev(ctx);
- 
- 	if (!req->nbytes)
- 		return 0;
-@@ -1338,21 +1343,8 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
- 	struct omap_sham_hmac_ctx *bctx = tctx->base;
- 	int bs = crypto_shash_blocksize(bctx->shash);
- 	int ds = crypto_shash_digestsize(bctx->shash);
--	struct omap_sham_dev *dd = NULL, *tmp;
- 	int err, i;
- 
--	spin_lock_bh(&sham.lock);
--	if (!tctx->dd) {
--		list_for_each_entry(tmp, &sham.dev_list, list) {
--			dd = tmp;
--			break;
--		}
--		tctx->dd = dd;
--	} else {
--		dd = tctx->dd;
--	}
--	spin_unlock_bh(&sham.lock);
--
- 	err = crypto_shash_setkey(tctx->fallback, key, keylen);
- 	if (err)
- 		return err;
-@@ -1370,7 +1362,7 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
- 
- 	memset(bctx->ipad + keylen, 0, bs - keylen);
- 
--	if (!test_bit(FLAGS_AUTO_XOR, &dd->flags)) {
-+	if (!test_bit(FLAGS_AUTO_XOR, &sham.flags)) {
- 		memcpy(bctx->opad, bctx->ipad, bs);
- 
- 		for (i = 0; i < bs; i++) {
-@@ -2174,6 +2166,7 @@ static int omap_sham_probe(struct platform_device *pdev)
- 	}
- 
- 	dd->flags |= dd->pdata->flags;
-+	sham.flags |= dd->pdata->flags;
- 
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_set_autosuspend_delay(dev, DEFAULT_AUTOSUSPEND_DELAY);
-@@ -2201,6 +2194,9 @@ static int omap_sham_probe(struct platform_device *pdev)
- 	spin_unlock(&sham.lock);
- 
- 	for (i = 0; i < dd->pdata->algs_info_size; i++) {
-+		if (dd->pdata->algs_info[i].registered)
-+			break;
-+
- 		for (j = 0; j < dd->pdata->algs_info[i].size; j++) {
- 			struct ahash_alg *alg;
- 
-@@ -2252,9 +2248,11 @@ static int omap_sham_remove(struct platform_device *pdev)
- 	list_del(&dd->list);
- 	spin_unlock(&sham.lock);
- 	for (i = dd->pdata->algs_info_size - 1; i >= 0; i--)
--		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--)
-+		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--) {
- 			crypto_unregister_ahash(
- 					&dd->pdata->algs_info[i].algs_list[j]);
-+			dd->pdata->algs_info[i].registered--;
-+		}
- 	tasklet_kill(&dd->done_task);
- 	pm_runtime_disable(&pdev->dev);
- 
+ 	commit_planes_for_stream(
+ 				dc,
+ 				srf_updates,
 -- 
 2.25.1
 
