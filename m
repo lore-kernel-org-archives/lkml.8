@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC953C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5783EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB5CE20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A27420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388972AbgFWWAR (ORCPT
+        id S2389001AbgFWWAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:00:17 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:42486 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387558AbgFWWAQ (ORCPT
+        Tue, 23 Jun 2020 18:00:49 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:58744 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388125AbgFWWAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:00:16 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Tue, 23 Jun 2020 18:00:48 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.90_1)
         (envelope-from <ebiederm@xmission.com>)
-        id 1jnqxj-00032s-8r; Tue, 23 Jun 2020 16:00:15 -0600
+        id 1jnqyF-0004gJ-GE; Tue, 23 Jun 2020 16:00:47 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1jnqxi-0003Uu-CR; Tue, 23 Jun 2020 16:00:15 -0600
+        id 1jnqyE-00011w-IF; Tue, 23 Jun 2020 16:00:47 -0600
 From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     <linux-kernel@vger.kernel.org>
 Cc:     <linux-fsdevel@vger.kernel.org>,
@@ -39,58 +39,132 @@ Cc:     <linux-fsdevel@vger.kernel.org>,
         Bernd Edlinger <bernd.edlinger@hotmail.de>
 References: <87pn9u6h8c.fsf@x220.int.ebiederm.org>
         <87r1u5laac.fsf@x220.int.ebiederm.org>
-Date:   Tue, 23 Jun 2020 16:55:51 -0500
+Date:   Tue, 23 Jun 2020 16:56:23 -0500
 In-Reply-To: <87r1u5laac.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
         message of "Tue, 23 Jun 2020 16:52:43 -0500")
-Message-ID: <87y2odjvko.fsf_-_@x220.int.ebiederm.org>
+Message-ID: <87sgeljvjs.fsf_-_@x220.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1jnqxi-0003Uu-CR;;;mid=<87y2odjvko.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18OOvS43z9gpnli31m0/YVpcSYNZcjVme4=
+X-XM-SPF: eid=1jnqyE-00011w-IF;;;mid=<87sgeljvjs.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1//9RpPvm0Ju/m/af9xHXdmD0J+69ybl0M=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 5/6] coredump: Stop using group_exit_task
+Subject: [PATCH v2 6/6] exec: Rename group_exit_task group_exec_task and correct the Documentation
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Setting and clearing of group_exit_task in the coredump code was added
-to affect the outcome of signal_group_exit()[1].  The coredump code
-has not grown any other uses for setting group_exit_task since.  Now
-that signal_group_exit() no longer tests group_exit_task stop setting
-and clearing it.
+Rename group_exit_task to group_exec_task to make it clear this
+field is only used during exec.
 
-[1] 6cd8f0acae34 ("coredump: ensure that SIGKILL always kills the dumping thread")
+Update the comments for the fields group_exec_task and notify_count as
+they are only used by exec.  Notifications to the execing task aka
+group_exec_task happen at 0 and -1.
+
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- fs/coredump.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/exec.c                    |  8 ++++----
+ include/linux/sched/signal.h | 11 ++++-------
+ kernel/exit.c                |  4 ++--
+ 3 files changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 7237f07ff6be..37b71c72ab3a 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -369,7 +369,6 @@ static int zap_threads(struct task_struct *tsk, struct mm_struct *mm,
- 	spin_lock_irq(&tsk->sighand->siglock);
- 	if (!signal_group_exit(tsk->signal)) {
- 		mm->core_state = core_state;
--		tsk->signal->group_exit_task = tsk;
- 		nr = zap_process(tsk, exit_code, 0);
- 		clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
+diff --git a/fs/exec.c b/fs/exec.c
+index 9c4c1ab8f715..c594af64acd2 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1146,7 +1146,7 @@ static int de_thread(struct task_struct *tsk)
  	}
-@@ -481,7 +480,6 @@ static void coredump_finish(struct mm_struct *mm, bool core_dumped)
- 	spin_lock_irq(&current->sighand->siglock);
- 	if (core_dumped && !__fatal_signal_pending(current))
- 		current->signal->group_exit_code |= 0x80;
--	current->signal->group_exit_task = NULL;
- 	current->signal->flags = SIGNAL_GROUP_EXIT;
- 	spin_unlock_irq(&current->sighand->siglock);
  
+ 	sig->flags |= SIGNAL_GROUP_DETHREAD;
+-	sig->group_exit_task = tsk;
++	sig->group_exec_task = tsk;
+ 	sig->notify_count = zap_other_threads(tsk);
+ 	if (!thread_group_leader(tsk))
+ 		sig->notify_count--;
+@@ -1175,7 +1175,7 @@ static int de_thread(struct task_struct *tsk)
+ 			spin_lock(lock);
+ 			/*
+ 			 * Do this under tasklist_lock to ensure that
+-			 * exit_notify() can't miss ->group_exit_task
++			 * exit_notify() can't miss ->group_exec_task
+ 			 */
+ 			sig->notify_count = -1;
+ 			if (likely(leader->exit_state))
+@@ -1246,7 +1246,7 @@ static int de_thread(struct task_struct *tsk)
+ 
+ 	spin_lock_irq(lock);
+ 	sig->flags &= ~SIGNAL_GROUP_DETHREAD;
+-	sig->group_exit_task = NULL;
++	sig->group_exec_task = NULL;
+ 	sig->notify_count = 0;
+ 	spin_unlock_irq(lock);
+ 
+@@ -1262,7 +1262,7 @@ static int de_thread(struct task_struct *tsk)
+ 	read_lock_irq(&tasklist_lock);
+ 	spin_lock(lock);
+ 	sig->flags &= ~SIGNAL_GROUP_DETHREAD;
+-	sig->group_exit_task = NULL;
++	sig->group_exec_task = NULL;
+ 	sig->notify_count = 0;
+ 	spin_unlock(lock);
+ 	read_unlock_irq(&tasklist_lock);
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 43822e2b63e6..ad6b209b1363 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -98,13 +98,10 @@ struct signal_struct {
+ 
+ 	/* thread group exit support */
+ 	int			group_exit_code;
+-	/* overloaded:
+-	 * - notify group_exit_task when ->count is equal to notify_count
+-	 * - everyone except group_exit_task is stopped during signal delivery
+-	 *   of fatal signals, group_exit_task processes the signal.
+-	 */
++
++	/* exec support, notify group_exec_task when notify_count is 0 or -1 */
+ 	int			notify_count;
+-	struct task_struct	*group_exit_task;
++	struct task_struct	*group_exec_task;
+ 
+ 	/* thread group stop support, overloads group_exit_code too */
+ 	int			group_stop_count;
+@@ -265,7 +262,7 @@ static inline void signal_set_stop_flags(struct signal_struct *sig,
+ 	sig->flags = (sig->flags & ~SIGNAL_STOP_MASK) | flags;
+ }
+ 
+-/* If true, all threads except ->group_exit_task have pending SIGKILL */
++/* If true, all threads except ->group_exec_task have pending SIGKILL */
+ static inline int signal_group_exit(const struct signal_struct *sig)
+ {
+ 	return	(sig->flags & (SIGNAL_GROUP_EXIT |
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 727150f28103..4206d33b4904 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -115,7 +115,7 @@ static void __exit_signal(struct task_struct *tsk)
+ 		 * then notify it:
+ 		 */
+ 		if (sig->notify_count > 0 && !--sig->notify_count)
+-			wake_up_process(sig->group_exit_task);
++			wake_up_process(sig->group_exec_task);
+ 
+ 		if (tsk == sig->curr_target)
+ 			sig->curr_target = next_thread(tsk);
+@@ -672,7 +672,7 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 
+ 	/* mt-exec, de_thread() is waiting for group leader */
+ 	if (unlikely(tsk->signal->notify_count < 0))
+-		wake_up_process(tsk->signal->group_exit_task);
++		wake_up_process(tsk->signal->group_exec_task);
+ 	write_unlock_irq(&tasklist_lock);
+ 
+ 	list_for_each_entry_safe(p, n, &dead, ptrace_entry) {
 -- 
 2.20.1
 
