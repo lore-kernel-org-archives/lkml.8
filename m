@@ -2,77 +2,147 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B44C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 049C320774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A20207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592925205;
+	bh=pHyrYtEqzam1DvjsrFU9G/4oT0OUOGqgM144RO2l1BM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=g+TiO0hYGrsKbxhiKxH5ia2CjYnitYnBN7pU6oeulyyF8s2psfkK2MVKDmq/n4v+c
+	 nxsrikq7busWzn95A6vAArkFM2TBfBOZh9fDvHn52fia8vpTKLZxYJiwSFMYeNIeD/
+	 40uf899LedLpipXxsQSk/xA7uHzpKANfbT3B82TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732933AbgFWPJn (ORCPT
+        id S1732906AbgFWPNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732862AbgFWPJm (ORCPT
+        Tue, 23 Jun 2020 11:13:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39169 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732781AbgFWPNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:09:42 -0400
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88EABC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:09:42 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:26:93a1:ff06:f8b0])
-        by laurent.telenet-ops.be with bizsmtp
-        id uf9h220034qCYS801f9hoj; Tue, 23 Jun 2020 17:09:41 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jnkYO-0007jy-TP; Tue, 23 Jun 2020 17:09:40 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jnkYO-0008Nr-Qd; Tue, 23 Jun 2020 17:09:40 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] efi/libstub: EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER should not default to yes
-Date:   Tue, 23 Jun 2020 17:09:35 +0200
-Message-Id: <20200623150935.32181-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 23 Jun 2020 11:13:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 18so2275993otv.6;
+        Tue, 23 Jun 2020 08:13:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ti2WHwyTcE0aMHiiYFzjueBDRVS+U4KlIbhFdN8VMXU=;
+        b=iGmgqjDqcPQ82a4Z7uTO6IuW8wo/9tpJ9xvYQ/eJm7eBGTxNBYDDRlU+APNWHhrJAa
+         2E55B7iDqQReeL6ab0bNvymycfVOIX6g4s3iZbBNigEIWd98z7u2mrjS7M7W2UBBxxQw
+         U0q99z86joOwQX+q3tKcsTRcUyd3yooP10Tfj2AN3M1Kmu28U8t3Fj2g421YOydzMswn
+         VXpUQtS2grAMcSKHuMKgMImok5/rHiAG2Z/do2JK8AIEvT0HQzCXqjFC41Q8+C03iHXa
+         aB+omhvPxcBNbzwDnWEKt7qwgAMGaFG78ygbaX9K0y6vIN9sqVYzDPafSMYumAJ9ZFjR
+         BrtQ==
+X-Gm-Message-State: AOAM531OAdM1A4UtOqSr1uIbq5jNqJmo3I+ru5VvPsJuf8n99jSJ/OkQ
+        VgCXb/GO7YTUrhoonTK9K0iMbka5ry9VkHqGTjHyuA==
+X-Google-Smtp-Source: ABdhPJxVeEE74i8IgwTMNzoIpveKPQnYy9Uo13cXX+uwcXAFRqBXo+ELImH9t7I4+XNHDbLIlUBdHsBdOKiF4/JVsdw=
+X-Received: by 2002:a05:6830:10ca:: with SMTP id z10mr18171827oto.167.1592925202721;
+ Tue, 23 Jun 2020 08:13:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1592892767.git.yu.c.chen@intel.com> <55caab9c03a0d6c3c0a1f45294d6c274b73c954b.1592892767.git.yu.c.chen@intel.com>
+In-Reply-To: <55caab9c03a0d6c3c0a1f45294d6c274b73c954b.1592892767.git.yu.c.chen@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 23 Jun 2020 17:13:11 +0200
+Message-ID: <CAJZ5v0gJqPX55HvGb7dn8dV5jr3-MPNQHTRbsYCN47zp07VhsQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2][v3] PM / s2idle: Clear _TIF_POLLING_NRFLAG before
+ suspend to idle
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER is deprecated, so it should not
-be enabled by default.
+On Tue, Jun 23, 2020 at 8:30 AM Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> Suspend to idle was found to not work on Goldmont CPU recently.
+> And the issue was triggered due to:
+>
+> 1. On Goldmont the CPU in idle can only be woken up via IPIs,
+>    not POLLING mode:
+>    Commit 08e237fa56a1 ("x86/cpu: Add workaround for MONITOR
+>    instruction erratum on Goldmont based CPUs")
+> 2. When the CPU is entering suspend to idle process, the
+>    _TIF_POLLING_NRFLAG is kept on, due to cpuidle_enter_s2idle()
+>    doesn't properly match call_cpuidle().
+> 3. Commit b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
+>    makes use of _TIF_POLLING_NRFLAG to avoid sending IPIs to
+>    idle CPUs.
+> 4. As a result, some IPIs related functions might not work
+>    well during suspend to idle on Goldmont. For example, one
+>    suspected victim:
+>    tick_unfreeze() -> timekeeping_resume() -> hrtimers_resume()
+>    -> clock_was_set() -> on_each_cpu() might wait forever,
+>    because the IPIs will not be sent to the CPUs which are
+>    sleeping with _TIF_POLLING_NRFLAG set, and Goldmont CPU
+>    could not be woken up by only setting _TIF_NEED_RESCHED
+>    on the monitor address.
+>
+> Clear the _TIF_POLLING_NRFLAG flag before entering suspend to idle,
+> and let the driver's enter_s2idle() to decide whether to set
+> _TIF_POLLING_NRFLAG or not. So that to avoid the scenario described
+> above and keep the context consistent with before.
+>
+> Fixes: b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 
-In light of commit 4da0b2b7e67524cc ("efi/libstub: Re-enable command
-line initrd loading for x86"), keep the default for X86.
+Applied (based on the previous discussion) with some subject and
+changelog edits.
 
-Fixes: cf6b83664895a5c7 ("efi/libstub: Make initrd file loader configurable")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/firmware/efi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
 
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index e6fc022bc87e03ab..56055c61904e49f4 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -127,7 +127,7 @@ config EFI_ARMSTUB_DTB_LOADER
- config EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER
- 	bool "Enable the command line initrd loader" if !X86
- 	depends on EFI_STUB && (EFI_GENERIC_STUB || X86)
--	default y
-+	default y if X86
- 	help
- 	  Select this config option to add support for the initrd= command
- 	  line parameter, allowing an initrd that resides on the same volume
--- 
-2.17.1
-
+> ---
+> v2: According to Peter's review, v1 is racy, if someone already
+>     set TIF_NEED_RESCHED this patch just clear POLLING and go to sleep.
+>     Check TIF_NEED_RESCHED before entering suspend to idle and
+>     adjust the naming to be consistent with call_cpuidle().
+>
+> v3: According to Rafael, it would be better to do the simplest fix
+>    first and then do the cleanup on top of it.
+> ---
+>  drivers/cpuidle/cpuidle.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index c149d9e20dfd..e092789187c6 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/sched.h>
+>  #include <linux/sched/clock.h>
+> +#include <linux/sched/idle.h>
+>  #include <linux/notifier.h>
+>  #include <linux/pm_qos.h>
+>  #include <linux/cpu.h>
+> @@ -186,7 +187,7 @@ int cpuidle_enter_s2idle(struct cpuidle_driver *drv, struct cpuidle_device *dev)
+>          * be frozen safely.
+>          */
+>         index = find_deepest_state(drv, dev, U64_MAX, 0, true);
+> -       if (index > 0)
+> +       if (index > 0 && !current_clr_polling_and_test())
+>                 enter_s2idle_proper(drv, dev, index);
+>
+>         return index;
+> --
+> 2.17.1
+>
