@@ -2,169 +2,160 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D423C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71BE6206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O1nSICvs"
+	by mail.kernel.org (Postfix) with ESMTP id 6D2E620724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbgFWGVz (ORCPT
+        id S1730837AbgFWGWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:21:55 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:24907 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730406AbgFWGVy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:21:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592893314; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=5ZAFSKQuOxtflxXUrt8WGXtwebbL5g0a4E24JJ4kqw8=; b=O1nSICvstKHhWb8qi8tYy4wP7Q5uYlzyWZUslwoisC9XzgzS45VPt2zx29bf3fToyxC4Ti4W
- D36uStuVYoR03bF2C8o6tJlt4x7qr3L4VIIHka3YaW25t2OJtegxPb/HT6sQFEZP5EP9An/i
- JcBWdhY8TLqTlJNgoYepAA83eUQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5ef19f81bfb34e631ca52f12 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 06:21:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C6900C43395; Tue, 23 Jun 2020 06:21:52 +0000 (UTC)
-Received: from [192.168.0.100] (unknown [124.123.165.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B4CADC433C6;
-        Tue, 23 Jun 2020 06:21:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B4CADC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: [PATCH] rcu/tree: Remove CONFIG_PREMPT_RCU check in force_qs_rnp
-To:     paulmck@kernel.org
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1592849223-17774-1-git-send-email-neeraju@codeaurora.org>
- <20200622231829.GV9247@paulmck-ThinkPad-P72>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <b30ee288-7a84-1ecd-b2dd-776f810b9ddc@codeaurora.org>
-Date:   Tue, 23 Jun 2020 11:51:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200622231829.GV9247@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Jun 2020 02:22:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:54270 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730406AbgFWGWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:22:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A01A31B;
+        Mon, 22 Jun 2020 23:22:07 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.81.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6B77E3F71E;
+        Mon, 22 Jun 2020 23:22:03 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64/hugetlb: Reserve CMA areas for gigantic pages on 16K and 64K configs
+Date:   Tue, 23 Jun 2020 11:51:36 +0530
+Message-Id: <1592893296-22040-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Currently 'hugetlb_cma=' command line argument does not create CMA area on
+ARM64_16K_PAGES and ARM64_64K_PAGES based platforms. Instead, it just ends
+up with the following warning message. Reason being, hugetlb_cma_reserve()
+never gets called for these huge page sizes.
 
-On 6/23/2020 4:48 AM, Paul E. McKenney wrote:
-> On Mon, Jun 22, 2020 at 11:37:03PM +0530, Neeraj Upadhyay wrote:
->> Remove CONFIG_PREMPT_RCU check in force_qs_rnp(). Originally,
->> this check was required to skip executing fqs failsafe
->> for rcu-sched, which was added in commit a77da14ce9af ("rcu:
->> Yet another fix for preemption and CPU hotplug"). However,
->> this failsafe has been removed, since then. So, cleanup the
->> code to avoid any confusion around the need for boosting,
->> for !CONFIG_PREMPT_RCU.
->>
->> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> 
-> Good point, there is a !PREEMPT definition of the function
-> rcu_preempt_blocked_readers_cgp() that unconditionally returns zero.
-> And if !PREEMPT kernels, the same things happens in the "if"
-> body as after it, so behavior is not changed.
-> 
-> I have queued and pushed this with an upgraded commit log as
-> shown below.
-> 
-> 						Thanx, Paul
-> 
+[   64.255669] hugetlb_cma: the option isn't supported by current arch
 
-Thanks! patch looks good to me!
+This enables CMA areas reservation on ARM64_16K_PAGES and ARM64_64K_PAGES
+configs by defining an unified arm64_hugetlb_cma_reseve() that is wrapped
+in CONFIG_CMA.
 
-Thanks
-Neeraj
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Barry Song <song.bao.hua@hisilicon.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Applies on 5.8-rc2.
 
->> ---
->>   kernel/rcu/tree.c | 3 +--
->>   1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
->> index 6226bfb..57c904b 100644
->> --- a/kernel/rcu/tree.c
->> +++ b/kernel/rcu/tree.c
->> @@ -2514,8 +2514,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
->>   		raw_spin_lock_irqsave_rcu_node(rnp, flags);
->>   		rcu_state.cbovldnext |= !!rnp->cbovldmask;
->>   		if (rnp->qsmask == 0) {
->> -			if (!IS_ENABLED(CONFIG_PREEMPT_RCU) ||
->> -			    rcu_preempt_blocked_readers_cgp(rnp)) {
->> +			if (rcu_preempt_blocked_readers_cgp(rnp)) {
->>   				/*
->>   				 * No point in scanning bits because they
->>   				 * are all zero.  But we might need to
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
-> 
-> ------------------------------------------------------------------------
-> 
-> commit a4600389c35010aef414b89e2817d4a527e751b5
-> Author: Neeraj Upadhyay <neeraju@codeaurora.org>
-> Date:   Mon Jun 22 23:37:03 2020 +0530
-> 
->      rcu/tree: Remove CONFIG_PREMPT_RCU check in force_qs_rnp()
->      
->      Originally, the call to rcu_preempt_blocked_readers_cgp() from
->      force_qs_rnp() had to be conditioned on CONFIG_PREEMPT_RCU=y, as in
->      commit a77da14ce9af ("rcu: Yet another fix for preemption and CPU
->      hotplug").  However, there is now a CONFIG_PREEMPT_RCU=n definition of
->      rcu_preempt_blocked_readers_cgp() that unconditionally returns zero, so
->      invoking it is now safe.  In addition, the CONFIG_PREEMPT_RCU=n definition
->      of rcu_initiate_boost() simply releases the rcu_node structure's ->lock,
->      which is what happens when the "if" condition evaluates to false.
->      
->      This commit therefore drops the IS_ENABLED(CONFIG_PREEMPT_RCU) check,
->      so that rcu_initiate_boost() is called only in CONFIG_PREEMPT_RCU=y
->      kernels when there are readers blocking the current grace period.
->      This does not change the behavior, but reduces code-reader confusion by
->      eliminating non-CONFIG_PREEMPT_RCU=y calls to rcu_initiate_boost().
->      
->      Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
->      Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 6226bfb..57c904b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2514,8 +2514,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
->   		raw_spin_lock_irqsave_rcu_node(rnp, flags);
->   		rcu_state.cbovldnext |= !!rnp->cbovldmask;
->   		if (rnp->qsmask == 0) {
-> -			if (!IS_ENABLED(CONFIG_PREEMPT_RCU) ||
-> -			    rcu_preempt_blocked_readers_cgp(rnp)) {
-> +			if (rcu_preempt_blocked_readers_cgp(rnp)) {
->   				/*
->   				 * No point in scanning bits because they
->   				 * are all zero.  But we might need to
-> 
+ arch/arm64/include/asm/hugetlb.h |  8 ++++++++
+ arch/arm64/mm/hugetlbpage.c      | 38 ++++++++++++++++++++++++++++++++++++++
+ arch/arm64/mm/init.c             |  4 +---
+ 3 files changed, 47 insertions(+), 3 deletions(-)
 
+diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+index 94ba0c5..8eea0e0 100644
+--- a/arch/arm64/include/asm/hugetlb.h
++++ b/arch/arm64/include/asm/hugetlb.h
+@@ -17,6 +17,14 @@
+ extern bool arch_hugetlb_migration_supported(struct hstate *h);
+ #endif
+ 
++#ifdef CONFIG_CMA
++void arm64_hugetlb_cma_reserve(void);
++#else
++static inline void arm64_hugetlb_cma_reserve(void)
++{
++}
++#endif
++
+ static inline void arch_clear_hugepage_flags(struct page *page)
+ {
+ 	clear_bit(PG_dcache_clean, &page->flags);
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 0a52ce4..ea7fb48 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -19,6 +19,44 @@
+ #include <asm/tlbflush.h>
+ #include <asm/pgalloc.h>
+ 
++/*
++ * HugeTLB Support Matrix
++ *
++ * ---------------------------------------------------
++ * | Page Size | CONT PTE |  PMD  | CONT PMD |  PUD  |
++ * ---------------------------------------------------
++ * |     4K    |   64K    |   2M  |    32M   |   1G  |
++ * |    16K    |    2M    |  32M  |     1G   |       |
++ * |    64K    |    2M    | 512M  |    16G   |       |
++ * ---------------------------------------------------
++ */
++
++/*
++ * Reserve CMA areas for the largest supported gigantic
++ * huge page when requested. Any other smaller gigantic
++ * huge pages could still be served from those areas.
++ */
++#ifdef CONFIG_CMA
++void __init arm64_hugetlb_cma_reserve(void)
++{
++	int order;
++
++#ifdef CONFIG_ARM64_4K_PAGES
++	order = PUD_SHIFT - PAGE_SHIFT;
++#else
++	order = CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT;
++#endif
++	/*
++	 * HugeTLB CMA reservation is required for gigantic
++	 * huge pages which could not be allocated via the
++	 * page allocator. Just warn if there is any change
++	 * breaking this assumption.
++	 */
++	WARN_ON(order <= MAX_ORDER);
++	hugetlb_cma_reserve(order);
++}
++#endif /* CONFIG_CMA */
++
+ #ifdef CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION
+ bool arch_hugetlb_migration_supported(struct hstate *h)
+ {
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 1e93cfc..fabf8b0 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -425,9 +425,7 @@ void __init bootmem_init(void)
+ 	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
+ 	 * while allocating required CMA size across online nodes.
+ 	 */
+-#ifdef CONFIG_ARM64_4K_PAGES
+-	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+-#endif
++	arm64_hugetlb_cma_reserve();
+ 
+ 	/*
+ 	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of the Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
+
