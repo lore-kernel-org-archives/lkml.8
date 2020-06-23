@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22111C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7487BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E78522078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D0D20DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942710;
-	bh=KkBMj9YRD+62VQ1A+vZUx6Bw2StxSTW354l2AhqQOsc=;
+	s=default; t=1592942715;
+	bh=mNioKdiZlltvXFckGUJKJRkoWeOJS4WqiAurf6blrSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8AnTLNQhCXzEOlAg72AguUGJjFIzhBl3JyMsP1AAWZDYkvWZL82MxSuexMdzu7LR
-	 d8opDu5RRNTDR9pVK0jos3tDwewV9FJf6Atq8cneVB+noePtC1ifFjMaIoz3bAwlZK
-	 0uOrKoZCyk89T2MwCEQgacaE3JUHgghyCa92SD5Y=
+	b=Eb59L2/9vCLUaVpM5Xb7JdJpudGT0fB2inSfdgK3ZZQQKYFZqPutwWp5AI8fjDdmT
+	 oeNjwrydVGIz0r/MLFG+sk0x1ntuk443igXeZ+duoMu9/V9ZggaM2Kv96eBzjjG7kD
+	 9Z8yDANRx4Zxv8AFRxOSmyNkzTI0lgByMpwg5Z9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388315AbgFWUFI (ORCPT
+        id S2388327AbgFWUFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44168 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:05:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388256AbgFWUFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:05:04 -0400
+        id S2387744AbgFWUFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A6C206C3;
-        Tue, 23 Jun 2020 20:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC71C2078A;
+        Tue, 23 Jun 2020 20:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942704;
-        bh=KkBMj9YRD+62VQ1A+vZUx6Bw2StxSTW354l2AhqQOsc=;
+        s=default; t=1592942706;
+        bh=mNioKdiZlltvXFckGUJKJRkoWeOJS4WqiAurf6blrSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EI6EB+uJ6mi5QT7D4B8y+m4k3PNItLROi20aP2naYv6pi2IEmBoWosCJNdXunMA30
-         ob81Udc/mDSgD1h4bTce4gusFfZ7cDLVlaxKqprjEroJlu6HltloluAsRw1TEFEuDm
-         S/cbSB5ZFDSTfBXcRU3MAmQXlaoZ7UVNZZFbmdHs=
+        b=yOiVCwOLWqK0nd1EZuQNGpIt35FXowvAnrmJYdCmzqe0C6CF+uJr5fk+i/WSO6qlb
+         UoIPgyd9YlcX2bhXOqvm+/A9Js+9M7tDWmILV0f8iQPyLaGKgGH+dHUDcGOrwcdxk5
+         X0j6s7sFvrHtgPhV8c+mK9ftrE+wDUAQiSW3zIPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 071/477] powerpc/ptdump: Add _PAGE_COHERENT flag
-Date:   Tue, 23 Jun 2020 21:51:08 +0200
-Message-Id: <20200623195410.973070247@linuxfoundation.org>
+Subject: [PATCH 5.7 072/477] mfd: wm8994: Fix driver operation if loaded as modules
+Date:   Tue, 23 Jun 2020 21:51:09 +0200
+Message-Id: <20200623195411.021873892@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,38 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 3af4786eb429b2df76cbd7ce3bae21467ac3e4fb ]
+[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
 
-For platforms using shared.c (4xx, Book3e, Book3s/32), also handle the
-_PAGE_COHERENT flag which corresponds to the M bit of the WIMG flags.
+WM8994 chip has built-in regulators, which might be used for chip
+operation. They are controlled by a separate wm8994-regulator driver,
+which should be loaded before this driver calls regulator_get(), because
+that driver also provides consumer-supply mapping for the them. If that
+driver is not yet loaded, regulator core substitute them with dummy
+regulator, what breaks chip operation, because the built-in regulators are
+never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+"pre" dependency to "wm8994_regulator" module.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-[mpe: Make it more verbose, use "coherent" rather than "m"]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/324c3d860717e8e91fca3bb6c0f8b23e1644a404.1589866984.git.christophe.leroy@csgroup.eu
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/ptdump/shared.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/mfd/wm8994-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/mm/ptdump/shared.c b/arch/powerpc/mm/ptdump/shared.c
-index f7ed2f187cb01..784f8df17f732 100644
---- a/arch/powerpc/mm/ptdump/shared.c
-+++ b/arch/powerpc/mm/ptdump/shared.c
-@@ -30,6 +30,11 @@ static const struct flag_info flag_array[] = {
- 		.val	= _PAGE_PRESENT,
- 		.set	= "present",
- 		.clear	= "       ",
-+	}, {
-+		.mask	= _PAGE_COHERENT,
-+		.val	= _PAGE_COHERENT,
-+		.set	= "coherent",
-+		.clear	= "        ",
- 	}, {
- 		.mask	= _PAGE_GUARDED,
- 		.val	= _PAGE_GUARDED,
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 1e9fe7d92597e..737dede4a95c3 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -690,3 +690,4 @@ module_i2c_driver(wm8994_i2c_driver);
+ MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
++MODULE_SOFTDEP("pre: wm8994_regulator");
 -- 
 2.25.1
 
