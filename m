@@ -2,51 +2,58 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C88C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31996C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08EF82145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC2A217BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945389;
-	bh=/iR03Dl/Adbmu/nEqRDn7NV49c0rSvP9aV6p5m/kFXw=;
+	s=default; t=1592945410;
+	bh=gMpAb/ZZpi5zacxHMyAQXaX3k0m9CwTdxfUeRQnHUrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nyIs1bdHwHMrdD+MsSa7p7lah+uvnC0nfRLUBkyXBLRDHkZEXN5V4GbH8IZ0Q7I63
-	 TTAABFAKkdnELlQCKJ/DQ1W3mI8DQmcWed9/OGi3NgCMHEjnKuQgriV/9r58/fmKRY
-	 LzaweKEbi2QKDqR0NkaY12MzbAn6gqPl7b4O3Kho=
+	b=yvYOn1KmLG1hvxyGPJ30dLV6DuiV8AXIHODxOtdWXEtNEzWFtXnHidfcXlxnTL86l
+	 x3VLXTUj0pdQfBoBxPHjfbbs/fDq+9tFWxXcN8XPalwhTyFZc6YUIy7h6C7FX/myUS
+	 Rl16fKBqJ4w8TrJi48dM0zlZVdQzRahmW5QQEw7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404190AbgFWUtr (ORCPT
+        id S2390702AbgFWUuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49200 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392973AbgFWUta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:49:30 -0400
+        id S2404143AbgFWUtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:49:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2082A2158C;
-        Tue, 23 Jun 2020 20:49:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FF3C2098B;
+        Tue, 23 Jun 2020 20:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945369;
-        bh=/iR03Dl/Adbmu/nEqRDn7NV49c0rSvP9aV6p5m/kFXw=;
+        s=default; t=1592945346;
+        bh=gMpAb/ZZpi5zacxHMyAQXaX3k0m9CwTdxfUeRQnHUrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZarsbhIGVHS1Jo17bOEVhEyRE92NMv80EABDp5oNGC6+Sk3+Tt1TH6vKYJdd+TgMh
-         3ZJal9Lw3Ci1DPqQtcLerJpZRjgesMQ/MhiYYxQ8OBfD3A31lAdxK0CeCgT3t40ZK7
-         0OifRKPrcUWxoSA25XQDjC9tIKbB1XlL16jKB+jc=
+        b=sWgHAFWISuDhfFV5QB1uVNkVp5ijZO/Xrk0yw617Mtck80d1Y2/Ar/U5QYy2nb2W2
+         9lK41IZTEtYl2L7n4qXTXYwUskzZI3WL7v0nEIVK8tE1DfYruxyw80ZsSihmI/wgQQ
+         G2QSstOb+ZyEu46S6wyNOUSIb9teyVsw0I02B2TA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephan Mueller <smueller@chronox.de>
-Subject: [PATCH 4.14 130/136] crypto: algif_skcipher - Cap recv SG list at ctx->used
-Date:   Tue, 23 Jun 2020 21:59:46 +0200
-Message-Id: <20200623195310.339500306@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Gaurav Singh <gaurav1086@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 106/136] perf report: Fix NULL pointer dereference in hists__fprintf_nr_sample_events()
+Date:   Tue, 23 Jun 2020 21:59:22 +0200
+Message-Id: <20200623195309.009008965@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -59,42 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Gaurav Singh <gaurav1086@gmail.com>
 
-commit 7cf81954705b7e5b057f7dc39a7ded54422ab6e1 upstream.
+[ Upstream commit 11b6e5482e178055ec1f2444b55f2518713809d1 ]
 
-Somewhere along the line the cap on the SG list length for receive
-was lost.  This patch restores it and removes the subsequent test
-which is now redundant.
+The 'evname' variable can be NULL, as it is checked a few lines back,
+check it before using.
 
-Fixes: 2d97591ef43d ("crypto: af_alg - consolidation of...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Stephan Mueller <smueller@chronox.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 9e207ddfa207 ("perf report: Show call graph from reference events")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/algif_skcipher.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ tools/perf/builtin-report.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -85,14 +85,10 @@ static int _skcipher_recvmsg(struct sock
- 		return PTR_ERR(areq);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 429c3e140dc32..35a10b5985447 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -401,8 +401,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
+ 	if (evname != NULL)
+ 		ret += fprintf(fp, " of event '%s'", evname);
  
- 	/* convert iovecs of output buffers into RX SGL */
--	err = af_alg_get_rsgl(sk, msg, flags, areq, -1, &len);
-+	err = af_alg_get_rsgl(sk, msg, flags, areq, ctx->used, &len);
- 	if (err)
- 		goto free;
+-	if (symbol_conf.show_ref_callgraph &&
+-	    strstr(evname, "call-graph=no")) {
++	if (symbol_conf.show_ref_callgraph && evname && strstr(evname, "call-graph=no")) {
+ 		ret += fprintf(fp, ", show reference callgraph");
+ 	}
  
--	/* Process only as much RX buffers for which we have TX data */
--	if (len > ctx->used)
--		len = ctx->used;
--
- 	/*
- 	 * If more buffers are to be expected to be processed, process only
- 	 * full block size buffers.
+-- 
+2.25.1
+
 
 
