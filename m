@@ -2,92 +2,73 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42226C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA31C2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:06:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WbyJeYa1"
+	by mail.kernel.org (Postfix) with ESMTP id 220182072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592910449;
+	bh=zsfKB1wuRE9SSXUBbFLTHKmSLXW6nA+V2ztTFC7lHs4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B63mdouiFohg3PZSzf7DCV6tPBhRpyIxMcXJXDzTMPVxGO0Cw/THjjTLKWKsfsvDY
+	 ii4rM7BnNALGA9XnpZ6Fz3D0ZCEiCe4mj2e0FP8wDGlz9CLQZt4JsvpLNSvl+GeTXk
+	 MCndCVWQ1xfneYY3EhZyJNXgb+dmvDia5LTaeKT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732315AbgFWLGI (ORCPT
+        id S1732355AbgFWLH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:06:08 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58894 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732227AbgFWLGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:06:02 -0400
-X-UUID: 1746d2d9aaf84717a1868fe194cb0ea4-20200623
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=CcaM225zZP7WnZ1PC960F675Ck0YgebshhPK0DXhRCI=;
-        b=WbyJeYa1YmwygxexZSRYMyPs+OMDQevvaC4W3kSL4FPHWPL7grOxDWN6fl7h0S2so88lZd9WHzAJLLq3fJQgV6Y6I4dbQW1w3rdfAecDj0pKbHfKiBlRDbTKa0iYVGGggX04cR05a73V+Luxu65JHBkh2+ZVB2B2EvxvPlT8Mis=;
-X-UUID: 1746d2d9aaf84717a1868fe194cb0ea4-20200623
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1849796380; Tue, 23 Jun 2020 19:05:59 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 23 Jun 2020 19:03:25 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 23 Jun 2020 19:03:19 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        Jussi Laako <jussi@sonarnerd.net>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Dmitry Panchenko <dmitry@d-systems.ee>,
-        Chris Wulff <crwulff@gmail.com>,
-        Jesus Ramos <jesus-ramos@live.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        <linux-usb@vger.kernel.org>,
-        Chihhao Chen <chihhao.chen@mediatek.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH] sound: usb: quirks: add quirk for Samsung USBC Headset (AKG)
-Date:   Tue, 23 Jun 2020 19:03:23 +0800
-Message-ID: <1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 23 Jun 2020 07:07:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732189AbgFWLH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:07:26 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8059D2072E;
+        Tue, 23 Jun 2020 11:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592910446;
+        bh=zsfKB1wuRE9SSXUBbFLTHKmSLXW6nA+V2ztTFC7lHs4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PY2qDnfEkRWh64fvJQJyDv79ltuupggMNAkE7iNBNsaD+7RGnhEkx1cYdXSH5F06H
+         uZdZqJ8knVOiE20AX92B+EGOEmmP2bNOmgUtDJ0l3UyezYAgoFVvCk1mjBI8PPeioy
+         09TfWUJ/d5RJW5ngA/MMsrpbsKOnex4ffkufF9a8=
+Date:   Tue, 23 Jun 2020 19:07:21 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, aisheng.dong@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 0/3] arm64: dts: imx8qxp: dtb aliases fix/update
+Message-ID: <20200623110720.GY30139@dragon>
+References: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 0C8C2E45E79FA20259A2A0BA8BD54FE967742A430CC67CFC5A05F99C5875173C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2UndmUgZm91bmQgU2Ftc3VuZyBVU0JDIEhlYWRzZXQgKEFLRykgKFZJRDogMHgwNGU4LCBQSUQ6
-IDB4YTA1MSkNCm5lZWQgYSB0aW55IGRlbGF5IGFmdGVyIGVhY2ggY2xhc3MgY29tcGxpYW50IHJl
-cXVlc3QuDQpPdGhlcndpc2UgdGhlIGRldmljZSBtaWdodCBub3QgYmUgYWJsZSB0byBiZSByZWNv
-Z25pemVkIGVhY2ggdGltZXMuDQoNClNpZ25lZC1vZmYtYnk6IENoaWhoYW8gQ2hlbiA8Y2hpaGhh
-by5jaGVuQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IE1hY3BhdWwgTGluIDxtYWNwYXVs
-LmxpbkBtZWRpYXRlay5jb20+DQpDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KLS0tDQogc291
-bmQvdXNiL3F1aXJrcy5jIHwgICAgOCArKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2Vy
-dGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL3NvdW5kL3VzYi9xdWlya3MuYyBiL3NvdW5kL3VzYi9x
-dWlya3MuYw0KaW5kZXggYmNhMDE3OS4uZWJiYTI5YSAxMDA2NDQNCi0tLSBhL3NvdW5kL3VzYi9x
-dWlya3MuYw0KKysrIGIvc291bmQvdXNiL3F1aXJrcy5jDQpAQCAtMTY3Myw2ICsxNjczLDE0IEBA
-IHZvaWQgc25kX3VzYl9jdGxfbXNnX3F1aXJrKHN0cnVjdCB1c2JfZGV2aWNlICpkZXYsIHVuc2ln
-bmVkIGludCBwaXBlLA0KIAkgICAgIGNoaXAtPnVzYl9pZCA9PSBVU0JfSUQoMHgwOTUxLCAweDE2
-YWQpKSAmJg0KIAkgICAgKHJlcXVlc3R0eXBlICYgVVNCX1RZUEVfTUFTSykgPT0gVVNCX1RZUEVf
-Q0xBU1MpDQogCQl1c2xlZXBfcmFuZ2UoMTAwMCwgMjAwMCk7DQorDQorCS8qDQorCSAqIFNhbXN1
-bmcgVVNCQyBIZWFkc2V0IChBS0cpIG5lZWQgYSB0aW55IGRlbGF5IGFmdGVyIGVhY2gNCisJICog
-Y2xhc3MgY29tcGxpYW50IHJlcXVlc3QuIChNb2RlbCBudW1iZXI6IEFBTTYyNVIgb3IgQUFNNjI3
-UikNCisJICovDQorCWlmIChjaGlwLT51c2JfaWQgPT0gVVNCX0lEKDB4MDRlOCwgMHhhMDUxKSAm
-Jg0KKwkgICAgKHJlcXVlc3R0eXBlICYgVVNCX1RZUEVfTUFTSykgPT0gVVNCX1RZUEVfQ0xBU1Mp
-DQorCQl1c2xlZXBfcmFuZ2UoNTAwMCwgNjAwMCk7DQogfQ0KIA0KIC8qDQotLSANCjEuNy45LjUN
-Cg==
+On Tue, Jun 23, 2020 at 02:49:51PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> V2:
+>  Fix order in patch 2/3, no other changes
+> 
+> Minor patchset to fix and update alias for i.MX8QXP
+> 
+> Peng Fan (3):
+>   arm64: dts: imx8qxp: add alias for lsio MU
+>   arm64: dts: imx8qxp: add i2c aliases
+>   arm64: dts: imx8qxp: Add ethernet alias
 
+Applied, thanks.
