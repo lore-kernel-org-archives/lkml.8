@@ -2,113 +2,131 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B908DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DC5204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XaG5IS7m"
+	by mail.kernel.org (Postfix) with ESMTP id 9961B2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387460AbgFWQri (ORCPT
+        id S2387486AbgFWQrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733052AbgFWQrg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:47:36 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47383C061755;
-        Tue, 23 Jun 2020 09:47:36 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g21so4001237wmg.0;
-        Tue, 23 Jun 2020 09:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=2a8A3SZ7tBOcfEqWak8yyvM0vR1xvbK/AAfn7XUHse8=;
-        b=XaG5IS7m1eA+gI4FIsCp1abY5EaS5J4F++5cxdUwUG2r6Oj46qpLOXkCiesfyQ+75z
-         5e1kVESZ1WPd+WbF1ptJigMflNi8z0SqXlT85/Jy2hBzcQKK56SkP6qFr77pZHnkTVHU
-         og9a64+MImwd6LMEHElbEuslUPh57AbB7GqvCWjqbdwrAXyD/tMgKzx2DTeu64K4cUjJ
-         Ab295T4L4df3dCYNjJNyGD2Bnz58dIMwlJemGRZLq668ic4/wmCEsew/Di9V5GbP0z7T
-         bR7srReGDI5xCZ0am81PqoKq18wXCcaE/d9u27k0n0AMwjBJhcxh88BWphAs7Yz5thUe
-         IbsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=2a8A3SZ7tBOcfEqWak8yyvM0vR1xvbK/AAfn7XUHse8=;
-        b=LvvCRSC9gllARgeK+p+oKgKnVhyD8YD1d3dGDidQp8/eSyh24GW9lMqHJ0ICcz9Tlr
-         TI/7VI6/GW9e8vJxukmjEiAMTpygDmofls2vD67ew5+1ZDBgjLyU+HlWaS3unrAcJ4rn
-         WvBFFFihgZ3VDbug0l9BBLhA/rE7WI8Pjb81RjP1D4TTJffZanOX6i8x71NuCpMfnk18
-         XS14vRqH4eDuqFGhgyIjRiaNf//+szsFCtnZ6xDchiEsDzUP5zFFiI8Epr+FlUSwZqDH
-         /mVA4UREh5GTACjdLDL/OLHlllLIflq8bZ2B7rvu6fNW7re9VBmYfRw4qlG3rPafwiNk
-         1dSA==
-X-Gm-Message-State: AOAM5300vQpqnPa9XAOgN5nGXCW57x+cm37upcPCbxvc/TXJL13Ex/tV
-        Z5TtMJENEV90PH+CX/3Z5YE=
-X-Google-Smtp-Source: ABdhPJxSuhZVggr1/EQ+Jrz7f0zu6OuFXAZICwjiL3Xfp9K7vXfwNBCxLQtiBy6U5aX7CEwNsEZHRQ==
-X-Received: by 2002:a1c:2485:: with SMTP id k127mr22257875wmk.138.1592930855034;
-        Tue, 23 Jun 2020 09:47:35 -0700 (PDT)
-Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
-        by smtp.gmail.com with ESMTPSA id d28sm25319430wrc.50.2020.06.23.09.47.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 09:47:34 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 18:47:33 +0200
-From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+        Tue, 23 Jun 2020 12:47:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39310 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733040AbgFWQpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:45:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4FC55AEDD;
+        Tue, 23 Jun 2020 16:45:19 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     gregkh@linuxfoundation.org
+Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 21/50] staging: vchi: Get rid of flags argument in vchi_msg_hold()
+Date:   Tue, 23 Jun 2020 18:42:07 +0200
+Message-Id: <20200623164235.29566-22-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
+References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everybody,
+All users are ignoring the flags argument. So for the sake of
+simplicity delete it.
 
-Is DVFS for memory bus really working on Odroid XU3/4 board?
-Using a simple microbenchmark that is doing only memory accesses, memory DVFS
-seems to not working properly:
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ .../vc04_services/bcm2835-audio/bcm2835-vchiq.c      |  3 +--
+ drivers/staging/vc04_services/interface/vchi/vchi.h  |  1 -
+ .../vc04_services/interface/vchiq_arm/vchiq_shim.c   | 12 +++---------
+ .../staging/vc04_services/vchiq-mmal/mmal-vchiq.c    |  2 +-
+ 4 files changed, 5 insertions(+), 13 deletions(-)
 
-The microbenchmark is doing pointer chasing by following index in an array.
-Indices in the array are set to follow a random pattern (cutting prefetcher),
-and forcing RAM access.
+diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
+index 5018b5baa009..68119246f10b 100644
+--- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
++++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
+@@ -102,8 +102,7 @@ static void audio_vchi_callback(void *param,
+ 	if (reason != VCHI_CALLBACK_MSG_AVAILABLE)
+ 		return;
+ 
+-	status = vchi_msg_hold(instance->service, (void **)&m, &size,
+-			       VCHI_FLAGS_NONE, &handle);
++	status = vchi_msg_hold(instance->service, (void **)&m, &size, &handle);
+ 	if (status)
+ 		return;
+ 
+diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
+index 55e51e5a1fdc..92ce811fc28d 100644
+--- a/drivers/staging/vc04_services/interface/vchi/vchi.h
++++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
+@@ -87,7 +87,6 @@ extern int vchi_queue_kernel_message(struct vchi_service *service, void *data,
+ extern int32_t vchi_msg_hold(struct vchi_service *service,
+ 			     void **data,        // } may be NULL, as info can be
+ 			     uint32_t *msg_size, // } obtained from HELD_MSG_T
+-			     enum vchi_flags flags,
+ 			     struct vchi_held_msg *message_descriptor);
+ 
+ /*******************************************************************************
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+index 0c3473861a8d..0466512cfe3c 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+@@ -195,7 +195,6 @@ EXPORT_SYMBOL(vchi_held_msg_release);
+  * Arguments:  struct vchi_service *service,
+  *             void **data,
+  *             uint32_t *msg_size,
+- *             enum vchi_flags flags,
+  *             struct vchi_held_msg *message_handle
+  *
+  * Description: Routine to return a pointer to the current message (to allow
+@@ -207,17 +206,12 @@ EXPORT_SYMBOL(vchi_held_msg_release);
+  *
+  ***********************************************************/
+ int32_t vchi_msg_hold(struct vchi_service *service, void **data,
+-		      uint32_t *msg_size, enum vchi_flags flags,
+-		      struct vchi_held_msg *message_handle)
++		      uint32_t *msg_size, struct vchi_held_msg *message_handle)
+ {
+ 	struct vchiq_header *header;
+ 
+-	WARN_ON((flags != VCHI_FLAGS_NONE) &&
+-		(flags != VCHI_FLAGS_BLOCK_UNTIL_OP_COMPLETE));
+-
+-	if (flags == VCHI_FLAGS_NONE)
+-		if (vchiu_queue_is_empty(&service->queue))
+-			return -1;
++	if (vchiu_queue_is_empty(&service->queue))
++		return -1;
+ 
+ 	header = vchiu_queue_pop(&service->queue);
+ 
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+index f49e45673e34..4ee4601cba1c 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+@@ -568,7 +568,7 @@ static void service_callback(void *param,
+ 	switch (reason) {
+ 	case VCHI_CALLBACK_MSG_AVAILABLE:
+ 		status = vchi_msg_hold(instance->service, (void **)&msg,
+-				       &msg_len, VCHI_FLAGS_NONE, &msg_handle);
++				       &msg_len, &msg_handle);
+ 		if (status) {
+ 			pr_err("Unable to dequeue a message (%d)\n", status);
+ 			break;
+-- 
+2.27.0
 
-git clone https://github.com/wwilly/benchmark.git \
-  && cd benchmark \
-  && source env.sh \
-  && ./bench_build.sh \
-  && bash source/scripts/test_dvfs_mem.sh
-
-Python 3, cmake and sudo rights are required.
-
-Results:
-DVFS CPU with performance governor
-mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
-benchmark is running.
-- on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
-- on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
-
-While forcing DVFS memory bus to use performance governor,
-mem_gov = performance at 825000000 Hz in idle,
-- on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
-- on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
-
-The kernel used is the last 5.7.5 stable with default exynos_defconfig.
-
-Cheers,
-Willy
