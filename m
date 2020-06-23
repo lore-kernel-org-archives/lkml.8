@@ -2,65 +2,95 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57825206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A638207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592948319;
+	bh=ttHX4YYNImlNRhLzLb7gps9c525D8cVu8sy7NvSpbjE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K8WE+sTjrOvWICqnclq72pBubaPwHNBecZtAaU/hQHQvOU+Bbs+OUG8xN74GHR//T
+	 bveBsvkwfncEu1D4e8xXPJ1ULQSfBNW2lyR13pcH+zDCYRlFbcwUpdFe7taCuG4xBb
+	 Iv6POM270uUBQDmHeSnsMb373zlniGHN0uKZVZgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393842AbgFWVi3 (ORCPT
+        id S2388693AbgFWUIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:38:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393791AbgFWViX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:38:23 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B1CC061573;
-        Tue, 23 Jun 2020 14:38:23 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 98557129428C9;
-        Tue, 23 Jun 2020 14:38:22 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 14:38:21 -0700 (PDT)
-Message-Id: <20200623.143821.491798381160245817.davem@davemloft.net>
-To:     horatiu.vultur@microchip.com
-Cc:     nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH net v2 0/2] bridge: mrp: Update MRP_PORT_ROLE
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200623090541.2964760-1-horatiu.vultur@microchip.com>
-References: <20200623090541.2964760-1-horatiu.vultur@microchip.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jun 2020 14:38:23 -0700 (PDT)
+        Tue, 23 Jun 2020 16:08:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388683AbgFWUH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5E09206C3;
+        Tue, 23 Jun 2020 20:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592942877;
+        bh=ttHX4YYNImlNRhLzLb7gps9c525D8cVu8sy7NvSpbjE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cxErd6/DrOdraYmM0M45PdcqtPqymwa+3LzAjkCac9aeUyTFZZKugKzHAayB6C/X7
+         7zGRrtblPIakzecuN6qbF+Q7J+mfSM4gp7cnKnu/7UUl/fmCJ4HDfJP3fvIZr3NzuP
+         yBpGfqaO6U+ICB2LZ9GsQnemVMHCDt4unwUSIW8g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 139/477] s390/qdio: tear down thinint indicator after early error
+Date:   Tue, 23 Jun 2020 21:52:16 +0200
+Message-Id: <20200623195414.178540406@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
+References: <20200623195407.572062007@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-Date: Tue, 23 Jun 2020 11:05:39 +0200
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-> This patch series does the following:
-> - fixes the enum br_mrp_port_role_type. It removes the port role none(0x2)
->   because this is in conflict with the standard. The standard defines the
->   interconnect port role as value 0x2.
-> - adds checks regarding current defined port roles: primary(0x0) and
->   secondary(0x1).
-> 
-> v2:
->  - add the validation code when setting the port role.
+[ Upstream commit 68a381746f20e5435206173e22d0a011ef78790e ]
 
-Series applied, thank you.
+qdio_establish() calls qdio_establish_thinint(), but later has an error
+exit path that doesn't roll this call back. Fix it.
+
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/qdio_main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index da5a111380201..80cc811bd2e0e 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -1363,6 +1363,7 @@ int qdio_establish(struct ccw_device *cdev,
+ 	if (rc) {
+ 		DBF_ERROR("%4x est IO ERR", irq_ptr->schid.sch_no);
+ 		DBF_ERROR("rc:%4x", rc);
++		qdio_shutdown_thinint(irq_ptr);
+ 		qdio_shutdown_irq(irq_ptr);
+ 		mutex_unlock(&irq_ptr->setup_mutex);
+ 		return rc;
+-- 
+2.25.1
+
+
+
