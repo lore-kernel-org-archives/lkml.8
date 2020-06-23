@@ -2,121 +2,230 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62388C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42033207F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592934285;
-	bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hrSE9Rlaejduqm/C10YstrIk9kDkXRi4X8w3ahFrXDD/5KA+NS2fCn3KyrhqJ2Sva
-	 qFzu7g89HG8ATVJKNKyA3LzDISFRnG21qGHY/DsosMV5zJdqzfjgA1YE8Pq8Eimmxg
-	 xs66IcdWCbKyqgNTU5CC0k7U5HoJCOePL6kOUWfY=
+	by mail.kernel.org (Postfix) with ESMTP id C36EF2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733045AbgFWRon (ORCPT
+        id S2387841AbgFWRol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733153AbgFWRfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:44:41 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31102 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733045AbgFWRfZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 13:35:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 892AB20774;
-        Tue, 23 Jun 2020 17:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933725;
-        bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0poEAU+iLCFJpeQ1zms+YPfpUUd1elRRkx+EcDDwo8aNtHVdmJO65pIT1CACkahAO
-         I///GMi1Cf/Z/Uhy24zYGlFqEwGj32u21seozwBiMFV55g4qpSU3kiVDANVc/mV6/3
-         QDqkXcgW+xC9ovZU3UvGHh+XtGVNzUtlWDhpY6Oo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 01/28] sata_rcar: handle pm_runtime_get_sync failure cases
-Date:   Tue, 23 Jun 2020 13:34:56 -0400
-Message-Id: <20200623173523.1355411-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHNT0G031499;
+        Tue, 23 Jun 2020 13:35:07 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 31uk3grq2h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 13:35:06 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05NHZ56m001997
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 23 Jun 2020 13:35:05 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 23 Jun
+ 2020 10:35:03 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 23 Jun 2020 10:35:03 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05NHYxMQ017521;
+        Tue, 23 Jun 2020 13:35:01 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v4 1/7] hwmon: pmbus: adm1266: add support
+Date:   Tue, 23 Jun 2020 20:36:53 +0300
+Message-ID: <20200623173659.41358-2-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200623173659.41358-1-alexandru.tachici@analog.com>
+References: <20200623173659.41358-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006120000 definitions=main-2006230123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-[ Upstream commit eea1238867205b9e48a67c1a63219529a73c46fd ]
+Add pmbus probing driver for the adm1266 Cascadable
+Super Sequencer with Margin Control and Fault Recording.
+Driver is using the pmbus_core, creating sysfs files
+under hwmon for inputs: vh1->vh4 and vp1->vp13.
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
-
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 ---
- drivers/ata/sata_rcar.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ Documentation/hwmon/adm1266.rst | 35 +++++++++++++++++++
+ drivers/hwmon/pmbus/Kconfig     |  9 +++++
+ drivers/hwmon/pmbus/Makefile    |  1 +
+ drivers/hwmon/pmbus/adm1266.c   | 62 +++++++++++++++++++++++++++++++++
+ 4 files changed, 107 insertions(+)
+ create mode 100644 Documentation/hwmon/adm1266.rst
+ create mode 100644 drivers/hwmon/pmbus/adm1266.c
 
-diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-index 980aacdbcf3b4..141ac600b64c8 100644
---- a/drivers/ata/sata_rcar.c
-+++ b/drivers/ata/sata_rcar.c
-@@ -907,7 +907,7 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0)
--		goto err_pm_disable;
-+		goto err_pm_put;
+diff --git a/Documentation/hwmon/adm1266.rst b/Documentation/hwmon/adm1266.rst
+new file mode 100644
+index 000000000000..65662115750c
+--- /dev/null
++++ b/Documentation/hwmon/adm1266.rst
+@@ -0,0 +1,35 @@
++Kernel driver adm1266
++=====================
++
++Supported chips:
++  * Analog Devices ADM1266
++    Prefix: 'adm1266'
++    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
++
++Author: Alexandru Tachici <alexandru.tachici@analog.com>
++
++
++Description
++-----------
++
++This driver supports hardware monitoring for Analog Devices ADM1266 sequencer.
++
++ADM1266 is a sequencer that features voltage readback from 17 channels via an
++integrated 12 bit SAR ADC, accessed using a PMBus interface.
++
++The driver is a client driver to the core PMBus driver. Please see
++Documentation/hwmon/pmbus for details on PMBus client drivers.
++
++
++Sysfs entries
++-------------
++
++The following attributes are supported. Limits are read-write, history reset
++attributes are write-only, all other attributes are read-only.
++
++inX_label		"voutx"
++inX_input		Measured voltage.
++inX_min			Minimum Voltage.
++inX_max			Maximum voltage.
++inX_min_alarm		Voltage low alarm.
++inX_max_alarm		Voltage high alarm.
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index de12a565006d..6949483aa732 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -26,6 +26,15 @@ config SENSORS_PMBUS
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called pmbus.
  
- 	host = ata_host_alloc(dev, 1);
- 	if (!host) {
-@@ -937,7 +937,6 @@ static int sata_rcar_probe(struct platform_device *pdev)
++config SENSORS_ADM1266
++	tristate "Analog Devices ADM1266 Sequencer"
++	help
++	  If you say yes here you get hardware monitoring support for Analog
++	  Devices ADM1266 Cascadable Super Sequencer.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called adm1266.
++
+ config SENSORS_ADM1275
+ 	tristate "Analog Devices ADM1275 and compatibles"
+ 	help
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index 5feb45806123..ed38f6d6f845 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -5,6 +5,7 @@
  
- err_pm_put:
- 	pm_runtime_put(dev);
--err_pm_disable:
- 	pm_runtime_disable(dev);
- 	return ret;
- }
-@@ -991,8 +990,10 @@ static int sata_rcar_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 
- 	if (priv->type == RCAR_GEN3_SATA) {
- 		sata_rcar_init_module(priv);
-@@ -1017,8 +1018,10 @@ static int sata_rcar_restore(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 
- 	sata_rcar_setup_port(host);
- 
+ obj-$(CONFIG_PMBUS)		+= pmbus_core.o
+ obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
++obj-$(CONFIG_SENSORS_ADM1266)	+= adm1266.o
+ obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
+ obj-$(CONFIG_SENSORS_BEL_PFE)	+= bel-pfe.o
+ obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+new file mode 100644
+index 000000000000..a7ef048a9a5c
+--- /dev/null
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ADM1266 - Cascadable Super Sequencer with Margin
++ * Control and Fault Recording
++ *
++ * Copyright 2020 Analog Devices Inc.
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++
++#include "pmbus.h"
++
++static int adm1266_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct pmbus_driver_info *info;
++	u32 funcs;
++	int i;
++
++	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
++			    GFP_KERNEL);
++
++	info->pages = 17;
++	info->format[PSC_VOLTAGE_OUT] = linear;
++	funcs = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
++	for (i = 0; i < info->pages; i++)
++		info->func[i] = funcs;
++
++	return pmbus_do_probe(client, id, info);
++}
++
++static const struct of_device_id adm1266_of_match[] = {
++	{ .compatible = "adi,adm1266" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, adm1266_of_match);
++
++static const struct i2c_device_id adm1266_id[] = {
++	{ "adm1266", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, adm1266_id);
++
++static struct i2c_driver adm1266_driver = {
++	.driver = {
++		   .name = "adm1266",
++		   .of_match_table = adm1266_of_match,
++		  },
++	.probe = adm1266_probe,
++	.remove = pmbus_do_remove,
++	.id_table = adm1266_id,
++};
++
++module_i2c_driver(adm1266_driver);
++
++MODULE_AUTHOR("Alexandru Tachici <alexandru.tachici@analog.com>");
++MODULE_DESCRIPTION("PMBus driver for Analog Devices ADM1266");
++MODULE_LICENSE("GPL v2");
 -- 
-2.25.1
+2.20.1
 
