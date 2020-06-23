@@ -2,29 +2,30 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6582020720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8A0206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732848AbgFWOfI (ORCPT
+        id S1732888AbgFWOfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:35:08 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:20753 "EHLO
+        Tue, 23 Jun 2020 10:35:15 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:7563 "EHLO
         relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732738AbgFWOfH (ORCPT
+        with ESMTP id S1732850AbgFWOfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:35:07 -0400
+        Tue, 23 Jun 2020 10:35:12 -0400
 X-Originating-IP: 90.76.143.236
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9B539240015;
-        Tue, 23 Jun 2020 14:35:02 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 5B223240002;
+        Tue, 23 Jun 2020 14:35:09 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -32,10 +33,12 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next v4 0/8] net: phy: mscc: PHC and timestamping support
-Date:   Tue, 23 Jun 2020 16:30:06 +0200
-Message-Id: <20200623143014.47864-1-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v4 3/8] net: phy: mscc: remove the TR CLK disable magic value
+Date:   Tue, 23 Jun 2020 16:30:09 +0200
+Message-Id: <20200623143014.47864-4-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200623143014.47864-1-antoine.tenart@bootlin.com>
+References: <20200623143014.47864-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,110 +46,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-This series aims at adding support for PHC and timestamping operations
-in the MSCC PHY driver, for the VSC858x and VSC8575. Those PHYs are
-capable of timestamping in 1-step and 2-step for both L2 and L4 traffic.
+This patch adds a define for the 0x8000 magic value used to perform
+enable/disable actions on the "token ring clock". The patch is only
+cosmetic.
 
-As of this series, only IPv4 support was implemented when using L4 mode.
-This is because of an hardware limitation which prevents us for
-supporting both IPv4 and IPv6 at the same time. Implementing support for
-IPv6 should be quite easy (I do have the modifications needed for the
-hardware configuration) but I did not see a way to retrieve this
-information in hwtstamp(). What would you suggest?
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/phy/mscc/mscc.h      |  1 +
+ drivers/net/phy/mscc/mscc_main.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-Those PHYs are distributed in hardware packages containing multiple
-times the PHY. The VSC8584 for example is composed of 4 PHYs. With
-hardware packages, parts of the logic is usually common and one of the
-PHY has to be used for some parts of the initialization. Following this
-logic, the 1588 blocks of those PHYs are shared between two PHYs and
-accessing the registers has to be done using the "base" PHY of the
-group. This is handled thanks to helpers in the PTP code (and locks).
-We also need the MDIO bus lock while performing a single read or write
-to the 1588 registers as the read/write are composed of multiple MDIO
-transactions (and we don't want other threads updating the page).
-
-To get and set the PHC time, a GPIO has to be used and changes are only
-retrieved or committed when on a rising edge. The same GPIO is shared by
-all PHYs, so the granularity of the lock protecting it has to be
-different from the ones protecting the 1588 registers (the VSC8584 PHY
-has 2 1588 blocks, and a single load/save pin).
-
-Patch 1 extends the recently added helpers to share information between
-PHYs of the same hardware package; to allow having part of the probe to
-be shared (in addition to the already supported init part). This will be
-used when adding support for PHC/TS to initialize locks.
-
-Patches 2 and 3 are mostly cosmetic.
-
-Patch 4 takes into account the 1588 block in the MACsec initialization,
-to allow having both the MACsec and 1588 blocks initialized on a running
-system.
-
-Patches 5 and 6 add support for PHC and timestamping operations in the
-MSCC driver. An initialization of the 1588 block (plus all the registers
-definition; and helpers) is added first; and then comes a patch to
-implement the PHC and timestamping API.
-
-Patches 7 and 8 add the required hardware description for device trees,
-to be able to use the load/save GPIO pin on the PCB120 board.
-
-To use this on a PCB120 board, two other series are needed and have
-already been sent upstream (one is merged). There are no dependency
-between all those series.
-
-Thanks!
-Antoine
-
-Since v3:
-  - Fixed a SKB leak.
-  - Removed ts_lock from the init, as TS and PHC operations aren't
-    registered at this time.
-  - Refectored the ts_base_addr/phy intialization.
-  - Cleaned up the ingr/egr latencies definitons.
-  - Fixed a comment about locking and the shared GPIO.
-  - A few cosmetic fixes.
-
-Since v2:
-  - Removed explicit inlines from .c files.
-  - Fixed three warnings.
-
-Since v1:
-  - Removed checks in rxtstamp/txtstamp as skb cannot be NULL here.
-  - Reworked get_ptp_header_rx/get_ptp_header.
-  - Reworked the locking logic between the PHC and timestamping
-    operations.
-  - Fixed a compilation issue on x86 reported by Jakub.
-
-Antoine Tenart (5):
-  net: phy: add support for a common probe between shared PHYs
-  net: phy: mscc: fix copyright and author information in MACsec
-  net: phy: mscc: take into account the 1588 block in MACsec init
-  net: phy: mscc: timestamping and PHC support
-  dt-bindings: net: phy: vsc8531: document the load/save GPIO
-
-Quentin Schulz (3):
-  net: phy: mscc: remove the TR CLK disable magic value
-  net: phy: mscc: 1588 block initialization
-  MIPS: dts: ocelot: describe the load/save GPIO
-
- .../bindings/net/mscc-phy-vsc8531.txt         |    3 +
- arch/mips/boot/dts/mscc/ocelot_pcb120.dts     |   12 +-
- drivers/net/phy/mscc/Makefile                 |    4 +
- drivers/net/phy/mscc/mscc.h                   |   63 +
- drivers/net/phy/mscc/mscc_fc_buffer.h         |    2 +-
- drivers/net/phy/mscc/mscc_mac.h               |    2 +-
- drivers/net/phy/mscc/mscc_macsec.c            |   10 +-
- drivers/net/phy/mscc/mscc_macsec.h            |    2 +-
- drivers/net/phy/mscc/mscc_main.c              |   61 +-
- drivers/net/phy/mscc/mscc_ptp.c               | 1592 +++++++++++++++++
- drivers/net/phy/mscc/mscc_ptp.h               |  477 +++++
- include/linux/phy.h                           |   18 +-
- 12 files changed, 2225 insertions(+), 21 deletions(-)
- create mode 100644 drivers/net/phy/mscc/mscc_ptp.c
- create mode 100644 drivers/net/phy/mscc/mscc_ptp.h
-
+diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+index fbcee5fce7b2..756ec418f4f8 100644
+--- a/drivers/net/phy/mscc/mscc.h
++++ b/drivers/net/phy/mscc/mscc.h
+@@ -252,6 +252,7 @@ enum rgmii_clock_delay {
+ /* Test page Registers */
+ #define MSCC_PHY_TEST_PAGE_5		  5
+ #define MSCC_PHY_TEST_PAGE_8		  8
++#define TR_CLK_DISABLE			  0x8000
+ #define MSCC_PHY_TEST_PAGE_9		  9
+ #define MSCC_PHY_TEST_PAGE_20		  20
+ #define MSCC_PHY_TEST_PAGE_24		  24
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index 5ddc44f87eaf..052a0def6e83 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -629,7 +629,7 @@ static int vsc8531_pre_init_seq_set(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
+ 	rc = phy_modify_paged(phydev, MSCC_PHY_PAGE_TEST,
+-			      MSCC_PHY_TEST_PAGE_8, 0x8000, 0x8000);
++			      MSCC_PHY_TEST_PAGE_8, TR_CLK_DISABLE, TR_CLK_DISABLE);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -1026,7 +1026,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_5, 0x1b20);
+ 
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg |= 0x8000;
++	reg |= TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
+ 
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
+@@ -1046,7 +1046,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
+ 
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg &= ~0x8000;
++	reg &= ~TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
+ 
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
+@@ -1196,7 +1196,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_5, 0x1f20);
+ 
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg |= 0x8000;
++	reg |= TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
+ 
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
+@@ -1225,7 +1225,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
+ 
+ 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
+-	reg &= ~0x8000;
++	reg &= ~TR_CLK_DISABLE;
+ 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
+ 
+ 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
 -- 
 2.26.2
 
