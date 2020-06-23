@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CACBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2B020772
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2985320772
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="up5DFWGz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuEQd2jW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbgFWGOk (ORCPT
+        id S1730951AbgFWGOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34204 "EHLO
+        Tue, 23 Jun 2020 02:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730571AbgFWGOi (ORCPT
+        with ESMTP id S1730571AbgFWGOm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:14:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD37C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:14:38 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d8so8668450plo.12
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:14:38 -0700 (PDT)
+        Tue, 23 Jun 2020 02:14:42 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCFDC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:14:41 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e8so4148837pgc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Dc8LghL6mPcKqqBO+Tl511spB3nCK4Lh+EbuLfVS40I=;
-        b=up5DFWGzS5WrjfCoJJN5xdu/dSnt80JnCIvsIR4FO584vq8RGK7mjGJlO4zGnQnNt9
-         NDY1nG1cVMwu4sfBRNJyFolgiS5lSDAnc63N6CgrsQqsDGoeM2Jm2F0l009uokROvN6L
-         TcUVe/dRulxTsgXTBZ2IbIXV2QdSufrJOOF6888yhzHDBKa6m9H7zbcooNgkaNZwgvHQ
-         8/p5jgQyvOV5rB+VkogjzEos4W758txaS7wzQQfMCXFgtwB6CP7yGkIMdJfhsgLs6nqY
-         miY0y/GsbyMyZ9j/9XiP7D9ZxKNn3KHoCCQ3ouGbMvYgmwqqFC/mcZW5Vr5EErUq9TLy
-         Jv7A==
+        bh=JeJRVUHUWS+NkYIk84BTUuRS8wpVOF+4CdGFtPuQTi4=;
+        b=BuEQd2jWXoEBKzZaSn/hHjBQOVNCpcUihjM+7y+30fNDJxRxKeKMDQPxV8S+xz0jMJ
+         KaxBwMOrhwCNHRW0wrqzGgtoUcgfeN4w2nC+OVw6h6gF9wj8zTH9ZShRYycHGkUcOaGB
+         uv7lbs23XHglLlChg4fuJ7+wbJlcu+g8TS06/d811dPgvt5iUQOoM2KTZMeWSevIHQoB
+         peaoEuZJ5LVGa6x2QyITw6nw9vM45xK5xTpmzZHV2FcNrnccZB6Tkd1CqIVBf3fNbLmZ
+         AW4Z6+I2q59VZJly1mM9pAaXRr9oeyvQo7anvM0z3/OQwjLRMbfWEkbsCk7x5UTJUeXu
+         aNUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Dc8LghL6mPcKqqBO+Tl511spB3nCK4Lh+EbuLfVS40I=;
-        b=qfbwwMIZ/Omj2efBvYf2z7nXYiM/zRlxoujo7Psv2ZhfhIpjHNrkq811e7XzwzOdoL
-         BAb/tfSg7IUbab0UbJKSYutLjfV9okRx7lobuevdtPKcvsS4kOSHrucT5plt/3s8nRkm
-         /P1sbZJ75vP1pdqcvv85jDB69h9rzlXWjYqDBzumLn3xoQMaBAnoQZK7Lg5/sB5/zGw9
-         AN3O8Wkh4j4DMihhH7Z4iZAg/6uLrtfsWeh88ow1S1N78CFKiP5J9mvz8ObJk3/EytCl
-         pe6kGZjeTWKEd09BpYxQYvXjCJBF44Zh6u/v9YpCYIFG0gcPqsB8bkm05eMjqz5eChry
-         YmIQ==
-X-Gm-Message-State: AOAM533u3YuSNTQFsVPu4zFpnkO8SHjgjtPnEjN3XWorPwGmEkbmt81U
-        eOtjG0tqV0tcuxn0HZvT7rY=
-X-Google-Smtp-Source: ABdhPJzKX1HSJANYr7NhAx6gNraDC6+KJqFwV6wV6/d6ax9bWH8Sqo5hTpSz6Y3cF5ezGkJ0Cy/U0Q==
-X-Received: by 2002:a17:90a:f0d4:: with SMTP id fa20mr21701832pjb.160.1592892878004;
-        Mon, 22 Jun 2020 23:14:38 -0700 (PDT)
+        bh=JeJRVUHUWS+NkYIk84BTUuRS8wpVOF+4CdGFtPuQTi4=;
+        b=uSrTrCuzLZv3eKY5HgEgPpLT6/dqsLmIIrPM2p6CI3kmdr/w5maig7BomYXE0x+In8
+         7Q2qB8BsivTYzeYTX28Xjw46vx9T6MfFkx/GAD4IoFSQ2IDd6+m9OV86RN4VnqA5SkY5
+         kt3KF6R71Pd0XqZa/hpWkJRd1ygmz/+BXxbUYXd4N1T0Il90XbwZ6cwf7Dkg1fUIZGS7
+         2fOIePTlJezcCqp3y6syUvPCH6ObjrjlHOyKdsBwULJHfuZYnoBayo3yG4a7Ft+f2t/g
+         TGDY0oOXV3BGqoyDwuaDeftaBoeCdpA4/bCii/PKdelq93PgzmQPDpZUalYgDWY1lbpA
+         NlGA==
+X-Gm-Message-State: AOAM533geV3x5CsnJ6qpOtJUs5liID6OEtfZHnMGWfCAcctUegxYS8sk
+        tPsyGv6lphy2uhPew3887dw=
+X-Google-Smtp-Source: ABdhPJyf29dQ7hZpX23MUTob3xHfA47w0T/RxJ1iIW4kUumzNWT2DjCDiGwi6tfbdXoUTnhm7C+isQ==
+X-Received: by 2002:aa7:9497:: with SMTP id z23mr23656436pfk.222.1592892881392;
+        Mon, 22 Jun 2020 23:14:41 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id m15sm12801093pgv.45.2020.06.22.23.14.34
+        by smtp.gmail.com with ESMTPSA id m15sm12801093pgv.45.2020.06.22.23.14.38
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jun 2020 23:14:37 -0700 (PDT)
+        Mon, 22 Jun 2020 23:14:40 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -70,9 +70,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
         Michal Hocko <mhocko@suse.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v3 4/8] mm/hugetlb: make hugetlb migration callback CMA aware
-Date:   Tue, 23 Jun 2020 15:13:44 +0900
-Message-Id: <1592892828-1934-5-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v3 5/8] mm/migrate: make a standard migration target allocation function
+Date:   Tue, 23 Jun 2020 15:13:45 +0900
+Message-Id: <1592892828-1934-6-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -83,207 +83,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-new_non_cma_page() in gup.c which try to allocate migration target page
-requires to allocate the new page that is not on the CMA area.
-new_non_cma_page() implements it by removing __GFP_MOVABLE flag. This way
-works well for THP page or normal page but not for hugetlb page.
+There are some similar functions for migration target allocation. Since
+there is no fundamental difference, it's better to keep just one rather
+than keeping all variants. This patch implements base migration target
+allocation function. In the following patches, variants will be converted
+to use this function.
 
-hugetlb page allocation process consists of two steps. First is dequeing
-from the pool. Second is, if there is no available page on the queue,
-allocating from the page allocator.
+Note that PageHighmem() call in previous function is changed to open-code
+"is_highmem_idx()" since it provides more readability.
 
-new_non_cma_page() can control allocation from the page allocator by
-specifying correct gfp flag. However, dequeing cannot be controlled until
-now, so, new_non_cma_page() skips dequeing completely. It is a suboptimal
-since new_non_cma_page() cannot utilize hugetlb pages on the queue so
-this patch tries to fix this situation.
-
-This patch makes the deque function on hugetlb CMA aware and skip CMA
-pages if newly added skip_cma argument is passed as true.
-
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/hugetlb.h |  6 ++----
- mm/gup.c                |  3 ++-
- mm/hugetlb.c            | 31 ++++++++++++++++++++++---------
- mm/mempolicy.c          |  2 +-
- mm/migrate.c            |  2 +-
- 5 files changed, 28 insertions(+), 16 deletions(-)
+ include/linux/migrate.h |  5 +++--
+ mm/internal.h           |  7 +++++++
+ mm/memory-failure.c     |  8 ++++++--
+ mm/memory_hotplug.c     | 14 +++++++++-----
+ mm/migrate.c            | 21 +++++++++++++--------
+ mm/page_isolation.c     |  8 ++++++--
+ 6 files changed, 44 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 8a8b755..858522e 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -505,11 +505,9 @@ struct huge_bootmem_page {
- struct page *alloc_huge_page(struct vm_area_struct *vma,
- 				unsigned long addr, int avoid_reserve);
- struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
--				nodemask_t *nmask, gfp_t gfp_mask);
-+				nodemask_t *nmask, gfp_t gfp_mask, bool skip_cma);
- struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
- 				unsigned long address);
--struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
--				     int nid, nodemask_t *nmask);
- int huge_add_to_page_cache(struct page *page, struct address_space *mapping,
- 			pgoff_t idx);
+diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+index 1d70b4a..5e9c866 100644
+--- a/include/linux/migrate.h
++++ b/include/linux/migrate.h
+@@ -10,6 +10,8 @@
+ typedef struct page *new_page_t(struct page *page, unsigned long private);
+ typedef void free_page_t(struct page *page, unsigned long private);
  
-@@ -760,7 +758,7 @@ static inline struct page *alloc_huge_page(struct vm_area_struct *vma,
++struct migration_target_control;
++
+ /*
+  * Return values from addresss_space_operations.migratepage():
+  * - negative errno on page migration failure;
+@@ -39,8 +41,7 @@ extern int migrate_page(struct address_space *mapping,
+ 			enum migrate_mode mode);
+ extern int migrate_pages(struct list_head *l, new_page_t new, free_page_t free,
+ 		unsigned long private, enum migrate_mode mode, int reason);
+-extern struct page *new_page_nodemask(struct page *page,
+-		int preferred_nid, nodemask_t *nodemask);
++extern struct page *alloc_migration_target(struct page *page, unsigned long private);
+ extern int isolate_movable_page(struct page *page, isolate_mode_t mode);
+ extern void putback_movable_page(struct page *page);
  
- static inline struct page *
- alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
--			nodemask_t *nmask, gfp_t gfp_mask)
-+			nodemask_t *nmask, gfp_t gfp_mask, bool skip_cma)
+diff --git a/mm/internal.h b/mm/internal.h
+index 42cf0b6..f725aa8 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -614,4 +614,11 @@ static inline bool is_migrate_highatomic_page(struct page *page)
+ 
+ void setup_zone_pageset(struct zone *zone);
+ extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
++
++struct migration_target_control {
++	int nid;		/* preferred node id */
++	nodemask_t *nmask;
++	gfp_t gfp_mask;
++};
++
+ #endif	/* __MM_INTERNAL_H */
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 47b8ccb..820ea5e 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1648,9 +1648,13 @@ EXPORT_SYMBOL(unpoison_memory);
+ 
+ static struct page *new_page(struct page *p, unsigned long private)
  {
- 	return NULL;
- }
-diff --git a/mm/gup.c b/mm/gup.c
-index 6f47697..15be281 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1630,11 +1630,12 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- #ifdef CONFIG_HUGETLB_PAGE
- 	if (PageHuge(page)) {
- 		struct hstate *h = page_hstate(page);
-+
- 		/*
- 		 * We don't want to dequeue from the pool because pool pages will
- 		 * mostly be from the CMA region.
- 		 */
--		return alloc_migrate_huge_page(h, gfp_mask, nid, NULL);
-+		return alloc_huge_page_nodemask(h, nid, NULL, gfp_mask, true);
- 	}
- #endif
- 	if (PageTransHuge(page)) {
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index bd408f2..1410e62 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1033,13 +1033,18 @@ static void enqueue_huge_page(struct hstate *h, struct page *page)
- 	h->free_huge_pages_node[nid]++;
+-	int nid = page_to_nid(p);
++	struct migration_target_control mtc = {
++		.nid = page_to_nid(p),
++		.nmask = &node_states[N_MEMORY],
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
+ 
+-	return new_page_nodemask(p, nid, &node_states[N_MEMORY]);
++	return alloc_migration_target(p, (unsigned long)&mtc);
  }
  
--static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
-+static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid, bool skip_cma)
+ /*
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index be3c62e3..d2b65a5 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1259,19 +1259,23 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+ 
+ static struct page *new_node_page(struct page *page, unsigned long private)
  {
- 	struct page *page;
+-	int nid = page_to_nid(page);
+ 	nodemask_t nmask = node_states[N_MEMORY];
++	struct migration_target_control mtc = {
++		.nid = page_to_nid(page),
++		.nmask = &nmask,
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
  
--	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
-+	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
-+		if (skip_cma && is_migrate_cma_page(page))
-+			continue;
-+
- 		if (!PageHWPoison(page))
- 			break;
-+	}
-+
  	/*
- 	 * if 'non-isolated free hugepage' not found on the list,
- 	 * the allocation fails.
-@@ -1054,7 +1059,7 @@ static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
+ 	 * try to allocate from a different node but reuse this node if there
+ 	 * are no other online nodes to be used (e.g. we are offlining a part
+ 	 * of the only existing node)
+ 	 */
+-	node_clear(nid, nmask);
+-	if (nodes_empty(nmask))
+-		node_set(nid, nmask);
++	node_clear(mtc.nid, *mtc.nmask);
++	if (nodes_empty(*mtc.nmask))
++		node_set(mtc.nid, *mtc.nmask);
+ 
+-	return new_page_nodemask(page, nid, &nmask);
++	return alloc_migration_target(page, (unsigned long)&mtc);
  }
  
- static struct page *dequeue_huge_page_nodemask(struct hstate *h, gfp_t gfp_mask, int nid,
--		nodemask_t *nmask)
-+		nodemask_t *nmask, bool skip_cma)
- {
- 	unsigned int cpuset_mems_cookie;
- 	struct zonelist *zonelist;
-@@ -1079,7 +1084,7 @@ static struct page *dequeue_huge_page_nodemask(struct hstate *h, gfp_t gfp_mask,
- 			continue;
- 		node = zone_to_nid(zone);
- 
--		page = dequeue_huge_page_node_exact(h, node);
-+		page = dequeue_huge_page_node_exact(h, node, skip_cma);
- 		if (page)
- 			return page;
- 	}
-@@ -1124,7 +1129,7 @@ static struct page *dequeue_huge_page_vma(struct hstate *h,
- 
- 	gfp_mask = htlb_alloc_mask(h);
- 	nid = huge_node(vma, address, gfp_mask, &mpol, &nodemask);
--	page = dequeue_huge_page_nodemask(h, gfp_mask, nid, nodemask);
-+	page = dequeue_huge_page_nodemask(h, gfp_mask, nid, nodemask, false);
- 	if (page && !avoid_reserve && vma_has_reserves(vma, chg)) {
- 		SetPagePrivate(page);
- 		h->resv_huge_pages--;
-@@ -1937,7 +1942,7 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
- 	return page;
- }
- 
--struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
-+static struct page *alloc_migrate_huge_page(struct hstate *h, gfp_t gfp_mask,
- 				     int nid, nodemask_t *nmask)
- {
- 	struct page *page;
-@@ -1980,7 +1985,7 @@ struct page *alloc_buddy_huge_page_with_mpol(struct hstate *h,
- 
- /* page migration callback function */
- struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
--		nodemask_t *nmask, gfp_t gfp_mask)
-+		nodemask_t *nmask, gfp_t gfp_mask, bool skip_cma)
- {
- 	gfp_mask |= htlb_alloc_mask(h);
- 
-@@ -1988,7 +1993,8 @@ struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
- 	if (h->free_huge_pages - h->resv_huge_pages > 0) {
- 		struct page *page;
- 
--		page = dequeue_huge_page_nodemask(h, gfp_mask, preferred_nid, nmask);
-+		page = dequeue_huge_page_nodemask(h, gfp_mask,
-+					preferred_nid, nmask, skip_cma);
- 		if (page) {
- 			spin_unlock(&hugetlb_lock);
- 			return page;
-@@ -1996,6 +2002,13 @@ struct page *alloc_huge_page_nodemask(struct hstate *h, int preferred_nid,
- 	}
- 	spin_unlock(&hugetlb_lock);
- 
-+	/*
-+	 * To skip the memory on CMA area, we need to clear __GFP_MOVABLE.
-+	 * Clearing __GFP_MOVABLE at the top of this function would also skip
-+	 * the proper allocation candidates for dequeue so clearing it here.
-+	 */
-+	if (skip_cma)
-+		gfp_mask &= ~__GFP_MOVABLE;
- 	return alloc_migrate_huge_page(h, gfp_mask, preferred_nid, nmask);
- }
- 
-@@ -2011,7 +2024,7 @@ struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
- 
- 	gfp_mask = htlb_alloc_mask(h);
- 	node = huge_node(vma, address, gfp_mask, &mpol, &nodemask);
--	page = alloc_huge_page_nodemask(h, node, nodemask, 0);
-+	page = alloc_huge_page_nodemask(h, node, nodemask, 0, false);
- 	mpol_cond_put(mpol);
- 
- 	return page;
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index f21cff5..a3abf64 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1071,7 +1071,7 @@ struct page *alloc_new_node_page(struct page *page, unsigned long node)
- 	if (PageHuge(page)) {
- 		return alloc_huge_page_nodemask(
- 			page_hstate(compound_head(page)), node,
--			NULL, __GFP_THISNODE);
-+			NULL, __GFP_THISNODE, false);
- 	} else if (PageTransHuge(page)) {
- 		struct page *thp;
- 
+ static int
 diff --git a/mm/migrate.c b/mm/migrate.c
-index 6ca9f0c..634f1ea 100644
+index 634f1ea..3afff59 100644
 --- a/mm/migrate.c
 +++ b/mm/migrate.c
-@@ -1546,7 +1546,7 @@ struct page *new_page_nodemask(struct page *page,
+@@ -1536,29 +1536,34 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
+ 	return rc;
+ }
+ 
+-struct page *new_page_nodemask(struct page *page,
+-				int preferred_nid, nodemask_t *nodemask)
++struct page *alloc_migration_target(struct page *page, unsigned long private)
+ {
+-	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL;
++	struct migration_target_control *mtc;
++	gfp_t gfp_mask;
+ 	unsigned int order = 0;
+ 	struct page *new_page = NULL;
++	int zidx;
++
++	mtc = (struct migration_target_control *)private;
++	gfp_mask = mtc->gfp_mask;
+ 
  	if (PageHuge(page)) {
  		return alloc_huge_page_nodemask(
- 				page_hstate(compound_head(page)),
--				preferred_nid, nodemask, 0);
-+				preferred_nid, nodemask, 0, false);
+-				page_hstate(compound_head(page)),
+-				preferred_nid, nodemask, 0, false);
++				page_hstate(compound_head(page)), mtc->nid,
++				mtc->nmask, gfp_mask, false);
  	}
  
  	if (PageTransHuge(page)) {
++		gfp_mask &= ~__GFP_RECLAIM;
+ 		gfp_mask |= GFP_TRANSHUGE;
+ 		order = HPAGE_PMD_ORDER;
+ 	}
+-
+-	if (PageHighMem(page) || (zone_idx(page_zone(page)) == ZONE_MOVABLE))
++	zidx = zone_idx(page_zone(page));
++	if (is_highmem_idx(zidx) || zidx == ZONE_MOVABLE)
+ 		gfp_mask |= __GFP_HIGHMEM;
+ 
+ 	new_page = __alloc_pages_nodemask(gfp_mask, order,
+-				preferred_nid, nodemask);
++				mtc->nid, mtc->nmask);
+ 
+ 	if (new_page && PageTransHuge(new_page))
+ 		prep_transhuge_page(new_page);
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index aec26d9..adba031 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -309,7 +309,11 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+ 
+ struct page *alloc_migrate_target(struct page *page, unsigned long private)
+ {
+-	int nid = page_to_nid(page);
++	struct migration_target_control mtc = {
++		.nid = page_to_nid(page),
++		.nmask = &node_states[N_MEMORY],
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
+ 
+-	return new_page_nodemask(page, nid, &node_states[N_MEMORY]);
++	return alloc_migration_target(page, (unsigned long)&mtc);
+ }
 -- 
 2.7.4
 
