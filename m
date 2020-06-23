@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D621BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4468FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A734720786
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208C320781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947835;
-	bh=wpg9bdml8FAk7etp5Y5ZvWfdNNyl7h8kD5aJPOpqkjM=;
+	s=default; t=1592947841;
+	bh=5sWbhd69f98lLETBFKDPvPfYfT9N6UYvfFQw0X5a4eU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sN3N3HvIVsh4HDrUZGlPtSIWNeDad3gHFqtMsRnux2G2kkAuk6nXiSDv9R/LsjMwd
-	 Bq0PLFi0604vfmqSMTKfG+x7jLa/O7AFBqtnBa9LrVe7eDj5HFH9hBrkBZI8nXid01
-	 /Fgi7QkgJM2Ac6PQ7uU+Ye8KZ6/wemQ2RuCZZErE=
+	b=LKggn5udJFalmnJezaX2hTJkJ7Jr5SGqAouFhq3yjz0AX9WkDixDYNBkNRe3p+5t2
+	 3x5fcbQZx8pMD7LFVIc+X3vV9BtqAbPKGXuj4RVGH+Kl5Ba625IfjpUAUXw64nZLMM
+	 n0+LQmPf+vKemFM9SoZpdnqO5EU/w/Vi+4ZWc6rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393614AbgFWVae (ORCPT
+        id S2389569AbgFWVaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55894 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389116AbgFWUNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:42 -0400
+        id S2389105AbgFWUNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E169D20707;
-        Tue, 23 Jun 2020 20:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAA22206C3;
+        Tue, 23 Jun 2020 20:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943222;
-        bh=wpg9bdml8FAk7etp5Y5ZvWfdNNyl7h8kD5aJPOpqkjM=;
+        s=default; t=1592943217;
+        bh=5sWbhd69f98lLETBFKDPvPfYfT9N6UYvfFQw0X5a4eU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pJ2xVhxUx7lU93IXxuKhN24JquEmVghRqnoOIQkf1UcDpkRtlpFdP5igig0CWxsn1
-         NQw1mblLwV2egUcla9kX+Qciu61Sfr8wFqertlBuyULlPMx0wAfWiAVUpCexftEA4N
-         VHc6MLbt1uO1k3sLquEMGd11ow1c5mGyP2rdziow=
+        b=Ek661p1ckarKo+GmTW0nh2JsHGAqjtCR7Ao0Q1Iu3bqg03E9e9kEWvl9LrXvO1QNl
+         K5GH63jdfNJslkciu58yFC+9iyIQBzMIWReW1Lqa8jgfIkLllpjP6PBqaRomgAxGnf
+         6bQzgZSdT3em/ZjAQ334HfU1STHk3DZk86+GSD0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 267/477] RDMA/iw_cxgb4: cleanup device debugfs entries on ULD remove
-Date:   Tue, 23 Jun 2020 21:54:24 +0200
-Message-Id: <20200623195420.194718627@linuxfoundation.org>
+Subject: [PATCH 5.7 275/477] ASoC: fix incomplete error-handling in img_i2s_in_probe.
+Date:   Tue, 23 Jun 2020 21:54:32 +0200
+Message-Id: <20200623195420.563174993@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,33 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 49ea0c036ede81f126f1a9389d377999fdf5c5a1 ]
+[ Upstream commit 25bf943e4e7b47282bd86ae7d39e039217ebb007 ]
 
-Remove device specific debugfs entries immediately if LLD detaches a
-particular ULD device in case of fatal PCI errors.
+Function "pm_runtime_get_sync()" is not handled by "pm_runtime_put()"
+if "PTR_ERR(rst) == -EPROBE_DEFER". Fix this issue by adding
+"pm_runtime_put()" into this error path.
 
-Link: https://lore.kernel.org/r/20200524190814.17599-1-bharat@chelsio.com
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: f65bb92ca12e ("ASoC: img-i2s-in: Add runtime PM")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200525055011.31925-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/device.c | 1 +
+ sound/soc/img/img-i2s-in.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/cxgb4/device.c b/drivers/infiniband/hw/cxgb4/device.c
-index 599340c1f0b82..541dbcf22d0eb 100644
---- a/drivers/infiniband/hw/cxgb4/device.c
-+++ b/drivers/infiniband/hw/cxgb4/device.c
-@@ -953,6 +953,7 @@ void c4iw_dealloc(struct uld_ctx *ctx)
- static void c4iw_remove(struct uld_ctx *ctx)
- {
- 	pr_debug("c4iw_dev %p\n", ctx->dev);
-+	debugfs_remove_recursive(ctx->dev->debugfs_root);
- 	c4iw_unregister_device(ctx->dev);
- 	c4iw_dealloc(ctx);
- }
+diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
+index a495d1050d490..e30b66b94bf67 100644
+--- a/sound/soc/img/img-i2s-in.c
++++ b/sound/soc/img/img-i2s-in.c
+@@ -482,6 +482,7 @@ static int img_i2s_in_probe(struct platform_device *pdev)
+ 	if (IS_ERR(rst)) {
+ 		if (PTR_ERR(rst) == -EPROBE_DEFER) {
+ 			ret = -EPROBE_DEFER;
++			pm_runtime_put(&pdev->dev);
+ 			goto err_suspend;
+ 		}
+ 
 -- 
 2.25.1
 
