@@ -2,104 +2,97 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65305C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81587C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37FFC2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8F5207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872342;
-	bh=3Oi1QCFDmxnGuJzvayyzGYUVZCZRr+L2VMWhGOQX91U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGFjbP7BM6DdSCaIKXg4Oc8UUKx+h6EkPDQGIwv7T2BWvUDtWFEHZol1l5oKMRERy
-	 /Fb/rS2oqNi5gfXl9LJwJvOCzU9zRNkfankP5efAR9JwwlT0AQqXnsIc/v3vwaLWfH
-	 HEx4GvUw+QhfGKw3b5CBFlmVrlGaA9lQoCfKvKSo=
+	s=default; t=1592872356;
+	bh=Upgc+1fy6WFH3XNcBPCvqoAbvhOSY1dzH3U/SYaFv04=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=QASjN9Tv+TvdBP4dEX+AtPy7oRAXGYETMljkeww620eAmL0lXlYb2OFAcbrC+scWW
+	 +Yst47C3cq0T36lh9qy1mUN8y/6T1auQp242EshAQO4mCRYQIKfI6Mkkpjm5OgQBoG
+	 0UakacexY6xUt9RDoVBvErjCzxqzOV6fCPbhfeIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731991AbgFWAcU (ORCPT
+        id S1731997AbgFWAcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55148 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbgFWAaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:30:16 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731487AbgFWAcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:32:33 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E582076E;
-        Tue, 23 Jun 2020 00:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1F92053B;
+        Tue, 23 Jun 2020 00:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872215;
-        bh=3Oi1QCFDmxnGuJzvayyzGYUVZCZRr+L2VMWhGOQX91U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLDEyjwrUO341U/hWG+Ms1CHSy93p+/wP+nf5aa/Kk68xvxEKaLQ7LgVRHJ+hDfYy
-         yE5q2QQHfoNHzBGLGfktRtMJf8oCjkcaLudIxru7QLDmXEerwgSlOcAtGTQFQMfleF
-         JieMaHRn+eDsqgepx+CpcclOhh4GtcLU1PQybuEs=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 03/30] rcuperf: Add comments explaining the high reader overhead
-Date:   Mon, 22 Jun 2020 17:29:46 -0700
-Message-Id: <20200623003013.26252-3-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
-References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
+        s=default; t=1592872353;
+        bh=Upgc+1fy6WFH3XNcBPCvqoAbvhOSY1dzH3U/SYaFv04=;
+        h=Date:From:To:Cc:Subject:From;
+        b=1n1lxV3OcLThhL8WtBPjr/PToUwi5lyitl08vDuv+e1LoNi9J0195yAj5Gf5ejRYd
+         NecAdT8RxzHXY+jo9uWPg1chv5+TeIWmDkHrxE0LXCmlqRfM3vDs05oq275kVf1+Hv
+         QXmD9lMJ394RNnlLyk/VjqAHpAwETqlcKPGHnzj0=
+Date:   Mon, 22 Jun 2020 19:38:02 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] perf cputopo: Use struct_size() helper
+Message-ID: <20200623003802.GA21572@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-This commit adds comments explaining why the readers have otherwise insane
-levels of measurement overhead, namely that they are intended as a test
-load for update-side performance measurements, not as a straight-up
-read-side performance test.
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- kernel/rcu/rcuperf.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/perf/util/cputopo.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index 246da8f..d906ca9 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -69,6 +69,11 @@ MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com>");
-  *	value specified by nr_cpus for a read-only test.
-  *
-  * Various other use cases may of course be specified.
-+ *
-+ * Note that this test's readers are intended only as a test load for
-+ * the writers.  The reader performance statistics will be overly
-+ * pessimistic due to the per-critical-section interrupt disabling,
-+ * test-end checks, and the pair of calls through pointers.
-  */
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index 1b52402a8923..1d1b26e39f12 100644
+--- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -7,6 +7,7 @@
+ #include <api/fs/fs.h>
+ #include <linux/zalloc.h>
+ #include <perf/cpumap.h>
++#include <linux/overflow.h>
  
- #ifdef MODULE
-@@ -309,8 +314,10 @@ static void rcu_perf_wait_shutdown(void)
- }
+ #include "cputopo.h"
+ #include "cpumap.h"
+@@ -321,7 +322,7 @@ struct numa_topology *numa_topology__new(void)
  
- /*
-- * RCU perf reader kthread.  Repeatedly does empty RCU read-side
-- * critical section, minimizing update-side interference.
-+ * RCU perf reader kthread.  Repeatedly does empty RCU read-side critical
-+ * section, minimizing update-side interference.  However, the point of
-+ * this test is not to evaluate reader performance, but instead to serve
-+ * as a test load for update-side performance testing.
-  */
- static int
- rcu_perf_reader(void *arg)
+ 	nr = (u32) node_map->nr;
+ 
+-	tp = zalloc(sizeof(*tp) + sizeof(tp->nodes[0])*nr);
++	tp = zalloc(struct_size(tp, nodes, nr));
+ 	if (!tp)
+ 		goto out;
+ 
 -- 
-2.9.5
+2.27.0
 
