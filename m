@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA131204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660F7204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733288AbgFWQqm (ORCPT
+        id S1733295AbgFWQqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:46:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39240 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 12:46:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40008 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733121AbgFWQpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:45:31 -0400
+        id S1733120AbgFWQpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:45:30 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C927CAECB;
+        by mx2.suse.de (Postfix) with ESMTP id 5762CB090;
         Tue, 23 Jun 2020 16:45:29 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org
@@ -31,9 +31,9 @@ Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 39/50] staging: vchi: Don't include vchiq_core.h
-Date:   Tue, 23 Jun 2020 18:42:25 +0200
-Message-Id: <20200623164235.29566-40-nsaenzjulienne@suse.de>
+Subject: [PATCH 38/50] staging: vchi: Get rid of struct vchiq_instance forward declaration
+Date:   Tue, 23 Jun 2020 18:42:24 +0200
+Message-Id: <20200623164235.29566-39-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
@@ -44,25 +44,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file is internal to vchiq.
+It's already forward declared in vchiq_if.h. So no need to insist
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/staging/vc04_services/interface/vchi/vchi.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-index fc12b76617d1..52654123463d 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-@@ -8,7 +8,6 @@
- #include "vchiq_if.h"
- #include "../vchi/vchi.h"
- #include "vchiq.h"
--#include "vchiq_core.h"
+diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
+index 7108c254a38a..d24e7027c08f 100644
+--- a/drivers/staging/vc04_services/interface/vchi/vchi.h
++++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
+@@ -4,13 +4,6 @@
+ #ifndef VCHI_H_
+ #define VCHI_H_
  
- int vchi_queue_kernel_message(unsigned handle, void *data, unsigned int size)
- {
+-/******************************************************************************
+- * Global defs
+- *****************************************************************************/
+-
+-// Opaque handle for a VCHIQ instance
+-struct vchiq_instance;
+-
+ /******************************************************************************
+  * Global funcs - implementation is specific to which side you are on
+  * (local / remote)
 -- 
 2.27.0
 
