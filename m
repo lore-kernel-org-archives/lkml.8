@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB9920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE46520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946520;
-	bh=1OvDeqrNdnLngoQvs8UegGnHsWT0Edkwhrm/k31VQEU=;
+	s=default; t=1592946531;
+	bh=YySmSrVLeNy4genNaIZGwum5q8gYdmuRjgWpMDygdmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J+E89CVV3/7ZTBGlEmoqnxx5nfh/8J9enWgMG4lkpxD7j3klhYXB8KYiGUqJgOt4r
-	 6fsloZZLvx/CGs7Cj0J0laMCqn/2m1u7HTd12l0TqVCA8nLO4paJl/x2xxjA+vl8dh
-	 LnKgfgtgfRgE1KiE0/XnIADN924ZjBDCQXa1bYvk=
+	b=fphtLenKmJLX+HGGefFtS/0/rIjNH5YlY8337LxUld0u8ajYsN+rqM9VTPlrBsgQC
+	 KB1AsnDR4d2Z/EtAJDBPdVwkNqsqnOwgcU3oUpriI6qTe8UmaOS84Eah4AEic0B6PA
+	 jrKPSX9VrANae4CO/RAF+gXCAuzgiR2Nyqd2I7zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392318AbgFWVIi (ORCPT
+        id S2393175AbgFWVIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:08:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403781AbgFWUek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:40 -0400
+        id S2403776AbgFWUed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 955B42064B;
-        Tue, 23 Jun 2020 20:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 974F4206C3;
+        Tue, 23 Jun 2020 20:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944481;
-        bh=1OvDeqrNdnLngoQvs8UegGnHsWT0Edkwhrm/k31VQEU=;
+        s=default; t=1592944473;
+        bh=YySmSrVLeNy4genNaIZGwum5q8gYdmuRjgWpMDygdmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IsHbDZQI6yZlqtsSAhuWGBI8NPftbGf75t4B+d4NOyp0fZQUvtlqsqIKTwh+vDxzR
-         +YCWbx7qB3dw3A2FrJTOB7vvd8KEGaj8fYChZu1rEBPDc6kpGgSp1h4J0Rz5zdvHt9
-         hrXMKR8TW9MZUhU56Iu8G5cdcMxHm2uJo+Jr2Riw=
+        b=GS6mokeI00d5XWVdBrl0j6qPxt/FrQWfJZRXNRRpwzVmNXxa/jcUBzVzeS1ZioSYI
+         ah0wOflPsuaCIs3rGAWcBEVthqQeRsJ7crEEHnkAv7Wu2xhfgNwp+1Aw9iXHHfiUmv
+         5J6fAnm9iUZXO58gWXh3ScAuCVcJy6k6qsHUsqUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kunal Joshi <kunal1.joshi@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 303/314] drm/i915/icl+: Fix hotplug interrupt disabling after storm detection
-Date:   Tue, 23 Jun 2020 21:58:18 +0200
-Message-Id: <20200623195353.449491429@linuxfoundation.org>
+Subject: [PATCH 5.4 300/314] drm/i915: Whitelist context-local timestamp in the gen9 cmdparser
+Date:   Tue, 23 Jun 2020 21:58:15 +0200
+Message-Id: <20200623195353.305420025@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,37 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit a3005c2edf7e8c3478880db1ca84028a2b6819bb upstream.
+commit 273500ae71711c040d258a7b3f4b6f44c368fff2 upstream.
 
-Atm, hotplug interrupts on TypeC ports are left enabled after detecting
-an interrupt storm, fix this.
+Allow batch buffers to read their own _local_ cumulative HW runtime of
+their logical context.
 
-Reported-by: Kunal Joshi <kunal1.joshi@intel.com>
-Bugzilla: https://gitlab.freedesktop.org/drm/intel/-/issues/1964
-Cc: Kunal Joshi <kunal1.joshi@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200612121731.19596-1-imre.deak@intel.com
-(cherry picked from commit 587a87b9d7e94927edcdea018565bc1939381eb1)
+Fixes: 0f2f39758341 ("drm/i915: Add gen9 BCS cmdparsing")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v5.4+
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200601161942.30854-1-chris@chris-wilson.co.uk
+(cherry picked from commit f9496520df11de00fbafc3cbd693b9570d600ab3)
 Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_irq.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/i915/i915_cmd_parser.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/i915/i915_irq.c
-+++ b/drivers/gpu/drm/i915/i915_irq.c
-@@ -3500,6 +3500,7 @@ static void gen11_hpd_irq_setup(struct d
+--- a/drivers/gpu/drm/i915/i915_cmd_parser.c
++++ b/drivers/gpu/drm/i915/i915_cmd_parser.c
+@@ -572,6 +572,9 @@ struct drm_i915_reg_descriptor {
+ #define REG32(_reg, ...) \
+ 	{ .addr = (_reg), __VA_ARGS__ }
  
- 	val = I915_READ(GEN11_DE_HPD_IMR);
- 	val &= ~hotplug_irqs;
-+	val |= ~enabled_irqs & hotplug_irqs;
- 	I915_WRITE(GEN11_DE_HPD_IMR, val);
- 	POSTING_READ(GEN11_DE_HPD_IMR);
- 
++#define REG32_IDX(_reg, idx) \
++	{ .addr = _reg(idx) }
++
+ /*
+  * Convenience macro for adding 64-bit registers.
+  *
+@@ -669,6 +672,7 @@ static const struct drm_i915_reg_descrip
+ 	REG64_IDX(RING_TIMESTAMP, BSD_RING_BASE),
+ 	REG32(BCS_SWCTRL),
+ 	REG64_IDX(RING_TIMESTAMP, BLT_RING_BASE),
++	REG32_IDX(RING_CTX_TIMESTAMP, BLT_RING_BASE),
+ 	REG64_IDX(BCS_GPR, 0),
+ 	REG64_IDX(BCS_GPR, 1),
+ 	REG64_IDX(BCS_GPR, 2),
 
 
