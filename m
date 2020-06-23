@@ -2,89 +2,67 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B34CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB3902070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580A120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592931023;
+	bh=Sd6SjhyVGewNRWiidoTTRQ5tZ9NYamhA0C4eDTLjMkU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=GdCmQ4VfbDBWp+QzerJpKhwKFLvflBT8Bf4NyWIuakgY+6abXSbkB0BkBIqtU4Fjm
+	 jK8VGIRdw2MYRHzjhSM9hDZ0pJDQ0Fqg/P4taAj7lA2QTXJA3X1x8oMTYchW64gSq1
+	 MvoEj/aGj2IRVE0jE6BC+sWbXWjqYorJDHEdGIGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733200AbgFWQsv (ORCPT
+        id S1733085AbgFWQuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:48:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38788 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 12:50:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732182AbgFWQpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:45:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 151CDAED2;
-        Tue, 23 Jun 2020 16:45:09 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 04/50] staging: mmal-vchiq: Make timeout a defined parameter
-Date:   Tue, 23 Jun 2020 18:41:50 +0200
-Message-Id: <20200623164235.29566-5-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
-References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1732953AbgFWQuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:50:21 -0400
+Subject: Re: [GIT PULL] Btrfs fixes for 5.8-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592931021;
+        bh=Sd6SjhyVGewNRWiidoTTRQ5tZ9NYamhA0C4eDTLjMkU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XmLc9zP1SStylE8J/3uCJj+ygUrpgOwdWTWlUWO+UbAyh1WFqsxgXQNCjPUTAg8sj
+         ZOQRAZODkXmTmKmn1NcpCU9hBfQumte6RB16Noy2wuHR6whXOpnAyamMY+ZJ9DYgJZ
+         yol7Ta/s04uUWLwHUlqnt6v39xLXd12dbjVM2qGo=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <cover.1592918083.git.dsterba@suse.com>
+References: <cover.1592918083.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1592918083.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.8-rc2-tag
+X-PR-Tracked-Commit-Id: b091f7fede97cc64f7aaad3eeb37965aebee3082
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3e08a95294a4fb3702bb3d35ed08028433c37fe6
+Message-Id: <159293102113.9844.16810566723336922683.pr-tracker-bot@kernel.org>
+Date:   Tue, 23 Jun 2020 16:50:21 +0000
+To:     David Sterba <dsterba@suse.com>
+Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+The pull request you sent on Tue, 23 Jun 2020 15:53:45 +0200:
 
-The timeout period for VPU communications is a useful thing
-to extend when debugging.
-Set it via a define, rather than a magic number buried in the code.
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.8-rc2-tag
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3e08a95294a4fb3702bb3d35ed08028433c37fe6
 
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index c30caad75253..070ff63b3850 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -38,6 +38,12 @@
-  */
- #define VCHIQ_MMAL_MAX_COMPONENTS 64
- 
-+/*
-+ * Timeout for synchronous msg responses in seconds.
-+ * Helpful to increase this if stopping in the VPU debugger.
-+ */
-+#define SYNC_MSG_TIMEOUT       3
-+
- /*#define FULL_MSG_DUMP 1*/
- 
- #ifdef DEBUG
-@@ -686,7 +692,7 @@ static int send_synchronous_mmal_msg(struct vchiq_mmal_instance *instance,
- 	}
- 
- 	timeout = wait_for_completion_timeout(&msg_context->u.sync.cmplt,
--					      3 * HZ);
-+					      SYNC_MSG_TIMEOUT * HZ);
- 	if (timeout == 0) {
- 		pr_err("timed out waiting for sync completion\n");
- 		ret = -ETIME;
+Thank you!
+
 -- 
-2.27.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
