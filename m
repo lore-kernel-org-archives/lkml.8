@@ -2,113 +2,191 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C367C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E654920720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D9420720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QQqHr4Is"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="JvX0MDxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732750AbgFWN7y (ORCPT
+        id S1732740AbgFWOCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:59:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
+        Tue, 23 Jun 2020 10:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732687AbgFWN7x (ORCPT
+        with ESMTP id S1729504AbgFWOCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:59:53 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68041C061573;
-        Tue, 23 Jun 2020 06:59:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vWFZnmE8muSdoNv/rlN/zg+D4ErnvxS0/K6mx8ubUo4=; b=QQqHr4IslmzJW09bxhv1Ibqy14
-        exvYtd4xNdVggaYQ7J+3Ux3ltaf/4zgfPk5nlZA57lRVghngQDw3jFFH1qd4JvYdxS7Gzuffi/EXa
-        pJCr6X0+J6sOE4R312V3eYLvvquor1WCpbl3LiqTvvZdXDG5QgUdiRucg2Mg1GfrE0aqshfm7iISX
-        4vueqvSBN9VUfaOsOehNU2M6fjlHD+xQrwa7GWTRoizDBchrv0ovCNNMo+E0mT0CThS8FbkY+19V5
-        PlUbml1JCC4gS4MGCLinM5pdDFLQRUkizCTYkXF/HLVQpJDKZXWrZLBOsC944fXDC+vkIXa/9RrRU
-        GcD0Wmtw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnjSI-0004Rt-F5; Tue, 23 Jun 2020 13:59:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73420300F28;
-        Tue, 23 Jun 2020 15:59:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6467323CBF701; Tue, 23 Jun 2020 15:59:16 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 15:59:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623135916.GI4817@hirez.programming.kicks-ass.net>
-References: <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200428075512.GP30814@suse.de>
- <20200623110706.GB4817@hirez.programming.kicks-ass.net>
- <20200623113007.GH31822@suse.de>
- <20200623114818.GD4817@hirez.programming.kicks-ass.net>
- <20200623120433.GB14101@suse.de>
- <20200623125201.GG4817@hirez.programming.kicks-ass.net>
- <20200623134003.GD14101@suse.de>
+        Tue, 23 Jun 2020 10:02:43 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD29C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:02:43 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id n23so23532428ljh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+mDKHqL9XaZmj7XcsJJwYzkkEK6i2Pe8R8fplxjQ0ik=;
+        b=JvX0MDxxQ7q45iyUquGhnRAfIa6C8NJAargxgnJLVJ1QKDLMHSQdE4DHqkXQDQQvMA
+         0BlItz+1HrqAU843jnYC7PfhRIxKT0JH19lnfBaqxGSiKEfVwkV0H5AeiwaryqbwipQ+
+         n5g+jwL4+9Joj4DgkA5NywYvIjzDIitw+83lU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+mDKHqL9XaZmj7XcsJJwYzkkEK6i2Pe8R8fplxjQ0ik=;
+        b=MJiLpnTdMgao0ZcMbKkFBvNBRe2O2UopOd0hUyjqNAQu/ZhDJTntTx5mn5SLLgee10
+         rDCVdotZ/F+Am95wcerNkl0PUOkAA0ncq2Dog4uf2N04PnGrbnRde9dKqckNYpoiXvmr
+         Bbp3AgyTHPCx2q1yGGKR+qrMcTn7GBS8+uDz4rL4DTA+gCLRJH/ssX4fjLPvPJ/luKhZ
+         cJ+wpWszA64LyIKfxu85sce5oxc8ST40Kin72GtgqWVJvABJoCPRS6jXgOjny3drF8BB
+         KG7dSbolIHksXHiGCZLB3shr3paxV1QPlj3V6QADwkBGXaT4WH+ig4B7RGiQ8JPThtRm
+         FS2g==
+X-Gm-Message-State: AOAM533lsU/vngCDzwJKSkhVMHj3kGtBHGzNQRcYvUFh29QL7lPa18ZT
+        B5tXWQIpIfaZHeO0Zt57XTlKJVIS0hH3H5IgCarsmggd5Bs=
+X-Google-Smtp-Source: ABdhPJwkp7xO233qrwVR3p5tSB1yZTt9QFCbp0qjfLwtRcyVzpREtRGELz74ul+4qEqtniyRgrWITwvGeGjIWMKuSHU=
+X-Received: by 2002:a2e:3603:: with SMTP id d3mr10508629lja.259.1592920961167;
+ Tue, 23 Jun 2020 07:02:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623134003.GD14101@suse.de>
+References: <20200622153546.49880-1-colin.king@canonical.com>
+ <20200622182816.GF4151@kadam> <B926444035E5E2439431908E3842AFD2514C4B@DGGEMI525-MBS.china.huawei.com>
+ <baf5a045-40f3-254b-fe0f-ad00cdf4b775@canonical.com>
+In-Reply-To: <baf5a045-40f3-254b-fe0f-ad00cdf4b775@canonical.com>
+From:   Vitaly Wool <vitaly.wool@konsulko.com>
+Date:   Tue, 23 Jun 2020 16:02:29 +0200
+Message-ID: <CAM4kBB+v+FJaoKx+zL3pfnV1e1pk8sVRX1=7-aq9OGdXXuBxJA@mail.gmail.com>
+Subject: Re: [PATCH][next] mm/zswap: fix a couple of memory leaks and rework
+ kzalloc failure check
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 03:40:03PM +0200, Joerg Roedel wrote:
-> On Tue, Jun 23, 2020 at 02:52:01PM +0200, Peter Zijlstra wrote:
+On Tue, Jun 23, 2020, 1:12 PM Colin Ian King <colin.king@canonical.com> wrote:
+>
+> On 22/06/2020 20:55, Song Bao Hua (Barry Song) wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
+> >> Sent: Tuesday, June 23, 2020 6:28 AM
+> >> To: Colin King <colin.king@canonical.com>
+> >> Cc: Seth Jennings <sjenning@redhat.com>; Dan Streetman
+> >> <ddstreet@ieee.org>; Vitaly Wool <vitaly.wool@konsulko.com>; Andrew
+> >> Morton <akpm@linux-foundation.org>; Song Bao Hua (Barry Song)
+> >> <song.bao.hua@hisilicon.com>; Stephen Rothwell <sfr@canb.auug.org.au>;
+> >> linux-mm@kvack.org; kernel-janitors@vger.kernel.org;
+> >> linux-kernel@vger.kernel.org
+> >> Subject: Re: [PATCH][next] mm/zswap: fix a couple of memory leaks and
+> >> rework kzalloc failure check
+> >>
+> >> On Mon, Jun 22, 2020 at 04:35:46PM +0100, Colin King wrote:
+> >>> From: Colin Ian King <colin.king@canonical.com>
+> >>>
+> >>> kzalloc failures return NULL on out of memory errors, so replace the
+> >>> IS_ERR_OR_NULL check with the usual null pointer check.  Fix two memory
+> >>> leaks with on acomp and acomp_ctx by ensuring these objects are free'd
+> >>> on the error return path.
+> >>>
+> >>> Addresses-Coverity: ("Resource leak")
+> >>> Fixes: d4f86abd6e35 ("mm/zswap: move to use crypto_acomp API for
+> >> hardware acceleration")
+> >>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >
+> >
+> > Colin, thanks for your patch. I am sorry I did the same thing with you here:
+> > https://lkml.org/lkml/2020/6/22/347
+>
+> Thanks for fixing this correctly, I ran out of time yesterday to re-do
+> the fix.
+>
+> Colin
 
-> > You only have that guarantee when any SNP #VC from kernel is an
-> > automatic panic. But in that case, what's the point of having the
-> > recursion count?
-> 
-> It is not a recursion count, it is a stack-recursion check. Basically
-> walk down the stack and look if your current stack is already in use.
-> Yes, this can be optimized, but that is what is needed.
-> 
-> IIRC the current prototype code for SNP just pre-validates all memory in
-> the VM and doesn't support moving pages around on the host. So any #VC
-> SNP exception would be fatal, yes.
-> 
-> In a scenario with on-demand validation of guest pages and support for
-> guest-assisted page-moving on the HV side it would be more complicated.
-> Basically all memory that is accessed during #VC exception handling must
-> stay validated at all times, including the IST stack.
-> 
-> So saying this, I don't understand why _all_ SNP #VC exceptions from
-> kernel space must be fatal?
+I think this has gotten out of hand. Barry, could you please come up
+with a replacement for the initial patch rather than doing it
+incrementally?
 
-Ah, because I hadn't thought of the stack-recursion check.
+Thanks,
+   Vitaly
 
-So basically when your exception frame points to your own IST, you die.
-That sounds like something we should have in generic IST code.
+>
+> >
+> >
+> >>> ---
+> >>>  mm/zswap.c | 16 +++++++++++-----
+> >>>  1 file changed, 11 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/mm/zswap.c b/mm/zswap.c
+> >>> index 0d914ba6b4a0..14839cbac7ff 100644
+> >>> --- a/mm/zswap.c
+> >>> +++ b/mm/zswap.c
+> >>> @@ -433,23 +433,23 @@ static int zswap_cpu_comp_prepare(unsigned int
+> >> cpu, struct hlist_node *node)
+> >>>             return 0;
+> >>>
+> >>>     acomp_ctx = kzalloc(sizeof(*acomp_ctx), GFP_KERNEL);
+> >>> -   if (IS_ERR_OR_NULL(acomp_ctx)) {
+> >>> +   if (!acomp_ctx) {
+> >>>             pr_err("Could not initialize acomp_ctx\n");
+> >>>             return -ENOMEM;
+> >>>     }
+> >>>     acomp = crypto_alloc_acomp(pool->tfm_name, 0, 0);
+> >>> -   if (IS_ERR_OR_NULL(acomp)) {
+> >>> +   if (!acomp) {
+> >>
+> >> This should be IS_ERR(acomp).  Please preserve the error code.
+> >>
+> >>>             pr_err("could not alloc crypto acomp %s : %ld\n",
+> >>>                             pool->tfm_name, PTR_ERR(acomp));
+> >>> -           return -ENOMEM;
+> >>> +           goto free_acomp_ctx;
+> >>>     }
+> >>>     acomp_ctx->acomp = acomp;
+> >>>
+> >>>     req = acomp_request_alloc(acomp_ctx->acomp);
+> >>> -   if (IS_ERR_OR_NULL(req)) {
+> >>> +   if (!req) {
+> >>>             pr_err("could not alloc crypto acomp %s : %ld\n",
+> >>>                    pool->tfm_name, PTR_ERR(acomp));
+> >>> -           return -ENOMEM;
+> >>> +           goto free_acomp;
+> >>>     }
+> >>>     acomp_ctx->req = req;
+> >>>
+> >>> @@ -462,6 +462,12 @@ static int zswap_cpu_comp_prepare(unsigned int
+> >> cpu, struct hlist_node *node)
+> >>>     *per_cpu_ptr(pool->acomp_ctx, cpu) = acomp_ctx;
+> >>>
+> >>>     return 0;
+> >>> +
+> >>> +free_acomp:
+> >>> +   kfree(acomp);
+> >>
+> >> The kfree() isn't correct.  It needs to be:
+> >>
+> >>      crypto_free_acomp(acomp);
+> >>
+> >>> +free_acomp_ctx:
+> >>> +   kfree(acomp_ctx);
+> >>> +   return -ENOMEM;
+> >>
+> >> regards,
+> >> dan carpenter
+> >
+>
