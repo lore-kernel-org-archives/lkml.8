@@ -2,296 +2,153 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA49C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F04C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 866F020724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945849;
-	bh=xadqCNRl+pQYANsrXX3gSEkiRPvlxOBuzu8ThLrbcsY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KpCeNOIfY64mFHcLBK7rzpwjCHzFf7D5BtH2pp0Qc9bet83vi/WpUB8YJp2cz5vJK
-	 sS+DPbw25PzC5T/d5j+ioMTu7jNCY+E97n7pgEqFlUmnS11ifPX+WaeSxvRh/Xaxk1
-	 dTzJA0CacOZ04odg+nvUO1tE+TTfqE8iY1Dxr4Cs=
+	by mail.kernel.org (Postfix) with ESMTP id 0915B20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmh.eng.br header.i=@hmh.eng.br header.b="tIFfEnSH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wbzgfng6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393059AbgFWU52 (ORCPT
+        id S2393088AbgFWU5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392429AbgFWUmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:42:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14B78218AC;
-        Tue, 23 Jun 2020 20:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944964;
-        bh=xadqCNRl+pQYANsrXX3gSEkiRPvlxOBuzu8ThLrbcsY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ngolo2drcV0T5pjH4I9jJtOWLrIm2nUy9ULOwOw6WnUKfrKZUigpQlCQckB+gcopr
-         QFazmf1mmy61cjkwdzVHomMmwSNx0aucJIKZj7iR6cm2qaLlGXzmKSLmUvt6j4sxgs
-         1PNUuv7Eo36/5EgozrGyZEnr1zbS0lys93JCT8fg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 163/206] usb: host: ehci-platform: add a quirk to avoid stuck
-Date:   Tue, 23 Jun 2020 21:58:11 +0200
-Message-Id: <20200623195325.017411182@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 23 Jun 2020 16:57:34 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:37163 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390565AbgFWUmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:42:42 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id DBA919C0;
+        Tue, 23 Jun 2020 16:42:40 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 23 Jun 2020 16:42:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=vrxA/FSkZCHAfFyeVNWgnBioSC9
+        BNFdUmNULPJc7l+s=; b=tIFfEnSH0ux8hs3mBttZhNV/H7Tp3TmuoALl+TSfHMn
+        llrOlKQVwfQAZqCEfEMTsu52DnOFzpAxvM4JbBVl2cHNEEkjBX81uTdVPwH5Z5sc
+        kY44YfkgsKvPV8ao+5qPKZPdK0JfNA7ohBc8P11SlojcAmQ/m+L1GRGcc0u+ZtWr
+        lSwzpRgDzpWxoq83DaOi4QvtU4B90QNnplKJLyTqj83WjVD6eBYfoLSh5FP8jycQ
+        MK8M7Efkttb5tYTCkivm+ok+Q+bJNMKs8acZUj/iALcxtzl00wMpdCECL7eFjMk4
+        JKKUkgU76lmUWpap4+TNQ8JwgOn8ecBtyRjA0PFHoJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=vrxA/F
+        SkZCHAfFyeVNWgnBioSC9BNFdUmNULPJc7l+s=; b=Wbzgfng60nrVvHeYrxCYLB
+        OTPbQdXCMlK0K6IkgencEN1GUguzmGHfqf5ibhalM7lgubN1DPcXg0GfrPqGqJEI
+        fFPAsjbMv9Yb3SjARNvecNPRahL0zMobbGrhvYxp2bSJBZAJxbPmJ1X5hYnyn2cU
+        89VWYwP4MhRk0wIMlDrTAObVg9XUkIH/IWF9/RAlHNFJPoWc3hGFBjJvYTcnnPsq
+        oaGzMg6mLRLot4y8Q98lhqiHRANivbUNDtHms0fOQZRHV/xPZLe9Z7N13Yriskco
+        t/JBFR2g8paGgmlb4Qn43EiirDx4khBAP7fR51kEZrZfrPWzEuMLWIzzheVDfuzw
+        ==
+X-ME-Sender: <xms:P2nyXpZfhuVA-rtlpQmjeIKkkUWk0vaPF-p5CpZ1MnnD_Cg_2KtYGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekhedguddviecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttddttddtredvnecuhfhrohhmpefjvghn
+    rhhiqhhuvgcuuggvucfoohhrrggvshcujfholhhstghhuhhhuceohhhmhheshhhmhhdrvg
+    hnghdrsghrqeenucggtffrrghtthgvrhhnpedtfeefvdffkeevjeeuffdvvdevveetjefg
+    vdfhffeuteefvdevgeeuueejtddutdenucffohhmrghinheplhhkmhhlrdhorhhgnecukf
+    hppedujeejrdduleegrdejrdefvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
+    mhepmhgrihhlfhhrohhmpehhmhhhsehhmhhhrdgvnhhgrdgsrh
+X-ME-Proxy: <xmx:P2nyXgaTVe7lgaOYLMJ5TCvw3rOKBQXfgT_Hs1NOv8zR06bZS8tgQg>
+    <xmx:P2nyXr9VbxH5uIew4iuHlNZ3K3D4dOI1zE8sIkNTZpJOHvmDeZb2Zg>
+    <xmx:P2nyXnqIaGal6PHvEwtnSVqnBOXQKIt4q1PhoMtuMoPJFeUg3EsQ_w>
+    <xmx:QGnyXvWPipUrpgRFO-LUEZHJt8qMJBIAX21kOM4Sp71v_uRgaOgX_g>
+Received: from khazad-dum.debian.net (unknown [177.194.7.32])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7C812328005A;
+        Tue, 23 Jun 2020 16:42:39 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id CE85F340321E;
+        Tue, 23 Jun 2020 17:42:36 -0300 (-03)
+X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
+Received: from khazad-dum.debian.net ([127.0.0.1])
+        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id 0ml-J_XkXns1; Tue, 23 Jun 2020 17:42:34 -0300 (-03)
+Received: by khazad-dum.debian.net (Postfix, from userid 1000)
+        id 4B208340321D; Tue, 23 Jun 2020 17:42:34 -0300 (-03)
+Date:   Tue, 23 Jun 2020 17:42:34 -0300
+From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Simon Arlott <simon@octiron.net>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH] scsi: sd: stop SSD (non-rotational) disks before reboot
+Message-ID: <20200623204234.GA16156@khazad-dum.debian.net>
+References: <499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+ <CY4PR04MB37511505492E9EC6A245CFB1E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB37511505492E9EC6A245CFB1E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+X-GPG-Fingerprint1: 4096R/0x0BD9E81139CB4807: C467 A717 507B BAFE D3C1  6092
+ 0BD9 E811 39CB 4807
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On Thu, 18 Jun 2020, Damien Le Moal wrote:
+> Are you experiencing data loss or corruption ? If yes, since a clean reboot or
+> shutdown issues a synchronize cache to all devices, a corruption would mean that
+> your SSD is probably not correctly processing flush cache commands.
 
-[ Upstream commit cc7eac1e4afdd151085be4d0341a155760388653 ]
+Cache flushes do not matter that much when SSDs and sudden power cuts
+are involved.  Power cuts at the wrong time harm the FLASH itself, it is
+not about still-in-flight data.
 
-Since EHCI/OHCI controllers on R-Car Gen3 SoCs are possible to
-be getting stuck very rarely after a full/low usb device was
-disconnected. To detect/recover from such a situation, the controllers
-require a special way which poll the EHCI PORTSC register and changes
-the OHCI functional state.
+Keep in mind that SSDs do a _lot_ of background writing, and power cuts
+during a FLASH write or erase can cause from weakened cells, to much
+larger damage.  It is possible to harden the chip or the design against
+this, but it is *expensive*.  And even if warded off by hardening and no
+FLASH damage happens, an erase/program cycle must be done on the whole
+erase block to clean up the incomplete program cycle.
 
-So, this patch adds a polling timer into the ehci-platform driver,
-and if the ehci driver detects the issue by the EHCI PORTSC register,
-the ehci driver removes a companion device (= the OHCI controller)
-to change the OHCI functional state to USB Reset once. And then,
-the ehci driver adds the companion device again.
+Due to this background activity, an unexpected power cut could damage
+data *anywhere* in an SSD: it could hit some filesystem area that was
+being scrubbed in background by the SSD, or internal SSD metadata.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/1580114262-25029-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/host/ehci-platform.c | 127 +++++++++++++++++++++++++++++++
- include/linux/usb/ehci_def.h     |   2 +-
- 2 files changed, 128 insertions(+), 1 deletion(-)
+So, you want that SSD to know it must be quiescent-for-poweroff for
+*real* before you allow the system to do anything that could power it
+off.
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 4c306fb6b0699..8a45362155c5a 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -29,6 +29,8 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
-+#include <linux/sys_soc.h>
-+#include <linux/timer.h>
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
- #include <linux/usb/ehci_pdriver.h>
-@@ -44,6 +46,9 @@ struct ehci_platform_priv {
- 	struct clk *clks[EHCI_MAX_CLKS];
- 	struct reset_control *rsts;
- 	bool reset_on_resume;
-+	bool quirk_poll;
-+	struct timer_list poll_timer;
-+	struct delayed_work poll_work;
- };
- 
- static const char hcd_name[] = "ehci-platform";
-@@ -118,6 +123,111 @@ static struct usb_ehci_pdata ehci_platform_defaults = {
- 	.power_off =		ehci_platform_power_off,
- };
- 
-+/**
-+ * quirk_poll_check_port_status - Poll port_status if the device sticks
-+ * @ehci: the ehci hcd pointer
-+ *
-+ * Since EHCI/OHCI controllers on R-Car Gen3 SoCs are possible to be getting
-+ * stuck very rarely after a full/low usb device was disconnected. To
-+ * detect such a situation, the controllers require a special way which poll
-+ * the EHCI PORTSC register.
-+ *
-+ * Return: true if the controller's port_status indicated getting stuck
-+ */
-+static bool quirk_poll_check_port_status(struct ehci_hcd *ehci)
-+{
-+	u32 port_status = ehci_readl(ehci, &ehci->regs->port_status[0]);
-+
-+	if (!(port_status & PORT_OWNER) &&
-+	     (port_status & PORT_POWER) &&
-+	    !(port_status & PORT_CONNECT) &&
-+	     (port_status & PORT_LS_MASK))
-+		return true;
-+
-+	return false;
-+}
-+
-+/**
-+ * quirk_poll_rebind_companion - rebind comanion device to recover
-+ * @ehci: the ehci hcd pointer
-+ *
-+ * Since EHCI/OHCI controllers on R-Car Gen3 SoCs are possible to be getting
-+ * stuck very rarely after a full/low usb device was disconnected. To
-+ * recover from such a situation, the controllers require changing the OHCI
-+ * functional state.
-+ */
-+static void quirk_poll_rebind_companion(struct ehci_hcd *ehci)
-+{
-+	struct device *companion_dev;
-+	struct usb_hcd *hcd = ehci_to_hcd(ehci);
-+
-+	companion_dev = usb_of_get_companion_dev(hcd->self.controller);
-+	if (!companion_dev)
-+		return;
-+
-+	device_release_driver(companion_dev);
-+	if (device_attach(companion_dev) < 0)
-+		ehci_err(ehci, "%s: failed\n", __func__);
-+
-+	put_device(companion_dev);
-+}
-+
-+static void quirk_poll_work(struct work_struct *work)
-+{
-+	struct ehci_platform_priv *priv =
-+		container_of(to_delayed_work(work), struct ehci_platform_priv,
-+			     poll_work);
-+	struct ehci_hcd *ehci = container_of((void *)priv, struct ehci_hcd,
-+					     priv);
-+
-+	/* check the status twice to reduce misdetection rate */
-+	if (!quirk_poll_check_port_status(ehci))
-+		return;
-+	udelay(10);
-+	if (!quirk_poll_check_port_status(ehci))
-+		return;
-+
-+	ehci_dbg(ehci, "%s: detected getting stuck. rebind now!\n", __func__);
-+	quirk_poll_rebind_companion(ehci);
-+}
-+
-+static void quirk_poll_timer(struct timer_list *t)
-+{
-+	struct ehci_platform_priv *priv = from_timer(priv, t, poll_timer);
-+	struct ehci_hcd *ehci = container_of((void *)priv, struct ehci_hcd,
-+					     priv);
-+
-+	if (quirk_poll_check_port_status(ehci)) {
-+		/*
-+		 * Now scheduling the work for testing the port more. Note that
-+		 * updating the status is possible to be delayed when
-+		 * reconnection. So, this uses delayed work with 5 ms delay
-+		 * to avoid misdetection.
-+		 */
-+		schedule_delayed_work(&priv->poll_work, msecs_to_jiffies(5));
-+	}
-+
-+	mod_timer(&priv->poll_timer, jiffies + HZ);
-+}
-+
-+static void quirk_poll_init(struct ehci_platform_priv *priv)
-+{
-+	INIT_DELAYED_WORK(&priv->poll_work, quirk_poll_work);
-+	timer_setup(&priv->poll_timer, quirk_poll_timer, 0);
-+	mod_timer(&priv->poll_timer, jiffies + HZ);
-+}
-+
-+static void quirk_poll_end(struct ehci_platform_priv *priv)
-+{
-+	del_timer_sync(&priv->poll_timer);
-+	cancel_delayed_work(&priv->poll_work);
-+}
-+
-+static const struct soc_device_attribute quirk_poll_match[] = {
-+	{ .family = "R-Car Gen3" },
-+	{ /* sentinel*/ }
-+};
-+
- static int ehci_platform_probe(struct platform_device *dev)
- {
- 	struct usb_hcd *hcd;
-@@ -178,6 +288,9 @@ static int ehci_platform_probe(struct platform_device *dev)
- 					  "has-transaction-translator"))
- 			hcd->has_tt = 1;
- 
-+		if (soc_device_match(quirk_poll_match))
-+			priv->quirk_poll = true;
-+
- 		for (clk = 0; clk < EHCI_MAX_CLKS; clk++) {
- 			priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
- 			if (IS_ERR(priv->clks[clk])) {
-@@ -249,6 +362,9 @@ static int ehci_platform_probe(struct platform_device *dev)
- 	device_enable_async_suspend(hcd->self.controller);
- 	platform_set_drvdata(dev, hcd);
- 
-+	if (priv->quirk_poll)
-+		quirk_poll_init(priv);
-+
- 	return err;
- 
- err_power:
-@@ -275,6 +391,9 @@ static int ehci_platform_remove(struct platform_device *dev)
- 	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
- 	int clk;
- 
-+	if (priv->quirk_poll)
-+		quirk_poll_end(priv);
-+
- 	usb_remove_hcd(hcd);
- 
- 	if (pdata->power_off)
-@@ -299,9 +418,13 @@ static int ehci_platform_suspend(struct device *dev)
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct usb_ehci_pdata *pdata = dev_get_platdata(dev);
- 	struct platform_device *pdev = to_platform_device(dev);
-+	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
- 	bool do_wakeup = device_may_wakeup(dev);
- 	int ret;
- 
-+	if (priv->quirk_poll)
-+		quirk_poll_end(priv);
-+
- 	ret = ehci_suspend(hcd, do_wakeup);
- 	if (ret)
- 		return ret;
-@@ -333,6 +456,10 @@ static int ehci_platform_resume(struct device *dev)
- 	}
- 
- 	ehci_resume(hcd, priv->reset_on_resume);
-+
-+	if (priv->quirk_poll)
-+		quirk_poll_init(priv);
-+
- 	return 0;
- }
- #endif /* CONFIG_PM_SLEEP */
-diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
-index a15ce99dfc2d6..78e0063555575 100644
---- a/include/linux/usb/ehci_def.h
-+++ b/include/linux/usb/ehci_def.h
-@@ -151,7 +151,7 @@ struct ehci_regs {
- #define PORT_OWNER	(1<<13)		/* true: companion hc owns this port */
- #define PORT_POWER	(1<<12)		/* true: has power (see PPC) */
- #define PORT_USB11(x) (((x)&(3<<10)) == (1<<10))	/* USB 1.1 device */
--/* 11:10 for detecting lowspeed devices (reset vs release ownership) */
-+#define PORT_LS_MASK	(3<<10)		/* Link status (SE0, K or J */
- /* 9 reserved */
- #define PORT_LPM	(1<<9)		/* LPM transaction */
- #define PORT_RESET	(1<<8)		/* reset port */
+And, as I have found out the hard way years ago, you also want to give
+the SSD enough *extra* time to actually quiesce, even if it claims to be
+already prepared for poweroff [1].
+
+When you do not follow these rules, well, excellent datacenter-class
+SSDs have super-capacitor power banks that actually work.  Most SSDs do
+not, although they hopefully came a long way and hopefully modern SSDs
+are not as easily to brick as they were reported to be three or four
+years ago.
+
+
+[1] I have long lost the will and energy to pursue this, so *this* is a
+throw-away anecdote for anyone that cares: I reported here a few years
+ago that many models of *SATA* based SSDs from Crucial/Micron, Samsung
+and Intel were complaining (through their SMART attributes) that Linux
+was causing unsafe shutdowns.
+
+https://lkml.org/lkml/2017/4/10/1181
+
+TL;DR: wait one *extra* second after the SSD acknowleged the STOP
+command as complete before you trust the SSD device is safe to be
+powered down (i.e. before reboot, suspend, poweroff/shutdown, and device
+removal/detach).  This worked around the issue for every vendor and
+model of SSD we tested.
+
 -- 
-2.25.1
-
-
-
+  Henrique Holschuh
