@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25776C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBD5206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E762073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943210;
-	bh=/bg1x58Ag6ikIYmW32Pb0XFrnZpo+mvVuewEt2vywmA=;
+	s=default; t=1592943216;
+	bh=T5OdWZpmKmI0YXdOZW0OM8SJtXzWE8Mg9kUKTxJwYNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbIBKPrcxI2hRpfc46k8QVg1yfeHjaaIjxTx/BVl8Op+IscSaOR3qN0Z+t+RTcBGc
-	 yjbep0KGxNvVlHq0j3Vg+tKeKR2fWNH+xCk95HR5PqU9EmjonFeY+SKw9y/QYu+Z8P
-	 VgeVt3lUFGz3GzeRieIZua+cUXlOF4iHgwwUAFvc=
+	b=KWDe66xw49qomz80yFIyLD7dfvcq4m2nOa6n6MeVD5veYMSd4xQ8VNPmhXOBDgPYt
+	 cWvS0j2lkstmgGFPwOc5uILTbcNbmNETEXdjEwC2LRKNzoVXGmYnJopcoOam/vhmib
+	 qmpjXJB4JlY76u69UKE//afwt5ZS7h+s8I5NxdN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389089AbgFWUN2 (ORCPT
+        id S2388218AbgFWUNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:13:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:13:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388879AbgFWUNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:13:24 -0400
+        id S2388585AbgFWUN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA3072078A;
-        Tue, 23 Jun 2020 20:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0C192145D;
+        Tue, 23 Jun 2020 20:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943204;
-        bh=/bg1x58Ag6ikIYmW32Pb0XFrnZpo+mvVuewEt2vywmA=;
+        s=default; t=1592943209;
+        bh=T5OdWZpmKmI0YXdOZW0OM8SJtXzWE8Mg9kUKTxJwYNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvE9NrobvSE0hP/tyZpmkvYy+E8IQG6k2JrDwUYGI7xOkfEq2bY72xYGQCMKSC+aL
-         44Cvx5UOTxE4Glr3magfNI9mI0wCaME0k2sYiIXqhOFayqVKHkcQzVP7Wwi3VE8OP3
-         cA9v1Wz5ue+bXKINqtTGQVkGOOBZeprpjCOXYl/A=
+        b=G4x+t9kXaTFQUpI2PTzM+rwBAYjLa3b0ZIdtTSeG5nXXoEjI1n7rg3+Ux5YSWE8xY
+         y04nORhr2rHS0dd3sQqnc7lHjIGjWsqY7PRd7f9w918msVLiz2Kow5ZTbSkWEVd2Bt
+         KcdSTDH7JNyuUd44NNvpUJ1Mooy6KcAc+cvF49Uo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 299/477] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
-Date:   Tue, 23 Jun 2020 21:54:56 +0200
-Message-Id: <20200623195421.683894250@linuxfoundation.org>
+Subject: [PATCH 5.7 272/477] mfd: wcd934x: Drop kfree for memory allocated with devm_kzalloc
+Date:   Tue, 23 Jun 2020 21:54:29 +0200
+Message-Id: <20200623195420.422611082@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,44 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
+[ Upstream commit 652b7b6740eb52d98377a881c7730e36997f00ab ]
 
-fsl_asrc_dma_hw_params() invokes dma_request_channel() or
-fsl_asrc_get_dma_channel(), which returns a reference of the specified
-dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
+It's not necessary to free memory allocated with devm_kzalloc
+and using kfree leads to a double free.
 
-The reference counting issue happens in one exception handling path of
-fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
-the function forgets to decrease the refcnt increased by
-dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
-leak.
-
-Fix this issue by calling dma_release_channel() when config DMA channel
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 6ac7e4d7ad70 ("mfd: wcd934x: Add support to wcd9340/wcd9341 codec")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_asrc_dma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/wcd934x.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index e7178817d7a75..1ee10eafe3e6a 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -252,6 +252,7 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
- 	if (ret) {
- 		dev_err(dev, "failed to config DMA channel for Back-End\n");
-+		dma_release_channel(pair->dma_chan[dir]);
- 		return ret;
- 	}
+diff --git a/drivers/mfd/wcd934x.c b/drivers/mfd/wcd934x.c
+index 90341f3c68101..da910302d51a2 100644
+--- a/drivers/mfd/wcd934x.c
++++ b/drivers/mfd/wcd934x.c
+@@ -280,7 +280,6 @@ static void wcd934x_slim_remove(struct slim_device *sdev)
  
+ 	regulator_bulk_disable(WCD934X_MAX_SUPPLY, ddata->supplies);
+ 	mfd_remove_devices(&sdev->dev);
+-	kfree(ddata);
+ }
+ 
+ static const struct slim_device_id wcd934x_slim_id[] = {
 -- 
 2.25.1
 
