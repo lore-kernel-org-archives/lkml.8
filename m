@@ -2,101 +2,119 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2E6E20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D5C2077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592889697;
-	bh=qcj1oy+YsTeJkEmfabJGHIuEEm8lk09hF25nMTjyERE=;
+	s=default; t=1592889752;
+	bh=bRSmFiLcHDdUZV1lLofJRbU6hkCpvLtaGBck/D3vn9A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FUAzDaSAHT8RDERqzrL0ZpRZhX0Nyp8Y/Qn6yeVqaJN6D5ZXciW/xFY5xbpK5us3T
-	 ccM7kg61Mq38lqmQb+Ytu++xSnZkH4ZRd84I1+DiacXoK9wiRIOOCby3kwcSwDYkaR
-	 tXlCkF95wb3NoXsDWyaHdnflZFvuRWEQ+cTPzBm8=
+	b=hzpr0P8qhBjpM1Bn/iQsssFBObK44QqkXk6fPDXgQQHnNN0sdTI3ry9M92cShZfiF
+	 exo8tvKkaVH7tYTGHvE9Dq76BQlqIBWg1HXGBQ2Zo7dvzIQa6c13vjMN8tK6rYfdiw
+	 rT2t0mvm96I1WgjncLQdmD2Fzy1Wry1O7u9Ly2V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgFWFVg (ORCPT
+        id S1730250AbgFWFWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:21:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 01:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbgFWFVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:21:35 -0400
+        id S1728496AbgFWFWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 01:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C63D20716;
-        Tue, 23 Jun 2020 05:21:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E8DE20716;
+        Tue, 23 Jun 2020 05:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592889694;
-        bh=qcj1oy+YsTeJkEmfabJGHIuEEm8lk09hF25nMTjyERE=;
+        s=default; t=1592889749;
+        bh=bRSmFiLcHDdUZV1lLofJRbU6hkCpvLtaGBck/D3vn9A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Fyh2tiwsePA0O2LLe0TAZc+hz15iln34sieHfLaAeUJuVmnxM5OJ5Ux62qJQVhgi7
-         VLlObODIYUGEZzx2goMBOCcqTUEQIcTnrBvCw/5PWvijhG2/f8dC43vODx5FzKVxhv
-         gK13FqhYguejHu8T5BiIQ4l1Da6EVs6xTtnmNrcc=
-Date:   Tue, 23 Jun 2020 07:21:28 +0200
+        b=kGwhuJ3POJsHPXPg+IwKqyBkudr/5DcI6PTwz3rxY6d36unPPXRADtNrMfTZAr1VP
+         XmTJyDNr/dkfyLp2k6fe3mD2SVpLy/b25B/GtWXTJe/oiHlAPMMLkpfiavZs5Gf6zn
+         VK2Lk2BRO3X9FWi+uLxTx1hkP30cmh92jHXvvzPc=
+Date:   Tue, 23 Jun 2020 07:22:24 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Cc:     Tejun Heo <tj@kernel.org>, Ian Kent <raven@themaw.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-Message-ID: <20200623052128.GB2252466@kroah.com>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
- <20200622174845.GB13061@mtj.duckdns.org>
- <20200622180306.GA1917323@kroah.com>
- <f9106e08-069d-1e58-96b1-6c63d2c62c16@linux.vnet.ibm.com>
+To:     Todd Kjos <tkjos@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Brauner <christian@brauner.io>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] binder: fix null deref of proc->context
+Message-ID: <20200623052224.GC2252466@kroah.com>
+References: <20200622200715.114382-1-tkjos@google.com>
+ <20200622200955.unq7elx2ry2vrnfe@wittgenstein>
+ <CAHRSSExVfUhkXzhuEUvUP-CTwSE7ExWwYCL8K_N+YABW9C1BzQ@mail.gmail.com>
+ <CAHRSSEzms6-4zvTXDG6PTcgHx1vev343DRWXxV2kZDqpop1=GQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f9106e08-069d-1e58-96b1-6c63d2c62c16@linux.vnet.ibm.com>
+In-Reply-To: <CAHRSSEzms6-4zvTXDG6PTcgHx1vev343DRWXxV2kZDqpop1=GQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 02:27:38PM -0700, Rick Lindsley wrote:
+On Mon, Jun 22, 2020 at 01:59:04PM -0700, Todd Kjos wrote:
+> On Mon, Jun 22, 2020 at 1:18 PM Todd Kjos <tkjos@google.com> wrote:
+> >
+> > On Mon, Jun 22, 2020 at 1:09 PM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> > >
+> > > On Mon, Jun 22, 2020 at 01:07:15PM -0700, Todd Kjos wrote:
+> > > > The binder driver makes the assumption proc->context pointer is invariant after
+> > > > initialization (as documented in the kerneldoc header for struct proc).
+> > > > However, in commit f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+> > > > proc->context is set to NULL during binder_deferred_release().
+> > > >
+> > > > Another proc was in the middle of setting up a transaction to the dying
+> > > > process and crashed on a NULL pointer deref on "context" which is a local
+> > > > set to &proc->context:
+> > > >
+> > > >     new_ref->data.desc = (node == context->binder_context_mgr_node) ? 0 : 1;
+> > > >
+> > > > Here's the stack:
+> > > >
+> > > > [ 5237.855435] Call trace:
+> > > > [ 5237.855441] binder_get_ref_for_node_olocked+0x100/0x2ec
+> > > > [ 5237.855446] binder_inc_ref_for_node+0x140/0x280
+> > > > [ 5237.855451] binder_translate_binder+0x1d0/0x388
+> > > > [ 5237.855456] binder_transaction+0x2228/0x3730
+> > > > [ 5237.855461] binder_thread_write+0x640/0x25bc
+> > > > [ 5237.855466] binder_ioctl_write_read+0xb0/0x464
+> > > > [ 5237.855471] binder_ioctl+0x30c/0x96c
+> > > > [ 5237.855477] do_vfs_ioctl+0x3e0/0x700
+> > > > [ 5237.855482] __arm64_sys_ioctl+0x78/0xa4
+> > > > [ 5237.855488] el0_svc_common+0xb4/0x194
+> > > > [ 5237.855493] el0_svc_handler+0x74/0x98
+> > > > [ 5237.855497] el0_svc+0x8/0xc
+> > > >
+> > > > The fix is to move the kfree of the binder_device to binder_free_proc()
+> > > > so the binder_device is freed when we know there are no references
+> > > > remaining on the binder_proc.
+> > > >
+> > > > Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+> > > > Signed-off-by: Todd Kjos <tkjos@google.com>
+> >
+> > Forgot to include stable. The issue was introduced in 5.6, so fix needed in 5.7.
+> > Cc: stable@vger.kernel.org # 5.7
 > 
-> On Mon, Jun 22, 2020 at 01:48:45PM -0400, Tejun Heo wrote:
-> 
-> > It should be obvious that representing each consecutive memory range with a
-> > separate directory entry is far from an optimal way of representing
-> > something like this. It's outright silly.
-> 
-> On 6/22/20 11:03 AM, Greg Kroah-Hartman wrote:
-> 
-> > I agree.  And again, Ian, you are just "kicking the problem down the
-> > road" if we accept these patches.  Please fix this up properly so that
-> > this interface is correctly fixed to not do looney things like this.
-> 
-> Given that we cannot change the underlying machine representation of
-> this hardware, what do you (all, not just you Greg) consider to be
-> "properly"?
+> Turns out the patch with the issue was also backported to 5.4.y, so
+> the fix is needed there too.
 
-Change the userspace representation of the hardware then.  Why does
-userspace care about so many individual blocks, what happens if you
-provide them a larger granularity?  I can't imagine userspace really
-wants to see 20k devices and manage them individually, where is the code
-that does that?
-
-What happens if you delay adding the devices until after booting?
-Userspace should be event driven and only handle things after it sees
-the devices being present, so try delaying and seeing what happens to
-prevent this from keeping boot from progressing.
+With the fixes tag in there and cc: stable, it will get to the proper
+trees no matter how far back it was backported :)
 
 thanks,
 
