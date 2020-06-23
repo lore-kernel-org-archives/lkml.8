@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F05C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0797FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D07520C09
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C943820781
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592870992;
-	bh=5NMjRuK6gvsvEYyIQaANOY2aNGclRQmhcrdEIQW/hxg=;
+	s=default; t=1592871000;
+	bh=qcJ/5t5PNa6BkRezuac2p2g5ttgTxTLc8Bz2YwjcuB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=caZ2hIUh/9OIqbnvbIwju7RpnTg+MpmKtMqoG26oGJlntkRSoZChpgCLDSmSETVjg
-	 4iPU/2jdjTDsYsAD+buEgf5JdvZJOQ9NxUeq+1sRQKifzFgcfgSSTY7oSjVfUMe4+T
-	 AjDRQmsMD/qj0oNA8mpsVDslxGKaWyI5zUceBLyU=
+	b=kl5Msd8FGUiFjMPFztJoJkuuva2WYAfN9BWvWHD8J0Zf7/oauxAVRfSkZLnzrsRUC
+	 DUggi3hVlz6wUJa0nU7DnJxH8i/vfwbLsCj/tZ3P7RCzsseWsO0vITYTf6rc5gjdVL
+	 BBhW9CjpRsYSJirdSoeGvjObUFYQwrg/0R+pMylQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731518AbgFWAJv (ORCPT
+        id S1731556AbgFWAJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43490 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:09:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731410AbgFWAJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:09:50 -0400
+        id S1731410AbgFWAJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:09:52 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DFBF2076A;
-        Tue, 23 Jun 2020 00:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74A70208B8;
+        Tue, 23 Jun 2020 00:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592870989;
-        bh=5NMjRuK6gvsvEYyIQaANOY2aNGclRQmhcrdEIQW/hxg=;
+        s=default; t=1592870991;
+        bh=qcJ/5t5PNa6BkRezuac2p2g5ttgTxTLc8Bz2YwjcuB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKmLMg+/GVQ+tjg849OL4yRSka7Lg1QxFF+aUHZDJfpkS4PzrG0BW8vJ0+L5Ydk6P
-         QCsUHNOedVyBhLgSr15y+bXAm6igtGdoomUI74PL2Ds1gDpV1COUH+7ww7XRBS9rlp
-         X0mGNGrfgznOaCtltzIDoAEq63LPXKrbhd68HFO8=
+        b=ytZkkAUON7BtJEPUwX6uSeyp8ttPfTtQaBHsBuRzRQi3EGvcN7oLLLm4krM9lLkt5
+         vj9NDEsD3s8MkhmtPqJBVo2usrSTUBLEZLw5nDk07/8xHhYO3fHyX3GH3RHYUI7Rxb
+         7t99EVSp0WCnaIOMfvAjmBChxqULWDkx7OscvCsY=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 01/10] docs: RCU: Convert checklist.txt to ReST
-Date:   Mon, 22 Jun 2020 17:09:38 -0700
-Message-Id: <20200623000947.25222-1-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 10/10] doc: Tasks RCU must protect instructions before trampoline
+Date:   Mon, 22 Jun 2020 17:09:47 -0700
+Message-Id: <20200623000947.25222-10-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623000923.GA25047@paulmck-ThinkPad-P72>
 References: <20200623000923.GA25047@paulmck-ThinkPad-P72>
@@ -60,92 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-- Add a SPDX header;
-- Adjust document title;
-- Some whitespace fixes and new line breaks;
-- Use the right list markups;
-- Add it to RCU/index.rst.
+Protecting the code in a trampoline can also require protecting a
+number of instructions prior to actually entering the trampoline.
+For example, these earlier instructions might be computing the address
+of the trampoline.  This commit therefore updates RCU's requirements to
+record this for posterity.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Link: https://lore.kernel.org/lkml/20200511154824.09a18c46@gandalf.local.home/
+Reported-by: Lai Jiangshan <jiangshanlai@gmail.com>
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/RCU/{checklist.txt => checklist.rst} | 17 ++++++++++++-----
- Documentation/RCU/index.rst                        |  3 +++
- 2 files changed, 15 insertions(+), 5 deletions(-)
- rename Documentation/RCU/{checklist.txt => checklist.rst} (98%)
+ Documentation/RCU/Design/Requirements/Requirements.rst | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/RCU/checklist.txt b/Documentation/RCU/checklist.rst
-similarity index 98%
-rename from Documentation/RCU/checklist.txt
-rename to Documentation/RCU/checklist.rst
-index e98ff26..2efed99 100644
---- a/Documentation/RCU/checklist.txt
-+++ b/Documentation/RCU/checklist.rst
-@@ -1,4 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+================================
- Review Checklist for RCU Patches
-+================================
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.rst b/Documentation/RCU/Design/Requirements/Requirements.rst
+index 75b8ca0..a69b5c4 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.rst
++++ b/Documentation/RCU/Design/Requirements/Requirements.rst
+@@ -2583,7 +2583,12 @@ not work to have these markers in the trampoline itself, because there
+ would need to be instructions following ``rcu_read_unlock()``. Although
+ ``synchronize_rcu()`` would guarantee that execution reached the
+ ``rcu_read_unlock()``, it would not be able to guarantee that execution
+-had completely left the trampoline.
++had completely left the trampoline. Worse yet, in some situations
++the trampoline's protection must extend a few instructions *prior* to
++execution reaching the trampoline.  For example, these few instructions
++might calculate the address of the trampoline, so that entering the
++trampoline would be pre-ordained a surprisingly long time before execution
++actually reached the trampoline itself.
  
- 
- This document contains a checklist for producing and reviewing patches
-@@ -411,18 +415,21 @@ over a rather long period of time, but improvements are always welcome!
- 	__rcu sparse checks to validate your RCU code.	These can help
- 	find problems as follows:
- 
--	CONFIG_PROVE_LOCKING: check that accesses to RCU-protected data
-+	CONFIG_PROVE_LOCKING:
-+		check that accesses to RCU-protected data
- 		structures are carried out under the proper RCU
- 		read-side critical section, while holding the right
- 		combination of locks, or whatever other conditions
- 		are appropriate.
- 
--	CONFIG_DEBUG_OBJECTS_RCU_HEAD: check that you don't pass the
-+	CONFIG_DEBUG_OBJECTS_RCU_HEAD:
-+		check that you don't pass the
- 		same object to call_rcu() (or friends) before an RCU
- 		grace period has elapsed since the last time that you
- 		passed that same object to call_rcu() (or friends).
- 
--	__rcu sparse checks: tag the pointer to the RCU-protected data
-+	__rcu sparse checks:
-+		tag the pointer to the RCU-protected data
- 		structure with __rcu, and sparse will warn you if you
- 		access that pointer without the services of one of the
- 		variants of rcu_dereference().
-@@ -442,8 +449,8 @@ over a rather long period of time, but improvements are always welcome!
- 
- 	You instead need to use one of the barrier functions:
- 
--	o	call_rcu() -> rcu_barrier()
--	o	call_srcu() -> srcu_barrier()
-+	-	call_rcu() -> rcu_barrier()
-+	-	call_srcu() -> srcu_barrier()
- 
- 	However, these barrier functions are absolutely -not- guaranteed
- 	to wait for a grace period.  In fact, if there are no call_rcu()
-diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
-index 81a0a1e..c1ba4d1 100644
---- a/Documentation/RCU/index.rst
-+++ b/Documentation/RCU/index.rst
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
- .. _rcu_concepts:
- 
- ============
-@@ -8,6 +10,7 @@ RCU concepts
-    :maxdepth: 3
- 
-    arrayRCU
-+   checklist
-    rcubarrier
-    rcu_dereference
-    whatisRCU
+ The solution, in the form of `Tasks
+ RCU <https://lwn.net/Articles/607117/>`__, is to have implicit read-side
 -- 
 2.9.5
 
