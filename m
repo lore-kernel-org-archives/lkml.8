@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A101CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25052C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7974E20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E8F2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944831;
-	bh=zL1tgBndNvcMMpigpZ68nQ3q4OHIHr57WZJs4hdzZ2U=;
+	s=default; t=1592944836;
+	bh=8C0qYZRp2nMNQzJmlTrpk8LQ/2JNVPCalkgNJ/+eiJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfMgjAVhs7pBHfuMfPjQgkm8o+WfBL4WiaHgd3ELBpOlZWy5MN3u23Tqq2zTJTzdY
-	 lAS16zmfzjSkwmikSEXuMz/EC1/V6Yexjskqh46jwOhf0P+TnmHv5yI9G6pEnFFD1R
-	 OYiIgVeTEDhRhJZlE7Jipn9Ua8tnsB7/7A+HWWHA=
+	b=S218st2MF632Qdc3i0pqVhDpOLCzLGQF6mxIwvLte+8NYualEE3POXCz75DXAlZll
+	 mOhxfGRewdR9uvUkS3IR7g2fviUXuwypPg8JZtsx5AbJIm4hwz3tUAxvEbakFMrOnL
+	 rksSDqS/KwSC6pzGd5DxV6ag3cD3FpfHhJ9GYalQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392237AbgFWUk2 (ORCPT
+        id S2392243AbgFWUkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36490 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392229AbgFWUk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:26 -0400
+        id S2392229AbgFWUka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:40:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87DD52070E;
-        Tue, 23 Jun 2020 20:40:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F2C52053B;
+        Tue, 23 Jun 2020 20:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944827;
-        bh=zL1tgBndNvcMMpigpZ68nQ3q4OHIHr57WZJs4hdzZ2U=;
+        s=default; t=1592944829;
+        bh=8C0qYZRp2nMNQzJmlTrpk8LQ/2JNVPCalkgNJ/+eiJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/T0zzAeE9V2G1wHBC7oDONa9Prn0Ar9lqYYKKzklzfuismLp3Skir7Y3xVh6SFjc
-         Ix6RNftMb066LFTgpnTVSBG33iT8zspKb968ch+iVMTCtkwYOHPswgDOLLIVFoR3J3
-         UlY/lF4er1Oz+GCAORy+Jn6bP0oV2iVy1RpPpzpo=
+        b=Dcv5kUiEAULtsShru82Ir6s5OpvoNT02Gsnguco9alLCOGGOQSLghInkYaNv6OUe2
+         cp6ZCX6aAjnLo8Ccsnf24MBcbhV6ILg8Qk+hoyxI9DD/hX5AOyW/qM9UJW0XRWtQSw
+         t2eQwxLDfkX0UA2fNUrDujbPFbQTOux/2yg0DPoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 141/206] blktrace: fix endianness for blk_log_remap()
-Date:   Tue, 23 Jun 2020 21:57:49 +0200
-Message-Id: <20200623195323.919991421@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 142/206] gfs2: fix use-after-free on transaction ail lists
+Date:   Tue, 23 Jun 2020 21:57:50 +0200
+Message-Id: <20200623195323.968867013@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,62 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 5aec598c456fe3c1b71a1202cbb42bdc2a643277 ]
+[ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
 
-The function blk_log_remap() can be simplified by removing the
-call to get_pdu_remap() that copies the values into extra variable to
-print the data, which also fixes the endiannness warning reported by
-sparse.
+Before this patch, transactions could be merged into the system
+transaction by function gfs2_merge_trans(), but the transaction ail
+lists were never merged. Because the ail flushing mechanism can run
+separately, bd elements can be attached to the transaction's buffer
+list during the transaction (trans_add_meta, etc) but quickly moved
+to its ail lists. Later, in function gfs2_trans_end, the transaction
+can be freed (by gfs2_trans_end) while it still has bd elements
+queued to its ail lists, which can cause it to either lose track of
+the bd elements altogether (memory leak) or worse, reference the bd
+elements after the parent transaction has been freed.
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Although I've not seen any serious consequences, the problem becomes
+apparent with the previous patch's addition of:
+
+	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
+
+to function gfs2_trans_free().
+
+This patch adds logic into gfs2_merge_trans() to move the merged
+transaction's ail lists to the sdp transaction. This prevents the
+use-after-free. To do this properly, we need to hold the ail lock,
+so we pass sdp into the function instead of the transaction itself.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ fs/gfs2/log.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 42027cf4ea91e..b7e1e09a0bef5 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1271,17 +1271,6 @@ static __u64 get_pdu_int(const struct trace_entry *ent, bool has_cg)
- 	return be64_to_cpu(*val);
- }
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index d3f0612e33471..06752db213d21 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -877,8 +877,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
+  * @new: New transaction to be merged
+  */
  
--static void get_pdu_remap(const struct trace_entry *ent,
--			  struct blk_io_trace_remap *r, bool has_cg)
--{
--	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
--	__u64 sector_from = __r->sector_from;
--
--	r->device_from = be32_to_cpu(__r->device_from);
--	r->device_to   = be32_to_cpu(__r->device_to);
--	r->sector_from = be64_to_cpu(sector_from);
--}
--
- typedef void (blk_log_action_t) (struct trace_iterator *iter, const char *act,
- 	bool has_cg);
- 
-@@ -1407,13 +1396,13 @@ static void blk_log_with_error(struct trace_seq *s,
- 
- static void blk_log_remap(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
+-static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
++static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
  {
--	struct blk_io_trace_remap r = { .device_from = 0, };
-+	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
++	struct gfs2_trans *old = sdp->sd_log_tr;
++
+ 	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
  
--	get_pdu_remap(ent, &r, has_cg);
- 	trace_seq_printf(s, "%llu + %u <- (%d,%d) %llu\n",
- 			 t_sector(ent), t_sec(ent),
--			 MAJOR(r.device_from), MINOR(r.device_from),
--			 (unsigned long long)r.sector_from);
-+			 MAJOR(be32_to_cpu(__r->device_from)),
-+			 MINOR(be32_to_cpu(__r->device_from)),
-+			 be64_to_cpu(__r->sector_from));
+ 	old->tr_num_buf_new	+= new->tr_num_buf_new;
+@@ -890,6 +892,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
+ 
+ 	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
+ 	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
++
++	spin_lock(&sdp->sd_ail_lock);
++	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
++	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
++	spin_unlock(&sdp->sd_ail_lock);
  }
  
- static void blk_log_plug(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
+ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+@@ -901,7 +908,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+ 	gfs2_log_lock(sdp);
+ 
+ 	if (sdp->sd_log_tr) {
+-		gfs2_merge_trans(sdp->sd_log_tr, tr);
++		gfs2_merge_trans(sdp, tr);
+ 	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
+ 		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
+ 		sdp->sd_log_tr = tr;
 -- 
 2.25.1
 
