@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F22C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16E6920702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850A320702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944373;
-	bh=BuHtDyIL+/1LfFaZxMMQgvnNoWYsGzWxgoMN6OTKQ2E=;
+	s=default; t=1592944379;
+	bh=PiYBw99wmfKJ//27nR5ikWPerKfd4ko8JO+p5q8jgSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAgwzWNvlSwdHjN+VGwvBhq2rJEvSm0c6OtPLVctnZso68jY1C3buaNtNDXa7SNo9
-	 ZyLp8dsslN9Ha6GKi+npIuZ6Of27EJ7YCGKxnMDZDMJUq384cN3Ue5Vg661opKXvul
-	 ZAsY2EBDhd/58LBTsuT0wNHQOnxUqF6ypzHfy32s=
+	b=pefyckClH4Z0G/1hsGbEywySJnGYoikySsDagllGTVGxehLHqH2uYHGECavMdDubr
+	 DAVuZcbGGv+/CFJDfblajZt4iUhx0reLT7LwaZhwzvm9qqPP+w/S/oojgjWTUpPd9J
+	 4L/tFc1N6vkfGawn30cfPbVi5B32K1wSJqjzILvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391117AbgFWUcv (ORCPT
+        id S2391358AbgFWUc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53778 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:32:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391353AbgFWUcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:32:46 -0400
+        id S2391354AbgFWUcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:32:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A613206C3;
-        Tue, 23 Jun 2020 20:32:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B20BD206C3;
+        Tue, 23 Jun 2020 20:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944366;
-        bh=BuHtDyIL+/1LfFaZxMMQgvnNoWYsGzWxgoMN6OTKQ2E=;
+        s=default; t=1592944371;
+        bh=PiYBw99wmfKJ//27nR5ikWPerKfd4ko8JO+p5q8jgSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KcHnIsaJpeNy1KxC35DNwmYijRBuqYvJVd3mOrZpDkrE1x5ntS65P5HKdC3XVoS0B
-         elqXglKuVNlqBheQAh5ogu6iCK4RNF9wWPXS4xFzcW66sLDqgWwAKda3T8VOQJFARa
-         Egkz9gBPoypk52A//fY0ain/J98F15p261byx7Yw=
+        b=jwL/yGqSJS6CkE6jF3EspmDtb27Ayqip3nSpRaLDbbjQTpVKKmxolx74lmvzng9+4
+         swdV9Q/5RljIYP4x5fogx9Veo8XKSTT/N/xrTOyOrESG22LzK1C3zi5SJnUuFjfCxi
+         dZR4fqOG8R4n5VoTwGMh15BWFtjjzXSUteZzEmm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 277/314] mvpp2: remove module bugfix
-Date:   Tue, 23 Jun 2020 21:57:52 +0200
-Message-Id: <20200623195352.197436951@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 279/314] libata: Use per port sync for detach
+Date:   Tue, 23 Jun 2020 21:57:54 +0200
+Message-Id: <20200623195352.290658446@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,56 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Auhagen <sven.auhagen@voleatech.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 807eaf99688ce162a98a7501477644782d4af098 ]
+[ Upstream commit b5292111de9bb70cba3489075970889765302136 ]
 
-The remove function does not destroy all
-BM Pools when per cpu pool is active.
+Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
+detach") may cause system freeze during suspend.
 
-When reloading the mvpp2 as a module the BM Pools
-are still active in hardware and due to the bug
-have twice the size now old + new.
+Using async_synchronize_full() in PM callbacks is wrong, since async
+callbacks that are already scheduled may wait for not-yet-scheduled
+callbacks, causes a circular dependency.
 
-This eventually leads to a kernel crash.
+Instead of using big hammer like async_synchronize_full(), use async
+cookie to make sure port probe are synced, without affecting other
+scheduled PM callbacks.
 
-v2:
-* add Fixes tag
-
-Fixes: 7d04b0b13b11 ("mvpp2: percpu buffers")
-Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 130f4caf145c ("libata: Ensure ata_port probe has completed before detach")
+Suggested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: John Garry <john.garry@huawei.com>
+BugLink: https://bugs.launchpad.net/bugs/1867983
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/ata/libata-core.c | 11 +++++------
+ include/linux/libata.h    |  3 +++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 373b8c8328501..cf5d447af7db2 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -5925,8 +5925,8 @@ static int mvpp2_remove(struct platform_device *pdev)
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 581595b355736..35f75c691d7cf 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -41,7 +41,6 @@
+ #include <linux/workqueue.h>
+ #include <linux/scatterlist.h>
+ #include <linux/io.h>
+-#include <linux/async.h>
+ #include <linux/log2.h>
+ #include <linux/slab.h>
+ #include <linux/glob.h>
+@@ -6592,7 +6591,7 @@ int ata_host_register(struct ata_host *host, struct scsi_host_template *sht)
+ 	/* perform each probe asynchronously */
+ 	for (i = 0; i < host->n_ports; i++) {
+ 		struct ata_port *ap = host->ports[i];
+-		async_schedule(async_port_probe, ap);
++		ap->cookie = async_schedule(async_port_probe, ap);
+ 	}
+ 
+ 	return 0;
+@@ -6732,11 +6731,11 @@ void ata_host_detach(struct ata_host *host)
  {
- 	struct mvpp2 *priv = platform_get_drvdata(pdev);
- 	struct fwnode_handle *fwnode = pdev->dev.fwnode;
-+	int i = 0, poolnum = MVPP2_BM_POOLS_NUM;
- 	struct fwnode_handle *port_fwnode;
--	int i = 0;
+ 	int i;
  
- 	mvpp2_dbgfs_cleanup(priv);
+-	/* Ensure ata_port probe has completed */
+-	async_synchronize_full();
+-
+-	for (i = 0; i < host->n_ports; i++)
++	for (i = 0; i < host->n_ports; i++) {
++		/* Ensure ata_port probe has completed */
++		async_synchronize_cookie(host->ports[i]->cookie + 1);
+ 		ata_port_detach(host->ports[i]);
++	}
  
-@@ -5940,7 +5940,10 @@ static int mvpp2_remove(struct platform_device *pdev)
+ 	/* the host is dead now, dissociate ACPI */
+ 	ata_acpi_dissociate(host);
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index c44e4cfbcb16a..b9970f5bab67c 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -22,6 +22,7 @@
+ #include <linux/acpi.h>
+ #include <linux/cdrom.h>
+ #include <linux/sched.h>
++#include <linux/async.h>
  
- 	destroy_workqueue(priv->stats_queue);
+ /*
+  * Define if arch has non-standard setup.  This is a _PCI_ standard
+@@ -870,6 +871,8 @@ struct ata_port {
+ 	struct timer_list	fastdrain_timer;
+ 	unsigned long		fastdrain_cnt;
  
--	for (i = 0; i < MVPP2_BM_POOLS_NUM; i++) {
-+	if (priv->percpu_pools)
-+		poolnum = mvpp2_get_nrxqs(priv) * 2;
++	async_cookie_t		cookie;
 +
-+	for (i = 0; i < poolnum; i++) {
- 		struct mvpp2_bm_pool *bm_pool = &priv->bm_pools[i];
+ 	int			em_message_type;
+ 	void			*private_data;
  
- 		mvpp2_bm_pool_destroy(&pdev->dev, priv, bm_pool);
 -- 
 2.25.1
 
