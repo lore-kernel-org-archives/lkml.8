@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4841EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB0D20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E84620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946593;
-	bh=GBrJKVKozyTHlRWcm5NrcbYq+wS4Mz63ptKr8NV0aGc=;
+	s=default; t=1592946607;
+	bh=oInHpdmlWN717wx6ubP5AP8bxJAce1oMzk4419RoyAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b9mjwzB9PEDZvhbPzUYoK6W0GwiEOd6aONvbUNs+rv+INpUpo3yw62HMk2JQ+gEz+
-	 Q9z0E2N2oMC8Dx30tI/PfJdJBL0eGTJbKDRhLjRugy6uoejOQJewfSQiiJ0UDgh0N2
-	 RGQ2NVJsx9zPl/znlTgS5gv6LrN5SVCPlqu6AtM4=
+	b=jpDz9IFYxNKemc7JniqkiVnDL4UgGAxsCCvuGieryVs1Vq7fiJ9u/KJqJUWXB9HgO
+	 DryDUhxiziL1Z3LTUdHy81DHxZP+CnmhvjTesov9shMGjsKIepTw1hjtcx64S+6s1X
+	 srhkcdPj9tO2bLQn5+Du43ky+Wan1Of3eqDuWzsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393173AbgFWVJv (ORCPT
+        id S2393383AbgFWVKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55356 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391456AbgFWUdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:49 -0400
+        id S2391440AbgFWUdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0C6321473;
-        Tue, 23 Jun 2020 20:33:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA90D2098B;
+        Tue, 23 Jun 2020 20:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944429;
-        bh=GBrJKVKozyTHlRWcm5NrcbYq+wS4Mz63ptKr8NV0aGc=;
+        s=default; t=1592944419;
+        bh=oInHpdmlWN717wx6ubP5AP8bxJAce1oMzk4419RoyAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjYOWDbQPoOyoQ5cUJQOvFB98NdoM69R4qRFyOcMnoiVLHyE4r2gCZg9Ddd3G9K9I
-         QAgyKBGzE5OA8kotMT25b9zi/yRA7hCwU52wc3qlX2DUYIIO5QsVPfQ6D5aqUKzoOJ
-         /KVWqP0JsRsS+5FML9BrT5VaEkLw7NCz/Y9gofGw=
+        b=F1fOQqy0S3bhaxwHeiGczTHvfzmnO2HVJyREOU68q7McqU0XZVP7d+ipKAjdE90Zg
+         NqDrFibMTZjAA5LPbdmPkPA9RPbXKN2IU3GRheoW2ahyx2/muRUxeZZDeLoVT+LnP4
+         yRCGjwKbgOFoAFdM+8X6kj8dyDDe254gLA1va+VA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 261/314] usb: host: ehci-platform: add a quirk to avoid stuck
-Date:   Tue, 23 Jun 2020 21:57:36 +0200
-Message-Id: <20200623195351.423914561@linuxfoundation.org>
+Subject: [PATCH 5.4 267/314] powerpc: Fix kernel crash in show_instructions() w/DEBUG_VIRTUAL
+Date:   Tue, 23 Jun 2020 21:57:42 +0200
+Message-Id: <20200623195351.711020987@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,235 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit cc7eac1e4afdd151085be4d0341a155760388653 ]
+[ Upstream commit a6e2c226c3d51fd93636320e47cabc8a8f0824c5 ]
 
-Since EHCI/OHCI controllers on R-Car Gen3 SoCs are possible to
-be getting stuck very rarely after a full/low usb device was
-disconnected. To detect/recover from such a situation, the controllers
-require a special way which poll the EHCI PORTSC register and changes
-the OHCI functional state.
+With CONFIG_DEBUG_VIRTUAL=y, we can hit a BUG() if we take a hard
+lockup watchdog interrupt when in OPAL mode.
 
-So, this patch adds a polling timer into the ehci-platform driver,
-and if the ehci driver detects the issue by the EHCI PORTSC register,
-the ehci driver removes a companion device (= the OHCI controller)
-to change the OHCI functional state to USB Reset once. And then,
-the ehci driver adds the companion device again.
+This happens in show_instructions() if the kernel takes the watchdog
+NMI IPI, or any other interrupt, with MSR_IR == 0. show_instructions()
+updates the variable pc in the loop and the second iteration will
+result in BUG().
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/1580114262-25029-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We hit the BUG_ON due the below check in  __va()
+
+  #define __va(x)
+  ({
+  	VIRTUAL_BUG_ON((unsigned long)(x) >= PAGE_OFFSET);
+  	(void *)(unsigned long)((phys_addr_t)(x) | PAGE_OFFSET);
+  })
+
+Fix it by moving the check out of the loop. Also update nip so that
+the nip == pc check still matches.
+
+Fixes: 4dd7554a6456 ("powerpc/64: Add VIRTUAL_BUG_ON checks for __va and __pa addresses")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+[mpe: Use IS_ENABLED(), massage change log]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200524093822.423487-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-platform.c | 127 +++++++++++++++++++++++++++++++
- include/linux/usb/ehci_def.h     |   2 +-
- 2 files changed, 128 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/process.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 769749ca5961a..e4fc3f66d43bf 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -29,6 +29,8 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
-+#include <linux/sys_soc.h>
-+#include <linux/timer.h>
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
- #include <linux/usb/ehci_pdriver.h>
-@@ -44,6 +46,9 @@ struct ehci_platform_priv {
- 	struct clk *clks[EHCI_MAX_CLKS];
- 	struct reset_control *rsts;
- 	bool reset_on_resume;
-+	bool quirk_poll;
-+	struct timer_list poll_timer;
-+	struct delayed_work poll_work;
- };
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 639ceae7da9d8..bd0c258a1d5dd 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1218,29 +1218,31 @@ struct task_struct *__switch_to(struct task_struct *prev,
+ static void show_instructions(struct pt_regs *regs)
+ {
+ 	int i;
++	unsigned long nip = regs->nip;
+ 	unsigned long pc = regs->nip - (NR_INSN_TO_PRINT * 3 / 4 * sizeof(int));
  
- static const char hcd_name[] = "ehci-platform";
-@@ -118,6 +123,111 @@ static struct usb_ehci_pdata ehci_platform_defaults = {
- 	.power_off =		ehci_platform_power_off,
- };
+ 	printk("Instruction dump:");
  
-+/**
-+ * quirk_poll_check_port_status - Poll port_status if the device sticks
-+ * @ehci: the ehci hcd pointer
-+ *
-+ * Since EHCI/OHCI controllers on R-Car Gen3 SoCs are possible to be getting
-+ * stuck very rarely after a full/low usb device was disconnected. To
-+ * detect such a situation, the controllers require a special way which poll
-+ * the EHCI PORTSC register.
-+ *
-+ * Return: true if the controller's port_status indicated getting stuck
-+ */
-+static bool quirk_poll_check_port_status(struct ehci_hcd *ehci)
-+{
-+	u32 port_status = ehci_readl(ehci, &ehci->regs->port_status[0]);
-+
-+	if (!(port_status & PORT_OWNER) &&
-+	     (port_status & PORT_POWER) &&
-+	    !(port_status & PORT_CONNECT) &&
-+	     (port_status & PORT_LS_MASK))
-+		return true;
-+
-+	return false;
-+}
-+
-+/**
-+ * quirk_poll_rebind_companion - rebind comanion device to recover
-+ * @ehci: the ehci hcd pointer
-+ *
-+ * Since EHCI/OHCI controllers on R-Car Gen3 SoCs are possible to be getting
-+ * stuck very rarely after a full/low usb device was disconnected. To
-+ * recover from such a situation, the controllers require changing the OHCI
-+ * functional state.
-+ */
-+static void quirk_poll_rebind_companion(struct ehci_hcd *ehci)
-+{
-+	struct device *companion_dev;
-+	struct usb_hcd *hcd = ehci_to_hcd(ehci);
-+
-+	companion_dev = usb_of_get_companion_dev(hcd->self.controller);
-+	if (!companion_dev)
-+		return;
-+
-+	device_release_driver(companion_dev);
-+	if (device_attach(companion_dev) < 0)
-+		ehci_err(ehci, "%s: failed\n", __func__);
-+
-+	put_device(companion_dev);
-+}
-+
-+static void quirk_poll_work(struct work_struct *work)
-+{
-+	struct ehci_platform_priv *priv =
-+		container_of(to_delayed_work(work), struct ehci_platform_priv,
-+			     poll_work);
-+	struct ehci_hcd *ehci = container_of((void *)priv, struct ehci_hcd,
-+					     priv);
-+
-+	/* check the status twice to reduce misdetection rate */
-+	if (!quirk_poll_check_port_status(ehci))
-+		return;
-+	udelay(10);
-+	if (!quirk_poll_check_port_status(ehci))
-+		return;
-+
-+	ehci_dbg(ehci, "%s: detected getting stuck. rebind now!\n", __func__);
-+	quirk_poll_rebind_companion(ehci);
-+}
-+
-+static void quirk_poll_timer(struct timer_list *t)
-+{
-+	struct ehci_platform_priv *priv = from_timer(priv, t, poll_timer);
-+	struct ehci_hcd *ehci = container_of((void *)priv, struct ehci_hcd,
-+					     priv);
-+
-+	if (quirk_poll_check_port_status(ehci)) {
-+		/*
-+		 * Now scheduling the work for testing the port more. Note that
-+		 * updating the status is possible to be delayed when
-+		 * reconnection. So, this uses delayed work with 5 ms delay
-+		 * to avoid misdetection.
-+		 */
-+		schedule_delayed_work(&priv->poll_work, msecs_to_jiffies(5));
++	/*
++	 * If we were executing with the MMU off for instructions, adjust pc
++	 * rather than printing XXXXXXXX.
++	 */
++	if (!IS_ENABLED(CONFIG_BOOKE) && !(regs->msr & MSR_IR)) {
++		pc = (unsigned long)phys_to_virt(pc);
++		nip = (unsigned long)phys_to_virt(regs->nip);
 +	}
 +
-+	mod_timer(&priv->poll_timer, jiffies + HZ);
-+}
-+
-+static void quirk_poll_init(struct ehci_platform_priv *priv)
-+{
-+	INIT_DELAYED_WORK(&priv->poll_work, quirk_poll_work);
-+	timer_setup(&priv->poll_timer, quirk_poll_timer, 0);
-+	mod_timer(&priv->poll_timer, jiffies + HZ);
-+}
-+
-+static void quirk_poll_end(struct ehci_platform_priv *priv)
-+{
-+	del_timer_sync(&priv->poll_timer);
-+	cancel_delayed_work(&priv->poll_work);
-+}
-+
-+static const struct soc_device_attribute quirk_poll_match[] = {
-+	{ .family = "R-Car Gen3" },
-+	{ /* sentinel*/ }
-+};
-+
- static int ehci_platform_probe(struct platform_device *dev)
- {
- 	struct usb_hcd *hcd;
-@@ -176,6 +286,9 @@ static int ehci_platform_probe(struct platform_device *dev)
- 					  "has-transaction-translator"))
- 			hcd->has_tt = 1;
+ 	for (i = 0; i < NR_INSN_TO_PRINT; i++) {
+ 		int instr;
  
-+		if (soc_device_match(quirk_poll_match))
-+			priv->quirk_poll = true;
-+
- 		for (clk = 0; clk < EHCI_MAX_CLKS; clk++) {
- 			priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
- 			if (IS_ERR(priv->clks[clk])) {
-@@ -247,6 +360,9 @@ static int ehci_platform_probe(struct platform_device *dev)
- 	device_enable_async_suspend(hcd->self.controller);
- 	platform_set_drvdata(dev, hcd);
+ 		if (!(i % 8))
+ 			pr_cont("\n");
  
-+	if (priv->quirk_poll)
-+		quirk_poll_init(priv);
-+
- 	return err;
- 
- err_power:
-@@ -273,6 +389,9 @@ static int ehci_platform_remove(struct platform_device *dev)
- 	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
- 	int clk;
- 
-+	if (priv->quirk_poll)
-+		quirk_poll_end(priv);
-+
- 	usb_remove_hcd(hcd);
- 
- 	if (pdata->power_off)
-@@ -297,9 +416,13 @@ static int ehci_platform_suspend(struct device *dev)
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct usb_ehci_pdata *pdata = dev_get_platdata(dev);
- 	struct platform_device *pdev = to_platform_device(dev);
-+	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
- 	bool do_wakeup = device_may_wakeup(dev);
- 	int ret;
- 
-+	if (priv->quirk_poll)
-+		quirk_poll_end(priv);
-+
- 	ret = ehci_suspend(hcd, do_wakeup);
- 	if (ret)
- 		return ret;
-@@ -331,6 +454,10 @@ static int ehci_platform_resume(struct device *dev)
- 	}
- 
- 	ehci_resume(hcd, priv->reset_on_resume);
-+
-+	if (priv->quirk_poll)
-+		quirk_poll_init(priv);
-+
- 	return 0;
- }
- #endif /* CONFIG_PM_SLEEP */
-diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
-index a15ce99dfc2d6..78e0063555575 100644
---- a/include/linux/usb/ehci_def.h
-+++ b/include/linux/usb/ehci_def.h
-@@ -151,7 +151,7 @@ struct ehci_regs {
- #define PORT_OWNER	(1<<13)		/* true: companion hc owns this port */
- #define PORT_POWER	(1<<12)		/* true: has power (see PPC) */
- #define PORT_USB11(x) (((x)&(3<<10)) == (1<<10))	/* USB 1.1 device */
--/* 11:10 for detecting lowspeed devices (reset vs release ownership) */
-+#define PORT_LS_MASK	(3<<10)		/* Link status (SE0, K or J */
- /* 9 reserved */
- #define PORT_LPM	(1<<9)		/* LPM transaction */
- #define PORT_RESET	(1<<8)		/* reset port */
+-#if !defined(CONFIG_BOOKE)
+-		/* If executing with the IMMU off, adjust pc rather
+-		 * than print XXXXXXXX.
+-		 */
+-		if (!(regs->msr & MSR_IR))
+-			pc = (unsigned long)phys_to_virt(pc);
+-#endif
+-
+ 		if (!__kernel_text_address(pc) ||
+ 		    probe_kernel_address((const void *)pc, instr)) {
+ 			pr_cont("XXXXXXXX ");
+ 		} else {
+-			if (regs->nip == pc)
++			if (nip == pc)
+ 				pr_cont("<%08x> ", instr);
+ 			else
+ 				pr_cont("%08x ", instr);
 -- 
 2.25.1
 
