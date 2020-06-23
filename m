@@ -2,258 +2,149 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC627C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D15C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF22120774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08E620768
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592917380;
+	bh=rVARgibcFkfZVUTWmBpOLFpWFa3uce069mhNNvSJess=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vLa6yKpptdRV+mrISKI+ucNcvnKztrZX7wbjp4Kuekjg6Jf+AiQd363s/hhgugBoK
+	 cRuVZ9a8r4UShfP2Mrc6V0cAY51Hc/IyJ5S5bGh6IBWDd7P3gyrkXj4KhRKZ3te67A
+	 TsTuPUhmqUMriSoE/EmeL5GGZMsJVD9QRoLTO3MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732636AbgFWNCm (ORCPT
+        id S1732646AbgFWNC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:02:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:45885 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729504AbgFWNCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:02:41 -0400
-IronPort-SDR: rBRh7GIDsPaTaPRb8hH2DmKolhjsu/Yz0qCbRUR+ZBXZeWIWQxalGBCKKnX+cAT8LCvl/JShlu
- uZDaPzZ9yBMA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132460669"
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="132460669"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 06:02:19 -0700
-IronPort-SDR: o+R2OoFeoWQA/J4RHm1r+9v8/K4tYupPJS7dDz4jqfOZVec75U7bER/7+AImsM9moUAvKTpryt
- aNbDAebtm6GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="263331773"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Jun 2020 06:02:15 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jniZ6-00FMmi-6o; Tue, 23 Jun 2020 16:02:16 +0300
-Date:   Tue, 23 Jun 2020 16:02:16 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
-        arnaldo.melo@gmail.com, kafai@fb.com, songliubraving@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux@rasmusvillemoes.dk, joe@perches.com, pmladek@suse.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com, corbet@lwn.net,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 bpf-next 6/8] printk: extend test_printf to test %pT
- BTF-based format specifier
-Message-ID: <20200623130216.GW2428291@smile.fi.intel.com>
-References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
- <1592914031-31049-7-git-send-email-alan.maguire@oracle.com>
+        Tue, 23 Jun 2020 09:02:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38166 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729504AbgFWNC6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:02:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z13so8676141wrw.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 06:02:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UMeXj9gEu6mOkGGZVMZPSy0hX5G3SwwQMeJ+x4wb7Fw=;
+        b=mtYMLEX+ynv+lB2sd5XZCgZBp4YtCerG7KychD1hvSZJe8Q11PYvrpuWFL1loS1FPB
+         43n3hW7EmwcT4UFacExHW/EuSLhFWZAZWKGLi35siUGMI95D8/Vmm5LNXmFYwUVxTjsa
+         FujQl2T4ttXi2CPk9PkJ5+eGvGPRFtHzKFEBStTDgIKRSnsMO0Hca6jbROz8jvut7UVW
+         R9J6raekmT7xzGJERtGPYMHyvLQY3G+5nqUnGWBddiqlioUQl2KQxiw9WpLyOfSCry5q
+         kJSTsyBnQ0BIyOuGWtsBbXFl7IUTxBLqAZ3u1XDLR5vxyrTf5Y9FLgaJAvW3iAbztGYH
+         BqaQ==
+X-Gm-Message-State: AOAM530VCHhA+LzSxAURPUc4dczKTatpi/509ZUA/Y+3r3yk57elMdfw
+        PQXCK8bqu2EhCmqgrCnXOBk=
+X-Google-Smtp-Source: ABdhPJy5YLCs+3mTOktQ35zlgLkwkeVniXT6WxubCHI0KBKjx7wVyKuJEluxQuqxkQhz1ERPHKQn3w==
+X-Received: by 2002:adf:8444:: with SMTP id 62mr24144074wrf.278.1592917376580;
+        Tue, 23 Jun 2020 06:02:56 -0700 (PDT)
+Received: from localhost (ip-37-188-173-135.eurotel.cz. [37.188.173.135])
+        by smtp.gmail.com with ESMTPSA id 185sm3722865wmz.22.2020.06.23.06.02.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 06:02:55 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 15:02:54 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 2/2] mm/page_alloc: drop nr_free_pagecache_pages()
+Message-ID: <20200623130254.GZ31426@dhcp22.suse.cz>
+References: <20200619132410.23859-1-david@redhat.com>
+ <20200619132410.23859-3-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592914031-31049-7-git-send-email-alan.maguire@oracle.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200619132410.23859-3-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:07:09PM +0100, Alan Maguire wrote:
-> Add tests to verify basic type display and to iterate through all
-> enums, structs, unions and typedefs ensuring expected behaviour
-> occurs.  Since test_printf can be built as a module we need to
-> export a BTF kind iterator function to allow us to iterate over
-> all names of a particular BTF kind.
+On Fri 19-06-20 15:24:10, David Hildenbrand wrote:
+> nr_free_pagecache_pages() isn't used outside page_alloc.c anymore - and
+> the name does not really help to understand what's going on. Let's inline
+> it instead and add a comment.
 > 
-> These changes add up to approximately 20,000 new tests covering
-> all enum, struct, union and typedefs in vmlinux BTF.
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+nr_free_pagecache_pages was an awkward name which kind of makes sense
+but it is terribly confusing (e.g. there are pagecache consumers
+restricted to lowmem zones only).
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  include/linux/swap.h |  1 -
+>  mm/page_alloc.c      | 16 ++--------------
+>  2 files changed, 2 insertions(+), 15 deletions(-)
 > 
-> Individual tests are also added for int, char, struct, enum
-> and typedefs which verify output is as expected.
-
-...
-
->  #include <linux/mm.h>
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 124261acd5d0a..9bde6c6b2c045 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -327,7 +327,6 @@ void workingset_update_node(struct xa_node *node);
+>  /* linux/mm/page_alloc.c */
+>  extern unsigned long totalreserve_pages;
+>  extern unsigned long nr_free_buffer_pages(void);
+> -extern unsigned long nr_free_pagecache_pages(void);
 >  
->  #include <linux/property.h>
-
-+ blank line, you see, headers are grouped.
-
-> +#include <linux/bpf.h>
-> +#include <linux/btf.h>
-> +#include <linux/skbuff.h>
-
-> +#define	__TEST_BTF(fmt, type, ptr, expected)				       \
-> +	test(expected, "%pT"fmt, ptr)
-> +
-> +#define TEST_BTF_C(type, var, ...)					       \
-> +	do {								       \
-> +		type var = __VA_ARGS__;					       \
-> +		struct btf_ptr *ptr = BTF_PTR_TYPE(&var, type);		       \
-
-> +		pr_debug("type %s: %pTc", #type, ptr);			       \
-
-Hmm... Can't we modify test() (or underneath macros / functions) to do this?
-
-> +		__TEST_BTF("c", type, ptr, "(" #type ")" #__VA_ARGS__);	       \
-> +	} while (0)
-> +
-> +#define TEST_BTF(fmt, type, var, expected, ...)				       \
-> +	do {								       \
-> +		type var = __VA_ARGS__;					       \
-> +		struct btf_ptr *ptr = BTF_PTR_TYPE(&var, type);		       \
-> +		pr_debug("type %s: %pT"fmt, #type, ptr);		       \
-> +		__TEST_BTF(fmt, type, ptr, expected);			       \
-> +	} while (0)
-
-...
-
-> +static void __init
-> +btf_print_kind(u8 kind, const char *kind_name, u64 fillval)
-> +{
-
-> +	const char *fmt1 = "%pT", *fmt2 = "%pTN", *fmt3 = "%pT0";
-
-This is hard to read. Provide a simple data structure or an array.
-
-> +	const char *name, *fmt = fmt1;
-> +	int i, res1, res2, res3, res4;
-> +	char type_name[256];
-> +	char *buf, *buf2;
-> +	u8 *dummy_data;
-> +	s32 id = 0;
-> +
-> +	dummy_data = kzalloc(BTF_MAX_DATA_SIZE, GFP_KERNEL);
-
-check?
-
-> +	/* fill our dummy data with supplied fillval. */
-> +	for (i = 0; i < BTF_MAX_DATA_SIZE; i++)
-> +		dummy_data[i] = fillval;
-
-> +	buf = kzalloc(BTF_MAX_DATA_SIZE, GFP_KERNEL);
-> +	buf2 = kzalloc(BTF_MAX_DATA_SIZE, GFP_KERNEL);
-
-Ditto.
-
-> +	for (;;) {
-> +		name = btf_vmlinux_next_type_name(kind, &id);
-> +		if (!name)
-> +			break;
-> +
-> +		total_tests++;
-> +
-> +		snprintf(type_name, sizeof(type_name), "%s%s",
-> +			 kind_name, name);
-> +
-> +		res1 = snprintf(buf, BTF_MAX_DATA_SIZE, fmt1,
-> +				BTF_PTR_TYPE(dummy_data, type_name));
-> +		res2 = snprintf(buf, 0, fmt1,
-> +				BTF_PTR_TYPE(dummy_data, type_name));
-> +		res3 = snprintf(buf, BTF_MAX_DATA_SIZE, fmt2,
-> +				BTF_PTR_TYPE(dummy_data, type_name));
-> +		res4 = snprintf(buf, BTF_MAX_DATA_SIZE, fmt3,
-> +				BTF_PTR_TYPE(dummy_data, type_name));
-> +
-> +		(void) snprintf(buf, BTF_MAX_DATA_SIZE, "%pT",
-> +				BTF_PTR_TYPE(dummy_data, type_name));
-> +		(void) snprintf(buf2, BTF_MAX_DATA_SIZE, "%pT",
-> +				BTF_PTR_TYPE(dummy_data, type_name));
-> +
-> +		/*
-> +		 * Ensure return value is > 0 and identical irrespective
-> +		 * of whether we pass in a big enough buffer;
-> +		 * also ensure that printing names always results in as
-> +		 * long/longer buffer length.
-> +		 */
-> +		if (res1 <= 0 || res2 <= 0 || res3 <= 0 || res4 <= 0) {
-> +			if (res3 <= 0)
-> +				fmt = fmt2;
-> +			if (res4 <= 0)
-> +				fmt = fmt3;
-
-> +			pr_warn("snprintf(%s%s); %d <= 0 (fmt %s)",
-> +				kind_name, name,
-> +				res1 <= 0 ? res1 : res2 <= 0 ? res2 :
-> +				res3 <= 0 ? res3 : res4, fmt);
-> +			failed_tests++;
-
-For these kind of prints you can use a new macro, right?
-
-> +		} else if (res1 != res2) {
-
-> +			pr_warn("snprintf(%s%s): %d (to buf) != %d (no buf)",
-> +				kind_name, name, res1, res2);
-> +			failed_tests++;
-
-Ditto.
-
-> +		} else if (res3 > res2) {
-
-> +			pr_warn("snprintf(%s%s); %d (no names) > %d (names)",
-> +				kind_name, name, res3, res2);
-> +			failed_tests++;
-
-Ditto.
-
-> +		} else if (strcmp(buf, buf2) != 0) {
-
-> +			/* Safe and unsafe buffers should match. */
-> +			pr_warn("snprintf(%s%s); safe != unsafe",
-> +				kind_name, name);
-> +			pr_warn("safe: %s", buf);
-> +			pr_warn("unsafe: %s", buf2);
-> +			failed_tests++;
-
-Perhaps also makes sense in a macro then somebody may reuse in the future.
-That said, the first warning here somehow cryptic, please be more human friendly.
-
-> +		} else {
-> +			pr_debug("Printed %s%s (%d bytes)",
-> +				 kind_name, name, res1);
-> +		}
-> +	}
-> +	kfree(dummy_data);
-> +	kfree(buf);
-> +	kfree(buf2);
-> +}
-
-...
-
-> +	TEST_BTF_C(int, testint, 1234);
-> +	TEST_BTF("cN", int, testint, "1234", 1234);
-
-We use small letter macros in other cases. So can you?
-
-
-...
-
-> +	/* typedef struct */
-> +	TEST_BTF_C(atomic_t, testtype, {.counter = (int)1,});
-> +	TEST_BTF("cN", atomic_t, testtype, "{1,}", {.counter = 1,});
-> +	/* typedef with 0 value should be printed at toplevel */
-> +	TEST_BTF("c", atomic_t, testtype, "(atomic_t){}", {.counter = 0,});
-> +	TEST_BTF("cN", atomic_t, testtype, "{}", {.counter = 0,});
-> +	TEST_BTF("c0", atomic_t, testtype, "(atomic_t){.counter = (int)0,}",
-> +		 {.counter = 0,});
-> +	TEST_BTF("cN0", atomic_t, testtype, "{0,}", {.counter = 0,});
-
-For one type, provide a data structure filled with test data and use loops.
-Same for all similar places over the code.
-
-...
-
-> +	u64 fillvals[] = { 0x0, 0xffffffffffffffff, 0x0123456789abcdef };
-
-U64_MAX?
+>  /* Definition of global_zone_page_state not available yet */
+>  #define nr_free_pages() global_zone_page_state(NR_FREE_PAGES)
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 7b0dde69748c1..c38903d1b3b4d 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5177,19 +5177,6 @@ unsigned long nr_free_buffer_pages(void)
+>  }
+>  EXPORT_SYMBOL_GPL(nr_free_buffer_pages);
+>  
+> -/**
+> - * nr_free_pagecache_pages - count number of pages beyond high watermark
+> - *
+> - * nr_free_pagecache_pages() counts the number of pages which are beyond the
+> - * high watermark within all zones.
+> - *
+> - * Return: number of pages beyond high watermark within all zones.
+> - */
+> -unsigned long nr_free_pagecache_pages(void)
+> -{
+> -	return nr_free_zone_pages(gfp_zone(GFP_HIGHUSER_MOVABLE));
+> -}
+> -
+>  static inline void show_node(struct zone *zone)
+>  {
+>  	if (IS_ENABLED(CONFIG_NUMA))
+> @@ -5911,7 +5898,8 @@ void __ref build_all_zonelists(pg_data_t *pgdat)
+>  		__build_all_zonelists(pgdat);
+>  		/* cpuset refresh routine should be here */
+>  	}
+> -	vm_total_pages = nr_free_pagecache_pages();
+> +	/* Get the number of free pages beyond high watermark in all zones. */
+> +	vm_total_pages = nr_free_zone_pages(gfp_zone(GFP_HIGHUSER_MOVABLE));
+>  	/*
+>  	 * Disable grouping by mobility if the number of pages in the
+>  	 * system is too low to allow the mechanism to work. It would be
+> -- 
+> 2.26.2
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Michal Hocko
+SUSE Labs
