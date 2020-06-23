@@ -2,128 +2,176 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D86C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27158C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC25420771
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018EF20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="q/Wwwp8A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W4imJMlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbgFWJlX (ORCPT
+        id S1731968AbgFWJmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732026AbgFWJlW (ORCPT
+        Tue, 23 Jun 2020 05:42:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38604 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732023AbgFWJmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:41:22 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C4DC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id i25so22946885iog.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
-        b=q/Wwwp8A1BT//ycShNsM7XqmB3bG24wQBAirlMbmZaCGJ14WlIrYk1hUeGFPFvFYh9
-         18AuWxnLJ1U1xdH/pGBPRjrPFyfPQg7q+9IucqCmFfeBCfeps7rxI2SW2DoKIfLUr5up
-         QiSEWrkcSOyboUd9lJ8T7gHRuzsG0YMSv8qg4VHWp/kK/35QhddY4oGB6G4nqgWMrCZh
-         syPjBA05FOD90Sz9u5udUM+MDkSo1wLudZ9Ufcpzj9Ht4F4P+CCs4YMhBoTiJJpc3hEZ
-         C3x7fLzfiu+6I1zCZCYLoB7ldYctRJTYQSe0hOhS8cOtdYjiuOJfUpqpndg4fwtYgwqc
-         4scA==
+        Tue, 23 Jun 2020 05:42:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592905364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QoBwKmjOvInG9MfmBsLrqKkfpaZqKCYNSmoYTUfOHHE=;
+        b=W4imJMlVrdXnxVmceX+aEA5Vc0QjNCsiOIZ/YP4/e15mTqZa3dvrTqJ/Vi9YdJVop+Ad/F
+        X77hWs09TzvvUVpIOtWeIFvLPBA6x9X8PKtpgyta+JyChwSyGbYYYSCUFZzAvBi1yGreuh
+        xPFYNC5qVZGN9GyBGJnQ5L+aRMU6J4A=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-Wx1_qQ-AMCSa3ZFrMk9Jsw-1; Tue, 23 Jun 2020 05:42:43 -0400
+X-MC-Unique: Wx1_qQ-AMCSa3ZFrMk9Jsw-1
+Received: by mail-wr1-f71.google.com with SMTP id y13so1448886wrp.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 02:42:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
-        b=V4sODiZnn6rtx9ftdZPQEz3LS4vq7TESqWdX7Hv3bVdzHx7sVS92oRCRLrYc6Ih2yz
-         ijB/QrBMmkP1jhVkz0kH9laye3uced3dv0UGoWBO6E8GbQDLLSFcfR3uMRx9b/vUuXRd
-         zRdhK4DawFyd8ETUbUOwvBcIPOI3KD6f8o9F4CFZ3ru9elgoV73NI41Eb1sJ1QMGCGqF
-         aHW+3j4XWbPHTiYz1Yhb9j8ZwDV/F6IVedu9qHVm3qxMgsDDF+jHm1cSnBUgg2iAyxGV
-         P4j5o5ylrYsNUAvrAYDVg3W87yQAG1eOrFCr3LzGviW+EUC/lKbAdBjpJ4SfMHS3jEah
-         WeVw==
-X-Gm-Message-State: AOAM531ePXf5lDsLi86IgK30K6TlMoB02wRra0IKpiDYuityUsmcH9km
-        NTzkEYUi6QFcGS9AY0nK2gnS1NUVIt2YY0431zLb3g==
-X-Google-Smtp-Source: ABdhPJx3IjaiDsJ/En/rPYv6gBlyL3k6lTKfuVMMpv+FRtlkN7ZNw3o69BET+TAsLrzyXAm77vQTkunODede1IEEHSw=
-X-Received: by 2002:a02:cdc4:: with SMTP id m4mr22844233jap.57.1592905281814;
- Tue, 23 Jun 2020 02:41:21 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QoBwKmjOvInG9MfmBsLrqKkfpaZqKCYNSmoYTUfOHHE=;
+        b=WPb3ykm5vc1jvP2Bidut4/6CCZQ41N8tfdx/rEVNz20dxuPM9Vu6nMVuWSsB+PkCI4
+         zDqpMkHMCZ4CtZ9WklXMEe80acpcWoVF9tlmvfnNZD1cy+orVAU1DrwkS3SZoPvo17DF
+         KrqRcaioyICbC/872OPg89SgsPS6rZtR3s8NFZffF2cFnfOi/TbLxZ1tv0r8v45xrCZn
+         GR5bsgRYYA/rOLDsJoqDWObR9cvSLejhMmbeSu8i9THxFRb+t5IToI762vuDKeLC1OWT
+         CaIjHKTOAeJYHzk4znvjRhLq1kUFWsU53YgPMQ04+PjMgNLrTVa5gd89W77iIEzrLa3B
+         HJoA==
+X-Gm-Message-State: AOAM533mskYcjfT/lzXIP9Q6inkBkWBbj1BqASHltlDvDMMeUOEVubIc
+        Eu/FD4qq341dHaNmy7eUBCBXWZC0ch2Q25C6xjoGiJZTnHk6tyYzW0QeaXPP9hr7wprqPO3QVxu
+        tu/69u8YYBpX5Q25gAANBWq4d
+X-Received: by 2002:adf:e908:: with SMTP id f8mr1064534wrm.3.1592905361581;
+        Tue, 23 Jun 2020 02:42:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwYpabjIXBcOB9eaiLhNkEzAaSPqokuBtil8iucj5gBxqX45bVu6WVMKG+2KSXPDnKUswgA9A==
+X-Received: by 2002:adf:e908:: with SMTP id f8mr1064490wrm.3.1592905361326;
+        Tue, 23 Jun 2020 02:42:41 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id 26sm1149131wmj.25.2020.06.23.02.42.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 02:42:40 -0700 (PDT)
+Subject: Re: [PATCH v4 0/7] clean up redundant 'kvm_run' parameters
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <fe463233-d094-fca5-b4e9-c1d97124fd69@redhat.com>
+Date:   Tue, 23 Jun 2020 11:42:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-15-brgl@bgdev.pl>
- <20200622132921.GI1551@shell.armlinux.org.uk>
-In-Reply-To: <20200622132921.GI1551@shell.armlinux.org.uk>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 Jun 2020 11:41:11 +0200
-Message-ID: <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
-Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
-<linux@armlinux.org.uk> napisa=C5=82(a):
->
+On 27/04/20 06:35, Tianjia Zhang wrote:
+> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+> structure. For historical reasons, many kvm-related function parameters
+> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+> patch does a unified cleanup of these remaining redundant parameters.
+> 
+> This series of patches has completely cleaned the architecture of
+> arm64, mips, ppc, and s390 (no such redundant code on x86). Due to
+> the large number of modified codes, a separate patch is made for each
+> platform. On the ppc platform, there is also a redundant structure
+> pointer of 'kvm_run' in 'vcpu_arch', which has also been cleaned
+> separately.
 
-[snip!]
+Tianjia, can you please refresh the patches so that each architecture
+maintainer can pick them up?  Thanks very much for this work!
 
->
-> This is likely to cause issues for some PHY drivers.  Note that we have
-> some PHY drivers which register a temperature sensor in the probe
-> function, which means they can be accessed independently of the lifetime
-> of the PHY bound to the network driver (which may only be while the
-> network device is "up".)  We certainly do not want hwmon failing just
-> because the network device is down.
->
-> That's kind of worked around for the reset stuff, because there are two
-> layers to that: the mdio device layer reset support which knows nothing
-> of the PHY binding state to the network driver, and the phylib reset
-> support, but it is not nice.
->
+Paolo
 
-Regulators are reference counted so if the hwmon driver enables it
-using mdio_device_power_on() it will stay on even after the PHY driver
-calls phy_device_power_off(), right? Am I missing something?
+> 
+> ---
+> v4 change:
+>   mips: fixes two errors in entry.c.
+> 
+> v3 change:
+>   Keep the existing `vcpu->run` in the function body unchanged.
+> 
+> v2 change:
+>   s390 retains the original variable name and minimizes modification.
+> 
+> Tianjia Zhang (7):
+>   KVM: s390: clean up redundant 'kvm_run' parameters
+>   KVM: arm64: clean up redundant 'kvm_run' parameters
+>   KVM: PPC: Remove redundant kvm_run from vcpu_arch
+>   KVM: PPC: clean up redundant 'kvm_run' parameters
+>   KVM: PPC: clean up redundant kvm_run parameters in assembly
+>   KVM: MIPS: clean up redundant 'kvm_run' parameters
+>   KVM: MIPS: clean up redundant kvm_run parameters in assembly
+> 
+>  arch/arm64/include/asm/kvm_coproc.h      |  12 +--
+>  arch/arm64/include/asm/kvm_host.h        |  11 +--
+>  arch/arm64/include/asm/kvm_mmu.h         |   2 +-
+>  arch/arm64/kvm/handle_exit.c             |  36 +++----
+>  arch/arm64/kvm/sys_regs.c                |  13 ++-
+>  arch/mips/include/asm/kvm_host.h         |  32 +------
+>  arch/mips/kvm/emulate.c                  |  59 ++++--------
+>  arch/mips/kvm/entry.c                    |  21 ++---
+>  arch/mips/kvm/mips.c                     |  14 +--
+>  arch/mips/kvm/trap_emul.c                | 114 ++++++++++-------------
+>  arch/mips/kvm/vz.c                       |  26 ++----
+>  arch/powerpc/include/asm/kvm_book3s.h    |  16 ++--
+>  arch/powerpc/include/asm/kvm_host.h      |   1 -
+>  arch/powerpc/include/asm/kvm_ppc.h       |  27 +++---
+>  arch/powerpc/kvm/book3s.c                |   4 +-
+>  arch/powerpc/kvm/book3s.h                |   2 +-
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c      |  12 +--
+>  arch/powerpc/kvm/book3s_64_mmu_radix.c   |   4 +-
+>  arch/powerpc/kvm/book3s_emulate.c        |  10 +-
+>  arch/powerpc/kvm/book3s_hv.c             |  64 ++++++-------
+>  arch/powerpc/kvm/book3s_hv_nested.c      |  12 +--
+>  arch/powerpc/kvm/book3s_interrupts.S     |  17 ++--
+>  arch/powerpc/kvm/book3s_paired_singles.c |  72 +++++++-------
+>  arch/powerpc/kvm/book3s_pr.c             |  33 ++++---
+>  arch/powerpc/kvm/booke.c                 |  39 ++++----
+>  arch/powerpc/kvm/booke.h                 |   8 +-
+>  arch/powerpc/kvm/booke_emulate.c         |   2 +-
+>  arch/powerpc/kvm/booke_interrupts.S      |   9 +-
+>  arch/powerpc/kvm/bookehv_interrupts.S    |  10 +-
+>  arch/powerpc/kvm/e500_emulate.c          |  15 ++-
+>  arch/powerpc/kvm/emulate.c               |  10 +-
+>  arch/powerpc/kvm/emulate_loadstore.c     |  32 +++----
+>  arch/powerpc/kvm/powerpc.c               |  72 +++++++-------
+>  arch/powerpc/kvm/trace_hv.h              |   6 +-
+>  arch/s390/kvm/kvm-s390.c                 |  23 +++--
+>  virt/kvm/arm/arm.c                       |   6 +-
+>  virt/kvm/arm/mmio.c                      |  11 ++-
+>  virt/kvm/arm/mmu.c                       |   5 +-
+>  38 files changed, 392 insertions(+), 470 deletions(-)
+> 
 
-Bart
