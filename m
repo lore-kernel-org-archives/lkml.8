@@ -2,64 +2,84 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55910C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F44C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA1C2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080882078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 22:03:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592949798;
+	bh=Bvq9D0O/hhO4RfjRIqep/CpdeImt0qPBseiaBGu+0C4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qYSwer/SNFXmlgnL2X8Eq8txhIrKenMPehVvd+R63B8rFl2j9Cnp9erQQiXTtxpRC
+	 KDXHUjQ2PHBV72/Gi2CJFGl7ZAL2qwyu9PxgTPZ3nCUzm5sqR6Ab/fOHx1IAgAk3bG
+	 0kLGkUECRTbGqOcr83QDnyI2zUhW+JwDMgY/Z3w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389613AbgFWWCq (ORCPT
+        id S2389629AbgFWWDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387709AbgFWWCo (ORCPT
+        Tue, 23 Jun 2020 18:03:17 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:56176 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387602AbgFWWDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 18:02:44 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664D7C061573;
-        Tue, 23 Jun 2020 15:02:44 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CAACA1294A149;
-        Tue, 23 Jun 2020 15:02:43 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 15:02:43 -0700 (PDT)
-Message-Id: <20200623.150243.580522101088235218.davem@davemloft.net>
-To:     dmurphy@ti.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v10 2/5] net: phy: Add a helper to return the
- index for of the internal delay
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200623134836.21981-3-dmurphy@ti.com>
-References: <20200623134836.21981-1-dmurphy@ti.com>
-        <20200623134836.21981-3-dmurphy@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jun 2020 15:02:44 -0700 (PDT)
+        Tue, 23 Jun 2020 18:03:16 -0400
+Received: by mail-pj1-f67.google.com with SMTP id ne5so51497pjb.5;
+        Tue, 23 Jun 2020 15:03:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zr2cbrFuPDxTuDeglx6Y4wt+neydmKrKJZF2csCmx64=;
+        b=hmAUj42uQk8tLlAvcBkbicizeJjO6NBuk3HK9btTnaEOaOh1UrvSvV3Mk0bHfa5UHc
+         TppFgHY3KfC6Ts//m0AUYOE5TI0LfMYEZN0NWEcV3fQ1bGIbVDm3rUJ9xP8EpbbouH+k
+         HREKIlt7RyspUGGe70c/tIr85MKk/yy+DzM5IMt9DiPC5u0Q28xhurpfVuxO31jXCkix
+         W72P11QwI9/ZbmSz9DvrWy1Q7/ol1WCZTtUQWn0X6SGYlIxvT2jqZH/8GMa8EMA8cUW5
+         moxqIJP6V7kFmI3wYOvMAYapfqkBTH0Y4Z1+I9WbMbpmDaJFyWQRf/4WgXJwE3EMlZ09
+         JWsA==
+X-Gm-Message-State: AOAM530WVWLhkEKUe+Y018BcpLZFLEfrRqshGJfx8robyi/QKbg89d32
+        cvXc3YJ5NgviMG+59NtSwwk=
+X-Google-Smtp-Source: ABdhPJxtt5Pir2cVgspMhA/MbZOePvLcVnPr3V93XKYtegNa4j6/08YrGhW1wAtceAEXLw9OA4alYQ==
+X-Received: by 2002:a17:902:7403:: with SMTP id g3mr23759989pll.342.1592949795184;
+        Tue, 23 Jun 2020 15:03:15 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id k7sm18088717pfp.84.2020.06.23.15.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 15:03:13 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id C5E4440430; Tue, 23 Jun 2020 22:03:12 +0000 (UTC)
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, damien.lemoal@wdc.com, bvanassche@acm.org,
+        ming.lei@redhat.com, martin.petersen@oracle.com, satyat@google.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 0/2] block: kdocify the request_queue
+Date:   Tue, 23 Jun 2020 22:03:09 +0000
+Message-Id: <20200623220311.8033-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.23.0.rc1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
-Date: Tue, 23 Jun 2020 08:48:33 -0500
+Bart suggested we add docs for the degugfs_mutex, while at it I noticed
+we don't have a nice way to add docs for members of the request_queue so
+I figured I'd add one as I drive by.
 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 29ef4456ac25..96f242eed058 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
- ...
-> +static inline int phy_get_int_delay_property(struct device *dev,
-> +					     const char *name)
+Come bike shed with me.
 
-Please do not use inline in foo.c files, thank you.
+Luis Chamberlain (2):
+  block: add initial kdoc over the request_queue
+  block: move request_queue member docs to kdoc
+
+ include/linux/blkdev.h | 159 ++++++++++++++++-------------------------
+ 1 file changed, 60 insertions(+), 99 deletions(-)
+
+-- 
+2.26.2
+
