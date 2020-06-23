@@ -2,211 +2,172 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92481C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADD920723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fqnGnbPb"
+	by mail.kernel.org (Postfix) with ESMTP id 7991720724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 05:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgFWFhe (ORCPT
+        id S1730271AbgFWFqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 01:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728729AbgFWFhd (ORCPT
+        Tue, 23 Jun 2020 01:46:20 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47346 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728800AbgFWFqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 01:37:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8634BC061795
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:37:33 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z63so9568505pfb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=idedKaXt1EJFqWab4yasy7BPJ92ugrTuHXvdVtqL0wg=;
-        b=fqnGnbPb9SPh8EMXOIobo9sfxLPtDxuZFEq2L6MiBDgwhqpQTkM3AJR/USACgKv0NX
-         Gl19Qe0JAX7KBeJ9krymloYkeQwJvEOMBmtuEvbnkL4IXo1dcr3TPfO4/S6MMoQ/bTUo
-         OOIzHHltloaWwiEvC1WdaHifhluYV9TlguO7s=
+        Tue, 23 Jun 2020 01:46:19 -0400
+Received: by mail-il1-f199.google.com with SMTP id o2so3617867ilg.14
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 22:46:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=idedKaXt1EJFqWab4yasy7BPJ92ugrTuHXvdVtqL0wg=;
-        b=EqnS/ZfnHCzlDKZ3qM9QtXFOh6SiCMKWXlpavfq6wNQFulI9vZoAsXnOdQQndpQQmD
-         GC3YovPnNH0izKsmYnGj2bAf8Qrnyyf0F8W9Mlu4GKMXGKQ8CM4VJg/7xWW/HLP6BTF/
-         jhQqpbNN1nJeVoGb/LWCMamisAyewYtJZmdnd1oYk45jqlTrhNeebd2lupAycFKriPOO
-         uKPSXVNbRpQ1YtU0R4YkKaFYmLWQADEcI4ayWiyQMB3xn+0up8Nm6gn1Kll5fAddwaJY
-         N9ardUQE5SoezZPsboSa4463WaHNEZP3O1oSm4wX0Q6benj9FpYyd04JMJkmjxJuspqD
-         QH+Q==
-X-Gm-Message-State: AOAM531nd0VszSKIzzDYbwuE9BEJb7dfto6T5FWTFqOMnY25XewG3PMC
-        wnCHUzW/pdPjoITFFcPSFby9wA==
-X-Google-Smtp-Source: ABdhPJzx51qqbC2f/8K0gqCqsK4+Jp2SnJmJqntXZ7xT8RoOfJ4QNbG0GcPKmh9VLmdp02IWXvYZsQ==
-X-Received: by 2002:a63:fc09:: with SMTP id j9mr14328858pgi.308.1592890651969;
-        Mon, 22 Jun 2020 22:37:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r7sm10730405pfc.183.2020.06.22.22.37.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 22:37:30 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 22:37:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kbuild: Provide way to actually disable stack protector
-Message-ID: <202006222234.FBCEAD7F@keescook>
-References: <202006221201.3641ED037E@keescook>
- <CAK7LNAQL=XF+xvsRNTEGXtY7J-fx5FJKpMuScoxLt8SDKGB3_Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=m3fj29Hs58+7AJZSVhbEzcUdtIghVdXbW0kkcD6cJMw=;
+        b=unSI+FGvh66uMkci/ABs6hBX1BORQaIFcLOivujroxkjWtZjVM5ZcUSe7IgUBKBqVf
+         v9sWXEdD2nm52soAT3HprFlNKs9dVihQxAbX7ni4SaZno8l2sf6MzP7DFdSbYpYmjUe0
+         /tI9Fh3gzD5833QrAeIWZ+sJTGmYHJXZu05KFwV3zBqXPPRgXoR1p5lTaRTyeU1APjOy
+         Ezz0PiBs8EebXe/aIl8Uci1O8PLVFZzEmwyMA/sFYZypLFRt5h6Klw78RiYyaTu8bDU1
+         HWEd5CXok/7juPQOpIOkDkdPys+suf2sUNP+1DItenM7pp0fawxhdnfqHqrLIJAj6SkK
+         WnJQ==
+X-Gm-Message-State: AOAM5329Y4+oBPCyCjjsp4ZHvwPps37wNB+gD6QkqNmBoVTKZ4nA9jiw
+        MGwHlbL9W666hnfZGRaVIUEo4AgkQO+On4hR8rYaaRuzSfFY
+X-Google-Smtp-Source: ABdhPJytbN2b/hOnOd5tvITNLHZFKw8hcLIq5M8TQMQQd6lPi8rwbi6zbmyoLU1FW/1zA8BQ6rLYNk0EcJRtO/SNHtyadB0OzwIv
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQL=XF+xvsRNTEGXtY7J-fx5FJKpMuScoxLt8SDKGB3_Q@mail.gmail.com>
+X-Received: by 2002:a92:d151:: with SMTP id t17mr22649482ilg.197.1592891177312;
+ Mon, 22 Jun 2020 22:46:17 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 22:46:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ca280205a8b9e060@google.com>
+Subject: KASAN: use-after-free Read in cgroup_throttle_swaprate
+From:   syzbot <syzbot+5e421ac7ea78f893184b@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:33:53AM +0900, Masahiro Yamada wrote:
-> On Tue, Jun 23, 2020 at 4:02 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Some builds of GCC enable stack protector by default. Simply removing
-> > the arguments is not sufficient to disable stack protector, as the stack
-> > protector for those GCC builds must be explicitly disabled. (Removing the
-> > arguments is left as-is just to be sure there are no ordering problems. If
-> > -fno-stack-protector ended up _before_ -fstack-protector, it would not
-> > disable it: GCC uses whichever -f... comes last on the command line.)
-> >
-> > Fixes: 20355e5f73a7 ("x86/entry: Exclude low level entry code from sanitizing")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  Makefile                          | 4 +++-
-> >  arch/Kconfig                      | 3 ---
-> >  arch/arm/boot/compressed/Makefile | 4 ++--
-> >  arch/x86/entry/Makefile           | 3 +++
-> >  4 files changed, 8 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index ac2c61c37a73..b46e91bf0b0e 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -762,7 +762,9 @@ ifneq ($(CONFIG_FRAME_WARN),0)
-> >  KBUILD_CFLAGS += -Wframe-larger-than=$(CONFIG_FRAME_WARN)
-> >  endif
-> >
-> > -stackp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-> > +DISABLE_STACKPROTECTOR := $(call cc-option,-fno-stack-protector)
-> > +export DISABLE_STACKPROTECTOR
-> > +stackp-flags-y                                    := $(DISABLE_STACKPROTECTOR)
-> >  stackp-flags-$(CONFIG_STACKPROTECTOR)             := -fstack-protector
-> >  stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
-> >
-> > diff --git a/arch/Kconfig b/arch/Kconfig
-> > index 8cc35dc556c7..1ea61290900a 100644
-> > --- a/arch/Kconfig
-> > +++ b/arch/Kconfig
-> > @@ -478,9 +478,6 @@ config HAVE_STACKPROTECTOR
-> >           An arch should select this symbol if:
-> >           - it has implemented a stack canary (e.g. __stack_chk_guard)
-> >
-> > -config CC_HAS_STACKPROTECTOR_NONE
-> > -       def_bool $(cc-option,-fno-stack-protector)
-> > -
-> >  config STACKPROTECTOR
-> >         bool "Stack Protector buffer overflow detection"
-> >         depends on HAVE_STACKPROTECTOR
-> > diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-> > index 00602a6fba04..3693bac525d2 100644
-> > --- a/arch/arm/boot/compressed/Makefile
-> > +++ b/arch/arm/boot/compressed/Makefile
-> > @@ -84,9 +84,9 @@ endif
-> >
-> >  # -fstack-protector-strong triggers protection checks in this code,
-> >  # but it is being used too early to link to meaningful stack_chk logic.
-> > -nossp-flags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) := -fno-stack-protector
-> >  $(foreach o, $(libfdt_objs) atags_to_fdt.o, \
-> > -       $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt $(nossp-flags-y)))
-> > +       $(eval CFLAGS_$(o) := -I $(srctree)/scripts/dtc/libfdt \
-> > +                             $(DISABLE_STACKPROTECTOR)))
-> >
-> >  # These were previously generated C files. When you are building the kernel
-> >  # with O=, make sure to remove the stale files in the output tree. Otherwise,
-> > diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
-> > index b7a5790d8d63..79902decc3d1 100644
-> > --- a/arch/x86/entry/Makefile
-> > +++ b/arch/x86/entry/Makefile
-> > @@ -10,6 +10,9 @@ KCOV_INSTRUMENT := n
-> >  CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-> >  CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-> >  CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector -fstack-protector-strong
-> > +CFLAGS_common.o += $(DISABLE_STACKPROTECTOR)
-> > +CFLAGS_syscall_32.o += $(DISABLE_STACKPROTECTOR)
-> > +CFLAGS_syscall_64.o += $(DISABLE_STACKPROTECTOR)
-> 
-> There is one more c file in this directory.
-> 
-> Is it OK to not patch syscall_x32.c ?
+Hello,
 
-Good question. Peter? (It seems all the syscall_*.c files are just a
-table, not code -- why do they need any instrumentation changes?)
+syzbot found the following crash on:
 
-> 
-> 
-> >
-> >  CFLAGS_syscall_64.o            += $(call cc-option,-Wno-override-init,)
-> >  CFLAGS_syscall_32.o            += $(call cc-option,-Wno-override-init,)
-> 
-> 
-> 
-> 
-> This patch is ugly.
-> 
-> I'd rather want to fix this by one-liner.
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11d65615100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
+dashboard link: https://syzkaller.appspot.com/bug?extid=5e421ac7ea78f893184b
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-Why not a global export to assist? This isn't the only place it's needed
-(see the arm64 chunk...)
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> 
-> 
-> 
-> 
-> diff --git a/arch/x86/entry/Makefile b/arch/x86/entry/Makefile
-> index b7a5790d8d63..0d41eb91aaea 100644
-> --- a/arch/x86/entry/Makefile
-> +++ b/arch/x86/entry/Makefile
-> @@ -11,6 +11,8 @@ CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE)
-> -fstack-protector -fstack-protector-
->  CFLAGS_REMOVE_syscall_32.o = $(CC_FLAGS_FTRACE) -fstack-protector
-> -fstack-protector-strong
->  CFLAGS_REMOVE_syscall_64.o = $(CC_FLAGS_FTRACE) -fstack-protector
-> -fstack-protector-strong
-> 
-> +ccflags-$(CONFIG_CC_HAS_STACKPROTECTOR_NONE) += -fno-stack-protector
-> +
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5e421ac7ea78f893184b@syzkaller.appspotmail.com
 
-Order matters here -- when is ccflags-y applied?
+==================================================================
+BUG: KASAN: use-after-free in atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in blk_cgroup_congested include/linux/blk-cgroup.h:288 [inline]
+BUG: KASAN: use-after-free in cgroup_throttle_swaprate+0x268/0x4f0 mm/swapfile.c:3799
+Read of size 4 at addr ffff888098690d80 by task syz-executor.1/11017
 
->  CFLAGS_syscall_64.o            += $(call cc-option,-Wno-override-init,)
->  CFLAGS_syscall_32.o            += $(call cc-option,-Wno-override-init,)
->  obj-y                          := entry_$(BITS).o thunk_$(BITS).o
-> syscall_$(BITS).o
-> 
-> 
-> 
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
+CPU: 0 PID: 11017 Comm: syz-executor.1 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ print_address_description+0x66/0x5a0 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:183 [inline]
+ check_memory_region+0x2b5/0x2f0 mm/kasan/generic.c:192
+ atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+ blk_cgroup_congested include/linux/blk-cgroup.h:288 [inline]
+ cgroup_throttle_swaprate+0x268/0x4f0 mm/swapfile.c:3799
+ wp_page_copy+0x29c/0x1ff0 mm/memory.c:2680
+ do_wp_page+0x750/0x1810 mm/memory.c:2919
+ handle_pte_fault mm/memory.c:4233 [inline]
+ __handle_mm_fault mm/memory.c:4347 [inline]
+ handle_mm_fault+0x23fc/0x2910 mm/memory.c:4384
+ faultin_page mm/gup.c:888 [inline]
+ __get_user_pages+0xbf5/0x16f0 mm/gup.c:1114
+ __get_user_pages_locked mm/gup.c:1307 [inline]
+ __get_user_pages_remote+0x130/0x680 mm/gup.c:1858
+ process_vm_rw_single_vec mm/process_vm_access.c:108 [inline]
+ process_vm_rw_core+0x458/0x990 mm/process_vm_access.c:218
+ process_vm_rw+0x1b7/0x270 mm/process_vm_access.c:286
+ __do_sys_process_vm_writev mm/process_vm_access.c:308 [inline]
+ __se_sys_process_vm_writev mm/process_vm_access.c:303 [inline]
+ __x64_sys_process_vm_writev+0xdc/0xf0 mm/process_vm_access.c:303
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca59
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f34c4af9c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000137
+RAX: ffffffffffffffda RBX: 00000000004fb1a0 RCX: 000000000045ca59
+RDX: 1000000000000005 RSI: 0000000020000000 RDI: 0000000000000108
+RBP: 000000000078bfa0 R08: 000000000000023a R09: 0000000000000000
+R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000087c R14: 00000000004cb674 R15: 00007f34c4afa6d4
 
--- 
-Kees Cook
+Allocated by task 1:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
+ kmem_cache_alloc_trace+0x234/0x300 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ cgroup1_root_to_use kernel/cgroup/cgroup-v1.c:1183 [inline]
+ cgroup1_get_tree+0x747/0xae0 kernel/cgroup/cgroup-v1.c:1207
+ vfs_get_tree+0x88/0x270 fs/super.c:1547
+ do_new_mount fs/namespace.c:2874 [inline]
+ do_mount+0x17e8/0x2900 fs/namespace.c:3199
+ __do_sys_mount fs/namespace.c:3409 [inline]
+ __se_sys_mount+0xd3/0x100 fs/namespace.c:3386
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 17:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x220 mm/slab.c:3757
+ process_one_work+0x76e/0xfd0 kernel/workqueue.c:2268
+ worker_thread+0xa7f/0x1450 kernel/workqueue.c:2414
+ kthread+0x353/0x380 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+The buggy address belongs to the object at ffff888098690000
+ which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 3456 bytes inside of
+ 8192-byte region [ffff888098690000, ffff888098692000)
+The buggy address belongs to the page:
+page:ffffea000261a400 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea000261a400 order:2 compound_mapcount:0 compound_pincount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0002619a08 ffffea000261ae08 ffff8880aa4021c0
+raw: 0000000000000000 ffff888098690000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888098690c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888098690d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888098690d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff888098690e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888098690e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
