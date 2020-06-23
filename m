@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC00C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4829621789
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679B721531
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944552;
-	bh=oKwisQrOKqgE7pSpQuySDnL7StNHuLim4ULxZuK618M=;
+	s=default; t=1592944554;
+	bh=sl5BXybxDS5lTWvZ3D+/uLhE3C2iZ/h6L+tlzhb7JM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ew5TDGpgrp7GatAhOyGJMRnONWtaySIJ56d8k+B2ZS4Swt+tQlj/CeMjx6uk9011t
-	 Ec5E/3rwj4l3qS1ODMTVeGamy4Dk0Oz/fg6xqViKZZNhgSuKPuf+7htVV+ogHx1Rxp
-	 5NZzD6q7PKwB/b8zgmoEy0WPwF+0oR1apl8NZChk=
+	b=NqQ3hEni2tgzpJXv2cP2Lt3dL7gwF2737qvpSA1hWpPzgFglnV50PwXzocNPMeGc4
+	 aiWERA2EZcJVLti74zJIp3NTHCHiZPTJU2biPW4C63X6IBx+NKMbdL2TgeWcHOobl/
+	 p3fvbS1oXmr74UqXdTBzQhOwlP+jPfpwSBCIV94k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391726AbgFWUfp (ORCPT
+        id S2391744AbgFWUfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:35:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:35:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391679AbgFWUfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:35:37 -0400
+        id S2391727AbgFWUfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:35:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FE392080C;
-        Tue, 23 Jun 2020 20:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F4B02080C;
+        Tue, 23 Jun 2020 20:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944537;
-        bh=oKwisQrOKqgE7pSpQuySDnL7StNHuLim4ULxZuK618M=;
+        s=default; t=1592944545;
+        bh=sl5BXybxDS5lTWvZ3D+/uLhE3C2iZ/h6L+tlzhb7JM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xfcPSsK+y0Uo+dZl2ex8VW2E7osyV+xXu7qdowTUqwVsPZnEib6TfzzH+WvkQgZY8
-         P0YvtG2gM8zQJOVxHMqEyykmrxRutxdouBqBi8PWaw3S9iXLCFIBlQu1xFxKUkA05E
-         QHX9hwwP0Zh+H6sulMdfhkjz3j27SkVnFoyg4FTM=
+        b=TopRIiYwKulYH7oUYkCmgABo2JmzLTGp6zx+CrRGB+5xj7Nn3ANI1Zi4H9kF0jjOW
+         EVCti4Ug+0ZjfEuEoeaZyOsf4+YKhbGRsg6gZ3tiGC8WtyfqsnlDsChaJ7362IqggL
+         GeRMXYgoUKys32MZ4AZJ9x2rGSJd3Mh4FDGmlA6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Honse <calcprogrammer1@gmail.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Georgi Djakov <georgi.djakov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 004/206] i2c: piix4: Detect secondary SMBus controller on AMD AM4 chipsets
-Date:   Tue, 23 Jun 2020 21:55:32 +0200
-Message-Id: <20200623195317.141905443@linuxfoundation.org>
+Subject: [PATCH 4.19 007/206] clk: qcom: msm8916: Fix the address location of pll->config_reg
+Date:   Tue, 23 Jun 2020 21:55:35 +0200
+Message-Id: <20200623195317.295118941@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -62,49 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Honse <calcprogrammer1@gmail.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit f27237c174fd9653033330e4e532cd9d153ce824 ]
+[ Upstream commit f47ab3c2f5338828a67e89d5f688d2cef9605245 ]
 
-The AMD X370 and other AM4 chipsets (A/B/X 3/4/5 parts) and Threadripper
-equivalents have a secondary SMBus controller at I/O port address
-0x0B20.  This bus is used by several manufacturers to control
-motherboard RGB lighting via embedded controllers.  I have been using
-this bus in my OpenRGB project to control the Aura RGB on many
-motherboards and ASRock also uses this bus for their Polychrome RGB
-controller.
+During the process of debugging a processor derived from the msm8916 which
+we found the new processor was not starting one of its PLLs.
 
-I am not aware of any CZ-compatible platforms which do not have the
-second SMBus channel.  All of AMD's AM4- and Threadripper- series
-chipsets that OpenRGB users have tested appear to have this secondary
-bus.  I also noticed this secondary bus is present on older AMD
-platforms including my FM1 home server.
+After tracing the addresses and writes that downstream was doing and
+comparing to upstream it became obvious that we were writing to a different
+register location than downstream when trying to configure the PLL.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202587
-Signed-off-by: Adam Honse <calcprogrammer1@gmail.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This error is also present in upstream msm8916.
+
+As an example clk-pll.c::clk_pll_recalc_rate wants to write to
+pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
+defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
+example
+
+lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
+
+0x01823010 GCC_BIMC_PLL_USER_CTL
+0x01823014 GCC_BIMC_PLL_CONFIG_CTL
+
+This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
+
+This error is likely not apparent since the bootloader will already have
+initialized these PLLs.
+
+This patch corrects the location of config_reg from PLL_CONFIG_CTL to
+PLL_USER_CTL for all relevant PLLs on msm8916.
+
+Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
+
+Cc: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Link: https://lkml.kernel.org/r/20200329124116.4185447-1-bryan.odonoghue@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-piix4.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-index 9ff3371ec385d..f1c79f9b3919b 100644
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -958,7 +958,8 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	}
- 
- 	if (dev->vendor == PCI_VENDOR_ID_AMD &&
--	    dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
-+	    (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
-+	     dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)) {
- 		retval = piix4_setup_sb800(dev, id, 1);
- 	}
- 
+diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
+index ac2b0aa1e8b5d..03e0ade7a6f32 100644
+--- a/drivers/clk/qcom/gcc-msm8916.c
++++ b/drivers/clk/qcom/gcc-msm8916.c
+@@ -268,7 +268,7 @@ static struct clk_pll gpll0 = {
+ 	.l_reg = 0x21004,
+ 	.m_reg = 0x21008,
+ 	.n_reg = 0x2100c,
+-	.config_reg = 0x21014,
++	.config_reg = 0x21010,
+ 	.mode_reg = 0x21000,
+ 	.status_reg = 0x2101c,
+ 	.status_bit = 17,
+@@ -295,7 +295,7 @@ static struct clk_pll gpll1 = {
+ 	.l_reg = 0x20004,
+ 	.m_reg = 0x20008,
+ 	.n_reg = 0x2000c,
+-	.config_reg = 0x20014,
++	.config_reg = 0x20010,
+ 	.mode_reg = 0x20000,
+ 	.status_reg = 0x2001c,
+ 	.status_bit = 17,
+@@ -322,7 +322,7 @@ static struct clk_pll gpll2 = {
+ 	.l_reg = 0x4a004,
+ 	.m_reg = 0x4a008,
+ 	.n_reg = 0x4a00c,
+-	.config_reg = 0x4a014,
++	.config_reg = 0x4a010,
+ 	.mode_reg = 0x4a000,
+ 	.status_reg = 0x4a01c,
+ 	.status_bit = 17,
+@@ -349,7 +349,7 @@ static struct clk_pll bimc_pll = {
+ 	.l_reg = 0x23004,
+ 	.m_reg = 0x23008,
+ 	.n_reg = 0x2300c,
+-	.config_reg = 0x23014,
++	.config_reg = 0x23010,
+ 	.mode_reg = 0x23000,
+ 	.status_reg = 0x2301c,
+ 	.status_bit = 17,
 -- 
 2.25.1
 
