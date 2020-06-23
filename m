@@ -2,272 +2,160 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6E2D20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8403A20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fm27fkNb"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="rBKHO9KS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733302AbgFWRvW (ORCPT
+        id S1733105AbgFWRyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:51:22 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48626 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733105AbgFWRvV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:51:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592934678;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=n9KsB5aXXDm57lub/PiCY+bnNmFIx6U7IgYf+nU+2no=;
-        b=fm27fkNbS0ffI3/W2WDr3HzNJNBjyEKeIfN/yJC/jfpwKkE0nsiJ2bidfdxK/o5aai/bne
-        eig6LXe1/QfamU5lPtJwae1NfjqfdKpvQAKhqcKi8sOiA7LPU/LjcoufiIOL9B43ZZeg0/
-        ZntpQ30RfUAU0NpjS2FaOOVK0ntOp2w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-HKK-cXm1OMSVv7OPGMRm4A-1; Tue, 23 Jun 2020 13:51:14 -0400
-X-MC-Unique: HKK-cXm1OMSVv7OPGMRm4A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 175991B2C99A;
-        Tue, 23 Jun 2020 17:51:13 +0000 (UTC)
-Received: from ovpn-114-234.ams2.redhat.com (ovpn-114-234.ams2.redhat.com [10.36.114.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4518710013C0;
-        Tue, 23 Jun 2020 17:51:11 +0000 (UTC)
-Message-ID: <35e27a36d4a57e203420dc742e1d2ac18d0951b7.camel@redhat.com>
-Subject: Re: [PATCH v2 net-next 2/2] ipv6: fib6: avoid indirect calls from
- fib6_rule_lookup
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Brian Vazquez <brianvv@google.com>,
-        Brian Vazquez <brianvv.kernel@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Luigi Rizzo <lrizzo@google.com>
-Date:   Tue, 23 Jun 2020 19:51:10 +0200
-In-Reply-To: <20200623164232.175846-2-brianvv@google.com>
-References: <20200623164232.175846-1-brianvv@google.com>
-         <20200623164232.175846-2-brianvv@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Tue, 23 Jun 2020 13:54:43 -0400
+Received: from cmta18.telus.net ([209.171.16.91]:48116 "EHLO cmta18.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732973AbgFWRym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:54:42 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id nn7yjynjsVEJfnn7zj4JZr; Tue, 23 Jun 2020 11:54:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1592934881; bh=B4rltPCrYDATZ3jKMgrnW3cKHjW7tbQI6WbcVyYwP8M=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=rBKHO9KSVyembk0vyrn59MfJQAo2WjL9+iOu31FxctTKrrpnmXMu12KSKyvDO80wZ
+         YhdjmRp0XX1tfgzTtVZv/Hrr1HId2N1foJPq2ZsZR4xiRaPLFEtVSgp/TKHSnze92J
+         E+zjqstk2kT84mnsBMOVuDqWd4qbb7NOA4Apt7GZ7EurcbVyVUDe2VuuIVHV044w1E
+         Yx1N4MvR9QXdn09EaXXuKck2Mx4FDIRw2toDyRX4s+b5Hck9TtTvLzOnT08BlaVEBv
+         p0c4IdPOJjNeorlrsJXvrcg7yKqoJGVYHTRKHAL65p6tTkSwG3oOYkyyopHCCG3iTa
+         OSyCAOG0QBEyQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=KIck82No c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=Y1XEqrXkt80nLp6DE-UA:9
+ a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19 a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Quentin Perret'" <qperret@google.com>
+Cc:     <arnd@arndb.de>, <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <kernel-team@android.com>,
+        <tkjos@google.com>, <adharmap@codeaurora.org>,
+        <viresh.kumar@linaro.org>, <rafael@kernel.org>, <rjw@rjwysocki.net>
+References: <20200623142138.209513-1-qperret@google.com>
+In-Reply-To: <20200623142138.209513-1-qperret@google.com>
+Subject: RE: [PATCH v2 0/2] cpufreq: Specify the default governor on command line
+Date:   Tue, 23 Jun 2020 10:54:33 -0700
+Message-ID: <002201d64987$5dc93b90$195bb2b0$@net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdZJaaHcP5RdUeGMRwewlXzPV6L8fwAGk87g
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfJu2yqI8bRMr3UvgLSZTDIOmbcCsPGfJ6bFMtvxEaoYm2d6MHbeS6knNu9stKr4x3M2WemFcg+T8r+YcHHN7Xm9m2GVRbnx9rrulnY0dOdo50fpRI8bF
+ L8C+gFGAN5a+pWPiW+Lf7UlIJ5vgUuvY4Cia10wb5tuYjUhIsibPUqw8CtQDcQqUnRl8B0KfSFDePVIoUmbQ+JP42QAcGEVgYvnmEUq8hjSuq5YyzzLJg+S4
+ 5Fcz0YvOEMWWgZVKttfvUWNGdLsN4rUHUfHwDGKQKKrmd0MseovLCT5Ct4yz58lEkF5A8wEKz95upfBi7W5Vvz+8xuLTG+OlxGl3Mggol+9Ou87f8VvCTkpp
+ MZb6MBTz4VxxT08r+nRm66fKbyVlBuaJGRasoLoU4k7l92Nq+bfvfslIeLAtCpMwrTeoYdOXA4Ja+xgivuKozyPRdJ/nVg9uqnzqpKUe/48c25TFhUM083Vx
+ HnGW8Ja+bMyxKQo+djKsm9SU1N8JLmaiNF49RPK0m8E1ynsnyZ+RXk47RWITIM0Ztd76eT17vo0Sm1nbdFM9ZJB+7G93bqcfXyKGMKHh9MCG/CVjyOPLnkaZ
+ lTrKtzC6oA/opqTaIoMj3H2FtUtOfU4fnXj1CYWgsW/ZbU+T/7O1jN6STF3HfSYYsuAwbgtAsqsVT08FfG+FGU7Pnm5X23RFcXsQe30uC5oNMjus53Cfzoo8
+ iKufS4H/2mc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-23 at 09:42 -0700, Brian Vazquez wrote:
-> It was reported that a considerable amount of cycles were spent on the
-> expensive indirect calls on fib6_rule_lookup. This patch introduces an
-> inline helper called pol_route_func that uses the indirect_call_wrappers
-> to avoid the indirect calls.
-> 
-> This patch saves around 50ns per call.
-> 
-> Performance was measured on the receiver by checking the amount of
-> syncookies that server was able to generate under a synflood load.
-> 
-> Traffic was generated using trafgen[1] which was pushing around 1Mpps on
-> a single queue. Receiver was using only one rx queue which help to
-> create a bottle neck and make the experiment rx-bounded.
-> 
-> These are the syncookies generated over 10s from the different runs:
-> 
-> Whithout the patch:
-> TcpExtSyncookiesSent            3553749            0.0
-> TcpExtSyncookiesSent            3550895            0.0
-> TcpExtSyncookiesSent            3553845            0.0
-> TcpExtSyncookiesSent            3541050            0.0
-> TcpExtSyncookiesSent            3539921            0.0
-> TcpExtSyncookiesSent            3557659            0.0
-> TcpExtSyncookiesSent            3526812            0.0
-> TcpExtSyncookiesSent            3536121            0.0
-> TcpExtSyncookiesSent            3529963            0.0
-> TcpExtSyncookiesSent            3536319            0.0
-> 
-> With the patch:
-> TcpExtSyncookiesSent            3611786            0.0
-> TcpExtSyncookiesSent            3596682            0.0
-> TcpExtSyncookiesSent            3606878            0.0
-> TcpExtSyncookiesSent            3599564            0.0
-> TcpExtSyncookiesSent            3601304            0.0
-> TcpExtSyncookiesSent            3609249            0.0
-> TcpExtSyncookiesSent            3617437            0.0
-> TcpExtSyncookiesSent            3608765            0.0
-> TcpExtSyncookiesSent            3620205            0.0
-> TcpExtSyncookiesSent            3601895            0.0
-> 
-> Without the patch the average is 354263 pkt/s or 2822 ns/pkt and with
-> the patch the average is 360738 pkt/s or 2772 ns/pkt which gives an
-> estimate of 50 ns per packet.
-> 
-> [1] http://netsniff-ng.org/
-> 
-> Changelog since v1:
->  - Change ordering in the ICW (Paolo Abeni)
-> 
-> Cc: Luigi Rizzo <lrizzo@google.com>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Reported-by: Eric Dumazet <edumazet@google.com>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> ---
->  include/net/ip6_fib.h | 36 ++++++++++++++++++++++++++++++++++++
->  net/ipv6/fib6_rules.c |  9 ++++++---
->  net/ipv6/ip6_fib.c    |  3 ++-
->  net/ipv6/route.c      |  8 ++++----
->  4 files changed, 48 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
-> index 3f615a29766e..cc8356fd927f 100644
-> --- a/include/net/ip6_fib.h
-> +++ b/include/net/ip6_fib.h
-> @@ -19,6 +19,7 @@
->  #include <net/netlink.h>
->  #include <net/inetpeer.h>
->  #include <net/fib_notifier.h>
-> +#include <linux/indirect_call_wrapper.h>
->  
->  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
->  #define FIB6_TABLE_HASHSZ 256
-> @@ -552,6 +553,41 @@ struct bpf_iter__ipv6_route {
->  };
->  #endif
->  
-> +INDIRECT_CALLABLE_DECLARE(struct rt6_info *ip6_pol_route_output(struct net *net,
-> +					     struct fib6_table *table,
-> +					     struct flowi6 *fl6,
-> +					     const struct sk_buff *skb,
-> +					     int flags));
-> +INDIRECT_CALLABLE_DECLARE(struct rt6_info *ip6_pol_route_input(struct net *net,
-> +					     struct fib6_table *table,
-> +					     struct flowi6 *fl6,
-> +					     const struct sk_buff *skb,
-> +					     int flags));
-> +INDIRECT_CALLABLE_DECLARE(struct rt6_info *__ip6_route_redirect(struct net *net,
-> +					     struct fib6_table *table,
-> +					     struct flowi6 *fl6,
-> +					     const struct sk_buff *skb,
-> +					     int flags));
-> +INDIRECT_CALLABLE_DECLARE(struct rt6_info *ip6_pol_route_lookup(struct net *net,
-> +					     struct fib6_table *table,
-> +					     struct flowi6 *fl6,
-> +					     const struct sk_buff *skb,
-> +					     int flags));
-> +static inline struct rt6_info *pol_lookup_func(pol_lookup_t lookup,
-> +						struct net *net,
-> +						struct fib6_table *table,
-> +						struct flowi6 *fl6,
-> +						const struct sk_buff *skb,
-> +						int flags)
-> +{
-> +	return INDIRECT_CALL_4(lookup,
-> +			       ip6_pol_route_output,
-> +			       ip6_pol_route_input,
-> +			       ip6_pol_route_lookup,
-> +			       __ip6_route_redirect,
-> +			       net, table, fl6, skb, flags);
-> +}
-> +
->  #ifdef CONFIG_IPV6_MULTIPLE_TABLES
->  static inline bool fib6_has_custom_rules(const struct net *net)
->  {
-> diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-> index fafe556d21e0..6053ef851555 100644
-> --- a/net/ipv6/fib6_rules.c
-> +++ b/net/ipv6/fib6_rules.c
-> @@ -111,11 +111,13 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
->  	} else {
->  		struct rt6_info *rt;
->  
-> -		rt = lookup(net, net->ipv6.fib6_local_tbl, fl6, skb, flags);
-> +		rt = pol_lookup_func(lookup,
-> +			     net, net->ipv6.fib6_local_tbl, fl6, skb, flags);
->  		if (rt != net->ipv6.ip6_null_entry && rt->dst.error != -EAGAIN)
->  			return &rt->dst;
->  		ip6_rt_put_flags(rt, flags);
-> -		rt = lookup(net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
-> +		rt = pol_lookup_func(lookup,
-> +			     net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
->  		if (rt->dst.error != -EAGAIN)
->  			return &rt->dst;
->  		ip6_rt_put_flags(rt, flags);
-> @@ -226,7 +228,8 @@ static int __fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
->  		goto out;
->  	}
->  
-> -	rt = lookup(net, table, flp6, arg->lookup_data, flags);
-> +	rt = pol_lookup_func(lookup,
-> +			     net, table, flp6, arg->lookup_data, flags);
->  	if (rt != net->ipv6.ip6_null_entry) {
->  		err = fib6_rule_saddr(net, rule, flags, flp6,
->  				      ip6_dst_idev(&rt->dst)->dev);
-> diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
-> index 49ee89bbcba0..25a90f3f705c 100644
-> --- a/net/ipv6/ip6_fib.c
-> +++ b/net/ipv6/ip6_fib.c
-> @@ -314,7 +314,8 @@ struct dst_entry *fib6_rule_lookup(struct net *net, struct flowi6 *fl6,
->  {
->  	struct rt6_info *rt;
->  
-> -	rt = lookup(net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
-> +	rt = pol_lookup_func(lookup,
-> +			net, net->ipv6.fib6_main_tbl, fl6, skb, flags);
->  	if (rt->dst.error == -EAGAIN) {
->  		ip6_rt_put_flags(rt, flags);
->  		rt = net->ipv6.ip6_null_entry;
-> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-> index 82cbb46a2a4f..5852039ca9cf 100644
-> --- a/net/ipv6/route.c
-> +++ b/net/ipv6/route.c
-> @@ -1207,7 +1207,7 @@ static struct rt6_info *ip6_create_rt_rcu(const struct fib6_result *res)
->  	return nrt;
->  }
->  
-> -static struct rt6_info *ip6_pol_route_lookup(struct net *net,
-> +INDIRECT_CALLABLE_SCOPE struct rt6_info *ip6_pol_route_lookup(struct net *net,
->  					     struct fib6_table *table,
->  					     struct flowi6 *fl6,
->  					     const struct sk_buff *skb,
-> @@ -2274,7 +2274,7 @@ struct rt6_info *ip6_pol_route(struct net *net, struct fib6_table *table,
->  }
->  EXPORT_SYMBOL_GPL(ip6_pol_route);
->  
-> -static struct rt6_info *ip6_pol_route_input(struct net *net,
-> +INDIRECT_CALLABLE_SCOPE struct rt6_info *ip6_pol_route_input(struct net *net,
->  					    struct fib6_table *table,
->  					    struct flowi6 *fl6,
->  					    const struct sk_buff *skb,
-> @@ -2465,7 +2465,7 @@ void ip6_route_input(struct sk_buff *skb)
->  						      &fl6, skb, flags));
->  }
->  
-> -static struct rt6_info *ip6_pol_route_output(struct net *net,
-> +INDIRECT_CALLABLE_SCOPE struct rt6_info *ip6_pol_route_output(struct net *net,
->  					     struct fib6_table *table,
->  					     struct flowi6 *fl6,
->  					     const struct sk_buff *skb,
-> @@ -2912,7 +2912,7 @@ struct ip6rd_flowi {
->  	struct in6_addr gateway;
->  };
->  
-> -static struct rt6_info *__ip6_route_redirect(struct net *net,
-> +INDIRECT_CALLABLE_SCOPE struct rt6_info *__ip6_route_redirect(struct net *net,
->  					     struct fib6_table *table,
->  					     struct flowi6 *fl6,
->  					     const struct sk_buff *skb,
+On 2020.06.23 07:22 Quentin Perret wrote:
+>=20
+> This series enables users of prebuilt kernels (e.g. distro kernels) to
+> specify their CPUfreq governor of choice using the kernel command =
+line,
+> instead of having to wait for the system to fully boot to userspace to
+> switch using the sysfs interface. This is helpful for 2 reasons:
+>   1. users get to choose the governor that runs during the actual =
+boot;
+>   2. it simplifies the userspace boot procedure a bit (one less thing =
+to
+>      worry about).
+>=20
+> To enable this, the first patch moves all governor init calls to
+> core_initcall, to make sure they are registered by the time the =
+drivers
+> probe. This should be relatively low impact as registering a governor
+> is a simple procedure (it gets added to a llist), and all governors
+> already load at core_initcall anyway when they're set as the default
+> in Kconfig. This also allows to clean-up the governors' init/exit =
+code,
+> and reduces boilerplate.
+>=20
+> The second patch introduces the new command line parameter, inspired =
+by
+> its cpuidle counterpart. More details can be found in the respective
+> patch headers.
+>=20
+> Changes in v2:
+>  - added Viresh's ack to patch 01
+>  - moved the assignment of 'default_governor' in patch 02 to the =
+governor
+>    registration path instead of the driver registration (Viresh)
+>=20
+> Thanks,
+> Quentin
+>=20
+> Quentin Perret (2):
+>   cpufreq: Register governors at core_initcall
+>   cpufreq: Specify default governor on command line
+>=20
+>  .../admin-guide/kernel-parameters.txt         |  5 ++++
+>  Documentation/admin-guide/pm/cpufreq.rst      |  6 ++---
+>  .../platforms/cell/cpufreq_spudemand.c        | 26 =
+++-----------------
+>  drivers/cpufreq/cpufreq.c                     | 23 ++++++++++++----
+>  drivers/cpufreq/cpufreq_conservative.c        | 22 ++++------------
+>  drivers/cpufreq/cpufreq_ondemand.c            | 24 +++++------------
+>  drivers/cpufreq/cpufreq_performance.c         | 14 ++--------
+>  drivers/cpufreq/cpufreq_powersave.c           | 18 +++----------
+>  drivers/cpufreq/cpufreq_userspace.c           | 18 +++----------
+>  include/linux/cpufreq.h                       | 14 ++++++++++
+>  kernel/sched/cpufreq_schedutil.c              |  6 +----
+>  11 files changed, 62 insertions(+), 114 deletions(-)
+>=20
+> --
+> 2.27.0.111.gc72c7da667-goog
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Hi Quentin,
+
+Because I am lazy and sometimes do not want to recompile
+the distro source, I have a need/desire for this.
+
+Tested these two grub command lines:
+
+GRUB_CMDLINE_LINUX_DEFAULT=3D"ipv6.disable=3D1 consoleblank=3D300 =
+intel_pstate=3Ddisable cpufreq.default_governor=3Dschedutil =
+cpuidle_sysfs_switch cpuidle.governor=3Dteo"
+
+And
+
+#GRUB_CMDLINE_LINUX_DEFAULT=3D"ipv6.disable=3D1 consoleblank=3D450 =
+intel_pstate=3Dpassive cpufreq.default_governor=3Dschedutil =
+cpuidle_sysfs_switch cpuidle.governor=3Dteo"
+
+And all worked as expected. I use Ubuntu as my distro, and also had to =
+disable a startup script that switches to "ondemand", or similar, after =
+1 minute.
+
+As a side note (separate subject, but is one reason I tried it):
+My i5-9600K based computer seems to hit a power limit during boot =
+approximately 3 seconds after kernel selection on grub.
+This had no effect on that issue (even when selecting powersave =
+governor).
+
+... Doug
+
 
