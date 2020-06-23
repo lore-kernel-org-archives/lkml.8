@@ -2,237 +2,198 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C43DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ECBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E019C206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CB42072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1T1Qono"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732651AbgFWMkR (ORCPT
+        id S1732597AbgFWMl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:40:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43994 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729667AbgFWMkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:40:16 -0400
-IronPort-SDR: gpBueS7DOmCnqwOvGG1aSv1LxeztbThOqTj2rMqDBtfy0mHrlvUX9d7aCJmibfWTQ3JKXx9Ojc
- ayo6wgpExhcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="132456225"
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="132456225"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 05:40:16 -0700
-IronPort-SDR: 5lRppJexD/ARHDG5mePXGJ6sfnJXLRvXiDKtvitz2J+G7BLb6RJ6uxLoFK4H0s7hzIyWJkiQF1
- s23kOdoFhmpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
-   d="scan'208";a="293186482"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 23 Jun 2020 05:40:11 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jniDk-00FMag-OT; Tue, 23 Jun 2020 15:40:12 +0300
-Date:   Tue, 23 Jun 2020 15:40:12 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
-        arnaldo.melo@gmail.com, kafai@fb.com, songliubraving@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux@rasmusvillemoes.dk, joe@perches.com, pmladek@suse.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com, corbet@lwn.net,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 bpf-next 4/8] printk: add type-printing %pT format
- specifier which uses BTF
-Message-ID: <20200623124012.GV2428291@smile.fi.intel.com>
-References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
- <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
+        Tue, 23 Jun 2020 08:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729611AbgFWMl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:41:26 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC92C061573;
+        Tue, 23 Jun 2020 05:41:25 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t194so3044701wmt.4;
+        Tue, 23 Jun 2020 05:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uudyXPmH4K+yrXT/65FBE/u5/bFJbJPus9HjMbmfelU=;
+        b=b1T1QonovDjAAKw3+0p/5r+gqachr/nXLStstkoUSpbKOsP08qa7jVVE90RkGUNJgE
+         9GAKldFVs/QctI0jaz9z0hKGczwJqGPPU4xFkkkj5+K51LvSMl+KE5V70CHzldzt3MYQ
+         C1h0VXvBV2VadSy5SLo3cptAQU+I6de4N2PdO8uqr9rXcjeZ5NLCNYoypDMbQLeIjepL
+         OV3LcqlZEbRFmAgd/FmdYBumZW73JJ0IH8prfIeCttVrUByxdCfZBbUCtX/JliL6aFki
+         f/F8BCiJ6IEpUUzVu1gnvVQoLR30yX7S+9So+gfYX6jyrnlyKOt4dPHHUPhW8QMCsLN+
+         0EJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uudyXPmH4K+yrXT/65FBE/u5/bFJbJPus9HjMbmfelU=;
+        b=lIoSmwFVpbKG89fnAG/dJ6s6aQuqNNVzDfFeRWRZo1Vr3C093tdeYLayF3pvztU0ZV
+         zb0wuyK7Y8zNTZVtt1isxJQhBsdVWXzRLGjwTYgfK8oVqrIHPJbU9MCZz30dD+63ZBya
+         ge45tJ4H7IptTuGElltO1HhjFlMbKAPkpMfN1NdC06xonfF/Wq8OFyPV5jKrM994uQui
+         qRlQkfWzD5M46nlzynoZTu+pGg8YOKfKK0J9TF/O+kD6L2erGL6vH5TnIOJoCshOklKD
+         mCPtLhY3w4XAT8enTFoPWBllNNHF+sEK1pKfZwhZMmAKLSwcqHml956StFF2rYUOoYB6
+         fO9g==
+X-Gm-Message-State: AOAM530Xt9SSq43xD69zssYTmj7mcpG0Pdsz0HL+/Nc82BcrBoQUrYb9
+        t8huhibxfbkIXgyZAxHPfhFpqHKb
+X-Google-Smtp-Source: ABdhPJxzI5YsFNYkNy0DPB9ktvhLhkWqlcVEs8OAaanY4X48AOvK5sHWxdRfXL5P+H6zcTKaAQ9N+g==
+X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr5037879wmg.118.1592916084323;
+        Tue, 23 Jun 2020 05:41:24 -0700 (PDT)
+Received: from [192.168.43.181] ([5.100.193.85])
+        by smtp.gmail.com with ESMTPSA id f16sm3719586wmh.27.2020.06.23.05.41.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 05:41:23 -0700 (PDT)
+Subject: Re: [PATCH 15/15] io_uring: support true async buffered reads, if
+ file provides it
+To:     io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        Jens Axboe <axboe@kernel.dk>
+References: <20200618144355.17324-1-axboe@kernel.dk>
+ <20200618144355.17324-16-axboe@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <029947e3-7615-e446-3194-d48827730e1d@gmail.com>
+Date:   Tue, 23 Jun 2020 15:39:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592914031-31049-5-git-send-email-alan.maguire@oracle.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200618144355.17324-16-axboe@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 01:07:07PM +0100, Alan Maguire wrote:
-> printk supports multiple pointer object type specifiers (printing
-> netdev features etc).  Extend this support using BTF to cover
-> arbitrary types.
-
-Is there any plans to cover (all?) existing %p extensions?
-
-> "%pT"
-
-One letter namespace is quite busy area. Perhaps %pOT ?
-
-> specifies the typed format, and the pointer
-> argument is a "struct btf_ptr *" where struct btf_ptr is as follows:
+On 18/06/2020 17:43, Jens Axboe wrote:
+> If the file is flagged with FMODE_BUF_RASYNC, then we don't have to punt
+> the buffered read to an io-wq worker. Instead we can rely on page
+> unlocking callbacks to support retry based async IO. This is a lot more
+> efficient than doing async thread offload.
 > 
-> struct btf_ptr {
->         void *ptr;
->         const char *type;
->         u32 id;
-> };
+> The retry is done similarly to how we handle poll based retry. From
+> the unlock callback, we simply queue the retry to a task_work based
+> handler.
 > 
-> Either the "type" string ("struct sk_buff") or the BTF "id" can be
-> used to identify the type to use in displaying the associated "ptr"
-> value.  A convenience function to create and point at the struct
-> is provided:
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> ---
+>  fs/io_uring.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 137 insertions(+), 8 deletions(-)
 > 
->         printk(KERN_INFO "%pT", BTF_PTR_TYPE(skb, struct sk_buff));
-> 
-> When invoked, BTF information is used to traverse the sk_buff *
-> and display it.  Support is present for structs, unions, enums,
-> typedefs and core types (though in the latter case there's not
-> much value in using this feature of course).
-> 
-> Default output is indented, but compact output can be specified
-> via the 'c' option.  Type names/member values can be suppressed
-> using the 'N' option.  Zero values are not displayed by default
-> but can be using the '0' option.  Pointer values are obfuscated
-> unless the 'x' option is specified.  As an example:
-> 
->   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
->   pr_info("%pT", BTF_PTR_TYPE(skb, struct sk_buff));
-> 
-> ...gives us:
-> 
-> (struct sk_buff){
->  .transport_header = (__u16)65535,
->  .mac_header = (__u16)65535,
->  .end = (sk_buff_data_t)192,
->  .head = (unsigned char *)0x000000006b71155a,
->  .data = (unsigned char *)0x000000006b71155a,
->  .truesize = (unsigned int)768,
->  .users = (refcount_t){
->   .refs = (atomic_t){
->    .counter = (int)1,
->   },
->  },
->  .extensions = (struct skb_ext *)0x00000000f486a130,
-> }
-
-I don't see how it looks on a real console when kernel dumps something.
-Care to provide? These examples better to have documented.
-
-> printk output is truncated at 1024 bytes.  For cases where overflow
-> is likely, the compact/no type names display modes may be used.
-
-How * is handled? (I mean %*pOT case)
-
 ...
+>  static int io_read(struct io_kiocb *req, bool force_nonblock)
+>  {
+>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+> @@ -2784,10 +2907,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>  		unsigned long nr_segs = iter.nr_segs;
+>  		ssize_t ret2 = 0;
+>  
+> -		if (req->file->f_op->read_iter)
+> -			ret2 = call_read_iter(req->file, kiocb, &iter);
+> -		else
+> -			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
+> +		ret2 = io_iter_do_read(req, &iter);
+>  
+>  		/* Catch -EAGAIN return for forced non-blocking submission */
+>  		if (!force_nonblock || (ret2 != -EAGAIN && ret2 != -EIO)) {
+> @@ -2799,17 +2919,26 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>  			ret = io_setup_async_rw(req, io_size, iovec,
+>  						inline_vecs, &iter);
+>  			if (ret)
+> -				goto out_free;
+> +				goto out;
+>  			/* any defer here is final, must blocking retry */
+>  			if (!(req->flags & REQ_F_NOWAIT) &&
+>  			    !file_can_poll(req->file))
+>  				req->flags |= REQ_F_MUST_PUNT;
+> +			/* if we can retry, do so with the callbacks armed */
+> +			if (io_rw_should_retry(req)) {
+> +				ret2 = io_iter_do_read(req, &iter);
+> +				if (ret2 == -EIOCBQUEUED) {
+> +					goto out;
+> +				} else if (ret2 != -EAGAIN) {
+> +					kiocb_done(kiocb, ret2);
+> +					goto out;
+> +				}
+> +			}
+> +			kiocb->ki_flags &= ~IOCB_WAITQ;
+>  			return -EAGAIN;
+>  		}
+>  	}
+> -out_free:
+> -	kfree(iovec);
+> -	req->flags &= ~REQ_F_NEED_CLEANUP;
 
-> +#define	BTF_PTR_TYPE(ptrval, typeval) \
-> +	(&((struct btf_ptr){.ptr = ptrval, .type = #typeval}))
-> +
-> +#define BTF_PTR_ID(ptrval, idval) \
-> +	(&((struct btf_ptr){.ptr = ptrval, .id = idval}))
+This looks fishy. For instance, if it fails early on rw_verify_area(), how would
+it free yet on-stack iovec? Is it handled somehow?
 
-Wouldn't be better if these will leave in its own (linker) section?
-
-...
-
-> +static noinline_for_stack
-> +char *btf_string(char *buf, char *end, void *ptr, struct printf_spec spec,
-> +		 const char *fmt)
-> +{
-
-> +	struct btf_ptr *bp = (struct btf_ptr *)ptr;
-
-Unneeded casting.
-
-> +	u8 btf_kind = BTF_KIND_TYPEDEF;
-> +	const struct btf_type *t;
-> +	const struct btf *btf;
-> +	char *buf_start = buf;
-> +	const char *btf_type;
-> +	u64 flags = 0, mod;
-> +	s32 btf_id;
-> +
-> +	if (check_pointer(&buf, end, ptr, spec))
-> +		return buf;
-> +
-> +	if (check_pointer(&buf, end, bp->ptr, spec))
-> +		return buf;
-
-> +	while (isalnum(*fmt)) {
-> +		mod = btf_modifier_flag(*fmt);
-> +		if (!mod)
-> +			break;
-> +		flags |= mod;
-> +		fmt++;
-> +	}
-
-Can't we have explicitly all handled flags here, like other extensions do?
-
-> +	btf = bpf_get_btf_vmlinux();
-> +	if (IS_ERR_OR_NULL(btf))
-> +		return ptr_to_id(buf, end, bp->ptr, spec);
-> +
-> +	if (bp->type != NULL) {
-> +		btf_type = bp->type;
-> +
-> +		if (strncmp(bp->type, "struct ", strlen("struct ")) == 0) {
-> +			btf_kind = BTF_KIND_STRUCT;
-> +			btf_type += strlen("struct ");
-> +		} else if (strncmp(btf_type, "union ", strlen("union ")) == 0) {
-> +			btf_kind = BTF_KIND_UNION;
-> +			btf_type += strlen("union ");
-> +		} else if (strncmp(btf_type, "enum ", strlen("enum ")) == 0) {
-> +			btf_kind = BTF_KIND_ENUM;
-> +			btf_type += strlen("enum ");
-> +		}
-
-Can't you provide a simple structure and do this in a loop?
-Or even something like match_[partial]string() to implement?
-
-> +		if (strlen(btf_type) == 0)
-
-Interesting way of checking btf_type == '\0'.
-
-> +			return ptr_to_id(buf, end, bp->ptr, spec);
-> +
-> +		/*
-> +		 * Assume type specified is a typedef as there's not much
-> +		 * benefit in specifying int types other than wasting time
-> +		 * on BTF lookups; we optimize for the most useful path.
-> +		 *
-> +		 * Fall back to BTF_KIND_INT if this fails.
-> +		 */
-> +		btf_id = btf_find_by_name_kind(btf, btf_type, btf_kind);
-> +		if (btf_id < 0)
-> +			btf_id = btf_find_by_name_kind(btf, btf_type,
-> +						       BTF_KIND_INT);
-> +	} else if (bp->id > 0)
-> +		btf_id = bp->id;
-> +	else
-> +		return ptr_to_id(buf, end, bp->ptr, spec);
-> +
-
-> +	if (btf_id > 0)
-> +		t = btf_type_by_id(btf, btf_id);
-> +	if (btf_id <= 0 || !t)
-> +		return ptr_to_id(buf, end, bp->ptr, spec);
-
-This can be easily incorporated in previous conditional tree.
-
-> +	buf += btf_type_snprintf_show(btf, btf_id, bp->ptr, buf,
-> +				      end - buf_start, flags);
-> +
-> +	return widen_string(buf, buf - buf_start, end, spec);
-> +}
+> +out:
+>  	return ret;
+>  }
+>  
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pavel Begunkov
