@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA4A206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8392080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944451;
-	bh=wDtFrapsnioZClbXOoiJVnqKh7rXYEFcysXwDAhr9fg=;
+	s=default; t=1592944454;
+	bh=C0UEociYPoleF+yP29f7LXRb7NbN0E3lsZrgXKbsd6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WzT8uI2VIEpJhycFHd/GpYnv2t6ahdVz4HqKl8lG3ldtFNHFWki7ZtOGynP3vsmae
-	 jJ3d7Qz4cTG2Jztvmtk8JpeLvYVxvdSaBbuHZefDC4volCI/fLN138/APG4FuPUFsJ
-	 D5z9hBto7rXaBdKLCLzfpJp21h2vayOyPN2SiOU0=
+	b=XN7LAYkZxOd8/ZDZJquItpDf4Rns541gDnB9oOKErZs5VIgxky0qsPT75FKKLF6Sx
+	 ZaZZmt7bftlZfhnfi7bYMLK4qnw6t6OxRcppNSvxb7BhodpZdFVE7U/RZcdl7Ej4Ia
+	 bLWbC4NXYcHWOFBIELtKTWonR8clPOBPdLB+tC5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391499AbgFWUeJ (ORCPT
+        id S2391504AbgFWUeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:34:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403772AbgFWUd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:33:56 -0400
+        id S2391477AbgFWUd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:33:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738752064B;
-        Tue, 23 Jun 2020 20:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0788420836;
+        Tue, 23 Jun 2020 20:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944436;
-        bh=wDtFrapsnioZClbXOoiJVnqKh7rXYEFcysXwDAhr9fg=;
+        s=default; t=1592944439;
+        bh=C0UEociYPoleF+yP29f7LXRb7NbN0E3lsZrgXKbsd6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AF89dtPnbhQu5bOM8CFD7f+BK4wMV5uHti40twzb0nFA1mPXTdw0RgA/Jwhuld+WO
-         fgTq7k3qdJDNPjjM5t8hH7mJbIg50LBoCgbUYi/6l1iE5zdJXPtW4s1EmNKLPk9fVU
-         TbaOdgsAE2zzylhGWINViD7bEFDT7+feo7AkThjw=
+        b=ffB/wP9yuf6WOZgkjksQdt496o3cRv3KyZw86txtZNl0HYvoYwzK36LfMQypmwGPv
+         ANwAgYM+XSi+AStUjG3yLuXUcLeP/6zeo0vMm9nOvp5P8TRxnoe5AZ4nWbFY/I5hlc
+         EEnzbBNvwZiZwlH/r/2gbia5osXUz6wlO1kvDuHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephan Mueller <smueller@chronox.de>
-Subject: [PATCH 5.4 305/314] crypto: algif_skcipher - Cap recv SG list at ctx->used
-Date:   Tue, 23 Jun 2020 21:58:20 +0200
-Message-Id: <20200623195353.545410487@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Gerow <gerow@google.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Eric Biggers <ebiggers@google.com>,
+        =?UTF-8?q?Kai=20L=C3=BCke?= <kai@kinvolk.io>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 306/314] crypto: algboss - dont wait during notifier callback
+Date:   Tue, 23 Jun 2020 21:58:21 +0200
+Message-Id: <20200623195353.589822127@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -59,42 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 7cf81954705b7e5b057f7dc39a7ded54422ab6e1 upstream.
+commit 77251e41f89a813b4090f5199442f217bbf11297 upstream.
 
-Somewhere along the line the cap on the SG list length for receive
-was lost.  This patch restores it and removes the subsequent test
-which is now redundant.
+When a crypto template needs to be instantiated, CRYPTO_MSG_ALG_REQUEST
+is sent to crypto_chain.  cryptomgr_schedule_probe() handles this by
+starting a thread to instantiate the template, then waiting for this
+thread to complete via crypto_larval::completion.
 
-Fixes: 2d97591ef43d ("crypto: af_alg - consolidation of...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Stephan Mueller <smueller@chronox.de>
+This can deadlock because instantiating the template may require loading
+modules, and this (apparently depending on userspace) may need to wait
+for the crc-t10dif module (lib/crc-t10dif.c) to be loaded.  But
+crc-t10dif's module_init function uses crypto_register_notifier() and
+therefore takes crypto_chain.rwsem for write.  That can't proceed until
+the notifier callback has finished, as it holds this semaphore for read.
+
+Fix this by removing the wait on crypto_larval::completion from within
+cryptomgr_schedule_probe().  It's actually unnecessary because
+crypto_alg_mod_lookup() calls crypto_larval_wait() itself after sending
+CRYPTO_MSG_ALG_REQUEST.
+
+This only actually became a problem in v4.20 due to commit b76377543b73
+("crc-t10dif: Pick better transform if one becomes available"), but the
+unnecessary wait was much older.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207159
+Reported-by: Mike Gerow <gerow@google.com>
+Fixes: 398710379f51 ("crypto: algapi - Move larval completion into algboss")
+Cc: <stable@vger.kernel.org> # v3.6+
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reported-by: Kai Lüke <kai@kinvolk.io>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algif_skcipher.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ crypto/algboss.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -74,14 +74,10 @@ static int _skcipher_recvmsg(struct sock
- 		return PTR_ERR(areq);
+--- a/crypto/algboss.c
++++ b/crypto/algboss.c
+@@ -188,8 +188,6 @@ static int cryptomgr_schedule_probe(stru
+ 	if (IS_ERR(thread))
+ 		goto err_put_larval;
  
- 	/* convert iovecs of output buffers into RX SGL */
--	err = af_alg_get_rsgl(sk, msg, flags, areq, -1, &len);
-+	err = af_alg_get_rsgl(sk, msg, flags, areq, ctx->used, &len);
- 	if (err)
- 		goto free;
- 
--	/* Process only as much RX buffers for which we have TX data */
--	if (len > ctx->used)
--		len = ctx->used;
+-	wait_for_completion_interruptible(&larval->completion);
 -
- 	/*
- 	 * If more buffers are to be expected to be processed, process only
- 	 * full block size buffers.
+ 	return NOTIFY_STOP;
+ 
+ err_put_larval:
 
 
