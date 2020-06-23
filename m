@@ -2,53 +2,51 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC80C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A311F21924
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD482053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944910;
-	bh=TMiyGgn59z1wPXiit7wOGB9KEZd/5dwFmdSTrlJu4DE=;
+	s=default; t=1592944923;
+	bh=uwlo3ynjf9FGMtYijKi+Yi2FGpOSik9dpgosa/9oYt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mK/NaON/D17pVwTVgXiAYEQIpRsc0gwAOIw8vwxmlM0s+BOWlxDP8GS/yFcAXfQYu
-	 7McxmkXsRMipRcDVmwWE10mae2kMjkUAKHhd22TItKLhjKeyx2Tk+y5USlfyyG9Riw
-	 WcI5s5YKnbLb7u3NNh41VcGOmjqPS74/tXpo0yZU=
+	b=TEpl530nQxZZIEzufEa/QAqy6vfKrL8Eb3U5hFtD2f6ZzF2oUJF+ZSicyE0d5qEIN
+	 zjiranOlG2pzrrJu7wS9OWINMZCbCUI7RFOPBCpVgdWQoESbW4VWwysA/iU9Hf1Kix
+	 6nsb3GS0EcyQiA1plCvl7U4zoWHWlkXeDz7Iu3Rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403872AbgFWUlr (ORCPT
+        id S2391787AbgFWUmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:42:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391913AbgFWUlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:37 -0400
+        id S2403880AbgFWUl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B7D52053B;
-        Tue, 23 Jun 2020 20:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F65C20702;
+        Tue, 23 Jun 2020 20:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944897;
-        bh=TMiyGgn59z1wPXiit7wOGB9KEZd/5dwFmdSTrlJu4DE=;
+        s=default; t=1592944918;
+        bh=uwlo3ynjf9FGMtYijKi+Yi2FGpOSik9dpgosa/9oYt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPoHpwyYYB8MCJCvWF6kM4Fn9vZMDC0jm6GXwvN7DYnRHCioPBG45NnLhLRMom419
-         M2un7XuGaGdOnPr2drqiVLaYr8pfyIOyr51R8WKEqa0eZLNjIWvVRNx1XXrFUD0Owb
-         DYKmh4lLvVXSIo+OZrZ1h4cAzgg3I8LX/pu/4Atg=
+        b=Jl2oJ0hxU83622de6MlcKjgjhgeGI2/FStKsYYeH4OQb0qx5UaVXfD6iRiSHB5Ufb
+         yimarxDeyqR1HKtWTjjNJ2JmzVTTsR16DV6qjqwT0IHz0uapXz7RhheuGYgA/emhG+
+         AaZdMiZYwTU9BvT96NU2t3jrwm9vF//1scWKW60I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YiFei Zhu <zhuyifei@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 160/206] net/filter: Permit reading NET in load_bytes_relative when MAC not set
-Date:   Tue, 23 Jun 2020 21:58:08 +0200
-Message-Id: <20200623195324.870879506@linuxfoundation.org>
+        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 176/206] drm/amdgpu: Replace invalid device ID with a valid device ID
+Date:   Tue, 23 Jun 2020 21:58:24 +0200
+Message-Id: <20200623195325.697496436@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,73 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YiFei Zhu <zhuyifei1999@gmail.com>
+From: Sandeep Raghuraman <sandy.8925@gmail.com>
 
-[ Upstream commit 0f5d82f187e1beda3fe7295dfc500af266a5bd80 ]
+commit 790243d3bf78f9830a3b2ffbca1ed0f528295d48 upstream.
 
-Added a check in the switch case on start_header that checks for
-the existence of the header, and in the case that MAC is not set
-and the caller requests for MAC, -EFAULT. If the caller requests
-for NET then MAC's existence is completely ignored.
+Initializes Powertune data for a specific Hawaii card by fixing what
+looks like a typo in the code. The device ID 66B1 is not a supported
+device ID for this driver, and is not mentioned elsewhere. 67B1 is a
+valid device ID, and is a Hawaii Pro GPU.
 
-There is no function to check NET header's existence and as far
-as cgroup_skb/egress is concerned it should always be set.
+I have tested on my R9 390 which has device ID 67B1, and it works
+fine without problems.
 
-Removed for ptr >= the start of header, considering offset is
-bounded unsigned and should always be true. len <= end - mac is
-redundant to ptr + len <= end.
+Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 3eee1f75f2b9 ("bpf: fix bpf_skb_load_bytes_relative pkt length check")
-Signed-off-by: YiFei Zhu <zhuyifei@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Stanislav Fomichev <sdf@google.com>
-Link: https://lore.kernel.org/bpf/76bb820ddb6a95f59a772ecbd8c8a336f646b362.1591812755.git.zhuyifei@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 40b3af05c883c..b5521b60a2d4f 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -1730,25 +1730,27 @@ BPF_CALL_5(bpf_skb_load_bytes_relative, const struct sk_buff *, skb,
- 	   u32, offset, void *, to, u32, len, u32, start_header)
- {
- 	u8 *end = skb_tail_pointer(skb);
--	u8 *net = skb_network_header(skb);
--	u8 *mac = skb_mac_header(skb);
--	u8 *ptr;
-+	u8 *start, *ptr;
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
+@@ -238,7 +238,7 @@ static void ci_initialize_power_tune_def
  
--	if (unlikely(offset > 0xffff || len > (end - mac)))
-+	if (unlikely(offset > 0xffff))
- 		goto err_clear;
- 
- 	switch (start_header) {
- 	case BPF_HDR_START_MAC:
--		ptr = mac + offset;
-+		if (unlikely(!skb_mac_header_was_set(skb)))
-+			goto err_clear;
-+		start = skb_mac_header(skb);
+ 	switch (dev_id) {
+ 	case 0x67BA:
+-	case 0x66B1:
++	case 0x67B1:
+ 		smu_data->power_tune_defaults = &defaults_hawaii_pro;
  		break;
- 	case BPF_HDR_START_NET:
--		ptr = net + offset;
-+		start = skb_network_header(skb);
- 		break;
- 	default:
- 		goto err_clear;
- 	}
- 
--	if (likely(ptr >= mac && ptr + len <= end)) {
-+	ptr = start + offset;
-+
-+	if (likely(ptr + len <= end)) {
- 		memcpy(to, ptr, len);
- 		return 0;
- 	}
--- 
-2.25.1
-
+ 	case 0x67B8:
 
 
