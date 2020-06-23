@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2736C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD4F20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E00420724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947909;
-	bh=li5D3uOG2gu6Ux4TerVx/9z/nBnXCeCz0BpHMZTXwmY=;
+	s=default; t=1592947915;
+	bh=L15Vj8OeudxmTag2zQVdk1b8JpwbIF3FlYGHITujZPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQfACqllORpJ1cryqLIrrf1V7DLJ8WJZMVtF+fdR4BheXnIbFkkW1+hRMB52iaryz
-	 PgxYCW2BGzJZDr+2tjPpQ4M0sR9537N2EmA1jpWssMc45ZqPHjSlQhnxNX5BiUqXMV
-	 J+JKhTKddmuxeShd4JrLo3PiJLHEvbKeiqszMTMU=
+	b=2roFIjLC9zVufJ1pqx1SaKCRbwNDOcjc6FwgBybrGqmQ8+AmZUrf3/wB01J9uJuka
+	 r3lYODQqsjIjgHgrm8QArDN+z8eaQZzHY6PrVyUQ4+cWWVHHf49CPxE/AFUEViawSK
+	 UCYNQWqChKB0SCKIBhp92F3P2uI+sgUxmC73FU2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388500AbgFWUMu (ORCPT
+        id S2389013AbgFWVby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388759AbgFWUM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:12:29 -0400
+        id S2389008AbgFWUMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:12:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E7220707;
-        Tue, 23 Jun 2020 20:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA1B82145D;
+        Tue, 23 Jun 2020 20:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943148;
-        bh=li5D3uOG2gu6Ux4TerVx/9z/nBnXCeCz0BpHMZTXwmY=;
+        s=default; t=1592943169;
+        bh=L15Vj8OeudxmTag2zQVdk1b8JpwbIF3FlYGHITujZPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wIG2Y/DUWdbruHh/adlT80SmC9c6shBj0cqQ3tXC6l3EkfArsotN+KSvTZRZmbKS/
-         2J80+ubcO1L0T4QVcgsBMLTcEPT9f+WKfEbrAaaLU/d2xMHja5aLeCzHvpBFYwVpfk
-         g4fReZxN/oC7j7QH02HSZVwPYLP7Bs+SJ5KRZ3tk=
+        b=REbKA2P8Rr+8/ZAcrgnftA7q9+m8oXyrtDBvpqMw2tTyEyqFjPGl9fw9MnaqaaIhV
+         idaQz06DQGAT5z1jDShRrKbFiGTQ+MRvCBSfdvQBKHynX4F447gzg99IOopkV5yTQ/
+         GZe2e8ibQT2EKyIxyF5xHcH2SLtbBD0l1q+qulAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 279/477] clk: zynqmp: Fix divider2 calculation
-Date:   Tue, 23 Jun 2020 21:54:36 +0200
-Message-Id: <20200623195420.755821270@linuxfoundation.org>
+Subject: [PATCH 5.7 269/477] mfd: stmfx: Reset chip on resume as supply was disabled
+Date:   Tue, 23 Jun 2020 21:54:26 +0200
+Message-Id: <20200623195420.292114342@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,85 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejas Patel <tejas.patel@xilinx.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-[ Upstream commit b8c1049c68d634a412ed5980ae666ed7c8839305 ]
+[ Upstream commit e583649d87ec090444aa5347af0927cd6e8581ae ]
 
-zynqmp_get_divider2_val() calculates, divider value of type DIV2 clock,
-considering best possible combination of DIV1 and DIV2.
+STMFX supply is disabled during suspend. To avoid a too early access to
+the STMFX firmware on resume, reset the chip and wait for its firmware to
+be loaded.
 
-To find best possible values of DIV1 and DIV2, DIV1's parent rate
-should be consider and not DIV2's parent rate since it would rate of
-div1 clock. Consider a below topology,
-
-	out_clk->div2_clk->div1_clk->fixed_parent
-
-where out_clk = (fixed_parent/div1_clk) / div2_clk, so parent clock
-of div1_clk (i.e. out_clk) should be divided by div1_clk and div2_clk.
-
-Existing code divides parent rate of div2_clk's clock instead of
-div1_clk's parent rate, which is wrong.
-
-Fix the same by considering div1's parent clock rate.
-
-Fixes: 4ebd92d2e228 ("clk: zynqmp: Fix divider calculation")
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-Link: https://lkml.kernel.org/r/1583185843-20707-3-git-send-email-jolly.shah@xilinx.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/zynqmp/divider.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/mfd/stmfx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-index 4be2cc76aa2e7..9bc4f9409aea0 100644
---- a/drivers/clk/zynqmp/divider.c
-+++ b/drivers/clk/zynqmp/divider.c
-@@ -111,23 +111,30 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
- 
- static void zynqmp_get_divider2_val(struct clk_hw *hw,
- 				    unsigned long rate,
--				    unsigned long parent_rate,
- 				    struct zynqmp_clk_divider *divider,
- 				    int *bestdiv)
- {
- 	int div1;
- 	int div2;
- 	long error = LONG_MAX;
--	struct clk_hw *parent_hw = clk_hw_get_parent(hw);
--	struct zynqmp_clk_divider *pdivider = to_zynqmp_clk_divider(parent_hw);
-+	unsigned long div1_prate;
-+	struct clk_hw *div1_parent_hw;
-+	struct clk_hw *div2_parent_hw = clk_hw_get_parent(hw);
-+	struct zynqmp_clk_divider *pdivider =
-+				to_zynqmp_clk_divider(div2_parent_hw);
- 
- 	if (!pdivider)
- 		return;
- 
-+	div1_parent_hw = clk_hw_get_parent(div2_parent_hw);
-+	if (!div1_parent_hw)
-+		return;
-+
-+	div1_prate = clk_hw_get_rate(div1_parent_hw);
- 	*bestdiv = 1;
- 	for (div1 = 1; div1 <= pdivider->max_div;) {
- 		for (div2 = 1; div2 <= divider->max_div;) {
--			long new_error = ((parent_rate / div1) / div2) - rate;
-+			long new_error = ((div1_prate / div1) / div2) - rate;
- 
- 			if (abs(new_error) < abs(error)) {
- 				*bestdiv = div2;
-@@ -192,7 +199,7 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
- 	 */
- 	if (div_type == TYPE_DIV2 &&
- 	    (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
--		zynqmp_get_divider2_val(hw, rate, *prate, divider, &bestdiv);
-+		zynqmp_get_divider2_val(hw, rate, divider, &bestdiv);
+diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+index 857991cb3cbb8..fde6541e347c8 100644
+--- a/drivers/mfd/stmfx.c
++++ b/drivers/mfd/stmfx.c
+@@ -501,6 +501,13 @@ static int stmfx_resume(struct device *dev)
+ 		}
  	}
  
- 	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
++	/* Reset STMFX - supply has been stopped during suspend */
++	ret = stmfx_chip_reset(stmfx);
++	if (ret) {
++		dev_err(stmfx->dev, "Failed to reset chip: %d\n", ret);
++		return ret;
++	}
++
+ 	ret = regmap_raw_write(stmfx->map, STMFX_REG_SYS_CTRL,
+ 			       &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
+ 	if (ret)
 -- 
 2.25.1
 
