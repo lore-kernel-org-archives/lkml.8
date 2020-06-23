@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA455C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A82C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95B7B206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4307206C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944183;
-	bh=41H/wvNFxvhfOqdL+8lXTBqmmzwHHM+hgN6cXXnzqzA=;
+	s=default; t=1592944187;
+	bh=GrohkfbmeiXd0QzpT86snwSvZYnUkRryWc+YAvRBiq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y48ItFvDPKrLtrXDCRILND+Ss+O+tSqYZG9BcT9aRxkaRHj8G31lLAF1kVSeDWvGc
-	 W/8f32T/FuSDpWrD/6Fv/hOOWM60HzRHb6dNbh+27Z+Zb+Q4CLbY66rllZwn6qcqzz
-	 M5/hi0e3e4c6Q06SzoQN6Nn2FYmlnmPh33rA/94k=
+	b=vk1vgfXutptC7BkWmyBnCcRVF0wgMedRNGMrG1mLuJYZhxjhr5XK6VaaqRj+eNAkV
+	 BbbX8jMd0iY9gPV2WND/hVYNfHWdMgFIyQjdJvqgxTh0sBiyBaw9aYbsbVvSPN5TzB
+	 4IWLNZr/MvZBT3+vYvfvMcCERXD3ZRmAqNECWfEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390733AbgFWU3l (ORCPT
+        id S2388632AbgFWU3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49580 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390986AbgFWU3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:29:31 -0400
+        id S2390994AbgFWU3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C05E7206C3;
-        Tue, 23 Jun 2020 20:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A09D2064B;
+        Tue, 23 Jun 2020 20:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944171;
-        bh=41H/wvNFxvhfOqdL+8lXTBqmmzwHHM+hgN6cXXnzqzA=;
+        s=default; t=1592944173;
+        bh=GrohkfbmeiXd0QzpT86snwSvZYnUkRryWc+YAvRBiq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hx6EtpDhJx8wZnX3HpRmmg0maYsqYMPX6803uUO40d3vMH2so7IQ6PczUu0X47BUO
-         wjQ2Yl9Diprqq/R4+l/v6gfU9O+Xld4cjTnGxRcriG40ABPAvWy+ldsBw2v7Odgjgg
-         D1mFgDXUAPfFdUc3sj71RxpwmRIVhhyYRlsuKd/s=
+        b=2MRKcZOiXtyABzj9imWDA3Nin3+esOIxNHk9qxkt3yAMX86+eOYi+XsRoeUuYC5b9
+         5wRDBEl4cYXP+jbT69UgkCPMEqBS5t8mWDAkslvJCcrn+VyF8AmUf2L3hnliBaEvHF
+         3PzJ2pvbXRJs9LUqtj5+ReDLuebRhxrA5Jg8WXo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Lang Cheng <chenglang@huawei.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 170/314] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
-Date:   Tue, 23 Jun 2020 21:56:05 +0200
-Message-Id: <20200623195346.992129114@linuxfoundation.org>
+Subject: [PATCH 5.4 161/314] RDMA/hns: Fix cmdq parameter of querying pf timer resource
+Date:   Tue, 23 Jun 2020 21:55:56 +0200
+Message-Id: <20200623195346.550128141@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,75 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Lang Cheng <chenglang@huawei.com>
 
-[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
+[ Upstream commit 441c88d5b3ff80108ff536c6cf80591187015403 ]
 
-Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
-not account for the fact that Switch Downstream Ports are not permitted to
-have a PTM capability; their PTM behavior is controlled by the Upstream
-Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
-capability, we did not mark them as "ptm_enabled", which meant that
-pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
+The firmware has reduced the number of descriptions of command
+HNS_ROCE_OPC_QUERY_PF_TIMER_RES to 1. The driver needs to adapt, otherwise
+the hardware will report error 4(CMD_NEXT_ERR).
 
-Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
-enabled.
-
-Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
-Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 0e40dc2f70cd ("RDMA/hns: Add timer allocation support for hip08")
+Link: https://lore.kernel.org/r/1588931159-56875-3-git-send-email-liweihang@huawei.com
+Signed-off-by: Lang Cheng <chenglang@huawei.com>
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 32 ++++++++--------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 9361f3aa26ab8..357a454cafa07 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -39,10 +39,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 9a8053bd01e22..0502c90c83edd 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -1349,34 +1349,26 @@ static int hns_roce_query_pf_resource(struct hns_roce_dev *hr_dev)
+ static int hns_roce_query_pf_timer_resource(struct hns_roce_dev *hr_dev)
+ {
+ 	struct hns_roce_pf_timer_res_a *req_a;
+-	struct hns_roce_cmq_desc desc[2];
+-	int ret, i;
++	struct hns_roce_cmq_desc desc;
++	int ret;
  
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
--	if (!pos)
--		return;
+-	for (i = 0; i < 2; i++) {
+-		hns_roce_cmq_setup_basic_desc(&desc[i],
+-					      HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
+-					      true);
++	hns_roce_cmq_setup_basic_desc(&desc, HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
++				      true);
+ 
+-		if (i == 0)
+-			desc[i].flag |= cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
+-		else
+-			desc[i].flag &= ~cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
+-	}
 -
- 	/*
- 	 * Enable PTM only on interior devices (root ports, switch ports,
- 	 * etc.) on the assumption that it causes no link traffic until an
-@@ -52,6 +48,23 @@ void pci_ptm_init(struct pci_dev *dev)
- 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
- 		return;
+-	ret = hns_roce_cmq_send(hr_dev, desc, 2);
++	ret = hns_roce_cmq_send(hr_dev, &desc, 1);
+ 	if (ret)
+ 		return ret;
  
-+	/*
-+	 * Switch Downstream Ports are not permitted to have a PTM
-+	 * capability; their PTM behavior is controlled by the Upstream
-+	 * Port (PCIe r5.0, sec 7.9.16).
-+	 */
-+	ups = pci_upstream_bridge(dev);
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
-+	    ups && ups->ptm_enabled) {
-+		dev->ptm_granularity = ups->ptm_granularity;
-+		dev->ptm_enabled = 1;
-+		return;
-+	}
-+
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!pos)
-+		return;
-+
- 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
- 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+-	req_a = (struct hns_roce_pf_timer_res_a *)desc[0].data;
++	req_a = (struct hns_roce_pf_timer_res_a *)desc.data;
  
-@@ -61,7 +74,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
- 	 * furthest upstream Time Source as the PTM Root.
- 	 */
--	ups = pci_upstream_bridge(dev);
- 	if (ups && ups->ptm_enabled) {
- 		ctrl = PCI_PTM_CTRL_ENABLE;
- 		if (ups->ptm_granularity == 0)
+ 	hr_dev->caps.qpc_timer_bt_num =
+-				roce_get_field(req_a->qpc_timer_bt_idx_num,
+-					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
+-					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
++		roce_get_field(req_a->qpc_timer_bt_idx_num,
++			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
++			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
+ 	hr_dev->caps.cqc_timer_bt_num =
+-				roce_get_field(req_a->cqc_timer_bt_idx_num,
+-					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
+-					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
++		roce_get_field(req_a->cqc_timer_bt_idx_num,
++			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
++			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
