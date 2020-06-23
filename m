@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA54C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B140C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF76820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7FE20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945612;
-	bh=w9e40VJgFi/5xIhYjyWmoWAugoEtwnTY8hHt6ZeEIAk=;
+	s=default; t=1592945618;
+	bh=6JlWlTycEqz+qg1DoLJCsDcfqz3mIMOPAVjwGszD3U8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QCDoj21u0DyqkFhHVNoyjZTbXx090sQ3O1kefvU+NI8VWAorM1HR7dvY0Xg7+Kjz1
-	 9nmaa1RKSfMcyH5jV5eivzjM5/DinhcZj6F/X3vHhYhvoRbcHNG5gRB/aHsPW1kVNf
-	 HnMOyv8Jye5upMcaXRx//gfN5vyMcuY6/TvMKq64=
+	b=BNkF67klhKdlVwFD+i/TI63VPlZ7QXUFVB0UKsYqxrzJIh7fuE4hW6m/fMt5Feg0p
+	 Un9iqpwXqPpwURSEuf/UOvzGMDhu9aWkTvClMWqbaFxNzqLeYcpDKIAafm1DNetoEE
+	 T7BxZwOaZepx9byPvrfBq8FgKurIzT6Os/Y8VDps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404018AbgFWUqf (ORCPT
+        id S2404085AbgFWUxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:53:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392483AbgFWUq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:46:28 -0400
+        id S2392851AbgFWUqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:46:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20AE220781;
-        Tue, 23 Jun 2020 20:46:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA9B20781;
+        Tue, 23 Jun 2020 20:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945188;
-        bh=w9e40VJgFi/5xIhYjyWmoWAugoEtwnTY8hHt6ZeEIAk=;
+        s=default; t=1592945193;
+        bh=6JlWlTycEqz+qg1DoLJCsDcfqz3mIMOPAVjwGszD3U8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jllzmCaunI5jE+mjrqtbVhnhZkHCNg679ys5qxWI3puaES+WBeEtSNBmX7Bj9fMJa
-         Zd/jFqej21i/ePkKU/OmvqzEseRAoiYgiGXdM69rTuH/0x5TPx5A5OgKB4woZXyHpr
-         fw0lxrnH+SVg2BKu3e/OYMo59PfbNGoYvCZVqzAs=
+        b=EseUj59yR5mrq7BXciq6bJIVeCDLlaJTDxq5rG/uarp8+Dzy8sjIXHRvwKHQkyny3
+         L11euELUVe8IyuESXG2B7aUfFzZsoCN9nHchIdSaiv0FwviVgVot08AqBfDawVA5Vi
+         bMS0/sSFK9Ztoxx2kZzCOElAhwbWOqg1QobGOx6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/136] powerpc/64s/pgtable: fix an undefined behaviour
-Date:   Tue, 23 Jun 2020 21:58:42 +0200
-Message-Id: <20200623195307.010581305@linuxfoundation.org>
+Subject: [PATCH 4.14 076/136] x86/apic: Make TSC deadline timer detection message visible
+Date:   Tue, 23 Jun 2020 21:58:52 +0200
+Message-Id: <20200623195307.503508968@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -60,77 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit c2e929b18cea6cbf71364f22d742d9aad7f4677a ]
+[ Upstream commit de308d1815c9e8fe602a958c5c76142ff6501d75 ]
 
-Booting a power9 server with hash MMU could trigger an undefined
-behaviour because pud_offset(p4d, 0) will do,
+The commit
 
-0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
+  c84cb3735fd5 ("x86/apic: Move TSC deadline timer debug printk")
 
-Fix it by converting pud_index() and friends to static inline
-functions.
+removed the message which said that the deadline timer was enabled.
+It added a pr_debug() message which is issued when deadline timer
+validation succeeds.
 
-UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
-shift exponent 34 is too large for 32-bit type 'int'
-CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
-Call Trace:
-dump_stack+0xf4/0x164 (unreliable)
-ubsan_epilogue+0x18/0x78
-__ubsan_handle_shift_out_of_bounds+0x160/0x21c
-walk_pagetables+0x2cc/0x700
-walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
-(inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
-ptdump_check_wx+0x8c/0xf0
-mark_rodata_ro+0x48/0x80
-kernel_init+0x74/0x194
-ret_from_kernel_thread+0x5c/0x74
+Well, issued only when CONFIG_DYNAMIC_DEBUG is enabled - otherwise
+pr_debug() calls get optimized away if DEBUG is not defined in the
+compilation unit.
 
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20200306044852.3236-1-cai@lca.pw
+Therefore, make the above message pr_info() so that it is visible in
+dmesg.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200525104218.27018-1-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h | 23 ++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index bcb79a96a6c83..618ee2c0ed53d 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -898,10 +898,25 @@ extern struct page *pgd_page(pgd_t pgd);
- #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
- #define pgd_page_vaddr(pgd)	__va(pgd_val(pgd) & ~PGD_MASKED_BITS)
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 48ab5fdd10442..ee33f09513223 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1915,7 +1915,7 @@ void __init init_apic_mappings(void)
+ 	unsigned int new_apicid;
  
--#define pgd_index(address) (((address) >> (PGDIR_SHIFT)) & (PTRS_PER_PGD - 1))
--#define pud_index(address) (((address) >> (PUD_SHIFT)) & (PTRS_PER_PUD - 1))
--#define pmd_index(address) (((address) >> (PMD_SHIFT)) & (PTRS_PER_PMD - 1))
--#define pte_index(address) (((address) >> (PAGE_SHIFT)) & (PTRS_PER_PTE - 1))
-+static inline unsigned long pgd_index(unsigned long address)
-+{
-+	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
-+}
-+
-+static inline unsigned long pud_index(unsigned long address)
-+{
-+	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-+}
-+
-+static inline unsigned long pmd_index(unsigned long address)
-+{
-+	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-+}
-+
-+static inline unsigned long pte_index(unsigned long address)
-+{
-+	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-+}
+ 	if (apic_validate_deadline_timer())
+-		pr_debug("TSC deadline timer available\n");
++		pr_info("TSC deadline timer available\n");
  
- /*
-  * Find an entry in a page-table-directory.  We combine the address region
+ 	if (x2apic_mode) {
+ 		boot_cpu_physical_apicid = read_apic_id();
 -- 
 2.25.1
 
