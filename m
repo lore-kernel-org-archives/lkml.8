@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C074C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24200C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5A020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF5CE20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946325;
-	bh=IP67GpzM2OaMpsiyr+1gUr5RKQnZ18BLqoKRbfpNLsE=;
+	s=default; t=1592946330;
+	bh=IKO8ZK/SkYdF/3dtBEcIEcacC+9R2DVwhJ5cfKla2TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aPUl+Gh5UnCdRXYPq/2FE1GE2Coh2KpSNRK/8YzL/E1e9InOGudVdIiAQdx8GZ887
-	 RGKuO2IUANRXjT7xmrWFPtASUiwOXhmhVq+yHcQYODWmpBcOdYrgEjftGR3CgxzNU8
-	 b3rDpZLkGxIWupe2yxG3+YyEcrqb7V66oonMZ7HI=
+	b=b3V4gvqhwf/dk04W5zBHi17arf4F4cbuIu5GBzqaZiExbr1HlTOqNftyadcKPe/J7
+	 INwq9B2+Z4LaVXqbdQ3oL1k2Tp1osPB1oRL56hwcq3R6NsDliHAwOjczCJKw7fwcCU
+	 qIcDMf1H9jT9D8FBo9h3XgKTcPghPYE24gjY2mbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393216AbgFWVFX (ORCPT
+        id S2390194AbgFWVF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60584 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391598AbgFWUhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:37:11 -0400
+        id S2391566AbgFWUhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:37:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BA232080C;
-        Tue, 23 Jun 2020 20:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8067921531;
+        Tue, 23 Jun 2020 20:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944632;
-        bh=IP67GpzM2OaMpsiyr+1gUr5RKQnZ18BLqoKRbfpNLsE=;
+        s=default; t=1592944627;
+        bh=IKO8ZK/SkYdF/3dtBEcIEcacC+9R2DVwhJ5cfKla2TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFfJzbFzF9sreh/lsC5jn49G19dcUfrsBePR8jR6y867v8ZFWnI3MYt5ngBzRQB1q
-         80odkpzyq+iMMJ/kOQGceMQRndpiaTZUhj+qQtolXCx8HjaBnFdejcBn6NRFEpHU+P
-         3/pvKQdRAfw5ZM09pqU7yR3pnpKfVGGTC3qA3QdM=
+        b=C+BFeW496ajNWN4AW1blDXq2LaJUSJZa70GC7dbB2GflGWt+WSVOEgUJUAGKwfDrL
+         BZfYiHeLsmAKZc4LQCRYep1pi0Tpl2pQ8GD/SeX6WEOQzUPw7SVUE7RnLO8yykhHBq
+         HiiU5rliKj9GK8z1VFtg0VMXMlVAq8LEiP62FULo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 034/206] PCI: vmd: Filter resource type bits from shadow register
-Date:   Tue, 23 Jun 2020 21:56:02 +0200
-Message-Id: <20200623195318.658121648@linuxfoundation.org>
+Subject: [PATCH 4.19 032/206] powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple hv-24x7 events run
+Date:   Tue, 23 Jun 2020 21:56:00 +0200
+Message-Id: <20200623195318.564735310@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,53 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Kajol Jain <kjain@linux.ibm.com>
 
-[ Upstream commit 3e5095eebe015d5a4d566aa5e03c8621add5f0a7 ]
+[ Upstream commit b4ac18eead28611ff470d0f47a35c4e0ac080d9c ]
 
-Versions of VMD with the Host Physical Address shadow register use this
-register to calculate the bus address offset needed to do guest
-passthrough of the domain. This register shadows the Host Physical
-Address registers including the resource type bits. After calculating
-the offset, the extra resource type bits lead to the VMD resources being
-over-provisioned at the front and under-provisioned at the back.
+Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
+values")' added to print _change_ in the counter value rather then raw
+value for 24x7 counters. Incase of transactions, the event count
+is set to 0 at the beginning of the transaction. It also sets
+the event's prev_count to the raw value at the time of initialization.
+Because of setting event count to 0, we are seeing some weird behaviour,
+whenever we run multiple 24x7 events at a time.
 
-Example:
-pci 10000:80:02.0: reg 0x10: [mem 0xf801fffc-0xf803fffb 64bit]
+For example:
 
-Expected:
-pci 10000:80:02.0: reg 0x10: [mem 0xf8020000-0xf803ffff 64bit]
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+	  		   -C 0 -I 1000 sleep 100
 
-If other devices are mapped in the over-provisioned front, it could lead
-to resource conflict issues with VMD or those devices.
+     1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
 
-Link: https://lore.kernel.org/r/20200528030240.16024-3-jonathan.derrick@intel.com
-Fixes: a1a30170138c9 ("PCI: vmd: Fix shadow offsets to reflect spec changes")
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Getting these large values in case we do -I.
+
+As we are setting event_count to 0, for interval case, overall event_count is not
+coming in incremental order. As we may can get new delta lesser then previous count.
+Because of which when we print intervals, we are getting negative value which create
+these large values.
+
+This patch removes part where we set event_count to 0 in function
+'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
+to the raw value at the time of initialization to print change value.
+
+With this patch
+In power9 platform
+
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+			   -C 0 -I 1000 sleep 100
+
+     1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+
+Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200525104308.9814-2-kjain@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/vmd.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/powerpc/perf/hv-24x7.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index b52885020c85c..c3ac7f094a394 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -617,9 +617,11 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 			if (!membar2)
- 				return -ENOMEM;
- 			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
--					readq(membar2 + MB2_SHADOW_OFFSET);
-+					(readq(membar2 + MB2_SHADOW_OFFSET) &
-+					 PCI_BASE_ADDRESS_MEM_MASK);
- 			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
--					readq(membar2 + MB2_SHADOW_OFFSET + 8);
-+					(readq(membar2 + MB2_SHADOW_OFFSET + 8) &
-+					 PCI_BASE_ADDRESS_MEM_MASK);
- 			pci_iounmap(vmd->dev, membar2);
+diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+index 72238eedc360f..2bb798918483d 100644
+--- a/arch/powerpc/perf/hv-24x7.c
++++ b/arch/powerpc/perf/hv-24x7.c
+@@ -1413,16 +1413,6 @@ static void h_24x7_event_read(struct perf_event *event)
+ 			h24x7hw = &get_cpu_var(hv_24x7_hw);
+ 			h24x7hw->events[i] = event;
+ 			put_cpu_var(h24x7hw);
+-			/*
+-			 * Clear the event count so we can compute the _change_
+-			 * in the 24x7 raw counter value at the end of the txn.
+-			 *
+-			 * Note that we could alternatively read the 24x7 value
+-			 * now and save its value in event->hw.prev_count. But
+-			 * that would require issuing a hcall, which would then
+-			 * defeat the purpose of using the txn interface.
+-			 */
+-			local64_set(&event->count, 0);
  		}
- 	}
+ 
+ 		put_cpu_var(hv_24x7_reqb);
 -- 
 2.25.1
 
