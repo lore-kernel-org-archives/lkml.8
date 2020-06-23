@@ -2,52 +2,56 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F72C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E809C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 075B22137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5A02080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943319;
-	bh=Z527Nq/Shc1OhWbgc0p7hdjRx5hnQ3jvYpuRZsNUlb8=;
+	s=default; t=1592943320;
+	bh=ZI3jyfKpUxlm+XB6Bob+pEEMgPi+7cqCeL52nl3BHlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5wsL00zVgNxVbKIhSTUfu4MrLx7lkiBYtAVH481ghgwYSq4jBrQuDR6iIkOyBbU1
-	 Lz3qVL39MgJ/YrJDCvDynlzYsUxv4amHhGhXOkzne08GvRUCAXAxk3JX3D86WWbANC
-	 iyTuADgg3hxQJHIzTxNVfTTUyd4AmXVB/PtE6cG4=
+	b=DzONRFVW6qgq5UAGunSSVNwFkopW9jOsyhe2jnxAG3/oAiOvVHp1TXatxWxNiavMu
+	 Cj494CHumq5CDfZHur9sI5gZ93QVEoj+UVycw284WL9vo9E89pBTZe/5e81OX1e0/a
+	 uoKmkB6XRQ5GV2jm7uOjNobyGUnPy/1ruNx7O10o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389304AbgFWUPR (ORCPT
+        id S2389311AbgFWUPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57960 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389299AbgFWUPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:15:07 -0400
+        id S2388463AbgFWUPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:15:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5717D20EDD;
-        Tue, 23 Jun 2020 20:15:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE4302073E;
+        Tue, 23 Jun 2020 20:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943305;
-        bh=Z527Nq/Shc1OhWbgc0p7hdjRx5hnQ3jvYpuRZsNUlb8=;
+        s=default; t=1592943308;
+        bh=ZI3jyfKpUxlm+XB6Bob+pEEMgPi+7cqCeL52nl3BHlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z91tOO+gszFdnNz9isjSvPWVG8SlNcsrM3kPcUM3YMBl3ZnoWyoPRHzS9Au6p3SIl
-         xzyaGtIanYZyrohsJfCuC0JSALKgkRD43GwwlIgGfLZcMS7YpsYyaEhTee56YvmElu
-         e+llIIj6Ff2/ypxkhQp9SqFdIYevWmidVnkwAk/A=
+        b=mHCHt14gLSbcSRKNKVBp0Rzl8vMmfq/nTZxO6h90KMomwZylbF3+D8IytdR5G8bLw
+         0Rz6/4LGaoEO04lXTUhKSID4JnMpWHFV+k3TM2sU8XZtKGDB+8LCzQn6RQgf6KQnui
+         svwUjPZD1nSul1cl59U1qx7RJWfWxnvOiau0ynQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 309/477] nfsd4: make drc_slab global, not per-net
-Date:   Tue, 23 Jun 2020 21:55:06 +0200
-Message-Id: <20200623195422.145506461@linuxfoundation.org>
+Subject: [PATCH 5.7 300/477] ASoC: SOF: Intel: hda: fix generic hda codec support
+Date:   Tue, 23 Jun 2020 21:54:57 +0200
+Message-Id: <20200623195421.731494966@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,248 +64,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 027690c75e8fd91b60a634d31c4891a6e39d45bd ]
+[ Upstream commit 89d73ccab20a684d8446cea4d8ac6a2608c8d390 ]
 
-I made every global per-network-namespace instead.  But perhaps doing
-that to this slab was a step too far.
+Add support for using generic codec driver with SOF. Generic driver
+is used if:
+ - snd_sof_intel_hda_common.hda_model="generic" is set, or
+ - fallback if no other codec driver is found
 
-The kmem_cache_create call in our net init method also seems to be
-responsible for this lockdep warning:
+The implementation is aligned with snd-hda-intel driver, and fixes audio
+support for systems like Acer Swift 3 SF314-57G, on which this issue was
+originally reported.
 
-[   45.163710] Unable to find swap-space signature
-[   45.375718] trinity-c1 (855): attempted to duplicate a private mapping with mremap.  This is not supported.
-[   46.055744] futex_wake_op: trinity-c1 tries to shift op by -209; fix this program
-[   51.011723]
-[   51.013378] ======================================================
-[   51.013875] WARNING: possible circular locking dependency detected
-[   51.014378] 5.2.0-rc2 #1 Not tainted
-[   51.014672] ------------------------------------------------------
-[   51.015182] trinity-c2/886 is trying to acquire lock:
-[   51.015593] 000000005405f099 (slab_mutex){+.+.}, at: slab_attr_store+0xa2/0x130
-[   51.016190]
-[   51.016190] but task is already holding lock:
-[   51.016652] 00000000ac662005 (kn->count#43){++++}, at: kernfs_fop_write+0x286/0x500
-[   51.017266]
-[   51.017266] which lock already depends on the new lock.
-[   51.017266]
-[   51.017909]
-[   51.017909] the existing dependency chain (in reverse order) is:
-[   51.018497]
-[   51.018497] -> #1 (kn->count#43){++++}:
-[   51.018956]        __lock_acquire+0x7cf/0x1a20
-[   51.019317]        lock_acquire+0x17d/0x390
-[   51.019658]        __kernfs_remove+0x892/0xae0
-[   51.020020]        kernfs_remove_by_name_ns+0x78/0x110
-[   51.020435]        sysfs_remove_link+0x55/0xb0
-[   51.020832]        sysfs_slab_add+0xc1/0x3e0
-[   51.021332]        __kmem_cache_create+0x155/0x200
-[   51.021720]        create_cache+0xf5/0x320
-[   51.022054]        kmem_cache_create_usercopy+0x179/0x320
-[   51.022486]        kmem_cache_create+0x1a/0x30
-[   51.022867]        nfsd_reply_cache_init+0x278/0x560
-[   51.023266]        nfsd_init_net+0x20f/0x5e0
-[   51.023623]        ops_init+0xcb/0x4b0
-[   51.023928]        setup_net+0x2fe/0x670
-[   51.024315]        copy_net_ns+0x30a/0x3f0
-[   51.024653]        create_new_namespaces+0x3c5/0x820
-[   51.025257]        unshare_nsproxy_namespaces+0xd1/0x240
-[   51.025881]        ksys_unshare+0x506/0x9c0
-[   51.026381]        __x64_sys_unshare+0x3a/0x50
-[   51.026937]        do_syscall_64+0x110/0x10b0
-[   51.027509]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   51.028175]
-[   51.028175] -> #0 (slab_mutex){+.+.}:
-[   51.028817]        validate_chain+0x1c51/0x2cc0
-[   51.029422]        __lock_acquire+0x7cf/0x1a20
-[   51.029947]        lock_acquire+0x17d/0x390
-[   51.030438]        __mutex_lock+0x100/0xfa0
-[   51.030995]        mutex_lock_nested+0x27/0x30
-[   51.031516]        slab_attr_store+0xa2/0x130
-[   51.032020]        sysfs_kf_write+0x11d/0x180
-[   51.032529]        kernfs_fop_write+0x32a/0x500
-[   51.033056]        do_loop_readv_writev+0x21d/0x310
-[   51.033627]        do_iter_write+0x2e5/0x380
-[   51.034148]        vfs_writev+0x170/0x310
-[   51.034616]        do_pwritev+0x13e/0x160
-[   51.035100]        __x64_sys_pwritev+0xa3/0x110
-[   51.035633]        do_syscall_64+0x110/0x10b0
-[   51.036200]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   51.036924]
-[   51.036924] other info that might help us debug this:
-[   51.036924]
-[   51.037876]  Possible unsafe locking scenario:
-[   51.037876]
-[   51.038556]        CPU0                    CPU1
-[   51.039130]        ----                    ----
-[   51.039676]   lock(kn->count#43);
-[   51.040084]                                lock(slab_mutex);
-[   51.040597]                                lock(kn->count#43);
-[   51.041062]   lock(slab_mutex);
-[   51.041320]
-[   51.041320]  *** DEADLOCK ***
-[   51.041320]
-[   51.041793] 3 locks held by trinity-c2/886:
-[   51.042128]  #0: 000000001f55e152 (sb_writers#5){.+.+}, at: vfs_writev+0x2b9/0x310
-[   51.042739]  #1: 00000000c7d6c034 (&of->mutex){+.+.}, at: kernfs_fop_write+0x25b/0x500
-[   51.043400]  #2: 00000000ac662005 (kn->count#43){++++}, at: kernfs_fop_write+0x286/0x500
-
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 3ba75830ce17 "drc containerization"
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Hui Wang <hui.wang@canonical.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+BugLink: https://github.com/thesofproject/linux/issues/1807
+BugLink: https://bugs.launchpad.net/bugs/1877757
+Link: https://lore.kernel.org/r/20200529160358.12134-1-kai.vehmanen@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/cache.h    |  2 ++
- fs/nfsd/netns.h    |  1 -
- fs/nfsd/nfscache.c | 29 +++++++++++++++++------------
- fs/nfsd/nfsctl.c   |  6 ++++++
- 4 files changed, 25 insertions(+), 13 deletions(-)
+ sound/soc/sof/intel/hda-codec.c | 51 +++++++++++++++++++++++++++++----
+ 1 file changed, 45 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
-index 10ec5ecdf1178..65c331f75e9c7 100644
---- a/fs/nfsd/cache.h
-+++ b/fs/nfsd/cache.h
-@@ -78,6 +78,8 @@ enum {
- /* Checksum this amount of the request */
- #define RC_CSUMLEN		(256U)
+diff --git a/sound/soc/sof/intel/hda-codec.c b/sound/soc/sof/intel/hda-codec.c
+index 3041fbbb010a2..ea021db697b8a 100644
+--- a/sound/soc/sof/intel/hda-codec.c
++++ b/sound/soc/sof/intel/hda-codec.c
+@@ -24,19 +24,44 @@
+ #define IDISP_VID_INTEL	0x80860000
  
-+int	nfsd_drc_slab_create(void);
-+void	nfsd_drc_slab_free(void);
- int	nfsd_reply_cache_init(struct nfsd_net *);
- void	nfsd_reply_cache_shutdown(struct nfsd_net *);
- int	nfsd_cache_lookup(struct svc_rqst *);
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 09aa545825bd9..9217cb64bf0e7 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -139,7 +139,6 @@ struct nfsd_net {
- 	 * Duplicate reply cache
- 	 */
- 	struct nfsd_drc_bucket   *drc_hashtbl;
--	struct kmem_cache        *drc_slab;
- 
- 	/* max number of entries allowed in the cache */
- 	unsigned int             max_drc_entries;
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 96352ab7bd810..0c10bfea039eb 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -36,6 +36,8 @@ struct nfsd_drc_bucket {
- 	spinlock_t cache_lock;
- };
- 
-+static struct kmem_cache	*drc_slab;
-+
- static int	nfsd_cache_append(struct svc_rqst *rqstp, struct kvec *vec);
- static unsigned long nfsd_reply_cache_count(struct shrinker *shrink,
- 					    struct shrink_control *sc);
-@@ -95,7 +97,7 @@ nfsd_reply_cache_alloc(struct svc_rqst *rqstp, __wsum csum,
+ /* load the legacy HDA codec driver */
+-static int hda_codec_load_module(struct hda_codec *codec)
++static int request_codec_module(struct hda_codec *codec)
  {
- 	struct svc_cacherep	*rp;
+ #ifdef MODULE
+ 	char alias[MODULE_NAME_LEN];
+-	const char *module = alias;
++	const char *mod = NULL;
  
--	rp = kmem_cache_alloc(nn->drc_slab, GFP_KERNEL);
-+	rp = kmem_cache_alloc(drc_slab, GFP_KERNEL);
- 	if (rp) {
- 		rp->c_state = RC_UNUSED;
- 		rp->c_type = RC_NOCACHE;
-@@ -129,7 +131,7 @@ nfsd_reply_cache_free_locked(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
- 		atomic_dec(&nn->num_drc_entries);
- 		nn->drc_mem_usage -= sizeof(*rp);
- 	}
--	kmem_cache_free(nn->drc_slab, rp);
-+	kmem_cache_free(drc_slab, rp);
+-	snd_hdac_codec_modalias(&codec->core, alias, sizeof(alias));
+-	dev_dbg(&codec->core.dev, "loading codec module: %s\n", module);
+-	request_module(module);
++	switch (codec->probe_id) {
++	case HDA_CODEC_ID_GENERIC:
++#if IS_MODULE(CONFIG_SND_HDA_GENERIC)
++		mod = "snd-hda-codec-generic";
+ #endif
++		break;
++	default:
++		snd_hdac_codec_modalias(&codec->core, alias, sizeof(alias));
++		mod = alias;
++		break;
++	}
++
++	if (mod) {
++		dev_dbg(&codec->core.dev, "loading codec module: %s\n", mod);
++		request_module(mod);
++	}
++#endif /* MODULE */
+ 	return device_attach(hda_codec_dev(codec));
  }
  
- static void
-@@ -141,6 +143,18 @@ nfsd_reply_cache_free(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
- 	spin_unlock(&b->cache_lock);
- }
- 
-+int nfsd_drc_slab_create(void)
++static int hda_codec_load_module(struct hda_codec *codec)
 +{
-+	drc_slab = kmem_cache_create("nfsd_drc",
-+				sizeof(struct svc_cacherep), 0, 0, NULL);
-+	return drc_slab ? 0: -ENOMEM;
++	int ret = request_codec_module(codec);
++
++	if (ret <= 0) {
++		codec->probe_id = HDA_CODEC_ID_GENERIC;
++		ret = request_codec_module(codec);
++	}
++
++	return ret;
 +}
 +
-+void nfsd_drc_slab_free(void)
-+{
-+	kmem_cache_destroy(drc_slab);
-+}
-+
- int nfsd_reply_cache_init(struct nfsd_net *nn)
+ /* enable controller wake up event for all codecs with jack connectors */
+ void hda_codec_jack_wake_enable(struct snd_sof_dev *sdev)
  {
- 	unsigned int hashsize;
-@@ -159,18 +173,13 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- 	if (status)
- 		goto out_nomem;
+@@ -78,6 +103,13 @@ void hda_codec_jack_check(struct snd_sof_dev *sdev) {}
+ EXPORT_SYMBOL_NS(hda_codec_jack_wake_enable, SND_SOC_SOF_HDA_AUDIO_CODEC);
+ EXPORT_SYMBOL_NS(hda_codec_jack_check, SND_SOC_SOF_HDA_AUDIO_CODEC);
  
--	nn->drc_slab = kmem_cache_create("nfsd_drc",
--				sizeof(struct svc_cacherep), 0, 0, NULL);
--	if (!nn->drc_slab)
--		goto out_shrinker;
--
- 	nn->drc_hashtbl = kcalloc(hashsize,
- 				sizeof(*nn->drc_hashtbl), GFP_KERNEL);
- 	if (!nn->drc_hashtbl) {
- 		nn->drc_hashtbl = vzalloc(array_size(hashsize,
- 						 sizeof(*nn->drc_hashtbl)));
- 		if (!nn->drc_hashtbl)
--			goto out_slab;
-+			goto out_shrinker;
++#if IS_ENABLED(CONFIG_SND_HDA_GENERIC)
++#define is_generic_config(bus) \
++	((bus)->modelname && !strcmp((bus)->modelname, "generic"))
++#else
++#define is_generic_config(x)	0
++#endif
++
+ /* probe individual codec */
+ static int hda_codec_probe(struct snd_sof_dev *sdev, int address,
+ 			   bool hda_codec_use_common_hdmi)
+@@ -87,6 +119,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address,
+ #endif
+ 	struct hda_bus *hbus = sof_to_hbus(sdev);
+ 	struct hdac_device *hdev;
++	struct hda_codec *codec;
+ 	u32 hda_cmd = (address << 28) | (AC_NODE_ROOT << 20) |
+ 		(AC_VERB_PARAMETERS << 8) | AC_PAR_VENDOR_ID;
+ 	u32 resp = -1;
+@@ -108,6 +141,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address,
+ 
+ 	hda_priv->codec.bus = hbus;
+ 	hdev = &hda_priv->codec.core;
++	codec = &hda_priv->codec;
+ 
+ 	ret = snd_hdac_ext_bus_device_init(&hbus->core, address, hdev);
+ 	if (ret < 0)
+@@ -122,6 +156,11 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address,
+ 		hda_priv->need_display_power = true;
  	}
  
- 	for (i = 0; i < hashsize; i++) {
-@@ -180,8 +189,6 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- 	nn->drc_hashsize = hashsize;
- 
- 	return 0;
--out_slab:
--	kmem_cache_destroy(nn->drc_slab);
- out_shrinker:
- 	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
- out_nomem:
-@@ -209,8 +216,6 @@ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
- 	nn->drc_hashtbl = NULL;
- 	nn->drc_hashsize = 0;
- 
--	kmem_cache_destroy(nn->drc_slab);
--	nn->drc_slab = NULL;
- }
- 
- /*
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 3bb2db947d291..71687d99b0901 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1533,6 +1533,9 @@ static int __init init_nfsd(void)
- 		goto out_free_slabs;
- 	nfsd_fault_inject_init(); /* nfsd fault injection controls */
- 	nfsd_stat_init();	/* Statistics */
-+	retval = nfsd_drc_slab_create();
-+	if (retval)
-+		goto out_free_stat;
- 	nfsd_lockd_init();	/* lockd->nfsd callbacks */
- 	retval = create_proc_exports_entry();
- 	if (retval)
-@@ -1546,6 +1549,8 @@ out_free_all:
- 	remove_proc_entry("fs/nfs", NULL);
- out_free_lockd:
- 	nfsd_lockd_shutdown();
-+	nfsd_drc_slab_free();
-+out_free_stat:
- 	nfsd_stat_shutdown();
- 	nfsd_fault_inject_cleanup();
- 	nfsd4_exit_pnfs();
-@@ -1560,6 +1565,7 @@ out_unregister_pernet:
- 
- static void __exit exit_nfsd(void)
- {
-+	nfsd_drc_slab_free();
- 	remove_proc_entry("fs/nfs/exports", NULL);
- 	remove_proc_entry("fs/nfs", NULL);
- 	nfsd_stat_shutdown();
++	if (is_generic_config(hbus))
++		codec->probe_id = HDA_CODEC_ID_GENERIC;
++	else
++		codec->probe_id = 0;
++
+ 	/*
+ 	 * if common HDMI codec driver is not used, codec load
+ 	 * is skipped here and hdac_hdmi is used instead
+@@ -129,7 +168,7 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address,
+ 	if (hda_codec_use_common_hdmi ||
+ 	    (resp & 0xFFFF0000) != IDISP_VID_INTEL) {
+ 		hdev->type = HDA_DEV_LEGACY;
+-		ret = hda_codec_load_module(&hda_priv->codec);
++		ret = hda_codec_load_module(codec);
+ 		/*
+ 		 * handle ret==0 (no driver bound) as an error, but pass
+ 		 * other return codes without modification
 -- 
 2.25.1
 
