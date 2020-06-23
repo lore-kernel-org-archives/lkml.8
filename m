@@ -2,157 +2,85 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C85C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB04D2098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1BC207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387588AbgFWTgD (ORCPT
+        id S2387474AbgFWThR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:36:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:11008 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387502AbgFWTfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:35:45 -0400
-IronPort-SDR: Q8lFbMZ7xy/EiJM7FIaf9pBZPtH7Qibg9eiEH/x0dP3ijrnUGLhZRKhUOPJoEXnqf0RfhrQocD
- 7xW6KTslSi7w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="142430971"
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="142430971"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 12:35:44 -0700
-IronPort-SDR: paQmTNzGnJBumOT+MUhvZ2x9BWmJndGmv2BbB6jitFmvWqLuje/y2u830LNVT9ST0JZj0z1O4/
- I5V00FXetfBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="263428292"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Jun 2020 12:35:43 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] KVM: x86/mmu: Batch zap MMU pages when recycling oldest pages
-Date:   Tue, 23 Jun 2020 12:35:40 -0700
-Message-Id: <20200623193542.7554-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200623193542.7554-1-sean.j.christopherson@intel.com>
-References: <20200623193542.7554-1-sean.j.christopherson@intel.com>
+        Tue, 23 Jun 2020 15:37:17 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44999 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733220AbgFWThR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 15:37:17 -0400
+Received: by mail-io1-f72.google.com with SMTP id h15so5369409ioj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 12:37:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=LFs9FQwJPzjZsjyEnnKo03dPiOHsVYsyRFbI7NzHdGY=;
+        b=KpT6pRODrRAbj1wtrRAa9WC7tmwt5//DGDyLG8M2NdJ6BeZZPBdlkQ8sRIWRsFksoK
+         98GrmdIuKTeVCdCfZ0Eue/ItfsXv0M3OlCAkH2+4lXBaHiaqL9QVH9sFBmPhFjjPi5AX
+         ff9hdM39ZE9/gw0V2ameOi+1zxM510s07JE02Wxw+YlsK7OaBpj8X18Lx/+MtU8hIzTw
+         9wqvywlQiLef8u6k8GxUV6ULSiAXo67te+Y/NF+ftA8DpD3Gno5wi8B3ZM2cvZnb9VXD
+         K8sJjv/ZjVveCQAiaN4L2Nu8ajVBqDsaOh77/0zxXtrSNRzy2S0G905WPQFLGeSw4kPv
+         anwQ==
+X-Gm-Message-State: AOAM533g5RcEnr5hnCANqpJOPOIznw7cErIX6Qj2mzGPyKU5jpArP6G1
+        EepIauX6eTHFrX27FiHIW/XLO5gn7IOOCWqjh/pyBude4UKM
+X-Google-Smtp-Source: ABdhPJwxdrC6x0hoUScfPr1/tavnK5H+g8rGXHG32+HRw0zc5xkolu7hGrNUdJXkdsOV9CJz5MbcEseTO5h1+QVjMlzofA1upD6b
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:93ea:: with SMTP id z97mr21523141jah.40.1592941036070;
+ Tue, 23 Jun 2020 12:37:16 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 12:37:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009a6e9805a8c57c58@google.com>
+Subject: BUG: corrupted list in corrupted (3)
+From:   syzbot <syzbot+0b3de1d31a24da20947b@syzkaller.appspotmail.com>
+To:     akpm@osdl.org, andreyknvl@google.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        paulmck@kernel.org, riel@redhat.com, rostedt@goodmis.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Collect MMU pages for zapping in a loop when making MMU pages available,
-and skip over active roots when doing so as zapping an active root can
-never immediately free up a page.  Batching the zapping avoids multiple
-remote TLB flushes and remedies the issue where the loop would bail
-early if an active root was encountered.
+Hello,
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+syzbot found the following crash on:
+
+HEAD commit:    f8f02d5c USB: OTG: rename product list of devices
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=11bfddf1100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fbe5dc26525767f1
+dashboard link: https://syzkaller.appspot.com/bug?extid=0b3de1d31a24da20947b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11abf20d100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ea5a11100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0b3de1d31a24da20947b@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:26!
+
+
 ---
- arch/x86/kvm/mmu/mmu.c | 58 ++++++++++++++++++++++++++++++------------
- 1 file changed, 42 insertions(+), 16 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 8e7df4ed4b55..8c85a3a178f4 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2838,20 +2838,51 @@ static bool prepare_zap_oldest_mmu_page(struct kvm *kvm,
- 	return kvm_mmu_prepare_zap_page(kvm, sp, invalid_list);
- }
- 
-+static unsigned long kvm_mmu_zap_oldest_mmu_pages(struct kvm *kvm,
-+						  unsigned long nr_to_zap)
-+{
-+	unsigned long total_zapped = 0;
-+	struct kvm_mmu_page *sp, *tmp;
-+	LIST_HEAD(invalid_list);
-+	bool unstable;
-+	int nr_zapped;
-+
-+	if (list_empty(&kvm->arch.active_mmu_pages))
-+		return 0;
-+
-+restart:
-+	list_for_each_entry_safe(sp, tmp, &kvm->arch.active_mmu_pages, link) {
-+		/*
-+		 * Don't zap active root pages, the page itself can't be freed
-+		 * and zapping it will just force vCPUs to realloc and reload.
-+		 */
-+		if (sp->root_count)
-+			continue;
-+
-+		unstable = __kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list,
-+						      &nr_zapped);
-+		total_zapped += nr_zapped;
-+		if (total_zapped >= nr_to_zap)
-+			break;
-+
-+		if (unstable)
-+			goto restart;
-+	}
-+
-+	kvm_mmu_commit_zap_page(kvm, &invalid_list);
-+
-+	kvm->stat.mmu_recycled += total_zapped;
-+	return total_zapped;
-+}
-+
- static int make_mmu_pages_available(struct kvm_vcpu *vcpu)
- {
--	LIST_HEAD(invalid_list);
-+	unsigned long avail = kvm_mmu_available_pages(vcpu->kvm);
- 
--	if (likely(kvm_mmu_available_pages(vcpu->kvm) >= KVM_MIN_FREE_MMU_PAGES))
-+	if (likely(avail >= KVM_MIN_FREE_MMU_PAGES))
- 		return 0;
- 
--	while (kvm_mmu_available_pages(vcpu->kvm) < KVM_REFILL_PAGES) {
--		if (!prepare_zap_oldest_mmu_page(vcpu->kvm, &invalid_list))
--			break;
--
--		++vcpu->kvm->stat.mmu_recycled;
--	}
--	kvm_mmu_commit_zap_page(vcpu->kvm, &invalid_list);
-+	kvm_mmu_zap_oldest_mmu_pages(vcpu->kvm, KVM_REFILL_PAGES - avail);
- 
- 	if (!kvm_mmu_available_pages(vcpu->kvm))
- 		return -ENOSPC;
-@@ -2864,17 +2895,12 @@ static int make_mmu_pages_available(struct kvm_vcpu *vcpu)
-  */
- void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned long goal_nr_mmu_pages)
- {
--	LIST_HEAD(invalid_list);
--
- 	spin_lock(&kvm->mmu_lock);
- 
- 	if (kvm->arch.n_used_mmu_pages > goal_nr_mmu_pages) {
--		/* Need to free some mmu pages to achieve the goal. */
--		while (kvm->arch.n_used_mmu_pages > goal_nr_mmu_pages)
--			if (!prepare_zap_oldest_mmu_page(kvm, &invalid_list))
--				break;
-+		kvm_mmu_zap_oldest_mmu_pages(kvm, kvm->arch.n_used_mmu_pages -
-+						  goal_nr_mmu_pages);
- 
--		kvm_mmu_commit_zap_page(kvm, &invalid_list);
- 		goal_nr_mmu_pages = kvm->arch.n_used_mmu_pages;
- 	}
- 
--- 
-2.26.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
