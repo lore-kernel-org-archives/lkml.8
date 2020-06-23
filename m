@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6558C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 165BC20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCA320702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946846;
-	bh=/jeMIeMAvV5mVKmzcCa+7ivUMMjbE+45PxVQ2In6AYM=;
+	s=default; t=1592946854;
+	bh=lNJA7nv//edGCQyQ9N80yJt172gDaWi2vTsrUGsennQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O1nIJCM1O+NWL7diI5mbLmnhQ+5na+ERCE2yiNz9NuYfVtgv2UemCf6+AGklZb8cW
-	 kbsx6jvBUpaBRDIa4RiaLN4WhLhll7mHRmKeeQj//1oh22WhuuW7ggGUlD1XXgrVyB
-	 4BG927NWQaYcMol6KZ7lbJy1HSxFP8nDsMyCAaMc=
+	b=QCStrkiG1LJMCjD0qIJ3XR3HXTSIQeG1xXPjPWSPKfgk7vjeTuspDDaTcpJOHhSjq
+	 C48uHL5HAHEmjY6CvVYmHQl8kjaRWjapepV1IADQMA6Yb3SwuoMZiez4cvnyirRlDV
+	 DrwGB7dCmLFMrcdqZRC4TBuavFb+NdWHkiqPJBCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391015AbgFWVOE (ORCPT
+        id S2393411AbgFWVOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389977AbgFWU3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:29:44 -0400
+        id S2390123AbgFWU3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B20E206EB;
-        Tue, 23 Jun 2020 20:29:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F129B206C3;
+        Tue, 23 Jun 2020 20:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944184;
-        bh=/jeMIeMAvV5mVKmzcCa+7ivUMMjbE+45PxVQ2In6AYM=;
+        s=default; t=1592944181;
+        bh=lNJA7nv//edGCQyQ9N80yJt172gDaWi2vTsrUGsennQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aw+8J0tGsrVg6zlhlXB+CG91SvPVnyKO0PS/rchNKdnEeBmGQtqUElqrfInxjjY1P
-         WJWXNXiIeYnMauM5gQ6UcE7PBuQ/5khE0JHPO8HFd2pxAsYJhoN0E4x52UMAJ6/ucJ
-         MhzhAT1qXni/rqXNzU82tfO/QuYjvrnGO/YEciKU=
+        b=HGja80e1fBjcf+my6QC/ZLZSCuNnGU7sGJKoNhN0TRZRDJJh4EOwzIEygah04gxxx
+         QdaTyJhBn06Oz9KnDBrFIHjk5o5+QUftXXwDF958/RJYKW4m3lUpVYSuyEaJ6kiyeM
+         qOfK4CSSgLIJ8bTLRPdnkygx4dvLA3sdY7zZURzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 206/314] mailbox: zynqmp-ipi: Fix NULL vs IS_ERR() check in zynqmp_ipi_mbox_probe()
-Date:   Tue, 23 Jun 2020 21:56:41 +0200
-Message-Id: <20200623195348.745935338@linuxfoundation.org>
+Subject: [PATCH 5.4 205/314] rtc: rv3028: Add missed check for devm_regmap_init_i2c()
+Date:   Tue, 23 Jun 2020 21:56:40 +0200
+Message-Id: <20200623195348.696895702@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,78 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 445aeeb569f8d7904f8cf80b7c6826bb651ef80e ]
+[ Upstream commit c3b29bf6f166f6ed5f04f9c125477358e0e25df8 ]
 
-In case of error, the function devm_ioremap() returns NULL pointer not
-ERR_PTR(). So we should check whether the return value of devm_ioremap()
-is NULL instead of IS_ERR.
+rv3028_probe() misses a check for devm_regmap_init_i2c().
+Add the missed check to fix it.
 
-Fixes: 4981b82ba2ff ("mailbox: ZynqMP IPI mailbox controller")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Fixes: e6e7376cfd7b ("rtc: rv3028: add new driver")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20200528103950.912353-1-hslester96@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/zynqmp-ipi-mailbox.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ drivers/rtc/rtc-rv3028.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c b/drivers/mailbox/zynqmp-ipi-mailbox.c
-index 86887c9a349a0..f9cc674ba9b76 100644
---- a/drivers/mailbox/zynqmp-ipi-mailbox.c
-+++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
-@@ -504,10 +504,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->req_buf_size = resource_size(&res);
- 		mchan->req_buf = devm_ioremap(mdev, res.start,
- 					      mchan->req_buf_size);
--		if (IS_ERR(mchan->req_buf)) {
-+		if (!mchan->req_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->req_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s, %d.\n", name, ret);
-@@ -520,10 +519,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->resp_buf_size = resource_size(&res);
- 		mchan->resp_buf = devm_ioremap(mdev, res.start,
- 					       mchan->resp_buf_size);
--		if (IS_ERR(mchan->resp_buf)) {
-+		if (!mchan->resp_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->resp_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s.\n", name);
-@@ -543,10 +541,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->req_buf_size = resource_size(&res);
- 		mchan->req_buf = devm_ioremap(mdev, res.start,
- 					      mchan->req_buf_size);
--		if (IS_ERR(mchan->req_buf)) {
-+		if (!mchan->req_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->req_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s.\n", name);
-@@ -559,10 +556,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->resp_buf_size = resource_size(&res);
- 		mchan->resp_buf = devm_ioremap(mdev, res.start,
- 					       mchan->resp_buf_size);
--		if (IS_ERR(mchan->resp_buf)) {
-+		if (!mchan->resp_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->resp_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s.\n", name);
+diff --git a/drivers/rtc/rtc-rv3028.c b/drivers/rtc/rtc-rv3028.c
+index 2b316661a5782..bbdfebd706442 100644
+--- a/drivers/rtc/rtc-rv3028.c
++++ b/drivers/rtc/rtc-rv3028.c
+@@ -625,6 +625,8 @@ static int rv3028_probe(struct i2c_client *client)
+ 		return -ENOMEM;
+ 
+ 	rv3028->regmap = devm_regmap_init_i2c(client, &regmap_config);
++	if (IS_ERR(rv3028->regmap))
++		return PTR_ERR(rv3028->regmap);
+ 
+ 	i2c_set_clientdata(client, rv3028);
+ 
 -- 
 2.25.1
 
