@@ -2,96 +2,164 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97726C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5DE20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2A32070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732709AbgFWNkI (ORCPT
+        id S1732712AbgFWNlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:40:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59130 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732631AbgFWNkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:40:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6A681ACF2;
-        Tue, 23 Jun 2020 13:40:05 +0000 (UTC)
-Date:   Tue, 23 Jun 2020 15:40:03 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Stunes <mstunes@vmware.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <JGross@suse.com>,
-        Jiri Slaby <jslaby@suse.cz>, Kees Cook <keescook@chromium.org>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: Should SEV-ES #VC use IST? (Re: [PATCH] Allow RDTSC and RDTSCP
- from userspace)
-Message-ID: <20200623134003.GD14101@suse.de>
-References: <910AE5B4-4522-4133-99F7-64850181FBF9@amacapital.net>
- <20200425202316.GL21900@8bytes.org>
- <CALCETrW2Y6UFC=zvGbXEYqpsDyBh0DSEM4NQ+L=_pp4aOd6Fuw@mail.gmail.com>
- <CALCETrXGr+o1_bKbnre8cVY14c_76m8pEf3iB_i7h+zfgE5_jA@mail.gmail.com>
- <20200428075512.GP30814@suse.de>
- <20200623110706.GB4817@hirez.programming.kicks-ass.net>
- <20200623113007.GH31822@suse.de>
- <20200623114818.GD4817@hirez.programming.kicks-ass.net>
- <20200623120433.GB14101@suse.de>
- <20200623125201.GG4817@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623125201.GG4817@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 23 Jun 2020 09:41:17 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:32992 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732631AbgFWNlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 09:41:17 -0400
+X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jun 2020 09:41:16 EDT
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 23 Jun 2020 06:35:11 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Jun 2020 06:35:09 -0700
+Received: from vbadigan-linux.qualcomm.com ([10.206.24.109])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Jun 2020 19:05:02 +0530
+Received: by vbadigan-linux.qualcomm.com (Postfix, from userid 76677)
+        id E43B94140; Tue, 23 Jun 2020 19:05:00 +0530 (IST)
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V5 1/3] mmc: sdhci: Allow platform controlled voltage switching
+Date:   Tue, 23 Jun 2020 19:04:46 +0530
+Message-Id: <1592919288-1020-2-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1592919288-1020-1-git-send-email-vbadigan@codeaurora.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1592919288-1020-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:52:01PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 23, 2020 at 02:04:33PM +0200, Joerg Roedel wrote:
-> > No, the recursion check is fine, because overwriting an already used IST
-> > stack doesn't matter (as long as it can be detected) if we are going to
-> > panic anyway. It doesn't matter because the kernel will not leave the
-> > currently running handler anymore.
-> 
-> You only have that guarantee when any SNP #VC from kernel is an
-> automatic panic. But in that case, what's the point of having the
-> recursion count?
+From: Vijay Viswanath <vviswana@codeaurora.org>
 
-It is not a recursion count, it is a stack-recursion check. Basically
-walk down the stack and look if your current stack is already in use.
-Yes, this can be optimized, but that is what is needed.
+If vendor platform drivers are controlling whole logic of voltage
+switching, then sdhci driver no need control vqmmc regulator.
+So skip enabling/disable vqmmc from SDHC driver.
 
-IIRC the current prototype code for SNP just pre-validates all memory in
-the VM and doesn't support moving pages around on the host. So any #VC
-SNP exception would be fatal, yes.
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-In a scenario with on-demand validation of guest pages and support for
-guest-assisted page-moving on the HV side it would be more complicated.
-Basically all memory that is accessed during #VC exception handling must
-stay validated at all times, including the IST stack.
-
-So saying this, I don't understand why _all_ SNP #VC exceptions from
-kernel space must be fatal?
-
-Regards,
-
-	Joerg
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 37b1158c1c0c..e6275c2202b0 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -4105,6 +4105,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	unsigned int override_timeout_clk;
+ 	u32 max_clk;
+ 	int ret;
++	bool enable_vqmmc = false;
+ 
+ 	WARN_ON(host == NULL);
+ 	if (host == NULL)
+@@ -4118,9 +4119,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	 * the host can take the appropriate action if regulators are not
+ 	 * available.
+ 	 */
+-	ret = mmc_regulator_get_supply(mmc);
+-	if (ret)
+-		return ret;
++	if (!mmc->supply.vqmmc) {
++		ret = mmc_regulator_get_supply(mmc);
++		if (ret)
++			return ret;
++		enable_vqmmc  = true;
++	}
+ 
+ 	DBG("Version:   0x%08x | Present:  0x%08x\n",
+ 	    sdhci_readw(host, SDHCI_HOST_VERSION),
+@@ -4377,7 +4381,15 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		mmc->caps |= MMC_CAP_NEEDS_POLL;
+ 
+ 	if (!IS_ERR(mmc->supply.vqmmc)) {
+-		ret = regulator_enable(mmc->supply.vqmmc);
++		if (enable_vqmmc) {
++			ret = regulator_enable(mmc->supply.vqmmc);
++			if (ret) {
++				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
++					mmc_hostname(mmc), ret);
++				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
++			}
++			host->sdhci_core_to_disable_vqmmc = !ret;
++		}
+ 
+ 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+@@ -4390,12 +4402,6 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
+ 						    3600000))
+ 			host->flags &= ~SDHCI_SIGNALING_330;
+-
+-		if (ret) {
+-			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
+-				mmc_hostname(mmc), ret);
+-			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
+-		}
+ 	}
+ 
+ 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
+@@ -4626,7 +4632,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	return 0;
+ 
+ unreg:
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ undma:
+ 	if (host->align_buffer)
+@@ -4644,7 +4650,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
+ {
+ 	struct mmc_host *mmc = host->mmc;
+ 
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ 
+ 	if (host->align_buffer)
+@@ -4787,7 +4793,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
+ 
+ 	destroy_workqueue(host->complete_wq);
+ 
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ 
+ 	if (host->align_buffer)
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 0008bbd27127..0770c036e2ff 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -567,6 +567,7 @@ struct sdhci_host {
+ 	u32 caps1;		/* CAPABILITY_1 */
+ 	bool read_caps;		/* Capability flags have been read */
+ 
++	bool sdhci_core_to_disable_vqmmc;  /* sdhci core can disable vqmmc */
+ 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
+ 	unsigned int            ocr_avail_sd;
+ 	unsigned int            ocr_avail_mmc;
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
