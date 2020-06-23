@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F19C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D489C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E58002078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA412078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948654;
-	bh=1Jo/vo4tTWbftNChB04q9LW+WzDhrX70cNawXmqn4AY=;
+	s=default; t=1592948659;
+	bh=Ghva/ikaioyruQdakRl/7NQRVz7NaOjmIaeQi/c1K+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZMR35ghC/cozoixFnqgrfILsiSl4IzCKC7nCGDEeKy98HnUR16h57AmTbsVVwCqu
-	 l2VaOsXRUAzTKg+r+3FdEh37welKtb2pyjiPv27TpmXJMdJggt/VZVQSNQ7Kye2DWl
-	 aiggZtuY6JCzJx5uKrjPAhRsj9HZXdoxRyxkzGhs=
+	b=YCwXTitrBFXT6Dp5cyi/LpJd95PcZEZ1vX2CejLPbKSEBI1rSVZ9+EOYUyaRSI/n4
+	 UI7OXVANO4eE4wlBsS5zWLZLglCtDvZulxn8UDLAy8a2dw8kFcJ1lOGtaAsdGvBlRX
+	 Vb4yEoCBbuQEyLGRBGTmhmaFL1VDUAmj/8tZjPq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393791AbgFWVoM (ORCPT
+        id S2387825AbgFWUCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:44:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39928 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387851AbgFWUCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:02:37 -0400
+        id S2387812AbgFWUCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:02:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA5AD2080C;
-        Tue, 23 Jun 2020 20:02:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6EEF2078A;
+        Tue, 23 Jun 2020 20:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942556;
-        bh=1Jo/vo4tTWbftNChB04q9LW+WzDhrX70cNawXmqn4AY=;
+        s=default; t=1592942540;
+        bh=Ghva/ikaioyruQdakRl/7NQRVz7NaOjmIaeQi/c1K+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CPnyg1XhuepPnBrNfzqXlXd5ssa9qqqojhiysxcZ3EOKEEVgoTcXfccHzkLzt2GH3
-         6+PVPldAhOHyvnT1XEfD4jTZTuYOaa/sWkLEqNvxy4niQ6IdnZbJSIWxok4Khxw5zS
-         cXqulKbo+QPXjRsoZkBWiKuuf5cloQOoJnBLG8Rw=
+        b=vbx0IddBqrG74Q4eol103od7DttexxhP+NKnAMeMlaqXwVgfL0Z2Q3vDrRb2fDzan
+         ljELKwhL+xn8Wu/IIfjtsX4yL8KGZbq30bcl+qje8focs7n3lwprPz12iFGYUMLTjn
+         9+iCPXN5y+Iuylg4KHYbV1aP5ueusxPoQ9fkNIF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 045/477] misc: fastrpc: fix potential fastrpc_invoke_ctx leak
-Date:   Tue, 23 Jun 2020 21:50:42 +0200
-Message-Id: <20200623195409.736962970@linuxfoundation.org>
+Subject: [PATCH 5.7 008/477] iio: pressure: bmp280: Tolerate IRQ before registering
+Date:   Tue, 23 Jun 2020 21:50:05 +0200
+Message-Id: <20200623195407.984909154@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,57 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 74003385cf716f1b88cc7753ca282f5493f204a2 ]
+[ Upstream commit 97b31a6f5fb95b1ec6575b78a7240baddba34384 ]
 
-fastrpc_invoke_ctx can have refcount of 2 in error path where
-rpmsg_send() fails to send invoke message. decrement the refcount
-properly in the error path to fix this leak.
+With DEBUG_SHIRQ enabled we have a kernel crash
 
-This also fixes below static checker warning:
+[  116.482696] BUG: kernel NULL pointer dereference, address: 0000000000000000
 
-drivers/misc/fastrpc.c:990 fastrpc_internal_invoke()
-warn: 'ctx->refcount.refcount.ref.counter' not decremented on lines: 990.
+...
 
-Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200512110930.2550-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[  116.606571] Call Trace:
+[  116.609023]  <IRQ>
+[  116.611047]  complete+0x34/0x50
+[  116.614206]  bmp085_eoc_irq+0x9/0x10 [bmp280]
+
+because DEBUG_SHIRQ mechanism fires an IRQ before registration and drivers
+ought to be able to handle an interrupt happening before request_irq() returns.
+
+Fixes: aae953949651 ("iio: pressure: bmp280: add support for BMP085 EOC interrupt")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/fastrpc.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/iio/pressure/bmp280-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 9065d3e71ff76..7939c55daceb2 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -904,6 +904,7 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
- 	struct fastrpc_channel_ctx *cctx;
- 	struct fastrpc_user *fl = ctx->fl;
- 	struct fastrpc_msg *msg = &ctx->msg;
-+	int ret;
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 29c209cc1108e..2540e7c2358c1 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -713,7 +713,7 @@ static int bmp180_measure(struct bmp280_data *data, u8 ctrl_meas)
+ 	unsigned int ctrl;
  
- 	cctx = fl->cctx;
- 	msg->pid = fl->tgid;
-@@ -919,7 +920,13 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
- 	msg->size = roundup(ctx->msg_sz, PAGE_SIZE);
- 	fastrpc_context_get(ctx);
+ 	if (data->use_eoc)
+-		init_completion(&data->done);
++		reinit_completion(&data->done);
  
--	return rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
-+	ret = rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
+ 	ret = regmap_write(data->regmap, BMP280_REG_CTRL_MEAS, ctrl_meas);
+ 	if (ret)
+@@ -969,6 +969,9 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
+ 			"trying to enforce it\n");
+ 		irq_trig = IRQF_TRIGGER_RISING;
+ 	}
 +
-+	if (ret)
-+		fastrpc_context_put(ctx);
++	init_completion(&data->done);
 +
-+	return ret;
-+
- }
- 
- static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+ 	ret = devm_request_threaded_irq(dev,
+ 			irq,
+ 			bmp085_eoc_irq,
 -- 
 2.25.1
 
