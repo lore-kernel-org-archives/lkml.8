@@ -2,82 +2,79 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A702C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61344C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 709D5206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C74F206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 14:38:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LujaQw2H"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="i8Xvf0dO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732818AbgFWOhi (ORCPT
+        id S1732931AbgFWOif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 10:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55744 "EHLO
+        Tue, 23 Jun 2020 10:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732754AbgFWOhi (ORCPT
+        with ESMTP id S1732798AbgFWOif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:37:38 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C5DC061573;
-        Tue, 23 Jun 2020 07:37:37 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cm23so1586321pjb.5;
-        Tue, 23 Jun 2020 07:37:37 -0700 (PDT)
+        Tue, 23 Jun 2020 10:38:35 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C683AC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:38:33 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id k23so1884362iom.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 07:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Voy94WnL+fl+utiKRLzwdCm/gpXPywr8J4kh798oT4Q=;
-        b=LujaQw2HcFE9eRAfDV3oVdOt/gX3NyJS81ef4tJDc09WgbF5X7Rke48Bp8uAX2Iwkw
-         lEYqMcQ4OMshLSPUXIfDlpuGtwgoFFOBE30EfcaZb6vO2P97F592ztN7GbZtipYZ9t6H
-         kJLsS5XEuBB+xX8UElc/GYZZXttwDNTtNzaImiLhqiAHXtnhcEZJjZ4mfXiTsaWeVNLW
-         ZKpD/ZoM+obo3bVBD1zPtpp9GpNldOfYslqDpvI3oeUMkJ6UGdFvRekCzrmg6ka4aNK3
-         ddcqNOnootAG/PtsoN7MZp/8wJaeLIi0roE9axbJEzdXovrGv7e3o8nIctc36RH5oyl6
-         5ctw==
+        bh=GO6VqQ1k5DfT8B3Hft14D4L5hj9uXyjCb94sDmddrkY=;
+        b=i8Xvf0dO3HlBgVkDMm2UdFWATb6q5c49Gp1uR5t24gxH4xjYC+5ei4BkAqzDM2KSv/
+         2gx/lezU+C8XyNWRfTI2XMPTKj6pxrB0XjEi8ZEynRWETcpvFmmMuGNdUvh/OrI+i/w5
+         vwWn6nfaeBN2WmpS8aNmJKRPO4tUJvKILSS4Hvp003kdC/j3G3kbQiCz9bHiXZCSdqLh
+         wIuxpVhhkSZ4J9U47uB+OkiyAa7fBy0f0ZDAIFve5z+1F2Hhm0G1n/FAMOS6UM/N4x95
+         PT9eFcXR5AxlX0ghw/EevRefdUSRw1vMHUuPnw5mrl2JdpHHK03FgT984eqxkUrvctEj
+         1eGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Voy94WnL+fl+utiKRLzwdCm/gpXPywr8J4kh798oT4Q=;
-        b=SpRHC4ww0SsYtNfNGUf57KCYZV1CYf7s4rBYfSySu1gm0f8LUq2SoHRNR+/+Z/Z5n3
-         NLhWlq4SJJhSmNjhuGOWTiiX9HNlSgdP2tl8jqPpjNEqn8/Do/0uaIGoCGVtEmJt9EWB
-         qOOk14QekKMcOvbluw+Rgpt0DnNOzn8x2oWPKkhfHV6VaiG0fsuxQiK8CgB/GDJ6DxVU
-         2goEkDAz0bAHcsW3xQiskU9tnFHgU0m8chr04StoRUWCJLtrEYEI9Gn7JtIfOnNKpqfA
-         NiIYaX1YL7jb2AzMB/H56hkUOFYfjLuyuqbfuHqvN/UYupeeeRQNPo/IHm4NYhi+S6Rq
-         rYyg==
-X-Gm-Message-State: AOAM530W4vSr1mu7pJrjH8nnH0zih+ExMdqs1J/BkwY8iH6oGJgVTVQH
-        2buvN9rCAszBF0QeDRngvdQ=
-X-Google-Smtp-Source: ABdhPJyKrImnNb0u+fJBpH7ptp7lCt7YXy7RdHs0zwfheBq+VGiZxA5mDcmmc9zeG0YhtVAA8gbrFw==
-X-Received: by 2002:a17:902:7788:: with SMTP id o8mr25480029pll.166.1592923057412;
-        Tue, 23 Jun 2020 07:37:37 -0700 (PDT)
-Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id 3sm7650259pfv.156.2020.06.23.07.37.33
+        bh=GO6VqQ1k5DfT8B3Hft14D4L5hj9uXyjCb94sDmddrkY=;
+        b=qbuGoiD4KOD8MgmLQHXECsVWwUznwZg367PLBSUux/0t+5Rwvqfx8/1FLsu/PZDYgF
+         8P28CUlzPSO7XaIV36y0Jr65+6IMJnd8chGoE5HcCRgvTs68a0mPWHipbGnbSSFPR8H+
+         UkXPMKiYt7pCCScGIB3OH0JSAPvjAjyl/q/cTEtmez720aaFQNOIV37mrRKudufFW8GL
+         GDleZIss8UFkWHvac7JFYcZ+/r/iS/TbD84Qkjv3OsJhAn5Euhepf0L90MY3yYt/0REM
+         zvNsvCxe1HydUDeEnvNkxcjVE74VY8QCtyTaCndeUlF07kWBhbn+BlPf00s+svXrdZQf
+         p0fA==
+X-Gm-Message-State: AOAM5300GG+jwtoyRPyPkirbtCUR3R2NUfNgzP0rlEXP83ZAa9HvEH5m
+        GfFr8P33JaUBGkaC3OtFSv6mGw==
+X-Google-Smtp-Source: ABdhPJxMOLP/f8YqjcdyvCnPvoh/iJidBaJRFad2O/9s6/oq7uoN5bcHuwnQcqjMnRJ+y18nv3dkKQ==
+X-Received: by 2002:a02:2417:: with SMTP id f23mr25134322jaa.28.1592923113020;
+        Tue, 23 Jun 2020 07:38:33 -0700 (PDT)
+Received: from [192.168.1.56] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id a20sm6546352ila.5.2020.06.23.07.38.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 07:37:36 -0700 (PDT)
-Subject: Re: [PATCH tip/core/rcu 13/14] tools/memory-model/README: Expand
- dependency of klitmus7
-To:     paulmck@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        Akira Yokosawa <akiyks@gmail.com>
-References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
- <20200623005231.27712-13-paulmck@kernel.org>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
-Date:   Tue, 23 Jun 2020 23:37:32 +0900
+        Tue, 23 Jun 2020 07:38:31 -0700 (PDT)
+Subject: Re: [PATCH 15/15] io_uring: support true async buffered reads, if
+ file provides it
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+References: <20200618144355.17324-1-axboe@kernel.dk>
+ <20200618144355.17324-16-axboe@kernel.dk>
+ <029947e3-7615-e446-3194-d48827730e1d@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9c368ff8-b867-d40e-cd3b-6dacbecc0515@kernel.dk>
+Date:   Tue, 23 Jun 2020 08:38:30 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200623005231.27712-13-paulmck@kernel.org>
+In-Reply-To: <029947e3-7615-e446-3194-d48827730e1d@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,95 +83,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 17:52:30 -0700, paulmck@kernel.org wrote:
-> From: Akira Yokosawa <akiyks@gmail.com>
+On 6/23/20 6:39 AM, Pavel Begunkov wrote:
+> On 18/06/2020 17:43, Jens Axboe wrote:
+>> If the file is flagged with FMODE_BUF_RASYNC, then we don't have to punt
+>> the buffered read to an io-wq worker. Instead we can rely on page
+>> unlocking callbacks to support retry based async IO. This is a lot more
+>> efficient than doing async thread offload.
+>>
+>> The retry is done similarly to how we handle poll based retry. From
+>> the unlock callback, we simply queue the retry to a task_work based
+>> handler.
+>>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> ---
+>>  fs/io_uring.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++---
+>>  1 file changed, 137 insertions(+), 8 deletions(-)
+>>
+> ...
+>>  static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  {
+>>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+>> @@ -2784,10 +2907,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  		unsigned long nr_segs = iter.nr_segs;
+>>  		ssize_t ret2 = 0;
+>>  
+>> -		if (req->file->f_op->read_iter)
+>> -			ret2 = call_read_iter(req->file, kiocb, &iter);
+>> -		else
+>> -			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
+>> +		ret2 = io_iter_do_read(req, &iter);
+>>  
+>>  		/* Catch -EAGAIN return for forced non-blocking submission */
+>>  		if (!force_nonblock || (ret2 != -EAGAIN && ret2 != -EIO)) {
+>> @@ -2799,17 +2919,26 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  			ret = io_setup_async_rw(req, io_size, iovec,
+>>  						inline_vecs, &iter);
+>>  			if (ret)
+>> -				goto out_free;
+>> +				goto out;
+>>  			/* any defer here is final, must blocking retry */
+>>  			if (!(req->flags & REQ_F_NOWAIT) &&
+>>  			    !file_can_poll(req->file))
+>>  				req->flags |= REQ_F_MUST_PUNT;
+>> +			/* if we can retry, do so with the callbacks armed */
+>> +			if (io_rw_should_retry(req)) {
+>> +				ret2 = io_iter_do_read(req, &iter);
+>> +				if (ret2 == -EIOCBQUEUED) {
+>> +					goto out;
+>> +				} else if (ret2 != -EAGAIN) {
+>> +					kiocb_done(kiocb, ret2);
+>> +					goto out;
+>> +				}
+>> +			}
+>> +			kiocb->ki_flags &= ~IOCB_WAITQ;
+>>  			return -EAGAIN;
+>>  		}
+>>  	}
+>> -out_free:
+>> -	kfree(iovec);
+>> -	req->flags &= ~REQ_F_NEED_CLEANUP;
 > 
-> klitmus7 is independent of the memory model but depends on the
-> build-target kernel release.
-> It occasionally lost compatibility due to kernel API changes [1, 2, 3].
-> It was remedied in a backwards-compatible manner respectively [4, 5, 6].
-> 
-> Reflect this fact in README.
-> 
-> [1]: b899a850431e ("compiler.h: Remove ACCESS_ONCE()")
-> [2]: 0bb95f80a38f ("Makefile: Globally enable VLA warning")
-> [3]: d56c0d45f0e2 ("proc: decouple proc from VFS with "struct proc_ops"")
-> [4]: https://github.com/herd/herdtools7/commit/e87d7f9287d1
->      ("klitmus: Use WRITE_ONCE and READ_ONCE in place of deprecated ACCESS_ONCE")
-> [5]: https://github.com/herd/herdtools7/commit/a0cbb10d02be
->      ("klitmus: Avoid variable length array")
-> [6]: https://github.com/herd/herdtools7/commit/46b9412d3a58
->      ("klitmus: Linux kernel v5.6.x compat")
-> 
-> NOTE: [5] was ahead of herdtools7 7.53, which did not make an
-> official release.  Code generated by klitmus7 without [5] can still be
-> built targeting Linux 4.20--5.5 if you don't care VLA warnings.
-> 
-> Acked-by: Andrea Parri <parri.andrea@gmail.com>
-> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  tools/memory-model/README | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/memory-model/README b/tools/memory-model/README
-> index b9c562e..90af203 100644
-> --- a/tools/memory-model/README
-> +++ b/tools/memory-model/README
-> @@ -28,8 +28,34 @@ downloaded separately:
->  See "herdtools7/INSTALL.md" for installation instructions.
->  
->  Note that although these tools usually provide backwards compatibility,
-> -this is not absolutely guaranteed.  Therefore, if a later version does
-> -not work, please try using the exact version called out above.
-> +this is not absolutely guaranteed.
-> +
-> +For example, a future version of herd7 might not work with the model
-> +in this release.  A compatible model will likely be made available in
-> +a later release of Linux kernel.
-> +
-> +If you absolutely need to run the model in this particular release,
-> +please try using the exact version called out above.
-> +
-> +klitmus7 is independent of the model provided here.  It has its own
-> +dependency on a target kernel release where converted code is built
-> +and executed.  Any change in kernel APIs essential to klitmus7 will
-> +necessitate an upgrade of klitmus7.
-> +
-> +If you find any compatibility issues in klitmus7, please inform the
-> +memory model maintainers.
-> +
-> +klitmus7 Compatibility Table
-> +----------------------------
-> +
-> +	============  ==========
-> +	target Linux  herdtools7
-> +	------------  ----------
-> +	     -- 4.18  7.48 --
-> +	4.15 -- 4.19  7.49 --
-> +	4.20 -- 5.5   7.54 --
-> +	5.6  --       HEAD
-> +	============  ==========
+> This looks fishy. For instance, if it fails early on rw_verify_area(), how would
+> it free yet on-stack iovec? Is it handled somehow?
 
-Paul,
+This was tweaked and rebased on top of the REQ_F_NEED_CLEANUP change,
+it should be correct in the tree:
 
-I was planning to send an update on this one.
-herdtoolds7 7.56 will be released later this week (now tagged 7.56-rc1).
+https://git.kernel.dk/cgit/linux-block/tree/fs/io_uring.c?h=for-5.9/io_uring#n2908
 
-Andrea tested klitmus7 7.56-rc1 against Linux 5.7 and 5.8-rc1.
-I tested it against Linux 5.7.4.
-klitmus7 worked fine in all these test.
+-- 
+Jens Axboe
 
-So I think we can safely update the bottom row of the table as:
-
-> +	5.6  --       7.56 --
-
-Can you amend this one directly?
-Or do you want me to send a follow-up patch?
-
-        Thanks, Akira
-
->  
->  
->  ==================
-> 
