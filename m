@@ -2,99 +2,116 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D204BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD5EF20874
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52C72053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S1bCy5X0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KbxBnfch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388142AbgFWXHd (ORCPT
+        id S2388314AbgFWXK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49914 "EHLO
+        Tue, 23 Jun 2020 19:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387634AbgFWXHc (ORCPT
+        with ESMTP id S2387829AbgFWXK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:07:32 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6119CC0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:07:32 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d10so128342pls.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:07:32 -0700 (PDT)
+        Tue, 23 Jun 2020 19:10:26 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20EE2C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:10:26 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x11so126384plo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:10:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=H5tzGK8Ul6tfg3isVDLVBRlbu5v0xvfY4n3qpqbH1NI=;
-        b=S1bCy5X06OFaFFNIdeDnS6CSjZ0Kdws9KkQcI1YuKKPPow3kSalVMW4MVN0P19JhbB
-         AwyXcbyYpdsEM0IJwO0xPhelwzn2W7jASJZYkOexxveaAuXUaOQ7uOYC3epePjn9jltI
-         lQOHuHv2T0gtLYpuYpMD6zRC+9vwL20ElP5Wzq6u7sgW+9JZYRzA8J0252oDhAIqlTQV
-         YGRG+RAWmh862PZuA9ECrmEd/GEZgSIvuOXjdL/U4x/3CEVNmrgL4lE7cP9xCS4wPU+4
-         l/3Gd7jY+5Jwg2evxhfuSRirITpsFdi1WghwcFzvGhDy3v8kxAQYLm5j4qYs3m/BeTlR
-         POJA==
+        bh=7CGyJvgDfqa7MpUh5embDkSIvDYKMmy2PpptbOHIrEM=;
+        b=KbxBnfchg2RNBRCTFJcBQBqbQAmyNQh/HXi+viuVz7TZ4U9dkUGXHvTy44WpHvxokb
+         87n0dBDZDidnAzVyqWRq33wij2V0sVhaVFfIaucT3qotWt3zH2jjPWJkJS2kQILaoMQL
+         yRN9ZLg8FrVnGR1hLX+DaepKcjahJ0EpkhK5o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=H5tzGK8Ul6tfg3isVDLVBRlbu5v0xvfY4n3qpqbH1NI=;
-        b=YOoOyw/dWq+VjFDW3lO643rl4G0Tz9Y74djGGe4NKAFhhaTJ5zu0Y4NPPYtRYzJwy7
-         tZPj7TbHJiOLnW1A/njiU83ge2kVOU8kiwP8biylT7LQ5COKFgeUg+KGUB6ecC7QPk+m
-         ty67MK3Z8gFglPj7HeK39puPLUw4iYTQTUW7eGUB9hiO3Uzn7RX9rlPJYnwuQ/sC0xJU
-         B5stARDoTFrVBTtfQXbP3wakBsafd6hwt6hafSaxRN8h+jRT+hMPAnKCCOAvFfD/YirS
-         gv76tN/5v1wyNjiv1BCpgtJSEqwpdJqtVPNYwwqTxER/avgHTH9KINIhMabblN7Td3I3
-         Aniw==
-X-Gm-Message-State: AOAM5322/g0AGiqGWw01OIsSHU4hluHErfH/OH+W4W1FRMBAwinRXGip
-        /FVTTEKiZz3nSbI/tNv2U91puw==
-X-Google-Smtp-Source: ABdhPJyJrZ0h4pT6D7zRuXMtMqWbxZWmhLKSGmNzOwnfxEQyboY/eJWM4/LcweJZjH+HF/v0xL4zQw==
-X-Received: by 2002:a17:902:ac94:: with SMTP id h20mr2016739plr.197.1592953651691;
-        Tue, 23 Jun 2020 16:07:31 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b5sm3307716pjz.34.2020.06.23.16.07.30
+        bh=7CGyJvgDfqa7MpUh5embDkSIvDYKMmy2PpptbOHIrEM=;
+        b=UoFtyIWKuFB/r5QdYh5STCJqGlgbZTtzfaH0fnOUvoe2TXi4EZm5dgPjxe3MyeiXUf
+         TPsH8Du523ulgYALwsJvoR/eJLQ6qFyd/nCnnDlI95aukqNcEfIMUSYKufQ03+Nn1jEK
+         6TNEh07C4w56YVP9Vfd/Jj2/dz5FfNTJq0McsuzScasCuW9WWv7a+kA6NsceTvTM9WvW
+         BUlF4v6X5yggga8qNJOjHKTB4HC3aDBPJHWCukGYpStKgE7CegaFJP7eVdVDrEYUZZUp
+         iK5zQWt5Gk2sB18wxcBz+cAeYHhrnbkecz6eWqyVqZ9Bry0qm9vURvfXFuHp9Dxq/ZIz
+         emmg==
+X-Gm-Message-State: AOAM532BP8mlWxiuAJIpYoLgzVLhf+Rlu2IGsM16nluDeyX64HcgzKEp
+        xCIb9jBfz0RnOLdtE7hN16MR4Q==
+X-Google-Smtp-Source: ABdhPJxWiopvITqQoUsjOrkPVJLPViTKTyfPSXoXAyVLmwAy3lfwE9jEZ/6WkBPSzCGcW/dk/mk+LA==
+X-Received: by 2002:a17:90a:d186:: with SMTP id fu6mr3871728pjb.185.1592953825608;
+        Tue, 23 Jun 2020 16:10:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r7sm13275139pfc.183.2020.06.23.16.10.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 16:07:31 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 16:04:48 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/12] arm64: dts: qcom: msm8994: Modernize the DTS
- style
-Message-ID: <20200623230448.GG128451@builder.lan>
-References: <20200623224813.297077-1-konradybcio@gmail.com>
- <20200623224813.297077-2-konradybcio@gmail.com>
+        Tue, 23 Jun 2020 16:10:24 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 16:10:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Prasad Sodagudi <psodagud@codeaurora.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
+Message-ID: <202006231610.4993DC5@keescook>
+References: <20200529200347.2464284-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623224813.297077-2-konradybcio@gmail.com>
+In-Reply-To: <20200529200347.2464284-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 23 Jun 15:48 PDT 2020, Konrad Dybcio wrote:
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-[..]
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <1 2 0xff08>,
-> +					<1 3 0xff08>,
-> +					<1 4 0xff08>,
-> +					<1 1 0xff08>;
+On Fri, May 29, 2020 at 01:03:43PM -0700, Kees Cook wrote:
+> Hi Greg,
+> 
+> Can you please apply these patches to your drivers/misc tree for LKDTM?
+> It's mostly a collection of fixes and improvements and tweaks to the
+> selftest integration.
 
-Indentation is off here and these are supposed to be GIC_PPI. So I fixed
-this and applied the patch.
+Friendly ping -- we're past -rc2 now. :)
 
-Thanks,
-Bjorn
+Thanks!
+
+-Kees
+
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> Kees Cook (4):
+>   lkdtm: Avoid more compiler optimizations for bad writes
+>   lkdtm/heap: Avoid edge and middle of slabs
+>   selftests/lkdtm: Reset WARN_ONCE to avoid false negatives
+>   lkdtm: Make arch-specific tests always available
+> 
+>  drivers/misc/lkdtm/bugs.c               | 45 +++++++++++++------------
+>  drivers/misc/lkdtm/heap.c               |  9 ++---
+>  drivers/misc/lkdtm/lkdtm.h              |  2 --
+>  drivers/misc/lkdtm/perms.c              | 22 ++++++++----
+>  drivers/misc/lkdtm/usercopy.c           |  7 ++--
+>  tools/testing/selftests/lkdtm/run.sh    |  6 ++++
+>  tools/testing/selftests/lkdtm/tests.txt |  1 +
+>  7 files changed, 56 insertions(+), 36 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
+
+-- 
+Kees Cook
