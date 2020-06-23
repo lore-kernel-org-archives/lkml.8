@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF52C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 910F82078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D85C207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmYzdO7O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jcx19Hzy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733234AbgFWSIr (ORCPT
+        id S1733255AbgFWSIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
+        Tue, 23 Jun 2020 14:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732549AbgFWSIm (ORCPT
+        with ESMTP id S1732549AbgFWSIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:08:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3B8C061573;
-        Tue, 23 Jun 2020 11:08:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o11so13793934wrv.9;
-        Tue, 23 Jun 2020 11:08:41 -0700 (PDT)
+        Tue, 23 Jun 2020 14:08:48 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB13FC061573;
+        Tue, 23 Jun 2020 11:08:47 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 22so2962461wmg.1;
+        Tue, 23 Jun 2020 11:08:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bmuqJ4buTrZEnhQ3OwlLnys6fUl+viCTck1AnKYO5ok=;
-        b=rmYzdO7OYq8VSY73XgUoty5FL5YDKiP4p4z37fZM/eE4+AwDh6+vsvkFJbY0AH8NtO
-         A8oWX/hZNEMJznlNSATUsszAsF+1YdgGxyi7fxoNYabRcxxDrwQO47R86Att5QVajQaF
-         QdzAFU3hN9qAw1MhAWe2M5d+TGd6kuidj2Xn2Vuinx+KCLBrKBV/Zqq1RQ5fm0hzlSJP
-         LQEniNhn+LLj0oAB1BJj+XWF/P2qOp1KY3CENTrRHiIw4GSDeSXNs4ampdzUF8vykApc
-         A+7VsZgU4gkCOe5nHOqGJYoX3FFvegQfbMq3ANT6UX+SdtZlyZ6qUEdoOHJzBvfycMYN
-         TLzg==
+        bh=3bxtTT24XCUFSEzo9TJrraJWvnIZVMAljX8QaOMq9yc=;
+        b=Jcx19HzyIeI9OHcm1n3h/bdnMyZhZPsIz9dXVeWTPlkqRHbGjaiwkPQSlbpVHaAq9U
+         CVbyaA965pR0hgK8AsZBvZs7O3cgqmQ+dYfSsH9s54t3Ym4lkh4qRYAHog0MV+dSgt6r
+         D+82qr8AsbQaltWWzUTmTm10mfD5BABAj6MmZuWpz5Np5a9LbBcBpMGK6j59s6aLPfLS
+         DZWrwPND6IqZs8XUFCfEkOVcZMRVVXUcy40J75VdLoMuZQm/vgjD9/zxex4Xf5fAlY/l
+         x00C6YN+E5dP4/G/hsDLdiZKmOM8Qs1DynorU3mSCCx5QXbifidrze8vgMtliSRRqUmp
+         2MpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bmuqJ4buTrZEnhQ3OwlLnys6fUl+viCTck1AnKYO5ok=;
-        b=PQIqSDqWnpqe4HjZaCPvgIDewxEivwGNjHfTS0UxeleUo0QF7sHhyqggqwWFrkPXsg
-         nW96RhFLk3gs10GS2+Z/2nozYOVlpzmUlQSTerRSGqycKx98AwX8dNQMjzp5s2ZuOhPt
-         4D7wnfvLmlRGdLJlnEz5jXcXrvSkburR4J2ZyZuNitla42y5TeIqOds6dKotBd9/84x3
-         +bEM3LGCyy6Jm5I9kv3XpSEie4s+tn5nggr/uOuhw/SXpKBFdtZE2FMl1tmrZeId2ThE
-         fT4jr4YHWyf3CUGzz3fMtt+p+IPhr4s9ow6pygi3sJClDE189OpiJ1vMIYelyaJt4YOy
-         KjrA==
-X-Gm-Message-State: AOAM530FFTnzISnYv0CiamjX3LKK+CSu0HYB4HDh+MX2QJFODZ8TB7Hr
-        oyfG+LLEqHPzOchpINEaOKc=
-X-Google-Smtp-Source: ABdhPJw8B34q2i4XM4XyV5NH8sz3t/6oK3BIxKzCOZmgBRjJsLkNvqxANMutYqjJR1LHwjuNQEcCUg==
-X-Received: by 2002:a5d:4d0d:: with SMTP id z13mr28035139wrt.220.1592935720081;
-        Tue, 23 Jun 2020 11:08:40 -0700 (PDT)
+        bh=3bxtTT24XCUFSEzo9TJrraJWvnIZVMAljX8QaOMq9yc=;
+        b=uSgKMtCkSfd97hzegaoh5bKjNYKB6iDbwqrIc0cHkCP7oTO5Ddy8SMnYi2GTGx1EQ8
+         MqRHRw0zdSFwenH/EkQgwcVIXgcv6fz73rHp8AGrp4++mLVdfpPqoRzfRX/zZqWXMqzl
+         5AMgwMEMGAWXofF+oQ+zIdKeVBs7jFviTgvpIeE4o2jg22CWfUso5XDRpWbxkO30XrAs
+         cPdZURO7lFI16CqsA1HZD6fHdBg1fBoF8L+Fy2tkMlwtCDETU8i6oFC6se0ZycdKPq+S
+         W75hsDd3vJqG1+f/OvvKLuT9DsC9ndHqP6nKWuBNh1oKdrOAjsP0R+J7G9P4VMynCB7w
+         ZC+A==
+X-Gm-Message-State: AOAM5305ennSJ5VbdhUckHhxyQ+8k4TJXVfcOER3danhO0uBEy9cdfNr
+        Ibn2Vd+wdYfaE4Hlckjtpjs=
+X-Google-Smtp-Source: ABdhPJxdGyFnxemry6uyd0/iseA2W/X2LRPcYYo/8lFhH9JKSLyNtNM7oIsZIaiTOMX0cylU15YRhg==
+X-Received: by 2002:a1c:7717:: with SMTP id t23mr19448487wmi.75.1592935726407;
+        Tue, 23 Jun 2020 11:08:46 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id c16sm4719529wml.45.2020.06.23.11.08.38
+        by smtp.googlemail.com with ESMTPSA id c16sm4719529wml.45.2020.06.23.11.08.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 11:08:39 -0700 (PDT)
+        Tue, 23 Jun 2020 11:08:46 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -72,9 +72,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Rajendra Nayak <rnayak@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 1/8] soc: qcom: rpmpd: Add SDM660 power-domains
-Date:   Tue, 23 Jun 2020 20:08:25 +0200
-Message-Id: <20200623180832.254163-2-konradybcio@gmail.com>
+Subject: [PATCH 4/8] arm64: dts: qcom: sdm630: nile: Enable BLSP1_UART2
+Date:   Tue, 23 Jun 2020 20:08:28 +0200
+Message-Id: <20200623180832.254163-5-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623180832.254163-1-konradybcio@gmail.com>
 References: <20200623180832.254163-1-konradybcio@gmail.com>
@@ -85,100 +85,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the shared cx/mx and sensor sub-system's cx and mx
-power-domains found on SDM660.
+Enable the second UART interface used on this board.
+Also convert the DT to use phandles instead of addresses
+to make it coherent with other device trees.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../devicetree/bindings/power/qcom,rpmpd.yaml |  1 +
- drivers/soc/qcom/rpmpd.c                      | 33 +++++++++++++++++++
- include/dt-bindings/power/qcom-rpmpd.h        | 12 +++++++
- 3 files changed, 46 insertions(+)
+ .../dts/qcom/sdm630-sony-xperia-nile.dtsi     | 50 ++++++++++---------
+ 1 file changed, 26 insertions(+), 24 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-index 8058955fb3b9..45ec2439ff51 100644
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-@@ -20,6 +20,7 @@ properties:
-       - qcom,msm8996-rpmpd
-       - qcom,msm8998-rpmpd
-       - qcom,qcs404-rpmpd
-+      - qcom,sdm660-rpmpd
-       - qcom,sc7180-rpmhpd
-       - qcom,sdm845-rpmhpd
-       - qcom,sm8150-rpmhpd
-diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
-index f2168e4259b2..d54a84dd83a8 100644
---- a/drivers/soc/qcom/rpmpd.c
-+++ b/drivers/soc/qcom/rpmpd.c
-@@ -220,11 +220,44 @@ static const struct rpmpd_desc qcs404_desc = {
- 	.max_state = RPM_SMD_LEVEL_BINNING,
- };
- 
-+/* sdm660 RPM Power domains */
-+DEFINE_RPMPD_PAIR(sdm660, vddcx, vddcx_ao, RWCX, LEVEL, 0);
-+DEFINE_RPMPD_VFL(sdm660, vddcx_vfl, RWCX, 0);
-+
-+DEFINE_RPMPD_PAIR(sdm660, vddmx, vddmx_ao, RWMX, LEVEL, 0);
-+DEFINE_RPMPD_VFL(sdm660, vddmx_vfl, RWMX, 0);
-+
-+DEFINE_RPMPD_LEVEL(sdm660, vdd_ssccx, RWSC, 0);
-+DEFINE_RPMPD_VFL(sdm660, vdd_ssccx_vfl, RWSC, 0);
-+
-+DEFINE_RPMPD_LEVEL(sdm660, vdd_sscmx, RWSM, 0);
-+DEFINE_RPMPD_VFL(sdm660, vdd_sscmx_vfl, RWSM, 0);
-+
-+static struct rpmpd *sdm660_rpmpds[] = {
-+	[SDM660_VDDCX] =		&sdm660_vddcx,
-+	[SDM660_VDDCX_AO] =		&sdm660_vddcx_ao,
-+	[SDM660_VDDCX_VFL] =		&sdm660_vddcx_vfl,
-+	[SDM660_VDDMX] =		&sdm660_vddmx,
-+	[SDM660_VDDMX_AO] =		&sdm660_vddmx_ao,
-+	[SDM660_VDDMX_VFL] =		&sdm660_vddmx_vfl,
-+	[SDM660_SSCCX] =		&sdm660_vdd_ssccx,
-+	[SDM660_SSCCX_VFL] =		&sdm660_vdd_ssccx_vfl,
-+	[SDM660_SSCMX] =		&sdm660_vdd_sscmx,
-+	[SDM660_SSCMX_VFL] =		&sdm660_vdd_sscmx_vfl,
+diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+index 9ba359c848d0..de06fa809488 100644
+--- a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+@@ -99,38 +99,40 @@ removed_region@85800000 {
+ 			no-map;
+ 		};
+ 	};
 +};
-+
-+static const struct rpmpd_desc sdm660_desc = {
-+	.rpmpds = sdm660_rpmpds,
-+	.num_pds = ARRAY_SIZE(sdm660_rpmpds),
-+	.max_state = RPM_SMD_LEVEL_TURBO,
-+};
-+
- static const struct of_device_id rpmpd_match_table[] = {
- 	{ .compatible = "qcom,msm8976-rpmpd", .data = &msm8976_desc },
- 	{ .compatible = "qcom,msm8996-rpmpd", .data = &msm8996_desc },
- 	{ .compatible = "qcom,msm8998-rpmpd", .data = &msm8998_desc },
- 	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
-+	{ .compatible = "qcom,sdm660-rpmpd", .data = &sdm660_desc },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rpmpd_match_table);
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-index dc146e44228b..c5a2ddef6b4b 100644
---- a/include/dt-bindings/power/qcom-rpmpd.h
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -101,6 +101,18 @@
- #define QCS404_LPIMX		5
- #define QCS404_LPIMX_VFL	6
  
-+/* SDM660 Power Domains */
-+#define SDM660_VDDCX		0
-+#define SDM660_VDDCX_AO		1
-+#define SDM660_VDDCX_VFL	2
-+#define SDM660_VDDMX		3
-+#define SDM660_VDDMX_AO		4
-+#define SDM660_VDDMX_VFL	5
-+#define SDM660_SSCCX		6
-+#define SDM660_SSCCX_VFL	7
-+#define SDM660_SSCMX		8
-+#define SDM660_SSCMX_VFL	9
+-	soc {
+-		sdhci@c0c4000 {
+-			status = "okay";
++&blsp_i2c1 {
++	status = "okay";
+ 
+-			mmc-ddr-1_8v;
+-			/* SoMC Nile platform's eMMC doesn't support HS200 mode */
+-			mmc-hs400-1_8v;
+-		};
++	/* Synaptics touchscreen */
++};
+ 
+-		i2c@c175000 {
+-			status = "okay";
++&blsp_i2c2 {
++	status = "okay";
+ 
+-			/* Synaptics touchscreen */
+-		};
++	/* SMB1351 charger */
++};
+ 
+-		i2c@c176000 {
+-			status = "okay";
++/* I2C3, 4, 5, 7 and 8 are disabled on this board. */
+ 
+-			/* SMB1351 charger */
+-		};
++&blsp_i2c6 {
++	status = "okay";
+ 
+-		serial@c1af000 {
+-			status = "okay";
+-		};
++	/* NXP NFC */
++};
+ 
+-		/* I2C3, 4, 5, 7 and 8 are disabled on this board. */
++&blsp1_uart2 {
++	status = "okay";
++};
+ 
+-		i2c@c1b6000 {
+-			status = "okay";
++&blsp2_uart1 {
++	status = "okay";
++};
+ 
+-			/* NXP NFC */
+-		};
+-	};
++&sdhc_1 {
++	status = "okay";
 +
- /* RPM SMD Power Domain performance levels */
- #define RPM_SMD_LEVEL_RETENTION       16
- #define RPM_SMD_LEVEL_RETENTION_PLUS  32
++	mmc-ddr-1_8v;
++	/* SoMC Nile platform's eMMC doesn't support HS200 mode */
++	mmc-hs400-1_8v;
+ };
 -- 
 2.27.0
 
