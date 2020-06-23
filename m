@@ -2,140 +2,110 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C263CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC81FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49082081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F64120809
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 18:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387428AbgFWS3f (ORCPT
+        id S1733182AbgFWS3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:29:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42806 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387525AbgFWS32 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 14:29:28 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id A3AEC2A3C65
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [RFC 7/7] media: uapi: make H264 stateless codec interface public
-Date:   Tue, 23 Jun 2020 15:28:09 -0300
-Message-Id: <20200623182809.1375-8-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200623182809.1375-1-ezequiel@collabora.com>
-References: <20200623182809.1375-1-ezequiel@collabora.com>
+        Tue, 23 Jun 2020 14:29:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45799 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387476AbgFWS3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 14:29:12 -0400
+IronPort-SDR: xMEBZiOUvMMmBLBG3ZIR9MeYDLHTeTJVBNxpumNDavVhsI7QV0E7nwuW7wY9CfkbzW3GmwZ2uv
+ gfvXHpVv3b1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="124427886"
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="124427886"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 11:29:11 -0700
+IronPort-SDR: BPpIr7ZbUhLbIiM0sqnLbwkHOmTPNLMCVvSPxNbsbwcsxhJyV4o8yFG8nykExF0PsDu6EYhB1l
+ 7BNQd69uXl3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
+   d="scan'208";a="275431860"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 23 Jun 2020 11:29:10 -0700
+Date:   Tue, 23 Jun 2020 11:29:10 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, wei.huang2@amd.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Chai Wen <chaiwen@baidu.com>, Jia Lina <jialina01@baidu.com>
+Subject: Re: [PATCH] KVM: X86: Emulate APERF/MPERF to report actual VCPU
+ frequency
+Message-ID: <20200623182910.GA24107@linux.intel.com>
+References: <20200623063530.81917-1-like.xu@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623063530.81917-1-like.xu@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The H264 interface is now ready to be part of the official
-public API.
+On Tue, Jun 23, 2020 at 02:35:30PM +0800, Like Xu wrote:
+> The aperf/mperf are used to report current CPU frequency after 7d5905dc14a
+> "x86 / CPU: Always show current CPU frequency in /proc/cpuinfo". But guest
+> kernel always reports a fixed VCPU frequency in the /proc/cpuinfo, which
+> may confuse users especially when turbo is enabled on the host.
+> 
+> Emulate guest APERF/MPERF capability based their values on the host.
+> 
+> Co-developed-by: Li RongQing <lirongqing@baidu.com>
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> Reviewed-by: Chai Wen <chaiwen@baidu.com>
+> Reviewed-by: Jia Lina <jialina01@baidu.com>
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
 
-In addition, sanitize header includes.
+...
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/staging/media/hantro/hantro_hw.h                  | 5 ++---
- include/media/v4l2-ctrls.h                                | 3 ++-
- include/media/v4l2-h264.h                                 | 2 +-
- .../{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h}  | 8 ++------
- 4 files changed, 7 insertions(+), 11 deletions(-)
- rename include/{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h} (96%)
+> @@ -8312,7 +8376,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  		dm_request_for_irq_injection(vcpu) &&
+>  		kvm_cpu_accept_dm_intr(vcpu);
+>  	fastpath_t exit_fastpath;
+> -
+> +	u64 enter_mperf = 0, enter_aperf = 0, exit_mperf = 0, exit_aperf = 0;
+>  	bool req_immediate_exit = false;
+>  
+>  	if (kvm_request_pending(vcpu)) {
+> @@ -8516,8 +8580,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
+>  	}
+>  
+> +	if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap))
+> +		get_host_amperf(&enter_mperf, &enter_aperf);
+> +
+>  	exit_fastpath = kvm_x86_ops.run(vcpu);
+>  
+> +	if (unlikely(vcpu->arch.hwp.hw_coord_fb_cap)) {
+> +		get_host_amperf(&exit_mperf, &exit_aperf);
+> +		vcpu_update_amperf(vcpu, get_amperf_delta(enter_aperf, exit_aperf),
+> +			get_amperf_delta(enter_mperf, exit_mperf));
+> +	}
+> +
 
-diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-index 4053d8710e04..48d5be144319 100644
---- a/drivers/staging/media/hantro/hantro_hw.h
-+++ b/drivers/staging/media/hantro/hantro_hw.h
-@@ -11,9 +11,8 @@
- 
- #include <linux/interrupt.h>
- #include <linux/v4l2-controls.h>
--#include <media/h264-ctrls.h>
--#include <media/mpeg2-ctrls.h>
--#include <media/vp8-ctrls.h>
-+
-+#include <media/v4l2-ctrls.h>
- #include <media/videobuf2-core.h>
- 
- #define DEC_8190_ALIGN_MASK	0x07U
-diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-index f40e2cbb21d3..fc725ba2ebd8 100644
---- a/include/media/v4l2-ctrls.h
-+++ b/include/media/v4l2-ctrls.h
-@@ -13,13 +13,14 @@
- #include <linux/videodev2.h>
- #include <media/media-request.h>
- 
-+#include <linux/v4l2-h264-ctrls.h>
-+
- /*
-  * Include the stateless codec compound control definitions.
-  * This will move to the public headers once this API is fully stable.
-  */
- #include <media/mpeg2-ctrls.h>
- #include <media/fwht-ctrls.h>
--#include <media/h264-ctrls.h>
- #include <media/vp8-ctrls.h>
- #include <media/hevc-ctrls.h>
- 
-diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
-index f08ba181263d..d2314f4d4490 100644
---- a/include/media/v4l2-h264.h
-+++ b/include/media/v4l2-h264.h
-@@ -10,7 +10,7 @@
- #ifndef _MEDIA_V4L2_H264_H
- #define _MEDIA_V4L2_H264_H
- 
--#include <media/h264-ctrls.h>
-+#include <media/v4l2-ctrls.h>
- 
- /**
-  * struct v4l2_h264_reflist_builder - Reference list builder object
-diff --git a/include/media/h264-ctrls.h b/include/uapi/linux/v4l2-h264-ctrls.h
-similarity index 96%
-rename from include/media/h264-ctrls.h
-rename to include/uapi/linux/v4l2-h264-ctrls.h
-index 6446ec9f283d..a06f60670d68 100644
---- a/include/media/h264-ctrls.h
-+++ b/include/uapi/linux/v4l2-h264-ctrls.h
-@@ -2,14 +2,10 @@
- /*
-  * These are the H.264 state controls for use with stateless H.264
-  * codec drivers.
-- *
-- * It turns out that these structs are not stable yet and will undergo
-- * more changes. So keep them private until they are stable and ready to
-- * become part of the official public API.
-  */
- 
--#ifndef _H264_CTRLS_H_
--#define _H264_CTRLS_H_
-+#ifndef __LINUX_V4L2_H264_CONTROLS_H
-+#define __LINUX_V4L2_H264_CONTROLS_H
- 
- #include <linux/videodev2.h>
- 
--- 
-2.26.0.rc2
+Is there an alternative approach that doesn't require 4 RDMSRs on every VMX
+round trip?  That's literally more expensive than VM-Enter + VM-Exit
+combined.
 
+E.g. what about adding KVM_X86_DISABLE_EXITS_APERF_MPERF and exposing the
+MSRs for read when that capability is enabled?
