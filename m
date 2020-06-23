@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D4E20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C205620707
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947943;
-	bh=aLWt/8UxmqPo2Cj3Qzb8QZkcV8GFh12eDwf4SwQizXI=;
+	s=default; t=1592947946;
+	bh=hVOkDo9kCSvHWRTp5fRFMZdNwqwL/m0FiPLJSvXuGE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypEKIiir7T/D7tySuXrJfkd5sdky4tULIBHSkOFPre1XK9BypHqCW6r//qcPBjelJ
-	 5HVFzdWnRGxL4qtIRLhOyqoJ9hZ+tIY4RZK0XcA813N2JmIBjarG8XGzv0H+OBBe3z
-	 AtHS/UDZ6ZyP+WrH/xjTXL2kUB6js74XEhnwhVd4=
+	b=iFy7CpC5wRAu14KWHK43GsCs7xeMeC1X6RQq0LepcHcJtneCPsWiVdtmHTO+USUDM
+	 v5/2AKED3A3+qyG/NRPwf9iA0u1g4oyUc0fbRZyzBIltSkoyA3cESE1dj7yuYL0hmv
+	 cYjk7dmY5D8g28eExAzHWITafevZs1e4exX6XmdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388773AbgFWUMd (ORCPT
+        id S2393109AbgFWVcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388456AbgFWUML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:12:11 -0400
+        id S2388972AbgFWUM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:12:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 320DA206C3;
-        Tue, 23 Jun 2020 20:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D2E206C3;
+        Tue, 23 Jun 2020 20:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943130;
-        bh=aLWt/8UxmqPo2Cj3Qzb8QZkcV8GFh12eDwf4SwQizXI=;
+        s=default; t=1592943146;
+        bh=hVOkDo9kCSvHWRTp5fRFMZdNwqwL/m0FiPLJSvXuGE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lllSONkkCgY88yeoLI2TTZBEY5OO3cvKnrZMvHnn7I9owfdSrf2PXlUdtvzeax6Rn
-         n+fKzH6Li6fmpCX7phfrjt5vR0Si+Uc3Wf6Bsvjcfre3XjNyPeOs4w/c6PlRppYV+m
-         +pWxat7gfT/HAx9U+ivgA7LL7cZ+zz/pinjqz/co=
+        b=GpMFjxSIPWVK5KKaAp+Gk99sS8YlOngbyILzz3UQpmc3KAIHRpoFNGUry3llxYeCr
+         Y2AHfOd4HIMb+5zEQPGU2kH6J5WhKsaXD6I+p0fMNgC3M/0iNfAutsnECM8msA1C/x
+         edaIJ2xRtyOibuSCZVdB4CKPCMDek7d0TcE7Rctc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 241/477] fuse: fix copy_file_range cache issues
-Date:   Tue, 23 Jun 2020 21:53:58 +0200
-Message-Id: <20200623195418.968225015@linuxfoundation.org>
+Subject: [PATCH 5.7 278/477] scsi: ufs-qcom: Fix scheduling while atomic issue
+Date:   Tue, 23 Jun 2020 21:54:35 +0200
+Message-Id: <20200623195420.705545448@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,61 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 2c4656dfd994538176db30ce09c02cc0dfc361ae ]
+[ Upstream commit 3be60b564de49875e47974c37fabced893cd0931 ]
 
-a) Dirty cache needs to be written back not just in the writeback_cache
-case, since the dirty pages may come from memory maps.
+ufs_qcom_dump_dbg_regs() uses usleep_range, a sleeping function, but can be
+called from atomic context in the following flow:
 
-b) The fuse_writeback_range() helper takes an inclusive interval, so the
-end position needs to be pos+len-1 instead of pos+len.
+ufshcd_intr -> ufshcd_sl_intr -> ufshcd_check_errors ->
+ufshcd_print_host_regs -> ufshcd_vops_dbg_register_dump ->
+ufs_qcom_dump_dbg_regs
 
-Fixes: 88bc7d5097a1 ("fuse: add support for copy_file_range()")
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+This causes a boot crash on the Lenovo Miix 630 when the interrupt is
+handled on the idle thread.
+
+Fix the issue by switching to udelay().
+
+Link: https://lore.kernel.org/r/20200525204125.46171-1-jeffrey.l.hugo@gmail.com
+Fixes: 9c46b8676271 ("scsi: ufs-qcom: dump additional testbus registers")
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/file.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ drivers/scsi/ufs/ufs-qcom.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index d400b71b98d55..d58324198b7a7 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -3280,13 +3280,11 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
- 		return -EXDEV;
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 19aa5c44e0da6..f938867301a05 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1658,11 +1658,11 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
  
--	if (fc->writeback_cache) {
--		inode_lock(inode_in);
--		err = fuse_writeback_range(inode_in, pos_in, pos_in + len);
--		inode_unlock(inode_in);
--		if (err)
--			return err;
--	}
-+	inode_lock(inode_in);
-+	err = fuse_writeback_range(inode_in, pos_in, pos_in + len - 1);
-+	inode_unlock(inode_in);
-+	if (err)
-+		return err;
+ 	/* sleep a bit intermittently as we are dumping too much data */
+ 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+-	usleep_range(1000, 1100);
++	udelay(1000);
+ 	ufs_qcom_testbus_read(hba);
+-	usleep_range(1000, 1100);
++	udelay(1000);
+ 	ufs_qcom_print_unipro_testbus(hba);
+-	usleep_range(1000, 1100);
++	udelay(1000);
+ }
  
- 	inode_lock(inode_out);
- 
-@@ -3294,11 +3292,9 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (err)
- 		goto out;
- 
--	if (fc->writeback_cache) {
--		err = fuse_writeback_range(inode_out, pos_out, pos_out + len);
--		if (err)
--			goto out;
--	}
-+	err = fuse_writeback_range(inode_out, pos_out, pos_out + len - 1);
-+	if (err)
-+		goto out;
- 
- 	if (is_unstable)
- 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi_out->state);
+ /**
 -- 
 2.25.1
 
