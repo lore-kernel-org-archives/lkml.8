@@ -2,114 +2,90 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC46FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6376C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38A5208A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A420B20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L1snu5U2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhR9prGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbgFWXcg (ORCPT
+        id S2388066AbgFWXf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:32:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
+        Tue, 23 Jun 2020 19:35:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387696AbgFWXcf (ORCPT
+        with ESMTP id S2387717AbgFWXf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:32:35 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94052C061573;
-        Tue, 23 Jun 2020 16:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=OVsi97xHW+lEj+KUOG+QvHgd6uEp9tOe09/6am2CW6I=; b=L1snu5U2r8dJy0a9uovEWFKKN9
-        BBGsUX0tmvJuHt2K4KQ7C73ckeio2zPjASjDWZ11FSrdkQAkR5xA5vFWsx0/JpWxj9glwFsmu4IAY
-        2X1erLv94ialoJxPIgOOvDTV0HwyCuGeOnkmubpqvaLAttsykrqlizsAzdSNdI2Hwe9Du8BikKH6j
-        cdRdtOAE+/ly/KDGBu4uDxL9lDL1BwC4CDX6H8BwCjtn1nmEok3ynXM23M8z26jV+P3IgqCSOryM6
-        As9Jqo0RhbyU9NzqkkTw1xKm7pepfJIpNyeljkYg5jod2/YDVEZFu3zJeUavpGCarYe+qmdQUlc+O
-        1DmbT4uA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnsOn-0002OP-Mn; Tue, 23 Jun 2020 23:32:18 +0000
-Subject: Re: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Prasad Sodagudi <psodagud@codeaurora.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        richard -rw- weinberger <richard.weinberger@gmail.com>
-References: <20200529200347.2464284-1-keescook@chromium.org>
- <202006231610.4993DC5@keescook>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2356a78c-750b-538f-3d64-b9c78aff89cb@infradead.org>
-Date:   Tue, 23 Jun 2020 16:32:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 23 Jun 2020 19:35:28 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F29C061573;
+        Tue, 23 Jun 2020 16:35:27 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id z17so79143edr.9;
+        Tue, 23 Jun 2020 16:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NEyk/wB0qGmsMWEbocOsoIHwIq+V4NJ+u58hlkbuXTE=;
+        b=OhR9prGrBTG8ITiMeDiXb/5yHt5gVJ+btDWjM5xVZCHviYAJPZmS2ckksSWklJ3SnD
+         tuAJM6zkNhUeMCb/QJm0gpGvHZh76r9l7YB7Xt7kmeQQRinNpp7s9sUzt+twRPfoanxL
+         h8dp94umx03MazDvlCUspHMGkYmtI7t/2sz/SoyEMHQl0owD45fgIWVmeXV4m4+J2L/k
+         EvZOtULYaW16+G+azFXXa/JFLEGcnyKtttRZMhejdG70nz8J2fuIOO5bXYM+wDzL+OKG
+         kmwL73d41L23KVYY4Q43iDMx7g8f6v91owluxWgDOe9J5Ac9FLXZvjP4jonAPFCzc4qn
+         EL2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NEyk/wB0qGmsMWEbocOsoIHwIq+V4NJ+u58hlkbuXTE=;
+        b=bKtXZqKqrOm2W9cMUlCb2wFxyZsIuMcEcpCAjirKANcn0nDJqbMPHCyg0QK21Bwq5H
+         /juw/0faMjFzQyEnGvNiOQcEamcs2V09ZNLXgntU0aZ/woHBYjpDT/IwKR80VZhWjaBg
+         4iCkjLLx2xwz582BjfWCNvn3hQvHgP90l8cmytLTIEaZXvosc4mdhLWts0ifnfMm+Aep
+         /AOdW0eNCQuPlg5ueySvMlZcpBwEYgabNne6IGcAGIWd3jOSpzAB2VMNpHTq8IAL8Cq/
+         K/8nbGQeJz0o4YddamObcRVvOXgPjlCwjjiPLQ7LrnmCo1nDAiSvVxfDiQm9qICsL31M
+         PmDQ==
+X-Gm-Message-State: AOAM531/fbIxyWpAE/c4sfTJ+7kvEh24DMvZ9sgvPT26TYOuVCelt8Yy
+        xRc5q2SrbD8UQHlw+Ubp8BcR2iUcqNUd34x++lo=
+X-Google-Smtp-Source: ABdhPJzXKv7kQiitxOPK8MlHEEWLx+C+OQNJSD9EH6T1whJUxg69uXKiGswptZh7r56A26zDbcuqMJPRaLRcsLsspFg=
+X-Received: by 2002:a50:e08c:: with SMTP id f12mr24149457edl.233.1592955326376;
+ Tue, 23 Jun 2020 16:35:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202006231610.4993DC5@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200623224813.297077-1-konradybcio@gmail.com>
+ <20200623224813.297077-5-konradybcio@gmail.com> <20200623231541.GH128451@builder.lan>
+In-Reply-To: <20200623231541.GH128451@builder.lan>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Wed, 24 Jun 2020 01:34:50 +0200
+Message-ID: <CAMS8qEV9hwL1MpEHzVC+w2rkQhdZ1aH3Dy8Mn1X_2Eu7W2naWA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] arm64: dts: qcom: msm8994: Add support for SMD RPM
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/20 4:10 PM, Kees Cook wrote:
-> On Fri, May 29, 2020 at 01:03:43PM -0700, Kees Cook wrote:
->> Hi Greg,
->>
->> Can you please apply these patches to your drivers/misc tree for LKDTM?
->> It's mostly a collection of fixes and improvements and tweaks to the
->> selftest integration.
-> 
-> Friendly ping -- we're past -rc2 now. :)
-> 
-> Thanks!
-> 
-> -Kees
-> 
->>
->> Thanks!
->>
->> -Kees
->>
->> Kees Cook (4):
->>   lkdtm: Avoid more compiler optimizations for bad writes
->>   lkdtm/heap: Avoid edge and middle of slabs
->>   selftests/lkdtm: Reset WARN_ONCE to avoid false negatives
->>   lkdtm: Make arch-specific tests always available
->>
->>  drivers/misc/lkdtm/bugs.c               | 45 +++++++++++++------------
->>  drivers/misc/lkdtm/heap.c               |  9 ++---
->>  drivers/misc/lkdtm/lkdtm.h              |  2 --
->>  drivers/misc/lkdtm/perms.c              | 22 ++++++++----
->>  drivers/misc/lkdtm/usercopy.c           |  7 ++--
->>  tools/testing/selftests/lkdtm/run.sh    |  6 ++++
->>  tools/testing/selftests/lkdtm/tests.txt |  1 +
->>  7 files changed, 56 insertions(+), 36 deletions(-)
->>
->> -- 
->> 2.25.1
->>
-> 
+Thanks for your review.
 
->> Regardless, it seems arch/x86/um/asm/desc.h is not needed any more?
+I will send the regulators/rpm patch very soon.
 
-> True that, we can rip the file.
+Regarding the mbox, do you know whether it should include any clocks
+on 8992/4? What comes to my head is a53/57pll, but that's not there yet..
+So perhaps I should just add it with .clk_name = NULL?
 
-Has anyone fixed the uml build errors?
-
-thanks.
--- 
-~Randy
-
+Regards
+Konrad
