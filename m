@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A82C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4307206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9240D2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944187;
-	bh=GrohkfbmeiXd0QzpT86snwSvZYnUkRryWc+YAvRBiq0=;
+	s=default; t=1592944189;
+	bh=0PBbNoMLgT/OjPeh5DapmIdaNhEuA8/SPN2ldUn2pTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vk1vgfXutptC7BkWmyBnCcRVF0wgMedRNGMrG1mLuJYZhxjhr5XK6VaaqRj+eNAkV
-	 BbbX8jMd0iY9gPV2WND/hVYNfHWdMgFIyQjdJvqgxTh0sBiyBaw9aYbsbVvSPN5TzB
-	 4IWLNZr/MvZBT3+vYvfvMcCERXD3ZRmAqNECWfEI=
+	b=Sdu5WgcdXiFpOwkMUS5vb8I81ukLvbR3nq/U6gmLM37VXN9RGqYAS66YFhffnUla7
+	 fXdEyrwiuxrh0OjgeyoLohbngpwqZY3QNiyZvVU6oikpl6doWAK/54lnxKAUn+BPs0
+	 97AX7wkQO3pmkQLefus2e1D5dnBbJ/y6eYoIhkB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388632AbgFWU3q (ORCPT
+        id S2391024AbgFWU3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390994AbgFWU3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:29:34 -0400
+        id S2391002AbgFWU3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:29:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A09D2064B;
-        Tue, 23 Jun 2020 20:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB91B206C3;
+        Tue, 23 Jun 2020 20:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944173;
-        bh=GrohkfbmeiXd0QzpT86snwSvZYnUkRryWc+YAvRBiq0=;
+        s=default; t=1592944176;
+        bh=0PBbNoMLgT/OjPeh5DapmIdaNhEuA8/SPN2ldUn2pTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MRKcZOiXtyABzj9imWDA3Nin3+esOIxNHk9qxkt3yAMX86+eOYi+XsRoeUuYC5b9
-         5wRDBEl4cYXP+jbT69UgkCPMEqBS5t8mWDAkslvJCcrn+VyF8AmUf2L3hnliBaEvHF
-         3PzJ2pvbXRJs9LUqtj5+ReDLuebRhxrA5Jg8WXo8=
+        b=0FbmZVfbouu+tHvTidLWoUCHDn6W9hMzkBlB8YvX4etHJLa0NVKguohks0mc2+ARU
+         AlUP5Wjq60CZRRCaWV0AWuORDC/aphx1AeoUtdGQN64UA7r/GXHqbIdv8H7zkRbxmJ
+         JXtaUXk+11ToamAa2kK7kw0vMO89US5y1xRlXK4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lang Cheng <chenglang@huawei.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org,
+        John Hubbard <jhubbard@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 161/314] RDMA/hns: Fix cmdq parameter of querying pf timer resource
-Date:   Tue, 23 Jun 2020 21:55:56 +0200
-Message-Id: <20200623195346.550128141@linuxfoundation.org>
+Subject: [PATCH 5.4 195/314] misc: xilinx-sdfec: improve get_user_pages_fast() error handling
+Date:   Tue, 23 Jun 2020 21:56:30 +0200
+Message-Id: <20200623195348.226110468@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,74 +64,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lang Cheng <chenglang@huawei.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-[ Upstream commit 441c88d5b3ff80108ff536c6cf80591187015403 ]
+[ Upstream commit 57343d51613227373759f5b0f2eede257fd4b82e ]
 
-The firmware has reduced the number of descriptions of command
-HNS_ROCE_OPC_QUERY_PF_TIMER_RES to 1. The driver needs to adapt, otherwise
-the hardware will report error 4(CMD_NEXT_ERR).
+This fixes the case of get_user_pages_fast() returning a -errno.
+The result needs to be stored in a signed integer. And for safe
+signed/unsigned comparisons, it's best to keep everything signed.
+And get_user_pages_fast() also expects a signed value for number
+of pages to pin.
 
-Fixes: 0e40dc2f70cd ("RDMA/hns: Add timer allocation support for hip08")
-Link: https://lore.kernel.org/r/1588931159-56875-3-git-send-email-liweihang@huawei.com
-Signed-off-by: Lang Cheng <chenglang@huawei.com>
-Signed-off-by: Weihang Li <liweihang@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Therefore, change most relevant variables, from u32 to int. Leave
+"n" unsigned, for convenience in checking for overflow. And provide
+a WARN_ON_ONCE() and early return, if overflow occurs.
+
+Also, as long as we're tidying up: rename the page array from page,
+to pages, in order to match the conventions used in most other call
+sites.
+
+Fixes: 20ec628e8007e ("misc: xilinx_sdfec: Add ability to configure LDPC")
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Link: https://lore.kernel.org/r/20200527012628.1100649-2-jhubbard@nvidia.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 32 ++++++++--------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+ drivers/misc/xilinx_sdfec.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 9a8053bd01e22..0502c90c83edd 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -1349,34 +1349,26 @@ static int hns_roce_query_pf_resource(struct hns_roce_dev *hr_dev)
- static int hns_roce_query_pf_timer_resource(struct hns_roce_dev *hr_dev)
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 48ba7e02bed72..d4c14b617201e 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -602,10 +602,10 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
+ 			      const u32 depth)
  {
- 	struct hns_roce_pf_timer_res_a *req_a;
--	struct hns_roce_cmq_desc desc[2];
--	int ret, i;
-+	struct hns_roce_cmq_desc desc;
-+	int ret;
+ 	u32 reg = 0;
+-	u32 res;
+-	u32 n, i;
++	int res, i, nr_pages;
++	u32 n;
+ 	u32 *addr = NULL;
+-	struct page *page[MAX_NUM_PAGES];
++	struct page *pages[MAX_NUM_PAGES];
  
--	for (i = 0; i < 2; i++) {
--		hns_roce_cmq_setup_basic_desc(&desc[i],
--					      HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
--					      true);
-+	hns_roce_cmq_setup_basic_desc(&desc, HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
-+				      true);
+ 	/*
+ 	 * Writes that go beyond the length of
+@@ -622,15 +622,22 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
+ 	if ((len * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE)
+ 		n += 1;
  
--		if (i == 0)
--			desc[i].flag |= cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
--		else
--			desc[i].flag &= ~cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
--	}
--
--	ret = hns_roce_cmq_send(hr_dev, desc, 2);
-+	ret = hns_roce_cmq_send(hr_dev, &desc, 1);
- 	if (ret)
- 		return ret;
+-	res = get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
+-	if (res < n) {
+-		for (i = 0; i < res; i++)
+-			put_page(page[i]);
++	if (WARN_ON_ONCE(n > INT_MAX))
++		return -EINVAL;
++
++	nr_pages = n;
++
++	res = get_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
++	if (res < nr_pages) {
++		if (res > 0) {
++			for (i = 0; i < res; i++)
++				put_page(pages[i]);
++		}
+ 		return -EINVAL;
+ 	}
  
--	req_a = (struct hns_roce_pf_timer_res_a *)desc[0].data;
-+	req_a = (struct hns_roce_pf_timer_res_a *)desc.data;
- 
- 	hr_dev->caps.qpc_timer_bt_num =
--				roce_get_field(req_a->qpc_timer_bt_idx_num,
--					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
--					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
-+		roce_get_field(req_a->qpc_timer_bt_idx_num,
-+			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
-+			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
- 	hr_dev->caps.cqc_timer_bt_num =
--				roce_get_field(req_a->cqc_timer_bt_idx_num,
--					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
--					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
-+		roce_get_field(req_a->cqc_timer_bt_idx_num,
-+			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
-+			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
- 
- 	return 0;
+-	for (i = 0; i < n; i++) {
+-		addr = kmap(page[i]);
++	for (i = 0; i < nr_pages; i++) {
++		addr = kmap(pages[i]);
+ 		do {
+ 			xsdfec_regwrite(xsdfec,
+ 					base_addr + ((offset + reg) *
+@@ -639,7 +646,7 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
+ 			reg++;
+ 		} while ((reg < len) &&
+ 			 ((reg * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE));
+-		put_page(page[i]);
++		put_page(pages[i]);
+ 	}
+ 	return reg;
  }
 -- 
 2.25.1
