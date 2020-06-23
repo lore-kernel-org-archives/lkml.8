@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB47BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88D242064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A090D20DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942890;
-	bh=oUxf/z+sLp4EBptueB0GPxM3/ng2XPA+6mZbwQSliKk=;
+	s=default; t=1592942910;
+	bh=DTy5+KKhOvDumFrETKDqUe+uDSaHlmNX0AfYy8W082g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZsXT5Wo/rLbnGOf1FTowZ/L2rJKg0hjYvs+V550+a25qRsuGySYLg7sjCZURxbqm
-	 sG5Zm3uu+Kv9hhzuxZQnIvWX/d4ZGwiXF1fDKCG78+of84+CXtAg+59kHGTmG9XgTB
-	 KA1COL1YhfiuPRHjzcGUWIqGIG60XxEYjOZMkWeg=
+	b=F66qqCWCogikzL74YqW41DwCYJbw9bRlyp9o8qV0Ewql1kg0ijEN0W1Z9viE0GBjw
+	 2rGko37jptf/QsP2i2+IQFFHiAxft2YFI2PuwLQu8MKF5p0uYLfwJvREyTTVhvonGy
+	 DnVDYKIiVNuolC3dTbWqHYg8w+aEY6V21IJt0cFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbgFWUII (ORCPT
+        id S2387991AbgFWUI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:08:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48856 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:08:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387676AbgFWUIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:08:00 -0400
+        id S2388692AbgFWUIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:08:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 426BB206C3;
-        Tue, 23 Jun 2020 20:07:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 807D82078A;
+        Tue, 23 Jun 2020 20:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942879;
-        bh=oUxf/z+sLp4EBptueB0GPxM3/ng2XPA+6mZbwQSliKk=;
+        s=default; t=1592942882;
+        bh=DTy5+KKhOvDumFrETKDqUe+uDSaHlmNX0AfYy8W082g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyLcN7zH7eRNf3Py/WdktIu4qmom3rLMHh+Mw4l5C913fcLXM0TTAVejfHJ417olX
-         Qs9DLJIxf+0K6DRQUVfNm4kJszNS7lY6e/0nFQo8UW9EWf1Aa7QBp4NFsbFsocb+ud
-         sSw5yZnZEE3FsJHRLoRYxlFDMIFZXyLR33XFVE2o=
+        b=PMYt6AJ42zM2JpTyawxZcEReUmhOsavpRByhKIsZb07QR9ldwhsQygPik90d/5rFS
+         P1ObgPkPNSr2gTN89Q2956uccGUP81S9r9ToSnxLKKzv9VvsSkgN8ZORK49sAWYbBj
+         v7AgDhRIMUfFE3/UWTUJJ/EznivZUKKAiUGawRPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 140/477] s390/qdio: put thinint indicator after early error
-Date:   Tue, 23 Jun 2020 21:52:17 +0200
-Message-Id: <20200623195414.224432283@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 141/477] staging: wfx: fix overflow in frame counters
+Date:   Tue, 23 Jun 2020 21:52:18 +0200
+Message-Id: <20200623195414.272118318@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,83 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
+[ Upstream commit 87066173e34b0ca5d041d5519e6bb030b1958184 ]
 
-qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
-If the subsequent qdio_establish_thinint() fails, we miss to put the
-DSCI again. Thus the DSCI isn't available for re-use. Given enough of
-such errors, we could end up with having only the shared DSCI available.
+It has been reported that trying to send small packets of data could
+produce a "inconsistent notification" warning.
 
-Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
-such an error internally.
+It seems that in some circumstances, the number of frame queued in the
+driver could greatly increase and exceed UCHAR_MAX. So the field
+"buffered" from struct sta_priv can overflow.
 
-Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Just increase the size of "bueffered" to fix the problem.
+
+Fixes: 7d2d2bfdeb82 ("staging: wfx: relocate "buffered" information to sta_priv")
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Link: https://lore.kernel.org/r/20200427134031.323403-10-Jerome.Pouiller@silabs.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio.h         |  1 -
- drivers/s390/cio/qdio_setup.c   |  1 -
- drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/staging/wfx/sta.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
-index 3cf223bc1d5f4..a2afd7bc100bb 100644
---- a/drivers/s390/cio/qdio.h
-+++ b/drivers/s390/cio/qdio.h
-@@ -364,7 +364,6 @@ static inline int multicast_outbound(struct qdio_q *q)
- extern u64 last_ai_time;
- 
- /* prototypes for thin interrupt */
--void qdio_setup_thinint(struct qdio_irq *irq_ptr);
- int qdio_establish_thinint(struct qdio_irq *irq_ptr);
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
- void tiqdio_add_device(struct qdio_irq *irq_ptr);
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index d12f094db056e..8edfa0982221f 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -480,7 +480,6 @@ int qdio_setup_irq(struct qdio_irq *irq_ptr, struct qdio_initialize *init_data)
- 	}
- 
- 	setup_qib(irq_ptr, init_data);
--	qdio_setup_thinint(irq_ptr);
- 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
- 			init_data->qib_param_field,
- 			init_data->input_slib_elements,
-diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
-index ae50373617cd4..0faa0ad217326 100644
---- a/drivers/s390/cio/qdio_thinint.c
-+++ b/drivers/s390/cio/qdio_thinint.c
-@@ -227,17 +227,19 @@ int __init tiqdio_register_thinints(void)
- 
- int qdio_establish_thinint(struct qdio_irq *irq_ptr)
- {
-+	int rc;
-+
- 	if (!is_thinint_irq(irq_ptr))
- 		return 0;
--	return set_subchannel_ind(irq_ptr, 0);
--}
- 
--void qdio_setup_thinint(struct qdio_irq *irq_ptr)
--{
--	if (!is_thinint_irq(irq_ptr))
--		return;
- 	irq_ptr->dsci = get_indicator();
- 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
-+
-+	rc = set_subchannel_ind(irq_ptr, 0);
-+	if (rc)
-+		put_indicator(irq_ptr->dsci);
-+
-+	return rc;
- }
- 
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
+diff --git a/drivers/staging/wfx/sta.h b/drivers/staging/wfx/sta.h
+index cf99a8a74a81b..ace845f9ed140 100644
+--- a/drivers/staging/wfx/sta.h
++++ b/drivers/staging/wfx/sta.h
+@@ -37,7 +37,7 @@ struct wfx_grp_addr_table {
+ struct wfx_sta_priv {
+ 	int link_id;
+ 	int vif_id;
+-	u8 buffered[IEEE80211_NUM_TIDS];
++	int buffered[IEEE80211_NUM_TIDS];
+ 	// Ensure atomicity of "buffered" and calls to ieee80211_sta_set_buffered()
+ 	spinlock_t lock;
+ };
 -- 
 2.25.1
 
