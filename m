@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D11AC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76659C433E0
 	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E88572073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DD62080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592943893;
-	bh=Z34m1vzMyTJ2qLI+HvKTSrB9vvo3eoENuWnQemmzaKM=;
+	bh=P4si8H1SED+EKjaI6lFpz3kNayMuEC68QWo0fi1aWMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N9vmoZkQASzwVyV5AFjxBAE/zcKoiVPL2X+Sj3AWVuv2Frtokivnd4gPJIfheIBIQ
-	 SA2Pp+X6AQvm0RbcoOFcBrwOLGSbMr9WVSAtm13XMbruRmCGGdSgI7F6PA6KuNyW4Y
-	 Gl1/JcwmkgkwKgbGaqb4KxD3I7z7hQSvuOfU2w6g=
+	b=QDsCRjY6Mplx8qcBQlJqyn7y9KQLARtF6P9Zc5alZeogqaC4/sclkBWIWnBX4Rjcp
+	 AdjfUHm3qrAnoS5BcFP+kgIJSKAvC1rEaKSJ2wE+/Si8JOzpM/krpUmGKqklerorjn
+	 6AvsyVM/WSTjy8qB+uuy+eYuzt+5yDicaH8C9YnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390474AbgFWUYr (ORCPT
+        id S2390466AbgFWUYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43496 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388915AbgFWUYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:24:44 -0400
+        id S2390180AbgFWUYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:24:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A142073E;
-        Tue, 23 Jun 2020 20:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B175D206C3;
+        Tue, 23 Jun 2020 20:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943884;
-        bh=Z34m1vzMyTJ2qLI+HvKTSrB9vvo3eoENuWnQemmzaKM=;
+        s=default; t=1592943876;
+        bh=P4si8H1SED+EKjaI6lFpz3kNayMuEC68QWo0fi1aWMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rl3kMcT73jhBPdxk/VatDXpvnfsbSgZgPs34lEE3xSdOIFIt4mpTOK9qbzx2TORQR
-         Q8WMp4q3CenaXEkp/HYmACFCUx/Gnmph5OLIpCaUDGl3IOMGdTjUC6+xEO7CJX3X+D
-         xRBoKngkAkiPpa7roSrVAHl8fVM+XpezR6MIxlPU=
+        b=qLi4/2QMsRP4SoN4rpmSLHDWA+F1oyB1kEBNs0EHL5U5XcB7Nk9WZI0KuBTdRGQku
+         tX0AYdG9LR9KthOpgngR85kkHITQr5VVsOHed0xur1EXyfwcpTlKRXqxJxu324z8jW
+         /RfBN+ZIAVEsjv0lb66YSIsTo0IrPwGrTn9Y4K+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Aiman Najjar <aiman.najjar@hurranet.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/314] arm64: dts: qcom: msm8916: remove unit name for thermal trip points
-Date:   Tue, 23 Jun 2020 21:54:43 +0200
-Message-Id: <20200623195343.066380610@linuxfoundation.org>
+Subject: [PATCH 5.4 085/314] staging: rtl8712: fix multiline derefernce warnings
+Date:   Tue, 23 Jun 2020 21:54:40 +0200
+Message-Id: <20200623195342.928743926@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,82 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Kucheria <amit.kucheria@linaro.org>
+From: Aiman Najjar <aiman.najjar@hurranet.com>
 
-[ Upstream commit fe2aff0c574d206f34f1864d5a0b093694c27142 ]
+[ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
 
-The thermal trip points have unit name but no reg property, so we can
-remove them. It also fixes the following warnings from 'make dtbs_check'
-after adding the thermal yaml bindings.
+This patch fixes remaining checkpatch warnings
+in rtl871x_xmit.c:
 
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
+636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
++					      (u8)psecuritypriv->
++					      PrivacyKeyIndex);
 
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Link: https://lore.kernel.org/r/2d3d045c18a2fb85b28cf304aa11ae6e6538d75e.1585562459.git.amit.kucheria@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
+
+Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 5ea9fb8f2f87d..340da154d4e37 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -212,7 +212,7 @@
- 			thermal-sensors = <&tsens 3>;
- 
- 			trips {
--				cpu2_3_alert0: trip-point@0 {
-+				cpu2_3_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -242,7 +242,7 @@
- 			thermal-sensors = <&tsens 2>;
- 
- 			trips {
--				gpu_alert0: trip-point@0 {
-+				gpu_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -262,7 +262,7 @@
- 			thermal-sensors = <&tsens 1>;
- 
- 			trips {
--				cam_alert0: trip-point@0 {
-+				cam_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -277,7 +277,7 @@
- 			thermal-sensors = <&tsens 0>;
- 
- 			trips {
--				modem_alert0: trip-point@0 {
-+				modem_alert0: trip-point0 {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "hot";
+diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
+index cc5809e49e356..7a821921c0da1 100644
+--- a/drivers/staging/rtl8712/rtl871x_xmit.c
++++ b/drivers/staging/rtl8712/rtl871x_xmit.c
+@@ -590,7 +590,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 	addr_t addr;
+ 	u8 *pframe, *mem_start, *ptxdesc;
+ 	struct sta_info		*psta;
+-	struct security_priv	*psecuritypriv = &padapter->securitypriv;
++	struct security_priv	*psecpriv = &padapter->securitypriv;
+ 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
+ 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
+ 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
+@@ -633,15 +633,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _WEP40_:
+ 				case _WEP104_:
+ 					WEP_IV(pattrib->iv, psta->txpn,
+-					       (u8)psecuritypriv->
+-					       PrivacyKeyIndex);
++					       (u8)psecpriv->PrivacyKeyIndex);
+ 					break;
+ 				case _TKIP_:
+ 					if (bmcst)
+ 						TKIP_IV(pattrib->iv,
+ 						    psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						TKIP_IV(pattrib->iv, psta->txpn,
+ 							0);
+@@ -649,8 +647,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _AES_:
+ 					if (bmcst)
+ 						AES_IV(pattrib->iv, psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						AES_IV(pattrib->iv, psta->txpn,
+ 						       0);
 -- 
 2.25.1
 
