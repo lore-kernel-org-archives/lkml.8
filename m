@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B29C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A6F2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C1521852
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944861;
-	bh=rzvja3UF3NYTTw7BxVOgNjPDOe6GvHtvLbfBgJcCI2o=;
+	s=default; t=1592944865;
+	bh=N3ZWL4UiTTyYZz4LzXGUi9NbMV0Ja4Bw/xleC7UnU5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/TpTyDOiZlyEBiTldosvW3WPw5jFpsm0oyLb68WwwMa91U2RGCina9XnJgDc8YCG
-	 hrRHdYi8FbHr7fYmcKVGWZuyfZakdatHJ2W5FkU+qdfu8eVnYU032EqoAPsP9ihRyT
-	 oTuNxzdYWnm5/NEXBARsAHUYthHFNslpErPKogHM=
+	b=kOX3IofEP80adrMEEMweze8gEkh9Y1I1IGmPiJmay2djZmBK+LRyiesCh1nhNTecN
+	 xy2yFEai1PblYJT3OMk9DVmsKLFWGwp7hp/ttPX5Vy1mNlDNUg1LIQulhYypN0QqUS
+	 4oe0Oja0Rui5ZMQtS7aU6+pkhilP0GfMmEbfcJXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403859AbgFWUk7 (ORCPT
+        id S2392284AbgFWUlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:40:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37190 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392284AbgFWUkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:55 -0400
+        id S2392293AbgFWUkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:40:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D5F2053B;
-        Tue, 23 Jun 2020 20:40:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8190A20675;
+        Tue, 23 Jun 2020 20:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944855;
-        bh=rzvja3UF3NYTTw7BxVOgNjPDOe6GvHtvLbfBgJcCI2o=;
+        s=default; t=1592944853;
+        bh=N3ZWL4UiTTyYZz4LzXGUi9NbMV0Ja4Bw/xleC7UnU5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xE4EK4jm6dyppYMzJ/qm7nTkF07LwsjBL9KZvAZzrGpLTWRZR0doH0ZSEGxB5wswu
-         rLgdjqWI8T/OG2Ye4WEo4exTVM6EzySEQiSMJoIoIbSvlKelStFsNCMtqhB0BcfUYx
-         4ZkE1trKEUmp9sVn6vClUJuOlMq6Rv5h9c3GGORs=
+        b=b8dhxV6InezACFXZuwqD5R3Wgw8Xh+E8QKZkirXwKAk2bXbNn6039EHagfsjAlXF6
+         lGbrTWJuiwnnbCUWIB7Y5GbEqDDbSyAbRjuNrukETt4DK7AXyddjRchxae2gOwBwHW
+         f8Um97qXjH/ZyiG/k2tWEfjj1tiwawVtSY+wkqMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 151/206] drivers/perf: hisi: Fix wrong value for all counters enable
-Date:   Tue, 23 Jun 2020 21:57:59 +0200
-Message-Id: <20200623195324.417084094@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 150/206] NTB: ntb_test: Fix bug when counting remote files
+Date:   Tue, 23 Jun 2020 21:57:58 +0200
+Message-Id: <20200623195324.376329532@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,39 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 961abd78adcb4c72c343fcd9f9dc5e2ebbe9b448 ]
+[ Upstream commit 2130c0ba69d69bb21f5c52787f2587db00d13d8a ]
 
-In L3C uncore PMU drivers, bit16 is used to control all counters enable &
-disable. Wrong value is given in the driver and its default value is 1'b1,
-it can work because each PMU counter has its own control bits too.
-Let's fix the wrong value.
+When remote files are counted in get_files_count, without using SSH,
+the code returns 0 because there is a colon prepended to $LOC. $VPATH
+should have been used instead of $LOC.
 
-Fixes: 2940bc433370 ("perf: hisi: Add support for HiSilicon SoC L3C PMU driver")
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/r/1591350221-32275-1-git-send-email-zhangshaokun@hisilicon.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 06bd0407d06c ("NTB: ntb_test: Update ntb_tool Scratchpad tests")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c | 2 +-
+ tools/testing/selftests/ntb/ntb_test.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 0bde5d919b2eb..4aff69cbb9032 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -38,7 +38,7 @@
- /* L3C has 8-counters */
- #define L3C_NR_COUNTERS		0x8
+diff --git a/tools/testing/selftests/ntb/ntb_test.sh b/tools/testing/selftests/ntb/ntb_test.sh
+index 08cbfbbc70291..17ca36403d04c 100755
+--- a/tools/testing/selftests/ntb/ntb_test.sh
++++ b/tools/testing/selftests/ntb/ntb_test.sh
+@@ -250,7 +250,7 @@ function get_files_count()
+ 	split_remote $LOC
  
--#define L3C_PERF_CTRL_EN	0x20000
-+#define L3C_PERF_CTRL_EN	0x10000
- #define L3C_EVTYPE_NONE		0xff
- 
- /*
+ 	if [[ "$REMOTE" == "" ]]; then
+-		echo $(ls -1 "$LOC"/${NAME}* 2>/dev/null | wc -l)
++		echo $(ls -1 "$VPATH"/${NAME}* 2>/dev/null | wc -l)
+ 	else
+ 		echo $(ssh "$REMOTE" "ls -1 \"$VPATH\"/${NAME}* | \
+ 		       wc -l" 2> /dev/null)
 -- 
 2.25.1
 
