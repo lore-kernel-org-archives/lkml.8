@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83F621548
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7CB2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945346;
-	bh=KBuvIhyZm/BBg+Kcj7ctVvYIWsJYksyAeju6FUxkpnI=;
+	s=default; t=1592945351;
+	bh=ldubIelhFi6phziJtpFYwyha/cUAIGDCBQl1UyKHo8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T8zhusrEI3MVDYt092HnZfAnCYNz9KZKgq0n+wVM41ZYSe9ZeR0XEqui1zqHfuqDh
-	 vWYSMjaIU+oF7YxEYNdz+Ekz01lK3V7NEGP8b0BvzmBoESGgkTxmLqopTAvz9cum9i
-	 FmR/tkX9k5n0FdFnOnVHMNH7O8wzvuugwAqTJR7w=
+	b=fm6w7MbmjRQbu6JBEssboxMLZHQDik0Z93N2KGdb4Vm5K+ofeQoEHPAvVqmi1geme
+	 PgbVTuCZ7nJdSCyVOQj+YKYaIn1xOyL4eibVzefo8eBuw1x+NijI7nSc/cAKKhlymC
+	 Uu+hlpSYgfCvpPXR4cnqLSqJp1T7Ljf2iRUqf3CU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392381AbgFWUtE (ORCPT
+        id S2392685AbgFWUtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48120 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404127AbgFWUsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:48:54 -0400
+        id S2404132AbgFWUs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:48:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7978B2098B;
-        Tue, 23 Jun 2020 20:48:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBF972098B;
+        Tue, 23 Jun 2020 20:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945334;
-        bh=KBuvIhyZm/BBg+Kcj7ctVvYIWsJYksyAeju6FUxkpnI=;
+        s=default; t=1592945336;
+        bh=ldubIelhFi6phziJtpFYwyha/cUAIGDCBQl1UyKHo8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UHIGWtapR1qMdctt5UuEKesetjy347Ovrircn/uY5+rsRQLXv2GRo13w3XfGJVI6l
-         sh+OOG51doJT3o6DWgTM5+1Zb2poYPaXyX+PlbdWzI/IDLPr4WYYV4rIWf8KOUp2XI
-         5h4zX3a6JxoI6tPGx88iorC6N8XCKRA5/rLiTji8=
+        b=Mz7Q9/jSKknWv1mITl7qx/qo3c8VQmA4WwJlNXmWY0+BbU5U7gxQqavMIFCg5k//Q
+         o8AKQS0zffi6quaqN10PVmne+KaXvhAS5bU9HH3pwwkIDKy/1Ckjco7KAsw2lTDcg7
+         0Tu88x3HKfS29o0f7NEJYWJTf+Fc5ufdKnns/LlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 129/136] mtd: rawnand: tmio: Fix the probe error path
-Date:   Tue, 23 Jun 2020 21:59:45 +0200
-Message-Id: <20200623195310.293718504@linuxfoundation.org>
+Subject: [PATCH 4.14 102/136] drm/sun4i: hdmi ddc clk: Fix size of m divider
+Date:   Tue, 23 Jun 2020 21:59:18 +0200
+Message-Id: <20200623195308.807562433@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -59,42 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 75e9a330a9bd48f97a55a08000236084fe3dae56 ]
+[ Upstream commit 54e1e06bcf1cf6e7ac3f86daa5f7454add24b494 ]
 
-nand_release() is supposed be called after MTD device registration.
-Here, only nand_scan() happened, so use nand_cleanup() instead.
+m divider in DDC clock register is 4 bits wide. Fix that.
 
-There is no real Fixes tag applying here as the use of nand_release()
-in this driver predates by far the introduction of nand_cleanup() in
-commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-which makes this change possible. However, pointing this commit as the
-culprit for backporting purposes makes sense even if this commit is not
-introducing any bug.
-
-Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-57-miquel.raynal@bootlin.com
+Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200413095457.1176754-1-jernej.skrabec@siol.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/tmio_nand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h         | 2 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/nand/tmio_nand.c b/drivers/mtd/nand/tmio_nand.c
-index 5a082d9432f96..51f12b9f90ba1 100644
---- a/drivers/mtd/nand/tmio_nand.c
-+++ b/drivers/mtd/nand/tmio_nand.c
-@@ -448,7 +448,7 @@ static int tmio_probe(struct platform_device *dev)
- 	if (!retval)
- 		return retval;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+index a1f8cba251a24..3d9148eb40a7e 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+@@ -143,7 +143,7 @@
+ #define SUN4I_HDMI_DDC_CMD_IMPLICIT_WRITE	3
  
--	nand_release(nand_chip);
-+	nand_cleanup(nand_chip);
+ #define SUN4I_HDMI_DDC_CLK_REG		0x528
+-#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0x7) << 3)
++#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0xf) << 3)
+ #define SUN4I_HDMI_DDC_CLK_N(n)			((n) & 0x7)
  
- err_irq:
- 	tmio_hw_stop(dev, tmio);
+ #define SUN4I_HDMI_DDC_LINE_CTRL_REG	0x540
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+index 4692e8c345ed4..58d9557a774fe 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+@@ -32,7 +32,7 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
+ 	unsigned long best_rate = 0;
+ 	u8 best_m = 0, best_n = 0, _m, _n;
+ 
+-	for (_m = 0; _m < 8; _m++) {
++	for (_m = 0; _m < 16; _m++) {
+ 		for (_n = 0; _n < 8; _n++) {
+ 			unsigned long tmp_rate;
+ 
 -- 
 2.25.1
 
