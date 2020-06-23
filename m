@@ -5,48 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC32C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E482C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB84620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5B220663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946211;
-	bh=6chtRcH+PpMKghPrStLEVFJR+kCqrRiVpmVv9M3GhgU=;
+	s=default; t=1592946218;
+	bh=TzNyeNTRndhnt9CP4fFLcc7wkIhGvqnA1cqAHrSXqlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1BjRtKw3jxnIYN1DQM8LLo7WnDwlV2eVxztG0c8C3mNO1esUFPaKkxyJRroySgjKv
-	 F9E0ENU2bTXRwSV/irR6F3hxKUFNF/BNDH4CE368gnnt2Lp9u8BlrS7FDt0Iqx1OX/
-	 ejnd2A1R3WVxz0uw8Q6cp4/3iP0Z9xKtWt3QJ8WA=
+	b=mYWzZMKAJrlpeViF+LvbY6NT11BjCtn1NfyJAmuHBTE+rDdbtBRB057BpMHWut2tN
+	 AYeEKQZme9dltHNw5NTFDKXq/HYGIJt1K+VJMfthkUk4oq28Tt7HAouE1Euee5jT97
+	 5inOvEyJIp/uNzZcrWK5NWcJ2n490ahw2wyfkNSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392079AbgFWVD3 (ORCPT
+        id S2403837AbgFWVDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:03:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403837AbgFWUij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:38:39 -0400
+        id S2388912AbgFWUid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:38:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF7D82085B;
-        Tue, 23 Jun 2020 20:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF8562085B;
+        Tue, 23 Jun 2020 20:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944719;
-        bh=6chtRcH+PpMKghPrStLEVFJR+kCqrRiVpmVv9M3GhgU=;
+        s=default; t=1592944714;
+        bh=TzNyeNTRndhnt9CP4fFLcc7wkIhGvqnA1cqAHrSXqlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cy2DdF4BgcFwFPd4YgFKBtZOx7UXp6/8K6GwXMYUne7V9Kr3NYGGfqwKhwGdisV7R
-         n6ZG7LFgIv3YJh8OFT+1awv2cv3oCMB+0pq3Ylj0o6SM/S5wE8NMu01pN+fpjH5UTe
-         ZnHD0xKn2GAr1MeQ8dHb6PsJX8BOcMbAHvjwp+lk=
+        b=MnnNHBgroCRcDPAwBQ0RCYtJ5rlxkUrkOH/mLLIhWmshB1pKPsFBxWQ3jEAyxTJ0v
+         fzcR22VJD21Y5vDF36m8sTD07CuVYkHEqWXEHu5DOYX5giPjF+CuJ93pl8s2MkDn2Y
+         D1JGzCQLsEuqDXlU7gDGnNtyHIYtruUny6cuAZoQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matej Dujava <mdujava@kocurkovo.cz>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/206] staging: sm750fb: add missing case while setting FB_VISUAL
-Date:   Tue, 23 Jun 2020 21:56:36 +0200
-Message-Id: <20200623195320.308757553@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 066/206] soundwire: slave: dont init debugfs on device registration error
+Date:   Tue, 23 Jun 2020 21:56:34 +0200
+Message-Id: <20200623195320.204985936@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -59,34 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matej Dujava <mdujava@kocurkovo.cz>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
+[ Upstream commit 8893ab5e8ee5d7c12e0fc1dca4a309475064473d ]
 
-Switch statement does not contain all cases: 8, 16, 24, 32.
-This patch will add missing one (24)
+The error handling flow seems incorrect, there is no reason to try and
+add debugfs support if the device registration did not
+succeed. Return on error.
 
-Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
-Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
-Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Link: https://lore.kernel.org/r/20200419185117.4233-2-yung-chuan.liao@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/sm750fb/sm750.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soundwire/slave.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 846d7d243994c..3972e215128e6 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -897,6 +897,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
- 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
- 		break;
- 	case 16:
-+	case 24:
- 	case 32:
- 		fix->visual = FB_VISUAL_TRUECOLOR;
- 		break;
+diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+index ac103bd0c1760..b6330b6672d59 100644
+--- a/drivers/soundwire/slave.c
++++ b/drivers/soundwire/slave.c
+@@ -55,6 +55,8 @@ static int sdw_slave_add(struct sdw_bus *bus,
+ 		list_del(&slave->node);
+ 		mutex_unlock(&bus->bus_lock);
+ 		put_device(&slave->dev);
++
++		return ret;
+ 	}
+ 
+ 	return ret;
 -- 
 2.25.1
 
