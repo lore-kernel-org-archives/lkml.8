@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45213C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198C62078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C892089D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948566;
-	bh=MUfnL6/sr/TawQi32RX12iNttQvk7p08cXinlCl/o7o=;
+	s=default; t=1592948578;
+	bh=C8plsjTbzTGDw+qKFpBKTXxSb7qke20Cwx5EshaE9fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ckvHDuw/Kk6tMIO0h+y3ja5G7evcifa8dHiAmM+9HfUacmdT6dUHeOlh+UDmlW5IU
-	 7ZVvokyoi582J/8aPh/GsQHoDJUqG/IMMYNo+IahPzJouZ6gR2aR9/VHd+ZbOeLRfU
-	 0UYqkzedZjXAP823X2zwvBb9bkjMUpNPZ3dhOaAE=
+	b=T7bi9rua9ZXoN+Cup6EHXFl5YKiAey9ZdL5TkwH1yWodBYtXMATiEPjlHhqoFraqC
+	 VIj3k2lfKnr2rz7Z6cEb11D2hvvqKgDL5bSoobL//7QT9CaNK0RNMmPP1BOGyHzMNc
+	 gyDJi8gSJavpxUK/c1okz3eOOkjJYtSr+7DjwWyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388234AbgFWVmo (ORCPT
+        id S2388181AbgFWUES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388233AbgFWUEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:36 -0400
+        id S2387537AbgFWUEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C81F206C3;
-        Tue, 23 Jun 2020 20:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A34E2080C;
+        Tue, 23 Jun 2020 20:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942675;
-        bh=MUfnL6/sr/TawQi32RX12iNttQvk7p08cXinlCl/o7o=;
+        s=default; t=1592942650;
+        bh=C8plsjTbzTGDw+qKFpBKTXxSb7qke20Cwx5EshaE9fM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvFOFXPxKFLDj4ka0CJ0pdYOjLUSxv1xN2ldFdi5523pdyaUpgNuKCe0swe/DGFir
-         5ZZJOrI/0+yDnJMdM2QsP4i+cGxQuNuHQkBtxn9iSlPdHl6sdg5ipk8KSE36RIJ/k4
-         V80ZEFsmSt6ONplVr66DWDXwNDcWjsrgcecAabmE=
+        b=Cjg4Ml0ZilD0LOCR8epBZEmQfVc3QmX2plX5gahBrF7DGL26AvmJFHvhUTNAaVDFS
+         a8HworjoyhhVR83EslGAe45YhdLKzLnubuaxxG83yLCPm+4QRNNf6Kd3IwdmXRuKZx
+         fw9emPlZFzzFhPYVSBE6R48orJoxVWzR4Z+obYWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 091/477] yam: fix possible memory leak in yam_init_driver
-Date:   Tue, 23 Jun 2020 21:51:28 +0200
-Message-Id: <20200623195411.908988598@linuxfoundation.org>
+Subject: [PATCH 5.7 082/477] RDMA/core: Fix several reference count leaks.
+Date:   Tue, 23 Jun 2020 21:51:19 +0200
+Message-Id: <20200623195411.486545454@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,34 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+[ Upstream commit 0b8e125e213204508e1b3c4bdfe69713280b7abd ]
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
+kobject_init_and_add() takes reference even when it fails.  If this
+function returns an error, kobject_put() must be called to properly clean
+up the memory associated with the object. Previous
+commit b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200528030231.9082-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/yam.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/core/sysfs.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index 71cdef9fb56bc..5ab53e9942f30 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1133,6 +1133,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
+diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+index 087682e6969e5..defe9cd4c5eeb 100644
+--- a/drivers/infiniband/core/sysfs.c
++++ b/drivers/infiniband/core/sysfs.c
+@@ -1058,8 +1058,7 @@ static int add_port(struct ib_core_device *coredev, int port_num)
+ 				   coredev->ports_kobj,
+ 				   "%d", port_num);
+ 	if (ret) {
+-		kfree(p);
+-		return ret;
++		goto err_put;
+ 	}
+ 
+ 	p->gid_attr_group = kzalloc(sizeof(*p->gid_attr_group), GFP_KERNEL);
+@@ -1072,8 +1071,7 @@ static int add_port(struct ib_core_device *coredev, int port_num)
+ 	ret = kobject_init_and_add(&p->gid_attr_group->kobj, &gid_attr_type,
+ 				   &p->kobj, "gid_attrs");
+ 	if (ret) {
+-		kfree(p->gid_attr_group);
+-		goto err_put;
++		goto err_put_gid_attrs;
+ 	}
+ 
+ 	if (device->ops.process_mad && is_full_dev) {
+@@ -1404,8 +1402,10 @@ int ib_port_register_module_stat(struct ib_device *device, u8 port_num,
+ 
+ 		ret = kobject_init_and_add(kobj, ktype, &port->kobj, "%s",
+ 					   name);
+-		if (ret)
++		if (ret) {
++			kobject_put(kobj);
+ 			return ret;
++		}
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
