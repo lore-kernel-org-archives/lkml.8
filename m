@@ -2,102 +2,143 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D389C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B298FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B14E2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592914168;
-	bh=haSQooFduqRyz9/+2LYejvi7M3QhqKKO0sIdFNibuWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jB7exvIpeylAko/SX6ouz/VnGwH9WGH64LWHndDh6oG13rvqfni1jbM+7ENOtCe7p
-	 pDpkyzkNZG3B7Ocz3lFz/TFEq/OpjuX9MHXYYM+iBShvW2rbYqW8F9qWH0MrD3wmKg
-	 +jF56J7Go+r9mqqauoxZ06KK9/e3W7GxCL2O47rs=
+	by mail.kernel.org (Postfix) with ESMTP id 9231C2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:10:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TTlHi/7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732517AbgFWMJ1 (ORCPT
+        id S1732608AbgFWMKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:09:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732333AbgFWMJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:09:26 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E5D42072E;
-        Tue, 23 Jun 2020 12:09:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592914166;
-        bh=haSQooFduqRyz9/+2LYejvi7M3QhqKKO0sIdFNibuWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rzq1klcmTchLWDMT0jwDWd2NktAnGleEVTa1toh+z6VhUqsTEQ5k8th3jeERJJ0+a
-         Ilkz8SBUzXQhi2Fqa+cV4t/f5fyp9yyMiyvkZIEXxp7dw8XDZPuPl3TmQloDzaYguM
-         IDYJRqWjS+HHLltHhOdG5tbddTOVPhjK5cdHqjNs=
-Date:   Tue, 23 Jun 2020 20:09:20 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, Yu Kuai <yukuai3@huawei.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Yi Zhang <yi.zhang@huawei.com>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: ARM: imx6: add missing put_device() call in imx6q_suspend_init()
-Message-ID: <20200623120919.GE30139@dragon>
-References: <cf810c93-297c-c02c-9bba-8c3d097b8e31@web.de>
- <2ab2cc9f-c720-75ca-e20c-0e4236ff45fd@huawei.com>
- <1542979d-f7f6-bcf1-53c3-22b7c076ddc7@web.de>
- <20200623073220.GV30139@dragon>
- <5300cb30-2243-9bfe-125c-96e720cd1f29@web.de>
- <20200623110222.GX30139@dragon>
- <9f429c51-0fa9-16dc-4d62-d456551c5376@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9f429c51-0fa9-16dc-4d62-d456551c5376@web.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 23 Jun 2020 08:10:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51092 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732396AbgFWMKB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:10:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NC7jqi051976;
+        Tue, 23 Jun 2020 12:09:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=MTrI+iVmFvo3cZvwKsuePw6GQVm8XRiz1/7qTOD9t8c=;
+ b=TTlHi/7CvdLjijxnAnnu9u13VHtEsGJVTOXOWpBjLHqSmvLmTRmqUZ5jEtu/N4SvdM0Q
+ h5b4CLqeRVOqiU+FBr7xwOfblrnTKU8txZxmUHjuFW3DZPL1sUFfuCK9qxEnVUfCM+Aj
+ Kb4+2t6xZNGYAQKVyVOorZfzwZDwSbaF6IKIzojRllm/9zVh2NCsMaCPKtan8lUjpLfO
+ MzBcc+BJ7hPfK27BwtZ6r2zJtQteGic0584Q+ZYfbQWYqwip3Bg9Vn76erHj7HDsry4l
+ nNfnZCdH8PxR3fhNKdrNZQ1DYurrLK2bzr6+rbq2404fwJc+khRdUJmNZQ5XT6AONgK6 lA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31sebbcv8x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jun 2020 12:09:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NC7h9X185364;
+        Tue, 23 Jun 2020 12:09:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 31sv1n7gtn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jun 2020 12:09:08 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05NC9469018634;
+        Tue, 23 Jun 2020 12:09:04 GMT
+Received: from localhost.uk.oracle.com (/10.175.166.3)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Jun 2020 12:09:04 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
+        arnaldo.melo@gmail.com
+Cc:     kafai@fb.com, songliubraving@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, linux@rasmusvillemoes.dk, joe@perches.com,
+        pmladek@suse.com, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
+        corbet@lwn.net, bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH v3 bpf-next 1/8] bpf: provide function to get vmlinux BTF information
+Date:   Tue, 23 Jun 2020 13:07:04 +0100
+Message-Id: <1592914031-31049-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006230097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
+ lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 priorityscore=1501 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006230097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:00:09PM +0200, Markus Elfring wrote:
-> >>>>>> Do you find a previous update suggestion useful?
-> >>>>>>
-> >>>>>> ARM: imx6: Add missing put_device() call in imx6q_suspend_init()
-> >>>>>> https://lore.kernel.org/linux-arm-kernel/5acd7308-f6e1-4b1e-c744-bb2e5fdca1be@web.de/
-> >>>>>> https://lore.kernel.org/patchwork/patch/1151158/
-> >>>>>> https://lkml.org/lkml/2019/11/9/125
-> …
-> >> You can get relevant information from the referenced message archive interfaces,
-> >> can't you?
-> >
-> > Well, I'm asking you to resend to make sure the following:
-> >
-> >  - Use correct maintainer mailbox address.
-> 
-> Were the selected message recipients appropriate at 2019-11-09?
+It will be used later for BTF printk() support
 
-At least, my mailbox was not.
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ include/linux/bpf.h   |  2 ++
+ kernel/bpf/verifier.c | 18 ++++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-> 
-> 
-> >  - You still care about the patch.
-> 
-> Partly, yes.
-> 
-> 
-> >  - The patch applies to v5.8-rc.
-> 
-> Would you like to try it out if my proposal is still valid?
-> 
-> Does the change approach by Yu Kuai supersede it?
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 07052d4..a2ecebd 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1237,6 +1237,8 @@ int bpf_check(struct bpf_prog **fp, union bpf_attr *attr,
+ 	      union bpf_attr __user *uattr);
+ void bpf_patch_call_args(struct bpf_insn *insn, u32 stack_depth);
+ 
++struct btf *bpf_get_btf_vmlinux(void);
++
+ /* Map specifics */
+ struct xdp_buff;
+ struct sk_buff;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index a1857c4..d448aa8 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -10878,6 +10878,17 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 	}
+ }
+ 
++struct btf *bpf_get_btf_vmlinux(void)
++{
++	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
++		mutex_lock(&bpf_verifier_lock);
++		if (!btf_vmlinux)
++			btf_vmlinux = btf_parse_vmlinux();
++		mutex_unlock(&bpf_verifier_lock);
++	}
++	return btf_vmlinux;
++}
++
+ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
+ 	      union bpf_attr __user *uattr)
+ {
+@@ -10911,12 +10922,7 @@ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
+ 	env->ops = bpf_verifier_ops[env->prog->type];
+ 	is_priv = bpf_capable();
+ 
+-	if (!btf_vmlinux && IS_ENABLED(CONFIG_DEBUG_INFO_BTF)) {
+-		mutex_lock(&bpf_verifier_lock);
+-		if (!btf_vmlinux)
+-			btf_vmlinux = btf_parse_vmlinux();
+-		mutex_unlock(&bpf_verifier_lock);
+-	}
++	bpf_get_btf_vmlinux();
+ 
+ 	/* grab the mutex to protect few globals used by verifier */
+ 	if (!is_priv)
+-- 
+1.8.3.1
+
