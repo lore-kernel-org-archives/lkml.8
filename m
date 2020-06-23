@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E3120707
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0CE2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943265;
-	bh=58BjIi//UUzgUCcWBw6C1zUX/jPjqYckyPctRZQbmuo=;
+	s=default; t=1592943270;
+	bh=/0jXKY3TJ2pVhw3ClEqAeO1O7QusWNrVVyNMLtWUTJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z/odQX6nX7vmMJzdMCJCtVIg5qMWUoewmhNjEinssYrw0Vy7Ip+A/Y0yMtMChMY+m
-	 zZmOzpxa6kxjrhcOKVvYn5kZLyaa7WYtPyUY+6X2P8rBG8utC4l9IGJRukjnBet2SM
-	 hSJ4QgGd0KSaUnT1OMJPEJgc2JzhzhvIjENcsf+s=
+	b=PciXaRR5YWnLp7ACb3kYFXJt4C0TrJtJYE4w8zxPt6vM2E3m4l8D/RoKy09F8C8ip
+	 Cdr2IYDi//tw1UtH5HATGL8ZS6KKPh1NTNYfFXsl1tdHexAX+16pNPGID9v13wfExz
+	 MfZBy3yEshAgDu5XHSSpWWAhK5bKYrXMnZAb0T3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389190AbgFWUOT (ORCPT
+        id S2388959AbgFWUO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56520 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389166AbgFWUOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:10 -0400
+        id S2388911AbgFWUOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:14:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E4822073E;
-        Tue, 23 Jun 2020 20:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FAB52073E;
+        Tue, 23 Jun 2020 20:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943250;
-        bh=58BjIi//UUzgUCcWBw6C1zUX/jPjqYckyPctRZQbmuo=;
+        s=default; t=1592943263;
+        bh=/0jXKY3TJ2pVhw3ClEqAeO1O7QusWNrVVyNMLtWUTJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YRaoj8vPiEQip+vT0wXjJRsLvhE5ObFCkoyb6uBhsqnbYiyD+JBMDr4NZ47iDIpX6
-         PHm6ol0AsyCjQBMeqOCDFasr0wDuahrwybpgXQC2Oe4F4hLcOMi73xY+sLOmDdNztV
-         RSagl84oHf8WrjW/fmduw6DBNjciTzJiICsj3fkQ=
+        b=ydqIet8HtrqF5I6ZM2OTMkxSqg2+IQxrsiy6/NKNUztKxV6uGAGERXaXaO3t9OhUJ
+         CcKfsFiGoSqbpb+guBj0+oyz2ZWuQ+fmpTkGUolrCSJZR2g2h7ZANooaPFKb8JBEjn
+         UPR43IWLCasM0IcQTghTDwZetJeJErbP1U4BvfEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 319/477] nfsd: safer handling of corrupted c_type
-Date:   Tue, 23 Jun 2020 21:55:16 +0200
-Message-Id: <20200623195422.609917994@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 323/477] ext4: dont block for O_DIRECT if IOCB_NOWAIT is set
+Date:   Tue, 23 Jun 2020 21:55:20 +0200
+Message-Id: <20200623195422.801381152@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -59,34 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit c25bf185e57213b54ea0d632ac04907310993433 ]
+[ Upstream commit 6e014c621e7271649f0d51e54dbe1db4c10486c8 ]
 
-This can only happen if there's a bug somewhere, so let's make it a WARN
-not a printk.  Also, I think it's safest to ignore the corruption rather
-than trying to fix it by removing a cache entry.
+Running with some debug patches to detect illegal blocking triggered the
+extend/unaligned condition in ext4. If ext4 needs to extend the file (and
+hence go to buffered IO), or if the app is doing unaligned IO, then ext4
+asks the iomap code to wait for IO completion. If the caller asked for
+no-wait semantics by setting IOCB_NOWAIT, then ext4 should return -EAGAIN
+instead.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+
+Link: https://lore.kernel.org/r/76152096-2bbb-7682-8fce-4cb498bcd909@kernel.dk
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfscache.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/ext4/file.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 0c10bfea039eb..4a258065188e1 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -469,8 +469,7 @@ found_entry:
- 		rtn = RC_REPLY;
- 		break;
- 	default:
--		printk(KERN_WARNING "nfsd: bad repcache type %d\n", rp->c_type);
--		nfsd_reply_cache_free_locked(b, rp, nn);
-+		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
- 	}
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index b8e69f9e38587..2a01e31a032c4 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -502,6 +502,12 @@ static ssize_t ext4_dio_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (ret <= 0)
+ 		return ret;
  
- 	goto out;
++	/* if we're going to block and IOCB_NOWAIT is set, return -EAGAIN */
++	if ((iocb->ki_flags & IOCB_NOWAIT) && (unaligned_io || extend)) {
++		ret = -EAGAIN;
++		goto out;
++	}
++
+ 	offset = iocb->ki_pos;
+ 	count = ret;
+ 
 -- 
 2.25.1
 
