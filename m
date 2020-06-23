@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE47C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4965C2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023D0207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 04:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMxmJuYD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdajZ7xM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbgFWEDY (ORCPT
+        id S1732383AbgFWED2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 00:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42320 "EHLO
+        Tue, 23 Jun 2020 00:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732320AbgFWEDP (ORCPT
+        with ESMTP id S1732351AbgFWEDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 00:03:15 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AFD0C061573;
-        Mon, 22 Jun 2020 21:03:14 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b7so646056pju.0;
-        Mon, 22 Jun 2020 21:03:14 -0700 (PDT)
+        Tue, 23 Jun 2020 00:03:24 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB50C061795;
+        Mon, 22 Jun 2020 21:03:23 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u128so9247903pgu.13;
+        Mon, 22 Jun 2020 21:03:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gIH44XP+3+d8u/o5onM5jscJ417kAbas5Jl16ovp4QI=;
-        b=QMxmJuYDSsMGB3THi0GFjsWzTVsTtKNeQWjpu++s0JBZgTJw/d9Z0lRU3ljYQjn5Hs
-         08t5p8tjLUQvSV9s4enh2kw6ex9rvCfKwyXyzEnxHmti3gsye2etzlNYyAaAcVhOw+iu
-         tpKfQsXSZOQnWWlw/WxtOr6VI6i9yb2CfXW+nTnZJKfRiWSo2/i6u1pLvQWRhkUHDPRp
-         10FXo2Ms2sqVIUI/W0WTMwwmdi/6lZAuzS5ccLslonZInG716q9FPSLSHZLcLOHl5xHd
-         iQnuzSEonnFrGbwOjuGPL3+ysZwnKqwkFyus8RNepnYWwAp0xsg8Na5FtgS6jePCHJrF
-         hIjQ==
+        bh=+kW864VZBEMSalv4BR4EqKVRUPzOGP1u8NMsK1NQ/ws=;
+        b=gdajZ7xMPK0mLpLirrDDbV0d3rJ9oxl189kBoGbxoUONebK+GOt4eBnL0+1MFkz/zR
+         Wl81a2GNMNXlNA/p08lltWI6xhqopJ5SDQq728duU8awuB56ZduuwuhgvTiOzpO2iEQM
+         RoqXe4WtYLavTth8wO3G9xTzQY0s7ShP10KyE4pS9xn4efmHHOwKISkxK9nQnQbdejWf
+         HS6+N7NKnozeiOqBz+fWnQ9LrhTH2eKJ2cGxJ9mt9G+LYQA4XUGO+E4h9o+0bwIx3uF0
+         R68ZpGoUWniC0wH282fKC7fSZSll4YJ2LA/gljyskDAWiV8LprZOSgYmN6LW3/q8tplq
+         uGWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gIH44XP+3+d8u/o5onM5jscJ417kAbas5Jl16ovp4QI=;
-        b=lEAADc/LMFgY4MKn3UVXtlehKQSBirBxtIAvO6ejfWSXP0Yf7wcH/InJjXoU2F+HEV
-         FzF8IECnjyViLqn0V4GCs4fvxzyfYlg+4+HRpCbui/PyA3TFthNrOKEKp61ISLTOKDLp
-         p9NiqVMmMwRIFJncCZteIC4/O1vcTDyTBehwXH/CMNVIST81JzPG0ltFmnWGTsXupCnO
-         iBzxggLED3Y6sW/yeKpF8s+/cgaDOhH/nXTBGGf4k8SLJYPO6QmH0kFrZTP4+gwau3SN
-         zEx6EYCguco5k2CSlzHxhmuqOYy2/VdBnQCLeZG/9UpNw4NlTfDN6y49YXvK2WMY13Kf
-         TrCw==
-X-Gm-Message-State: AOAM533fK+4lUAQRgrU6twSsJT1y3KXqoCS9jjFcpIMnN1PHtbHuk4VI
-        rKKzH3tibRYuaPY2nqaJXL6KfksVfss=
-X-Google-Smtp-Source: ABdhPJyGwaSdjarOKsLbDjq6OvTWMzjLgHBCihVIyMjePQDTnc7tAGJ3lTxKgumy0S5EiUEDeKqNHw==
-X-Received: by 2002:a17:90a:5c85:: with SMTP id r5mr21583673pji.40.1592884993354;
-        Mon, 22 Jun 2020 21:03:13 -0700 (PDT)
+        bh=+kW864VZBEMSalv4BR4EqKVRUPzOGP1u8NMsK1NQ/ws=;
+        b=j3w/tohf0ExGDJUyRnJhLQ1mcrpDAhqnNWwZltwBm8Hxrb7mZBjEjYlY3rOyaAjFBW
+         u7zLJ4k5VBLN3uo9IUrAY6E9dsHQSUrnBSEGVxZEG20SC32Fiec/WSp3Tw5/f8TZDcl5
+         wV8hp4QXbdKJztUdab/c5tpu/nqj9kfOtCpFxssoOXg7xGvjKt/pm8alG8ObE1Nbneks
+         fq4TPQXwcATJhcJDVOza/CTwNE74xn1NAv5+llsnA230ffqFlgmCkOJH17847Qz8lG/M
+         tvcLSvaPoy0NhwrK7P8ze6UHqNuR0AOgb8AOIMlr+0JzgfUWY/BRrtsCU8SDuQNHApSG
+         8NKw==
+X-Gm-Message-State: AOAM533vSXTMTVqLlS6lr7MpBOjSm/3QBgyOweuykHSigTjj4Ls770aI
+        LW6nhsdO0clTlFhpYdEjo3rbbz4XVGw=
+X-Google-Smtp-Source: ABdhPJwLQILd6naRQA/C6iTsG37IZzSbRnvBzv+5fCGSk99RUcVfdgtO0wi2ka5vFTN/J5s3TS/Bng==
+X-Received: by 2002:a63:4f1b:: with SMTP id d27mr15223800pgb.389.1592885002956;
+        Mon, 22 Jun 2020 21:03:22 -0700 (PDT)
 Received: from sol.lan (220-235-126-59.dyn.iinet.net.au. [220.235.126.59])
-        by smtp.gmail.com with ESMTPSA id n64sm12442315pga.38.2020.06.22.21.03.10
+        by smtp.gmail.com with ESMTPSA id n64sm12442315pga.38.2020.06.22.21.03.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 21:03:12 -0700 (PDT)
+        Mon, 22 Jun 2020 21:03:22 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 17/22] gpiolib: cdev: report edge detection in lineinfo
-Date:   Tue, 23 Jun 2020 12:01:02 +0800
-Message-Id: <20200623040107.22270-18-warthog618@gmail.com>
+Subject: [PATCH 19/22] gpio: uapi: document uAPI V1 as deprecated
+Date:   Tue, 23 Jun 2020 12:01:04 +0800
+Message-Id: <20200623040107.22270-20-warthog618@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623040107.22270-1-warthog618@gmail.com>
 References: <20200623040107.22270-1-warthog618@gmail.com>
@@ -77,76 +77,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Report the state of edge detection for a line in the gpioline_info_v2
-returned by GPIO_GET_LINEINFO_V2_IOCTL, and indirectly for lines watched
-by GPIO_GET_LINEINFO_WATCH_V2_IOCTL.
+Update uAPI documentation to deprecate V1 structs and ioctls.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
 ---
- drivers/gpio/gpiolib-cdev.c | 14 ++++++++++++++
- drivers/gpio/gpiolib.c      |  2 ++
- drivers/gpio/gpiolib.h      |  2 ++
- 3 files changed, 18 insertions(+)
+ include/uapi/linux/gpio.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index d4a22d78953f..7ba0929b2741 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -566,6 +566,12 @@ static void edge_detector_stop(struct edge_detector *edet)
- static int edge_detector_setup(struct edge_detector *edet,
- 			       struct gpioline_config *lc)
- {
-+	struct gpio_desc *desc = edge_detector_desc(edet);
-+
-+	if (lc->edge_detection & GPIOLINE_EDGE_RISING)
-+		set_bit(FLAG_EDGE_RISING, &desc->flags);
-+	if (lc->edge_detection & GPIOLINE_EDGE_FALLING)
-+		set_bit(FLAG_EDGE_FALLING, &desc->flags);
- 	if (lc->edge_detection)
- 		return edge_detector_start(edet);
- 	return 0;
-@@ -1574,6 +1580,14 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	}
+diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+index e4ed6f79e332..752d63f56b0d 100644
+--- a/include/uapi/linux/gpio.h
++++ b/include/uapi/linux/gpio.h
+@@ -238,6 +238,9 @@ struct gpioline_event {
  
- 	lc->edge_detection = 0;
-+	if (test_bit(FLAG_EDGE_RISING, &desc->flags)) {
-+		lc->flags |= GPIOLINE_FLAG_V2_EDGE_DETECTION;
-+		lc->edge_detection |= GPIOLINE_EDGE_RISING;
-+	}
-+	if (test_bit(FLAG_EDGE_FALLING, &desc->flags)) {
-+		lc->flags |= GPIOLINE_FLAG_V2_EDGE_DETECTION;
-+		lc->edge_detection |= GPIOLINE_EDGE_FALLING;
-+	}
+ /*
+  *  ABI V1
++ *
++ * This version of the ABI is deprecated and will be removed in the future.
++ * Use the latest version if the ABI, defined above, instead.
+  */
  
- 	spin_unlock_irqrestore(&gpio_lock, flags);
- }
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 517c99ddf6c8..a5f2795e17b7 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2041,6 +2041,8 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
- 		clear_bit(FLAG_PULL_UP, &desc->flags);
- 		clear_bit(FLAG_PULL_DOWN, &desc->flags);
- 		clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
-+		clear_bit(FLAG_EDGE_RISING, &desc->flags);
-+		clear_bit(FLAG_EDGE_FALLING, &desc->flags);
- 		clear_bit(FLAG_IS_HOGGED, &desc->flags);
- #ifdef CONFIG_OF_DYNAMIC
- 		desc->hog = NULL;
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 2dee4e1e12dc..1dc6d2b191af 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -114,6 +114,8 @@ struct gpio_desc {
- #define FLAG_PULL_UP    13	/* GPIO has pull up enabled */
- #define FLAG_PULL_DOWN  14	/* GPIO has pull down enabled */
- #define FLAG_BIAS_DISABLE    15	/* GPIO has pull disabled */
-+#define FLAG_EDGE_RISING     16	/* GPIO CDEV detects rising edge events */
-+#define FLAG_EDGE_FALLING    17	/* GPIO CDEV detects falling edge events */
+ /* Informational flags */
+@@ -261,6 +264,9 @@ struct gpioline_event {
+  * @consumer: a functional name for the consumer of this GPIO line as set by
+  * whatever is using it, will be empty if there is no current user but may
+  * also be empty if the consumer doesn't set this up
++ *
++ * This struct part of ABI V1 and is deprecated.
++ * Use struct gpioline_info_v2 instead.
+  */
+ struct gpioline_info {
+ 	__u32 line_offset;
+@@ -292,6 +298,9 @@ enum {
+  * guarantee there are no implicit holes between it and subsequent members.
+  * The 20-byte padding at the end makes sure we don't add any implicit padding
+  * at the end of the structure on 64-bit architectures.
++ *
++ * This struct part of ABI V1 and is deprecated.
++ * Use struct gpioline_info_changed_v2 instead.
+  */
+ struct gpioline_info_changed {
+ 	struct gpioline_info info;
+@@ -331,6 +340,9 @@ struct gpioline_info_changed {
+  * @fd: if successful this field will contain a valid anonymous file handle
+  * after a GPIO_GET_LINEHANDLE_IOCTL operation, zero or negative value
+  * means error
++ *
++ * This struct part of ABI V1 and is deprecated.
++ * Use struct gpioline_request instead.
+  */
+ struct gpiohandle_request {
+ 	__u32 lineoffsets[GPIOHANDLES_MAX];
+@@ -350,6 +362,9 @@ struct gpiohandle_request {
+  * this specifies the default output value, should be 0 (low) or
+  * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
+  * @padding: reserved for future use and should be zero filled
++ *
++ * This struct part of ABI V1 and is deprecated.
++ * Use struct gpioline_config instead.
+  */
+ struct gpiohandle_config {
+ 	__u32 flags;
+@@ -362,6 +377,9 @@ struct gpiohandle_config {
+  * @values: when getting the state of lines this contains the current
+  * state of a line, when setting the state of lines these should contain
+  * the desired target state
++ *
++ * This struct part of ABI V1 and is deprecated.
++ * Use struct gpioline_values instead.
+  */
+ struct gpiohandle_data {
+ 	__u8 values[GPIOHANDLES_MAX];
+@@ -385,6 +403,9 @@ struct gpiohandle_data {
+  * @fd: if successful this field will contain a valid anonymous file handle
+  * after a GPIO_GET_LINEEVENT_IOCTL operation, zero or negative value
+  * means error
++ *
++ * This struct part of ABI V1 and is deprecated.
++ * Use struct gpioline_request instead.
+  */
+ struct gpioevent_request {
+ 	__u32 lineoffset;
+@@ -404,6 +425,9 @@ struct gpioevent_request {
+  * struct gpioevent_data - The actual event being pushed to userspace
+  * @timestamp: best estimate of time of event occurrence, in nanoseconds
+  * @id: event identifier
++ *
++ * This struct part of ABI V1 and is deprecated.
++ * Use struct gpioline_event instead.
+  */
+ struct gpioevent_data {
+ 	__u64 timestamp;
+@@ -428,6 +452,8 @@ struct gpioevent_data {
  
- 	/* Connection label */
- 	const char		*label;
+ /*
+  * V1 ioctl()s
++ *
++ * These ioctl()s are deprecated.  Use the V2 equivalent instead.
+  */
+ #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+ #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
 -- 
 2.27.0
 
