@@ -2,124 +2,101 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F61B20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDFB20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:34:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ai6ermZk"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="txSs6WoD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732436AbgFWLeL (ORCPT
+        id S1732477AbgFWLeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:34:11 -0400
-Received: from mail-eopbgr00054.outbound.protection.outlook.com ([40.107.0.54]:22289
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732376AbgFWLdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:34:21 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:26468 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732328AbgFWLdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 07:33:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d7qylII9MuXotPfuIdmT4H6WyDCqknfDBNhCdDh4lGTDMVMe013U8pOKF2Cn4ZvHRhobvTgOQSbKoXiNXGSAmGP8eXOFyhLdnDlqBFKI+OPlGsS++y/7u4oIAta/cOn9IzEReQ1qUBOYoKELaXbt9Pzz9Ug9FkTjc99skH02WaTyiVrG8kWa1h9MaN9clQRxQ8OYvyGws3Y8gKq4YYO1z8gBwksPx0vTu+Fo1LE42WY1hJQrAJNvj2T2Z3bya0i/iDA+5OXIwx4L8L4qFXR/nDm6ntyoVlyaOQlaP8y1lPWIoAxqdobU3RXQpIgDg/M4sNJT7vdYRg99JY6kXy/5Pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X2h+zOs5R0eliKb/t+GzJ425evISynD5H2FbKyoioAw=;
- b=nmKMHrsQl49+Xcdh/+WX3AHMM9W4G4zjnbPg1GdBpPcj1LgmArE8XFLhnN+XPld/ehQeqB4sK8L8cFcvg8evxb9zSG8Vam4haDHEpuc4VjWArakvY3k82w7ypZxU6tbbCJMlYa90s+YU8Fz0LH/qo37F7G2TcR4audNLLpcD9svUXc0ek+W+hXFYRmNaY/EuaCyE8wRkgGyxkokc2aTVy62yGv2WuEPdmcnTALMU/a51qsJ3TKC83MQWOHjS+b35KMXEqo4snDPvHGxP4teZKmqMs9jd3rTKxEBU9CUmYQ5NN2ifIU1RhG9TqFTQ07R3asHhILKj1iQunxa3k0ExTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X2h+zOs5R0eliKb/t+GzJ425evISynD5H2FbKyoioAw=;
- b=ai6ermZkFR7LfD7vTruyqRpHXYpO9rhfzF4DAXoRRW1fk572DGhjmiAFF+ocC9+GxTenL80wB+kK/3EZHzEL/2JWgI1grRXZiPwXs9nlAWu2m7DkvS38ObF2Y1hmkBcDBxTE1dsizzpuOgGcMB2eH1uVbsxfMtk31EGUZgtbQQ4=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19) by VI1PR0401MB2558.eurprd04.prod.outlook.com
- (2603:10a6:800:5c::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Tue, 23 Jun
- 2020 11:33:28 +0000
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 11:33:28 +0000
-From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
-To:     khilman@kernel.org, ulf.hansson@linaro.org,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net
-Cc:     linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, alsa-devel@alsa-project.org
-Subject: [RESEND PATCH v2 0/2] Introduce multi PM domains helpers
-Date:   Tue, 23 Jun 2020 14:32:59 +0300
-Message-Id: <20200623113301.631-1-daniel.baluta@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR06CA0131.eurprd06.prod.outlook.com
- (2603:10a6:208:ab::36) To VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19)
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 05NBWiUg029531;
+        Tue, 23 Jun 2020 20:32:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 05NBWiUg029531
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592911965;
+        bh=UBNMDPzFnN1cnIVkGWvbjH9Uo3Pe4tVb9X7LiojohOs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=txSs6WoDHTo3B6ahAwu2aWrCBUKUSI5HzVJ3K7QcCNLC7UraMms6L/+/XkE3RR+OT
+         exD/ZJcHkJ2H2QbT8vT6glOP0yDkdOnikRN0rsjr0lX52xOs9A4+eTwdl+MAf7RGJl
+         SvKtMiLSZznzz41mss95xot9NEjHdBptoYc2azxajQh/ZQR3TBe4rDcc8rEtAGCrxk
+         BLXkDqWeK+gFi3BFFsrHh+IfZr+P3zMiihFOB2JMtc92XEMxNjJhG3AxuEIy7e8BAN
+         5bQUQ1mVhqAvM1/IiOLjiLVgt9LIn5VA/cSIYvnr3MjyUgYJF+5TsZFEfqmR5uKhVE
+         aDPhIhOyJ0vvw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: bus: uniphier-system-bus: fix warning in example
+Date:   Tue, 23 Jun 2020 20:32:42 +0900
+Message-Id: <20200623113242.779241-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-103.ro-buh02.nxp.com (83.217.231.2) by AM0PR06CA0131.eurprd06.prod.outlook.com (2603:10a6:208:ab::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Tue, 23 Jun 2020 11:33:27 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a9035f05-f04c-46d7-804d-08d817693fcd
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2558:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB2558B8FD27901D6207683AD5B8940@VI1PR0401MB2558.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 04433051BF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tio7f3P4SM8NAquUNfg4XIi+ddw0SSWa/h+qCbjUxsbcxOkzSnyBtqe2+8FfFl6L2sHUStPrBWcnQqRPThrdF1Rw4xedP+J43nO63JBAcYmSTyMs/Ekop0Zrpznk24sptf3YlR/b44/MryUMQu6qdwCy6KK7ZkQh1ria68Q7F1wlNpnvz9nOmFQyNM32W14iHnt9fNeA3dDjB8zRcEl+fYOQPigjna9QcLZeIRNNoQlXVRVdk0hw2hayaIUdUjgsKiur40/+XxaAipp00BGinqZvG6Mk3Wl1EYbs87HPTeERd/oBSfqDqTcBo1gxw9M1
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66946007)(6506007)(4744005)(4326008)(5660300002)(498600001)(44832011)(66476007)(8936002)(66556008)(956004)(86362001)(2616005)(6666004)(8676002)(6486002)(26005)(83380400001)(52116002)(186003)(2906002)(1076003)(16526019)(6512007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1nHRGlNWpKvPbfa7d+nNZl8tZa6qXiqCXAN6YAlIV4mBiQSlFK7+MhSNpR+6gaxPogVrs+AmpigXMCY+xjxYt4k9D1zK4MxldPtTcX5iyK7z/l4UEh/QcRZu4cPrbKsXo+3/dcYhigYC6HGDwscaRsa187WnLUy100fRkwl5IOUgV6lNUCla1QD5EBZDmSmlWDlAzw0jYi8uLMufE+8JMz04zm4tvfvZ2n2Ey1VKk8T7Kl4NMZ7sDceGPMWIAWEWmviwNQUymHDXO5teoxj9Yk8sni3fRh0yNWKw1yxuM9meWy+Su2vjvTPASPajMJGckPd5h1Gv4nTYrHmLZMMdsx5BHbSjgn3806GTrB1JT19sRzSPgtRglhjhIqH6BAcmX1fl0JyeQ1kMU78NHMb9BbX3GZZMP76LjknvlLJcFb59iMfljVz2gLyh9pMU0D/2SHu4TNaKi2MskLClaDpZP5zTWOU8DAZlu1/Lymz2Vgk=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9035f05-f04c-46d7-804d-08d817693fcd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2020 11:33:28.5860
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pkBqLzG+n04ZiP6Ks6uMZ+feB1rUFVkJhgjyl2LoAikOB0MyF+NFdIRSE5r7n6gJnEfAFf/ScquZ0PDki0rEBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2558
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+Since commit e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to
+json-schema"), the schema for "ns16550a" is checked.
 
-i.MX8QXP/i.MX8QM has IPs that need multiple power domains to be up
-in order to work. In order to help drivers, we introduce multi PM
-domains helpers that are able to activate/deactivate multi PM domains.
+'make dt_binding_check' emits the following warning:
 
-First patch introduces the helpers and second patch demonstrates how
-a driver can use them instead of hardcoding the PM domains handling.
+  uart@5,00200000: $nodename:0: 'uart@5,00200000' does not match '^serial(@[0-9a-f,]+)*$'
 
-Changes since v1: (addressed Ranjani's comments)
-	- enhanced description for dev_multi_pm_attach return value
-	- renamed exit_unroll_pm label to exit_detach_pm
+Rename the node to follow the pattern defined in
+Documentation/devicetree/bindings/serial/serial.yaml
 
-Ideally would be to have patch 1/2 merged via power tree and then I
-will submit again patch 2/2 on sound tree.
+While I was here, I removed leading zeros from unit names.
 
-Daniel Baluta (2):
-  PM / domains: Introduce multi PM domains helpers
-  ASoC: SOF: Use multi PM domains helpers
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
- drivers/base/power/common.c | 93 +++++++++++++++++++++++++++++++++++++
- include/linux/pm_domain.h   | 19 ++++++++
- sound/soc/sof/imx/imx8.c    | 60 ++++--------------------
- 3 files changed, 121 insertions(+), 51 deletions(-)
+Changes in v2:
+ - change unit names too
 
+ .../bindings/bus/socionext,uniphier-system-bus.yaml           | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+index c4c9119e4a20..a0c6c5d2b70f 100644
+--- a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
++++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+@@ -80,14 +80,14 @@ examples:
+         ranges = <1 0x00000000 0x42000000 0x02000000>,
+                  <5 0x00000000 0x46000000 0x01000000>;
+ 
+-        ethernet@1,01f00000 {
++        ethernet@1,1f00000 {
+             compatible = "smsc,lan9115";
+             reg = <1 0x01f00000 0x1000>;
+             interrupts = <0 48 4>;
+             phy-mode = "mii";
+         };
+ 
+-        uart@5,00200000 {
++        serial@5,200000 {
+             compatible = "ns16550a";
+             reg = <5 0x00200000 0x20>;
+             interrupts = <0 49 4>;
 -- 
-2.17.1
+2.25.1
 
