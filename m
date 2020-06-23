@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F42C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0AB52072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5BB206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948139;
-	bh=JHWuGWGgG+yTFPUz5997dxPk+ppnHwY8nNNDkJLxbRE=;
+	s=default; t=1592948142;
+	bh=qomMVHelz32wV1DJmo/wJ+iI86ikMxpmfFDWGHY8R6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JFQ12WDv8Fidjx6dvI165q16C9kupVNOvkaQDR11UcE+V5dNDMgmM/1jvbJEk/ckT
-	 eOuoioMl/gT7fDtu/sfploXS3wPbVC4aL6iOI4kkinhSqYGAFCTZPUEU0AyARWLevo
-	 S4sWdhyUzEhj6CgVNcN5beeFf8QiRI/2spuk6T2I=
+	b=jMV3BkTlewVse7k1GbMfbO0cI3j6x1yO+GVcqcRlOjXY2Bl5mdhLzo85YHh8nhMr+
+	 5BElfHKQvvB65f9Zn69buwgQhcLZJ5yOmYZbqAiQIKnlt7SfHLbZKGp2852EVUrr3Z
+	 8lcgmEjPgbRonxvchus9aiJjcuejTMYd0Ex7MxNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393852AbgFWVfi (ORCPT
+        id S2388622AbgFWVfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:35:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51514 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388252AbgFWUKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:20 -0400
+        id S2388796AbgFWUKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C26B32073E;
-        Tue, 23 Jun 2020 20:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 599592078A;
+        Tue, 23 Jun 2020 20:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943019;
-        bh=JHWuGWGgG+yTFPUz5997dxPk+ppnHwY8nNNDkJLxbRE=;
+        s=default; t=1592943011;
+        bh=qomMVHelz32wV1DJmo/wJ+iI86ikMxpmfFDWGHY8R6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zPN6H2YCyyPSEAv+l64DgQojT1mE3FsXiFO1fxL/TNYBRo3vucpLuftGtV+MXnnP0
-         MKbWw2ORhh/+Ze45+0WAHrep27h3KgB6ZcMx3FtxYP9oK4OK+h+gWboqzJem9heBxB
-         ejB9tFhFz3FqvOWDDOOIk7YvWVoPy4tkRsJlhpWM=
+        b=yV41VtTl6ZJoBNF6Aa3hKMq6zOK2DUSGVcb4rmcnMlS8kzytiujxm3lLqW1EZhzJD
+         0nIjg5er0Q9jUkeV2L9mQ0/Ick9/s565eE4AfaSqaZr4PWyw55y2evjrBwq1/P0tmq
+         DNqbolZA0jVNcwK8Suh7I2RfH49ROi24Wg/TYrCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 227/477] drm/msm: Fix undefined "rd_full" link error
-Date:   Tue, 23 Jun 2020 21:53:44 +0200
-Message-Id: <20200623195418.310621346@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 224/477] iommu/arm-smmu-v3: Dont reserve implementation defined register space
+Date:   Tue, 23 Jun 2020 21:53:41 +0200
+Message-Id: <20200623195418.169588983@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,45 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 20aebe83698feb107d5a66b6cfd1d54459ccdfcf ]
+[ Upstream commit 52f3fab0067d6fa9e99c1b7f63265dd48ca76046 ]
 
-rd_full should be defined outside the CONFIG_DEBUG_FS region, in order
-to be able to link the msm driver even when CONFIG_DEBUG_FS is disabled.
+Some SMMUv3 implementation embed the Perf Monitor Group Registers (PMCG)
+inside the first 64kB region of the SMMU. Since PMCG are managed by a
+separate driver, this layout causes resource reservation conflicts
+during boot.
 
-Fixes: e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+To avoid this conflict, don't reserve the MMIO regions that are
+implementation defined. Although devm_ioremap_resource() still works on
+full pages under the hood, this way we benefit from resource conflict
+checks.
+
+Fixes: 7d839b4b9e00 ("perf/smmuv3: Add arm64 smmuv3 pmu driver")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/20200513110255.597203-1-jean-philippe@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_rd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 35 +++++++++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
-index 732f65df5c4f4..fea30e7aa9e83 100644
---- a/drivers/gpu/drm/msm/msm_rd.c
-+++ b/drivers/gpu/drm/msm/msm_rd.c
-@@ -29,8 +29,6 @@
-  * or shader programs (if not emitted inline in cmdstream).
-  */
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 82508730feb7a..af21d24a09e88 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -171,6 +171,8 @@
+ #define ARM_SMMU_PRIQ_IRQ_CFG1		0xd8
+ #define ARM_SMMU_PRIQ_IRQ_CFG2		0xdc
  
--#ifdef CONFIG_DEBUG_FS
--
- #include <linux/circ_buf.h>
- #include <linux/debugfs.h>
- #include <linux/kfifo.h>
-@@ -47,6 +45,8 @@ bool rd_full = false;
- MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all buffer contents");
- module_param_named(rd_full, rd_full, bool, 0600);
- 
-+#ifdef CONFIG_DEBUG_FS
++#define ARM_SMMU_REG_SZ			0xe00
 +
- enum rd_sect_type {
- 	RD_NONE,
- 	RD_TEST,       /* ascii text */
+ /* Common MSI config fields */
+ #define MSI_CFG0_ADDR_MASK		GENMASK_ULL(51, 2)
+ #define MSI_CFG2_SH			GENMASK(5, 4)
+@@ -628,6 +630,7 @@ struct arm_smmu_strtab_cfg {
+ struct arm_smmu_device {
+ 	struct device			*dev;
+ 	void __iomem			*base;
++	void __iomem			*page1;
+ 
+ #define ARM_SMMU_FEAT_2_LVL_STRTAB	(1 << 0)
+ #define ARM_SMMU_FEAT_2_LVL_CDTAB	(1 << 1)
+@@ -733,9 +736,8 @@ static struct arm_smmu_option_prop arm_smmu_options[] = {
+ static inline void __iomem *arm_smmu_page1_fixup(unsigned long offset,
+ 						 struct arm_smmu_device *smmu)
+ {
+-	if ((offset > SZ_64K) &&
+-	    (smmu->options & ARM_SMMU_OPT_PAGE0_REGS_ONLY))
+-		offset -= SZ_64K;
++	if (offset > SZ_64K)
++		return smmu->page1 + offset - SZ_64K;
+ 
+ 	return smmu->base + offset;
+ }
+@@ -4021,6 +4023,18 @@ err_reset_pci_ops: __maybe_unused;
+ 	return err;
+ }
+ 
++static void __iomem *arm_smmu_ioremap(struct device *dev, resource_size_t start,
++				      resource_size_t size)
++{
++	struct resource res = {
++		.flags = IORESOURCE_MEM,
++		.start = start,
++		.end = start + size - 1,
++	};
++
++	return devm_ioremap_resource(dev, &res);
++}
++
+ static int arm_smmu_device_probe(struct platform_device *pdev)
+ {
+ 	int irq, ret;
+@@ -4056,10 +4070,23 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 	}
+ 	ioaddr = res->start;
+ 
+-	smmu->base = devm_ioremap_resource(dev, res);
++	/*
++	 * Don't map the IMPLEMENTATION DEFINED regions, since they may contain
++	 * the PMCG registers which are reserved by the PMU driver.
++	 */
++	smmu->base = arm_smmu_ioremap(dev, ioaddr, ARM_SMMU_REG_SZ);
+ 	if (IS_ERR(smmu->base))
+ 		return PTR_ERR(smmu->base);
+ 
++	if (arm_smmu_resource_size(smmu) > SZ_64K) {
++		smmu->page1 = arm_smmu_ioremap(dev, ioaddr + SZ_64K,
++					       ARM_SMMU_REG_SZ);
++		if (IS_ERR(smmu->page1))
++			return PTR_ERR(smmu->page1);
++	} else {
++		smmu->page1 = smmu->base;
++	}
++
+ 	/* Interrupt lines */
+ 
+ 	irq = platform_get_irq_byname_optional(pdev, "combined");
 -- 
 2.25.1
 
