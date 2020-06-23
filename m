@@ -2,198 +2,105 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26861C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0AB20724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1262520738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDyAe3Km"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frQCVrMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404250AbgFWVVv (ORCPT
+        id S2390560AbgFWVV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33468 "EHLO
+        Tue, 23 Jun 2020 17:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390204AbgFWVVr (ORCPT
+        with ESMTP id S2404249AbgFWVVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:21:47 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3BBC061573;
-        Tue, 23 Jun 2020 14:21:47 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id o38so42009qtf.6;
-        Tue, 23 Jun 2020 14:21:47 -0700 (PDT)
+        Tue, 23 Jun 2020 17:21:51 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BB1C061573;
+        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l188so7235107qkf.10;
+        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ui8fQB3APJYaznUih7pNhgAm6LkfIND4txjh+hzkfLk=;
-        b=bDyAe3KmBqYUtOn2jpTaEUd551O0xWhnVDI2ujVJnTMzDhUkQreqigMEvR8vO50OaO
-         grFw6Kd/+8ECCnBPmdu6gHFtfta3+HsZ8klmci+sYF0qOBuesKpTEIB18DAtCOa7V5eL
-         C+H5t/lMImzwt3KHPKs7h4gUvsyPo1eYePHcp7xKB6vz5qadHTSl6wxL4VINcp/Uz/s8
-         dRXIaYLEM9hFnOXABJze5j99JEXvIZDMbuHus7IZhQgz7NpT34QaLpWyFFzeNrzasGK4
-         gW2cOmTY37WlE2ufcyOGG6+x/EdPQpYMinZ0VX+qmkjzp8/lBxiAQXIXfvlH0BfPNqkV
-         PrGg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JyKLP13MA3we/vWXo7vrVA6xMNeRPMkMoZjirv2W5f8=;
+        b=frQCVrMNN/+WhRNV+xlYiJ59hqptoPUZlFyQEi5Nxs1ZDTbZCHFzkP5Fy+KHZmFx42
+         4IJltfqqSa4cluvGdrB4QfYoiCddWuCbVEMiIL6FvU/Mjg/zWLLtqFYCq+HGrgRVQigm
+         e1zJzySEmJ7pSb7vKwaNOzU+CG88I+Vm5N2F6Vmg60ITcOh6RaK2G52nuUAqhRk7QpWT
+         jKGMiyN6PpnOOGPsPIukYvhMFkaarZQ4yeSa1wdJ1yDxyAA1MLvXSOCLVDnpBJN9yWq2
+         UzM3uNt2YbG7Sa4i5E79iwTPccj9Z6xjuyIg1TF4ioqpdc5bEslAT2EgP+LR4fpOBfKS
+         4KTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ui8fQB3APJYaznUih7pNhgAm6LkfIND4txjh+hzkfLk=;
-        b=K4VgBiY2HJ6u/FmNNektSev+4m0me83Mv2u4ecfAFb1NrnlseulG50wO2nl8HR1Bvw
-         JvEswEZ3MAofbQodRgZ8jNnca4rjlpkYIXqTPqJHl97Lopp5b3oE+xFov28UspCZKpZG
-         FFnmVYb/EtXUgXT+c6k+7CEBqZnt9t+XM9JF300dVatweFN6rMKeFmadmK++hmp0VhPX
-         jBBm7D5DXuIRzP+R2iQrud9zJCFrR4h5Q+5Y4fD0rZ1F6HPZi5OoVMK6uZqkMw4GnF+y
-         qwXzrT3DYNbcdgXv9/zTHAplxCnv25k5Uw0MFbv6vzpncoA+BB0Gfo6GGB4DSFd2Lqur
-         wTUw==
-X-Gm-Message-State: AOAM530c0V2fIiatlwq3aE2Mb4EPZLU5/lmtWyaliGg1CVAnP5mfTuk7
-        /3+vX9mq8+Qmye5jFuiMTSM=
-X-Google-Smtp-Source: ABdhPJyB8imk14WxcQe8ntL2dDRXMkBus0kLhyBHS8AjEL83uqP0tjqgyJfPcKN8hHt4hPwCa2x2xQ==
-X-Received: by 2002:aed:2b04:: with SMTP id p4mr11265085qtd.158.1592947306614;
-        Tue, 23 Jun 2020 14:21:46 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f016:65e9:974:aec1:b314:98ea])
-        by smtp.gmail.com with ESMTPSA id w45sm1835327qtj.51.2020.06.23.14.21.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JyKLP13MA3we/vWXo7vrVA6xMNeRPMkMoZjirv2W5f8=;
+        b=szwbNOW340Hfr+2PwizwZwucn4EhqXN3WvNetSHsWvd0EmQRJQMJwPZ7PfB7L6K/fc
+         leaUW30hOyN/2hhKzTADZxtYIGim19JQv83Q8PAr1an7n2HQzzPC3XuM1+pUjGjjYsAy
+         FJuH8g92nrM1FIEUnQ0Kh5KAFb6zim+A5+K25gziMflTrrSl/dxesGBYAgoBeY+pz3De
+         L7LeEXZMIktE70JvEqKAZZW7sCTKiEtlRxGRyMfaUkZed+p9qx74L4OQOjJpQnFvYVFU
+         J2oDZtxNJoKP267s7RQ8wfMeoUuqpxfWh+tbz4A5IneSwHX1TwTSVGHrCgd269UAVN4F
+         uoEQ==
+X-Gm-Message-State: AOAM5306NgY4u3ftBcAGZ10cYHR5FQTPM3PiHqdHMm/cJfryz5QiwJ17
+        bCBZ4SmyKBzJm9a47rWhQEaYg2rMf7pjqg==
+X-Google-Smtp-Source: ABdhPJxPuHCjth4EvPORtZ3tcp/As6OSbqLCTv4lhJm6iUiMx7p+8K7lcbf/Vp1AKm6A+CrjKnFUXQ==
+X-Received: by 2002:a37:6fc6:: with SMTP id k189mr21800161qkc.289.1592947310034;
+        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
+Received: from DESKTOP-J6NUVB7.localdomain ([179.232.194.217])
+        by smtp.gmail.com with ESMTPSA id b4sm1459665qka.133.2020.06.23.14.21.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 14:21:45 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 5487BC1B81; Tue, 23 Jun 2020 18:21:43 -0300 (-03)
-Date:   Tue, 23 Jun 2020 18:21:43 -0300
-From:   'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>
-To:     Corey Minyard <minyard@acm.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Michael Tuexen <Michael.Tuexen@lurchi.franken.de>,
-        Xin Long <lucien.xin@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Strange problem with SCTP+IPv6
-Message-ID: <20200623212143.GR2491@localhost.localdomain>
-References: <20200621155604.GA23135@minyard.net>
- <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
- <20200622165759.GA3235@minyard.net>
- <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
- <20200622183253.GQ2491@localhost.localdomain>
- <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
- <20200623161756.GE3235@minyard.net>
+        Tue, 23 Jun 2020 14:21:49 -0700 (PDT)
+From:   =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] MIPS: ingenic: gcw0: Fix HP detection GPIO.
+Date:   Tue, 23 Jun 2020 18:19:45 -0300
+Message-Id: <20200623211945.823-1-jhlspies@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623161756.GE3235@minyard.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:17:56AM -0500, Corey Minyard wrote:
-> On Tue, Jun 23, 2020 at 01:17:28PM +0000, David Laight wrote:
-> > From: Marcelo Ricardo Leitner
-> > > Sent: 22 June 2020 19:33
-> > > On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
-> > > > > On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
-> > > > >
-> > > > > On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
-> > > > >> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
-> > > > >>>
-> > > > >>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
-> > > > >>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
-> > > > >>> then I make a connection to it using ::1, the connection will drop after
-> > > > >>> 2.5 seconds with an ECONNRESET error.
-> > > > >>>
-> > > > >>> It only happens on SCTP, it doesn't have the issue if you connect to a
-> > > > >>> full IPv6 address instead of ::1, and it doesn't happen if you don't
-> > > > >>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
-> > > > >>> I tried on an ARM system and x86_64.
-> > > > >>>
-> > > > >>> I haven't dug into the kernel to see if I could find anything yet, but I
-> > > > >>> thought I would go ahead and report it.  I am attaching a reproducer.
-> > > > >>> Basically, compile the following code:
-> > > > >> The code only set IPV6_V6ONLY on server side, so the client side will
-> > > > >> still bind all the local ipv4 addresses (as you didn't call bind() to
-> > > > >> bind any specific addresses ). Then after the connection is created,
-> > > > >> the client will send HB on the v4 paths to the server. The server
-> > > > >> will abort the connection, as it can't support v4.
-> > > > >>
-> > > > >> So you can work around it by either:
-> > > > >>
-> > > > >>  - set IPV6_V6ONLY on client side.
-> > > > >>
-> > > > >> or
-> > > > >>
-> > > > >>  - bind to the specific v6 addresses on the client side.
-> > > > >>
-> > > > >> I don't see RFC said something about this.
-> > > > >> So it may not be a good idea to change the current behaviour
-> > > > >> to not establish the connection in this case, which may cause regression.
-> > > > >
-> > > > > Ok, I understand this.  It's a little strange, but I see why it works
-> > > > > this way.
-> > > > I don't. I would expect it to work as I described in my email.
-> > > > Could someone explain me how and why it is behaving different from
-> > > > my expectation?
-> > > 
-> > > It looks like a bug to me. Testing with this test app here, I can see
-> > > the INIT_ACK being sent with a bunch of ipv4 addresses in it and
-> > > that's unexpected for a v6only socket. As is, it's the server saying
-> > > "I'm available at these other addresses too, but not."
-> > 
-> > Does it even make sense to mix IPv4 and IPv6 addresses on the same
-> > connection?
-> > I don't remember ever seeing both types of address in a message,
-> > but may not have looked.
-> 
-> That's an interesting question.  Do the RFCs say anything?  I would
-> assume it was ok unless ipv6only was set.
-> 
-> > 
-> > I also wonder whether the connection should be dropped for an error
-> > response on a path that has never been validated.
-> 
-> That actually bothered me a bit more.  Shouldn't it stay up if any path
-> is up?  That's kind of the whole point of multihoming.
+Previously marked as active high, but is in reality active low.
 
-Michael explained it on the other email. What he described is what I
-observed in my tests.
+Cc: stable@vger.kernel.org
+Fixes: b1bfdb660516 ("MIPS: ingenic: DTS: Update GCW0 support")
+Signed-off-by: João H. Spies <jhlspies@gmail.com>
+---
+ arch/mips/boot/dts/ingenic/gcw0.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > 
-> > OTOH the whole 'multi-homing' part of SCTP sucks.
-> 
-> I don't think so.
-> 
-> > The IP addresses a server needs to bind to depend on where the
-> > incoming connection will come from.
-> > A local connection may be able to use a 192.168.x.x address
-> > but a remote connection must not - as it may be defined locally
-> > at the remote system.
-> > But both connections can come into the public (routable) address.
-> > We have to tell customers to explicitly configure the local IP
-> > addresses - which means the application has to know what they are.
-> > Fortunately these apps are pretty static - usually M3UA.
-> 
-> Umm, no,  If you have a private address, it better be behind a firewall,
-> and the firewall should handle rewriting the packet to fix the addresses.
-> 
-> It doesn't appear that Linux netfilter does this.  There is a TODO in
-> the code for this.  But that's how it *should* work.
+diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
+index 8d22828787d8..bc72304a2440 100644
+--- a/arch/mips/boot/dts/ingenic/gcw0.dts
++++ b/arch/mips/boot/dts/ingenic/gcw0.dts
+@@ -92,7 +92,7 @@
+ 			"MIC1N", "Built-in Mic";
+ 		simple-audio-card,pin-switches = "Speaker", "Headphones";
+ 
+-		simple-audio-card,hp-det-gpio = <&gpf 21 GPIO_ACTIVE_HIGH>;
++		simple-audio-card,hp-det-gpio = <&gpf 21 GPIO_ACTIVE_LOW>;
+ 		simple-audio-card,aux-devs = <&speaker_amp>, <&headphones_amp>;
+ 
+ 		simple-audio-card,bitclock-master = <&dai_codec>;
+-- 
+2.17.1
 
-Right, we don't support SCTP aware NAT [1].
-
-1.https://tools.ietf.org/html/draft-stewart-behave-sctpnat-04
-
-  Marcelo
-
-> 
-> -corey
-> 
-> > 
-> > 	David
-> > 
-> > -
-> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> > Registration No: 1397386 (Wales)
-> > 
