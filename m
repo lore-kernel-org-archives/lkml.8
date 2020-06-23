@@ -2,52 +2,53 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B43218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F17B21883
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944809;
-	bh=NzjNbYdWoDBkpJahk6tIwE3w4sDcdCjJ/9LtBlllqwA=;
+	s=default; t=1592944812;
+	bh=fBNwQNF9HrDUmnmWR+flBOEs6oIlGvxrXjx/t5+Qz24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gX+Mp5maafHLN4xsIMqmMdnT+q+vRPkCjPkwfRhWKRWrXcP76MzGZM3fWlJDy8Crf
-	 iiL0hYT1TSzv9qKTF/Ob0+86t7w10QYSbDCwnuKZJc8r2475paMakQNlzvpSFwqD1Q
-	 Z76Q92mpu6Ez0o4iaE85IMJejrKcoH0+WfZcTJwk=
+	b=UsIpZWIpb/CdI8oPNu4abaOU+C1pZLR7h0SztSK9d5b4ToWoR3kLFEYd3Bzq9e8Nq
+	 tFRuYLpMB5FLMfJhjL0VN3MqleZnR07bk+iAoYOL2J0hfElQo6/CWG22256Tzczjdi
+	 6cnMrp8NtaOOkOWOzm6oef6T73fhWQvNnjgiVX9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392146AbgFWUkG (ORCPT
+        id S2392147AbgFWUkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35890 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:40:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392199AbgFWUkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:02 -0400
+        id S2392119AbgFWUkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:40:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E47021582;
-        Tue, 23 Jun 2020 20:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EA4921883;
+        Tue, 23 Jun 2020 20:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944802;
-        bh=NzjNbYdWoDBkpJahk6tIwE3w4sDcdCjJ/9LtBlllqwA=;
+        s=default; t=1592944804;
+        bh=fBNwQNF9HrDUmnmWR+flBOEs6oIlGvxrXjx/t5+Qz24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lbBwMpaHrChc9D88qXlYE2oXAw5OCZUqcmZxviaacTX63MnLRIn+wnsxygUbfeTnj
-         +hqxUWdgUqW4rYLfRhUUZ1n2dbW56/HLlHPEEJT75VJaTSObpYDdeB3Yq/Qn9479m7
-         Ub19exNMYO0MKxMMmgcQB23PG09nCt5nv9Fw3FhQ=
+        b=uwpRW+zYsY7qSUDjiK8sLrxQ3XiGKiQKJ+gxTDExc/yXat9eq8xQhaesMSDQxoMk4
+         EgayMcTGwpT2d4/ee4h1l2VWpzEWcAKQXBaF+DShUcXih3Taud7gFNEf3xxIKIee2H
+         13ZrN4PlLo68VBwQSSGAv6gfAMWcbqoWJTMkTo+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/206] powerpc/64s/pgtable: fix an undefined behaviour
-Date:   Tue, 23 Jun 2020 21:57:08 +0200
-Message-Id: <20200623195321.858826607@linuxfoundation.org>
+Subject: [PATCH 4.19 101/206] dm zoned: return NULL if dmz_get_zone_for_reclaim() fails to find a zone
+Date:   Tue, 23 Jun 2020 21:57:09 +0200
+Message-Id: <20200623195321.909239872@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,77 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Hannes Reinecke <hare@suse.de>
 
-[ Upstream commit c2e929b18cea6cbf71364f22d742d9aad7f4677a ]
+[ Upstream commit 489dc0f06a5837f87482c0ce61d830d24e17082e ]
 
-Booting a power9 server with hash MMU could trigger an undefined
-behaviour because pud_offset(p4d, 0) will do,
+The only case where dmz_get_zone_for_reclaim() cannot return a zone is
+if the respective lists are empty. So we should just return a simple
+NULL value here as we really don't have an error code which would make
+sense.
 
-0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
-
-Fix it by converting pud_index() and friends to static inline
-functions.
-
-UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
-shift exponent 34 is too large for 32-bit type 'int'
-CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
-Call Trace:
-dump_stack+0xf4/0x164 (unreliable)
-ubsan_epilogue+0x18/0x78
-__ubsan_handle_shift_out_of_bounds+0x160/0x21c
-walk_pagetables+0x2cc/0x700
-walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
-(inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
-ptdump_check_wx+0x8c/0xf0
-mark_rodata_ro+0x48/0x80
-kernel_init+0x74/0x194
-ret_from_kernel_thread+0x5c/0x74
-
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20200306044852.3236-1-cai@lca.pw
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h | 23 ++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/md/dm-zoned-metadata.c | 4 ++--
+ drivers/md/dm-zoned-reclaim.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 2aea6efc2e63d..008eb63fa851d 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -985,10 +985,25 @@ extern struct page *pgd_page(pgd_t pgd);
- #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
- #define pgd_page_vaddr(pgd)	__va(pgd_val(pgd) & ~PGD_MASKED_BITS)
+diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
+index 53eb21343b11f..5c2bbdf67f25d 100644
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1580,7 +1580,7 @@ static struct dm_zone *dmz_get_rnd_zone_for_reclaim(struct dmz_metadata *zmd)
+ 			return dzone;
+ 	}
  
--#define pgd_index(address) (((address) >> (PGDIR_SHIFT)) & (PTRS_PER_PGD - 1))
--#define pud_index(address) (((address) >> (PUD_SHIFT)) & (PTRS_PER_PUD - 1))
--#define pmd_index(address) (((address) >> (PMD_SHIFT)) & (PTRS_PER_PMD - 1))
--#define pte_index(address) (((address) >> (PAGE_SHIFT)) & (PTRS_PER_PTE - 1))
-+static inline unsigned long pgd_index(unsigned long address)
-+{
-+	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
-+}
-+
-+static inline unsigned long pud_index(unsigned long address)
-+{
-+	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-+}
-+
-+static inline unsigned long pmd_index(unsigned long address)
-+{
-+	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-+}
-+
-+static inline unsigned long pte_index(unsigned long address)
-+{
-+	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-+}
+-	return ERR_PTR(-EBUSY);
++	return NULL;
+ }
  
  /*
-  * Find an entry in a page-table-directory.  We combine the address region
+@@ -1600,7 +1600,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
+ 			return zone;
+ 	}
+ 
+-	return ERR_PTR(-EBUSY);
++	return NULL;
+ }
+ 
+ /*
+diff --git a/drivers/md/dm-zoned-reclaim.c b/drivers/md/dm-zoned-reclaim.c
+index 84ac671acd2e1..879848aad97a7 100644
+--- a/drivers/md/dm-zoned-reclaim.c
++++ b/drivers/md/dm-zoned-reclaim.c
+@@ -348,8 +348,8 @@ static int dmz_do_reclaim(struct dmz_reclaim *zrc)
+ 
+ 	/* Get a data zone */
+ 	dzone = dmz_get_zone_for_reclaim(zmd);
+-	if (IS_ERR(dzone))
+-		return PTR_ERR(dzone);
++	if (!dzone)
++		return -EBUSY;
+ 
+ 	start = jiffies;
+ 
 -- 
 2.25.1
 
