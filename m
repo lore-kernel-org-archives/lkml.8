@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A82DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49668C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABA021548
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163132053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945413;
-	bh=khsAJ4ZidOaLgn219+IpSknbqrHVVtVqkpp/uuHqMl8=;
+	s=default; t=1592945418;
+	bh=R8poT/WfSWU1GfxheMUoZ/FdITa3vE/XmE9Ej5fNV9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tZEj6ZkD5sCSMtr9K6Okiuw2i0fuBrlr0ZO+JNLfOZWrM8RGaLz06JEtNaBj1Q/IC
-	 QWoB8mQ/x5j5BwJkzoVv0xZDQodT+NHH3CAfFnbDNF8o/p3jUN8tCJkOfHNgwK5Pa7
-	 KEoPBL1APWSQR7cAM4AMGOuoKhojnvu6spCizhNg=
+	b=v0UwoYyBKDyoNO5ZTHcqxkgq1zj5h4TGIMkvqdSc8X2ANnXsgFHJ+ASoCNeYfAIUK
+	 GLhHfQ2XmRVCJdB8Fm4dffbmpwQm+geS93+PmvBbrsoJwnF8QN9aSIytQ9ae//f1zi
+	 TmmBDBR/MkFe0rBCKQxbD7IecM/NN5IunXzh1E5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392590AbgFWUuM (ORCPT
+        id S2393134AbgFWUuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48324 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389870AbgFWUtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:49:01 -0400
+        id S2404136AbgFWUs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:48:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AA3E2098B;
-        Tue, 23 Jun 2020 20:49:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 619BD21548;
+        Tue, 23 Jun 2020 20:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945341;
-        bh=khsAJ4ZidOaLgn219+IpSknbqrHVVtVqkpp/uuHqMl8=;
+        s=default; t=1592945339;
+        bh=R8poT/WfSWU1GfxheMUoZ/FdITa3vE/XmE9Ej5fNV9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uctO9gWbSHWBiwhg/3s1Z7fM0IkU8YntYNTl7BfLvjAT54IU/R/COIVpCB+b+QOIW
-         9o0pJLfJ2Cg5d6VYAbZrO9uF/FlO2btADV+Z8amWI4dFd9HDGJw80aDN8izu34KdL8
-         7uqnRvLmmG+VELFGnplfSp2cN8c7jtUyMmUGoTNk=
+        b=ywRC/CddO5ou3iWBurckDGe7kjztbihH3+ZKUv0S6nghY9VIfx5fUK4D1kRpw1JyT
+         ldxVJcI67eD4gSekuGsQgUzf4BWnDix/MMngXbenyqlFwXMSYZ/PbOCqu2awL+Tokh
+         HC0/o2S7o54VBgdCrND3TgVuMk4P4JYncucBZfXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/136] usb/xhci-plat: Set PM runtime as active on resume
-Date:   Tue, 23 Jun 2020 21:59:20 +0200
-Message-Id: <20200623195308.905960323@linuxfoundation.org>
+Subject: [PATCH 4.14 103/136] scsi: acornscsi: Fix an error handling path in acornscsi_probe()
+Date:   Tue, 23 Jun 2020 21:59:19 +0200
+Message-Id: <20200623195308.856634438@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -63,54 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 79112cc3c29f4a8c73a21428fbcbcb0afb005e3e ]
+[ Upstream commit 42c76c9848e13dbe0538d7ae0147a269dfa859cb ]
 
-Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
-resume.
+'ret' is known to be 0 at this point.  Explicitly return -ENOMEM if one of
+the 'ecardm_iomap()' calls fail.
 
-ohci-platform.c had a warning reported due to the missing
-pm_runtime_set_active() [1].
-
-[1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
-
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Tony Prisk <linux@prisktech.co.nz>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Mathias Nyman <mathias.nyman@intel.com>
-CC: Oliver Neukum <oneukum@suse.de>
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-usb@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518154931.6144-2-qais.yousef@arm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200530081622.577888-1-christophe.jaillet@wanadoo.fr
+Fixes: e95a1b656a98 ("[ARM] rpc: acornscsi: update to new style ecard driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-plat.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/scsi/arm/acornscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 2a73592908e1e..7219cbf7c54c2 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -381,7 +381,15 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
+index 421fe869a11ef..ef9d907f2df5c 100644
+--- a/drivers/scsi/arm/acornscsi.c
++++ b/drivers/scsi/arm/acornscsi.c
+@@ -2914,8 +2914,10 @@ static int acornscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
  
--	return xhci_resume(xhci, 0);
-+	ret = xhci_resume(xhci, 0);
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
- }
+ 	ashost->base = ecardm_iomap(ec, ECARD_RES_MEMC, 0, 0);
+ 	ashost->fast = ecardm_iomap(ec, ECARD_RES_IOCFAST, 0, 0);
+-	if (!ashost->base || !ashost->fast)
++	if (!ashost->base || !ashost->fast) {
++		ret = -ENOMEM;
+ 		goto out_put;
++	}
  
- static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
+ 	host->irq = ec->irq;
+ 	ashost->host = host;
 -- 
 2.25.1
 
