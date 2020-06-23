@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1593CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ACDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D0B20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1BF2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933744;
-	bh=boPdYnru8phemdGqCpuKpNL84NgVCqhwYi4yrMm6mGA=;
+	s=default; t=1592933749;
+	bh=2ubDCHODXZNNgKbQOQukr/eKLce8EHPTK8F1h0as8Xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/fuPZAdmCX6KmBYOJchuhd0xbDks5cB/f1kwIr2bXOxfUrXcaBatf0tHVzxFQfE9
-	 6AAA7/xJL2WLyG/XxZio4uChouEvDryF71uvsM87tBwbuZqY1AGotQLN0NugT3YwOm
-	 gpiRy/HoTlen4HvBmk7Ntitcu1uT8lQ/QLe50Kw8=
+	b=Ew6yq/ON1OD/E3bS/pgOQbAuo8A14Zqyw0yQNQM78VWNZpi0k+4hT32+y75EyaC6J
+	 SzTEUA85wjR/WwiRwhv3/cvmu8QhYouoQqH4j1fV1vmcWZpTvz9A+Hy4OAw2nUO8lF
+	 oYvmpgMRHR9o0uVEfRhlpmEMXZVBg2epRfZ/ADxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733268AbgFWRfn (ORCPT
+        id S1733294AbgFWRfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60260 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:35:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733241AbgFWRfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:38 -0400
+        id S1733274AbgFWRfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A324D20774;
-        Tue, 23 Jun 2020 17:35:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B958120706;
+        Tue, 23 Jun 2020 17:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933738;
-        bh=boPdYnru8phemdGqCpuKpNL84NgVCqhwYi4yrMm6mGA=;
+        s=default; t=1592933744;
+        bh=2ubDCHODXZNNgKbQOQukr/eKLce8EHPTK8F1h0as8Xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zygpxxubmAS/JNt9Uf/0e5UgTGtZxLtsQ7frgKbHGPxTk7/ezuq6PraaYznRSTyh5
-         Ion/J8Z7EWrihXpVUflyPQph6kHYVBgNTDXtDFu3XOaYBX//b8uJvT81NOi1xnwWeK
-         rKvGklVLG4pOLFWpt4cpv0+K80kdsLwHQ37V2tM8=
+        b=SfZlSVEYHVIpDQ//GmShSUAvf/8ndVTwKTt2AetorbmaLdNunxmG/8X4PNtGe37Cn
+         xGYBsb7NmDpLZxsjAuarCZD7lwpZ7PSDn2H/yFL6vXcnhp9Rr4I0bmgjYiJ/n5QBnZ
+         OrnwE6U2lW/pgIxs3BgHstPCQDd8z+3bg+fdjdBM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Auhagen <sven.auhagen@voleatech.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 12/28] mvpp2: ethtool rxtx stats fix
-Date:   Tue, 23 Jun 2020 13:35:07 -0400
-Message-Id: <20200623173523.1355411-12-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 17/28] s390/ptrace: pass invalid syscall numbers to tracing
+Date:   Tue, 23 Jun 2020 13:35:12 -0400
+Message-Id: <20200623173523.1355411-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
 References: <20200623173523.1355411-1-sashal@kernel.org>
@@ -59,42 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Auhagen <sven.auhagen@voleatech.de>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit cc970925feb9a38c2f0d34305518e00a3084ce85 ]
+[ Upstream commit 00332c16b1604242a56289ff2b26e283dbad0812 ]
 
-The ethtool rx and tx queue statistics are reporting wrong values.
-Fix reading out the correct ones.
+tracing expects to see invalid syscalls, so pass it through.
+The syscall path in entry.S checks the syscall number before
+looking up the handler, so it is still safe.
 
-Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/kernel/entry.S  | 2 +-
+ arch/s390/kernel/ptrace.c | 6 ++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 2b5dad2ec650c..5d4ec95be8691 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1544,7 +1544,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
- 	for (q = 0; q < port->ntxqs; q++)
- 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
- 			*pstats++ += mvpp2_read_index(port->priv,
--						      MVPP22_CTRS_TX_CTR(port->id, i),
-+						      MVPP22_CTRS_TX_CTR(port->id, q),
- 						      mvpp2_ethtool_txq_regs[i].offset);
- 
- 	/* Rxqs are numbered from 0 from the user standpoint, but not from the
-@@ -1553,7 +1553,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
- 	for (q = 0; q < port->nrxqs; q++)
- 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
- 			*pstats++ += mvpp2_read_index(port->priv,
--						      port->first_rxq + i,
-+						      port->first_rxq + q,
- 						      mvpp2_ethtool_rxq_regs[i].offset);
- }
- 
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index 3ae64914bd144..9584e743102b7 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -368,9 +368,9 @@ ENTRY(system_call)
+ 	jnz	.Lsysc_nr_ok
+ 	# svc 0: system call number in %r1
+ 	llgfr	%r1,%r1				# clear high word in r1
++	sth	%r1,__PT_INT_CODE+2(%r11)
+ 	cghi	%r1,NR_syscalls
+ 	jnl	.Lsysc_nr_ok
+-	sth	%r1,__PT_INT_CODE+2(%r11)
+ 	slag	%r8,%r1,3
+ .Lsysc_nr_ok:
+ 	xc	__SF_BACKCHAIN(8,%r15),__SF_BACKCHAIN(%r15)
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index 3f29646313e82..fca78b269349d 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -848,11 +848,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 	 * call number to gprs[2].
+ 	 */
+ 	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
+-	    (tracehook_report_syscall_entry(regs) ||
+-	     regs->gprs[2] >= NR_syscalls)) {
++	    tracehook_report_syscall_entry(regs)) {
+ 		/*
+-		 * Tracing decided this syscall should not happen or the
+-		 * debugger stored an invalid system call number. Skip
++		 * Tracing decided this syscall should not happen. Skip
+ 		 * the system call and the system call restart handling.
+ 		 */
+ 		goto skip;
 -- 
 2.25.1
 
