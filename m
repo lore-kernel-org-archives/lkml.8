@@ -2,109 +2,87 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87554C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9B62072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:32:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfKUA1iM"
+	by mail.kernel.org (Postfix) with ESMTP id F20252072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbgFWIcP (ORCPT
+        id S1731806AbgFWIdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731579AbgFWIcO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:32:14 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C697C061573;
-        Tue, 23 Jun 2020 01:32:14 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id l188so5025069qkf.10;
-        Tue, 23 Jun 2020 01:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WUXkMq3EwcMN7rag+IOzTouUq2jW1leXveyXqam81mE=;
-        b=MfKUA1iM2cNLIQb0gJHMFANrfHxAxLJ7OauUZ2pO/Zib5rQxdceNoygxEhaSDMdHF9
-         oRekPg5JE8wO67W1XXq2VajDG1CD5zGtq6DzJ+Qqzc0xSSHh8EvgNnEnJ7pA67a4qEGf
-         lPl3QQNFvtUUy0Dxt3X/UuNwZ7fbemOh29ZTt497SOrwO3oL3Sey/D/ilE2uGS2PQFbx
-         8eRe/P+4LFzxcDQI8ZY/wsYR0Eaj3Q5c4e3/otG65UcV+dUVpriPExa1pjkoV6FtNKsk
-         eTFyhw3iNwgYihpOJRXlLTx1rYmcfRPPKKxP+HEqKHn704oUg1p1fMwDArGlPS5755W+
-         rRFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WUXkMq3EwcMN7rag+IOzTouUq2jW1leXveyXqam81mE=;
-        b=NPmLEXhIFO7gTqA+k8vpP7MYud0A+r3q8Ubve1H6sA3J2dPviSNkghi+MUw+dnuu0a
-         p/nGw/tlksPlPcUY+5s687gBXqBDTfYS3tyMDjR9GOLnkV7Wtv++ktS6j4qSWEmMXsyF
-         JW+RLftnFWcaXhZfJDKrgbTlHHa1CQuJ3D5C6KTR15j+0Eeje/yqMZjpDd9dPWvQOLMT
-         X1iu0T7//EA4rQLlOhvZH1MOF68twVotefhQlAuOWPct1Qq1vp6rYGv5EVifQf1ospGE
-         iMbNr07eQp/laNfohMNJUPyjNbOVukhZufHBRboMYfmBtSc3BWAxV3BZStyB1jEvhm1x
-         Rhkg==
-X-Gm-Message-State: AOAM531zWSygy4VEtqHmYpcZjZL2Jeu/jjkaM4WfIZspC89Q7sHTlMJy
-        yVAPET9ZrXnaKWqGx93Nb7+VR+LN2xM4pBRbSxE=
-X-Google-Smtp-Source: ABdhPJy8aJP9b/KoDke180z5lb657c5ulXpRf52exbUwqEylh9UUhQV3q7rSAK3MRe5vqIrWMG20D3EDlUJCCfc0XW8=
-X-Received: by 2002:a37:8a43:: with SMTP id m64mr18899695qkd.37.1592901133739;
- Tue, 23 Jun 2020 01:32:13 -0700 (PDT)
+        Tue, 23 Jun 2020 04:33:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54205 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731579AbgFWIdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:33:33 -0400
+IronPort-SDR: FDGEW1N0Bq4pEde0OtEtv/LQZzM4mlIrTE+z1pbGdW1j4XCeOqkXFEyIh9ghzobNU5ZL0m9KUg
+ cSxYEosBRzJg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="124262267"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="124262267"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 01:33:32 -0700
+IronPort-SDR: VcuRFLa3aMgDYJ1ODJzyyswd2p2S6MJd1FWN3QstouzkItwFoYqOy+yoiy7dx39ldYrJYBW7Ig
+ 1tpAJH0qHEWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="353737239"
+Received: from mylly.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga001.jf.intel.com with ESMTP; 23 Jun 2020 01:33:30 -0700
+Subject: Re: [PATCH] i2c: designware: Fix functionality in !CONFIG_ACPI case
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org
+References: <20200623025144.34246-1-john.stultz@linaro.org>
+ <d6c317ee-4f97-9c57-6b04-1eabd814b6ce@linux.intel.com>
+Message-ID: <96ea5e42-0632-4c8b-03c2-4958b9eea8c5@linux.intel.com>
+Date:   Tue, 23 Jun 2020 11:33:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <39ac8f24-3148-2a3d-3f8d-91567b3c4c9e@web.de>
-In-Reply-To: <39ac8f24-3148-2a3d-3f8d-91567b3c4c9e@web.de>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Tue, 23 Jun 2020 16:32:02 +0800
-Message-ID: <CAA+D8APR2NGAn9jRDSZzr1fgj5u0hAvH19VxZS+tj2A7j3PCuw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ASoC: fsl_mqs: Don't check clock is NULL before
- calling clk API
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org, Timur Tabi <timur@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>, Takashi Iwai <tiwai@suse.com>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d6c317ee-4f97-9c57-6b04-1eabd814b6ce@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 3:38 PM Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> > In-Reply-To: <cover.1592888591.git.shengjiu.wang@nxp.com>
->
-> I guess that it should be sufficient to specify such a field once
-> for the header information.
+On 6/23/20 10:59 AM, Jarkko Nikula wrote:
+> Hi
+> 
+> On 6/23/20 5:51 AM, John Stultz wrote:
+>> On the HiKey board, where CONFIG_ACPI is not set, we started
+>> to see a graphics regression where the adv7511 HDMI bridge driver
+>> wasn't probing. This was due to the i2c bus failing to start up.
+>>
+>> I bisected the problem down to commit f9288fcc5c615 ("i2c:
+>> designware: Move ACPI parts into common module") and after
+>> looking at it a bit, I realized that change moved some
+>> initialization into i2c_dw_acpi_adjust_bus_speed(). However,
+>> i2c_dw_acpi_adjust_bus_speed() is only functional if CONFIG_ACPI
+>> is set.
+>>
+>> This patch pulls i2c_dw_acpi_adjust_bus_speed() out of the
+>> ifdef CONFIG_ACPI conditional, and gets the board working again.
+>>
+> Andy: what you think should the i2c_dw_acpi_adjust_bus_speed() fixed to 
+> return adjusted speed or zero if not found (also for !CONFIG_ACPI) and 
+> move above lines back to probe? It looks more clear to me that way and 
+> should fix the regression I think.
+> 
+Ok, I sent a patch what I was thinking. Care to test John does it fix 
+the regression you are seeing?
 
-seems it's caused by my "git format-patch" command, I will update
-it, hope it is better next time.
+-- 
+Jarkko
 
->
->
-> > Because clk_prepare_enable and clk_disable_unprepare should
-> > check input clock parameter is NULL or not internally,
->
-> I find this change description unclear.
-
-    clk_prepare_enable and clk_disable_unprepare check the input
-    clock parameter in the beginning of the function, if the parameter
-    is NULL, clk_prepare_enable and clk_disable_unprepare will
-    return immediately.
-
-    So Don't need to check input clock parameters before calling clk
-    API.
-
-Do you think this commit message is better?
-
-best regards
-wang shengjiu
