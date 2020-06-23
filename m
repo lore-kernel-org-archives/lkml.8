@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9162CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E936206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CEE2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943748;
-	bh=XdGr7wo88QC1X3JLceRhGU8zIUMPJFkCeqfIKIEWxec=;
+	s=default; t=1592943752;
+	bh=iH08VnW3uKA0g3AvFh8w+vi2WfhazxAAViYMCsS7Izo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLiQvc2nkFoZAqW+RTdhoRhDqs8yA1T3G3zleMoBEjMqFXwhx9rl29LZAQXNiMpar
-	 fAigAW07tXsdC3Y+W+1HoysGRNqo+cKXWK6BuEVlCG29YYxTfmwN82K2q0SQS0NkhM
-	 7zR6cIQxcTO7dzPJF0yfwWkhrdDBh7YEDqVIFi7Q=
+	b=BZ2MngpQ1tWOuN2Tb+iqVfABwgKc0EmV8RdnCXllOp/i3veBdM7BOAuhMXU2aGfsZ
+	 xOr8TSZG2Fo22iMS7P7wPRnedVpyZ0/vCoIQMMEF/z5aVeUdLORgQEi4pRWglmnXaV
+	 qmuydR2n5DFi4XLtTSEhei5ogqkfqPutI7ExaMOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390167AbgFWUWZ (ORCPT
+        id S2390183AbgFWUWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:22:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40234 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389379AbgFWUWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:22:21 -0400
+        id S2389898AbgFWUWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:22:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AA9720780;
-        Tue, 23 Jun 2020 20:22:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA1042064B;
+        Tue, 23 Jun 2020 20:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943740;
-        bh=XdGr7wo88QC1X3JLceRhGU8zIUMPJFkCeqfIKIEWxec=;
+        s=default; t=1592943742;
+        bh=iH08VnW3uKA0g3AvFh8w+vi2WfhazxAAViYMCsS7Izo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BnVFvYX0MHhinOAMMB5jKdIWuuXAPGX+WOB18OZxZE2FaassNIr3GaLcr3+Sihd9t
-         OvkmpnHHtfA0FHBJRTlhHnpSsCpGKJHuQm7sBLFsH59qV3rMLUKYav1kwjZxv6xc16
-         CO4oG8TMk3fjegWXxhbGISpuluzQ5Gea0tM7XvOY=
+        b=YdItPIm0xRBa91oCT71M4hFMUNunUPbfK8JgeKOTBa3XfIfI9uUtMH4G5ftTrfr9j
+         02X3jV0kghq7bteEJOD/bi8lWE5nRuEndp1gDlDmfGlSgyVn68j+Q2rjjTX9fJ/js+
+         ar06lGSOxAYvIYRrXHgq9OSYpg1s3glTpxwBXSmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suman Anna <s-anna@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 006/314] iio: pressure: bmp280: Tolerate IRQ before registering
-Date:   Tue, 23 Jun 2020 21:53:21 +0200
-Message-Id: <20200623195339.086909780@linuxfoundation.org>
+Subject: [PATCH 5.4 007/314] remoteproc: Fix IDR initialisation in rproc_alloc()
+Date:   Tue, 23 Jun 2020 21:53:22 +0200
+Message-Id: <20200623195339.144198310@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -62,56 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Alex Elder <elder@linaro.org>
 
-[ Upstream commit 97b31a6f5fb95b1ec6575b78a7240baddba34384 ]
+[ Upstream commit 6442df49400b466431979e7634849a464a5f1861 ]
 
-With DEBUG_SHIRQ enabled we have a kernel crash
+If ida_simple_get() returns an error when called in rproc_alloc(),
+put_device() is called to clean things up.  By this time the rproc
+device type has been assigned, with rproc_type_release() as the
+release function.
 
-[  116.482696] BUG: kernel NULL pointer dereference, address: 0000000000000000
+The first thing rproc_type_release() does is call:
+    idr_destroy(&rproc->notifyids);
 
-...
+But at the time the ida_simple_get() call is made, the notifyids
+field in the remoteproc structure has not been initialized.
 
-[  116.606571] Call Trace:
-[  116.609023]  <IRQ>
-[  116.611047]  complete+0x34/0x50
-[  116.614206]  bmp085_eoc_irq+0x9/0x10 [bmp280]
+I'm not actually sure this case causes an observable problem, but
+it's incorrect.  Fix this by initializing the notifyids field before
+calling ida_simple_get() in rproc_alloc().
 
-because DEBUG_SHIRQ mechanism fires an IRQ before registration and drivers
-ought to be able to handle an interrupt happening before request_irq() returns.
-
-Fixes: aae953949651 ("iio: pressure: bmp280: add support for BMP085 EOC interrupt")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
+Signed-off-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200415204858.2448-2-mathieu.poirier@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/bmp280-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/remoteproc/remoteproc_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index 8d0f15f27dc55..084a1d56cc2f0 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -706,7 +706,7 @@ static int bmp180_measure(struct bmp280_data *data, u8 ctrl_meas)
- 	unsigned int ctrl;
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 0896b3614eb11..ce92ae227aa10 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -2036,6 +2036,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 	rproc->dev.type = &rproc_type;
+ 	rproc->dev.class = &rproc_class;
+ 	rproc->dev.driver_data = rproc;
++	idr_init(&rproc->notifyids);
  
- 	if (data->use_eoc)
--		init_completion(&data->done);
-+		reinit_completion(&data->done);
+ 	/* Assign a unique device index and name */
+ 	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
+@@ -2060,8 +2061,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
  
- 	ret = regmap_write(data->regmap, BMP280_REG_CTRL_MEAS, ctrl_meas);
- 	if (ret)
-@@ -962,6 +962,9 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
- 			"trying to enforce it\n");
- 		irq_trig = IRQF_TRIGGER_RISING;
- 	}
-+
-+	init_completion(&data->done);
-+
- 	ret = devm_request_threaded_irq(dev,
- 			irq,
- 			bmp085_eoc_irq,
+ 	mutex_init(&rproc->lock);
+ 
+-	idr_init(&rproc->notifyids);
+-
+ 	INIT_LIST_HEAD(&rproc->carveouts);
+ 	INIT_LIST_HEAD(&rproc->mappings);
+ 	INIT_LIST_HEAD(&rproc->traces);
 -- 
 2.25.1
 
