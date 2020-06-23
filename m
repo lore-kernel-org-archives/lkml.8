@@ -2,165 +2,218 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A77C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 582ED206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6015920780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bkVSOuX3"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="rrfwAaQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbgFWRlu (ORCPT
+        id S2387650AbgFWRl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:41:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41890 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733273AbgFWRls (ORCPT
+        Tue, 23 Jun 2020 13:41:58 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:63392 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387923AbgFWRlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:41:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NHMZjH015017;
-        Tue, 23 Jun 2020 17:41:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=01fOHNPSwBjJzaf1P4ANrSZ8Ny4TlenXhzftmFd9g2g=;
- b=bkVSOuX30qAbfW7g3HvLuMU7Ad7ZK3klyHd2us52MT9T7CqCn+Rcvu6UsYQWLHvmFfHc
- NPSvyxic+lNg8dWMv2869qYiQsevVm9alH5rGdrL9NnvEQfB/rqPeGNvYOh3lHMxvCAR
- 8Q0q6YqQLc0FRy0g+6JkpanL2OORvIgNpkq8mLNm6JTKBg4zm7Prq3EF9IRgFHqVR3Rw
- WFiR5u/xuvUXvzR9h3UkmPL6WdpUSSifSc5wrsgc8UKsXjqDjKSf/9AIteBmin9VywLq
- UW4DOGhPCCP49YRH2ZXKZMie6j3upeVh3om3I0/d49dvlCT/LxK7iVzB6FlIdGn+YTtm 5A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31uk2rs9qv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 17:41:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NHNihx036985;
-        Tue, 23 Jun 2020 17:41:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 31uk3chd01-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 17:41:38 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05NHfaD7023654;
-        Tue, 23 Jun 2020 17:41:36 GMT
-Received: from [10.39.252.55] (/10.39.252.55)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jun 2020 17:41:36 +0000
-Subject: Re: [RFC PATCH v2] xen/privcmd: Convert get_user_pages*() to
- pin_user_pages*()
-To:     Souptick Joarder <jrdr.linux@gmail.com>, jgross@suse.com,
-        sstabellini@kernel.org
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>
-References: <1592913499-15558-1-git-send-email-jrdr.linux@gmail.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <c68a3805-080f-22c3-a4d3-f03be6b32176@oracle.com>
-Date:   Tue, 23 Jun 2020 13:41:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 13:41:04 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NHexTW010489
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:41:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=ivt/D0vc3oMHwNluUc1Nq40iWqoqzSlS0A4SlHhKIYs=;
+ b=rrfwAaQAGBJWJd7Au8bODR9NVMrqZAFWCCI6bvirwcefJV1+LLg0Qlu99gxV9ukF3a0M
+ L6wnU+CC3VEdjP7FZFFhi9q2ik47j2prLgNTxqxtVMZhUmDk3daPmpT7/8W7KY5D1/80
+ +xWIGtTpuetL2VIiZVU45EDBcqsIH9gz2yw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 31uk3ch4xt-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 10:41:03 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 23 Jun 2020 10:40:45 -0700
+Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
+        id A877B273E5DA; Tue, 23 Jun 2020 10:40:41 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: vll0c01
+Subject: [PATCH v7 04/19] mm: slub: implement SLUB version of obj_to_index()
+Date:   Tue, 23 Jun 2020 10:40:22 -0700
+Message-ID: <20200623174037.3951353-5-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200623174037.3951353-1-guro@fb.com>
+References: <20200623174037.3951353-1-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <1592913499-15558-1-git-send-email-jrdr.linux@gmail.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006120000
- definitions=main-2006230123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- phishscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- bulkscore=0 mlxscore=0 spamscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230123
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_11:2020-06-23,2020-06-23 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
+ impostorscore=0 suspectscore=2 phishscore=0 mlxlogscore=981
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006120000 definitions=main-2006230124
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/20 7:58 AM, Souptick Joarder wrote:
-> In 2019, we introduced pin_user_pages*() and now we are converting
-> get_user_pages*() to the new API as appropriate. [1] & [2] could
-> be referred for more information. This is case 5 as per document [1].
->
-> As discussed, pages need to be marked as dirty before unpinned it.
->
-> Previously, if lock_pages() end up partially mapping pages, it used
-> to return -ERRNO due to which unlock_pages() have to go through
-> each pages[i] till *nr_pages* to validate them. This can be avoided
-> by passing correct number partially mapped pages & -ERRNO separately
-> while returning from lock_pages() due to error.
-> With this fix unlock_pages() doesn't need to validate pages[i] till
-> *nr_pages* for error scenario.
+This commit implements SLUB version of the obj_to_index() function, which
+will be required to calculate the offset of obj_cgroup in the obj_cgroups
+vector to store/obtain the objcg ownership data.
 
+To make it faster, let's repeat the SLAB's trick introduced by commit
+6a2d7a955d8d ("SLAB: use a multiply instead of a divide in
+obj_to_index()") and avoid an expensive division.
 
-This should be split into two patches please. The first one will fix the
-return value bug (and will need to go to stable branches) and the second
-will use new routine to pin pages.
+Vlastimil Babka noticed, that SLUB does have already a similar function
+called slab_index(), which is defined only if SLUB_DEBUG is enabled.  The
+function does a similar math, but with a division, and it also takes a
+page address instead of a page pointer.
 
+Let's remove slab_index() and replace it with the new helper
+__obj_to_index(), which takes a page address.  obj_to_index() will be a
+simple wrapper taking a page pointer and passing page_address(page) into
+__obj_to_index().
 
-> @@ -580,25 +580,30 @@ static long privcmd_ioctl_mmap_batch(
-> =20
->  static int lock_pages(
->  	struct privcmd_dm_op_buf kbufs[], unsigned int num,
-> -	struct page *pages[], unsigned int nr_pages)
-> +	struct page *pages[], unsigned int nr_pages, int *errno)
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+---
+ include/linux/slub_def.h | 16 ++++++++++++++++
+ mm/slub.c                | 15 +++++----------
+ 2 files changed, 21 insertions(+), 10 deletions(-)
 
-
-I'd prefer if you used more traditional way of returning error code by
-the function, and pass the number of pinned pages as an argument. This
-will also make call site simpler.
-
-
--boris
+diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
+index d2153789bd9f..30e91c83d401 100644
+--- a/include/linux/slub_def.h
++++ b/include/linux/slub_def.h
+@@ -8,6 +8,7 @@
+  * (C) 2007 SGI, Christoph Lameter
+  */
+ #include <linux/kobject.h>
++#include <linux/reciprocal_div.h>
+=20
+ enum stat_item {
+ 	ALLOC_FASTPATH,		/* Allocation from cpu slab */
+@@ -86,6 +87,7 @@ struct kmem_cache {
+ 	unsigned long min_partial;
+ 	unsigned int size;	/* The size of an object including metadata */
+ 	unsigned int object_size;/* The size of an object without metadata */
++	struct reciprocal_value reciprocal_size;
+ 	unsigned int offset;	/* Free pointer offset */
+ #ifdef CONFIG_SLUB_CPU_PARTIAL
+ 	/* Number of per cpu partial objects to keep around */
+@@ -182,4 +184,18 @@ static inline void *nearest_obj(struct kmem_cache *c=
+ache, struct page *page,
+ 	return result;
+ }
+=20
++/* Determine object index from a given position */
++static inline unsigned int __obj_to_index(const struct kmem_cache *cache=
+,
++					  void *addr, void *obj)
++{
++	return reciprocal_divide(kasan_reset_tag(obj) - addr,
++				 cache->reciprocal_size);
++}
++
++static inline unsigned int obj_to_index(const struct kmem_cache *cache,
++					const struct page *page, void *obj)
++{
++	return __obj_to_index(cache, page_address(page), obj);
++}
++
+ #endif /* _LINUX_SLUB_DEF_H */
+diff --git a/mm/slub.c b/mm/slub.c
+index c79d33cbe815..aa8d18824e62 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -317,12 +317,6 @@ static inline void set_freepointer(struct kmem_cache=
+ *s, void *object, void *fp)
+ 		__p < (__addr) + (__objects) * (__s)->size; \
+ 		__p +=3D (__s)->size)
+=20
+-/* Determine object index from a given position */
+-static inline unsigned int slab_index(void *p, struct kmem_cache *s, voi=
+d *addr)
+-{
+-	return (kasan_reset_tag(p) - addr) / s->size;
+-}
+-
+ static inline unsigned int order_objects(unsigned int order, unsigned in=
+t size)
+ {
+ 	return ((unsigned int)PAGE_SIZE << order) / size;
+@@ -465,7 +459,7 @@ static unsigned long *get_map(struct kmem_cache *s, s=
+truct page *page)
+ 	bitmap_zero(object_map, page->objects);
+=20
+ 	for (p =3D page->freelist; p; p =3D get_freepointer(s, p))
+-		set_bit(slab_index(p, s, addr), object_map);
++		set_bit(__obj_to_index(s, addr, p), object_map);
+=20
+ 	return object_map;
+ }
+@@ -3758,6 +3752,7 @@ static int calculate_sizes(struct kmem_cache *s, in=
+t forced_order)
+ 	 */
+ 	size =3D ALIGN(size, s->align);
+ 	s->size =3D size;
++	s->reciprocal_size =3D reciprocal_value(size);
+ 	if (forced_order >=3D 0)
+ 		order =3D forced_order;
+ 	else
+@@ -3862,7 +3857,7 @@ static void list_slab_objects(struct kmem_cache *s,=
+ struct page *page,
+ 	map =3D get_map(s, page);
+ 	for_each_object(p, s, addr, page->objects) {
+=20
+-		if (!test_bit(slab_index(p, s, addr), map)) {
++		if (!test_bit(__obj_to_index(s, addr, p), map)) {
+ 			pr_err("INFO: Object 0x%p @offset=3D%tu\n", p, p - addr);
+ 			print_tracking(s, p);
+ 		}
+@@ -4578,7 +4573,7 @@ static void validate_slab(struct kmem_cache *s, str=
+uct page *page)
+ 	/* Now we know that a valid freelist exists */
+ 	map =3D get_map(s, page);
+ 	for_each_object(p, s, addr, page->objects) {
+-		u8 val =3D test_bit(slab_index(p, s, addr), map) ?
++		u8 val =3D test_bit(__obj_to_index(s, addr, p), map) ?
+ 			 SLUB_RED_INACTIVE : SLUB_RED_ACTIVE;
+=20
+ 		if (!check_object(s, page, p, val))
+@@ -4769,7 +4764,7 @@ static void process_slab(struct loc_track *t, struc=
+t kmem_cache *s,
+=20
+ 	map =3D get_map(s, page);
+ 	for_each_object(p, s, addr, page->objects)
+-		if (!test_bit(slab_index(p, s, addr), map))
++		if (!test_bit(__obj_to_index(s, addr, p), map))
+ 			add_location(t, s, get_track(s, p, alloc));
+ 	put_map(map);
+ }
+--=20
+2.26.2
 
