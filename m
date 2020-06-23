@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E25C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895DEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8A0204EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5C820780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733182AbgFWQpr (ORCPT
+        id S1732696AbgFWQph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:45:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40324 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 12:45:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39240 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733154AbgFWQpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:45:38 -0400
+        id S1733111AbgFWQp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:45:29 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1EA8DAEBE;
-        Tue, 23 Jun 2020 16:45:36 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 4E9CEAEDD;
+        Tue, 23 Jun 2020 16:45:28 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org
 Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
@@ -31,9 +31,9 @@ Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 50/50] staging: vchiq: Move vchiq.h into include directory
-Date:   Tue, 23 Jun 2020 18:42:36 +0200
-Message-Id: <20200623164235.29566-51-nsaenzjulienne@suse.de>
+Subject: [PATCH 36/50] staging: vchi: Rework vchi_msg_hold() to match vchiq_msg_hold()
+Date:   Tue, 23 Jun 2020 18:42:22 +0200
+Message-Id: <20200623164235.29566-37-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
@@ -44,124 +44,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To make the separation clear between vchiq's header files and vchiq.h,
-which is to be used by services and is the 'public' API, move it into a
-dedicated includes directory.
+The services have access to struct vchiq_header's internals, so we can
+let them get the data pointer. This pretty much makes both functions
+exactly the same, which will allow us to make a switch to
+vchiq_msg_hold() further down the road.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/staging/vc04_services/Makefile                        | 2 +-
- drivers/staging/vc04_services/bcm2835-audio/Makefile          | 2 +-
- drivers/staging/vc04_services/bcm2835-audio/bcm2835.h         | 2 +-
- .../vchiq_arm => include/linux/raspberrypi}/vchiq.h           | 0
- .../staging/vc04_services/interface/vchiq_arm/vchiq_core.h    | 2 +-
- .../staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h   | 2 +-
- drivers/staging/vc04_services/vchiq-mmal/Makefile             | 1 +
- drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c         | 4 ++--
- 8 files changed, 8 insertions(+), 7 deletions(-)
- rename drivers/staging/vc04_services/{interface/vchiq_arm => include/linux/raspberrypi}/vchiq.h (100%)
+ .../staging/vc04_services/interface/vchi/vchi.h   |  5 +----
+ .../interface/vchiq_arm/vchiq_shim.c              | 15 ++-------------
+ 2 files changed, 3 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
-index e02a9c2abf77..7546d70116a0 100644
---- a/drivers/staging/vc04_services/Makefile
-+++ b/drivers/staging/vc04_services/Makefile
-@@ -12,5 +12,5 @@ obj-$(CONFIG_SND_BCM2835)		+= bcm2835-audio/
- obj-$(CONFIG_VIDEO_BCM2835)		+= bcm2835-camera/
- obj-$(CONFIG_BCM2835_VCHIQ_MMAL)	+= vchiq-mmal/
+diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
+index 72771fdee9d6..59559d4cd5f1 100644
+--- a/drivers/staging/vc04_services/interface/vchi/vchi.h
++++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
+@@ -54,10 +54,7 @@ extern int vchi_queue_kernel_message(unsigned handle, void *data,
+ // Routine to look at a message in place.
+ // The message is dequeued, so the caller is left holding it; the descriptor is
+ // filled in and must be released when the user has finished with the message.
+-extern int32_t vchi_msg_hold(unsigned handle,
+-			     void **data,        // } may be NULL, as info can be
+-			     uint32_t *msg_size, // } obtained from HELD_MSG_T
+-			     struct vchiq_header **message);
++struct vchiq_header *vchi_msg_hold(unsigned handle);
  
--ccflags-y += -D__VCCOREVER__=0x04000000
-+ccflags-y += -I $(srctree)/$(src)/include  -D__VCCOREVER__=0x04000000
- 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/Makefile b/drivers/staging/vc04_services/bcm2835-audio/Makefile
-index 13fa6d7d9745..d59fe4dde615 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/Makefile
-+++ b/drivers/staging/vc04_services/bcm2835-audio/Makefile
-@@ -2,4 +2,4 @@
- obj-$(CONFIG_SND_BCM2835)	+= snd-bcm2835.o
- snd-bcm2835-objs		:= bcm2835.o bcm2835-ctl.o bcm2835-pcm.o bcm2835-vchiq.o
- 
--ccflags-y += -I $(srctree)/$(src)/.. -D__VCCOREVER__=0x04000000
-+ccflags-y += -I $(srctree)/$(src)/../include -D__VCCOREVER__=0x04000000
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-index ca220f5230ec..1b36475872d6 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-@@ -6,10 +6,10 @@
- 
- #include <linux/device.h>
- #include <linux/wait.h>
-+#include <linux/raspberrypi/vchiq.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm-indirect.h>
--#include "interface/vchiq_arm/vchiq.h"
- 
- #define MAX_SUBSTREAMS   (8)
- #define AVAIL_SUBSTREAMS_MASK  (0xff)
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h b/drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
-similarity index 100%
-rename from drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-rename to drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-index 8a27f3d7217e..e67692879249 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-@@ -10,10 +10,10 @@
- #include <linux/kref.h>
- #include <linux/rcupdate.h>
- #include <linux/wait.h>
-+#include <linux/raspberrypi/vchiq.h>
- 
- #include "vchiq_cfg.h"
- 
--#include "vchiq.h"
- 
- /* Do this so that we can test-build the code on non-rpi systems */
- #if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-index f285d754ad28..3653fd99d8a1 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-@@ -5,7 +5,7 @@
- #define VCHIQ_IOCTLS_H
- 
- #include <linux/ioctl.h>
--#include "vchiq.h"
-+#include <linux/raspberrypi/vchiq.h>
- 
- #define VCHIQ_IOC_MAGIC 0xc4
- #define VCHIQ_INVALID_HANDLE (~0)
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/Makefile b/drivers/staging/vc04_services/vchiq-mmal/Makefile
-index f8164c33aec3..b2a830f48acc 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/Makefile
-+++ b/drivers/staging/vc04_services/vchiq-mmal/Makefile
-@@ -5,4 +5,5 @@ obj-$(CONFIG_BCM2835_VCHIQ_MMAL) += bcm2835-mmal-vchiq.o
- 
- ccflags-y += \
- 	-I$(srctree)/$(src)/.. \
-+	-I$(srctree)/$(src)/../include \
- 	-D__VCCOREVER__=0x04000000
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index 72afa4319bd3..b99b7555a8fb 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -23,14 +23,14 @@
- #include <linux/slab.h>
- #include <linux/completion.h>
- #include <linux/vmalloc.h>
-+#include <linux/raspberrypi/vchiq.h>
- #include <media/videobuf2-vmalloc.h>
-+#include <linux/raspberrypi/vchiq.h>
- 
- #include "mmal-common.h"
- #include "mmal-vchiq.h"
- #include "mmal-msg.h"
- 
--#include "interface/vchiq_arm/vchiq.h"
+ /*******************************************************************************
+  * Global service support API - operations on held messages
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+index 6eb9a9878641..fc12b76617d1 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+@@ -154,20 +154,9 @@ EXPORT_SYMBOL(vchi_held_msg_release);
+  * Returns: int32_t - success == 0
+  *
+  ***********************************************************/
+-int32_t vchi_msg_hold(unsigned handle, void **data, uint32_t *msg_size,
+-		      struct vchiq_header **message)
++struct vchiq_header *vchi_msg_hold(unsigned handle)
+ {
+-	struct vchiq_header *header;
 -
- /*
-  * maximum number of components supported.
-  * This matches the maximum permitted by default on the VPU
+-	header = vchiq_msg_hold(handle);
+-	if (!header)
+-		return -ENOENT;
+-
+-	*data = header->data;
+-	*msg_size = header->size;
+-	*message = header;
+-
+-	return 0;
++	return vchiq_msg_hold(handle);
+ }
+ EXPORT_SYMBOL(vchi_msg_hold);
+ 
 -- 
 2.27.0
 
