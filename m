@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E152C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 581D72078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3352078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948173;
-	bh=oI11+UeCNAjXbuWH90HC9sblP0vXUeNVYXJNIZhvkVM=;
+	s=default; t=1592948175;
+	bh=s/Cy2BKCYpzUTUPPYO325Q7i/LpMEO5BDKCOiNIEZJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NqM+lqEdB/EmYpQjmPTTe2easxZPqgPyW0T5cnuf6e+LGjizPgqI2zylU5faL/5Gg
-	 sBF2iOZimjylixlKxBwfvcUMcWUIwAXdrHxPbdwoRNLO49UYoCo5YxN8bUbvSZiPkS
-	 iYgbpYD0j6TJvB9zRfTz/q+9Pwi3SX7a2HDbz4+w=
+	b=hWDwZiWKlMoQi7QR9OOMUjPeRY0R1pg+71ct3ukpmCvDBRCk2rJFVQLwS39ElGem9
+	 hZzOWkNSqG/n/H0ifI4GVqAroAtBeFcLVdOYTuLOJIlpHdmtBJpsk92q40Mdr+tbmN
+	 xKB3qFNWasLN2JKdiH1ltvDTR70mEx4yLMgikrjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388307AbgFWVgL (ORCPT
+        id S2388770AbgFWUJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51200 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388396AbgFWUKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:03 -0400
+        id S2388701AbgFWUJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:09:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A8720EDD;
-        Tue, 23 Jun 2020 20:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAAAE2082F;
+        Tue, 23 Jun 2020 20:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943002;
-        bh=oI11+UeCNAjXbuWH90HC9sblP0vXUeNVYXJNIZhvkVM=;
+        s=default; t=1592942958;
+        bh=s/Cy2BKCYpzUTUPPYO325Q7i/LpMEO5BDKCOiNIEZJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x5EDxhkI9Awk1MZTGFrB8cRmL3ppnjyJS/N0K+RdqlvhJzryuSX02dR84c7uaCEwO
-         g2lSZhJ6hcQ5W9pHtM7oLDsUJZUeNXnRQFtZaOs/7B5qjlPksCFlGr5e9sjyKPB6Pk
-         yH2l/ZPPHxEpg5kaSBBY3GeNwexXnEke8RL+BwwM=
+        b=NSm41EUSGZQJSpVdzymGFwxaafeL+viSFUAtJJpWYnEfzGCZ8jPQItgGQysh6/FeH
+         CzZEECkSnEGZE4Rszf7hj+gYYO4lbgmc0ChJBoXdTlGTo/5u3aLBNAHmtu1+jjQH1q
+         T5k0Xz+vicgdbA4N9Bdot7P1XXgefzyslvdewA60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        stable@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 220/477] PCI: aardvark: Issue PERST via GPIO
-Date:   Tue, 23 Jun 2020 21:53:37 +0200
-Message-Id: <20200623195417.984616032@linuxfoundation.org>
+Subject: [PATCH 5.7 172/477] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
+Date:   Tue, 23 Jun 2020 21:52:49 +0200
+Message-Id: <20200623195415.714460986@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,128 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-[ Upstream commit 5169a9851daaa2782a7bd2bb83d5b1bd224b2879 ]
+[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
 
-Add support for issuing PERST via GPIO specified in 'reset-gpios'
-property (as described in PCI device tree bindings).
+If platform bus driver registration is failed then, accessing
+platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
+in __platform_driver_probe() without verifying the return value
+__platform_driver_register() can lead to NULL pointer exception.
 
-Some buggy cards (e.g. Compex WLE900VX or WLE1216) are not detected
-after reboot when PERST is not issued during driver initialization.
+So check the return value before attempting the spin lock.
 
-If bootloader already enabled link training then issuing PERST has no
-effect for some buggy cards (e.g. Compex WLE900VX) and these cards are
-not detected. We therefore clear the LINK_TRAINING_EN register before.
+One such example is below:
 
-It was observed that Compex WLE900VX card needs to be in PERST reset
-for at least 10ms if bootloader enabled link training.
+For a custom usecase, I have intentionally failed the platform bus
+registration and I expected all the platform device/driver
+registrations to fail gracefully. But I came across this panic
+issue.
 
-Tested on Turris MOX.
+[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
+[    1.331118] #PF: supervisor write access in kernel mode
+[    1.331163] #PF: error_code(0x0002) - not-present page
+[    1.331208] PGD 0 P4D 0
+[    1.331233] Oops: 0002 [#1] PREEMPT SMP
+[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
+[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
+[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
+[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
+[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
+[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
+[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
+[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
+[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
+[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
+[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    1.332252] Call Trace:
+[    1.332281]  __platform_driver_probe+0x92/0xee
+[    1.332323]  ? rtc_dev_init+0x2b/0x2b
+[    1.332358]  cmos_init+0x37/0x67
+[    1.332396]  do_one_initcall+0x7d/0x168
+[    1.332428]  kernel_init_freeable+0x16c/0x1c9
+[    1.332473]  ? rest_init+0xc0/0xc0
+[    1.332508]  kernel_init+0x5/0x100
+[    1.332543]  ret_from_fork+0x1f/0x30
+[    1.332579] CR2: 00000000000000c8
+[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
+[    1.333549] note: swapper/0[1] exited with preempt_count 1
+[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    1.333736] Kernel Offset: disabled
 
-Link: https://lore.kernel.org/r/20200430080625.26070-6-pali@kernel.org
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Note, this can only be triggered if a driver errors out from this call,
+which should never happen.  If it does, the driver needs to be fixed.
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 43 ++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
+ drivers/base/platform.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index e202f954eb84e..2ecc79c03ade1 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/delay.h>
-+#include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-@@ -18,6 +19,7 @@
- #include <linux/platform_device.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_pci.h>
- 
- #include "../pci.h"
-@@ -204,6 +206,7 @@ struct advk_pcie {
- 	int root_bus_nr;
- 	int link_gen;
- 	struct pci_bridge_emul bridge;
-+	struct gpio_desc *reset_gpio;
- };
- 
- static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
-@@ -330,10 +333,31 @@ err:
- 	dev_err(dev, "link never came up\n");
- }
- 
-+static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-+{
-+	u32 reg;
-+
-+	if (!pcie->reset_gpio)
-+		return;
-+
-+	/* PERST does not work for some cards when link training is enabled */
-+	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-+	reg &= ~LINK_TRAINING_EN;
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+
-+	/* 10ms delay is needed for some cards */
-+	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+	usleep_range(10000, 11000);
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+}
-+
- static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
- 	u32 reg;
- 
-+	advk_pcie_issue_perst(pcie);
-+
- 	/* Set to Direct mode */
- 	reg = advk_readl(pcie, CTRL_CONFIG_REG);
- 	reg &= ~(CTRL_MODE_MASK << CTRL_MODE_SHIFT);
-@@ -406,7 +430,8 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index b27d0f6c18c9c..f5d485166fd3f 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -851,6 +851,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
+ 	/* temporary section violation during probe() */
+ 	drv->probe = probe;
+ 	retval = code = __platform_driver_register(drv, module);
++	if (retval)
++		return retval;
  
  	/*
- 	 * PERST# signal could have been asserted by pinctrl subsystem before
--	 * probe() callback has been called, making the endpoint going into
-+	 * probe() callback has been called or issued explicitly by reset gpio
-+	 * function advk_pcie_issue_perst(), making the endpoint going into
- 	 * fundamental reset. As required by PCI Express spec a delay for at
- 	 * least 100ms after such a reset before link training is needed.
- 	 */
-@@ -1046,6 +1071,22 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	}
- 	pcie->root_bus_nr = bus->start;
- 
-+	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
-+						       "reset-gpios", 0,
-+						       GPIOD_OUT_LOW,
-+						       "pcie1-reset");
-+	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
-+	if (ret) {
-+		if (ret == -ENOENT) {
-+			pcie->reset_gpio = NULL;
-+		} else {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to get reset-gpio: %i\n",
-+					ret);
-+			return ret;
-+		}
-+	}
-+
- 	ret = of_pci_get_max_link_speed(dev->of_node);
- 	if (ret <= 0 || ret > 3)
- 		pcie->link_gen = 3;
+ 	 * Fixup that section violation, being paranoid about code scanning
 -- 
 2.25.1
 
