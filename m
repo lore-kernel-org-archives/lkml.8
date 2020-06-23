@@ -3,144 +3,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E63C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63053208A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806452098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 23:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFEJGHPp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kleomPaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388232AbgFWXYg (ORCPT
+        id S2388261AbgFWXYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52574 "EHLO
+        Tue, 23 Jun 2020 19:24:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388200AbgFWXYa (ORCPT
+        with ESMTP id S2387568AbgFWXYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 19:24:30 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB10C061573;
-        Tue, 23 Jun 2020 16:24:30 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id m21so53374eds.13;
-        Tue, 23 Jun 2020 16:24:29 -0700 (PDT)
+        Tue, 23 Jun 2020 19:24:51 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51F7C061795
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:24:50 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d6so168445pjs.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 16:24:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=qg4pRwyioF70kpz98uHFH8Xcc44ozp1PlRWmbay6J2w=;
-        b=HFEJGHPprM3bOHD1+gxF55zE2NhzUfb4wpVzfOFCcFMtGbT1FF78kNWmLMFjXIilby
-         1jhr3YEY6ZsI35Bs1jlAdLAkhnlHMfBAYVMwVL/zaSybG31MG70pvX6V/WWavmzfI5f2
-         WPywh5CHiIoHUtgJmpzJuvwTwZSyJl/YvslqqmVehhVe3jVYkCM7js49kUeyx5dHRvUn
-         jyEbWNJ6XXPTJJA/Ta9q6l+6oVojbl/5l/cSlMjJlLRRP9NHpeGcC0SbpzNVicdtLkJR
-         2Jf+fmPBbjMl9k9+sxbBkcQnVK0dyO+sdte2TwGGttmhRwkP5aAB8Ix/LeLBv3O+Mb9d
-         ACdQ==
+        bh=3G9QMVwxTsA92LLKCFH4RqCAh/UtFLmjlIBZFONQCss=;
+        b=kleomPaHRpYa6r8GyLa5xfannizPFjQqXQWpZBPvk5Kv28krx2yW1R+46OHgC/VrOa
+         orGPc9RcAHqT0crgKC8pHbALu1G9E71b2hDazaZ8IugV5ZC7kf34zZDYMZadtHSRha12
+         C+nYl0T+bDdRldeU5Oh91e0n0VyUYWql4+V6sqH8tMXgNuS6g3/r+o+CwD9ECIK1pbDf
+         Iu0m+GXI/jpB563yx0A15h5kO6aAa2x+g9S2BcXUAngENANFC71xbE25w5HgsaBTOd3c
+         L5pkE21g86RSpvDH/+DxtxldgadP4Mr8HGLCPPt54AtgI1DVSQpkaWwlm8VLiyoPjsPH
+         LvZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qg4pRwyioF70kpz98uHFH8Xcc44ozp1PlRWmbay6J2w=;
-        b=EgXWr1D7GeoO3xFPsYgOy0EFnVmlPEYLlLhurN8X4lL5TmUQ1Cd5K2pHujVoAwJYBv
-         VBpRnuJWuFQrCKpBTpcmh8+ZALX4Xda6k8EOwkN5NWIYcXfYGL1j7xwu4PQoSJ2n3cZS
-         SZBPitazp76RpC6NnaV5hN1C4aOFicIZk3ci88LCa2r7LaZ7RkFmhS3Bq/Tokram5S4L
-         /36HYf5rADqqvU04YVBvPZ6Rk7E2mx76eOEAKhoR46hmx//FBGH+3vlHeWTkc78ReIFI
-         l8pwR6DMrDbDpCR2EGf8rAHntaMmuzgNSvC5E8k2V2dHm/0s++LBaqopqxHyXHJ6gKbX
-         8qpQ==
-X-Gm-Message-State: AOAM532moFmeZSgC/19J7ITI2TeLqb5WqE2IZom+yfHyJ4EBojQls7uW
-        Xf5KoDafxk9asSDa/M+YPIg=
-X-Google-Smtp-Source: ABdhPJyAT1d/IwlKuS/na5EbKXi3//g9xDMtPn0+NfNC4Z6jKGX2hsbEiR3inayxc9aJtllFSa2blw==
-X-Received: by 2002:a50:a701:: with SMTP id h1mr23535578edc.170.1592954668632;
-        Tue, 23 Jun 2020 16:24:28 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id rp21sm14247191ejb.97.2020.06.23.16.24.27
+        bh=3G9QMVwxTsA92LLKCFH4RqCAh/UtFLmjlIBZFONQCss=;
+        b=cj1TTDqN9S9T2wzIrzZRVkvucQfyVqtHZzphqHOkzu3gN09KPMdEwY+kKkHGhvZWML
+         RD8ZobM/5FWVmjrqILudan/+IlfahX7F/Zp4vKhSZ/A1kaeFPm4BvnVt4SlTwajoIrrd
+         DDPWksmP/tfX4qbLmSJcL3GuX/bvRJdw3e7Kt5Bs+afiqoRv3A9MNksI5tNB2+D1L05S
+         k7pqsxw0OTkKQR9CYGSDbtrn6cioqdB6DKo5IAtpZ/zZs2ZEOfeVUcomXz6ht7VqinWa
+         5V3u5wnVgIzYOp9KPXXvjhR9oa/FRtDTqPUMqOFMDt9EmqczAM17Z3IoCTYrDqHOmg4t
+         mdpQ==
+X-Gm-Message-State: AOAM5321/Drzt7SB/JfHKhP6mAz9H/O6W1nNkq/rAh2pjjfKo0zuwQvr
+        +u8H6ecCshyUDZF5SA8tOaaYJA==
+X-Google-Smtp-Source: ABdhPJybS5PXzSDbG++SU/WtqGmAw1CKJ6YSGskex+IHZgTwomcda7KuYRhYhMYpTv6ddwrA5pM8vw==
+X-Received: by 2002:a17:90a:930c:: with SMTP id p12mr26990817pjo.2.1592954690455;
+        Tue, 23 Jun 2020 16:24:50 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z24sm18411636pfk.29.2020.06.23.16.24.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 16:24:28 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 01:24:25 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     paulmck@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
-Subject: Re: [PATCH 2/2] Documentation/litmus-tests: Add note on herd7 7.56
- in atomic litmus test
-Message-ID: <20200623232425.GB418699@andrea>
-References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
- <20200623005231.27712-13-paulmck@kernel.org>
- <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
- <20200623155419.GI9247@paulmck-ThinkPad-P72>
- <b3433b44-29af-4ef4-d047-b0b0d51a9fbd@gmail.com>
- <9e1d448a-cf3c-523d-e0a6-f46ac4706c48@gmail.com>
+        Tue, 23 Jun 2020 16:24:49 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 16:22:07 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/12] arm64: dts: qcom: msm8994: Add pmu node
+Message-ID: <20200623232207.GN128451@builder.lan>
+References: <20200623224813.297077-1-konradybcio@gmail.com>
+ <20200623224813.297077-9-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9e1d448a-cf3c-523d-e0a6-f46ac4706c48@gmail.com>
+In-Reply-To: <20200623224813.297077-9-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 07:09:01AM +0900, Akira Yokosawa wrote:
-> From f808c371075d2f92b955da1a83ecb3828db1972e Mon Sep 17 00:00:00 2001
-> From: Akira Yokosawa <akiyks@gmail.com>
-> Date: Wed, 24 Jun 2020 06:59:26 +0900
-> Subject: [PATCH 2/2] Documentation/litmus-tests: Add note on herd7 7.56 in atomic litmus test
+On Tue 23 Jun 15:48 PDT 2020, Konrad Dybcio wrote:
+
+> Add the CPU PMU to get perf support for hardware events.
 > 
-> herdtools 7.56 has enhanced herd7's C parser so that the "(void)expr"
-> construct in Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus is
-> accepted.
-> 
-> This is independent of LKMM's cat model, so mention the required
-> version in the header of the litmus test and its entry in README.
-> 
-> CC: Boqun Feng <boqun.feng@gmail.com>
-> Reported-by: Andrea Parri <parri.andrea@gmail.com>
-> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
-Frankly, I was hoping that we could simply bump the herd7 version in
-tools/memory-model/README; I understand your point, but I admit that
-I haven't being playing with 7.52 for a while now...
-
-Acked-by: Andrea Parri <parri.andrea@gmail.com>
-
-  Andrea
-
+Applied, thanks.
 
 > ---
->  Documentation/litmus-tests/README                                | 1 +
->  .../atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus       | 1 +
->  2 files changed, 2 insertions(+)
+>  arch/arm64/boot/dts/qcom/msm8994.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
-> index b79e640214b9..7f5c6c3ed6c3 100644
-> --- a/Documentation/litmus-tests/README
-> +++ b/Documentation/litmus-tests/README
-> @@ -19,6 +19,7 @@ Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> index 8af01ebe73f7..b3c01ebc5c67 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> @@ -154,6 +154,11 @@ memory {
+>  		reg = <0 0 0 0>;
+>  	};
 >  
->  Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
->      Test that atomic_set() cannot break the atomicity of atomic RMWs.
-> +    NOTE: Require herd7 7.56 or later which supports "(void)expr".
->  
->  
->  RCU (/rcu directory)
-> diff --git a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> index 49385314d911..ffd4d3e79c4a 100644
-> --- a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> +++ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> @@ -4,6 +4,7 @@ C Atomic-RMW-ops-are-atomic-WRT-atomic_set
->   * Result: Never
->   *
->   * Test that atomic_set() cannot break the atomicity of atomic RMWs.
-> + * NOTE: This requires herd7 7.56 or later which supports "(void)expr".
->   *)
->  
->  {
+> +	pmu {
+> +		compatible = "arm,cortex-a53-pmu";
+> +		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
+> +	};
+> +
+>  	reserved-memory {
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
 > -- 
-> 2.17.1
-> 
+> 2.27.0
 > 
