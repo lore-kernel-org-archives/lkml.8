@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA041C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 974332078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085482078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948508;
-	bh=8OD0oLEMtoz2b3kF+Ko69dJ60zm1O134MUg1/UpKczo=;
+	s=default; t=1592948515;
+	bh=PkK2UXjpSrkO2+WgnJFbtgzvy2KObtu6IBzMw+cE+uc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1uocziLuCsmyJiGmbwsWm52G6xy2oNu/uuV1SGXgFmLBCJoHPyICSFFOePj9NK/B
-	 f6hp3B5vo33e3gd43YEF6cuV2jZvFEX7XDVmTXsvlP8U4q32xXdKihRwyCqL6yaHJY
-	 rJgchYxdqvErRH8leeq6NFJjTRcyA/vPnAo5lKqs=
+	b=BFU1F/0jN+F495iFh5B6BkmborGU1ya45I9rrQdwpJDZ6x9nYyzkKvgzHi+H32xWZ
+	 SVQvVvybSnbPgzieYAzvlD17DvJ9sMswCnSmnUZxZPxkSXpszU4lV/zD3I15C8qzDG
+	 tggayYcRzXtfpaDwWYy4diVZ5/oAM99+GNHYbgtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393765AbgFWVlr (ORCPT
+        id S2393918AbgFWVlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45230 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:41:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387841AbgFWUFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:05:40 -0400
+        id S2388333AbgFWUFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8778206C3;
-        Tue, 23 Jun 2020 20:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6C22078A;
+        Tue, 23 Jun 2020 20:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942739;
-        bh=8OD0oLEMtoz2b3kF+Ko69dJ60zm1O134MUg1/UpKczo=;
+        s=default; t=1592942729;
+        bh=PkK2UXjpSrkO2+WgnJFbtgzvy2KObtu6IBzMw+cE+uc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CKi+RJT3vOJhDojwOb74o9Az+5W8vNlxNRzZqTTN73vpFsTj9veuDjVhoxolkCyzB
-         /3fkJbPTO6dddavAz5K4xUA26FmaXAQ53BthvdZs53ws4v1jBj2S4+9WE10EFQOu4B
-         CKGm2MLWszgtgXwPuzRMrJlrfmepd4qKuiYQrZGA=
+        b=X4W0q9nSJbz4VM4pQ8vyI4Skqc/HAUma/0/aLxIIzU+K2W62p8gNLRbBiEyvWTXSZ
+         qRI9GiDUVNRvpebtDjmuKipOkBbx2cCeVC8K+gCpCFo9HTYJnUm9F2ocQtCFqxfr05
+         XPTOwSPsnEnTg3EEEsIOeMw3KZd8lmAJJgro1x4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 117/477] staging: mt7621-pci: fix PCIe interrupt mapping
-Date:   Tue, 23 Jun 2020 21:51:54 +0200
-Message-Id: <20200623195413.133085025@linuxfoundation.org>
+Subject: [PATCH 5.7 113/477] ARM: dts: bcm283x: Use firmware PM driver for V3D
+Date:   Tue, 23 Jun 2020 21:51:50 +0200
+Message-Id: <20200623195412.937645869@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,185 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit fab6710e4c51f4eb622f95a08322ab5fdbe3f295 ]
+[ Upstream commit 3ac395a5b3f3b678663fbb58381fdae2b1b57588 ]
 
-MT7621 has three assigned interrupts for the pcie. This
-interrupts should properly being mapped taking into account
-which devices are finally connected in which bus according
-to link status. So the irq mappings should be as follows
-according to link status (three bits indicating which devices
-are link up):
+The register based driver turned out to be unstable, specially on RPi3a+
+but not limited to it. While a fix is being worked on, we roll back to
+using firmware based scheme.
 
-* For PCIe Bus 1 slot 0:
-  - status = 0x2 || status = 0x6 => IRQ = pcie1_irq (24).
-  - status = 0x4 => IRQ = pcie2_irq (25).
-  - default => IRQ = pcie0_irq (23).
-* For PCIe Bus 2 slot 0:
-  - status = 0x5 || status = 0x6 => IRQ = pcie2_irq (25).
-  - default => IRQ = pcie1_irq (24).
-* For PCIe Bus 2 slot 1:
-  - status = 0x5 || status = 0x6 => IRQ = pcie2_irq (25).
-  - default => IRQ = pcie1_irq (24).
-* For PCIe Bus 3 any slot:
-  - default => IRQ = pcie2_irq (25).
-
-Because of this, the function 'of_irq_parse_and_map_pci' cannot
-be used and we need to change device tree information from using
-the 'interrupt-map' and 'interrupt-map-mask' properties into an
-'interrupts' property to be able to get irq information from the
-ports using the 'platform_get_irq' and storing an 'irq-map' into
-the pcie driver data node to properly map correct irq using a
-new 'mt7621_map_irq' function where this map will be read and the
-correct irq returned.
-
-Fixes: 46d093124df4 ("staging: mt7621-pci: improve interrupt mapping")
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Link: https://lore.kernel.org/r/20200413055942.2714-1-sergio.paracuellos@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM driver instead of firmware")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Link: https://lore.kernel.org/r/20200303173217.3987-1-nsaenzjulienne@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/mt7621-dts/mt7621.dtsi  |  9 +++----
- drivers/staging/mt7621-pci/pci-mt7621.c | 36 +++++++++++++++++++++++--
- 2 files changed, 38 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/bcm2835-common.dtsi     |  1 -
+ arch/arm/boot/dts/bcm2835-rpi-common.dtsi | 12 ++++++++++++
+ arch/arm/boot/dts/bcm2835.dtsi            |  1 +
+ arch/arm/boot/dts/bcm2836.dtsi            |  1 +
+ arch/arm/boot/dts/bcm2837.dtsi            |  1 +
+ 5 files changed, 15 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/bcm2835-rpi-common.dtsi
 
-diff --git a/drivers/staging/mt7621-dts/mt7621.dtsi b/drivers/staging/mt7621-dts/mt7621.dtsi
-index 9e5cf68731bb0..82aa93634eda3 100644
---- a/drivers/staging/mt7621-dts/mt7621.dtsi
-+++ b/drivers/staging/mt7621-dts/mt7621.dtsi
-@@ -523,11 +523,10 @@
- 			0x01000000 0 0x00000000 0x1e160000 0 0x00010000 /* io space */
- 		>;
+diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
+index 2b1d9d4c0cdea..4119271c979d6 100644
+--- a/arch/arm/boot/dts/bcm2835-common.dtsi
++++ b/arch/arm/boot/dts/bcm2835-common.dtsi
+@@ -130,7 +130,6 @@
+ 			compatible = "brcm,bcm2835-v3d";
+ 			reg = <0x7ec00000 0x1000>;
+ 			interrupts = <1 10>;
+-			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
+ 		};
  
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0xF0000 0 0 1>;
--		interrupt-map = <0x10000 0 0 1 &gic GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH>,
--				<0x20000 0 0 1 &gic GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>,
--				<0x30000 0 0 1 &gic GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SHARED 4 IRQ_TYPE_LEVEL_HIGH
-+				GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH
-+				GIC_SHARED 25 IRQ_TYPE_LEVEL_HIGH>;
- 
- 		status = "disabled";
- 
-diff --git a/drivers/staging/mt7621-pci/pci-mt7621.c b/drivers/staging/mt7621-pci/pci-mt7621.c
-index b9d460a9c0419..36207243a71b0 100644
---- a/drivers/staging/mt7621-pci/pci-mt7621.c
-+++ b/drivers/staging/mt7621-pci/pci-mt7621.c
-@@ -97,6 +97,7 @@
-  * @pcie_rst: pointer to port reset control
-  * @gpio_rst: gpio reset
-  * @slot: port slot
-+ * @irq: GIC irq
-  * @enabled: indicates if port is enabled
-  */
- struct mt7621_pcie_port {
-@@ -107,6 +108,7 @@ struct mt7621_pcie_port {
- 	struct reset_control *pcie_rst;
- 	struct gpio_desc *gpio_rst;
- 	u32 slot;
-+	int irq;
- 	bool enabled;
- };
- 
-@@ -120,6 +122,7 @@ struct mt7621_pcie_port {
-  * @dev: Pointer to PCIe device
-  * @io_map_base: virtual memory base address for io
-  * @ports: pointer to PCIe port information
-+ * @irq_map: irq mapping info according pcie link status
-  * @resets_inverted: depends on chip revision
-  * reset lines are inverted.
-  */
-@@ -135,6 +138,7 @@ struct mt7621_pcie {
- 	} offset;
- 	unsigned long io_map_base;
- 	struct list_head ports;
-+	int irq_map[PCIE_P2P_MAX];
- 	bool resets_inverted;
- };
- 
-@@ -279,6 +283,16 @@ static void setup_cm_memory_region(struct mt7621_pcie *pcie)
- 	}
- }
- 
-+static int mt7621_map_irq(const struct pci_dev *pdev, u8 slot, u8 pin)
-+{
-+	struct mt7621_pcie *pcie = pdev->bus->sysdata;
-+	struct device *dev = pcie->dev;
-+	int irq = pcie->irq_map[slot];
+ 		vc4: gpu {
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-common.dtsi b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+new file mode 100644
+index 0000000000000..8a55b6cded592
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * This include file covers the common peripherals and configuration between
++ * bcm2835, bcm2836 and bcm2837 implementations that interact with RPi's
++ * firmware interface.
++ */
 +
-+	dev_info(dev, "bus=%d slot=%d irq=%d\n", pdev->bus->number, slot, irq);
-+	return irq;
-+}
++#include <dt-bindings/power/raspberrypi-power.h>
 +
- static int mt7621_pci_parse_request_of_pci_ranges(struct mt7621_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -330,6 +344,7 @@ static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
- {
- 	struct mt7621_pcie_port *port;
- 	struct device *dev = pcie->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
- 	struct device_node *pnode = dev->of_node;
- 	struct resource regs;
- 	char name[10];
-@@ -371,6 +386,12 @@ static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
- 	port->slot = slot;
- 	port->pcie = pcie;
++&v3d {
++	power-domains = <&power RPI_POWER_DOMAIN_V3D>;
++};
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 53bf4579cc224..0549686134ea6 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "bcm283x.dtsi"
+ #include "bcm2835-common.dtsi"
++#include "bcm2835-rpi-common.dtsi"
  
-+	port->irq = platform_get_irq(pdev, slot);
-+	if (port->irq < 0) {
-+		dev_err(dev, "Failed to get IRQ for PCIe%d\n", slot);
-+		return -ENXIO;
-+	}
-+
- 	INIT_LIST_HEAD(&port->list);
- 	list_add_tail(&port->list, &pcie->ports);
+ / {
+ 	compatible = "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
+index 82d6c4662ae49..b390006aef79a 100644
+--- a/arch/arm/boot/dts/bcm2836.dtsi
++++ b/arch/arm/boot/dts/bcm2836.dtsi
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "bcm283x.dtsi"
+ #include "bcm2835-common.dtsi"
++#include "bcm2835-rpi-common.dtsi"
  
-@@ -585,13 +606,15 @@ static int mt7621_pcie_init_virtual_bridges(struct mt7621_pcie *pcie)
- {
- 	u32 pcie_link_status = 0;
- 	u32 n;
--	int i;
-+	int i = 0;
- 	u32 p2p_br_devnum[PCIE_P2P_MAX];
-+	int irqs[PCIE_P2P_MAX];
- 	struct mt7621_pcie_port *port;
+ / {
+ 	compatible = "brcm,bcm2836";
+diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+index 9e95fee78e192..0199ec98cd616 100644
+--- a/arch/arm/boot/dts/bcm2837.dtsi
++++ b/arch/arm/boot/dts/bcm2837.dtsi
+@@ -1,5 +1,6 @@
+ #include "bcm283x.dtsi"
+ #include "bcm2835-common.dtsi"
++#include "bcm2835-rpi-common.dtsi"
  
- 	list_for_each_entry(port, &pcie->ports, list) {
- 		u32 slot = port->slot;
- 
-+		irqs[i++] = port->irq;
- 		if (port->enabled)
- 			pcie_link_status |= BIT(slot);
- 	}
-@@ -614,6 +637,15 @@ static int mt7621_pcie_init_virtual_bridges(struct mt7621_pcie *pcie)
- 		 (p2p_br_devnum[1] << PCIE_P2P_BR_DEVNUM1_SHIFT) |
- 		 (p2p_br_devnum[2] << PCIE_P2P_BR_DEVNUM2_SHIFT));
- 
-+	/* Assign IRQs */
-+	n = 0;
-+	for (i = 0; i < PCIE_P2P_MAX; i++)
-+		if (pcie_link_status & BIT(i))
-+			pcie->irq_map[n++] = irqs[i];
-+
-+	for (i = n; i < PCIE_P2P_MAX; i++)
-+		pcie->irq_map[i] = -1;
-+
- 	return 0;
- }
- 
-@@ -638,7 +670,7 @@ static int mt7621_pcie_register_host(struct pci_host_bridge *host,
- 	host->busnr = pcie->busn.start;
- 	host->dev.parent = pcie->dev;
- 	host->ops = &mt7621_pci_ops;
--	host->map_irq = of_irq_parse_and_map_pci;
-+	host->map_irq = mt7621_map_irq;
- 	host->swizzle_irq = pci_common_swizzle;
- 	host->sysdata = pcie;
- 
+ / {
+ 	compatible = "brcm,bcm2837";
 -- 
 2.25.1
 
