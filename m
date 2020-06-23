@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2051AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D61EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF13B20DD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB39208C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942739;
-	bh=joL/9IAFY40Wqexpgd8IxuHmzXpJOJQ1HdE6Mho+sGg=;
+	s=default; t=1592942744;
+	bh=SLM5MIevUxfvh2jk1+ocMbjPsbao/AC+XRwjb+YwPjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LbZQUiyLc7wzOKryf+w8FR/F4YHB094aljR/y2dN0WxLzZSMcxAKWJ++fVYUkH+Wn
-	 2DwZZZ4sPx+TWdAIo5Il1735tzCoQ8gyNo0qLxZWALL50Au/F7TGGtAvytHopDdyfr
-	 nagX1eVh2hYQCn8nXhjfxX9uLxeUuDGLJLnJwZUM=
+	b=ZL88FXmyGwZ8n1BIx13jd8y3rvx71wpxwJhcaYN0PtL/2vr4ZM9z4KYCvyluk+DwA
+	 4TYrJC/xvCvMcErw626fClLSUYNqUtbt6IJQTokmNfOuo+fnVZSruo7m8vEWBsOe4b
+	 5VC5CaQgOXLZLkU7rGuGDc50Ft1SVtysexLKbQEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbgFWUFg (ORCPT
+        id S2388373AbgFWUFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387753AbgFWUFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:05:32 -0400
+        id S2387753AbgFWUFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:05:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AB9E20DD4;
-        Tue, 23 Jun 2020 20:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 585372078A;
+        Tue, 23 Jun 2020 20:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942731;
-        bh=joL/9IAFY40Wqexpgd8IxuHmzXpJOJQ1HdE6Mho+sGg=;
+        s=default; t=1592942736;
+        bh=SLM5MIevUxfvh2jk1+ocMbjPsbao/AC+XRwjb+YwPjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNuv6ogFZ7kHFNASUOWQ3FZJIQJWPEN+dPYmer+fqGUEVlkny+ItLW3Fa5geOHkUW
-         DdpAvl0UTvvAdzvUU91VSJ/Ngknl3HJjglMDHhA3RspzP9ql+AV9SlBAJRBBYmJlF2
-         XbTSU+Jg4h5anNkSfZYt5glfTOOKIKHXkRLn1q40=
+        b=j3Mta9M/VtDd9LEOQyYNcV0AxTxVDjDN6kzGZ2N9or9cW/cHSMv3RvLcIbzkomNBG
+         MLeoZhOrLBh3hJd1t1ulwbYi1D8V29+qcVLzXb6neETYFOt7rFmdKebpu82vBPE8/Y
+         dBdltNG6qqmupiuQNPUuPHQIEqW4pDE1euGkHDRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        stable@vger.kernel.org, Aiman Najjar <aiman.najjar@hurranet.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 114/477] arm64: dts: realtek: rtd129x: Fix GIC CPU masks for RTD1293
-Date:   Tue, 23 Jun 2020 21:51:51 +0200
-Message-Id: <20200623195412.984811431@linuxfoundation.org>
+Subject: [PATCH 5.7 116/477] staging: rtl8712: fix multiline derefernce warnings
+Date:   Tue, 23 Jun 2020 21:51:53 +0200
+Message-Id: <20200623195413.083518969@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,97 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Färber <afaerber@suse.de>
+From: Aiman Najjar <aiman.najjar@hurranet.com>
 
-[ Upstream commit 31888c8be1486daf2c34ba6c58129635e49d564a ]
+[ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
 
-Convert from GIC_CPU_MASK_RAW() to GIC_CPU_MASK_SIMPLE().
+This patch fixes remaining checkpatch warnings
+in rtl871x_xmit.c:
 
-In case of RTD1293 adjust the arch timer and VGIC interrupts'
-CPU masks to its smaller number of CPUs.
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
+636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
++					      (u8)psecuritypriv->
++					      PrivacyKeyIndex);
 
-Fixes: cf976f660ee8 ("arm64: dts: realtek: Add RTD1293 and Synology DS418j")
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
+
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
+
+Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/realtek/rtd1293.dtsi | 12 ++++++++----
- arch/arm64/boot/dts/realtek/rtd1295.dtsi |  8 ++++----
- arch/arm64/boot/dts/realtek/rtd1296.dtsi |  8 ++++----
- 3 files changed, 16 insertions(+), 12 deletions(-)
+ drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd1293.dtsi b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
-index bd4e22723f7b0..2d92b56ac94d6 100644
---- a/arch/arm64/boot/dts/realtek/rtd1293.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
-@@ -36,16 +36,20 @@
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 14
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
- 
- &arm_pmu {
- 	interrupt-affinity = <&cpu0>, <&cpu1>;
- };
-+
-+&gic {
-+	interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-index 93f0e1d977212..34f6cc6f16fe7 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-@@ -61,13 +61,13 @@
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 14
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/realtek/rtd1296.dtsi b/arch/arm64/boot/dts/realtek/rtd1296.dtsi
-index 0f9e59cac086e..fb864a139c97e 100644
---- a/arch/arm64/boot/dts/realtek/rtd1296.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1296.dtsi
-@@ -50,13 +50,13 @@
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 14
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
- 
+diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
+index f0b85338b567c..57f4fd22b0ff5 100644
+--- a/drivers/staging/rtl8712/rtl871x_xmit.c
++++ b/drivers/staging/rtl8712/rtl871x_xmit.c
+@@ -589,7 +589,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 	addr_t addr;
+ 	u8 *pframe, *mem_start, *ptxdesc;
+ 	struct sta_info		*psta;
+-	struct security_priv	*psecuritypriv = &padapter->securitypriv;
++	struct security_priv	*psecpriv = &padapter->securitypriv;
+ 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
+ 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
+ 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
+@@ -632,15 +632,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _WEP40_:
+ 				case _WEP104_:
+ 					WEP_IV(pattrib->iv, psta->txpn,
+-					       (u8)psecuritypriv->
+-					       PrivacyKeyIndex);
++					       (u8)psecpriv->PrivacyKeyIndex);
+ 					break;
+ 				case _TKIP_:
+ 					if (bmcst)
+ 						TKIP_IV(pattrib->iv,
+ 						    psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						TKIP_IV(pattrib->iv, psta->txpn,
+ 							0);
+@@ -648,8 +646,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _AES_:
+ 					if (bmcst)
+ 						AES_IV(pattrib->iv, psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						AES_IV(pattrib->iv, psta->txpn,
+ 						       0);
 -- 
 2.25.1
 
