@@ -2,229 +2,198 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4118BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26861C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0662920724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947309;
-	bh=dZ7VARjuqmS34PNeGWoBrIfqC9yCV3egqsQoeWvlIAI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eyjuGVvcYPNTSn1K0EyOOTj8ycmht8B0B7SmCT/HDIJ5EDNDmlSOFS2GmiU+lFNnz
-	 /rpsckoOr+FM7zYxrk+2njd/7uiRgAzYgGdf0pXsHHOZoDmS8vuQovH6N6M8E+OLWw
-	 3L22JFa/o8l5GzPARoub14lOxF5CDcoQUUrt4sek=
+	by mail.kernel.org (Postfix) with ESMTP id ED0AB20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDyAe3Km"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393438AbgFWVVr (ORCPT
+        id S2404250AbgFWVVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 23 Jun 2020 17:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390204AbgFWVVr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 17:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390204AbgFWUWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:22:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 236622064B;
-        Tue, 23 Jun 2020 20:22:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943761;
-        bh=dZ7VARjuqmS34PNeGWoBrIfqC9yCV3egqsQoeWvlIAI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufz15JrsG3sv8YQrrVnLVKJw/3B+91+lGLhs/2JB3uowobp1j96h8f3usNiLe46xv
-         DFJg+I7T9TtQQLqE6JXmkzBMAe3MQozisySzyAyzOVoKtnmUS/wVFrJzG3mpSJ2b1l
-         koX3CZp7qmOYLAP/QAb+oqiguBvHL7TG83/a2DzI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 041/314] arm64: dts: fvp: Fix GIC child nodes
-Date:   Tue, 23 Jun 2020 21:53:56 +0200
-Message-Id: <20200623195340.768711619@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
-References: <20200623195338.770401005@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3BBC061573;
+        Tue, 23 Jun 2020 14:21:47 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id o38so42009qtf.6;
+        Tue, 23 Jun 2020 14:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ui8fQB3APJYaznUih7pNhgAm6LkfIND4txjh+hzkfLk=;
+        b=bDyAe3KmBqYUtOn2jpTaEUd551O0xWhnVDI2ujVJnTMzDhUkQreqigMEvR8vO50OaO
+         grFw6Kd/+8ECCnBPmdu6gHFtfta3+HsZ8klmci+sYF0qOBuesKpTEIB18DAtCOa7V5eL
+         C+H5t/lMImzwt3KHPKs7h4gUvsyPo1eYePHcp7xKB6vz5qadHTSl6wxL4VINcp/Uz/s8
+         dRXIaYLEM9hFnOXABJze5j99JEXvIZDMbuHus7IZhQgz7NpT34QaLpWyFFzeNrzasGK4
+         gW2cOmTY37WlE2ufcyOGG6+x/EdPQpYMinZ0VX+qmkjzp8/lBxiAQXIXfvlH0BfPNqkV
+         PrGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ui8fQB3APJYaznUih7pNhgAm6LkfIND4txjh+hzkfLk=;
+        b=K4VgBiY2HJ6u/FmNNektSev+4m0me83Mv2u4ecfAFb1NrnlseulG50wO2nl8HR1Bvw
+         JvEswEZ3MAofbQodRgZ8jNnca4rjlpkYIXqTPqJHl97Lopp5b3oE+xFov28UspCZKpZG
+         FFnmVYb/EtXUgXT+c6k+7CEBqZnt9t+XM9JF300dVatweFN6rMKeFmadmK++hmp0VhPX
+         jBBm7D5DXuIRzP+R2iQrud9zJCFrR4h5Q+5Y4fD0rZ1F6HPZi5OoVMK6uZqkMw4GnF+y
+         qwXzrT3DYNbcdgXv9/zTHAplxCnv25k5Uw0MFbv6vzpncoA+BB0Gfo6GGB4DSFd2Lqur
+         wTUw==
+X-Gm-Message-State: AOAM530c0V2fIiatlwq3aE2Mb4EPZLU5/lmtWyaliGg1CVAnP5mfTuk7
+        /3+vX9mq8+Qmye5jFuiMTSM=
+X-Google-Smtp-Source: ABdhPJyB8imk14WxcQe8ntL2dDRXMkBus0kLhyBHS8AjEL83uqP0tjqgyJfPcKN8hHt4hPwCa2x2xQ==
+X-Received: by 2002:aed:2b04:: with SMTP id p4mr11265085qtd.158.1592947306614;
+        Tue, 23 Jun 2020 14:21:46 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f016:65e9:974:aec1:b314:98ea])
+        by smtp.gmail.com with ESMTPSA id w45sm1835327qtj.51.2020.06.23.14.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 14:21:45 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 5487BC1B81; Tue, 23 Jun 2020 18:21:43 -0300 (-03)
+Date:   Tue, 23 Jun 2020 18:21:43 -0300
+From:   'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>
+To:     Corey Minyard <minyard@acm.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Michael Tuexen <Michael.Tuexen@lurchi.franken.de>,
+        Xin Long <lucien.xin@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Strange problem with SCTP+IPv6
+Message-ID: <20200623212143.GR2491@localhost.localdomain>
+References: <20200621155604.GA23135@minyard.net>
+ <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
+ <20200622165759.GA3235@minyard.net>
+ <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+ <20200622183253.GQ2491@localhost.localdomain>
+ <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
+ <20200623161756.GE3235@minyard.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623161756.GE3235@minyard.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+On Tue, Jun 23, 2020 at 11:17:56AM -0500, Corey Minyard wrote:
+> On Tue, Jun 23, 2020 at 01:17:28PM +0000, David Laight wrote:
+> > From: Marcelo Ricardo Leitner
+> > > Sent: 22 June 2020 19:33
+> > > On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
+> > > > > On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
+> > > > >
+> > > > > On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
+> > > > >> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
+> > > > >>>
+> > > > >>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
+> > > > >>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
+> > > > >>> then I make a connection to it using ::1, the connection will drop after
+> > > > >>> 2.5 seconds with an ECONNRESET error.
+> > > > >>>
+> > > > >>> It only happens on SCTP, it doesn't have the issue if you connect to a
+> > > > >>> full IPv6 address instead of ::1, and it doesn't happen if you don't
+> > > > >>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
+> > > > >>> I tried on an ARM system and x86_64.
+> > > > >>>
+> > > > >>> I haven't dug into the kernel to see if I could find anything yet, but I
+> > > > >>> thought I would go ahead and report it.  I am attaching a reproducer.
+> > > > >>> Basically, compile the following code:
+> > > > >> The code only set IPV6_V6ONLY on server side, so the client side will
+> > > > >> still bind all the local ipv4 addresses (as you didn't call bind() to
+> > > > >> bind any specific addresses ). Then after the connection is created,
+> > > > >> the client will send HB on the v4 paths to the server. The server
+> > > > >> will abort the connection, as it can't support v4.
+> > > > >>
+> > > > >> So you can work around it by either:
+> > > > >>
+> > > > >>  - set IPV6_V6ONLY on client side.
+> > > > >>
+> > > > >> or
+> > > > >>
+> > > > >>  - bind to the specific v6 addresses on the client side.
+> > > > >>
+> > > > >> I don't see RFC said something about this.
+> > > > >> So it may not be a good idea to change the current behaviour
+> > > > >> to not establish the connection in this case, which may cause regression.
+> > > > >
+> > > > > Ok, I understand this.  It's a little strange, but I see why it works
+> > > > > this way.
+> > > > I don't. I would expect it to work as I described in my email.
+> > > > Could someone explain me how and why it is behaving different from
+> > > > my expectation?
+> > > 
+> > > It looks like a bug to me. Testing with this test app here, I can see
+> > > the INIT_ACK being sent with a bunch of ipv4 addresses in it and
+> > > that's unexpected for a v6only socket. As is, it's the server saying
+> > > "I'm available at these other addresses too, but not."
+> > 
+> > Does it even make sense to mix IPv4 and IPv6 addresses on the same
+> > connection?
+> > I don't remember ever seeing both types of address in a message,
+> > but may not have looked.
+> 
+> That's an interesting question.  Do the RFCs say anything?  I would
+> assume it was ok unless ipv6only was set.
+> 
+> > 
+> > I also wonder whether the connection should be dropped for an error
+> > response on a path that has never been validated.
+> 
+> That actually bothered me a bit more.  Shouldn't it stay up if any path
+> is up?  That's kind of the whole point of multihoming.
 
-[ Upstream commit 78631aecc52c4b2adcf611769df2ff9c67ac16d0 ]
+Michael explained it on the other email. What he described is what I
+observed in my tests.
 
-The GIC DT nodes for the fastmodels were not fully compliant with the
-DT binding, which has certain expectations about child nodes and their
-size and address cells values.
+> 
+> > 
+> > OTOH the whole 'multi-homing' part of SCTP sucks.
+> 
+> I don't think so.
+> 
+> > The IP addresses a server needs to bind to depend on where the
+> > incoming connection will come from.
+> > A local connection may be able to use a 192.168.x.x address
+> > but a remote connection must not - as it may be defined locally
+> > at the remote system.
+> > But both connections can come into the public (routable) address.
+> > We have to tell customers to explicitly configure the local IP
+> > addresses - which means the application has to know what they are.
+> > Fortunately these apps are pretty static - usually M3UA.
+> 
+> Umm, no,  If you have a private address, it better be behind a firewall,
+> and the firewall should handle rewriting the packet to fix the addresses.
+> 
+> It doesn't appear that Linux netfilter does this.  There is a TODO in
+> the code for this.  But that's how it *should* work.
 
-Use smaller #address-cells and #size-cells values, as the binding
-requests, and adjust the reg properties accordingly.
-This requires adjusting the interrupt nexus nodes as well, as one
-field of the interrupt-map property depends on the GIC's address-size.
+Right, we don't support SCTP aware NAT [1].
 
-Since the .dts files share interrupt nexus nodes across different
-interrupt controllers (GICv2 vs. GICv3), we need to use the only
-commonly allowed #address-size value of <1> for both.
+1.https://tools.ietf.org/html/draft-stewart-behave-sctpnat-04
 
-Link: https://lore.kernel.org/r/20200513103016.130417-11-andre.przywara@arm.com
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../boot/dts/arm/foundation-v8-gicv2.dtsi     |  2 +-
- .../boot/dts/arm/foundation-v8-gicv3.dtsi     |  8 +-
- arch/arm64/boot/dts/arm/foundation-v8.dtsi    | 86 +++++++++----------
- 3 files changed, 48 insertions(+), 48 deletions(-)
+  Marcelo
 
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
-index 15fe81738e94d..dfb23dfc0b0fb 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
-@@ -8,7 +8,7 @@
- 	gic: interrupt-controller@2c001000 {
- 		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
- 		#interrupt-cells = <3>;
--		#address-cells = <2>;
-+		#address-cells = <1>;
- 		interrupt-controller;
- 		reg = <0x0 0x2c001000 0 0x1000>,
- 		      <0x0 0x2c002000 0 0x2000>,
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi b/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi
-index f2c75c756039c..906f51935b362 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi
-@@ -8,9 +8,9 @@
- 	gic: interrupt-controller@2f000000 {
- 		compatible = "arm,gic-v3";
- 		#interrupt-cells = <3>;
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x2f000000 0x100000>;
- 		interrupt-controller;
- 		reg =	<0x0 0x2f000000 0x0 0x10000>,
- 			<0x0 0x2f100000 0x0 0x200000>,
-@@ -22,7 +22,7 @@
- 		its: its@2f020000 {
- 			compatible = "arm,gic-v3-its";
- 			msi-controller;
--			reg = <0x0 0x2f020000 0x0 0x20000>;
-+			reg = <0x20000 0x20000>;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-index 3f78373f708a2..2a6aa43241b3b 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-@@ -107,49 +107,49 @@
- 
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 63>;
--		interrupt-map = <0 0  0 &gic 0 0 GIC_SPI  0 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  1 &gic 0 0 GIC_SPI  1 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  2 &gic 0 0 GIC_SPI  2 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  3 &gic 0 0 GIC_SPI  3 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  4 &gic 0 0 GIC_SPI  4 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  5 &gic 0 0 GIC_SPI  5 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  6 &gic 0 0 GIC_SPI  6 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  7 &gic 0 0 GIC_SPI  7 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  8 &gic 0 0 GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  9 &gic 0 0 GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 10 &gic 0 0 GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 11 &gic 0 0 GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 12 &gic 0 0 GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 13 &gic 0 0 GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 14 &gic 0 0 GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 15 &gic 0 0 GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 16 &gic 0 0 GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 17 &gic 0 0 GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 18 &gic 0 0 GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 19 &gic 0 0 GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 20 &gic 0 0 GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 21 &gic 0 0 GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 22 &gic 0 0 GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 23 &gic 0 0 GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 24 &gic 0 0 GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 25 &gic 0 0 GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 26 &gic 0 0 GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 27 &gic 0 0 GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 28 &gic 0 0 GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 29 &gic 0 0 GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 30 &gic 0 0 GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 31 &gic 0 0 GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 32 &gic 0 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 33 &gic 0 0 GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 34 &gic 0 0 GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 35 &gic 0 0 GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 36 &gic 0 0 GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 37 &gic 0 0 GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 38 &gic 0 0 GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 39 &gic 0 0 GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 40 &gic 0 0 GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 41 &gic 0 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 42 &gic 0 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map = <0 0  0 &gic 0 GIC_SPI  0 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  1 &gic 0 GIC_SPI  1 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  2 &gic 0 GIC_SPI  2 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  3 &gic 0 GIC_SPI  3 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  4 &gic 0 GIC_SPI  4 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  5 &gic 0 GIC_SPI  5 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  6 &gic 0 GIC_SPI  6 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  7 &gic 0 GIC_SPI  7 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  8 &gic 0 GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  9 &gic 0 GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 10 &gic 0 GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 11 &gic 0 GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 12 &gic 0 GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 13 &gic 0 GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 14 &gic 0 GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 15 &gic 0 GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 16 &gic 0 GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 17 &gic 0 GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 18 &gic 0 GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 19 &gic 0 GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 20 &gic 0 GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 21 &gic 0 GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 22 &gic 0 GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 23 &gic 0 GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 24 &gic 0 GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 25 &gic 0 GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 26 &gic 0 GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 27 &gic 0 GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 28 &gic 0 GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 29 &gic 0 GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 30 &gic 0 GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 31 &gic 0 GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 32 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 33 &gic 0 GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 34 &gic 0 GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 35 &gic 0 GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 36 &gic 0 GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 37 &gic 0 GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 38 &gic 0 GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 39 &gic 0 GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 40 &gic 0 GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 41 &gic 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 
- 		ethernet@2,02000000 {
- 			compatible = "smsc,lan91c111";
--- 
-2.25.1
-
-
-
+> 
+> -corey
+> 
+> > 
+> > 	David
+> > 
+> > -
+> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> > Registration No: 1397386 (Wales)
+> > 
