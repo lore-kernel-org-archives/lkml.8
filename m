@@ -2,75 +2,60 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1262520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frQCVrMN"
+	by mail.kernel.org (Postfix) with ESMTP id E8A8920724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592947332;
+	bh=Xmddb0PGgjMb8z3kGUQmrF98teyc8qCD/2QReoPrssc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rh3YRC/n8VB5XjpodFa467IO6sldoZLVTDATkdgOQ2XlkumNk3rpBSE3FGiHjKKF8
+	 xq/x62jVmDhVRwKLDQbO2aFMXBqufz/RhYQvSKO+Q/Rc0Un15Lx/Pe6dw0xD5sPhK1
+	 yceR9hyVX0OGpKBkC4gQExjQlATSFqgzpifzTUhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390560AbgFWVV5 (ORCPT
+        id S2388164AbgFWVWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:21:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404249AbgFWVVv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 17:21:51 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BB1C061573;
-        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l188so7235107qkf.10;
-        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JyKLP13MA3we/vWXo7vrVA6xMNeRPMkMoZjirv2W5f8=;
-        b=frQCVrMNN/+WhRNV+xlYiJ59hqptoPUZlFyQEi5Nxs1ZDTbZCHFzkP5Fy+KHZmFx42
-         4IJltfqqSa4cluvGdrB4QfYoiCddWuCbVEMiIL6FvU/Mjg/zWLLtqFYCq+HGrgRVQigm
-         e1zJzySEmJ7pSb7vKwaNOzU+CG88I+Vm5N2F6Vmg60ITcOh6RaK2G52nuUAqhRk7QpWT
-         jKGMiyN6PpnOOGPsPIukYvhMFkaarZQ4yeSa1wdJ1yDxyAA1MLvXSOCLVDnpBJN9yWq2
-         UzM3uNt2YbG7Sa4i5E79iwTPccj9Z6xjuyIg1TF4ioqpdc5bEslAT2EgP+LR4fpOBfKS
-         4KTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JyKLP13MA3we/vWXo7vrVA6xMNeRPMkMoZjirv2W5f8=;
-        b=szwbNOW340Hfr+2PwizwZwucn4EhqXN3WvNetSHsWvd0EmQRJQMJwPZ7PfB7L6K/fc
-         leaUW30hOyN/2hhKzTADZxtYIGim19JQv83Q8PAr1an7n2HQzzPC3XuM1+pUjGjjYsAy
-         FJuH8g92nrM1FIEUnQ0Kh5KAFb6zim+A5+K25gziMflTrrSl/dxesGBYAgoBeY+pz3De
-         L7LeEXZMIktE70JvEqKAZZW7sCTKiEtlRxGRyMfaUkZed+p9qx74L4OQOjJpQnFvYVFU
-         J2oDZtxNJoKP267s7RQ8wfMeoUuqpxfWh+tbz4A5IneSwHX1TwTSVGHrCgd269UAVN4F
-         uoEQ==
-X-Gm-Message-State: AOAM5306NgY4u3ftBcAGZ10cYHR5FQTPM3PiHqdHMm/cJfryz5QiwJ17
-        bCBZ4SmyKBzJm9a47rWhQEaYg2rMf7pjqg==
-X-Google-Smtp-Source: ABdhPJxPuHCjth4EvPORtZ3tcp/As6OSbqLCTv4lhJm6iUiMx7p+8K7lcbf/Vp1AKm6A+CrjKnFUXQ==
-X-Received: by 2002:a37:6fc6:: with SMTP id k189mr21800161qkc.289.1592947310034;
-        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
-Received: from DESKTOP-J6NUVB7.localdomain ([179.232.194.217])
-        by smtp.gmail.com with ESMTPSA id b4sm1459665qka.133.2020.06.23.14.21.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 14:21:49 -0700 (PDT)
-From:   =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] MIPS: ingenic: gcw0: Fix HP detection GPIO.
-Date:   Tue, 23 Jun 2020 18:19:45 -0300
-Message-Id: <20200623211945.823-1-jhlspies@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 23 Jun 2020 17:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390166AbgFWUWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:22:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2052064B;
+        Tue, 23 Jun 2020 20:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592943744;
+        bh=Xmddb0PGgjMb8z3kGUQmrF98teyc8qCD/2QReoPrssc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Wsmh7nVW0yFCGSV7/u4JEhl4G63LxUV9v5CrWdme5RKQYnxKlphFo+EmJAg2QByJy
+         LmqcbwdJ3QkAOxXnlMZBlQ6WL7/Mzc33ZmkT7QJeN6945TnibkhFzukJNPvgF4RsZe
+         9qAxxeo7b7ztKmKqSmExea0ktuwnopGdvhU8LQW4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Georgi Djakov <georgi.djakov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 008/314] clk: qcom: msm8916: Fix the address location of pll->config_reg
+Date:   Tue, 23 Jun 2020 21:53:23 +0200
+Message-Id: <20200623195339.191328443@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
+References: <20200623195338.770401005@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -79,28 +64,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously marked as active high, but is in reality active low.
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-Cc: stable@vger.kernel.org
-Fixes: b1bfdb660516 ("MIPS: ingenic: DTS: Update GCW0 support")
-Signed-off-by: João H. Spies <jhlspies@gmail.com>
+[ Upstream commit f47ab3c2f5338828a67e89d5f688d2cef9605245 ]
+
+During the process of debugging a processor derived from the msm8916 which
+we found the new processor was not starting one of its PLLs.
+
+After tracing the addresses and writes that downstream was doing and
+comparing to upstream it became obvious that we were writing to a different
+register location than downstream when trying to configure the PLL.
+
+This error is also present in upstream msm8916.
+
+As an example clk-pll.c::clk_pll_recalc_rate wants to write to
+pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
+defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
+example
+
+lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
+
+0x01823010 GCC_BIMC_PLL_USER_CTL
+0x01823014 GCC_BIMC_PLL_CONFIG_CTL
+
+This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
+
+This error is likely not apparent since the bootloader will already have
+initialized these PLLs.
+
+This patch corrects the location of config_reg from PLL_CONFIG_CTL to
+PLL_USER_CTL for all relevant PLLs on msm8916.
+
+Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
+
+Cc: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Link: https://lkml.kernel.org/r/20200329124116.4185447-1-bryan.odonoghue@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/gcw0.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
-index 8d22828787d8..bc72304a2440 100644
---- a/arch/mips/boot/dts/ingenic/gcw0.dts
-+++ b/arch/mips/boot/dts/ingenic/gcw0.dts
-@@ -92,7 +92,7 @@
- 			"MIC1N", "Built-in Mic";
- 		simple-audio-card,pin-switches = "Speaker", "Headphones";
- 
--		simple-audio-card,hp-det-gpio = <&gpf 21 GPIO_ACTIVE_HIGH>;
-+		simple-audio-card,hp-det-gpio = <&gpf 21 GPIO_ACTIVE_LOW>;
- 		simple-audio-card,aux-devs = <&speaker_amp>, <&headphones_amp>;
- 
- 		simple-audio-card,bitclock-master = <&dai_codec>;
+diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
+index 4e329a7baf2ba..17e4a5a2a9fde 100644
+--- a/drivers/clk/qcom/gcc-msm8916.c
++++ b/drivers/clk/qcom/gcc-msm8916.c
+@@ -260,7 +260,7 @@ static struct clk_pll gpll0 = {
+ 	.l_reg = 0x21004,
+ 	.m_reg = 0x21008,
+ 	.n_reg = 0x2100c,
+-	.config_reg = 0x21014,
++	.config_reg = 0x21010,
+ 	.mode_reg = 0x21000,
+ 	.status_reg = 0x2101c,
+ 	.status_bit = 17,
+@@ -287,7 +287,7 @@ static struct clk_pll gpll1 = {
+ 	.l_reg = 0x20004,
+ 	.m_reg = 0x20008,
+ 	.n_reg = 0x2000c,
+-	.config_reg = 0x20014,
++	.config_reg = 0x20010,
+ 	.mode_reg = 0x20000,
+ 	.status_reg = 0x2001c,
+ 	.status_bit = 17,
+@@ -314,7 +314,7 @@ static struct clk_pll gpll2 = {
+ 	.l_reg = 0x4a004,
+ 	.m_reg = 0x4a008,
+ 	.n_reg = 0x4a00c,
+-	.config_reg = 0x4a014,
++	.config_reg = 0x4a010,
+ 	.mode_reg = 0x4a000,
+ 	.status_reg = 0x4a01c,
+ 	.status_bit = 17,
+@@ -341,7 +341,7 @@ static struct clk_pll bimc_pll = {
+ 	.l_reg = 0x23004,
+ 	.m_reg = 0x23008,
+ 	.n_reg = 0x2300c,
+-	.config_reg = 0x23014,
++	.config_reg = 0x23010,
+ 	.mode_reg = 0x23000,
+ 	.status_reg = 0x2301c,
+ 	.status_bit = 17,
 -- 
-2.17.1
+2.25.1
+
+
 
