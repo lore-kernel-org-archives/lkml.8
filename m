@@ -2,193 +2,152 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29920C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBD1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1078D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C0120780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbgFWP4s (ORCPT
+        id S1733028AbgFWP5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:56:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26908 "EHLO
+        Tue, 23 Jun 2020 11:57:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52904 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732979AbgFWP4r (ORCPT
+        by vger.kernel.org with ESMTP id S1731616AbgFWP5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:56:47 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NFWhCA069355;
-        Tue, 23 Jun 2020 11:56:38 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uk64u3kb-1
+        Tue, 23 Jun 2020 11:57:49 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NFX7DJ076972;
+        Tue, 23 Jun 2020 11:57:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uk60uwnr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 11:56:38 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NFfLqT025582;
-        Tue, 23 Jun 2020 15:56:35 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 31uk33038w-1
+        Tue, 23 Jun 2020 11:57:41 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05NFXOUG078594;
+        Tue, 23 Jun 2020 11:57:40 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uk60uwnb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 15:56:35 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NFuX1J62783658
+        Tue, 23 Jun 2020 11:57:40 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NFdlNl004195;
+        Tue, 23 Jun 2020 15:57:39 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02dal.us.ibm.com with ESMTP id 31uk480ve1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 15:57:39 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NFvcUh52887958
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 15:56:33 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1AE474C050;
-        Tue, 23 Jun 2020 15:56:33 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DCBE4C04E;
-        Tue, 23 Jun 2020 15:56:30 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.145.25.83])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 23 Jun 2020 15:56:29 +0000 (GMT)
-Date:   Tue, 23 Jun 2020 18:56:27 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 5/9] docs: move nommu-mmap.txt to admin-guide and
- rename to ReST
-Message-ID: <20200623155224.GD1774541@linux.ibm.com>
-References: <cover.1592905407.git.mchehab+huawei@kernel.org>
- <a8f4a5a8ba117bc15785901423f46f5725fd68b0.1592905407.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8f4a5a8ba117bc15785901423f46f5725fd68b0.1592905407.git.mchehab+huawei@kernel.org>
+        Tue, 23 Jun 2020 15:57:38 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0229978066;
+        Tue, 23 Jun 2020 15:57:38 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB7187805C;
+        Tue, 23 Jun 2020 15:57:36 +0000 (GMT)
+Received: from DESKTOP-AV6EVPG.localdomain (unknown [9.160.30.158])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Jun 2020 15:57:36 +0000 (GMT)
+From:   Maurizio Drocco <maurizio.drocco@ibm.com>
+To:     zohar@linux.ibm.com
+Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
+        jejb@linux.ibm.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, maurizio.drocco@ibm.com,
+        mdrocco@linux.vnet.ibm.com, roberto.sassu@huawei.com,
+        serge@hallyn.com
+Subject: [PATCH v4] ima: extend boot_aggregate with kernel measurements
+Date:   Tue, 23 Jun 2020 11:57:32 -0400
+Message-Id: <20200623155732.105-1-maurizio.drocco@ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <1592920990.5437.15.camel@linux.ibm.com>
+References: <1592920990.5437.15.camel@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-23_07:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 clxscore=1011
- mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 priorityscore=1501
- malwarescore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006120000
- definitions=main-2006230118
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 clxscore=1015 suspectscore=1
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006120000 definitions=main-2006230118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:52:58AM +0200, Mauro Carvalho Chehab wrote:
-> The nommu-mmap.txt file provides description of user visible
-> behaviuour. So, move it to the admin-guide.
-> 
-> As it is already at the ReST, also rename it.
-> 
-> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-> Suggested-by: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Registers 8-9 are used to store measurements of the kernel and its
+command line (e.g., grub2 bootloader with tpm module enabled). IMA
+should include them in the boot aggregate. Registers 8-9 should be
+only included in non-SHA1 digests to avoid ambiguity.
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+---
+Changelog:
+v4:
+- Reworded comments: PCRs 8 & 9 are always included in non-sha1 digests
+v3:
+- Limit including PCRs 8 & 9 to non-sha1 hashes
+v2:
+- Minor comment improvements
+v1:
+- Include non zero PCRs 8 & 9 in the boot_aggregate
 
-> ---
->  Documentation/admin-guide/mm/index.rst                          | 1 +
->  Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} | 0
->  Documentation/admin-guide/sysctl/vm.rst                         | 2 +-
->  Documentation/gpu/drm-mm.rst                                    | 2 +-
->  init/Kconfig                                                    | 2 +-
->  mm/Kconfig                                                      | 2 +-
->  mm/nommu.c                                                      | 2 +-
->  7 files changed, 6 insertions(+), 5 deletions(-)
->  rename Documentation/{nommu-mmap.txt => admin-guide/mm/nommu-mmap.rst} (100%)
-> 
-> diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
-> index 11db46448354..774dad6d3d29 100644
-> --- a/Documentation/admin-guide/mm/index.rst
-> +++ b/Documentation/admin-guide/mm/index.rst
-> @@ -31,6 +31,7 @@ the Linux memory management.
->     idle_page_tracking
->     ksm
->     memory-hotplug
-> +   nommu-map
->     numa_memory_policy
->     numaperf
->     pagemap
-> diff --git a/Documentation/nommu-mmap.txt b/Documentation/admin-guide/mm/nommu-mmap.rst
-> similarity index 100%
-> rename from Documentation/nommu-mmap.txt
-> rename to Documentation/admin-guide/mm/nommu-mmap.rst
-> diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-> index 4b7c496199ca..4b9d2e8e9142 100644
-> --- a/Documentation/admin-guide/sysctl/vm.rst
-> +++ b/Documentation/admin-guide/sysctl/vm.rst
-> @@ -598,7 +598,7 @@ trimming of allocations is initiated.
->  
->  The default value is 1.
->  
-> -See Documentation/nommu-mmap.txt for more information.
-> +See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
->  
->  
->  numa_zonelist_order
-> diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
-> index 8d10e6b38918..9abee1589c1e 100644
-> --- a/Documentation/gpu/drm-mm.rst
-> +++ b/Documentation/gpu/drm-mm.rst
-> @@ -311,7 +311,7 @@ To use drm_gem_cma_get_unmapped_area(), drivers must fill the struct
->  a pointer on drm_gem_cma_get_unmapped_area().
->  
->  More detailed information about get_unmapped_area can be found in
-> -Documentation/nommu-mmap.txt
-> +Documentation/admin-guide/mm/nommu-mmap.rst
->  
->  Memory Coherency
->  ----------------
-> diff --git a/init/Kconfig b/init/Kconfig
-> index a46aa8f3174d..2dd5531dae98 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1957,7 +1957,7 @@ config MMAP_ALLOW_UNINITIALIZED
->  	  userspace.  Since that isn't generally a problem on no-MMU systems,
->  	  it is normally safe to say Y here.
->  
-> -	  See Documentation/nommu-mmap.txt for more information.
-> +	  See Documentation/mm/nommu-mmap.rst for more information.
->  
->  config SYSTEM_DATA_VERIFICATION
->  	def_bool n
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index f2104cc0d35c..d41f3fa7e923 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -387,7 +387,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
->  	  This option specifies the initial value of this option.  The default
->  	  of 1 says that all excess pages should be trimmed.
->  
-> -	  See Documentation/nommu-mmap.txt for more information.
-> +	  See Documentation/mm/nommu-mmap.rst for more information.
->  
->  config TRANSPARENT_HUGEPAGE
->  	bool "Transparent Hugepage Support"
-> diff --git a/mm/nommu.c b/mm/nommu.c
-> index f32a69095d50..314174817b04 100644
-> --- a/mm/nommu.c
-> +++ b/mm/nommu.c
-> @@ -5,7 +5,7 @@
->   *  Replacement code for mm functions to support CPU's that don't
->   *  have any form of memory management unit (thus no virtual memory).
->   *
-> - *  See Documentation/nommu-mmap.txt
-> + *  See Documentation/mm/nommu-mmap.rst
->   *
->   *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
->   *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
-> -- 
-> 2.26.2
-> 
+ security/integrity/ima/ima.h        |  2 +-
+ security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index df93ac258e01..9d94080bdad8 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -30,7 +30,7 @@
+ 
+ enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
+ 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
+-enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
++enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
+ 
+ /* digest size for IMA, fits SHA1 or MD5 */
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 220b14920c37..011c3c76af86 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -823,13 +823,26 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+ 	if (rc != 0)
+ 		return rc;
+ 
+-	/* cumulative sha1 over tpm registers 0-7 */
++	/* cumulative digest over TPM registers 0-7 */
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
+ 		/* now accumulate with current aggregate */
+ 		rc = crypto_shash_update(shash, d.digest,
+ 					 crypto_shash_digestsize(tfm));
+ 	}
++	/*
++	 * Extend cumulative digest over TPM registers 8-9, which contain
++	 * measurement for the kernel command line (reg. 8) and image (reg. 9)
++	 * in a typical PCR allocation. Registers 8-9 are only included in
++	 * non-SHA1 boot_aggregate digests to avoid ambiguity.
++	 */
++	if (alg_id != TPM_ALG_SHA1) {
++		for (i = TPM_PCR8; i < TPM_PCR10; i++) {
++			ima_pcrread(i, &d);
++			rc = crypto_shash_update(shash, d.digest,
++						crypto_shash_digestsize(tfm));
++		}
++	}
+ 	if (!rc)
+ 		crypto_shash_final(shash, digest);
+ 	return rc;
 -- 
-Sincerely yours,
-Mike.
+2.17.1
+
