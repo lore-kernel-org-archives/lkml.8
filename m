@@ -2,168 +2,144 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4018BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0317520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="xbNuK+VZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c+L61//x"
+	by mail.kernel.org (Postfix) with ESMTP id 1BD3320771
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 11:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592913224;
+	bh=LuOYdy9hM+E6UpW0wiB3dYuE7jDUweZJNS5ZAL1MAg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pa4tZ7H3+Q6vCNiMmrAH9Mcz3cul3O30f55MfdyPqDQZ4WXIwb6VKy+QZf5OXBiuP
+	 7RufIWDOPLMVGjgZ7Tih3jDGr5ydQ45q4HbDjwMQXpNok2BxXQOay8wbwGXqK1Sv42
+	 V1i6I1GKKrOdCHKRGUEi4pafIF4ausDVVKn5sGjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732610AbgFWLvX (ORCPT
+        id S1732471AbgFWLxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:51:23 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:40869 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732389AbgFWLvX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:51:23 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id ACCC15E3;
-        Tue, 23 Jun 2020 07:51:21 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 23 Jun 2020 07:51:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        l0J4A/dshGlbVBcJCsP/9iEYM7UuYctdoHwOc1yIvjc=; b=xbNuK+VZ+98ruYrL
-        Y/4Tzh8HwXwiq2ACU+SlrAKM7Cv1sZRoCDfKp/D9EmhBbgRySgoUg1QwF3TsuFfb
-        hpW7nyzj+cJRs+SVtLDXSL6e2x9VRB6CD3Op1PNmNf+NAzVULKWNXFIO2Qnk3Lk+
-        ytWNRWrnork6Oz5N1asTBERYONDwhxw0IT1aOWIFeYfrhxQf00buOziIQTVQvwqY
-        SyETfVgYDU60xq+58TU9iVkYLynLfiObUQyHSPaOPcaWoo2ouU9OXDJ0of0usjCU
-        zv4CC2NAj7IyFbz2kUUYpdBfn5uts0Kw7M6KOsvpOmbN5uEDMzx632/XQvJIhJIY
-        SwP3EQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=l0J4A/dshGlbVBcJCsP/9iEYM7UuYctdoHwOc1yIv
-        jc=; b=c+L61//xDmsBm8OtRyPAOOqoJKl39cxFd8XzW/73y1+BCO5HuPiyu9vS6
-        es/h51yiY4VtwJ4tE3A8VUBZhj2hNTfiDdon3tdrDdxeTy8CxByBgWH4rKNBHxcR
-        8U79/SI9HsxoMjgD0sy64kZjP1tU55jl/YkKT/APgwBFu7sreggCYaDFBg4AuDXe
-        uQZQS282hX9yEbLJH8TPAqy40M2sMi1vtYgK/D2OQR9F15GBtm7oxEUt2Q7gZ2lg
-        rObI8McpX1YlrZ4e6yxJ303kVXjpYDrmIHjMDAB7w4QJ0vLTgTMcj6/MhlFL/Isy
-        RnbwOpx2JZE0pSNVuuTDSj0r/9zRQ==
-X-ME-Sender: <xms:uOzxXmeSHA-XtAhMJbagF_24G-cQKv2JyMwOWNgKLCdkYkvw24ZNvw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekhedgudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
-    phepuddukedrvddtkedrheegrdehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:uOzxXgP8nKvrrHlTfpW8epDS72L-W_Yx_uJntn_KPzrdSi4WQl0SZg>
-    <xmx:uOzxXnhXZgC0MIT7M4Bnqum6Fk9S8_0qusDifyC2057nOrnFxrZOYQ>
-    <xmx:uOzxXj96rBVmPWkDgV-U3jBh7vvWL8RksOBUclAAr07P4-E3Gq-_4w>
-    <xmx:uezxXkUHtshHtK9m6E7mxPm6KmlCNp7MSIqx4oo_F0L8byiMO16b7g>
-Received: from mickey.themaw.net (unknown [118.208.54.50])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CC34D328005E;
-        Tue, 23 Jun 2020 07:51:16 -0400 (EDT)
-Message-ID: <befb09a5f62852a828ac959acbad5d5e50c967de.camel@themaw.net>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-From:   Ian Kent <raven@themaw.net>
-To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Tejun Heo <tj@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 23 Jun 2020 19:51:12 +0800
-In-Reply-To: <74fb24d0-2b61-27f8-c44e-abd159e57469@linux.vnet.ibm.com>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
-         <20200619153833.GA5749@mtj.thefacebook.com>
-         <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
-         <20200619222356.GA13061@mtj.duckdns.org>
-         <429696e9fa0957279a7065f7d8503cb965842f58.camel@themaw.net>
-         <20200622174845.GB13061@mtj.duckdns.org>
-         <20200622180306.GA1917323@kroah.com>
-         <2ead27912e2a852bffb1477e8720bdadb591628d.camel@themaw.net>
-         <20200623060236.GA3818201@kroah.com>
-         <74fb24d0-2b61-27f8-c44e-abd159e57469@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 23 Jun 2020 07:53:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732333AbgFWLxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:53:42 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D5C720738;
+        Tue, 23 Jun 2020 11:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592913221;
+        bh=LuOYdy9hM+E6UpW0wiB3dYuE7jDUweZJNS5ZAL1MAg0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fMOOHNZtRJjXYvYkiawh185QMxi4FJyC9A+cQw7a/2YwNm4OscQj1wzIUDtDv6cOg
+         7ZlvXFKdiaJRkK5/syKubxz/yTWpCx9/876J6sDcc+CQapuC2QHUL9MtrQ58ydQJ8g
+         +wGKKKUlCBoP8SQ6BsNsguo0gVDaO6t21c6GGaSU=
+Date:   Tue, 23 Jun 2020 19:53:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] ARM: imx6plus: enable internal routing of
+ clk_enet_ref where possible
+Message-ID: <20200623115335.GC30139@dragon>
+References: <20200613201703.16788-1-TheSven73@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613201703.16788-1-TheSven73@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-23 at 02:33 -0700, Rick Lindsley wrote:
-> On 6/22/20 11:02 PM, Greg Kroah-Hartman wrote:
-> 
-> > First off, this is not my platform, and not my problem, so it's
-> > funny
-> > you ask me :)
-> 
-> Weeeelll, not your platform perhaps but MAINTAINERS does list you
-> first and Tejun second as maintainers for kernfs.  So in that sense,
-> any patches would need to go thru you.  So, your opinions do matter.
-> 
->   
-> > Anyway, as I have said before, my first guesses would be:
-> > 	- increase the granularity size of the "memory chunks",
-> > reducing
-> > 	  the number of devices you create.
-> 
-> This would mean finding every utility that relies on this
-> behavior.  That may be possible, although not easy, for distro or
-> platform software, but it's hard to guess what user-related utilities
-> may have been created by other consumers of those distros or that
-> platform.  In any case, removing an interface without warning is a
-> hanging offense in many Linux circles.
-> 
-> > 	- delay creating the devices until way after booting, or do it
-> > 	  on a totally different path/thread/workqueue/whatever to
-> > 	  prevent delay at booting
-> 
-> This has been considered, but it again requires a full list of
-> utilities relying on this interface and determining which of them may
-> want to run before the devices are "loaded" at boot time.  It may be
-> few, or even zero, but it would be a much more disruptive change in
-> the boot process than what we are suggesting.
-> 
-> > And then there's always:
-> > 	- don't create them at all, only only do so if userspace asks
-> > 	  you to.
-> 
-> If they are done in parallel on demand, you'll see the same problem
-> (load average of 1000+, contention in the same spot.)  You obviously
-> won't hold up the boot, of course, but your utility and anything else
-> running on the machine will take an unexpected pause ... for
-> somewhere between 30 and 90 minutes.  Seems equally unfriendly.
-> 
-> A variant of this, which does have a positive effect, is to observe
-> that coldplug during initramfs does seem to load up the memory device
-> tree without incident.  We do a second coldplug after we switch roots
-> and this is the one that runs into timer issues.  I have asked "those
-> that should know" why there is a second coldplug.  I can guess but
-> would prefer to know to avoid that screaming option.  If that second
-> coldplug is unnecessary for the kernfs memory interfaces to work
-> correctly, then that is an alternate, and perhaps even better
-> solution.  (It wouldn't change the fact that kernfs was not built for
-> speed and this problem remains below the surface to trip up another.)
+Hi Fugang,
 
-We might still need the patches here for that on-demand mechanism
-to be feasible.
+Can you take a look at this patch?  Thanks!
 
-For example, for an ls of the node directory it should be doable to
-enumerate the nodes in readdir without creating dentries but there's
-the inevitable stat() of each path that follows that would probably
-lead to similar contention.
+Shawn
 
-And changing the division of the entries into sub-directories would
-inevitably break anything that does actually need to access them.
-
-Ian
-
+On Sat, Jun 13, 2020 at 04:17:03PM -0400, Sven Van Asbroeck wrote:
+> On imx6, the ethernet reference clock (clk_enet_ref) can be generated
+> by either the imx6, or an external source (e.g. an oscillator or the
+> PHY). When generated by the imx6, the clock source (from ANATOP)
+> must be routed to the input of clk_enet_ref via two pads on the SoC,
+> typically via a dedicated track on the PCB.
+> 
+> On an imx6 plus however, there is a new setting which enables this
+> clock to be routed internally on the SoC, from its ANATOP clock
+> source, straight to clk_enet_ref, without having to go through
+> the SoC pads.
+> 
+> Board designs where the clock is generated by the imx6 should not
+> be affected by routing the clock internally. Therefore on a plus,
+> we can enable internal routing by default.
+> 
+> To: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  arch/arm/mach-imx/mach-imx6q.c              | 18 ++++++++++++++++++
+>  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |  1 +
+>  2 files changed, 19 insertions(+)
+> 
+> Tree: next-20200613
+> 
+> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+> index 85c084a716ab..4d22567bb650 100644
+> --- a/arch/arm/mach-imx/mach-imx6q.c
+> +++ b/arch/arm/mach-imx/mach-imx6q.c
+> @@ -203,6 +203,24 @@ static void __init imx6q_1588_init(void)
+>  	else
+>  		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
+>  
+> +	/*
+> +	 * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
+> +	 * be the PTP clock source, instead of having to be routed through
+> +	 * pads.
+> +	 * Board designs which route the ANATOP/CCM clock through pads are
+> +	 * unaffected when routing happens internally. So on these designs,
+> +	 * route internally by default.
+> +	 */
+> +	if (clksel == IMX6Q_GPR1_ENET_CLK_SEL_ANATOP && cpu_is_imx6q() &&
+> +			imx_get_soc_revision() >= IMX_CHIP_REVISION_2_0) {
+> +		if (!IS_ERR(gpr))
+> +			regmap_update_bits(gpr, IOMUXC_GPR5,
+> +					IMX6Q_GPR5_ENET_TXCLK_SEL,
+> +					IMX6Q_GPR5_ENET_TXCLK_SEL);
+> +		else
+> +			pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
+> +		}
+> +
+>  	clk_put(enet_ref);
+>  put_ptp_clk:
+>  	clk_put(ptp_clk);
+> diff --git a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> index d4b5e527a7a3..eb65d48da0df 100644
+> --- a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> +++ b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> @@ -240,6 +240,7 @@
+>  #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
+>  
+>  #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
+> +#define IMX6Q_GPR5_ENET_TXCLK_SEL		BIT(9)
+>  #define IMX6Q_GPR5_SATA_SW_PD			BIT(10)
+>  #define IMX6Q_GPR5_SATA_SW_RST			BIT(11)
+>  
+> -- 
+> 2.17.1
+> 
