@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C844FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A518E2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815172137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943246;
-	bh=x4RSguTMnFIbqsz0RXtxFzcoas9tfUhhUV9OTTkBHj0=;
+	s=default; t=1592943251;
+	bh=HxgZGib8B7jApfVRJLYV16Iqb0rLo81W0p/C/EOsT08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0fJiud5tP19lg7WRS3bmt5PNaQNtaTJ3vwY7mWlsC4eBuFl9VVVIwpNpWo3n6heW
-	 wiuaOv/c34VJNTFRQZThFHeS2bSei4vVDT68fQJN+D+44l6YdC3KsHDW2h2BwLcseJ
-	 5W91AZxl/GrtPz7MsMz0yZxHBY6fQzhAksRo8Ccg=
+	b=KlYkLMP40W0hu+IIEPIfpKtgUG+Kvng5f4Bm3NeQ0rnlaiMZuIb5JY3iPNyRbPSdr
+	 QIhVPZchLn2w4aQqWpHbkb47kdaIMocVyiMO5PLlZ7J1pgisDOjxTdq9lCDbxaqVvm
+	 RTRaAw3kn/XKJ8at1CjTe7U+PklH9e403/tGHloM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388096AbgFWUOE (ORCPT
+        id S2389140AbgFWUOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56322 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388406AbgFWUOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:14:00 -0400
+        id S2388713AbgFWUNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:13:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A29332137B;
-        Tue, 23 Jun 2020 20:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4118F20E65;
+        Tue, 23 Jun 2020 20:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943240;
-        bh=x4RSguTMnFIbqsz0RXtxFzcoas9tfUhhUV9OTTkBHj0=;
+        s=default; t=1592943232;
+        bh=HxgZGib8B7jApfVRJLYV16Iqb0rLo81W0p/C/EOsT08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DK25FJmzSLx97ReK1KSJa9sMMNBqX7VtYkehY12HxSyyMknySkOgLaOIyd6SYW5wD
-         Kn/+s0JqNwi0nZ2EPqOMnpJnQk5n7M2hvg/lH2D/Dr5dOCiQ+RAWWIZCSXURMifWiG
-         URleqRkmrQgzEoFTG/XvSpOMWQiiex/n4a9bQv4A=
+        b=inDALAsOuUQXR8DzNlMaLW60AOMtgrQfowJ/RpH05WRRSFGzMWR6T14M3+ZaXwLQd
+         JO3fRdR214pvXWw+GSfzv2GuQwabQz3OkNOVrs6FIMBMSxPl98rbIJTvL0RfpgpZZS
+         2iyj/J2YcgHgqL9FjQP1AjRkbSuab0t9PNKcBxQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Qiushi Wu <wu000273@umn.edu>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 315/477] pinctrl: imxl: Fix an error handling path in imx1_pinctrl_core_probe()
-Date:   Tue, 23 Jun 2020 21:55:12 +0200
-Message-Id: <20200623195422.420539030@linuxfoundation.org>
+Subject: [PATCH 5.7 312/477] scsi: iscsi: Fix reference count leak in iscsi_boot_create_kobj
+Date:   Tue, 23 Jun 2020 21:55:09 +0200
+Message-Id: <20200623195422.285864109@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 9eb728321286c4b31e964d2377fca2368526d408 ]
+[ Upstream commit 0267ffce562c8bbf9b57ebe0e38445ad04972890 ]
 
-When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
-an error handling path has not been updated.
+kobject_init_and_add() takes reference even when it fails. If this
+function returns an error, kobject_put() must be called to properly
+clean up the memory associated with the object.
 
-Axe a now unneeded 'pinctrl_unregister()'.
-
-Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200530201952.585798-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20200528201353.14849-1-wu000273@umn.edu
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/iscsi_boot_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index c00d0022d311b..421f7d1886e54 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
- 
- 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
- 	if (ret) {
--		pinctrl_unregister(ipctl->pctl);
- 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
- 		return ret;
+diff --git a/drivers/scsi/iscsi_boot_sysfs.c b/drivers/scsi/iscsi_boot_sysfs.c
+index e4857b7280338..a64abe38db2d4 100644
+--- a/drivers/scsi/iscsi_boot_sysfs.c
++++ b/drivers/scsi/iscsi_boot_sysfs.c
+@@ -352,7 +352,7 @@ iscsi_boot_create_kobj(struct iscsi_boot_kset *boot_kset,
+ 	boot_kobj->kobj.kset = boot_kset->kset;
+ 	if (kobject_init_and_add(&boot_kobj->kobj, &iscsi_boot_ktype,
+ 				 NULL, name, index)) {
+-		kfree(boot_kobj);
++		kobject_put(&boot_kobj->kobj);
+ 		return NULL;
  	}
+ 	boot_kobj->data = data;
 -- 
 2.25.1
 
