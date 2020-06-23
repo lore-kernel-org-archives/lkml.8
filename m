@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10EA620702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB9920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946517;
-	bh=9Y+QW6C7mi8kmyJpRYZ+G1/TJtJ8eMv5VTZ+0KcRnyc=;
+	s=default; t=1592946520;
+	bh=1OvDeqrNdnLngoQvs8UegGnHsWT0Edkwhrm/k31VQEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=brK5bUp8RwFQtHpojiN8nVv6tVQcS3s+3d1jUQQUBS9FqJpB1UYPYasLD0LUvFzS7
-	 iOgKT0JeCm+sXKoNLnBLqWmR89+siAf/dkBxTK+osneJ11LGiG90Idoxg/EBzeEvtG
-	 CBCLuIeGAs7T7R8ZyQc3wdqz7ZEsX5lIEr3We9A4=
+	b=J+E89CVV3/7ZTBGlEmoqnxx5nfh/8J9enWgMG4lkpxD7j3klhYXB8KYiGUqJgOt4r
+	 6fsloZZLvx/CGs7Cj0J0laMCqn/2m1u7HTd12l0TqVCA8nLO4paJl/x2xxjA+vl8dh
+	 LnKgfgtgfRgE1KiE0/XnIADN924ZjBDCQXa1bYvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391985AbgFWVIf (ORCPT
+        id S2392318AbgFWVIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56648 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391558AbgFWUeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:34:36 -0400
+        id S2403781AbgFWUek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:34:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95ADA2072E;
-        Tue, 23 Jun 2020 20:34:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 955B42064B;
+        Tue, 23 Jun 2020 20:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944476;
-        bh=9Y+QW6C7mi8kmyJpRYZ+G1/TJtJ8eMv5VTZ+0KcRnyc=;
+        s=default; t=1592944481;
+        bh=1OvDeqrNdnLngoQvs8UegGnHsWT0Edkwhrm/k31VQEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VJVFXIuYlGrIa4ewB8ZSY8AsDH2fsxs0T2tJU+yUmG2hnNoqED26a+f1m7v0sXgq4
-         d+p2akv/pBQmgv35h7Sqjb79KvtIDVKy7N9/1MHj+25RQnQcm6HuXDlB2h/VHGGbB0
-         AEDi+rsKCCmSPI3CK2wA6mQCdO/rQr5rz/Z4+dJQ=
+        b=IsHbDZQI6yZlqtsSAhuWGBI8NPftbGf75t4B+d4NOyp0fZQUvtlqsqIKTwh+vDxzR
+         +YCWbx7qB3dw3A2FrJTOB7vvd8KEGaj8fYChZu1rEBPDc6kpGgSp1h4J0Rz5zdvHt9
+         hrXMKR8TW9MZUhU56Iu8G5cdcMxHm2uJo+Jr2Riw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Steve Cohen <cohens@codeaurora.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 5.4 301/314] drm/connector: notify userspace on hotplug after register complete
-Date:   Tue, 23 Jun 2020 21:58:16 +0200
-Message-Id: <20200623195353.353722626@linuxfoundation.org>
+        stable@vger.kernel.org, Kunal Joshi <kunal1.joshi@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: [PATCH 5.4 303/314] drm/i915/icl+: Fix hotplug interrupt disabling after storm detection
+Date:   Tue, 23 Jun 2020 21:58:18 +0200
+Message-Id: <20200623195353.449491429@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -60,59 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeykumar Sankaran <jsanka@codeaurora.org>
+From: Imre Deak <imre.deak@intel.com>
 
-commit 968d81a64a883af2d16dd3f8a6ad6b67db2fde58 upstream.
+commit a3005c2edf7e8c3478880db1ca84028a2b6819bb upstream.
 
-drm connector notifies userspace on hotplug event prematurely before
-late_register and mode_object register completes. This leads to a race
-between userspace and kernel on updating the IDR list. So, move the
-notification to end of connector register.
+Atm, hotplug interrupts on TypeC ports are left enabled after detecting
+an interrupt storm, fix this.
 
-Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
-Signed-off-by: Steve Cohen <cohens@codeaurora.org>
+Reported-by: Kunal Joshi <kunal1.joshi@intel.com>
+Bugzilla: https://gitlab.freedesktop.org/drm/intel/-/issues/1964
+Cc: Kunal Joshi <kunal1.joshi@intel.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1591155451-10393-1-git-send-email-jsanka@codeaurora.org
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200612121731.19596-1-imre.deak@intel.com
+(cherry picked from commit 587a87b9d7e94927edcdea018565bc1939381eb1)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_connector.c |    5 +++++
- drivers/gpu/drm/drm_sysfs.c     |    3 ---
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/i915/i915_irq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -27,6 +27,7 @@
- #include <drm/drm_print.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_file.h>
-+#include <drm/drm_sysfs.h>
+--- a/drivers/gpu/drm/i915/i915_irq.c
++++ b/drivers/gpu/drm/i915/i915_irq.c
+@@ -3500,6 +3500,7 @@ static void gen11_hpd_irq_setup(struct d
  
- #include <linux/uaccess.h>
+ 	val = I915_READ(GEN11_DE_HPD_IMR);
+ 	val &= ~hotplug_irqs;
++	val |= ~enabled_irqs & hotplug_irqs;
+ 	I915_WRITE(GEN11_DE_HPD_IMR, val);
+ 	POSTING_READ(GEN11_DE_HPD_IMR);
  
-@@ -511,6 +512,10 @@ int drm_connector_register(struct drm_co
- 	drm_mode_object_register(connector->dev, &connector->base);
- 
- 	connector->registration_state = DRM_CONNECTOR_REGISTERED;
-+
-+	/* Let userspace know we have a new connector */
-+	drm_sysfs_hotplug_event(connector->dev);
-+
- 	goto unlock;
- 
- err_debugfs:
---- a/drivers/gpu/drm/drm_sysfs.c
-+++ b/drivers/gpu/drm/drm_sysfs.c
-@@ -293,9 +293,6 @@ int drm_sysfs_connector_add(struct drm_c
- 		return PTR_ERR(connector->kdev);
- 	}
- 
--	/* Let userspace know we have a new connector */
--	drm_sysfs_hotplug_event(dev);
--
- 	if (connector->ddc)
- 		return sysfs_create_link(&connector->kdev->kobj,
- 				 &connector->ddc->dev.kobj, "ddc");
 
 
