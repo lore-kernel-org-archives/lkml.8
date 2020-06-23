@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5988BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB93DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23631206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905E02082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592871017;
-	bh=uM60TInvRXu0eMKTDe77HJ7sHKmRkq4gHqQx5e+Uvlc=;
+	s=default; t=1592871020;
+	bh=axAbcbkmrw/8RcIa1j4sVSgbYzOp8E+mMMYo6eFBOOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fo7XC6Kulzl2K3Ttg7v3OrYpXO3PlsPGUbThuvjXINmA4oOaGt9iN79wfgywccKah
-	 g/nW6wblmHaxK1qTK3odPRtu509sAzV7bEx2604TzdI5VDr2m81nKh/W/D8gk2qtyA
-	 9nRSDLUiv+VDpYVjkk3th+7b8wXy62vi4VJmZoUU=
+	b=G3imr/3yR77n6eLpBuVadQwiRYp8ow2eQ15c/gs99hsOhW7PEgnG6yn8fimuxUoOn
+	 hkuws8WRF/f8CMEyFkLfDzukwShApUziwQ+db/t6O05sVglKu1jiB8Ox6WpgxIIn6l
+	 jVKzuP7guruO/ihzp9EXBN901/Ya3kcJuGzTA5oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbgFWAKO (ORCPT
+        id S1731591AbgFWAKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43714 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 20:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731509AbgFWAJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:09:52 -0400
+        id S1731514AbgFWAJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:09:51 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 448A4208D5;
+        by mail.kernel.org (Postfix) with ESMTPSA id 13AD1207DD;
         Tue, 23 Jun 2020 00:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592870991;
-        bh=uM60TInvRXu0eMKTDe77HJ7sHKmRkq4gHqQx5e+Uvlc=;
+        bh=axAbcbkmrw/8RcIa1j4sVSgbYzOp8E+mMMYo6eFBOOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rstvupwShAsU/O3Oi1QFL6+CllrDQW6i5xe0TtGBSXkuKxan/hzR7QrSk5YrgBlee
-         5QNooCWEXQmTfxnCP7PQzVQd8iDNsFaPVx0hB8QN9tyVmvP1Yfhw50idxbcFKE3Bgd
-         F7zp3aMe8SnnKbDGN8LtaxE28pVfZmn7w4jXY0Lo=
+        b=h0Fuq5eWW7poKIPGxClebIR26M6mTVmQH3h6qYzLokvyoICjdi7nEk5H6pqrANQcC
+         mnwXn1kg88ypuWbZf6Jn/pn2ZHt4jLSbua075wUn8nP4lpwyVzLFjFB67o+w24jgrw
+         Gl/k9q8ZlaUZ2I5V7/5riiIkAc8KZu9lr/XTI6H8=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,10 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 09/10] doc: Timer problems can cause RCU CPU stall warnings
-Date:   Mon, 22 Jun 2020 17:09:46 -0700
-Message-Id: <20200623000947.25222-9-paulmck@kernel.org>
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 08/10] docs: RCU: Don't duplicate chapter names in rculist_nulls.rst
+Date:   Mon, 22 Jun 2020 17:09:45 -0700
+Message-Id: <20200623000947.25222-8-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200623000923.GA25047@paulmck-ThinkPad-P72>
 References: <20200623000923.GA25047@paulmck-ThinkPad-P72>
@@ -59,36 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Over the past few years, there have been several cases where timekeeping
-bugs have caused RCU CPU stall warnings, particularly during hardware
-bringup.  This commit therefore adds such bugs to the list of things
-that can result in RCU CPU stall warnings.
+Since changeset 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst"),
+auto-references for chapters are generated. This is a nice feature, but
+has a drawback: no chapters can have the same sumber.
 
+So, we need to add two higher hierarchy chapters on this document,
+in order to avoid such duplication.
+
+Fixes: 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/RCU/stallwarn.rst | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/RCU/rculist_nulls.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/RCU/stallwarn.rst b/Documentation/RCU/stallwarn.rst
-index 08bc9ae..c9ab6af 100644
---- a/Documentation/RCU/stallwarn.rst
-+++ b/Documentation/RCU/stallwarn.rst
-@@ -87,6 +87,13 @@ warnings:
- 	problem really has happened, and seems to be most likely to
- 	result in RCU CPU stall warnings for CONFIG_NO_HZ_COMMON=n kernels.
+diff --git a/Documentation/RCU/rculist_nulls.rst b/Documentation/RCU/rculist_nulls.rst
+index d403742..a9fc774 100644
+--- a/Documentation/RCU/rculist_nulls.rst
++++ b/Documentation/RCU/rculist_nulls.rst
+@@ -10,6 +10,9 @@ objects using SLAB_TYPESAFE_BY_RCU allocations.
  
-+-	A hardware or software issue that prevents time-based wakeups
-+	from occurring.  These issues can range from misconfigured or
-+	buggy timer hardware through bugs in the interrupt or exception
-+	path (whether hardware, firmware, or software) through bugs
-+	in Linux's timer subsystem through bugs in the scheduler, and,
-+	yes, even including bugs in RCU itself.
+ Please read the basics in Documentation/RCU/listRCU.rst
+ 
++Using 'nulls'
++=============
 +
- -	A bug in the RCU implementation.
+ Using special makers (called 'nulls') is a convenient way
+ to solve following problem :
  
- -	A hardware failure.  This is quite unlikely, but has occurred
+@@ -126,6 +129,9 @@ very very fast (before the end of RCU grace period)
+ 
+ --------------------------------------------------------------------------
+ 
++Avoiding extra smp_rmb()
++========================
++
+ With hlist_nulls we can avoid extra smp_rmb() in lockless_lookup()
+ and extra smp_wmb() in insert function.
+ 
 -- 
 2.9.5
 
