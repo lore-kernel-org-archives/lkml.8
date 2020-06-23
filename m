@@ -2,59 +2,53 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A82C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61847214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F5120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946030;
-	bh=bZRuB5p9TGNz39dnIgVBa1C/bdUKLOcWkOgS+V9w8xM=;
+	s=default; t=1592946033;
+	bh=41H/wvNFxvhfOqdL+8lXTBqmmzwHHM+hgN6cXXnzqzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1lXr/AM1VJsTmYzFDkTk3axmyD3ZqLXNrHqoh8DyDOlnUbInCehz+5q6xJ2DlQoc0
-	 i4gnnPZ7MzlJNzAw7wTiX3M1wAmleZHXSKRQKH7wfd7OOCBCZPjnapyll0v8gjYt1I
-	 11jcf6C/A1n9P2ilX2KIBJyfGyBl915C/h7v4p7w=
+	b=DKJo0Q51c1G2NJ2sIhy/Ti+HLZZbpootfro+lRWWUkIvDPmQmi7SCzruZLz+ADDxo
+	 4SPAiDv4egWdP/d/IKlZhx2b73hstCAlNYZoWVGJTBSPgkDKcb+5dxJOKb8zdjGWzs
+	 cB4dZo9xwoIcadOlX6FZRGhvtBG1RWcSh4ZB5Exs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404002AbgFWVA2 (ORCPT
+        id S2390071AbgFWUkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:00:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392205AbgFWUkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:40:17 -0400
+        id S2392145AbgFWUkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:40:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515A72053B;
-        Tue, 23 Jun 2020 20:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E98721582;
+        Tue, 23 Jun 2020 20:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944816;
-        bh=bZRuB5p9TGNz39dnIgVBa1C/bdUKLOcWkOgS+V9w8xM=;
+        s=default; t=1592944807;
+        bh=41H/wvNFxvhfOqdL+8lXTBqmmzwHHM+hgN6cXXnzqzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLbgc8ZhPGw+C2z4HpdUxLuodbksXnDc6P0oDqbHxYPSMxk9ra3q3DyW9LmQRmrRz
-         y51+GhaOAZAd1lgIoeSGz76h8XlFr85gg6NZ1yXcl4bIIW5iDkBfJOBGvjV3I3RCcJ
-         Ywff87Wy1O8FEqfUanMNfYO64ikaD9ZbF1W71gis=
+        b=wim1OH8zSdFxJYP4tHeGNyoWKSjoL4Azm3LXBUGa42PzIFkaIyeH+iLxGF1eQDcr0
+         OBlGqxbVQA3dVGOijQs9KeApZngRweTGrPiYMQ32hAEZQAhJ1hynGy9XGZbPBdDIxp
+         AlCOFSE6R784H5naZi6xkuChy1KVFccrwm33HwUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Ilie Halip <ilie.halip@gmail.com>
-Subject: [PATCH 4.19 137/206] elfnote: mark all .note sections SHF_ALLOC
-Date:   Tue, 23 Jun 2020 21:57:45 +0200
-Message-Id: <20200623195323.728281701@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 102/206] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
+Date:   Tue, 23 Jun 2020 21:57:10 +0200
+Message-Id: <20200623195321.957572724@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -67,59 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 51da9dfb7f20911ae4e79e9b412a9c2d4c373d4b ]
+[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
 
-ELFNOTE_START allows callers to specify flags for .pushsection assembler
-directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC.  For vdso's
-that explicitly use ELF_NOTE_START and BUILD_SALT, the same section is
-specified twice after preprocessing, once with "a" flag, once without.
-Example:
+Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
+not account for the fact that Switch Downstream Ports are not permitted to
+have a PTM capability; their PTM behavior is controlled by the Upstream
+Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
+capability, we did not mark them as "ptm_enabled", which meant that
+pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
 
-.pushsection .note.Linux, "a", @note ;
-.pushsection .note.Linux, "", @note ;
+Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
+enabled.
 
-While GNU as allows this ordering, it warns for the opposite ordering,
-making these directives position dependent.  We'd prefer not to precisely
-match this behavior in Clang's integrated assembler.  Instead, the non
-__ASSEMBLY__ definition of ELF_NOTE uses
-__attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
-so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
-and just always use "a" flag.
-
-This allows Clang to assemble a working mainline (5.6) kernel via:
-$ make CC=clang AS=clang
-
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Cc: Jeremy Fitzhardinge <jeremy@goop.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/913
-Link: http://lkml.kernel.org/r/20200325231250.99205-1-ndesaulniers@google.com
-Debugged-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
+Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/elfnote.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/elfnote.h b/include/linux/elfnote.h
-index f236f5b931b2a..7fdd7f355b529 100644
---- a/include/linux/elfnote.h
-+++ b/include/linux/elfnote.h
-@@ -54,7 +54,7 @@
- .popsection				;
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 9361f3aa26ab8..357a454cafa07 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -39,10 +39,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	if (!pci_is_pcie(dev))
+ 		return;
  
- #define ELFNOTE(name, type, desc)		\
--	ELFNOTE_START(name, type, "")		\
-+	ELFNOTE_START(name, type, "a")		\
- 		desc			;	\
- 	ELFNOTE_END
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+-	if (!pos)
+-		return;
+-
+ 	/*
+ 	 * Enable PTM only on interior devices (root ports, switch ports,
+ 	 * etc.) on the assumption that it causes no link traffic until an
+@@ -52,6 +48,23 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
+ 		return;
  
++	/*
++	 * Switch Downstream Ports are not permitted to have a PTM
++	 * capability; their PTM behavior is controlled by the Upstream
++	 * Port (PCIe r5.0, sec 7.9.16).
++	 */
++	ups = pci_upstream_bridge(dev);
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
++	    ups && ups->ptm_enabled) {
++		dev->ptm_granularity = ups->ptm_granularity;
++		dev->ptm_enabled = 1;
++		return;
++	}
++
++	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
++	if (!pos)
++		return;
++
+ 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+ 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+ 
+@@ -61,7 +74,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
+ 	 * furthest upstream Time Source as the PTM Root.
+ 	 */
+-	ups = pci_upstream_bridge(dev);
+ 	if (ups && ups->ptm_enabled) {
+ 		ctrl = PCI_PTM_CTRL_ENABLE;
+ 		if (ups->ptm_granularity == 0)
 -- 
 2.25.1
 
