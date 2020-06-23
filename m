@@ -2,90 +2,96 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67671C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09EB22072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592899649;
-	bh=jWj+VNk6ajfQd3MeYpICg1FnHL9iFqlO838ZG1np4Dw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2GznQodXHWmAJ5eiN7a7u86ulBCi1jMo+CWlGEM9IoMLOot2QSMc1YUE2IytmoOb0
-	 zKsONZtrox7AzeYMlc1cuVzFKZ96fKDAl8DIhiRBPKkf53GBL3wtSIjVaG46pFkXH9
-	 5ds5uTMzVMvqugxIMEGWApPKn5nO+WQyAtQtbhxg=
+	by mail.kernel.org (Postfix) with ESMTP id 44F5A20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S47ZPXC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731655AbgFWIH1 (ORCPT
+        id S1731674AbgFWIIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:07:27 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:53668 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730977AbgFWIHZ (ORCPT
+        Tue, 23 Jun 2020 04:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730977AbgFWIIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:07:25 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 05N86kG6004915;
-        Tue, 23 Jun 2020 17:06:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 05N86kG6004915
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592899607;
-        bh=mzwLNlVbc4tN700SeYrthBTYehwSNuisM3RuMNKEncU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Vhp1xJ4AsuCaTUX7lrWPWQXqPAKHx8ySfE62u+vOOiGRlJy266d1E7yY9I1nUxvLd
-         u+cIRGFDpNG/03FysaUbwoHKydILPc0vCju2zN0psXpcqQs3S6ha4ar+K7yUPSYjrg
-         B97lsOZ8OF9XIHC/+ohZO//Ivw8sxfXmXAdkbLXUVCHWNyRr4hSoDyUkhSSTPk8noD
-         Pc48dU0oNZtYA8l1Nc5zfz61AAOQ70R7gY4XtnDV08XhJcCOhY5ibuSHppyNNk+w1O
-         Omf+PjGWyakZ+VDXSVBeyqaA0lux1LMYH6/SZPp52K2AvLrcCxFAnpBs7HN72ij/Wh
-         Mble3EzYLLy4A==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "kbuild: Create directory for target DTB"
-Date:   Tue, 23 Jun 2020 17:05:49 +0900
-Message-Id: <20200623080549.725632-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 23 Jun 2020 04:08:43 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0234C061573;
+        Tue, 23 Jun 2020 01:08:42 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dp18so20670267ejc.8;
+        Tue, 23 Jun 2020 01:08:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AS7TimUz7z8+rMZyTH97GIezLjZkUeEIVCpiJ6Gw7B0=;
+        b=S47ZPXC+FYwh8V7L5c2+8itWpI9KDfD8p1uh9U7fo57c18jaGgRyDzTW+VhNwH8Lsx
+         MtX4+YmNcZEGMCTZDonFL1qWh+jSKC3RprK/vwB2F73qqvTU503k8bHuvsKvvZP5PFQX
+         jUOlYllMjYf9G+Svf3u8HYyPJ4JjnpHT77U0BXwsv0eptbsZnW+GlQ8g8WYP8cpkF0pp
+         4Kej3r6TvPPrq9I7mqoTtpCsM54uN1YOA6J1QAiCZu2/4IJdboPdXlOWF0lta7QH4w88
+         DsEpcjJx1j1B5PQkJ7RybvRnF0zp5XHNpsLHCAFoGowa83Df9QzsfC4+kwnTp81mbOOg
+         dCNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AS7TimUz7z8+rMZyTH97GIezLjZkUeEIVCpiJ6Gw7B0=;
+        b=CmeHKrgP3BrzrDpVqnkhP31KmRh/Y2tITuNuU92ZwdSDw/FEMZlxhMV0lnKkQZh4po
+         anSIBatQjbHTCii3kWJ2VrZ1cEDBAkwAYOF6hSvfy1AzrOrYLAyd4I3vTccny8uufUQa
+         rz0Rle6f+dLO1lK7kZWztUmwuRKq3BjRP6SphWd4wINjFlQiwtfQCiHSEmfZesE1+f50
+         cI/WD7xwo90lIo3SMP1zJEdJ27LtDCh8g7vqopiNj0g62nCgTbwkTIFYKJ2Sxf6HtM/v
+         VBYEnpPS81dLGtPyczzqx4MDEjdQkvCuvrUUNB7WgO/RzKUdDQwL8Gcws8DFj1kxPfj4
+         R7Wg==
+X-Gm-Message-State: AOAM533WABqrjb/rQRPHZBcsFUI/pzALeprIorD4eBIMmw4d1r+AuuGX
+        WzEni9xdin4TIowJ8RMsru/6znJ/6kmQeWL49tQ=
+X-Google-Smtp-Source: ABdhPJwljkT+moXY2qJ3jfsDmyXMt4qZ00+PFRngJKCMxSGvmEn/oJ58VvG6Tsg7akvsEz/4uYjX8RZRvl3tN1aan9U=
+X-Received: by 2002:a17:907:94ca:: with SMTP id dn10mr18453143ejc.348.1592899721577;
+ Tue, 23 Jun 2020 01:08:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200622192558.152828-1-konradybcio@gmail.com>
+ <20200622192558.152828-6-konradybcio@gmail.com> <20200623073515.GA128451@builder.lan>
+In-Reply-To: <20200623073515.GA128451@builder.lan>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Tue, 23 Jun 2020 10:08:05 +0200
+Message-ID: <CAMS8qEULN_3_j17-kh9zmX=iJU0XVVj0=nPDj8G1OnZ9Oen0xA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] arm64: dts: qcom: Add support for Sony Xperia
+ XA2/Plus/Ultra (Nile platform)
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, "??ukasz Patron" <priv.luk@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 77479b38e2f58890eb221a0418357502a5b41cd6.
+Thanks for applying them.
 
-Since commit 8a78756eb545 ("kbuild: create object directories simpler
-and faster"), all directories for 'targets' are created.
+In case I have some updates to these DTs,
+(they are being rapidly developed!) could I
+submit them now, or should I want for the next
+merge window? I saw that they are already
+applied to qcom/for-next, so I guess the
+former?
 
-'mkdir -p $(dir ${dtc-tmp})' is no longer needed.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- scripts/Makefile.lib | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 99ac59c59826..94da02a57780 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -298,8 +298,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
- 	$(call if_changed,dt_S_dtb)
- 
- quiet_cmd_dtc = DTC     $@
--cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
--	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-+cmd_dtc = $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
- 	$(DTC) -O $(patsubst .%,%,$(suffix $@)) -o $@ -b 0 \
- 		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
--- 
-2.25.1
-
+Regards
+Konrad
