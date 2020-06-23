@@ -2,190 +2,179 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D10B12070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87362070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 15:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mgVgpJ6Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/OEIZh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733041AbgFWPZz (ORCPT
+        id S1732948AbgFWP3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 11:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
+        Tue, 23 Jun 2020 11:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733032AbgFWPZx (ORCPT
+        with ESMTP id S1732885AbgFWP3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 11:25:53 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD9FC061796
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:25:53 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c11so11888042lfh.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 08:25:53 -0700 (PDT)
+        Tue, 23 Jun 2020 11:29:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8CFC061573;
+        Tue, 23 Jun 2020 08:29:15 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ga6so1617924pjb.1;
+        Tue, 23 Jun 2020 08:29:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wu5Jb22ItoXjx67uBh26qW7KZs2/G12nEiorIVjh8pI=;
-        b=mgVgpJ6YC03VthawpjYHmfyp8oolEBSV1hoHPj8jhCmOLnVFxwKmbF+g1LystfT7Dr
-         MEK1SnLgbEtVFsxFVG89/ABB6xzQoqY0arQIWsrIz97UJt2h5cZba0Ql+ICwN6N1CKx5
-         dXoGx56T1M++ZEdNgMmT0sukslSIV2cjvHNibaI8+X73zoN5QUk7lLBN/4qs2DMPXzJ4
-         x7w7U1h/eLRM7Fs91V/SdLsFZxIE6hc2uAKLJBgmPUbXzpyFXHoSOcCXwDWiiebsnWQy
-         INCvf/G2wpTOU65Y8YnMVG3nJ2lq0zCpWLh1UZ1Ioo3B+3hrE/pvw6vuDtv3IXox/i/v
-         q0NQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KDCfSozN/IsFdVgihX+4tXj9STjMapc13JwQrRlGOGI=;
+        b=T/OEIZh0zGlP2T9RFvlsU5XYkUCDBl7ASqg608sxi47S9mKGhwAFLwcfgL1MqyXRcp
+         uklUH5Or7eaEv71m02+vA97XLy/dXH5U+foa4S7Vj9Q0O50iPLVwvAqj+5jgG9RS9md7
+         pQP1ro8onkLP5R/3cMKjIsXABJs/oGVlz13NfuZqm98Vb3xYHslPqTkQ3XCeuz3OesqI
+         ZR5AxtYNoJ5OQysH1gWddF5qJ0Zp+bewtxlnLHAeWoSMb4zv4HR0EVfJhvONtvuUnNYy
+         HCg0vwEsUV5V960RXRAHsYR8Cy45XFsxCo16xubO//gmpXwHfBksLCgISWWv8156XHdY
+         QMPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wu5Jb22ItoXjx67uBh26qW7KZs2/G12nEiorIVjh8pI=;
-        b=QlirjY7+imNH3WgIAoS+Vfh/CuREpsDknvZMF9gSOkGCoTW0Bi4ukTkZ+L4X5urUzT
-         p2p3ju+2Wf6PqmCzd/dswr2DD5MHFBUxvf4MWV1r4g46Inay/sYVhcyxjG4RGLXkL+C9
-         akNlN1sQYmpv88iR3RSMcSLMGNNpbQ0qug0h+FuVIofY1CQi3rNKQF4veGNcno242ZlA
-         ZvScaGvRWHjg9XFUqCfKkSL2L5ZCtX20viHR3wPY5lU5IVDzKWQlxpMANj+g2TwIaI7i
-         W9G4/9xkET1+shtEm0+Qsul9pxYIXow88+RDF+J+XQhc30BjjFYXbSz0/orDUtatvJNa
-         gWXA==
-X-Gm-Message-State: AOAM533Ib8b58xRY9qtDdqIwxrgD2MSpKdJq0TXLLUZdA0YRoXnZ9N3W
-        BMb91DfMCPQ/E1YQ1JBq2HVgooROQInNV4pbIZV9DA==
-X-Google-Smtp-Source: ABdhPJz/l9dZNGfY+DnT424JHJKqrgndWlRTPhLAbD2ysBWneCN9oFPMXO8VVCGVpHKw+cmd0Z5uExPRjgFoCh0LOCc=
-X-Received: by 2002:a19:2292:: with SMTP id i140mr12723588lfi.95.1592925951626;
- Tue, 23 Jun 2020 08:25:51 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KDCfSozN/IsFdVgihX+4tXj9STjMapc13JwQrRlGOGI=;
+        b=WuUhJ0tbeKNfIoLlMXhwtqTvoZfDUXstVbL4F+bcv8pS1iXxHM8hkbxfFQq/ihgoa6
+         r9ycCjYMeawXvimWOL9lJCuqhrIpSDKKwTlpXH2vE0aqwXpQp4c2vLYi8F/2/DsHZQ6l
+         fBP6uD6zgt0W+gDsjMKf5ADhxaT2w+NmtWFEk88hYwnTNOO3r7bLGyaCGVSpDHnQg8SF
+         gKXshFDLutif0BgYvL6ybG0+mlF4uC9OYwrBqNbCb2LR2AsLhdndLKV1vZJdb537HpTU
+         lNIdYNWvkxEFJ2sQ4zL3VdZH84cC8bs/W4CK7j+hI8iNMVoPLvqQ3QPTpHk/btybcHEa
+         FeSw==
+X-Gm-Message-State: AOAM530W6aLVR+AoRMHhCtqHrmoP2MRKDUVQSZvsAJNRsJlDBE962xyj
+        I0KLmkjnA4FVCqtyW+OKHQ==
+X-Google-Smtp-Source: ABdhPJxkqvJJZzhda47S/KsXfI8hQaJBLoqa63OrEAxyytojiWtkO6JBXA35r6p572mg7DM/mxBfSA==
+X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr22159395plk.256.1592926154950;
+        Tue, 23 Jun 2020 08:29:14 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:ceb:846:8098:13b7:478d:bfe2])
+        by smtp.gmail.com with ESMTPSA id l2sm2841461pjl.34.2020.06.23.08.29.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jun 2020 08:29:13 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Tue, 23 Jun 2020 20:59:05 +0530
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     madhuparnabhowmik10@gmail.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, paulmck@kernel.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] kvm: Fix false positive RCU usage warning
+Message-ID: <20200623152905.GA9914@madhuparna-HP-Notebook>
+References: <20200516082227.22194-1-madhuparnabhowmik10@gmail.com>
+ <9fff3c6b-1978-c647-16f7-563a1cdf62ff@redhat.com>
 MIME-Version: 1.0
-References: <20200618012600.608744-1-sashal@kernel.org> <20200618012600.608744-90-sashal@kernel.org>
-In-Reply-To: <20200618012600.608744-90-sashal@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 23 Jun 2020 20:55:38 +0530
-Message-ID: <CA+G9fYuBGRz9=Q5KyCat0qk_8aiGvNsreY05rcGSjMZpvM1FJg@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.14 090/108] ovl: verify permissions in ovl_path_open()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        linux-unionfs@vger.kernel.org, lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9fff3c6b-1978-c647-16f7-563a1cdf62ff@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 at 07:18, Sasha Levin <sashal@kernel.org> wrote:
+On Tue, Jun 23, 2020 at 09:39:53AM +0200, Paolo Bonzini wrote:
+> On 16/05/20 10:22, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > Fix the following false positive warnings:
+> > 
+> > [ 9403.765413][T61744] =============================
+> > [ 9403.786541][T61744] WARNING: suspicious RCU usage
+> > [ 9403.807865][T61744] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
+> > [ 9403.838945][T61744] -----------------------------
+> > [ 9403.860099][T61744] arch/x86/kvm/mmu/page_track.c:257 RCU-list traversed in non-reader section!!
+> > 
+> > and
+> > 
+> > [ 9405.859252][T61751] =============================
+> > [ 9405.859258][T61751] WARNING: suspicious RCU usage
+> > [ 9405.880867][T61755] -----------------------------
+> > [ 9405.911936][T61751] 5.7.0-rc1-next-20200417 #4 Tainted: G             L
+> > [ 9405.911942][T61751] -----------------------------
+> > [ 9405.911950][T61751] arch/x86/kvm/mmu/page_track.c:232 RCU-list traversed in non-reader section!!
+> > 
+> > Since srcu read lock is held, these are false positive warnings.
+> > Therefore, pass condition srcu_read_lock_held() to
+> > list_for_each_entry_rcu().
+> > 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > ---
+> > v2:
+> > -Rebase v5.7-rc5
+> > 
+> >  arch/x86/kvm/mmu/page_track.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
+> > index ddc1ec3bdacd..1ad79c7aa05b 100644
+> > --- a/arch/x86/kvm/mmu/page_track.c
+> > +++ b/arch/x86/kvm/mmu/page_track.c
+> > @@ -229,7 +229,8 @@ void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
+> >  		return;
+> >  
+> >  	idx = srcu_read_lock(&head->track_srcu);
+> > -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
+> > +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
+> > +				srcu_read_lock_held(&head->track_srcu))
+> >  		if (n->track_write)
+> >  			n->track_write(vcpu, gpa, new, bytes, n);
+> >  	srcu_read_unlock(&head->track_srcu, idx);
+> > @@ -254,7 +255,8 @@ void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot)
+> >  		return;
+> >  
+> >  	idx = srcu_read_lock(&head->track_srcu);
+> > -	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node)
+> > +	hlist_for_each_entry_rcu(n, &head->track_notifier_list, node,
+> > +				srcu_read_lock_held(&head->track_srcu))
+> >  		if (n->track_flush_slot)
+> >  			n->track_flush_slot(kvm, slot, n);
+> >  	srcu_read_unlock(&head->track_srcu, idx);
+> > 
+> 
+> Hi, sorry for the delay in reviewing this patch.  I would like to ask
+> Paul about it.
+> 
+> While you're correctly fixing a false positive, hlist_for_each_entry_rcu
+> would have a false _negative_ if you called it under
+> rcu_read_lock/unlock and the data structure was protected by SRCU.  This
+> is why for example srcu_dereference is used instead of
+> rcu_dereference_check, and why srcu_dereference uses
+> __rcu_dereference_check (with the two underscores) instead of
+> rcu_dereference_check.  Using rcu_dereference_check would add an "||
+> rcu_read_lock_held()" to the condition which is wrong.
 >
-> From: Miklos Szeredi <mszeredi@redhat.com>
->
-> [ Upstream commit 56230d956739b9cb1cbde439d76227d77979a04d ]
->
-> Check permission before opening a real file.
->
-> ovl_path_open() is used by readdir and copy-up routines.
->
-> ovl_permission() theoretically already checked copy up permissions, but it
-> doesn't hurt to re-do these checks during the actual copy-up.
->
-> For directory reading ovl_permission() only checks access to topmost
-> underlying layer.  Readdir on a merged directory accesses layers below the
-> topmost one as well.  Permission wasn't checked for these layers.
->
-> Note: modifying ovl_permission() to perform this check would be far more
-> complex and hence more bug prone.  The result is less precise permissions
-> returned in access(2).  If this turns out to be an issue, we can revisit
-> this bug.
->
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/overlayfs/util.c | 27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-> index afdc2533ce74..76d6610767f6 100644
-> --- a/fs/overlayfs/util.c
-> +++ b/fs/overlayfs/util.c
-> @@ -307,7 +307,32 @@ bool ovl_is_whiteout(struct dentry *dentry)
->
->  struct file *ovl_path_open(struct path *path, int flags)
->  {
-> -       return dentry_open(path, flags | O_NOATIME, current_cred());
-> +       struct inode *inode = d_inode(path->dentry);
-> +       int err, acc_mode;
-> +
-> +       if (flags & ~(O_ACCMODE | O_LARGEFILE))
-> +               BUG();
-> +
-> +       switch (flags & O_ACCMODE) {
-> +       case O_RDONLY:
-> +               acc_mode = MAY_READ;
-> +               break;
-> +       case O_WRONLY:
-> +               acc_mode = MAY_WRITE;
-> +               break;
-> +       default:
-> +               BUG();
+Yes, that makes sense, there would be a false negative, thank you for
+pointing out this issue.
 
-This BUG: triggered on stable-rc 5.7, 5.4, 4.19 and 4.14.
+> I think instead you should add hlist_for_each_srcu and
+> hlist_for_each_entry_srcu macro to include/linux/rculist.h.
+> 
+This seems good to me, I can work on this, but I would wait for Paul's
+suggestion on this.
 
-steps to reproduce:
-          - cd /opt/ltp
-          - ./runltp -s execveat03
+> There is no need for equivalents of hlist_for_each_entry_continue_rcu
+> and hlist_for_each_entry_from_rcu, because they use rcu_dereference_raw.
+>  However, it's not documented why they do so.
+> 
+> Paul, do you have any objections to the idea?  Thanks,
+> 
+> Paolo
 
-Test output:
-mke2fs 1.43.8 (1-Jan-2018)
-[   47.739682] ------------[ cut here ]------------
-[   47.744317] kernel BUG at fs/overlayfs/util.c:314!
-[   47.749117] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[   47.754608] Modules linked in: overlay rfkill crc32_ce crct10dif_ce fuse
-[   47.761335] Process execveat03 (pid: 2880, stack limit = 0xffff00000ec60000)
-[   47.768397] CPU: 3 PID: 2880 Comm: execveat03 Not tainted
-4.14.186-rc1-00111-gb518002db397 #1
-[   47.776933] Hardware name: ARM Juno development board (r2) (DT)
-[   47.782860] task: ffff8009546ade80 task.stack: ffff00000ec60000
-[   47.788819] pc : ovl_path_open+0xa8/0xb0 [overlay]
-[   47.793641] lr : ovl_check_d_type_supported+0x38/0xf0 [overlay]
-[   47.799567] sp : ffff00000ec63ba0 pstate : 40000145
-[   47.804449] x29: ffff00000ec63ba0 x28: 0000000000000000
-[   47.809770] x27: ffff800955bfb710 x26: ffff800955bfb700
-[   47.815091] x25: ffff00000ec63ce0 x24: 0000000000000000
-[   47.820412] x23: ffff00000ec63cd0 x22: 0000000000000001
-[   47.825733] x21: ffff8009509609b8 x20: ffff00000ec63ce0
-[   47.831054] x19: 0000000000004000 x18: 0000000000000000
-[   47.836375] x17: 0000000000000000 x16: ffff0000080d1800
-[   47.841696] x15: 095a041701101c00 x14: ff00000000000000
-[   47.847017] x13: 0000000000000000 x12: 000000000000000b
-[   47.852338] x11: 0101010101010101 x10: ffff800950960b40
-[   47.857659] x9 : 7f7f7f7f7f7f7f7f x8 : 6f2d6c6473727872
-[   47.862980] x7 : 001c100117045a09 x6 : 095a041701101c00
-[   47.868301] x5 : 0000000000000000 x4 : 0000000000000000
-[   47.873622] x3 : 0000000000000000 x2 : ffff000000b7ec88
-[   47.878943] x1 : ffff800953f78180 x0 : 0000000000004000
-[   47.884264] Call trace:
-[   47.886736]  ovl_path_open+0xa8/0xb0 [overlay]
-[   47.891209]  ovl_check_d_type_supported+0x38/0xf0 [overlay]
-[   47.896812]  ovl_fill_super+0x540/0xc98 [overlay]
-[   47.901528]  mount_nodev+0x4c/0xa8
-[   47.904954]  ovl_mount+0x14/0x28 [overlay]
-[   47.909056]  mount_fs+0x54/0x188
-[   47.912289]  vfs_kern_mount.part.0+0x4c/0x118
-[   47.916651]  do_mount+0x1cc/0xbe0
-[   47.919970]  compat_SyS_mount+0xb0/0x1b8
-[   47.923899]  __sys_trace_return+0x0/0x4
-[   47.927742] Code: f94013f5 a8c37bfd d65f03c0 d4210000 (d4210000)
-[   47.933845] ---[ end trace 1b32b515dde8d9db ]---
+Thank you,
+Madhuparna
 
-Test link,
-https://lkft.validation.linaro.org/scheduler/job/1517781#L1266
-
-metadata:
-  git branch: linux-4.14.y
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-  git commit: b518002db397b51173a3e17045bfb3ff0e1aa0ed
-  kernel-config:
-https://builds.tuxbuild.com/B_xCv6-0v8npcEVw6hA_ZQ/kernel.config
-
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+> 
