@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72987C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F16C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4508E20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C1F20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946177;
-	bh=Hpsh9cDCa8eylw5OZnQy4anD48i3R8tVNBdx07my5+Y=;
+	s=default; t=1592946193;
+	bh=49qIr2bme5VHBwoOnXrXG2s0Ld5QHMRUkftv5Yy7fkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rR/xxDcWSNc5W1YRP7QeSVKA4ptc7uNem7oj4XN6r7DfT8DL0zsKnkQVOvhMTlUf9
-	 yJBvq8YoQc8AJrG7/C8dMWMfg46meFuk7YrtoGiMVE7vObQlWuJskMnSTWB7TMgzyl
-	 GiZr5+lZeks6+BodfDTpMUaHcC6AYoJ60YtTFeIA=
+	b=r96nSwfijaRqTT+eYMb9Y3ULvvsN8oi6002n27uUaKREe4tYsXFHZG4axCCwj+jtK
+	 23wrOwMAsev1/ajhQvbwI5mgfIgCGdK63S1hPtawhMhVubXe0ebvDDcrmabhHwe1HW
+	 DhQusCUGbdoOsSb+sUvfLi1AnWUkdGbm1kpR8LaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404255AbgFWVCz (ORCPT
+        id S2404293AbgFWVDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34492 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390619AbgFWUiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:38:55 -0400
+        id S2391992AbgFWUit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:38:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D2621531;
-        Tue, 23 Jun 2020 20:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 527C0215A4;
+        Tue, 23 Jun 2020 20:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944735;
-        bh=Hpsh9cDCa8eylw5OZnQy4anD48i3R8tVNBdx07my5+Y=;
+        s=default; t=1592944729;
+        bh=49qIr2bme5VHBwoOnXrXG2s0Ld5QHMRUkftv5Yy7fkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6kvXktrSiehzCaRVHZKXv11UK2iyZepITXz4KGmOLwB3+tTU0KpweCT6drGC++1h
-         eb8d1EAMVDAtcIyHFZP03uy7Xm5A5cFu5jz3Hr4v+GIso0mZnCWkDkdrv/NikzMlst
-         KaBiKK9ao8oAXywYHSrxZCM0N5+WZ4H64G1wcc88=
+        b=GKOOYh7sG8ziYVCWdlBb6vd38csc5JnkK4m2fwGQP6Gw3atY9f5o56J6qt6iia7lT
+         QDBCKRessjcUXXhFtol8fVWTT7fUGqx6F8A5nz1liURIEUVwjEYNQabeZMRqS6f2vJ
+         cPqZcXv2u8r042QqjSQJwXBgipZbrhgq0JcyXvGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 105/206] watchdog: da9062: No need to ping manually before setting timeout
-Date:   Tue, 23 Jun 2020 21:57:13 +0200
-Message-Id: <20200623195322.108462444@linuxfoundation.org>
+Subject: [PATCH 4.19 103/206] PCI: dwc: Fix inner MSI IRQ domain registration
+Date:   Tue, 23 Jun 2020 21:57:11 +0200
+Message-Id: <20200623195322.005718151@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -63,47 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Riedmueller <s.riedmueller@phytec.de>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
+[ Upstream commit 0414b93e78d87ecc24ae1a7e61fe97deb29fa2f4 ]
 
-There is actually no need to ping the watchdog before disabling it
-during timeout change. Disabling the watchdog already takes care of
-resetting the counter.
+On a system that uses the internal DWC MSI widget, I get this
+warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
 
-This fixes an issue during boot when the userspace watchdog handler takes
-over and the watchdog is already running. Opening the watchdog in this case
-leads to the first ping and directly after that without the required
-heartbeat delay a second ping issued by the set_timeout call. Due to the
-missing delay this resulted in a reset.
+  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+This is due to the fact that the DWC MSI code tries to register two
+IRQ domains for the same firmware node, without telling the low
+level code how to distinguish them (by setting a bus token). This
+further confuses debugfs which tries to create corresponding
+files for each domain.
+
+Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
+the closest thing we have as to "generic MSI".
+
+Link: https://lore.kernel.org/r/20200501113921.366597-1-maz@kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 7f0a8e6352860..132d45d003ce4 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -60,11 +60,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
- 					      unsigned int regval)
- {
- 	struct da9062 *chip = wdt->hw;
--	int ret;
--
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret)
--		return ret;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 6d4ef0101ef68..be62f654c8eb7 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -285,6 +285,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 		return -ENOMEM;
+ 	}
  
- 	regmap_update_bits(chip->regmap,
- 				  DA9062AA_CONTROL_D,
++	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
++
+ 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+ 						   &dw_pcie_msi_domain_info,
+ 						   pp->irq_domain);
 -- 
 2.25.1
 
