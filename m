@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B92C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B25CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD5B206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F602137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942626;
-	bh=1UryEDmGlUrONnnp3xHIuxghwrrXGA2Qiq+pwONwrvI=;
+	s=default; t=1592942630;
+	bh=CxE7DB/DxfV2qd4+TdcBAW9MuHejz0PAQ9Qz9EB1qrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SCLWRaJUy2L5ZC0DYeOQ82M/9c0xEnMhHhfT/h66LfseLjFZQQYY4AZKM4zP7QH/9
-	 QbLpmMt2QWobLl/HDKT0e8eqjrojVjpV1DZjDz4hA7i8BpGnXG8VRemy4Gq+L6IXFA
-	 gbVYE242d4DHZu+GoNwduOe7tJmUhlTF4oJUTyLI=
+	b=Y0Aq3QLL/ksDGEaPMpotG4xUPc8YvtcWHdXLpeZT4cE70/2FZMRqxbiEP9AIuw/G/
+	 RgF7JB3SC1GeHzg+lmNP9bU20pmtNyj/dyAqq9ZGDEverXxKO0P0S6Gj4W86rTLAGa
+	 JDJoh3U/EAOv25NiDbHB7acmOzu8Ailf5XIBwD7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388097AbgFWUDp (ORCPT
+        id S2388106AbgFWUDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:03:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388076AbgFWUDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:03:40 -0400
+        id S2388096AbgFWUDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:03:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A2882082F;
-        Tue, 23 Jun 2020 20:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 471762082F;
+        Tue, 23 Jun 2020 20:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942619;
-        bh=1UryEDmGlUrONnnp3xHIuxghwrrXGA2Qiq+pwONwrvI=;
+        s=default; t=1592942625;
+        bh=CxE7DB/DxfV2qd4+TdcBAW9MuHejz0PAQ9Qz9EB1qrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lWRryndH1AunBFLzo27Lz/Ji5urbD8JTJwF2/MtkyF8yo5qm90bDe/fAMgTNK3bub
-         Skou6QzoJur3vo9GRA6qb5xCxwr1v22+bvShF4QGw1aQYiHPALXB+Sd7n5U7gmbn+1
-         0ExMdCtwNMNmRFUBWKu7eyRvS+4F0pYP4L0h89zU=
+        b=HdviU5AJ0DJC43qvr+RHGwYxeWjukwNqU/j0eMsJp0ChOduDyau5PawrmS86l1Ptf
+         +A/mb0UZpgGuM9frNTvEl29Jhben6v3SkI5VojFaUGhsGf6jW3V8wW/aptlsZeJiZt
+         6b6FhHdagmgLBDOH2ytDLb8CkrQDe4H1eptudgWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 039/477] staging: wfx: fix output of rx_stats on big endian hosts
-Date:   Tue, 23 Jun 2020 21:50:36 +0200
-Message-Id: <20200623195409.450730073@linuxfoundation.org>
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        chenqiwu <chenqiwu@xiaomi.com>,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 041/477] usb: roles: Switch on role-switch uevent reporting
+Date:   Tue, 23 Jun 2020 21:50:38 +0200
+Message-Id: <20200623195409.546274713@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,49 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit a823d6ecd4904e1a6ffb12964de88fb0bb4802f6 ]
+[ Upstream commit 3e63cff384e625f09758ce8f4d01ae3033402b63 ]
 
-The struct hif_rx_stats contains only little endian values. Thus, it is
-necessary to fix byte ordering before to use them.
+Right now we don't report to user-space a role switch when doing a
+usb_role_switch_set_role() despite having registered the uevent callbacks.
 
-Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/20200512150414.267198-6-Jerome.Pouiller@silabs.com
+This patch switches on the notifications allowing user-space to see
+role-switch change notifications and subsequently determine the current
+controller data-role.
+
+example:
+PFX=/devices/platform/soc/78d9000.usb/ci_hdrc.0
+
+root@somebox# udevadm monitor -p
+
+KERNEL[49.894994] change $PFX/usb_role/ci_hdrc.0-role-switch (usb_role)
+ACTION=change
+DEVPATH=$PFX/usb_role/ci_hdrc.0-role-switch
+SUBSYSTEM=usb_role
+DEVTYPE=usb_role_switch
+USB_ROLE_SWITCH=ci_hdrc.0-role-switch
+SEQNUM=2432
+
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Wen Yang <wenyang@linux.alibaba.com>
+Cc: chenqiwu <chenqiwu@xiaomi.com>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Link: https://lore.kernel.org/r/20200508162937.2566818-1-bryan.odonoghue@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wfx/debug.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/usb/roles/class.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/wfx/debug.c b/drivers/staging/wfx/debug.c
-index 1164aba118a18..a73b5bbb578e6 100644
---- a/drivers/staging/wfx/debug.c
-+++ b/drivers/staging/wfx/debug.c
-@@ -142,7 +142,7 @@ static int wfx_rx_stats_show(struct seq_file *seq, void *v)
- 	mutex_lock(&wdev->rx_stats_lock);
- 	seq_printf(seq, "Timestamp: %dus\n", st->date);
- 	seq_printf(seq, "Low power clock: frequency %uHz, external %s\n",
--		   st->pwr_clk_freq,
-+		   le32_to_cpu(st->pwr_clk_freq),
- 		   st->is_ext_pwr_clk ? "yes" : "no");
- 	seq_printf(seq,
- 		   "Num. of frames: %d, PER (x10e4): %d, Throughput: %dKbps/s\n",
-@@ -152,9 +152,12 @@ static int wfx_rx_stats_show(struct seq_file *seq, void *v)
- 	for (i = 0; i < ARRAY_SIZE(channel_names); i++) {
- 		if (channel_names[i])
- 			seq_printf(seq, "%5s %8d %8d %8d %8d %8d\n",
--				   channel_names[i], st->nb_rx_by_rate[i],
--				   st->per[i], st->rssi[i] / 100,
--				   st->snr[i] / 100, st->cfo[i]);
-+				   channel_names[i],
-+				   le32_to_cpu(st->nb_rx_by_rate[i]),
-+				   le16_to_cpu(st->per[i]),
-+				   (s16)le16_to_cpu(st->rssi[i]) / 100,
-+				   (s16)le16_to_cpu(st->snr[i]) / 100,
-+				   (s16)le16_to_cpu(st->cfo[i]));
- 	}
- 	mutex_unlock(&wdev->rx_stats_lock);
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 5b17709821dfd..27d92af296351 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -49,8 +49,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+ 	mutex_lock(&sw->lock);
+ 
+ 	ret = sw->set(sw, role);
+-	if (!ret)
++	if (!ret) {
+ 		sw->role = role;
++		kobject_uevent(&sw->dev.kobj, KOBJ_CHANGE);
++	}
+ 
+ 	mutex_unlock(&sw->lock);
  
 -- 
 2.25.1
