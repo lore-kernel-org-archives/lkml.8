@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B665CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1911520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9673320738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947418;
-	bh=CvsfPdG/ATsZOu/+MpQV9rjJuabT7A6GDEwGA3TImnw=;
+	s=default; t=1592947422;
+	bh=zK/irHUDZK0+XA8nS3vqOsMfHGzH7FbVhWaR9AONVhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIZ7OVZYdXDILIqaA242Mca7JeBeb8QMnAFtH6HJxUe+bIWE6uXYI7iKtAFJgxJTl
-	 toeXD8TLp7690qdWVeFOQUs60ab6Jyj1B+jx/+dwprWLmIONe7J3olxHT0wa7c/k3k
-	 k/zp3rBwzwLFR1egsle1K7z3+WRK2pvb/d6wTKF8=
+	b=DpHvxnAzTR/TSS6N/d3oKp3BFH3hNhDTBQmQR4XaHpY7B0t3TbLn7MSWfFgkcocYS
+	 BwnqENuwzXVXfbmw9bpGz2aVmJmx6do2Ln2+FvOsxJyW8/9HroUKddHPwTKpg3AGTr
+	 /Od9M3R7R4FtE9qTsYYixg8pElCU5i25uyAlr3Bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393467AbgFWVXg (ORCPT
+        id S2393508AbgFWVXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38436 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388743AbgFWUU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:20:58 -0400
+        id S2389970AbgFWUUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:20:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1932520723;
-        Tue, 23 Jun 2020 20:20:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF3EB206C3;
+        Tue, 23 Jun 2020 20:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943657;
-        bh=CvsfPdG/ATsZOu/+MpQV9rjJuabT7A6GDEwGA3TImnw=;
+        s=default; t=1592943647;
+        bh=zK/irHUDZK0+XA8nS3vqOsMfHGzH7FbVhWaR9AONVhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZEHOjb5vE1QEmeU+UV52RNEdFEgUKU8wk9t8hlemtce8oXdembrkezq2NLRlCN0AE
-         Rq3YpNk+620bKElg7AAuD1d4jB1LmyFVA9NE+gXijvoUIBc1SENBVWvPWyt5KZ8zkp
-         gv7YSoiBEuLuTqn9GXaokoYEV7z5yMUBoP4jCHRM=
+        b=g5Th2XgSqHtLNPil1TOiFKIYoURjhfyaiBamqS8dGlmbm4X4OWtpyaUA3E6dQyYvn
+         4fcpwVMDt+iwPwt2c2ZqAuD+jzgzVeOj5nX8lFbU3u/jmZipD314CPSf8JSH8bp52+
+         NuNyGbUdpDN22o/5yZm0F9GLc/wp+HFlG1LjK9As=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Dillinger <miked@softtalker.com>,
-        Stefano Brivio <sbrivio@redhat.com>, Phil Sutter <phil@nwl.cc>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.7 469/477] netfilter: nft_set_rbtree: Dont account for expired elements on insertion
-Date:   Tue, 23 Jun 2020 21:57:46 +0200
-Message-Id: <20200623195429.715962046@linuxfoundation.org>
+        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: [PATCH 5.7 442/477] drm/i915: Fix AUX power domain toggling across TypeC mode resets
+Date:   Tue, 23 Jun 2020 21:57:19 +0200
+Message-Id: <20200623195428.429474311@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,115 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Imre Deak <imre.deak@intel.com>
 
-commit 33d077996a87175b155fe88030e8fec7ca76327e upstream.
+commit d96536f0fe699729a0974eb5b65eb0d87cc747e1 upstream.
 
-While checking the validity of insertion in __nft_rbtree_insert(),
-we currently ignore conflicting elements and intervals only if they
-are not active within the next generation.
+Make sure to select the port's AUX power domain while holding the TC
+port lock. The domain depends on the port's current TC mode, which may
+get changed under us if we're not holding the lock.
 
-However, if we consider expired elements and intervals as
-potentially conflicting and overlapping, we'll return error for
-entries that should be added instead. This is particularly visible
-with garbage collection intervals that are comparable with the
-element timeout itself, as reported by Mike Dillinger.
+This was left out from
+commit 8c10e2262663 ("drm/i915: Keep the TypeC port mode fixed for detect/AUX transfers")
 
-Other than the simple issue of denying insertion of valid entries,
-this might also result in insertion of a single element (opening or
-closing) out of a given interval. With single entries (that are
-inserted as intervals of size 1), this leads in turn to the creation
-of new intervals. For example:
-
-  # nft add element t s { 192.0.2.1 }
-  # nft list ruleset
-  [...]
-     elements = { 192.0.2.1-255.255.255.255 }
-
-Always ignore expired elements active in the next generation, while
-checking for conflicts.
-
-It might be more convenient to introduce a new macro that covers
-both inactive and expired items, as this type of check also appears
-quite frequently in other set back-ends. This is however beyond the
-scope of this fix and can be deferred to a separate patch.
-
-Other than the overlap detection cases introduced by commit
-7c84d41416d8 ("netfilter: nft_set_rbtree: Detect partial overlaps
-on insertion"), we also have to cover the original conflict check
-dealing with conflicts between two intervals of size 1, which was
-introduced before support for timeout was introduced. This won't
-return an error to the user as -EEXIST is masked by nft if
-NLM_F_EXCL is not given, but would result in a silent failure
-adding the entry.
-
-Reported-by: Mike Dillinger <miked@softtalker.com>
-Cc: <stable@vger.kernel.org> # 5.6.x
-Fixes: 8d8540c4f5e0 ("netfilter: nft_set_rbtree: add timeout support")
-Fixes: 7c84d41416d8 ("netfilter: nft_set_rbtree: Detect partial overlaps on insertion")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Acked-by: Phil Sutter <phil@nwl.cc>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: Imre Deak <imre.deak@intel.com>
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200514204553.27193-1-imre.deak@intel.com
+(cherry picked from commit ae9b6cfe1352da25931bce3ea4acfd4dc1ac8a85)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_set_rbtree.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/i915/display/intel_dp.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -271,12 +271,14 @@ static int __nft_rbtree_insert(const str
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -1343,8 +1343,7 @@ intel_dp_aux_xfer(struct intel_dp *intel
+ 	bool is_tc_port = intel_phy_is_tc(i915, phy);
+ 	i915_reg_t ch_ctl, ch_data[5];
+ 	u32 aux_clock_divider;
+-	enum intel_display_power_domain aux_domain =
+-		intel_aux_power_domain(intel_dig_port);
++	enum intel_display_power_domain aux_domain;
+ 	intel_wakeref_t aux_wakeref;
+ 	intel_wakeref_t pps_wakeref;
+ 	int i, ret, recv_bytes;
+@@ -1359,6 +1358,8 @@ intel_dp_aux_xfer(struct intel_dp *intel
+ 	if (is_tc_port)
+ 		intel_tc_port_lock(intel_dig_port);
  
- 			if (nft_rbtree_interval_start(new)) {
- 				if (nft_rbtree_interval_end(rbe) &&
--				    nft_set_elem_active(&rbe->ext, genmask))
-+				    nft_set_elem_active(&rbe->ext, genmask) &&
-+				    !nft_set_elem_expired(&rbe->ext))
- 					overlap = false;
- 			} else {
- 				overlap = nft_rbtree_interval_end(rbe) &&
- 					  nft_set_elem_active(&rbe->ext,
--							      genmask);
-+							      genmask) &&
-+					  !nft_set_elem_expired(&rbe->ext);
- 			}
- 		} else if (d > 0) {
- 			p = &parent->rb_right;
-@@ -284,9 +286,11 @@ static int __nft_rbtree_insert(const str
- 			if (nft_rbtree_interval_end(new)) {
- 				overlap = nft_rbtree_interval_end(rbe) &&
- 					  nft_set_elem_active(&rbe->ext,
--							      genmask);
-+							      genmask) &&
-+					  !nft_set_elem_expired(&rbe->ext);
- 			} else if (nft_rbtree_interval_end(rbe) &&
--				   nft_set_elem_active(&rbe->ext, genmask)) {
-+				   nft_set_elem_active(&rbe->ext, genmask) &&
-+				   !nft_set_elem_expired(&rbe->ext)) {
- 				overlap = true;
- 			}
- 		} else {
-@@ -294,15 +298,18 @@ static int __nft_rbtree_insert(const str
- 			    nft_rbtree_interval_start(new)) {
- 				p = &parent->rb_left;
++	aux_domain = intel_aux_power_domain(intel_dig_port);
++
+ 	aux_wakeref = intel_display_power_get(i915, aux_domain);
+ 	pps_wakeref = pps_lock(intel_dp);
  
--				if (nft_set_elem_active(&rbe->ext, genmask))
-+				if (nft_set_elem_active(&rbe->ext, genmask) &&
-+				    !nft_set_elem_expired(&rbe->ext))
- 					overlap = false;
- 			} else if (nft_rbtree_interval_start(rbe) &&
- 				   nft_rbtree_interval_end(new)) {
- 				p = &parent->rb_right;
- 
--				if (nft_set_elem_active(&rbe->ext, genmask))
-+				if (nft_set_elem_active(&rbe->ext, genmask) &&
-+				    !nft_set_elem_expired(&rbe->ext))
- 					overlap = false;
--			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
-+			} else if (nft_set_elem_active(&rbe->ext, genmask) &&
-+				   !nft_set_elem_expired(&rbe->ext)) {
- 				*ext = &rbe->ext;
- 				return -EEXIST;
- 			} else {
 
 
