@@ -2,109 +2,97 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ADFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD5B206C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592873054;
-	bh=VWjVUGNmFlVkvNEThVXbyf9Imml5f0wPVHRhk67aEU4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06pKk8NNsl+p9J0jxtipBWRjTwV15trmCnaJZT5g4OwjPzDVXW39jRaT5jSr7RRzk
-	 GO3nGzxXCeRbep2nGQOw00bM1ixQJjrqaer+MtDduUxAGZpUVImuHQZAMeCvIur7PH
-	 01X8d39KigqLA5F9XVrRSeKqSb+0bnnAk37Wfvh4=
+	by mail.kernel.org (Postfix) with ESMTP id D70D720706
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:46:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvLMDgYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732333AbgFWAoN (ORCPT
+        id S1731954AbgFWAqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732151AbgFWAng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:43:36 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD5C20780;
-        Tue, 23 Jun 2020 00:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592873015;
-        bh=VWjVUGNmFlVkvNEThVXbyf9Imml5f0wPVHRhk67aEU4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rnEmpZkIHFrWoSSrNmjzXdITRuekXzwXZjqXSn0zi+oVujIagEpVoz0UEnCzmDUUO
-         0ORBoQDmBh+qMGzhVE9NEFDApmYqWf5ZmIqTRj+7fUhbSHC7VG9A36fhhYKBYSUbeL
-         JZv8ya+WgGkByFE0qdiGij8kc5SAFSUOBjz/Q1mw=
-From:   paulmck@kernel.org
-To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 02/10] x86/mm/pat: Mark an intentional data race
-Date:   Mon, 22 Jun 2020 17:43:25 -0700
-Message-Id: <20200623004333.27227-2-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200623003731.GA26717@paulmck-ThinkPad-P72>
-References: <20200623003731.GA26717@paulmck-ThinkPad-P72>
+        Mon, 22 Jun 2020 20:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731729AbgFWAqU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:46:20 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9805C061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:45:26 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id l188so4339192qkf.10
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 17:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FBwIr+e7jchXkt4H6NuRTDKCZPzK552qDXzcqbEDs6A=;
+        b=KvLMDgYyXyMPI7eTp85e3a/i4y9HPaeqg07wSFPssZfnEXEecckD/ppMG6XW2NJcHU
+         Xl/5cocxTIR91efDHjl/CCC//+USry2FvyNoKbQDRySIz1b1D+iawmDyxFkvH8lfGbNl
+         DngNEmdT7aFQtMxwvBTJQ5fNtJcCyTtCv71CztBmsJ2uw3Mkq+cp4dnHi6Y7J8OAsiKO
+         e3H/aHRoRVG/KAA8gP3B8BLARaoFHX4t+X7LUWRY2kk28c42kHbSNiP1q1GpwInNB5Gl
+         xGte3AsxjbBgHA7aHstHMeDHaaJbh7GvL4fFBzOPzKnvsCzFGfSClnwA0xGa8bd1A74W
+         QMRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FBwIr+e7jchXkt4H6NuRTDKCZPzK552qDXzcqbEDs6A=;
+        b=h2LdC75nflPRzZbIYSyAoH+P99p34+Qxhs0yWOkFyzuvhmte/o2YEMO54km6xJhsuW
+         EdP0ArjfZlfJ2j4Zdxw+EWL8cOE2dfYGA54//Lp3/I2qMLE+pNZ3D1x55GVMqTpFHlDa
+         kp0Hc7m0/T8UmYnufjGBVm4V6CgfYbBSy4q7dn3wlDIcCjNKhresVyxDLyUBFF9YecLl
+         87nFLhpetJB7Gum9QjyAyhmb+eWh+59yzi0DvIyd8jvxRyawXthsp/25gYLqM4g53hh+
+         mKmuOrFGqY3AW0PA4Rb2AOlAcQMEsHT00rOX8VwZhuNjrpmJoo+ObN+iR8ZFr26vLdvP
+         GsfQ==
+X-Gm-Message-State: AOAM53387G94bW+Vb7tPVcDRiH660E79XLE9R1gRTVulLiCPK5TRQdA4
+        4HGnWGEa/5k3IoQr/OhE/WeBjFUc
+X-Google-Smtp-Source: ABdhPJyrvMyw/vRiwaIk+6bsDB49ocS0y4w+9Qel4O1jM1875NmTOtCphmQoLZMRBTctpPG4nrtiNA==
+X-Received: by 2002:a37:488c:: with SMTP id v134mr18322081qka.318.1592873125630;
+        Mon, 22 Jun 2020 17:45:25 -0700 (PDT)
+Received: from localhost.localdomain ([72.53.229.195])
+        by smtp.gmail.com with ESMTPSA id r2sm9493715qtn.27.2020.06.22.17.45.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 17:45:25 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Janos Farkas <chexum+dev@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v1 0/2] address romfs performance regression
+Date:   Mon, 22 Jun 2020 20:45:18 -0400
+Message-Id: <20200623004520.26520-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+Tree: next-20200613
 
-cpa_4k_install could be accessed concurrently as noticed by KCSAN,
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Janos Farkas <chexum+dev@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+To: linux-kernel@vger.kernel.org
 
-read to 0xffffffffaa59a000 of 8 bytes by interrupt on cpu 7:
-cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
-__change_page_attr+0x10cf/0x1840 arch/x86/mm/pat/set_memory.c:1514
-__change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
-__set_pages_np+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2148
-__kernel_map_pages+0xb0/0xc8 arch/x86/mm/pat/set_memory.c:2178
-kernel_map_pages include/linux/mm.h:2719 [inline] <snip>
+Sven Van Asbroeck (2):
+  romfs: use s_blocksize(_bits) if CONFIG_BLOCK
+  romfs: address performance regression since v3.10
 
-write to 0xffffffffaa59a000 of 8 bytes by task 1 on cpu 6:
-cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
-__change_page_attr+0x10ea/0x1840 arch/x86/mm/pat/set_memory.c:1514
-__change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
-__set_pages_p+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2129
-__kernel_map_pages+0x2e/0xc8 arch/x86/mm/pat/set_memory.c:2176
-kernel_map_pages include/linux/mm.h:2719 [inline] <snip>
+ fs/romfs/storage.c | 25 ++++++++--------
+ fs/romfs/super.c   | 71 ++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 78 insertions(+), 18 deletions(-)
 
-Both accesses are due to the same "cpa_4k_install++" in
-cpa_inc_4k_install. A data race here could be potentially undesirable:
-depending on compiler optimizations or how x86 executes a non-LOCK'd
-increment, it may lose increments, corrupt the counter, etc. Since this
-counter only seems to be used for printing some stats, this data race
-itself is unlikely to cause harm to the system though. Thus, mark this
-intentional data race using the data_race() marco.
-
-Suggested-by: Macro Elver <elver@google.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- arch/x86/mm/pat/set_memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 77e0430..d1b2a88 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -135,7 +135,7 @@ static inline void cpa_inc_2m_checked(void)
- 
- static inline void cpa_inc_4k_install(void)
- {
--	cpa_4k_install++;
-+	data_race(cpa_4k_install++);
- }
- 
- static inline void cpa_inc_lp_sameprot(int level)
 -- 
-2.9.5
+2.17.1
 
