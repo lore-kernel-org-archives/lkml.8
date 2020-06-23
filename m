@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB082078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCD82078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933788;
-	bh=mfDFS8D7iKgXefOgDDNed7cMp9TqQlEMh+b4QZDqsu0=;
+	s=default; t=1592933793;
+	bh=ixsHUQGYOCZM9ksHuB4vVsBeM8l6i98MFux05+DDgQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EoUv0lSOeJS4SAXbkw7cE6MwpA0iVD7nVhbxB9Mwa0/XjIgcTYjQOGI/PnSotvcq5
-	 w9EXOQKQ2t5QOcPrwRZ1KYQsVl/XObQyGITxp6x4Rmet8LoPPziC0c9SVzJ1PBI3gt
-	 TcaATba3RqdX90x0LZ4aZDg5rVB5o2p99ES5hqnM=
+	b=fePyDq1YmMZRBEWMKf3nmLrxZm7AouxGRCNeT12nu3G0XFeJ4rCTZp5C5iRfzCa0B
+	 3Opk5aAGlkxPc5JOyhurH2xry7WSyXuUTwhzJDJD0/fDrZYTo8mOrnlHQZMlyMI8IA
+	 49jCPjJPO3uojc2om3qh9OyFK5ps7UTcrhXSKfPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbgFWRg0 (ORCPT
+        id S1732962AbgFWRgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33442 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:36:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387545AbgFWRgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:22 -0400
+        id S2387570AbgFWRg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D638920706;
-        Tue, 23 Jun 2020 17:36:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA52E20774;
+        Tue, 23 Jun 2020 17:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933780;
-        bh=mfDFS8D7iKgXefOgDDNed7cMp9TqQlEMh+b4QZDqsu0=;
+        s=default; t=1592933785;
+        bh=ixsHUQGYOCZM9ksHuB4vVsBeM8l6i98MFux05+DDgQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pgf4jNUcKn+UYdMDVYgCzBQzVXV9hkhE9s0MIZtkxYbZDYg9hE26ucWpVZaOhpmeX
-         0Ak5WkiXvcL0C2ywXEkkaXONiFtpuau13AmPZyobBOsAJUMn8Cl7Yu/FpxCs62IxF4
-         SPHGHsrdxuckL45wHLw42aWNXjSlW508GMz/6qFo=
+        b=NzdVTN6d5vw1fujIQhviV0blIkhmNHA1Cpu93lP7aAZCN40B0ODA9qoU1EX62JOoa
+         1YZKgYXJjRixMZB/G2VX7v01Ix3/YypIfjjZnnal3eMqkNrlZN9PtNpHN1nfJafaym
+         SyNCeDU1Q8KLfQPgyarUmS+UPP2zYSDsAVRlc4dc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 17/24] s390/vdso: fix vDSO clock_getres()
-Date:   Tue, 23 Jun 2020 13:35:52 -0400
-Message-Id: <20200623173559.1355728-17-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 21/24] kprobes: Suppress the suspicious RCU warning on kprobes
+Date:   Tue, 23 Jun 2020 13:35:56 -0400
+Message-Id: <20200623173559.1355728-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173559.1355728-1-sashal@kernel.org>
 References: <20200623173559.1355728-1-sashal@kernel.org>
@@ -61,117 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 478237a595120a18e9b52fd2c57a6e8b7a01e411 ]
+[ Upstream commit 6743ad432ec92e680cd0d9db86cb17b949cf5a43 ]
 
-clock_getres in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+Anders reported that the lockdep warns that suspicious
+RCU list usage in register_kprobe() (detected by
+CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
+access kprobe_table[] by hlist_for_each_entry_rcu()
+without rcu_read_lock.
 
-In particular, posix_get_hrtimer_res() does:
-    sec = 0;
-    ns = hrtimer_resolution;
-and hrtimer_resolution depends on the enablement of the high
-resolution timers that can happen either at compile or at run time.
+If we call get_kprobe() from the breakpoint handler context,
+it is run with preempt disabled, so this is not a problem.
+But in other cases, instead of rcu_read_lock(), we locks
+kprobe_mutex so that the kprobe_table[] is not updated.
+So, current code is safe, but still not good from the view
+point of RCU.
 
-Fix the s390 vdso implementation of clock_getres keeping a copy of
-hrtimer_resolution in vdso data and using that directly.
+Joel suggested that we can silent that warning by passing
+lockdep_is_held() to the last argument of
+hlist_for_each_entry_rcu().
 
-Link: https://lkml.kernel.org/r/20200324121027.21665-1-vincenzo.frascino@arm.com
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-[heiko.carstens@de.ibm.com: use llgf for proper zero extension]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Add lockdep_is_held(&kprobe_mutex) at the end of the
+hlist_for_each_entry_rcu() to suppress the warning.
+
+Link: http://lkml.kernel.org/r/158927055350.27680.10261450713467997503.stgit@devnote2
+
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Suggested-by: Joel Fernandes <joel@joelfernandes.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/vdso.h           |  1 +
- arch/s390/kernel/asm-offsets.c         |  2 +-
- arch/s390/kernel/time.c                |  1 +
- arch/s390/kernel/vdso64/clock_getres.S | 10 +++++-----
- 4 files changed, 8 insertions(+), 6 deletions(-)
+ kernel/kprobes.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
-index 169d7604eb804..f3ba84fa9bd18 100644
---- a/arch/s390/include/asm/vdso.h
-+++ b/arch/s390/include/asm/vdso.h
-@@ -36,6 +36,7 @@ struct vdso_data {
- 	__u32 tk_shift;			/* Shift used for xtime_nsec	0x60 */
- 	__u32 ts_dir;			/* TOD steering direction	0x64 */
- 	__u64 ts_end;			/* TOD steering end		0x68 */
-+	__u32 hrtimer_res;		/* hrtimer resolution		0x70 */
- };
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 2625c241ac00f..bd484392d7894 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
+ 	struct kprobe *p;
  
- struct vdso_per_cpu_data {
-diff --git a/arch/s390/kernel/asm-offsets.c b/arch/s390/kernel/asm-offsets.c
-index b6628586ab702..a65cb4924bdbd 100644
---- a/arch/s390/kernel/asm-offsets.c
-+++ b/arch/s390/kernel/asm-offsets.c
-@@ -76,6 +76,7 @@ int main(void)
- 	OFFSET(__VDSO_TK_SHIFT, vdso_data, tk_shift);
- 	OFFSET(__VDSO_TS_DIR, vdso_data, ts_dir);
- 	OFFSET(__VDSO_TS_END, vdso_data, ts_end);
-+	OFFSET(__VDSO_CLOCK_REALTIME_RES, vdso_data, hrtimer_res);
- 	OFFSET(__VDSO_ECTG_BASE, vdso_per_cpu_data, ectg_timer_base);
- 	OFFSET(__VDSO_ECTG_USER, vdso_per_cpu_data, ectg_user_time);
- 	OFFSET(__VDSO_CPU_NR, vdso_per_cpu_data, cpu_nr);
-@@ -87,7 +88,6 @@ int main(void)
- 	DEFINE(__CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
- 	DEFINE(__CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
- 	DEFINE(__CLOCK_THREAD_CPUTIME_ID, CLOCK_THREAD_CPUTIME_ID);
--	DEFINE(__CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
- 	DEFINE(__CLOCK_COARSE_RES, LOW_RES_NSEC);
- 	BLANK();
- 	/* idle data offsets */
-diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
-index e8766beee5ad8..8ea9db599d38d 100644
---- a/arch/s390/kernel/time.c
-+++ b/arch/s390/kernel/time.c
-@@ -310,6 +310,7 @@ void update_vsyscall(struct timekeeper *tk)
- 
- 	vdso_data->tk_mult = tk->tkr_mono.mult;
- 	vdso_data->tk_shift = tk->tkr_mono.shift;
-+	vdso_data->hrtimer_res = hrtimer_resolution;
- 	smp_wmb();
- 	++vdso_data->tb_update_count;
- }
-diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
-index 081435398e0a1..0c79caa32b592 100644
---- a/arch/s390/kernel/vdso64/clock_getres.S
-+++ b/arch/s390/kernel/vdso64/clock_getres.S
-@@ -17,12 +17,14 @@
- 	.type  __kernel_clock_getres,@function
- __kernel_clock_getres:
- 	CFI_STARTPROC
--	larl	%r1,4f
-+	larl	%r1,3f
-+	lg	%r0,0(%r1)
- 	cghi	%r2,__CLOCK_REALTIME_COARSE
- 	je	0f
- 	cghi	%r2,__CLOCK_MONOTONIC_COARSE
- 	je	0f
--	larl	%r1,3f
-+	larl	%r1,_vdso_data
-+	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
- 	cghi	%r2,__CLOCK_REALTIME
- 	je	0f
- 	cghi	%r2,__CLOCK_MONOTONIC
-@@ -36,7 +38,6 @@ __kernel_clock_getres:
- 	jz	2f
- 0:	ltgr	%r3,%r3
- 	jz	1f				/* res == NULL */
--	lg	%r0,0(%r1)
- 	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
- 	stg	%r0,8(%r3)			/* store tp->tv_usec */
- 1:	lghi	%r2,0
-@@ -45,6 +46,5 @@ __kernel_clock_getres:
- 	svc	0
- 	br	%r14
- 	CFI_ENDPROC
--3:	.quad	__CLOCK_REALTIME_RES
--4:	.quad	__CLOCK_COARSE_RES
-+3:	.quad	__CLOCK_COARSE_RES
- 	.size	__kernel_clock_getres,.-__kernel_clock_getres
+ 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+-	hlist_for_each_entry_rcu(p, head, hlist) {
++	hlist_for_each_entry_rcu(p, head, hlist,
++				 lockdep_is_held(&kprobe_mutex)) {
+ 		if (p->addr == addr)
+ 			return p;
+ 	}
 -- 
 2.25.1
 
