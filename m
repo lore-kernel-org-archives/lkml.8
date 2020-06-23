@@ -2,39 +2,40 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0654C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE87207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760032098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 19:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbgFWTfo (ORCPT
+        id S2387546AbgFWTfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:35:44 -0400
+        Tue, 23 Jun 2020 15:35:50 -0400
 Received: from mga11.intel.com ([192.55.52.93]:11007 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbgFWTfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 15:35:43 -0400
-IronPort-SDR: 2mwWk0sby4tCvc0rJNa1K8Y8icUos6UEtcwxHT1zg1gc1A9xRDDO8r6YYFYy3NGNKXWNbZL8yj
- 1+Sjxi+YBNbQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="142430966"
+        id S1733309AbgFWTfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 15:35:45 -0400
+IronPort-SDR: H10Jgg2UxxfeaY7xUaV/Mt4DpUyYVYice8NxIgp1SwXQRN2xZr7gPxhvWqnEGhZ5BYZBSCvGnI
+ VLxyoFUAusfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="142430976"
 X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="142430966"
+   d="scan'208";a="142430976"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 12:35:43 -0700
-IronPort-SDR: w6DCk5L9cIhRfbhUuZT1pBFGa7B7OXBCXGDP8PbeXVBFzTrGCpF+awJ71LdnnZorr4xA6xGRJ4
- xsY1D0eKysQA==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 12:35:44 -0700
+IronPort-SDR: KzHXMSfU2DHmk3eYK1ZX/Merfa9fzMuYT/5+BSbiITlLZIHTdodU9dUWHih0nr0PmCsIhgUX30
+ 9j6C8skSuTmw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,272,1589266800"; 
-   d="scan'208";a="263428285"
+   d="scan'208";a="263428296"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Jun 2020 12:35:43 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 23 Jun 2020 12:35:44 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -43,10 +44,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] KVM: x86/mmu: Zapping and recycling cleanups
-Date:   Tue, 23 Jun 2020 12:35:38 -0700
-Message-Id: <20200623193542.7554-1-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 3/4] KVM: x86/mmu: Batch zap MMU pages when shrinking the slab
+Date:   Tue, 23 Jun 2020 12:35:41 -0700
+Message-Id: <20200623193542.7554-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200623193542.7554-1-sean.j.christopherson@intel.com>
+References: <20200623193542.7554-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,43 +57,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Semi-random, but related, changes that deal with the handling of active
-root shadow pages during zapping and the zapping of arbitary/old pages.
+Use the recently introduced kvm_mmu_zap_oldest_mmu_pages() to batch zap
+MMU pages when shrinking a slab.  This fixes a long standing issue where
+KVM's shrinker implementation is completely ineffective due to zapping
+only a single page.  E.g. without batch zapping, forcing a scan via
+drop_caches basically has no impact on a VM with ~2k shadow pages.  With
+batch zapping, the number of shadow pages can be reduced to a few
+hundred pages in one or two runs of drop_caches.
 
-Patch 1 changes the low level handling to keep zapped active roots off the
-active page list.  KVM already relies on the vCPU to explicitly free the
-root, putting invalid root pages back on the list is just a quirk of the
-implementation.
+Note, if the default batch size (currently 128) is problematic, e.g.
+zapping 128 pages holds mmu_lock for too long, KVM can bound the batch
+size by setting @batch in mmu_shrinker.
 
-Patches 2 reworks the MMU page recycling to batch zap pages instead of
-zapping them one at a time.  This provides better handling for active root
-pages and also avoids multiple remote TLB flushes.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
 
-Patch 3 applies the batch zapping to the .shrink_scan() path.  This is a
-significant change in behavior, i.e. is the scariest of the changes, but
-unless I'm missing something it provides the intended functionality that
-has been lacking since shrinker support was first added.
-
-Patch 4 changes the page fault handlers to return an error to userspace
-instead of restarting the guest if there are no MMU pages available.  This
-is dependent on patch 2 as theoretically the old recycling flow could
-prematurely bail if it encountered an active root.
-
-v2:
-  - Add a comment for the list shenanigans in patch 1. [Paolo]
-  - Add patches 2-4.
-  - Rebased to kvm/queue, commit a037ff353ba6 ("Merge branch ...")
-
-Sean Christopherson (4):
-  KVM: x86/mmu: Don't put invalid SPs back on the list of active pages
-  KVM: x86/mmu: Batch zap MMU pages when recycling oldest pages
-  KVM: x86/mmu: Batch zap MMU pages when shrinking the slab
-  KVM: x86/mmu: Exit to userspace on make_mmu_pages_available() error
-
- arch/x86/kvm/mmu/mmu.c         | 94 +++++++++++++++++++++-------------
- arch/x86/kvm/mmu/paging_tmpl.h |  3 +-
- 2 files changed, 61 insertions(+), 36 deletions(-)
-
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 8c85a3a178f4..4d40b21a67bd 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -2825,19 +2825,6 @@ static void kvm_mmu_commit_zap_page(struct kvm *kvm,
+ 	}
+ }
+ 
+-static bool prepare_zap_oldest_mmu_page(struct kvm *kvm,
+-					struct list_head *invalid_list)
+-{
+-	struct kvm_mmu_page *sp;
+-
+-	if (list_empty(&kvm->arch.active_mmu_pages))
+-		return false;
+-
+-	sp = list_last_entry(&kvm->arch.active_mmu_pages,
+-			     struct kvm_mmu_page, link);
+-	return kvm_mmu_prepare_zap_page(kvm, sp, invalid_list);
+-}
+-
+ static unsigned long kvm_mmu_zap_oldest_mmu_pages(struct kvm *kvm,
+ 						  unsigned long nr_to_zap)
+ {
+@@ -6125,9 +6112,7 @@ mmu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 			goto unlock;
+ 		}
+ 
+-		if (prepare_zap_oldest_mmu_page(kvm, &invalid_list))
+-			freed++;
+-		kvm_mmu_commit_zap_page(kvm, &invalid_list);
++		freed = kvm_mmu_zap_oldest_mmu_pages(kvm, sc->nr_to_scan);
+ 
+ unlock:
+ 		spin_unlock(&kvm->mmu_lock);
 -- 
 2.26.0
 
