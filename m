@@ -2,118 +2,179 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F36F020706
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FjAEsgqZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9F31C20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732235AbgFWAvf (ORCPT
+        id S1732347AbgFWAvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:51:35 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18765 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731750AbgFWAve (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:51:34 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef152090000>; Mon, 22 Jun 2020 17:51:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jun 2020 17:51:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jun 2020 17:51:34 -0700
-Received: from [10.2.59.206] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jun
- 2020 00:51:26 +0000
-Subject: Re: [RESEND PATCH 1/3] nouveau: fix migrate page regression
-To:     Ralph Campbell <rcampbell@nvidia.com>,
-        <nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        "Jason Gunthorpe" <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-References: <20200622233854.10889-1-rcampbell@nvidia.com>
- <20200622233854.10889-2-rcampbell@nvidia.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <53751f8e-d901-df2e-a2e0-1b1484b31b81@nvidia.com>
-Date:   Mon, 22 Jun 2020 17:51:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 20:51:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10120 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731750AbgFWAvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:51:38 -0400
+IronPort-SDR: TwQ4rW+XOK1NTshp9+G8eOvNKtr7K6kZc9Jgu7nL6YJd29tV6PkLEhMe2ILDec54za4ctRdczw
+ fiS5pBGfqjpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="141422602"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="141422602"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 17:51:37 -0700
+IronPort-SDR: RXTycZaOvOOv96UEW80afRXTHI74G+J3g0EXw6R3mRJBzFpBV01mjP80zcCQbuOfjoMwPes/u+
+ jAi8gMV7Q+sQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="319007683"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 17:51:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jingqi Liu <jingqi.liu@intel.com>,
+        Tao Xu <tao3.xu@intel.com>
+Subject: [PATCH] KVM: VMX: Stop context switching MSR_IA32_UMWAIT_CONTROL
+Date:   Mon, 22 Jun 2020 17:51:35 -0700
+Message-Id: <20200623005135.10414-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200622233854.10889-2-rcampbell@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592873481; bh=M5JpDj0By/NXP/evMyGItwbU3cOrKr1W3Gf6kJ1yhow=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FjAEsgqZOHCD5Y2lJ3rJvBJxyTDAAT7f2T2k3awy8TT3tw62KkqIEfBAVdDk7X0ar
-         S9zdWi7YdDIsMwxtqRzep7bFKp83t1o2SgpFzjUvqkVeBfRG+OzDeRIdCcnACQhzYK
-         zmrntuXB+iqInv0bFRNBVrUZ7cM8pvDhm3liuq+RROLpo+cdLteh0+SVXWYoqnjNqq
-         vjCr/EvEFNCNO3I9kLzBFP1be2wa+1UaXCU6izslR7s/gfanxexhEL/jQv7WS8VCXU
-         lR8/fxc36R9kwQdJE/HJKQnJQ79XUVBiqMz8zcY+4DvD5VLEuL0QdQMf4U+9Ak9m0K
-         wmFk/TWgZw4Tg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22 16:38, Ralph Campbell wrote:
-> The patch to add zero page migration to GPU memory inadvertantly included
+Remove support for context switching between the guest's and host's
+desired UMWAIT_CONTROL.  Propagating the guest's value to hardware isn't
+required for correct functionality, e.g. KVM intercepts reads and writes
+to the MSR, and the latency effects of the settings controlled by the
+MSR are not architecturally visible.
 
-inadvertently
+As a general rule, KVM should not allow the guest to control power
+management settings unless explicitly enabled by userspace, e.g. see
+KVM_CAP_X86_DISABLE_EXITS.  E.g. Intel's SDM explicitly states that C0.2
+can improve the performance of SMT siblings.  A devious guest could
+disable C0.2 so as to improve the performance of their workloads at the
+detriment to workloads running in the host or on other VMs.
 
-> part of a future change which broke normal page migration to GPU memory
-> by copying too much data and corrupting GPU memory.
-> Fix this by only copying one page instead of a byte count.
-> 
-> Fixes: 9d4296a7d4b3 ("drm/nouveau/nouveau/hmm: fix migrate zero page to GPU")
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> ---
->   drivers/gpu/drm/nouveau/nouveau_dmem.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> index e5c230d9ae24..cc9993837508 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> @@ -550,7 +550,7 @@ static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm,
->   					 DMA_BIDIRECTIONAL);
->   		if (dma_mapping_error(dev, *dma_addr))
->   			goto out_free_page;
-> -		if (drm->dmem->migrate.copy_func(drm, page_size(spage),
-> +		if (drm->dmem->migrate.copy_func(drm, 1,
->   			NOUVEAU_APER_VRAM, paddr, NOUVEAU_APER_HOST, *dma_addr))
->   			goto out_dma_unmap;
->   	} else {
->
+Wholesale removal of UMWAIT_CONTROL context switching also fixes a race
+condition where updates from the host may cause KVM to enter the guest
+with the incorrect value.  Because updates are are propagated to all
+CPUs via IPI (SMP function callback), the value in hardware may be
+stale with respect to the cached value and KVM could enter the guest
+with the wrong value in hardware.  As above, the guest can't observe the
+bad value, but it's a weird and confusing wart in the implementation.
 
+Removal also fixes the unnecessary usage of VMX's atomic load/store MSR
+lists.  Using the lists is only necessary for MSRs that are required for
+correct functionality immediately upon VM-Enter/VM-Exit, e.g. EFER on
+old hardware, or for MSRs that need to-the-uop precision, e.g. perf
+related MSRs.  For UMWAIT_CONTROL, the effects are only visible in the
+kernel via TPAUSE/delay(), and KVM doesn't do any form of delay in
+vcpu_vmx_run().  Using the atomic lists is undesirable as they are more
+expensive than direct RDMSR/WRMSR.
 
-I Am Not A Nouveau Expert, nor is it really clear to me how
-page_size(spage) came to contain something other than a page's worth of
-byte count, but this fix looks accurate to me. It's better for
-maintenance, too, because the function never intends to migrate "some
-number of bytes". It intends to migrate exactly one page.
+Furthermore, even if giving the guest control of the MSR is legitimate,
+e.g. in pass-through scenarios, it's not clear that the benefits would
+outweigh the overhead.  E.g. saving and restoring an MSR across a VMX
+roundtrip costs ~250 cycles, and if the guest diverged from the host
+that cost would be paid on every run of the guest.  In other words, if
+there is a legitimate use case then it should be enabled by a new
+per-VM capability.
 
-Hope I'm not missing something fundamental, but:
+Note, KVM still needs to emulate MSR_IA32_UMWAIT_CONTROL so that it can
+correctly expose other WAITPKG features to the guest, e.g. TPAUSE,
+UMWAIT and UMONITOR.
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com
+Fixes: 6e3ba4abcea56 ("KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL")
+Cc: stable@vger.kernel.org
+Cc: Jingqi Liu <jingqi.liu@intel.com>
+Cc: Tao Xu <tao3.xu@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/include/asm/mwait.h |  2 --
+ arch/x86/kernel/cpu/umwait.c |  6 ------
+ arch/x86/kvm/vmx/vmx.c       | 18 ------------------
+ 3 files changed, 26 deletions(-)
 
-
-thanks,
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 73d997aa2966..e039a933aca3 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -25,8 +25,6 @@
+ #define TPAUSE_C01_STATE		1
+ #define TPAUSE_C02_STATE		0
+ 
+-u32 get_umwait_control_msr(void);
+-
+ static inline void __monitor(const void *eax, unsigned long ecx,
+ 			     unsigned long edx)
+ {
+diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+index 300e3fd5ade3..ec8064c0ae03 100644
+--- a/arch/x86/kernel/cpu/umwait.c
++++ b/arch/x86/kernel/cpu/umwait.c
+@@ -18,12 +18,6 @@
+  */
+ static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
+ 
+-u32 get_umwait_control_msr(void)
+-{
+-	return umwait_control_cached;
+-}
+-EXPORT_SYMBOL_GPL(get_umwait_control_msr);
+-
+ /*
+  * Cache the original IA32_UMWAIT_CONTROL MSR value which is configured by
+  * hardware or BIOS before kernel boot.
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 08e26a9518c2..b2447c1ee362 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6606,23 +6606,6 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+ 					msrs[i].host, false);
+ }
+ 
+-static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
+-{
+-	u32 host_umwait_control;
+-
+-	if (!vmx_has_waitpkg(vmx))
+-		return;
+-
+-	host_umwait_control = get_umwait_control_msr();
+-
+-	if (vmx->msr_ia32_umwait_control != host_umwait_control)
+-		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
+-			vmx->msr_ia32_umwait_control,
+-			host_umwait_control, false);
+-	else
+-		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
+-}
+-
+ static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -6730,7 +6713,6 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	if (vcpu_to_pmu(vcpu)->version)
+ 		atomic_switch_perf_msrs(vmx);
+-	atomic_switch_umwait_control_msr(vmx);
+ 
+ 	if (enable_preemption_timer)
+ 		vmx_update_hv_timer(vcpu);
 -- 
-John Hubbard
-NVIDIA
+2.26.0
+
