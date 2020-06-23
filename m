@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA427C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C65C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0A620702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763A7207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944303;
-	bh=x4M0gM955DbUGzPhDWyeu/gJcFuUQ85B4gZLp1+nCVM=;
+	s=default; t=1592944307;
+	bh=VtCfLABy9jFIpwB0CiuNGNBuZRK0+oBQP1HeBXvQ2ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7L8usjHnJNl5QXN3XuSMR8vTVATuxruwEXwd1U+S6YzrUdSo50sncerdYHotJl0h
-	 R9TeaoD9ComEJSzoCphdvfuMASlYhkUhEmyL0f0WPbju8K+EPW0GeNiUVb+h+5Q8RL
-	 S5K0NwtCSNKAGHm1oTU/qowirNdKjv9PKh8O6ZBQ=
+	b=VxD7Ledz6EUOnYCuEOqs4M8djPEqeofqpc3SIJRHZyutm/iTEwrzIN1jhMPtbQ842
+	 LJkAew+cRr+drZmmJFeLOO4SQuGH/pddFWxJpL2EfK4vXY1AEg9HgyYRGf9/aGrTwh
+	 wciuxgYiNnru3SHf1iBeEObic/AZFvzxYtNBg208=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391228AbgFWUbl (ORCPT
+        id S2391239AbgFWUbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:31:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51966 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387752AbgFWUb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:31:27 -0400
+        id S2391204AbgFWUb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:31:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18B3920723;
-        Tue, 23 Jun 2020 20:31:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358EF2070E;
+        Tue, 23 Jun 2020 20:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944284;
-        bh=x4M0gM955DbUGzPhDWyeu/gJcFuUQ85B4gZLp1+nCVM=;
+        s=default; t=1592944289;
+        bh=VtCfLABy9jFIpwB0CiuNGNBuZRK0+oBQP1HeBXvQ2ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wxwN8BbVDH5yuOjBSAyf+1c548SwGKmBiK9F6+GgBb7toqn5NkDTG/UB4w3IJemWL
-         LmVQ01j9tjAo5k6hxrURLpYYULS+Cjve1PkzZUd8HMZKUUlQDP91a4RIKeSCThbROo
-         FWHslCqpSIRB6xoxP2Uwg4Docryjg4Kkdc9LUEPE=
+        b=yvYaoQyBy/S8txccoQ0a9n7aOTZodDfqeRVUFtXS5mYcPpRZz5dEqW5RtkffI2pe5
+         05hwTca/3gNy45ZVvTmLDtxRENp4QIMU2DjGt27+aplibW7jUwPH0Yh5o0aKt7c8Vc
+         9Z4ucA2jTez13UEpqKdynNwTaxZxfYfj2NGaVI+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, dihu <anny.hu@linux.alibaba.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 245/314] ASoC: Intel: bytcr_rt5640: Add quirk for Toshiba Encore WT10-A tablet
-Date:   Tue, 23 Jun 2020 21:57:20 +0200
-Message-Id: <20200623195350.633696637@linuxfoundation.org>
+Subject: [PATCH 5.4 247/314] bpf/sockmap: Fix kernel panic at __tcp_bpf_recvmsg
+Date:   Tue, 23 Jun 2020 21:57:22 +0200
+Message-Id: <20200623195350.731188809@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,49 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: dihu <anny.hu@linux.alibaba.com>
 
-[ Upstream commit 199a5e8fda54ab3c8c6f6bf980c004e97ebf5ccb ]
+[ Upstream commit 487082fb7bd2a32b66927d2b22e3a81b072b44f0 ]
 
-The Toshiba Encore WT10-A tablet almost fully works with the default
-settings for Bay Trail CR devices. The only issue is that it uses a
-digital mic. connected the the DMIC1 input instead of an analog mic.
+When user application calls read() with MSG_PEEK flag to read data
+of bpf sockmap socket, kernel panic happens at
+__tcp_bpf_recvmsg+0x12c/0x350. sk_msg is not removed from ingress_msg
+queue after read out under MSG_PEEK flag is set. Because it's not
+judged whether sk_msg is the last msg of ingress_msg queue, the next
+sk_msg may be the head of ingress_msg queue, whose memory address of
+sg page is invalid. So it's necessary to add check codes to prevent
+this problem.
 
-Add a quirk for this model using the default settings with the input-map
-replaced with BYT_RT5640_DMIC1_MAP.
+[20759.125457] BUG: kernel NULL pointer dereference, address:
+0000000000000008
+[20759.132118] CPU: 53 PID: 51378 Comm: envoy Tainted: G            E
+5.4.32 #1
+[20759.140890] Hardware name: Inspur SA5212M4/YZMB-00370-109, BIOS
+4.1.12 06/18/2017
+[20759.149734] RIP: 0010:copy_page_to_iter+0xad/0x300
+[20759.270877] __tcp_bpf_recvmsg+0x12c/0x350
+[20759.276099] tcp_bpf_recvmsg+0x113/0x370
+[20759.281137] inet_recvmsg+0x55/0xc0
+[20759.285734] __sys_recvfrom+0xc8/0x130
+[20759.290566] ? __audit_syscall_entry+0x103/0x130
+[20759.296227] ? syscall_trace_enter+0x1d2/0x2d0
+[20759.301700] ? __audit_syscall_exit+0x1e4/0x290
+[20759.307235] __x64_sys_recvfrom+0x24/0x30
+[20759.312226] do_syscall_64+0x55/0x1b0
+[20759.316852] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608204634.93407-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: dihu <anny.hu@linux.alibaba.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Acked-by: Jakub Sitnicki <jakub@cloudflare.com>
+Link: https://lore.kernel.org/bpf/20200605084625.9783-1-anny.hu@linux.alibaba.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/ipv4/tcp_bpf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index f222e1091bae7..f7964d1ec486f 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -754,6 +754,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
- 					BYT_RT5640_JD_NOT_INV |
- 					BYT_RT5640_MCLK_EN),
- 	},
-+	{	/* Toshiba Encore WT10-A */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "TOSHIBA WT10-A-103"),
-+		},
-+		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
-+					BYT_RT5640_JD_SRC_JD1_IN4P |
-+					BYT_RT5640_OVCD_TH_2000UA |
-+					BYT_RT5640_OVCD_SF_0P75 |
-+					BYT_RT5640_SSP0_AIF2 |
-+					BYT_RT5640_MCLK_EN),
-+	},
- 	{	/* Catch-all for generic Insyde tablets, must be last */
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index 69b0254083904..ad9f382027311 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -96,6 +96,9 @@ int __tcp_bpf_recvmsg(struct sock *sk, struct sk_psock *psock,
+ 		} while (i != msg_rx->sg.end);
+ 
+ 		if (unlikely(peek)) {
++			if (msg_rx == list_last_entry(&psock->ingress_msg,
++						      struct sk_msg, list))
++				break;
+ 			msg_rx = list_next_entry(msg_rx, list);
+ 			continue;
+ 		}
 -- 
 2.25.1
 
