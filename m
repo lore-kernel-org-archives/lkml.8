@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5011D206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E084206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592934196;
-	bh=h4/VQuK+NEk8IFZm8ehPUDjin5k8yswJvnKZPww2js0=;
+	s=default; t=1592934199;
+	bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IMrB37uKGiI335U4qSuRuZhGVbc+UZ6MaMYsuzPMsTz3lcn/U0Ib9C4f8MpFR/i3w
-	 qAgFAlskWun5EvSPj9nKLHfY/Dr++c54nXSw9yXAiDl2OsCPTBkoR9+KwbuBNmjrgS
-	 oYBw7AftGj1ThZ9l+Q5KjjCqRyw3v3+PVQiAhpzc=
+	b=RgL1FhyCEMGVgXpxAEdgHqUvwJrmdoDs2XUWnB65Aid47MPrH2HERHDFTI5Z+vlas
+	 oh1QA+8n9UbA0/NC/Qj7PLJDPEP+7kdqOJ1iBCiY9crrCkOgzhP/rdxvUac2cqeOrp
+	 N/DJRzQ5Ke5mGnKAxKlSIRO856f6YKus80J4k3uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbgFWRnP (ORCPT
+        id S2387836AbgFWRnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60382 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:43:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733267AbgFWRfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:44 -0400
+        id S1733209AbgFWRfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9270A2078C;
-        Tue, 23 Jun 2020 17:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21E30207F9;
+        Tue, 23 Jun 2020 17:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933743;
-        bh=h4/VQuK+NEk8IFZm8ehPUDjin5k8yswJvnKZPww2js0=;
+        s=default; t=1592933741;
+        bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9OKnin00MDDIx26DMWHmBGtZXiC9CgUX47ktyVSkI9L4aO8sgKk/ih8wnnme4Dig
-         I2/9Ca2EAdrBsqLIg1PhFUHYxcdFiueCdmzXj+BEsTFqSAYrKxfQjrODoai5Vr3ARW
-         mcrBxKoORkKijCfsUUTiS0yh9Ez9TPTkrrWGw6Rw=
+        b=AJill2gcN6v+6mGk4/2Z5HHxZWDumye57oY2ZVNd4bVHgmlLTDxblXYFuMkt/mJ/N
+         RRKWHHWXtoFEs2k6+FoojW0DGuC680eLRoa4yMKoZzPqdHiZH/bjqgyhy2Gh9lKHd1
+         j7H+LoPGj5/W4rXnSyegc6rE2DSSEkbZFAxkBV5k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 16/28] s390/ptrace: return -ENOSYS when invalid syscall is supplied
-Date:   Tue, 23 Jun 2020 13:35:11 -0400
-Message-Id: <20200623173523.1355411-16-sashal@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 14/28] pinctrl: tegra: Use noirq suspend/resume callbacks
+Date:   Tue, 23 Jun 2020 13:35:09 -0400
+Message-Id: <20200623173523.1355411-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
 References: <20200623173523.1355411-1-sashal@kernel.org>
@@ -59,82 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit cd29fa798001075a554b978df3a64e6656c25794 ]
+[ Upstream commit 782b6b69847f34dda330530493ea62b7de3fd06a ]
 
-The current code returns the syscall number which an invalid
-syscall number is supplied and tracing is enabled. This makes
-the strace testsuite fail.
+Use noirq suspend/resume callbacks as other drivers which implement
+noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
+configure the signals used by their respective devices in the noirq phase.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200604174935.26560-1-vidyas@nvidia.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/ptrace.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index 9eee345568890..3f29646313e82 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -838,6 +838,7 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
- asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- {
- 	unsigned long mask = -1UL;
-+	long ret = -1;
- 
- 	if (is_compat_task())
- 		mask = 0xffffffff;
-@@ -854,8 +855,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 		 * debugger stored an invalid system call number. Skip
- 		 * the system call and the system call restart handling.
- 		 */
--		clear_pt_regs_flag(regs, PIF_SYSCALL);
--		return -1;
-+		goto skip;
- 	}
- 
- #ifdef CONFIG_SECCOMP
-@@ -871,7 +871,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 			sd.arch = AUDIT_ARCH_S390X;
- 		}
- 
--		sd.nr = regs->gprs[2] & 0xffff;
-+		sd.nr = regs->int_code & 0xffff;
- 		sd.args[0] = regs->orig_gpr2 & mask;
- 		sd.args[1] = regs->gprs[3] & mask;
- 		sd.args[2] = regs->gprs[4] & mask;
-@@ -880,19 +880,26 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 		sd.args[5] = regs->gprs[7] & mask;
- 
- 		if (__secure_computing(&sd) == -1)
--			return -1;
-+			goto skip;
- 	}
- #endif /* CONFIG_SECCOMP */
- 
- 	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
--		trace_sys_enter(regs, regs->gprs[2]);
-+		trace_sys_enter(regs, regs->int_code & 0xffff);
- 
- 
--	audit_syscall_entry(regs->gprs[2], regs->orig_gpr2 & mask,
-+	audit_syscall_entry(regs->int_code & 0xffff, regs->orig_gpr2 & mask,
- 			    regs->gprs[3] &mask, regs->gprs[4] &mask,
- 			    regs->gprs[5] &mask);
- 
-+	if ((signed long)regs->gprs[2] >= NR_syscalls) {
-+		regs->gprs[2] = -ENOSYS;
-+		ret = -ENOSYS;
-+	}
- 	return regs->gprs[2];
-+skip:
-+	clear_pt_regs_flag(regs, PIF_SYSCALL);
-+	return ret;
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 21661f6490d68..195cfe557511b 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -731,8 +731,8 @@ static int tegra_pinctrl_resume(struct device *dev)
  }
  
- asmlinkage void do_syscall_trace_exit(struct pt_regs *regs)
+ const struct dev_pm_ops tegra_pinctrl_pm = {
+-	.suspend = &tegra_pinctrl_suspend,
+-	.resume = &tegra_pinctrl_resume
++	.suspend_noirq = &tegra_pinctrl_suspend,
++	.resume_noirq = &tegra_pinctrl_resume
+ };
+ 
+ static bool tegra_pinctrl_gpio_node_has_range(struct tegra_pmx *pmx)
 -- 
 2.25.1
 
