@@ -7,33 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E74C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD6B20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B8220780
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387513AbgFWQsB (ORCPT
+        id S1733038AbgFWQpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:48:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38840 "EHLO mx2.suse.de"
+        Tue, 23 Jun 2020 12:45:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38900 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733054AbgFWQpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:45:17 -0400
+        id S1733011AbgFWQpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:45:12 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6114DB077;
-        Tue, 23 Jun 2020 16:45:16 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 88BC7B066;
+        Tue, 23 Jun 2020 16:45:10 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     gregkh@linuxfoundation.org
 Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.org>,
+        Jacopo Mondi <jacopo@jmondi.org>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 16/50] staging: vc04_services: bcm2835-audio: Use vchi_msg_hold()
-Date:   Tue, 23 Jun 2020 18:42:02 +0200
-Message-Id: <20200623164235.29566-17-nsaenzjulienne@suse.de>
+Subject: [PATCH 07/50] staging: mmal-vchiq: Fix client_component for 64 bit kernel
+Date:   Tue, 23 Jun 2020 18:41:53 +0200
+Message-Id: <20200623164235.29566-8-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
@@ -44,68 +46,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vchi_msg_dequeue() provides the same functionality as vchi_msg_hold()
-except it copies the message data as opposed to the later which provides
-the data in place.
+From: Dave Stevenson <dave.stevenson@raspberrypi.org>
 
-The copying is done on a local variable, so there is no need to keep the
-message out the function's bounds, so use vchi_msg_hold() instead.
+The MMAL client_component field is used with the event
+mechanism to allow the client to identify the component for
+which the event is generated.
+The field is only 32bits in size, therefore we can't use a
+pointer to the component in a 64 bit kernel.
 
+Component handles are already held in an array per VCHI
+instance, so use the array index as the client_component handle
+to avoid having to create a new IDR for this purpose.
+
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../bcm2835-audio/bcm2835-vchiq.c             | 25 +++++++++++--------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c | 8 +++++++-
+ drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-index 62eef233275f..5018b5baa009 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-@@ -94,31 +94,34 @@ static void audio_vchi_callback(void *param,
- 				void *msg_handle)
- {
- 	struct bcm2835_audio_instance *instance = param;
--	struct vc_audio_msg m;
--	int msg_len;
-+	struct vchi_held_msg handle;
-+	struct vc_audio_msg *m;
-+	unsigned size;
- 	int status;
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+index 48feeef60091..c598a10452be 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+@@ -943,7 +943,7 @@ static int create_component(struct vchiq_mmal_instance *instance,
  
- 	if (reason != VCHI_CALLBACK_MSG_AVAILABLE)
- 		return;
+ 	/* build component create message */
+ 	m.h.type = MMAL_MSG_TYPE_COMPONENT_CREATE;
+-	m.u.component_create.client_component = (u32)(unsigned long)component;
++	m.u.component_create.client_component = component->client_component;
+ 	strncpy(m.u.component_create.name, name,
+ 		sizeof(m.u.component_create.name));
  
--	status = vchi_msg_dequeue(instance->service,
--				  &m, sizeof(m), &msg_len, VCHI_FLAGS_NONE);
-+	status = vchi_msg_hold(instance->service, (void **)&m, &size,
-+			       VCHI_FLAGS_NONE, &handle);
- 	if (status)
- 		return;
- 
--	if (m.type == VC_AUDIO_MSG_TYPE_RESULT) {
--		instance->result = m.result.success;
-+	if (m->type == VC_AUDIO_MSG_TYPE_RESULT) {
-+		instance->result = m->result.success;
- 		complete(&instance->msg_avail_comp);
--	} else if (m.type == VC_AUDIO_MSG_TYPE_COMPLETE) {
--		if (m.complete.cookie1 != VC_AUDIO_WRITE_COOKIE1 ||
--		    m.complete.cookie2 != VC_AUDIO_WRITE_COOKIE2)
-+	} else if (m->type == VC_AUDIO_MSG_TYPE_COMPLETE) {
-+		if (m->complete.cookie1 != VC_AUDIO_WRITE_COOKIE1 ||
-+		    m->complete.cookie2 != VC_AUDIO_WRITE_COOKIE2)
- 			dev_err(instance->dev, "invalid cookie\n");
- 		else
- 			bcm2835_playback_fifo(instance->alsa_stream,
--					      m.complete.count);
-+					      m->complete.count);
- 	} else {
--		dev_err(instance->dev, "unexpected callback type=%d\n", m.type);
-+		dev_err(instance->dev, "unexpected callback type=%d\n", m->type);
+@@ -1662,6 +1662,12 @@ int vchiq_mmal_component_init(struct vchiq_mmal_instance *instance,
+ 		goto unlock;
  	}
-+
-+	vchi_held_msg_release(&handle);
- }
  
- static int
++	/* We need a handle to reference back to our component structure.
++	 * Use the array index in instance->component rather than rolling
++	 * another IDR.
++	 */
++	component->client_component = idx;
++
+ 	ret = create_component(instance, component, name);
+ 	if (ret < 0) {
+ 		pr_err("%s: failed to create component %d (Not enough GPU mem?)\n",
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
+index df608585063b..1dc81ecf9268 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
++++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
+@@ -92,6 +92,7 @@ struct vchiq_mmal_component {
+ 	struct vchiq_mmal_port input[MAX_PORT_COUNT]; /* input ports */
+ 	struct vchiq_mmal_port output[MAX_PORT_COUNT]; /* output ports */
+ 	struct vchiq_mmal_port clock[MAX_PORT_COUNT]; /* clock ports */
++	u32 client_component;	/* Used to ref back to client struct */
+ };
+ 
+ int vchiq_mmal_init(struct vchiq_mmal_instance **out_instance);
 -- 
 2.27.0
 
