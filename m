@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04262080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50AF2100A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592942690;
-	bh=tT/PXHaRQ8O76+29X1ggI+b7E1cA3ew3/FHpIhduOTU=;
+	s=default; t=1592942693;
+	bh=Cp+rbRk77EwlK+FHOkTWRcXf/2JtelDx0wdAb4NwYu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ysl9ExmmoDeHMKHZdr9pN3sKVNucJWCdkqZKl+GKGrSOFagl/kQp5+C3d0StEgLGP
-	 UqkFxkg3SDSB1JVbSWBKm3w4EAWI/UsBw4f4m23opD5WLIfIn/0EQC7jwtr+pDpmY2
-	 sIw4wC1Eic8rb3kSdzEE8g1mdZ6LxR4vxrBlBcbg=
+	b=memkuixWlt3Sm+aTXb5w2YLT9413Z548vpZDLhB4dmdge+B3FNoITL0c34u/3QXOh
+	 FtRFi4m+Pg8GTUZxJpXRMIVQ9fVGnFNd/MKajb+d/83zj66YJba/F1cBzwqvniS/WM
+	 zRd/IhjTfQF2ck3aXEOb+tbXtkZE75FGjLB0Cyvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388262AbgFWUEt (ORCPT
+        id S2388270AbgFWUEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388239AbgFWUEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:04:41 -0400
+        id S2388256AbgFWUEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:04:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64C38206C3;
-        Tue, 23 Jun 2020 20:04:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B762100A;
+        Tue, 23 Jun 2020 20:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942680;
-        bh=tT/PXHaRQ8O76+29X1ggI+b7E1cA3ew3/FHpIhduOTU=;
+        s=default; t=1592942686;
+        bh=Cp+rbRk77EwlK+FHOkTWRcXf/2JtelDx0wdAb4NwYu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Idsc29hQPmDsdR+BdEx3h4X8VQDUDk5iJE392eQAUxoobXKChcsTot/jMvec9ai4h
-         oSI85QehNAXLBZaOYXhXycyScqILnsqqD6Izn1Rg40uEk9R2CVfa+s5jnFGZCnrU8V
-         PscwKE9xi8a+UOg1F1wmmezaLSk/+LLnMzBdwXbk=
+        b=HbTLV+a+3uuFjXg69UKSjI03hl0ZYYW5JM0Yqna6uAy4LqEtw7mhF54a0vMM8T6u5
+         ge9mnvOs5vpRpDFOCpZPZHlyE00e+2+jaXIj4lJRRnTv4pm8/vaHCp6wmCsKszQgFJ
+         R4cx2mi+cHxip0C/UB3E+BDSoHQ9kg2kbVShvnpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 093/477] ASoC: meson: fix memory leak of links if allocation of ldata fails
-Date:   Tue, 23 Jun 2020 21:51:30 +0200
-Message-Id: <20200623195412.002476182@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 095/477] NTB: Fix the default port and peer numbers for legacy drivers
+Date:   Tue, 23 Jun 2020 21:51:32 +0200
+Message-Id: <20200623195412.097955036@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,59 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 6e801dc411329aff592fbd48fb116183d0acdb00 ]
+[ Upstream commit fc8b086d9dbd57458d136c4fa70ee26f832c3a2e ]
 
-Currently if the allocation of ldata fails the error return path
-does not kfree the allocated links object.  Fix this by adding
-an error exit return path that performs the necessary kfree'ing.
+When the commit adding ntb_default_port_number() and
+ntb_default_peer_port_number()  entered the kernel there was no
+users of it so it was impossible to tell what the API needed.
 
-Fixes: 7864a79f37b5 ("ASoC: meson: add axg sound card support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Addresses-Coverity: ("Resource leak")
-Link: https://lore.kernel.org/r/20200604171216.60043-1-colin.king@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+When a user finally landed a year later (ntb_pingpong) there were
+more NTB topologies were created and no consideration was considered
+to how other drivers had changed.
+
+Now that there is a user it can be fixed to provide a sensible default
+for the legacy drivers that do not implement ntb_{peer_}port_number().
+Seeing ntb_pingpong doesn't check error codes returning EINVAL was also
+not sensible.
+
+Patches for ntb_pingpong and ntb_perf follow (which are broken
+otherwise) to support hardware that doesn't have port numbers. This is
+important not only to not break support with existing drivers but for
+the cross link topology which, due to its perfect symmetry, cannot
+assign unique port numbers to each side.
+
+Fixes: 1e5301196a88 ("NTB: Add indexed ports NTB API")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/meson-card-utils.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/ntb/core.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/meson/meson-card-utils.c b/sound/soc/meson/meson-card-utils.c
-index 2ca8c98e204f2..5a4a91c887347 100644
---- a/sound/soc/meson/meson-card-utils.c
-+++ b/sound/soc/meson/meson-card-utils.c
-@@ -49,19 +49,26 @@ int meson_card_reallocate_links(struct snd_soc_card *card,
- 	links = krealloc(priv->card.dai_link,
- 			 num_links * sizeof(*priv->card.dai_link),
- 			 GFP_KERNEL | __GFP_ZERO);
-+	if (!links)
-+		goto err_links;
-+
- 	ldata = krealloc(priv->link_data,
- 			 num_links * sizeof(*priv->link_data),
- 			 GFP_KERNEL | __GFP_ZERO);
+diff --git a/drivers/ntb/core.c b/drivers/ntb/core.c
+index 2581ab724c347..c9a0912b175fa 100644
+--- a/drivers/ntb/core.c
++++ b/drivers/ntb/core.c
+@@ -214,10 +214,8 @@ int ntb_default_port_number(struct ntb_dev *ntb)
+ 	case NTB_TOPO_B2B_DSD:
+ 		return NTB_PORT_SEC_DSD;
+ 	default:
+-		break;
++		return 0;
+ 	}
 -
--	if (!links || !ldata) {
--		dev_err(priv->card.dev, "failed to allocate links\n");
--		return -ENOMEM;
--	}
-+	if (!ldata)
-+		goto err_ldata;
- 
- 	priv->card.dai_link = links;
- 	priv->link_data = ldata;
- 	priv->card.num_links = num_links;
- 	return 0;
-+
-+err_ldata:
-+	kfree(links);
-+err_links:
-+	dev_err(priv->card.dev, "failed to allocate links\n");
-+	return -ENOMEM;
-+
+-	return -EINVAL;
  }
- EXPORT_SYMBOL_GPL(meson_card_reallocate_links);
+ EXPORT_SYMBOL(ntb_default_port_number);
+ 
+@@ -240,10 +238,8 @@ int ntb_default_peer_port_number(struct ntb_dev *ntb, int pidx)
+ 	case NTB_TOPO_B2B_DSD:
+ 		return NTB_PORT_PRI_USD;
+ 	default:
+-		break;
++		return 0;
+ 	}
+-
+-	return -EINVAL;
+ }
+ EXPORT_SYMBOL(ntb_default_peer_port_number);
  
 -- 
 2.25.1
