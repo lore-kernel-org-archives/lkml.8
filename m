@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2F0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E59E20702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A402053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944891;
-	bh=R8poT/WfSWU1GfxheMUoZ/FdITa3vE/XmE9Ej5fNV9g=;
+	s=default; t=1592944894;
+	bh=R2yDVzq7zJ6XMt70V3QRr7jjIJrA7VZsncxDTAAQA58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=koru7s7jcwY+jsQyanrkTIQ4Yh1WX8TPBQZSkT8hwEx4ditCzp0X9OaU1Y6Nu7aL+
-	 E1qEECg3gkTNlNIGXM4ibAO1PkyssWi/2DOhyM46bERcekgpTJC+8WS5tYGDg4bS4X
-	 t5chX7iVZ/fYUwNhFgCJwekh0Ty8YoymqoRj8qtE=
+	b=P62cpfEcWu+gmT9E7Q8/vk1y0nfvD9fCL3NQ8dxx8MWn3qCvbnO1eZW7KHRs9choc
+	 P7Kz3d8UksFJgjix5IO1qXfppqiJZPE8OHp494aE+x2cfQlCJnj65CR6UmsUqFlWPo
+	 7tpOyWYs2SC6r9sAQlsGdOf3dhc9kkymgF/64rfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392320AbgFWUl2 (ORCPT
+        id S2392337AbgFWUlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37658 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392306AbgFWUlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:41:16 -0400
+        id S2392173AbgFWUlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:41:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B96320702;
-        Tue, 23 Jun 2020 20:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E8E320675;
+        Tue, 23 Jun 2020 20:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944876;
-        bh=R8poT/WfSWU1GfxheMUoZ/FdITa3vE/XmE9Ej5fNV9g=;
+        s=default; t=1592944874;
+        bh=R2yDVzq7zJ6XMt70V3QRr7jjIJrA7VZsncxDTAAQA58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+pt+wo7DN1fcGPmCyLd0IKfbRBz1QTMcwELouziBSmAbx/gqrxO9z6r3i17wIob/
-         +Z3exulofq41RdqGi9/e/fLeaxPWstFSY3S9cd2QcMI/hKZYZttrR0+rPR4RnZAPK6
-         3eBpgKITdxc7gJjdsGva3aHW1T5oHNmFnojtqXfk=
+        b=axqRB3o0tTim1jp/OcwfjYM29QDQp3gwyvngot0I892GS0f8xPocDEiqnPgEUWxTW
+         Ebn3qpxT28zHQ+LN0V3KxwvYqR+GSdkitKW6g/Rt07QF8IpwEzZyxsJBvbT2wEHyl6
+         /PtbnUSqxD24xMPDb1VqdbF/0Xhf8GkUpO1mreDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 158/206] scsi: acornscsi: Fix an error handling path in acornscsi_probe()
-Date:   Tue, 23 Jun 2020 21:58:06 +0200
-Message-Id: <20200623195324.763291266@linuxfoundation.org>
+Subject: [PATCH 4.19 157/206] drm/sun4i: hdmi ddc clk: Fix size of m divider
+Date:   Tue, 23 Jun 2020 21:58:05 +0200
+Message-Id: <20200623195324.715353790@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -61,38 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 42c76c9848e13dbe0538d7ae0147a269dfa859cb ]
+[ Upstream commit 54e1e06bcf1cf6e7ac3f86daa5f7454add24b494 ]
 
-'ret' is known to be 0 at this point.  Explicitly return -ENOMEM if one of
-the 'ecardm_iomap()' calls fail.
+m divider in DDC clock register is 4 bits wide. Fix that.
 
-Link: https://lore.kernel.org/r/20200530081622.577888-1-christophe.jaillet@wanadoo.fr
-Fixes: e95a1b656a98 ("[ARM] rpc: acornscsi: update to new style ecard driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200413095457.1176754-1-jernej.skrabec@siol.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/acornscsi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h         | 2 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
-index 421fe869a11ef..ef9d907f2df5c 100644
---- a/drivers/scsi/arm/acornscsi.c
-+++ b/drivers/scsi/arm/acornscsi.c
-@@ -2914,8 +2914,10 @@ static int acornscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+index b685ee11623d1..a13e14dd7746a 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+@@ -152,7 +152,7 @@
+ #define SUN4I_HDMI_DDC_CMD_IMPLICIT_WRITE	3
  
- 	ashost->base = ecardm_iomap(ec, ECARD_RES_MEMC, 0, 0);
- 	ashost->fast = ecardm_iomap(ec, ECARD_RES_IOCFAST, 0, 0);
--	if (!ashost->base || !ashost->fast)
-+	if (!ashost->base || !ashost->fast) {
-+		ret = -ENOMEM;
- 		goto out_put;
-+	}
+ #define SUN4I_HDMI_DDC_CLK_REG		0x528
+-#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0x7) << 3)
++#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0xf) << 3)
+ #define SUN4I_HDMI_DDC_CLK_N(n)			((n) & 0x7)
  
- 	host->irq = ec->irq;
- 	ashost->host = host;
+ #define SUN4I_HDMI_DDC_LINE_CTRL_REG	0x540
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+index e826da34e9191..14b6762567fbf 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+@@ -37,7 +37,7 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
+ 	unsigned long best_rate = 0;
+ 	u8 best_m = 0, best_n = 0, _m, _n;
+ 
+-	for (_m = 0; _m < 8; _m++) {
++	for (_m = 0; _m < 16; _m++) {
+ 		for (_n = 0; _n < 8; _n++) {
+ 			unsigned long tmp_rate;
+ 
 -- 
 2.25.1
 
