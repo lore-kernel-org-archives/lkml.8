@@ -2,92 +2,76 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E82C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54BC820768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EC620720
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 02:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ioju6TH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbgFWCQU (ORCPT
+        id S1731216AbgFWCSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:16:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34289 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728447AbgFWCQT (ORCPT
+        Mon, 22 Jun 2020 22:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbgFWCSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:16:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t6so1339602pgq.1;
-        Mon, 22 Jun 2020 19:16:19 -0700 (PDT)
+        Mon, 22 Jun 2020 22:18:52 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D2DC061795
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:18:52 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k1so8460854pls.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 19:18:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=kLZjBPtHSAXfJtA8Ix/wp7Lto4xpgPzVeFE7SLHRWeo=;
+        b=ioju6TH5Ffu+9KU8EwCkPcqaRyk9IoHJABxfa3QEOddQbV7mkY6JLK4ru+UX7432PU
+         Oe/Xz9XjEXXvCq06scF5oYKTL0/fu2vgy0Wbi//raQBuDzKX/PeaPp6I1DKC74yhKBez
+         u5iM4eo4iOHNbl5CFz7iBeRfc54FsawgydJChyaB6YfT1TFKtzXjkJ0sViTuZ+lxW965
+         oMr7KKvpgfG86b5L2euFIiTXTBL3jF6/rUHv0eSJKg/wSygVy+EKfre1pzkFEvXCZ9rd
+         9nfxz9//oFsrPUSvr2NJkZ6cAjJdPpi/16lw2F8j6TgRX4fj8Aeh6qPcYu3pq3YPiFu6
+         abdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=M/lKgw0WIqHsOqIn5qkk2P21mZzLktylguXH7Jx+OVk=;
-        b=tqxq8Wgo3F6HifXAj6ZoPlu5n2aUQidj+j5DJPbbRbMNYSt/ewAArz93QpfqH5H64T
-         NeCpjtJjUnJ6qvHzun2OT6fZqIMJDZ67SbcWf4Ptwm2hwUMbZ+jKN5BHy3WXM958+uFV
-         dzNWB/7qFm6LoUTm1hA1BXVP7OEifKLvA6YDJKkukoar+EBAeVeOOthJ6CC5SfVr8Yxj
-         Z+pDqch5KXutT6kL4IYYbP5mYzfiYSmgmpoE7VwCeZPF3ohAgNqJrgWGzHbJxMG1rlxu
-         3a/n4JhTWDW8wLh0zsD1vSehPXVnD2PNgf3mrdiVn86QXow9ZhUw0ZNEHLtyPMn/tOwy
-         hMgQ==
-X-Gm-Message-State: AOAM533/meih7OltlveyYgom5SgPpffYOwv9s5Q5DqBhklLMQsu43j2V
-        pZ8tI32qbLqUrvqXDQWseTQ=
-X-Google-Smtp-Source: ABdhPJzQeAPANbiAmUwJbdDHqgqKLmC7CQe4oeQcA4IUQ/MBdOu2b/RZsx/t4Z569lut9IJk2LZxsA==
-X-Received: by 2002:a62:640b:: with SMTP id y11mr22670086pfb.195.1592878578089;
-        Mon, 22 Jun 2020 19:16:18 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id w77sm15909899pff.126.2020.06.22.19.16.16
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kLZjBPtHSAXfJtA8Ix/wp7Lto4xpgPzVeFE7SLHRWeo=;
+        b=HXZ47639vg+BzTQ2cQJJnNyKXFdnpCMgOd3zqJGN2sytA6qmTy8yzuuzbNZ1Y4ucvU
+         ujGgLeZ39PzWZTSUJTRTjE8EGtBNbJSM7UB9INpKNocRcxT9sHYKcCXswaL7+W52dekN
+         rbEf+u372kv3hcQhNZFf9J01VvYRntRjozNmmFvEh0W+koACYbY6OWSCVw+PMMkeycji
+         8Vce7p3UtJOfItCrn0YynGneGlLsicIt70s3dhgkAyXzFQlVoQijXrffrkkKDs7h2ugh
+         TK/vxvAI+8aOvbvRSaFyeheD+kbB0nok0j8bW/5UOYWSLEgqD1VQ+ws10yUfTWmuH0We
+         ymgQ==
+X-Gm-Message-State: AOAM531RuFgo1grzn5eSFi05MPwutIPr7TQlUNhs10L/iRZQV9V5WVRT
+        1BMv8CB295yHRkgfSSb0ayoFgT5JGWU=
+X-Google-Smtp-Source: ABdhPJz7T82FALVVA0k0BggOasAD3CrPK/UIFUIutSvLKLsMUSpURkBkNf0gzP7JZmULqdacqMhtyw==
+X-Received: by 2002:a17:90a:be09:: with SMTP id a9mr20404009pjs.43.1592878731390;
+        Mon, 22 Jun 2020 19:18:51 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c085:21e1::136e? ([2620:10d:c090:400::5:30d1])
+        by smtp.gmail.com with ESMTPSA id u14sm16299612pfk.211.2020.06.22.19.18.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 19:16:17 -0700 (PDT)
-Subject: Re: [PATCH v7 5/8] loop: be paranoid on exit and prevent new
- additions / removals
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        martin.petersen@oracle.com, jejb@linux.ibm.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-References: <20200619204730.26124-1-mcgrof@kernel.org>
- <20200619204730.26124-6-mcgrof@kernel.org>
- <7e76d892-b5fd-18ec-c96e-cf4537379eba@acm.org>
- <20200622122742.GU11244@42.do-not-panic.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <14dc9294-fa99-cad0-871b-b69f138e8ac9@acm.org>
-Date:   Mon, 22 Jun 2020 19:16:15 -0700
+        Mon, 22 Jun 2020 19:18:50 -0700 (PDT)
+Subject: Re: [PATCH 1/4] io_uring: fix hanging iopoll in case of -EAGAIN
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1592863245.git.asml.silence@gmail.com>
+ <0301f35644823a01cbae87e440df7d58ebcf2279.1592863245.git.asml.silence@gmail.com>
+ <95b720a6-926c-a208-e929-1d0203fa8701@kernel.dk>
+Message-ID: <e05fc48b-684d-2980-3986-47a77af403e0@kernel.dk>
+Date:   Mon, 22 Jun 2020 20:18:49 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200622122742.GU11244@42.do-not-panic.com>
+In-Reply-To: <95b720a6-926c-a208-e929-1d0203fa8701@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -96,22 +80,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22 05:27, Luis Chamberlain wrote:
-> Note: this will bring you sanity if you try to figure out *why* we still
-> get:
+On 6/22/20 8:07 PM, Jens Axboe wrote:
+> On 6/22/20 4:16 PM, Pavel Begunkov wrote:
+>> io_do_iopoll() won't do anything with a request unless
+>> req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
+>> it, otherwise io_do_iopoll() will poll a file again and again even
+>> though the request of interest was completed long ago.
 > 
-> [235530.144343] debugfs: Directory 'loop0' with parent 'block' already present!
-> [235530.149477] blktrace: debugfs_dir not present for loop0 so skipping
-> [235530.232328] debugfs: Directory 'loop0' with parent 'block' already present!
-> [235530.238962] blktrace: debugfs_dir not present for loop0 so skipping
-> 
-> If you run run_0004.sh from break-blktrace [0]. Even with all my patches
-> merged we still run into this. And so the bug lies within the block
-> layer or on the driver. I haven't been able to find the issue yet.
-> 
-> [0] https://github.com/mcgrof/break-blktrace
+> I need to look at this again, because with this change, I previously
+> got various use-after-free. I haven't seen any issues with it, but
+> I agree, from a quick look that I'm not quite sure how it's currently
+> not causing hangs. Yet I haven't seen any, with targeted -EAGAIN
+> testing.
 
-Thanks Luis for having shared this information. If I can find the time I
-will have a look into this myself.
+Ah I think I know what it is - if we run into:
 
-Bart.
+if (req->result == -EAGAIN)
+	return -EAGAIN
+
+in io_issue_sqe() and race with it, we'll reissue twice potentially.
+So the above isn't quite enough, we'll need something a bit broader.
+
+-- 
+Jens Axboe
+
