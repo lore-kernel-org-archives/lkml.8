@@ -2,52 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27052C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D422070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731AE2070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592946110;
-	bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
+	s=default; t=1592946114;
+	bh=q7AB9mS4mtH1q8Pg4IL60EGe/7NmFsbw+nZpN7cOZ1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZEYTIPNuijM4SrEu3z699p7UkeuYAnsKCRLPIW7sjv3zy/SSzO9h6foS5TeUdSAH
-	 wEzqT/sNx5vPKsTF6udO5aiUdNvoM0+ejs7AN46YsluyQ3fYZprxCgWR5AL9FAWU7F
-	 mCmn89fqMF7AGWiGYM4yxbFgjV7VgvaDg+qdbbTU=
+	b=rA4b8NJVMEE5FubKWbv/1wTCfHXniGitBGvu2sNnDtRqtRNqp4e+QbVjRo4/ivAo4
+	 JDX2WA8oMHZJ3doONKo+zPK5nSK8bjM/m4KF4cyCUAgtzyIKCmhRvtAbC6d3nk6REM
+	 ELLs4JhHR423tO7fyrRm5AZSviuChKmgre6tIIxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392077AbgFWUjl (ORCPT
+        id S2392060AbgFWUjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:39:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35262 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390002AbgFWUjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:39:33 -0400
+        id S2391643AbgFWUj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:39:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4143F215A4;
-        Tue, 23 Jun 2020 20:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 242232085B;
+        Tue, 23 Jun 2020 20:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944773;
-        bh=zs1Fsnj+WxD8z7ioOPR4f0U8x/ABY56oKNjP/7rKsb4=;
+        s=default; t=1592944768;
+        bh=q7AB9mS4mtH1q8Pg4IL60EGe/7NmFsbw+nZpN7cOZ1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ymgtCk+tBQR39jkAD1dB7ui/eN6sW8aMkdrq5upwVJqZZNd/8d1T0WuWgzUVjAzP/
-         h/GSVbk2fxgeR3QStgM4Am3RVUx1/A931UPKQs8JBnjCTRbWU66wDIp95faSqdtoaM
-         8E8oBtm8GGkPz1rW1GGXx+GXmwxaB7tItG7Qwy5I=
+        b=ys682eGBtbo5+WujP/e7gU6mH+QdgmsETvDsYKbh1Xn2CE0Dnt89gaznOWamHHdyu
+         XVXtVDITGbutCDapulTyVzmsIsl+U27W6/2Gbuz3zP9ZkARXK/tKLVaeP7br4stmbO
+         PlaNQoessPVwWHNxsDV8bE/JLYO3Hs4cnWuO2kVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fedor Tokarev <ftokarev@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 119/206] net: sunrpc: Fix off-by-one issues in rpc_ntop6
-Date:   Tue, 23 Jun 2020 21:57:27 +0200
-Message-Id: <20200623195322.807795119@linuxfoundation.org>
+Subject: [PATCH 4.19 117/206] KVM: PPC: Book3S HV: Ignore kmemleak false positives
+Date:   Tue, 23 Jun 2020 21:57:25 +0200
+Message-Id: <20200623195322.702803406@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,43 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fedor Tokarev <ftokarev@gmail.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
+[ Upstream commit 0aca8a5575544bd21b3363058afb8f1e81505150 ]
 
-Fix off-by-one issues in 'rpc_ntop6':
- - 'snprintf' returns the number of characters which would have been
-   written if enough space had been available, excluding the terminating
-   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
-   last character was dropped.
- - 'strcat' adds a terminating null byte to the string, thus if len ==
-   buflen, the null byte is written past the end of the buffer.
+kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
+pud_populate() and pmd_populate() will use __pa() to reference the newly
+allocated memory.
 
-Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Since kmemleak is unable to track the physical memory resulting in false
+positives, silence those by using kmemleak_ignore().
+
+unreferenced object 0xc000201c382a1000 (size 4096):
+ comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
+ hex dump (first 32 bytes):
+   c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
+   c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
+ backtrace:
+   [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
+   kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
+   (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
+   [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+   [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+   [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+   [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+   [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+   [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+   [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+   [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+   [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+   [<000000004afc4310>] system_call_exception+0x114/0x1e0
+   [<00000000fb70a873>] system_call_common+0xf0/0x278
+unreferenced object 0xc0002001f0c03900 (size 256):
+ comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
+ hex dump (first 32 bytes):
+   c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
+   c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
+ backtrace:
+   [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
+   kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
+   (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
+   [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+   [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+   [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+   [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+   [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+   [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+   [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+   [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+   [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+   [<000000004afc4310>] system_call_exception+0x114/0x1e0
+   [<00000000fb70a873>] system_call_common+0xf0/0x278
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s_64_mmu_radix.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 2e0a6f92e563d..8391c27855501 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -81,11 +81,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
+diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+index 998f8d089ac7e..df0f08cb821b5 100644
+--- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
++++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+@@ -171,7 +171,13 @@ static struct kmem_cache *kvm_pmd_cache;
  
- 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
- 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
--	if (unlikely((size_t)rc > sizeof(scopebuf)))
-+	if (unlikely((size_t)rc >= sizeof(scopebuf)))
- 		return 0;
+ static pte_t *kvmppc_pte_alloc(void)
+ {
+-	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
++	pte_t *pte;
++
++	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
++	/* pmd_populate() will only reference _pa(pte). */
++	kmemleak_ignore(pte);
++
++	return pte;
+ }
  
- 	len += rc;
--	if (unlikely(len > buflen))
-+	if (unlikely(len >= buflen))
- 		return 0;
+ static void kvmppc_pte_free(pte_t *ptep)
+@@ -187,7 +193,13 @@ static inline int pmd_is_leaf(pmd_t pmd)
  
- 	strcat(buf, scopebuf);
+ static pmd_t *kvmppc_pmd_alloc(void)
+ {
+-	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
++	pmd_t *pmd;
++
++	pmd = kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
++	/* pud_populate() will only reference _pa(pmd). */
++	kmemleak_ignore(pmd);
++
++	return pmd;
+ }
+ 
+ static void kvmppc_pmd_free(pmd_t *pmdp)
 -- 
 2.25.1
 
