@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA011C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F3DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B062073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92476214F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943494;
-	bh=BArVR45chIw1X4upIIFTauSanWQ6flRGPdm8KKvSDbk=;
+	s=default; t=1592943501;
+	bh=YkVoEorFSdIv9ryto11yZN9u8v2/IijlcqCT9u3qakE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VT0kDqgYwILbHaubZzpO/jRfYX3YEQxBHbC+BKLbz5Q5sryYt7+caZzfop8o6Abm9
-	 rhWQIwrpAkcXaoINzsWjC4gESi5lnexNnvj6ZPkFfJphj8K6rRSHMwQz6hD00hQKkt
-	 rROOTiAdq3HzBpexe4vdiuaxtEir9v6oj5K/GWlc=
+	b=1RXHUDZIajLDsr2elq9f2l+WRgMC6xZQO0eRDusOxFLTJp7mzfSrT9ZPhIkbF7pvl
+	 auWAHDet/T1RLoyAfllXl20c3Cxis5IyM2aOGhXtXNJTuiGg+HIelfKFvjCMHNN8aS
+	 Btu2lcjFuJJhAHUP3IsHFDxaopGJSKCHJWjoUhoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389642AbgFWUSM (ORCPT
+        id S2389654AbgFWUST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34654 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389624AbgFWUSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:18:03 -0400
+        id S2389627AbgFWUSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 639882080C;
-        Tue, 23 Jun 2020 20:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7E1B2073E;
+        Tue, 23 Jun 2020 20:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943482;
-        bh=BArVR45chIw1X4upIIFTauSanWQ6flRGPdm8KKvSDbk=;
+        s=default; t=1592943490;
+        bh=YkVoEorFSdIv9ryto11yZN9u8v2/IijlcqCT9u3qakE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWLQMZVxz0nMfdtr5zFUTWD36vtw5JRMED0Qvqr2nalSW0ZhZ17YU8GRnF2CtKc2K
-         YFh/M5LTjcu+XIredrVS41k2yWLVmbVuCffWOn4G7sUuKnbBzo8DqITHA/N/CE5VnZ
-         bPF+DCYmncA6JHkvanCwjDrv2tMSYnq5NnVHgJoo=
+        b=Op+FhTuXNMhCcK9yDqVukY70MHmXzCRlp2TBF2t89JgTvtmDpRR7Bkim2bgSN3+y0
+         jd8JNqQmLSsHXhNWsZnliXj/HbohQUN2VL4JjJouEddI3xrfKnFyJPh5O32Mjp3Fvo
+         VAILUc2FL+Iz22K+dCJjPRDcN8axcnkkKnrF6QcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Barry Song <song.bao.hua@hisilicon.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 410/477] arm64: mm: reserve hugetlb CMA after numa_init
-Date:   Tue, 23 Jun 2020 21:56:47 +0200
-Message-Id: <20200623195426.909259529@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 413/477] drm: encoder_slave: fix refcouting error for modules
+Date:   Tue, 23 Jun 2020 21:56:50 +0200
+Message-Id: <20200623195427.050996347@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,59 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Barry Song <song.bao.hua@hisilicon.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 618e07865b7453d02410c1f3407c2d78a670eabb ]
+[ Upstream commit f78d4032de60f50fd4afaa0fb68ea03b985f820a ]
 
-hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
-done yet. so all reserved memory will be located at node0.
+module_put() balances try_module_get(), not request_module(). Fix the
+error path to match that.
 
-Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200617215828.25296-1-song.bao.hua@hisilicon.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 2066facca4c7 ("drm/kms: slave encoder interface.")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/init.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_encoder_slave.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index e42727e3568ea..3f90101674687 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -458,11 +458,6 @@ void __init arm64_memblock_init(void)
- 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+diff --git a/drivers/gpu/drm/drm_encoder_slave.c b/drivers/gpu/drm/drm_encoder_slave.c
+index cf804389f5eca..d50a7884e69e1 100644
+--- a/drivers/gpu/drm/drm_encoder_slave.c
++++ b/drivers/gpu/drm/drm_encoder_slave.c
+@@ -84,7 +84,7 @@ int drm_i2c_encoder_init(struct drm_device *dev,
  
- 	dma_contiguous_reserve(arm64_dma32_phys_limit);
--
--#ifdef CONFIG_ARM64_4K_PAGES
--	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
--#endif
--
+ 	err = encoder_drv->encoder_init(client, dev, encoder);
+ 	if (err)
+-		goto fail_unregister;
++		goto fail_module_put;
+ 
+ 	if (info->platform_data)
+ 		encoder->slave_funcs->set_config(&encoder->base,
+@@ -92,9 +92,10 @@ int drm_i2c_encoder_init(struct drm_device *dev,
+ 
+ 	return 0;
+ 
++fail_module_put:
++	module_put(module);
+ fail_unregister:
+ 	i2c_unregister_device(client);
+-	module_put(module);
+ fail:
+ 	return err;
  }
- 
- void __init bootmem_init(void)
-@@ -478,6 +473,16 @@ void __init bootmem_init(void)
- 	min_low_pfn = min;
- 
- 	arm64_numa_init();
-+
-+	/*
-+	 * must be done after arm64_numa_init() which calls numa_init() to
-+	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
-+	 * while allocating required CMA size across online nodes.
-+	 */
-+#ifdef CONFIG_ARM64_4K_PAGES
-+	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-+#endif
-+
- 	/*
- 	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
- 	 * done after the fixed reservations.
 -- 
 2.25.1
 
