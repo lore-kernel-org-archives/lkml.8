@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4442072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB692072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388931AbgFXFaE (ORCPT
+        id S2388950AbgFXFaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:30:04 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59032 "EHLO mga17.intel.com"
+        Wed, 24 Jun 2020 01:30:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59056 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727957AbgFXFaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:30:02 -0400
-IronPort-SDR: WYqBgP8APv2zSPNwH4Q8pGsITDEQyUIgeAc6LgufJ0AAtfNR1CDtoqtIgq5bfEW2nvF0BGNfqy
- Be/iHkvPteMA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="124597091"
+        id S1727957AbgFXFaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:30:11 -0400
+IronPort-SDR: hd+ZJQLitlBqHdTsAp6GMxmFDDoDr1VkORToY2wObB6aaZRZMDGty5Mqwq6glprvAf4I+wbvmf
+ ubUlIWQs3/HQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="124597202"
 X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="124597091"
+   d="scan'208";a="124597202"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 22:30:02 -0700
-IronPort-SDR: /YXuIUhNkNjNpiuyXCOM96a/xMVp2Ev2JwKD0G4s5SBW3XUyaQv1OLBsHE4fe1bVkYNkIykq3Q
- DkJaSxG5J1hA==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 22:30:11 -0700
+IronPort-SDR: 6qCjaBh756XqDD1clRqa/Sk30co5NJU1FxK+EtZTZG0fuOjWw3u9OXaRJ1EeSpKMRh/1iux4nc
+ DkmZlTqqFcrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="452513257"
+   d="scan'208";a="452513392"
 Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 22:29:58 -0700
+  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 22:30:06 -0700
 From:   Bard Liao <yung-chuan.liao@linux.intel.com>
 To:     alsa-devel@alsa-project.org, vkoul@kernel.org
 Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
@@ -45,9 +45,9 @@ Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
         pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
         slawomir.blauciak@intel.com, mengdong.lin@intel.com,
         bard.liao@intel.com
-Subject: [PATCH 1/9] soundwire: intel: reuse code for wait loops to set/clear bits
-Date:   Wed, 24 Jun 2020 01:35:38 +0800
-Message-Id: <20200623173546.21870-2-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH 3/9] soundwire: intel: introduce a helper to arm link synchronization
+Date:   Wed, 24 Jun 2020 01:35:40 +0800
+Message-Id: <20200623173546.21870-4-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
 References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
@@ -58,78 +58,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Refactor code and use same routines on set/clear
+Move code from pre_bank_switch to dedicated helper, will be used in
+follow-up patches as recommended by programming flows.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 ---
- drivers/soundwire/intel.c | 45 +++++++++++++++++----------------------
- 1 file changed, 19 insertions(+), 26 deletions(-)
+ drivers/soundwire/intel.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 7a65414e5714..8c7ae07c0fe1 100644
+index 4792613e8e5a..6a745602c9cc 100644
 --- a/drivers/soundwire/intel.c
 +++ b/drivers/soundwire/intel.c
-@@ -123,40 +123,33 @@ static inline void intel_writew(void __iomem *base, int offset, u16 value)
- 	writew(value, base + offset);
+@@ -497,6 +497,21 @@ static int __maybe_unused intel_link_power_down(struct sdw_intel *sdw)
+ 	return 0;
  }
  
-+static int intel_wait_bit(void __iomem *base, int offset, u32 mask, u32 target)
++static void intel_shim_sync_arm(struct sdw_intel *sdw)
 +{
-+	int timeout = 10;
-+	u32 reg_read;
++	void __iomem *shim = sdw->link_res->shim;
++	u32 sync_reg;
 +
-+	do {
-+		reg_read = readl(base + offset);
-+		if ((reg_read & mask) == target)
-+			return 0;
++	mutex_lock(sdw->link_res->shim_lock);
 +
-+		timeout--;
-+		usleep_range(50, 100);
-+	} while (timeout != 0);
++	/* update SYNC register */
++	sync_reg = intel_readl(shim, SDW_SHIM_SYNC);
++	sync_reg |= (SDW_SHIM_SYNC_CMDSYNC << sdw->instance);
++	intel_writel(shim, SDW_SHIM_SYNC, sync_reg);
 +
-+	return -EAGAIN;
++	mutex_unlock(sdw->link_res->shim_lock);
 +}
 +
- static int intel_clear_bit(void __iomem *base, int offset, u32 value, u32 mask)
- {
--	int timeout = 10;
--	u32 reg_read;
--
- 	writel(value, base + offset);
--	do {
--		reg_read = readl(base + offset);
--		if (!(reg_read & mask))
--			return 0;
--
--		timeout--;
--		udelay(50);
--	} while (timeout != 0);
--
--	return -EAGAIN;
-+	return intel_wait_bit(base, offset, mask, 0);
- }
- 
- static int intel_set_bit(void __iomem *base, int offset, u32 value, u32 mask)
- {
--	int timeout = 10;
--	u32 reg_read;
--
- 	writel(value, base + offset);
--	do {
--		reg_read = readl(base + offset);
--		if (reg_read & mask)
--			return 0;
--
--		timeout--;
--		udelay(50);
--	} while (timeout != 0);
--
--	return -EAGAIN;
-+	return intel_wait_bit(base, offset, mask, mask);
- }
- 
  /*
+  * PDI routines
+  */
+@@ -710,21 +725,12 @@ static int intel_pre_bank_switch(struct sdw_bus *bus)
+ {
+ 	struct sdw_cdns *cdns = bus_to_cdns(bus);
+ 	struct sdw_intel *sdw = cdns_to_intel(cdns);
+-	void __iomem *shim = sdw->link_res->shim;
+-	int sync_reg;
+ 
+ 	/* Write to register only for multi-link */
+ 	if (!bus->multi_link)
+ 		return 0;
+ 
+-	mutex_lock(sdw->link_res->shim_lock);
+-
+-	/* Read SYNC register */
+-	sync_reg = intel_readl(shim, SDW_SHIM_SYNC);
+-	sync_reg |= SDW_SHIM_SYNC_CMDSYNC << sdw->instance;
+-	intel_writel(shim, SDW_SHIM_SYNC, sync_reg);
+-
+-	mutex_unlock(sdw->link_res->shim_lock);
++	intel_shim_sync_arm(sdw);
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
 
