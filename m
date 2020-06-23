@@ -2,174 +2,118 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4645C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67FDE206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829E5206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 06:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njWd611S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BIdVinkt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730939AbgFWGW2 (ORCPT
+        id S1730862AbgFWGX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:22:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35416 "EHLO
+        Tue, 23 Jun 2020 02:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730406AbgFWGW1 (ORCPT
+        with ESMTP id S1730695AbgFWGX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:22:27 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87797C061573;
-        Mon, 22 Jun 2020 23:22:27 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h22so1096558pjf.1;
-        Mon, 22 Jun 2020 23:22:27 -0700 (PDT)
+        Tue, 23 Jun 2020 02:23:57 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A55C061797
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:23:56 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 9so22039388ljv.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jun 2020 23:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JqdXnjOTSYDDpPPJplHpLnDfQ3QmZFq8Qe/1BA+yRRc=;
-        b=njWd611Shn9oilZBlrtfevCvAa+D5bJCriFuIYOaE2EhlPpt86TFW+K5ll3a62Ws99
-         ZJmRYHBR8o9MKWlXMmPG2gJ7jgX6on7Yziu7RT8oMqJKzN/70zkbc6bgKpvIikqwtf3y
-         A5Hxf1Dr8EdDpWYS+ITIuLUaGSwvA6FzmikSBQ6jQxdHk/+F7pnoAeRCQwqVIPgihjLY
-         J2K9+tpBEp/LrLPCtvlLYCdqRCJTND1D2kVXknpee03ac4qsMIiCAQ1yvrdWqEIyycbb
-         xNp8Nz4Ix55H02VWByVZ7dk4FEneuP3TeovyZuKHHl/vlT8ZvhcGjQWN1jKfXe1SpaIn
-         8k4Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dPmL4ji10DM23gXnHiUP2NWgp6rzRT93lGyytV/WtJM=;
+        b=BIdVinktvLNiMk2nDRyH/DIePkv0Y76ENlOPbiD73uhrPmAMWpcQr0GXrq31J7UWKy
+         nx8cSiBDNUNtKhgqbuWTj5/yrtE899FP1q+Kbv9b1V1z5MhHcAfoTPmKUBPRNv4O93xb
+         8ErCN2zCByMbG4NDklpkORi7nxFQvRFTmI7j6WCrrT6j3vugRvMD4MvqbAJez/VIbSj4
+         F0L1wnWSrbrCCkBdJrgEi6penn3FCPOtrKz5WHjQOZua3SlwQcChthsVjDiMoQ/6X8iE
+         H9FMLmhcj3Z+bPDhmvjDT6yMPl5j3w0NhSrNdNuLf8wDntXMPLPLJ4sFqphnVX3TlWyV
+         A/8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JqdXnjOTSYDDpPPJplHpLnDfQ3QmZFq8Qe/1BA+yRRc=;
-        b=t3/JZJ4oN+N98Lnp2pBAJn9dWuL8nJC/gO+Tdp9AAQEJBYzUhB4hPFH+BJ4Dm3UCll
-         iM+GOvTCulHUDuXKKiaoK4Ob7phcE3WCtHjEtQx//Ud0+hUifk84FrAgf1S8p/rtYCRP
-         8hIEpLwckXgoJTeYZcT/621fYLMpP4LIEybvj6wwj5XrRHWuyyAoW1iTtirnCermcFeQ
-         W3H1UqMOCAxaOJjVRy3qO3pVoKt8d6l8keR20jn1DPWFweP/63TJD3n9k/8FiscL3ReJ
-         DV66fZrQ4aH1DxbjQvceshuZtuNmtiIHUV2m44Whnq2rvaY4pqolFq0Y1QRmue8jIFIc
-         ns5A==
-X-Gm-Message-State: AOAM530qlVP5Ukx7ZSYam9oxMBneo6gpIW5ZDZFQgGERwX23JNge5LYd
-        0HBUYOKpIx/NhdWrDJ6Pu2s=
-X-Google-Smtp-Source: ABdhPJwlHrhVW3Iqlh67brc+IJeHLCozs/uo71Rj5VLzU1+/Ou4KwjZaevfVL7FipceVqNvC/obtcA==
-X-Received: by 2002:a17:90a:20e9:: with SMTP id f96mr581806pjg.13.1592893346950;
-        Mon, 22 Jun 2020 23:22:26 -0700 (PDT)
-Received: from dc803.localdomain (FL1-125-199-162-203.hyg.mesh.ad.jp. [125.199.162.203])
-        by smtp.gmail.com with ESMTPSA id 207sm16163690pfw.190.2020.06.22.23.22.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 23:22:26 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2 v5] exfat: write multiple sectors at once
-Date:   Tue, 23 Jun 2020 15:22:19 +0900
-Message-Id: <20200623062219.7148-1-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dPmL4ji10DM23gXnHiUP2NWgp6rzRT93lGyytV/WtJM=;
+        b=YKj6jCmj8aGgv75FlV6VHpp/YFTpUB/1SlMuJcAY3nBFstjfe9480TdrR7SqDv9Fce
+         4ObCXyk+WCwGNG7geFxNIIrcwwbcIMUavplM/ynbQD3tQl0OvNgoeqs52mOu0VGRZdf9
+         TaLTzmVQVfYd7M015HnuoMBj5W9aMjWLh6o7OF5FG0NY6p5BYKcX4STqffO6GYDnn4PE
+         vdF66VBi6DWasSr05BqNeLfrhN6cXHDFDrJxvVeAXgnH0wUEkU6cT/aGJ+IK2risHpSA
+         8Olsc3uljK6+Sn/JWmA6sZmAASwjHUOoJ9Gswm+k9lh2iFZgvVFyTJUkm/MKZ8h1qRbr
+         pQBQ==
+X-Gm-Message-State: AOAM530bvUd6v7uJQcZ5q+i2P5yyOsamY+2xoBsMDu9Ju4gU5avLpCZQ
+        PHFkCId7BHvop3NJ+lGfHh+6sdTgIO+sz0X+sIMG1g==
+X-Google-Smtp-Source: ABdhPJwyfBDDErbrS4GjTK/D+t1eKZ96j9X/dUhypMGUwehTdQFYmoz856g75PfnLqD8QeqGESPEHLqWG864TNrkBCI=
+X-Received: by 2002:a2e:b88c:: with SMTP id r12mr10241919ljp.266.1592893434808;
+ Mon, 22 Jun 2020 23:23:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
+ <20200622224920.GA4332@42.do-not-panic.com>
+In-Reply-To: <20200622224920.GA4332@42.do-not-panic.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 23 Jun 2020 11:53:43 +0530
+Message-ID: <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
+Subject: Re: LTP: crypto: af_alg02 regression on linux-next 20200621 tag
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     LTP List <ltp@lists.linux.it>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        lkft-triage@lists.linaro.org, linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Write multiple sectors at once when updating dir-entries.
-Add exfat_update_bhs() for that. It wait for write completion once
-instead of sector by sector.
-It's only effective if sync enabled.
+On Tue, 23 Jun 2020 at 04:19, Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Tue, Jun 23, 2020 at 12:04:06AM +0530, Naresh Kamboju wrote:
+> > LTP crypto regressions noticed on linux next 20200621.
+> >
+> > The common case for all tests is timeout after 15 minutes which
+> > means tests got hung and LTP timers killed those test runs after
+> > timeout.
+> > The root cause of the failure is under investigation.
+> >
+> >   ltp-crypto-tests:
+> >     * af_alg02 - failed
+> >     * af_alg05 - failed
+> >   ltp-syscalls-tests:
+> >     * keyctl07 - failed
+> >     * request_key03 - failed
+<trim>
+>
+> Can you try reverting:
+>
+> d13ef8e10756873b0a8b7cc8f230a2d1026710ea
+>
+> The patch is titled "umh: fix processed error when UMH_WAIT_PROC is used"
 
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
----
-Changes in v2:
- - Split into 'write multiple sectors at once'
-   and 'add error check when updating dir-entries'
-Changes in v3
- - Rebase to latest exfat-dev
-Changes in v4
- - Use if/else instead of conditional operator
-Changes in v5
- - Remove Reviewed-by tag
+Thanks for the investigation.
+After reverting, two test cases got PASS out of four reported failure cases.
+ ltp-crypto-tests:
+     * af_alg02 - still failing - Hung and time out
+     * af_alg05 - still failing - Hung and time out
+  ltp-syscalls-tests:
+     * keyctl07 - PASS
+     * request_key03 - PASS
 
- fs/exfat/dir.c      | 15 +++++++++------
- fs/exfat/exfat_fs.h |  1 +
- fs/exfat/misc.c     | 19 +++++++++++++++++++
- 3 files changed, 29 insertions(+), 6 deletions(-)
+Please suggest the way to debug / fix the af_alg02 and af_alg05 failures.
 
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 02acbb6ddf02..7c2e29632634 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -606,13 +606,16 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
- 
- void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- {
--	int i;
-+	int i, err = 0;
- 
--	for (i = 0; i < es->num_bh; i++) {
--		if (es->modified)
--			exfat_update_bh(es->bh[i], sync);
--		brelse(es->bh[i]);
--	}
-+	if (es->modified)
-+		err = exfat_update_bhs(es->bh, es->num_bh, sync);
-+
-+	for (i = 0; i < es->num_bh; i++)
-+		if (err)
-+			bforget(es->bh[i]);
-+		else
-+			brelse(es->bh[i]);
- 	kfree(es);
- }
- 
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 84664024e51e..cbb00ee97183 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -512,6 +512,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
- u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
- void exfat_update_bh(struct buffer_head *bh, int sync);
-+int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync);
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
- 		unsigned int size, unsigned char flags);
- void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec);
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index 8a3dde59052b..564718747fb2 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -172,6 +172,25 @@ void exfat_update_bh(struct buffer_head *bh, int sync)
- 		sync_dirty_buffer(bh);
- }
- 
-+int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync)
-+{
-+	int i, err = 0;
-+
-+	for (i = 0; i < nr_bhs; i++) {
-+		set_buffer_uptodate(bhs[i]);
-+		mark_buffer_dirty(bhs[i]);
-+		if (sync)
-+			write_dirty_buffer(bhs[i], 0);
-+	}
-+
-+	for (i = 0; i < nr_bhs && sync; i++) {
-+		wait_on_buffer(bhs[i]);
-+		if (!buffer_uptodate(bhs[i]))
-+			err = -EIO;
-+	}
-+	return err;
-+}
-+
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
- 		unsigned int size, unsigned char flags)
- {
--- 
-2.25.1
-
+- Naresh
