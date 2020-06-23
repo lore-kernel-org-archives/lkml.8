@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15BEC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F01AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A048E20791
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC6020738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 09:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592905992;
-	bh=wN0P/QDy192u7/6MjOrYNxlOo/vHTCArMdyL+uoVyLo=;
+	s=default; t=1592905995;
+	bh=Bsp2UX/TJRQ3mJE7Y8Q9cm19e5cC2NQN5tgels1xCwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YvlluAyB4NAfy4pfQvtDPwJcnR3iYaY24HLANnqtjhfUF6MtUrYzkECj0jEdJeOC1
-	 TGxtDA6aW/NJFRwcwXok9OiHYntbKERKE+zl87sedcSkIKmo5fyEBbLahVo2CA3Sx5
-	 5gB77YuCuMoM0eR9e/qbT4fPRyxOmErid3yDKhvY=
+	b=scMJWPBqHPxwTpNAzkGr8TOZXKeXUGEAyY6hwoPFL2w770sc3Vs0UO8LnSeSX9BiF
+	 jSgWv7w3NnEFqE70fs943RETeRFJXzCIKtTw/YWI7giiGtyQb9Ms2DQHZceNJW1aWG
+	 0OwWh05cw8jWVx6cFptAPnOKjbxiCkhOuXguwwds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732253AbgFWJxL (ORCPT
+        id S1732266AbgFWJxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33372 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 05:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732159AbgFWJxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732162AbgFWJxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jun 2020 05:53:06 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D0E4207BB;
+        by mail.kernel.org (Postfix) with ESMTPSA id 50819207D8;
         Tue, 23 Jun 2020 09:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592905986;
-        bh=wN0P/QDy192u7/6MjOrYNxlOo/vHTCArMdyL+uoVyLo=;
+        bh=Bsp2UX/TJRQ3mJE7Y8Q9cm19e5cC2NQN5tgels1xCwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmIEa/0pPyp7xDIhVh8Wqd2L3sWHJRza0P4YFVRNC4EF7LSSFM5q5CjXI9JqiGEl0
-         pYXoc0n5qrXpoJPYTCIMhdvTTTFfZxlcdA3KfwrDxR/5S9Zva86Ps7ndy5OaPZNxzw
-         1T20ps3huYb7y1pKXvPq0pOqtX8w9MDQAaRM7Ldc=
+        b=l+ugfYYNX0e3Xi3/3Nu5mRUlEO1KbJaBdh/9chjhlypp3jyATcVSoeNvDGs5UY7B7
+         o6GISvcVkNuIOziRwou+iqmX7Tw++uEtNx9LSaDfZaXxn2lx4PsddVz7Pr0s2Hmxt1
+         ZXuLWaJ8MYr6oREDZiUwZkXGRPlt6H36qHPk6UMk=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jnfc0-004C3d-EM; Tue, 23 Jun 2020 11:53:04 +0200
+        id 1jnfc0-004C3i-FE; Tue, 23 Jun 2020 11:53:04 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 8/9] docs: Add remaining Documentation/*.txt at staging/index.rst
-Date:   Tue, 23 Jun 2020 11:53:01 +0200
-Message-Id: <7db59daca912312ef750fd05359d801a7d80573e.1592905407.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 9/9] docs: staging: use small font for literal includes
+Date:   Tue, 23 Jun 2020 11:53:02 +0200
+Message-Id: <22bcadb42ba2c391d13a9f8cd1ccfa9349e3b555.1592905407.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592905407.git.mchehab+huawei@kernel.org>
 References: <cover.1592905407.git.mchehab+huawei@kernel.org>
@@ -59,41 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a few text files that aren't yet at the docs building
-system.
+The normal font is too big to display 80 columns, causing extra
+breaks to be added at weird places.
 
-Add those to the staging/index.rst.
+change to the footnotesize, as this would fit a little bit
+better.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/staging/index.rst | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ Documentation/staging/index.rst | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/staging/index.rst b/Documentation/staging/index.rst
-index 8cc9d94b0a13..8e98517675ca 100644
+index 8e98517675ca..184e6aece0a7 100644
 --- a/Documentation/staging/index.rst
 +++ b/Documentation/staging/index.rst
-@@ -19,17 +19,14 @@ Unsorted Documentation
+@@ -19,14 +19,41 @@ Unsorted Documentation
  Atomic Types
  ============
  
--.. include:: ../atomic_t.txt
--   :literal:
-+.. literalinclude:: ../atomic_t.txt
+-.. literalinclude:: ../atomic_t.txt
++.. raw:: latex
++
++    \footnotesize
++
++.. include:: ../atomic_t.txt
++   :literal:
++
++.. raw:: latex
++
++    \normalsize
  
  Atomic bitops
  =============
  
--.. include:: ../atomic_bitops.txt
--   :literal:
-+.. literalinclude:: ../atomic_bitops.txt
+-.. literalinclude:: ../atomic_bitops.txt
++.. raw:: latex
++
++    \footnotesize
++
++.. include:: ../atomic_bitops.txt
++   :literal:
++
++.. raw:: latex
++
++    \normalsize
  
  Memory Barriers
  ===============
  
--.. include:: ../memory-barriers.txt
--   :literal:
-+.. literalinclude:: ../memory-barriers.txt
+-.. literalinclude:: ../memory-barriers.txt
++.. raw:: latex
++
++    \footnotesize
++
++.. include:: ../memory-barriers.txt
++   :literal:
++
++.. raw:: latex
++
++    \normalsize
 -- 
 2.26.2
 
