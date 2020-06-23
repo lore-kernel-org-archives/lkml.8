@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9538C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F907C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC5B20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6428B20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933922;
-	bh=dWj/02JCFhcZIyCPN78y8G/mcwUuHQlsXctOb05YzsU=;
+	s=default; t=1592933927;
+	bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGulwlAEWmoqO1XABZcBzbehQRWrFjmzy1LLCN66+EtAuqDvS1XV+wGnel+tSbl3f
-	 FoR74O0o32aoj0QR1iCUHp3D5DWrxSoVapQafpxIjcz5oF/OWyBo9nsiZulcBGJnRO
-	 9qv0KhCt+412y91MzYgFEC8Caw2GHeGQ+/wrRbNE=
+	b=WQx/xwTSLfAo7ZZDybZGWz+cLFspJ8/oXBHpFj4dgSBsWqwZOjguG6mkSSC9S/dLP
+	 G6k5p9ImUg1Kj7wIpi2uf6hc/W8scqVXI5P5/D4BVpeVQZFSKMV1tJAjaD0vDkeDsC
+	 DtveDHFhkRa+N9EL7X//2DcNAnmE8XiCvfP1jadc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387649AbgFWRgr (ORCPT
+        id S2387439AbgFWRiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33924 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:38:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387595AbgFWRgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:35 -0400
+        id S2387641AbgFWRgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA33820781;
-        Tue, 23 Jun 2020 17:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A150E20774;
+        Tue, 23 Jun 2020 17:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933794;
-        bh=dWj/02JCFhcZIyCPN78y8G/mcwUuHQlsXctOb05YzsU=;
+        s=default; t=1592933805;
+        bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GhEqhvEyIsflmQ80fUMyz8f9fcUWDkyEpdYhy/54ePeHFyRKye5Ih51tqUgK73EaJ
-         43hiNxRQtXOrG2NekPpEHDITSx9yTBcM1G7oYZBcF6kQD0isvcbu0IsSnIf/7SjSVl
-         AuKDNvOnOJowL7Cj6yo7aJNFcC4eXXRLk4/kAwSg=
+        b=ZB0YEehG8JMIVPRLAaRSvn+Ks9hu7D9umdNE8P0a17AHxt0ve8E9CUCuUtN61RPsp
+         WGiWYZ03GyUHuQc4gXqSU7VuALGEIDbFVmYpOQP9sfiq5mwwNsLjZ0fS+EDTeDQH7f
+         iKg5C4feZ4nQGu4u1SRdGyqWePFu3ceTLolBBaJo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 03/15] drm/amd/display: Use kfree() to free rgb_user in calculate_user_regamma_ramp()
-Date:   Tue, 23 Jun 2020 13:36:18 -0400
-Message-Id: <20200623173630.1355971-3-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 12/15] arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
+Date:   Tue, 23 Jun 2020 13:36:27 -0400
+Message-Id: <20200623173630.1355971-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173630.1355971-1-sashal@kernel.org>
 References: <20200623173630.1355971-1-sashal@kernel.org>
@@ -60,34 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 43a562774fceba867e8eebba977d7d42f8a2eac7 ]
+[ Upstream commit e575fb9e76c8e33440fb859572a8b7d430f053d6 ]
 
-Use kfree() instead of kvfree() to free rgb_user in
-calculate_user_regamma_ramp() because the memory is allocated with
-kcalloc().
+When I squashed the 'allnoconfig' compiler warning about the
+set_sve_default_vl() function being defined but not used in commit
+1e570f512cbd ("arm64/sve: Eliminate data races on sve_default_vl"), I
+accidentally broke the build for configs where ARM64_SVE is enabled, but
+SYSCTL is not.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix this by only compiling the SVE sysctl support if both CONFIG_SVE=y
+and CONFIG_SYSCTL=y.
+
+Cc: Dave Martin <Dave.Martin@arm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200616131808.GA1040@lca.pw
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/fpsimd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-index 962900932beed..11ea1a0e629bd 100644
---- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-+++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-@@ -1561,7 +1561,7 @@ bool calculate_user_regamma_ramp(struct dc_transfer_func *output_tf,
- 
- 	kfree(rgb_regamma);
- rgb_regamma_alloc_fail:
--	kvfree(rgb_user);
-+	kfree(rgb_user);
- rgb_user_alloc_fail:
- 	return ret;
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index af59b42973141..177363abbd3e3 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -315,7 +315,7 @@ static unsigned int find_supported_vector_length(unsigned int vl)
+ 	return sve_vl_from_vq(bit_to_vq(bit));
  }
+ 
+-#ifdef CONFIG_SYSCTL
++#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
+ 
+ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 				  void __user *buffer, size_t *lenp,
+@@ -361,9 +361,9 @@ static int __init sve_sysctl_init(void)
+ 	return 0;
+ }
+ 
+-#else /* ! CONFIG_SYSCTL */
++#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ static int __init sve_sysctl_init(void) { return 0; }
+-#endif /* ! CONFIG_SYSCTL */
++#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ 
+ #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
+ 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
 -- 
 2.25.1
 
