@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E88C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0FC520702
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD3720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592947125;
-	bh=Gr+7mGqsDHE2+PVmXGg8TKqDKTF5Xxt5FkTcsG3CXhI=;
+	s=default; t=1592947129;
+	bh=s6K/392NY46dmiTl46+fheMqiNYnH4RrZWpEd4k0xhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iskoAnHcOaSJWdQqfKYAo0z14H1qku2/yBCyAq4QWTqa9iIWC/8xOnukHsPIwuBmk
-	 VtHEqBPnBGMeP/Q16mL7+m3Oro2fz0imINNCJP3x58PMhbBfP4r75C0V7d1j+yGmL0
-	 0iR/vjxPAJjgwZMP6R6/3MHpUX5T+PWdagxq12lw=
+	b=OhFIo7dvLYNy7aC6Z+j2C/n+QEcohPKIMt7GFcZdGDKQtdpVQ0ZWobCCEqlA25Nls
+	 Dh7Zv38qHUpw+giMulMB/Qvk/BGaxGjjuusSag7jzX+f9ijulCkSsnshmubywinIUh
+	 5cExTC30qFxx+NosckD+3bEv7KRw9TMRhZwEsiZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390894AbgFWVSm (ORCPT
+        id S2393431AbgFWVSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44644 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390292AbgFWUZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:25:38 -0400
+        id S2390557AbgFWUZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:25:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80062206EB;
-        Tue, 23 Jun 2020 20:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303CF2064B;
+        Tue, 23 Jun 2020 20:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943938;
-        bh=Gr+7mGqsDHE2+PVmXGg8TKqDKTF5Xxt5FkTcsG3CXhI=;
+        s=default; t=1592943932;
+        bh=s6K/392NY46dmiTl46+fheMqiNYnH4RrZWpEd4k0xhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDMgwemldoN9/qdLOYWwX4vMo3oWbCxtE0QOsIfVcCIOeCD7ZkSeJUuLDSivJ6Ds8
-         4DB5hoEF+boTrgX3IrV5cpD1PzC/MRoSfkW9etWHYZBOmrAOB4yFq+O7ZJyfp5rVPq
-         euU2LlSarsk20EFrht5bB46DE6HV1d2xQ7Fdzrk4=
+        b=MMLEK3vkN95I/mWLPBz0pGRGd34kfPZ/6UkKAVoHq34BtzmJFxmWuz1v/IPZ0fCot
+         larsmhd900SsOYNaql7IYCWhaqSAi5DgayV8NvJgl50QRrD7xRWyNMLuQLC9GnkNdj
+         ykvXmXSu1a1RvZ31Yk0LB1Xlvi7tDYaeC8hPiXRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+        stable@vger.kernel.org, Marcel Gudert <m.gudert@eckelmann.de>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 110/314] clk: meson: meson8b: Dont rely on u-boot to init all GP_PLL registers
-Date:   Tue, 23 Jun 2020 21:55:05 +0200
-Message-Id: <20200623195344.114396450@linuxfoundation.org>
+Subject: [PATCH 5.4 108/314] gpio: pca953x: fix handling of automatic address incrementing
+Date:   Tue, 23 Jun 2020 21:55:03 +0200
+Message-Id: <20200623195344.018032697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195338.770401005@linuxfoundation.org>
 References: <20200623195338.770401005@linuxfoundation.org>
@@ -61,81 +63,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit a29ae8600d50ece1856b062a39ed296b8b952259 ]
+[ Upstream commit bcf41dc480b179bfb669a232080a2e26dc7294b4 ]
 
-Not all u-boot versions initialize the HHI_GP_PLL_CNTL[2-5] registers.
-In that case all HHI_GPLL_PLL_CNTL[1-5] registers are 0x0 and when
-booting Linux the PLL fails to lock.
-The initialization sequence from u-boot is:
-- put the PLL into reset
-- write 0x59C88000 to HHI_GP_PLL_CNTL2
-- write 0xCA463823 to HHI_GP_PLL_CNTL3
-- write 0x0286A027 to HHI_GP_PLL_CNTL4
-- write 0x00003000 to HHI_GP_PLL_CNTL5
-- set M, N, OD and the enable bit
-- take the PLL out of reset
-- check if it has locked
-- disable the PLL
+Some of the chips supported by the pca953x driver need the most
+significant bit in the address word set to automatically increment the
+address pointer on subsequent reads and writes (example: PCA9505). With
+this bit unset the same register is read multiple times on a multi-byte
+read sequence. Other chips must not have this bit set and autoincrement
+always (example: PCA9555).
 
-In Linux we already initialize M, N, OD, the enable and the reset bits.
-Also the HHI_GP_PLL_CNTL[2-5] registers with these magic values (the
-exact meaning is unknown) so the PLL can lock when the vendor u-boot did
-not initialize these registers yet.
+Up to now this AI bit was interpreted to be part of the address, which
+resulted in inconsistent regmap caching when a register was written with
+AI set and then read without it. This happened for the PCA9505 in
+pca953x_gpio_set_multiple() where pca953x_read_regs() bulk read from the
+cache for registers 0x8-0xc and then wrote to registers 0x88-0x8c. (Side
+note: reading 5 values from offset 0x8 yiels OP0 5 times because AI must
+be set to get OP0-OP4, which is another bug that is resolved here as a
+by-product.) The same problem happens when calls to gpio_set_value() and
+gpio_set_array_value() were mixed.
 
-Fixes: b882964b376f21 ("clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200501215717.735393-1-martin.blumenstingl@googlemail.com
+With this patch the AI bit is always set for chips that support it. This
+works as there are no code locations that make use of the behaviour with
+AI unset (for the chips that support it).
+
+Note that the call to pca953x_setup_gpio() had to be done a bit earlier
+to make the NBANK macro work.
+
+The history of this bug is a bit complicated. Commit b32cecb46bdc
+("gpio: pca953x: Extract the register address mangling to single
+function") changed which chips and functions are affected. Commit
+3b00691cc46a ("gpio: pca953x: hack to fix 24 bit gpio expanders") used
+some duct tape to make the driver at least appear to work. Commit
+49427232764d ("gpio: pca953x: Perform basic regmap conversion")
+introduced the caching. Commit b4818afeacbd ("gpio: pca953x: Add
+set_multiple to allow multiple bits to be set in one write.") introduced
+the .set_multiple() callback which didn't work for chips that need the
+AI bit which was fixed later for some chips in 8958262af3fb ("gpio:
+pca953x: Repair multi-byte IO address increment on PCA9575"). So I'm
+sorry, I don't know which commit I should pick for a Fixes: line.
+
+Tested-by: Marcel Gudert <m.gudert@eckelmann.de>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/meson8b.c | 9 +++++++++
- drivers/clk/meson/meson8b.h | 4 ++++
- 2 files changed, 13 insertions(+)
+ drivers/gpio/gpio-pca953x.c | 44 +++++++++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 4f9b79ed79d7d..082178a0f41a3 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1910,6 +1910,13 @@ static struct clk_regmap meson8b_mali = {
- 	},
- };
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 3edc1762803ac..29ba26742c8f5 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -306,8 +306,22 @@ static const struct regmap_config pca953x_i2c_regmap = {
+ 	.volatile_reg = pca953x_volatile_register,
  
-+static const struct reg_sequence meson8m2_gp_pll_init_regs[] = {
-+	{ .reg = HHI_GP_PLL_CNTL2,	.def = 0x59c88000 },
-+	{ .reg = HHI_GP_PLL_CNTL3,	.def = 0xca463823 },
-+	{ .reg = HHI_GP_PLL_CNTL4,	.def = 0x0286a027 },
-+	{ .reg = HHI_GP_PLL_CNTL5,	.def = 0x00003000 },
+ 	.cache_type = REGCACHE_RBTREE,
+-	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
+-	.max_register = 0xff,
++	.max_register = 0x7f,
 +};
 +
- static const struct pll_params_table meson8m2_gp_pll_params_table[] = {
- 	PLL_PARAMS(182, 3),
- 	{ /* sentinel */ },
-@@ -1943,6 +1950,8 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
- 			.width   = 1,
- 		},
- 		.table = meson8m2_gp_pll_params_table,
-+		.init_regs = meson8m2_gp_pll_init_regs,
-+		.init_count = ARRAY_SIZE(meson8m2_gp_pll_init_regs),
- 	},
- 	.hw.init = &(struct clk_init_data){
- 		.name = "gp_pll_dco",
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index c889fbeec30f0..c91fb07fcb657 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -20,6 +20,10 @@
-  * [0] http://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-  */
- #define HHI_GP_PLL_CNTL			0x40  /* 0x10 offset in data sheet */
-+#define HHI_GP_PLL_CNTL2		0x44  /* 0x11 offset in data sheet */
-+#define HHI_GP_PLL_CNTL3		0x48  /* 0x12 offset in data sheet */
-+#define HHI_GP_PLL_CNTL4		0x4C  /* 0x13 offset in data sheet */
-+#define HHI_GP_PLL_CNTL5		0x50  /* 0x14 offset in data sheet */
- #define HHI_VIID_CLK_DIV		0x128 /* 0x4a offset in data sheet */
- #define HHI_VIID_CLK_CNTL		0x12c /* 0x4b offset in data sheet */
- #define HHI_GCLK_MPEG0			0x140 /* 0x50 offset in data sheet */
++static const struct regmap_config pca953x_ai_i2c_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.read_flag_mask = REG_ADDR_AI,
++	.write_flag_mask = REG_ADDR_AI,
++
++	.readable_reg = pca953x_readable_register,
++	.writeable_reg = pca953x_writeable_register,
++	.volatile_reg = pca953x_volatile_register,
++
++	.cache_type = REGCACHE_RBTREE,
++	.max_register = 0x7f,
+ };
+ 
+ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+@@ -318,18 +332,6 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+ 	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+ 	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
+ 
+-	/* Single byte read doesn't need AI bit set. */
+-	if (!addrinc)
+-		return regaddr;
+-
+-	/* Chips with 24 and more GPIOs always support Auto Increment */
+-	if (write && NBANK(chip) > 2)
+-		regaddr |= REG_ADDR_AI;
+-
+-	/* PCA9575 needs address-increment on multi-byte writes */
+-	if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE)
+-		regaddr |= REG_ADDR_AI;
+-
+ 	return regaddr;
+ }
+ 
+@@ -897,6 +899,7 @@ static int pca953x_probe(struct i2c_client *client,
+ 	int ret;
+ 	u32 invert = 0;
+ 	struct regulator *reg;
++	const struct regmap_config *regmap_config;
+ 
+ 	chip = devm_kzalloc(&client->dev,
+ 			sizeof(struct pca953x_chip), GFP_KERNEL);
+@@ -960,7 +963,17 @@ static int pca953x_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, chip);
+ 
+-	chip->regmap = devm_regmap_init_i2c(client, &pca953x_i2c_regmap);
++	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
++
++	if (NBANK(chip) > 2 || PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
++		dev_info(&client->dev, "using AI\n");
++		regmap_config = &pca953x_ai_i2c_regmap;
++	} else {
++		dev_info(&client->dev, "using no AI\n");
++		regmap_config = &pca953x_i2c_regmap;
++	}
++
++	chip->regmap = devm_regmap_init_i2c(client, regmap_config);
+ 	if (IS_ERR(chip->regmap)) {
+ 		ret = PTR_ERR(chip->regmap);
+ 		goto err_exit;
+@@ -991,7 +1004,6 @@ static int pca953x_probe(struct i2c_client *client,
+ 	/* initialize cached registers from their original values.
+ 	 * we can't share this chip with another i2c master.
+ 	 */
+-	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
+ 
+ 	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+ 		chip->regs = &pca953x_regs;
 -- 
 2.25.1
 
