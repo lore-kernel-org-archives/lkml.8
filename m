@@ -2,257 +2,586 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A078C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94548C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6401720723
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FE5206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 13:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YmzB9RKb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ne8CXheI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbgFWNTF (ORCPT
+        id S1732657AbgFWNUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:19:05 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31279 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732580AbgFWNTE (ORCPT
+        Tue, 23 Jun 2020 09:20:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732580AbgFWNUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:19:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592918342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Wm7934vy90ysEQUEwWEJMP2bPmnPH5zr0UpywfuvKWA=;
-        b=YmzB9RKbf/8u/VMu4nRzy9+lEA3Nr0UQer6QlcKhoatsvc2f0awdNZPv3Sr3a4FJOve3XF
-        UcbKGdKQmVyZnTeeEZ6X0jMF9H5lzyyRv3Tu01qHI6V9DkfA4usFum+YvCTMmCOzxWtwWs
-        oUlObeLEVNkS4msQmxm9lFRTFO+xAqY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365--v0K_m57M4ubZSdoCoXFqQ-1; Tue, 23 Jun 2020 09:18:58 -0400
-X-MC-Unique: -v0K_m57M4ubZSdoCoXFqQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A29F1192297A;
-        Tue, 23 Jun 2020 13:18:53 +0000 (UTC)
-Received: from [10.10.112.224] (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D72890324;
-        Tue, 23 Jun 2020 13:18:41 +0000 (UTC)
-Subject: Re: [Patch v2 1/3] lib: Restrict cpumask_local_spread to houskeeping
- CPUs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
-        sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com
-References: <20200622234510.240834-1-nitesh@redhat.com>
- <20200622234510.240834-2-nitesh@redhat.com>
- <20200623092139.GB4781@hirez.programming.kicks-ass.net>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <9b499cd8-e311-db5b-4261-0b3f355c8c89@redhat.com>
-Date:   Tue, 23 Jun 2020 09:18:37 -0400
+        Tue, 23 Jun 2020 09:20:34 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2DFC061573;
+        Tue, 23 Jun 2020 06:20:34 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id b16so10061559pfi.13;
+        Tue, 23 Jun 2020 06:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eAYulPUk9vJGqhCnoVz6cakBG1YIc1l1bNLgYnK84s4=;
+        b=Ne8CXheIjPCT4j/2NG/cAMtFX8k4jY9iQ0+4KrIWGsmMjF++pGLW6WNkZqMkS8I4aL
+         2nIZHGjcFK1wxCTcY73pfTid4p2unQNg6ZHmEuyhghjNBK+ZvevHe1D5nU8iuDseJyKK
+         198DL07vrFZ31/GVBAqMsSUcjBMPU0FXhyVWIDWAV7wohPWghUvhNkSN6pFXT3nszX6i
+         j1eZPakWOBprzJnBt9fQYyiqtwpLtVnDhprpvJkF6ebMkUg01V24J/JqBgfHE6EfNH84
+         isPgNHc1fpsms4QFTElRzUyjd+q4w38wwHHJ8rMjBW/weR1vqEzv870k5epryRnh5OoH
+         6b5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eAYulPUk9vJGqhCnoVz6cakBG1YIc1l1bNLgYnK84s4=;
+        b=nG9Whn516DN9YGkPKP2wZqVMNTNl1KD9Y7lLOfHJBD6YwpjBWnK5Qp9rXoizhR596V
+         dU3Eq2k7gp5FbfuGl1Zwc7LVa1HuXDXeyh1ScHXh7AhZErfTQeUBXpw0KhzXIKTEE08Y
+         rRhVST7haPYt7uUsNMSZSfL/c3sp7s3CNCPnx0rWrvpZvNIZY0fqE1ocLYwckk1yu/vr
+         hXrQ1pWcMZTMzcgxHiwGy7n5OHnwi8us0h9M5McR0T8fnML+VrjQzTDiq88+QWOGqbXu
+         9lbvHVqOqR1o1Pi5bJ3bqc//UwTDs9c8eZQ37EhAyKMtOusV/MaKNNdolPsnFInIi/E0
+         MebA==
+X-Gm-Message-State: AOAM533wrD7+CeBG3MV98o4yUQZFTO8UScn5BTOXjwiAZNsD9FEkYhPd
+        EFBGBmxjsn3j/7G6OZb8oPYdVZ35
+X-Google-Smtp-Source: ABdhPJxSPbMrF9mxKkux+iRwVwQxFiMHDL5GYab9J0xXrU6nHGrJ6i3x3uh918fGtRlFcDX0j3pvrw==
+X-Received: by 2002:a63:5d04:: with SMTP id r4mr17430776pgb.15.1592918433409;
+        Tue, 23 Jun 2020 06:20:33 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b24sm16635928pfo.112.2020.06.23.06.20.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 06:20:32 -0700 (PDT)
+Subject: Re: [PATCH 3/3] watchdog: ds1374_wdt: Introduce Dallas/Maxim DS1374
+ Watchdog driver
+To:     =?UTF-8?B?Sm9obnNvbiBDSCBDaGVuICjpmbPmmK3li7Mp?= 
+        <JohnsonCH.Chen@moxa.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Lee Jones <lee.jones@linaro.org>
+References: <HK2PR01MB3281885DA5822E1D10ACD07CFA970@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+ <9af288a5-b2a2-c36b-1b28-6a0b925b4a68@roeck-us.net>
+ <HK2PR01MB328183C5595B0BD046146B41FA940@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <de352d8e-7c91-6f8e-5d0d-93497a830940@roeck-us.net>
+Date:   Tue, 23 Jun 2020 06:20:30 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200623092139.GB4781@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="KxFdHc4nNsmoEb5Z4JeJrTYFF0IbAnbWV"
+In-Reply-To: <HK2PR01MB328183C5595B0BD046146B41FA940@HK2PR01MB3281.apcprd01.prod.exchangelabs.com>
+Content-Type: text/plain; charset=big5
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---KxFdHc4nNsmoEb5Z4JeJrTYFF0IbAnbWV
-Content-Type: multipart/mixed; boundary="N3pPay3VTB8ZxfMV0HMF98bVzXhPUIWGC"
+On 6/22/20 11:28 PM, Johnson CH Chen (³¯¬L¾±) wrote:
+> Hi,
+> 
+> Thanks for your good detailed suggestions!
+> 
 
---N3pPay3VTB8ZxfMV0HMF98bVzXhPUIWGC
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+Other feedback suggests to convert the driver to use
+the watchdog core in the rtc code. I would suggest to follow
+that suggestion.
 
-
-On 6/23/20 5:21 AM, Peter Zijlstra wrote:
-> On Mon, Jun 22, 2020 at 07:45:08PM -0400, Nitesh Narayan Lal wrote:
->> From: Alex Belits <abelits@marvell.com>
+>>> + * It would be more efficient to use i2c msgs/i2c_transfer directly
+>>> +but, as
+>>> + * recommened in .../Documentation/i2c/writing-clients section
+>>> + * "Sending and receiving", using SMBus level communication is preferred.
+>>> + */
+>>> +
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/ioctl.h>
+>>> +#include <linux/reboot.h>
+>>> +#include <linux/watchdog.h>
+>>> +#include <linux/workqueue.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/uaccess.h>
 >>
->> The current implementation of cpumask_local_spread() does not respect th=
-e
->> isolated CPUs, i.e., even if a CPU has been isolated for Real-Time task,
->> it will return it to the caller for pinning of its IRQ threads. Having
->> these unwanted IRQ threads on an isolated CPU adds up to a latency
->> overhead.
+>> Alphabetic order please.
 >>
->> Restrict the CPUs that are returned for spreading IRQs only to the
->> available housekeeping CPUs.
+>>> +
+>>> +#define DEVNAME                 "ds1374_wdt"
+>>> +
+>>> +#define DS1374_REG_WDALM0	0x04 /* Watchdog/Alarm */
+>>> +#define DS1374_REG_WDALM1	0x05
+>>> +#define DS1374_REG_WDALM2	0x06
+>>> +#define DS1374_REG_CR		0x07 /* Control */
+>>> +#define DS1374_REG_CR_AIE	0x01 /* Alarm Int. Enable */
+>>> +#define DS1374_REG_CR_WDSTR     0x08 /* 1=INT, 0=RST */
+>>> +#define DS1374_REG_CR_WDALM	0x20 /* 1=Watchdog, 0=Alarm */
+>>> +#define DS1374_REG_CR_WACE	0x40 /* WD/Alarm counter enable */
+>>> +
+>>> +/* Default margin */
+>>> +#define WD_TIMO                 131762
+>>> +#define TIMER_MARGIN_MIN	4096 /* 1s */
+>>> +#define TIMER_MARGIN_MAX	(60*60*24*4096) /* one day */
+>>> +
+>>> +static int wdt_margin = WD_TIMO;
 >>
->> Signed-off-by: Alex Belits <abelits@marvell.com>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  lib/cpumask.c | 43 +++++++++++++++++++++++++------------------
->>  1 file changed, 25 insertions(+), 18 deletions(-)
+>> Sjould not be pre-initialized. Also, 131762 isn't 32 seconds, it is 131,762
+>> seconds.
 >>
->> diff --git a/lib/cpumask.c b/lib/cpumask.c
->> index fb22fb266f93..cc4311a8c079 100644
->> --- a/lib/cpumask.c
->> +++ b/lib/cpumask.c
->> @@ -6,6 +6,7 @@
->>  #include <linux/export.h>
->>  #include <linux/memblock.h>
->>  #include <linux/numa.h>
->> +#include <linux/sched/isolation.h>
->> =20
->>  /**
->>   * cpumask_next - get the next cpu in a cpumask
->> @@ -205,28 +206,34 @@ void __init free_bootmem_cpumask_var(cpumask_var_t=
- mask)
->>   */
->>  unsigned int cpumask_local_spread(unsigned int i, int node)
->>  {
->> -=09int cpu;
->> +=09int cpu, m, n, hk_flags;
->> +=09const struct cpumask *mask;
->> =20
->> +=09hk_flags =3D HK_FLAG_DOMAIN | HK_FLAG_WQ;
->> +=09mask =3D housekeeping_cpumask(hk_flags);
->> +=09m =3D cpumask_weight(mask);
->>  =09/* Wrap: we always want a cpu. */
->> -=09i %=3D num_online_cpus();
->> +=09n =3D i % m;
->> +=09while (m-- > 0) {
-> I are confuzled. What do we need this outer loop for?
->
-> Why isn't something like:
->
-> =09i %=3D cpumask_weight(mask);
->
-> good enough? That voids having to touch the test.
+> 
+> 131762 is 32 seconds actually because watchdog counter increases per 
+> 1/4096 seconds for DS1374. If DS1374_REG_CR_WDALM is set to 0 (alarm), 
+> alarm counter will increase per 1 second.
+> 
 
-Makes sense.
-Thanks
+The watchdog core keeps timeouts in seconds. For the watchdog core,
+131762 is 131,762 seconds. Your code assumes that the watchdog core
+does not care about / need to scale, which is wrong. Besides,
+MODULE_PARM_DESC below clearly states "Watchdog timeout _in seconds_"
+(emphasis added).
 
-> Still when you're there, at the very least you can fix the horrible
-> style:
-
-Sure.
-
->
->
->> +=09=09if (node =3D=3D NUMA_NO_NODE) {
->> +=09=09=09for_each_cpu(cpu, mask)
->> +=09=09=09=09if (n-- =3D=3D 0)
->> +=09=09=09=09=09return cpu;
-> { }
->
->> +=09=09} else {
->> +=09=09=09/* NUMA first. */
->> +=09=09=09for_each_cpu_and(cpu, cpumask_of_node(node), mask)
->> +=09=09=09=09if (n-- =3D=3D 0)
->> +=09=09=09=09=09return cpu;
-> { }
->
->> =20
->> +=09=09=09for_each_cpu(cpu, mask) {
->> +=09=09=09=09/* Skip NUMA nodes, done above. */
->> +=09=09=09=09if (cpumask_test_cpu(cpu,
->> +=09=09=09=09=09=09     cpumask_of_node(node)))
->> +=09=09=09=09=09continue;
-> No linebreak please.
->
->> =20
->> +=09=09=09=09if (n-- =3D=3D 0)
->> +=09=09=09=09=09return cpu;
->> +=09=09=09}
->>  =09=09}
->>  =09}
->>  =09BUG();
->> --=20
->> 2.18.4
+>>> +module_param(wdt_margin, int, 0);
+>>> +MODULE_PARM_DESC(wdt_margin, "Watchdog timeout in seconds (default
+>>> +32s)");
+>>> +
 >>
---=20
-Nitesh
+>> As a new driver, it would be better to just use the customary "timeout".
+>>
+>>> +static bool nowayout = WATCHDOG_NOWAYOUT; module_param(nowayout,
+>>> +bool, 0); MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped
+>> once
+>>> +started default ="
+>>> +		__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>>> +
+>>> +struct ds1374_wdt {
+>>> +	struct i2c_client *client;
+>>> +	struct watchdog_device *wdt;
+>>> +	struct work_struct work;
+>>
+>> Not used.
+>>
+>>> +
+>>> +	/* The mutex protects alarm operations, and prevents a race
+>>> +	 * between the enable_irq() in the workqueue and the free_irq()
+>>> +	 * in the remove function.
+>>> +	 */
+>>
+>> There is no workqueue here, and the remove function is not needed.
+>>
+>>> +	struct mutex mutex;
+>>> +};
+>>> +
+>>> +static const struct watchdog_info ds1374_wdt_info = {
+>>> +	.identity       = DEVNAME,
+>>> +	.options        = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+>>> +						WDIOF_MAGICCLOSE,
+>>> +};
+>>> +
+>>> +static struct watchdog_device ds1374_wdd;
+>>> +
+>> Move declaration please.
+>>
+>>> +static int ds1374_wdt_settimeout(struct watchdog_device *wdt,
+>>> +					unsigned int timeout)
+>>> +{
+>>
+>> How is this synchronized against accesses by the RTC driver ?
+>>
+> By original design in rtc-ds1374.c, it seems no synchronized problem between 
+> rtc and watchdog, but I think we can add mutex lock to deal with it.
+> 
+The mutex is used there where needed.
 
+>>> +	int ret = -ENOIOCTLCMD;
+>>
+>> Not an appropriate error code here.
+>>
+>>> +	u8 buf[4];
+>>> +	int cr, i;
+>>> +	struct ds1374_wdt *drv_data = watchdog_get_drvdata(wdt);
+>>> +
+>>> +	ret = cr = i2c_smbus_read_byte_data(drv_data->client, DS1374_REG_CR);
+>>> +	if (ret < 0)
+>>> +		goto out;
+>>
+>> "goto out;" is unnecessary. Just return the error. Same everywhere else below.
+>>
+>>> +
+>>> +	/* Disable any existing watchdog/alarm before setting the new one */
+>>> +	cr &= ~DS1374_REG_CR_WACE;
+>>> +
+>>> +	ret = i2c_smbus_write_byte_data(drv_data->client, DS1374_REG_CR, cr);
+>>> +	if (ret < 0)
+>>> +		goto out;
+>>> +
+>>> +	/* Set new watchdog time */
+>>> +	for (i = 0; i < 3; i++) {
+>>> +		buf[i] = timeout & 0xff;
+>>> +		timeout >>= 8;
+>>> +	}
+>>
+>> The value passed to this function from the watchdog core is the timeout in
+>> seconds. I don't see a conversion to internal values here.
+>>
+> 
+> For original design in rtc-ds1374.c, ds1374_wdt_settimeout () will call 
+> ds1374_write_rtc() to write hardware register. To separate watchdog and rtc 
+> functions, expand code from ds1374_write_rtc() here, and final buf[] values 
+> will be written into hardware register for DS1374.
+> 
 
---N3pPay3VTB8ZxfMV0HMF98bVzXhPUIWGC--
+ds1374_wdt_settimeout() is an API function, It gets timeouts from the watchdog
+core in seconds. Those timeouts have to be converted to chip internal values
+in this function.
 
---KxFdHc4nNsmoEb5Z4JeJrTYFF0IbAnbWV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl7yAS0ACgkQo4ZA3AYy
-ozm9TxAA03qyAclOLwN/ogLAtS/TkuXdENI8mJXEgyHAzUM7UH7eToCmwP5UYQ2t
-YF3+hLB2b3PZYZptdnXUkDIrAPO9Em++YLTBNYdglNsI3jGZ6vPKvRh1tOmpIlk6
-gano9vSHSyRqq0RqsnYRrweENT0JPXTGC7tDrXT4RIFLA7tbG677b7WUNCChpSpu
-93Bf1upf4WVVoRbiPVt/a/TdPiKv6gLQz2GHfqHNfJ1OMfbBrdDEKssP3MXpV0Bq
-QEvZXtUTzp+O16L3mVjai+sx2U0PxQAuyrD+bnAIRzsI8Xz8isBc3YoQ/RvQM5og
-iIaUofFgNhJ8LpJxUJnWkFHz9dwFnhuy7c57RstPM2KZqdMrc9b0lGi10dOqUQRA
-nyktu1w8NYtfaOSk+QMBcdJky7scRBiJ5orjpt43eM3Rb9T9k6krYirhZj+WeIpG
-ZiBOPo7llQpv2T4g9KgtEPSdLaTapW74GiRq5OiAjj3SpqAhT+eut7XelwlFIjTo
-NAf1Gl50A+pYPZWEIjb1OSrsrFN3eXPqvLmf7B8w5F2yIz1c7rn5Q5LEts6JtWJd
-4taXA/9eWy/vq/inBVveWYyqvg47YKGqbohKTsUi4kUpLx5TFYbNSgUydUsKxeH3
-zVdxV/l68gRxy/c/cN7Cu3VH9NwZXQ3rkOeKsuV15OVk8GuBMws=
-=Cu5B
------END PGP SIGNATURE-----
-
---KxFdHc4nNsmoEb5Z4JeJrTYFF0IbAnbWV--
+>>> +
+>>> +	ret = i2c_smbus_write_i2c_block_data(drv_data->client,
+>>> +						DS1374_REG_WDALM0, 3, buf);
+>>> +	if (ret) {
+>>> +		pr_info("couldn't set new watchdog time\n");
+>>> +		goto out;
+>>> +	}
+>>
+>>> +
+>>> +	/* Enable watchdog timer */
+>>> +	cr |= DS1374_REG_CR_WACE | DS1374_REG_CR_WDALM;
+>>> +	cr &= ~DS1374_REG_CR_WDSTR;/* for RST PIN */
+>>> +	cr &= ~DS1374_REG_CR_AIE;
+>>> +
+>>> +	ret = i2c_smbus_write_byte_data(drv_data->client, DS1374_REG_CR, cr);
+>>> +	if (ret < 0)
+>>> +		goto out;
+>>> +
+>>> +	return 0;
+>>
+>> Pointless. Just return ret.
+>>
+>> Also, this function needs to store the new timeout in struct watchdog_device.
+>>
+>>> +out:
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +
+>>> +/*
+>>> + * Read WD/Alarm counter to reload the watchdog timer. (ie, pat the
+>>> +watchdog)  */ static int ds1374_wdt_ping(struct watchdog_device *wdt)
+>>> +{
+>>> +	struct ds1374_wdt *drv_data = watchdog_get_drvdata(wdt);
+>>> +	int ret;
+>>> +	u8 buf[4];
+>>> +
+>>> +	ret = i2c_smbus_read_i2c_block_data(drv_data->client,
+>>> +						DS1374_REG_WDALM0, 3, buf);
+>>> +
+>>> +	if (ret < 0 || ret < 3)
+>>> +		pr_info("WD TICK FAIL!!!!!!!!!! %i\n", ret);
+>>> +
+>>
+>> This is not an info message, this is an error. Besides, it is just noise.
+>> Just return the error and drop the message.
+>>
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int ds1374_wdt_start(struct watchdog_device *wdt) {
+>>> +	int ret;
+>>> +
+>>> +	ret = ds1374_wdt_settimeout(wdt, wdt_margin);
+>>
+>> This is wrong. The timeout may have been updated by userspace.
+>> It is inappropriate to change it back to the default here.
+>>
+> Thanks, I will keep in mind.
+> 
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	ds1374_wdt_ping(wdt);
+>>
+>> Please do not ignore errors.
+>>
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int ds1374_wdt_stop(struct watchdog_device *wdt) {
+>>> +	struct ds1374_wdt *drv_data = watchdog_get_drvdata(wdt);
+>>> +	int cr;
+>>> +
+>>> +	if (nowayout)
+>>> +		return 0;
+>>
+>> Not needed.
+>>
+> Thanks!, it has been implemented in watchdog_stop().
+> 
+>>> +
+>>> +	cr = i2c_smbus_read_byte_data(drv_data->client, DS1374_REG_CR);
+>>> +	/* Disable watchdog timer */
+>>> +	cr &= ~DS1374_REG_CR_WACE;
+>>> +
+>>> +	return i2c_smbus_write_byte_data(drv_data->client, DS1374_REG_CR,
+>>> +cr); }
+>>> +
+>>> +/*
+>>> + * Handle commands from user-space.
+>>> + */
+>>> +static long ds1374_wdt_ioctl(struct watchdog_device *wdt, unsigned int
+>> cmd,
+>>> +				unsigned long arg)
+>>
+>> The whole point of using the watchdog subsystem is to not need a local ioctl
+>> function - and most definitely not one that duplicates watchdog core
+>> functionality.
+>>
+>>> +{
+>>> +	int new_margin, options;
+>>> +
+>>> +	switch (cmd) {
+>>> +	case WDIOC_GETSUPPORT:
+>>> +		return copy_to_user((struct watchdog_info __user *)arg,
+>>> +		&ds1374_wdt_info, sizeof(ds1374_wdt_info)) ? -EFAULT : 0;
+>>> +
+>>> +	case WDIOC_GETSTATUS:
+>>> +	case WDIOC_GETBOOTSTATUS:
+>>> +		return put_user(0, (int __user *)arg);
+>>> +	case WDIOC_KEEPALIVE:
+>>> +		ds1374_wdt_ping(wdt);
+>>> +		return 0;
+>>> +	case WDIOC_SETTIMEOUT:
+>>> +		if (get_user(new_margin, (int __user *)arg))
+>>> +			return -EFAULT;
+>>> +
+>>> +		/* the hardware's tick rate is 4096 Hz, so
+>>> +		 * the counter value needs to be scaled accordingly
+>>> +		 */
+>>> +		new_margin <<= 12;
+>>> +		if (new_margin < 1 || new_margin > 16777216)
+>>> +			return -EINVAL;
+>>> +
+>>> +		wdt_margin = new_margin;
+>>> +		ds1374_wdt_settimeout(wdt, new_margin);
+>>
+>> Is the idea here to bypass the watchdog subsystem's notion of keeping the
+>> timeout in seconds ? If so, that would be wrong and unacceptable.
+>>
+> It seems take care about 4096Hz for original design in rtc-ds1374.c. I think we
+> can just use ioctl() which watchdog core provides and input margin time
+> appropriately.
+> 
+> 
+>>> +		ds1374_wdt_ping(wdt);
+>>> +		fallthrough;
+>>> +	case WDIOC_GETTIMEOUT:
+>>> +		/* when returning ... inverse is true */
+>>> +		return put_user((wdt_margin >> 12), (int __user *)arg);
+>>> +	case WDIOC_SETOPTIONS:
+>>> +		if (copy_from_user(&options, (int __user *)arg, sizeof(int)))
+>>> +			return -EFAULT;
+>>> +
+>>> +		if (options & WDIOS_DISABLECARD) {
+>>> +			pr_info("disable watchdog\n");
+>>> +			ds1374_wdt_stop(wdt);
+>>> +			return 0;
+>>> +		}
+>>> +
+>>> +		if (options & WDIOS_ENABLECARD) {
+>>> +			pr_info("enable watchdog\n");
+>>> +			ds1374_wdt_settimeout(wdt, wdt_margin);
+>>> +			ds1374_wdt_ping(wdt);
+>>> +			return 0;
+>>> +		}
+>>> +		return -EINVAL;
+>>> +	}
+>>> +	return -ENOTTY;
+>>> +}
+>>> +
+>>> +static int ds1374_wdt_notify_sys(struct notifier_block *this,
+>>> +			unsigned long code, void *unused)
+>>> +{
+>>> +	if (code == SYS_DOWN || code == SYS_HALT)
+>>> +		/* Disable Watchdog */
+>>> +		ds1374_wdt_stop(&ds1374_wdd);
+>>> +	return NOTIFY_DONE;
+>>> +}
+>>> +
+>> Not needed - see below.
+>>
+>>> +static struct notifier_block ds1374_wdt_notifier = {
+>>> +	.notifier_call = ds1374_wdt_notify_sys, };
+>>> +
+>>> +static int ds1374_wdt_probe(struct platform_device *pdev) {
+>>> +	struct ds1374_wdt *drv_data;
+>>> +	struct i2c_client *client = to_i2c_client(pdev->dev.parent);
+>>> +	int ret;
+>>> +
+>>> +	drv_data = devm_kzalloc(&pdev->dev, sizeof(struct ds1374_wdt),
+>>> +				GFP_KERNEL);
+>>> +	if (!drv_data)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	drv_data->wdt = &ds1374_wdd;
+>>> +	drv_data->client = client;
+>>> +	mutex_init(&drv_data->mutex);
+>>> +
+>>> +	watchdog_init_timeout(drv_data->wdt, wdt_margin, &pdev->dev);
+>>> +	watchdog_set_nowayout(drv_data->wdt, nowayout);
+>>> +
+>>> +	watchdog_set_drvdata(drv_data->wdt, drv_data);
+>>> +	platform_set_drvdata(pdev, drv_data);
+>>> +
+>>> +	ret = watchdog_register_device(drv_data->wdt);
+>>
+>> Use devm_watchdog_register_device()
+>>
+>>> +	if (ret) {
+>>> +		dev_err(&pdev->dev, "failed to register Watchdog device\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = register_reboot_notifier(&ds1374_wdt_notifier);
+>>
+>> Call watchdog_stop_on_reboot() before calling watchdog_register_device()
+>> instead.
+>>
+>>> +	if (ret) {
+>>> +		watchdog_unregister_device(drv_data->wdt);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ds1374_wdt_settimeout(drv_data->wdt, wdt_margin);
+>>
+>> Unnecessary here; called from start function.
+>>
+>>> +	dev_info(&pdev->dev, "Dallas/Maxim DS1374 watchdog device
+>>> +enabled\n");
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int ds1374_wdt_remove(struct platform_device *pdev) {
+>>> +	struct ds1374_wdt *drv_data = platform_get_drvdata(pdev);
+>>> +
+>>> +	dev_warn(&pdev->dev, "Unregister DS1374 watchdog device\n");
+>>> +	watchdog_unregister_device(drv_data->wdt);
+>>> +	unregister_reboot_notifier(&ds1374_wdt_notifier);
+>>> +
+>>
+>> Call watchdog_stop_on_unregister() before calling
+>> watchdog_register_device().
+>>
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void ds1374_wdt_shutdown(struct platform_device *pdev) {
+>>> +	struct ds1374_wdt *drv_data = platform_get_drvdata(pdev);
+>>> +
+>>> +	mutex_lock(&drv_data->mutex);
+>>> +	ds1374_wdt_stop(drv_data->wdt);
+>>> +	mutex_unlock(&drv_data->mutex);
+>>
+>> Unnecessary and pointless.
+>>
+>>> +}
+>>> +
+>>> +static const struct watchdog_ops ds1374_wdt_fops = {
+>>> +	.owner          = THIS_MODULE,
+>>> +	.start          = ds1374_wdt_start,
+>>> +	.stop           = ds1374_wdt_stop,
+>>> +	.ping           = ds1374_wdt_ping,
+>>> +	.set_timeout    = ds1374_wdt_settimeout,
+>>> +	.ioctl          = ds1374_wdt_ioctl,
+>>> +};
+>>> +
+>>> +static struct watchdog_device ds1374_wdd = {
+>>> +	.info           = &ds1374_wdt_info,
+>>> +	.ops            = &ds1374_wdt_fops,
+>>> +	.min_timeout    = TIMER_MARGIN_MIN,
+>>> +	.max_timeout    = TIMER_MARGIN_MAX,
+>>
+>> .timeout should be set here.
+>>
+>> Also, there can (at least in theory) be more than one ds1374 in the system. The
+>> code does not support this case. ds1374_wdd should be moved into struct
+>> ds1374_wdt.
+>>
+> Thanks for good suggestion.
+>>> +};
+>>> +
+>>> +static struct platform_driver ds1374_wdt = {
+>>> +	.driver         = {
+>>> +		.owner  = THIS_MODULE,
+>>> +		.name   = DEVNAME,
+>>> +	},
+>>> +	.probe          = ds1374_wdt_probe,
+>>> +	.remove         = ds1374_wdt_remove,
+>>> +	.shutdown       = ds1374_wdt_shutdown,
+>>> +};
+>>> +
+>>> +module_platform_driver(ds1374_wdt);
+>>> +
+>>> +MODULE_AUTHOR("Johnson Chen <johnsonch.chen@moxa.com>");
+>>> +MODULE_DESCRIPTION("Dallas/Maxim DS1374 Watchdog Driver");
+>>> +MODULE_LICENSE("GPL"); MODULE_ALIAS("Platform:ds1374_wdt");
+>>>
+> 
+> Best regards,
+> Johnson
+> 
 
