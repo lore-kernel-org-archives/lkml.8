@@ -2,135 +2,184 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8727C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF7AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC0120738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592901255;
-	bh=xhJyNgexKUtQqsTRLYLgxO9uWTnpO1SU0yUZ5LR0Wo4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=C2CnmmyUVd5L6eG4Y9H9MJyF3CYRD8UnRYisLyE5max2l08yYVjcx4Bj5B88vYJUL
-	 QRL50ioM61/HX1naI/4GboBf6Ln9CB7XH+VX9DqUqbvrGt56GeIkDF67dsYrvAc3SW
-	 AQvC59zcSkKYSEmFs9ANHnBTGdaK6HJi1bTMBUT8=
+	by mail.kernel.org (Postfix) with ESMTP id CE0DD206D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ij3LAsP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731860AbgFWIeO (ORCPT
+        id S1731805AbgFWIfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731724AbgFWIeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:34:13 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C17032072E;
-        Tue, 23 Jun 2020 08:34:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592901252;
-        bh=xhJyNgexKUtQqsTRLYLgxO9uWTnpO1SU0yUZ5LR0Wo4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Ks2iMxwjVDQaF6CrIGCOP56jLcSr3LgtnkdgSdDDO3INAZiCMtFiB9G+H2pjdqVM9
-         ne5m50sMrW5MA+Hy1L3pWaNWHCebIUoPgDYXFJsd1dKm4PAPsjsOEJ6Al8b4Fmv4jG
-         qiApvojFQ5MSp+dEZ3JOBZcz0UBhYVjP0s6GNScY=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 23 Jun 2020 04:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731567AbgFWIfL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 04:35:11 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1935CC061573;
+        Tue, 23 Jun 2020 01:35:11 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 18so1104434otv.6;
+        Tue, 23 Jun 2020 01:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=goSzzxDsgzxsQuY6F1h0SsNpCeO6nw7HQJbzXsVCZxo=;
+        b=ij3LAsP9p1irjc88wp1/WWNHRrwz3UZn4dmSUurQcPXlkh41m+MnezeltpEXliOxCt
+         3kxSCX/4mPnFXq4aU057VjYSGpTGZrzzbJh5hHQi7dNdKWoa+CeUDBGmwvYnMD0T0e7g
+         Zf3DMSrWTgKKz2RUHr6MjNXLPC7iat4GzmFDvoGBlMzY8c1YInfnPOGF2SOjDI/FkzUB
+         jGgTDY0j5xpx3tobTOPpKWUnG8uoy3BLAWFeis2vjxDOhRP25kXrtnKqd/ZB1ALr1kuQ
+         xX+XKpRAYJioif5IWq6jAiewZ4Oky2moCN/xQsOeuFpvjGUzrMMsAoCqh4Elq8QWcRD6
+         ZuXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=goSzzxDsgzxsQuY6F1h0SsNpCeO6nw7HQJbzXsVCZxo=;
+        b=PpfK3U8zyxd2buZJtox4W0jSmc1M1wMSeixVekqgfcqTyaH2ge/bkb2W0aQ2S2utaQ
+         nhaQoFsNlmorw8nKC3EWA0CLs7ZhZ1w4U9/4UB7kR+NXvjuTkaQBbp7dQ8+monyn1wr8
+         zmX+JhBejofPrLP7XMG7QAwzzVNWEqTY17mbLUL/neBdRyxTWkcMw8errylzRr38iv0M
+         rICWE9WP0FkNgP8i2W73otecrkzNAoDv3nc7rjg14nC3URZp9g8RNBM3LqV6zvdn9yNC
+         YIQ8c1lyX4tCxn6vYFTL+hzIhFdkWvWDIQl+n3f+AbcL1ezvqwctLKTg2nr+40gcSMOK
+         bmRw==
+X-Gm-Message-State: AOAM5317u/5teCkY10D2Q8VVweDdmDysQogfDgUzLTDFpMPSPfeMHzdE
+        70Qb1tzR9egnVvtZ0ze4TBRL9YPChizRtpePSvo=
+X-Google-Smtp-Source: ABdhPJwffdh0M4nKESM3uobBBa2UiPZNyiH0quaHQH7SdqqFBJmq9vJwUIlp8hKAj1M9RkRbx/6mjjn2BU9Qv+N0dQQ=
+X-Received: by 2002:a9d:6546:: with SMTP id q6mr16850481otl.365.1592901310350;
+ Tue, 23 Jun 2020 01:35:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <AM6PR04MB496690A045E0BFFF3D03AE0380940@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com> <1591687933-19495-4-git-send-email-Anson.Huang@nxp.com> <AM6PR04MB49660A10856A3746C7103394809A0@AM6PR04MB4966.eurprd04.prod.outlook.com> <DB3PR0402MB39163BC04E4E5F4F6A22F6D4F59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com> <AM6PR04MB4966B94CFAE642E6AF5AEF79809B0@AM6PR04MB4966.eurprd04.prod.outlook.com> <159262367025.62212.11651547971712516448@swboyd.mtv.corp.google.com> <AM6PR04MB496690A045E0BFFF3D03AE0380940@AM6PR04MB4966.eurprd04.prod.outlook.com>
-Subject: RE: [PATCH V2 3/9] clk: imx: Support building SCU clock driver as module
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-To:     Abel Vesa <abel.vesa@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Stefan Agner <stefan.agner@toradex.com>, allison@lohutok.net,
-        arnd@arndb.de, festevam@gmail.com, gregkh@linuxfoundation.org,
-        info@metux.net, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
-        mturquette@baylibre.com, oleksandr.suvorov@toradex.com,
-        s.hauer@pengutronix.de, sfr@canb.auug.org.au, shawnguo@kernel.org,
-        tglx@linutronix.de, yuehaibing@huawei.com
-Date:   Tue, 23 Jun 2020 01:34:12 -0700
-Message-ID: <159290125202.62212.13172213909023205615@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
+ <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
+ <CA+V-a8vAfoQGpv-sXvJ11i9QC=EvKg750yusHBhLp8C17KmJbA@mail.gmail.com> <CAMuHMdWp6dL3g56EGDGnDBs+GNHeaO7ejy1k_4EaM_RY+dV=Cg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWp6dL3g56EGDGnDBs+GNHeaO7ejy1k_4EaM_RY+dV=Cg@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 23 Jun 2020 09:34:44 +0100
+Message-ID: <CA+V-a8tUvT1Q+nhsk1Te5CrYSSTbEqvO1=8QyRHY4q2VYNzoKQ@mail.gmail.com>
+Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
+ Rev.2.0 specific into hihope-common-rev2.dtsi file
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Aisheng Dong (2020-06-22 20:42:19)
-> > From: Stephen Boyd <sboyd@kernel.org>
-> > Sent: Saturday, June 20, 2020 11:28 AM
-> > Subject: RE: [PATCH V2 3/9] clk: imx: Support building SCU clock driver=
- as
-> > module
-> >=20
-> > Quoting Aisheng Dong (2020-06-17 18:58:51)
-> > > > From: Anson Huang <anson.huang@nxp.com>
-> > > > > > +obj-$(CONFIG_MXC_CLK_SCU) +=3D mxc-clk-scu.o
-> > > > >
-> > > > > Like i.MX pinctrl, I'm not sure if it's really necessary to build
-> > > > > core libraries as modules. Probably the simplest way is only
-> > > > > building platform drivers part as module. And leave those core li=
-braries
-> > built in kernel.
-> > > > > This may make the code a bit cleaner.
-> > > > >
-> > > >
-> > > > Will discuss this with Linaro guys about it, previous requirement I
-> > > > received is all SoC specific modules need to be built as module.
-> > > >
-> > >
-> > > Okay. AFAIK it's not conflict.
-> > > You still make drivers into modules.
-> > > Only difference is for those common libraries part, we don't convert
-> > > them into module Which is less meaningless.
-> > >
-> >=20
-> > What is the benefit of making the core part of the SoC driver not a mod=
-ule?
->=20
-> Usually we could try to build it as module if it's not hard.
->=20
-> One question is sometimes those core part are shared with some platforms =
-which can't built as module.
-> For i.MX case, it's mainly patch 4:
-> [V2,4/9] clk: imx: Support building i.MX common clock driver as module
-> https://patchwork.kernel.org/patch/11594801/
->=20
-> Those libraries are also used by i.MX6&7 which can't build as module.
-> So we need an extra workaround patch to forcely 'select' it under arch/ar=
-m/mach-imx/Kconfig
-> [V2,2/9] ARM: imx: Select MXC_CLK for ARCH_MXC
-> https://patchwork.kernel.org/patch/11594793/
-> Then the users can't configure it as module in order to not break build.
->=20
-> If build-in those common libraries, the implementation could be a bit eas=
-ier and cleaner.
-> So I'm not sure if we still have to build them as module.
-> How would you suggest for such case?
+Hi Geert,
 
-Stop using 'select MXC_CLK' when requiring the core library code?
-Instead, make it a 'depends' and then that will make depending modules
-(i.e. the SoC files) that want to be builtin force the core module to be
-builtin too. Other modular configs that depend on the core will still be
-modular.=20
+On Tue, Jun 23, 2020 at 9:14 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Jun 23, 2020 at 9:51 AM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > On Mon, Jun 8, 2020 at 3:59 PM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > > On Mon, Jun 8, 2020 at 3:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > > > Separate out Rev.2.0 specific hardware changes into
+> > > > > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
+> > > > > by all the variants for RZ/G2M[N] boards.
+> > > > >
+> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> > > > > @@ -0,0 +1,101 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
+> > > > > + * parts
+> > > > > + *
+> > > > > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > > > > + */
+> > > > > +
+> > > > > +#include <dt-bindings/gpio/gpio.h>
+> > > > > +
+> > > > > +/ {
+> > > > > +       leds {
+> > > > > +               compatible = "gpio-leds";
+> > > > > +
+> > > > > +               bt_active_led {
+> > > > > +                       label = "blue:bt";
+> > > > > +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
+> > > > > +                       linux,default-trigger = "hci0-power";
+> > > > > +                       default-state = "off";
+> > > > > +               };
+> > > > > +
+> > > > > +               led0 {
+> > > > > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > > > +
+> > > > > +               led1 {
+> > > > > +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > > > +
+> > > > > +               led2 {
+> > > > > +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > > > +
+> > > > > +               led3 {
+> > > > > +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > >
+> > > > led1, led2, and led3 are present on both, so I'd keep them in
+> > > > hihope-common.dtsi.
+> > > >
+> > > The leds defined in hihope-common-rev4.dtsi are as per the label names
+> > > on the schematics/board so that it's easier to identify the LED's by
+> > > name.
+> > >
+> > I was waiting on the above to be confirmed.
+>
+> I can confirm the naming of the LEDs on the rev4 board.
+> However, following the same reasoning, the rev2 LEDs should be renamed
+> led2201, led2202, led2203, and led2402 ;-)
 
-I don't know why an architecture is selecting the clk code at all to be
-honest. That can be moved to the defconfig instead of in the
-architecture Kconfig and then you don't get a working system unless you
-select the MXC_CLK config from the configurator tool (menuconfig,
-nconfig, etc.) So ARCH_MXC shouldn't be in this discussion and the core
-module should be selectable by the configurator and that should be
-tristate and all SoC modules should depend on that core library module
-and be selectable too and those Kconfigs can be tristate or bool.
+I didn't want to change any behaviour if some was using the LED's with names.
+
+> Does anyone rely on the names?  If not, it may make sense to use the
+> rev4 names for both, in the common file?
+>
+Not sure, but I'll take your suggestion and just name them as per rev4 naming.
+
+> Not even considering the switches...
+> Seems they forgot to rename switches SW220[123] when renaming LED220[123].
+> Worse, on rev2, you have SW220_2_/LED220_1_ sharing a GPIO, and
+> SW220_1_/LED220_2_ sharing another one.
+>
+> And on rev4, GP6_11/GP_LED/TSW_0_ is driving LED_4_ and SW220_2_?
+>
+> Conclusion: I don't care how you name them ;-)
+>
+ :)
+
+Cheers,
+--Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
