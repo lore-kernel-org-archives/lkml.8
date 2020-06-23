@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75680C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B40B206E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4299F206E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948362;
-	bh=YYeBL89PZqEY9Ml46NTuVrzX0FHcl+gQcwCR1Cwuz7k=;
+	s=default; t=1592948371;
+	bh=QP6tJUUtGHfRPksj92wCUrbYb57oWUe1ma4dltobteE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BvgWWxQ9dYZNLXNu58jNf+WaI77tAKCBhnT15/RU8nPcVE0N6yZF/UnII1oxXTM3K
-	 wVvJRYcrpK9u9LQijKF4BRUaN+ryhViPsoDvmFxAOsiay38TJI8XkA0TNzsXHMmB+j
-	 uVNg2ticO891zCy7/rVgHc0HCnmvzfor3cqgPppU=
+	b=HnZBBdEgH/0rAy1ud6u1+5rU64Jo2Nu3qgtZ0btu2MXIOcW6c7Z5n6JRdgeW9t1do
+	 QAsfffmEcijYreZPBE5zz6g9SQjBGlqe9MwcZEVVjudsqDaEvb6ykycs4GuAhLx6GA
+	 TfQEcMXMqFmAh8OuWmY4ie5w6ZluGN6y/wF2Pwac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393509AbgFWVjU (ORCPT
+        id S2393862AbgFWVj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 17:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:39:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388148AbgFWUHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:07:17 -0400
+        id S2388573AbgFWUHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:07:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648B72064B;
-        Tue, 23 Jun 2020 20:07:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9FF12064B;
+        Tue, 23 Jun 2020 20:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592942836;
-        bh=YYeBL89PZqEY9Ml46NTuVrzX0FHcl+gQcwCR1Cwuz7k=;
+        s=default; t=1592942829;
+        bh=QP6tJUUtGHfRPksj92wCUrbYb57oWUe1ma4dltobteE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbThSYyq2+FQYvBh5AIgnbXoFkWrc8UQ6/Edex9iLp7/GqmV3QbrsKnybgDmx3d/d
-         cgqBwz0XFALLkgyKBebq/VPozfXqj5721eFXhiiAbloocrAOfFlea0csiRzJV9JHl3
-         24F78wbt0qzGgwK6bPge0MSdEirwwbDb8Ku2VM08=
+        b=E13t2jkpKUJQ1W2wiMbtrRBzuCzqJwACtlJp3h4sG98KWwvc3Q4PEkdVedbUqVriL
+         tDHoRatthQYyq1+pfa6VSWM0WaNx8QKBV8nL1zYXMMAzsU+UwoZtnKatfF5nhO5W4c
+         s+Awh+4nYt5Ph4lfNtK7XMeLhS1WMRsbiY2/3C2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 154/477] ASoC: rt5682: fix I2C/Soundwire dependencies
-Date:   Tue, 23 Jun 2020 21:52:31 +0200
-Message-Id: <20200623195414.876514030@linuxfoundation.org>
+Subject: [PATCH 5.7 152/477] ASoC: component: suppress uninitialized-variable warning
+Date:   Tue, 23 Jun 2020 21:52:29 +0200
+Message-Id: <20200623195414.778521596@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -62,46 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit fd443a20c2f0950f3c31765a08f7dd49b3bc69cb ]
+[ Upstream commit be16a0f0dc8fab8e25d9cdbeb4f8f28afc9186d2 ]
 
-If one of the two is a loadable module, the combined driver must
-not be built-in:
+Old versions of gcc (tested on gcc-4.8) produce a warning for
+correct code:
 
-aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_free':
-rt5682.c:(.text+0xb34): undefined reference to `sdw_stream_remove_slave'
-aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_params':
-rt5682.c:(.text+0xe78): undefined reference to `sdw_stream_add_slave'
+sound/soc/soc-compress.c: In function 'soc_compr_open':
+sound/soc/soc-compress.c:75:28: error: 'component' is used uninitialized in this function [-Werror=uninitialized]
+  struct snd_soc_component *component, *save = NULL;
 
-In particular, the soundwire driver must not be built-in if
-CONFIG_I2C=m.
+Change the for_each_rtd_components() macro to ensure 'component'
+gets initialized to a value the compiler does not complain about.
 
-Fixes: 5549ea647997 ("ASoC: rt5682: fix unmet dependencies")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200428214642.3925004-1-arnd@arndb.de
+Link: https://lore.kernel.org/r/20200428214754.3925368-1-arnd@arndb.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ include/sound/soc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 8cdc68c141dc2..8a66f23a7b055 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1136,10 +1136,13 @@ config SND_SOC_RT5677_SPI
- config SND_SOC_RT5682
- 	tristate
- 	depends on I2C || SOUNDWIRE
-+	depends on SOUNDWIRE || !SOUNDWIRE
-+	depends on I2C || !I2C
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 946f88a6c63d1..e0371e70242d5 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -1177,7 +1177,7 @@ struct snd_soc_pcm_runtime {
+ #define asoc_rtd_to_codec(rtd, n) (rtd)->dais[n + (rtd)->num_cpus]
  
- config SND_SOC_RT5682_SDW
- 	tristate "Realtek RT5682 Codec - SDW"
- 	depends on SOUNDWIRE
-+	depends on I2C || !I2C
- 	select SND_SOC_RT5682
- 	select REGMAP_SOUNDWIRE
- 
+ #define for_each_rtd_components(rtd, i, component)			\
+-	for ((i) = 0;							\
++	for ((i) = 0, component = NULL;					\
+ 	     ((i) < rtd->num_components) && ((component) = rtd->components[i]);\
+ 	     (i)++)
+ #define for_each_rtd_cpu_dais(rtd, i, dai)				\
 -- 
 2.25.1
 
