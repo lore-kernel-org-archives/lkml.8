@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A58E2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886C621473
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943486;
-	bh=4dCn1E3y2lsNH/aZZpCpK8OpPJhFa/TNxEoJEzBdOJg=;
+	s=default; t=1592943490;
+	bh=tZMQr/Q8JhGXXZy8gsk6H35sIthSl3tSMej9xQDBbog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8ANWRjCcYu6y8ZI9BY3QcYVRTesy+Nv03nrRcOlPn1Zs7V1dnCBV0qAUGi6z1GYy
-	 MnzfrFdLMFwZ6AE9qf+i9IdvgfeTnjrsA0wkQGIJIfrDW4u/OiInAsvzx9B9sawktu
-	 wquugTb9o4LcO8fubiWeu2pLhrYOJI1+OMbSrDnc=
+	b=yNSVfQEaoTlf1YFVhXGSJReJJhrxRhRsvKEaMGhiQibBRnc/FuRUru21NongLlu3w
+	 gIK52bLN3YyTHOojn6xL2wbXu36a40RMnq8eAm5AXH1PnT5EmJaNC23ubSCCSAyxHO
+	 P6A3I2ZraxRJRanu9U53yKqHBg/3x8pvE9IU7G40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389615AbgFWUSF (ORCPT
+        id S2389635AbgFWUSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:18:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389616AbgFWUR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:17:58 -0400
+        id S2389630AbgFWUSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:18:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521F12064B;
-        Tue, 23 Jun 2020 20:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DED1F2145D;
+        Tue, 23 Jun 2020 20:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943477;
-        bh=4dCn1E3y2lsNH/aZZpCpK8OpPJhFa/TNxEoJEzBdOJg=;
+        s=default; t=1592943485;
+        bh=tZMQr/Q8JhGXXZy8gsk6H35sIthSl3tSMej9xQDBbog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gHp54yvqZXAB9oCLJ7R1aLO2wD22BidZ7/EyHy5na4ntQGfZtRgP4lkf2938e2wMJ
-         BZ41AnCS+sxAfgrB5ysa4NiqVRebGsNjE6UPgv7HyB9UkCH6pLsBiSeMi8cgp4UkcT
-         OpKMRHmOrlQG4I4XWHVNHwYjVinMft/84ueSwX8M=
+        b=fx1ZxAbBPCRDjtEWOygNpdGQfDZrHcglm+unrKrfKMr+SxqDOcNeHk8onWaDtamQc
+         v1Nm4wt4uvXYisyFBnKUTX9bHVep55sjiMjRmHYPD/4uQ6RWE7B91akXnYHisp5prn
+         EsA1NuppQUtlP0JfRLXdOTMiiIsMg89LEvJw2UFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 367/477] x86/mce/dev-mcelog: Fix -Wstringop-truncation warning about strncpy()
-Date:   Tue, 23 Jun 2020 21:56:04 +0200
-Message-Id: <20200623195424.879067556@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Luis Machado <luis.machado@linaro.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 411/477] arm64: hw_breakpoint: Dont invoke overflow handler on uaccess watchpoints
+Date:   Tue, 23 Jun 2020 21:56:48 +0200
+Message-Id: <20200623195426.956763608@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -61,47 +61,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Luck <tony.luck@intel.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 7ccddc4613db446dc3cbb69a3763ba60ec651d13 ]
+[ Upstream commit 24ebec25fb270100e252b19c288e21bd7d8cc7f7 ]
 
-The kbuild test robot reported this warning:
+Unprivileged memory accesses generated by the so-called "translated"
+instructions (e.g. STTR) at EL1 can cause EL0 watchpoints to fire
+unexpectedly if kernel debugging is enabled. In such cases, the
+hw_breakpoint logic will invoke the user overflow handler which will
+typically raise a SIGTRAP back to the current task. This is futile when
+returning back to the kernel because (a) the signal won't have been
+delivered and (b) userspace can't handle the thing anyway.
 
-  arch/x86/kernel/cpu/mce/dev-mcelog.c: In function 'dev_mcelog_init_device':
-  arch/x86/kernel/cpu/mce/dev-mcelog.c:346:2: warning: 'strncpy' output \
-    truncated before terminating nul copying 12 bytes from a string of the \
-    same length [-Wstringop-truncation]
+Avoid invoking the user overflow handler for watchpoints triggered by
+kernel uaccess routines, and instead single-step over the faulting
+instruction as we would if no overflow handler had been installed.
 
-This is accurate, but I don't care that the trailing NUL character isn't
-copied. The string being copied is just a magic number signature so that
-crash dump tools can be sure they are decoding the right blob of memory.
+(Fixes tag identifies the introduction of unprivileged memory accesses,
+ which exposed this latent bug in the hw_breakpoint code)
 
-Use memcpy() instead of strncpy().
-
-Fixes: d8ecca4043f2 ("x86/mce/dev-mcelog: Dynamically allocate space for machine check records")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200527182808.27737-1-tony.luck@intel.com
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Fixes: 57f4959bad0a ("arm64: kernel: Add support for User Access Override")
+Reported-by: Luis Machado <luis.machado@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mce/dev-mcelog.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/hw_breakpoint.c | 44 ++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-index d089567a9ce82..bcb379b2fd42e 100644
---- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
-+++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-@@ -343,7 +343,7 @@ static __init int dev_mcelog_init_device(void)
- 	if (!mcelog)
- 		return -ENOMEM;
+diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+index 0b727edf41046..af234a1e08b7d 100644
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -730,6 +730,27 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
+ 		return 0;
+ }
  
--	strncpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
-+	memcpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
- 	mcelog->len = mce_log_len;
- 	mcelog->recordlen = sizeof(struct mce);
++static int watchpoint_report(struct perf_event *wp, unsigned long addr,
++			     struct pt_regs *regs)
++{
++	int step = is_default_overflow_handler(wp);
++	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
++
++	info->trigger = addr;
++
++	/*
++	 * If we triggered a user watchpoint from a uaccess routine, then
++	 * handle the stepping ourselves since userspace really can't help
++	 * us with this.
++	 */
++	if (!user_mode(regs) && info->ctrl.privilege == AARCH64_BREAKPOINT_EL0)
++		step = 1;
++	else
++		perf_bp_event(wp, regs);
++
++	return step;
++}
++
+ static int watchpoint_handler(unsigned long addr, unsigned int esr,
+ 			      struct pt_regs *regs)
+ {
+@@ -739,7 +760,6 @@ static int watchpoint_handler(unsigned long addr, unsigned int esr,
+ 	u64 val;
+ 	struct perf_event *wp, **slots;
+ 	struct debug_info *debug_info;
+-	struct arch_hw_breakpoint *info;
+ 	struct arch_hw_breakpoint_ctrl ctrl;
  
+ 	slots = this_cpu_ptr(wp_on_reg);
+@@ -777,25 +797,13 @@ static int watchpoint_handler(unsigned long addr, unsigned int esr,
+ 		if (dist != 0)
+ 			continue;
+ 
+-		info = counter_arch_bp(wp);
+-		info->trigger = addr;
+-		perf_bp_event(wp, regs);
+-
+-		/* Do we need to handle the stepping? */
+-		if (is_default_overflow_handler(wp))
+-			step = 1;
++		step = watchpoint_report(wp, addr, regs);
+ 	}
+-	if (min_dist > 0 && min_dist != -1) {
+-		/* No exact match found. */
+-		wp = slots[closest_match];
+-		info = counter_arch_bp(wp);
+-		info->trigger = addr;
+-		perf_bp_event(wp, regs);
+ 
+-		/* Do we need to handle the stepping? */
+-		if (is_default_overflow_handler(wp))
+-			step = 1;
+-	}
++	/* No exact match found? */
++	if (min_dist > 0 && min_dist != -1)
++		step = watchpoint_report(slots[closest_match], addr, regs);
++
+ 	rcu_read_unlock();
+ 
+ 	if (!step)
 -- 
 2.25.1
 
