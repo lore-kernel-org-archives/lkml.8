@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE943C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39804C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B87A620768
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B7A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592945768;
-	bh=pC3hyyQkxUMnEIbm46tMZ4mv5JdI1vuRJK1PTOlTq9E=;
+	s=default; t=1592945775;
+	bh=eUKwYhgLO3DTtM512He1RqTz4a4I1dyzOwa/eGBL+7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NCIpbcwf8hpjqtAQLjktPicYsrPJCFq3sJLreGcAW7m+yKIoQDpsI0x7FTUa/rTqo
-	 BLdMtqAHVyhYwWmGwKdL2QCLhI0QCJH0UDLTI7JYkKuRnoEA+ETf31z8SrrSzJAwqy
-	 KY/dWLOlI+kWIXJzmHo1sO70fD04es0QmOwmcmsc=
+	b=X9CEfe3XhlOu6JYW9IH7rNKFo+J/Dcqqu6CYogahn1iQldk0Zf9fW6X0T354FkKdL
+	 gjpP9fVmYdnxW6i0BPXyTgb/t1xEImRuLqaGAMzfr9lInOxDvqEuGue0VDR2tLAKF0
+	 4zBKUGsyqY7p4MRwhN0dayfDpQvQ/A7F4yFKA08g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392255AbgFWUoA (ORCPT
+        id S2392568AbgFWU4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:44:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40856 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403935AbgFWUnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:43:51 -0400
+        id S2391736AbgFWUn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:43:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2E782053B;
-        Tue, 23 Jun 2020 20:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9CFE2070E;
+        Tue, 23 Jun 2020 20:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592945032;
-        bh=pC3hyyQkxUMnEIbm46tMZ4mv5JdI1vuRJK1PTOlTq9E=;
+        s=default; t=1592945039;
+        bh=eUKwYhgLO3DTtM512He1RqTz4a4I1dyzOwa/eGBL+7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wtXlF43+e2f8dvbKAyX3tBuC3XawFYyTSn6x/YyvbcrcNYJNi7XNSiJp0W5UDH6p/
-         jKEpCxwg5U4JEznBKFVMgJ+1N4A3xPFof+faWB2Y3t1WFl7CfPEAMan1oIoGWYCX9d
-         lZILWjA9l/+cwANncpfFFe1z/NtRSA+mTPI8M+G4=
+        b=GjdFVXAoImpLODO740KRmq3Ag9jF1Dmg+fqxFBhra3eCRmWLWIoiExZMcabr6foUJ
+         Z7CoMaJmS01O71KtyusOXl8tbzvhyL11GQb9kn1rFuGNgj24T/LvM5/MR3pQf0TbNt
+         g7fibZ1zIX4ePts9GQjmGsllV6yuQiPva6NQUv9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 013/136] ALSA: isa/wavefront: prevent out of bounds write in ioctl
-Date:   Tue, 23 Jun 2020 21:57:49 +0200
-Message-Id: <20200623195304.285450650@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 016/136] f2fs: report delalloc reserve as non-free in statfs for project quota
+Date:   Tue, 23 Jun 2020 21:57:52 +0200
+Message-Id: <20200623195304.433536641@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195303.601828702@linuxfoundation.org>
 References: <20200623195303.601828702@linuxfoundation.org>
@@ -59,47 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
+[ Upstream commit baaa7ebf25c78c5cb712fac16b7f549100beddd3 ]
 
-The "header->number" comes from the ioctl and it needs to be clamped to
-prevent out of bounds writes.
+This reserved space isn't committed yet but cannot be used for
+allocations. For userspace it has no difference from used space.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+See the same fix in ext4 commit f06925c73942 ("ext4: report delalloc
+reserve as non-free in statfs for project quota").
+
+Fixes: ddc34e328d06 ("f2fs: introduce f2fs_statfs_project")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/f2fs/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
-index 0b1e4b34b2996..13c8e6542a2fc 100644
---- a/sound/isa/wavefront/wavefront_synth.c
-+++ b/sound/isa/wavefront/wavefront_synth.c
-@@ -1175,7 +1175,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
- 				      "alias for %d\n",
- 				      header->number,
- 				      header->hdr.a.OriginalSample);
--    
-+
-+	if (header->number >= WF_MAX_SAMPLE)
-+		return -EINVAL;
-+
- 	munge_int32 (header->number, &alias_hdr[0], 2);
- 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
- 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
-@@ -1206,6 +1209,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
- 	int num_samples;
- 	unsigned char *msample_hdr;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 2d021a33914a6..89319c3524061 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -918,7 +918,8 @@ static int f2fs_statfs_project(struct super_block *sb,
+ 		limit >>= sb->s_blocksize_bits;
  
-+	if (header->number >= WF_MAX_SAMPLE)
-+		return -EINVAL;
-+
- 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
- 	if (! msample_hdr)
- 		return -ENOMEM;
+ 	if (limit && buf->f_blocks > limit) {
+-		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
++		curblock = (dquot->dq_dqb.dqb_curspace +
++			    dquot->dq_dqb.dqb_rsvspace) >> sb->s_blocksize_bits;
+ 		buf->f_blocks = limit;
+ 		buf->f_bfree = buf->f_bavail =
+ 			(buf->f_blocks > curblock) ?
 -- 
 2.25.1
 
