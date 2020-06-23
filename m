@@ -2,206 +2,130 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E043207BC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592872268;
-	bh=02ER3ClrOYLxdVzXGnlH4+yezOa0TX9/pgbCrbD/jCs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8uqNw4oRIW/i+gbmmcTAFdDIjKA9ORXHetyavqV5hjNzvroCMoA69XKoFYgn2QaG
-	 G9C3wDz3TkVyh1Fe+hOd8b2CUy0tPcS/S+qiKQg2ueKbHmWCi67KbvHIwYPWklSG2E
-	 VQ5ccOi3QUZVq5Slju3mC9PpTc9iJN8I+AsyXVRs=
+	by mail.kernel.org (Postfix) with ESMTP id CA59C20809
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 00:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GUxJV+C/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731867AbgFWAbG (ORCPT
+        id S1731860AbgFWAbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jun 2020 20:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731703AbgFWAaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jun 2020 20:30:21 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 106A720FC3;
-        Tue, 23 Jun 2020 00:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592872220;
-        bh=02ER3ClrOYLxdVzXGnlH4+yezOa0TX9/pgbCrbD/jCs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eTXdU3C5uT5e4MqNRNbUb5SLCem2fklZGc6o58EyYlNSRu7hI9vnSLBVeuNmMA02Z
-         Qn9lG3xSIoBmJofju93GYtqpaws+UxW1Feoyc8ZjslUj5uFfNguFne7YcOHmiIDOFI
-         Es7qwIG4r1rINwk1OwY5Pj1VO4N8+vY9rC+oy3g8=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 24/30] refperf: Change readdelay module parameter to nanoseconds
-Date:   Mon, 22 Jun 2020 17:30:07 -0700
-Message-Id: <20200623003013.26252-24-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200623002941.GA26089@paulmck-ThinkPad-P72>
-References: <20200623002941.GA26089@paulmck-ThinkPad-P72>
+        Mon, 22 Jun 2020 20:31:05 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2467 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731717AbgFWAa7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jun 2020 20:30:59 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef14ce70000>; Mon, 22 Jun 2020 17:29:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 22 Jun 2020 17:30:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 22 Jun 2020 17:30:58 -0700
+Received: from [10.2.59.206] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jun
+ 2020 00:30:50 +0000
+Subject: Re: [RESEND PATCH 2/3] nouveau: fix mixed normal and device private
+ page migration
+To:     Ralph Campbell <rcampbell@nvidia.com>,
+        <nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+References: <20200622233854.10889-1-rcampbell@nvidia.com>
+ <20200622233854.10889-3-rcampbell@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <f2bf81df-8faa-0f51-3f74-cb3b31d96aad@nvidia.com>
+Date:   Mon, 22 Jun 2020 17:30:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200622233854.10889-3-rcampbell@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592872167; bh=2WrAbqXV4DGqxlrZm0+ZDSPDtMkQaV6QGvn6pSPJL84=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GUxJV+C/xcw2X+UKzYR0HO4lSwOnk4RAsKDmxnyBhUc/ZDOpq7i1TBhtNI0IuxO8t
+         Vk3aU9aLCeDYez3x/H43zWX4DVKc7QreC8NXnlEDeI6R1j2f10oqs644W1dGmzh+vp
+         3d1+XPUn3Qt0Y8dyGN1pG/18VShsrDIK+uZxaMdNQuaTdUoZaTkcoesEazRT376OJS
+         KNAxa2LzMt6rAmVPucNTn5Lpahf5/zF5vaRa1HPQ5H2GLNV/WaMzoduLSJnX2PwT6x
+         8cGJ8f8oRxHYkmU9TDnVvOT9Fv+gWry9WmY8iIA/L2UlSqnNZtiwHjomp3maYRYPB+
+         h7QmH3p7gxbzA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On 2020-06-22 16:38, Ralph Campbell wrote:
+> The OpenCL function clEnqueueSVMMigrateMem(), without any flags, will
+> migrate memory in the given address range to device private memory. The
+> source pages might already have been migrated to device private memory.
+> In that case, the source struct page is not checked to see if it is
+> a device private page and incorrectly computes the GPU's physical
+> address of local memory leading to data corruption.
+> Fix this by checking the source struct page and computing the correct
+> physical address.
+> 
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> ---
+>   drivers/gpu/drm/nouveau/nouveau_dmem.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> index cc9993837508..f6a806ba3caa 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> @@ -540,6 +540,12 @@ static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm,
+>   	if (!(src & MIGRATE_PFN_MIGRATE))
+>   		goto out;
+>   
+> +	if (spage && is_device_private_page(spage)) {
+> +		paddr = nouveau_dmem_page_addr(spage);
+> +		*dma_addr = DMA_MAPPING_ERROR;
+> +		goto done;
+> +	}
+> +
+>   	dpage = nouveau_dmem_page_alloc_locked(drm);
+>   	if (!dpage)
+>   		goto out;
+> @@ -560,6 +566,7 @@ static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm,
+>   			goto out_free_page;
+>   	}
+>   
+> +done:
+>   	*pfn = NVIF_VMM_PFNMAP_V0_V | NVIF_VMM_PFNMAP_V0_VRAM |
+>   		((paddr >> PAGE_SHIFT) << NVIF_VMM_PFNMAP_V0_ADDR_SHIFT);
+>   	if (src & MIGRATE_PFN_WRITE)
+> @@ -615,6 +622,7 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+>   	struct migrate_vma args = {
+>   		.vma		= vma,
+>   		.start		= start,
+> +		.src_owner	= drm->dev,
 
-The current units of microseconds are too coarse, so this commit
-changes the units to nanoseconds.  However, ndelay is used only for the
-nanoseconds with udelay being used for whole microseconds.  For example,
-setting refperf.readdelay=1500 results in a udelay(1) followed by an
-ndelay(500).
+Hi Ralph,
 
-Suggested-by: Akira Yokosawa <akiyks@gmail.com>
-[ paulmck: Abstracted delay per Akira feedback and move from 80 to 100 lines. ]
-[ paulmck: Fix names as suggested by kbuild test robot. ]
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/rcu/refperf.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+This .src_owner setting does look like a required fix, but it seems like
+a completely separate fix from what is listed in this patch's commit
+description, right? (It feels like a casualty of rearranging the patches.)
 
-diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
-index 80d4490..49fffb9 100644
---- a/kernel/rcu/refperf.c
-+++ b/kernel/rcu/refperf.c
-@@ -66,8 +66,8 @@ torture_param(long, loops, 10000, "Number of loops per experiment.");
- torture_param(int, nreaders, -1, "Number of readers, -1 for 75% of CPUs.");
- // Number of runs.
- torture_param(int, nruns, 30, "Number of experiments to run.");
--// Reader delay in microseconds, 0 for no delay.
--torture_param(int, readdelay, 0, "Read-side delay in microseconds.");
-+// Reader delay in nanoseconds, 0 for no delay.
-+torture_param(int, readdelay, 0, "Read-side delay in nanoseconds.");
- 
- #ifdef MODULE
- # define REFPERF_SHUTDOWN 0
-@@ -111,12 +111,20 @@ struct ref_perf_ops {
- 	void (*init)(void);
- 	void (*cleanup)(void);
- 	void (*readsection)(const int nloops);
--	void (*delaysection)(const int nloops, const int ndelay);
-+	void (*delaysection)(const int nloops, const int udl, const int ndl);
- 	const char *name;
- };
- 
- static struct ref_perf_ops *cur_ops;
- 
-+static void un_delay(const int udl, const int ndl)
-+{
-+	if (udl)
-+		udelay(udl);
-+	if (ndl)
-+		ndelay(ndl);
-+}
-+
- static void ref_rcu_read_section(const int nloops)
- {
- 	int i;
-@@ -127,13 +135,13 @@ static void ref_rcu_read_section(const int nloops)
- 	}
- }
- 
--static void ref_rcu_delay_section(const int nloops, const int ndelay)
-+static void ref_rcu_delay_section(const int nloops, const int udl, const int ndl)
- {
- 	int i;
- 
- 	for (i = nloops; i >= 0; i--) {
- 		rcu_read_lock();
--		udelay(ndelay);
-+		un_delay(udl, ndl);
- 		rcu_read_unlock();
- 	}
- }
-@@ -165,14 +173,14 @@ static void srcu_ref_perf_read_section(const int nloops)
- 	}
- }
- 
--static void srcu_ref_perf_delay_section(const int nloops, const int ndelay)
-+static void srcu_ref_perf_delay_section(const int nloops, const int udl, const int ndl)
- {
- 	int i;
- 	int idx;
- 
- 	for (i = nloops; i >= 0; i--) {
- 		idx = srcu_read_lock(srcu_ctlp);
--		udelay(ndelay);
-+		un_delay(udl, ndl);
- 		srcu_read_unlock(srcu_ctlp, idx);
- 	}
- }
-@@ -197,13 +205,13 @@ static void ref_refcnt_section(const int nloops)
- 	}
- }
- 
--static void ref_refcnt_delay_section(const int nloops, const int ndelay)
-+static void ref_refcnt_delay_section(const int nloops, const int udl, const int ndl)
- {
- 	int i;
- 
- 	for (i = nloops; i >= 0; i--) {
- 		atomic_inc(&refcnt);
--		udelay(ndelay);
-+		un_delay(udl, ndl);
- 		atomic_dec(&refcnt);
- 	}
- }
-@@ -233,13 +241,13 @@ static void ref_rwlock_section(const int nloops)
- 	}
- }
- 
--static void ref_rwlock_delay_section(const int nloops, const int ndelay)
-+static void ref_rwlock_delay_section(const int nloops, const int udl, const int ndl)
- {
- 	int i;
- 
- 	for (i = nloops; i >= 0; i--) {
- 		read_lock(&test_rwlock);
--		udelay(ndelay);
-+		un_delay(udl, ndl);
- 		read_unlock(&test_rwlock);
- 	}
- }
-@@ -269,13 +277,13 @@ static void ref_rwsem_section(const int nloops)
- 	}
- }
- 
--static void ref_rwsem_delay_section(const int nloops, const int ndelay)
-+static void ref_rwsem_delay_section(const int nloops, const int udl, const int ndl)
- {
- 	int i;
- 
- 	for (i = nloops; i >= 0; i--) {
- 		down_read(&test_rwsem);
--		udelay(ndelay);
-+		un_delay(udl, ndl);
- 		up_read(&test_rwsem);
- 	}
- }
-@@ -292,7 +300,7 @@ static void rcu_perf_one_reader(void)
- 	if (readdelay <= 0)
- 		cur_ops->readsection(loops);
- 	else
--		cur_ops->delaysection(loops, readdelay);
-+		cur_ops->delaysection(loops, readdelay / 1000, readdelay % 1000);
- }
- 
- // Reader kthread.  Repeatedly does empty RCU read-side
+
+thanks,
 -- 
-2.9.5
-
+John Hubbard
+NVIDIA
