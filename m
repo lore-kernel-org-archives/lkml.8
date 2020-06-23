@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9864EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E8F206D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0C520774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592934183;
-	bh=oMx8hRqY3J/55UxEYvezLAHGiHIP7THkkH2dLbd4euI=;
+	s=default; t=1592934191;
+	bh=bu0XAxa18yWCEfHS6NqT/vNP6+rA4huyowrE0NGD83o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V5TtHQSshDfowr0sgShSnEa3F6jhXPn7jm4f6XdaSjJoOFPqwxtkrrvCP6o3Nu4AI
-	 LSyLgOjBQMJibA2sjCMuZoK4BKjk+8Y4sl61yKxZl63/2Q15UQmBO9LAFe9thD7/M9
-	 s3M+nYqZEs3z94jGmSWEWv+LNOkaLnCMJCfXj7S8=
+	b=QP1Be+5yyboT/Vq+4rOA9X3mXjdFtGyspjHrAcxKT5IAqhdc8KcOwjKaJySoAvJsG
+	 /VmZtDpIeWCNOuJc4aVWf9ArmkvptXebQkHT814CwhY2BsrQ5eK2O9mwKaV2TqtjlS
+	 AWseTGzL9dSVLbZKpWJPJR3yaRPdnlUZXeyCd19M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387805AbgFWRnB (ORCPT
+        id S1733281AbgFWRfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60620 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbgFWRfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:35:51 -0400
+        id S1733265AbgFWRfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138BC2078A;
-        Tue, 23 Jun 2020 17:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 735E520706;
+        Tue, 23 Jun 2020 17:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933750;
-        bh=oMx8hRqY3J/55UxEYvezLAHGiHIP7THkkH2dLbd4euI=;
+        s=default; t=1592933742;
+        bh=bu0XAxa18yWCEfHS6NqT/vNP6+rA4huyowrE0NGD83o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hSbpO0BLtC9IzD6uQlUdlB8elWSNkL0BmuNNIcSzmFGkW9JpU4AB3NsQOfIgOX/2Z
-         M+1xwxINuZW6HBPf6ZQIWSqLaLPHzSRlwnzHV08Wvf0Z42TD52w4awrCglMaqldAdZ
-         yZwigR0cjvzzQSLD1QoRwuS5bi54SUjTsPm01hUc=
+        b=VUvp+WXqnG5v68mrUncg8lKxwR08e4arQpOIMa5reT0ThTMIxgVkiIlFjBNE61B3O
+         N78x+Yur4/I62GnBMR6bbPOMbuyYUBMUPcEAdH13ZTIh2amp+szk7VdQ/zS/4eLwmY
+         6sku+iZSOWO5wlQ5Yt8HlvGcgEWndJ1HSPP7+iVE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 22/28] kbuild: improve cc-option to clean up all temporary files
-Date:   Tue, 23 Jun 2020 13:35:17 -0400
-Message-Id: <20200623173523.1355411-22-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 15/28] s390/seccomp: pass syscall arguments via seccomp_data
+Date:   Tue, 23 Jun 2020 13:35:10 -0400
+Message-Id: <20200623173523.1355411-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
 References: <20200623173523.1355411-1-sashal@kernel.org>
@@ -58,70 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
+[ Upstream commit 664f5f8de825648d1d31f6f5652e3cd117c77b50 ]
 
-When cc-option and friends evaluate compiler flags, the temporary file
-$$TMP is created as an output object, and automatically cleaned up.
-The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
-ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
-escape sequence of $$).
+Use __secure_computing() and pass the register data via
+seccomp_data so secure computing doesn't have to fetch it
+again.
 
-Such garbage files are cleaned up in most cases, but some compiler flags
-create additional output files.
-
-For example, -gsplit-dwarf creates a .dwo file.
-
-When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
-left in the top of build directories. You may not notice them unless you
-do 'ls -a', but the garbage files will increase every time you run 'make'.
-
-This commit changes the temporary object path to .tmp_<pid>/tmp, and
-removes .tmp_<pid> directory when exiting. Separate build artifacts such
-as *.dwo will be cleaned up all together because their file paths are
-usually determined based on the base name of the object.
-
-Another example is -ftest-coverage, which outputs the coverage data into
-<base-name-of-object>.gcno
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kbuild.include | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index 6cabf20ce66a3..fe427f7fcfb31 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -86,20 +86,21 @@ cc-cross-prefix = $(firstword $(foreach c, $(1), \
- 			$(if $(shell command -v -- $(c)gcc 2>/dev/null), $(c))))
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index 58faa12542a1b..9eee345568890 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -839,6 +839,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ {
+ 	unsigned long mask = -1UL;
  
- # output directory for tests below
--TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
-+TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
++	if (is_compat_task())
++		mask = 0xffffffff;
++
+ 	/*
+ 	 * The sysc_tracesys code in entry.S stored the system
+ 	 * call number to gprs[2].
+@@ -855,17 +858,35 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 		return -1;
+ 	}
  
- # try-run
- # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
- # Exit code chooses option. "$$TMP" serves as a temporary file and is
- # automatically cleaned up.
- try-run = $(shell set -e;		\
--	TMP="$(TMPOUT).$$$$.tmp";	\
--	TMPO="$(TMPOUT).$$$$.o";	\
-+	TMP=$(TMPOUT)/tmp;		\
-+	TMPO=$(TMPOUT)/tmp.o;		\
-+	mkdir -p $(TMPOUT);		\
-+	trap "rm -rf $(TMPOUT)" EXIT;	\
- 	if ($(1)) >/dev/null 2>&1;	\
- 	then echo "$(2)";		\
- 	else echo "$(3)";		\
--	fi;				\
--	rm -f "$$TMP" "$$TMPO")
-+	fi)
++#ifdef CONFIG_SECCOMP
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing()) {
+-		/* seccomp failures shouldn't expose any additional code. */
+-		return -1;
++	if (unlikely(test_thread_flag(TIF_SECCOMP))) {
++		struct seccomp_data sd;
++
++		if (is_compat_task()) {
++			sd.instruction_pointer = regs->psw.addr & 0x7fffffff;
++			sd.arch = AUDIT_ARCH_S390;
++		} else {
++			sd.instruction_pointer = regs->psw.addr;
++			sd.arch = AUDIT_ARCH_S390X;
++		}
++
++		sd.nr = regs->gprs[2] & 0xffff;
++		sd.args[0] = regs->orig_gpr2 & mask;
++		sd.args[1] = regs->gprs[3] & mask;
++		sd.args[2] = regs->gprs[4] & mask;
++		sd.args[3] = regs->gprs[5] & mask;
++		sd.args[4] = regs->gprs[6] & mask;
++		sd.args[5] = regs->gprs[7] & mask;
++
++		if (__secure_computing(&sd) == -1)
++			return -1;
+ 	}
++#endif /* CONFIG_SECCOMP */
  
- # as-option
- # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
+ 	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
+ 		trace_sys_enter(regs, regs->gprs[2]);
+ 
+-	if (is_compat_task())
+-		mask = 0xffffffff;
+ 
+ 	audit_syscall_entry(regs->gprs[2], regs->orig_gpr2 & mask,
+ 			    regs->gprs[3] &mask, regs->gprs[4] &mask,
 -- 
 2.25.1
 
