@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA58C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A5FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C676206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EC3206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 12:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a+pyfdhE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q7z/Z9/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732697AbgFWMK2 (ORCPT
+        id S1732676AbgFWMKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:10:28 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51434 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732673AbgFWMKW (ORCPT
+        Tue, 23 Jun 2020 08:10:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51536 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732659AbgFWMKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 08:10:22 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NC7xCh052195;
-        Tue, 23 Jun 2020 12:09:35 GMT
+        Tue, 23 Jun 2020 08:10:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NC7k6W165344;
+        Tue, 23 Jun 2020 12:09:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=E8fHB7DcBFvLhd8t1qiFwiqXsKebHCqIA8SKLWeX8Ag=;
- b=a+pyfdhEhLKRep9FR7qYoiPUEWy0kACfD8ai7BBZmObjop4905J8HClw/pRdHewtPbWX
- 4SQ0oit24pjlCFLzDp0D98+1l123gFbnLnlRglLjiPRDyVHAj5TENfs4jrtGQE92o61g
- 17vsBoitadRNLEHx/hwMQ1AHQjJ2WICZHIAFNRFgqMhnjdNyNI/36XeLW4WNQ9szd588
- 9sas0/GTfq0Y6UwSObU4HT/SgZDrwUqlS0W5SgL7Nj2oduxCDptYT3OndNOlbO8qdaY3
- DF27tEuV6haRr0Qx+rZzfmVSM67ssLzFM9Jrhq9nV5R2DD+YOud/25DIpLlEBgXaaSYK Ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31sebbcvbx-1
+ bh=U/MyKEjjQ1gJn14dZA24EpgO4l+oS9LvjkoZUD9Bgxk=;
+ b=q7z/Z9/No401poC2lOClx5e9E/UNi/J3v7D/8YPFdU4aJ8oPOlvG8s93lsYwXRexbNc+
+ PCYzMGhKuh4A0RE5iFzP1MswqYO9j511cEUsGpbSy9R7VI/igm0JkGZiuntMZHBU/Dbj
+ Igkc0xHAuOokBgykcF39kDMYjLaCch6HjEYPniOM2HswTdb4KOGMTnii5HLlKav2bL70
+ s/5EohAiWPbAc4wfybOXQxjmfK/H7cTgtGmH28l5J0HOExjvWa2+avDtTGhABuTLohZv
+ yUBWPyRjy6udkoV1A+XSoPzrYVgYei74+VKwF6ERC1nHsv+eoa63D8nE5qPQPvGvn0hJ hw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31sebbmtu6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 12:09:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NC7kwY185627;
-        Tue, 23 Jun 2020 12:09:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 31sv1n7h3r-1
+        Tue, 23 Jun 2020 12:09:26 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05NC80BY143699;
+        Tue, 23 Jun 2020 12:09:25 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31svc4103m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 12:09:34 +0000
+        Tue, 23 Jun 2020 12:09:25 +0000
 Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05NC9W1v025702;
-        Tue, 23 Jun 2020 12:09:32 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05NC9NDt018722;
+        Tue, 23 Jun 2020 12:09:23 GMT
 Received: from localhost.uk.oracle.com (/10.175.166.3)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jun 2020 12:09:32 +0000
+        with ESMTP ; Tue, 23 Jun 2020 12:09:23 +0000
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
         arnaldo.melo@gmail.com
@@ -60,184 +60,57 @@ Cc:     kafai@fb.com, songliubraving@fb.com, john.fastabend@gmail.com,
         sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
         corbet@lwn.net, bpf@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v3 bpf-next 7/8] bpf: add support for %pT format specifier for bpf_trace_printk() helper
-Date:   Tue, 23 Jun 2020 13:07:10 +0100
-Message-Id: <1592914031-31049-8-git-send-email-alan.maguire@oracle.com>
+Subject: [PATCH v3 bpf-next 5/8] printk: initialize vmlinux BTF outside of printk in late_initcall()
+Date:   Tue, 23 Jun 2020 13:07:08 +0100
+Message-Id: <1592914031-31049-6-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
 References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006230097
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
+ spamscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006230097
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9660 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 cotscore=-2147483648
- lowpriorityscore=0 phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006230097
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ adultscore=0 impostorscore=0 cotscore=-2147483648 mlxscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006230097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow %pT[cNx0] format specifier for BTF-based display of data associated
-with pointer.  The unsafe data modifier 'u' - where the source data
-is traversed without copying it to a safe buffer via probe_kernel_read() -
-is not supported.
+vmlinux BTF initialization can take time so it's best to do that
+outside of printk context; otherwise the first printk() using %pT
+will trigger BTF initialization.
 
 Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 ---
- include/uapi/linux/bpf.h       | 27 ++++++++++++++++++++++-----
- kernel/trace/bpf_trace.c       | 24 +++++++++++++++++++++++-
- tools/include/uapi/linux/bpf.h | 27 ++++++++++++++++++++++-----
- 3 files changed, 67 insertions(+), 11 deletions(-)
+ lib/vsprintf.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 1968481..ea4fbf3 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -702,7 +702,12 @@ struct bpf_stack_build_id {
-  * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
-  * 		available. It can take up to three additional **u64**
-  * 		arguments (as an eBPF helpers, the total number of arguments is
-- * 		limited to five).
-+ *		limited to five), and also supports %pT (BTF-based type
-+ *		printing), as long as BPF_READ lockdown is not active.
-+ *		"%pT" takes a "struct __btf_ptr *" as an argument; it
-+ *		consists of a pointer value and specified BTF type string or id
-+ *		used to select the type for display.  For more details, see
-+ *		Documentation/core-api/printk-formats.rst.
-  *
-  * 		Each time the helper is called, it appends a line to the trace.
-  * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
-@@ -738,10 +743,10 @@ struct bpf_stack_build_id {
-  * 		The conversion specifiers supported by *fmt* are similar, but
-  * 		more limited than for printk(). They are **%d**, **%i**,
-  * 		**%u**, **%x**, **%ld**, **%li**, **%lu**, **%lx**, **%lld**,
-- * 		**%lli**, **%llu**, **%llx**, **%p**, **%s**. No modifier (size
-- * 		of field, padding with zeroes, etc.) is available, and the
-- * 		helper will return **-EINVAL** (but print nothing) if it
-- * 		encounters an unknown specifier.
-+ *		**%lli**, **%llu**, **%llx**, **%p**, **%pT[cNx0], **%s**.
-+ *		Only %pT supports modifiers, and the helper will return
-+ *		**-EINVAL** (but print nothing) if it encouters an unknown
-+ *		specifier.
-  *
-  * 		Also, note that **bpf_trace_printk**\ () is slow, and should
-  * 		only be used for debugging purposes. For this reason, a notice
-@@ -4260,4 +4265,16 @@ struct bpf_pidns_info {
- 	__u32 pid;
- 	__u32 tgid;
- };
-+
-+/*
-+ * struct __btf_ptr is used for %pT (typed pointer) display; the
-+ * additional type string/BTF id are used to render the pointer
-+ * data as the appropriate type.
-+ */
-+struct __btf_ptr {
-+	void *ptr;
-+	const char *type;
-+	__u32 id;
-+};
-+
- #endif /* _UAPI__LINUX_BPF_H__ */
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index e729c9e5..33ddb31 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -374,9 +374,13 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
- 	}
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index c0d209d..8ac136a 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -3628,3 +3628,15 @@ int sscanf(const char *buf, const char *fmt, ...)
+ 	return i;
  }
- 
-+/* Unsafe BTF display ('u' modifier) is absent here. */
-+#define is_btf_safe_modifier(c)		\
-+	(c == 'c' || c == 'N' || c == 'x' || c == '0')
-+
- /*
-  * Only limited trace_printk() conversion specifiers allowed:
-- * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pks %pus %s
-+ * %d %i %u %x %ld %li %lu %lx %lld %lli %llu %llx %p %pks %pus %s %pT
-  */
- BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
- 	   u64, arg2, u64, arg3)
-@@ -412,6 +416,24 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
- 			i++;
- 		} else if (fmt[i] == 'p') {
- 			mod[fmt_cnt]++;
-+
-+			/*
-+			 * allow BTF type-based printing, but disallow unsafe
-+			 * mode - this ensures the data is copied safely
-+			 * using probe_kernel_read() prior to traversing it.
-+			 */
-+			if (fmt[i + 1] == 'T') {
-+				int ret;
-+
-+				ret = security_locked_down(LOCKDOWN_BPF_READ);
-+				if (unlikely(ret < 0))
-+					return ret;
-+				i += 2;
-+				while (is_btf_safe_modifier(fmt[i]))
-+					i++;
-+				goto fmt_next;
-+			}
-+
- 			if ((fmt[i + 1] == 'k' ||
- 			     fmt[i + 1] == 'u') &&
- 			    fmt[i + 2] == 's') {
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 1968481..ea4fbf3 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -702,7 +702,12 @@ struct bpf_stack_build_id {
-  * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
-  * 		available. It can take up to three additional **u64**
-  * 		arguments (as an eBPF helpers, the total number of arguments is
-- * 		limited to five).
-+ *		limited to five), and also supports %pT (BTF-based type
-+ *		printing), as long as BPF_READ lockdown is not active.
-+ *		"%pT" takes a "struct __btf_ptr *" as an argument; it
-+ *		consists of a pointer value and specified BTF type string or id
-+ *		used to select the type for display.  For more details, see
-+ *		Documentation/core-api/printk-formats.rst.
-  *
-  * 		Each time the helper is called, it appends a line to the trace.
-  * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
-@@ -738,10 +743,10 @@ struct bpf_stack_build_id {
-  * 		The conversion specifiers supported by *fmt* are similar, but
-  * 		more limited than for printk(). They are **%d**, **%i**,
-  * 		**%u**, **%x**, **%ld**, **%li**, **%lu**, **%lx**, **%lld**,
-- * 		**%lli**, **%llu**, **%llx**, **%p**, **%s**. No modifier (size
-- * 		of field, padding with zeroes, etc.) is available, and the
-- * 		helper will return **-EINVAL** (but print nothing) if it
-- * 		encounters an unknown specifier.
-+ *		**%lli**, **%llu**, **%llx**, **%p**, **%pT[cNx0], **%s**.
-+ *		Only %pT supports modifiers, and the helper will return
-+ *		**-EINVAL** (but print nothing) if it encouters an unknown
-+ *		specifier.
-  *
-  * 		Also, note that **bpf_trace_printk**\ () is slow, and should
-  * 		only be used for debugging purposes. For this reason, a notice
-@@ -4260,4 +4265,16 @@ struct bpf_pidns_info {
- 	__u32 pid;
- 	__u32 tgid;
- };
+ EXPORT_SYMBOL(sscanf);
 +
 +/*
-+ * struct __btf_ptr is used for %pT (typed pointer) display; the
-+ * additional type string/BTF id are used to render the pointer
-+ * data as the appropriate type.
++ * Initialize vmlinux BTF as it may be used by printk()s and it's better
++ * to incur the cost of initialization outside of printk context.
 + */
-+struct __btf_ptr {
-+	void *ptr;
-+	const char *type;
-+	__u32 id;
-+};
++static int __init init_btf_vmlinux(void)
++{
++	(void) bpf_get_btf_vmlinux();
 +
- #endif /* _UAPI__LINUX_BPF_H__ */
++	return 0;
++}
++late_initcall(init_btf_vmlinux);
 -- 
 1.8.3.1
 
