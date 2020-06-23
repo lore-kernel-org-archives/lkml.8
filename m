@@ -2,51 +2,52 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F907C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6428B20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7EB20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 17:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592933927;
-	bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
+	s=default; t=1592933930;
+	bh=dWkrqx4ALWCKfq6upMG6IxKwpwdIUe2rOcIVwVBikrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQx/xwTSLfAo7ZZDybZGWz+cLFspJ8/oXBHpFj4dgSBsWqwZOjguG6mkSSC9S/dLP
-	 G6k5p9ImUg1Kj7wIpi2uf6hc/W8scqVXI5P5/D4BVpeVQZFSKMV1tJAjaD0vDkeDsC
-	 DtveDHFhkRa+N9EL7X//2DcNAnmE8XiCvfP1jadc=
+	b=C1qhQHNfdxhujmMhCloaquBC0Tdj2Ys7+013/YsQHKDsMXDJLR+jcvMpukErhExd3
+	 5JYaJd0cQvpnhc4xW3hA4abXoIKX1oPCcq858C6+rEulLUTuMz1h0cYsvBh30sHpCz
+	 Cpp7t0yQCa5xqPzRm5cXaJrr6kLcfuacYmZC1SkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387439AbgFWRiq (ORCPT
+        id S2387635AbgFWRgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 13:38:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 13:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387641AbgFWRgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 13:36:46 -0400
+        id S2387600AbgFWRgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:36:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A150E20774;
-        Tue, 23 Jun 2020 17:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 096F32078A;
+        Tue, 23 Jun 2020 17:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592933805;
-        bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
+        s=default; t=1592933795;
+        bh=dWkrqx4ALWCKfq6upMG6IxKwpwdIUe2rOcIVwVBikrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZB0YEehG8JMIVPRLAaRSvn+Ks9hu7D9umdNE8P0a17AHxt0ve8E9CUCuUtN61RPsp
-         WGiWYZ03GyUHuQc4gXqSU7VuALGEIDbFVmYpOQP9sfiq5mwwNsLjZ0fS+EDTeDQH7f
-         iKg5C4feZ4nQGu4u1SRdGyqWePFu3ceTLolBBaJo=
+        b=xVZqCkG799x86voPid7vEj1gngAZSkPrF/zw783P2pxEprVN1ujbvub7wAlbr6rLS
+         wo/G7HbeRVDEUG4wQFCPpizBO0WtIL38pQs54vPUzKnDhMz+bacDl+YhIrQ0OJk7M2
+         OxXE9gP+5y0cX2MGVO3cbwbzTc8Ji+ynVwiQPrDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
-        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 12/15] arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
-Date:   Tue, 23 Jun 2020 13:36:27 -0400
-Message-Id: <20200623173630.1355971-12-sashal@kernel.org>
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 04/15] riscv/atomic: Fix sign extension for RV64I
+Date:   Tue, 23 Jun 2020 13:36:19 -0400
+Message-Id: <20200623173630.1355971-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200623173630.1355971-1-sashal@kernel.org>
 References: <20200623173630.1355971-1-sashal@kernel.org>
@@ -59,53 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Nathan Huckleberry <nhuck@google.com>
 
-[ Upstream commit e575fb9e76c8e33440fb859572a8b7d430f053d6 ]
+[ Upstream commit 6c58f25e6938c073198af8b1e1832f83f8f0df33 ]
 
-When I squashed the 'allnoconfig' compiler warning about the
-set_sve_default_vl() function being defined but not used in commit
-1e570f512cbd ("arm64/sve: Eliminate data races on sve_default_vl"), I
-accidentally broke the build for configs where ARM64_SVE is enabled, but
-SYSCTL is not.
+The argument passed to cmpxchg is not guaranteed to be sign
+extended, but lr.w sign extends on RV64I. This makes cmpxchg
+fail on clang built kernels when __old is negative.
 
-Fix this by only compiling the SVE sysctl support if both CONFIG_SVE=y
-and CONFIG_SYSCTL=y.
+To fix this, we just cast __old to long which sign extends on
+RV64I. With this fix, clang built RISC-V kernels now boot.
 
-Cc: Dave Martin <Dave.Martin@arm.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200616131808.GA1040@lca.pw
-Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/867
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/fpsimd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/riscv/include/asm/cmpxchg.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index af59b42973141..177363abbd3e3 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -315,7 +315,7 @@ static unsigned int find_supported_vector_length(unsigned int vl)
- 	return sve_vl_from_vq(bit_to_vq(bit));
- }
- 
--#ifdef CONFIG_SYSCTL
-+#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
- 
- static int sve_proc_do_default_vl(struct ctl_table *table, int write,
- 				  void __user *buffer, size_t *lenp,
-@@ -361,9 +361,9 @@ static int __init sve_sysctl_init(void)
- 	return 0;
- }
- 
--#else /* ! CONFIG_SYSCTL */
-+#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
- static int __init sve_sysctl_init(void) { return 0; }
--#endif /* ! CONFIG_SYSCTL */
-+#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
- 
- #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
- 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index c12833f7b6bd1..42978aac99d53 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -187,7 +187,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -232,7 +232,7 @@
+ 			RISCV_ACQUIRE_BARRIER				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -278,7 +278,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -324,7 +324,7 @@
+ 			"	fence rw, rw\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
 -- 
 2.25.1
 
