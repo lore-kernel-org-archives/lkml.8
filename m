@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB10120724
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7F520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 21:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592948067;
-	bh=U41vo2J41mKdG0sSmbL4LAJnwKc8Gnby07k97bRSZCU=;
+	s=default; t=1592948070;
+	bh=VmTq7WiCpOLz3tHYQ0PS3FnAJD+WTh8JM+zId/dUwOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QhsIxEUi1my1l08YR0WxrZKdKeelx+y3Q2MRqQ8xSTHGmpcPH9SPcFbIHZ8Q2nbLG
-	 tSej96n+M1Dp13aAamkDXlgMrU8Owuyzbq04u0ElWfYSCC6qnrRgylQzuXfNqtAH2C
-	 1tpTEeVpq0kzbgMtfpEpUAMvBtHEZXE+oPDdicSU=
+	b=IEK3ziVpJwMqGYzLxx7AdoYrBr9usw/GZVWFx2LmMiV4PZVNE2No+gtOY7V3SaW63
+	 eeU0pOT/GLcdQfpNkO3NIO1DNrsNW5dryHzNYluC4gIoPHbwC/2ptstT+b5zxDP/BA
+	 pg8j3vLE8KRtPuaFzbhhOyltjUG8n3AHDwUmMtLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388863AbgFWULA (ORCPT
+        id S2393727AbgFWVe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 17:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388805AbgFWUKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:10:31 -0400
+        id S2387680AbgFWUK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:10:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E17EC20707;
-        Tue, 23 Jun 2020 20:10:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F9E920EDD;
+        Tue, 23 Jun 2020 20:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943031;
-        bh=U41vo2J41mKdG0sSmbL4LAJnwKc8Gnby07k97bRSZCU=;
+        s=default; t=1592943058;
+        bh=VmTq7WiCpOLz3tHYQ0PS3FnAJD+WTh8JM+zId/dUwOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sG/HDnBqf224kNiji3bfJgMY6nfcgJdGWQ/RrVjsBSb339Ud/8Qdo4PbbBCWnJBoF
-         IX0DOjp0bdfg1yUzqCf4e9Rsq8P0kqln1oyDS87HIGe7SK9bIPLuOc/JchO6lpmkvx
-         cUzuM1gh73B/gidiS+QYFiZlKH09aV4aHMomhBj8=
+        b=dOfozMUR/2Rl5r9AIoUcbaeCfO+C7PC9oTLu16iDfvQWVRER1pYf02v1kaJlQnjmR
+         /VwH1iGBL6wcbAcNotrmpwu/2EjhlD0WB00gQh1ofmYbdOGiboutQZ2jQztAe9eLNO
+         wN/nioozWN3lWZyqJjU0ULZTyFmPR1Uf6+9tqOcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        stable@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 231/477] tty: n_gsm: Fix bogus i++ in gsm_data_kick
-Date:   Tue, 23 Jun 2020 21:53:48 +0200
-Message-Id: <20200623195418.500791401@linuxfoundation.org>
+Subject: [PATCH 5.7 244/477] arm64: tegra: Fix flag for 64-bit resources in ranges property
+Date:   Tue, 23 Jun 2020 21:54:01 +0200
+Message-Id: <20200623195419.103544592@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195407.572062007@linuxfoundation.org>
 References: <20200623195407.572062007@linuxfoundation.org>
@@ -60,51 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
+[ Upstream commit 3482a7afb261e2de9269a7f9ad0f4a3a82a83a53 ]
 
-When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
-layer when room available". It was suggested to switch from a while to
-a for loop, but when doing it, there was a remaining bogus i++.
+Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+represent 64-bit resources.
 
-This patch removes this i++ and also reorganizes the code making it more
-compact.
-
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 0a8f241e537d9..f189579db7c4c 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -711,17 +711,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- 		} else {
- 			int i = 0;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index f4ede86e32b42..3c928360f4ed2 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1387,7 +1387,7 @@
  
--			for (i = 0; i < NUM_DLCI; i++) {
--				struct gsm_dlci *dlci;
--
--				dlci = gsm->dlci[i];
--				if (dlci == NULL) {
--					i++;
--					continue;
--				}
--
--				tty_port_tty_wakeup(&dlci->port);
--			}
-+			for (i = 0; i < NUM_DLCI; i++)
-+				if (gsm->dlci[i])
-+					tty_port_tty_wakeup(&gsm->dlci[i]->port);
- 		}
- 	}
- }
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1432,7 +1432,7 @@
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1477,7 +1477,7 @@
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1522,7 +1522,7 @@
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1567,7 +1567,7 @@
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1616,7 +1616,7 @@
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
 -- 
 2.25.1
 
