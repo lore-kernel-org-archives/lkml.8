@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7605720836
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271922100A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 20:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592944541;
-	bh=/FvxPPIPe+dQTXQL6FxQuEEeAiwkRfiSX57QfrrFAq4=;
+	s=default; t=1592944549;
+	bh=cqXo4sFFq3eyBc3yOBsOF0tDKrormseqsHL1lsfYwnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQ8/T+blJZzIXXRGsKgnH+xbKcUZBDW6iQXUnUrthIc4Cu39CkQ0IILWlciGzt7et
-	 pPURXPEAWgJBm+ItJzgBP8nPUsFh3S58p2pIh83WeOyj5N7oHapPEtNO0o9TMpgoSf
-	 aHi1+H4IYOdGq83xHzEoQnGAs402VfMMb3b2O1Ew=
+	b=xkiGvoEPUHbces/rDhoGOUeCogn5f/AKuZUz4UEflwnnlZ1KyRsHtwVtfLdi6linU
+	 Ytk5OncVdEfP0fZEebiZkccX+P6n509k5VO9JWbq+ly+kwdcSrtC2U9WE04S4155AL
+	 cIvwX1Cby0/qDisNYL8suMPgFyQQ8kFRHIJ4Vx3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391710AbgFWUfj (ORCPT
+        id S2391733AbgFWUfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:35:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57948 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 16:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391175AbgFWUfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:35:30 -0400
+        id S2391722AbgFWUfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 16:35:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 556D020836;
-        Tue, 23 Jun 2020 20:35:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9AF720836;
+        Tue, 23 Jun 2020 20:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592944529;
-        bh=/FvxPPIPe+dQTXQL6FxQuEEeAiwkRfiSX57QfrrFAq4=;
+        s=default; t=1592944543;
+        bh=cqXo4sFFq3eyBc3yOBsOF0tDKrormseqsHL1lsfYwnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEJajS+UsrqEGW722Vn4Uz5BEE0KPp+1WPL+pra0yzymWnr7s2KCceRRm3oTru06+
-         T8u7gAyeyZZSYXM8sqh345pxT9WpfnRx+5MTO1d509QeOsMr1rcqmgE1YCzpFsjljh
-         vAwc+2tPReQkvegVxqY0RXHJip0c/NpypTXLThAg=
+        b=HLBcPj1Bed+C497nCF8kuKh43fos1HssNFsythEj3iYAUOtKlrtLydEgNQojby2Bw
+         JTQhM+dYagKqX92PXprdok+N/7RcA7RA4ByakWfz7Z+SWRpOCp6s1OxGbB9YHUfLHc
+         Jaxh0zO3D+NQ+t1CMsd3iAzo5mlNkVjYz6kECdfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Alex Elder <elder@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suman Anna <s-anna@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 025/206] vfio/pci: fix memory leaks in alloc_perm_bits()
-Date:   Tue, 23 Jun 2020 21:55:53 +0200
-Message-Id: <20200623195318.217122468@linuxfoundation.org>
+Subject: [PATCH 4.19 006/206] remoteproc: Fix IDR initialisation in rproc_alloc()
+Date:   Tue, 23 Jun 2020 21:55:34 +0200
+Message-Id: <20200623195317.244434695@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
 References: <20200623195316.864547658@linuxfoundation.org>
@@ -60,72 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Alex Elder <elder@linaro.org>
 
-[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
+[ Upstream commit 6442df49400b466431979e7634849a464a5f1861 ]
 
-vfio_pci_disable() calls vfio_config_free() but forgets to call
-free_perm_bits() resulting in memory leaks,
+If ida_simple_get() returns an error when called in rproc_alloc(),
+put_device() is called to clean things up.  By this time the rproc
+device type has been assigned, with rproc_type_release() as the
+release function.
 
-unreferenced object 0xc000000c4db2dee0 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
-    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
-    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
-    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
-    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
-unreferenced object 0xc000000c4db2e330 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+The first thing rproc_type_release() does is call:
+    idr_destroy(&rproc->notifyids);
 
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Qian Cai <cai@lca.pw>
-[aw: rolled in follow-up patch]
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+But at the time the ida_simple_get() call is made, the notifyids
+field in the remoteproc structure has not been initialized.
+
+I'm not actually sure this case causes an observable problem, but
+it's incorrect.  Fix this by initializing the notifyids field before
+calling ida_simple_get() in rproc_alloc().
+
+Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
+Signed-off-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200415204858.2448-2-mathieu.poirier@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/remoteproc/remoteproc_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 423ea1f98441a..c2d300bc37f64 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1732,8 +1732,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
- 	vdev->vconfig = NULL;
- 	kfree(vdev->pci_config_map);
- 	vdev->pci_config_map = NULL;
--	kfree(vdev->msi_perm);
--	vdev->msi_perm = NULL;
-+	if (vdev->msi_perm) {
-+		free_perm_bits(vdev->msi_perm);
-+		kfree(vdev->msi_perm);
-+		vdev->msi_perm = NULL;
-+	}
- }
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index d5ff272fde343..e48069db17033 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1598,6 +1598,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 	rproc->dev.type = &rproc_type;
+ 	rproc->dev.class = &rproc_class;
+ 	rproc->dev.driver_data = rproc;
++	idr_init(&rproc->notifyids);
  
- /*
+ 	/* Assign a unique device index and name */
+ 	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
+@@ -1622,8 +1623,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 
+ 	mutex_init(&rproc->lock);
+ 
+-	idr_init(&rproc->notifyids);
+-
+ 	INIT_LIST_HEAD(&rproc->carveouts);
+ 	INIT_LIST_HEAD(&rproc->mappings);
+ 	INIT_LIST_HEAD(&rproc->traces);
 -- 
 2.25.1
 
