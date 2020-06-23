@@ -2,107 +2,100 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E263C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5462078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 08:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="s72LzhP5"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TuCRazjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbgFWICZ (ORCPT
+        id S1731737AbgFWICn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:02:25 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:43000 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731158AbgFWICX (ORCPT
+        Tue, 23 Jun 2020 04:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731158AbgFWICn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:02:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592899342; x=1624435342;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0ogUMEimjCKkrZVTOaTS0pbyYgrTcwl/8QxbW1JRQZo=;
-  b=s72LzhP5Xsvag/48itoOU6FY1eJEIOaUgS07NRmNvYT5kEp2C7SF8jSf
-   puZqBsr9IEz+v40oJvWlkhhSNRPtLZjxfVUYVPTfhETK9Z+1/Ze5LOqLh
-   qPKUoHVfaJxj8NKpG0rRcxyMGACQWZheYgoe2IqBXNzcQ8oN/6zrpJsxD
-   fHW+8Icp26T1RawhlXChbEmjzJipR2JAa2VmTHsV88Zek4lTxrNZoO8TU
-   ybliO8XJNebycwY4hGkvnuDcRUgpMYAclDt5Jc3np58ou2mGDCrInkeEE
-   7nVTXsjTBCcr/oP+07UFqHJ36SzUjPqLbsMo4NM8WfJz6WS7ccyuPe/Wn
-   Q==;
-IronPort-SDR: J6ZvwGuNaoSpKwnAaAeypTuXdyhRSVceuVIKH3RwYh4QvdmJKHXJ4aGW2lIpkllfCBG+EVA8Pt
- MTFoy6rg2fjQ8W/plsDPPdAIq0cpH+KcuBOSqG3s1XC0DpeTLFPt6Q6t9WzJTQ78I/LjLD8gGb
- 45Bs37LWResoGb9gue8JkjT+jMpzEA8fQG6VO00SuLgw8sIYf0SE3DutOirS0ie+RdISpZmDxF
- UcPZC+ensF3o14pj0qxf9JcYn54yRi1SUaUwO2Qu+jQfJppfqKXMZGWDOmRXly33imKYIWmark
- hFs=
-X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
-   d="scan'208";a="79430541"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jun 2020 01:02:22 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 23 Jun 2020 01:02:10 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 23 Jun 2020 01:02:21 -0700
-Date:   Tue, 23 Jun 2020 10:02:17 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     David Miller <davem@davemloft.net>
-CC:     <nikolay@cumulusnetworks.com>, <UNGLinuxDriver@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: Re: [Resend PATCH net] bridge: uapi: mrp: Fix MRP_PORT_ROLE
-Message-ID: <20200623080217.bjsml4jmrvrq6eev@soft-dev3.localdomain>
-References: <20200620131403.2680293-1-horatiu.vultur@microchip.com>
- <20200622.160712.2300967026610181117.davem@davemloft.net>
+        Tue, 23 Jun 2020 04:02:43 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64CD3C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:02:43 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e9so9492553pgo.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 01:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ru8jPTPnBePyvGJchZOluuKt4Npgi7HZT0olX4LUWXA=;
+        b=TuCRazjmS40grkDqJhwcvAh8RwtyFqD92Ki4Rz3qIjFPjt58XSWg6p6In9ykDmJJXW
+         D3wx0UiR2A2t/JmpXXWckro9KUZ2IiR3myo9lPlRAzg4gewNK3N94Awjn2EkVJCNCO9Z
+         r5FiCzfabQxxs3j+1xsO5xTazRPMCoxqm0vB6VKJnpzF7cx+Tt049EbnFJqbF0BNcsi9
+         ghT/EtvEJ4WBCErg8YDKPlIwDOb1uMhaz4R2GveUKeYxGwq7bdN3d38NGbV4qEJaj7r6
+         jHg8Lu4FuJGVKC+P1s8KOBQKvGCJSW+R/CJKlSoKyRhKKrik1eA+N+aHIdkFVuNhpH6Y
+         FBTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ru8jPTPnBePyvGJchZOluuKt4Npgi7HZT0olX4LUWXA=;
+        b=WpSjRUv3bpcOCFO6EvWGZvsnGogSuaguypPYUPVSg9zA3HQPGrvYbHxtTpQ9volEw4
+         UR3GRhYP+Rc0Pks3k2bqVqvzErD8HFUorM8UfHOcPpPphqKTfaGUVBHkmxnkdgua9VHq
+         EUcsgi/0CeyNnQUPv6ZJfC4IJVBGNIhJLP42FsglGpTubaTpYe2bKDaMfiH2hSJ9IgrT
+         4Y524shLiQgyxE42UxeeV4Yf4bKFu7wLqae9fUxHiQ5IoahCWPto0ef5T05ipv5Jybdc
+         w5Ng4fMnFrgVSF8kHE7He1+px3lIR3+i7lc+tgZdypkdUIHsO+8afbArnNrAsvERbQnu
+         hTTw==
+X-Gm-Message-State: AOAM530VJ0pB3cNwoB3M22S5hQJlJbRkOCqjfyg4SDY4aqsZa3fza4xg
+        UoHia0GoujvCuNKXYZfqpT3KYA==
+X-Google-Smtp-Source: ABdhPJwNKGpmftqGSnIuinlv7FoUHRvottguTJgzZ8vYl3davjP/NHkvSa9jOZ1OJXxz90aZkipbfg==
+X-Received: by 2002:a05:6a00:7c8:: with SMTP id n8mr23161403pfu.116.1592899362851;
+        Tue, 23 Jun 2020 01:02:42 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id x4sm15499868pfx.87.2020.06.23.01.02.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 01:02:42 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH] riscv: Define AT_VECTOR_SIZE_ARCH for ARCH_DLINFO
+Date:   Tue, 23 Jun 2020 16:02:38 +0800
+Message-Id: <20200623080238.122973-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200622.160712.2300967026610181117.davem@davemloft.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 06/22/2020 16:07, David Miller wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> From: Horatiu Vultur <horatiu.vultur@microchip.com>
-> Date: Sat, 20 Jun 2020 15:14:03 +0200
-> 
-> > Currently the MRP_PORT_ROLE_NONE has the value 0x2 but this is in conflict
-> > with the IEC 62439-2 standard. The standard defines the following port
-> > roles: primary (0x0), secondary(0x1), interconnect(0x2).
-> > Therefore remove the port role none.
-> >
-> > Fixes: 4714d13791f831 ("bridge: uapi: mrp: Add mrp attributes.")
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> 
-> The code accepts arbitrary 32-bit values for the role in a configuration
-> but only PRIMARY and SECONDARY seem to be valid.
-> 
-> There is no validation that the value used makes sense.
-> 
-> In the future if we handle type interconnect, and we add checks, it will
-> break any existing applications.  Because they can validly pass any
-> non-zero valid and the code treats that as SECONDARY currently.
-> 
-> So you really can't just remove NONE, you have to add validation code
-> too so we don't run into problem in the future.
+AT_VECTOR_SIZE_ARCH should be defined with the maximum number of
+NEW_AUX_ENT entries that ARCH_DLINFO can contain, but it wasn't defined
+for RISC-V at all even though ARCH_DLINFO will contain one NEW_AUX_ENT
+for the VDSO address.
 
-Thanks for the explanation. I will add some code that checks
-specifically for primary(0x0) and secondary(0x1) values and for any
-other value to return -EINVAL.
-Then in the future when we handle the type interconnect(0x2), we will
-just extend this code to check for this value.
+Signed-off-by: Zong Li <zong.li@sifive.com>
+---
+ arch/riscv/include/uapi/asm/auxvec.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 
-> Thanks.
-
+diff --git a/arch/riscv/include/uapi/asm/auxvec.h b/arch/riscv/include/uapi/asm/auxvec.h
+index d86cb17bbabe..22e0ae888406 100644
+--- a/arch/riscv/include/uapi/asm/auxvec.h
++++ b/arch/riscv/include/uapi/asm/auxvec.h
+@@ -10,4 +10,7 @@
+ /* vDSO location */
+ #define AT_SYSINFO_EHDR 33
+ 
++/* entries in ARCH_DLINFO */
++#define AT_VECTOR_SIZE_ARCH	1
++
+ #endif /* _UAPI_ASM_RISCV_AUXVEC_H */
 -- 
-/Horatiu
+2.27.0
+
