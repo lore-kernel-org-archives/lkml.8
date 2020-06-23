@@ -2,142 +2,103 @@ Return-Path: <SRS0=AM+j=AE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC16C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABB92076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592928740;
-	bh=6nRc1jGM9JfCbm9AMXUpZEjUTEOQfLi5Qg96RQgjxSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CQVu1zwGFuancUvJo8rbcoebzrTt9YYCpEaskv5CG8/yJptBM8TCdYlLqUlWgnDk2
-	 v8YtgX9HqmbbIunCycPJNlX9jKdkSqYjmrJs0PF4TJevjAJslJ7gc52F8o0fNXeAdp
-	 u/gfIaqYOsXdppF5tH7x9792TMjY+7VFDrDbaGQc=
+	by mail.kernel.org (Postfix) with ESMTP id B3CB92076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jun 2020 16:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732416AbgFWQMT (ORCPT
+        id S1732510AbgFWQNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbgFWQMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 12:12:18 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFD32081A;
-        Tue, 23 Jun 2020 16:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592928737;
-        bh=6nRc1jGM9JfCbm9AMXUpZEjUTEOQfLi5Qg96RQgjxSc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o8Oqg6WAtj5VPOvslTDqt6BUwgSHZhkB+0DXnYfwb0L7fa3cjFCiQh5Q+sskZ8pwE
-         k0kfdvRZnaMLmdpKizu9J6N89rBIkUoFPPhz7IoF0M+AgnbBu8/K97R5W3kC1s7kvv
-         kV36xNka75qLN9GjoaL6rjcFhg43GAlUT9HqwOVc=
-Date:   Tue, 23 Jun 2020 17:12:13 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64/module: Optimize module load time by optimizing
- PLT counting
-Message-ID: <20200623161212.GA4819@willie-the-truck>
-References: <20200623011803.91232-1-saravanak@google.com>
+        Tue, 23 Jun 2020 12:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728916AbgFWQNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 12:13:42 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8AEC061573;
+        Tue, 23 Jun 2020 09:13:41 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1jnlY2-0005Ko-Kg; Tue, 23 Jun 2020 18:13:22 +0200
+Date:   Tue, 23 Jun 2020 18:13:21 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
+        x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623011803.91232-1-saravanak@google.com>
+In-Reply-To: <20200623152450.GM4817@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 06:18:02PM -0700, Saravana Kannan wrote:
-> When loading a module, module_frob_arch_sections() tries to figure out
-> the number of PLTs that'll be needed to handle all the RELAs. While
-> doing this, it tries to dedupe PLT allocations for multiple
-> R_AARCH64_CALL26 relocations to the same symbol. It does the same for
-> R_AARCH64_JUMP26 relocations.
-> 
-> To make checks for duplicates easier/faster, it sorts the relocation
-> list by type, symbol and addend. That way, to check for a duplicate
-> relocation, it just needs to compare with the previous entry.
-> 
-> However, sorting the entire relocation array is unnecessary and
-> expensive (O(n log n)) because there are a lot of other relocation types
-> that don't need deduping or can't be deduped.
-> 
-> So this commit partitions the array into entries that need deduping and
-> those that don't. And then sorts just the part that needs deduping. And
-> when CONFIG_RANDOMIZE_BASE is disabled, the sorting is skipped entirely
-> because PLTs are not allocated for R_AARCH64_CALL26 and R_AARCH64_JUMP26
-> if it's disabled.
-> 
-> This gives significant reduction in module load time for modules with
-> large number of relocations with no measurable impact on modules with a
-> small number of relocations. In my test setup with CONFIG_RANDOMIZE_BASE
-> enabled, these were the results for a few downstream modules:
-> 
-> Module		Size (MB)
-> wlan		14
-> video codec	3.8
-> drm		1.8
-> IPA		2.5
-> audio		1.2
-> gpu		1.8
-> 
-> Without this patch:
-> Module		Number of entries sorted	Module load time (ms)
-> wlan		243739				283
-> video codec	74029				138
-> drm		53837				67
-> IPA		42800				90
-> audio		21326				27
-> gpu		20967				32
-> 
-> Total time to load all these module: 637 ms
-> 
-> With this patch:
-> Module		Number of entries sorted	Module load time (ms)
-> wlan		22454				61
-> video codec	10150				47
-> drm		13014				40
-> IPA		8097				63
-> audio		4606				16
-> gpu		6527				20
-> 
-> Total time to load all these modules: 247
-> 
-> Time saved during boot for just these 6 modules: 390 ms
-> 
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
-> 
-> v1 -> v2:
-> - Provided more details in the commit text
-> - Pulled in Will's comments on the coding style
-> - Pulled in Ard's suggestion about skipping jumps with the same section
->   index (parts of Will's suggested code)
-> 
->  arch/arm64/kernel/module-plts.c | 46 ++++++++++++++++++++++++++++++---
->  1 file changed, 43 insertions(+), 3 deletions(-)
+On Tue, Jun 23, 2020 at 05:24:50PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 23, 2020 at 05:00:31PM +0200, Ahmed S. Darwish wrote:
+> > On Tue, Jun 23, 2020 at 10:36:52AM +0200, Peter Zijlstra wrote:
+> > ...
+> > > -#define lockdep_assert_irqs_disabled()	do {				\
+> > > -		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
+> > > -			  current->hardirqs_enabled,			\
+> > > -			  "IRQs not disabled as expected\n");		\
+> > > -	} while (0)
+> > > +#define lockdep_assert_irqs_enabled()					\
+> > > +do {									\
+> > > +	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirqs_enabled));	\
+> > > +} while (0)
+> > >
+> >
+> > Can we add a small comment on top of lockdep_off(), stating that lockdep
+> > IRQ tracking will still be kept after a lockdep_off call?
+>
+> That would only legitimize lockdep_off(). The only comment I want to put
+> on that is: "if you use this, you're doing it wrong'.
+>
 
-Nice, it looks like you were more-or-less able to use my suggestion
-directly! Commit message looks much better to, so:
+Well, freshly merged code is using it. For example, KCSAN:
 
-Acked-by: Will Deacon <will@kernel.org>
+    => f1bc96210c6a ("kcsan: Make KCSAN compatible with lockdep")
+    => kernel/kcsan/report.c:
 
-Catalin can pick this up when he starts queuing patches for 5.9.
+    void kcsan_report(...)
+    {
+	...
+        /*
+         * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
+         * we do not turn off lockdep here; this could happen due to recursion
+         * into lockdep via KCSAN if we detect a race in utilities used by
+         * lockdep.
+         */
+        lockdep_off();
+	...
+    }
 
-Cheers,
+thanks,
 
-Will
+--
+Ahmed S. Darwish
+Linutronix GmbH
