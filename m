@@ -2,126 +2,176 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD28C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD74DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941F42073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCP/dCOi"
+	by mail.kernel.org (Postfix) with ESMTP id 8BDD82073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387959AbgFXW6M (ORCPT
+        id S2388485AbgFXXBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 18:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728383AbgFXW6M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 18:58:12 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9AAC061573;
-        Wed, 24 Jun 2020 15:58:10 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d10so1804515pls.5;
-        Wed, 24 Jun 2020 15:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5fFSv63vrx2iH/K6v2qc1f863y3U8N/wNCQngVFz1pY=;
-        b=bCP/dCOilIiQ3qzUm/oFbudTkYh4ecnU3wkfGZB1rrcrBxtofienEF5mEHGj+F+97e
-         GDGVKNTn+KFlQxZI0CFZP3QYOLA4V1vbUIgdPol+1ZI+ZX+Yo5WHsWOE2tw0pphCWTke
-         aCnkEkV+vm1SiJUpMwUbtDmjQcKY9CLh5o6Wtx2emU456VNaIiq5wwnVfPppHQpQSnG7
-         DjjYUHV7SMS51gFMr5hWe5O5GECrs0Teljd8zQzrnF/iWt2R7/CgnjqVoJSEjIWstg+k
-         XN8wdNHKHy1ksCycnrbdNDhHlIGc5Sk6jKiP81GFplZi1vRRrqOpTvdzm9yv6YaTzzrO
-         6KhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5fFSv63vrx2iH/K6v2qc1f863y3U8N/wNCQngVFz1pY=;
-        b=ft/Ef5jeCxlU/nRONL9xX52y5XFGYb/uHdl7gMsb39A91MYKAQJ19n1ujt/3nGDQEW
-         FWMf1H9+A1hTalu1lkaNRkMgxNIT4u4hAOtTbNKrimREWNUvGoicLU1p63DL0KZR7+a7
-         1PT3vZxrEGKgbIRKjHwfw/AnAjep8fbGOzkHd/DsHW3T0Np/FTcqOD6tkZtKrJpkGGuK
-         qhr/tZAATYvH9qpe9YoVO6G1jgheWkxdeNzfFViLpqFTWaxUdREe9yYQou0e3WvCE84i
-         fuCHRh6TwvQGoFRpJUlr3hn0lLa4D4KIE2DGQyCIL2NorohRf9zw89rb579onh6T0u1p
-         WcWQ==
-X-Gm-Message-State: AOAM532u2uSt/UljQDvJhyG0OQA64gIn378dQFmUU4L8ZROLlRGrIqGi
-        33JO31R4rr2BUgbuiCnXxlo=
-X-Google-Smtp-Source: ABdhPJwAQfiiSjDCMp1CDUq8F9cf6gWRE3v18/jbXPR2o3424p703EWghl1h0OEej910i+7DIvQRsQ==
-X-Received: by 2002:a17:90a:668f:: with SMTP id m15mr102540pjj.32.1593039490207;
-        Wed, 24 Jun 2020 15:58:10 -0700 (PDT)
-Received: from sol (220-235-99-174.dyn.iinet.net.au. [220.235.99.174])
-        by smtp.gmail.com with ESMTPSA id k28sm1856498pfp.82.2020.06.24.15.58.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 15:58:09 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 06:58:03 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 10/22] gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
-Message-ID: <20200624225803.GA3600@sol>
-References: <20200623040107.22270-1-warthog618@gmail.com>
- <20200623040107.22270-11-warthog618@gmail.com>
- <CAHp75VdG4r95ZU8G9TfL+jkT63+Gppb8w5TRvAtCR_pAk0o=NA@mail.gmail.com>
- <20200624155714.GB8622@sol>
+        Wed, 24 Jun 2020 19:01:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28947 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388138AbgFXXA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 19:00:59 -0400
+IronPort-SDR: +b9gquAbtwdaK5Uxeo/VykBfgZ7lMQWTpypFL4NIOW0G8eGrl1sSiiZyBRCFTSovoi+lMvoApZ
+ iBOjG1t7Od6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="124911233"
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="124911233"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 16:00:58 -0700
+IronPort-SDR: G0hLA6N6Yk1nM47CgFNu/GWReiR2LY6URhVxZeEWSGe1pLRFzy0J5I/WsZ3bQqNiiNQTEfmMYV
+ S5TpLuIwnAdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="311804932"
+Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 16:00:51 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Kylene Jo Hall <kjhall@us.ibm.com>,
+        "Ferry Toth :" <ferry.toth@elsinga.info>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        Andrew Morton <akpm@osdl.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] tpm_tis: Remove the HID IFX0102
+Date:   Thu, 25 Jun 2020 02:00:33 +0300
+Message-Id: <20200624230037.21192-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624155714.GB8622@sol>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:57:14PM +0800, Kent Gibson wrote:
-> On Wed, Jun 24, 2020 at 05:46:33PM +0300, Andy Shevchenko wrote:
-> > On Tue, Jun 23, 2020 at 7:03 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > Merge separate usage of test_bit/set_bit into test_and_set_bit to remove
-> > > the possibility of a race between the test and set.
-> > >
-> > > Similarly test_bit and clear_bit.
-> > >
-> > > In the existing code it is possible for two threads to race past the
-> > > test_bit and then set or clear the watch bit, and neither return EBUSY.
-> > 
-> > I stumbled over this myself, but...
-> > 
-> > > -               if (test_bit(hwgpio, gcdev->watched_lines))
-> > > +               if (test_and_set_bit(hwgpio, gcdev->watched_lines))
-> > >                         return -EBUSY;
-> > >
-> > >                 gpio_desc_to_lineinfo(desc, &lineinfo);
-> > > @@ -897,7 +897,6 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> > >                 if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
-> > >                         return -EFAULT;
-> > >
-> > > -               set_bit(hwgpio, gcdev->watched_lines);
-> > >                 return 0;
-> > 
-> > ...I think it's not an equivalent despite races involved. If you set
-> > bit and return error code, you will have the wrong state.
-> > 
-> 
-> Not quite sure what you mean.  There is only an error if the bit is
-> already set, so you've changed nothing.
-> 
-> And the watched state is not part of the lineinfo, so the state returned is
-> the same either way.
-> 
+Acer C720 running Linux v5.3 reports this in klog:
 
-Perhaps you are referring to the case where the copy_to_user fails?
-To be honest I considered that to be so unlikely that I ignored it.
-Is there a relevant failure mode that I'm missing?
+tpm_tis: 1.2 TPM (device-id 0xB, rev-id 16)
+tpm tpm0: tpm_try_transmit: send(): error -5
+tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
+tpm_tis tpm_tis: Could not get TPM timeouts and durations
+tpm_tis 00:08: 1.2 TPM (device-id 0xB, rev-id 16)
+tpm tpm0: tpm_try_transmit: send(): error -5
+tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
+tpm_tis 00:08: Could not get TPM timeouts and durations
+ima: No TPM chip found, activating TPM-bypass!
+tpm_inf_pnp 00:08: Found TPM with ID IFX0102
 
-Cheers,
-Kent.
+% git --no-pager grep IFX0102 drivers/char/tpm
+drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
+drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
+
+Obviously IFX0102 was added to the HID table for the TCG TIS driver by
+mistake.
+
+Fixes: 93e1b7d42e1e ("[PATCH] tpm: add HID module parameter")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203877
+Cc: Kylene Jo Hall <kjhall@us.ibm.com>
+Reported-by: Ferry Toth: <ferry.toth@elsinga.info>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ drivers/char/tpm/tpm2-space.c | 14 ++++++++++----
+ drivers/char/tpm/tpm_tis.c    |  1 -
+ include/linux/tpm.h           |  6 ++++--
+ 3 files changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
+index 982d341d8837..c9817930eb23 100644
+--- a/drivers/char/tpm/tpm2-space.c
++++ b/drivers/char/tpm/tpm2-space.c
+@@ -47,9 +47,13 @@ int tpm2_init_space(struct tpm_space *space)
+ 	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (space->session_buf == NULL) {
+ 		kfree(space->context_buf);
++		space->context_buf = NULL;
+ 		return -ENOMEM;
+ 	}
+ 
++	space->context_size = PAGE_SIZE;
++	space->session_size = PAGE_SIZE;
++
+ 	return 0;
+ }
+ 
+@@ -311,8 +315,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
+ 	       sizeof(space->context_tbl));
+ 	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
+ 	       sizeof(space->session_tbl));
+-	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
+-	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
++	memcpy(chip->work_space.context_buf, space->context_buf,
++	       space->context_size);
++	memcpy(chip->work_space.session_buf, space->session_buf,
++	       space->session_size);
+ 
+ 	rc = tpm2_load_space(chip);
+ 	if (rc) {
+@@ -492,7 +498,7 @@ static int tpm2_save_space(struct tpm_chip *chip)
+ 			continue;
+ 
+ 		rc = tpm2_save_context(chip, space->context_tbl[i],
+-				       space->context_buf, PAGE_SIZE,
++				       space->context_buf, space->context_size,
+ 				       &offset);
+ 		if (rc == -ENOENT) {
+ 			space->context_tbl[i] = 0;
+@@ -509,7 +515,7 @@ static int tpm2_save_space(struct tpm_chip *chip)
+ 			continue;
+ 
+ 		rc = tpm2_save_context(chip, space->session_tbl[i],
+-				       space->session_buf, PAGE_SIZE,
++				       space->session_buf, space->session_size,
+ 				       &offset);
+ 
+ 		if (rc == -ENOENT) {
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index e7df342a317d..c58ea10fc92f 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -238,7 +238,6 @@ static int tpm_tis_pnp_init(struct pnp_dev *pnp_dev,
+ static struct pnp_device_id tpm_pnp_tbl[] = {
+ 	{"PNP0C31", 0},		/* TPM */
+ 	{"ATM1200", 0},		/* Atmel */
+-	{"IFX0102", 0},		/* Infineon */
+ 	{"BCM0101", 0},		/* Broadcom */
+ 	{"BCM0102", 0},		/* Broadcom */
+ 	{"NSC1200", 0},		/* National */
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 03e9b184411b..9ea39e8f7162 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -92,10 +92,12 @@ enum tpm_duration {
+ #define TPM_PPI_VERSION_LEN		3
+ 
+ struct tpm_space {
++	u8  *context_buf;
++	u8  *session_buf;
++	u32 context_size;
++	u32 session_size;
+ 	u32 context_tbl[3];
+-	u8 *context_buf;
+ 	u32 session_tbl[3];
+-	u8 *session_buf;
+ };
+ 
+ struct tpm_bios_log {
+-- 
+2.25.1
+
