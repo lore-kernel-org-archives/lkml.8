@@ -2,160 +2,264 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF05C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D395FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3B12088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9660320644
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:43:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzohEuEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390483AbgFXKgY (ORCPT
+        id S2388800AbgFXKnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:36:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:59922 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390441AbgFXKgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:36:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11BEE1FB;
-        Wed, 24 Jun 2020 03:36:23 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8129F3F6CF;
-        Wed, 24 Jun 2020 03:36:21 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 11:36:19 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] sched/uclamp: Fix initialization of strut
- uclamp_rq
-Message-ID: <20200624103618.zkk2unblc265v4mo@e107158-lin.cambridge.arm.com>
-References: <20200619172011.5810-1-qais.yousef@arm.com>
- <20200619172011.5810-2-qais.yousef@arm.com>
- <87sgekorfq.derkling@matbug.net>
+        Wed, 24 Jun 2020 06:43:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388421AbgFXKne (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 06:43:34 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6835C061573;
+        Wed, 24 Jun 2020 03:43:33 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id cv17so781951qvb.13;
+        Wed, 24 Jun 2020 03:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=53grDewekNrOB2bW/tm9l6rwVpIC3TgcuaE7tw8uawA=;
+        b=FzohEuEVibCgvm1oM7fIqBRpuHsSyXMTI7FO/l6RdAM0AH2MABb9eqGMiU1+Mtd9L2
+         /8MK1gXr2pSICbqvHUPIaz3kvgDWZjUkRKJaA5201KFkrw3Ep1xsEwJubzb0E7O9E0XO
+         wcqSrEO7QS6TgTo2tnigRxzmvpgbQetx4Fnd/iXlir7mrO65IuvpfHeqmflzLRVPIQ6a
+         7Lc5uwVAUSUKG24pqurCMIA2VkmxggRrAN8l0t7RA0p32dP5PKzzscN7PTU8GOxrn+27
+         tEg7x4upd2MSQnm9KVA3fzSR7YAUN7kExTKETnjrYn7P07Y5mpniJ+BT2vaZ0zrbrQJU
+         BSkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=53grDewekNrOB2bW/tm9l6rwVpIC3TgcuaE7tw8uawA=;
+        b=stiHLEMIDld08H+QmKBAjq31lTaQZP6IbpksMpy6RG7e/qZc7OEWfWCgxwnpBvlFdg
+         l0MZbFE4+TPn5ivxnqOQJiYWTY7aSsbwoZAj72sMMeXdkJSpOKJNtoEYXOJuykt19iwd
+         fD2tlySBxGTgezQj+n9uXIAlhbS3pmVmkASYFP5sBWO45z6ZvDyV6UfMF3FrQFGwe0+4
+         29CsfTZGwOO5EATmXqDrm+PaesniGRK0/lWV1uUR0LQSPR/DX2VnbxwXxD+Wjr4sZRLm
+         c1WYJFBWWxACT70jBQ1N2VQ+ODPe4DLXaSFjefhaFIRwKLNpxUU35TRrvRHdvA0BIvNW
+         X8oQ==
+X-Gm-Message-State: AOAM532dc2xkJHe9pkx/rNs/MVQ0U6QT7QVcg8cWcdoU0HjDypTUeYbQ
+        sDMDN4N9pdOSCERAy6IM/EY=
+X-Google-Smtp-Source: ABdhPJyD+7fyQEzpU3irVOvPmQx9brF4HdO+cILokeRPqhMrBXYSeui0xD12FywrNMLIvyEgLLd87w==
+X-Received: by 2002:ad4:5646:: with SMTP id bl6mr18009420qvb.112.1592995412965;
+        Wed, 24 Jun 2020 03:43:32 -0700 (PDT)
+Received: from ip-172-31-24-31.ec2.internal (ec2-54-234-246-66.compute-1.amazonaws.com. [54.234.246.66])
+        by smtp.gmail.com with ESMTPSA id z19sm3570216qtz.81.2020.06.24.03.43.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jun 2020 03:43:32 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:43:31 +0000
+From:   Rodolfo C Villordo <rodolfovillordo@gmail.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: staging: vt6655: replace CamelCase names on
+ function s_uGetRTSCTSRsvTime
+Message-ID: <20200624104331.GA17280@ip-172-31-24-31.ec2.internal>
+References: <20200624100256.GA17118@ip-172-31-24-31.ec2.internal>
+ <alpine.DEB.2.22.394.2006241205210.2433@hadrien>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87sgekorfq.derkling@matbug.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <alpine.DEB.2.22.394.2006241205210.2433@hadrien>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/20 09:26, Patrick Bellasi wrote:
+On Wed, Jun 24, 2020 at 12:05:49PM +0200, Julia Lawall wrote:
 > 
-> Hi Qais,
 > 
-> On Fri, Jun 19, 2020 at 19:20:10 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+> On Wed, 24 Jun 2020, Rodolfo C. Villordo wrote:
 > 
-> > struct uclamp_rq was zeroed out entirely in assumption that in the first
-> > call to uclamp_rq_inc() they'd be initialized correctly in accordance to
-> > default settings.
+> > Replace function and variables name from CamelCase style to snake_case style.
+> > Remove Hungarian notation.
 > >
-> > But when next patch introduces a static key to skip
-> > uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
-> > will fail to perform any frequency changes because the
-> > rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
-> > means all rqs are capped to 0 by default.
-> 
-> Does not this means the problem is more likely with uclamp_rq_util_with(),
-> which should be guarded?
-
-The initialization is wrong and needs to be fixed, no? So I won't say
-uclamp_rq_util_with() has any problem.
-
-For RT boosting to work as-is, uclamp_rq_util_with() needs to stay the same,
-otherwise we need to add extra logic to deal with that. Which I don't think is
-worth it or necessary. The function is called from sugov and
-find_energy_efficient_cpu(), both of which aren't a worry to make this call
-unconditionally IMO.
-
-Thanks
-
---
-Qais Yousef
-
-> 
-> Otherwise, we will also keep doing useless min/max aggregations each
-> time schedutil calls that function, thus not completely removing
-> uclamp overheads while user-space has not opted in.
-> 
-> What about dropping this and add the guard in the following patch, along
-> with the others?
-
-> 
-> > Fix it by making sure we do proper initialization at init without
-> 
-> >
-> > Fix it by making sure we do proper initialization at init without
-> > relying on uclamp_rq_inc() doing it later.
-> >
-> > Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > Cc: Juri Lelli <juri.lelli@redhat.com>
-> > Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> > Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Ben Segall <bsegall@google.com>
-> > Cc: Mel Gorman <mgorman@suse.de>
-> > CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-> > Cc: Chris Redpath <chris.redpath@arm.com>
-> > Cc: Lukasz Luba <lukasz.luba@arm.com>
-> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
 > > ---
-> >  kernel/sched/core.c | 23 ++++++++++++++++++-----
-> >  1 file changed, 18 insertions(+), 5 deletions(-)
+> >  drivers/staging/vt6655/rxtx.c | 80 +++++++++++++++++------------------
+> >  1 file changed, 38 insertions(+), 42 deletions(-)
 > >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index a43c84c27c6f..4265861e13e9 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -1248,6 +1248,22 @@ static void uclamp_fork(struct task_struct *p)
-> >  	}
-> >  }
-> >  
-> > +static void __init init_uclamp_rq(struct rq *rq)
-> > +{
-> > +	enum uclamp_id clamp_id;
-> > +	struct uclamp_rq *uc_rq = rq->uclamp;
-> > +
-> > +	for_each_clamp_id(clamp_id) {
-> > +		memset(uc_rq[clamp_id].bucket,
-> > +		       0,
-> > +		       sizeof(struct uclamp_bucket)*UCLAMP_BUCKETS);
-> > +
-> > +		uc_rq[clamp_id].value = uclamp_none(clamp_id);
-> > +	}
-> > +
-> > +	rq->uclamp_flags = 0;
-> > +}
-> > +
-> >  static void __init init_uclamp(void)
-> >  {
-> >  	struct uclamp_se uc_max = {};
-> > @@ -1256,11 +1272,8 @@ static void __init init_uclamp(void)
-> >  
-> >  	mutex_init(&uclamp_mutex);
-> >  
-> > -	for_each_possible_cpu(cpu) {
-> > -		memset(&cpu_rq(cpu)->uclamp, 0,
-> > -				sizeof(struct uclamp_rq)*UCLAMP_CNT);
-> > -		cpu_rq(cpu)->uclamp_flags = 0;
-> > -	}
-> > +	for_each_possible_cpu(cpu)
-> > +		init_uclamp_rq(cpu_rq(cpu));
-> >  
-> >  	for_each_clamp_id(clamp_id) {
-> >  		uclamp_se_set(&init_task.uclamp_req[clamp_id],
+> > diff --git a/drivers/staging/vt6655/rxtx.c b/drivers/staging/vt6655/rxtx.c
+> > index cfab64d2b312..4778439e8757 100644
+> > --- a/drivers/staging/vt6655/rxtx.c
+> > +++ b/drivers/staging/vt6655/rxtx.c
+> > @@ -21,7 +21,7 @@
+> >   *      s_uGetDataDuration - get tx data required duration
+> >   *      s_uFillDataHead- fulfill tx data duration header
+> >   *      s_uGetRTSCTSDuration- get rtx/cts required duration
+> > - *      s_uGetRTSCTSRsvTime- get rts/cts reserved time
+> > + *      get_rtscts_time- get rts/cts reserved time
+> >   *      s_uGetTxRsvTime- get frame reserved time
+> >   *      s_vFillCTSHead- fulfill CTS ctl header
+> >   *      s_vFillFragParameter- Set fragment ctl parameter.
 > 
+> Why is only one of these done?
+> 
+Hi Julia, 
+
+I intend to do it on all of those functions. However, I'm avoiding big
+patch sets for now. To fix all then it will require at least 18 patches
+in a set:
+
+* Functions:
+  0  *      s_vGenerateTxParameter - Generate tx dma required parameter.
+  1  *      vGenerateMACHeader - Translate 802.3 to 802.11 header
+  2  *      cbGetFragCount - Calculate fragment number count
+  3  *      csBeacon_xmit - beacon tx function
+  4  *      csMgmt_xmit - management tx function
+  5  *      s_cbFillTxBufHead - fulfill tx dma buffer header
+  6  *      s_uGetDataDuration - get tx data required duration
+  7  *      s_uFillDataHead- fulfill tx data duration header
+  8  *      s_uGetRTSCTSDuration- get rtx/cts required duration
+  9  *      get_rtscts_time- get rts/cts reserved time
+ 10  *      s_uGetTxRsvTime- get frame reserved time
+ 11  *      s_vFillCTSHead- fulfill CTS ctl header
+ 12  *      s_vFillFragParameter- Set fragment ctl parameter.
+ 13  *      s_vFillRTSHead- fulfill RTS ctl header
+ 14  *      s_vFillTxKey- fulfill tx encrypt key
+ 15  *      s_vSWencryption- Software encrypt header
+ 16  *      vDMA0_tx_80211- tx 802.11 frame via dma0
+ 17  *      vGenerateFIFOHeader- Generate tx FIFO ctl header
+ 18  *
+ 19  * Revision History:
+
+ Thanks.
+
+> julia
+> 
+> > @@ -190,45 +190,41 @@ static __le16 vnt_rxtx_rsvtime_le16(struct vnt_private *priv, u8 pkt_type,
+> >  }
+> >
+> >  /* byFreqType: 0=>5GHZ 1=>2.4GHZ */
+> > -static
+> > -__le16
+> > -s_uGetRTSCTSRsvTime(
+> > -	struct vnt_private *pDevice,
+> > -	unsigned char byRTSRsvType,
+> > -	unsigned char byPktType,
+> > -	unsigned int cbFrameLength,
+> > -	unsigned short wCurrentRate
+> > -)
+> > +static __le16 get_rtscts_time(struct vnt_private *priv,
+> > +			      unsigned char rts_rsvtype,
+> > +			      unsigned char pkt_type,
+> > +			      unsigned int frame_length,
+> > +			      unsigned short current_rate)
+> >  {
+> > -	unsigned int uRrvTime = 0;
+> > -	unsigned int uRTSTime = 0;
+> > -	unsigned int uCTSTime = 0;
+> > -	unsigned int uAckTime = 0;
+> > -	unsigned int uDataTime = 0;
+> > -
+> > -	uDataTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, cbFrameLength, wCurrentRate);
+> > -	if (byRTSRsvType == 0) { /* RTSTxRrvTime_bb */
+> > -		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopCCKBasicRate);
+> > -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
+> > -		uCTSTime = uAckTime;
+> > -	} else if (byRTSRsvType == 1) { /* RTSTxRrvTime_ba, only in 2.4GHZ */
+> > -		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopCCKBasicRate);
+> > -		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
+> > -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
+> > -	} else if (byRTSRsvType == 2) { /* RTSTxRrvTime_aa */
+> > -		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopOFDMBasicRate);
+> > -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
+> > -		uCTSTime = uAckTime;
+> > -	} else if (byRTSRsvType == 3) { /* CTSTxRrvTime_ba, only in 2.4GHZ */
+> > -		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
+> > -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
+> > -		uRrvTime = uCTSTime + uAckTime + uDataTime + 2 * pDevice->uSIFS;
+> > -		return cpu_to_le16((u16)uRrvTime);
+> > +	unsigned int rrv_time = 0;
+> > +	unsigned int rts_time = 0;
+> > +	unsigned int cts_time = 0;
+> > +	unsigned int ack_time = 0;
+> > +	unsigned int data_time = 0;
+> > +
+> > +	data_time = bb_get_frame_time(priv->byPreambleType, pkt_type, frame_length, current_rate);
+> > +	if (rts_rsvtype == 0) { /* RTSTxRrvTime_bb */
+> > +		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopCCKBasicRate);
+> > +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
+> > +		cts_time = ack_time;
+> > +	} else if (rts_rsvtype == 1) { /* RTSTxRrvTime_ba, only in 2.4GHZ */
+> > +		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopCCKBasicRate);
+> > +		cts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
+> > +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
+> > +	} else if (rts_rsvtype == 2) { /* RTSTxRrvTime_aa */
+> > +		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopOFDMBasicRate);
+> > +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
+> > +		cts_time = ack_time;
+> > +	} else if (rts_rsvtype == 3) { /* CTSTxRrvTime_ba, only in 2.4GHZ */
+> > +		cts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
+> > +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
+> > +		rrv_time = cts_time + ack_time + data_time + 2 * priv->uSIFS;
+> > +		return cpu_to_le16((u16)rrv_time);
+> >  	}
+> >
+> >  	/* RTSRrvTime */
+> > -	uRrvTime = uRTSTime + uCTSTime + uAckTime + uDataTime + 3 * pDevice->uSIFS;
+> > -	return cpu_to_le16((u16)uRrvTime);
+> > +	rrv_time = rts_time + cts_time + ack_time + data_time + 3 * priv->uSIFS;
+> > +	return cpu_to_le16((u16)rrv_time);
+> >  }
+> >
+> >  /* byFreqType 0: 5GHz, 1:2.4Ghz */
+> > @@ -921,9 +917,9 @@ s_vGenerateTxParameter(
+> >  			/* Fill RsvTime */
+> >  			struct vnt_rrv_time_rts *buf = pvRrvTime;
+> >
+> > -			buf->rts_rrv_time_aa = s_uGetRTSCTSRsvTime(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+> > -			buf->rts_rrv_time_ba = s_uGetRTSCTSRsvTime(pDevice, 1, byPktType, cbFrameSize, wCurrentRate);
+> > -			buf->rts_rrv_time_bb = s_uGetRTSCTSRsvTime(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+> > +			buf->rts_rrv_time_aa = get_rtscts_time(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+> > +			buf->rts_rrv_time_ba = get_rtscts_time(pDevice, 1, byPktType, cbFrameSize, wCurrentRate);
+> > +			buf->rts_rrv_time_bb = get_rtscts_time(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+> >  			buf->rrv_time_a = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
+> >  			buf->rrv_time_b = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, pDevice->byTopCCKBasicRate, bNeedACK);
+> >
+> > @@ -933,7 +929,7 @@ s_vGenerateTxParameter(
+> >
+> >  			buf->rrv_time_a = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
+> >  			buf->rrv_time_b = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, pDevice->byTopCCKBasicRate, bNeedACK);
+> > -			buf->cts_rrv_time_ba = s_uGetRTSCTSRsvTime(pDevice, 3, byPktType, cbFrameSize, wCurrentRate);
+> > +			buf->cts_rrv_time_ba = get_rtscts_time(pDevice, 3, byPktType, cbFrameSize, wCurrentRate);
+> >
+> >  			/* Fill CTS */
+> >  			s_vFillCTSHead(pDevice, uDMAIdx, byPktType, pvCTS, cbFrameSize, bNeedACK, bDisCRC, wCurrentRate, byFBOption);
+> > @@ -942,7 +938,7 @@ s_vGenerateTxParameter(
+> >  		if (pvRTS) {/* RTS_need, non PCF mode */
+> >  			struct vnt_rrv_time_ab *buf = pvRrvTime;
+> >
+> > -			buf->rts_rrv_time = s_uGetRTSCTSRsvTime(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+> > +			buf->rts_rrv_time = get_rtscts_time(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+> >  			buf->rrv_time = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
+> >
+> >  			/* Fill RTS */
+> > @@ -956,7 +952,7 @@ s_vGenerateTxParameter(
+> >  		if (pvRTS) {/* RTS_need, non PCF mode */
+> >  			struct vnt_rrv_time_ab *buf = pvRrvTime;
+> >
+> > -			buf->rts_rrv_time = s_uGetRTSCTSRsvTime(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+> > +			buf->rts_rrv_time = get_rtscts_time(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+> >  			buf->rrv_time = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, wCurrentRate, bNeedACK);
+> >
+> >  			/* Fill RTS */
+> > --
+> > 2.17.1
+> >
+> >
