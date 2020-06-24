@@ -2,113 +2,72 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55FCB20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8D12078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389045AbgFXGNp (ORCPT
+        id S2389081AbgFXGO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:13:45 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59793 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387817AbgFXGNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:13:44 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U0Zjl4J_1592979220;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0Zjl4J_1592979220)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 24 Jun 2020 14:13:40 +0800
-Date:   Wed, 24 Jun 2020 14:13:40 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org, bhe@redhat.com,
-        linux-kernel@vger.kernel.org, david@redhat.com
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-Message-ID: <20200624061340.GA11552@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
- <20200623151828.GA31426@dhcp22.suse.cz>
+        Wed, 24 Jun 2020 02:14:26 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:8768 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387817AbgFXGOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:14:25 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Wed, 24 Jun 2020 14:14:14
+ +0800 (GMT+08:00)
+X-Originating-IP: [210.32.144.65]
+Date:   Wed, 24 Jun 2020 14:14:14 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Stanimir Varbanov" <stanimir.varbanov@linaro.org>
+Cc:     kjlu@umn.edu, "Andy Gross" <agross@kernel.org>,
+        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] media: venus: vdec: Fix runtime PM imbalance in
+ vdec_open
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <5d88210d-db4c-e171-5d4b-5dffe22d4d48@linaro.org>
+References: <20200522111357.2613-1-dinghao.liu@zju.edu.cn>
+ <5d88210d-db4c-e171-5d4b-5dffe22d4d48@linaro.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623151828.GA31426@dhcp22.suse.cz>
+Message-ID: <516b94f.24c29.172e4f66de8.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgBXwng27_Jekt81AQ--.45803W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUBBlZdtOzhLwABsc
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXIS07vEb7Iv0x
+        C_JF4lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8AwCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 05:18:28PM +0200, Michal Hocko wrote:
->On Tue 23-06-20 17:42:58, Wei Yang wrote:
->> For early sections, we assumes its memmap will never be partially
->> removed. But current behavior breaks this.
->> 
->> Let's correct it.
->> 
->> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->
->Can a user trigger this or is this a theoretical bug?
-
-Let me rewrite the changelog a little. Look forward any comments.
-
-   For early sections, its memmap is handled specially even sub-section is
-   enabled. The memmap could only be populated as a whole.
-   
-   Quoted from the comment of section_activate():
-   
-       * The early init code does not consider partially populated
-       * initial sections, it simply assumes that memory will never be
-       * referenced.  If we hot-add memory into such a section then we
-       * do not need to populate the memmap and can simply reuse what
-       * is already there.
-   
-   While current section_deactivate() breaks this rule. When hot-remove a
-   sub-section, section_deactivate() would depopulate its memmap. The
-   consequence is if we hot-add this subsection again, its memmap never get
-   proper populated.
-
->
->> ---
->>  mm/sparse.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->> 
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index b2b9a3e34696..1a0069f492f5 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -825,10 +825,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->>  		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
->>  	}
->>  
->> -	if (section_is_early && memmap)
->> -		free_map_bootmem(memmap);
->> -	else
->> +	if (!section_is_early)
->
->This begs a comment.
->
->>  		depopulate_section_memmap(pfn, nr_pages, altmap);
->> +	else if (memmap)
->> +		free_map_bootmem(memmap);
->>  
->>  	if (empty)
->>  		ms->section_mem_map = (unsigned long)NULL;
->> -- 
->> 2.20.1 (Apple Git-117)
->> 
->
->-- 
->Michal Hocko
->SUSE Labs
-
--- 
-Wei Yang
-Help you, Help me
+SGkgU3RhbmltaXIsCgo+IAo+IFRoaXMgcGF0Y2ggaXMgbm90IGFwcGxpY2FibGUgYW55bW9yZSBh
+ZnRlciBbMV0uCj4gCj4gWzFdIDYzMzQyYWZlYTY1ZSAoIm1lZGlhOiB2ZW51czogdmRlYzogVXNl
+IHBtcnVudGltZSBhdXRvc3VzcGVuZCIpCj4gCgpTaW5jZSBwbV9ydW50aW1lX2dldF9zeW5jKCkg
+aGFzIGJlZW4gcmVtb3ZlZCBmcm9tIHZkZWNfb3BlbigpLCAKdGhpcyBwYXRjaCBpcyBubyBsb25n
+ZXIgbmVlZGVkLgoKUmVnYXJkcywKRGluZ2hhbw==
