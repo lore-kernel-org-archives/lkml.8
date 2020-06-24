@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D970C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34135C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE2720823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1690520823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593029573;
-	bh=vcy/8t17m4cgmRq5RCI0nkupUPMBoViZmO448RsmEtc=;
+	s=default; t=1593029577;
+	bh=F1qOCDwwNfeWgzfsj20Di4HSZQFe0hO7B/XOMKoeBHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t9MLsks4tvvoQ1DGwRFgMzCR/fG6Ob6qM248WlidEa2GCrtmplp2GAsiVaJvlhn6e
-	 qqeuPrbEYuzkD2XiUS/DjXqFklcpsw0B0oXLMhSTXh2MyheSBuVHnL1bQDgbnpJ2fM
-	 2KRtYSKVC04rhRXatC+2TMgZrpNJuNBNKe/9NROQ=
+	b=v9NdyIbdoj+OtM6ArUDfBqGSkpkAjNpoofMAtWbx8ihQXfR3MRGoCMP4KVd22vKSa
+	 I168j2SNvlKiYef1EdL211EQiY9cAGIbnBXvrhJqBn+Pfi0VC5GgFP6H1oF4YR8gqM
+	 6qF0WVrI6HghGzRQkhyHhzjbibR0PJi8Nno8NOEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406414AbgFXUMg (ORCPT
+        id S2406454AbgFXUMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 16:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406271AbgFXUM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:12:29 -0400
+        id S2406400AbgFXUMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 16:12:32 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F69F20885;
-        Wed, 24 Jun 2020 20:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAC6721789;
+        Wed, 24 Jun 2020 20:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593029548;
-        bh=vcy/8t17m4cgmRq5RCI0nkupUPMBoViZmO448RsmEtc=;
+        s=default; t=1593029551;
+        bh=F1qOCDwwNfeWgzfsj20Di4HSZQFe0hO7B/XOMKoeBHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5QVpWUv1ITUGk3KanKMkAGY5dsuW8PCFyA4O74d9LDCyq3SEf7Ara0g8TBgG84DR
-         x4MB2W0sjs7Mud2ztuy/i5Z8bbgL/ihOMymAGPRvOrc0x7ZlL6365nyU1I/k+yaecr
-         wNtTAI/3KofCEIwfH2Ira8IqPEmSjqBgJ0G4TH1U=
+        b=zkbK8ZxOIXDbds8E4RML/YUz126+1VNn/MWmc8ASW+DE6tSRn7nJv8xJaEx9lMP9H
+         tUdc72fsClxUrH2GkWXo2yZEnZh1AybkeqYvMlPLK+0Bctyt3/zpNnYZlST9ZIPfVW
+         +fEk3EvkKKetQDTq5/+g9G7gOeBoCady9WIuPHu4=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        bigeasy@linutronix.de, Uladzislau Rezki <urezki@gmail.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 02/17] rcu/tree: Keep kfree_rcu() awake during lock contention
-Date:   Wed, 24 Jun 2020 13:12:11 -0700
-Message-Id: <20200624201226.21197-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 17/17] lib/test_vmalloc.c: Add test cases for kvfree_rcu()
+Date:   Wed, 24 Jun 2020 13:12:26 -0700
+Message-Id: <20200624201226.21197-17-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200624201200.GA28901@paulmck-ThinkPad-P72>
 References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
@@ -60,146 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-On PREEMPT_RT kernels, the krcp spinlock gets converted to an rt-mutex
-and causes kfree_rcu() callers to sleep. This makes it unusable for
-callers in purely atomic sections such as non-threaded IRQ handlers and
-raw spinlock sections. Fix it by converting the spinlock to a raw
-spinlock.
+Introduce four new test cases for testing the kvfree_rcu()
+interface. Two of them belong to single argument functionality
+and another two for 2-argument functionality.
 
-Vetting all code paths, there is no reason to believe that the raw
-spinlock will hurt RT latencies as it is not held for a long time.
+The aim is to stress and check how kvfree_rcu() behaves under
+different load and memory conditions and analyze its performance
+throughput.
 
-Cc: bigeasy@linutronix.de
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ lib/test_vmalloc.c | 103 ++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 95 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 912d466..64592b4 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2998,7 +2998,7 @@ struct kfree_rcu_cpu {
- 	struct kfree_rcu_bulk_data *bhead;
- 	struct kfree_rcu_bulk_data *bcached;
- 	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	struct delayed_work monitor_work;
- 	bool monitor_todo;
- 	bool initialized;
-@@ -3031,12 +3031,12 @@ static void kfree_rcu_work(struct work_struct *work)
- 	krwp = container_of(to_rcu_work(work),
- 			    struct kfree_rcu_cpu_work, rcu_work);
- 	krcp = krwp->krcp;
--	spin_lock_irqsave(&krcp->lock, flags);
-+	raw_spin_lock_irqsave(&krcp->lock, flags);
- 	head = krwp->head_free;
- 	krwp->head_free = NULL;
- 	bhead = krwp->bhead_free;
- 	krwp->bhead_free = NULL;
--	spin_unlock_irqrestore(&krcp->lock, flags);
-+	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
+index ddc9685..5cf2fe9 100644
+--- a/lib/test_vmalloc.c
++++ b/lib/test_vmalloc.c
+@@ -15,6 +15,8 @@
+ #include <linux/delay.h>
+ #include <linux/rwsem.h>
+ #include <linux/mm.h>
++#include <linux/rcupdate.h>
++#include <linux/slab.h>
  
- 	/* "bhead" is now private, so traverse locklessly. */
- 	for (; bhead; bhead = bnext) {
-@@ -3139,14 +3139,14 @@ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
- 	krcp->monitor_todo = false;
- 	if (queue_kfree_rcu_work(krcp)) {
- 		// Success! Our job is done here.
--		spin_unlock_irqrestore(&krcp->lock, flags);
-+		raw_spin_unlock_irqrestore(&krcp->lock, flags);
- 		return;
- 	}
+ #define __param(type, name, init, msg)		\
+ 	static type name = init;				\
+@@ -35,14 +37,18 @@ __param(int, test_loop_count, 1000000,
  
- 	// Previous RCU batch still in progress, try again later.
- 	krcp->monitor_todo = true;
- 	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
--	spin_unlock_irqrestore(&krcp->lock, flags);
-+	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+ __param(int, run_test_mask, INT_MAX,
+ 	"Set tests specified in the mask.\n\n"
+-		"\t\tid: 1,   name: fix_size_alloc_test\n"
+-		"\t\tid: 2,   name: full_fit_alloc_test\n"
+-		"\t\tid: 4,   name: long_busy_list_alloc_test\n"
+-		"\t\tid: 8,   name: random_size_alloc_test\n"
+-		"\t\tid: 16,  name: fix_align_alloc_test\n"
+-		"\t\tid: 32,  name: random_size_align_alloc_test\n"
+-		"\t\tid: 64,  name: align_shift_alloc_test\n"
+-		"\t\tid: 128, name: pcpu_alloc_test\n"
++		"\t\tid: 1,    name: fix_size_alloc_test\n"
++		"\t\tid: 2,    name: full_fit_alloc_test\n"
++		"\t\tid: 4,    name: long_busy_list_alloc_test\n"
++		"\t\tid: 8,    name: random_size_alloc_test\n"
++		"\t\tid: 16,   name: fix_align_alloc_test\n"
++		"\t\tid: 32,   name: random_size_align_alloc_test\n"
++		"\t\tid: 64,   name: align_shift_alloc_test\n"
++		"\t\tid: 128,  name: pcpu_alloc_test\n"
++		"\t\tid: 256,  name: kvfree_rcu_1_arg_vmalloc_test\n"
++		"\t\tid: 512,  name: kvfree_rcu_2_arg_vmalloc_test\n"
++		"\t\tid: 1024, name: kvfree_rcu_1_arg_slab_test\n"
++		"\t\tid: 2048, name: kvfree_rcu_2_arg_slab_test\n"
+ 		/* Add a new test case description here. */
+ );
+ 
+@@ -316,6 +322,83 @@ pcpu_alloc_test(void)
+ 	return rv;
  }
  
- /*
-@@ -3159,11 +3159,11 @@ static void kfree_rcu_monitor(struct work_struct *work)
- 	struct kfree_rcu_cpu *krcp = container_of(work, struct kfree_rcu_cpu,
- 						 monitor_work.work);
++struct test_kvfree_rcu {
++	struct rcu_head rcu;
++	unsigned char array[20];
++};
++
++static int
++kvfree_rcu_1_arg_vmalloc_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = vmalloc(1 * PAGE_SIZE);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p);
++	}
++
++	return 0;
++}
++
++static int
++kvfree_rcu_2_arg_vmalloc_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = vmalloc(1 * PAGE_SIZE);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p, rcu);
++	}
++
++	return 0;
++}
++
++static int
++kvfree_rcu_1_arg_slab_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = kmalloc(sizeof(*p), GFP_KERNEL);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p);
++	}
++
++	return 0;
++}
++
++static int
++kvfree_rcu_2_arg_slab_test(void)
++{
++	struct test_kvfree_rcu *p;
++	int i;
++
++	for (i = 0; i < test_loop_count; i++) {
++		p = kmalloc(sizeof(*p), GFP_KERNEL);
++		if (!p)
++			return -1;
++
++		p->array[0] = 'a';
++		kvfree_rcu(p, rcu);
++	}
++
++	return 0;
++}
++
+ struct test_case_desc {
+ 	const char *test_name;
+ 	int (*test_func)(void);
+@@ -330,6 +413,10 @@ static struct test_case_desc test_case_array[] = {
+ 	{ "random_size_align_alloc_test", random_size_align_alloc_test },
+ 	{ "align_shift_alloc_test", align_shift_alloc_test },
+ 	{ "pcpu_alloc_test", pcpu_alloc_test },
++	{ "kvfree_rcu_1_arg_vmalloc_test", kvfree_rcu_1_arg_vmalloc_test },
++	{ "kvfree_rcu_2_arg_vmalloc_test", kvfree_rcu_2_arg_vmalloc_test },
++	{ "kvfree_rcu_1_arg_slab_test", kvfree_rcu_1_arg_slab_test },
++	{ "kvfree_rcu_2_arg_slab_test", kvfree_rcu_2_arg_slab_test },
+ 	/* Add a new test case here. */
+ };
  
--	spin_lock_irqsave(&krcp->lock, flags);
-+	raw_spin_lock_irqsave(&krcp->lock, flags);
- 	if (krcp->monitor_todo)
- 		kfree_rcu_drain_unlock(krcp, flags);
- 	else
--		spin_unlock_irqrestore(&krcp->lock, flags);
-+		raw_spin_unlock_irqrestore(&krcp->lock, flags);
- }
- 
- static inline bool
-@@ -3234,7 +3234,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
- 	krcp = this_cpu_ptr(&krc);
- 	if (krcp->initialized)
--		spin_lock(&krcp->lock);
-+		raw_spin_lock(&krcp->lock);
- 
- 	// Queue the object but don't yet schedule the batch.
- 	if (debug_rcu_head_queue(head)) {
-@@ -3265,7 +3265,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 
- unlock_return:
- 	if (krcp->initialized)
--		spin_unlock(&krcp->lock);
-+		raw_spin_unlock(&krcp->lock);
- 	local_irq_restore(flags);
- }
- EXPORT_SYMBOL_GPL(kfree_call_rcu);
-@@ -3297,11 +3297,11 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
- 
- 		count = krcp->count;
--		spin_lock_irqsave(&krcp->lock, flags);
-+		raw_spin_lock_irqsave(&krcp->lock, flags);
- 		if (krcp->monitor_todo)
- 			kfree_rcu_drain_unlock(krcp, flags);
- 		else
--			spin_unlock_irqrestore(&krcp->lock, flags);
-+			raw_spin_unlock_irqrestore(&krcp->lock, flags);
- 
- 		sc->nr_to_scan -= count;
- 		freed += count;
-@@ -3328,15 +3328,15 @@ void __init kfree_rcu_scheduler_running(void)
- 	for_each_online_cpu(cpu) {
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
- 
--		spin_lock_irqsave(&krcp->lock, flags);
-+		raw_spin_lock_irqsave(&krcp->lock, flags);
- 		if (!krcp->head || krcp->monitor_todo) {
--			spin_unlock_irqrestore(&krcp->lock, flags);
-+			raw_spin_unlock_irqrestore(&krcp->lock, flags);
- 			continue;
- 		}
- 		krcp->monitor_todo = true;
- 		schedule_delayed_work_on(cpu, &krcp->monitor_work,
- 					 KFREE_DRAIN_JIFFIES);
--		spin_unlock_irqrestore(&krcp->lock, flags);
-+		raw_spin_unlock_irqrestore(&krcp->lock, flags);
- 	}
- }
- 
-@@ -4232,7 +4232,7 @@ static void __init kfree_rcu_batch_init(void)
- 	for_each_possible_cpu(cpu) {
- 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
- 
--		spin_lock_init(&krcp->lock);
-+		raw_spin_lock_init(&krcp->lock);
- 		for (i = 0; i < KFREE_N_BATCHES; i++) {
- 			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
- 			krcp->krw_arr[i].krcp = krcp;
 -- 
 2.9.5
 
