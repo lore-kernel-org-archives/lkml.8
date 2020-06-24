@@ -2,90 +2,111 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D70C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE442137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC52421527
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Di/BtklM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaJP3cF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388029AbgFXBSG (ORCPT
+        id S2388260AbgFXBVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 21:18:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40664 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387916AbgFXBSF (ORCPT
+        Tue, 23 Jun 2020 21:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387761AbgFXBVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 21:18:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592961484;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=v3+UUW6YvtIXEKqK6unLKp0s3Sioh7yCdLFU6q9JrlU=;
-        b=Di/BtklMDVjU4kQ09Dizk+9+fAp4JNMERTEgB/T12wB57yoLIYU1B5qbEbudMnpo/kUxe/
-        KXFYh3ATRRz/9U9fUmEZ80FLzNWKrc8KE+fj4DwxnR1JKsHXCQHoIaXuIcrBRbS3DQ2DsH
-        WgJIEdjocK6NJfqD6EdLflbgO6cq5l0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-56-c0pSj-gQN_qEdwt2-3CGxQ-1; Tue, 23 Jun 2020 21:18:02 -0400
-X-MC-Unique: c0pSj-gQN_qEdwt2-3CGxQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 220381005512;
-        Wed, 24 Jun 2020 01:18:01 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3632C610FD;
-        Wed, 24 Jun 2020 01:17:58 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAPcyv4gdB6iOD8N0KAHY9WybpJtRx3EfEQCSM1zuTDkURrfuug@mail.gmail.com>
-References: <CAPcyv4gdB6iOD8N0KAHY9WybpJtRx3EfEQCSM1zuTDkURrfuug@mail.gmail.com> <1503686.1591113304@warthog.procyon.org.uk> <23219b787ed1c20a63017ab53839a0d1c794ec53.camel@intel.com> <CAPcyv4g+T+GK4yVJs8bTT1q90SFDpFYUSL9Pk_u8WZROhREPkw@mail.gmail.com> <3015561.1592960116@warthog.procyon.org.uk>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     dhowells@redhat.com,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "raven@themaw.net" <raven@themaw.net>,
-        "kzak@redhat.com" <kzak@redhat.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "dray@redhat.com" <dray@redhat.com>,
-        "swhiteho@redhat.com" <swhiteho@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "mszeredi@redhat.com" <mszeredi@redhat.com>,
-        "jlayton@redhat.com" <jlayton@redhat.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "andres@anarazel.de" <andres@anarazel.de>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>
-Subject: Re: [GIT PULL] General notification queue and key notifications
+        Tue, 23 Jun 2020 21:21:51 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2FB3C061573;
+        Tue, 23 Jun 2020 18:21:50 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id e12so428220qtr.9;
+        Tue, 23 Jun 2020 18:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=txJPzANDLZA/zCp7w12cv1QnOI9jTpDX4eklhPyYXbw=;
+        b=gaJP3cF7Dk7i226eYnKM0oB52NJRBsaTIkbTN7Fi35BR0ZlqmyUgMhxgIH2UwFY9pf
+         paSV/f0XPy3FwbzPrl2s3CF352uTpGdjHplfJYKM22eEb0NXdP5qmFCQeHFtZNvTRXVV
+         beAXqJuonjcBioya1b22YNDnwVvCx3nib1c122JsyW+ty1bHdveCinxUUKrKwiMvG3B2
+         +mtH9KQdXf1QXfnJSwni2a8hiTbVl1cxoj0fxAiYtJJl9pIlnAVE4nJGjH2FJKYJ7m0o
+         CBdsHDryZIonLeyLU6DyM8b6nRKLX1g0IoWOiCQLkI8JTvXAkIkDoAZy43MuHlIOMyL0
+         t3og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=txJPzANDLZA/zCp7w12cv1QnOI9jTpDX4eklhPyYXbw=;
+        b=Rp0YgmXKSGFefvADXPop4wJnsMRB54Tl+FLbWXFdXrW8PDeqvpxw8Q+3E4bqyclGgk
+         ajc0iN2Aa24kiWhN6Oqy9BG+LIcv40A0AwqKxbxY65AnUU4A55WhLXkwG8w9RG5adC7B
+         ePFoLT2mY9y/iLLWvGUuoTdkfORA6T54hLn0ZkWeuMsdrkVYWOoP1PtM7+EgP1ArY28Z
+         qlI8sKsXliE6RaPnHzAsILuOA8xLuObWyyaa7MTwp3yv+2gKn7pavZVPwgZ+rMx3dew3
+         Y39wpy1Av7fyTzGKtfK7ciutIF1zvPJJ9ieIkh3QWL2MGOHR90MxbuxUrnUN4DS6qyry
+         lW5A==
+X-Gm-Message-State: AOAM530+NNLtzQOoQzrzGGqI47eJh2zCOqKExqERpkS+1vuQfM4T1ZMb
+        KCV9kyUSvgCLEmEbfvFBncQ=
+X-Google-Smtp-Source: ABdhPJyE8MW42xgdaHIn7HPazuE3h0+sANm89AjaI5wmOF7S0Bn1mKgLqL/MX+sypxtkj8V7jHZN5A==
+X-Received: by 2002:ac8:8a4:: with SMTP id v33mr15262860qth.392.1592961709983;
+        Tue, 23 Jun 2020 18:21:49 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:712c:e542:fd5b:52d3:4072])
+        by smtp.gmail.com with ESMTPSA id v59sm2120129qte.96.2020.06.23.18.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 18:21:49 -0700 (PDT)
+From:   "Tales L. da Aparecida" <tales.aparecida@gmail.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     andrealmeid@collabora.com,
+        "Tales L. da Aparecida" <tales.aparecida@gmail.com>
+Subject: [PATCH] rtc: imxdi: fix trivial typos
+Date:   Tue, 23 Jun 2020 22:21:19 -0300
+Message-Id: <20200624012119.54768-1-tales.aparecida@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3018028.1592961477.1@warthog.procyon.org.uk>
-Date:   Wed, 24 Jun 2020 02:17:57 +0100
-Message-ID: <3018029.1592961477@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> wrote:
+Fix typos 'pionter' -> 'pointer' and 'softwere' -> 'software'
 
-> Shall I wait for your further reworks to fix this for v5.8, or is that
-> v5.9 material?
+Signed-off-by: Tales L. da Aparecida <tales.aparecida@gmail.com>
+---
+ drivers/rtc/rtc-imxdi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-It could do with stewing in linux-next for a while, so 5.9 probably.
-
-David
+diff --git a/drivers/rtc/rtc-imxdi.c b/drivers/rtc/rtc-imxdi.c
+index f21dc6b16d88..8d141d8a5490 100644
+--- a/drivers/rtc/rtc-imxdi.c
++++ b/drivers/rtc/rtc-imxdi.c
+@@ -95,7 +95,7 @@
+ 
+ /**
+  * struct imxdi_dev - private imxdi rtc data
+- * @pdev: pionter to platform dev
++ * @pdev: pointer to platform dev
+  * @rtc: pointer to rtc struct
+  * @ioaddr: IO registers pointer
+  * @clk: input reference clock
+@@ -350,7 +350,7 @@ static int di_handle_invalid_and_failure_state(struct imxdi_dev *imxdi, u32 dsr)
+ 			 * the tamper register is locked. We cannot disable the
+ 			 * tamper detection. The TDCHL can only be reset by a
+ 			 * DRYICE POR, but we cannot force a DRYICE POR in
+-			 * softwere because we are still in "FAILURE STATE".
++			 * software because we are still in "FAILURE STATE".
+ 			 * We need a DRYICE POR via battery power cycling....
+ 			 */
+ 			/*
+-- 
+2.27.0
 
