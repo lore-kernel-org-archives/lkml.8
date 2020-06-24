@@ -2,111 +2,121 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93909C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46521C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6923D206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA89206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qsvuBeQg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QoHXRaEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404066AbgFXPAu (ORCPT
+        id S2391250AbgFXPBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55314 "EHLO
+        Wed, 24 Jun 2020 11:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404006AbgFXPAt (ORCPT
+        with ESMTP id S2390251AbgFXPBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:00:49 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14DDC061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:00:49 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id cm23so1261930pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:00:49 -0700 (PDT)
+        Wed, 24 Jun 2020 11:01:19 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F74C061573;
+        Wed, 24 Jun 2020 08:01:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g18so2631429wrm.2;
+        Wed, 24 Jun 2020 08:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Q/jaQeCVttGzGBo3E3lk1QjN0UoCwQgqot3lYK2zXtk=;
-        b=qsvuBeQgO4niMQcI2gC+VVoIgpUqo5H4wRPLlaR/5qawyoXdMx/bjxy7jtPw3aL8Dl
-         cRg0StjUcxNFOmQnJunhva1NegHntMT8fa77CMkohiT1LX1ydJgW8uGuDjysJPCp/35R
-         znrly6bkXru8zbZenMv52ZiGlSJ91NS8nCH0gnNyaTgbSN91QAtpFb9Pizp9ez9VUpZR
-         lkCSizcvK1T9hmpEE8ePUTS0LPXCQRR/r7Kz54/FhrDGancf3WJTukegFfSwMmgTEQw7
-         jqA687/rpGcmCpsu5xlVqxiDBCSFTSyk7tjMNs+8LBV//NZ7jPB012Xm3BxjFW42Ee5C
-         w2jw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G1/tgFSEPzLGEWgFIjtQpqgS4DnYma/m5Iy4TZnXgTE=;
+        b=QoHXRaEjmyXE4GwZkcrNhYwb9HRqV7Q8mETs8rxzB1JXf5BsD8mgNE3HeVTC5mUXDi
+         K1LBaNXKyZGkZLGHAGocXP+7I1o7McnZhQEa6J2LmcP3uZxCyTQ+RKWBW+aZ5NKFyspQ
+         cw0BQa8lmTIiP+n5sBvadPK5Hx/9qglVQDe+BLkxKGxnH8w+03WdC02dzJqmrt5o5nS4
+         QFJl6uSMMazHK3aagVeFAUKWKb0hXvI/TZa+SHGKQUXHp8ApfO4Z+OulB1/nLT/2OUEY
+         cdvObYbaIhHUdeqjiX6dYhv6xYKTtABIEiktnI5NhCpRP2+cNO+P767XqIjF9ap8ngmL
+         oa8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Q/jaQeCVttGzGBo3E3lk1QjN0UoCwQgqot3lYK2zXtk=;
-        b=FHmJR6WLRNuTRlvK8x94P8qTIiKixThCwOGo0M3KlVjCz/B1JwjJTqOMQefHIAs6wY
-         BVo922XWR5h0uexWMI6S3eyQhX35vYT1uQ3kbpmbfMMKTHk1jbWRpAX/kolcBldRrW8A
-         Sn0ELqmKS4TFzHOiLD7KYRH1fIr0jhjq6se9IBhZmHgXYjzvCTSVmaoGgTb7obDMDb5/
-         jZaileDYOCYrpJjOI4P+2S0iUG1Rw5s1K27AWl7/megoLekARxhfh3sCZU8vRJ9u+ahh
-         B26nt8N6DYjfF2vhk4LzrbzTSsRAJMk5m5AY2rG+N+I+8AsxZii01YooCRc7auiOjuim
-         Db5g==
-X-Gm-Message-State: AOAM53206V/JJiw8sSFqcW54tH7uhDFk5qrjtYholjD6dWPM2AgcBV77
-        v7ssVwgQL07rMCun4Ed1hkOc9w==
-X-Google-Smtp-Source: ABdhPJySN748/btTbadKTHVRipOZVFkvJAeaRPC1DlqdK8kxD+Mddoxrv8JQ5kTFSMXrj12Wq4V18g==
-X-Received: by 2002:a17:90a:2070:: with SMTP id n103mr29733694pjc.109.1593010849032;
-        Wed, 24 Jun 2020 08:00:49 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id m8sm5470354pjk.20.2020.06.24.08.00.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 08:00:48 -0700 (PDT)
-Subject: Re: [PATCH 05/15] mm: allow read-ahead with IOCB_NOWAIT set
-To:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>
-References: <20200618144355.17324-1-axboe@kernel.dk>
- <20200618144355.17324-6-axboe@kernel.dk>
- <20200624010253.GB5369@dread.disaster.area>
- <20200624014645.GJ21350@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <bad52be9-ae44-171b-8dbf-0d98eedcadc0@kernel.dk>
-Date:   Wed, 24 Jun 2020 09:00:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        bh=G1/tgFSEPzLGEWgFIjtQpqgS4DnYma/m5Iy4TZnXgTE=;
+        b=WZd2biuZ9hlgoDwJ159192rFOiCjX5BIJhMt8W4oXPPiunsWzcs+ewC1hdcuIBzlsx
+         lJlQ3N1B9Fi9uXN/HEFl77cSDieRk3MUSj3lhowkynJw1+SIkHkOGRZuQwspwWdJk4rn
+         kqu0twBhtnf58UhPFnWGLRhuhXFinJm03g+NzOrUuFCSCQz46dtIQgOd7KhDrUlqaDTo
+         iOXpqbZzIRvcfAobcZCIlzu99DR7JnZaerXgE70nOEMO3GnJzqFBt/80eCPgLqZWWllj
+         bPe1jEhC2u9jOB4nriWddYx0q0K4jyruGARanugc0ZbUo1oQ3H/+EK4/ncwyhJfycK23
+         2f+Q==
+X-Gm-Message-State: AOAM532BMQ34CgDojp3XslqW6216qclbjkY1lGljyApK8m6Oi8eqVMyu
+        aCkJzPrDcCXmpaExpfHqIc0=
+X-Google-Smtp-Source: ABdhPJyjovMUsXCbiiflsGu+suhkfBFu9ISRVh9yoncvFWtslrW0/Brooqqrxvu5uZRBKQDjfozwyQ==
+X-Received: by 2002:adf:f34c:: with SMTP id e12mr19662863wrp.46.1593010877790;
+        Wed, 24 Jun 2020 08:01:17 -0700 (PDT)
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id s8sm21339390wru.38.2020.06.24.08.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:01:17 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] MSM8994 peripheral enablement, DTS updates
+Date:   Wed, 24 Jun 2020 17:00:58 +0200
+Message-Id: <20200624150107.76234-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200624014645.GJ21350@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/20 7:46 PM, Matthew Wilcox wrote:
-> On Wed, Jun 24, 2020 at 11:02:53AM +1000, Dave Chinner wrote:
->> On Thu, Jun 18, 2020 at 08:43:45AM -0600, Jens Axboe wrote:
->>> The read-ahead shouldn't block, so allow it to be done even if
->>> IOCB_NOWAIT is set in the kiocb.
->>
->> Doesn't think break preadv2(RWF_NOWAIT) semantics for on buffered
->> reads? i.e. this can now block on memory allocation for the page
->> cache, which is something RWF_NOWAIT IO should not do....
-> 
-> Yes.  This eventually ends up in page_cache_readahead_unbounded()
-> which gets its gfp flags from readahead_gfp_mask(mapping).
-> 
-> I'd be quite happy to add a gfp_t to struct readahead_control.
-> The other thing I've been looking into for other reasons is adding
-> a memalloc_nowait_{save,restore}, which would avoid passing down
-> the gfp_t.
+changes since v2:
 
-That was my first thought, having the memalloc_foo_save/restore for
-this. I don't think adding a gfp_t to readahead_control is going
-to be super useful, seems like the kind of thing that should be
-non-blocking by default.
+- drop applied patches
+- add msm8994 SCM compat and binding
+- declare regulators in device DTs
+- make APCS a mailbox
+
+Konrad Dybcio (8):
+  firmware: qcom_scm: Add msm8994 compatible
+  arm64: dts: qcom: msm8994: Add SCM node
+  arm64: dts: qcom: msm8992: Add a label to rpm-requests
+  arm64: dts: qcom: msm8992: Remove regulators from SoC DTSI
+  mailbox: qcom: Add msm8994 apcs compatible
+  arm64: dts: qcom: msm8994: Add support for SMD RPM
+  arm64: dts: qcom: Move msm8994-smd-rpm contents to lg-bullhead.
+  arm64: dts: qcom: Add support for Sony Xperia Z5 (SoMC Sumire-RoW)
+
+ .../devicetree/bindings/firmware/qcom,scm.txt |   1 +
+ .../mailbox/qcom,apcs-kpss-global.yaml        |   1 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../dts/qcom/msm8992-bullhead-rev-101.dts     | 225 ++++++++++++++-
+ arch/arm64/boot/dts/qcom/msm8992.dtsi         |  48 +---
+ arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi | 268 ------------------
+ .../msm8994-sony-xperia-kitakami-sumire.dts   |  13 +
+ .../qcom/msm8994-sony-xperia-kitakami.dtsi    | 235 +++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8994.dtsi         |  49 ++++
+ drivers/firmware/qcom_scm.c                   |   1 +
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c       |   5 +
+ 11 files changed, 531 insertions(+), 316 deletions(-)
+ delete mode 100644 arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-sumire.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
 
 -- 
-Jens Axboe
+2.27.0
 
