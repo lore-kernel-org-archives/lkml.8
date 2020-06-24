@@ -2,159 +2,130 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0095EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C44C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE67020656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5377A20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d3Kbk6je"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLLo7z94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404355AbgFXPLi (ORCPT
+        id S2404390AbgFXPMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:11:38 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:50818 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404238AbgFXPLh (ORCPT
+        Wed, 24 Jun 2020 11:12:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390826AbgFXPL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:11:37 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200624151135euoutp02cb43cbb9c544f5781ef23901e2db6e00~bg4Pd41BE2380323803euoutp02u
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:11:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200624151135euoutp02cb43cbb9c544f5781ef23901e2db6e00~bg4Pd41BE2380323803euoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593011495;
-        bh=vIfCBmSC+5GtsPYmRCTd8QesuVfaXVykkj6k7TxHWDA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=d3Kbk6jeUH/b2U8aGb6xc4Ya2Uv1ARZ/vt/zcpb2yKnIdwyifNi/aogKF9wSFjcCY
-         0UfDxG+a4xfJBK1wYPPkNn1fpcJoTsVSCoacjsNacSk8Wvt/SunvyW8qmvUbe6HS+j
-         yKx9sbNPfvw1rxIj4PokZL2Z4apGM1W75Z0Drnp0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200624151135eucas1p1335bb5b1799513a14a8efb3d455078b2~bg4PLTJKl1469014690eucas1p1P;
-        Wed, 24 Jun 2020 15:11:35 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id BF.7B.06456.72D63FE5; Wed, 24
-        Jun 2020 16:11:35 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200624151134eucas1p1c70eef4c8ed9fd2fb0275cbec6576f44~bg4O0FaiQ1265612656eucas1p1Q;
-        Wed, 24 Jun 2020 15:11:34 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200624151134eusmtrp1dfb6c70903341241eeeae3dbab271a31~bg4OzaZn01873818738eusmtrp1I;
-        Wed, 24 Jun 2020 15:11:34 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-e6-5ef36d270ac2
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D9.72.06017.62D63FE5; Wed, 24
-        Jun 2020 16:11:34 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200624151134eusmtip11cc243e141c704390f7521bb388feef3~bg4OEgzT22683126831eusmtip1N;
-        Wed, 24 Jun 2020 15:11:33 +0000 (GMT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Lukasz Luba <lukasz.luba@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
-Date:   Wed, 24 Jun 2020 17:11:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
+        Wed, 24 Jun 2020 11:11:59 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16386C061573;
+        Wed, 24 Jun 2020 08:11:58 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id h5so2650873wrc.7;
+        Wed, 24 Jun 2020 08:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ujwQciPl+L7lbdcyijKwCUqH7IK4/9USSSXUk6qmZOg=;
+        b=SLLo7z94ccgwtDRo0DFIuN0STQWBcNUVZRVpDAX0TnbXHV/3AfY7PhJ3vY6yeCIH/p
+         J/bRTe2lxeuS/kMB3cPIpFqxkvT0V9JUW7F1Ogi7YXj5mrC0SW4YKpNJGfXyMdgUTSBN
+         SL7zioevlWWqq2F5+Iyq0KGMeVPqSp2qDGZpkKCoQzpDrArtAR+pd1Fg3z7EVwTM3afV
+         rv5/iz2fwdHuzU1R8q0Hq0Bm1wz3GL/3HDF1q9XuOipEvbPrfp6UC8cg3iTIEEsBxCq0
+         sJN8yqiKVu+Zr9WIQvF4U2zzpiW7BoCgHCEFi3VDNhDmtRVpsaAFiutq3h55vS7ysc2w
+         jVRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ujwQciPl+L7lbdcyijKwCUqH7IK4/9USSSXUk6qmZOg=;
+        b=sMA2JR1COlUatbElHVpZrJPGadKjAFyyekKte6KTNd1a3BCbB3lhhDzX6IpoJ4K1FT
+         530TXA8V9aswpOcdAgHkGYgyu1KSc7VOiA8dv8OA3eRotVrIYHTRiMT83VU8gbFUHy5i
+         +F3KoxvbGnVzwHW1bZzjdMvtsfrpIcWDfQR9GbOqTlQmpviE8UhBXF66od5t8ZkV5BdK
+         rX4shM/6v8rHF/XcUf0Ah/nbBjyuZ4t2kptGjqhcRjiJtwuGwHXLCOTicUHfzpaQUoAg
+         M5BUesNjw2c9mKJDhU+i+Jjj3BFiCiIYLbAOQ03g2cR6M1pkkSj670aP4+lmdmQMj/IM
+         pUEg==
+X-Gm-Message-State: AOAM533YPCDY89ejBq/pj6FyPw0FSZQ0mOZ2D2j9l++NTWKr4QdPz2Du
+        vGyJ7B1K9eOUvO4ui2cUuj7yVyUxrVyfKOIOVXU=
+X-Google-Smtp-Source: ABdhPJxcZ8Rrz4WTVA4JzfkWUwnDA9iyEW5D2N5Bj7502ovzHh8Sp8ZDl5fWVo+v3zOctaqg18jwU0autp6y1oTfP34=
+X-Received: by 2002:a5d:5549:: with SMTP id g9mr28913930wrw.419.1593011516671;
+ Wed, 24 Jun 2020 08:11:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCKsWRmVeSWpSXmKPExsWy7djP87rquZ/jDPqv81hc//Kc1aL/8Wtm
-        i/PnN7BbnG16w26x6fE1VovLu+awWXzuPcJoMeP8PiaLhU0t7Ba3G1ewWXw78YjRgdtjzbw1
-        jB47Z91l99i0qpPNY/OSeo++LasYPT5vkgtgi+KySUnNySxLLdK3S+DKOHj1OGvBbr6KtdfX
-        sTYw3uPuYuTkkBAwkdjZ+5Kli5GLQ0hgBaPEufOv2CCcL4wS75uamSGcz4wSfzZ0ssK0NP9b
-        DNWynFGiv+k6E4TzkVFi8afjTCBVwgJ2EvOv7QLrEBGolLg18zvYXGaBt0wSe/7eZgNJsAkY
-        SvQe7WMEsXmBGm63dQI1c3CwCKhKzPymBBIWFYiV6Fu6gA2iRFDi5MwnLCA2p4C1xJJZb8F2
-        MQuIS9x6Mh/KlpfY/nYO2NkSArfYJb5fOQd1tovE6huNzBC2sMSr41vYIWwZidOTe1ggGpoZ
-        JXp232aHcCYwStw/voARospa4s65X2wg1zELaEqs36UPEXaUeHvsDTNIWEKAT+LGW0GII/gk
-        Jm2bDhXmlehoE4KoVpH4vWo6E4QtJdH95D/LBEalWUhem4XknVlI3pmFsHcBI8sqRvHU0uLc
-        9NRiw7zUcr3ixNzi0rx0veT83E2MwLR1+t/xTzsYv15KOsQowMGoxMO74cHHOCHWxLLiytxD
-        jBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvE
-        wSnVwDhb0UHT0/UAK3/VOm3V7m+XtZsTomtu/szcWuNd5620QvC4628e+TRr1TLX1pslDCbX
-        mexyjjtzCuo2LTpkeIth46zQKQ83CRkFZq9bzn0lau39+tvZSS2MTkbpy542X72iufcMc/8e
-        +dNFbKd8en9N2HLHOW/366qaaR/qJ2yw6knJcZ38UImlOCPRUIu5qDgRAI2LKFhXAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xu7pquZ/jDN41m1hc//Kc1aL/8Wtm
-        i/PnN7BbnG16w26x6fE1VovLu+awWXzuPcJoMeP8PiaLhU0t7Ba3G1ewWXw78YjRgdtjzbw1
-        jB47Z91l99i0qpPNY/OSeo++LasYPT5vkgtgi9KzKcovLUlVyMgvLrFVija0MNIztLTQMzKx
-        1DM0No+1MjJV0rezSUnNySxLLdK3S9DLOHj1OGvBbr6KtdfXsTYw3uPuYuTkkBAwkWj+t5il
-        i5GLQ0hgKaPEm/5WIIcDKCElMb9FCaJGWOLPtS42EFtI4D2jxMzp7iC2sICdxPxru1hBbBGB
-        Son7P+8wg8xhFnjPJPH3xEwmiKGrmSSOvVoJ1s0mYCjRe7SPEcTmBeq+3dbJBLKMRUBVYuY3
-        sGWiArES3+5tYYMoEZQ4OfMJC4jNKWAtsWTWWyYQm1lAXeLPvEvMELa4xK0n86Hi8hLb385h
-        nsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYIxuO/Zzyw7G
-        rnfBhxgFOBiVeHg3PPgYJ8SaWFZcmXuIUYKDWUmE1+ns6Tgh3pTEyqrUovz4otKc1OJDjKZA
-        v01klhJNzgemj7ySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYzp
-        7T/VVRL5E0yePJPhEOwMUTx9xN9tRlaOpkfuKvfe6nk9xWdTMu4/WvYztTZm24Kfx5fbL1Ta
-        F5F4Onf5hwtcU14WXl166ZFiyQxLVsnjLpdZNZZUMnTHfmc4eIHbXpnhf0Eow6RlDuZi9y34
-        Um4HpEy8X1MSpCfxp8xPiWdeWtSMu6tfvVFiKc5INNRiLipOBACBoft/5wIAAA==
-X-CMS-MailID: 20200624151134eucas1p1c70eef4c8ed9fd2fb0275cbec6576f44
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-        <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-        <20200623191129.GA4171@kozik-lap>
-        <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
-        <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
+References: <20200624141423.6307-1-colin.king@canonical.com> <f9ceecb4-2679-c0e2-8f64-4dd2a4f5401f@amd.com>
+In-Reply-To: <f9ceecb4-2679-c0e2-8f64-4dd2a4f5401f@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 24 Jun 2020 11:11:45 -0400
+Message-ID: <CADnq5_PA+Qs=oBkWwSneD1ptAVMdLcN3zL=UrjsNQFnaA2wLYQ@mail.gmail.com>
+Subject: Re: [PATCH][next] drm: amdgpu: fix premature goto because of missing braces
+To:     Nirmoy <nirmodas@amd.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nirmoy Das <nirmoy.das@amd.com>,
+        Sonny Jiang <sonny.jiang@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Applied.  Thanks!
 
-On 24.06.2020 12:32, Lukasz Luba wrote:
-> I had issues with devfreq governor which wasn't called by devfreq
-> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
-> for it [1]. If the CPU which scheduled the next work went idle, the
-> devfreq workqueue will not be kicked and devfreq governor won't check
-> DMC status and will not decide to decrease the frequency based on low
-> busy_time.
-> The same applies for going up with the frequency. They both are
-> done by the governor but the workqueue must be scheduled periodically.
+Alex
 
-As I have been working on resolving the video mixer IOMMU fault issue
-described here: https://patchwork.kernel.org/patch/10861757
-I did some investigation of the devfreq operation, mostly on Odroid U3.
-
-My conclusions are similar to what Lukasz says above. I would like to add
-that broken scheduling of the performance counters read and the devfreq 
-updates seems to have one more serious implication. In each call, which
-normally should happen periodically with fixed interval we stop the counters, 
-read counter values and start the counters again. But if period between 
-calls becomes long enough to let any of the counters overflow, we will
-get wrong performance measurement results. My observations are that 
-the workqueue job can be suspended for several seconds and conditions for 
-the counter overflow occur sooner or later, depending among others 
-on the CPUs load.
-Wrong bus load measurement can lead to setting too low interconnect bus 
-clock frequency and then bad things happen in peripheral devices.
-
-I agree the workqueue issue needs to be fixed. I have some WIP code to use
-the performance counters overflow interrupts instead of SW polling and with 
-that the interconnect bus clock control seems to work much better.
-
--- 
-Regards,
-Sylwester
+On Wed, Jun 24, 2020 at 10:32 AM Nirmoy <nirmodas@amd.com> wrote:
+>
+> Acked-by: Nirmoy Das <nirmoy.das@amd.com>
+>
+>
+> Thanks,
+>
+> Nirmoy
+>
+> On 6/24/20 4:14 PM, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > Currently the goto statement is skipping over a lot of setup code
+> > because it is outside of an if-block and should be inside it. Fix
+> > this by adding missing if statement braces.
+> >
+> > Addresses-Coverity: ("Structurally dead code")
+> > Fixes: fd151ca5396d ("drm amdgpu: SI UVD v3_1")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c | 5 +++--
+> >   1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c b/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c
+> > index 599719e89c31..7cf4b11a65c5 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c
+> > @@ -642,9 +642,10 @@ static int uvd_v3_1_hw_init(void *handle)
+> >       uvd_v3_1_start(adev);
+> >
+> >       r = amdgpu_ring_test_helper(ring);
+> > -     if (r)
+> > +     if (r) {
+> >               DRM_ERROR("amdgpu: UVD ring test fail (%d).\n", r);
+> > -     goto done;
+> > +             goto done;
+> > +     }
+> >
+> >       r = amdgpu_ring_alloc(ring, 10);
+> >       if (r) {
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
