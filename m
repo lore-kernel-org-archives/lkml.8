@@ -2,106 +2,134 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B434C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD69320823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:48:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TK3CFbKk"
+	by mail.kernel.org (Postfix) with ESMTP id 14D692081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406019AbgFXSsH (ORCPT
+        id S2406008AbgFXStR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405581AbgFXSsH (ORCPT
+        Wed, 24 Jun 2020 14:49:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42120 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405384AbgFXStR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:48:07 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EF1C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:48:07 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 145so331233qke.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eETegcECrqvywpE3KsL+8WK3hMwkFIOHNGmh0aWGRFA=;
-        b=TK3CFbKkxiJln4JU3katp8P1wCphmM8l24Pu1y7cIzE7uqmb01MGeURvRdKy75rFUq
-         PKojLEKtdIPvfWqaGlgUR1ZXP5NeTA26kTDgafmMoBNa8R3UoHWyIIlrUJvwmhvuTRE8
-         wLTSkPsFDQt5TD6zsiTgmRPBuIZbVZKyheVW48Bfqb/4qPi6U271rlHt+Kap8WhSYOaG
-         gwIqbMm7+jrtyFheUdJuP/0bIQDCTC1e8auU1g2KXVoEB6L7Ty/1mg+E0mmfYrY1VugH
-         8i/FD9MJFVLBnUSbSe6jsl+QhevOv0D9zbbnoUqw3H5nSLKfybbs+dlsgvEMSEV8l+j3
-         qICQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eETegcECrqvywpE3KsL+8WK3hMwkFIOHNGmh0aWGRFA=;
-        b=S+Ogk/S0LOelbYZcIsTHhnJD09vxhQCJC/RYQUIZwMJJresG78SyMdGM/sTXdpYD5N
-         hXVimOyoSb/C7giLI5XKZQuns8YP0oqJ1xdUdripoCXYPkByWV9IJCT3xf6DVFC8Xpj1
-         pJzczJmQ79D2BWF9c6LH4s+d3xkZg//GFLGUY0laQjXxZnEcM0zEVhOYhMesj5LAEujG
-         5hdeVLF0JnSrIbq5NoOCwGD8fdjMUbRc1kpl4siDNFJfEVrts1cW4Ji60tBI0NVbLUOr
-         zRYAJqehVT9XOlBSHqMlpBMFPluYczMzWQ55KDfJ8HCbPmAQqVB/N1fpLdXDFissRM7/
-         JxxQ==
-X-Gm-Message-State: AOAM5313nOgCNLq3Kkfjb3rDQM6BESBEJ+RpAUGymyvNg1YHmUl7WbkG
-        a2FPyglY/UbD44rqM0CVwhGUJESz5NhBWg==
-X-Google-Smtp-Source: ABdhPJwCclSbXjfp78+cyBid7KTxKfsoe/k5D1XwYtNFhk9DIfiHIytxbU3UfA1zOl//O+JimPup0w==
-X-Received: by 2002:a37:9a01:: with SMTP id c1mr4508370qke.111.1593024486213;
-        Wed, 24 Jun 2020 11:48:06 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id j7sm2913342qtd.53.2020.06.24.11.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 11:48:05 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1joARI-00DgLI-MZ; Wed, 24 Jun 2020 15:48:04 -0300
-Date:   Wed, 24 Jun 2020 15:48:04 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/2] mm/mmu_notifier: Mark up direct reclaim paths with
- MAYFAIL
-Message-ID: <20200624184804.GL6578@ziepe.ca>
-References: <20200624121053.GD6578@ziepe.ca>
- <159300126338.4527.3968787379471939056@build.alporthouse.com>
- <20200624123910.GA3178169@ziepe.ca>
- <159300796224.4527.2014771396582759689@build.alporthouse.com>
- <20200624141604.GH6578@ziepe.ca>
- <159300850942.4527.8335506003268197914@build.alporthouse.com>
- <20200624142544.GI6578@ziepe.ca>
- <159300945202.4527.4366416413140642633@build.alporthouse.com>
- <20200624165057.GJ6578@ziepe.ca>
- <159302152915.4527.9099070806700792078@build.alporthouse.com>
+        Wed, 24 Jun 2020 14:49:17 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OIXUI1058498;
+        Wed, 24 Jun 2020 14:49:10 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31uwym1w9y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 14:49:10 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OIkCUN097446;
+        Wed, 24 Jun 2020 14:49:09 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31uwym1w93-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 14:49:09 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OIagc6016544;
+        Wed, 24 Jun 2020 18:49:07 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 31uus50y4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 18:49:07 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OIn52A63438938
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 18:49:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16F63A4051;
+        Wed, 24 Jun 2020 18:49:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A6F44A404D;
+        Wed, 24 Jun 2020 18:49:04 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.4.225])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 24 Jun 2020 18:49:04 +0000 (GMT)
+Date:   Wed, 24 Jun 2020 20:49:03 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 01/26] mm: Do page fault accounting in handle_mm_fault
+Message-ID: <20200624204903.097a5a58@thinkpad>
+In-Reply-To: <20200619160538.8641-2-peterx@redhat.com>
+References: <20200619160538.8641-1-peterx@redhat.com>
+        <20200619160538.8641-2-peterx@redhat.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159302152915.4527.9099070806700792078@build.alporthouse.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_15:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ suspectscore=0 impostorscore=0 cotscore=-2147483648 adultscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 06:58:49PM +0100, Chris Wilson wrote:
-> > I'm still a little unclear on what you are trying to fix - pinned
-> > pages are definitely not freed, do you have some case where pages
-> > which are pinned are being cleaned out from the MM despite being
-> > pinned? Sounds a bit strange, maybe that is worth adressing directly?
+On Fri, 19 Jun 2020 12:05:13 -0400
+Peter Xu <peterx@redhat.com> wrote:
+
+[...]
+
+> @@ -4393,6 +4425,38 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+>  			mem_cgroup_oom_synchronize(false);
+>  	}
 > 
-> It suffices to say that pin_user_pages does not prevent try_to_unmap_one
-> from trying to revoke the page.
+> +	if (ret & VM_FAULT_RETRY)
+> +		return ret;
 
-This doesn't sound right.. Maybe there are some odd ball cases, but in
-common things like page out we absolutely cannot page out or discard
-pages under DMA. This would be a significant bug.
+I'm wondering if this also needs a check and exit for VM_FAULT_ERROR.
+In arch code (s390 and all others I briefly checked), the accounting
+was skipped for VM_FAULT_ERROR case.
 
-What is the actual problem here?
+> +
+> +	/*
+> +	 * Do accounting in the common code, to avoid unnecessary
+> +	 * architecture differences or duplicated code.
+> +	 *
+> +	 * We arbitrarily make the rules be:
+> +	 *
+> +	 *  - faults that never even got here (because the address
+> +	 *    wasn't valid). That includes arch_vma_access_permitted()
 
-Jason
+Missing "do not count" at the end of the first sentence?
+
+> +	 *    failing above.
+> +	 *
+> +	 *    So this is expressly not a "this many hardware page
+> +	 *    faults" counter. Use the hw profiling for that.
+> +	 *
+> +	 *  - incomplete faults (ie RETRY) do not count (see above).
+> +	 *    They will only count once completed.
+> +	 *
+> +	 *  - the fault counts as a "major" fault when the final
+> +	 *    successful fault is VM_FAULT_MAJOR, or if it was a
+> +	 *    retry (which implies that we couldn't handle it
+> +	 *    immediately previously).
+> +	 *
+> +	 *  - if the fault is done for GUP, regs wil be NULL and
+
+wil -> will
+
+Regards,
+Gerald
