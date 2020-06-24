@@ -2,115 +2,125 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C060A20723
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lneLGurg"
+	by mail.kernel.org (Postfix) with ESMTP id A8A1420723
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404366AbgFXPYU (ORCPT
+        id S2404407AbgFXPYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404017AbgFXPYT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:24:19 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EACC061573;
-        Wed, 24 Jun 2020 08:24:19 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id mb16so2866465ejb.4;
-        Wed, 24 Jun 2020 08:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D5fcBmctUqkWRaCAlEquaCo151xfdRO5uLvWNbrg/T4=;
-        b=lneLGurgH4ESLltEQrI6RKR+MKIH5cMowieW6nb3PawBpUTe8dVgXXy8oMVUK4D+zC
-         61WQaa5yJ1WzosFIDyQOD1CeZNhfkijfHCaT6mJAdif+JAeN342vfOojjhY8ewmYPOzq
-         I4kosKQDArhuQ2/XphencidtJupidiJX+nZ5H6E7oaqCqRewZQ3U+4o3EzmxXdA3Rr7j
-         4qmsbilXgqZ0HMl8Ur1ZL0mPzVIuxqRV1viDITxeKOkGQl11bsqz6AevPORWx6Bp15Vr
-         TjnOlBl9Mn2pzwKcOnHs6/3+0411yKC2rOwo5wP78mP9XfNzXPI6N131Rmc32t+nTZth
-         gmeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D5fcBmctUqkWRaCAlEquaCo151xfdRO5uLvWNbrg/T4=;
-        b=pX5G4sSYWmn+mPK4+7RfzNCfl/J284ocKLVLy3MDgiNGoV6rgdGlVMnShRPDz2vDEQ
-         Pfi6o2VuqiTuGBiYuC1b+bogHdmPOpmA9MvYlw7vLOR3qXkMFdwayPLwoOjfuzR9TM4e
-         OSPY6DSyXV5PELv6LuKV6JS7gWwamVXQeL2rZzf0XYRqFQHpubZbpCNeld5rLRpK46ss
-         HC+iSZaEQaYwZFsZRDDW/mY55lNDRp2GAbwp1bb5dqC+V0s4z2GRhMcQSPtKBEtgQJe9
-         kqsrXB03ZXT8Jd5m/QRfBtw1H9Q1S8CZfbco0GvGP+KRrbjcn/dZAW8iqXh8WKGeO7qj
-         niXw==
-X-Gm-Message-State: AOAM530SiHeud6uFxSRQ+YDj7se6d+W/LUM/h3K+m33jSE5jPosw/fGD
-        5fu1rSi/0ZEKSRmHvIv/4Y9HuGC/GC98PjZvs4YQxw==
-X-Google-Smtp-Source: ABdhPJxXGFYEUDzodXY4S+pGgiGRko+o5hHsygS3MwblQ/K5dQVLFwuQYt/iX5NoNFt1e3/nk2D1FtPqKZ2S2whWJAI=
-X-Received: by 2002:a17:906:5949:: with SMTP id g9mr7426231ejr.305.1593012258194;
- Wed, 24 Jun 2020 08:24:18 -0700 (PDT)
+        Wed, 24 Jun 2020 11:24:30 -0400
+Received: from lizzard.sbs.de ([194.138.37.39]:39144 "EHLO lizzard.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404017AbgFXPY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:24:29 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 05OFO7aH004305
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 17:24:07 +0200
+Received: from [167.87.59.49] ([167.87.59.49])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 05OFO5fK027922;
+        Wed, 24 Jun 2020 17:24:06 +0200
+Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
+ initial allowed window
+To:     Tero Kristo <t-kristo@ti.com>, wim@linux-watchdog.org,
+        linux@roeck-us.net, linux-watchdog@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200624114534.1362-1-t-kristo@ti.com>
+ <20200624114534.1362-3-t-kristo@ti.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
+Date:   Wed, 24 Jun 2020 17:24:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200623090541.2964760-1-horatiu.vultur@microchip.com>
- <20200623.143821.491798381160245817.davem@davemloft.net> <20200624113156.hsutqewk4xntmkld@soft-dev3.localdomain>
-In-Reply-To: <20200624113156.hsutqewk4xntmkld@soft-dev3.localdomain>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 24 Jun 2020 18:24:07 +0300
-Message-ID: <CA+h21hogZsJZUksYY66_=-qkdG3kDA+byfX0tV=C-80M6mfYMA@mail.gmail.com>
-Subject: Re: [PATCH net v2 0/2] bridge: mrp: Update MRP_PORT_ROLE
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        bridge@lists.linux-foundation.org, netdev <netdev@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200624114534.1362-3-t-kristo@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu,
+On 24.06.20 13:45, Tero Kristo wrote:
+> If the RTI watchdog has been started by someone (like bootloader) when
+> the driver probes, we must adjust the initial ping timeout to match the
+> currently running watchdog window to avoid generating watchdog reset.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>   drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
+> index d456dd72d99a..02ea2b2435f5 100644
+> --- a/drivers/watchdog/rti_wdt.c
+> +++ b/drivers/watchdog/rti_wdt.c
+> @@ -55,11 +55,13 @@ static int heartbeat;
+>    * @base - base io address of WD device
+>    * @freq - source clock frequency of WDT
+>    * @wdd  - hold watchdog device as is in WDT core
+> + * @min_hw_heartbeat_save - save of the min hw heartbeat value
+>    */
+>   struct rti_wdt_device {
+>   	void __iomem		*base;
+>   	unsigned long		freq;
+>   	struct watchdog_device	wdd;
+> +	unsigned int		min_hw_heartbeat_save;
+>   };
+>   
+>   static int rti_wdt_start(struct watchdog_device *wdd)
+> @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
+>   	/* put watchdog in active state */
+>   	writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
+>   
+> +	if (wdt->min_hw_heartbeat_save) {
+> +		wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
+> +		wdt->min_hw_heartbeat_save = 0;
+> +	}
+> +
+>   	return 0;
+>   }
+>   
+> @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device *pdev)
+>   		goto err_iomap;
+>   	}
+>   
+> +	if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
+> +		u32 time_left;
+> +		u32 heartbeat;
+> +
+> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> +		time_left = rti_wdt_get_timeleft(wdd);
+> +		heartbeat = readl(wdt->base + RTIDWDPRLD);
+> +		heartbeat <<= WDT_PRELOAD_SHIFT;
+> +		heartbeat /= wdt->freq;
+> +		if (time_left < heartbeat / 2)
+> +			wdd->min_hw_heartbeat_ms = 0;
+> +		else
+> +			wdd->min_hw_heartbeat_ms =
+> +				(time_left - heartbeat / 2 + 1) * 1000;
+> +
+> +		wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
+> +	}
+> +
+>   	ret = watchdog_register_device(wdd);
+>   	if (ret) {
+>   		dev_err(dev, "cannot register watchdog device\n");
+> 
 
-On Wed, 24 Jun 2020 at 14:34, Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
->
-> The 06/23/2020 14:38, David Miller wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >
-> > From: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > Date: Tue, 23 Jun 2020 11:05:39 +0200
-> >
-> > > This patch series does the following:
-> > > - fixes the enum br_mrp_port_role_type. It removes the port role none(0x2)
-> > >   because this is in conflict with the standard. The standard defines the
-> > >   interconnect port role as value 0x2.
-> > > - adds checks regarding current defined port roles: primary(0x0) and
-> > >   secondary(0x1).
-> > >
-> > > v2:
-> > >  - add the validation code when setting the port role.
-> >
-> > Series applied, thank you.
->
-> Thanks. Will these patches be applied also on net-next?
-> Because if I start now to add support for the interconnect port, these
-> patches are needed on net-next. Or do I need to add these patches to the
-> patch series for the interconnect port?
-> What is the correct way of doing this?
->
-> --
-> /Horatiu
+This assumes that the bootloader also programmed a 50% window, right? 
+The pending U-Boot patch will do that, but what if that may chance or 
+someone uses a different setup?
 
-The "net" tree is merged weekly (or so) by David into "net-next". So,
-your patches should be available at the beginning of the next week.
+Jan
 
-Cheers,
--Vladimir
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
