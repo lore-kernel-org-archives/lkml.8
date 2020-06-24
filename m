@@ -2,138 +2,149 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3892C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E9C20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MvLV62bG"
+	by mail.kernel.org (Postfix) with ESMTP id 76D852084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388697AbgFXDbr (ORCPT
+        id S2388733AbgFXDbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 23:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388408AbgFXDbq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 23:31:46 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3C5C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 20:31:46 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id b7so1801301pju.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 20:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IahJt8/KJJjCX5znAGwjVoLhoLAi5KgGttIopC9m27U=;
-        b=MvLV62bGP7HuCujPeBIHKz13XUI8YQmFtRra1vib+8tF+xHHQRVE/n3L2rgdukvz0W
-         tXgg5gRG56BP2uOmEc+oEMf47b4I2KLwUM3lCVukC+NRxgYxHqsxLKDUjSfA6R0sfqEo
-         TgggLZp03MNbl6iiR1g9B+Tdp9CA3YajVJsQpkFoRyIFXvFULZrBVh7rUaJHmg4R6nNH
-         1qsvb5gRGuCH3ZPUtMEqqFW/A+OofiC/qMD5DJlvOz7Ilyyt2ZStv6KM1sJPos9n372w
-         0UbUY406dJ7GN3qOL01soPCDMdymvlW2KSQp3fukKyBl3YvdOFBaJIjT8ZDn4ePN1mFb
-         xD6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IahJt8/KJJjCX5znAGwjVoLhoLAi5KgGttIopC9m27U=;
-        b=SAlfJthZsgnIpgNSz3UlCjEAS+FKSEKDp8lYyxgUL05cfe0HvHH9IpJat6CpmcvD+E
-         KDfphZCzsanqKpOu0Q28WzxMTy3PKNcI09VlZJAliJ13W3asuA3lhm8SAhOgnqRgHQN9
-         dOGf7oMu5QyzEA8XMoNumrNEuHkVrtEOJVEFRrCv0m3MNr86MmD6RvEbIss3Dqjcb5ZE
-         WswQMQx+VlWjRIofBveq6hjD7S+seIKKPXjznWNcLxJSDCXTHL6ih+IKD6bC7y7sAISB
-         oj6emTjnaRub5cty/gCqug4SaZTs0j+q8quqcg1l/iLf+eEmHJmv0LdUohlzuFaMnaeP
-         V2xA==
-X-Gm-Message-State: AOAM533M5/KX9WCmiaOyMnNNPJDE79ZsMJQ95fnruHNLdAAG9oM98niA
-        i7LeCCYc415ZmRLyxpWbKL6Ncg==
-X-Google-Smtp-Source: ABdhPJwO/hYz95xUwT1OWmJI4vtUw4+LYaBqYL3FPsRivwPfG7ygEmvTnhPAC6hvl2WpJppN7B6bFQ==
-X-Received: by 2002:a17:90a:1ac3:: with SMTP id p61mr27689014pjp.23.1592969505744;
-        Tue, 23 Jun 2020 20:31:45 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id c2sm14702791pgk.77.2020.06.23.20.31.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 20:31:45 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 20:31:42 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-Message-ID: <20200624033142.cinvg6rbg252j46d@google.com>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org>
+        Tue, 23 Jun 2020 23:31:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:39137 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388664AbgFXDbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 23:31:49 -0400
+IronPort-SDR: eo03stLJEtMsL2fdKtjpVDGEoJBZIGZDVyI63psLISxSLbFMFmXBaiTyLQYCcTRZPlKlWbnQtk
+ qFc5p0lNz/8Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="162393500"
+X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
+   d="scan'208";a="162393500"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 20:31:48 -0700
+IronPort-SDR: vqGtMTTjU0DkuCs2AfagtZX/vQkgtfO+0GXC40K4tsidAgz2ccmtwi1rYxoSV9yenUCgm8rcfK
+ SwA3bszqLA8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
+   d="scan'208";a="452488485"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 20:31:46 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH -V2] swap: Reduce lock contention on swap cache from swap slots allocation
+References: <20200520031502.175659-1-ying.huang@intel.com>
+        <20200520195102.2343f746e88a2bec5c29ef5b@linux-foundation.org>
+        <87o8qihsw7.fsf@yhuang-dev.intel.com>
+Date:   Wed, 24 Jun 2020 11:31:45 +0800
+In-Reply-To: <87o8qihsw7.fsf@yhuang-dev.intel.com> (Ying Huang's message of
+        "Thu, 21 May 2020 11:24:40 +0800")
+Message-ID: <87wo3xxhpa.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200624014940.1204448-4-keescook@chromium.org>
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-23, Kees Cook wrote:
->In preparation for adding --orphan-handling=warn to more architectures,
->make sure unwanted sections don't end up appearing under the .init
->section prefix that libstub adds to itself during objcopy.
+"Huang, Ying" <ying.huang@intel.com> writes:
+
+> Andrew Morton <akpm@linux-foundation.org> writes:
 >
->Signed-off-by: Kees Cook <keescook@chromium.org>
->---
-> drivers/firmware/efi/libstub/Makefile | 3 +++
-> 1 file changed, 3 insertions(+)
+>> On Wed, 20 May 2020 11:15:02 +0800 Huang Ying <ying.huang@intel.com> wrote:
+>>
+>>> In some swap scalability test, it is found that there are heavy lock
+>>> contention on swap cache even if we have split one swap cache radix
+>>> tree per swap device to one swap cache radix tree every 64 MB trunk in
+>>> commit 4b3ef9daa4fc ("mm/swap: split swap cache into 64MB trunks").
+>>> 
+>>> The reason is as follow.  After the swap device becomes fragmented so
+>>> that there's no free swap cluster, the swap device will be scanned
+>>> linearly to find the free swap slots.  swap_info_struct->cluster_next
+>>> is the next scanning base that is shared by all CPUs.  So nearby free
+>>> swap slots will be allocated for different CPUs.  The probability for
+>>> multiple CPUs to operate on the same 64 MB trunk is high.  This causes
+>>> the lock contention on the swap cache.
+>>> 
+>>> To solve the issue, in this patch, for SSD swap device, a percpu
+>>> version next scanning base (cluster_next_cpu) is added.  Every CPU
+>>> will use its own per-cpu next scanning base.  And after finishing
+>>> scanning a 64MB trunk, the per-cpu scanning base will be changed to
+>>> the beginning of another randomly selected 64MB trunk.  In this way,
+>>> the probability for multiple CPUs to operate on the same 64 MB trunk
+>>> is reduced greatly.  Thus the lock contention is reduced too.  For
+>>> HDD, because sequential access is more important for IO performance,
+>>> the original shared next scanning base is used.
+>>> 
+>>> To test the patch, we have run 16-process pmbench memory benchmark on
+>>> a 2-socket server machine with 48 cores.  One ram disk is configured
+>>
+>> What does "ram disk" mean here?  Which drivers(s) are in use and backed
+>> by what sort of memory?
 >
->diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
->index 75daaf20374e..9d2d2e784bca 100644
->--- a/drivers/firmware/efi/libstub/Makefile
->+++ b/drivers/firmware/efi/libstub/Makefile
->@@ -66,6 +66,9 @@ lib-$(CONFIG_X86)		+= x86-stub.o
-> CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
-> CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+> We use the following kernel command line
 >
->+# Remove unwanted sections first.
->+STUBCOPY_FLAGS-y		+= --remove-section=.note.gnu.property
->+
-> #
-> # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
-> # .bss section, so the .bss section of the EFI stub needs to be included in the
+> memmap=48G!6G memmap=48G!68G
+>
+> to create 2 DRAM based /dev/pmem disks (48GB each).  Then we use these
+> ram disks as swap devices.
+>
+>>> as the swap device per socket.  The pmbench working-set size is much
+>>> larger than the available memory so that swapping is triggered.  The
+>>> memory read/write ratio is 80/20 and the accessing pattern is random.
+>>> In the original implementation, the lock contention on the swap cache
+>>> is heavy.  The perf profiling data of the lock contention code path is
+>>> as following,
+>>> 
+>>> _raw_spin_lock_irq.add_to_swap_cache.add_to_swap.shrink_page_list:      7.91
+>>> _raw_spin_lock_irqsave.__remove_mapping.shrink_page_list:               7.11
+>>> _raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 2.51
+>>> _raw_spin_lock_irqsave.swap_cgroup_record.mem_cgroup_uncharge_swap:     1.66
+>>> _raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:      1.29
+>>> _raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:         1.03
+>>> _raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:        0.93
+>>> 
+>>> After applying this patch, it becomes,
+>>> 
+>>> _raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 3.58
+>>> _raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:      2.3
+>>> _raw_spin_lock_irqsave.swap_cgroup_record.mem_cgroup_uncharge_swap:     2.26
+>>> _raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:        1.8
+>>> _raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:         1.19
+>>> 
+>>> The lock contention on the swap cache is almost eliminated.
+>>> 
+>>> And the pmbench score increases 18.5%.  The swapin throughput
+>>> increases 18.7% from 2.96 GB/s to 3.51 GB/s.  While the swapout
+>>> throughput increases 18.5% from 2.99 GB/s to 3.54 GB/s.
+>>
+>> If this was backed by plain old RAM, can we assume that the performance
+>> improvement on SSD swap is still good?
+>
+> We need really fast disk to show the benefit.  I have tried this on 2
+> Intel P3600 NVMe disks.  The performance improvement is only about 1%.
+> The improvement should be better on the faster disks, such as Intel
+> Optane disk.  I will try to find some to test.
 
-arch/arm64/Kconfig enables ARM64_PTR_AUTH by default. When the config is on
+I finally find 2 Intel Optane disks to test.  The pmbench throughput
+(page accesses per second) increases ~1.7% with the patch.  The swapin
+throughput increases 2% (~1.36 GB/s to ~1.39 GB/s), the swapout
+throughput increases 1.7% (~1.61 GB/s to 1.63 GB/s).  Perf profile shows
+the CPU cycles on the swap cache radix tree spinlock is reduced from
+~1.76% to nearly 0.  So the performance difference is much smaller, but
+still measurable.
 
-ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
-branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI) := -mbranch-protection=pac-ret+leaf+bti
-else
-branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET) := -mbranch-protection=pac-ret+leaf
-endif
-
-This option creates .note.gnu.property:
-
-% readelf -n drivers/firmware/efi/libstub/efi-stub.o
-
-Displaying notes found in: .note.gnu.property
-   Owner                Data size        Description
-   GNU                  0x00000010       NT_GNU_PROPERTY_TYPE_0
-       Properties: AArch64 feature: PAC
-
-If .note.gnu.property is not desired in drivers/firmware/efi/libstub, specifying
--mbranch-protection=none can override -mbranch-protection=pac-ret+leaf
+Best Regards,
+Huang, Ying
