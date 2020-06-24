@@ -2,114 +2,139 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC37C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5D7206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149C520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ZvrfzlZN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tjyu6khi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404715AbgFXQKX (ORCPT
+        id S2404692AbgFXQLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404531AbgFXQKW (ORCPT
+        Wed, 24 Jun 2020 12:11:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22963 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404235AbgFXQLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:10:22 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D95C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:10:22 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id t21so1891404edr.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CLPAvbq/jeYHfg7FTd3eSHmjKk2usdkzJKthmaiXIo8=;
-        b=ZvrfzlZNgIA+onZZAlqnmU1RPQNYcGK0AJ0sANVmYurFnqexDQH84xBGPSwIkrakti
-         mFQTbpuFJLke0gP1+xA5KoTwMuBxllumFrO7SqUu7X5FbglbrRJSI8HZ0yMFxhrMW6ar
-         hi4cCFCRjEbaQ9fgYypDD5zHzqbcn0rHcYB2PtRsFQCaCSitzwliPwcdRylK3Z2TTrE2
-         TsKVqQvMjx2bIBF1IjVF9LhxdzjilJqgWgKhWHw1G/fBrlUf8iqS8LGXH+47xrpc5/td
-         cl2EnMSeaqZcjzoH+XVvN+XSUXjbBSqJZUQ16uvQv5ewo9CPxMVhN5yJPTHQAPxDLsrv
-         Hgdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CLPAvbq/jeYHfg7FTd3eSHmjKk2usdkzJKthmaiXIo8=;
-        b=er1xsQ38XRe5Ld6iNVf7PrZgzSjFTain3qlqvaJ/gvLgT7PSnT6Fas3ictVcvVSi1M
-         RPb0TSDY9Mh3YgfnVI4hdFnLkGyanfRuXfS3O9AA2ZNfaLZJnVovbEX9Ui3QEvn/rolA
-         xaB3I+MPe0GfxeCfM1ay32tHN+CNBiW1PgyXLczKxN3LqRcBQR66375r/amq6BOwaCEM
-         vYE9D3m3ZkjSnsUlLaDXgwLZ4VgYOSz3zTjywo9eSxgUMxqOrdOGAo3rv4tG8xIiUlJ7
-         GK0VOAEY+hHZqT88DQFqcDaAflIYMhAeaQiPV3hib8epZwgCXioEedusgpe7Uhr/uQEZ
-         Xu+A==
-X-Gm-Message-State: AOAM533rNQDlkaG7Rwy2Jssan/mUIMsDFo0b8FFB6sRn9Ux+XMlIH3yM
-        8pQtR8j7SKh8PhWxWNm5uVho3lPNeNG0d6NZyOB24g==
-X-Google-Smtp-Source: ABdhPJz/LyWML2A9O3eOvChFMF2pj94Hmc0Dil9jdAodBK50RG9PbNs6c/xVBLGE3keNaEpKfeXrqt1z700nztWRtPk=
-X-Received: by 2002:aa7:d043:: with SMTP id n3mr3899927edo.102.1593015020879;
- Wed, 24 Jun 2020 09:10:20 -0700 (PDT)
+        Wed, 24 Jun 2020 12:11:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593015114;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=A4jhzXNSNkKjQ25lQLNxsf4Iqa8gVw2wrfWG5+sE2n4=;
+        b=Tjyu6khiIB8JvLvXk2iT1BnaqD3AJRVyvFsppg5kTpF5qgjsgQWCUC3sQ+YWmYcPOdhQxh
+        lq8UT0QJXNU3m9gLgxnf4ONBaDasBnPL9qzQWR7ylH4C6rjCmWkj1eZh4Y591q/gHfhdtu
+        pvWWn0ww22f0R/nnFJ+lVylSBXvj0ws=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-E7mrOMq7NfyV6kkiRbCgKw-1; Wed, 24 Jun 2020 12:11:47 -0400
+X-MC-Unique: E7mrOMq7NfyV6kkiRbCgKw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD5EA107ACCA;
+        Wed, 24 Jun 2020 16:11:45 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.207])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 361373C6B;
+        Wed, 24 Jun 2020 16:11:42 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 24 Jun 2020 18:11:45 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 18:11:42 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>, Davidlohr Bueso <dave@stgolabs.net>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     Lukas Czerner <lczerner@redhat.com>, linux-kernel@vger.kernel.org
+Subject: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss wakeup?
+Message-ID: <20200624161142.GA12184@redhat.com>
 MIME-Version: 1.0
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
- <20200623151828.GA31426@dhcp22.suse.cz> <20200624061340.GA11552@L-31X9LVDL-1304.local>
-In-Reply-To: <20200624061340.GA11552@L-31X9LVDL-1304.local>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Jun 2020 09:10:09 -0700
-Message-ID: <CAPcyv4gEUq0yyz00AbQQSyo_acj1wUCZPse5vEff_Bq7GmeksQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>, Baoquan He <bhe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:14 PM Wei Yang
-<richard.weiyang@linux.alibaba.com> wrote:
->
-> On Tue, Jun 23, 2020 at 05:18:28PM +0200, Michal Hocko wrote:
-> >On Tue 23-06-20 17:42:58, Wei Yang wrote:
-> >> For early sections, we assumes its memmap will never be partially
-> >> removed. But current behavior breaks this.
-> >>
-> >> Let's correct it.
-> >>
-> >> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-> >
-> >Can a user trigger this or is this a theoretical bug?
->
-> Let me rewrite the changelog a little. Look forward any comments.
->
->    For early sections, its memmap is handled specially even sub-section is
->    enabled. The memmap could only be populated as a whole.
->
->    Quoted from the comment of section_activate():
->
->        * The early init code does not consider partially populated
->        * initial sections, it simply assumes that memory will never be
->        * referenced.  If we hot-add memory into such a section then we
->        * do not need to populate the memmap and can simply reuse what
->        * is already there.
->
->    While current section_deactivate() breaks this rule. When hot-remove a
->    sub-section, section_deactivate() would depopulate its memmap. The
->    consequence is if we hot-add this subsection again, its memmap never get
->    proper populated.
+Suppose that 2 threads T1 and T2 call __lock_page_killable() and sleep in
+wait_on_page_bit_common() -> io_schedule().
 
-Ok, forgive the latency as re-fetched this logic into my mental cache.
-So what I was remembering was the initial state of the code that
-special cased early sections, and that still seems to be the case in
-pfn_valid(). IIRC early_sections / bootmem are blocked from being
-removed entirely. Partial / subsection removals are ok.
+T1 is killed, it does test_and_set_bit_lock() but the page is still locked.
+
+unlock_page() calls __wake_up_common(nr_exclusive = 1), this wakes T1 up.
+T2 is not woken.
+
+T1 checks signal_pending_state() and returns EINTR.
+
+T2 will sleep until another thread does lock/unlock ?
+
+----------------------------------------------------------------------------
+I noticed this by accident, I am hunting for another / unrelated bug. I did
+git-blame and iiuc the commit a8b169afbf06a ("Avoid page waitqueue race leaving
+possible page locker waiting") tried to fix the problem but see above, I don't
+understand how can it help.
+
+Don't we need something like below or I am totally confused?
+
+Oleg.
+
+--- x/mm/filemap.c
++++ x/mm/filemap.c
+@@ -1131,14 +1131,23 @@ static inline int wait_on_page_bit_commo
+ 	wait_page.bit_nr = bit_nr;
+ 
+ 	for (;;) {
++		int intr = 0;
++
+ 		spin_lock_irq(&q->lock);
+ 
+-		if (likely(list_empty(&wait->entry))) {
+-			__add_wait_queue_entry_tail(q, wait);
+-			SetPageWaiters(page);
+-		}
++		// see the comment prepare_to_wait_event()
++		if (signal_pending_state(state, current)) {
++			list_del_init(&wait->entry);
++			intr = 1;
++		} else {
++			if (likely(list_empty(&wait->entry))) {
++				// HMM. head/tail depending on EXCLUSIVE ???
++				__add_wait_queue_entry_tail(q, wait);
++				SetPageWaiters(page);
++			}
+ 
+-		set_current_state(state);
++			set_current_state(state);
++		}
+ 
+ 		spin_unlock_irq(&q->lock);
+ 
+@@ -1146,7 +1155,7 @@ static inline int wait_on_page_bit_commo
+ 		if (behavior == DROP)
+ 			put_page(page);
+ 
+-		if (likely(bit_is_set))
++		if (!intr && likely(bit_is_set))
+ 			io_schedule();
+ 
+ 		if (behavior == EXCLUSIVE) {
+@@ -1157,7 +1166,7 @@ static inline int wait_on_page_bit_commo
+ 				break;
+ 		}
+ 
+-		if (signal_pending_state(state, current)) {
++		if (intr) {
+ 			ret = -EINTR;
+ 			break;
+ 		}
+
