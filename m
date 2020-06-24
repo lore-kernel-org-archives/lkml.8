@@ -2,168 +2,100 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD56C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42D3D2078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8C320C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="t5sN2GgB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGmPGFa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387940AbgFXAH2 (ORCPT
+        id S2388005AbgFXAHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 20:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
+        Tue, 23 Jun 2020 20:07:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387584AbgFXAH1 (ORCPT
+        with ESMTP id S2387951AbgFXAHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 20:07:27 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC26DC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:07:25 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id x24so134236edi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:07:25 -0700 (PDT)
+        Tue, 23 Jun 2020 20:07:37 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3630EC061573;
+        Tue, 23 Jun 2020 17:07:36 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id d13so122250ybk.8;
+        Tue, 23 Jun 2020 17:07:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wYef0IlAA5cnvfvaD0Ws/jCKLqqDtLAVNioagh3fxFo=;
-        b=t5sN2GgB6Vwi68B+oh29pa7pkMP4cZNgHjmADZPfF23wYRyavKOWBHEcL5ZtKvnGMN
-         D0gsG07XLLr6RcEq1i+IusZ880iwgHJVt6zNq3yfL1xQXd1ji+IkRbTaWVXaKreilrBU
-         T0T+/jcUySEfnlKYR1xW6pRMoIn61kJtnV6YBtcIrw/Wv/G0gpeN3jTnwI3jMfCF2Pju
-         NtzFQBPyy2jQUttqO9n6yxiqn56vAwZ1IiByNO4vuGf/qa9bqndjoQCuaWmgqj3EZKar
-         lOOLEjpBCETVEO2uSMlfhdUrjCp0WRs89LLvFfGTiOGG15dUpV8OkiPdACmTudaFOt8J
-         kjLQ==
+        bh=qShZDIcN/jFhOwqO29jMZXeHqEdC9ZyhtPQiroLvjyE=;
+        b=KGmPGFa43fZf/V6c02MbxHTWqoEWeu62GfXnZr/qc/Kkh1U50EtgVcf1OXjEKiMzFR
+         poq0vb9AjdMXC8ioDD2mE1IctXXgXcrM53zgZ2zw0OyuX7c2Dg4+lqt1+mc4lEu3kqfD
+         7YJjM4yMbt6xJBc9tL2JD0idrIuosv/hTWPKkKPOv63iy8kiPP7hdkWJjpXeNxLiKGmA
+         RvcEssXEpJUW02vNJ2xAu4GRKjdFKHbH31C8R0kFEBPXR+8DMnvBWtQIVhAaVn+3l0va
+         J6BU4QHtV6m07YnbMZ5Z+I/3Dl3beqB+31QRC0Zz/HVb7rLxl3iuuVyden+8C8Day4rO
+         70BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wYef0IlAA5cnvfvaD0Ws/jCKLqqDtLAVNioagh3fxFo=;
-        b=S1xpFWF2P0nwI6Jb7nJRQluwRtFlrJyDxN9y7LJMM0ttGKHt4txbVNpe16SaaS80lL
-         AStCUt9qCv+bIBQv6z1A1kAVoGd9o6ekRFldOV9h0SlTQbrQ0lChW69FrfxW/lOrhJfi
-         vOM0RA6OvgXLDukkOmPvYm++HUUOLv0UNHPzMbDuDFY6eiUHDGrjrbu4PcRpmlUm/ZoI
-         L4J6c7nNjAeV/dGTwWY7KpW7MCktCepgPYDdnx+AZvVaaWRatB5u1pVjCkVpx/gnrKEZ
-         IyMrCx0ZNm/Bv/e500Y60hEZWu3qRbcmZsEkZZbF1Ytv+G5HEaZVpaicjx8buMm9GxPN
-         7jcg==
-X-Gm-Message-State: AOAM532f8i2ME6TcFBciqhVC0idXFnPr5X3MGyzWDKQEHXU/kEtPk7Od
-        XEPitEwWzQjsIclVzUXmv0wZBD/gSUYX5ceRsFKB
-X-Google-Smtp-Source: ABdhPJxm2K+GHRjbkAJL7JkYWCiCsE49AHvZ3AgzIC+2MhsncYMq9OfsaBZK3cyOIwmZUZDbN96x/rMx2egaXaIUw38=
-X-Received: by 2002:aa7:de08:: with SMTP id h8mr23618936edv.164.1592957244179;
- Tue, 23 Jun 2020 17:07:24 -0700 (PDT)
+        bh=qShZDIcN/jFhOwqO29jMZXeHqEdC9ZyhtPQiroLvjyE=;
+        b=tbys6K/W5l1qVeaC/YQC3jtc0R/FLEqZrjOiP5UIHlLD9FENqWuVmYDCxaDKBQNV2/
+         SmjHaDBvgxFB5E2r4TZJXVrMrYwu/c24pnP3sE0cIzYgAc1SzMl1vo7uvUbXti9pAtfe
+         2Ct3+DHAhRzuwd61qjQvKoLNvVY+8tOwHJaqGST1OcA89XURnoWrMuubnlKCMxR9zF9j
+         +y/uuTHFEdMuvmd0sSTulRwdpNm3kP0t5EmHEjAzx/+YYx+s7GfkMIbkTWtoXgyNO846
+         TO4t+25ZYlc2hoTiyos41jCIECwPLjbH6UlKGExQ0+2NB5umsq5HTPsTCAcMY3mxQX2b
+         aC4A==
+X-Gm-Message-State: AOAM533+JqeAssLVLxDAL7BD1KWJ/+7hi1MEQVdVHhPXSF/rMtxgmg6J
+        CiohidaXLt/zFBeuc7EF9goXwU+E0m3bZ55LSdNWtQ==
+X-Google-Smtp-Source: ABdhPJyTrja1DJ79D22qD1X1gM/+avVVqpHjXFElnVgpFom29/W+s7ljUPvZyduZ5Mi9RQMl2NreT3cr4NzgwI97g8E=
+X-Received: by 2002:a25:bc81:: with SMTP id e1mr37206935ybk.375.1592957255400;
+ Tue, 23 Jun 2020 17:07:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200618211012.2823-1-nramas@linux.microsoft.com>
-In-Reply-To: <20200618211012.2823-1-nramas@linux.microsoft.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 23 Jun 2020 20:07:13 -0400
-Message-ID: <CAHC9VhTW-M7e7BK3d-UKi6KuPo3=8wNzAU1hN3HDsw=B-CGxFw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] integrity: Add errno field in audit message
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, sgrubb@redhat.com, rgb@redhat.com,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
+References: <20200624083133.466f1f19@canb.auug.org.au>
+In-Reply-To: <20200624083133.466f1f19@canb.auug.org.au>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 23 Jun 2020 19:07:24 -0500
+Message-ID: <CAH2r5muqFH6zxt+uNt=ySeATj9CGtzpAX1TNFPLzqbJg2uaWoA@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commits in the cifs tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 5:10 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> Error code is not included in the audit messages logged by
-> the integrity subsystem.
->
-> Define a new function integrity_audit_message() that takes error code
-> in the "errno" parameter. Add "errno" field in the audit messages logged
-> by the integrity subsystem and set the value passed in the "errno"
-> parameter.
->
-> [    6.303048] audit: type=1804 audit(1592506281.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=measuring_key cause=ENOMEM comm="swapper/0" name=".builtin_trusted_keys" res=0 errno=-12
->
-> [    7.987647] audit: type=1802 audit(1592506283.312:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=policy_update cause=completed comm="systemd" res=1 errno=0
->
-> [    8.019432] audit: type=1804 audit(1592506283.344:10): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_kexec_cmdline cause=hashing_error comm="systemd" name="kexec-cmdline" res=0 errno=-22
->
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Steve Grubb <sgrubb@redhat.com>
-> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->  security/integrity/integrity.h       | 13 +++++++++++++
->  security/integrity/integrity_audit.c | 11 ++++++++++-
->  2 files changed, 23 insertions(+), 1 deletion(-)
+fixed
 
-The audit record changes look good to me.
+cifs-2.6.git for-next updated
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+thx
 
-> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-> index 16c1894c29bb..413c803c5208 100644
-> --- a/security/integrity/integrity.h
-> +++ b/security/integrity/integrity.h
-> @@ -239,6 +239,11 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
->                          const unsigned char *fname, const char *op,
->                          const char *cause, int result, int info);
+On Tue, Jun 23, 2020 at 5:31 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> +void integrity_audit_message(int audit_msgno, struct inode *inode,
-> +                            const unsigned char *fname, const char *op,
-> +                            const char *cause, int result, int info,
-> +                            int errno);
-> +
->  static inline struct audit_buffer *
->  integrity_audit_log_start(struct audit_context *ctx, gfp_t gfp_mask, int type)
->  {
-> @@ -253,6 +258,14 @@ static inline void integrity_audit_msg(int audit_msgno, struct inode *inode,
->  {
->  }
+> Hi all,
 >
-> +static inline void integrity_audit_message(int audit_msgno,
-> +                                          struct inode *inode,
-> +                                          const unsigned char *fname,
-> +                                          const char *op, const char *cause,
-> +                                          int result, int info, int errno)
-> +{
-> +}
-> +
->  static inline struct audit_buffer *
->  integrity_audit_log_start(struct audit_context *ctx, gfp_t gfp_mask, int type)
->  {
-> diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
-> index 5109173839cc..f25e7df099c8 100644
-> --- a/security/integrity/integrity_audit.c
-> +++ b/security/integrity/integrity_audit.c
-> @@ -28,6 +28,15 @@ __setup("integrity_audit=", integrity_audit_setup);
->  void integrity_audit_msg(int audit_msgno, struct inode *inode,
->                          const unsigned char *fname, const char *op,
->                          const char *cause, int result, int audit_info)
-> +{
-> +       integrity_audit_message(audit_msgno, inode, fname, op, cause,
-> +                               result, audit_info, 0);
-> +}
-> +
-> +void integrity_audit_message(int audit_msgno, struct inode *inode,
-> +                            const unsigned char *fname, const char *op,
-> +                            const char *cause, int result, int audit_info,
-> +                            int errno)
->  {
->         struct audit_buffer *ab;
->         char name[TASK_COMM_LEN];
-> @@ -53,6 +62,6 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
->                 audit_log_untrustedstring(ab, inode->i_sb->s_id);
->                 audit_log_format(ab, " ino=%lu", inode->i_ino);
->         }
-> -       audit_log_format(ab, " res=%d", !result);
-> +       audit_log_format(ab, " res=%d errno=%d", !result, errno);
->         audit_log_end(ab);
->  }
+> Commits
+>
+>   52e2b5b30cee ("cifs/smb3: Fix data inconsistent when punch hole")
+>   76f77967b39e ("cifs/smb3: Fix data inconsistent when zero file range")
+>
+> are missing a Signed-off-by from their committer.
+>
 > --
-> 2.27.0
->
+> Cheers,
+> Stephen Rothwell
+
 
 
 -- 
-paul moore
-www.paul-moore.com
+Thanks,
+
+Steve
