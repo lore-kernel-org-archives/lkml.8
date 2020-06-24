@@ -2,79 +2,103 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB369C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8AE320767
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498BD2078E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:28:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593023322;
+	bh=MzwuoMAmLth+NFCHyQ1yJFVWJK3LQtCK+GPYwfcCChw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=nPDtKRZauM+i8OHs5WGNtPEqgt1ZsblM0EYfEFQmn2u1QQAQahDOI/bc/m4afTrMx
+	 obBj2AbspJGn+URziJV5vDAkSnz4kKDTwYbPVBFYBpE3eV3vYUshbrwZc3AjKDO7ut
+	 ot9k5bvvf+WJtKuBJKNAlUyOm20/KUbByKht1KSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406038AbgFXS1j (ORCPT
+        id S2406079AbgFXS2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:27:39 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:40802 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404995AbgFXS1j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:27:39 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id A3F1FCECDB;
-        Wed, 24 Jun 2020 20:37:30 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2] Bluetooth: btusb: Reset port on cmd timeout
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200624111128.v2.1.Ibae403db54245c458d14297f1892c77c5055da41@changeid>
-Date:   Wed, 24 Jun 2020 20:27:37 +0200
-Cc:     Rocky Liao <rjliao@codeaurora.org>,
-        BlueZ <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
+        Wed, 24 Jun 2020 14:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405956AbgFXS2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:28:39 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF4E920738;
+        Wed, 24 Jun 2020 18:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593023319;
+        bh=MzwuoMAmLth+NFCHyQ1yJFVWJK3LQtCK+GPYwfcCChw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=CEWA/FNOfQqqOptQ/cRr21qM7soPky4gD1f8lJGD94BX3L1Uex2TUndon/Deu9hEf
+         kcq9O35m8ErA442XRbUoTt2q1x4/vJ3RFfA6P+3HF0x3LVTGknGeLVlm/XOLjFkEhN
+         5R87+xMfyPEsUuIQXy8ow47pzAlC+JOQ8RxHKrdk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8D55C35228BC; Wed, 24 Jun 2020 11:28:39 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 11:28:39 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <FB7B7C39-4F0F-440C-8C95-7C8E63E17C05@holtmann.org>
-References: <20200624111128.v2.1.Ibae403db54245c458d14297f1892c77c5055da41@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+Subject: Re: [RFC PATCH linux-next] refperf: __srcu_struct_srcu_refctl_scale
+ can be static
+Message-ID: <20200624182839.GI9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202006250116.MYIhw039%lkp@intel.com>
+ <20200624174709.GA165567@6b4061f35fb6>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624174709.GA165567@6b4061f35fb6>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
-
-> QCA_ROME sometimes gets into a state where it is unresponsive to
-> commands. Since it doesn't have support for a reset gpio, reset the usb
-> port when this occurs instead.
+On Thu, Jun 25, 2020 at 01:47:09AM +0800, kernel test robot wrote:
 > 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: kernel test robot <lkp@intel.com>
+
+This gets me the following from gcc version 7.5.0:
+
+kernel/rcu/refscale.c:162:1: error: duplicate ‘static’
+ static DEFINE_STATIC_SRCU(srcu_refctl_scale);
+ ^~~~~~
+
+Is the concern the __srcu_struct_srcu_refctl_scale that is defined
+as non-static?  Last I checked, non-static was required in order for
+the ___srcu_struct_ptrs mechanism to correctly allocate the needed
+per-CPU data.
+
+						Thanx, Paul
+
 > ---
-> On Chromebooks with this chipset, we encountered cmd_timeout after
-> running suspend stress test for hundreds of iterations. Without
-> a recovery mechanism, continued cmd_timeout failures eventually caused
-> the suspend stress test to fail.
+>  refscale.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> This change will just reset the port that the Bluetooth chip is on when
-> cmd_timeout is encountered. At the very least, the driver will unload
-> and stop affecting suspend. It doesn't seem to restore the BT controller
-> to a good state however (this still requires a power cycle).
-> 
-> Changes in v2:
-> - Renamed btusb_generic_usb_cmd_timeout to btusb_qca_cmd_timeout
-> - Updated commit note
-> 
-> drivers/bluetooth/btusb.c | 17 +++++++++++++++++
-> 1 file changed, 17 insertions(+)
-
-patch has been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
-
+> diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
+> index d9291f883b5428..4097b53867b33d 100644
+> --- a/kernel/rcu/refscale.c
+> +++ b/kernel/rcu/refscale.c
+> @@ -159,7 +159,7 @@ static struct ref_scale_ops rcu_ops = {
+>  };
+>  
+>  // Definitions for SRCU ref scale testing.
+> -DEFINE_STATIC_SRCU(srcu_refctl_scale);
+> +static DEFINE_STATIC_SRCU(srcu_refctl_scale);
+>  static struct srcu_struct *srcu_ctlp = &srcu_refctl_scale;
+>  
+>  static void srcu_ref_scale_read_section(const int nloops)
