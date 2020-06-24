@@ -2,141 +2,179 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F70C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB19620738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F01920738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592986488;
+	bh=wCyFawTYIupwoV8sK17GffzQtpLZ4YNmIg9jy3ma+T8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b451LdzK8eINwhAcM7sV/1bPWQRd2ZF+/3NV3IsceQW8obx6svVf51xbuWBuGp+q8
+	 fjqFpCK5LLasPshTcMfjcqoVpYfJdiSH3Zdbe0g72WVe7fOfG7b4F5Nc9R3wVDxIN0
+	 rAqeWsghgDhXf7QAGqmQ8GUfs2IOXDesVui/81jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390317AbgFXIN2 (ORCPT
+        id S2390346AbgFXIOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:13:28 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:50868 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387732AbgFXIN2 (ORCPT
+        Wed, 24 Jun 2020 04:14:46 -0400
+Received: from mail-ej1-f52.google.com ([209.85.218.52]:38533 "EHLO
+        mail-ej1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390249AbgFXIOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:13:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U0aKfqF_1592986404;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0aKfqF_1592986404)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 24 Jun 2020 16:13:24 +0800
-Date:   Wed, 24 Jun 2020 16:13:24 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-Message-ID: <20200624081324.GA12461@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
- <20200623151828.GA31426@dhcp22.suse.cz>
- <57d8a558-dcb3-b318-8e38-6c016b050414@redhat.com>
+        Wed, 24 Jun 2020 04:14:45 -0400
+Received: by mail-ej1-f52.google.com with SMTP id w16so1559139ejj.5;
+        Wed, 24 Jun 2020 01:14:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ibh7qwsVmOM0eKJK6oTaNo8+HhtSr5AxAKMdLvNoMHg=;
+        b=Tx9eORMt9WfmS5rqNr50S4SZJw+JylxOQiJp64Vm2I7zAzVRXpFo6fEoHqZaqSxWJK
+         i7rnVSp6SAcXQW37ggGYt7ts8t0f+Fo0MgzyQCzJdZh03kQAr4X0/3XW0i7LhNiio0R4
+         6GOmng2ODDxncjpaYpu8ZHn9cXDcaD8hPY68F2+08nJeAInKKafte/FAa2wI0UvqnQJi
+         0aTU0l+nsweoc0igRz8EbV3FfsBXNUIcYkt6cp0cbE54SJZG0ufm6MWBus+DzfxgxCiy
+         suzQIg2/3N2QkIRq6ouQkFdssZrXx2IOzxA6H0Xhf7RaQISPdIT8Til+jAukAbuHjoX1
+         gzDQ==
+X-Gm-Message-State: AOAM532BNMExjDSwHKWNvmfaVG8LlLNp7/Jlgh0CAxfBUJ0zDfk7USMS
+        OewfcYZcl+FLbZzjGRE7Le0=
+X-Google-Smtp-Source: ABdhPJwTeuyZfApU34NyzWK0HGsXM4sXOeoUnfsKIw0gNosZtxMfWcYqWxrIgZNdijsZjlpl7dJwjQ==
+X-Received: by 2002:a17:907:11db:: with SMTP id va27mr11152068ejb.175.1592986481334;
+        Wed, 24 Jun 2020 01:14:41 -0700 (PDT)
+Received: from pi3 ([194.230.155.235])
+        by smtp.googlemail.com with ESMTPSA id f16sm3512754ejr.0.2020.06.24.01.14.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 01:14:40 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:14:38 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
+Message-ID: <20200624081438.GA20603@pi3>
+References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+ <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+ <20200623191129.GA4171@kozik-lap>
+ <20200624080117.fzgowkpgyhs6tbzx@macmini.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <57d8a558-dcb3-b318-8e38-6c016b050414@redhat.com>
+In-Reply-To: <20200624080117.fzgowkpgyhs6tbzx@macmini.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 09:48:43AM +0200, David Hildenbrand wrote:
->On 23.06.20 17:18, Michal Hocko wrote:
->> On Tue 23-06-20 17:42:58, Wei Yang wrote:
->>> For early sections, we assumes its memmap will never be partially
->>> removed. But current behavior breaks this.
->>>
->>> Let's correct it.
->>>
->>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> 
->> Can a user trigger this or is this a theoretical bug?
->
->I tried to reproduce it, but somehow I get unexpected behavior.
->With a hacked QEMU I can get
+On Wed, Jun 24, 2020 at 10:01:17AM +0200, Willy Wolff wrote:
+> Hi Krzysztof,
+> Thanks to look at it.
+> 
+> mem_gov is /sys/class/devfreq/10c20000.memory-controller/governor
+> 
+> Here some numbers after increasing the running time:
+> 
+> Running using simple_ondemand:
+> Before:
+>      From  :   To                                                                                     
+>            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+> * 165000000:         0         0         0         0         0         0         0         4   4528600
+>   206000000:         5         0         0         0         0         0         0         0     57780
+>   275000000:         0         5         0         0         0         0         0         0     50060
+>   413000000:         0         0         5         0         0         0         0         0     46240
+>   543000000:         0         0         0         5         0         0         0         0     48970
+>   633000000:         0         0         0         0         5         0         0         0     47330
+>   728000000:         0         0         0         0         0         0         0         0         0
+>   825000000:         0         0         0         0         0         5         0         0    331300
+> Total transition : 34
+> 
+> 
+> After:
+>      From  :   To
+>            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+> * 165000000:         0         0         0         0         0         0         0         4   5098890
+>   206000000:         5         0         0         0         0         0         0         0     57780
+>   275000000:         0         5         0         0         0         0         0         0     50060
+>   413000000:         0         0         5         0         0         0         0         0     46240
+>   543000000:         0         0         0         5         0         0         0         0     48970
+>   633000000:         0         0         0         0         5         0         0         0     47330
+>   728000000:         0         0         0         0         0         0         0         0         0
+>   825000000:         0         0         0         0         0         5         0         0    331300
+> Total transition : 34
+> 
+> With a running time of:
+> LITTLE => 283.699 s (680.877 c per mem access)
+> big => 284.47 s (975.327 c per mem access)
 
-David,
+I see there were no transitions during your memory test.
 
-Thanks for your effort. Would you mind sharing your qemu command line, so that
-I can have a try at my side?
+> 
+> And when I set to the performance governor:
+> Before:
+>      From  :   To
+>            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+>   165000000:         0         0         0         0         0         0         0         5   5099040
+>   206000000:         5         0         0         0         0         0         0         0     57780
+>   275000000:         0         5         0         0         0         0         0         0     50060
+>   413000000:         0         0         5         0         0         0         0         0     46240
+>   543000000:         0         0         0         5         0         0         0         0     48970
+>   633000000:         0         0         0         0         5         0         0         0     47330
+>   728000000:         0         0         0         0         0         0         0         0         0
+> * 825000000:         0         0         0         0         0         5         0         0    331350
+> Total transition : 35
+> 
+> After:
+>      From  :   To
+>            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+>   165000000:         0         0         0         0         0         0         0         5   5099040
+>   206000000:         5         0         0         0         0         0         0         0     57780
+>   275000000:         0         5         0         0         0         0         0         0     50060
+>   413000000:         0         0         5         0         0         0         0         0     46240
+>   543000000:         0         0         0         5         0         0         0         0     48970
+>   633000000:         0         0         0         0         5         0         0         0     47330
+>   728000000:         0         0         0         0         0         0         0         0         0
+> * 825000000:         0         0         0         0         0         5         0         0    472980
+> Total transition : 35
+> 
+> With a running time of:
+> LITTLE: 68.8428 s (165.223 c per mem access)
+> big: 71.3268 s (244.549 c per mem access)
+> 
+> 
+> I see some transition, but not occuring during the benchmark.
+> I haven't dive into the code, but maybe it is the heuristic behind that is not
+> well defined? If you know how it's working that would be helpfull before I dive
+> in it.
 
->
->$ cat /proc/iomem
->[...]
->100000000-143ffffff : System RAM
->144000000-343dfffff : Persistent Memory
->  144000000-1441fffff : namespace0.0
->  144200000-144ffffff : dax0.0
->
->After
->$ ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax --size=16M
->
->I get
->
->$ cat /proc/iomem
->[...]
->100000000-143ffffff : System RAM
->144000000-343dfffff : Persistent Memory
->  144000000-1441fffff : namespace0.0
->  144200000-144ffffff : dax0.0
->
+Sorry, don't know that much. It seems it counts time between overflow of
+DMC perf events and based on this bumps up the frequency.
 
-The memory layout seems not changed.
+Maybe your test does not fit well in current formula? Maybe the formula
+has some drawbacks...
 
->I can trigger remove+re-add via 
->$ ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax --size=16M
+> 
+> I run your test as well, and indeed, it seems to work for large bunch of memory,
+> and there is some delay before making a transition (seems to be around 10s).
+> When you kill memtester, it reduces the freq stepwisely every ~10s.
+> 
+> Note that the timing shown above account for the critical path, and the code is
+> looping on reading only, there is no write in the critical path.
+> Maybe memtester is doing writes and devfreq heuristic uses only write info?
+>
+You mentioned that you want to cut the prefetcher to have direct access
+to RAM. But prefetcher also accesses the RAM. He does not get the
+contents from the air.  Although this is unrelated to the problem
+because your pattern should kick ondemand as well.
 
-Do we need to change the mode to force the reconfig?
-
->
->So we clearly have an overlap between System RAM and dax0.0 within a section.
->However, I never get early_section() to trigger in
->section_activate()/section_deactivate() ? That's unexpected
->
->
->Definitely something seems to go wrong after the first "ndctl create-namespace".
->Using a random page walker:
->
->[root@localhost ~]# ./page-types 
-
-What is this page-types?
-
->[  387.019229] general protection fault, probably for non-canonical address 0xfdfdfdfdfdfdfdfc: 0000 [#1] SMP NOPTI
->[  387.020172] CPU: 17 PID: 1314 Comm: page-types Kdump: loaded Tainted: G        W         5.8.0-rc2 #20
->[  387.021015] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
->[  387.022056] RIP: 0010:stable_page_flags+0x27/0x3f0
->[  387.022519] Code: 00 00 00 66 66 66 66 90 48 85 ff 0f 84 d2 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48f
->[  387.024291] RSP: 0018:ffff9f8781057e58 EFLAGS: 00010202
->[  387.024775] RAX: fdfdfdfdfdfdfdfc RBX: fdfdfdfdfdfdfdfd RCX: 00007ffc4f4f1f78
->[  387.025423] RDX: 0000000000000001 RSI: 0000002000000000 RDI: ffffc590c5100000
->[  387.026052] RBP: ffffc590c5100000 R08: 0000000000000001 R09: 0000000000000000
->[  387.026696] R10: 0000000000000000 R11: 0000000000000000 R12: 00007ffc4f4f1f80
->[  387.027324] R13: 0000000000040000 R14: 00007ffc4f4d1f80 R15: ffffffffa1577ee0
->[  387.027974] FS:  00007f91a0f9c580(0000) GS:ffff888b3f7c0000(0000) knlGS:0000000000000000
->[  387.028699] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->[  387.029223] CR2: 0000000000449b00 CR3: 000000007a7fc000 CR4: 00000000000006e0
->[  387.029864] Call Trace:
->[  387.030108]  kpageflags_read+0xcc/0x160
->[  387.030473]  proc_reg_read+0x53/0x80
->[  387.030809]  vfs_read+0x9d/0x150
->[  387.031114]  ksys_pread64+0x65/0xa0
->[  387.031449]  do_syscall_64+0x4d/0x90
->[  387.031783]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
->
->-- 
->Thanks,
->
->David / dhildenb
-
--- 
-Wei Yang
-Help you, Help me
+Best regards,
+Krzysztof
