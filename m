@@ -2,90 +2,453 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90972C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA6A20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593001370;
-	bh=llsEnXOBdDldUYmEyO0zoXemSr+7CRN/czVZ0wtPt98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X31lwW51DV66GwhbBcDKxJpEyt3WKHhZ+MMsIrxOmgaPwWsE5H6sdd0XsG9lLPm7J
-	 NT8ifmE8duqwsJfdU68yvQALbbHUpauTnsNi6MCl1hRvhLMhXx7nOR6Sxv6K/AyFH2
-	 Hr8qEoYYnTzoBbJ1EcYcOnTmuTYHr3zSB4UNNumI=
+	by mail.kernel.org (Postfix) with ESMTP id 6C2A720707
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390581AbgFXMWs (ORCPT
+        id S2390639AbgFXMXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60926 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 08:23:14 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54532 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390537AbgFXMWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:22:47 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D78DE20707;
-        Wed, 24 Jun 2020 12:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593001367;
-        bh=llsEnXOBdDldUYmEyO0zoXemSr+7CRN/czVZ0wtPt98=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vq8pa5speUnvVEor4+UxiuzoF0QDSc88FgivHmWNqRFNYftWS8EVzdyvfXRcVHSfq
-         rkiU9Q0jRaitl6/pPya2DCCkV29BuUICj7LboiTxyoK1wm/VgjqmNbdeWytFFuIeeQ
-         nTxkwhmLIxlrIEENeizswb7Q37sY1PE+GtYeJ8oY=
-Date:   Wed, 24 Jun 2020 13:22:42 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jun 24 [build failure on arm64]
-Message-ID: <20200624122242.GA6270@willie-the-truck>
-References: <20200624165323.3dffcde5@canb.auug.org.au>
- <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
- <20200624105528.GB6134@willie-the-truck>
- <b561e663-a9aa-d600-e23b-09793199141e@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b561e663-a9aa-d600-e23b-09793199141e@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S2388548AbgFXMXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:23:12 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D3452001CF;
+        Wed, 24 Jun 2020 14:23:09 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 961792001C2;
+        Wed, 24 Jun 2020 14:22:58 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 15129402A6;
+        Wed, 24 Jun 2020 20:22:46 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net, leonard.crestez@nxp.com,
+        aisheng.dong@nxp.com, peng.fan@nxp.com, franck.lenormand@nxp.com,
+        arnd@arndb.de, krzk@kernel.org, daniel.baluta@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] firmware: imx: Move i.MX SCU soc driver into SCU firmware driver
+Date:   Wed, 24 Jun 2020 20:11:27 +0800
+Message-Id: <1593000687-12213-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 12:57:23PM +0100, Jon Hunter wrote:
-> On 24/06/2020 11:55, Will Deacon wrote:
-> > diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> > index 1e5a940532da..97d3d3632093 100644
-> > --- a/arch/arm64/kernel/vdso/Makefile
-> > +++ b/arch/arm64/kernel/vdso/Makefile
-> > @@ -23,8 +23,9 @@ btildflags-$(CONFIG_ARM64_BTI_KERNEL) += -z force-bti
-> >  # potential future proofing if we end up with internal calls to the exported
-> >  # routines, as x86 does (see 6f121e548f83 ("x86, vdso: Reimplement vdso.so
-> >  # preparation in build-time C")).
-> > -ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
-> > -               -Bsymbolic --no-eh-frame-hdr --build-id -n $(btildflags-y) -T
-> > +ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv       \
-> > +            -Bsymbolic $(call ld-option, --no-eh-frame-hdr) --build-id -n      \
-> > +            $(btildflags-y) -T
-> >  
-> >  ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
-> >  ccflags-y += -DDISABLE_BRANCH_PROFILING
-> > 
-> 
-> 
-> I am seeing the same build failure and the above does fix it for me.
+The i.MX SCU soc driver depends on SCU firmware driver, so it has to
+use platform driver model for proper defer probe operation, since
+it has no device binding in DT file, a simple platform device is
+created together inside the platform driver. To make it more clean,
+we can just move the entire SCU soc driver into SCU firmware driver.
 
-Cheers, Jon. I'll get this into -next with your Tested-by.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/configs/defconfig   |   1 -
+ drivers/firmware/imx/imx-scu.c | 127 ++++++++++++++++++++++++++++++
+ drivers/soc/imx/Kconfig        |   9 ---
+ drivers/soc/imx/Makefile       |   1 -
+ drivers/soc/imx/soc-imx-scu.c  | 172 -----------------------------------------
+ 5 files changed, 127 insertions(+), 183 deletions(-)
+ delete mode 100644 drivers/soc/imx/soc-imx-scu.c
 
-Will
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index ae76fae..35f037f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -854,7 +854,6 @@ CONFIG_OWL_PM_DOMAINS=y
+ CONFIG_RASPBERRYPI_POWER=y
+ CONFIG_FSL_DPAA=y
+ CONFIG_FSL_MC_DPIO=y
+-CONFIG_IMX_SCU_SOC=y
+ CONFIG_QCOM_AOSS_QMP=y
+ CONFIG_QCOM_GENI_SE=y
+ CONFIG_QCOM_RMTFS_MEM=m
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index 2ab0482..2719487 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -7,6 +7,7 @@
+  *
+  */
+ 
++#include <dt-bindings/firmware/imx/rsrc.h>
+ #include <linux/err.h>
+ #include <linux/firmware/imx/ipc.h>
+ #include <linux/firmware/imx/sci.h>
+@@ -18,6 +19,7 @@
+ #include <linux/mutex.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/sys_soc.h>
+ 
+ #define SCU_MU_CHAN_NUM		8
+ #define MAX_RX_TIMEOUT		(msecs_to_jiffies(30))
+@@ -45,6 +47,25 @@ struct imx_sc_ipc {
+ 	u8 count;
+ };
+ 
++struct imx_sc_msg_misc_get_soc_id {
++	struct imx_sc_rpc_msg hdr;
++	union {
++		struct {
++			u32 control;
++			u16 resource;
++		} __packed req;
++		struct {
++			u32 id;
++		} resp;
++	} data;
++} __packed __aligned(4);
++
++struct imx_sc_msg_misc_get_soc_uid {
++	struct imx_sc_rpc_msg hdr;
++	u32 uid_low;
++	u32 uid_high;
++} __packed;
++
+ /*
+  * This type is used to indicate error response for most functions.
+  */
+@@ -257,6 +278,108 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
+ }
+ EXPORT_SYMBOL(imx_scu_call_rpc);
+ 
++static int imx_scu_soc_uid(u64 *soc_uid)
++{
++	struct imx_sc_msg_misc_get_soc_uid msg;
++	struct imx_sc_rpc_msg *hdr = &msg.hdr;
++	int ret;
++
++	hdr->ver = IMX_SC_RPC_VERSION;
++	hdr->svc = IMX_SC_RPC_SVC_MISC;
++	hdr->func = IMX_SC_MISC_FUNC_UNIQUE_ID;
++	hdr->size = 1;
++
++	ret = imx_scu_call_rpc(imx_sc_ipc_handle, &msg, true);
++	if (ret) {
++		pr_err("%s: get soc uid failed, ret %d\n", __func__, ret);
++		return ret;
++	}
++
++	*soc_uid = msg.uid_high;
++	*soc_uid <<= 32;
++	*soc_uid |= msg.uid_low;
++
++	return 0;
++}
++
++static int imx_scu_soc_id(void)
++{
++	struct imx_sc_msg_misc_get_soc_id msg;
++	struct imx_sc_rpc_msg *hdr = &msg.hdr;
++	int ret;
++
++	hdr->ver = IMX_SC_RPC_VERSION;
++	hdr->svc = IMX_SC_RPC_SVC_MISC;
++	hdr->func = IMX_SC_MISC_FUNC_GET_CONTROL;
++	hdr->size = 3;
++
++	msg.data.req.control = IMX_SC_C_ID;
++	msg.data.req.resource = IMX_SC_R_SYSTEM;
++
++	ret = imx_scu_call_rpc(imx_sc_ipc_handle, &msg, true);
++	if (ret) {
++		pr_err("%s: get soc info failed, ret %d\n", __func__, ret);
++		return ret;
++	}
++
++	return msg.data.resp.id;
++}
++
++static int imx_scu_soc_init(struct device *dev)
++{
++	struct soc_device_attribute *soc_dev_attr;
++	struct soc_device *soc_dev;
++	int id, ret;
++	u64 uid = 0;
++	u32 val;
++
++	soc_dev_attr = devm_kzalloc(dev, sizeof(*soc_dev_attr),
++				    GFP_KERNEL);
++	if (!soc_dev_attr)
++		return -ENOMEM;
++
++	soc_dev_attr->family = "Freescale i.MX";
++
++	ret = of_property_read_string(of_root,
++				      "model",
++				      &soc_dev_attr->machine);
++	if (ret)
++		return ret;
++
++	id = imx_scu_soc_id();
++	if (id < 0)
++		return -EINVAL;
++
++	ret = imx_scu_soc_uid(&uid);
++	if (ret < 0)
++		return -EINVAL;
++
++	/* format soc_id value passed from SCU firmware */
++	val = id & 0x1f;
++	soc_dev_attr->soc_id = devm_kasprintf(dev, GFP_KERNEL, "0x%x", val);
++	if (!soc_dev_attr->soc_id)
++		return -ENOMEM;
++
++	/* format revision value passed from SCU firmware */
++	val = (id >> 5) & 0xf;
++	val = (((val >> 2) + 1) << 4) | (val & 0x3);
++	soc_dev_attr->revision = devm_kasprintf(dev, GFP_KERNEL, "%d.%d",
++						(val >> 4) & 0xf, val & 0xf);
++	if (!soc_dev_attr->revision)
++		return -ENOMEM;
++
++	soc_dev_attr->serial_number = devm_kasprintf(dev, GFP_KERNEL,
++						     "%016llX", uid);
++	if (!soc_dev_attr->serial_number)
++		return -ENOMEM;
++
++	soc_dev = soc_device_register(soc_dev_attr);
++	if (IS_ERR(soc_dev))
++		return PTR_ERR(soc_dev);
++
++	return 0;
++}
++
+ static int imx_scu_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -328,6 +451,10 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 
+ 	imx_sc_ipc_handle = sc_ipc;
+ 
++	ret = imx_scu_soc_init(dev);
++	if (ret)
++		dev_warn(dev, "failed to initialize SoC info: %d\n", ret);
++
+ 	ret = imx_scu_enable_general_irq_channel(dev);
+ 	if (ret)
+ 		dev_warn(dev,
+diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
+index d515d2c..d49fa63 100644
+--- a/drivers/soc/imx/Kconfig
++++ b/drivers/soc/imx/Kconfig
+@@ -8,15 +8,6 @@ config IMX_GPCV2_PM_DOMAINS
+ 	select PM_GENERIC_DOMAINS
+ 	default y if SOC_IMX7D
+ 
+-config IMX_SCU_SOC
+-	bool "i.MX System Controller Unit SoC info support"
+-	depends on IMX_SCU
+-	select SOC_BUS
+-	help
+-	  If you say yes here you get support for the NXP i.MX System
+-	  Controller Unit SoC info module, it will provide the SoC info
+-	  like SoC family, ID and revision etc.
+-
+ config SOC_IMX8M
+ 	bool "i.MX8M SoC family support"
+ 	depends on ARCH_MXC || COMPILE_TEST
+diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
+index 4461432..078dc91 100644
+--- a/drivers/soc/imx/Makefile
++++ b/drivers/soc/imx/Makefile
+@@ -5,4 +5,3 @@ endif
+ obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
+ obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) += gpcv2.o
+ obj-$(CONFIG_SOC_IMX8M) += soc-imx8m.o
+-obj-$(CONFIG_IMX_SCU_SOC) += soc-imx-scu.o
+diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
+deleted file mode 100644
+index 92448ca..0000000
+--- a/drivers/soc/imx/soc-imx-scu.c
++++ /dev/null
+@@ -1,172 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright 2019 NXP.
+- */
+-
+-#include <dt-bindings/firmware/imx/rsrc.h>
+-#include <linux/firmware/imx/sci.h>
+-#include <linux/slab.h>
+-#include <linux/sys_soc.h>
+-#include <linux/platform_device.h>
+-#include <linux/of.h>
+-
+-#define IMX_SCU_SOC_DRIVER_NAME		"imx-scu-soc"
+-
+-static struct imx_sc_ipc *soc_ipc_handle;
+-
+-struct imx_sc_msg_misc_get_soc_id {
+-	struct imx_sc_rpc_msg hdr;
+-	union {
+-		struct {
+-			u32 control;
+-			u16 resource;
+-		} __packed req;
+-		struct {
+-			u32 id;
+-		} resp;
+-	} data;
+-} __packed __aligned(4);
+-
+-struct imx_sc_msg_misc_get_soc_uid {
+-	struct imx_sc_rpc_msg hdr;
+-	u32 uid_low;
+-	u32 uid_high;
+-} __packed;
+-
+-static int imx_scu_soc_uid(u64 *soc_uid)
+-{
+-	struct imx_sc_msg_misc_get_soc_uid msg;
+-	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+-	int ret;
+-
+-	hdr->ver = IMX_SC_RPC_VERSION;
+-	hdr->svc = IMX_SC_RPC_SVC_MISC;
+-	hdr->func = IMX_SC_MISC_FUNC_UNIQUE_ID;
+-	hdr->size = 1;
+-
+-	ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
+-	if (ret) {
+-		pr_err("%s: get soc uid failed, ret %d\n", __func__, ret);
+-		return ret;
+-	}
+-
+-	*soc_uid = msg.uid_high;
+-	*soc_uid <<= 32;
+-	*soc_uid |= msg.uid_low;
+-
+-	return 0;
+-}
+-
+-static int imx_scu_soc_id(void)
+-{
+-	struct imx_sc_msg_misc_get_soc_id msg;
+-	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+-	int ret;
+-
+-	hdr->ver = IMX_SC_RPC_VERSION;
+-	hdr->svc = IMX_SC_RPC_SVC_MISC;
+-	hdr->func = IMX_SC_MISC_FUNC_GET_CONTROL;
+-	hdr->size = 3;
+-
+-	msg.data.req.control = IMX_SC_C_ID;
+-	msg.data.req.resource = IMX_SC_R_SYSTEM;
+-
+-	ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
+-	if (ret) {
+-		pr_err("%s: get soc info failed, ret %d\n", __func__, ret);
+-		return ret;
+-	}
+-
+-	return msg.data.resp.id;
+-}
+-
+-static int imx_scu_soc_probe(struct platform_device *pdev)
+-{
+-	struct soc_device_attribute *soc_dev_attr;
+-	struct soc_device *soc_dev;
+-	int id, ret;
+-	u64 uid = 0;
+-	u32 val;
+-
+-	ret = imx_scu_get_handle(&soc_ipc_handle);
+-	if (ret)
+-		return ret;
+-
+-	soc_dev_attr = devm_kzalloc(&pdev->dev, sizeof(*soc_dev_attr),
+-				    GFP_KERNEL);
+-	if (!soc_dev_attr)
+-		return -ENOMEM;
+-
+-	soc_dev_attr->family = "Freescale i.MX";
+-
+-	ret = of_property_read_string(of_root,
+-				      "model",
+-				      &soc_dev_attr->machine);
+-	if (ret)
+-		return ret;
+-
+-	id = imx_scu_soc_id();
+-	if (id < 0)
+-		return -EINVAL;
+-
+-	ret = imx_scu_soc_uid(&uid);
+-	if (ret < 0)
+-		return -EINVAL;
+-
+-	/* format soc_id value passed from SCU firmware */
+-	val = id & 0x1f;
+-	soc_dev_attr->soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "0x%x", val);
+-	if (!soc_dev_attr->soc_id)
+-		return -ENOMEM;
+-
+-	/* format revision value passed from SCU firmware */
+-	val = (id >> 5) & 0xf;
+-	val = (((val >> 2) + 1) << 4) | (val & 0x3);
+-	soc_dev_attr->revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%d.%d",
+-						(val >> 4) & 0xf, val & 0xf);
+-	if (!soc_dev_attr->revision)
+-		return -ENOMEM;
+-
+-	soc_dev_attr->serial_number = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+-						     "%016llX", uid);
+-	if (!soc_dev_attr->serial_number)
+-		return -ENOMEM;
+-
+-	soc_dev = soc_device_register(soc_dev_attr);
+-	if (IS_ERR(soc_dev))
+-		return PTR_ERR(soc_dev);
+-
+-	return 0;
+-}
+-
+-static struct platform_driver imx_scu_soc_driver = {
+-	.driver = {
+-		.name = IMX_SCU_SOC_DRIVER_NAME,
+-	},
+-	.probe = imx_scu_soc_probe,
+-};
+-
+-static int __init imx_scu_soc_init(void)
+-{
+-	struct platform_device *pdev;
+-	struct device_node *np;
+-	int ret;
+-
+-	np = of_find_compatible_node(NULL, NULL, "fsl,imx-scu");
+-	if (!np)
+-		return -ENODEV;
+-
+-	of_node_put(np);
+-
+-	ret = platform_driver_register(&imx_scu_soc_driver);
+-	if (ret)
+-		return ret;
+-
+-	pdev = platform_device_register_simple(IMX_SCU_SOC_DRIVER_NAME,
+-					       -1, NULL, 0);
+-	if (IS_ERR(pdev))
+-		platform_driver_unregister(&imx_scu_soc_driver);
+-
+-	return PTR_ERR_OR_ZERO(pdev);
+-}
+-device_initcall(imx_scu_soc_init);
+-- 
+2.7.4
+
