@@ -2,231 +2,129 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C666CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5BCD20706
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:29:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="eB/MS0cM"
+	by mail.kernel.org (Postfix) with ESMTP id AC1AC20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390415AbgFXK3Q (ORCPT
+        id S2390427AbgFXK3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:29:16 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:10084 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387962AbgFXK3P (ORCPT
+        Wed, 24 Jun 2020 06:29:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59142 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388377AbgFXK3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:29:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592994555; x=1624530555;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yGrRZklnrruPHgecJrYbeXz0jFDG57EUhI3217bZdwA=;
-  b=eB/MS0cMZP+i1dGdN6vCO5NFel8/OR2g0CefRYfG+TcppBK5PVsLDjpy
-   twCiuWbIfhsZtLL5NS26rgZkJzcmod3DckdSOGkuywRlIIu9cMcBoH/k/
-   Nl39SdL+0n9YYWIJYmwxxuiEoakurT3J/zb04FRIV/S33huDOC18OrOwL
-   L4qHvEhCT1l1vtid9VEMciOhkqMPVG09DJbuSN0M9c8pxYL6ey7NZ/m75
-   lVj3Hoth9roCNjFLw4it8O+Kh2Bpv8NHkm0VNfL5Mo4s0giP3gvYdLVFW
-   GeDZS7bz7FXrIuZXT7ANYfBcGgc5kbH+30Wz7HjuXZNukcYrR8jTwtbf6
-   g==;
-IronPort-SDR: QF9yjQ2ujdsb0ncOlgvHmhhBMwQCkscrjqW4/bB7HhH9IWJAHZ9sLcLx8hjpz7chdqyyVce84K
- 8QCpW6f1rhQe7Ua9b9rvEkJGY6OveEOaw4EK29MptqltC4LdJmkitYIGTPyufnvfdvilrkihP0
- uUe6e+dyPs2meOxXX1kpd+060HQDYagIHS/YCLJXLIecZrNIvZcyXJchFK9jiKjQ0ZbvvfiNON
- RJX38CuEmnNE9vCKJoxZZihA148rU2x9j5yhsnObODlR5DWTxz7zkumjzOXCcYqIxc+LJjcCvh
- 61Q=
-X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
-   d="scan'208";a="79575176"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2020 03:29:14 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 24 Jun 2020 03:29:02 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Wed, 24 Jun 2020 03:29:01 -0700
-Date:   Wed, 24 Jun 2020 12:29:09 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <roopa@cumulusnetworks.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH net-next] bridge: mrp: Extend MRP netlink interface with
- IFLA_BRIDGE_MRP_CLEAR
-Message-ID: <20200624102909.dumxk24at65yjyai@soft-dev3.localdomain>
-References: <20200624080537.3154332-1-horatiu.vultur@microchip.com>
- <84c1e063-f49b-ee5a-c5ed-ab6ba5346991@cumulusnetworks.com>
+        Wed, 24 Jun 2020 06:29:43 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OA3Xe3086323;
+        Wed, 24 Jun 2020 06:29:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyrv06c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 06:29:28 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OAS12d040149;
+        Wed, 24 Jun 2020 06:29:28 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyrv05m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 06:29:28 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OAKPvX032124;
+        Wed, 24 Jun 2020 10:29:26 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02wdc.us.ibm.com with ESMTP id 31uus3k5h1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 10:29:26 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OATQaw54395248
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 10:29:26 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F242112066;
+        Wed, 24 Jun 2020 10:29:26 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1186E112062;
+        Wed, 24 Jun 2020 10:29:26 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.85.91.248])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Jun 2020 10:29:26 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 2227A2E4AAE; Wed, 24 Jun 2020 15:59:21 +0530 (IST)
+Date:   Wed, 24 Jun 2020 15:59:21 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v5 2/3] powerpc/numa: Prefer node id queried from vphn
+Message-ID: <20200624102920.GB31972@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
+ <20200624092846.9194-3-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <84c1e063-f49b-ee5a-c5ed-ab6ba5346991@cumulusnetworks.com>
+In-Reply-To: <20200624092846.9194-3-srikar@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_05:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ cotscore=-2147483648 mlxscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 adultscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 06/24/2020 11:19, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 24/06/2020 11:05, Horatiu Vultur wrote:
-> > In case the userspace daemon dies, then when is restarted it doesn't
-> > know if there are any MRP instances in the kernel. Therefore extend the
-> > netlink interface to allow the daemon to clear all MRP instances when is
-> > started.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > ---
-> >  include/uapi/linux/if_bridge.h |  8 ++++++++
-> >  net/bridge/br_mrp.c            | 15 +++++++++++++++
-> >  net/bridge/br_mrp_netlink.c    | 26 ++++++++++++++++++++++++++
-> >  net/bridge/br_private_mrp.h    |  1 +
-> >  4 files changed, 50 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-> > index caa6914a3e53a..2ae7d0c0d46b8 100644
-> > --- a/include/uapi/linux/if_bridge.h
-> > +++ b/include/uapi/linux/if_bridge.h
-> > @@ -166,6 +166,7 @@ enum {
-> >       IFLA_BRIDGE_MRP_RING_STATE,
-> >       IFLA_BRIDGE_MRP_RING_ROLE,
-> >       IFLA_BRIDGE_MRP_START_TEST,
-> > +     IFLA_BRIDGE_MRP_CLEAR,
-> >       __IFLA_BRIDGE_MRP_MAX,
-> >  };
-> >
-> > @@ -228,6 +229,13 @@ enum {
-> >
-> >  #define IFLA_BRIDGE_MRP_START_TEST_MAX (__IFLA_BRIDGE_MRP_START_TEST_MAX - 1)
-> >
-> > +enum {
-> > +     IFLA_BRIDGE_MRP_CLEAR_UNSPEC,
-> > +     __IFLA_BRIDGE_MRP_CLEAR_MAX,
-> > +};
-> 
-> Out of curiousity - do you plan to have any clean attributes?
-> In case you don't this can simply be a flag that clears the MRP instances instead
-> of a nested attribute.
+Hello Srikar,
 
-Currently I don't plan to add any clean attributes. But I have used the
-nested attribute just in case in the future something will be needed.
 
+On Wed, Jun 24, 2020 at 02:58:45PM +0530, Srikar Dronamraju wrote:
+> Node id queried from the static device tree may not
+> be correct. For example: it may always show 0 on a shared processor.
+> Hence prefer the node id queried from vphn and fallback on the device tree
+> based node id if vphn query fails.
 > 
-> > +
-> > +#define IFLA_BRIDGE_MRP_CLEAR_MAX (__IFLA_BRIDGE_MRP_CLEAR_MAX - 1)
-> > +
-> >  struct br_mrp_instance {
-> >       __u32 ring_id;
-> >       __u32 p_ifindex;
-> > diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-> > index 24986ec7d38cc..02d102edaaaad 100644
-> > --- a/net/bridge/br_mrp.c
-> > +++ b/net/bridge/br_mrp.c
-> > @@ -372,6 +372,21 @@ int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance)
-> >       return 0;
-> >  }
-> >
-> > +/* Deletes all MRP instances on the bridge
-> > + * note: called under rtnl_lock
-> > + */
-> > +int br_mrp_clear(struct net_bridge *br)
-> > +{
-> > +     struct br_mrp *mrp;
-> > +
-> > +     list_for_each_entry_rcu(mrp, &br->mrp_list, list,
-> > +                             lockdep_rtnl_is_held()) {
-> > +             br_mrp_del_impl(br, mrp);
-> 
-> I don't think you're in RCU-protected region here, as the lockdep above confirms, which
-> means br_mrp_del_impl() can free mrp and you can access freed memory while walking the list
-> (trying to access of the next element).
-> 
-> You should be using list_for_each_entry_safe() to delete elements while walking the list.
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
+> Cc: Christopher Lameter <cl@linux.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-Good catch! I will update in the next version.
-> 
-> Cheers,
->  Nik
-> 
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  /* Set port state, port state can be forwarding, blocked or disabled
-> >   * note: already called with rtnl_lock
-> >   */
-> > diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-> > index 34b3a8776991f..5e743538464f6 100644
-> > --- a/net/bridge/br_mrp_netlink.c
-> > +++ b/net/bridge/br_mrp_netlink.c
-> > @@ -14,6 +14,7 @@ static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
-> >       [IFLA_BRIDGE_MRP_RING_STATE]    = { .type = NLA_NESTED },
-> >       [IFLA_BRIDGE_MRP_RING_ROLE]     = { .type = NLA_NESTED },
-> >       [IFLA_BRIDGE_MRP_START_TEST]    = { .type = NLA_NESTED },
-> > +     [IFLA_BRIDGE_MRP_CLEAR]         = { .type = NLA_NESTED },
-> >  };
-> >
-> >  static const struct nla_policy
-> > @@ -235,6 +236,25 @@ static int br_mrp_start_test_parse(struct net_bridge *br, struct nlattr *attr,
-> >       return br_mrp_start_test(br, &test);
-> >  }
-> >
-> > +static const struct nla_policy
-> > +br_mrp_clear_policy[IFLA_BRIDGE_MRP_CLEAR_MAX + 1] = {
-> > +     [IFLA_BRIDGE_MRP_CLEAR_UNSPEC]          = { .type = NLA_REJECT },
-> > +};
-> > +
-> > +static int br_mrp_clear_parse(struct net_bridge *br, struct nlattr *attr,
-> > +                           struct netlink_ext_ack *extack)
-> > +{
-> > +     struct nlattr *tb[IFLA_BRIDGE_MRP_START_TEST_MAX + 1];
-> > +     int err;
-> > +
-> > +     err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_CLEAR_MAX, attr,
-> > +                            br_mrp_clear_policy, extack);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     return br_mrp_clear(br);
-> > +}
-> > +
-> >  int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-> >                struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
-> >  {
-> > @@ -301,6 +321,12 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
-> >                       return err;
-> >       }
-> >
-> > +     if (tb[IFLA_BRIDGE_MRP_CLEAR]) {
-> > +             err = br_mrp_clear_parse(br, tb[IFLA_BRIDGE_MRP_CLEAR], extack);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> >       return 0;
-> >  }
-> >
-> > diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-> > index 33b255e38ffec..25c3b8596c25b 100644
-> > --- a/net/bridge/br_private_mrp.h
-> > +++ b/net/bridge/br_private_mrp.h
-> > @@ -36,6 +36,7 @@ struct br_mrp {
-> >  /* br_mrp.c */
-> >  int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance);
-> >  int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance);
-> > +int br_mrp_clear(struct net_bridge *br);
-> >  int br_mrp_set_port_state(struct net_bridge_port *p,
-> >                         enum br_mrp_port_state_type state);
-> >  int br_mrp_set_port_role(struct net_bridge_port *p,
-> >
-> 
 
--- 
-/Horatiu
+This patch looks good to me.
+
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+
+
+--
+Thanks and Regards
+gautham.
