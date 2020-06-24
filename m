@@ -2,105 +2,141 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A71C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2101C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706AD20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SNkQbmm6"
+	by mail.kernel.org (Postfix) with ESMTP id 9FA8220720
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593004651;
+	bh=86snOjR4hqyDxecZ2epb7ASiyjJfRnnwVyoYeuwlHmw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=St0sKD3JFx5l/1htES4KRLRh2oz/fopwP4BNYYMbdWYdQcu3Z1nYzom3M3vqokLvm
+	 HVaQwrpt6NPxRkuYMtTJ5aw7nWtrIQl+eKTvOLGK/dEsUu/nfdZAwvP8or1kK6lAqj
+	 2xQduSe6xlUtGr95HS7sXsxzLZil60tltuKcxKM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388319AbgFXNQ4 (ORCPT
+        id S2390481AbgFXNR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgFXNQz (ORCPT
+        Wed, 24 Jun 2020 09:17:29 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39242 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728685AbgFXNR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:16:55 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B86EC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:16:53 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id s10so1542617oih.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hrq4bU7gW/zMadgffXP6inYxHXZqoA5vMZOPEq8EPJg=;
-        b=SNkQbmm6GBRU2KhBaTQKfcfmn3IqVyo1IEsawGEMXu1m/zaaJfewRLW+JgQxzyNplo
-         PMxdiHAHUJj1jcLrCJu0EMigY/jpaqGRCjn9eKfBNn9ASxC662tvzS+E+WsmVKZ3s9t6
-         NrRZIGxw9m88UnZv/NKxQWD5/cTP5KjXmezEvqgj+jMn3++GyHopD3hTboMCLUQVqj5/
-         UMP41AzRmIsaMtAw6crTx5unAExkCuX3t+OXDZpMJKrjD9+bLYiMdGeEtS7Xq5lDB1sS
-         xprDV5SPobMBnB9pS/vy+Vaf9C1Pruluatlv2PWS/VaTGPus5vwEvqkJyBc64kFKRbIy
-         QHow==
+        Wed, 24 Jun 2020 09:17:28 -0400
+Received: by mail-pj1-f65.google.com with SMTP id b92so1146276pjc.4;
+        Wed, 24 Jun 2020 06:17:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hrq4bU7gW/zMadgffXP6inYxHXZqoA5vMZOPEq8EPJg=;
-        b=X09C70BlCQr3PjjjBQzaAAiBATrGw7k7s+GEMaRdmPAQOlbHwDuepZ5xEcToKEubsn
-         45FAO93sjA1HPiFww5ea7P2QYmlUWTL9cOJ8qscvUP6azqQJPqI9MiK02UvsIkgVt7n5
-         CHNHqrJRx+FjUoZx4Pbbst4769X8P+YIe3FDN/afKGZcL+ttGQeqUC+a3nLnkpoNgTHx
-         xc3uVY2AARSA6nNarIRpVLWf7/vnEtX4MLeTqdAMVStpvL4xFy1fiKtIce8IxKY+BGKI
-         M+cqYQXphmAlZmPQDqqyXORnWQhwjz6pQk5r59X9ck4awMfYkKJ8NS6db42kmA0YAUkO
-         AlJw==
-X-Gm-Message-State: AOAM530QuCQFPyKuNf9R2ijZUOUKdg0iIOHMlrVEXvxsSFH3DSXL2OgQ
-        i5hmxVzFuxGZSDnSqwEFpeRbweogeq5iVa08DYMysQ==
-X-Google-Smtp-Source: ABdhPJx8qSm/SisU7nPLHdrxBsDzhY4RaZrh+8tIbppoxAScIc3iEG1s2KuYqRjROS5f3+6X1lPiJtMoj8EFpKdT+Q4=
-X-Received: by 2002:a54:4694:: with SMTP id k20mr4411799oic.146.1593004612263;
- Wed, 24 Jun 2020 06:16:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AmTxCuZjvcdiVEVhuLvvhfsJ8oNVmZ/lVyIOEYHWB0Y=;
+        b=Xc7/HPDfLjwO3vfOloH87tfQI4+HU7eSv2eJgbWB2VPf9JWtdmpEd2QXBmiJCy05dd
+         SUFETLgRt/OctOt5l3jgTWrwYVWkWAU8Q+QsiKAPRb9F+7ugQOxyeILRtceXsv0VmKP4
+         VtYCRJdJqRojiwFMXqFVJ/tpocUN8g7Cr8MFuOwUM10AFQE5i3sUtlTGmGPmOFBBzN+i
+         kB/jdQyJ0/WGTJuU62xF2LdZua+UNsDRQ7ku0j9EVHleHCUDO9GPVyjGTeCRbebME5Ie
+         9FeEDrpG+AADn8a8F+j4z4deipzeJi01RNzahjOH3jN2QhXTV+pnzrMRK6k8L7o6NVgw
+         D//w==
+X-Gm-Message-State: AOAM532vVbPp5eIKC7CxT0QEgrf89GpuBF1Bt8bpM9ELPFqnKUFeiaEr
+        wgVIjEamAzQeW5xiUzyrNUA=
+X-Google-Smtp-Source: ABdhPJz52oTL2B/3PLmnDoI2vugPQaT+ieV89E/RBDP6y5SvM7SHzDqNhk7CAkBkvaU94q6GXPDJhQ==
+X-Received: by 2002:a17:90a:2622:: with SMTP id l31mr29954851pje.18.1593004647767;
+        Wed, 24 Jun 2020 06:17:27 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id b71sm10617893pfb.125.2020.06.24.06.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 06:17:26 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 46E1340430; Wed, 24 Jun 2020 13:17:25 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 13:17:25 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Doucha <mdoucha@suse.cz>
+Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200624131725.GL13911@42.do-not-panic.com>
+References: <20200610154923.27510-5-mcgrof@kernel.org>
+ <20200623141157.5409-1-borntraeger@de.ibm.com>
+ <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+ <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+ <20200624120546.GC4332@42.do-not-panic.com>
 MIME-Version: 1.0
-References: <20200617123844.29960-1-steven.price@arm.com> <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
- <20200624093846.GA11863@gaia> <20200624103412.GD25945@arm.com>
- <faa68f22-4d8e-0290-b52a-63ae7425b988@arm.com> <20200624110904.GB11863@gaia> <904edac0-3de7-35a6-a9bc-b983ccd3490c@arm.com>
-In-Reply-To: <904edac0-3de7-35a6-a9bc-b983ccd3490c@arm.com>
-From:   Peter Maydell <peter.maydell@linaro.org>
-Date:   Wed, 24 Jun 2020 14:16:41 +0100
-Message-ID: <CAFEAcA_LOVox4z=x8nH3S4=Oyc5_5zSkdxbsvnm=jiODaBTvsw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
-To:     Steven Price <steven.price@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Dave P Martin <Dave.Martin@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624120546.GC4332@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 12:18, Steven Price <steven.price@arm.com> wrote:
-> Ah yes, similar to (1) but much lower overhead ;) That's probably the
-> best option - it can be hidden in a memcpy_ignoring_tags() function.
-> However it still means that the VMM can't directly touch the guest's
-> memory which might cause issues for the VMM.
+Martin, your eyeballs would be appreciated for a bit on this.
 
-That's kind of awkward, since in general QEMU assumes it can
-naturally just access guest RAM[*] (eg emulation of DMAing devices,
-virtio, graphics display, gdb stub memory accesses). It would be
-nicer to be able to do it the other way around, maybe, so that the
-current APIs give you the "just the memory" and if you really want
-to do tagged accesses to guest ram you can do it with tag-specific
-APIs. I haven't thought about this very much though and haven't
-read enough of the MTE spec recently enough to make much
-sensible comment. So mostly what I'm trying to encourage here
-is that the people implementing the KVM/kernel side of this API
-also think about the userspace side of it, so we get one coherent
-design rather than a half-a-product that turns out to be awkward
-to use :-)
+On Wed, Jun 24, 2020 at 12:05:46PM +0000, Luis Chamberlain wrote:
+> On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
+> > 
+> > 
+> > On 23.06.20 16:23, Christian Borntraeger wrote:
+> > > 
+> > > 
+> > > On 23.06.20 16:11, Christian Borntraeger wrote:
+> > >> Jens Markwardt reported a regression in the linux-next runs.  with "umh: fix
+> > >> processed error when UMH_WAIT_PROC is used" (from linux-next) a linux bridge
+> > >> with an KVM guests no longer activates :
+> > >>
+> > >> without patch
+> > >> # ip addr show dev virbr1
+> > >> 6: virbr1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+> > >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+> > >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+> > >>        valid_lft forever preferred_lft forever
+> > >>
+> > >> with this patch the bridge stays DOWN with NO-CARRIER
+> > >>
+> > >> # ip addr show dev virbr1
+> > >> 6: virbr1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+> > >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+> > >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+> > >>        valid_lft forever preferred_lft forever
+> > >>
+> > >> This was bisected in linux-next. Reverting from linux-next also fixes the issue.
+> > >>
+> > >> Any idea?
+> > > 
+> > > FWIW, s390 is big endian. Maybe some of the shifts inn the __KW* macros are wrong.
+> > 
+> > Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
+> > linux-bridge on s390?
+> 
+> glibc for instance defines __WEXITSTATUS in only one location: bits/waitstatus.h
+> and it does not special case it per architecture, so at this point I'd
+> have to say we have to look somewhere else for why this is happening.
 
-[*] "guest ram is encrypted" also breaks this assumption, of course;
-I haven't looked at the efforts in that direction that are already in
-QEMU to see how they work, though.
+I found however an LTP bug indicating the need to test for
+s390 wait macros [0] in light of a recent bug in glibc for s390.
+I am asking for references to that issue given I cannot find
+any mention of this on glibc yet.
 
-thanks
--- PMM
+I'm in hopes Martin might be aware of that mentioned s390 glic bug.
+
+[0] https://github.com/linux-test-project/ltp/issues/605
+
+  Luis
