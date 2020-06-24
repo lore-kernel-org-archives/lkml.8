@@ -2,108 +2,147 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDE720706
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BFB20706
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AiRV5H39"
+	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="xd3x1HFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404400AbgFXPod (ORCPT
+        id S2404456AbgFXPot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34016 "EHLO
+        Wed, 24 Jun 2020 11:44:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404187AbgFXPoc (ORCPT
+        with ESMTP id S2404187AbgFXPot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:44:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926D5C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:44:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h5so2762227wrc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:44:32 -0700 (PDT)
+        Wed, 24 Jun 2020 11:44:49 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80E5C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:44:48 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so2983757wml.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:44:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=SE0p5yCntbHLxajveJ/3xidAqYZlUe0dqIonH/NYsTo=;
-        b=AiRV5H39bO2eHiz1hKC7aI5kK4LSRqCTDajZ/KIz10GTnMeDYdSHF8d6Qlxk5ODYko
-         p3xPOdRIHGbBFe7AwylFWgfZ766bMLhDZlkDPYHQRtjdsV4hF04HhNy6Ivi/BkfcNXnm
-         mECmBHMX9HKrr+suhQvaRYWEVhUfyPbxicHxf8NHpOH9snlqF8WsVgNYB86A/BC1t9xh
-         xZ7ceUQ0Tyxji3fxl3iGFc2lSFMZzu2xpcC6t2PWhBMnHuQOj4y2Z58PV3bwYBC6P7bu
-         V9WOlfaXxPRZz+Yf2cUAyGEHRgnQKKI5IA6UwkjX2m6IDUDEF/093mkqPfryJbZukzOD
-         jPVQ==
+        d=forissier-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RdI5M2Ilrl2+vmVMHIIBNrAs2nh4Sr2me7AQbdHn46E=;
+        b=xd3x1HFCw2Tw5G4YgrI4TEYRwKzSJNBM6wmdSVA59txdEtkxfpSh5Ae8sTkuZv4W29
+         S0A2N+Or30SSf0tpzHGNDqoHW9UdEiI2cTJN+lJUH+s4joj1eMlVveNe2kM5G62ZUJFa
+         lyb33MpXtlCg3IO5J280SNnMcWaTuVokSgsxZ2KDfdWMHhT0sbpTdMV2MQGhQIKZJ2K7
+         rKgfM9909WBaJESSWPDW3XGocUYN2QZPW6legItJmQvjK9f/rqDrUdI4uOEYRHsFmpCE
+         FtfAVUBj3Qpn9SiLDy3nDKQkaaZ92bVzSRyfanSydG8rjZbp5EeTZEklrcrzGVNgqFdp
+         swFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SE0p5yCntbHLxajveJ/3xidAqYZlUe0dqIonH/NYsTo=;
-        b=KKT8bFXThNZ5f7tX8JT1tP0UFLd3WiMt2JlDhlWLETCVpHp1UAsn9U63PFjumXBJ1m
-         xASZtZYstzhs9kqqD2CFOHm2YhogQZHHQUdrykomKH+LnE4VbIOZa9dL8sAD74ZjUVLi
-         qFutPRqOUy0JjNCfTlljld4RkQQbSbaPvuwzDOJJ7i3c6NcFBToL2HUciWLYQILsQM3V
-         KGExqnAAT/Lwy7HMDc/l/dDeBdPWSTMIPrJRKjnhnmtblJmaEYkf11zXvnHKA8hR5VDW
-         CzHsRVkaX/t4q7D/UxDq/8kIgjDa/wgJ8BQWkeDlA1pvBSTjAE/wkR38Iqf1Fo5xTVLJ
-         PC1w==
-X-Gm-Message-State: AOAM532aOM4EVe/HSMYRvImhS54xR//HkPI00yBslfrxxvTFrxWpE0mc
-        wf5i8OfD3qBAP9K66IUjwXw+Wg==
-X-Google-Smtp-Source: ABdhPJw/07poY7dVOm3UC5HXMgoyhCu3QXc/QqotRwi+VYJMtlWq9BrwCzYenUIdL9yxrPoSxdtjoQ==
-X-Received: by 2002:a5d:6986:: with SMTP id g6mr32525873wru.27.1593013471172;
-        Wed, 24 Jun 2020 08:44:31 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:81b5:a82d:69e7:f32e])
-        by smtp.gmail.com with ESMTPSA id v11sm9844301wmb.3.2020.06.24.08.44.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:44:30 -0700 (PDT)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        rong.a.chen@intel.com
-Cc:     valentin.schneider@arm.com, pauld@redhat.com, hdanton@sina.com,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH] sched/cfs: change initial value of runnable_avg
-Date:   Wed, 24 Jun 2020 17:44:22 +0200
-Message-Id: <20200624154422.29166-1-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RdI5M2Ilrl2+vmVMHIIBNrAs2nh4Sr2me7AQbdHn46E=;
+        b=slvCLEODLB45eswktn6tuus/dwyNikz0cx3tKAA7ZWHdQBJWlDM12YJ7Gpwahh8dx8
+         xWKG4tfcFYCKz0wTXoqPC0FUZIk8OR74MFpj6WRqaeaal7NYFM2yPpyuVVEFqKuqym0w
+         vKcqBSY41tEI57MOlbSSLThAgksCzxzav06ROyLoi4N+YUZIyDDs8UYA+ZawF9aohZEU
+         OedRjcT1RrtLttIupjszlMDD7FJhGp15cYkXAi4LeQ7QUrMFiQ/7xuhqN/d+QSMqI4W8
+         pQuNWyGF12Qboa/DI6MDEkiMzTdX6HcSpCD5OGbTZ/tf/iTu3tPuk2Ye503Sq7Vxhvzv
+         voMg==
+X-Gm-Message-State: AOAM532lapxKDXA5vHcOtr+wKdyn/FG+09v9BlbsujqdkGnVGMnW+CZ7
+        L334IJd/93VwuRWDU0VR73BQuw==
+X-Google-Smtp-Source: ABdhPJxXnUB7GBcjHzRLLlk+/5eb2yu9/Ebs/uXxHVrBfcmv8vemV/0WlbECWnp7rV+861ObPrN0hw==
+X-Received: by 2002:a1c:9d56:: with SMTP id g83mr15935541wme.130.1593013487525;
+        Wed, 24 Jun 2020 08:44:47 -0700 (PDT)
+Received: from ?IPv6:2a01:e0a:3cb:7bb0:bd12:acc9:5374:bd9b? ([2a01:e0a:3cb:7bb0:bd12:acc9:5374:bd9b])
+        by smtp.gmail.com with ESMTPSA id n189sm8495216wmb.43.2020.06.24.08.44.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 08:44:46 -0700 (PDT)
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Sumit Garg <sumit.garg@linaro.org>
+Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+ <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+ <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+ <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+ <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+ <1592507935.15159.5.camel@HansenPartnership.com>
+ <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+ <1592578844.4369.5.camel@HansenPartnership.com>
+ <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+ <1593012069.28403.11.camel@HansenPartnership.com>
+From:   Jerome Forissier <jerome@forissier.org>
+Message-ID: <3aa8705a-0342-25ea-00c4-d5370d91ddb4@forissier.org>
+Date:   Wed, 24 Jun 2020 17:44:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <1593012069.28403.11.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some performance regression on reaim benchmark have been raised with
-  commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
 
-The problem comes from the init value of runnable_avg which is initialized
-with max value. This can be a problem if the newly forked task is finally
-a short task because the group of CPUs is wrongly set to overloaded and
-tasks are pulled less agressively.
 
-Set initial value of runnable_avg equals to util_avg to reflect that there
-is no waiting time so far.
+On 6/24/20 5:21 PM, James Bottomley wrote:
+> On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
+>> Apologies for delay in my reply as I was busy with some other stuff.
+>>
+>> On Fri, 19 Jun 2020 at 20:30, James Bottomley
+>> <James.Bottomley@hansenpartnership.com> wrote:
+> [...]
+>>> it's about consistency with what the kernel types mean.  When some
+>>> checker detects your using little endian operations on a big endian
+>>> structure (like in the prink for instance) they're going to keep
+>>> emailing you about it.
+>>
+>> As mentioned above, using different terminology is meant to cause
+>> more confusion than just difference in endianness which is manageable
+>> inside TEE.
+>>
+>> And I think it's safe to say that the kernel implements UUID in big
+>> endian format and thus uses %pUb whereas OP-TEE implements UUID in
+>> little endian format and thus uses %pUl.
+> 
+> So what I think you're saying is that if we still had uuid_be and
+> uuid_le you'd use uuid_le, because that's exactly the structure
+> described in the docs.  But because we renamed
+> 
+> uuid_be -> uuid_t
+> uuid_le -> guid_t
+> 
+> You can't use guid_t as a kernel type because it has the wrong name?
 
-Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Let me try to clear the confusion that I introduce myself I believe :-/
+IMO:
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 0424a0af5f87..45e467bf42fc 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -806,7 +806,7 @@ void post_init_entity_util_avg(struct task_struct *p)
- 		}
- 	}
- 
--	sa->runnable_avg = cpu_scale;
-+	sa->runnable_avg = sa->util_avg;
- 
- 	if (p->sched_class != &fair_sched_class) {
- 		/*
+- optee_register_device(const uuid_t *device_uuid) *is* the correct
+prototype.
+- device_uuid is *guaranteed* to be BE because OP-TEE makes this
+guarantee (it converts from its internal LE representation to BE when
+enumerating the devices, but it doesn't matter to the kernel).
+- Therefore %pUb is the correct format.
+
+I'm sorry for doubting the BE order initially. I am so used to OP-TEE
+using LE internally, that I missed the fact that we have an explicit
+conversion...
+
+Does this sound good?
+
+Thanks,
 -- 
-2.17.1
-
+Jerome
