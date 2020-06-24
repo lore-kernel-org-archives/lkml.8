@@ -2,287 +2,142 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B16C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C205B207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5204207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592982555;
+	bh=xbNqFn/9ByJOYnzc/xSSD/TofOt0SnTeW8Q4g5Pnaso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NN/0GQWRV3EI33FRvzIanUtvciQ2jhRh1hSg4i9z8/hFGNLhvWAdKaeFrvrQaZgTx
+	 5FEu5unGXnWQ/JflOd4dXL5DCOw8KiGZUEVfTyOkX+0EnHJ91ki75SSFR222bcNRL3
+	 +KKZKjf9fAc0wsGIF7ajZKUMA1+sey8O+dPlBxmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389590AbgFXHHw (ORCPT
+        id S2389606AbgFXHJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:07:52 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:41040 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389266AbgFXHHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:07:49 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
+        Wed, 24 Jun 2020 03:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387849AbgFXHJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:09:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 654772002F;
-        Wed, 24 Jun 2020 09:07:40 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 09:07:38 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>, drinkcat@chromium.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        hsinyi@chromium.org, matthias.bgg@gmail.com,
-        Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCH 3/3] drm/bridge: ps8640: Rework power state handling
-Message-ID: <20200624070738.GA1807736@ravnborg.org>
-References: <20200615205320.790334-1-enric.balletbo@collabora.com>
- <20200615205320.790334-4-enric.balletbo@collabora.com>
- <20200620214225.GD74146@ravnborg.org>
- <0220cfe5-2ac9-2d8b-529d-bb1a61478395@collabora.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1148B207DD;
+        Wed, 24 Jun 2020 07:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592982551;
+        bh=xbNqFn/9ByJOYnzc/xSSD/TofOt0SnTeW8Q4g5Pnaso=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sgHtXjB0lEQ3whfnQCzMBjGSp2vdCYAJ2njn+Sdc/gMz0S+zjSQ5yIp7Lvm+vfvZ7
+         eF8NmiFaUFlxeuq9cGKFlkzKMR2PRgnCiO4LS4UQDlSqSFrLG+iW1YaJxRgFc4SVX5
+         k2fRhWGQcl7/m9hKGWTA3/bdCGQV+P9yNTMhjcvg=
+Date:   Wed, 24 Jun 2020 09:09:10 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Phu Luu <Phu.Luu@silabs.com>
+Cc:     "johan@kernel.org" <johan@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brant Merryman <Brant.Merryman@silabs.com>,
+        Richard Hendricks <Richard.Hendricks@silabs.com>
+Subject: Re: [PATCH v3 2/2] USB: serial: cp210x: Proper RTS control when
+ buffers fill
+Message-ID: <20200624070910.GA1557212@kroah.com>
+References: <DM6PR11MB2857CC4B06D64F290FC42E739C950@DM6PR11MB2857.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0220cfe5-2ac9-2d8b-529d-bb1a61478395@collabora.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=QX4gbG5DAAAA:8 a=e5mUnYsNAAAA:8
-        a=fPFVr3NBQ--GmxzU-DwA:9 a=CjuIK1q_8ugA:10 a=AbAUZ8qAyYyZVLSsDulk:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <DM6PR11MB2857CC4B06D64F290FC42E739C950@DM6PR11MB2857.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric.
+On Wed, Jun 24, 2020 at 07:03:04AM +0000, Phu Luu wrote:
+> CP210x hardware disables auto-RTS but leaves auto-CTS when
+> in hardware flow control mode and UART on cp210x hardware
+> is disabled. This allows data to flow out, but new data
+> will not come into the port. When re-opening the port, if
+> auto-CTS is enabled on the cp210x, then auto-RTS must be
+> re-enabled in the driver.
+> 
+> Signed-off-by: Phu Luu <phu.luu@silabs.com>
+> Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+> ---
+> 06/09/2020: Patch v3 2/2 Modified based on feedback from Johan Hovold <johan@kernel.org>
+> 12/18/2019: Patch v2 Broken into two patches and modified based on feedback from Johan Hovold <johan@kernel.org>
+> 12/09/2019: Initial submission of patch "Proper RTS control when buffers fill"
+> 
+> drivers/usb/serial/cp210x.c | 18 ++++++++++++++++++
+> 1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+> index bcceb4ad8be0..091441b1c5b9 100644
+> --- a/drivers/usb/serial/cp210x.c
+> +++ b/drivers/usb/serial/cp210x.c
+> @@ -917,6 +917,7 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
+>                u32 baud;
+>                u16 bits;
+>                u32 ctl_hs;
+> +             u32 flow_repl;
+>                 cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
+> @@ -1017,6 +1018,23 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
+>                ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
+>                if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
+>                                dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
+> +                             /*
+> +                             * When the port is closed, the CP210x hardware disables
+> +                             * auto-RTS and RTS is deasserted but it leaves auto-CTS when
+> +                             * in hardware flow control mode. This prevents new data from
+> +                             * being received by the port. When re-opening the port, if
+> +                             * auto-CTS is enabled on the cp210x, then auto-RTS must be
+> +                             * re-enabled in the driver.
+> +                             */
+> +                             flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
+> +                             flow_repl &= ~CP210X_SERIAL_RTS_MASK;
+> +                             flow_repl |= CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
+> +                             flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
+> +                             cp210x_write_reg_block(port,
+> +                                                             CP210X_SET_FLOW,
+> +                                                             &flow_ctl,
+> +                                                             sizeof(flow_ctl));
+> +
+>                                cflag |= CRTSCTS;
+>                } else {
+>                                dev_dbg(dev, "%s - flow control = NONE\n", __func__);
+> --
+> 2.17.0
+> 
 
-On Tue, Jun 23, 2020 at 05:16:43PM +0200, Enric Balletbo i Serra wrote:
-> Hi Sam,
-> 
-> Many thanks for your feedback. See my answers below.
-> 
-> On 20/6/20 23:42, Sam Ravnborg wrote:
-> > Hi Enric.
-> > 
-> > On Mon, Jun 15, 2020 at 10:53:20PM +0200, Enric Balletbo i Serra wrote:
-> >> The get_edid() callback can be triggered anytime by an ioctl, i.e
-> >>
-> >>   drm_mode_getconnector (ioctl)
-> >>     -> drm_helper_probe_single_connector_modes
-> >>        -> drm_bridge_connector_get_modes
-> >>           -> ps8640_bridge_get_edid
-> >>
-> >> Actually if the bridge pre_enable() function was not called before
-> >> get_edid(), the driver will not be able to get the EDID properly and
-> >> display will not work until a second get_edid() call is issued and if
-> >> pre_enable() is called before.
-> > Is it correct to fix this in the driver?
-> > Why not just fail and tell user-sapce to try again later?
-> > (Dunno what error-code to use - there must be one).
-> > 
-> 
-> My undestanding, I might be wrong, is that userspace should don't know which
-> bits, regulators, etc, are needed to get the EDID with an ioctl. Is the kernel
-> that should make sure that all is set properly (the required regulators, etc)
-> when userspace wants to read the EDID.
+Hi,
 
-The idea I suggest is that the kernel side should just error
-out and let user-space retry later.
-So we avoid all the extra logic in the kernel because userspace wants
-info before the HW is ready.
-And userspace shall anyway deal with the ioctl that fails.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-	Sam
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-> 
-> > Then we avoid complicating drivers fro somethign we really should
-> > fix in user-space.
-> > 
-> >> The side effect of this, for example, is
-> >> that you see anything when `Frecon` starts, neither the splash screen,
-> > that you do not see ...
-> > 
-> > (Otherwise I do not parse the above).
-> > 
-> >> until the graphical session manager starts.
-> >>
-> >> To fix this we need to make sure that all we need is enabled before
-> >> reading the EDID. This means the following:
-> >>
-> >> 1. If get_edid() is called before having the device powered we need to
-> >>    power on the device. In such case, the driver will power off again the
-> >>    device.
-> >>
-> >> 2. If get_edid() is called after having the device powered, all should
-> >>    just work. We added a powered flag in order to avoid recurrent calls
-> >>    to ps8640_bridge_poweron() and unneeded delays.
-> >>
-> >> 3. This seems to be specific for this device, but we need to make sure
-> >>    the panel is powered on before do a power on cycle on this device.
-> >>    Otherwise the device fails to retrieve the EDID.
-> > Step 3. looks like an ugly hack too....
-> > 
-> 
-> It is, but I don't have enough hardware details to be able to answer why we need
-> to do this. What is well tested is that, if I don't power the panel before
-> powering on the bridge, it doesn't get a proper EDID. Seems that when the bridge
-> goes up, the firmware tries to read the EDID and caches somehow. Well not sure.
-> 
-> >>
-> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >> ---
-> >>
-> >>  drivers/gpu/drm/bridge/parade-ps8640.c | 79 ++++++++++++++++++++++++--
-> >>  1 file changed, 73 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
-> >> index 9f7b7a9c53c52..ca651480891df 100644
-> >> --- a/drivers/gpu/drm/bridge/parade-ps8640.c
-> >> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-> >> @@ -65,6 +65,7 @@ struct ps8640 {
-> >>  	struct regulator_bulk_data supplies[2];
-> >>  	struct gpio_desc *gpio_reset;
-> >>  	struct gpio_desc *gpio_powerdown;
-> >> +	bool powered;
-> >>  };
-> >>  
-> >>  static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
-> >> @@ -91,13 +92,25 @@ static int ps8640_bridge_vdo_control(struct ps8640 *ps_bridge,
-> >>  	return 0;
-> >>  }
-> >>  
-> >> -static void ps8640_pre_enable(struct drm_bridge *bridge)
-> >> +static void ps8640_bridge_poweron(struct ps8640 *ps_bridge)
-> >>  {
-> >> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> >>  	struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
-> >> +	struct drm_bridge *panel;
-> >>  	unsigned long timeout;
-> >>  	int ret, status;
-> >>  
-> >> +	if (ps_bridge->powered)
-> >> +		return;
-> >> +
-> >> +	/*
-> >> +	 * That seems to be specific to this chip, and a weird behaviour, but
-> >> +	 * we need to call drm_panel_prepare before issuing a poweron cycle. If
-> >> +	 * we don't do this, the chip is not able to read properly the EDID.
-> >> +	 */
-> >> +	panel = ps_bridge->panel_bridge;
-> >> +	if (panel->funcs && panel->funcs->pre_enable)
-> >> +		panel->funcs->pre_enable(panel);
-> >> +
-> >>  	ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
-> >>  				    ps_bridge->supplies);
-> >>  	if (ret < 0) {
-> >> @@ -164,6 +177,8 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
-> >>  		goto err_regulators_disable;
-> >>  	}
-> >>  
-> >> +	ps_bridge->powered = true;
-> >> +
-> >>  	return;
-> >>  
-> >>  err_regulators_disable:
-> >> @@ -171,12 +186,13 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
-> >>  			       ps_bridge->supplies);
-> >>  }
-> >>  
-> >> -static void ps8640_post_disable(struct drm_bridge *bridge)
-> >> +static void ps8640_bridge_poweroff(struct ps8640 *ps_bridge)
-> >>  {
-> >> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> >> +	struct drm_bridge *panel;
-> >>  	int ret;
-> >>  
-> >> -	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> >> +	if (!ps_bridge->powered)
-> >> +		return;
-> >>  
-> >>  	gpiod_set_value(ps_bridge->gpio_reset, 1);
-> >>  	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
-> >> @@ -184,6 +200,32 @@ static void ps8640_post_disable(struct drm_bridge *bridge)
-> >>  				     ps_bridge->supplies);
-> >>  	if (ret < 0)
-> >>  		DRM_ERROR("cannot disable regulators %d\n", ret);
-> >> +
-> >> +	panel = ps_bridge->panel_bridge;
-> >> +	if (panel->funcs && panel->funcs->post_disable)
-> >> +		panel->funcs->post_disable(panel);
-> >> +
-> >> +	ps_bridge->powered = false;
-> >> +}
-> >> +
-> >> +static void ps8640_pre_enable(struct drm_bridge *bridge)
-> >> +{
-> >> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> >> +	int ret;
-> >> +
-> >> +	ps8640_bridge_poweron(ps_bridge);
-> >> +
-> >> +	ret = ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> >> +	if (ret < 0)
-> >> +		ps8640_bridge_poweroff(ps_bridge);
-> >> +}
-> >> +
-> >> +static void ps8640_post_disable(struct drm_bridge *bridge)
-> >> +{
-> >> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> >> +
-> >> +	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> >> +	ps8640_bridge_poweroff(ps_bridge);
-> >>  }
-> >>  
-> >>  static int ps8640_bridge_attach(struct drm_bridge *bridge,
-> >> @@ -249,9 +291,34 @@ static struct edid *ps8640_bridge_get_edid(struct drm_bridge *bridge,
-> >>  					   struct drm_connector *connector)
-> >>  {
-> >>  	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> >> +	bool poweroff = !ps_bridge->powered;
-> >> +	struct edid *edid;
-> >> +
-> >> +	/*
-> >> +	 * When we end calling get_edid() triggered by an ioctl, i.e
-> >> +	 *
-> >> +	 *   drm_mode_getconnector (ioctl)
-> >> +	 *     -> drm_helper_probe_single_connector_modes
-> >> +	 *        -> drm_bridge_connector_get_modes
-> >> +	 *           -> ps8640_bridge_get_edid
-> >> +	 *
-> >> +	 * We need to make sure that what we need is enabled before reading
-> >> +	 * EDID, for this chip, we need to do a full poweron, otherwise it will
-> >> +	 * fail.
-> >> +	 */
-> >> +	ps8640_bridge_poweron(ps_bridge);
-> >>  
-> >> -	return drm_get_edid(connector,
-> >> +	edid = drm_get_edid(connector,
-> >>  			    ps_bridge->page[PAGE0_DP_CNTL]->adapter);
-> >> +
-> >> +	/*
-> >> +	 * If we call the get_edid() function without having enabled the chip
-> >> +	 * before, return the chip to its original power state.
-> >> +	 */
-> >> +	if (poweroff)
-> >> +		ps8640_bridge_poweroff(ps_bridge);
-> >> +
-> >> +	return edid;
-> >>  }
-> >>  
-> >>  static const struct drm_bridge_funcs ps8640_bridge_funcs = {
-> >> -- 
-> >> 2.27.0
-> >>
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+- Your patch is malformed (tabs converted to spaces, linewrapped, etc.)
+  and can not be applied.  Please read the file,
+  Documentation/email-clients.txt in order to fix this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
