@@ -2,148 +2,198 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7542AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5944C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4202820FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E72C2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwfCmmQY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LM+9Emsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389664AbgFXHUf (ORCPT
+        id S2389668AbgFXHVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
+        Wed, 24 Jun 2020 03:21:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388622AbgFXHUe (ORCPT
+        with ESMTP id S1728360AbgFXHVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:20:34 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A98C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:20:33 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so1466193wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:20:33 -0700 (PDT)
+        Wed, 24 Jun 2020 03:21:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DEEAC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:20:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d6so784733pjs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=drCCaJCXIn2mo+mQ/UY/6xEqi1xm+UmU4NktVohFN/Y=;
-        b=uwfCmmQYp9GrrUekyLK9vL9jLZ+BwiKQT7PnF9ENmwqfacWCXDWDc3lgTq1uBdt+mU
-         KgZtLqjaY++wcvGB/U/848Y51wtS9SAJQE6Hm5LnXVf0ywEJzZO9Jv7GPqlku7yyWCHh
-         VtjPKHb2fcDeTtCVb0eUtP+fUxypcKWnomiHuBVwQHQZzdj+fORnm3a7mQGSSpMu4AyX
-         YEChk4cs8+zf0/6boK/kWeBSE56gbOccn+DjLtSkaSqpreg0q8QAo6QhemyBJFY34iHp
-         fhPuDxK81n6wiD5nsWSG1vhXoGYk1yzlNYjOptytz/rGMjNPjWpRtfhAJZKTiU53o38m
-         CtRQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pjnQ7WBzCOByclYff5fag1J6k77rRFjTJeOwwIhXIsI=;
+        b=LM+9Emsg/Bnt9ZPqcCtr1BIO53wrwaXkstgGZO8mwi6wqv0h60blnansku5od/fTJN
+         owpxS2UsG0aNQ+ZThFnv5sjD8qtDr2g6ICUJoExlIp4x+ifOT9hyUOwAARo7C4YxFk1b
+         ruSfG+DQPOplV5fZHpAsmSK1cGDsDRMt9v2fw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=drCCaJCXIn2mo+mQ/UY/6xEqi1xm+UmU4NktVohFN/Y=;
-        b=BKKsm5gzaV/6j6hQlUzizUQBoGvRC86+m839BEj9COWuiB0+fd0UDoVG8jmeNnRsHT
-         td8qPUpQXKuPl6DDo9Oxjup6+JEVkF1Uysy6wnWac/L+VuFq3YgyOUlkgPNmTHV5qLsC
-         BPEreDcuep61erbk8OedgwNuBvVp+mjDoTCkLc8CYd3l3WbiD+LyMYjJVJTgHnTfDiU0
-         nAx0J2VBMT8xgy0UvRL7J/KUmoWig7ygThIqf/9TfY7fBhBw9pNBtP7eUK8T6lEEFCSL
-         p4Ehwz4KwGltq1kkA+HoHur4XnbjGNzkTzBheb913OVAbBMT0KBVvXo6ObhbTzYO5cx4
-         1L6g==
-X-Gm-Message-State: AOAM531uTh109tz2vlmxCDpJjEJwFkHbZtCMbBWa55N+9/Ctg8GSjTaM
-        UhZOErgAcP/11BVPmZHtbKlywglu4brtFOXudaWawSxE5RY=
-X-Google-Smtp-Source: ABdhPJzHjm8RtRv71V5VykstOzUMuWAtF+YHeHfqQHk/vk+GilfeafMjoA7Y+iN3GJm/COFkDZyZk606mVBBKnpIqFc=
-X-Received: by 2002:a1c:61d7:: with SMTP id v206mr25236029wmb.173.1592983231896;
- Wed, 24 Jun 2020 00:20:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pjnQ7WBzCOByclYff5fag1J6k77rRFjTJeOwwIhXIsI=;
+        b=cVycf/9A7CT+Pwa9UuHK8B9jlLtkG28zWKCBmaEds2hy10pp+bOIJ1+PyMcIGS5q8c
+         M0J/ylDZe+GUAzHEXWI8sA4LQ0+vTrNgfGuHFNvCIUgGPwCXfMGwJYeIvn9sFc5jS9hR
+         q1+AE5hqcModHylhlcvaVExylUh91+16e/SMvdXOrdSwcZ2Tzd1vknb5YDeYHz046HgV
+         pZ08CEHveDblcG1o3NGjy2mYObZ3pzGc4dM3UUTHDzeiA4hYqObMKYaeOQ3TntXEgA51
+         DA6NAYpiGQjR2R5+dUrtnukaRl/1ZBuUqXKlRUGtUlvjXeq7Sct7MdLe5VEAOby8GbwX
+         8zCQ==
+X-Gm-Message-State: AOAM530ldXOUOUiVwplvR5XmhYk/PPcpMsr9zhUbWDdcyof4rxIw5gSB
+        g2odCCxkNhj5Uc+pRCvVNeLfvQ==
+X-Google-Smtp-Source: ABdhPJx0mccfQsquGoFKjKPiTC10fC3qOuSqvdb6OgKAmDilcLtaiwiVyjw/1caXio4aFtntnNK1MQ==
+X-Received: by 2002:a17:902:bd0b:: with SMTP id p11mr26994367pls.91.1592983258898;
+        Wed, 24 Jun 2020 00:20:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u20sm1917349pfm.152.2020.06.24.00.20.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 00:20:58 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 00:20:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v3 09/10] kallsyms: Hide layout
+Message-ID: <202006240013.7806A28435@keescook>
+References: <20200623172327.5701-1-kristen@linux.intel.com>
+ <20200623172327.5701-10-kristen@linux.intel.com>
 MIME-Version: 1.0
-From:   Caleb Jorden <cjorden@gmail.com>
-Date:   Wed, 24 Jun 2020 12:50:19 +0530
-Message-ID: <CABD8wQkJ7ZrjeBszFqd92x504hXmbEPdcUpBft3KSnZo-70a2Q@mail.gmail.com>
-Subject: GCC_PLUGIN_RANDSTRUCT being set breaks 5.8-rc2 build
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200623172327.5701-10-kristen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+On Tue, Jun 23, 2020 at 10:23:26AM -0700, Kristen Carlson Accardi wrote:
+> This patch makes /proc/kallsyms display alphabetically by symbol
+> name rather than sorted by address in order to hide the newly
+> randomized address layout.
+> 
+> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Tested-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  kernel/kallsyms.c | 128 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+> 
+> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+> index 16c8c605f4b0..df2b20e1b7f2 100644
+> --- a/kernel/kallsyms.c
+> +++ b/kernel/kallsyms.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/filter.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/compiler.h>
+> +#include <linux/list_sort.h>
+>  
+>  /*
+>   * These will be re-linked against their real values
+> @@ -446,6 +447,11 @@ struct kallsym_iter {
+>  	int show_value;
+>  };
+>  
+> +struct kallsyms_iter_list {
+> +	struct kallsym_iter iter;
+> +	struct list_head next;
+> +};
+> +
+>  int __weak arch_get_kallsym(unsigned int symnum, unsigned long *value,
+>  			    char *type, char *name)
+>  {
+> @@ -660,6 +666,127 @@ int kallsyms_show_value(void)
+>  	}
+>  }
 
-I was trying to test out the 5.8-rc2 kernel using my standard
-machine-specific config, but my build kept failing.  I ended up
-comparing against the x86_64_defconfig configuration (which worked)
-using the config-bisect.pl script, and discovered that if
-GCC_PLUGIN_RANDSTRUCT is set, I get this error:
+The #ifdef can be moved up to here:
 
---------------------
-In file included from ./arch/x86/include/asm/atomic.h:5,
-                 from ./include/linux/atomic.h:7,
-                 from ./include/linux/llist.h:51,
-                 from ./include/linux/irq_work.h:5,
-                 from kernel/smp.c:10:
-kernel/smp.c: In function =E2=80=98smp_init=E2=80=99:
-./include/linux/compiler.h:392:38: error: call to
-=E2=80=98__compiletime_assert_157=E2=80=99 declared with attribute error: B=
-UILD_BUG_ON
-failed: offsetof(struct task_struct, wake_entry_type) -
-offsetof(struct task_struct, wake_entry) !=3D offsetof(struct
-__call_single_data, flags) - offsetof(struct __call_single_data,
-llist)
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-      |                                      ^
-./include/linux/compiler.h:373:4: note: in definition of macro
-=E2=80=98__compiletime_assert=E2=80=99
-  373 |    prefix ## suffix();    \
-      |    ^~~~~~
-./include/linux/compiler.h:392:2: note: in expansion of macro
-=E2=80=98_compiletime_assert=E2=80=99
-  392 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro
-=E2=80=98compiletime_assert=E2=80=99
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg=
-)
-      |                                     ^~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98BUIL=
-D_BUG_ON_MSG=E2=80=99
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-kernel/smp.c:687:2: note: in expansion of macro =E2=80=98BUILD_BUG_ON=E2=80=
-=99
-  687 |  BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) -
-offsetof(struct task_struct, wake_entry) !=3D
-      |  ^~~~~~~~~~~~
-  CC      fs/fs_context.o
-make[1]: *** [scripts/Makefile.build:281: kernel/smp.o] Error 1
---------------------
+#ifdef CONFIG_FG_KASLR
 
-I am able to reproduce this error now if I use the x86_64_defconfig,
-and simply set GCC_PLUGIN_RANDSTRUCT from the configuration tree in:
-- General architecture-dependent options
-  - GCC plugins
-    [x] Randomize layout of sensitive kernel structures
+Otherwise without CONFIG_FG_KASLR, I get:
 
-It appears the cause is this commit:
----------------------
-commit a148866489fbe243c936fe43e4525d8dbfa0318f
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Tue May 26 18:11:04 2020 +0200
+kernel/kallsyms.c:714:12: warning: ‘kallsyms_list_cmp’ defined but not used [-Wunused-function]
+  714 | static int kallsyms_list_cmp(void *priv, struct list_head *a,
+      |            ^~~~~~~~~~~~~~~~~
 
-    sched: Replace rq::wake_list
----------------------
 
-I am observing these build failures on GCC 9.3.0 (Gentoo) and GCC
-10.1.0 (Manjaro) using the 5.8-rc2 kernel from git
-(48778464bb7d346b47157d21ffde2af6b2d39110).
+>  
+> +static int sorted_show(struct seq_file *m, void *p)
+> +{
+> +	struct list_head *list = m->private;
+> +	struct kallsyms_iter_list *iter;
+> +	int rc;
+> +
+> +	if (list_empty(list))
+> +		return 0;
+> +
+> +	iter = list_first_entry(list, struct kallsyms_iter_list, next);
+> +
+> +	m->private = iter;
+> +	rc = s_show(m, p);
+> +	m->private = list;
+> +
+> +	list_del(&iter->next);
+> +	kfree(iter);
+> +
+> +	return rc;
+> +}
+> +
+> +static void *sorted_start(struct seq_file *m, loff_t *pos)
+> +{
+> +	return m->private;
+> +}
+> +
+> +static void *sorted_next(struct seq_file *m, void *p, loff_t *pos)
+> +{
+> +	struct list_head *list = m->private;
+> +
+> +	(*pos)++;
+> +
+> +	if (list_empty(list))
+> +		return NULL;
+> +
+> +	return p;
+> +}
+> +
+> +static const struct seq_operations kallsyms_sorted_op = {
+> +	.start = sorted_start,
+> +	.next = sorted_next,
+> +	.stop = s_stop,
+> +	.show = sorted_show
+> +};
+> +
+> +static int kallsyms_list_cmp(void *priv, struct list_head *a,
+> +			     struct list_head *b)
+> +{
+> +	struct kallsyms_iter_list *iter_a, *iter_b;
+> +
+> +	iter_a = list_entry(a, struct kallsyms_iter_list, next);
+> +	iter_b = list_entry(b, struct kallsyms_iter_list, next);
+> +
+> +	return strcmp(iter_a->iter.name, iter_b->iter.name);
+> +}
+> +
+> +int get_all_symbol_name(void *data, const char *name, struct module *mod,
+> +			unsigned long addr)
 
-I am not on the kernel mailing list, if there is anything I can do to
-assist with fixing this, please copy me directly.
+This can be static too.
 
-Thanks!
+Otherwise, looks good!
 
-Caleb Jorden
-cjorden@gmail.com
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
