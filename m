@@ -2,139 +2,92 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3864EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0541D2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24BAF20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592971515;
-	bh=UN9AXOXZVMh4VcN/L7a9gqChekTy955irMIWoZV9chI=;
+	s=default; t=1592971593;
+	bh=Ua6lB42IyABJSBPH2fW/GfDOYG86wj9YaP8tlq4CKuQ=;
 	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
 	 From;
-	b=XtXa2iFx9tDQkEfKwW9MlsznI2NHIFE5Yp/FA2+XJKA5iBb4kWj8eOixv+W9AKYo2
-	 E1e/NGqK5oYLdz0tYgpcfGhvUcXMDJD+uOnPuJzIF/vMV049CJCE3JKtT3c+v9Sp09
-	 iekD5Wo0splz8BUDHIdus3Feo52633dk6yovlMeo=
+	b=WQG9w8gtDbwcl1PS4d0+qYxyD5lt1x+NpWdBHGHxVtWKk8EdmVLw7Z610I9ki8NF9
+	 G27ZQ5FEK0R+D0VsEXcLyv6U/D5vAaAYL7R5YIDARfuEkdUttNIf+ER81xt4LnZrVj
+	 tq0Q9OF5iTihUxQld5wCl/WJI/0Oq4sge7rD4g14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgFXEFG (ORCPT
+        id S1728656AbgFXEGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 00:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 00:06:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgFXEFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 00:05:05 -0400
+        id S1725765AbgFXEGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 00:06:21 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1BA2070E;
-        Wed, 24 Jun 2020 04:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57F5C2085B;
+        Wed, 24 Jun 2020 04:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592971504;
-        bh=UN9AXOXZVMh4VcN/L7a9gqChekTy955irMIWoZV9chI=;
+        s=default; t=1592971581;
+        bh=Ua6lB42IyABJSBPH2fW/GfDOYG86wj9YaP8tlq4CKuQ=;
         h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=G2fm4SY0SO1gCyEyonbU08pLiG2aQZp/buBlZx/PMtFrFFx9xpfopeTtOA/9Gg/7r
-         F17pnTMhzT8/CEIloxuTVFVbb4FlqmWCjd8x/2GBInM77wA76+0FaROqOCtYzaHP6J
-         yjNoGLVYA2g0KGVBw5mvR7AvqBxmZ1DWvgncv6/8=
+        b=lPYww/NXRZWF9cd//sbPGLIXeNwDD2PGE3vAi40h3KeJig255CjrlifOAL8MFKvJf
+         WlUqMEpSMZJwoPVfSbFln2SCxqi49RasZxS8UizPJNa8iE/Mhb6s293GC/s2XHAH3r
+         dOsx0EH6kCfFXbwKt+40hObQfa3gwzqkowc6ttbE=
 Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B3329352265B; Tue, 23 Jun 2020 21:05:04 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 21:05:04 -0700
+        id 3F7EA352265B; Tue, 23 Jun 2020 21:06:21 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 21:06:21 -0700
 From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Akira Yokosawa <akiyks@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
-Subject: Re: [PATCH 2/2] Documentation/litmus-tests: Add note on herd7 7.56
- in atomic litmus test
-Message-ID: <20200624040504.GB9247@paulmck-ThinkPad-P72>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the rcu tree with the tip tree
+Message-ID: <20200624040621.GC9247@paulmck-ThinkPad-P72>
 Reply-To: paulmck@kernel.org
-References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
- <20200623005231.27712-13-paulmck@kernel.org>
- <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
- <20200623155419.GI9247@paulmck-ThinkPad-P72>
- <b3433b44-29af-4ef4-d047-b0b0d51a9fbd@gmail.com>
- <9e1d448a-cf3c-523d-e0a6-f46ac4706c48@gmail.com>
- <20200623232425.GB418699@andrea>
+References: <20200624130450.57e793f9@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623232425.GB418699@andrea>
+In-Reply-To: <20200624130450.57e793f9@canb.auug.org.au>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:24:25AM +0200, Andrea Parri wrote:
-> On Wed, Jun 24, 2020 at 07:09:01AM +0900, Akira Yokosawa wrote:
-> > From f808c371075d2f92b955da1a83ecb3828db1972e Mon Sep 17 00:00:00 2001
-> > From: Akira Yokosawa <akiyks@gmail.com>
-> > Date: Wed, 24 Jun 2020 06:59:26 +0900
-> > Subject: [PATCH 2/2] Documentation/litmus-tests: Add note on herd7 7.56 in atomic litmus test
-> > 
-> > herdtools 7.56 has enhanced herd7's C parser so that the "(void)expr"
-> > construct in Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus is
-> > accepted.
-> > 
-> > This is independent of LKMM's cat model, so mention the required
-> > version in the header of the litmus test and its entry in README.
-> > 
-> > CC: Boqun Feng <boqun.feng@gmail.com>
-> > Reported-by: Andrea Parri <parri.andrea@gmail.com>
-> > Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+On Wed, Jun 24, 2020 at 01:04:50PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Frankly, I was hoping that we could simply bump the herd7 version in
-> tools/memory-model/README; I understand your point, but I admit that
-> I haven't being playing with 7.52 for a while now...
-
-Maybe in a few years it will no longer be relevant, and could then
-be removed?
-
-> Acked-by: Andrea Parri <parri.andrea@gmail.com>
-
-I queued both, thank you both!
-
-						Thanx, Paul
-
->   Andrea
+> Today's linux-next merge of the rcu tree got a conflict in:
 > 
+>   kernel/sched/core.c
 > 
-> > ---
-> >  Documentation/litmus-tests/README                                | 1 +
-> >  .../atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus       | 1 +
-> >  2 files changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
-> > index b79e640214b9..7f5c6c3ed6c3 100644
-> > --- a/Documentation/litmus-tests/README
-> > +++ b/Documentation/litmus-tests/README
-> > @@ -19,6 +19,7 @@ Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
-> >  
-> >  Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> >      Test that atomic_set() cannot break the atomicity of atomic RMWs.
-> > +    NOTE: Require herd7 7.56 or later which supports "(void)expr".
-> >  
-> >  
-> >  RCU (/rcu directory)
-> > diff --git a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> > index 49385314d911..ffd4d3e79c4a 100644
-> > --- a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> > +++ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> > @@ -4,6 +4,7 @@ C Atomic-RMW-ops-are-atomic-WRT-atomic_set
-> >   * Result: Never
-> >   *
-> >   * Test that atomic_set() cannot break the atomicity of atomic RMWs.
-> > + * NOTE: This requires herd7 7.56 or later which supports "(void)expr".
-> >   *)
-> >  
-> >  {
-> > -- 
-> > 2.17.1
-> > 
-> > 
+> between commit:
+> 
+>   964ed98b0752 ("sched/core: Fix ttwu() race")
+> 
+> from the tip tree and commit:
+> 
+>   3c88d09bfb1b ("EXP sched: Alleged fix for v5.8 merge-window scheduler issue")
+> 
+> from the rcu tree.
+> 
+> I fixed it up (I used the version from the tip tree) and can carry the
+> fix as necessary. This is now fixed as far as linux-next is concerned,
+> but any non trivial conflicts should be mentioned to your upstream
+> maintainer when your tree is submitted for merging.  You may also want
+> to consider cooperating with the maintainer of the conflicting tree to
+> minimise any particularly complex conflicts.
+
+Gah.  I will move my copy of this patch out of the rcu/next batch.
+I included it so that I could find other bugs.  ;-)
+
+							Thanx, Paul
