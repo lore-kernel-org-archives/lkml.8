@@ -2,228 +2,185 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F47C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E727C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45B082053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D28F2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:51:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K8jpejZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389677AbgFXIur (ORCPT
+        id S2389601AbgFXIvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:50:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:1309 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387796AbgFXIs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:48:58 -0400
-IronPort-SDR: dof78PE56RueGZuaA/IkzjRmMN5qmqtInXwqzspmx5gul6ERErijfWmgRrfUMqwX9GlyQDsbTO
- yEgEt9AqXhxg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="162484865"
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="162484865"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 01:48:56 -0700
-IronPort-SDR: 3wjsszL64qt/U6/qcUJlWSGelCbu9HW5E0/evm5z894kj3Dtspdpx+1+N9J8/5oAYE3DaDplnU
- Sg64TNcC6g2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="275624490"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 01:48:55 -0700
-From:   Liu Yi L <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, jun.j.tian@intel.com,
-        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
-        hao.wu@intel.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 00/14] vfio: expose virtual Shared Virtual Addressing to VMs
-Date:   Wed, 24 Jun 2020 01:55:13 -0700
-Message-Id: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 24 Jun 2020 04:51:18 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53700 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388730AbgFXIvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:51:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592988675;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=BdqSavOlq9SK4C9+l0Tf1dbvsL4gWXY1hx9siZC6vIQ=;
+        b=K8jpejZqebQlwyvjR8nph5dfq+RIq0X9Lq/OpU1TFmYtyTpWn3jimPrslTxkS2F8DiPR7t
+        Uc154/WkeYS5jNnW9rLS/NTNy9zjkjRpkDSP0K9PYgF7jWZTX15Q4EgoFKK/0fQFGFEhPo
+        /d/+VDtSPXofU1wlmvj5rdCeaTgqtuA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-GUl-l0hxNu2P6x608axcLg-1; Wed, 24 Jun 2020 04:51:12 -0400
+X-MC-Unique: GUl-l0hxNu2P6x608axcLg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBF76805EE2;
+        Wed, 24 Jun 2020 08:51:10 +0000 (UTC)
+Received: from [10.36.113.65] (ovpn-113-65.ams2.redhat.com [10.36.113.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 296065C660;
+        Wed, 24 Jun 2020 08:51:09 +0000 (UTC)
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <CAPcyv4ipnZ2jXd-obBk4KMGPNz4DMu0jGXFEEPCnST+A2zR+Uw@mail.gmail.com>
+ <20200624014737.GG3346@MiWiFi-R3L-srv>
+ <20200624034638.GA10687@L-31X9LVDL-1304.local>
+ <20200624035236.GI3346@MiWiFi-R3L-srv>
+ <20200624035622.GA10774@L-31X9LVDL-1304.local>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <53f7f04e-9c77-a987-8206-bd572268522b@redhat.com>
+Date:   Wed, 24 Jun 2020 10:51:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200624035622.GA10774@L-31X9LVDL-1304.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shared Virtual Addressing (SVA), a.k.a, Shared Virtual Memory (SVM) on
-Intel platforms allows address space sharing between device DMA and
-applications. SVA can reduce programming complexity and enhance security.
+On 24.06.20 05:56, Wei Yang wrote:
+> On Wed, Jun 24, 2020 at 11:52:36AM +0800, Baoquan He wrote:
+>> On 06/24/20 at 11:46am, Wei Yang wrote:
+>>> On Wed, Jun 24, 2020 at 09:47:37AM +0800, Baoquan He wrote:
+>>>> On 06/23/20 at 05:21pm, Dan Williams wrote:
+>>>>> On Tue, Jun 23, 2020 at 2:43 AM Wei Yang
+>>>>> <richard.weiyang@linux.alibaba.com> wrote:
+>>>>>>
+>>>>>> For early sections, we assumes its memmap will never be partially
+>>>>>> removed. But current behavior breaks this.
+>>>>>
+>>>>> Where do we assume that?
+>>>>>
+>>>>> The primary use case for this was mapping pmem that collides with
+>>>>> System-RAM in the same 128MB section. That collision will certainly be
+>>>>> depopulated on-demand depending on the state of the pmem device. So,
+>>>>> I'm not understanding the problem or the benefit of this change.
+>>>>
+>>>> I was also confused when review this patch, the patch log is a little
+>>>> short and simple. From the current code, with SPARSE_VMEMMAP enabled, we
+>>>> do build memmap for the whole memory section during boot, even though
+>>>> some of them may be partially populated. We just mark the subsection map
+>>>> for present pages. 
+>>>>
+>>>> Later, if pmem device is mapped into the partially boot memory section,
+>>>> we just fill the relevant subsection map, do return directly, w/o building
+>>>> the memmap for it, in section_activate(). Because the memmap for the
+>>>> unpresent RAM part have been there. I guess this is what Wei is trying to 
+>>>> do to keep the behaviour be consistent for pmem device adding, or
+>>>> pmem device removing and later adding again.
+>>>>
+>>>> Please correct me if I am wrong.
+>>>
+>>> You are right here.
+>>>
+>>>>
+>>>> To me, fixing it looks good. But a clear doc or code comment is
+>>>> necessary so that people can understand the code with less time.
+>>>> Leaving it as is doesn't cause harm. I personally tend to choose
+>>>> the former.
+>>>>
+>>>
+>>> The former is to add a clear doc?
+>>
+>> Sorry for the confusion. The former means the fix in your patch. Maybe a
+>> improved log and some code comment adding can make it more perfect.
+>>
+> 
+> Sure, I would try to add more log and comments, in case you have some good
+> suggestion, just let me know :)
+> 
 
-This VFIO series is intended to expose SVA usage to VMs. i.e. Sharing
-guest application address space with passthru devices. This is called
-vSVA in this series. The whole vSVA enabling requires QEMU/VFIO/IOMMU
-changes. For IOMMU and QEMU changes, they are in separate series (listed
-in the "Related series").
+We have documented this is section_activate() and pfn_valid()
+sufficiently. Maybe add a pointer like
 
-The high-level architecture for SVA virtualization is as below, the key
-design of vSVA support is to utilize the dual-stage IOMMU translation (
-also known as IOMMU nesting translation) capability in host IOMMU.
-
-
-    .-------------.  .---------------------------.
-    |   vIOMMU    |  | Guest process CR3, FL only|
-    |             |  '---------------------------'
-    .----------------/
-    | PASID Entry |--- PASID cache flush -
-    '-------------'                       |
-    |             |                       V
-    |             |                CR3 in GPA
-    '-------------'
-Guest
-------| Shadow |--------------------------|--------
-      v        v                          v
-Host
-    .-------------.  .----------------------.
-    |   pIOMMU    |  | Bind FL for GVA-GPA  |
-    |             |  '----------------------'
-    .----------------/  |
-    | PASID Entry |     V (Nested xlate)
-    '----------------\.------------------------------.
-    |             |   |SL for GPA-HPA, default domain|
-    |             |   '------------------------------'
-    '-------------'
-Where:
- - FL = First level/stage one page tables
- - SL = Second level/stage two page tables
-
-Patch Overview:
- 1. a refactor to vfio_iommu_type1 ioctl (patch 0001)
- 2. reports IOMMU nesting info to userspace ( patch 0002, 0003 and 0014)
- 3. vfio support for PASID allocation and free for VMs (patch 0004, 0005, 0006)
- 4. vfio support for binding guest page table to host (patch 0007, 0008, 0009)
- 5. vfio support for IOMMU cache invalidation from VMs (patch 0010)
- 6. vfio support for vSVA usage on IOMMU-backed mdevs (patch 0011)
- 7. expose PASID capability to VM (patch 0012)
- 8. add doc for VFIO dual stage control (patch 0013)
-
-The complete vSVA kernel upstream patches are divided into three phases:
-    1. Common APIs and PCI device direct assignment
-    2. IOMMU-backed Mediated Device assignment
-    3. Page Request Services (PRS) support
-
-This patchset is aiming for the phase 1 and phase 2, and based on Jacob's
-below series.
-[PATCH v3 0/5] IOMMU user API enhancement - wip
-https://lore.kernel.org/linux-iommu/1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com/
-
-[PATCH 00/10] IOASID extensions for guest SVA - wip
-https://lkml.org/lkml/2020/3/25/874
-
-The latest IOASID code added below new interface for itertate all PASIDs of an
-ioasid_set. The implementation is not sent out yet as Jacob needs some cleanup,
-it can be found in branch vsva-linux-5.8-rc1-v3
- int ioasid_set_for_each_ioasid(int sid, void (*fn)(ioasid_t id, void *data), void *data);
-
-Complete set for current vSVA can be found in below branch.
-This branch also includes some extra modifications to IOASID core code and
-vt-d iommu driver cleanup patches.
-https://github.com/luxis1999/linux-vsva.git:vsva-linux-5.8-rc1-v3
-
-The corresponding QEMU patch series is included in below branch:
-https://github.com/luxis1999/qemu.git:vsva_5.8_rc1_qemu_rfcv6
-
-
-Regards,
-Yi Liu
-
-Changelog:
-	- Patch v2 -> Patch v3:
-	  a) Rebase on top of Jacob's v3 iommu uapi patchset
-	  b) Address comments from Kevin and Stefan Hajnoczi
-	  c) Reuse DOMAIN_ATTR_NESTING to get iommu nesting info
-	  d) Drop [PATCH v2 07/15] iommu/uapi: Add iommu_gpasid_unbind_data
-	  https://lore.kernel.org/linux-iommu/1591877734-66527-1-git-send-email-yi.l.liu@intel.com/#r
-
-	- Patch v1 -> Patch v2:
-	  a) Refactor vfio_iommu_type1_ioctl() per suggestion from Christoph
-	     Hellwig.
-	  b) Re-sequence the patch series for better bisect support.
-	  c) Report IOMMU nesting cap info in detail instead of a format in
-	     v1.
-	  d) Enforce one group per nesting type container for vfio iommu type1
-	     driver.
-	  e) Build the vfio_mm related code from vfio.c to be a separate
-	     vfio_pasid.ko.
-	  f) Add PASID ownership check in IOMMU driver.
-	  g) Adopted to latest IOMMU UAPI design. Removed IOMMU UAPI version
-	     check. Added iommu_gpasid_unbind_data for unbind requests from
-	     userspace.
-	  h) Define a single ioctl:VFIO_IOMMU_NESTING_OP for bind/unbind_gtbl
-	     and cahce_invld.
-	  i) Document dual stage control in vfio.rst.
-	  Patch v1: https://lore.kernel.org/linux-iommu/1584880325-10561-1-git-send-email-yi.l.liu@intel.com/
-
-	- RFC v3 -> Patch v1:
-	  a) Address comments to the PASID request(alloc/free) path
-	  b) Report PASID alloc/free availabitiy to user-space
-	  c) Add a vfio_iommu_type1 parameter to support pasid quota tuning
-	  d) Adjusted to latest ioasid code implementation. e.g. remove the
-	     code for tracking the allocated PASIDs as latest ioasid code
-	     will track it, VFIO could use ioasid_free_set() to free all
-	     PASIDs.
-	  RFC v3: https://lore.kernel.org/linux-iommu/1580299912-86084-1-git-send-email-yi.l.liu@intel.com/
-
-	- RFC v2 -> v3:
-	  a) Refine the whole patchset to fit the roughly parts in this series
-	  b) Adds complete vfio PASID management framework. e.g. pasid alloc,
-	  free, reclaim in VM crash/down and per-VM PASID quota to prevent
-	  PASID abuse.
-	  c) Adds IOMMU uAPI version check and page table format check to ensure
-	  version compatibility and hardware compatibility.
-	  d) Adds vSVA vfio support for IOMMU-backed mdevs.
-	  RFC v2: https://lore.kernel.org/linux-iommu/1571919983-3231-1-git-send-email-yi.l.liu@intel.com/
-
-	- RFC v1 -> v2:
-	  Dropped vfio: VFIO_IOMMU_ATTACH/DETACH_PASID_TABLE.
-	  RFC v1: https://lore.kernel.org/linux-iommu/1562324772-3084-1-git-send-email-yi.l.liu@intel.com/
-
----
-Eric Auger (1):
-  vfio: Document dual stage control
-
-Liu Yi L (12):
-  vfio/type1: Refactor vfio_iommu_type1_ioctl()
-  iommu: Report domain nesting info
-  vfio/type1: Report iommu nesting info to userspace
-  vfio: Add PASID allocation/free support
-  iommu/vt-d: Support setting ioasid set to domain
-  vfio/type1: Add VFIO_IOMMU_PASID_REQUEST (alloc/free)
-  iommu/vt-d: Check ownership for PASIDs from user-space
-  vfio/type1: Support binding guest page tables to PASID
-  vfio/type1: Allow invalidating first-level/stage IOMMU cache
-  vfio/type1: Add vSVA support for IOMMU-backed mdevs
-  vfio/pci: Expose PCIe PASID capability to guest
-  iommu/vt-d: Support reporting nesting capability info
-
-Yi Sun (1):
-  iommu: Pass domain to sva_unbind_gpasid()
-
- Documentation/driver-api/vfio.rst  |  67 ++++
- drivers/iommu/arm-smmu-v3.c        |  29 +-
- drivers/iommu/arm-smmu.c           |  29 +-
- drivers/iommu/intel/iommu.c        | 105 ++++-
- drivers/iommu/intel/svm.c          |  10 +-
- drivers/iommu/iommu.c              |   2 +-
- drivers/vfio/Kconfig               |   6 +
- drivers/vfio/Makefile              |   1 +
- drivers/vfio/pci/vfio_pci_config.c |   2 +-
- drivers/vfio/vfio_iommu_type1.c    | 800 +++++++++++++++++++++++++++++--------
- drivers/vfio/vfio_pasid.c          | 191 +++++++++
- include/linux/intel-iommu.h        |  23 +-
- include/linux/iommu.h              |   4 +-
- include/linux/vfio.h               |  54 +++
- include/uapi/linux/iommu.h         |  59 +++
- include/uapi/linux/vfio.h          |  78 ++++
- 16 files changed, 1273 insertions(+), 187 deletions(-)
- create mode 100644 drivers/vfio/vfio_pasid.c
+/*
+ * The memmap of early sections is always fully populated. See
+ * section_activate() and pfn_valid() .
+ */
 
 -- 
-2.7.4
+Thanks,
+
+David / dhildenb
 
