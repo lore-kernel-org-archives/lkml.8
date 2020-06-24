@@ -2,131 +2,166 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F01C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5006720768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5767520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b0Tf4PR1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IOKX5uP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404831AbgFXQQh (ORCPT
+        id S2404838AbgFXQQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:16:37 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50466 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405052AbgFXQQH (ORCPT
+        Wed, 24 Jun 2020 12:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404760AbgFXQQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:16:07 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFMJC038562;
-        Wed, 24 Jun 2020 11:15:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593015322;
-        bh=Y5MdwCGXU77RAWVwX/WygJujeCPyLUiyCkJR3oQySLQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=b0Tf4PR1HtSIeUBiCHH1c4L6C++nPwuKH1nD4RmBvdwoK9GjKinpV1hJuquszow2i
-         4NFo69/tYvk6j0xqcTWPBZuMJX5zc0joVtcGoQTjAAm39NpAys6GVP6+tSiVo99a60
-         fQWfkb94FL+1WIRDI9iUld8s/r2f9qhNFoBVNRb8=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OGFHew058586
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 11:15:17 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 11:15:16 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 11:15:16 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFGhm099160;
-        Wed, 24 Jun 2020 11:15:16 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v5 4/7] ASoC: tas2562: Add rx and tx slot programming
-Date:   Wed, 24 Jun 2020 11:14:56 -0500
-Message-ID: <20200624161459.19248-5-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200624161459.19248-1-dmurphy@ti.com>
-References: <20200624161459.19248-1-dmurphy@ti.com>
+        Wed, 24 Jun 2020 12:16:47 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DEFCC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:16:47 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y18so1242097plr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r9Atz1n5S97FsyRtwbW9FxEwVR3HptLSj7YkFtdgBWc=;
+        b=IOKX5uP5HrCSDaBldb1Tlqjq7QjS/iWV7iYPBJGBjm5MBfZlGZ65fHIb7gwqwcoeRw
+         dpXx4RbkMXKmlmUkJyMmOhKjGP7uq2faKSrJkx0pPbJOJB7HDj5gJYJ2qr85eHA/cnXV
+         H6UkqiZT7Hf4A7Y6EJAKS9VnW6TG4YJJIJmC+zN1+gKqnpwjbbJGFpXjQv5PDJQkvtpY
+         D/il9Ds6lNa0aRabxw+vMLX7xAiBD/HhgWYaeid2aqPseFEPjLtTY//si6OJ/tdrxJqy
+         ei45oSHSPuORVmZon0PcThpNgkP0FKv3aL/MUReCE1NqPG/qnNGcmVu2OID8z6Gczdpa
+         L/Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r9Atz1n5S97FsyRtwbW9FxEwVR3HptLSj7YkFtdgBWc=;
+        b=mf+g9uG1hjO/e2gl7kt8w+Rrzha+F+CvMThIW86D7hTEhAadCqiaaRzGog3eBx71os
+         TcItUfoPBZanpNmPFPS0uNtMQdx5+yJphmRzAawTmBjtNDYhFkHUIdUVvl9r+L50BpgS
+         Ep5rc+Ctp4hM8BMZFrGjYmODb28rE0TaOj+JiPJBrIUt5SQ6M7Fk5gsiyAcaUH4U3h2f
+         Qp9YCn2j9C3WxfHUmw9L2VXxEFjfdBPBokZeWY5h2hOIZ+OrrzElDYdR5pw6ic3rE5HH
+         qPhzyFDC9UDX/q2AOMZSGzfcIhe/klFqhPqf3meWB3gNt1GfUGxHfhWSQLhnPlGxNZvJ
+         s+nQ==
+X-Gm-Message-State: AOAM532dJO2mOzyLD5foo/v65B64V95fFtoewT4s/VcTVu8SjqiV3fRI
+        InrtKrG17TVi+chV3MDfpzKFPQ==
+X-Google-Smtp-Source: ABdhPJzR5oxdlp9qxvLSBQa9QdrzRcyjkIYkFPOJwAujW1umQ1cg0Dv9Hmvl7bclAIhrUSrRff3SUA==
+X-Received: by 2002:a17:90a:7c4e:: with SMTP id e14mr29364901pjl.175.1593015406860;
+        Wed, 24 Jun 2020 09:16:46 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id oc6sm6480133pjb.43.2020.06.24.09.16.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 09:16:46 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 09:16:43 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/9] vmlinux.lds.h: Add .symtab, .strtab, and
+ .shstrtab to STABS_DEBUG
+Message-ID: <20200624161643.73x6navnwryckuit@google.com>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-3-keescook@chromium.org>
+ <20200624153930.GA1337895@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200624153930.GA1337895@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add programming for the tdm slots for both tx and rx offsets.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- sound/soc/codecs/tas2562.c | 17 ++++++++++++++++-
- sound/soc/codecs/tas2562.h |  4 ++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+On 2020-06-24, Arvind Sankar wrote:
+>On Tue, Jun 23, 2020 at 06:49:33PM -0700, Kees Cook wrote:
+>> When linking vmlinux with LLD, the synthetic sections .symtab, .strtab,
+>> and .shstrtab are listed as orphaned. Add them to the STABS_DEBUG section
+>> so there will be no warnings when --orphan-handling=warn is used more
+>> widely. (They are added above comment as it is the more common
+>
+>Nit 1: is "after .comment" better than "above comment"? It's above in the
+>sense of higher file offset, but it's below in readelf output.
 
-diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-index d26e30a2948c..2f1d4b697f01 100644
---- a/sound/soc/codecs/tas2562.c
-+++ b/sound/soc/codecs/tas2562.c
-@@ -208,6 +208,22 @@ static int tas2562_set_dai_tdm_slot(struct snd_soc_dai *dai,
- 	if (ret < 0)
- 		return ret;
- 
-+	if (tx_mask > TAS2562_TX_OFF_MAX) {
-+		dev_err(tas2562->dev, "TX slot is larger then %d",
-+			TAS2562_TX_OFF_MAX);
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_component_update_bits(component, TAS2562_TDM_CFG1,
-+					    TAS2562_RX_OFF_MASK, rx_mask << 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = snd_soc_component_update_bits(component, TAS2562_TDM_CFG4,
-+					    TAS2562_TX_OFF_MASK, tx_mask << 1);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- }
- 
-@@ -327,7 +343,6 @@ static int tas2562_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	ret = snd_soc_component_update_bits(component, TAS2562_TDM_CFG1,
- 					    TAS2562_TDM_CFG1_RX_OFFSET_MASK,
- 					    tdm_rx_start_slot);
--
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/sound/soc/codecs/tas2562.h b/sound/soc/codecs/tas2562.h
-index 28e75fc431d0..47e59c82eef3 100644
---- a/sound/soc/codecs/tas2562.h
-+++ b/sound/soc/codecs/tas2562.h
-@@ -34,6 +34,10 @@
- #define TAS2562_TDM_DET		TAS2562_REG(0, 0x11)
- #define TAS2562_REV_ID		TAS2562_REG(0, 0x7d)
- 
-+#define TAS2562_RX_OFF_MASK	GENMASK(5, 1)
-+#define TAS2562_TX_OFF_MASK	GENMASK(3, 1)
-+#define TAS2562_TX_OFF_MAX	7
-+
- /* Page 2 */
- #define TAS2562_DVC_CFG1	TAS2562_REG(2, 0x0c)
- #define TAS2562_DVC_CFG2	TAS2562_REG(2, 0x0d)
--- 
-2.26.2
+I mean this order:)
 
+   .comment
+   .symtab
+   .shstrtab
+   .strtab
+
+This is the case in the absence of a linker script if at least one object file has .comment (mostly for GCC/clang version information) or the linker is LLD which adds a .comment
+
+>Nit 2: These aren't actually debugging sections, no? Is it better to add
+>a new macro for it, and is there any plan to stop LLD from warning about
+>them?
+
+https://reviews.llvm.org/D75149 "[ELF] --orphan-handling=: don't warn/error for unused synthesized sections"
+described that .symtab .shstrtab .strtab are different in GNU ld.
+Since many other GNU ld synthesized sections (.rela.dyn .plt ...) can be renamed or dropped
+via output section descriptions, I don't understand why the 3 sections
+can't be customized.
+
+I created a feature request: https://sourceware.org/bugzilla/show_bug.cgi?id=26168
+(If this is supported, it is a consistent behavior to warn for orphan
+.symtab/.strtab/.shstrtab
+
+There may be 50% chance that the maintainer decides that "LLD diverges"
+I would disagree: there is no fundamental problems with .symtab/.strtab/.shstrtab which make them special in output section descriptions or orphan handling.)
+
+>> order[1].)
+>>
+>> ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
+>> ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
+>> ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
+>>
+>> [1] https://lore.kernel.org/lkml/20200622224928.o2a7jkq33guxfci4@google.com/
+>>
+>> Reported-by: Fangrui Song <maskray@google.com>
+>> Reviewed-by: Fangrui Song <maskray@google.com>
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> ---
+>>  include/asm-generic/vmlinux.lds.h | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+>> index 1248a206be8d..8e71757f485b 100644
+>> --- a/include/asm-generic/vmlinux.lds.h
+>> +++ b/include/asm-generic/vmlinux.lds.h
+>> @@ -792,7 +792,10 @@
+>>  		.stab.exclstr 0 : { *(.stab.exclstr) }			\
+>>  		.stab.index 0 : { *(.stab.index) }			\
+>>  		.stab.indexstr 0 : { *(.stab.indexstr) }		\
+>> -		.comment 0 : { *(.comment) }
+>> +		.comment 0 : { *(.comment) }				\
+>> +		.symtab 0 : { *(.symtab) }				\
+>> +		.strtab 0 : { *(.strtab) }				\
+>> +		.shstrtab 0 : { *(.shstrtab) }
+>>
+>>  #ifdef CONFIG_GENERIC_BUG
+>>  #define BUG_TABLE							\
+>> --
+>> 2.25.1
+>>
