@@ -2,192 +2,120 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43672C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C15C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F3D207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6E120789
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:39:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="T1CWLk9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390657AbgFXMh6 (ORCPT
+        id S2390691AbgFXMjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:37:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:44190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388942AbgFXMh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:37:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D8941F1;
-        Wed, 24 Jun 2020 05:37:56 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A71433F6CF;
-        Wed, 24 Jun 2020 05:37:53 -0700 (PDT)
-Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
- integer and pointer types
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-kernel@vger.kernel.org,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <20200624114127.3016-1-a.hajda@samsung.com>
- <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
- <20200624114127.3016-4-a.hajda@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2203e0c2-016b-4dbe-452d-63c857f06dd1@arm.com>
-Date:   Wed, 24 Jun 2020 13:37:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 08:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389677AbgFXMjM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:39:12 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA42C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:39:12 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l17so1587905qki.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=O/0cdThP5fAQ+/smPXNv+odghzJr2Q1Aqw1IMd91wZA=;
+        b=T1CWLk9BQg8bxbXVlDHiZ1HNK9aWUgDyhnwXlvf7G1lp4EM9sfXD7Q96jVRjiz4yrZ
+         lY9Rk9EgtMdOZNia1/0n1xS5Mjy1TvArYxGBRmc0xwkGY/PrAUeLiHUHCDzap5ESq+xn
+         je4qakoryfYVA737t+MaVGU0Oar7bLHbZmOMAbAm/JXvDJETc6f1D3NY/LWERUg9I2AV
+         D2I4p2/CHPScP0wpsmK89qHyw43+Rk+uqjpdjydVUuL3TDulgH9u+cv45WsODs4qD1Mu
+         s4aihH09jLgE/IZaZb8127eRoffii0+tGVlAT9cDjZ9XpFo5Gp3mAI/4yPigpo7hbbl/
+         WHBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O/0cdThP5fAQ+/smPXNv+odghzJr2Q1Aqw1IMd91wZA=;
+        b=mF5wdK9K+mmhaJ98ClMMSHQE7vGwdlu753i9gNgBSLVmORo84LtKkHDX6bHF82wEqt
+         NA5tLeoHKFbeEsj39ZJMNcYjdJiLLULaNjbhRkNekKozDaKS7Rp1kFEp+vvFTsr8Z3rO
+         4dirSk/HzQKebjdBw+fuiyXokydV4dP14lNfQ3KeMIEfA9LygW01pb4/7SbjGyO0QsCC
+         u9bQtC4K9bKMy5Il8kFqW98Gutnd6Uvaw/SMudjCUilb1XFlnkgND+6hrGanqye808pL
+         d6jmo1NuEOnVnkKN/9vY6veLpaTu1s9VwNWLDbJ75JVgcA05RjBI6MMnFISPgF8OsF1/
+         TLuQ==
+X-Gm-Message-State: AOAM532o2ig6fQcTCdaqIyQqBpbWFFBnJ0pXqrJow85H9DUzFmJCKquH
+        yz92choa7RZJYdoRo/PTDBH8aw==
+X-Google-Smtp-Source: ABdhPJzsppi/TSTervD1YOTkftKCwoEPTx4uYqETqOWiNzYhzo6xfHzVvPg4ru+tFHHQY6xy8smpbw==
+X-Received: by 2002:a37:ef08:: with SMTP id j8mr25034888qkk.442.1593002351998;
+        Wed, 24 Jun 2020 05:39:11 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id x19sm3587303qtc.36.2020.06.24.05.39.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 05:39:10 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jo4gI-00DKtq-DH; Wed, 24 Jun 2020 09:39:10 -0300
+Date:   Wed, 24 Jun 2020 09:39:10 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] mm/mmu_notifier: Mark up direct reclaim paths with
+ MAYFAIL
+Message-ID: <20200624123910.GA3178169@ziepe.ca>
+References: <20200624080248.3701-1-chris@chris-wilson.co.uk>
+ <20200624121053.GD6578@ziepe.ca>
+ <159300126338.4527.3968787379471939056@build.alporthouse.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624114127.3016-4-a.hajda@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159300126338.4527.3968787379471939056@build.alporthouse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 12:41, Andrzej Hajda wrote:
-> Many resource acquisition functions return error value encapsulated in
-> pointer instead of integer value. To simplify coding we can use macro
-> which will accept both types of error.
-> With this patch user can use:
-> 	probe_err(dev, ptr, ...)
-> instead of:
-> 	probe_err(dev, PTR_ERR(ptr), ...)
-> Without loosing old functionality:
-> 	probe_err(dev, err, ...)
-
-Personally I'm not convinced that simplification has much value, and I'd 
-say it *does* have a significant downside. This:
-
-	if (IS_ERR(x))
-		do_something_with(PTR_ERR(x));
-
-is a familiar and expected pattern when reading/reviewing code, and at a 
-glance is almost certainly doing the right thing. If I see this, on the 
-other hand:
-
-	if (IS_ERR(x))
-		do_something_with(x);
-
-my immediate instinct is to be suspicious, and now I've got to go off 
-and double-check that if do_something_with() really expects a pointer 
-it's also robust against PTR_ERR values. Off-hand I can't think of any 
-APIs that work that way in the areas with which I'm familiar, so it 
-would be a pretty unusual and non-obvious thing.
-
-Furthermore, an error helper that explicitly claims to accept "pointer 
-type" values seems like it could easily lead to misunderstandings like this:
-
-	int init_my_buffer(struct my_device *d)
-	{
-		d->buffer = kzalloc(d->buffer_size, GFP_KERNEL);
-		return probe_err(d->dev, d->buffer, "failed to init buffer\n");
-	}
-
-and allowing that to compile without any hint of an error seems a 
-little... unfair.
-
-Robin.
-
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->   drivers/base/core.c    | 25 ++-----------------------
->   include/linux/device.h | 25 ++++++++++++++++++++++++-
->   2 files changed, 26 insertions(+), 24 deletions(-)
+On Wed, Jun 24, 2020 at 01:21:03PM +0100, Chris Wilson wrote:
+> Quoting Jason Gunthorpe (2020-06-24 13:10:53)
+> > On Wed, Jun 24, 2020 at 09:02:47AM +0100, Chris Wilson wrote:
+> > > When direct reclaim enters the shrinker and tries to reclaim pages, it
+> > > has to opportunitically unmap them [try_to_unmap_one]. For direct
+> > > reclaim, the calling context is unknown and may include attempts to
+> > > unmap one page of a dma object while attempting to allocate more pages
+> > > for that object. Pass the information along that we are inside an
+> > > opportunistic unmap that can allow that page to remain referenced and
+> > > mapped, and let the callback opt in to avoiding a recursive wait.
+> > 
+> > i915 should already not be holding locks shared with the notifiers
+> > across allocations that can trigger reclaim. This is already required
+> > to use notifiers correctly anyhow - why do we need something in the
+> > notifiers?
 > 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 2a96954d5460..df283c62d9c0 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3953,28 +3953,7 @@ define_dev_printk_level(_dev_info, KERN_INFO);
->   
->   #endif
->   
-> -/**
-> - * probe_err - probe error check and log helper
-> - * @dev: the pointer to the struct device
-> - * @err: error value to test
-> - * @fmt: printf-style format string
-> - * @...: arguments as specified in the format string
-> - *
-> - * This helper implements common pattern present in probe functions for error
-> - * checking: print message if the error is not -EPROBE_DEFER and propagate it.
-> - * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
-> - * later by reading devices_deferred debugfs attribute.
-> - * It replaces code sequence:
-> - * 	if (err != -EPROBE_DEFER)
-> - * 		dev_err(dev, ...);
-> - * 	return err;
-> - * with
-> - * 	return probe_err(dev, err, ...);
-> - *
-> - * Returns @err.
-> - *
-> - */
-> -int probe_err(const struct device *dev, int err, const char *fmt, ...)
-> +int __probe_err(const struct device *dev, int err, const char *fmt, ...)
->   {
->   	struct va_format vaf;
->   	va_list args;
-> @@ -3992,7 +3971,7 @@ int probe_err(const struct device *dev, int err, const char *fmt, ...)
->   
->   	return err;
->   }
-> -EXPORT_SYMBOL_GPL(probe_err);
-> +EXPORT_SYMBOL_GPL(__probe_err);
->   
->   static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
->   {
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 40a90d9bf799..22d3c3d4f461 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -965,7 +965,30 @@ void device_links_supplier_sync_state_pause(void);
->   void device_links_supplier_sync_state_resume(void);
->   
->   extern __printf(3, 4)
-> -int probe_err(const struct device *dev, int err, const char *fmt, ...);
-> +int __probe_err(const struct device *dev, int err, const char *fmt, ...);
-> +
-> +/**
-> + * probe_err - probe error check and log helper
-> + * @dev: the pointer to the struct device
-> + * @err: error value to test, can be integer or pointer type
-> + * @fmt: printf-style format string
-> + * @...: arguments as specified in the format string
-> + *
-> + * This helper implements common pattern present in probe functions for error
-> + * checking: print message if the error is not -EPROBE_DEFER and propagate it.
-> + * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
-> + * later by reading devices_deferred debugfs attribute.
-> + * It replaces code sequence:
-> + * 	if (err != -EPROBE_DEFER)
-> + * 		dev_err(dev, ...);
-> + * 	return err;
-> + * with
-> + * 	return probe_err(dev, err, ...);
-> + *
-> + * Returns @err.
-> + *
-> + */
-> +#define probe_err(dev, err, args...) __probe_err(dev, (long)(err), args)
->   
->   /* Create alias, so I can be autoloaded. */
->   #define MODULE_ALIAS_CHARDEV(major,minor) \
+> for (n = 0; n < num_pages; n++)
+> 	pin_user_page()
 > 
+> may call try_to_unmap_page from the lru shrinker for [0, n-1].
+
+Yes, of course you can't hold any locks that intersect with notifiers
+across pin_user_page()/get_user_page()
+
+It has always been that way.
+
+I consolidated all this tricky locking into interval notifiers, maybe
+updating i915 to use them will give it a solution. I looked at it
+once, it was straightforward enough until it got to all the #ifdefery
+
+> We're in the middle of allocating the object, how are we best to untangle
+> that?
+
+I don't know anything about i915, but this is clearly i915 not using
+notifiers properly, it needs proper fixing, not hacking up notifiers.
+
+Jason
