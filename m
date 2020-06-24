@@ -2,106 +2,86 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE19C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6800BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80EA92145D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593038271;
-	bh=j/JT04bUIGp1KPXmU9tBSt/XagxtgDGn8tJTtwxowlE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AgJ+eCVC10LqDB/a6TRlknlCfu/a/TEk05tJ0y2Wj7W0MpIPjX1IbcNtbRQ9ZT+MZ
-	 QHstdLLZXBNdnruwPPeEMt4i8QEC6GiEUDVGRpO6lFU1Nv1rGTk0PVDCCkF/QKv1bK
-	 HLCakC4EAkwRmuOYg9gFrdDUOotecqa9x2gNUNFI=
+	by mail.kernel.org (Postfix) with ESMTP id 3AC2820B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDiKCZY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390153AbgFXWhu (ORCPT
+        id S2389817AbgFXWjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 18:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732806AbgFXWht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 18:37:49 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACA0C2145D
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593038269;
-        bh=j/JT04bUIGp1KPXmU9tBSt/XagxtgDGn8tJTtwxowlE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CcPNKzfA716pG2lRlW/5iMiAIi48GuzF32J9ROS1YCZbBJjNEo89KuaY28IBoFm9S
-         3fGrD7tx6vll0/sQfgJVW4Bs75aM76sRCRo0POv+9w4JsyobkVbJ9BLRzb0nWLsfoY
-         4APO8Pfuiv3rm95SJpHC1SKyVW0WHHe21HU0ktjU=
-Received: by mail-wm1-f54.google.com with SMTP id q15so3731146wmj.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:37:48 -0700 (PDT)
-X-Gm-Message-State: AOAM532fTWNzZYMpC9/8sar8C3B3lnGgawug7UY2G3L3Ku9Dvf7LNEK+
-        a3xpoHqwChMVHG3rE7e4acclDkJHoUw1azQeMHPT3w==
-X-Google-Smtp-Source: ABdhPJx4fLw4UTKYwGkCEWfPFEcMOBCPz8bEmhCE2U5/jNza+cfbnDxCsmikFctzGxT5KdtB+DKb1MjHPY4h/GK89tU=
-X-Received: by 2002:a1c:1b90:: with SMTP id b138mr3460wmb.21.1593038267193;
- Wed, 24 Jun 2020 15:37:47 -0700 (PDT)
+        Wed, 24 Jun 2020 18:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732806AbgFXWjY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 18:39:24 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10BDC061573;
+        Wed, 24 Jun 2020 15:39:23 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id g1so2686202edv.6;
+        Wed, 24 Jun 2020 15:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gRvXdVDFOL2nNC+UTdN9/1dh3APtBhSu9xe02kERmtc=;
+        b=FDiKCZY1+dAftJp9jkdsMliH8I5tgu2wSLQUC3MN2SNYdH8TLg/zSCCPr5iaftRG81
+         6msrCMfMgM67nSl19Tq6INqN0NMInn1m3eSPOx8TZ2dTIA3GQqancmIg6JWmMguelg/v
+         toElg+vdrbhLBFRZtyrFGXC1/7KZca0SNobFhxqlplqTyDUdRCgvGUlmI4kCq3llyO/h
+         okMh7NrfdPH1U2skuoC5eMnSSt8JopfjpgAjXvgVAKZ47dour/VYlp8TX6np3rTyoGRJ
+         GtDg5hlrzFiEprK0r4cgXB8NJ77L8y+um625JfCZpX9MAK4yiQN1bTFUw+D8WiSUGD38
+         rEbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gRvXdVDFOL2nNC+UTdN9/1dh3APtBhSu9xe02kERmtc=;
+        b=bLDSFyHpZ39WDGYDmkc24rPYr9v41h2HUHLpzn44KR5ytm3vfbFs3OVW+xR7hMBUyB
+         exczezsHElVnJmclacS3Q5/vU0HV5XG7a0MlNLVVvw0/tIRdSl253NrDu/PLBZMeIwyZ
+         cE/HGBHV0gAn6stuCt/Xa0Gbqxq9buPmvP/ummjBfYXFglcph55TBOjvAhsWIIsWu436
+         sDN8dHP/ioHO5erV5VTJbi2xmllM1L6nP9crkWMMD20j7MXW01xx1WLo3II9rkMPlEK5
+         1HVl/3HJ5pD0ZpZBT/Ksr0OOtNMj3XkUdtIP+fMvj/YE0/Vn6Xcwfv6F0cEUkm3O6POb
+         Gbfw==
+X-Gm-Message-State: AOAM532p1RipSDOiq45h2otTQaMx2XJ9WuaXeb0mcnWVyziwa+8Uf/x6
+        K2xBbN2eq9/Ih7k6TQDrCTCOvLMfNikJIBeSY50=
+X-Google-Smtp-Source: ABdhPJzc3AhSjYn3zf3cKkc3+5Rh+L/SL0NkuH5klMlptZ+xrvmJkm92f+X9/9g7BcyecThEgbHhM8mvyglwCsuBQDI=
+X-Received: by 2002:a05:6402:b57:: with SMTP id bx23mr9809887edb.304.1593038362635;
+ Wed, 24 Jun 2020 15:39:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200618190207.GO576905@hirez.programming.kicks-ass.net>
- <257B4193-08FB-4B3E-85E9-6C512B52C2C2@amacapital.net> <20200618211823.GP576905@hirez.programming.kicks-ass.net>
- <20200622114713.GE577403@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200622114713.GE577403@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 24 Jun 2020 15:37:34 -0700
-X-Gmail-Original-Message-ID: <CALCETrXjyp=P7b_tcFHD-ZCVrF4-KhojYDas7WJpMSzPr2B0Tg@mail.gmail.com>
-Message-ID: <CALCETrXjyp=P7b_tcFHD-ZCVrF4-KhojYDas7WJpMSzPr2B0Tg@mail.gmail.com>
-Subject: Re: [PATCH 1/7] x86/entry: Fix #UD vs WARN more
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Matthew Helsley <mhelsley@vmware.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jthierry@redhat.com,
-        Miroslav Benes <mbenes@suse.cz>
+References: <20200623230018.303776-1-konradybcio@gmail.com>
+ <CAMS8qEVHxnAwC9fK69Pb4MEMWVEa9N7ZdkQCkXwvqC-JfQEfRA@mail.gmail.com> <159303797640.62212.15039388585433005717@swboyd.mtv.corp.google.com>
+In-Reply-To: <159303797640.62212.15039388585433005717@swboyd.mtv.corp.google.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Thu, 25 Jun 2020 00:38:46 +0200
+Message-ID: <CAMS8qEUK1tSnaVOEyhcZoSXs_8Fqd+rwrRfy8=xT4jffvnsW-w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] clk: qcom: smd: Add support for MSM8992/4 rpm clocks
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 4:47 AM Peter Zijlstra <peterz@infradead.org> wrote=
-:
->
-> On Thu, Jun 18, 2020 at 11:18:23PM +0200, Peter Zijlstra wrote:
->
-> > > So maybe also do an untraced cond_local_irq_enable()?  After all, if
-> > > we=E2=80=99re trying to report a bug from IRQs on, it should be okay =
-to have
-> > > IRQs on while reporting it. It might even work better than having IRQ=
-s
-> > > off.
-> >
-> > Yes, very good point. Now I want to go look at the old code... I'll fro=
-b
-> > something tomorrow, brain is pretty fried by now.
->
-> How's this then?
->
-> ---
-> Subject: x86/entry: Fix #UD vs WARN more
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Tue Jun 16 13:28:36 CEST 2020
->
-> vmlinux.o: warning: objtool: exc_invalid_op()+0x47: call to probe_kernel_=
-read() leaves .noinstr.text section
->
-> Since we use UD2 as a short-cut for 'CALL __WARN', treat it as such.
-> Have the bare exception handler do the report_bug() thing.
->
-> Fixes: 15a416e8aaa7 ("x86/entry: Treat BUG/WARN as NMI-like entries")
+Nah, it does not crash. It just does not work properly.
+If my memory isn't corrupted, rpmcc doesn't load and regulator
+voltages aren't brought up.
+It is safe to merge, as the worst case scenario is it just
+not loading.
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Regards
+Konrad
