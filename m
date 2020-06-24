@@ -2,116 +2,97 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02828C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122E8214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03D2214DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="KYVTXVXk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHN9+2+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388372AbgFXBDu (ORCPT
+        id S2388348AbgFXBFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 21:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39650 "EHLO
+        Tue, 23 Jun 2020 21:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388117AbgFXBDt (ORCPT
+        with ESMTP id S2387932AbgFXBE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 21:03:49 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962B6C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 18:03:48 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id cy7so220448edb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 18:03:48 -0700 (PDT)
+        Tue, 23 Jun 2020 21:04:59 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C3CC061573;
+        Tue, 23 Jun 2020 18:04:59 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id z2so420338qts.5;
+        Tue, 23 Jun 2020 18:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Eo5cTIL37FpYiHosBDpvR4kZAwB7mWQXF34HqE6NXHo=;
-        b=KYVTXVXkCqMbcVuFTDEDKDF/vl50d6y6AVcDR3VWHAdVtg0rVF+rufFQ1wEqaxVJxh
-         SIb5YPrtFiiuP3U/USOvpvsCngwFcKcauttqEoZunWAugH4tljXQUnJSNiIjDNlSZE/Y
-         8vINYeh9lbMfW+YemTuHtIAKi4Sl9PXz4gZiOGRJUuGUwoyGoQmUiLV5cCSbIz4EaasJ
-         92s42xO9NEEqZm68/Q83e/Ak5uUYC6GXyyuUfu/VrtqYiplckhU03c0Vgvov8YbQnCav
-         /XiD58yFRrnMH13HCsgJrnDk0K6+OaiL+fWCrT5lEA0dPZE6YPGCpL2dE8+4ZxvV249D
-         1a5g==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=3OBgMDcvg30CRdCm9XIACqMvUJtLpuU1344J7O//WYI=;
+        b=NHN9+2+B9gQpMaHIT4JfyKUJw1CUMHHF42dfqh4p3Pfha4IQH6PigO6675MF70gsbh
+         bF3uw5/0fpWXYzEV21wwpwmf/1dUd1wtuH/YxhLnoXJ7H8gUNeYkUfLCh2/a36HrCQ22
+         +b5kABWFKcipyL8Dm+kZTIHtFFcumXg/7GRKyt+q59McrXDM7OK7jEiYUBaSxjfSO4cw
+         OfJFReAf1PbsAclpJaCYKbVCnNoHmEAK1kk61BfFCSFmcjns+5ZhpxFEYtW9GIjUnZC6
+         /o19reTcqh+qZI3EEq4xJYPmvqQJGilcLH9gEFifHZhI86BmOtQoa127z+LmRtxsZgml
+         6zLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Eo5cTIL37FpYiHosBDpvR4kZAwB7mWQXF34HqE6NXHo=;
-        b=OTSNUrO5s9pg+DAmlhD+m/Tn9BiuTfT7khH9+8fGxePBu9aj/RvffN4KiOyMa7QXhW
-         S65VRBwfxVSKSnmiyj48tS9ANRcpRRymT/4682FWF+5U5dP7kONHGSU6k4mqBuCJGcw9
-         1sBcBu4wGMP+A1axQSCexG8vNc1fTnobGOnvoj4lTy78Zv7Zmk4m84YwdCYGrHL170lS
-         YmyRNjlgt0p8hB2+aMRJfOZsZVE5lFy3UQNv4a3AiLZlgS1hlL1+CRRjHwxKKNfDImRv
-         7HSobFE79oUUAFu+eDnyFuHZum2Kru/fG3+8YHRDdyoWaC4XpROYRIiIMpeGMEhANGQ0
-         zMsA==
-X-Gm-Message-State: AOAM530FFlh2QD5bp3LWxblv7NdJEOnpovuOok/ETR3PGYQQCijnJwE0
-        Lf8aimrNWV2eEUOsvWhgBw6q0cLzqcempoFAd2KHGA==
-X-Google-Smtp-Source: ABdhPJwgEGyrPH+KoGgpyagYhDQWzp/X9Fcbf8BzrxMJ5Voz+JAHTmCCV7B6TldsquEEpVkTerwdy9arRqf3hvl6HiY=
-X-Received: by 2002:a50:d9cb:: with SMTP id x11mr9688647edj.93.1592960627165;
- Tue, 23 Jun 2020 18:03:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <1503686.1591113304@warthog.procyon.org.uk> <23219b787ed1c20a63017ab53839a0d1c794ec53.camel@intel.com>
- <CAPcyv4g+T+GK4yVJs8bTT1q90SFDpFYUSL9Pk_u8WZROhREPkw@mail.gmail.com> <3015561.1592960116@warthog.procyon.org.uk>
-In-Reply-To: <3015561.1592960116@warthog.procyon.org.uk>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 23 Jun 2020 18:03:36 -0700
-Message-ID: <CAPcyv4gdB6iOD8N0KAHY9WybpJtRx3EfEQCSM1zuTDkURrfuug@mail.gmail.com>
-Subject: Re: [GIT PULL] General notification queue and key notifications
-To:     David Howells <dhowells@redhat.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "raven@themaw.net" <raven@themaw.net>,
-        "kzak@redhat.com" <kzak@redhat.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "dray@redhat.com" <dray@redhat.com>,
-        "swhiteho@redhat.com" <swhiteho@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "mszeredi@redhat.com" <mszeredi@redhat.com>,
-        "jlayton@redhat.com" <jlayton@redhat.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "andres@anarazel.de" <andres@anarazel.de>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=3OBgMDcvg30CRdCm9XIACqMvUJtLpuU1344J7O//WYI=;
+        b=ItDPf0WV9v2lfqkh/ywjyyamo/nNyNApGkT79NmHqBfLLYfzLb3c6qaxqmAGdkY0Nk
+         kWFXi15YUvwzuMsDJiYrSEDkbIWSfEg5qzVKxxIANrbkQrfNmNFhF0TzzfGsRjjEg6dF
+         IvkFKjXz6mkOHhvEyi3n4iCLCfRMNqW2qkAbLM9KAshBBcOLs/FOsFFv0dpVfGkGKmnL
+         o4wOjZnTa0j2GUoJj60e/FwqBRs0RVG+Qy16UXS22rEYRRejYiKNedwczFvzMAQwCTlW
+         E+RsXTy0ssa/jBlAy49Zz0dUU4LzJW9EgWKJzqBsQkUZDMOl/2zNH7F3ORgH632koyrN
+         1vAA==
+X-Gm-Message-State: AOAM532aPR0RrMxatn8/Kj/pweWKAOY7bK1ht3eWZpl39QV6KbGa6yt9
+        tG9aU0vke9d4PdLeMJl71X4=
+X-Google-Smtp-Source: ABdhPJzpzOMIa0DJbqE+BzfGx83i+CzC+VDiaMfdL9OiFjLLB2Z2aSu9Xu/zOS/ZgGpS+CiYw74zyw==
+X-Received: by 2002:ac8:2f0b:: with SMTP id j11mr21806690qta.17.1592960699009;
+        Tue, 23 Jun 2020 18:04:59 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:596e:7d49:a74:946e])
+        by smtp.googlemail.com with ESMTPSA id w4sm2269137qtc.5.2020.06.23.18.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 18:04:58 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, "Jan \"Yenya\" Kasprzak" <kas@fi.muni.cz>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [net/wan] cosa_init: check bounds before access
+Date:   Tue, 23 Jun 2020 21:04:49 -0400
+Message-Id: <20200624010450.4490-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 5:55 PM David Howells <dhowells@redhat.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > > This commit:
-> > >
-> > > >       keys: Make the KEY_NEED_* perms an enum rather than a mask
-> > >
-> > > ...upstream as:
-> > >
-> > >     8c0637e950d6 keys: Make the KEY_NEED_* perms an enum rather than a mask
-> > >
-> > > ...triggers a regression in the libnvdimm unit test that exercises the
-> > > encrypted keys used to store nvdimm passphrases. It results in the
-> > > below warning.
-> >
-> > This regression is still present in tip of tree. David, have you had a
-> > chance to take a look?
->
-> nvdimm_lookup_user_key() needs to indicate to lookup_user_key() what it wants
-> the key for so that the appropriate security checks can take place in SELinux
-> and Smack.  Note that I have a patch in the works that changes this still
-> further.
->
-> Does setting the third argument of lookup_user_key() to KEY_NEED_SEARCH work
-> for you?
+Check i < io bounds before accessing io[i].
 
-It does, thanks.
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ drivers/net/wan/cosa.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Shall I wait for your further reworks to fix this for v5.8, or is that
-v5.9 material?
+diff --git a/drivers/net/wan/cosa.c b/drivers/net/wan/cosa.c
+index 5d6532ad6b78..8797adfa0ab0 100644
+--- a/drivers/net/wan/cosa.c
++++ b/drivers/net/wan/cosa.c
+@@ -363,7 +363,7 @@ static int __init cosa_init(void)
+ 	}
+ 	for (i=0; i<MAX_CARDS; i++)
+ 		cosa_cards[i].num = -1;
+-	for (i=0; io[i] != 0 && i < MAX_CARDS; i++)
++	for (i=0; i < MAX_CARDS && io[i] != 0; i++)
+ 		cosa_probe(io[i], irq[i], dma[i]);
+ 	if (!nr_cards) {
+ 		pr_warn("no devices found\n");
+-- 
+2.17.1
+
