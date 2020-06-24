@@ -2,119 +2,113 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86158C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF660C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E0920781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8852320723
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHMmhLBr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jnpRf2uO";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jnpRf2uO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404544AbgFXPT3 (ORCPT
+        id S2404190AbgFXPVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404017AbgFXPT3 (ORCPT
+        Wed, 24 Jun 2020 11:21:12 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51730 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403781AbgFXPVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:19:29 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0B7DC061573;
-        Wed, 24 Jun 2020 08:19:28 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id v3so2703598wrc.1;
-        Wed, 24 Jun 2020 08:19:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Py6R13MD/ALi+lmKz+0wD4Voo520rKERVOmYa94FmgM=;
-        b=WHMmhLBrGsTKq8yguQB2bjx3E8JorBYdumZsxQYbxblYDAb8jiPDC9IByepKx+eccf
-         A5h7Tlqxva0/EkSd32fHC2vvXjDnYlQw4RseSVvOxbp7Juf4pL7awzGRSAf9IzCzGIDM
-         CPee79NMTwFDmyScJR/rHTnO+4ExhnAmEuTlQWu21xxH34an6xtftGYQLJGfuzsCr002
-         MKZ21DNsuBIYBUKHkN0jphHx0ASZun96Ch6VbyQ109D59xnKGMvdJDqX8uVfq/OSqWcl
-         S1rXrgUcmvjggtekDWmBBge8j7P7zTP1+3dUem26Xg5YY488gkAkSSBhNTni+U/DZFRv
-         UWWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Py6R13MD/ALi+lmKz+0wD4Voo520rKERVOmYa94FmgM=;
-        b=lnpwesRw6+qt35dkSDM6+JWoUp0NTsm7OG3MzTHwg1SIh3yZwHqSlhb35ugdESwVSj
-         Qq/HPDxBGvvgCyoGjxejuAtTbsrKm2szwyLCbpgfs8m2wtnapkGO2hHGnRnf3GcWWFPL
-         kWR7ps9nnaU17qoXFAbAXx5lHPOsCAKDb07BGTLGUsnh2f0xNZQvUHsvBXnEz5pHORWq
-         WNBYXpqltt6L3uj4V6+FcIia/+YZO4vsOc/ogm6+5qm7Nqjsv3pLbdojnKT8dDRaiEWb
-         cD8KpSbveMoMvaRv32F2ZNnE+qtPaSdcoABZIUtXo/8eoFrMS+ww1ENYB9Ry+rJJo5ce
-         yOaA==
-X-Gm-Message-State: AOAM533R3BJiZJtVtsA8ccjYfvlw7RE3sMMOj22jAHn1k3jC6Cb7kBpV
-        bNEBgSkgHyO2dboRljLcKKsvncH9f4xZSr3dgj0oIQ==
-X-Google-Smtp-Source: ABdhPJzkiAB8rak7/EF7xQt5xkZIsOH0iRZ9o4lt3W5kLDwG6kLpL6P22IQui3lFLPjKWXPAPlyPVqKx8E1Jd9qgHCc=
-X-Received: by 2002:a5d:6a46:: with SMTP id t6mr4633910wrw.374.1593011967560;
- Wed, 24 Jun 2020 08:19:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200624120710.10957-1-colin.king@canonical.com>
-In-Reply-To: <20200624120710.10957-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 24 Jun 2020 11:19:16 -0400
-Message-ID: <CADnq5_NGQzU6rrrqO4iXTHPSxpAt-w0ayxfrS0jj3K8u38f3hg@mail.gmail.com>
-Subject: Re: [PATCH] drm/radeon: fix array out-of-bounds read and write issues
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
+        Wed, 24 Jun 2020 11:21:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id C06958EE16A;
+        Wed, 24 Jun 2020 08:21:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1593012070;
+        bh=DOfXn7+KwCf/KpOq0sgZgebZBq+AocK/Mz+BMpU//pw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=jnpRf2uO2k/DXOOIyuh7s7drZDKCrsxIQ5uRzBjEtPAVaoVdvmXcbKggYo1Rh65vS
+         VfJkjwHplAQLF/lGQPdl5jUDMKDhZc/FIpzMMIXZ94UN26BGDD98CPfXMCzFqC5H0J
+         0vTwpXwEgOkLBHllHmNZ8p2QKY+LswhDsnzeujJI=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qYj7yQLOuoXC; Wed, 24 Jun 2020 08:21:10 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1BBFB8EE0E9;
+        Wed, 24 Jun 2020 08:21:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1593012070;
+        bh=DOfXn7+KwCf/KpOq0sgZgebZBq+AocK/Mz+BMpU//pw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=jnpRf2uO2k/DXOOIyuh7s7drZDKCrsxIQ5uRzBjEtPAVaoVdvmXcbKggYo1Rh65vS
+         VfJkjwHplAQLF/lGQPdl5jUDMKDhZc/FIpzMMIXZ94UN26BGDD98CPfXMCzFqC5H0J
+         0vTwpXwEgOkLBHllHmNZ8p2QKY+LswhDsnzeujJI=
+Message-ID: <1593012069.28403.11.camel@HansenPartnership.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Jerome Forissier <jerome@forissier.org>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Date:   Wed, 24 Jun 2020 08:21:09 -0700
+In-Reply-To: <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+         <20200604175851.758-2-maxim.uvarov@linaro.org>
+         <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+         <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+         <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+         <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+         <1592507935.15159.5.camel@HansenPartnership.com>
+         <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+         <1592578844.4369.5.camel@HansenPartnership.com>
+         <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
+> Apologies for delay in my reply as I was busy with some other stuff.
+> 
+> On Fri, 19 Jun 2020 at 20:30, James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+[...]
+> > it's about consistency with what the kernel types mean.  When some
+> > checker detects your using little endian operations on a big endian
+> > structure (like in the prink for instance) they're going to keep
+> > emailing you about it.
+> 
+> As mentioned above, using different terminology is meant to cause
+> more confusion than just difference in endianness which is manageable
+> inside TEE.
+> 
+> And I think it's safe to say that the kernel implements UUID in big
+> endian format and thus uses %pUb whereas OP-TEE implements UUID in
+> little endian format and thus uses %pUl.
 
-Alex
+So what I think you're saying is that if we still had uuid_be and
+uuid_le you'd use uuid_le, because that's exactly the structure
+described in the docs.  But because we renamed
 
-On Wed, Jun 24, 2020 at 8:07 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is an off-by-one bounds check on the index into arrays
-> table->mc_reg_address and table->mc_reg_table_entry[k].mc_data[j] that
-> can lead to reads and writes outside of arrays. Fix the bound checking
-> off-by-one error.
->
-> Addresses-Coverity: ("Out-of-bounds read/write")
-> Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/gpu/drm/radeon/ci_dpm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
-> index 134aa2b01f90..86ac032275bb 100644
-> --- a/drivers/gpu/drm/radeon/ci_dpm.c
-> +++ b/drivers/gpu/drm/radeon/ci_dpm.c
-> @@ -4351,7 +4351,7 @@ static int ci_set_mc_special_registers(struct radeon_device *rdev,
->                                         table->mc_reg_table_entry[k].mc_data[j] |= 0x100;
->                         }
->                         j++;
-> -                       if (j > SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
-> +                       if (j >= SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
->                                 return -EINVAL;
->
->                         if (!pi->mem_gddr5) {
-> --
-> 2.27.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+uuid_be -> uuid_t
+uuid_le -> guid_t
+
+You can't use guid_t as a kernel type because it has the wrong name?
+
+James
+
