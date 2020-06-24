@@ -2,116 +2,91 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD62C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05473C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D59B20702
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDE12082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:56:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593024997;
+	bh=IUZ1TdJqxfyYQjX35T0yNKtN123wm6TZ++oWRDKTlMU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KIXM431Cnqkk7wDEjX172ApNogBSEPHPKxdVNkc4HeL/Nr7m53GVSiy7oFYXkh6aW
+	 QnYNrsXdk3t5+vSuALSqAcmb+ETJ7yqPwRX9OS+LL7e/rgHNqw2vdQFNJ77xzKR//O
+	 9fttOTCpzFT/B4Rl8FxsUVgE+g4swnf4EDmT9oAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406209AbgFXSzF (ORCPT
+        id S2406066AbgFXS4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:55:05 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45383 "EHLO mga04.intel.com"
+        Wed, 24 Jun 2020 14:56:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406019AbgFXSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:55:04 -0400
-IronPort-SDR: 5vFrg2Gpi18PUvIhmJYwDyTr0Iju2BNTStiPq+VJ5UXvrH37HmJecX4B/O3+8pVZ36q+Vn/mne
- kmChtDpUMeLg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="142080699"
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="142080699"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 11:55:04 -0700
-IronPort-SDR: aANov6vjSZGZtORqh4D03erAF1CDI6QmLcOFKgsk2+UG6alKTWdnmcBssRFT9bmvXPZYPwMFTs
- UiQr4ybHUO5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="385254827"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2020 11:55:04 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id D77E65804D6;
-        Wed, 24 Jun 2020 11:55:03 -0700 (PDT)
-Message-ID: <12d36fdcdbcf438dd3aac7769e8366afd9d5aa1a.camel@linux.intel.com>
-Subject: Re: [PATCH V2 0/2] nvme: Add support for ACPI StorageD3Enable
- property
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
-        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
-Date:   Wed, 24 Jun 2020 11:55:03 -0700
-In-Reply-To: <20200612204820.20111-1-david.e.box@linux.intel.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
-         <20200612204820.20111-1-david.e.box@linux.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
-MIME-Version: 1.0
+        id S2405469AbgFXS4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:56:35 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB8020702;
+        Wed, 24 Jun 2020 18:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593024995;
+        bh=IUZ1TdJqxfyYQjX35T0yNKtN123wm6TZ++oWRDKTlMU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qfTFkUqOsu0wIXUbkk0qItvD/XS6wCQC2ect3Y+O9FahvOqWIVJK68z5s703MCHR2
+         0VwH/qcqmdaMCe2f/o6ydeQA9cAWNdp4UlydsyyrkS+9gww8RVoCcExnGjqSzpqyiB
+         VJAheCd8yzEn453CqrljkXRCHHu5a9hgbQt7XfPU=
+Date:   Wed, 24 Jun 2020 11:56:35 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        "Fabrizio D'Angelo" <fdangelo@redhat.com>, linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm/page_alloc: fix documentation error and remove
+ magic numbers
+Message-Id: <20200624115635.852cb4563ad52844685e5c61@linux-foundation.org>
+In-Reply-To: <20200624170131.GQ21350@casper.infradead.org>
+References: <20200624164943.32048-1-jsavitz@redhat.com>
+        <20200624170131.GQ21350@casper.infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly reminder. Thanks.
+On Wed, 24 Jun 2020 18:01:31 +0100 Matthew Wilcox <willy@infradead.org> wrote:
 
-David
+> On Wed, Jun 24, 2020 at 12:49:43PM -0400, Joel Savitz wrote:
+> > When I increased the upper bound of the min_free_kbytes value in
+> > ee8eb9a5fe863, I forgot to tweak the above comment to reflect
+> > the new value. This patch fixes that mistake.
+> > 
+> > In addition, this patch replaces the magic number bounds with symbolic
+> > constants to clarify the logic.
+> > 
+> > changes from v1:
+> > - declare constants via enum instead of separate integers
+> > 
+> > Suggested-by: John Hubbard <jhubbard@nvidia.com>
+> > Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> 
+> NAK.  Just fix the documentation.  It's bad form to combine two completely
+> different things in one patch anyway.
 
-On Fri, 2020-06-12 at 13:48 -0700, David E. Box wrote:
-> This patch set implements a solution for a BIOS hack used on some
-> currently
-> shipping Intel systems to address issues with power management policy
-> decisions concerning PCIe NVMe drives. Some newer Intel platforms,
-> like
-> some Comet Lake systems, require that PCIe devices use D3 when doing
-> suspend-to-idle in order to allow the platform to realize maximum
-> power
-> savings. This is particularly needed to support ATX power supply
-> shutdown
-> on desktop systems. In order to ensure this happens for root ports
-> with
-> storage devices, Microsoft apparently created this ACPI _DSD property
-> as a
-> way to override their driver policy. To my knowledge this property
-> has not
-> been discussed with the NVME specification body.
-> 
-> Though the solution is not ideal, it addresses a problem that also
-> affects
-> Linux since the NVMe driver's default policy of using NVMe APST
-> during
-> suspend-to-idle would lead to higher power consumption for these
-> platforms.
-> 
-> Patch 1 provides a symbol in the PCI/ACPI layer to read the property.
-> Patch 2 uses the symbol in the NVMe driver to select D3 as a quirk if
-> set.
-> 
-> Changes from V2:
-> 	- Export the pci_acpi_storage_d3 function for use by drivers as
-> 	  needed instead of modifying the pci header.
-> 	- Add missing put on acpi device handle.
-> 	- Add 'noacpi' module parameter to allow undoing this change.
-> 	- Add info message that this is a platform quirk.
-> 
-> David E. Box (2):
->   PCI: Add ACPI StorageD3Enable _DSD support
->   drivers/nvme: Add support for ACPI StorageD3Enable property
-> 
->  drivers/acpi/property.c |  3 +++
->  drivers/nvme/host/pci.c | 14 ++++++++++
->  drivers/pci/pci-acpi.c  | 59
-> +++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h     |  2 ++
->  4 files changed, 78 insertions(+)
-> 
+I don't think the enums add value anyway - if these numbers are only
+used in a single place, it's clearer to just open-code them.
+
+One advantage of using a #define/enum for single-use constants is that
+the #define/enum site provides a neat location for documenting
+(commenting) the reasoning behind the particular values which were
+chosen.  But this patch didn't do that.
 
