@@ -5,24 +5,24 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CBBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD628207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A3D207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389879AbgFXHa0 (ORCPT
+        id S2389909AbgFXHan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:30:26 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:59672 "EHLO loongson.cn"
+        Wed, 24 Jun 2020 03:30:43 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:59652 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388882AbgFXH3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:29:55 -0400
+        id S2388375AbgFXH3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:29:54 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_93mAPNezSRJAA--.399S6;
-        Wed, 24 Jun 2020 15:29:45 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_93mAPNezSRJAA--.399S13;
+        Wed, 24 Jun 2020 15:29:48 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -31,97 +31,59 @@ Cc:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 04/14] irqchip/davinci-aintc: Fix potential resource leaks
-Date:   Wed, 24 Jun 2020 15:29:32 +0800
-Message-Id: <1592983782-8842-5-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 11/14] irqchip/omap-intc: Fix potential resource leak
+Date:   Wed, 24 Jun 2020 15:29:39 +0800
+Message-Id: <1592983782-8842-12-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dx_93mAPNezSRJAA--.399S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ar4DuryfXr1ftF45GF47twb_yoW8tFy3pF
-        W5Aw4a9r48tF15XwsxCFyYgF13Cw1vkFW7C34UGas7ZrsYy34v9r15GFZxZFyUGw48X3Wj
-        yFs3Ja48WF1UZaUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUQI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-        z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-        4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE
-        3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2I
-        x0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8
-        JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2
-        ka0xkIwI1lc7CjxVAaw2AFwI0_JF0_Jw1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48J
-        MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-        0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26c
+X-CM-TRANSID: AQAAf9Dx_93mAPNezSRJAA--.399S13
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF4rtF1xAryrCFyfWw1xZrb_yoW3AFc_u3
+        Wqgas3Wr4xAr4rGr1Igw13ZryYvrWkWFn7uF40q3ZxJ3y3Xw10yr42vrZ3JF10kFWUCr97
+        Gr4UurWxAw1IyjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbmxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
+        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
+        F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
+        1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+        3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
+        IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4U
+        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
+        kIc2xKxwCY1x0262kKe7AKxVWUAVWUtwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l
+        4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+        cVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26c
         xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x02
-        67AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7VUjNB_UUUUUU==
+        67AKxVW0oVCq3bIYCTnIWIevJa73UjIFyTuYvjfUeQ6JUUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists potential resource leaks in the error path, fix them.
+There exists potential resource leak in the error path, fix it.
 
-Fixes: 0145beed9d26 ("irqchip: davinci-aintc: move the driver to drivers/irqchip")
+Fixes: 8598066cddd1 ("arm: omap: irq: move irq.c to drivers/irqchip/")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-davinci-aintc.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-omap-intc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-davinci-aintc.c b/drivers/irqchip/irq-davinci-aintc.c
-index 810ccc4..12db502 100644
---- a/drivers/irqchip/irq-davinci-aintc.c
-+++ b/drivers/irqchip/irq-davinci-aintc.c
-@@ -96,7 +96,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
- 				     resource_size(&config->reg));
- 	if (!davinci_aintc_base) {
- 		pr_err("%s: unable to ioremap register range\n", __func__);
--		return;
-+		goto err_release;
- 	}
+diff --git a/drivers/irqchip/irq-omap-intc.c b/drivers/irqchip/irq-omap-intc.c
+index d360a6e..e711530 100644
+--- a/drivers/irqchip/irq-omap-intc.c
++++ b/drivers/irqchip/irq-omap-intc.c
+@@ -254,8 +254,10 @@ static int __init omap_init_irq_of(struct device_node *node)
+ 	omap_irq_soft_reset();
  
- 	/* Clear all interrupt requests */
-@@ -133,7 +133,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
- 	if (irq_base < 0) {
- 		pr_err("%s: unable to allocate interrupt descriptors: %d\n",
- 		       __func__, irq_base);
--		return;
-+		goto err_iounmap;
- 	}
+ 	ret = omap_alloc_gc_of(domain, omap_irq_base);
+-	if (ret < 0)
++	if (ret < 0) {
+ 		irq_domain_remove(domain);
++		iounmap(omap_irq_base);
++	}
  
- 	davinci_aintc_irq_domain = irq_domain_add_legacy(NULL,
-@@ -141,7 +141,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
- 						&irq_domain_simple_ops, NULL);
- 	if (!davinci_aintc_irq_domain) {
- 		pr_err("%s: unable to create interrupt domain\n", __func__);
--		return;
-+		goto err_free_descs;
- 	}
- 
- 	ret = irq_alloc_domain_generic_chips(davinci_aintc_irq_domain, 32, 1,
-@@ -150,7 +150,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
- 	if (ret) {
- 		pr_err("%s: unable to allocate generic irq chips for domain\n",
- 		       __func__);
--		return;
-+		goto err_domain_remove;
- 	}
- 
- 	for (irq_off = 0, reg_off = 0;
-@@ -160,4 +160,13 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
- 				       irq_base + irq_off, 32);
- 
- 	set_handle_irq(davinci_aintc_handle_irq);
-+
-+err_domain_remove:
-+	irq_domain_remove(davinci_aintc_irq_domain);
-+err_free_descs:
-+	irq_free_descs(irq_base, config->num_irqs);
-+err_iounmap:
-+	iounmap(davinci_aintc_base);
-+err_release:
-+	release_mem_region(config->reg.start, resource_size(&config->reg));
+ 	return ret;
  }
 -- 
 2.1.0
