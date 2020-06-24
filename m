@@ -2,127 +2,126 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69629C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A818C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C88D207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:06:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="brcPr/qd"
+	by mail.kernel.org (Postfix) with ESMTP id DFBD220836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390052AbgFXWG0 (ORCPT
+        id S2390147AbgFXWIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 18:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389453AbgFXWGX (ORCPT
+        Wed, 24 Jun 2020 18:08:53 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:35821 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387718AbgFXWIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 18:06:23 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB9FC061573;
-        Wed, 24 Jun 2020 15:06:22 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y18so2094523lfh.11;
-        Wed, 24 Jun 2020 15:06:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UgyMArw4CzkOtjq5ORhsXeOYAj7kLhbHa9ROjF5N1ZA=;
-        b=brcPr/qdwolNKlQ2seNrW+NR5dn3F8qzG/5QSrP5Uvzqyojcl+GZUA33WwbzgAcUpQ
-         J4HFOf5CWTkwIKQOAvIi7Nl3+3d+D5CPJ9s+e3POhZZbTliBmMb5a4mjKqR/Ncj93rm8
-         OKxUFVvEAFTjS/MH3GX1V3tHhI6eKR8ieKjHheZ3zU54uVGBQLwNvX6cB2waHX29T7H0
-         w4CJ6AuMuIsb6NvZipexg3gLOsXnZrMMxyt0fEa04d5oIfxPT1kfrTVh9Fvix4wV+ZyT
-         VPvcaCGITS2n9Wl0i2hPkqumA2s6XPuw5PvSLeuCjRis6U6u988o1lDIBTVTmk39pUTk
-         S6bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UgyMArw4CzkOtjq5ORhsXeOYAj7kLhbHa9ROjF5N1ZA=;
-        b=ky8ZCwh51IFDSyyYzmAoCEQEYukKuCwdew17fXZWd5KF4KoRKcAzPQw+R7rNZ3u+29
-         MrTroFR0/UStoNMSKqD1XWDIH3Okr/uqM08fwhTFxDtVG0NHFEaOLJlX3e3YbkpZQHkk
-         1fd9mcNMVrHZdjvff9KxPPVTnlM0B8XojbvL3MDEm+aDm571vgZTdce7LArQpHit5ezF
-         noAMFO67BbcGHLw3ugnAz3eM79ZF5akWoOdPU+3iN87s2z5hUWUx/wA2PH5GpBueD4dc
-         670Ir84E2UrxV9cWc2oJAXdWsmU/VSRZOrGFHx7FWPB2AyGNxbH0JNdMYnbOaSgH8Atb
-         X0kA==
-X-Gm-Message-State: AOAM532mCloLUOfIrc/5a6UYxs2+L4R+ev1SUySrurIwRjzJk4BDSvce
-        uZ9KClJIGAyvTBKxRjsujkGRcn0L1ST5wtjp3A==
-X-Google-Smtp-Source: ABdhPJziBSIPd70JafmfjsSZBN5adlm7ZLw/+u52IOWV9W91ao6QMegxNcu8vWfFtx2lhET9gfIAJ60yhX40DrLEejc=
-X-Received: by 2002:ac2:5c09:: with SMTP id r9mr16809657lfp.176.1593036380605;
- Wed, 24 Jun 2020 15:06:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <1592410366125160@kroah.com>
-In-Reply-To: <1592410366125160@kroah.com>
-From:   Gabriel C <nix.or.die@googlemail.com>
-Date:   Thu, 25 Jun 2020 00:05:54 +0200
-Message-ID: <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
-Subject: Re: Linux 5.7.3
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Wed, 24 Jun 2020 18:08:53 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U0dBAHt_1593036529;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0dBAHt_1593036529)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 25 Jun 2020 06:08:49 +0800
+Date:   Thu, 25 Jun 2020 06:08:49 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable <stable@vger.kernel.org>, lwn@lwn.net,
-        Jiri Slaby <jslaby@suse.cz>, angrypenguinpoland@gmail.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200624220849.GB15016@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <CAPcyv4ipnZ2jXd-obBk4KMGPNz4DMu0jGXFEEPCnST+A2zR+Uw@mail.gmail.com>
+ <20200624014737.GG3346@MiWiFi-R3L-srv>
+ <20200624034638.GA10687@L-31X9LVDL-1304.local>
+ <20200624035236.GI3346@MiWiFi-R3L-srv>
+ <20200624035622.GA10774@L-31X9LVDL-1304.local>
+ <53f7f04e-9c77-a987-8206-bd572268522b@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <53f7f04e-9c77-a987-8206-bd572268522b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
-<gregkh@linuxfoundation.org>:
+On Wed, Jun 24, 2020 at 10:51:08AM +0200, David Hildenbrand wrote:
+>On 24.06.20 05:56, Wei Yang wrote:
+>> On Wed, Jun 24, 2020 at 11:52:36AM +0800, Baoquan He wrote:
+>>> On 06/24/20 at 11:46am, Wei Yang wrote:
+>>>> On Wed, Jun 24, 2020 at 09:47:37AM +0800, Baoquan He wrote:
+>>>>> On 06/23/20 at 05:21pm, Dan Williams wrote:
+>>>>>> On Tue, Jun 23, 2020 at 2:43 AM Wei Yang
+>>>>>> <richard.weiyang@linux.alibaba.com> wrote:
+>>>>>>>
+>>>>>>> For early sections, we assumes its memmap will never be partially
+>>>>>>> removed. But current behavior breaks this.
+>>>>>>
+>>>>>> Where do we assume that?
+>>>>>>
+>>>>>> The primary use case for this was mapping pmem that collides with
+>>>>>> System-RAM in the same 128MB section. That collision will certainly be
+>>>>>> depopulated on-demand depending on the state of the pmem device. So,
+>>>>>> I'm not understanding the problem or the benefit of this change.
+>>>>>
+>>>>> I was also confused when review this patch, the patch log is a little
+>>>>> short and simple. From the current code, with SPARSE_VMEMMAP enabled, we
+>>>>> do build memmap for the whole memory section during boot, even though
+>>>>> some of them may be partially populated. We just mark the subsection map
+>>>>> for present pages. 
+>>>>>
+>>>>> Later, if pmem device is mapped into the partially boot memory section,
+>>>>> we just fill the relevant subsection map, do return directly, w/o building
+>>>>> the memmap for it, in section_activate(). Because the memmap for the
+>>>>> unpresent RAM part have been there. I guess this is what Wei is trying to 
+>>>>> do to keep the behaviour be consistent for pmem device adding, or
+>>>>> pmem device removing and later adding again.
+>>>>>
+>>>>> Please correct me if I am wrong.
+>>>>
+>>>> You are right here.
+>>>>
+>>>>>
+>>>>> To me, fixing it looks good. But a clear doc or code comment is
+>>>>> necessary so that people can understand the code with less time.
+>>>>> Leaving it as is doesn't cause harm. I personally tend to choose
+>>>>> the former.
+>>>>>
+>>>>
+>>>> The former is to add a clear doc?
+>>>
+>>> Sorry for the confusion. The former means the fix in your patch. Maybe a
+>>> improved log and some code comment adding can make it more perfect.
+>>>
+>> 
+>> Sure, I would try to add more log and comments, in case you have some good
+>> suggestion, just let me know :)
+>> 
 >
-> I'm announcing the release of the 5.7.3 kernel.
+>We have documented this is section_activate() and pfn_valid()
+>sufficiently. Maybe add a pointer like
 >
+>/*
+> * The memmap of early sections is always fully populated. See
+> * section_activate() and pfn_valid() .
+> */
 
-Hello Greg,
+Thanks, I have added this above the "if" check.
 
-> Qiujun Huang (5):
->       ath9k: Fix use-after-free Read in htc_connect_service
->       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
->       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
->       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
->       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
 >
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
-We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
-while working fine on <5.7.3.
-
-I don't have myself such HW, and the reported doesn't have any experience
-in bisecting the kernel, so we build kernels, each with one of the
-above commits reverted,
-to find the bad commit.
-
-The winner is:
-
-commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
-Author: Qiujun Huang <hqjagain@gmail.com>
-Date:   Sat Apr 4 12:18:38 2020 +0800
-
-    ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-
-    commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
-...
-
-Reverting this one fixed his problem.
-
-I don't have so much info about the HW, besides a dmesg showing the
-phy breaking.
-I also added the reporter to CC too.
-
-https://gist.github.com/AngryPenguinPL/1e545f0da3c2339e443b9e5044fcccea
-
-If you need more info, please let me know and I'll try my best to get
-it as fast as possible for you.
-
-
-Best Regards,
-
-Gabriel C
+-- 
+Wei Yang
+Help you, Help me
