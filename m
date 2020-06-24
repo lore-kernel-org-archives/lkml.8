@@ -2,90 +2,154 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8116EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE0002082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:16:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lvI0AvNC"
+	by mail.kernel.org (Postfix) with ESMTP id 663BB20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390379AbgFXVQF (ORCPT
+        id S2390437AbgFXVSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390317AbgFXVQF (ORCPT
+        Wed, 24 Jun 2020 17:18:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40420 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389773AbgFXVSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:16:05 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDC1C061573;
-        Wed, 24 Jun 2020 14:16:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CYAOBdXXwk5atGG1OkexemEOJEg2uOXvmf8MxtMHkzA=; b=lvI0AvNCOyQRFPEBPSO732MCmS
-        priyMdaeyT9DlHRLc/z9qWhkeCY/G37ozS6HciR55B+xdk3sRO+bn4RdzWVJS4FDFf++roys12UFi
-        2Xn0aJcu82shXhcuPUJaxr0NiofjiM9cS72P+0UyExr/CWjZItZDE4OZMDMLf4RBiQ+3eGs0RrR20
-        QerCqnR4yK+D/eqXSR/BaYzSzLfSMZBayOvuxe0uMIgumCmxbS4aKn+HlmJxHDAjxC7KlQlu9/mMK
-        D//TxmU24AKwnTz6mvW3vYpxg3iJ7ar26Kv6tNzbCv4aRAJOYWk+gjYHLWLDLC4v2if3/bM+oS2fR
-        WOLeUYeg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joCkB-0004Ne-TF; Wed, 24 Jun 2020 21:15:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1283B304B6D;
-        Wed, 24 Jun 2020 23:15:41 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 05648203CDC3F; Wed, 24 Jun 2020 23:15:41 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 23:15:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200624211540.GS4817@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
+        Wed, 24 Jun 2020 17:18:02 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OL2eA1069618;
+        Wed, 24 Jun 2020 17:17:55 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwymyggj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 17:17:55 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OLHsef143482;
+        Wed, 24 Jun 2020 17:17:54 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwymygg0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 17:17:54 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OLG6IB020242;
+        Wed, 24 Jun 2020 21:17:53 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma04wdc.us.ibm.com with ESMTP id 31uury6ufj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 21:17:53 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OLHqs544433764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 21:17:52 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD99D112061;
+        Wed, 24 Jun 2020 21:17:52 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95B4E112064;
+        Wed, 24 Jun 2020 21:17:52 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Jun 2020 21:17:52 +0000 (GMT)
+Subject: Re: [PATCH v2] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
+To:     Bruno Meneguele <bmeneg@redhat.com>,
+        Maurizio Drocco <maurizio.drocco@ibm.com>
+Cc:     zohar@linux.ibm.com, Silviu.Vlasceanu@huawei.com,
+        dmitry.kasatkin@gmail.com, jejb@linux.ibm.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, mdrocco@linux.vnet.ibm.com,
+        roberto.sassu@huawei.com, serge@hallyn.com
+References: <1592856871.4987.21.camel@linux.ibm.com>
+ <20200623180122.209-1-maurizio.drocco@ibm.com> <20200623181357.GC4983@glitch>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <92a0d170-8157-476b-8083-ae567b11f364@linux.ibm.com>
+Date:   Wed, 24 Jun 2020 17:17:52 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624203200.78870-1-samitolvanen@google.com>
+In-Reply-To: <20200623181357.GC4983@glitch>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_16:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ cotscore=-2147483648 spamscore=0 malwarescore=0 adultscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1011 phishscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:31:38PM -0700, Sami Tolvanen wrote:
-> This patch series adds support for building x86_64 and arm64 kernels
-> with Clang's Link Time Optimization (LTO).
-> 
-> In addition to performance, the primary motivation for LTO is to allow
-> Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
-> Pixel devices have shipped with LTO+CFI kernels since 2018.
-> 
-> Most of the patches are build system changes for handling LLVM bitcode,
-> which Clang produces with LTO instead of ELF object files, postponing
-> ELF processing until a later stage, and ensuring initcall ordering.
-> 
-> Note that first objtool patch in the series is already in linux-next,
-> but as it's needed with LTO, I'm including it also here to make testing
-> easier.
+On 6/23/20 2:13 PM, Bruno Meneguele wrote:
+> On Tue, Jun 23, 2020 at 02:01:22PM -0400, Maurizio Drocco wrote:
+>> From: Maurizio <maurizio.drocco@ibm.com>
+>>
+>> If PCRs 8 - 9 are set (i.e. not all-zeros), cal_bootaggr should include
+>> them into the digest.
 
-I'm very sad that yet again, memory ordering isn't addressed. LTO vastly
-increases the range of the optimizer to wreck things.
+
+Wouldn't you have to check for not all-zeros in your code?
+
+
+    Stefan
+
+
+>>
+>> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+>> ---
+>> Changelog:
+>> v2:
+>> - Always include PCRs 8 & 9 to non-sha1 hashes
+>> v1:
+>> - Include non-zero PCRs 8 & 9 to boot aggregates
+>>
+>>   src/evmctl.c | 15 +++++++++++++--
+>>   1 file changed, 13 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/src/evmctl.c b/src/evmctl.c
+>> index 1d065ce..46b7092 100644
+>> --- a/src/evmctl.c
+>> +++ b/src/evmctl.c
+>> @@ -1930,6 +1930,16 @@ static void calc_bootaggr(struct tpm_bank_info *bank)
+>>   		}
+>>   	}
+>>   
+>> +	if (strcmp(bank->algo_name, "sha1") != 0) {
+>> +		for (i = 8; i < 10; i++) {
+>> +			err = EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size);
+>> +			if (!err) {
+>> +				log_err("EVP_DigestUpdate() failed\n");
+>> +				return;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>>   	err = EVP_DigestFinal(pctx, bank->digest, &mdlen);
+>>   	if (!err) {
+>>   		log_err("EVP_DigestFinal() failed\n");
+>> @@ -1972,8 +1982,9 @@ static int append_bootaggr(char *bootaggr, struct tpm_bank_info *tpm_banks)
+>>   /*
+>>    * The IMA measurement list boot_aggregate is the link between the preboot
+>>    * event log and the IMA measurement list.  Read and calculate all the
+>> - * possible per TPM bank boot_aggregate digests based on the existing
+>> - * PCRs 0 - 7 to validate against the IMA boot_aggregate record.
+>> + * possible per TPM bank boot_aggregate digests based on the existing PCRs
+>> + * 0 - 9 to validate against the IMA boot_aggregate record. If the digest
+>> + * algorithm is SHA1, only PCRs 0 - 7 are considered to avoid ambiguity.
+>>    */
+>>   static int cmd_ima_bootaggr(struct command *cmd)
+>>   {
+>> -- 
+>> 2.17.1
+>>
+> Reviewed-by: Bruno Meneguele <bmeneg@redhat.com>
+>
+
