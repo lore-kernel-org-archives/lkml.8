@@ -2,112 +2,133 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD858C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9602A206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592989966;
-	bh=Kl+ZOM3sevpxbNrcPAJzV0ryLglGQ4MCad+fXGWxAu0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ffMvNyIW0fKWlMAMq777PV3F5HrLdHlkWeJ+Fp9b41x8MSe+AVPH+t/WHxgFsPGar
-	 2c59H3PLEY4gHqHP/l9Bgyih6iUs6VVo1gKhBEzLV0n313XqCH3jdSe7BuQ7U+bTEa
-	 46I+/PDPXLvFFdPk95+eHMTELp3TZ3BWxWOgkwaM=
+	by mail.kernel.org (Postfix) with ESMTP id DAE5D206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NGT7+V58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388903AbgFXJMp (ORCPT
+        id S2389159AbgFXJOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:12:45 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:33840 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387614AbgFXJMo (ORCPT
+        Wed, 24 Jun 2020 05:14:23 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53436 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387970AbgFXJOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:12:44 -0400
-Received: by mail-ej1-f66.google.com with SMTP id y10so1737382eje.1;
-        Wed, 24 Jun 2020 02:12:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YdWYqCcMRr77s7ONOlycpXkNOF5ibDahUUAFISahTZ8=;
-        b=rPyKw2iNt+MTqobRya2IA59wOB0kW2fPybRkeBN3EmjBzaGBk/j6Y7zrGS+TlZu1rK
-         fvHnBWpSZc0jp7aFKMerC3VbFgc+fvyo328Nh5omIr3we0wmB6OVIOcti8k5emV7PfRv
-         Ve2nTpLMwgxAQ1jczDtisSIErjv2yU+mbvgRjQBboBZ/Y622m0oyxVoyfhwH05ex1K/2
-         Kt6bUtWgbvTjIcJVKNxjxXn/LupfinVJWugGEeZ9PGWQQNW9oASqwhaDRuNI068JQTOc
-         gVq2LWj1F8dHavy6nOEgd5hzbEriaeubfFRxslW5193k45zsUnEA3y9G0/BMvKCP60ki
-         k8gw==
-X-Gm-Message-State: AOAM533j86JTTNYid2gDlz+SzXiRYwxNmcvfKzJC9K3PfJQNOEF+RlYu
-        FddUqiRJgGxR1dc2bNSkpC4=
-X-Google-Smtp-Source: ABdhPJw+6nm3RPauYFejP5pE6TcOmJh0UYlB9uSK8bOa6dCg7F66bo2p5kNrBvg9wZ4p/DNKLHBPhg==
-X-Received: by 2002:a17:906:4c81:: with SMTP id q1mr24499860eju.273.1592989962320;
-        Wed, 24 Jun 2020 02:12:42 -0700 (PDT)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id 36sm16585162edl.31.2020.06.24.02.12.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 02:12:41 -0700 (PDT)
-From:   Ricardo Ribalda <ribalda@kernel.org>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda <ribalda@kernel.org>
-Subject: [PATCH] i2c: designware: platdrv: Set class based on dmi
-Date:   Wed, 24 Jun 2020 11:12:39 +0200
-Message-Id: <20200624091239.802218-1-ribalda@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Wed, 24 Jun 2020 05:14:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E4no119939;
+        Wed, 24 Jun 2020 04:14:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592990045;
+        bh=+U9mzYjHXvzQcKQ8zAR2Rl0V4zJPMHqdfZnHwYl51KE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NGT7+V58MqwR78RadLUNojxEoPh5W+sm16OU/EMx8sWnj8LbRXkAfZs9Eln6tzgAt
+         IYFyiE0imKDk4SH6pv41DbSdY0l123owgB99SGQjRVF0eLjh76B/6+YcPfDMklIgHP
+         /Xp6RtDvnGeWHBbO+WqsAzMgQK24Fyhm4jX1io20=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E4vd127560;
+        Wed, 24 Jun 2020 04:14:04 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 04:14:04 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 24 Jun 2020 04:14:04 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E25P006129;
+        Wed, 24 Jun 2020 04:14:03 -0500
+Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
+ kzalloc()
+To:     Vinod Koul <vkoul@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+References: <20200619224334.GA7857@embeddedor>
+ <20200624055535.GX2324254@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <22b95e2d-dbe0-6d17-3085-2f363cd4d889@ti.com>
+Date:   Wed, 24 Jun 2020 12:14:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624055535.GX2324254@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current AMD's zen-based APUs use this core for some of its i2c-buses.
 
-With this patch we re-enable autodetection of hwmon-alike devices, so
-lm-sensors will be able to work automatically.
 
-It does not affect the boot-time of embedded devices, as the class is
-set based on the dmi information.
+On 24/06/2020 8.55, Vinod Koul wrote:
+> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
+>> Make use of the struct_size() helper instead of an open-coded version
+>> in order to avoid any potential type mistakes.
+>>
+>> This code was detected with the help of Coccinelle and, audited and
+>> fixed manually.
+>>
+>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>  drivers/dma/ti/k3-udma.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>> index 0d5fb154b8e2..411c54b86ba8 100644
+>> --- a/drivers/dma/ti/k3-udma.c
+>> +++ b/drivers/dma/ti/k3-udma.c
+>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, str=
+uct scatterlist *sgl,
+>>  	u32 ring_id;
+>>  	unsigned int i;
+>> =20
+>> -	d =3D kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT)=
+;
+>> +	d =3D kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
+>=20
+> struct_size() is a * b + c but here we need, a + b * c.. the trailing
+> struct is N times here..
 
-Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
----
- drivers/i2c/busses/i2c-designware-platdrv.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Yes, that's correct.
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index c2efaaaac252..f0a02fc3c135 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -191,6 +191,13 @@ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
- 	return ret;
- }
- 
-+static bool dw_i2c_hwmon_bus(void)
-+{
-+	if (strstr(dmi_get_system_info(DMI_PRODUCT_NAME), "QT5222"))
-+		return true;
-+	return false;
-+}
-+
- static int dw_i2c_plat_probe(struct platform_device *pdev)
- {
- 	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
-@@ -267,7 +274,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	adap = &dev->adapter;
- 	adap->owner = THIS_MODULE;
--	adap->class = I2C_CLASS_DEPRECATED;
-+	adap->class = dw_i2c_hwmon_bus() ? I2C_CLASS_HWMON
-+					 : I2C_CLASS_DEPRECATED;
- 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
- 	adap->dev.of_node = pdev->dev.of_node;
- 	adap->nr = -1;
--- 
-2.27.0
+>=20
+>=20
+>>  	if (!d)
+>>  		return NULL;
+>> =20
+>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, d=
+ma_addr_t buf_addr,
+>>  	if (period_len >=3D SZ_4M)
+>>  		return NULL;
+>> =20
+>> -	d =3D kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAI=
+T);
+>> +	d =3D kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+>>  	if (!d)
+>>  		return NULL;
+>> =20
+>> --=20
+>> 2.27.0
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
