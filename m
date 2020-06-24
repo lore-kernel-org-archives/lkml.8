@@ -2,147 +2,123 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987EB2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B2120738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnJbg9Bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405224AbgFXQvx (ORCPT
+        id S2405235AbgFXQv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:51:53 -0400
-Received: from out28-218.mail.aliyun.com ([115.124.28.218]:51549 "EHLO
-        out28-218.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404017AbgFXQvv (ORCPT
+        Wed, 24 Jun 2020 12:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405222AbgFXQvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:51:51 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1343684|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0249185-0.00058213-0.974499;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.Hrw5KdE_1593017496;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Hrw5KdE_1593017496)
-          by smtp.aliyun-inc.com(10.147.42.198);
-          Thu, 25 Jun 2020 00:51:44 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, robh+dt@kernel.org, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 1/2] dt-bindings: timer: Add Ingenic X1000 OST bindings.
-Date:   Thu, 25 Jun 2020 00:51:12 +0800
-Message-Id: <20200624165113.30873-2-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200624165113.30873-1-zhouyanjie@wanyeetech.com>
-References: <20200624165113.30873-1-zhouyanjie@wanyeetech.com>
+        Wed, 24 Jun 2020 12:51:53 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D73DC061573;
+        Wed, 24 Jun 2020 09:51:51 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so3180615wmf.5;
+        Wed, 24 Jun 2020 09:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=tL+FccFFqTcjb6bX8W92TsCzve7bd5pnKbHcClrHQeo=;
+        b=nnJbg9BwB2MDzp+XFIl6Y0inVMl+qLwVAqt3Yk/thT3bpIHsZChRhB2RPcWdjuJ088
+         ZupJe/xGzNOWjXKswEWZvLeIUqSoh+2HfnluEeh3kyXMAmZmncI7qb5UAqI2ap3yPTws
+         tfHjgE1mHLbppxXp3jEmAo5CKUIsbnH3sKWQKlPAjxg4L8Si5/Nr6o5u8LIKaqzHl/SQ
+         /wMdarhNNgdsjy59n70NpGQoktrUH5glsKLWlh5eljxL1NsJyzyvguzV610Wq/b0/Ly2
+         jfDLLo2U0Yt9q+1JI6RdpyUob2hE7s2JNF5B13yfoJpMzN86P1HjPSBYvNcwdLmQj92z
+         9dMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tL+FccFFqTcjb6bX8W92TsCzve7bd5pnKbHcClrHQeo=;
+        b=oyZSLLMnuMZxzx0k9nzfXW8nI+YRyMDY9RnUhzFpkObZESVLEEoiZ+gDJHJ056qcew
+         hi9g2ZL6z0vqw38+SeCcS2WAqhDXmvHYaN8RlPbltpnU5UWulnT19z0HvcbNh9BKExtv
+         rbUXfYOdxdETt/qre/0Glc/ML06S3h9dUbQKsNR9PnQAgTySYJ7te/g78gKF2hRPGrta
+         jzSrX0X49m18Mk290B8B1d+4fhPCb6y0rccivuxa6V97y8yoSePPDRty9nc+8SK6ABgO
+         BuhwzZsHglbjBCbutaJuwQfD3h/L8sQcHzVfK4qONFk7d/kQ2uaoOzvx84dACOlcoqG5
+         /gFw==
+X-Gm-Message-State: AOAM532Vqqh21huP8q2QZ1TwgWq31XnSQ16yMgpw3vmF5OnksJF1U60/
+        5BSotZHi2qK4dX+QkklJSPCnYb4Z
+X-Google-Smtp-Source: ABdhPJxTJXfYP902VI5+AR3tlUf5MufajhaM3ibZnApzolBSYbtbU7XYycnPlyaM6oYDlZLbUFlORQ==
+X-Received: by 2002:a1c:9acf:: with SMTP id c198mr30746114wme.172.1593017510071;
+        Wed, 24 Jun 2020 09:51:50 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.85])
+        by smtp.gmail.com with ESMTPSA id z16sm18138182wrr.35.2020.06.24.09.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 09:51:49 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] io_uring: fix hanging iopoll in case of -EAGAIN
+Date:   Wed, 24 Jun 2020 19:50:07 +0300
+Message-Id: <22111b29e298f5f606130fcf4307bda99dbec089.1593016907.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1593016907.git.asml.silence@gmail.com>
+References: <cover.1593016907.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the OST bindings for the X10000 SoC from Ingenic.
+io_do_iopoll() won't do anything with a request unless
+req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
+it, otherwise io_do_iopoll() will poll a file again and again even
+though the request of interest was completed long time ago.
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Also, remove -EAGAIN check from io_issue_sqe() as it races with
+the changed lines. The request will take the long way and be
+resubmitted from io_iopoll*().
+
+Fixes: bbde017a32b3 ("io_uring: add memory barrier to synchronize
+io_kiocb's result and iopoll_completed")
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- .../devicetree/bindings/timer/ingenic,ost.yaml     | 62 ++++++++++++++++++++++
- include/dt-bindings/clock/ingenic,ost.h            | 12 +++++
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,ost.yaml
- create mode 100644 include/dt-bindings/clock/ingenic,ost.h
+ fs/io_uring.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/ingenic,ost.yaml b/Documentation/devicetree/bindings/timer/ingenic,ost.yaml
-new file mode 100644
-index 000000000000..73c7d6ee5591
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/ingenic,ost.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/ingenic,ost.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for SYSOST in Ingenic XBurst family SoCs
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+
-+description:
-+  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
-+  and one or more than one 32bit timers for clockevent.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+
-+      - description: SYSOST in Ingenic XBurst family SoCs
-+        enum:
-+          - ingenic,x1000-ost
-+          - ingenic,x2000-ost
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 3
-+
-+  clock-names:
-+    const: ost
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - "#clock-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/x1000-cgu.h>
-+
-+    ost: timer@12000000 {
-+    		compatible = "ingenic,x1000-ost";
-+    		reg = <0x12000000 0x3c>;
-+
-+    		#clock-cells = <1>;
-+
-+    		clocks = <&cgu X1000_CLK_OST>;
-+    		clock-names = "ost";
-+
-+    		interrupt-parent = <&cpuintc>;
-+    		interrupts = <3>;
-+    	};
-+...
-diff --git a/include/dt-bindings/clock/ingenic,ost.h b/include/dt-bindings/clock/ingenic,ost.h
-new file mode 100644
-index 000000000000..9ac88e90babf
---- /dev/null
-+++ b/include/dt-bindings/clock/ingenic,ost.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides clock numbers for the ingenic,tcu DT binding.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-+#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-+
-+#define OST_CLK_PERCPU_TIMER	0
-+#define OST_CLK_GLOBAL_TIMER	1
-+
-+#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index c686061c3762..fb88a537f471 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2104,10 +2104,8 @@ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
+ 
+ 	WRITE_ONCE(req->result, res);
+ 	/* order with io_poll_complete() checking ->result */
+-	if (res != -EAGAIN) {
+-		smp_wmb();
+-		WRITE_ONCE(req->iopoll_completed, 1);
+-	}
++	smp_wmb();
++	WRITE_ONCE(req->iopoll_completed, 1);
+ }
+ 
+ /*
+@@ -5592,9 +5590,6 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 	if ((ctx->flags & IORING_SETUP_IOPOLL) && req->file) {
+ 		const bool in_async = io_wq_current_is_worker();
+ 
+-		if (req->result == -EAGAIN)
+-			return -EAGAIN;
+-
+ 		/* workqueue context doesn't hold uring_lock, grab it now */
+ 		if (in_async)
+ 			mutex_lock(&ctx->uring_lock);
 -- 
-2.11.0
+2.24.0
 
