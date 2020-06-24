@@ -2,74 +2,83 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 418D220C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161072078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QvE8GkRT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jFkzpH9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388105AbgFXXVZ (ORCPT
+        id S2388535AbgFXXVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:21:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34993 "EHLO
+        Wed, 24 Jun 2020 19:21:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49891 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728035AbgFXXVZ (ORCPT
+        with ESMTP id S2388145AbgFXXVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 19:21:25 -0400
+        Wed, 24 Jun 2020 19:21:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593040884;
+        s=mimecast20190719; t=1593040887;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=HVbEuEGkVIuG5NhNxqmnGS+9NKLEk9a8dY03A8fYLyw=;
-        b=QvE8GkRTfZMdmrdAMrMgjbXA7gP2YqsHB2zgWjYszi3jk2e1q4dlTH/xrRqhq8yboekufG
-        8ltY3FX8SohPn234Qm7C5UcqZbeezri1spg/SeXPxw+18Iz7hZOtpEWIuCrT+eu1abaUkw
-        /592iYkL+rezMxBWu0f2iN8lKYqfhI4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-CyGzLeZPO_qPrbmYp7haCQ-1; Wed, 24 Jun 2020 19:21:22 -0400
-X-MC-Unique: CyGzLeZPO_qPrbmYp7haCQ-1
-Received: by mail-wm1-f69.google.com with SMTP id s134so4867270wme.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 16:21:22 -0700 (PDT)
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1qVm+qFHpBcFnajiwKWBoYJyF5SCnRnSLqkqB/nC2LI=;
+        b=jFkzpH9owUc8bZLwn1UaSk89u6eTTma4xsChaQTztd2coDNmdyqW3VAVR+dPTunQqZX3/2
+        U7/Tvyi0Yb0TkydH6yusCE2js+ur42hzFDpd2tzRpLX2M2Wjkr7FdrB4GDdIQ6+RJ5ULxI
+        x/ZgWoa013gMBfmENfHn5OgiZdir4lE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-f_g3NO0xMWWyVxQCnSNGUg-1; Wed, 24 Jun 2020 19:21:26 -0400
+X-MC-Unique: f_g3NO0xMWWyVxQCnSNGUg-1
+Received: by mail-wr1-f71.google.com with SMTP id o12so4705193wrj.23
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 16:21:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=HVbEuEGkVIuG5NhNxqmnGS+9NKLEk9a8dY03A8fYLyw=;
-        b=gPdQRPnL9lFtbLTnEcy5LtEaW9mrASGkmQTxHcnp+uFOerxQYkaw+clfKxTjFsq96H
-         USnPLgs33bVk1bL+7rFNpHnht7EuLcdYC0wedzDklhaHDr/kp9RuTSY8M3FWd+b9gt8F
-         i1PanKmby2CRhtmi0PPPzWixaed3eW8Yr++/ZP0JKNRutrXIhSlaNxiZJIGs1yzcjyHz
-         LpEq99hRt7D95T0CcVXsNX6+z42gjOJIthnOZKI/lT7TXQh/yjNYN/nGMvbgGysDqeQM
-         13ZKmpOv/QcrFWw/kmWa8CSWZGqfiqp9fnbxXj0hyqAbx0A39p3knVTLKt1MT4uKNPn6
-         e9hA==
-X-Gm-Message-State: AOAM532FaVcY3hLroLgFYZnibdDyUZDcoqo9Yg5NWWzqckuLnk2weU0o
-        vnNyrwRYcsDSFxQZSZ2tyQe7zFboiXkNVVG2RJVk0cueJLB6CjpVVp8U3bQtxliKfnMOjA/E/J0
-        rSuLCMC9z2Pjmvb/tlXPOKxVo
-X-Received: by 2002:a1c:f203:: with SMTP id s3mr167749wmc.126.1593040881218;
-        Wed, 24 Jun 2020 16:21:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyM0cktsDl5CrWaaOPv+1nYAYm4w3v8Sv0284TWIxv5uQ05SVVcH6miZb9gN0YuAb6dFYTBHA==
-X-Received: by 2002:a1c:f203:: with SMTP id s3mr167730wmc.126.1593040881042;
-        Wed, 24 Jun 2020 16:21:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1qVm+qFHpBcFnajiwKWBoYJyF5SCnRnSLqkqB/nC2LI=;
+        b=YYcpNd+dooycaAclDNQIbIZUilhxicXlc3V7gWGQ6xhyzXF2dOkOsGh1YIvc7fVjaP
+         fQDP/ZzsyA3UDBou77Ex+81A4d/C2iBEMIDYfG1e9K8lZwQARev220WqzHlwApAF7a0Z
+         VzsrFUhz2V4s+vT8OFbKAXFrxZeGPV7WzJ1QFvTh31BfJtbaVHE6ysU+ClPdgxEKGPNF
+         toGlLCNgXPhTcJab7X+AYhvrRboYvWDTVNnyFuuaPNacZZ8cvjgBYCQow1q7tksv/GMl
+         oeI7amtViNcKzOP3pHEIx0stICpfaRonSJpHSn5kz6xku5I3HuDk4LZKjQc4N7JN5Q08
+         u/HA==
+X-Gm-Message-State: AOAM531a+R/Z3kto8kQCJVhLDuEM5CgzRSfI+YaLJvb/W8AeHygEBe2Z
+        gNtQlEus34Wc9oEPNo9e0XgVufu7ncsEJgr3qYU3sVOGx6Zgns2UykqBivQn0+oil2ru4Ik9kad
+        2EF+rNiqaq4WUrf9mFZhpEtFb
+X-Received: by 2002:adf:9205:: with SMTP id 5mr31880036wrj.232.1593040884077;
+        Wed, 24 Jun 2020 16:21:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxqFyNRbJvNmvq82fhlM5himBZXXkAKRBOYQGCEH/gPc8s0pO7SeqL9CkzgxhVJ/ckX6aHU5w==
+X-Received: by 2002:adf:9205:: with SMTP id 5mr31880025wrj.232.1593040883843;
+        Wed, 24 Jun 2020 16:21:23 -0700 (PDT)
 Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id c25sm9717109wml.46.2020.06.24.16.21.19
+        by smtp.gmail.com with ESMTPSA id c206sm10725877wmf.36.2020.06.24.16.21.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 16:21:20 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 19:21:18 -0400
+        Wed, 24 Jun 2020 16:21:23 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 19:21:21 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 0/2] virtio: modernize DMA quirks
-Message-ID: <20200624232035.704217-1-mst@redhat.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Jason Wang <jasowang@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-um@lists.infradead.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v2 1/2] virtio: VIRTIO_F_IOMMU_PLATFORM ->
+ VIRTIO_F_ACCESS_PLATFORM
+Message-ID: <20200624232035.704217-2-mst@redhat.com>
+References: <20200624232035.704217-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200624232035.704217-1-mst@redhat.com>
 X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
 X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,30 +86,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use generic names for the quirks to make it clear it is not just about
-the IOMMU, it's about DMA access in general.
+Rename the bit to match latest virtio spec.
+Add a compat macro to avoid breaking existing userspace.
 
-changes from v1:
-	added patch 2
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ arch/um/drivers/virtio_uml.c       |  2 +-
+ drivers/vdpa/ifcvf/ifcvf_base.h    |  2 +-
+ drivers/vdpa/vdpa_sim/vdpa_sim.c   |  4 ++--
+ drivers/vhost/net.c                |  4 ++--
+ drivers/vhost/vdpa.c               |  2 +-
+ drivers/virtio/virtio_balloon.c    |  2 +-
+ drivers/virtio/virtio_ring.c       |  2 +-
+ include/linux/virtio_config.h      |  2 +-
+ include/uapi/linux/virtio_config.h | 10 +++++++---
+ tools/virtio/linux/virtio_config.h |  2 +-
+ 10 files changed, 18 insertions(+), 14 deletions(-)
 
-Michael S. Tsirkin (2):
-  virtio: VIRTIO_F_IOMMU_PLATFORM -> VIRTIO_F_ACCESS_PLATFORM
-  virtio: virtio_has_iommu_quirk -> virtio_has_dma_quirk
-
- arch/um/drivers/virtio_uml.c            |  2 +-
- drivers/gpu/drm/virtio/virtgpu_object.c |  2 +-
- drivers/gpu/drm/virtio/virtgpu_vq.c     |  4 ++--
- drivers/vdpa/ifcvf/ifcvf_base.h         |  2 +-
- drivers/vdpa/vdpa_sim/vdpa_sim.c        |  4 ++--
- drivers/vhost/net.c                     |  4 ++--
- drivers/vhost/vdpa.c                    |  2 +-
- drivers/virtio/virtio_balloon.c         |  2 +-
- drivers/virtio/virtio_ring.c            |  4 ++--
- include/linux/virtio_config.h           |  6 +++---
- include/uapi/linux/virtio_config.h      | 10 +++++++---
- tools/virtio/linux/virtio_config.h      |  6 +++---
- 12 files changed, 26 insertions(+), 22 deletions(-)
-
+diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+index 351aee52aca6..a6c4bb6c2c01 100644
+--- a/arch/um/drivers/virtio_uml.c
++++ b/arch/um/drivers/virtio_uml.c
+@@ -385,7 +385,7 @@ static irqreturn_t vu_req_interrupt(int irq, void *data)
+ 		}
+ 		break;
+ 	case VHOST_USER_SLAVE_IOTLB_MSG:
+-		/* not supported - VIRTIO_F_IOMMU_PLATFORM */
++		/* not supported - VIRTIO_F_ACCESS_PLATFORM */
+ 	case VHOST_USER_SLAVE_VRING_HOST_NOTIFIER_MSG:
+ 		/* not supported - VHOST_USER_PROTOCOL_F_HOST_NOTIFIER */
+ 	default:
+diff --git a/drivers/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf_base.h
+index f4554412e607..24af422b5a3e 100644
+--- a/drivers/vdpa/ifcvf/ifcvf_base.h
++++ b/drivers/vdpa/ifcvf/ifcvf_base.h
+@@ -29,7 +29,7 @@
+ 		 (1ULL << VIRTIO_F_VERSION_1)			| \
+ 		 (1ULL << VIRTIO_NET_F_STATUS)			| \
+ 		 (1ULL << VIRTIO_F_ORDER_PLATFORM)		| \
+-		 (1ULL << VIRTIO_F_IOMMU_PLATFORM)		| \
++		 (1ULL << VIRTIO_F_ACCESS_PLATFORM)		| \
+ 		 (1ULL << VIRTIO_NET_F_MRG_RXBUF))
+ 
+ /* Only one queue pair for now. */
+diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+index c7334cc65bb2..a9bc5e0fb353 100644
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -55,7 +55,7 @@ struct vdpasim_virtqueue {
+ 
+ static u64 vdpasim_features = (1ULL << VIRTIO_F_ANY_LAYOUT) |
+ 			      (1ULL << VIRTIO_F_VERSION_1)  |
+-			      (1ULL << VIRTIO_F_IOMMU_PLATFORM);
++			      (1ULL << VIRTIO_F_ACCESS_PLATFORM);
+ 
+ /* State of each vdpasim device */
+ struct vdpasim {
+@@ -450,7 +450,7 @@ static int vdpasim_set_features(struct vdpa_device *vdpa, u64 features)
+ 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+ 
+ 	/* DMA mapping must be done by driver */
+-	if (!(features & (1ULL << VIRTIO_F_IOMMU_PLATFORM)))
++	if (!(features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
+ 		return -EINVAL;
+ 
+ 	vdpasim->features = features & vdpasim_features;
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index e992decfec53..8e0921d3805d 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -73,7 +73,7 @@ enum {
+ 	VHOST_NET_FEATURES = VHOST_FEATURES |
+ 			 (1ULL << VHOST_NET_F_VIRTIO_NET_HDR) |
+ 			 (1ULL << VIRTIO_NET_F_MRG_RXBUF) |
+-			 (1ULL << VIRTIO_F_IOMMU_PLATFORM)
++			 (1ULL << VIRTIO_F_ACCESS_PLATFORM)
+ };
+ 
+ enum {
+@@ -1653,7 +1653,7 @@ static int vhost_net_set_features(struct vhost_net *n, u64 features)
+ 	    !vhost_log_access_ok(&n->dev))
+ 		goto out_unlock;
+ 
+-	if ((features & (1ULL << VIRTIO_F_IOMMU_PLATFORM))) {
++	if ((features & (1ULL << VIRTIO_F_ACCESS_PLATFORM))) {
+ 		if (vhost_init_device_iotlb(&n->dev, true))
+ 			goto out_unlock;
+ 	}
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index a54b60d6623f..18869a35d408 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -31,7 +31,7 @@ enum {
+ 		(1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) |
+ 		(1ULL << VIRTIO_F_ANY_LAYOUT) |
+ 		(1ULL << VIRTIO_F_VERSION_1) |
+-		(1ULL << VIRTIO_F_IOMMU_PLATFORM) |
++		(1ULL << VIRTIO_F_ACCESS_PLATFORM) |
+ 		(1ULL << VIRTIO_F_RING_PACKED) |
+ 		(1ULL << VIRTIO_F_ORDER_PLATFORM) |
+ 		(1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 1f157d2f4952..fc7301406540 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -1120,7 +1120,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
+ 	else if (!virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON))
+ 		__virtio_clear_bit(vdev, VIRTIO_BALLOON_F_REPORTING);
+ 
+-	__virtio_clear_bit(vdev, VIRTIO_F_IOMMU_PLATFORM);
++	__virtio_clear_bit(vdev, VIRTIO_F_ACCESS_PLATFORM);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 58b96baa8d48..a1a5c2a91426 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -2225,7 +2225,7 @@ void vring_transport_features(struct virtio_device *vdev)
+ 			break;
+ 		case VIRTIO_F_VERSION_1:
+ 			break;
+-		case VIRTIO_F_IOMMU_PLATFORM:
++		case VIRTIO_F_ACCESS_PLATFORM:
+ 			break;
+ 		case VIRTIO_F_RING_PACKED:
+ 			break;
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index bb4cc4910750..f2cc2a0df174 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -171,7 +171,7 @@ static inline bool virtio_has_iommu_quirk(const struct virtio_device *vdev)
+ 	 * Note the reverse polarity of the quirk feature (compared to most
+ 	 * other features), this is for compatibility with legacy systems.
+ 	 */
+-	return !virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
++	return !virtio_has_feature(vdev, VIRTIO_F_ACCESS_PLATFORM);
+ }
+ 
+ static inline
+diff --git a/include/uapi/linux/virtio_config.h b/include/uapi/linux/virtio_config.h
+index ff8e7dc9d4dd..b5eda06f0d57 100644
+--- a/include/uapi/linux/virtio_config.h
++++ b/include/uapi/linux/virtio_config.h
+@@ -67,13 +67,17 @@
+ #define VIRTIO_F_VERSION_1		32
+ 
+ /*
+- * If clear - device has the IOMMU bypass quirk feature.
+- * If set - use platform tools to detect the IOMMU.
++ * If clear - device has the platform DMA (e.g. IOMMU) bypass quirk feature.
++ * If set - use platform DMA tools to access the memory.
+  *
+  * Note the reverse polarity (compared to most other features),
+  * this is for compatibility with legacy systems.
+  */
+-#define VIRTIO_F_IOMMU_PLATFORM		33
++#define VIRTIO_F_ACCESS_PLATFORM	33
++#ifndef __KERNEL__
++/* Legacy name for VIRTIO_F_ACCESS_PLATFORM (for compatibility with old userspace) */
++#define VIRTIO_F_IOMMU_PLATFORM		VIRTIO_F_ACCESS_PLATFORM
++#endif /* __KERNEL__ */
+ 
+ /* This feature indicates support for the packed virtqueue layout. */
+ #define VIRTIO_F_RING_PACKED		34
+diff --git a/tools/virtio/linux/virtio_config.h b/tools/virtio/linux/virtio_config.h
+index dbf14c1e2188..f99ae42668e0 100644
+--- a/tools/virtio/linux/virtio_config.h
++++ b/tools/virtio/linux/virtio_config.h
+@@ -51,7 +51,7 @@ static inline bool virtio_has_iommu_quirk(const struct virtio_device *vdev)
+ 	 * Note the reverse polarity of the quirk feature (compared to most
+ 	 * other features), this is for compatibility with legacy systems.
+ 	 */
+-	return !virtio_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
++	return !virtio_has_feature(vdev, VIRTIO_F_ACCESS_PLATFORM);
+ }
+ 
+ static inline bool virtio_is_little_endian(struct virtio_device *vdev)
 -- 
 MST
 
