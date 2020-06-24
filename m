@@ -2,81 +2,97 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A51C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0642081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4713A2081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:24:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X9nwcbTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406209AbgFXTXk (ORCPT
+        id S2391239AbgFXTYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:23:40 -0400
-Received: from smtp11.smtpout.orange.fr ([80.12.242.133]:31160 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405057AbgFXTXj (ORCPT
+        Wed, 24 Jun 2020 15:24:31 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53504 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387801AbgFXTYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:23:39 -0400
-Received: from localhost.localdomain ([93.23.13.252])
-        by mwinf5d46 with ME
-        id v7PU2200J5SHPSM037PVh4; Wed, 24 Jun 2020 21:23:37 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 24 Jun 2020 21:23:37 +0200
-X-ME-IP: 93.23.13.252
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     stefanr@s5r6.in-berlin.de, krh@bitplanet.net, hch@infradead.org
-Cc:     linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] firewire: nosy: Fix the amount of memory deallocated by some 'pci_free_consistent' calls
-Date:   Wed, 24 Jun 2020 21:23:25 +0200
-Message-Id: <20200624192325.940280-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Wed, 24 Jun 2020 15:24:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593026669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WwvLgGG2LaRCgwsWiAA6pHtAn5uRNCtZdPPhDv+Az8E=;
+        b=X9nwcbTvKKLpBZpySp/od5OTZHog2dbeV4qS6FLUuGuXfbcgGIXwce4Zp9OhHCwvqK4rEj
+        JOZBYaBdeJmzdpB7GHVurxUBVofOvM5ni2hUaTXXtxSDSiCiMZm7/K8CV4DbDHu4x5t6UM
+        58sAVoNrMsYETX+NpGRjE0wu2d+SFZ0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-uucXm7f8Nme8dccQphk9QQ-1; Wed, 24 Jun 2020 15:24:25 -0400
+X-MC-Unique: uucXm7f8Nme8dccQphk9QQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A65A804003;
+        Wed, 24 Jun 2020 19:24:23 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-18.ams2.redhat.com [10.36.113.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 485145C1BB;
+        Wed, 24 Jun 2020 19:24:17 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/3] glibc: Perform rseq registration at C startup and thread creation (v21)
+References: <20200622180803.1449-1-mathieu.desnoyers@efficios.com>
+        <20200622180803.1449-2-mathieu.desnoyers@efficios.com>
+        <87d05obl4w.fsf@oldenburg2.str.redhat.com>
+        <1158112159.11628.1593025203438.JavaMail.zimbra@efficios.com>
+        <87r1u48eix.fsf@oldenburg2.str.redhat.com>
+        <1248023868.11643.1593026198678.JavaMail.zimbra@efficios.com>
+Date:   Wed, 24 Jun 2020 21:24:15 +0200
+In-Reply-To: <1248023868.11643.1593026198678.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Wed, 24 Jun 2020 15:16:38 -0400
+        (EDT)")
+Message-ID: <87mu4s8dy8.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'lynx->pci_device' is allocated with a size of RCV_BUFFER_SIZE. This is to
-say (16 * 1024).
+* Mathieu Desnoyers:
 
-Pass the same size when it is freed.
+>> I think we should keep things simple on the glibc side for now and do
+>> this changes to the kernel headers first.
+>
+> Just to be sure I understand what you mean by "keep things simple", do you
+> recommend removing the following lines completely for now from sys/rseq.h ?
+>
+> /* Ensure the compiler supports rseq_align.  */
+> __rseq_static_assert (__rseq_alignof (struct rseq_cs) >= 32, "alignment");
+> __rseq_static_assert (__rseq_alignof (struct rseq) >= 32, "alignment");
 
-Fixes: 286468210d83 ("firewire: new driver: nosy - IEEE 1394 traffic sniffer")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/firewire/nosy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yes, that's what I meant.
 
-diff --git a/drivers/firewire/nosy.c b/drivers/firewire/nosy.c
-index 5fd6a60b6741..445c37f5251d 100644
---- a/drivers/firewire/nosy.c
-+++ b/drivers/firewire/nosy.c
-@@ -510,7 +510,7 @@ remove_card(struct pci_dev *dev)
- 			    lynx->rcv_start_pcl, lynx->rcv_start_pcl_bus);
- 	pci_free_consistent(lynx->pci_device, sizeof(struct pcl),
- 			    lynx->rcv_pcl, lynx->rcv_pcl_bus);
--	pci_free_consistent(lynx->pci_device, PAGE_SIZE,
-+	pci_free_consistent(lynx->pci_device, RCV_BUFFER_SIZE,
- 			    lynx->rcv_buffer, lynx->rcv_buffer_bus);
- 
- 	iounmap(lynx->registers);
-@@ -668,7 +668,7 @@ add_card(struct pci_dev *dev, const struct pci_device_id *unused)
- 		pci_free_consistent(lynx->pci_device, sizeof(struct pcl),
- 				lynx->rcv_pcl, lynx->rcv_pcl_bus);
- 	if (lynx->rcv_buffer)
--		pci_free_consistent(lynx->pci_device, PAGE_SIZE,
-+		pci_free_consistent(lynx->pci_device, RCV_BUFFER_SIZE,
- 				lynx->rcv_buffer, lynx->rcv_buffer_bus);
- 	iounmap(lynx->registers);
- 
--- 
-2.25.1
+Thanks,
+Florian
 
