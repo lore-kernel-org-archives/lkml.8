@@ -2,120 +2,159 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0095EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAAD2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593011488;
-	bh=nYl8l1Sm+SCWmjeb4Ljbgr5wKM1Z7Cv6vgBTchUl1N4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zT+K7LTOgyHVopTZvTsyPvxZlMApeT7FSNR5vqa6VpRUfXAWArNxcgDO1uNmdNKlm
-	 8ykW+lw1REo2hl2aZ2uWicKKEGviCK3xpoIKJYUwZa5gombfecBCYJoASzRcIQu7uT
-	 c6V7xK1KZcXrVBlmAreplZzY4jWkaUeiGtis0wAM=
+	by mail.kernel.org (Postfix) with ESMTP id CE67020656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d3Kbk6je"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404214AbgFXPL0 (ORCPT
+        id S2404355AbgFXPLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390829AbgFXPL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:11:26 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53C320656;
-        Wed, 24 Jun 2020 15:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593011485;
-        bh=nYl8l1Sm+SCWmjeb4Ljbgr5wKM1Z7Cv6vgBTchUl1N4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PVjN7CQcIFGqOKfaSA8dQDmv6Z2sQ+55jE75SlIg41a6pZFmOIxzvBZHw5wXf99n0
-         v9yg3BrdhsDJU+uYF0L9Uv/eZjSx9SWOjZeU2ppc9bAjTwwd721aKQyt07v/CO9nmJ
-         Xw2b/a0MWS/C2uC3g9skEETF2RE2CO3dPUz00NVM=
-Date:   Wed, 24 Jun 2020 20:41:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v8 2/3] phy: zynqmp: Add PHY driver for the Xilinx ZynqMP
- Gigabit Transceiver
-Message-ID: <20200624151121.GF2324254@vkoul-mobl>
-References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
- <20200513172239.26444-3-laurent.pinchart@ideasonboard.com>
+        Wed, 24 Jun 2020 11:11:38 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:50818 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404238AbgFXPLh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:11:37 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200624151135euoutp02cb43cbb9c544f5781ef23901e2db6e00~bg4Pd41BE2380323803euoutp02u
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:11:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200624151135euoutp02cb43cbb9c544f5781ef23901e2db6e00~bg4Pd41BE2380323803euoutp02u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593011495;
+        bh=vIfCBmSC+5GtsPYmRCTd8QesuVfaXVykkj6k7TxHWDA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=d3Kbk6jeUH/b2U8aGb6xc4Ya2Uv1ARZ/vt/zcpb2yKnIdwyifNi/aogKF9wSFjcCY
+         0UfDxG+a4xfJBK1wYPPkNn1fpcJoTsVSCoacjsNacSk8Wvt/SunvyW8qmvUbe6HS+j
+         yKx9sbNPfvw1rxIj4PokZL2Z4apGM1W75Z0Drnp0=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200624151135eucas1p1335bb5b1799513a14a8efb3d455078b2~bg4PLTJKl1469014690eucas1p1P;
+        Wed, 24 Jun 2020 15:11:35 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id BF.7B.06456.72D63FE5; Wed, 24
+        Jun 2020 16:11:35 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200624151134eucas1p1c70eef4c8ed9fd2fb0275cbec6576f44~bg4O0FaiQ1265612656eucas1p1Q;
+        Wed, 24 Jun 2020 15:11:34 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200624151134eusmtrp1dfb6c70903341241eeeae3dbab271a31~bg4OzaZn01873818738eusmtrp1I;
+        Wed, 24 Jun 2020 15:11:34 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-e6-5ef36d270ac2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D9.72.06017.62D63FE5; Wed, 24
+        Jun 2020 16:11:34 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200624151134eusmtip11cc243e141c704390f7521bb388feef3~bg4OEgzT22683126831eusmtip1N;
+        Wed, 24 Jun 2020 15:11:33 +0000 (GMT)
+Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
+To:     Lukasz Luba <lukasz.luba@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
+Date:   Wed, 24 Jun 2020 17:11:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513172239.26444-3-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCKsWRmVeSWpSXmKPExsWy7djP87rquZ/jDPqv81hc//Kc1aL/8Wtm
+        i/PnN7BbnG16w26x6fE1VovLu+awWXzuPcJoMeP8PiaLhU0t7Ba3G1ewWXw78YjRgdtjzbw1
+        jB47Z91l99i0qpPNY/OSeo++LasYPT5vkgtgi+KySUnNySxLLdK3S+DKOHj1OGvBbr6KtdfX
+        sTYw3uPuYuTkkBAwkdjZ+5Kli5GLQ0hgBaPEufOv2CCcL4wS75uamSGcz4wSfzZ0ssK0NP9b
+        DNWynFGiv+k6E4TzkVFi8afjTCBVwgJ2EvOv7QLrEBGolLg18zvYXGaBt0wSe/7eZgNJsAkY
+        SvQe7WMEsXmBGm63dQI1c3CwCKhKzPymBBIWFYiV6Fu6gA2iRFDi5MwnLCA2p4C1xJJZb8F2
+        MQuIS9x6Mh/KlpfY/nYO2NkSArfYJb5fOQd1tovE6huNzBC2sMSr41vYIWwZidOTe1ggGpoZ
+        JXp232aHcCYwStw/voARospa4s65X2wg1zELaEqs36UPEXaUeHvsDTNIWEKAT+LGW0GII/gk
+        Jm2bDhXmlehoE4KoVpH4vWo6E4QtJdH95D/LBEalWUhem4XknVlI3pmFsHcBI8sqRvHU0uLc
+        9NRiw7zUcr3ixNzi0rx0veT83E2MwLR1+t/xTzsYv15KOsQowMGoxMO74cHHOCHWxLLiytxD
+        jBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvE
+        wSnVwDhb0UHT0/UAK3/VOm3V7m+XtZsTomtu/szcWuNd5620QvC4628e+TRr1TLX1pslDCbX
+        mexyjjtzCuo2LTpkeIth46zQKQ83CRkFZq9bzn0lau39+tvZSS2MTkbpy542X72iufcMc/8e
+        +dNFbKd8en9N2HLHOW/366qaaR/qJ2yw6knJcZ38UImlOCPRUIu5qDgRAI2LKFhXAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xu7pquZ/jDN41m1hc//Kc1aL/8Wtm
+        i/PnN7BbnG16w26x6fE1VovLu+awWXzuPcJoMeP8PiaLhU0t7Ba3G1ewWXw78YjRgdtjzbw1
+        jB47Z91l99i0qpPNY/OSeo++LasYPT5vkgtgi9KzKcovLUlVyMgvLrFVija0MNIztLTQMzKx
+        1DM0No+1MjJV0rezSUnNySxLLdK3S9DLOHj1OGvBbr6KtdfXsTYw3uPuYuTkkBAwkWj+t5il
+        i5GLQ0hgKaPEm/5WIIcDKCElMb9FCaJGWOLPtS42EFtI4D2jxMzp7iC2sICdxPxru1hBbBGB
+        Son7P+8wg8xhFnjPJPH3xEwmiKGrmSSOvVoJ1s0mYCjRe7SPEcTmBeq+3dbJBLKMRUBVYuY3
+        sGWiArES3+5tYYMoEZQ4OfMJC4jNKWAtsWTWWyYQm1lAXeLPvEvMELa4xK0n86Hi8hLb385h
+        nsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYIxuO/Zzyw7G
+        rnfBhxgFOBiVeHg3PPgYJ8SaWFZcmXuIUYKDWUmE1+ns6Tgh3pTEyqrUovz4otKc1OJDjKZA
+        v01klhJNzgemj7ySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYzp
+        7T/VVRL5E0yePJPhEOwMUTx9xN9tRlaOpkfuKvfe6nk9xWdTMu4/WvYztTZm24Kfx5fbL1Ta
+        F5F4Onf5hwtcU14WXl166ZFiyQxLVsnjLpdZNZZUMnTHfmc4eIHbXpnhf0Eow6RlDuZi9y34
+        Um4HpEy8X1MSpCfxp8xPiWdeWtSMu6tfvVFiKc5INNRiLipOBACBoft/5wIAAA==
+X-CMS-MailID: 20200624151134eucas1p1c70eef4c8ed9fd2fb0275cbec6576f44
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
+References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+        <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+        <20200623191129.GA4171@kozik-lap>
+        <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
+        <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+Hi All,
 
-Mostly this looks fine to me, some minor nitpicks below:
+On 24.06.2020 12:32, Lukasz Luba wrote:
+> I had issues with devfreq governor which wasn't called by devfreq
+> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
+> for it [1]. If the CPU which scheduled the next work went idle, the
+> devfreq workqueue will not be kicked and devfreq governor won't check
+> DMC status and will not decide to decrease the frequency based on low
+> busy_time.
+> The same applies for going up with the frequency. They both are
+> done by the governor but the workqueue must be scheduled periodically.
 
-On 13-05-20, 20:22, Laurent Pinchart wrote:
-> +config PHY_XILINX_ZYNQMP
-> +	tristate "Xilinx ZynqMP PHY driver"
-> +	depends on ARCH_ZYNQMP
+As I have been working on resolving the video mixer IOMMU fault issue
+described here: https://patchwork.kernel.org/patch/10861757
+I did some investigation of the devfreq operation, mostly on Odroid U3.
 
-Can we add COMPILE_TEST here so that this driver gets wider compile
-coverage?
+My conclusions are similar to what Lukasz says above. I would like to add
+that broken scheduling of the performance counters read and the devfreq 
+updates seems to have one more serious implication. In each call, which
+normally should happen periodically with fixed interval we stop the counters, 
+read counter values and start the counters again. But if period between 
+calls becomes long enough to let any of the counters overflow, we will
+get wrong performance measurement results. My observations are that 
+the workqueue job can be suspended for several seconds and conditions for 
+the counter overflow occur sooner or later, depending among others 
+on the CPUs load.
+Wrong bus load measurement can lead to setting too low interconnect bus 
+clock frequency and then bad things happen in peripheral devices.
 
-> +++ b/drivers/phy/xilinx/phy-zynqmp.c
-> @@ -0,0 +1,995 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * phy-zynqmp.c - PHY driver for Xilinx ZynqMP GT.
-> + *
-> + * Copyright (C) 2018-20 Xilinx Inc.
-
-2018-2020 please
-
-> +/* Number of GT lanes */
-> +#define NUM_LANES			4
-
-Should this be coded in driver like this? Maybe future versions of
-hardware will have more lanes..? Why not describe this in DT?
-> +
-> +/* SIOU SATA control register */
-> +#define SATA_CONTROL_OFFSET		0x0100
-> +
-> +/* Total number of controllers */
-> +#define CONTROLLERS_PER_LANE		5
-
-Same question for this as well..
-
-> +/*
-> + * I/O Accessors
-> + */
-> +
-> +static inline u32 xpsgtr_read(struct xpsgtr_dev *gtr_dev, u32 reg)
-> +{
-> +	return readl(gtr_dev->serdes + reg);
-> +}
-> +
-> +static inline void xpsgtr_write(struct xpsgtr_dev *gtr_dev, u32 reg, u32 value)
-> +{
-> +	writel(value, gtr_dev->serdes + reg);
-> +}
-> +
-> +static inline void xpsgtr_clr_set(struct xpsgtr_dev *gtr_dev, u32 reg,
-> +				  u32 clr, u32 set)
-
-wouldn't it be apt to rename this to xpsgtr_modify() and with args as
-value and mask, somehow I find that more simpler...
-
-Also, please align second line with opening brace of preceding line
+I agree the workqueue issue needs to be fixed. I have some WIP code to use
+the performance counters overflow interrupts instead of SW polling and with 
+that the interconnect bus clock control seems to work much better.
 
 -- 
-~Vinod
+Regards,
+Sylwester
