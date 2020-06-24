@@ -2,139 +2,129 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00A820857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0287120857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="GqRCXCtm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391060AbgFXNmP (ORCPT
+        id S2391012AbgFXNoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:42:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:51184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388453AbgFXNmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:42:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B1B81F1;
-        Wed, 24 Jun 2020 06:42:13 -0700 (PDT)
-Received: from [10.37.12.79] (unknown [10.37.12.79])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97BAD3F6CF;
-        Wed, 24 Jun 2020 06:42:10 -0700 (PDT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kamil Konieczny <k.konieczny@samsung.com>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
- <20200623191129.GA4171@kozik-lap>
- <CGME20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2@eucas1p2.samsung.com>
- <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
- <828b0d63-4d01-48d6-5971-64855adebed2@samsung.com>
- <20200624120651.GA20813@pi3> <55772862-ff8f-1e1d-91ae-7b4d7c3be1b6@arm.com>
- <20200624131341.GA20905@pi3>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <c3b4d74e-0e0e-590d-0588-3ff9756f8050@arm.com>
-Date:   Wed, 24 Jun 2020 14:42:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200624131341.GA20905@pi3>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jun 2020 09:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388933AbgFXNoN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:44:13 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30464C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:11 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x207so1192404pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZgyeINKrMfCmStbrdGUOQJ0+zjYNUPFNiKqRfIX3gIg=;
+        b=GqRCXCtmhr790iQkLEPF+dxbbHleFa77YD/V0YQYzUF0xkVahyK4lr9xnWX3prr8Cf
+         NdLtJTlvJRrZgZnbd7+o36vnEtJ4gILevM5EcFc4yHG/wsCvHuoCUw5ag2Pz4/2iHzYQ
+         aFdcVntvMvsb3TeNDr+gwLRYFPXEKKZNjTDu7nYQUcluvNWHr/B+UKmb9U5Itj+/issC
+         H9Mp1Lk2kYDsswb4CPVJ6FW06WUI8SmLC3wMSkaCtLTlqzDRDgDQr5RKJwUv5KKEp+/q
+         uHw1LXO8Eq60nSnXsYymhUBS5Bko5b+6TOwwYPvyJd5aGkiDqIxotb4PWf/HKQd01YiJ
+         X4Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZgyeINKrMfCmStbrdGUOQJ0+zjYNUPFNiKqRfIX3gIg=;
+        b=VczuwBNcYwu2ri4mzscbxY9KoH559ca/kqKzdtJGO92XW94yUbVDOLOY3/Mlzf5BZ2
+         RnojYh7w+z6zg05FTlW4YUsgHIjd7KPW+BGcw8yzsnVJxCuXI5VVCGVpXxOjkz7OFOMR
+         3dRrtQ/Wzef+0yCdHWeTGv0pgavh5PVpfsVpRBU99lKkeB1jskj4LCcsKV+migBNXN9F
+         xuK3+R7ki4xS2fk0nWCocP/XhFvRXcIBhxyXoojSwgFuQ0RU8byivH2NOvz/pPrGnpHx
+         gDoWaK1VAmAnzyfObIhAVgT10KQ0dch0PMNggq0kndnPUdCj+4KI3y27no8NHdwqbaPA
+         yyQw==
+X-Gm-Message-State: AOAM533lqlINppbRBiADDxb1TYEXiyrFszkXgNZnm/G5WmLbKxw7vPvO
+        EQFyh+V92SoTMzir3Lqr3HcQ0Q==
+X-Google-Smtp-Source: ABdhPJwHuWdqFEDY82SpSbQpvl6saxB8SdggovAdmogqJvxM5hnncM5n2WedOVV60UIpPB2Ie9nGYA==
+X-Received: by 2002:a63:ee0c:: with SMTP id e12mr20486811pgi.83.1593006250600;
+        Wed, 24 Jun 2020 06:44:10 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([2401:4900:4174:4b69:7433:bb27:35ac:b181])
+        by smtp.gmail.com with ESMTPSA id f14sm5526683pjq.36.2020.06.24.06.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 06:44:10 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Subject: [PATCH v5 0/3]
+Date:   Wed, 24 Jun 2020 19:13:51 +0530
+Message-Id: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changes since v4:
+	- Add another patch which changes char argument to const char
+	in function tpg_gen_text()
+	- Return const char * from function tpg_g_color_order() in patch
+	  2
+	In 3rd patch:
+	- Check font in probe() instead of s_stream()
+	- Use dev_err instead of pr_err
+	- Fix errors in commit message.
+	- Base VIMC_CID_SHOW_INFO on VIVID_CID_OSD_TEXT_MODE
 
+Changes since v3:
+        In 1st patch:
+        -Improved formatting of returned string.
 
-On 6/24/20 2:13 PM, Krzysztof Kozlowski wrote:
-> On Wed, Jun 24, 2020 at 02:03:03PM +0100, Lukasz Luba wrote:
->>
->>
->> On 6/24/20 1:06 PM, Krzysztof Kozlowski wrote:
->>> My case was clearly showing wrong behavior. System was idle but not
->>> sleeping - network working, SSH connection ongoing.  Therefore at least
->>> one CPU was not idle and could adjust the devfreq/DMC... but this did not
->>> happen. The system stayed for like a minute in 633 MHz OPP.
->>>
->>> Not-waking up idle processors - ok... so why not using power efficient
->>> workqueue? It is exactly for this purpose - wake up from time to time on
->>> whatever CPU to do the necessary job.
->>
->> IIRC I've done this experiment, still keeping in devfreq:
->> INIT_DEFERRABLE_WORK()
->> just applying patch [1]. It uses a system_wq which should
->> be the same as system_power_efficient_wq when
->> CONFIG_WQ_POWER_EFFICIENT_DEFAULT is not set (our case).
->> This wasn't solving the issue for the deferred work. That's
->> why the patch 2/2 following patch 1/2 [1] was needed.
->>
->> The deferred work uses TIMER_DEFERRABLE in it's initialization
->> and this is the problem. When the deferred work was queued on a CPU,
->> next that CPU went idle, the work was not migrated to some other CPU.
->> The former cpu is also not woken up according to the documentation [2].
-> 
-> Yes, you need either workqueue.power_efficient kernel param or CONFIG
-> option to actually enable it.  But at least it could then work on any
-> CPU.
-> 
-> Another solution is to use directly WQ_UNBOUND.
-> 
->> That's why Kamil's approach should be continue IMHO. It gives more
->> control over important devices like: bus, dmc, gpu, which utilization
->> does not strictly correspond to cpu utilization (which might be low or
->> even 0 and cpu put into idle).
->>
->> I think Kamil was pointing out also some other issues not only dmc
->> (buses probably), but I realized too late to help him.
-> 
-> This should not be a configurable option. Why someone would prefer to
-> use one over another and decide about this during build or run time?
-> Instead it should be just *right* all the time. Always.
+        In 2nd patch:
+         - Add CID prefix in control name and change it to a more
+           generic name.
+         - Rename bool variable to a generic name.
+         - Disable text rendering instead of stopping stream if no
+           font found.
+         - Display more info like VIVID in VIMC.
 
-I had the same opinion, as you can see in my explanation to those
-patches, but I failed. That's why I agree with Kamil's approach
-because had higher chance to get into mainline and fix at least some
-of the use cases.
+Changes since v2:
+        In 1st patch:
+        - Create a 'define' to prevent repetition of the common color
+          sequence string.
+        - Use 'fallthrough' on case statement to prevent repetition of
+          code.
 
-> 
-> Argument that we want to save power so we will not wake up any CPU is
-> ridiculous if because of this system stays in high-power mode.
-> 
-> If system is idle and memory going to be idle, someone should be woken
-> up to save more power and slow down memory controller.
-> 
-> If system is idle but memory going to be busy, the currently busy CPU
-> (which performs some memory-intensive job) could do the job and ramp up
-> the devfreq performance.
+Changes since v1:
+        - Divided the patch into two patches.
+        - Returned NULL for patterns whose color order cannot be
+          defined. (Reported-by: kernel test robot <lkp@intel.com>)
+        - Made separate switch cases for separate test patterns
+         (Reported-by: kernel test robot <lkp@intel.com>)
+        - Renamed variables from camelcase to use '_'
+        - prefixed 'media' to the patches.
 
-I agree. I think this devfreq mechanism was designed in the times
-where there was/were 1 or 2 CPUs in the system. After a while we got ~8
-and not all of them are used. This scenario was probably not
-experimented widely on mainline platforms.
+Kaaira Gupta (3):
+  media: tpg: change char argument to const char
+  media: tpg: Add function to return colors' order of test image
+  media: vimc: Add a control to display info on test image
 
-That is a good material for improvements, for someone who has time and
-power.
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 39 ++++++++++---
+ drivers/media/test-drivers/vimc/Kconfig       |  2 +
+ drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+ drivers/media/test-drivers/vimc/vimc-core.c   | 10 ++++
+ drivers/media/test-drivers/vimc/vimc-sensor.c | 57 +++++++++++++++++++
+ include/media/tpg/v4l2-tpg.h                  |  3 +-
+ 6 files changed, 104 insertions(+), 8 deletions(-)
 
-Regards,
-Lukasz
+-- 
+2.17.1
 
-> 
-> Best regards,
-> Krzysztof
-> 
