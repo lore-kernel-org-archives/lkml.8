@@ -2,132 +2,161 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88109C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5435C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68964207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3592088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592997939;
-	bh=2G6/L3/azm1EoZAnF/Xp527SGtl5pdg2SM9IZMLxwR8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vaaIOrS1Ct7kzdw4po06Yrh6jIwvKS/uOzVaylixYILlxW3Jqfuzyf8MDlWUtS1jk
-	 jgLLWVg8VdsJxYY2h7WZmfhch2Fmlc1B6b450RIj7Wri2utLAxRLkdkso1pT42Ixvw
-	 aoLtNDQDM71fpF8+CvKtiCksDE9kUecJMDPrBFVU=
+	s=default; t=1592998017;
+	bh=0UmukP6NVeEd+zs9QbZciKhf63orfAMQP6x99v2ThjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IdsIcDIV4iU6wH3Tqk6I9MqgfH9cPZd+d6EkOlNAbgpg/g8GY/fFELO4C7gjkFtbo
+	 w9v5j/Gv4z2T/jOh0HkBg/f5ml2/l8BJvXRZ7kMmj5cQDqS+VRcbDZcyETgRQkMT4i
+	 pjCkoAK/KpLZLEI3sK3uBa3Sti9h65sg8hKjYGHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389183AbgFXLZg (ORCPT
+        id S2390586AbgFXL04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:25:36 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:45003 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388811AbgFXLZf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:25:35 -0400
-Received: by mail-ej1-f68.google.com with SMTP id ga4so2046783ejb.11;
-        Wed, 24 Jun 2020 04:25:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LA2XapGq4IaVD7/Jz16sK+vZWcKUBPvVZlD7kxpKK+4=;
-        b=UqSQWr7HR57YOBTpk+tpYtlRdcQ24t9ztAs+LGnu7k4mvP1Fxexu1MYm0z6E2G7t7l
-         soOdfCVFTiUZn3e1M7+cWPBUOLdr6uPXIg6C2DVyV2e+lSdSwRe58tBxxXPw3GzUYrnb
-         W7jlI+CeGr8CUX4vLIGcLOPD5lbDKJ+IQ40B6UF0w/gjo3N9jnsbaEC4ryp+Ja+HVDjI
-         u0zKtypXiTCPAWSiMucZ6trnBLTCbr4zLu/d5AzLYkmb3N27IKW0+9zwbLaqSw/i2IU6
-         6F/XJiy1VF3e6CVEA/8EpNCjMe97w2PWitIoRMdjwf4q7M3ggnZc3NYV3Xcw5TnDbRAy
-         zDxw==
-X-Gm-Message-State: AOAM532pmpKynj9jNi8VkEsTlbv9EsbYtIJiyc+fdalGtbQ0CpVYoBQW
-        NC7QY49Un4DPinH3lSM2xBQ=
-X-Google-Smtp-Source: ABdhPJxhx0cXd0uflR7vtTwXvD4YGbtCrkhU2pMwvJFNbTADtFUIR9Zj3aH8PJurs/hAcjFNhB0QjA==
-X-Received: by 2002:a17:906:3042:: with SMTP id d2mr3703894ejd.420.1592997933359;
-        Wed, 24 Jun 2020 04:25:33 -0700 (PDT)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id a24sm15147934ejc.109.2020.06.24.04.25.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 04:25:32 -0700 (PDT)
-From:   Ricardo Ribalda <ribalda@kernel.org>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>
-Cc:     Ricardo Ribalda <ribalda@kernel.org>
-Subject: [PATCH v2] i2c: designware: platdrv: Set class based on dmi
-Date:   Wed, 24 Jun 2020 13:25:30 +0200
-Message-Id: <20200624112530.852254-1-ribalda@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Wed, 24 Jun 2020 07:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388811AbgFXL0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:26:55 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2917020836;
+        Wed, 24 Jun 2020 11:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592998014;
+        bh=0UmukP6NVeEd+zs9QbZciKhf63orfAMQP6x99v2ThjI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TaJFnJBJH6v57vh4k4qpqczHZE+gAEuxHL0D7vQKZQV7498wW0m4uJi1n74icYaZA
+         4pEeFLTVg9u3esVOG13VCDEP7R/rDl5jdIk3cq65wbNF6TsH1UVIJvzqGffQpDl5ff
+         dRwYJhIecRl6FOQtcWKDOiGr4iahuuAGRSV4kBsU=
+Date:   Wed, 24 Jun 2020 12:26:47 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+Message-ID: <20200624112647.GC6134@willie-the-truck>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org>
+ <20200624033142.cinvg6rbg252j46d@google.com>
+ <202006232143.66828CD3@keescook>
+ <20200624104356.GA6134@willie-the-truck>
+ <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current AMD's zen-based APUs use this core for some of its i2c-buses.
+On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
+> On Wed, 24 Jun 2020 at 12:44, Will Deacon <will@kernel.org> wrote:
+> > On Tue, Jun 23, 2020 at 09:44:11PM -0700, Kees Cook wrote:
+> > > On Tue, Jun 23, 2020 at 08:31:42PM -0700, 'Fangrui Song' via Clang Bu=
+ilt Linux wrote:
+> > > > arch/arm64/Kconfig enables ARM64_PTR_AUTH by default. When the conf=
+ig is on
+> > > >
+> > > > ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
+> > > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI) :=3D -mb=
+ranch-protection=3Dpac-ret+leaf+bti
+> > > > else
+> > > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET) :=3D -mbranc=
+h-protection=3Dpac-ret+leaf
+> > > > endif
+> > > >
+> > > > This option creates .note.gnu.property:
+> > > >
+> > > > % readelf -n drivers/firmware/efi/libstub/efi-stub.o
+> > > >
+> > > > Displaying notes found in: .note.gnu.property
+> > > >   Owner                Data size        Description
+> > > >   GNU                  0x00000010       NT_GNU_PROPERTY_TYPE_0
+> > > >       Properties: AArch64 feature: PAC
+> > > >
+> > > > If .note.gnu.property is not desired in drivers/firmware/efi/libstu=
+b, specifying
+> > > > -mbranch-protection=3Dnone can override -mbranch-protection=3Dpac-r=
+et+leaf
+> > >
+> > > We want to keep the branch protection enabled. But since it's not a
+> > > "regular" ELF, we don't need to keep the property that identifies the
+> > > feature.
+> >
+> > For the kernel Image, how do we remove these sections? The objcopy flags
+> > in arch/arm64/boot/Makefile look both insufficient and out of date. My
+> > vmlinux ends up with both a ".notes" and a ".init.note.gnu.property"
+> > segment.
+> >
+>=20
+> The latter is the fault of the libstub make rules, that prepend .init
+> to all section names.
 
-With this patch we re-enable autodetection of hwmon-alike devices, so
-lm-sensors will be able to work automatically.
+Hmm. I tried adding -mbranch-protection=3Dnone to arm64 cflags for the stub,
+but I still see this note in vmlinux. It looks like it comes in via the
+stub copy of lib-ctype.o, but I don't know why that would force the
+note. The cflags look ok to me [1] and I confirmed that the note is
+being generated by the compiler.
 
-It does not affect the boot-time of embedded devices, as the class is
-set based on the dmi information.
+> I'm not sure if there is a point to having PAC and/or BTI in the EFI
+> stub, given that it runs under the control of the firmware, with its
+> memory mappings and PAC configuration etc.
 
-Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
----
-v2:
-Changes by Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
- - CodeStyle
-Changes by kernel test robot <lkp@intel.com>
- - Include dmi header to fix build error on arc
- - check if dmi_get_system_info returned NULL
- drivers/i2c/busses/i2c-designware-platdrv.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Agreed, I just can't figure out how to get rid of the note.
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index c2efaaaac252..5892fdba9c25 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -12,6 +12,7 @@
- #include <linux/clk-provider.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -173,6 +174,19 @@ static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
- 		pm_runtime_put_noidle(dev->dev);
- }
- 
-+static bool dw_i2c_hwmon_bus(void)
-+{
-+	const char *product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
-+
-+	if (!product_name)
-+		return false;
-+
-+	if (strstr(product_name, "QT5222"))
-+		return true;
-+
-+	return false;
-+}
-+
- static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev->dev);
-@@ -267,7 +281,7 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	adap = &dev->adapter;
- 	adap->owner = THIS_MODULE;
--	adap->class = I2C_CLASS_DEPRECATED;
-+	adap->class = dw_i2c_hwmon_bus() ? I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
- 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
- 	adap->dev.of_node = pdev->dev.of_node;
- 	adap->nr = -1;
--- 
-2.27.0
+Will
 
+[1] -mlittle-endian -DKASAN_SHADOW_SCALE_SHIFT=3D3 -Qunused-arguments -Wall=
+ -Wundef -Werror=3Dstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -f=
+no-common -fshort-wchar -fno-PIE -Werror=3Dimplicit-function-declaration -W=
+error=3Dimplicit-int -Wno-format-security -std=3Dgnu89 --target=3Daarch64-l=
+inux-gnu --prefix=3D/usr/local/google/home/willdeacon/bin/ --gcc-toolchain=
+=3D/usr/local/google/home/willdeacon -no-integrated-as -Werror=3Dunknown-wa=
+rning-option -mgeneral-regs-only -DCONFIG_CC_HAS_K_CONSTRAINT=3D1 -fno-asyn=
+chronous-unwind-tables -mbranch-protection=3Dpac-ret+leaf+bti -Wa,-march=3D=
+armv8.3-a -DKASAN_SHADOW_SCALE_SHIFT=3D3 -fno-delete-null-pointer-checks -W=
+no-address-of-packed-member -O2 -Wframe-larger-than=3D2048 -fstack-protecto=
+r-strong -Wno-format-invalid-specifier -Wno-gnu -mno-global-merge -Wno-unus=
+ed-const-variable -fno-omit-frame-pointer -fno-optimize-sibling-calls -g -W=
+declaration-after-statement -Wvla -Wno-pointer-sign -Wno-array-bounds -fno-=
+strict-overflow -fno-merge-all-constants -fno-stack-check -Werror=3Ddate-ti=
+me -Werror=3Dincompatible-pointer-types -fmacro-prefix-map=3D./=3D -Wno-ini=
+tializer-overrides -Wno-format -Wno-sign-compare -Wno-format-zero-length -W=
+no-tautological-constant-out-of-range-compare -fpie -mbranch-protection=3Dn=
+one -I./scripts/dtc/libfdt -Os -DDISABLE_BRANCH_PROFILING -include ./driver=
+s/firmware/efi/libstub/hidden.h -D__NO_FORTIFY -ffreestanding -fno-stack-pr=
+otector -fno-addrsig -D__DISABLE_EXPORTS    -DKBUILD_MODFILE=3D'"drivers/fi=
+rmware/efi/libstub/lib-ctype"' -DKBUILD_BASENAME=3D'"lib_ctype"' -DKBUILD_M=
+ODNAME=3D'"lib_ctype"' -c -o drivers/firmware/efi/libstub/lib-ctype.o lib/c=
+type.c
