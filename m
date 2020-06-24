@@ -2,79 +2,95 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A61C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C32882084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592983639;
-	bh=/IEQjo3dkaHLyL3FMHe3F00O94pOiS2lVlYclHP0hng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p4eOI4vVsIxHHzxePi8LPbKE8GcmwA71v3qEvY3ZB/qt/YvEtgxoJgx4OeGOdg3nq
-	 manoqTU0EPSo0JgT4683agWs6IioJE0v/HYmyC+vouMvcC7666eOGhj6dSIuldrvBz
-	 oGzvv5Odb5f35bRWa1YfH0Vhk8j5XESbqsSHojn4=
+	by mail.kernel.org (Postfix) with ESMTP id 719AB2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389793AbgFXH1S (ORCPT
+        id S2389714AbgFXH3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728858AbgFXH1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:27:15 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0921207DD;
-        Wed, 24 Jun 2020 07:27:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592983634;
-        bh=/IEQjo3dkaHLyL3FMHe3F00O94pOiS2lVlYclHP0hng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sJUx1RIsexRztruW+f9TxU13MlXVJ7pznN2/Vmk8knlQ72ZDkTDbA9xQIN4nvWCmK
-         yMRxxU9nVcGZymdMMubKAMGUsrK18AKbgbZPLk+jWXJr7PRNyFBO0Ef6lflRqi57/K
-         3muyQgWvqXj+YGWgaR9gJemzXLNm87hVxjli1MKw=
-Date:   Wed, 24 Jun 2020 12:57:10 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
- kzalloc()
-Message-ID: <20200624072710.GK2324254@vkoul-mobl>
-References: <20200619224334.GA7857@embeddedor>
- <20200624055535.GX2324254@vkoul-mobl>
- <fa304f0ef1dba4fcf5e495f3c2feb4d3816f20ac.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa304f0ef1dba4fcf5e495f3c2feb4d3816f20ac.camel@perches.com>
+        Wed, 24 Jun 2020 03:29:54 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:59660 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387871AbgFXH3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:29:54 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_93mAPNezSRJAA--.399S10;
+        Wed, 24 Jun 2020 15:29:47 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v3 08/14] irqchip/ls1x: Fix potential resource leaks
+Date:   Wed, 24 Jun 2020 15:29:36 +0800
+Message-Id: <1592983782-8842-9-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dx_93mAPNezSRJAA--.399S10
+X-Coremail-Antispam: 1UD129KBjvdXoWrurWUWFykJF48Zr47Zr4xJFb_yoWDZFgE9r
+        1Sg3s3WayIyr1fJ3yIgw13ZFW7trZYgFs2vFW0kF13ta4xWw1rur4xZr1fJF4xuFWjkF97
+        C3yjvr10y34xAjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbmkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
+        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
+        F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
+        1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+        3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
+        IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4U
+        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
+        kIc2xKxwCY1x0262kKe7AKxVWUAVWUtwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l
+        4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+        cVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26c
+        xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x02
+        67AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7VUjNB_UUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-06-20, 22:56, Joe Perches wrote:
-> On Wed, 2020-06-24 at 11:25 +0530, Vinod Koul wrote:
-> > On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
-> > > Make use of the struct_size() helper instead of an open-coded version
-> > > in order to avoid any potential type mistakes.
-> > > 
-> > > This code was detected with the help of Coccinelle and, audited and
-> > > fixed manually.
-> > > 
-> > > Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-> 
-> Is this odd tag really useful?
+There exists potential resource leaks in the error path, fix them.
 
-Not at all :)
+Fixes: 9e543e22e204 ("irqchip: Add driver for Loongson-1 interrupt controller")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/irqchip/irq-ls1x.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
+index 353111a..409001b 100644
+--- a/drivers/irqchip/irq-ls1x.c
++++ b/drivers/irqchip/irq-ls1x.c
+@@ -131,7 +131,7 @@ static int __init ls1x_intc_of_init(struct device_node *node,
+ 	if (!priv->domain) {
+ 		pr_err("ls1x-irq: cannot add IRQ domain\n");
+ 		err = -ENOMEM;
+-		goto out_iounmap;
++		goto out_dispose_irq;
+ 	}
+ 
+ 	err = irq_alloc_domain_generic_chips(priv->domain, 32, 2,
+@@ -182,6 +182,8 @@ static int __init ls1x_intc_of_init(struct device_node *node,
+ 
+ out_free_domain:
+ 	irq_domain_remove(priv->domain);
++out_dispose_irq:
++	irq_dispose_mapping(parent_irq);
+ out_iounmap:
+ 	iounmap(priv->intc_base);
+ out_free_priv:
 -- 
-~Vinod
+2.1.0
+
