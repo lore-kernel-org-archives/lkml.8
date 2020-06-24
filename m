@@ -2,78 +2,136 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A516C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B840C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50A1C20702
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0236C20702
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PsqGQVo7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5K8c8og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388467AbgFXBrD (ORCPT
+        id S2388520AbgFXBrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 21:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387780AbgFXBrC (ORCPT
+        Tue, 23 Jun 2020 21:47:51 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49042 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387780AbgFXBrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 21:47:02 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E036C061573;
-        Tue, 23 Jun 2020 18:47:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SV+FHOxoc0B38PSkoJCLzzz/s0XSVgJTssyo0SVm0sM=; b=PsqGQVo7omY1pxGM+gvcBcWALS
-        XgPC65w1lx+gweE8FT9WbQa61YMqc1NWr8MbKmZAhHhqxuj6958RXXQZboI78otwpXDNLnqTAUHlP
-        55SEAEVkaFfu/7rKrH8PXcKOWkuS2e+f1R5KpEtHTmQOeNgWaf5DVfaPQDkhyT06oWz5S0oIY1bWJ
-        WN24Lt+VysG+NlToqAZOTvQgNiEA+bXkwTf+IRBJ6PLclnSPAsAWCQrJlh9gzY53o+HLBvZJga7wG
-        YcjeYTcdiIzPwqP72ly39bJmPwPvx41iBdGDxG4kfGJqCPaWyig9a+DRgJ/ZNeK1OYK1iLvlDOEcK
-        d9tH4IsA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jnuUv-0005LA-50; Wed, 24 Jun 2020 01:46:45 +0000
-Date:   Wed, 24 Jun 2020 02:46:45 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Add@vger.kernel.org, support@vger.kernel.org, for@vger.kernel.org,
-        async@vger.kernel.org, buffered@vger.kernel.org,
-        reads@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH 05/15] mm: allow read-ahead with IOCB_NOWAIT set
-Message-ID: <20200624014645.GJ21350@casper.infradead.org>
-References: <20200618144355.17324-1-axboe@kernel.dk>
- <20200618144355.17324-6-axboe@kernel.dk>
- <20200624010253.GB5369@dread.disaster.area>
+        Tue, 23 Jun 2020 21:47:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592963269;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JYnZNnpS2HgqC1iM73H/jgj0+9mKXjT6JgH/NmNe1Q4=;
+        b=P5K8c8ogkYuh9VyroGh2eDNKxXqJBmIYWcxcvmAk1sIQmub5+qqVxfafdCwHDdNqA0Q/lA
+        LbV7KlAVEsKiF/6qj63QLKV407QUUZORwN+nZtsMTG0RFmwvPXhAkO3R0h/QP+qHm0bMvl
+        D84Sb9LEL+j0HyPiPq3FLG0sC24FgfE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-JVTAxYjrPreR86AyXCDayw-1; Tue, 23 Jun 2020 21:47:45 -0400
+X-MC-Unique: JVTAxYjrPreR86AyXCDayw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 317C7BFC2;
+        Wed, 24 Jun 2020 01:47:44 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B610C5D9E7;
+        Wed, 24 Jun 2020 01:47:40 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 09:47:37 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200624014737.GG3346@MiWiFi-R3L-srv>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <CAPcyv4ipnZ2jXd-obBk4KMGPNz4DMu0jGXFEEPCnST+A2zR+Uw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624010253.GB5369@dread.disaster.area>
+In-Reply-To: <CAPcyv4ipnZ2jXd-obBk4KMGPNz4DMu0jGXFEEPCnST+A2zR+Uw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:02:53AM +1000, Dave Chinner wrote:
-> On Thu, Jun 18, 2020 at 08:43:45AM -0600, Jens Axboe wrote:
-> > The read-ahead shouldn't block, so allow it to be done even if
-> > IOCB_NOWAIT is set in the kiocb.
+On 06/23/20 at 05:21pm, Dan Williams wrote:
+> On Tue, Jun 23, 2020 at 2:43 AM Wei Yang
+> <richard.weiyang@linux.alibaba.com> wrote:
+> >
+> > For early sections, we assumes its memmap will never be partially
+> > removed. But current behavior breaks this.
 > 
-> Doesn't think break preadv2(RWF_NOWAIT) semantics for on buffered
-> reads? i.e. this can now block on memory allocation for the page
-> cache, which is something RWF_NOWAIT IO should not do....
+> Where do we assume that?
+> 
+> The primary use case for this was mapping pmem that collides with
+> System-RAM in the same 128MB section. That collision will certainly be
+> depopulated on-demand depending on the state of the pmem device. So,
+> I'm not understanding the problem or the benefit of this change.
 
-Yes.  This eventually ends up in page_cache_readahead_unbounded()
-which gets its gfp flags from readahead_gfp_mask(mapping).
+I was also confused when review this patch, the patch log is a little
+short and simple. From the current code, with SPARSE_VMEMMAP enabled, we
+do build memmap for the whole memory section during boot, even though
+some of them may be partially populated. We just mark the subsection map
+for present pages. 
 
-I'd be quite happy to add a gfp_t to struct readahead_control.
-The other thing I've been looking into for other reasons is adding
-a memalloc_nowait_{save,restore}, which would avoid passing down
-the gfp_t.
+Later, if pmem device is mapped into the partially boot memory section,
+we just fill the relevant subsection map, do return directly, w/o building
+the memmap for it, in section_activate(). Because the memmap for the
+unpresent RAM part have been there. I guess this is what Wei is trying to 
+do to keep the behaviour be consistent for pmem device adding, or
+pmem device removing and later adding again.
+
+Please correct me if I am wrong.
+
+To me, fixing it looks good. But a clear doc or code comment is
+necessary so that people can understand the code with less time.
+Leaving it as is doesn't cause harm. I personally tend to choose
+the former.
+
+	paging_init()
+	    ->sparse_init()
+	        ->sparse_init_nid()
+	          {
+                      ...
+                      for_each_present_section_nr(pnum_begin, pnum) {
+                          ...
+                          map = __populate_section_memmap(pfn, PAGES_PER_SECTION,
+                                     nid, NULL);
+                          ...
+                      }
+                  }
+             ...
+             ->zone_sizes_init()
+                 ->free_area_init()
+                   {
+                       for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+                           subsection_map_init(start_pfn, end_pfn - start_pfn);
+                       }
+                   {
+		
+         __add_pages()
+             ->sparse_add_section()
+                 ->section_activate()
+                   {
+                       ...
+                       fill_subsection_map();
+                       if (nr_pages < PAGES_PER_SECTION && early_section(ms))   <----------*********
+                           return pfn_to_page(pfn);
+                       ...
+                   }
+> 
+
