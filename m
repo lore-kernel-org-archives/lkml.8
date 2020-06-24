@@ -2,87 +2,91 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1DE20C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YSWR8LYz"
+	by mail.kernel.org (Postfix) with ESMTP id B82CF214DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388216AbgFXA6r (ORCPT
+        id S2388366AbgFXBDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 20:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387586AbgFXA6q (ORCPT
+        Tue, 23 Jun 2020 21:03:09 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:46138 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388240AbgFXBDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 20:58:46 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F78FC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:58:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id x18so675681lji.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o88U5URmW+6MR16b/R2K54jEVRKDmah+bTz23qZzCpo=;
-        b=YSWR8LYzFvhf2n/qT9TXv0lN04IqFa7XM33Kmq+zcSJZpkxVTFOae49vPDGv5XgRQm
-         ryQV8ktF4kbc+OL/zCkZg0nTjjRkGYLzWFH5COLREo7ohT2QpZEUb2qnWB21BBnRYZaO
-         ELK0+vYIVGlsUxbkX30VjP8HRrCu/tajmVvlPsLaRA5hCeocPijloszm/Z0IVkGFNG3o
-         fhi37G2ZVHytq2WvvMFvazplwfY8E2/Jcm3OxzOe3XdJig2fYbc+p19ERebTP1LSRe6E
-         ISPdRcu5oZYjD1pam0bHr898wCAOam6VU+y3Q1dlMPYazsk7FbbuyAPGDqz0f6tE6xya
-         LC+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o88U5URmW+6MR16b/R2K54jEVRKDmah+bTz23qZzCpo=;
-        b=erwBRK+DHAOQE27COz4rtIcgZIRor3gXOf8TwopX8lUfbDkiKaGNiuKwwyCqA6wSVH
-         93MXWPAYJdiJOE31L3tZWlbPUALrdoSXn1Bd4yDPdvi04Fakx2ION/aDIPo5xSUsZf7u
-         pCjflANLhwU0cd1qiRuCOCfEEa8Polbd0iF9BFXeOdhF4gtdipzbMvDBx+IM2Bz2L47V
-         udqNBWDq+tBAajzIV4PAexUwiWaoOf3RA/AbKY3PF/yEK/gfguaSv1A21iqg8mz/LN1G
-         sgi3qp80aGYhuwd+A7F448qwbKiOOvjCYDVY/WZEM703LbERp6AtGRsUxujuNWvgkBsB
-         4qxQ==
-X-Gm-Message-State: AOAM533/EMEK37XwO9ubysDJoLdoC5XeSTouTEl4PvIKYK9Ej6y3PMSe
-        +WnqB4qXQo4WDNSf7xN9VZj3FaCw0l8H/+CCwLEAOg==
-X-Google-Smtp-Source: ABdhPJx4+TMVe9obxlPY9iCN34JLkOOJSMwnHLPa4bnnL91ftwmD9hWrTH6Dt8WgYEMjeU/1ohzNfaLWd0QUCEJt68s=
-X-Received: by 2002:a2e:910c:: with SMTP id m12mr13126966ljg.332.1592960323561;
- Tue, 23 Jun 2020 17:58:43 -0700 (PDT)
+        Tue, 23 Jun 2020 21:03:08 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 2763010B2D4;
+        Wed, 24 Jun 2020 11:02:54 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jntoT-0001jv-FK; Wed, 24 Jun 2020 11:02:53 +1000
+Date:   Wed, 24 Jun 2020 11:02:53 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Add@vger.kernel.org, support@vger.kernel.org, for@vger.kernel.org,
+        async@vger.kernel.org, buffered@vger.kernel.org,
+        reads@vger.kernel.org
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH 05/15] mm: allow read-ahead with IOCB_NOWAIT set
+Message-ID: <20200624010253.GB5369@dread.disaster.area>
+References: <20200618144355.17324-1-axboe@kernel.dk>
+ <20200618144355.17324-6-axboe@kernel.dk>
 MIME-Version: 1.0
-References: <20200623184515.4132564-1-guro@fb.com> <20200623184515.4132564-2-guro@fb.com>
-In-Reply-To: <20200623184515.4132564-2-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 23 Jun 2020 17:58:32 -0700
-Message-ID: <CALvZod6_itLtuVwo3FK5GhcUUQQjp1u93xHUtgKJkA=28spavA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] percpu: return number of released bytes from pcpu_free_area()
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618144355.17324-6-axboe@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=ufHFDILaAAAA:8 a=7-415B0cAAAA:8
+        a=WCjB2_pVjg0caHknj34A:9 a=CjuIK1q_8ugA:10 a=ZmIg1sZ3JBWsdXgziEIF:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:47 AM Roman Gushchin <guro@fb.com> wrote:
->
-> To implement accounting of percpu memory we need the information about the
-> size of freed object.  Return it from pcpu_free_area().
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Dennis Zhou <dennis@kernel.org>
+On Thu, Jun 18, 2020 at 08:43:45AM -0600, Jens Axboe wrote:
+> The read-ahead shouldn't block, so allow it to be done even if
+> IOCB_NOWAIT is set in the kiocb.
+> 
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> ---
+>  mm/filemap.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index f0ae9a6308cb..3378d4fca883 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2028,8 +2028,6 @@ ssize_t generic_file_buffered_read(struct kiocb *iocb,
+>  
+>  		page = find_get_page(mapping, index);
+>  		if (!page) {
+> -			if (iocb->ki_flags & IOCB_NOWAIT)
+> -				goto would_block;
+>  			page_cache_sync_readahead(mapping,
+>  					ra, filp,
+>  					index, last_index - index);
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Doesn't think break preadv2(RWF_NOWAIT) semantics for on buffered
+reads? i.e. this can now block on memory allocation for the page
+cache, which is something RWF_NOWAIT IO should not do....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
