@@ -2,157 +2,105 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF05BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA417C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A8B2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAE920723
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLWp55cC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E27hEDFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404197AbgFXPXC (ORCPT
+        id S2404256AbgFXPYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58922 "EHLO
+        Wed, 24 Jun 2020 11:24:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404092AbgFXPXB (ORCPT
+        with ESMTP id S2404017AbgFXPYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:23:01 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CEDFC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:23:01 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id u8so1190057qvj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:23:01 -0700 (PDT)
+        Wed, 24 Jun 2020 11:24:04 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844FCC061573;
+        Wed, 24 Jun 2020 08:24:03 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id y13so1483594lfe.9;
+        Wed, 24 Jun 2020 08:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=o8WO4FwPMMVJumAcMtjFKZzBUw94gPXqNMSz5go/YzA=;
-        b=fLWp55cC6brOr3WSJga3/tcSm/BlsyClXysj/n1kXkr6Gm1JOwArAv9EugsTxYhGmL
-         6fOcv6Cb6pggdB128TXaTlsWOySfTJJZ2fPiEQcDFdScieY8UDi1DBxafIlfNa2yZdaV
-         XMA4tta+xS0e4/xANOizXBlgJoNXUi0Xs+MkspK0Gy1IaNqICBRYBVVbWbKqFlizuNn+
-         2n8WjjJI1eFeDJjqoaaFAcPdai6JyjC2B6KLY3DMamJtLXeSUEWtnop14fn9elqCEGQH
-         /M9j8ivJR3mqi+wvyKRtXRYhXX43LGEKNAnfM/652TzNUF/RUpgpUToJ/YLP2GO+PUVi
-         1Gtg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7ouKIzv9lcqviAIR01eC0zUDPcbdP0WKdUxuCP9SSpw=;
+        b=E27hEDFRxtZsQruEYVPTKunSsgJg6aALuxPxpQbSwxDRgiJZXbVdVQJKazLD8M5Wjo
+         om0KM0Faci6ftvWbxcquMgWXyDdqtOfBWWlErm0YTPMPTa03xNpBHyYwVibyb2Zzo0M2
+         lLUKMh7OyfZEu106pZZ0RNyuGDGS/S4uk2L6AOrXY+Jh1/LOzcsft59VuVdAXRCw8/UI
+         tcjTk82W9LuJXvGO7esKypzBLAlzPsyTJqqSq9tTMUXUgl0I+StFKkE/jGlxVfZXHQng
+         5tBnnQZgaSockOreNNvEUaLFcdjWc5LD4DodWFz7Xw5DP5j7+DI7/+krFCr1JuaAiZiq
+         yuPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=o8WO4FwPMMVJumAcMtjFKZzBUw94gPXqNMSz5go/YzA=;
-        b=X8m1tajDG7j+wmMyKGM7IwpoRHp/S5KOPzqFNabZjoZ6DRyQZdZ0yyhrF9H+FmDib1
-         KCaZVUwFvQ1XAkGaPn1GpdbtejEIy5lTHopHENXArd0Uxn/918z8mLPJopuDNh9TanKd
-         NFah6XLY/O28x7/5SDth7PVKo4gQUjTCf8RTYJIYkI6Rkj3XIQE571JND7FxsISQfWEN
-         YqrakCyK3xpL1UNeXNZrhSXeDYX5tFE15fa8jZhLKkNfDH8SQfBauQv32LQmeqU6DBzQ
-         lJj8ZlYR7N+t4EgpKGkgA0DcztIxm2vnoEiKcfWCvUddnC9Ln/uURtXfQiYowhrItC9s
-         28cQ==
-X-Gm-Message-State: AOAM532eMvTahfFEYgK2b/wMOkrwGd/emBhKJOwQHmwTG5PUWOhn3wi6
-        5Rkz0O3wpWAXX+vCmBvmUcI=
-X-Google-Smtp-Source: ABdhPJw+Sg4HKtlC6yNVorphDuMImKS5ITm7fR2GvW7ccjgSaqLox34vx6TRkuDqGh2xwrN9fMYagg==
-X-Received: by 2002:a0c:8d46:: with SMTP id s6mr31945947qvb.241.1593012180655;
-        Wed, 24 Jun 2020 08:23:00 -0700 (PDT)
-Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id w1sm3558521qto.0.2020.06.24.08.22.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:23:00 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     shawnguo@kernel.org, fugang.duan@nxp.com
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ARM: imx6plus: enable internal routing of clk_enet_ref where possible
-Date:   Wed, 24 Jun 2020 11:22:56 -0400
-Message-Id: <20200624152256.21937-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7ouKIzv9lcqviAIR01eC0zUDPcbdP0WKdUxuCP9SSpw=;
+        b=a1xGszQOqrl8mVakOWEcsD5EL4zA6M+a1lBNRSGDlhN1ZtNEn7J977PGFWdWNEcChy
+         C2H0RyfbGx4IBD+TwwLSbCHqIMcuZV36tDQqO8DlKka3/2UcGuh/07+8KbqFdt5HcHF7
+         yQ10H08cHyPhkHu059btIIlVEvYygF5GIuON7ZFkm3i14PD6PxuGjx8tm0qhBQiDnMCX
+         cjgUmaGzlg6Daq9gU2cChTBomW3yIR4G6UBPjNtdkhh/WdzoidstvG8tFu8t5wW4Mact
+         ktoqEnv1LxUiEgP7HiGWl3w6GnAfmk5G6vUBiEENC94efQioC8L7Nf+7fsrI7VkfGs/W
+         d9zQ==
+X-Gm-Message-State: AOAM5327AR6hfLXbl9hAnX0jWL9kYGAODVL0L7lKM5YPdhbVfG4rp61m
+        R9zSX2HVNWY8ezznqESNhbOKFnuY
+X-Google-Smtp-Source: ABdhPJw5CK19plm3sDVgaQZ/FaKkfb0UTJA6gbhs1PnwT7h7YAvOtoMlEmVpoVoZxpLFP0oqUejuXQ==
+X-Received: by 2002:ac2:47e7:: with SMTP id b7mr15661708lfp.68.1593012241393;
+        Wed, 24 Jun 2020 08:24:01 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id d20sm5262732lfi.22.2020.06.24.08.24.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 08:24:00 -0700 (PDT)
+Subject: Re: [PATCH v2 0/4] Tegra Video Decoder driver power management
+ corrections
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200624150847.22672-1-digetx@gmail.com>
+ <90323aa6-38b5-0a45-69a7-ccf380690a78@xs4all.nl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <23cbaa18-9461-8f72-3d43-aa14cd0c1095@gmail.com>
+Date:   Wed, 24 Jun 2020 18:23:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <90323aa6-38b5-0a45-69a7-ccf380690a78@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On imx6, the ethernet reference clock (clk_enet_ref) can be generated
-by either the imx6, or an external source (e.g. an oscillator or the
-PHY). When generated by the imx6, the clock source (from ANATOP)
-must be routed to the input of clk_enet_ref via two pads on the SoC,
-typically via a dedicated track on the PCB.
+24.06.2020 18:16, Hans Verkuil пишет:
+> On 24/06/2020 17:08, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This small series addresses a Runtime PM issue that was discovered during
+>> of Tegra VI driver reviewing by balancing RPM usage count on RPM resume
+>> failure. Secondly it fixes reboot on some Tegra devices due to bootloader
+>> expecting VDE power partition to be ON at the boot time, which wasn't
+>> happening in case of a warm re-booting (i.e. by PMC resetting).
+> 
+> Can you rebase this on top of the media_tree master branch? I think a variant
+> of patch 1 has already been applied. I found a mail today where you mentioned
+> that you preferred your version (it looks like I missed that) so you'll need to
+> rework patch 1.
 
-On an imx6 plus however, there is a new setting which enables this
-clock to be routed internally on the SoC, from its ANATOP clock
-source, straight to clk_enet_ref, without having to go through
-the SoC pads.
+Hello Hans,
 
-Board designs where the clock is generated by the imx6 should not
-be affected by routing the clock internally. Therefore on a plus,
-we can enable internal routing by default.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
-v2 -> v3:
-  - remove check for imx6q, which is already implied when
-    of_machine_is_compatible("fsl,imx6qp")
-v1 -> v2:
-  - Fabio Estevam: use of_machine_is_compatible() to determine if we
-    are running on an imx6 plus.
-
-To: Shawn Guo <shawnguo@kernel.org>
-To: Andy Duan <fugang.duan@nxp.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-
- arch/arm/mach-imx/mach-imx6q.c              | 18 ++++++++++++++++++
- include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |  1 +
- 2 files changed, 19 insertions(+)
-
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 85c084a716ab..a760779b934e 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -203,6 +203,24 @@ static void __init imx6q_1588_init(void)
- 	else
- 		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
- 
-+	/*
-+	 * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
-+	 * be the PTP clock source, instead of having to be routed through
-+	 * pads.
-+	 * Board designs which route the ANATOP/CCM clock through pads are
-+	 * unaffected when routing happens internally. So on these designs,
-+	 * route internally by default.
-+	 */
-+	if (clksel == IMX6Q_GPR1_ENET_CLK_SEL_ANATOP &&
-+			of_machine_is_compatible("fsl,imx6qp")) {
-+		if (!IS_ERR(gpr))
-+			regmap_update_bits(gpr, IOMUXC_GPR5,
-+					IMX6Q_GPR5_ENET_TXCLK_SEL,
-+					IMX6Q_GPR5_ENET_TXCLK_SEL);
-+		else
-+			pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
-+		}
-+
- 	clk_put(enet_ref);
- put_ptp_clk:
- 	clk_put(ptp_clk);
-diff --git a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-index d4b5e527a7a3..eb65d48da0df 100644
---- a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-+++ b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-@@ -240,6 +240,7 @@
- #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
- 
- #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
-+#define IMX6Q_GPR5_ENET_TXCLK_SEL		BIT(9)
- #define IMX6Q_GPR5_SATA_SW_PD			BIT(10)
- #define IMX6Q_GPR5_SATA_SW_RST			BIT(11)
- 
--- 
-2.17.1
-
+I'll take a look at what patches has been applied, my bad for sending
+the v2 too late. Thank you for the heads up!
