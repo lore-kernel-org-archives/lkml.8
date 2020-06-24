@@ -2,109 +2,125 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3294C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4221A2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F272076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yGzNNUiU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAVF2FGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404571AbgFXPQm (ORCPT
+        id S2404580AbgFXPQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57916 "EHLO
+        Wed, 24 Jun 2020 11:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404243AbgFXPQj (ORCPT
+        with ESMTP id S2404564AbgFXPQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:16:39 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F4CC061796
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:16:38 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id n2so1158361pld.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:16:38 -0700 (PDT)
+        Wed, 24 Jun 2020 11:16:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55BE6C061573;
+        Wed, 24 Jun 2020 08:16:40 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 17so2902824wmo.1;
+        Wed, 24 Jun 2020 08:16:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TVX/MV1cRkugdklQX2owAo6W7k+5NFqvXnOlDA4kvRY=;
-        b=yGzNNUiU0zB4ia/e/BRLyub6jOMkcwxNBtVbxa2YAtqv9bXPxUetSHNyXmsHenrYHt
-         cjkFgPmkRZp/X2yNr2u9mju+xed5eYUhQk4Kpx+jH0CGmR61y8a9ouWVJug5DZ7A+Qlv
-         DJD/L8PQC/W42O0m9N96kcj4qg7p6UcD14f7MiBpKvVmmzYFuDReGBcXd8RNy518wKPV
-         wNXnls0RdYt9lZQO/MEmeg8HOax7edYnC7etow2AGG1sgeWTIFjKemddtFXoz8u+vQRr
-         Ma2eSMXnN6YljqXWa7Q+47mtbUe6tyaeYSy4XLkUoOPj471841XsJUywEBTvACE5vQ1m
-         8c/Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=34hmditf+vhlxJcmEFkZgWoC7pJeDEW0sX6340LuRHw=;
+        b=QAVF2FGrKfQudyBRkn3UEh/QzSSNVI0DOwlhIyVt7j4OWP0Q1EKpaZB7h08BZ34SL5
+         xOPUwta5fN7soRtWRKATYZPdLsezxlnLx3C0yP1njOkEOzi5vwQ1wVWsSFYl46UQmRhx
+         zTRbOaYgkfnwfMea/9aKyEZMcMEW3De25mZvgPzrdK5mCyi9yvuFwNz7toArk1ExXQGr
+         vqzqH9txAcCm0C96sFblR42GmoxJWnINnyVmRpWtXXZ0fR2wTjyAkgdvpiYyxX6KbeWp
+         9Y5MzCGn0FT1gQPQ1kvcOhDRGpeAcA5WLfAy9ClOcUCzgBrD76MCrjQM1IcW5VIxPfCx
+         GAbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TVX/MV1cRkugdklQX2owAo6W7k+5NFqvXnOlDA4kvRY=;
-        b=COoLSQdoZqY6VLKxb215toepBueXjU2D9uuoN/SlNv2vjglDSKZJSF+4j2pZPbSpxJ
-         20/mJcBC3KGSsPp3axqQyVMW8vHDPfbyobFJfmG29y5eu1E4vJF8udJlbYYsZYWG9ycM
-         jKtkOJ80WVUdjyQ5kFULYkK+aCYk2Us0wIO+GvdUNQTl51xCvyVaU/+nBqwhO/+y+Vpd
-         6LetPmVhceGdiylw43tvhjrKnOyKoS0myAyWCP6pMHR850obdHHdKvVcCz6+WZOMJG48
-         PcF3ZDXZew1JNmp5pGZBsbAnUxborQRHY8WvekvGsF3zIG39J/BFBq2bHnGTndsY2EAs
-         ysCA==
-X-Gm-Message-State: AOAM530BDd5eKjkxCLDX1OqYAcNEb2j+EfCfXC+zFj1tMUgZjUJSs6nv
-        XiD/1L0+QqMVBLgb3EUwJCaTSUDxLx8=
-X-Google-Smtp-Source: ABdhPJycIgQsbIB02Wur2mBRtNGc1PyURqcruMtrpODXrvsCtMYEKd4KNUN/T13UfMqBLSg/gfKfEQ==
-X-Received: by 2002:a17:902:8d98:: with SMTP id v24mr17314674plo.276.1593011798114;
-        Wed, 24 Jun 2020 08:16:38 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id n15sm3158702pgs.25.2020.06.24.08.16.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 08:16:37 -0700 (PDT)
-Subject: Re: move block bits out of fs.h
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200620071644.463185-1-hch@lst.de>
- <c2fba635-b2ce-a2b5-772b-4bfcb9b43453@kernel.dk>
- <20200624151211.GA17344@lst.de>
- <216bcea4-a38d-8a64-bc0f-be61b2f26e79@kernel.dk>
- <20200624151454.GB17344@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <989cafe3-ddfd-8b0c-2bad-412eb3a20ee0@kernel.dk>
-Date:   Wed, 24 Jun 2020 09:16:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=34hmditf+vhlxJcmEFkZgWoC7pJeDEW0sX6340LuRHw=;
+        b=TLvLBEQKDQ+eq9uzxR4g4k0zNNmff9WKShE3uaNIafUYlvswyqnQDyy748fTR3lk0C
+         iGIJnCdYA2lqn+jAnEqvojbcYCbN68L9OWbrTrrxmJFAYrZ9Xm9TdMq/V/D7kf0g+cWY
+         /0C58wij8T9tUbRgDzp96GNly6Iana6WvNopmYznSKPm/mRB3+aIw1utfc0Mb8zv/IDi
+         JkU/8A7AAoFDu1KJUZacykhJJag6l8amOmnZgDFza4aiiP6kkzSxBTe3L75ehl2vjMpm
+         IXPQoBQKOqXYHOVzB89sTePBDgMdVzZYKn1wD5Ryi7U6gtISFGYBHIFl7gqV0CwTvSsO
+         mjFw==
+X-Gm-Message-State: AOAM533g+OnCgh+z7pl/KXPAasg4heBgqj8f8Vq5MI6vyv2B9RrIq9od
+        3E+YJmRY/H1VTfRZ79Eydda22vzPzaC4USUWMpE=
+X-Google-Smtp-Source: ABdhPJy1qPZlkbkex+2mcQ3H0P1rh2BMF6aNpxBKJx6viXiD5LP/TMlDpplYwy2FDejjx7BYrjXNvarY9HUElDbSf5M=
+X-Received: by 2002:a1c:32c4:: with SMTP id y187mr30880941wmy.79.1593011798868;
+ Wed, 24 Jun 2020 08:16:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200624151454.GB17344@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200624145418.7794-1-colin.king@canonical.com>
+In-Reply-To: <20200624145418.7794-1-colin.king@canonical.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 24 Jun 2020 11:16:27 -0400
+Message-ID: <CADnq5_PySz6YWOMM4kosC_B83i+jsPKmf0puMt3sw2C-hExa3Q@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amdgpu: ensure 0 is returned for success in jpeg_v2_5_wait_for_idle
+To:     Colin King <colin.king@canonical.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>, Leo Liu <leo.liu@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/20 9:14 AM, Christoph Hellwig wrote:
-> On Wed, Jun 24, 2020 at 09:14:11AM -0600, Jens Axboe wrote:
->> On 6/24/20 9:12 AM, Christoph Hellwig wrote:
->>> On Wed, Jun 24, 2020 at 09:09:42AM -0600, Jens Axboe wrote:
->>>> Applied for 5.9 - I kept this in a separate topic branch, fwiw. There's the
->>>> potential for some annoying issues with this, so would rather have it in
->>>> a branch we can modify easily, if we need to.
->>>
->>> Hmm, I have a bunch of things building on top of this pending, so that
->>> branch split will be interesting to handle.
->>
->> We can stuff it in for-5.9/block, but then I'd rather just rebase that
->> on 5.8-rc2 now since it's still early days. If we don't, we already
->> have conflicts...
-> 
-> I'll happily rebase.  rc1 also has funny ext4 warnings which are
-> pretty annoying.
+On Wed, Jun 24, 2020 at 10:54 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> In the cases where adev->jpeg.num_jpeg_inst is zero or the condition
+> adev->jpeg.harvest_config & (1 << i) is always non-zero the variable
+> ret is never set to an error condition and the function returns
+> an uninitialized value in ret.  Since the only exit condition at
+> the end if the function is a success then explicitly return
+> 0 rather than a potentially uninitialized value in ret.
 
-Done, pushed it out.
+We should actually never hit this condition in practice because the
+driver won't initialize this module if all of the instances are
+harvested, but better safe than sorry.  Applied.
 
--- 
-Jens Axboe
+Thanks,
 
+Alex
+
+>
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Fixes: 14f43e8f88c5 ("drm/amdgpu: move JPEG2.5 out from VCN2.5")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
+> index f74262a22a16..7a51c615d22d 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
+> @@ -462,7 +462,7 @@ static int jpeg_v2_5_wait_for_idle(void *handle)
+>                         return ret;
+>         }
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static int jpeg_v2_5_set_clockgating_state(void *handle,
+> --
+> 2.27.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
