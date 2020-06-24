@@ -2,187 +2,535 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87BEA20E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593002088;
-	bh=qfSj1ptFbPtQoHsR9HGcQDGFx6Aq81c6MnnNldPe7+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gdNh3DuNPZvh2nuKZowO4ZZZ2kPlXZH/AlqraEXT/6DwIz4UFt6FaJr//7KBx+0Ct
-	 bp51n5lnk5LtxfzqLZlzvV4gMWpWpFGh1vC6Gq3DQqClJrMHL9U0Id0AOA9DbeFP5F
-	 roJPrRf6w/KX1fdmlAH/FOV5zp1eMMBCco4cQA0I=
+	by mail.kernel.org (Postfix) with ESMTP id 43A1820EDD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403921AbgFXMer (ORCPT
+        id S2403932AbgFXMeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403894AbgFXMel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:34:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B57A920E65;
-        Wed, 24 Jun 2020 12:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593002080;
-        bh=qfSj1ptFbPtQoHsR9HGcQDGFx6Aq81c6MnnNldPe7+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xehCxHf8eN6B8fsbunRwbnsKFrg8kS7Sq5NLNbcFc7Kwku8wgy4i7dh5fyXhVfd84
-         WEWAGSLGntFIxaM+1pBzYpDxPRAG3yMn/+GH3N7LYzQQ0+OWEWoGJ84GzjScaAU3iP
-         v5HU5+UYzsLjAvLF9XXUV7fesuail1JrKHzGnvpk=
-Date:   Wed, 24 Jun 2020 14:34:38 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Subject: Re: [RESEND PATCH v5 2/5] driver core: add deferring probe reason to
- devices_deferred property
-Message-ID: <20200624123438.GC1773782@kroah.com>
-References: <20200624114127.3016-1-a.hajda@samsung.com>
- <CGME20200624114136eucas1p1a3a31d95d86754201c7965f26ccd5de0@eucas1p1.samsung.com>
- <20200624114127.3016-3-a.hajda@samsung.com>
+        Wed, 24 Jun 2020 08:34:50 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36131 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403891AbgFXMek (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:34:40 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x62so1497219qtd.3;
+        Wed, 24 Jun 2020 05:34:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y4czRrcF8zH3CO6lp92Gxox7EeM3jmLaCFfYGsiywQ8=;
+        b=GBrSQ1s33amMw4QXx6/+mKPViD4qLrACT/Nv5lolYn+J44jcFloF83aIK/qSoWVnEo
+         TjeEhPawhf5gSXm+UE8FOnT2klw2BmE4YbA9UkV5imKM7yOzZ1xi7Mk8bVVmofBkgKEh
+         /TxY9kW/puLVs2n/ZK+QwC1Z3IQ0ML/Tj/jr/YXPWY9MG0QwIRxJTHy1yF8MIsE95LFX
+         0d5nQg/Oex5veFgkgxRJg10xidocJwYHvMI4uFVZGl62a9gw1GCyhuIPy8H3c5dYs3ep
+         yoezG53Zb0Q6lwKEaZBfhmXwsJj51r2Y8q1on8n1RDlFgl52f/QSeRQV7Cz3JN6IRWGF
+         kOvQ==
+X-Gm-Message-State: AOAM530ozmNvBwgeUdtq3pBwuQXkZFXoiZsCjjNEHqvoLZ3reX0FMINg
+        Kxw82eeKil9nLNHBk5xRIk8=
+X-Google-Smtp-Source: ABdhPJwMR5kemIERKfm0W+OpXFOK+gSG7ictSnsXTa1f5CZsDv6zNarK9fLqgQYKuzvvKfSHWnlFDQ==
+X-Received: by 2002:ac8:263b:: with SMTP id u56mr26577878qtu.388.1593002077584;
+        Wed, 24 Jun 2020 05:34:37 -0700 (PDT)
+Received: from localhost.localdomain ([185.248.161.177])
+        by smtp.gmail.com with ESMTPSA id x26sm3354512qtr.4.2020.06.24.05.34.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 05:34:36 -0700 (PDT)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+        Emese Revfy <re.emese@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Mathias Krause <minipli@googlemail.com>,
+        PaX Team <pageexec@freemail.hu>,
+        Brad Spengler <spender@grsecurity.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org
+Cc:     notify@kernel.org
+Subject: [PATCH v2 4/5] gcc-plugins/stackleak: Use asm instrumentation to avoid useless register saving
+Date:   Wed, 24 Jun 2020 15:33:29 +0300
+Message-Id: <20200624123330.83226-5-alex.popov@linux.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200624123330.83226-1-alex.popov@linux.com>
+References: <20200624123330.83226-1-alex.popov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624114127.3016-3-a.hajda@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:41:24PM +0200, Andrzej Hajda wrote:
-> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
-> This list does not contain reason why the driver deferred probe, the patch
-> improves it.
-> The natural place to set the reason is probe_err function introduced recently,
-> ie. if probe_err will be called with -EPROBE_DEFER instead of printk the message
-> will be attached to deferred device and printed when user read devices_deferred
-> property.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Reviewed-by: Mark Brown <broonie@kernel.org>
-> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->  drivers/base/base.h |  3 +++
->  drivers/base/core.c | 10 ++++++----
->  drivers/base/dd.c   | 21 ++++++++++++++++++++-
->  3 files changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/base/base.h b/drivers/base/base.h
-> index 95c22c0f9036..93ef1c2f4c1f 100644
-> --- a/drivers/base/base.h
-> +++ b/drivers/base/base.h
-> @@ -93,6 +93,7 @@ struct device_private {
->  	struct klist_node knode_class;
->  	struct list_head deferred_probe;
->  	struct device_driver *async_driver;
-> +	char *deferred_probe_msg;
->  	struct device *device;
->  	u8 dead:1;
->  };
-> @@ -134,6 +135,8 @@ extern void device_release_driver_internal(struct device *dev,
->  extern void driver_detach(struct device_driver *drv);
->  extern int driver_probe_device(struct device_driver *drv, struct device *dev);
->  extern void driver_deferred_probe_del(struct device *dev);
-> +extern void __deferred_probe_set_msg(const struct device *dev,
-> +				     struct va_format *vaf);
->  static inline int driver_match_device(struct device_driver *drv,
->  				      struct device *dev)
->  {
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index ee9da66bff1b..2a96954d5460 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3962,6 +3962,8 @@ define_dev_printk_level(_dev_info, KERN_INFO);
->   *
->   * This helper implements common pattern present in probe functions for error
->   * checking: print message if the error is not -EPROBE_DEFER and propagate it.
-> + * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
-> + * later by reading devices_deferred debugfs attribute.
->   * It replaces code sequence:
->   * 	if (err != -EPROBE_DEFER)
->   * 		dev_err(dev, ...);
-> @@ -3977,14 +3979,14 @@ int probe_err(const struct device *dev, int err, const char *fmt, ...)
->  	struct va_format vaf;
->  	va_list args;
->  
-> -	if (err == -EPROBE_DEFER)
-> -		return err;
-> -
->  	va_start(args, fmt);
->  	vaf.fmt = fmt;
->  	vaf.va = &args;
->  
-> -	dev_err(dev, "error %d: %pV", err, &vaf);
-> +	if (err == -EPROBE_DEFER)
-> +		__deferred_probe_set_msg(dev, &vaf);
-> +	else
-> +		dev_err(dev, "error %d: %pV", err, &vaf);
->  
->  	va_end(args);
->  
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 9a1d940342ac..f44d26454b6a 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -27,6 +27,7 @@
->  #include <linux/async.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pinctrl/devinfo.h>
-> +#include <linux/slab.h>
->  
->  #include "base.h"
->  #include "power/power.h"
-> @@ -136,6 +137,8 @@ void driver_deferred_probe_del(struct device *dev)
->  	if (!list_empty(&dev->p->deferred_probe)) {
->  		dev_dbg(dev, "Removed from deferred list\n");
->  		list_del_init(&dev->p->deferred_probe);
-> +		kfree(dev->p->deferred_probe_msg);
-> +		dev->p->deferred_probe_msg = NULL;
->  	}
->  	mutex_unlock(&deferred_probe_mutex);
->  }
-> @@ -211,6 +214,21 @@ void device_unblock_probing(void)
->  	driver_deferred_probe_trigger();
->  }
->  
-> +/*
-> + * __deferred_probe_set_msg() - Set defer probe reason message for device
-> + */
-> +void __deferred_probe_set_msg(const struct device *dev, struct va_format *vaf)
-> +{
-> +	const char *drv = dev_driver_string(dev);
-> +
-> +	mutex_lock(&deferred_probe_mutex);
-> +
-> +	kfree(dev->p->deferred_probe_msg);
-> +	dev->p->deferred_probe_msg = kasprintf(GFP_KERNEL, "%s: %pV", drv, vaf);
+The kernel code instrumentation in stackleak gcc plugin works in two stages.
+At first, stack tracking is added to GIMPLE representation of every function
+(except some special cases). And later, when stack frame size info is
+available, stack tracking is removed from the RTL representation of the
+functions with small stack frame. There is an unwanted side-effect for these
+functions: some of them do useless work with caller-saved registers.
 
-What about the device name?  Don't you also want that?
+As an example of such case, proc_sys_write without() instrumentation:
+    55                      push   %rbp
+    41 b8 01 00 00 00       mov    $0x1,%r8d
+    48 89 e5                mov    %rsp,%rbp
+    e8 11 ff ff ff          callq  ffffffff81284610 <proc_sys_call_handler>
+    5d                      pop    %rbp
+    c3                      retq
+    0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+    66 2e 0f 1f 84 00 00    nopw   %cs:0x0(%rax,%rax,1)
+    00 00 00
 
-You want the same format that __dev_printk() outputs, please use that
-to be consistant with all other messages that drivers are spitting out.
+proc_sys_write() with instrumentation:
+    55                      push   %rbp
+    48 89 e5                mov    %rsp,%rbp
+    41 56                   push   %r14
+    41 55                   push   %r13
+    41 54                   push   %r12
+    53                      push   %rbx
+    49 89 f4                mov    %rsi,%r12
+    48 89 fb                mov    %rdi,%rbx
+    49 89 d5                mov    %rdx,%r13
+    49 89 ce                mov    %rcx,%r14
+    4c 89 f1                mov    %r14,%rcx
+    4c 89 ea                mov    %r13,%rdx
+    4c 89 e6                mov    %r12,%rsi
+    48 89 df                mov    %rbx,%rdi
+    41 b8 01 00 00 00       mov    $0x1,%r8d
+    e8 f2 fe ff ff          callq  ffffffff81298e80 <proc_sys_call_handler>
+    5b                      pop    %rbx
+    41 5c                   pop    %r12
+    41 5d                   pop    %r13
+    41 5e                   pop    %r14
+    5d                      pop    %rbp
+    c3                      retq
+    66 0f 1f 84 00 00 00    nopw   0x0(%rax,%rax,1)
+    00 00
 
-thanks,
+Let's improve the instrumentation to avoid this:
 
-greg k-h
+1. Make stackleak_track_stack() save all register that it works with.
+Use no_caller_saved_registers attribute for that function. This attribute
+is available for x86_64 and i386 starting from gcc-7.
+
+2. Insert calling stackleak_track_stack() in asm:
+  asm volatile("call stackleak_track_stack" :: "r" (current_stack_pointer))
+Here we use ASM_CALL_CONSTRAINT trick from arch/x86/include/asm/asm.h.
+The input constraint is taken into account during gcc shrink-wrapping
+optimization. It is needed to be sure that stackleak_track_stack() call is
+inserted after the prologue of the containing function, when the stack
+frame is prepared.
+
+This work is a deep reengineering of the idea described on grsecurity blog
+  https://grsecurity.net/resolving_an_unfortunate_stackleak_interaction
+
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+---
+ include/linux/compiler_attributes.h    |  13 ++
+ kernel/stackleak.c                     |  16 +-
+ scripts/Makefile.gcc-plugins           |   2 +
+ scripts/gcc-plugins/stackleak_plugin.c | 205 +++++++++++++++++++++----
+ 4 files changed, 196 insertions(+), 40 deletions(-)
+
+diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+index cdf016596659..551ea8cb70b1 100644
+--- a/include/linux/compiler_attributes.h
++++ b/include/linux/compiler_attributes.h
+@@ -37,6 +37,7 @@
+ # define __GCC4_has_attribute___copy__                0
+ # define __GCC4_has_attribute___designated_init__     0
+ # define __GCC4_has_attribute___externally_visible__  1
++# define __GCC4_has_attribute___no_caller_saved_registers__ 0
+ # define __GCC4_has_attribute___noclone__             1
+ # define __GCC4_has_attribute___nonstring__           0
+ # define __GCC4_has_attribute___no_sanitize_address__ (__GNUC_MINOR__ >= 8)
+@@ -175,6 +176,18 @@
+  */
+ #define __mode(x)                       __attribute__((__mode__(x)))
+ 
++/*
++ * Optional: only supported since gcc >= 7
++ *
++ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/x86-Function-Attributes.html#index-no_005fcaller_005fsaved_005fregisters-function-attribute_002c-x86
++ * clang: https://clang.llvm.org/docs/AttributeReference.html#no-caller-saved-registers
++ */
++#if __has_attribute(__no_caller_saved_registers__)
++# define __no_caller_saved_registers	__attribute__((__no_caller_saved_registers__))
++#else
++# define __no_caller_saved_registers
++#endif
++
+ /*
+  * Optional: not supported by clang
+  *
+diff --git a/kernel/stackleak.c b/kernel/stackleak.c
+index b193a59fc05b..a8fc9ae1d03d 100644
+--- a/kernel/stackleak.c
++++ b/kernel/stackleak.c
+@@ -104,19 +104,9 @@ asmlinkage void notrace stackleak_erase(void)
+ }
+ NOKPROBE_SYMBOL(stackleak_erase);
+ 
+-void __used notrace stackleak_track_stack(void)
++void __used __no_caller_saved_registers notrace stackleak_track_stack(void)
+ {
+-	/*
+-	 * N.B. stackleak_erase() fills the kernel stack with the poison value,
+-	 * which has the register width. That code assumes that the value
+-	 * of 'lowest_stack' is aligned on the register width boundary.
+-	 *
+-	 * That is true for x86 and x86_64 because of the kernel stack
+-	 * alignment on these platforms (for details, see 'cc_stack_align' in
+-	 * arch/x86/Makefile). Take care of that when you port STACKLEAK to
+-	 * new platforms.
+-	 */
+-	unsigned long sp = (unsigned long)&sp;
++	unsigned long sp = current_stack_pointer;
+ 
+ 	/*
+ 	 * Having CONFIG_STACKLEAK_TRACK_MIN_SIZE larger than
+@@ -125,6 +115,8 @@ void __used notrace stackleak_track_stack(void)
+ 	 */
+ 	BUILD_BUG_ON(CONFIG_STACKLEAK_TRACK_MIN_SIZE > STACKLEAK_SEARCH_DEPTH);
+ 
++	/* 'lowest_stack' should be aligned on the register width boundary */
++	sp = ALIGN(sp, sizeof(unsigned long));
+ 	if (sp < current->lowest_stack &&
+ 	    sp >= (unsigned long)task_stack_page(current) +
+ 						sizeof(unsigned long)) {
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index 5f7df50cfe7a..952e46876329 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -33,6 +33,8 @@ gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK)		\
+ 		+= -DSTACKLEAK_PLUGIN
+ gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK)		\
+ 		+= -fplugin-arg-stackleak_plugin-track-min-size=$(CONFIG_STACKLEAK_TRACK_MIN_SIZE)
++gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK)		\
++		+= -fplugin-arg-stackleak_plugin-arch=$(SRCARCH)
+ ifdef CONFIG_GCC_PLUGIN_STACKLEAK
+     DISABLE_STACKLEAK_PLUGIN += -fplugin-arg-stackleak_plugin-disable
+ endif
+diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+index cc75eeba0be1..a18b0d4af456 100644
+--- a/scripts/gcc-plugins/stackleak_plugin.c
++++ b/scripts/gcc-plugins/stackleak_plugin.c
+@@ -20,7 +20,7 @@
+  *
+  * Debugging:
+  *  - use fprintf() to stderr, debug_generic_expr(), debug_gimple_stmt(),
+- *     print_rtl() and print_simple_rtl();
++ *     print_rtl_single() and debug_rtx();
+  *  - add "-fdump-tree-all -fdump-rtl-all" to the plugin CFLAGS in
+  *     Makefile.gcc-plugins to see the verbose dumps of the gcc passes;
+  *  - use gcc -E to understand the preprocessing shenanigans;
+@@ -32,6 +32,7 @@
+ __visible int plugin_is_GPL_compatible;
+ 
+ static int track_frame_size = -1;
++static bool build_for_x86 = false;
+ static const char track_function[] = "stackleak_track_stack";
+ 
+ /*
+@@ -43,32 +44,31 @@ static GTY(()) tree track_function_decl;
+ static struct plugin_info stackleak_plugin_info = {
+ 	.version = "201707101337",
+ 	.help = "track-min-size=nn\ttrack stack for functions with a stack frame size >= nn bytes\n"
++		"arch=target_arch\tspecify target build arch\n"
+ 		"disable\t\tdo not activate the plugin\n"
+ };
+ 
+-static void stackleak_add_track_stack(gimple_stmt_iterator *gsi, bool after)
++static void add_stack_tracking_gcall(gimple_stmt_iterator *gsi, bool after)
+ {
+ 	gimple stmt;
+-	gcall *stackleak_track_stack;
++	gcall *gimple_call;
+ 	cgraph_node_ptr node;
+ 	basic_block bb;
+ 
+-	/* Insert call to void stackleak_track_stack(void) */
++	/* Insert calling stackleak_track_stack() */
+ 	stmt = gimple_build_call(track_function_decl, 0);
+-	stackleak_track_stack = as_a_gcall(stmt);
+-	if (after) {
+-		gsi_insert_after(gsi, stackleak_track_stack,
+-						GSI_CONTINUE_LINKING);
+-	} else {
+-		gsi_insert_before(gsi, stackleak_track_stack, GSI_SAME_STMT);
+-	}
++	gimple_call = as_a_gcall(stmt);
++	if (after)
++		gsi_insert_after(gsi, gimple_call, GSI_CONTINUE_LINKING);
++	else
++		gsi_insert_before(gsi, gimple_call, GSI_SAME_STMT);
+ 
+ 	/* Update the cgraph */
+-	bb = gimple_bb(stackleak_track_stack);
++	bb = gimple_bb(gimple_call);
+ 	node = cgraph_get_create_node(track_function_decl);
+ 	gcc_assert(node);
+ 	cgraph_create_edge(cgraph_get_node(current_function_decl), node,
+-			stackleak_track_stack, bb->count,
++			gimple_call, bb->count,
+ 			compute_call_stmt_bb_frequency(current_function_decl, bb));
+ }
+ 
+@@ -85,6 +85,79 @@ static bool is_alloca(gimple stmt)
+ 	return false;
+ }
+ 
++static tree get_current_stack_pointer_decl(void)
++{
++	varpool_node_ptr node;
++
++	FOR_EACH_VARIABLE(node) {
++		tree var = NODE_DECL(node);
++		tree name = DECL_NAME(var);
++
++		if (DECL_NAME_LENGTH(var) != sizeof("current_stack_pointer") - 1)
++			continue;
++
++		if (strcmp(IDENTIFIER_POINTER(name), "current_stack_pointer"))
++			continue;
++
++		return var;
++	}
++
++	return NULL_TREE;
++}
++
++static void add_stack_tracking_gasm(gimple_stmt_iterator *gsi, bool after)
++{
++	gasm *asm_call = NULL;
++	tree sp_decl, input;
++	vec<tree, va_gc> *inputs = NULL;
++
++	/* 'no_caller_saved_registers' is currently supported only for x86 */
++	gcc_assert(build_for_x86);
++
++	/*
++	 * Insert calling stackleak_track_stack() in asm:
++	 *   asm volatile("call stackleak_track_stack"
++	 *		  :: "r" (current_stack_pointer))
++	 * Use ASM_CALL_CONSTRAINT trick from arch/x86/include/asm/asm.h.
++	 * This constraint is taken into account during gcc shrink-wrapping
++	 * optimization. It is needed to be sure that stackleak_track_stack()
++	 * call is inserted after the prologue of the containing function,
++	 * when the stack frame is prepared.
++	 */
++	sp_decl = get_current_stack_pointer_decl();
++	if (sp_decl == NULL_TREE) {
++		add_stack_tracking_gcall(gsi, after);
++		return;
++	}
++	input = build_tree_list(NULL_TREE, build_const_char_string(2, "r"));
++	input = chainon(NULL_TREE, build_tree_list(input, sp_decl));
++	vec_safe_push(inputs, input);
++	asm_call = gimple_build_asm_vec("call stackleak_track_stack",
++					inputs, NULL, NULL, NULL);
++	gimple_asm_set_volatile(asm_call, true);
++	if (after)
++		gsi_insert_after(gsi, asm_call, GSI_CONTINUE_LINKING);
++	else
++		gsi_insert_before(gsi, asm_call, GSI_SAME_STMT);
++	update_stmt(asm_call);
++}
++
++static void add_stack_tracking(gimple_stmt_iterator *gsi, bool after)
++{
++	/*
++	 * The 'no_caller_saved_registers' attribute is used for
++	 * stackleak_track_stack(). If the compiler supports this attribute for
++	 * the target arch, we can add calling stackleak_track_stack() in asm.
++	 * That improves performance: we avoid useless operations with the
++	 * caller-saved registers in the functions from which we will remove
++	 * stackleak_track_stack() call during the stackleak_cleanup pass.
++	 */
++	if (lookup_attribute_spec(get_identifier("no_caller_saved_registers")))
++		add_stack_tracking_gasm(gsi, after);
++	else
++		add_stack_tracking_gcall(gsi, after);
++}
++
+ /*
+  * Work with the GIMPLE representation of the code. Insert the
+  * stackleak_track_stack() call after alloca() and into the beginning
+@@ -94,7 +167,7 @@ static unsigned int stackleak_instrument_execute(void)
+ {
+ 	basic_block bb, entry_bb;
+ 	bool prologue_instrumented = false, is_leaf = true;
+-	gimple_stmt_iterator gsi;
++	gimple_stmt_iterator gsi = { 0 };
+ 
+ 	/*
+ 	 * ENTRY_BLOCK_PTR is a basic block which represents possible entry
+@@ -123,7 +196,7 @@ static unsigned int stackleak_instrument_execute(void)
+ 				continue;
+ 
+ 			/* Insert stackleak_track_stack() call after alloca() */
+-			stackleak_add_track_stack(&gsi, true);
++			add_stack_tracking(&gsi, true);
+ 			if (bb == entry_bb)
+ 				prologue_instrumented = true;
+ 		}
+@@ -168,7 +241,7 @@ static unsigned int stackleak_instrument_execute(void)
+ 		bb = single_succ(ENTRY_BLOCK_PTR_FOR_FN(cfun));
+ 	}
+ 	gsi = gsi_after_labels(bb);
+-	stackleak_add_track_stack(&gsi, false);
++	add_stack_tracking(&gsi, false);
+ 
+ 	return 0;
+ }
+@@ -182,21 +255,10 @@ static bool large_stack_frame(void)
+ #endif
+ }
+ 
+-/*
+- * Work with the RTL representation of the code.
+- * Remove the unneeded stackleak_track_stack() calls from the functions
+- * which don't call alloca() and don't have a large enough stack frame size.
+- */
+-static unsigned int stackleak_cleanup_execute(void)
++static void remove_stack_tracking_gcall(void)
+ {
+ 	rtx_insn *insn, *next;
+ 
+-	if (cfun->calls_alloca)
+-		return 0;
+-
+-	if (large_stack_frame())
+-		return 0;
+-
+ 	/*
+ 	 * Find stackleak_track_stack() calls. Loop through the chain of insns,
+ 	 * which is an RTL representation of the code for a function.
+@@ -257,6 +319,84 @@ static unsigned int stackleak_cleanup_execute(void)
+ 		}
+ #endif
+ 	}
++}
++
++static bool remove_stack_tracking_gasm(void)
++{
++	bool removed = false;
++	rtx_insn *insn, *next;
++
++	/* 'no_caller_saved_registers' is currently supported only for x86 */
++	gcc_assert(build_for_x86);
++
++	/*
++	 * Find stackleak_track_stack() asm calls. Loop through the chain of
++	 * insns, which is an RTL representation of the code for a function.
++	 *
++	 * The example of a matching insn:
++	 *  (insn 11 5 12 2 (parallel [ (asm_operands/v
++	 *  ("call stackleak_track_stack") ("") 0
++	 *  [ (reg/v:DI 7 sp [ current_stack_pointer ]) ]
++	 *  [ (asm_input:DI ("r")) ] [])
++	 *  (clobber (reg:CC 17 flags)) ]) -1 (nil))
++	 */
++	for (insn = get_insns(); insn; insn = next) {
++		rtx body;
++
++		next = NEXT_INSN(insn);
++
++		/* Check the expression code of the insn */
++		if (!NONJUMP_INSN_P(insn))
++			continue;
++
++		/*
++		 * Check the expression code of the insn body, which is an RTL
++		 * Expression (RTX) describing the side effect performed by
++		 * that insn.
++		 */
++		body = PATTERN(insn);
++
++		if (GET_CODE(body) != PARALLEL)
++			continue;
++
++		body = XVECEXP(body, 0, 0);
++
++		if (GET_CODE(body) != ASM_OPERANDS)
++			continue;
++
++		if (strcmp(ASM_OPERANDS_TEMPLATE(body),
++						"call stackleak_track_stack")) {
++			continue;
++		}
++
++		delete_insn_and_edges(insn);
++		gcc_assert(!removed);
++		removed = true;
++	}
++
++	return removed;
++}
++
++/*
++ * Work with the RTL representation of the code.
++ * Remove the unneeded stackleak_track_stack() calls from the functions
++ * which don't call alloca() and don't have a large enough stack frame size.
++ */
++static unsigned int stackleak_cleanup_execute(void)
++{
++	bool removed = false;
++
++	if (cfun->calls_alloca)
++		return 0;
++
++	if (large_stack_frame())
++		return 0;
++
++	if (lookup_attribute_spec(get_identifier("no_caller_saved_registers")))
++		removed = remove_stack_tracking_gasm();
++
++	if (!removed)
++		remove_stack_tracking_gcall();
+ 
+ 	return 0;
+ }
+@@ -392,6 +532,15 @@ __visible int plugin_init(struct plugin_name_args *plugin_info,
+ 					plugin_name, argv[i].key, argv[i].value);
+ 				return 1;
+ 			}
++		} else if (!strcmp(argv[i].key, "arch")) {
++			if (!argv[i].value) {
++				error(G_("no value supplied for option '-fplugin-arg-%s-%s'"),
++					plugin_name, argv[i].key);
++				return 1;
++			}
++
++			if (!strcmp(argv[i].value, "x86"))
++				build_for_x86 = true;
+ 		} else {
+ 			error(G_("unknown option '-fplugin-arg-%s-%s'"),
+ 					plugin_name, argv[i].key);
+-- 
+2.25.4
+
