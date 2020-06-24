@@ -2,100 +2,114 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96235C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B3420823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="j/Z1FPcX"
+	by mail.kernel.org (Postfix) with ESMTP id 72F0220899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404934AbgFXQYc (ORCPT
+        id S2404954AbgFXQYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:24:32 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:64758 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404468AbgFXQYb (ORCPT
+        Wed, 24 Jun 2020 12:24:52 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:55946 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404855AbgFXQYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:24:31 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OGOFiA018499;
-        Wed, 24 Jun 2020 11:24:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=9bnVOoXg509juKgEEccE6gNXpJT63oPQhPcJewIyDbs=;
- b=j/Z1FPcXnp1aiM/TUW91h7XBeMmQhQV2hSc5hXrtPTLVMJimAzvmj9eX3XRhz5bSWViS
- 8FrpcSsNnR6IsLBjnKVpdhFjit3Ur7IEFarEw18oQ/FMa16DfZGOt9LI6HWHl+Q+W+63
- wkAdPWid2u+Idjxjg3c+HTu6IsX6b96aimmt0IlTyyPiKtQ4L+cWArA5Nl8pRvjhj4iH
- wTT86FExAf6xOm9Ck75rJ0QX3BLPlP7p6iTlS1i/4wh4KhKPF5PMGJ4Y6/VKiFWKlREB
- jZPYlcGXfBV6J1M3Lz++q4fgA6Z4+/Ce5EyMzylBOdDRX6z881/LvCHEZf9z8Q6muP6p Aw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 31uus3953a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 24 Jun 2020 11:24:27 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 24 Jun
- 2020 17:24:25 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Wed, 24 Jun 2020 17:24:25 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 4AFC32C5;
-        Wed, 24 Jun 2020 16:24:25 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 16:24:25 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+        Wed, 24 Jun 2020 12:24:51 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E18FD806BA;
+        Wed, 24 Jun 2020 18:24:47 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 18:24:46 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Lee Jones <lee.jones@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Mark Brown <broonie@opensource.wolfsonmicro.com>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH 10/10] mfd: wm831x-core: Supply description
- wm831x_reg_{un}lock args
-Message-ID: <20200624162425.GZ71940@ediswmail.ad.cirrus.com>
-References: <20200624150704.2729736-1-lee.jones@linaro.org>
- <20200624150704.2729736-11-lee.jones@linaro.org>
+Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/8] Fix a bunch of W=1 warnings in Backlight
+Message-ID: <20200624162446.GA1815586@ravnborg.org>
+References: <20200624145721.2590327-1-lee.jones@linaro.org>
+ <20200624153216.GA1814806@ravnborg.org>
+ <20200624154321.GH954398@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200624150704.2729736-11-lee.jones@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- mlxscore=0 mlxlogscore=832 phishscore=0 spamscore=0 cotscore=-2147483648
- impostorscore=0 priorityscore=1501 bulkscore=0 adultscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006240112
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624154321.GH954398@dell>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=IkcTkHD0fZMA:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8
+        a=9V60zPr9lzPatE790UIA:9 a=QEXdDO2ut3YA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 04:07:04PM +0100, Lee Jones wrote:
-> Kerneldoc syntax is used, but not complete.  Descriptions required.
-> 
-> Prevents warnings like:
-> 
->  drivers/mfd/wm831x-core.c:119: warning: Function parameter or member 'wm831x' not described in 'wm831x_reg_lock'
->  drivers/mfd/wm831x-core.c:145: warning: Function parameter or member 'wm831x' not described in 'wm831x_reg_unlock'
-> 
-> Cc: <stable@vger.kernel.org>
-> Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> Cc: patches@opensource.cirrus.com
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
+Hi Lee.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+On Wed, Jun 24, 2020 at 04:43:21PM +0100, Lee Jones wrote:
+> On Wed, 24 Jun 2020, Sam Ravnborg wrote:
+> 
+> > Hi Lee.
+> > 
+> > On Wed, Jun 24, 2020 at 03:57:13PM +0100, Lee Jones wrote:
+> > > Attempting to clean-up W=1 kernel builds, which are currently
+> > > overwhelmingly riddled with niggly little warnings.
+> > > 
+> > > Lee Jones (8):
+> > >   backlight: lms501kf03: Remove unused const variables
+> > >   backlight: lcd: Add missing kerneldoc entry for 'struct device parent'
+> > 
+> > 
+> > >   backlight: ili922x: Add missing kerneldoc descriptions for
+> > >     CHECK_FREQ_REG() args
+> > >   backlight: ili922x: Remove invalid use of kerneldoc syntax
+> > >   backlight: ili922x: Add missing kerneldoc description for
+> > >     ili922x_reg_dump()'s arg
+> > I wonder why these warnings show up as nothing pulls in this .c file.
+> > Anyway I would suggest to drop using kerneldoc syntax for single drivers
+> > like this - and the benefit here is low.
+> > Now they are typed, otherwise this ahd been fine in a single patch.
+> 
+> What do you mean by 'nothing pulls it in'?
+There are no .rst files that includes any:
+.. kernel-doc:: drivers/video/backlight/ili922x.c
 
-Thanks,
-Charles
+so I do not see how the kernel-doc comments will be used by any
+of the generated kernel-docs.
+
+	Sam
+
+> 
+> > >   backlight: backlight: Supply description for function args in existing
+> > >     Kerneldocs
+> > >   backlight: lm3630a_bl: Remove invalid checks for unsigned int < 0
+> > >   backlight: qcom-wled: Remove unused configs for LED3 and LED4
+> > 
+> > The other fixes looks good.
+> > They are all:
+> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> Thanks (although this should be Reviewed-by).
+> 
+> > >  drivers/video/backlight/backlight.c  | 2 ++
+> > >  drivers/video/backlight/ili922x.c    | 8 ++++++--
+> > >  drivers/video/backlight/lcd.c        | 1 +
+> > >  drivers/video/backlight/lm3630a_bl.c | 4 ++--
+> > >  drivers/video/backlight/lms501kf03.c | 8 --------
+> > >  drivers/video/backlight/qcom-wled.c  | 8 --------
+> > >  6 files changed, 11 insertions(+), 20 deletions(-)
+> > > 
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Senior Technical Lead - Developer Services
+> Linaro.org │ Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
