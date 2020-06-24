@@ -2,133 +2,180 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3676C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE5D206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NGT7+V58"
+	by mail.kernel.org (Postfix) with ESMTP id 811C620738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389159AbgFXJOX (ORCPT
+        id S2389187AbgFXJPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:14:23 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53436 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387970AbgFXJOS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:14:18 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E4no119939;
-        Wed, 24 Jun 2020 04:14:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592990045;
-        bh=+U9mzYjHXvzQcKQ8zAR2Rl0V4zJPMHqdfZnHwYl51KE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NGT7+V58MqwR78RadLUNojxEoPh5W+sm16OU/EMx8sWnj8LbRXkAfZs9Eln6tzgAt
-         IYFyiE0imKDk4SH6pv41DbSdY0l123owgB99SGQjRVF0eLjh76B/6+YcPfDMklIgHP
-         /Xp6RtDvnGeWHBbO+WqsAzMgQK24Fyhm4jX1io20=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E4vd127560;
-        Wed, 24 Jun 2020 04:14:04 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 04:14:04 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 04:14:04 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E25P006129;
-        Wed, 24 Jun 2020 04:14:03 -0500
-Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
- kzalloc()
-To:     Vinod Koul <vkoul@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20200619224334.GA7857@embeddedor>
- <20200624055535.GX2324254@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <22b95e2d-dbe0-6d17-3085-2f363cd4d889@ti.com>
-Date:   Wed, 24 Jun 2020 12:14:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 05:15:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52019 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387970AbgFXJPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:15:25 -0400
+IronPort-SDR: 12iyne6dxW6Ss3qjwX/hg0NDM4yRA3SgvXvIrpFmRmUiQMzcX+ZgIIcnhxy03VxKrvBaqdrN1B
+ be4la8DIsaAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="141883766"
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208,223";a="141883766"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 02:15:24 -0700
+IronPort-SDR: v4K5gxhB0HbT/g4cu7ffo4ednpsN1hsYHnHK+PLifJ8xB73RfCgOhqML3dG3/d207RcCm+BtXk
+ 4sfgHdHiUuCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208,223";a="385117082"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 24 Jun 2020 02:15:20 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 24 Jun 2020 12:15:20 +0300
+Date:   Wed, 24 Jun 2020 12:15:20 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Azhar Shaikh <azhar.shaikh@intel.com>,
+        Casey Bowman <casey.g.bowman@intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Yicheng Li <yichengli@chromium.org>
+Subject: Re: [PATCH 2/2] platform/chrome: cros_ec_typec: Add TBT compat
+ support
+Message-ID: <20200624091520.GA1487@kuha.fi.intel.com>
+References: <20200624080926.165107-1-pmalani@chromium.org>
+ <20200624080926.165107-2-pmalani@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200624055535.GX2324254@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/mixed; boundary="YZ5djTAD1cGYuMQK"
+Content-Disposition: inline
+In-Reply-To: <20200624080926.165107-2-pmalani@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--YZ5djTAD1cGYuMQK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 24/06/2020 8.55, Vinod Koul wrote:
-> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
->> Make use of the struct_size() helper instead of an open-coded version
->> in order to avoid any potential type mistakes.
->>
->> This code was detected with the help of Coccinelle and, audited and
->> fixed manually.
->>
->> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>  drivers/dma/ti/k3-udma.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
->> index 0d5fb154b8e2..411c54b86ba8 100644
->> --- a/drivers/dma/ti/k3-udma.c
->> +++ b/drivers/dma/ti/k3-udma.c
->> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, str=
-uct scatterlist *sgl,
->>  	u32 ring_id;
->>  	unsigned int i;
->> =20
->> -	d =3D kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT)=
-;
->> +	d =3D kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
->=20
-> struct_size() is a * b + c but here we need, a + b * c.. the trailing
-> struct is N times here..
+On Wed, Jun 24, 2020 at 01:09:24AM -0700, Prashant Malani wrote:
+> Add mux control support for Thunderbolt compatibility mode.
+> 
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Co-developed-by: Azhar Shaikh <azhar.shaikh@intel.com>
+> Co-developed-by: Casey Bowman <casey.g.bowman@intel.com>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 70 ++++++++++++++++++++++++-
+>  1 file changed, 69 insertions(+), 1 deletion(-)
 
-Yes, that's correct.
+Cool! Can you guys test also USB4 with the attached patch (still work
+in progress)? It should apply on top of these.
 
->=20
->=20
->>  	if (!d)
->>  		return NULL;
->> =20
->> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, d=
-ma_addr_t buf_addr,
->>  	if (period_len >=3D SZ_4M)
->>  		return NULL;
->> =20
->> -	d =3D kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAI=
-T);
->> +	d =3D kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
->>  	if (!d)
->>  		return NULL;
->> =20
->> --=20
->> 2.27.0
->=20
+The mux driver is still missing USB4 support, but I'll send the
+patches needed for that right now...
 
-- P=C3=A9ter
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+thanks,
 
+-- 
+heikki
+
+--YZ5djTAD1cGYuMQK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-platform-chrome-typec-USB4-support.patch"
+
+From cdc5d9528c4f751d856dfc1781f125a767a5de20 Mon Sep 17 00:00:00 2001
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Date: Tue, 23 Jun 2020 15:53:02 +0300
+Subject: [PATCH] platform/chrome: typec: USB4 support
+
+With USB4 the mux driver needs the Enter_USB VDO.
+Constructing one from the information we have.
+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/platform/chrome/cros_ec_typec.c | 39 ++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index 688d12efe9c42..c6448485ddfa3 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -13,6 +13,7 @@
+ #include <linux/platform_data/cros_ec_proto.h>
+ #include <linux/platform_data/cros_usbpd_notify.h>
+ #include <linux/platform_device.h>
++#include <linux/usb/pd.h>
+ #include <linux/usb/typec.h>
+ #include <linux/usb/typec_altmode.h>
+ #include <linux/usb/typec_dp.h>
+@@ -511,6 +512,40 @@ static int cros_typec_enable_tbt(struct cros_typec_data *typec,
+         return typec_mux_set(port->mux, &port->state);
+ }
+ 
++static int cros_typec_enable_usb4(struct cros_typec_data *typec,
++				int port_num,
++				struct ec_response_usb_pd_control_v2 *pd_ctrl)
++{
++	struct cros_typec_port *port = typec->ports[port_num];
++	u32 eudo;
++
++	eudo = EUDO_USB_MODE_USB4 << EUDO_USB_MODE_SHIFT;
++
++	/* Cable Speed */
++	eudo |= pd_ctrl->cable_speed << EUDO_CABLE_SPEED_SHIFT;
++
++	/* Cable Type */
++	if (pd_ctrl->control_flags & USB_PD_CTRL_OPTICAL_CABLE)
++		eudo |= EUDO_CABLE_TYPE_OPTICAL << EUDO_CABLE_TYPE_SHIFT;
++	else if (pd_ctrl->control_flags & USB_PD_CTRL_ACTIVE_CABLE)
++		eudo |= EUDO_CABLE_TYPE_RE_TIMER << EUDO_CABLE_TYPE_SHIFT;
++
++	/* FIXME: Cable Current */
++
++	/* REVISIT: Claiming unconditionally that all tunnels are supported. */
++	eudo |= EUDO_PCIE_SUPPORT;
++	eudo |= EUDO_DP_SUPPORT;
++
++	eudo |= EUDO_TBT_SUPPORT;
++	eudo |= EUDO_HOST_PRESENT;
++
++	port->state.alt = NULL;
++	port->state.data = &eudo;
++	port->state.mode = TYPEC_MODE_USB4;
++
++	return typec_mux_set(port->mux, &port->state);
++}
++
+ int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+ 			     struct ec_response_usb_pd_mux_info *resp,
+ 			     struct ec_response_usb_pd_control_v2 *pd_ctrl)
+@@ -534,7 +569,9 @@ int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+ 	port->state.alt = NULL;
+ 	port->state.mode = TYPEC_STATE_USB;
+ 
+-	if (resp->flags & USB_PD_MUX_TBT_COMPAT_ENABLED)
++	if (resp->flags & USB_PD_MUX_USB4_ENABLED)
++		ret = cros_typec_enable_usb4(typec, port_num, pd_ctrl);
++	else if (resp->flags & USB_PD_MUX_TBT_COMPAT_ENABLED)
+ 		ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
+ 	else if (resp->flags & USB_PD_MUX_DP_ENABLED)
+ 		ret = cros_typec_enable_dp(typec, port_num, pd_ctrl);
+-- 
+2.27.0
+
+
+--YZ5djTAD1cGYuMQK--
