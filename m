@@ -2,125 +2,120 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B64C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B971C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF7E20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5782F20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcOujtdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390822AbgFXMmo (ORCPT
+        id S2390844AbgFXMmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:42:44 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:48474 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389197AbgFXMmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:42:43 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jo4jE-0001yO-Ix; Wed, 24 Jun 2020 22:42:13 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 24 Jun 2020 22:42:12 +1000
-Date:   Wed, 24 Jun 2020 22:42:12 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] lockdep: Move list.h inclusion into lockdep.h
-Message-ID: <20200624124212.GA17350@gondor.apana.org.au>
-References: <20200621131554.5a662afe@canb.auug.org.au>
- <20200623102655.6d16e610@canb.auug.org.au>
- <20200623121637.GA8444@alley>
- <20200623121937.GA9671@gondor.apana.org.au>
- <20200623142858.GB8444@alley>
+        Wed, 24 Jun 2020 08:42:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389211AbgFXMmv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:42:51 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E2CC061573;
+        Wed, 24 Jun 2020 05:42:51 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id y10so2329071eje.1;
+        Wed, 24 Jun 2020 05:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Ml8IEXnxlcphMCeOPuUacNA9+fRNhaDcQOn9VWlYsY=;
+        b=kcOujtdCj9nWIxDRg7YAh1GMY7/Edl5qEITr+WMixYypg2DMLokLE6LUnHGdVKXTiG
+         aYxnA18xegXnzogLI1H6Xm+JjDN4Rdc+4jmPsJGWscMmdmncmAzzCleiIfh/x1235Yg6
+         DIbYcOE5EBoMEwxkIUjmhw5jQ1yOpyJt58zt7DbtD8laWvpTXBfzvzqR5BX6+7uSf6GZ
+         GGQckWFsREkJTepmLP86YFsAxC4r4AnRBBVwJwBj1r43QuPEg/0FJsdZdu8q6GmAa4KK
+         biipx2ksfx8k/Y0e/EiVdE9Dci/q4vEOJYMF3B1WCEfMK16bU8mCQaCJZDhY93tHVMUD
+         d51Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Ml8IEXnxlcphMCeOPuUacNA9+fRNhaDcQOn9VWlYsY=;
+        b=SGukTzAaNJ28UVU2JpNtyQfi7lLnN15UfG+JVDY7F4DZ4uBSPCPhUvGtTNCxKT3N5w
+         uWW1MYlCL13ISyfoSXLZRgGJ0cPqJSZ1SD4zVs+3ZzJtiMV5YAAdMBW17h4vblaKxJk4
+         yTZ4zTDO3uDgN7pHwy8CjsrzbPMjNMZENLRN+sKlZ0LNaIW/EesdCI5YG5zDJUKpqYWM
+         aOBZ+k7KUiLHI8BX9J6lAFHYGTp5xBSWjGxy1bK/STPqpcjWTJMseGeNuLBj1i7Gpa5l
+         lhmuK/ot6tW3ELev8foNkqIBP1I2/MucYBWwr2pO2cBJArvLQXlAs9ZDKe2Apbkr5BCy
+         Gb5A==
+X-Gm-Message-State: AOAM531jYekHIQoD2vMaPYBqKSjklbVWZQB7xBX7QGLL089BUHJ2jSIk
+        VxhaUMBynvuGdomiMAHxLJrdacF4/2de5hRnrTXVJQ==
+X-Google-Smtp-Source: ABdhPJyjIokjbdiL94vFu34yuvT5zlrneEHEcaS9NagGBi5uR4r7zEn0+ZucO+th0nUUaL5SIH6RUpYDF5nOCxzUWBE=
+X-Received: by 2002:a17:906:492:: with SMTP id f18mr14945035eja.279.1593002569588;
+ Wed, 24 Jun 2020 05:42:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623142858.GB8444@alley>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200624124013.3210537-1-olteanv@gmail.com>
+In-Reply-To: <20200624124013.3210537-1-olteanv@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 24 Jun 2020 15:42:38 +0300
+Message-ID: <CA+h21hrnYCDGH035AKssimEMy67k+2VzyirprPSyhrkjuMUFkw@mail.gmail.com>
+Subject: Re: [PATCH stable-5.4.y] Revert "dpaa_eth: fix usage as DSA master,
+ try 3"
+To:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev <netdev@vger.kernel.org>
+Cc:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Joakim Tjernlund <joakim.tjernlund@infinera.com>,
+        fido_max@inbox.ru, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 04:28:58PM +0200, Petr Mladek wrote:
+On Wed, 24 Jun 2020 at 15:40, Vladimir Oltean <olteanv@gmail.com> wrote:
 >
-> My "allmodconfig" build has successfully finished with the following extra
->  fix on top of the two patches:
-> 
-> diff --git a/include/linux/list.h b/include/linux/list.h
-> index aff44d34f4e4..6d606c4036ce 100644
-> --- a/include/linux/list.h
-> +++ b/include/linux/list.h
-> @@ -6,7 +6,7 @@
->  #include <linux/stddef.h>
->  #include <linux/poison.h>
->  #include <linux/const.h>
-> -#include <linux/kernel.h>
-> +#include <linux/compiler.h>
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>
+> This reverts commit b145710b69388aa4034d32b4a937f18f66b5538e.
 
-Unfortunately this doesn't work because list.h actually does need
-kernel.h for container_of.
+Sorry, this sha1sum is wrong, I forgot to update it from 4.19. I'll send a v2.
 
-However, we can easily fix the loop another way by removing list.h
-from lockdep.h as it doesn't actually use any list macros/functions
-but only the list type which is now in linux/types.h.
-
-We could either fold this into the lockdep_types patch, or fold it
-into the printk patch, or just leave it as a standalone patch.
-What do you guys think?
-
----8<---
-Currently lockdep_types.h includes list.h without actually using any
-of its macros or functions.  All it needs are the type definitions
-which were moved into types.h long ago.  This potentially causes
-inclusion loops because both are included by many core header
-files.
-
-This patch moves the list.h inclusion into lockdep.h.  Note that
-we could probably remove it completely but that could potentially
-result in compile failures should any end users not include list.h
-directly and also be unlucky enough to not get list.h via some other
-header file.
-
-Reported-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 3b73cf84f77d..b1ad5c045353 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -21,6 +21,7 @@ extern int lock_stat;
- #ifdef CONFIG_LOCKDEP
- 
- #include <linux/linkage.h>
-+#include <linux/list.h>
- #include <linux/debug_locks.h>
- #include <linux/stacktrace.h>
- 
-diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
-index 7b9350624577..bb35b449f533 100644
---- a/include/linux/lockdep_types.h
-+++ b/include/linux/lockdep_types.h
-@@ -32,8 +32,6 @@ enum lockdep_wait_type {
- 
- #ifdef CONFIG_LOCKDEP
- 
--#include <linux/list.h>
--
- /*
-  * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-  * the total number of states... :-(
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+>
+> The patch is not wrong, but the Fixes: tag is. It should have been:
+>
+>         Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
+>
+> which means that it's fixing a commit which was introduced in:
+>
+> git tag --contains 060ad66f97954
+> v5.5
+>
+> which then means it should have not been backported to linux-5.4.y,
+> where things _were_ working and now they're not.
+>
+> Reported-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+>  drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> index 6683409fbd4a..4b21ae27a9fd 100644
+> --- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> +++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> @@ -2796,7 +2796,7 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+>         }
+>
+>         /* Do this here, so we can be verbose early */
+> -       SET_NETDEV_DEV(net_dev, dev->parent);
+> +       SET_NETDEV_DEV(net_dev, dev);
+>         dev_set_drvdata(dev, net_dev);
+>
+>         priv = netdev_priv(net_dev);
+> --
+> 2.25.1
+>
