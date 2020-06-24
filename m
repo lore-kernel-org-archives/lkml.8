@@ -2,83 +2,67 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5883C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A564020E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1784620CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:34:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nb48uKun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390637AbgFXMeX (ORCPT
+        id S2403871AbgFXMec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:34:23 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40131 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388132AbgFXMeR (ORCPT
+        Wed, 24 Jun 2020 08:34:32 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:30277 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388132AbgFXMe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:34:17 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 80so1582630qko.7;
-        Wed, 24 Jun 2020 05:34:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NYlBDYPOP+i+Z8CCPoWHLzBw8cVCy1kOHLCJDYgloi0=;
-        b=Um2pPq53cIsmU/SMf9olAn7Fy0Eqf6MlbuYQHWe/zlTbYewfd0U32b9DdyNjbPb5zO
-         DiX+KMpkBcF+g7BT7gQINg8vSjFz/TeXKWu6kAzkAJZECq1/uv7Irp6IZV0/0y83R5wX
-         s5uK54zgb1qckBPQ+9eqyfMW8Jc/CapAd7++LO7IV3AWpoRpxprCtxagLoiig9gqJnBr
-         VSP3MlVMfDCQfJioZahkFHYdLh1LxCzZWNyCmNMS5odYaXwXt2TKwKurErJeguMhpZmH
-         NMVIsuNS3xomQi7ZiOyDbNc98jj8x/P7tKHXRRhScX9wLGDrpiNQ9GSymlNffNd8dHff
-         8A8g==
-X-Gm-Message-State: AOAM5329oQz76FQw0bjLfHvJRUvQPnSI/j2RGtW9t5fgwoh6aUX7smIw
-        QfSOsSdYbcV7jbZ61GqtRR8=
-X-Google-Smtp-Source: ABdhPJxG56K9PcyzErynBCq8WXO4GdEN7iVHSozkebRt9XKZi/zlbyDg2T5l/cdnA0We9Seu6jAYtg==
-X-Received: by 2002:a37:a785:: with SMTP id q127mr10507259qke.452.1593002055490;
-        Wed, 24 Jun 2020 05:34:15 -0700 (PDT)
-Received: from localhost.localdomain ([185.248.161.177])
-        by smtp.gmail.com with ESMTPSA id x26sm3354512qtr.4.2020.06.24.05.34.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 05:34:14 -0700 (PDT)
-From:   Alexander Popov <alex.popov@linux.com>
-To:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-        Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
+        Wed, 24 Jun 2020 08:34:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593002066; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=pj8/0Ubz9CNAhcpDUVr9idQFgMJauC3hf2tZfvnxXVM=; b=nb48uKunD/ZB7zSp4aWRkI4+SpOxo7C9uEpfLJNWJOIGSGceAKzfNMQoRKkih86z5w/lq4/W
+ poYdjUy9SSZ8xTNjT8ze95DNG6IyOc1arW+rhg1Alskv7DtWobRbV/IejKWAOSlXsh220e1Y
+ KZ55MlkLZKjugNZiRY9YEroHkzk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
+ 5ef348516f2ee827dab49a98 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 24 Jun 2020 12:34:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 19F7AC433B1; Wed, 24 Jun 2020 12:34:25 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 303F0C433C8;
+        Wed, 24 Jun 2020 12:34:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 303F0C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org
-Cc:     notify@kernel.org
-Subject: [PATCH v2 2/5] ARM: vdso: Don't use gcc plugins for building vgettimeofday.c
-Date:   Wed, 24 Jun 2020 15:33:27 +0300
-Message-Id: <20200624123330.83226-3-alex.popov@linux.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200624123330.83226-1-alex.popov@linux.com>
-References: <20200624123330.83226-1-alex.popov@linux.com>
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] arm64: kpti: Add KRYO{3,4}XX silver CPU cores to kpti safelist
+Date:   Wed, 24 Jun 2020 18:04:06 +0530
+Message-Id: <20200624123406.3472-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,27 +70,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't use gcc plugins for building arch/arm/vdso/vgettimeofday.c to
-avoid unneeded instrumentation.
+QCOM KRYO{3,4}XX silver/LITTLE CPU cores are based on Cortex-A55
+and are meltdown safe, hence add them to kpti_safe_list[].
 
-Signed-off-by: Alexander Popov <alex.popov@linux.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- arch/arm/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/cpufeature.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
-index d3c9f03e7e79..a54f70731d9f 100644
---- a/arch/arm/vdso/Makefile
-+++ b/arch/arm/vdso/Makefile
-@@ -29,7 +29,7 @@ CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
- CFLAGS_REMOVE_vdso.o = -pg
- 
- # Force -O2 to avoid libgcc dependencies
--CFLAGS_REMOVE_vgettimeofday.o = -pg -Os
-+CFLAGS_REMOVE_vgettimeofday.o = -pg -Os $(GCC_PLUGINS_CFLAGS)
- ifeq ($(c-gettimeofday-y),)
- CFLAGS_vgettimeofday.o = -O2
- else
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 4ae41670c2e6..9f63053a63a9 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1290,6 +1290,8 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
+ 		MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+ 		MIDR_ALL_VERSIONS(MIDR_NVIDIA_CARMEL),
++		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
++		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+ 		{ /* sentinel */ }
+ 	};
+ 	char const *str = "kpti command line option";
+
+base-commit: cfafde3c949cae39483639c03c5da5fd91bb234e
 -- 
-2.25.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
