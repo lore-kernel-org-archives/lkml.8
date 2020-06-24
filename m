@@ -2,131 +2,114 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDF1206EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4353520823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593021591;
-	bh=lqF4UvFTuSVPWPvYKcQ8+owOKSTEFacagpA6y42+2I4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZDQ78G8ccStrIyL9o1st/0I8+8RtZKxu/ChFxMt+J9nkz5POxuHRudrI682MrQLkF
-	 Ij7dd7nPsgtdIoGCcm31wBg0i7G4yXz6/wPx8YlbdA6xUKP91ouv4IpzRd/oNBRd86
-	 cL8UPZ+RbJ1+SfDUTzU0VH7latsu0G0coKlwIrs0=
+	s=default; t=1593021610;
+	bh=2UitKT4K/Va+jamxjwCKoZ96M6fFhFnTIM3vNCb7ews=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RlRtK9frRaoL8WtojcVdHLbk9bkt+rftQ5KqfHvQ9rUIadIYleKHWfNutcT15olY+
+	 rmBPXoLrFAPWYR0kG5CTp90VsCwBSKjMSI4XTdWKZUAh0Omo0gmTeouoLc9FUf2HRw
+	 hdtjy0XiOXHRG6c7STaO3w+pEybLtR6GEsEn5vUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405956AbgFXR7t (ORCPT
+        id S2405961AbgFXSAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 14:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405808AbgFXR7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:59:49 -0400
-Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        id S2405538AbgFXSAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:00:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47F00207DD;
-        Wed, 24 Jun 2020 17:59:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B05320823;
+        Wed, 24 Jun 2020 18:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593021588;
-        bh=lqF4UvFTuSVPWPvYKcQ8+owOKSTEFacagpA6y42+2I4=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=2OyEwIQ2W+yC8MeIiJn+zg6EpblYaMgeW1W2KIyhIYSiWBv27LoWjQc7whL/xeVKv
-         y88icKjpG7HCb5h5QohX0bjtTPKL9DqECdzfBD8KC9GTdN07U3EonUUVOnBxKcXHUo
-         yqYasuZpBgXc5lZj44gwka4tdlhLxCPXuN8CH3H4=
-Date:   Wed, 24 Jun 2020 10:59:47 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-cc:     Peng Fan <peng.fan@nxp.com>, sstabellini@kernel.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        konrad.wilk@oracle.com, jasowang@redhat.com, x86@kernel.org,
-        xen-devel@lists.xenproject.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        virtualization@lists.linux-foundation.org, linux-imx@nxp.com
-Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
-In-Reply-To: <20200624050355-mutt-send-email-mst@kernel.org>
-Message-ID: <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
-References: <20200624091732.23944-1-peng.fan@nxp.com> <20200624050355-mutt-send-email-mst@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        s=default; t=1593021608;
+        bh=2UitKT4K/Va+jamxjwCKoZ96M6fFhFnTIM3vNCb7ews=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jxGGDXD+7FCXVcwlZhZqXBvq1DvyW+uYJzZaxydTJA9wNhMM48Hg5B07C2qbyhUL7
+         0N81zxTi7/Yc7UgSCqScAA9ETzJLN54jI09xUJuyiIkWZKqd6Sj+Nu2lk8uhLWH+GT
+         PyW14MTtkb3MRiWt9bG4/hf0QASBtnHr7eLWoP/Y=
+Date:   Wed, 24 Jun 2020 19:00:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
+        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
+        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
+ state
+Message-ID: <20200624180005.GO5472@sirena.org.uk>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
+ <20200624170933.GB39073@google.com>
+ <20200624171537.GL5472@sirena.org.uk>
+ <20200624173948.GC39073@google.com>
+ <20200624174417.GM5472@sirena.org.uk>
+ <20200624175536.GD39073@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oJAv8lSwuaQsYd0G"
+Content-Disposition: inline
+In-Reply-To: <20200624175536.GD39073@google.com>
+X-Cookie: So this is it.  We're going to die.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
-> On Wed, Jun 24, 2020 at 05:17:32PM +0800, Peng Fan wrote:
-> > Export xen_swiotlb for all platforms using xen swiotlb
-> > 
-> > Use xen_swiotlb to determine when vring should use dma APIs to map the
-> > ring: when xen_swiotlb is enabled the dma API is required. When it is
-> > disabled, it is not required.
-> > 
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> 
-> Isn't there some way to use VIRTIO_F_IOMMU_PLATFORM for this?
-> Xen was there first, but everyone else is using that now.
 
-Unfortunately it is complicated and it is not related to
-VIRTIO_F_IOMMU_PLATFORM :-(
+--oJAv8lSwuaQsYd0G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Jun 24, 2020 at 10:55:36AM -0700, Matthias Kaehlcke wrote:
+> On Wed, Jun 24, 2020 at 06:44:17PM +0100, Mark Brown wrote:
 
-The Xen subsystem in Linux uses dma_ops via swiotlb_xen to translate
-foreign mappings (memory coming from other VMs) to physical addresses.
-On x86, it also uses dma_ops to translate Linux's idea of a physical
-address into a real physical address (this is unneeded on ARM.)
+> > Wait, so *some* of the series should go together but not other bits?
+> > But you want them split up for some reason?
 
+> Yes, this will almost certainly be the case, even if not for this patch.
+> I brought this up earlier (https://patchwork.kernel.org/cover/11604623/#23428709).
 
-So regardless of VIRTIO_F_IOMMU_PLATFORM, dma_ops should be used on Xen/x86
-always and on Xen/ARM if Linux is Dom0 (because it has foreign
-mappings.) That is why we have the if (xen_domain) return true; in
-vring_use_dma_api.
+I'm not really reading any of this stuff for the series as a whole, as
+far as I could tell I'd reviewed all my bits and was hoping whatever
+random platform stuff needs sorting out was going to be sorted out so I
+stopped getting copied on revisions :(
 
-You might have noticed that I missed one possible case above: Xen/ARM
-DomU :-)
+> For the QSPI patch you could argue to just take it through QCOM since the SPI
+> patch of this series goes through this tree, up to you, I just want to make
+> sure everybody is on the same page.
 
-Xen/ARM domUs don't need swiotlb_xen, it is not even initialized. So if
-(xen_domain) return true; would give the wrong answer in that case.
-Linux would end up calling the "normal" dma_ops, not swiotlb-xen, and
-the "normal" dma_ops fail.
+If there are some part of this that don't have a connection with the
+rest of the series and should be applied separately please split them
+out and send them separately so it's clear what's going on.
 
+--oJAv8lSwuaQsYd0G
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The solution I suggested was to make the check in vring_use_dma_api more
-flexible by returning true if the swiotlb_xen is supposed to be used,
-not in general for all Xen domains, because that is what the check was
-really meant to do.
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zlKQACgkQJNaLcl1U
+h9CrTQf/Vg2E6duvaq65qFsFKS/aluS0uK8RMRY4XebTQ8EzKerzfY2M5BG+G78p
+rXdzGDqWdLhmofORK0GP8dFjJO8SQPuGs1yMyQSSNom7oe816OOF3H4zP0y3g09u
+teC+rFX5q4vtZlqsiiLkO7dscWNR6Ee2ezUWFVNIfIpQR8xTzL63shWO5dYTWsI6
++fYLfWPWRQkTUxTP6R46j4SoTIikF6clMqsXocztZG+UapaLlf5ttfQTRyNv+fGU
+IK1TOePE14Cb2f47WxSnccI6BE+Pj7V/ixQHF9JMjR2veIYzKQ3poRoSNj+OiN3j
+sv2FJuPzEyc4agZNugHJlMZvCPvDfA==
+=ZMZQ
+-----END PGP SIGNATURE-----
 
-In this regards I have two more comments:
-
-- the comment on top of the check in vring_use_dma_api is still valid
-- the patch looks broken on x86: it should always return true, but it
-  returns false instead
-
- 
-> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > index a2de775801af..768afd79f67a 100644
-> > --- a/drivers/virtio/virtio_ring.c
-> > +++ b/drivers/virtio/virtio_ring.c
-> > @@ -252,7 +252,7 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
-> >  	 * the DMA API if we're a Xen guest, which at least allows
-> >  	 * all of the sensible Xen configurations to work correctly.
-> >  	 */
-> > -	if (xen_domain())
-> > +	if (xen_vring_use_dma())
-> >  		return true;
-> >  
-> >  	return false;
-> 
-> 
-> The comment above this should probably be fixed.
-
-> 
+--oJAv8lSwuaQsYd0G--
