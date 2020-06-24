@@ -2,312 +2,151 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB84C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B6C20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862C020899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rUBalvyy"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IbUErGQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404691AbgFXP5P (ORCPT
+        id S2404760AbgFXP5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
+        Wed, 24 Jun 2020 11:57:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404718AbgFXP5C (ORCPT
+        with ESMTP id S2404751AbgFXP5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:57:02 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4E60C061573;
-        Wed, 24 Jun 2020 08:57:01 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r12so2758327wrj.13;
-        Wed, 24 Jun 2020 08:57:01 -0700 (PDT)
+        Wed, 24 Jun 2020 11:57:15 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2318C061796
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:57:15 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id z63so2275852qkb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0fWqoRxWBCqdBHBS2H2/Nb85DBqENZwJYZ563FQxmmA=;
-        b=rUBalvyyjuzbg5xoceVShBhFF0BzgWQFg0AOoc2qHtRNRvowsiWu2pqejfNGvdB8Jx
-         PqlgYIvst/jtIVEav/2Prz3BcJM0RS+lWSQL/7VO3UzP/EDXVnxcC/Psp89gK1j2+kRg
-         F500TJuLDZ5cPhwEtUA2yOW26s3nYXMcvaNrVCFN9pps60OzDa2NOdIowPfMyx2SFTpj
-         v9dN9zXh94YjcZOgYwrRtTJMojpU85Sq6EOnjVZs9l/Vr5UpAQ0TE9O+U9l9F1Krk9gO
-         vZnzpn1YJOG9lqEvkXLWMn19OdHhlR7vLHIa/CgCAuv/9JecmxVztty5ZJHQSNMFnkuH
-         TL3A==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=jZYzs8OyHucPngtfa3rnlFCl1zhe+pFCEDNvHAi29U8=;
+        b=IbUErGQEAYWMvoLjyGAk425gR0i5lwgLpntmHS+QHu9bhEmU3AY6VBdIaTj/2TOzMc
+         OKDL3hAf1ZbscbPlWIXwKQiMMAK1vTBBOgRCOJ7Fw/lO3jUfQ1K1l0BR1ahGAa4mtfy2
+         uRYp1zOb47kIH1gWy2EyX6B0JPkWfiJDYWcWuIQGGoNfX4wEO1L0VLZDlhNSdCoG0xYd
+         lI1JpmdK+xupMWM7ExZVsDk55aRlFJ34/IcbLEyvseKw1UMPHE5imSPdTFj+T03bcE7s
+         Alc5Yu3R8Obtz+0NiMm+nbcdkhE2JflDHuFgyv+7ZIumwncJw4qibehaXIp4OE3STeoB
+         V3+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0fWqoRxWBCqdBHBS2H2/Nb85DBqENZwJYZ563FQxmmA=;
-        b=oofsVO7uUu+Xy5FvPIapjPoiDJYO183T6a8ieLi86j0++ivTuuLCGjVHlP6ou1nSRA
-         NFgCt+15cEfoG6zrjQCQ44ckMCmQSMsvQS1BLQttC2vF++aXFPqgONHTEcDElz6NocnD
-         1JoWMH/NiByIxBrIdcOtuiWskc5qIqUypHo/xXs/73BZAY+qj5K4m4HFy7wjZlE8r52h
-         ptLyD1EP7Et96avb7xvQC4w9RrA7k7yWHlKX2M9cHuY/+v66DF5mgS8BD6Q5SDAjINgT
-         XA/taG+IKzT99afwO1jJym2PhKG0biV8fX3QbhSWqbBbUKxjM5po8jt+WknPFIZIJ+IN
-         esVg==
-X-Gm-Message-State: AOAM533w4QcbgcCSquNWY2UgZfv1VzwN/VqWPazsVkqtisq/wc5FZRaY
-        iJKNyibG7+0uBi7HFsRTR54=
-X-Google-Smtp-Source: ABdhPJxD6+qpz0n4qf0xCNR0wrqQdIU/JLb07XUrL0PuZCeycXAeQEX77+AbjTC4v/5AjrgguvFV3Q==
-X-Received: by 2002:a5d:4008:: with SMTP id n8mr31143871wrp.82.1593014220595;
-        Wed, 24 Jun 2020 08:57:00 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id u186sm8951064wmu.10.2020.06.24.08.56.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 08:57:00 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
-        Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH v3 6/6] power: supply: max17040: Support soc alert
-Date:   Wed, 24 Jun 2020 18:56:33 +0300
-Message-Id: <20200624155633.3557401-7-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200624155633.3557401-1-iskren.chernev@gmail.com>
-References: <20200624155633.3557401-1-iskren.chernev@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=jZYzs8OyHucPngtfa3rnlFCl1zhe+pFCEDNvHAi29U8=;
+        b=sSnzMS436cyGMS1qFYz/KLSHSWn2cpgUyzORYcNkF0JAYfLiWwrp+h8I/25S7r6uXP
+         0mK4U3OedrcY62QZQpRNFZJpZTEoh/F1cDU+OGBDGxVcIVR0caIwFxkJ8mEn677un3Ul
+         DOAvLUnxsZoRYsGYlUkfAdE107mR+Lp3I37Y0JvI8UZYmfXhHd511KxcUN2Ecvx8sS4e
+         ZbD/lXZ3gSeQfispC9oZ70Mj+6jXuU2gOB5IO1JsrsYxPxrf/dMsb1mQjt+3zoP9zVBt
+         +q67RNKNxjcUO7WBNZbw7DgoP9AxVEcniBWqx9+0K8/pYi8BdrgEt59685qEYHail0VE
+         XUtg==
+X-Gm-Message-State: AOAM531D09O5AXGTMHFp3Im5+jPu/vPqtJ9N/AzSiWkltRsFYdAAWslJ
+        PJaUIVfBEsbDbq+ZH2nNQc7l+A==
+X-Google-Smtp-Source: ABdhPJxiBzUIpNvmMf5asVsKH9SyMy6oN7t91xT2ZCVkBRmIuCeJU5UxviSvLsog1PSu8pEiIvn6fQ==
+X-Received: by 2002:a37:c4b:: with SMTP id 72mr4991601qkm.359.1593014234745;
+        Wed, 24 Jun 2020 08:57:14 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i13sm4109354qtc.83.2020.06.24.08.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:57:14 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 11:57:07 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, paulmck@kernel.org,
+        rcu@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re: Null-ptr-deref due to "vfs, fsinfo: Add an RCU safe per-ns mount
+ list"
+Message-ID: <20200624155707.GA1259@lca.pw>
+References: <31941725-BEB0-4839-945A-4952C2B5ADC7@lca.pw>
+ <2961585.1589326192@warthog.procyon.org.uk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2961585.1589326192@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-max17048 and max17049 support SOC alerts (interrupts when battery
-capacity changes by +/- 1%). At the moment the driver polls for changes
-every second. Using the alerts removes the need for polling.
+On Wed, May 13, 2020 at 12:29:52AM +0100, David Howells wrote:
+> Qian Cai <cai@lca.pw> wrote:
+> 
+> > Reverted the linux-next commit ee8ad8190cb1 (“vfs, fsinfo: Add an RCU safe per-ns mount list”) fixed the null-ptr-deref.
+> 
+> Okay, I'm dropping this commit for now.
 
-Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
----
- drivers/power/supply/max17040_battery.c | 82 ++++++++++++++++++++++---
- 1 file changed, 73 insertions(+), 9 deletions(-)
+What's the point of re-adding this buggy patch to linux-next again since
+0621 without fixing the previous reported issue at all? Reverting the
+commit will still fix the crash below immediately, i.e.,
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 54393f411211e..4425411775f26 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -25,6 +25,7 @@
- #define MAX17040_MODE	0x06
- #define MAX17040_VER	0x08
- #define MAX17040_CONFIG	0x0C
-+#define MAX17040_STATUS	0x1A
- #define MAX17040_CMD	0xFE
- 
- 
-@@ -33,7 +34,10 @@
- #define MAX17040_RCOMP_DEFAULT  0x9700
- 
- #define MAX17040_ATHD_MASK		0x3f
-+#define MAX17040_ALSC_MASK		0x40
- #define MAX17040_ATHD_DEFAULT_POWER_UP	4
-+#define MAX17040_STATUS_HD_MASK		0x1000
-+#define MAX17040_STATUS_SC_MASK		0x2000
- #define MAX17040_CFG_RCOMP_MASK		0xff00
- 
- enum chip_id {
-@@ -55,6 +59,7 @@ struct chip_data {
- 	u16 vcell_div;
- 	u8  has_low_soc_alert;
- 	u8  rcomp_bytes;
-+	u8  has_soc_alert;
- };
- 
- static struct chip_data max17040_family[] = {
-@@ -65,6 +70,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 0,
- 		.rcomp_bytes = 2,
-+		.has_soc_alert = 0,
- 	},
- 	[ID_MAX17041] = {
- 		.reset_val = 0x0054,
-@@ -73,6 +79,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 0,
- 		.rcomp_bytes = 2,
-+		.has_soc_alert = 0,
- 	},
- 	[ID_MAX17043] = {
- 		.reset_val = 0x0054,
-@@ -81,6 +88,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 1,
- 		.rcomp_bytes = 1,
-+		.has_soc_alert = 0,
- 	},
- 	[ID_MAX17044] = {
- 		.reset_val = 0x0054,
-@@ -89,6 +97,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 1,
- 		.rcomp_bytes = 1,
-+		.has_soc_alert = 0,
- 	},
- 	[ID_MAX17048] = {
- 		.reset_val = 0x5400,
-@@ -97,6 +106,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 8,
- 		.has_low_soc_alert = 1,
- 		.rcomp_bytes = 1,
-+		.has_soc_alert = 1,
- 	},
- 	[ID_MAX17049] = {
- 		.reset_val = 0x5400,
-@@ -105,6 +115,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 4,
- 		.has_low_soc_alert = 1,
- 		.rcomp_bytes = 1,
-+		.has_soc_alert = 1,
- 	},
- 	[ID_MAX17058] = {
- 		.reset_val = 0x5400,
-@@ -113,6 +124,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 8,
- 		.has_low_soc_alert = 1,
- 		.rcomp_bytes = 1,
-+		.has_soc_alert = 0,
- 	},
- 	[ID_MAX17059] = {
- 		.reset_val = 0x5400,
-@@ -121,6 +133,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_div = 4,
- 		.has_low_soc_alert = 1,
- 		.rcomp_bytes = 1,
-+		.has_soc_alert = 0,
- 	},
- };
- 
-@@ -156,6 +169,12 @@ static int max17040_set_low_soc_alert(struct max17040_chip *chip, u32 level)
- 			MAX17040_ATHD_MASK, level);
- }
- 
-+static int max17040_set_soc_alert(struct max17040_chip *chip, bool enable)
-+{
-+	return regmap_update_bits(chip->regmap, MAX17040_CONFIG,
-+			MAX17040_ALSC_MASK, enable ? MAX17040_ALSC_MASK : 0);
-+}
-+
- static int max17040_set_rcomp(struct max17040_chip *chip, u16 rcomp)
- {
- 	u16 mask = chip->data.rcomp_bytes == 2 ?
-@@ -298,11 +317,33 @@ static void max17040_work(struct work_struct *work)
- 	max17040_queue_work(chip);
- }
- 
-+/* Returns true if alert cause was SOC change, not low SOC */
-+static bool max17040_handle_soc_alert(struct max17040_chip *chip)
-+{
-+	bool ret = true;
-+	u32 data;
-+
-+	regmap_read(chip->regmap, MAX17040_STATUS, &data);
-+
-+	if (data & MAX17040_STATUS_HD_MASK) {
-+		// this alert was caused by low soc
-+		ret = false;
-+	}
-+	if (data & MAX17040_STATUS_SC_MASK) {
-+		// soc change bit -- deassert to mark as handled
-+		regmap_write(chip->regmap, MAX17040_STATUS,
-+				data & ~MAX17040_STATUS_SC_MASK);
-+	}
-+
-+	return ret;
-+}
-+
- static irqreturn_t max17040_thread_handler(int id, void *dev)
- {
- 	struct max17040_chip *chip = dev;
- 
--	dev_warn(&chip->client->dev, "IRQ: Alert battery low level");
-+	if (!(chip->data.has_soc_alert && max17040_handle_soc_alert(chip)))
-+		dev_warn(&chip->client->dev, "IRQ: Alert battery low level\n");
- 
- 	/* read registers */
- 	max17040_check_changes(chip);
-@@ -384,6 +425,7 @@ static int max17040_probe(struct i2c_client *client,
- 	struct power_supply_config psy_cfg = {};
- 	struct max17040_chip *chip;
- 	enum chip_id chip_id;
-+	bool enable_irq = false;
- 	int ret;
- 
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
-@@ -434,6 +476,27 @@ static int max17040_probe(struct i2c_client *client,
- 			return ret;
- 		}
- 
-+		enable_irq = true;
-+	}
-+
-+	if (client->irq && chip->data.has_soc_alert) {
-+		ret = max17040_set_soc_alert(chip, 1);
-+		if (ret) {
-+			dev_err(&client->dev,
-+				"Failed to set SOC alert: err %d\n", ret);
-+			return ret;
-+		}
-+		enable_irq = true;
-+	} else {
-+		/* soc alerts negate the need for polling */
-+		INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
-+		ret = devm_add_action(&client->dev, max17040_stop_work, chip);
-+		if (ret)
-+			return ret;
-+		max17040_queue_work(chip);
-+	}
-+
-+	if (enable_irq) {
- 		ret = max17040_enable_alert_irq(chip);
- 		if (ret) {
- 			client->irq = 0;
-@@ -442,12 +505,6 @@ static int max17040_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
--	ret = devm_add_action(&client->dev, max17040_stop_work, chip);
--	if (ret)
--		return ret;
--	max17040_queue_work(chip);
--
- 	return 0;
- }
- 
-@@ -458,7 +515,11 @@ static int max17040_suspend(struct device *dev)
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
- 
--	cancel_delayed_work(&chip->work);
-+	if (client->irq && chip->data.has_soc_alert)
-+		// disable soc alert to prevent wakeup
-+		max17040_set_soc_alert(chip, 0);
-+	else
-+		cancel_delayed_work(&chip->work);
- 
- 	if (client->irq && device_may_wakeup(dev))
- 		enable_irq_wake(client->irq);
-@@ -474,7 +535,10 @@ static int max17040_resume(struct device *dev)
- 	if (client->irq && device_may_wakeup(dev))
- 		disable_irq_wake(client->irq);
- 
--	max17040_queue_work(chip);
-+	if (client->irq && chip->data.has_soc_alert)
-+		max17040_set_soc_alert(chip, 1);
-+	else
-+		max17040_queue_work(chip);
- 
- 	return 0;
- }
--- 
-2.27.0
+dbc87e74d022 ("vfs, fsinfo: Add an RCU safe per-ns mount list")
 
+# runc run root
+
+[ 9067.486969][T72863] general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN PTI
+[ 9067.543973][T72863] KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+[ 9067.586640][T72863] CPU: 24 PID: 72863 Comm: runc:[2:INIT] Not tainted 5.8.0-rc2-next-20200624+ #4
+[ 9067.629285][T72863] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
+[ 9067.663809][T72863] RIP: 0010:umount_tree+0x4ec/0xcf0
+[ 9067.688505][T72863] Code: 0f 85 61 04 00 00 49 83 c7 08 48 8b 43 b8 4c 89 fa 48 c1 ea 03 80 3c 2a 00 0f 85 33 04 00 00 4c 8b 7b c0 4c 89 fa 48 c1 ea 03 <80> 3c 2a 00 0f 85 09 04 00 00 49 89 07 48 85 c0 74 19 48 8d 78 08
+[ 9067.782308][T72863] RSP: 0018:ffffc900259efcb0 EFLAGS: 00010246
+[ 9067.810141][T72863] RAX: 0000000000000000 RBX: ffff8884b0cb8cd8 RCX: 1ffff92004b3dfa0
+[ 9067.848310][T72863] RDX: 0000000000000000 RSI: ffff8884b0cb8cd8 RDI: ffffc900259efd08
+[ 9067.886236][T72863] RBP: dffffc0000000000 R08: fffffbfff2bac7a6 R09: fffffbfff2bac7a6
+[ 9067.922883][T72863] R10: ffffffff95d63d2f R11: fffffbfff2bac7a5 R12: ffff8884b0cb8c40
+[ 9067.960156][T72863] R13: ffffc900259efd00 R14: 0000000000000001 R15: 0000000000000000
+[ 9067.997069][T72863] FS:  00007fc286f88b80(0000) GS:ffff88881ed80000(0000) knlGS:0000000000000000
+[ 9068.040907][T72863] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 9068.074258][T72863] CR2: 00007fc284141e00 CR3: 0000000fbc33a002 CR4: 00000000001706e0
+[ 9068.111890][T72863] Call Trace:
+[ 9068.126482][T72863]  ? rcu_read_unlock+0x50/0x50
+[ 9068.148298][T72863]  ? unhash_mnt+0x450/0x450
+[ 9068.169156][T72863]  ? rwlock_bug.part.1+0x90/0x90
+[ 9068.191014][T72863]  do_mount+0x1132/0x1620
+[ 9068.211042][T72863]  ? rcu_read_lock_bh_held+0xc0/0xc0
+[ 9068.235399][T72863]  ? copy_mount_string+0x20/0x20
+[ 9068.258407][T72863]  ? memdup_user+0x4f/0x80
+[ 9068.278493][T72863]  __x64_sys_mount+0x15d/0x1b0
+[ 9068.299948][T72863]  do_syscall_64+0x5f/0x310
+[ 9068.320837][T72863]  ? trace_hardirqs_off+0x12/0x1a0
+[ 9068.343781][T72863]  ? asm_exc_page_fault+0x8/0x30
+[ 9068.367139][T72863]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 9068.394316][T72863] RIP: 0033:0x55d71f93e7ca
+[ 9068.414833][T72863] Code: Bad RIP value.
+[ 9068.433443][T72863] RSP: 002b:000000c00021af30 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
+[ 9068.473044][T72863] RAX: ffffffffffffffda RBX: 000000c000028000 RCX: 000055d71f93e7ca
+[ 9068.510343][T72863] RDX: 000000c00010546a RSI: 000000c000105470 RDI: 000000c000105460
+[ 9068.547999][T72863] RBP: 000000c00021afc8 R08: 0000000000000000 R09: 0000000000000000
+[ 9068.587756][T72863] R10: 0000000000001000 R11: 0000000000000206 R12: 0000000000000148
+[ 9068.624851][T72863] R13: 0000000000000147 R14: 0000000000000200 R15: 0000000000000100
+[ 9068.662061][T72863] Modules linked in: loop vfio_pci vfio_virqfd vfio_iommu_type1 vfio kvm_intel kvm irqbypass efivars nls_ascii nls_cp437 vfat fat ip_tables x_tables sd_mod bnx2x hpsa mdio scsi_transport_sas firmware_class dm_mirror dm_region_hash dm_log dm_mod efivarfs
+[ 9068.777205][T72863] ---[ end trace 9c03562d398fb10f ]---
+[ 9068.802729][T72863] RIP: 0010:umount_tree+0x4ec/0xcf0
+[ 9068.826630][T72863] Code: 0f 85 61 04 00 00 49 83 c7 08 48 8b 43 b8 4c 89 fa 48 c1 ea 03 80 3c 2a 00 0f 85 33 04 00 00 4c 8b 7b c0 4c 89 fa 48 c1 ea 03 <80> 3c 2a 00 0f 85 09 04 00 00 49 89 07 48 85 c0 74 19 48 8d 78 08
+[ 9068.918966][T72863] RSP: 0018:ffffc900259efcb0 EFLAGS: 00010246
+[ 9068.947083][T72863] RAX: 0000000000000000 RBX: ffff8884b0cb8cd8 RCX: 1ffff92004b3dfa0
+[ 9068.985097][T72863] RDX: 0000000000000000 RSI: ffff8884b0cb8cd8 RDI: ffffc900259efd08
+[ 9069.022555][T72863] RBP: dffffc0000000000 R08: fffffbfff2bac7a6 R09: fffffbfff2bac7a6
+[ 9069.061621][T72863] R10: ffffffff95d63d2f R11: fffffbfff2bac7a5 R12: ffff8884b0cb8c40
+[ 9069.101629][T72863] R13: ffffc900259efd00 R14: 0000000000000001 R15: 0000000000000000
+[ 9069.138367][T72863] FS:  00007fc286f88b80(0000) GS:ffff88881ed80000(0000) knlGS:0000000000000000
+[ 9069.180543][T72863] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 9069.209807][T72863] CR2: 00007fc284141e00 CR3: 0000000fbc33a002 CR4: 00000000001706e0
+[ 9069.245727][T72863] Kernel panic - not syncing: Fatal exception
+[ 9069.273756][T72863] Kernel Offset: 0x11c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 9069.327388][T72863] ---[ end Kernel panic - not syncing: Fatal exception ]---
+> 
