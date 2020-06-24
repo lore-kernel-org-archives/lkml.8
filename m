@@ -2,356 +2,153 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8621C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6558420768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29AD20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xvwuxmj2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tq1ZXb5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390075AbgFXVKn (ORCPT
+        id S2389773AbgFXVNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:10:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388749AbgFXVKm (ORCPT
+        Wed, 24 Jun 2020 17:13:10 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33938 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388749AbgFXVNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:10:42 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA713C061573;
-        Wed, 24 Jun 2020 14:10:40 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id cm23so1766870pjb.5;
-        Wed, 24 Jun 2020 14:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=/eiwI1eGlw5Yv/W0V/S+2e3gbq80QMsr1vAJ9YkSwVk=;
-        b=Xvwuxmj2iQDNUKKjDTIqIAu6fZ+stY6McugP2B54qu1N7oEoLEOCueH1Gsp801kIiD
-         q6nsT96rBUvSj6fOUVDUU6nkt0JacEuQMAeQBWRfoT3DZK9KvAghar2F0u/FBZxhufvX
-         2qiMPClEd6PGrpi+I2Imry5467U+ehY+z88sjuPbXavayx2Q7f58vjd+9hW6wRMLCvC1
-         /duw0dNh7fqVh9b80es9Yk6noeCaD9GHLHsQBWYIDWtbEBGKSRG93+WvcQqckY3pNRyo
-         jQkSLtXcu0TaJj6unTdwEMe/HziJ2RAShMb+5J+KXsUHbssx6KExaa+J1T7tBPtKXB40
-         S7Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=/eiwI1eGlw5Yv/W0V/S+2e3gbq80QMsr1vAJ9YkSwVk=;
-        b=rEHCmvslLizcJa1g30JK1ACE5S/5TVudp36WEtYDJZJiwCQZsE57Eo8t9e9RhByVXl
-         ONCMA2SBLgBCuAJfHuaDYxziRtlOCAKQaof8RXCS8fRbOnQ0dtiDmItfWlVphx/zPtoA
-         PYjVDk0PkIq6+eqQaaHbIcPOC+nZJBHw6oDHH8/DfSpf74F2iKyVmU3CwIPtXkWw+ddI
-         HnDOYxnx079Hn8P87fZ/zpTRgVakvbKrOi2Tk12RTC0KTD3G095dK51jrR3U4UpUpYfu
-         tjZShRQ+pMaNFhL2UUC7ZQxrbidy0K2SQvBwnof10J0UNNojOlZVx1WdGdEcgzeOTKlB
-         NowQ==
-X-Gm-Message-State: AOAM531Irt/0DkeLCtY2wbYk4yOUowBHFz1q8JrcRFkZa+MyhZZnDY82
-        8G2aynbDBC/ZHwDEfCmQErE=
-X-Google-Smtp-Source: ABdhPJybmXXFlZ8AhuIjBfTS+0JjnixQMHnBIuXtWZkkRNHD0uqvco3gh2AjNP+Xw9uTmHbVcCIRHw==
-X-Received: by 2002:a17:902:bcc1:: with SMTP id o1mr26623226pls.246.1593033040342;
-        Wed, 24 Jun 2020 14:10:40 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b14sm2987858pfb.186.2020.06.24.14.10.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 14:10:39 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 14:10:38 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
-Message-ID: <20200624211038.GA72859@roeck-us.net>
-References: <20200618135951.25441-1-lars.povlsen@microchip.com>
- <20200618135951.25441-4-lars.povlsen@microchip.com>
+        Wed, 24 Jun 2020 17:13:09 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05OL7ti3079031;
+        Wed, 24 Jun 2020 21:11:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=p12IwfDSTjlrVJZkgtc6h6hG3Scqk3K8QQYaIgeoBpE=;
+ b=tq1ZXb5AApncz3SUYU0h5vc4uHokBZlluGIOeY4PYDPYLsTgISVzIcAqfCSnASacooKF
+ BI+cJd/ySmSK/zjO79odmO/txOS5zZiVURSpP8JcyZ6bNwyyRV/qRc421QkXiFvakGnr
+ EcQNFnoQImaJLmt06I50VVUdznAZ78LGMXejOWCRuf7+jQ0WLvrkSJdwb7Uh1HEYVTAq
+ GZgmWHjAXqtlofkLE+vdb5qHARzxQVOEpRA2VHhVDP5446vIJI9JBQq3VJKkkzxHfCR1
+ bcUcPFetaFoVXNyxGlkCU/2/LwM0nTNQKFcVre5NwAkh/6YGFDkjKuOyk3S5+dRzFy1P OQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31uustw7a7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 21:11:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05OL8EVd117495;
+        Wed, 24 Jun 2020 21:11:03 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31uur7xdc9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 21:11:03 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05OLAjAP004688;
+        Wed, 24 Jun 2020 21:10:45 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jun 2020 21:10:45 +0000
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 00D9A6A00F1; Wed, 24 Jun 2020 17:11:32 -0400 (EDT)
+Date:   Wed, 24 Jun 2020 17:11:32 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Ashish Kalra <ashish.kalra@amd.com>
+Cc:     Konrad Rzeszutek Wilk <konrad@darnok.org>, hch@lst.de,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, luto@kernel.org, peterz@infradead.org,
+        dave.hansen@linux-intel.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
+        Thomas.Lendacky@amd.com
+Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
+ guests.
+Message-ID: <20200624211132.GB14137@char.us.oracle.com>
+References: <20200121200947.GA24884@ashkalra_ubuntu_server>
+ <20200121205403.GC75374@Konrads-MacBook-Pro.local>
+ <20200124230008.GA1565@ashkalra_ubuntu_server>
+ <20200204193500.GA15564@ashkalra_ubuntu_server>
+ <20200303170353.GC31627@char.us.oracle.com>
+ <20200330222551.GA22743@ashkalra_ubuntu_server>
+ <20200427185318.GA8253@ashkalra_ubuntu_server>
+ <20200623133843.GA5499@localhost.localdomain>
+ <20200624002357.GA9955@ashkalra_ubuntu_server>
+ <20200624070509.GA13381@ashkalra_ubuntu_server>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200618135951.25441-4-lars.povlsen@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200624070509.GA13381@ashkalra_ubuntu_server>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 03:59:51PM +0200, Lars Povlsen wrote:
-> This patch adds a temperature sensor driver to the Sparx5 SoC.
+.snip..
+> > Actually as per the boot flow :
+> > 
+> > setup_arch() calls reserve_crashkernel() and pci_iommu_alloc() is
+> > invoked through mm_init()/mem_init() and not via initmem_init().
+> > 
+> > start_kernel:
+> > ...
+> > setup_arch()
+> > 	reserve_crashkernel
+> > 		reserve_crashkernel_low
+> > 			-> swiotlb_size_or_default
+> > 
+> > ...
+> > ...
+> > mm_init()
+> > 	mem_init()
+> > 		pci_iommu_alloc
+> > 			-> pci_swiotlb_detect_4gb
+> > 			-> swiotlb_init
+> > 
+> > So as per the above boot flow, reserve_crashkernel() can get called
+> > before swiotlb_detect/init, and hence, if we don't fixup or adjust
+> > the SWIOTLB buffer size in swiotlb_size_or_default() then crash kernel
+> > will reserve memory which will conflict/overlap with any SWIOTLB bounce
+> > buffer allocated memory (adjusted or fixed up later).
+> > 
+> > Therefore, we need to adjust/fixup SWIOTLB bounce buffer memory in
+> > swiotlb_size_or_default() function itself, before swiotlb detect/init
+> > funtions get invoked.
+> > 
 > 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> Also to add here, it looks like swiotlb_size_or_default() is an
+> interface function to get the SWIOTLB bounce buffer size for components
+> which are initialized before swiotlb_detect/init, so that these 
+> components can reserve or allocate their memory requirements with the
+> knowledge of how much SWIOTLB bounce buffers are going to use, so
+> therefore, any fixups or adjustments to SWIOTLB buffer size will need
+> to be made as part of swiotlb_size_or_default(). 
 
-Sorry for the long delay.
+That was never its purpose. It was meant as way to figure out the segment
+size for DMA requests and to be used for runtime components. In fact to
+be idempotent.
 
-We'll still need approval from DT for DT properties.
+This is why I am disliking this usage and leaning towards something else.
 
-> ---
->  Documentation/hwmon/sparx5-temp.rst |  33 ++++++
+But you pointed out something interesting - you are in fact needing to
+adjust the size of the swiotlb based on your needs at bootup. Not any different
+from say 'swiotlb' paramter.
 
-Nitpick: The new file needs to be added to index.rst.
+Why not have an 'swiotlb_adjust' that is an __init that modifies the
+internal swiotlb buffer sizes? Obviously we have to account for 'swiotlb'
+parsing as well. The swiotlb_adjust would pick the max from those.
 
-Other than that, for my reference:
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
->  drivers/hwmon/Kconfig               |  10 ++
->  drivers/hwmon/Makefile              |   1 +
->  drivers/hwmon/sparx5-temp.c         | 168 ++++++++++++++++++++++++++++
->  4 files changed, 212 insertions(+)
->  create mode 100644 Documentation/hwmon/sparx5-temp.rst
->  create mode 100644 drivers/hwmon/sparx5-temp.c
-> 
-> diff --git a/Documentation/hwmon/sparx5-temp.rst b/Documentation/hwmon/sparx5-temp.rst
-> new file mode 100644
-> index 0000000000000..0140809089542
-> --- /dev/null
-> +++ b/Documentation/hwmon/sparx5-temp.rst
-> @@ -0,0 +1,33 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +Microchip SparX-5 SoC
-> +=====================
-> +
-> +Supported chips:
-> +
-> +  * VSC7546, VSC7549, VSC755, VSC7556, and VSC7558 (Sparx5 series)
-> +
-> +    Prefix: 'sparx5-temp'
-> +
-> +    Addresses scanned: -
-> +
-> +    Datasheet: Provided by Microchip upon request and under NDA
-> +
-> +Author: Lars Povlsen <lars.povlsen@microchip.com>
-> +
-> +Description
-> +-----------
-> +
-> +The Sparx5 SoC contains a temperature sensor based on the MR74060
-> +Moortec IP.
-> +
-> +The sensor has a range of -40°C to +125°C and an accuracy of +/-5°C.
-> +
-> +Sysfs entries
-> +-------------
-> +
-> +The following attributes are supported.
-> +
-> +======================= ========================================================
-> +temp1_input		Die temperature (in millidegree Celsius.)
-> +======================= ========================================================
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 288ae9f63588c..7fb5e0c6c6306 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -515,6 +515,16 @@ config SENSORS_I5K_AMB
->  	  This driver can also be built as a module. If so, the module
->  	  will be called i5k_amb.
->  
-> +config SENSORS_SPARX5
-> +	tristate "Sparx5 SoC temperature sensor"
-> +	depends on ARCH_SPARX5 || COMPILE_TEST
-> +	help
-> +	  If you say yes here you get support for temperature monitoring
-> +	  with the Microchip Sparx5 SoC.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called sparx5-temp.
-> +
->  config SENSORS_F71805F
->  	tristate "Fintek F71805F/FG, F71806F/FG and F71872F/FG"
->  	depends on !PPC
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 3e32c21f5efe3..857293f650412 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_SMM665)	+= smm665.o
->  obj-$(CONFIG_SENSORS_SMSC47B397)+= smsc47b397.o
->  obj-$(CONFIG_SENSORS_SMSC47M1)	+= smsc47m1.o
->  obj-$(CONFIG_SENSORS_SMSC47M192)+= smsc47m192.o
-> +obj-$(CONFIG_SENSORS_SPARX5)	+= sparx5-temp.o
->  obj-$(CONFIG_SENSORS_STTS751)	+= stts751.o
->  obj-$(CONFIG_SENSORS_AMC6821)	+= amc6821.o
->  obj-$(CONFIG_SENSORS_TC74)	+= tc74.o
-> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
-> new file mode 100644
-> index 0000000000000..7d7a060259a80
-> --- /dev/null
-> +++ b/drivers/hwmon/sparx5-temp.c
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/* Sparx5 SoC temperature sensor driver
-> + *
-> + * Copyright (C) 2020 Lars Povlsen <lars.povlsen@microchip.com>
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define TEMP_CTRL		0
-> +#define TEMP_CFG		4
-> +#define  TEMP_CFG_CYCLES	GENMASK(24, 15)
-> +#define  TEMP_CFG_ENA		BIT(0)
-> +#define TEMP_STAT		8
-> +#define  TEMP_STAT_VALID	BIT(12)
-> +#define  TEMP_STAT_TEMP		GENMASK(11, 0)
-> +
-> +struct s5_hwmon {
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +};
-> +
-> +static void s5_temp_clk_disable(void *data)
-> +{
-> +	struct clk *clk = data;
-> +
-> +	clk_disable_unprepare(clk);
-> +}
-> +
-> +static void s5_temp_enable(struct s5_hwmon *hwmon)
-> +{
-> +	u32 val = readl(hwmon->base + TEMP_CFG);
-> +	u32 clk = clk_get_rate(hwmon->clk) / USEC_PER_SEC;
-> +
-> +	val &= ~TEMP_CFG_CYCLES;
-> +	val |= FIELD_PREP(TEMP_CFG_CYCLES, clk);
-> +	val |= TEMP_CFG_ENA;
-> +
-> +	writel(val, hwmon->base + TEMP_CFG);
-> +}
-> +
-> +static int s5_read(struct device *dev, enum hwmon_sensor_types type,
-> +		   u32 attr, int channel, long *temp)
-> +{
-> +	struct s5_hwmon *hwmon = dev_get_drvdata(dev);
-> +	int rc = 0, value;
-> +	u32 stat;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		stat = readl_relaxed(hwmon->base + TEMP_STAT);
-> +		if (!(stat & TEMP_STAT_VALID))
-> +			return -EIO;
-> +		value = stat & TEMP_STAT_TEMP;
-> +		/*
-> +		 * From register documentation:
-> +		 * Temp(C) = TEMP_SENSOR_STAT.TEMP / 4096 * 352.2 - 109.4
-> +		 */
-> +		value = DIV_ROUND_CLOSEST(value * 3522, 4096) - 1094;
-> +		/*
-> +		 * Scale down by 10 from above and multiply by 1000 to
-> +		 * have millidegrees as specified by the hwmon sysfs
-> +		 * interface.
-> +		 */
-> +		value *= 100;
-> +		*temp = value;
-> +		break;
-> +	default:
-> +		rc = -EOPNOTSUPP;
-> +		break;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static umode_t s5_is_visible(const void *_data, enum hwmon_sensor_types type,
-> +			     u32 attr, int channel)
-> +{
-> +	if (type != hwmon_temp)
-> +		return 0;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		return 0444;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static const struct hwmon_channel_info *s5_info[] = {
-> +	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
-> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops s5_hwmon_ops = {
-> +	.is_visible = s5_is_visible,
-> +	.read = s5_read,
-> +};
-> +
-> +static const struct hwmon_chip_info s5_chip_info = {
-> +	.ops = &s5_hwmon_ops,
-> +	.info = s5_info,
-> +};
-> +
-> +static int s5_temp_probe(struct platform_device *pdev)
-> +{
-> +	struct device *hwmon_dev;
-> +	struct s5_hwmon *hwmon;
-> +	int ret;
-> +
-> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
-> +	if (!hwmon)
-> +		return -ENOMEM;
-> +
-> +	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(hwmon->base))
-> +		return PTR_ERR(hwmon->base);
-> +
-> +	hwmon->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(hwmon->clk))
-> +		return PTR_ERR(hwmon->clk);
-> +
-> +	ret = clk_prepare_enable(hwmon->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(&pdev->dev, s5_temp_clk_disable,
-> +				       hwmon->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	s5_temp_enable(hwmon);
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +							 "s5_temp",
-> +							 hwmon,
-> +							 &s5_chip_info,
-> +							 NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +const struct of_device_id s5_temp_match[] = {
-> +	{ .compatible = "microchip,sparx5-temp" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, s5_temp_match);
-> +
-> +static struct platform_driver s5_temp_driver = {
-> +	.probe = s5_temp_probe,
-> +	.driver = {
-> +		.name = "sparx5-temp",
-> +		.of_match_table = s5_temp_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(s5_temp_driver);
-> +
-> +MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
-> +MODULE_DESCRIPTION("Sparx5 SoC temperature sensor driver");
-> +MODULE_LICENSE("GPL");
