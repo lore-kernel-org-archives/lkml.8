@@ -2,119 +2,76 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C475BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99645C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2E52078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:12:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H+6fL4de"
+	by mail.kernel.org (Postfix) with ESMTP id 7B78420738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405992AbgFXSMs (ORCPT
+        id S2405996AbgFXSOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:12:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405983AbgFXSMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:12:47 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF82DC061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:12:47 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j4so1364687plk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C3KkiGAO8lyqdIQuvAEQ8JzIRmCuaGHCnXCsx5RyvD0=;
-        b=H+6fL4de2g0NqRjNI58Cx3x6zrt4dbBLGQLeSSyd6+OzOQlJC6BzxHFaJ3I6S99Bec
-         OQ2a62j+C7MqgQn7mbkbzWzppHEB1GYqdwdKnSwj1Vy8L0SHQX5CCTQyFFhw2nfP2Oma
-         GC+ibr91Yu35ORM9umWb5oqy9JE3ZhDSBRfrU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C3KkiGAO8lyqdIQuvAEQ8JzIRmCuaGHCnXCsx5RyvD0=;
-        b=Qnsw+s9ENXF9ZV5IMNkEQKCWk0iVolYxMsstIt3GZffKJYCKozeSDCD6XW1gSIYIKW
-         rf4HfqaeSHkKqpD2VK3VwFqmf/dUaG5EKrT54iUZgtg8Vu6TahXX41XdlulNXLanbVtG
-         UxrQnpxRO7mG0LRj87PHAz5hRrmfGem33Iw8vNOx8dqiNORXjTYFMrWNVo/YkFSdpmP8
-         +7r50He4Rmq72wTD8jxWkgW4D2MCXaprb3lcH5mGJ6H6RqKxZwHFDvh8uvDfvf7RsJ5z
-         SDDk2X8QslM6e8dhrD1b/K0EKJn9avHbyDWP7JTXiQBFxP2gukcfPr1paT+0GVUWKJJW
-         bl9g==
-X-Gm-Message-State: AOAM532iscXClItYGaLkZj7pUgjgDQhMHEC2JZHlcbX9G1asAdPwVxB8
-        IydwEzVgfuPq4n16gpLCezA36g==
-X-Google-Smtp-Source: ABdhPJzWq9UU+H14Fdg0rAeVk81PgRXWQJtgYbujIWk0/OsSMEkiHBY5RWPayIIneJl57lJZWSk1gg==
-X-Received: by 2002:a17:90b:3010:: with SMTP id hg16mr5180108pjb.69.1593022367291;
-        Wed, 24 Jun 2020 11:12:47 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id s10sm1319332pjl.41.2020.06.24.11.12.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 11:12:46 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 11:12:45 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
-        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
-        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
-        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-Message-ID: <20200624181245.GE39073@google.com>
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
- <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
- <20200624170933.GB39073@google.com>
- <20200624171537.GL5472@sirena.org.uk>
- <20200624173948.GC39073@google.com>
- <20200624174417.GM5472@sirena.org.uk>
- <20200624175536.GD39073@google.com>
- <20200624180005.GO5472@sirena.org.uk>
+        Wed, 24 Jun 2020 14:14:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:45497 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405119AbgFXSOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:14:40 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E6C1668B02; Wed, 24 Jun 2020 20:14:37 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 20:14:37 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Message-ID: <20200624181437.GA26277@lst.de>
+References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de> <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com> <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624180005.GO5472@sirena.org.uk>
+In-Reply-To: <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 07:00:05PM +0100, Mark Brown wrote:
-> On Wed, Jun 24, 2020 at 10:55:36AM -0700, Matthias Kaehlcke wrote:
-> > On Wed, Jun 24, 2020 at 06:44:17PM +0100, Mark Brown wrote:
+On Wed, Jun 24, 2020 at 11:11:50AM -0700, Linus Torvalds wrote:
+> What I mean was *not* something like uptr_t.
 > 
-> > > Wait, so *some* of the series should go together but not other bits?
-> > > But you want them split up for some reason?
+> Just keep the existing "set_fs()". It's not harmful if it's only used
+> occasionally. We should rename it once it's rare enough, though.
 > 
-> > Yes, this will almost certainly be the case, even if not for this patch.
-> > I brought this up earlier (https://patchwork.kernel.org/cover/11604623/#23428709).
+> Then, make the following changes:
 > 
-> I'm not really reading any of this stuff for the series as a whole, as
-> far as I could tell I'd reviewed all my bits and was hoping whatever
-> random platform stuff needs sorting out was going to be sorted out so I
-> stopped getting copied on revisions :(
-
-Sorry this caused you extra work, I only fully realized this when the series
-was basically ready to land :(
-
-Avoiding unnecessary revision spam is another good reason to not combine
-technically unrelated patches in a single series.
-
-If I notice similar series in the future I'll try to bring it up early.
-
-> > For the QSPI patch you could argue to just take it through QCOM since the SPI
-> > patch of this series goes through this tree, up to you, I just want to make
-> > sure everybody is on the same page.
+>  - all the normal user access functions stop caring. They use
+> TASK_SIZE_MAX and are done with it. They basically stop reacting to
+> set_fs().
 > 
-> If there are some part of this that don't have a connection with the
-> rest of the series and should be applied separately please split them
-> out and send them separately so it's clear what's going on.
+>  - then, we can have a few *very* specific cases (like setsockopt,
+> maybe some random read/write) that we teach to use the new set_fs()
+> thing.
+> 
+> So in *those* cases, we'd basically just do "oh, ok, we are supposed
+> to use a kernel pointer" based on the setfs value.
+> 
+> IOW, I mean tto do something much more gradual. No new interfaces, no
+> new types, just a couple of (very clearly marked!) cases of the legacy
+> set_fs() behavior.
 
-Rajendra, IIUC you have to re-spin this series anyway, please split it
-up in self-contained chunks.
+So we'd need new user copy functions for just those cases, and make
+sure everything below the potential get_fs-NG uses them.  But without
+any kind of tape safety to easily validate all users below actually
+use them?  I just don't see how that makes sense.
+
+FYI, I think the only users where we really need it are setsockopt
+and a s390-specific driver from my audits so far.  Everything else
+shouldn't need anything like that.
