@@ -2,127 +2,118 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E006CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C131C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24AE20885
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A70F20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vuaVAcTH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZJ+x6Lm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389805AbgFXJjc (ORCPT
+        id S2389817AbgFXJmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388031AbgFXJjb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:39:31 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3281C061573;
-        Wed, 24 Jun 2020 02:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mu39W01/t9ACc+drZK56GEmPLcRgj8Ms7poz8whzmow=; b=vuaVAcTH7W1+HEM32sXXCH+PV
-        qLbCEfLDNkxMy9Qm63+cJQwVrVVLMfhkLUGfHBw8Nf2BjF/Iy2HQ4cggnd5joJPhh7L2767co4iv5
-        C71N+Po+YjfaSzbWe4iBRJrc7TeZwf2QYiB9BsekdSrGjWLh+TJCussKTG2UJ//73av1mdmZkYEf3
-        2fZCrxaxztth359yTjF1jk5CL092a6U1LZlDDB3RAYC4n6V/GCMZLYNUZKOHUKkeXPOvbItDdyWfj
-        2ud2QmXexeJAdFVw7RnB1m3NPmEElOwPszX+S84WJeh9ncCXhwmiE6jKYGePwhwbup7vk7zL7UfXJ
-        0XmMe6HHA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59050)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jo1sL-0002oX-Rr; Wed, 24 Jun 2020 10:39:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jo1sJ-0001qH-RN; Wed, 24 Jun 2020 10:39:23 +0100
-Date:   Wed, 24 Jun 2020 10:39:23 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] net: phy: call phy_disable_interrupts() in
- phy_init_hw()
-Message-ID: <20200624093923.GX1551@shell.armlinux.org.uk>
-References: <20200624112516.7fcd6677@xhacker.debian>
- <20200624112624.200306ac@xhacker.debian>
- <996affa7-9f78-73c4-8f86-9bcd337191c4@gmail.com>
+        Wed, 24 Jun 2020 05:42:19 -0400
+Received: from mail-eopbgr150070.outbound.protection.outlook.com ([40.107.15.70]:21014
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388005AbgFXJmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:42:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UVyXlC72oEOAJpMq4hJHy2T3zdYNlQNuchc9byVItdRP+Mh6sycU27Jyobd6sdj258cNwzUGA82d2PMpb0UMB9r3ETiJEYjbCEgP76YjiJ4Ch5y+S8lPNg998e7tDlNFvv7CUrAIeEPZFXkyrZvZC5poJpZuzXWPbBFC4X4XrdUjaarGSeilVZp0mRKqK/te4kkQeC9llS4b11oqBzESNUKyUXkKLfV36xP0OU+FNRr7La5IhRUwFMDMhJVUmV45FhyO+NPQsXUAiY4F9mFCLGldMNA+Ab791luwbO8Xf5NcJ6t2aCPW53AO2Gvca/jL4wlr435GsYGuJN+RfLucPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eijbQIHE5obPQu13PPhCctgjYrSEfmyN7CSUEBUNi/Q=;
+ b=LJGKB5ZrD6fbxn7xDrEM5u3x3vwCBn9hYI/aKyHEZijG/1MNZh6xcd+sMi9rvWor6+fjLTnyRm+maGpHp6M5i7WdW/GRV1gQql8klHyfdmMLqdL61pqSZP1GmnDX50SG7YwR/swmUset0KLabDeFwoWBnkH/CAvdYbdLKPQwXFQYd1E5Da8k73yyMVw1hMOunMiJRiS4FnJytDSdJ+JW4wt9e5SzKVOk2MXP1zgwNS4NL2zScbiAhDvG97zXXlWTUXEUoMSHC8wGCJZq+JEW/d1HwWKDOndwXBh6C8DJKTYby6A9U1ORUSXtbaF+1vPMYSx3eqmJ4YQ1pVtHG5fNsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eijbQIHE5obPQu13PPhCctgjYrSEfmyN7CSUEBUNi/Q=;
+ b=ZJ+x6Lm39uj+GCSRQV9jjbT7e8JYyWE22nf8Nq7JVDTC66XK9JZglrVVvvwxD3p7FaCgpWuYLPdvxCTRTlznnDl+uanHXDIMYqeoyMVgYMLCQmU5DqzdrAvQKk0eIjU5ZMdvoB3VXLwLXV19m1evnfC3sSyO6+twth8sJWT3EaQ=
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
+ by VI1PR04MB6974.eurprd04.prod.outlook.com (2603:10a6:803:133::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Wed, 24 Jun
+ 2020 09:42:14 +0000
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3131.021; Wed, 24 Jun 2020
+ 09:42:14 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>
+CC:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
+Thread-Topic: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
+Thread-Index: AQHWKrwXtO/N2oQua0+uJ10PPhSg4aiqXxHQgBMCnACAAXIN0IAAAhkAgAAAaZCAAAIiAIAAA9TggAAAzoCAH6fKgIAJPHlw
+Date:   Wed, 24 Jun 2020 09:42:14 +0000
+Message-ID: <VI1PR04MB4366C3866EB8D2CD2A8A08E38F950@VI1PR04MB4366.eurprd04.prod.outlook.com>
+References: <20200515132353.vfor7v4buzoddfmb@pali>
+ <VI1PR04MB4366625917BB57695BE454448FBA0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+ <20200528103432.irmsaaz72x3xophg@pali>
+ <VI1PR04MB4366409B8E293A265851DA948F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+ <20200529084630.j7rpdypt6vycsedh@pali>
+ <VI1PR04MB4366DECFA1EB5C3D6AADB0818F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+ <20200529085536.zivf36mn2d6zx5ii@pali>
+ <VI1PR04MB43663ACEAADB7ADD1EB7572D8F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+ <20200529091211.vx2godj5zirsptam@pali> <20200618123647.axx7wtlclgs333k5@pali>
+In-Reply-To: <20200618123647.axx7wtlclgs333k5@pali>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [115.112.95.158]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 11db65af-3af2-40ee-8c72-08d81822e095
+x-ms-traffictypediagnostic: VI1PR04MB6974:
+x-microsoft-antispam-prvs: <VI1PR04MB69746B865853DF01A82C453B8F950@VI1PR04MB6974.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0444EB1997
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SbwADqBYHWbVwUkpDE+8NJrdIdWcjKgTFj1qQnPqWf5sIgocLlwLOICpBkPMuz2lpNC92J2TdLpkA931aGBAHIYeZ6UkgNxFEUGJRZo5eA3lIfFGtoBgkovgTp4jzFLT/2SvoUFnolXCYzaDKRJP2TpV+W9KkVBuW33TG96yyVt1dtCA4+iUAlg3FYku1x6/SH5rHyNu2/xQ2dJUbkMDko0TZdGMhzR8o6zICMtSYTmOTE5iWZi68Dn1Nmtzj1z7DxQRJv08+tbxivcXfiNQGfrGc89Bxw9zmH5cQiSFTQRrs5EyAD0aFJ4j3Kim8M9a4EJIYU3V9iDnpvIb79cNqg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(346002)(396003)(39860400002)(66446008)(64756008)(66946007)(66476007)(8676002)(44832011)(33656002)(4326008)(478600001)(8936002)(76116006)(83380400001)(2906002)(186003)(26005)(55016002)(6506007)(4744005)(55236004)(5660300002)(52536014)(66556008)(6916009)(7696005)(9686003)(316002)(54906003)(71200400001)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: xWfjW7HSwP+vzNJTkFn3OnQAZoz1Q7o9KuCrQ9RVGR8OGbwjPP5YQlWWfeTdvnDrAa7ZemKPsx+K8amJL28iKG3OHwhhYCHApR2y8yJHKhFQfqf65oEJ/9SoV6gLmo+6eNaeSkML4vrbT7Za7f5lLMVU9I29i1pVWqd/kLra67wHtxWjcsLdEHXQ8LAlK6KhtsCoX/gtq1smvO9yOYBA8oFUtpBmyGCyeN0aJT3bxAySM7eN4+RiQJaSSyZtpwfdOiub01keagBG5cVXBCrPpLh4QLeBUnyZACItmLqmn8IEAByzYYBSa+ZCWDmabNDdBsxCLjZGBSIqkCKc95oyNOpYg86/qQ/rNa9NSxEEAKs4cCZ+EmhNRgoegoP7kXWpKME/Nmf6Sh6OyNqlb9xYz1EYyirtXEikfb0JH6H2m7ReIlKDWC2kZ3Y4uc3rvOB5PTBWxOqUrD8g/rIT9sOwWB1tNr16vJio/NN5Iy3sxtCyLh04hUErCUNrL5q62S3c
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <996affa7-9f78-73c4-8f86-9bcd337191c4@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11db65af-3af2-40ee-8c72-08d81822e095
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 09:42:14.7627
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /lzsbyXbEfpdDiJUG2LW5Uk8KWrHRk1X+e7gSgGvuIxppcabEcRfZNW/+10qhS1bmFCcHXRVttBn4WiSDeODCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6974
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 08:36:46PM -0700, Florian Fainelli wrote:
-> Le 2020-06-23 à 20:26, Jisheng Zhang a écrit :
-> > Call phy_disable_interrupts() in phy_init_hw() to "have a defined init
-> > state as we don't know in which state the PHY is if the PHY driver is
-> > loaded. We shouldn't assume that it's the chip power-on defaults, BIOS
-> > or boot loader could have changed this. Or in case of dual-boot
-> > systems the other OS could leave the PHY in whatever state." as pointed
-> > out by Heiner.
-> > 
-> > Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
-> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > ---
-> >  drivers/net/phy/phy_device.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> > index 04946de74fa0..f17d397ba689 100644
-> > --- a/drivers/net/phy/phy_device.c
-> > +++ b/drivers/net/phy/phy_device.c
-> > @@ -1090,10 +1090,13 @@ int phy_init_hw(struct phy_device *phydev)
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > -	if (phydev->drv->config_init)
-> > +	if (phydev->drv->config_init) {
-> >  		ret = phydev->drv->config_init(phydev);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> >  
-> > -	return ret;
-> > +	return phy_disable_interrupts(phydev);
-> 
-> Not sure if the order makes sense here, it may seem more natural for a
-> driver writer to have interrupts disabled first and then config_init
-> called (which could enable interrupts not related to link management
-> like thermal events etc.)
-
-If this is a shared interrupt, and the PHY interrupt has been left
-enabled, wouldn't we want to ensure that the PHY interrupt is disabled
-as early as possible - in other words, when the device is probed,
-rather than when the PHY is eventually bound to the network device.
-
-However, I must point out that even disabling the PHY interrupt at
-probe time is only reducing the window for problems - if that shared
-interrupt has already been claimed by other users, and if the PHY
-interrupt is unmasked in the PHY, then the PHY can do whatever it
-likes with the shared interrupt before we even get to probe the PHY.
-So the only real solution to this is to fix the environment that is
-passing control to the kernel.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+SGkgUGFsaSwNCg0KPiA+ID4gPiBIZWxsbyBHYW5hcGF0aGkhIFNlZW1zIHRoYXQgb24gYm90aCBs
+b2NhdGlvbnMgaXMgb2xkZXIgdmVyc2lvbiBvZg0KPiA+ID4gPiBzZHNkODk5N19jb21ib192NC5i
+aW4gZmlybXdhcmUsIG5vdCB0aGUgbGF0ZXN0IG9uZS4gT24gYm90aA0KPiA+ID4gPiBsb2NhdGlv
+biBpcyBhdmFpbGFibGUganVzdCB2ZXJzaW9uIDE2LjY4LjEucDE3OS4gQnV0IHdlIGhhdmUgbmV3
+ZXINCj4gdmVyc2lvbiAxNi42OC4xLnAxOTcuDQoNCldoZXJlIGRpZCB5b3UgZmluZCBwMTk3LCBr
+aW5kbHkgbGV0IG1lIGtub3cgc28gdGhhdCBJIGNhbiB0cnkgdG8gZ2V0IGl0J3MgZGV0YWlscyBh
+bmQgdXBzdHJlYW0uDQoNCj4gPiA+ID4gQ291bGQgeW91IHBsZWFzZSByZWNoZWNrIGl0Pw0KPiA+
+ID4NCj4gPiA+IHAxNzkgZG8gaGF2ZSB0aGUgZml4IGJ1dCB3ZSB3aWxsIHRyeSB0byB1cHN0cmVh
+bSBwMTk3IGFsc28gc29vbi4NCj4gPg0KPiA+IFRoYW5rIHlvdSENCj4gDQo+IEhlbGxvIEdhbmFw
+YXRoaSEgRG8geW91IGhhdmUgYW55IHVwZGF0ZXMgYWJvdXQgdXBzdHJlYW1pbmcgbmV3IGZpcm13
+YXJlDQo+IHZlcnNpb24/DQoNClJlZ2FyZHMsDQpHYW5hcGF0aGkNCg==
