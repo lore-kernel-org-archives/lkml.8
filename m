@@ -2,126 +2,168 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D167CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CED2C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981A320C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="0jvmCkm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391108AbgFXNtC (ORCPT
+        id S2391121AbgFXNtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:49:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:51856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389590AbgFXNtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391102AbgFXNtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 09:49:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F21631B;
-        Wed, 24 Jun 2020 06:49:00 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E3913F6CF;
-        Wed, 24 Jun 2020 06:48:57 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 14:48:55 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Fangrui Song <maskray@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-Message-ID: <20200624134854.GF25945@arm.com>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org>
- <20200624033142.cinvg6rbg252j46d@google.com>
- <202006232143.66828CD3@keescook>
- <20200624104356.GA6134@willie-the-truck>
- <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
- <20200624112647.GC6134@willie-the-truck>
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19A8C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:49:01 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id z2so2136896ilq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HMgVoQ0NH17cOLvd+EMrZ4qMVzF5NeVckkBSBDB5GLs=;
+        b=0jvmCkm1uxOa1uyi4BAYlDRMMqRDa38wgi9E8/XIDdGrA9oQ5L4spIW2A1eGA4BtF2
+         S8zElmWx4UIeuMFNfhPYYnWZuScbEVueJuWuV4FXywiqce4LL2run2a4ymvcOzIu/C/+
+         6Fe7gIuaYQNI6sGKgF4WgNb2BUsmVdRrHfRKrtAsfldLg5IvcbHl6PWauCZhmFQojQhm
+         9a7Q5RrPl/lbr4+33xEC9+RPw7xZD15uxySVT5i1FJFwQookYTDkrFsYT0wH0jVU3Rlu
+         L9Tp3z1r1c62MEmeG50kWokbFvxn6cOtU/lGUbjrNM0wFfDadl3nZISJG+6IalJfMcDf
+         33mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HMgVoQ0NH17cOLvd+EMrZ4qMVzF5NeVckkBSBDB5GLs=;
+        b=UhQOk5MbUGWm3JtRytqindywQIGmjd2xlqya67ROJQgRfumpGmFWe8GFCaC/0jkWcd
+         kBSLhwF6Ss1dkt6zcPRNi4tYi9vt90RBob7Kgy44oiUrXsdbBt9E+7evS1MaKeGa53eZ
+         UK7IxnH2gqKbtWEtRsC1orDKG6B3DVFVoKaaskpN+POEjo6qR1lnMShlQOz2CIX2642h
+         u7C1djOUWxsOuzC037ZR3U0C0CtfKWQfuLtLcqqUUG7SMD5And8NgH+ZE1cQIPPc3Wa+
+         2SuqLqd16bQCRuIODorsXsWuVE7s8RWxmPEvyKS5E7XmIA2HDiCsIG8Nc6tamwlmJUbV
+         g6Qg==
+X-Gm-Message-State: AOAM533+UCmECAAuQrkmJemMHThhF8qfhyvMbTfi1lZlWD0MTODPna18
+        0F4bMEzZVOkBdN1uYSFVaBQ7uyCpFMv9BkjLnHy6SQ==
+X-Google-Smtp-Source: ABdhPJxdX8ruFrJVm8CZiU93LA3RvFI3WisGoVFQmLOi9T6/smGz8KDwDETgwAqF6p43r34eXBRDqfcPxFBj5bX92S8=
+X-Received: by 2002:a92:de10:: with SMTP id x16mr29799293ilm.6.1593006540971;
+ Wed, 24 Jun 2020 06:49:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624112647.GC6134@willie-the-truck>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-10-brgl@bgdev.pl>
+ <20200622133940.GL338481@lunn.ch> <20200622135106.GK4560@sirena.org.uk>
+ <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com> <20200624094302.GA5472@sirena.org.uk>
+In-Reply-To: <20200624094302.GA5472@sirena.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 24 Jun 2020 15:48:50 +0200
+Message-ID: <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY registration
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 12:26:47PM +0100, Will Deacon wrote:
-> On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 24 Jun 2020 at 12:44, Will Deacon <will@kernel.org> wrote:
-> > > On Tue, Jun 23, 2020 at 09:44:11PM -0700, Kees Cook wrote:
-> > > > On Tue, Jun 23, 2020 at 08:31:42PM -0700, 'Fangrui Song' via Clang Built Linux wrote:
-> > > > > arch/arm64/Kconfig enables ARM64_PTR_AUTH by default. When the config is on
-> > > > >
-> > > > > ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
-> > > > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI) := -mbranch-protection=pac-ret+leaf+bti
-> > > > > else
-> > > > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET) := -mbranch-protection=pac-ret+leaf
-> > > > > endif
-> > > > >
-> > > > > This option creates .note.gnu.property:
-> > > > >
-> > > > > % readelf -n drivers/firmware/efi/libstub/efi-stub.o
-> > > > >
-> > > > > Displaying notes found in: .note.gnu.property
-> > > > >   Owner                Data size        Description
-> > > > >   GNU                  0x00000010       NT_GNU_PROPERTY_TYPE_0
-> > > > >       Properties: AArch64 feature: PAC
-> > > > >
-> > > > > If .note.gnu.property is not desired in drivers/firmware/efi/libstub, specifying
-> > > > > -mbranch-protection=none can override -mbranch-protection=pac-ret+leaf
-> > > >
-> > > > We want to keep the branch protection enabled. But since it's not a
-> > > > "regular" ELF, we don't need to keep the property that identifies the
-> > > > feature.
-> > >
-> > > For the kernel Image, how do we remove these sections? The objcopy flags
-> > > in arch/arm64/boot/Makefile look both insufficient and out of date. My
-> > > vmlinux ends up with both a ".notes" and a ".init.note.gnu.property"
-> > > segment.
-> > >
-> > 
-> > The latter is the fault of the libstub make rules, that prepend .init
-> > to all section names.
-> 
-> Hmm. I tried adding -mbranch-protection=none to arm64 cflags for the stub,
-> but I still see this note in vmlinux. It looks like it comes in via the
-> stub copy of lib-ctype.o, but I don't know why that would force the
-> note. The cflags look ok to me [1] and I confirmed that the note is
-> being generated by the compiler.
-> 
-> > I'm not sure if there is a point to having PAC and/or BTI in the EFI
-> > stub, given that it runs under the control of the firmware, with its
-> > memory mappings and PAC configuration etc.
-> 
-> Agreed, I just can't figure out how to get rid of the note.
+=C5=9Br., 24 cze 2020 o 11:43 Mark Brown <broonie@kernel.org> napisa=C5=82(=
+a):
+>
+> On Tue, Jun 23, 2020 at 12:49:15PM -0700, Florian Fainelli wrote:
+> > On 6/22/20 6:51 AM, Mark Brown wrote:
+>
+> > > If the bus includes power management for the devices on the bus the
+> > > controller is generally responsible for that rather than the devices,
+> > > the devices access this via facilities provided by the bus if needed.
+> > > If the device is enumerated by firmware prior to being physically
+> > > enumerable then the bus will generally instantiate the device model
+> > > device and then arrange to wait for the physical device to appear and
+> > > get joined up with the device model device, typically in such situati=
+ons
+> > > the physical device might appear and disappear dynamically at runtime
+> > > based on what the driver is doing anyway.
+>
+> > In premise there is nothing that prevents the MDIO bus from taking care
+> > of the regulators, resets, prior to probing the PHY driver, what is
+> > complicated here is that we do need to issue a read of the actual PHY t=
+o
+> > know its 32-bit unique identifier and match it with an appropriate
+> > driver. The way that we have worked around this with if you do not wish
+> > such a hardware access to be made, is to provide an Ethernet PHY node
+> > compatible string that encodes that 32-bit OUI directly. In premise the
+> > same challenges exist with PCI devices/endpoints as well as USB, would
+> > they have reset or regulator typically attached to them.
+>
+> That all sounds very normal and is covered by both cases I describe?
+>
+> > > We could use a pre-probe stage in the device model for hotpluggable
+> > > buses in embedded contexts where you might need to bring things out o=
+f
+> > > reset or power them up before they'll appear on the bus for enumerati=
+on
+> > > but buses have mostly handled that at their level.
+>
+> > That sounds like a better solution, are there any subsystems currently
+> > implementing that, or would this be a generic Linux device driver model
+> > addition that needs to be done?
+>
+> Like I say I'm suggesting doing something at the device model level.
 
-Because this section is generated by the linker itself I think you might
-have to send it to /DISCARD/ in the link, or strip it explicitly after
-linking.
+I didn't expect to open such a can of worms...
 
-Cheers
----Dave
+This has evolved into several new concepts being proposed vs my
+use-case which is relatively simple. The former will probably take
+several months of development, reviews and discussions and it will
+block supporting the phy supply on pumpkin boards upstream. I would
+prefer not to redo what other MAC drivers do (phy-supply property on
+the MAC node, controlling it from the MAC driver itself) if we've
+already established it's wrong.
+
+Is there any compromise we could reach to add support for a basic,
+common use-case of a single regulator supplying a PHY that needs
+enabling before reading its ID short-term (just like we currently
+support a single reset or reset-gpios property for PHYs) and
+introducing a whole new concept to the device model for more advanced
+(but currently mostly hypothetical) cases long-term?
+
+Bart
