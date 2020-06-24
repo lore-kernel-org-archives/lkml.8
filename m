@@ -2,86 +2,148 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3383FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC056C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083D3206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD4B206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGLKEPfm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPAONOoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404270AbgFXPCe (ORCPT
+        id S2404278AbgFXPCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55618 "EHLO
+        Wed, 24 Jun 2020 11:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404255AbgFXPC1 (ORCPT
+        with ESMTP id S2404249AbgFXPC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:02:27 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C85BC0613ED;
-        Wed, 24 Jun 2020 08:02:27 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id e15so1744084edr.2;
-        Wed, 24 Jun 2020 08:02:27 -0700 (PDT)
+        Wed, 24 Jun 2020 11:02:26 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1346AC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:02:26 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id jz3so1280171pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=joaqSzO9YrunPdmQExA2g6tAJBLWEu7X/4bAmZ8Um/4=;
-        b=fGLKEPfmpfyDVfYFXgXYsN+ra45eqMzfoxlE5fEQq2E/nJlHkb3aLLEjASyTdxD0Jh
-         +azO0HVFjVl2/2A/s38XUzjfiLxD9o7Nlu0Mw+VBWhW6rymHPfENV5SXmIstGF3ITmL5
-         lpiHMvnjinZehwBoLMIs4FZv2qc6PRH5il+rtve0m8NIj/csmPfzKCyMnuV2PaWONWJt
-         uvZM4HPJ4IPqUXK7qJA5fRfSKYpcoTO44cEXFLc30/fnJpzKaLiXjo7QQ+Y97+D5I+RA
-         pQWfrIqsaosnoRb470LdJUW7z15by2RA49MHwX/B8AidCSBEDUPfUTb6E6T/QWxNkcVQ
-         FTBA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=J0Xeovjt/xfdRY3CY7rSgO7sQOzE+w1RTWn+OXKgogk=;
+        b=mPAONOoOMCz3IzPvpOtPAvFkSpNOWWK64tYeTcGp6deJ7CGiQdTIbJCV2Oq5KqScuO
+         ADRvQ4+VVqQBfUd0xqxLtL5HOjaJKhJGpU/WYe8APPid8XYqspwYo1OuZqTS7Nm22CiQ
+         dmociYAaoYOUH0EqVKScWSV8fzliM2Gt2mSfUAFL8rSsvHv1vAxPpTXX6XhyMO0wgIz0
+         2QmyCW3M3bAByYly33meuPj7eq64fO2j+tSP7MDEmaZ76LbcUiEIDIcU4llqohRiD/QA
+         O54Zk7e6ZJyVtnWggGSBqR1lqlmXON+xERUiXIGJU73FIak4foWAfIvj0FdlrHopRmji
+         Z0GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=joaqSzO9YrunPdmQExA2g6tAJBLWEu7X/4bAmZ8Um/4=;
-        b=LJgFstwVId7Gj1PEa9S0JUX669uDIiMYeZGsAdJ8yrTh0rHYpCn0DIYgY8pkbGCNyD
-         Lf7I7l9DMs1jxKQm/tK3/v/hUfdQASLUylPC8K1rC4QVCYW/hpNFL/XjjtMaUWCTTJTZ
-         BCSzW1PYP8fpv/EG7BAyTBOjkhsleTRHTvUUB+29ViaAMrnudibv95mTF34SI9Bu95Bw
-         AZjrRXPuXjUZ7DOmueWZo4x/TPewboC/VscsPY8sctsYdKhFnLPYpgSadLy+MYpANYt0
-         1drfeZMM7FyASo68FyTsnD6JFsBmRToIi8D8i24IVrLq5YUyoip1XbKgmkRz7ZIhpBCt
-         UogA==
-X-Gm-Message-State: AOAM530iLMyTtY+HSvYnzrjQ4E9VO27dEmcBpjr1d4gz1OnQYT7H7Rdx
-        bVkDtoM7BkXrucb8esFrPk9TRqTiB/Fj5ZEBd1UV3V10
-X-Google-Smtp-Source: ABdhPJybRDss19kJA/nU6b6NvS3HVIs6RZo/E76NGJSVeOzB8R3k6aWf/LXpQbE9UooKYCG8cGulykoWdAXpdAGvXJ0=
-X-Received: by 2002:aa7:c756:: with SMTP id c22mr27583864eds.239.1593010946270;
- Wed, 24 Jun 2020 08:02:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623180832.254163-1-konradybcio@gmail.com>
- <20200623180832.254163-4-konradybcio@gmail.com> <CAHLCerOAM5j+gZWP9MUuGZ+TQfBg4Z=GoEdUfxBTwtEs5TqUuw@mail.gmail.com>
-In-Reply-To: <CAHLCerOAM5j+gZWP9MUuGZ+TQfBg4Z=GoEdUfxBTwtEs5TqUuw@mail.gmail.com>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Wed, 24 Jun 2020 17:01:50 +0200
-Message-ID: <CAMS8qEUT+Kdq-gqZn25X7W2V8HacuXFbeoTDz=N7C7MNpSfOHA@mail.gmail.com>
-Subject: Re: [PATCH 3/8] arm64: dts: qcom: sdm630: Add tsens node
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=J0Xeovjt/xfdRY3CY7rSgO7sQOzE+w1RTWn+OXKgogk=;
+        b=f+/Hxni5UC826jt/WwT1s4tV9k+gq6E5/05OV0rcqRznxDoi7TjLbJPLr9yIRQ9Vol
+         gOMte74wSNFSFLnILH/UeAdTqIbgLSWCSDqMszoflQsQPmumtO3ImoEkSzJPL5JfPYcc
+         nubrzdjwFUbPAAWmjMo/d1ImWhaC8TD4x+PtkUHpm/CbNVwgbnFtgibShjYN0/R+EH5d
+         AmwHJr1KABT3jIKyoT1tQLketbOHw7S+uDFGo/Z1NHu5PYel5nleLX7/FMMCN7ZUBj51
+         NX5WZzGJ+bXJXGJDbdormk4FQIRTPWIgJTujf4cFwZwKYqWg5OTCOLzMUi1C6UCBzqXO
+         UNDg==
+X-Gm-Message-State: AOAM533IgeW+KW58pbLcwvjq64NYRGNLA1dOsqpn+9ZqNJyE1AwrVv4O
+        bKekvHP4dMKULKPsRY9cxg==
+X-Google-Smtp-Source: ABdhPJw6MfmyFpw8wUaLuJ/Vb231TF9GIf25hqGNAuaS+lTOsKaFPSQMkwSVd0NnleNPPJ4y5vKcQg==
+X-Received: by 2002:a17:90a:e801:: with SMTP id i1mr28012066pjy.79.1593010945548;
+        Wed, 24 Jun 2020 08:02:25 -0700 (PDT)
+Received: from ip-172-31-41-194.ap-northeast-1.compute.internal (ec2-52-199-21-241.ap-northeast-1.compute.amazonaws.com. [52.199.21.241])
+        by smtp.gmail.com with ESMTPSA id i125sm17013705pgd.21.2020.06.24.08.02.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:02:25 -0700 (PDT)
+From:   nao.horiguchi@gmail.com
+To:     linux-mm@kvack.org
+Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
+        mike.kravetz@oracle.com, osalvador@suse.de, tony.luck@intel.com,
+        david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
+        zeil@yandex-team.ru, naoya.horiguchi@nec.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 14/15] mm,hwpoison: Return 0 if the page is already poisoned in soft-offline
+Date:   Wed, 24 Jun 2020 15:01:36 +0000
+Message-Id: <20200624150137.7052-15-nao.horiguchi@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200624150137.7052-1-nao.horiguchi@gmail.com>
+References: <20200624150137.7052-1-nao.horiguchi@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Interesting, the downstream DTS only mentions the 0x010AD one..
-Are you sure you're not looking at 636/660?
+From: Oscar Salvador <osalvador@suse.de>
 
-Regards
-Konrad
+Currently, there is an inconsistency when calling soft-offline from
+different paths on a page that is already poisoned.
+
+1) madvise:
+
+        madvise_inject_error skips any poisoned page and continues
+        the loop.
+        If that was the only page to madvise, it returns 0.
+
+2) /sys/devices/system/memory/:
+
+        When calling soft_offline_page_store()->soft_offline_page(),
+        we return -EBUSY in case the page is already poisoned.
+        This is inconsistent with a) the above example and b)
+        memory_failure, where we return 0 if the page was poisoned.
+
+Fix this by dropping the PageHWPoison() check in madvise_inject_error,
+and let soft_offline_page return 0 if it finds the page already poisoned.
+
+Please, note that this represents a user-api change, since now the
+return error when calling soft_offline_page_store()->soft_offline_page()
+will be different.
+
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
+---
+ mm/madvise.c        | 3 ---
+ mm/memory-failure.c | 4 ++--
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git v5.8-rc1-mmots-2020-06-20-21-44/mm/madvise.c v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/madvise.c
+index 2b5080253406..b59bbd6c9982 100644
+--- v5.8-rc1-mmots-2020-06-20-21-44/mm/madvise.c
++++ v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/madvise.c
+@@ -902,9 +902,6 @@ static int madvise_inject_error(int behavior,
+ 		 */
+ 		put_page(page);
+ 
+-		if (PageHWPoison(page))
+-			continue;
+-
+ 		if (behavior == MADV_SOFT_OFFLINE) {
+ 			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
+ 				pfn, start);
+diff --git v5.8-rc1-mmots-2020-06-20-21-44/mm/memory-failure.c v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/memory-failure.c
+index 22c904f6d17a..9ad3198a3954 100644
+--- v5.8-rc1-mmots-2020-06-20-21-44/mm/memory-failure.c
++++ v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/memory-failure.c
+@@ -1800,7 +1800,7 @@ static int __soft_offline_page(struct page *page)
+ 		unlock_page(page);
+ 		put_page(page);
+ 		pr_info("soft offline: %#lx page already poisoned\n", pfn);
+-		return -EBUSY;
++		return 0;
+ 	}
+ 
+ 	if (!PageHuge(page))
+@@ -1901,7 +1901,7 @@ int soft_offline_page(unsigned long pfn)
+ 
+ 	if (PageHWPoison(page)) {
+ 		pr_info("soft offline: %#lx page already poisoned\n", pfn);
+-		return -EBUSY;
++		return 0;
+ 	}
+ 
+ 	get_online_mems();
+-- 
+2.17.1
+
