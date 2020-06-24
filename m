@@ -2,79 +2,105 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F021FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD06C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C330A2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7FA2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592978112;
-	bh=C7u6f+o/DrwWusWOFFTNio0VAYGLsCOVgTu9dC0eAoI=;
+	s=default; t=1592978141;
+	bh=IDDIJV22a3Ovbw0bQoQy+zWJH8exNEIrWuN8w5nfDyI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1Ye/X5h6fl+dNsTmnCtNe11HBb4pGma47jDSSvjXx/5sJlLz/nv4gxT4s+874yLrn
-	 8KkPvLvzTaDShrR5mfEckifNMVHye2MolQARjp6yg3JytocF4XLvUtiUP5V8TbkNqB
-	 M4HmMjS8L/OompxraX9D+2J+iWj7AGSv71CBpUpI=
+	b=UuWNluStmoCMJB/gLMRFZdVIR03MAJ9Fb+8XPMwutmPHFYvYlCKRLJetJCT2qT/hj
+	 gRAiJLJPkIeU5g92pPmL04Vy5Z6ZdqrYnMMNZItFv3yWTUVyrfzVlnFMNEdrBGHaxk
+	 JbArcyo0171/NrA1z6vEnEK3d+2GfjwO7hur7Sr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389015AbgFXFzL (ORCPT
+        id S2389023AbgFXFzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:55:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58704 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 01:55:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388280AbgFXFzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:55:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2388280AbgFXFzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:55:39 -0400
+Received: from localhost (unknown [171.61.66.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5640F2085B;
-        Wed, 24 Jun 2020 05:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DDBC2073E;
+        Wed, 24 Jun 2020 05:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592978109;
-        bh=C7u6f+o/DrwWusWOFFTNio0VAYGLsCOVgTu9dC0eAoI=;
+        s=default; t=1592978139;
+        bh=IDDIJV22a3Ovbw0bQoQy+zWJH8exNEIrWuN8w5nfDyI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aZgDwP1kB5BuYMPsGylEZmCMeNU4q6GN6UJ01pEHNUiw4OsMfbO6/xD0wyyFwzNmz
-         cXNjx8Wv+Amh05LBRkhtYvEU7BekPJKoCzbmSOzFWC06LL6PRahYqvjSiC7B38LxxC
-         27mF0GUlDmU7IQU8ZkaanBRYPI4zbfchYHawOLJM=
-Date:   Wed, 24 Jun 2020 07:55:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/477] 5.7.6-rc1 review
-Message-ID: <20200624055508.GC684295@kroah.com>
-References: <20200623195407.572062007@linuxfoundation.org>
- <e2298fad-feda-cbda-102d-caad70a7fdd7@roeck-us.net>
+        b=uSWDiNYHDNs0J7RovY7qEJn4LzLzZaQsEA2w9mwAByWOtumiE89EjMbgKjNJTT/P5
+         1gcBxf9bVYZRa+uFtZgudQ90iIEU5VPoZchGhAajrb9/DivCTomqoRUlySL08YVsAi
+         hU79tghugxBDWVk5NrPakizX3ljxQt8g8/RfKDlM=
+Date:   Wed, 24 Jun 2020 11:25:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
+ kzalloc()
+Message-ID: <20200624055535.GX2324254@vkoul-mobl>
+References: <20200619224334.GA7857@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2298fad-feda-cbda-102d-caad70a7fdd7@roeck-us.net>
+In-Reply-To: <20200619224334.GA7857@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:07:08PM -0700, Guenter Roeck wrote:
-> On 6/23/20 12:49 PM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.7.6 release.
-> > There are 477 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 25 Jun 2020 19:52:30 +0000.
-> > Anything received after that time might be too late.
-> > 
-> [ ... ]
-> > Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> >     pinctrl: freescale: imx: Use 'devm_of_iomap()' to avoid a resource leak in case of error in 'imx_pinctrl_probe()'
-> > 
-> This patch has since been reverted in the upstream kernel (commit 13f2d25b951f)
-> and needs to be dropped.
+On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> This code was detected with the help of Coccinelle and, audited and
+> fixed manually.
+> 
+> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/dma/ti/k3-udma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index 0d5fb154b8e2..411c54b86ba8 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
+>  	u32 ring_id;
+>  	unsigned int i;
+>  
+> -	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT);
+> +	d = kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
 
-Now dropped, thanks.
+struct_size() is a * b + c but here we need, a + b * c.. the trailing
+struct is N times here..
 
-greg k-h
+
+>  	if (!d)
+>  		return NULL;
+>  
+> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
+>  	if (period_len >= SZ_4M)
+>  		return NULL;
+>  
+> -	d = kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAIT);
+> +	d = kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+>  	if (!d)
+>  		return NULL;
+>  
+> -- 
+> 2.27.0
+
+-- 
+~Vinod
