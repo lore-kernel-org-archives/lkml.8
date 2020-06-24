@@ -2,79 +2,97 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4E42073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11423207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GTdY+26C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389753AbgFXHXb convert rfc822-to-8bit (ORCPT
+        id S2389763AbgFXHXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:23:31 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:33368 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389661AbgFXHX2 (ORCPT
+        Wed, 24 Jun 2020 03:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389748AbgFXHXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:23:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 03BAC6089348;
-        Wed, 24 Jun 2020 09:23:26 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id kIp0YWd4f9Wp; Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 987DE6246915;
-        Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id guvA4nah7l7J; Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 6A8CC6089348;
-        Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-Message-ID: <903628180.54697.1592983405305.JavaMail.zimbra@nod.at>
-In-Reply-To: <2356a78c-750b-538f-3d64-b9c78aff89cb@infradead.org>
-References: <20200529200347.2464284-1-keescook@chromium.org> <202006231610.4993DC5@keescook> <2356a78c-750b-538f-3d64-b9c78aff89cb@infradead.org>
-Subject: Re: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
+        Wed, 24 Jun 2020 03:23:30 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1742AC061573;
+        Wed, 24 Jun 2020 00:23:30 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49sF4J2x6hz9sQt;
+        Wed, 24 Jun 2020 17:23:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592983408;
+        bh=vYlm9bUberKGeS5FHiBGn/ijfDTjheo3Sv1jYaFA1j4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GTdY+26CCjt20q6J20pfaYfzrW9mXZuGVMOxPFJAvu14Vtrd8W+M5sUGgPNCt06ZM
+         dh4YsAopp4v21xuzxKQQvyZ5aEidgJs4XRTOIU70NS6rqIq6IA2d6ieQ9xBvXg36VG
+         ZQ7iuOC3pLf0qBCa/n0Xp1fCIqFBQsIGE7xK1b2/Lzm73mMptXa+oeW2t+ZmMCJaE/
+         l/rHbEhn0RW5Lr6dW1V3uY/TRHvYyn7YYCAKgsgrTOTi0wdmIyI8zsWaC1zT+/amGA
+         szoJ88diuN8B2pKdskyZmrrUEJAkb1vCfSUrGuFV5Gws86IpmEPu8JdXn5aaiQxckx
+         H2p6KxGiPIAZQ==
+Date:   Wed, 24 Jun 2020 17:23:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: linux-next: Fixes tag needs some work in the scsi-fixes tree
+Message-ID: <20200624172326.43723eca@canb.auug.org.au>
+In-Reply-To: <20200624071447.19529-1-sjpark@amazon.com>
+References: <20200624170742.4e9e9c96@canb.auug.org.au>
+        <20200624071447.19529-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Topic: lkdtm: Various clean ups
-Thread-Index: AQwsBIGnKjKHDWJPXuIGObKRE4SqJA==
+Content-Type: multipart/signed; boundary="Sig_/r3ma.Ks12w9qo/NK48UlZeq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
->>> Regardless, it seems arch/x86/um/asm/desc.h is not needed any more?
-> 
->> True that, we can rip the file.
-> 
-> Has anyone fixed the uml build errors?
+--Sig_/r3ma.Ks12w9qo/NK48UlZeq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I didn't realize that this is a super urgent issue. ;-)
+Hi SeongJae,
 
-Kees, if you want you can carry a patch in your series, I'll ack it.
-Otherwise I can also do a patch and bring it via the uml tree upstream
-as soon more fixes queued up.
+On Wed, 24 Jun 2020 09:14:47 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+>
+> Oops, sorry for the mistake.  I will send the fixed version in reply to t=
+his.
 
-Thanks,
-//richard
+Unless Martin says otherwise, I am not sure it is worth fixing.  Just
+remember for next time.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/r3ma.Ks12w9qo/NK48UlZeq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7y/24ACgkQAVBC80lX
+0GwsXwf+LF4HisbD5RKi5kKqR5j0GActj79hJrpgmBHvJn8oizLLApHOHJVRqZNz
+B2FPCoYpeW0V+ZvDuzbGcAKvlOem1t4LjQ0bHSe4mRqxGp2zwb8rkEhbI5FdUNm8
+RPc4E4oXwYToeIr7mxbL1CvbXzNLwg5j4COustNqglNCZrwabocyAO6Tt4aRTQq3
+IkHGqfRzcEwh0R3q/kUtRfUrJVJCsvuEECdaJFiuvilm5FfV0ewa2hexxP+G1e5l
+ziQtZrUSPC/R6MgpC//E/iXrnOJaGZp87DabFgpngYHSU/Jwux8nPfOrWi6GNJdO
+tmQmkIOUsVJvpUdgxUm1hOlcEVGEdg==
+=MMzA
+-----END PGP SIGNATURE-----
+
+--Sig_/r3ma.Ks12w9qo/NK48UlZeq--
