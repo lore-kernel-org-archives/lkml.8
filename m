@@ -2,137 +2,120 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04023C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F74C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9F06206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WZQlmjlW"
+	by mail.kernel.org (Postfix) with ESMTP id 359ED20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593022332;
+	bh=vguMG2Frx6ddvH4sH94HUkTKzOWyajl73pm7n8N9kBo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=00x1vYkTeHn8stb/Qaovc3MLGLv7PGb7MQa7T0EAwIQXNqGsinxMaWkvwurf+/l32
+	 ecNOkxGfblgTQD2NHhr5kna947qgBdVRMj8dMOZ+ZcA4nmy5TKpVSlprpNAs26oguF
+	 6vQBpi5xyxBfsApWN+n4ykBSN3E36LT8VbKX5A0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405808AbgFXSLw (ORCPT
+        id S2405932AbgFXSMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57002 "EHLO
+        Wed, 24 Jun 2020 14:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405601AbgFXSLv (ORCPT
+        with ESMTP id S2405761AbgFXSMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:11:51 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51427C061796
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:11:51 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f2so1353776plr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:11:51 -0700 (PDT)
+        Wed, 24 Jun 2020 14:12:10 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD922C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:12:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id x18so3638711lji.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=422RvCVMwHIgJq8oJttIGIf/8JjnkP+mRkDXzBdPXT8=;
-        b=WZQlmjlWEQ1UkJeisUgXi12IFZ6FlsnfN2wqfWi8/FVPnx/OJBTsDqSDl+FXmzFiyM
-         6oBl5B6cOoZ/WjlUjxWskPl5yHIn3rERO++NtLEvpKmIYyhhUX4CiOwXhw7PhBLBIR0s
-         lxwGO1QQCRUN+VZdtOEsTPYmlCio5gvwj+m4Q=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U5O34Bhu+mXlljW4o1n6jAUtWoAilwwsuuBTtWM5EkM=;
+        b=X5q/JuuAXzg5cLEyj9l4hKnog2zLaFr6cPK5cIKZiYO1/ckVvp/JHr+ds9iPiDjB+2
+         hcA8637lcsrPk11j//mj62+mDzxeVnrD1z58Kyi/e3QQBd8UhOM4HlUaGtI/ZNsmRYg6
+         dF2K+SB970XHvOOxNG1Iyqt+exYASwGWsUUTo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=422RvCVMwHIgJq8oJttIGIf/8JjnkP+mRkDXzBdPXT8=;
-        b=Nu+y96FDQO4xULBtfsfTh5E9YeattIFIeUx1dQZBGn8G2f4qXAP+rp5QpXbOVLsnqd
-         dTWfPt5O5SqO21G8ALybnC3LugHioprZqcC4sGaTvHc8FPbddnaVQDcv+FG6UVZoJECA
-         /cNoZdjguXJ4DZgwiztkohwJMRd836m0l1Lne+VOPVRSFEq4tBZB8gqzhvtHHFUNvPCK
-         6CnOOBwxxmOy2SlwUaSd5pHYFKG0suP4EuW6G54Jk6IsuzFknOL6zEMWwXhS1hdmGJUl
-         J8M5+HfSR8JbJCAHz8iAXSACeFHzmtpm4hW3kXPTYL8v6fmgvgCy+N99dRnrvJ10cv3D
-         yPxQ==
-X-Gm-Message-State: AOAM533b3tc56oT7ZOTFfCQH/toRSPZ4iv7rBdrXE144Ey6/RPISPjgJ
-        HP1/AjiWPYM5PVXF7sGaQIVMrg==
-X-Google-Smtp-Source: ABdhPJz+C8v2cqUkkqdWQZydV3m7DEZkJpn2jSEDdMHcd1UHdmHWT6WqILDp+mDGYZS9oz6BpIb3yQ==
-X-Received: by 2002:a17:90b:1087:: with SMTP id gj7mr30297077pjb.124.1593022310574;
-        Wed, 24 Jun 2020 11:11:50 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id 127sm16139674pgf.5.2020.06.24.11.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 11:11:50 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     rjliao@codeaurora.org, marcel@holtmann.org,
-        linux-bluetooth@vger.kernel.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Bluetooth: btusb: Reset port on cmd timeout
-Date:   Wed, 24 Jun 2020 11:11:44 -0700
-Message-Id: <20200624111128.v2.1.Ibae403db54245c458d14297f1892c77c5055da41@changeid>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U5O34Bhu+mXlljW4o1n6jAUtWoAilwwsuuBTtWM5EkM=;
+        b=OfFWLihGvm6+MFMcMpLL1oqhZUIdogWqK7GW8fwDasZCKakbdtSG1hHSfcy+0uyNzI
+         HTyDLU+WBIitpuab8nyJoWhhvfRfv4W2T/D6iRVkVpy1x4vLpKwCM9jbWitl22HuwNIu
+         xCtqlhT8rtUYk/sejCMOCK87Dgy8kyA+E8fYwceB4W6KUACj0xBXY1lanbatqGMU1NJ+
+         vKnsUOGU8g3Xy2QhTGkclElYeEpgcu551ga9tCS/RgBLSKac4yUftMcYDxMwX/qUavNN
+         fWfL/cnPvITQg/AP74NsSNY+olTwjBg7ltJfRkKi0QctIifoMhW/G9nq3fK4o8+Amny6
+         p75A==
+X-Gm-Message-State: AOAM533siNF77RcjrjivRQAkgyk+FF9PyOsvRR/MZ0ozV4EFJVPEwOpr
+        JVqM22UsnOcg2bwoeyXy2kOLUj+T7c4=
+X-Google-Smtp-Source: ABdhPJw5gk7U5ODUedYr3miIzW16gtoGZ8A1J8Sg2dmK5dHclb7qgoWvbU88UlSTGeRt8uCG73DiRA==
+X-Received: by 2002:a2e:8047:: with SMTP id p7mr2732841ljg.414.1593022328066;
+        Wed, 24 Jun 2020 11:12:08 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id d20sm5390790lfi.22.2020.06.24.11.12.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 11:12:07 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id e4so3632411ljn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:12:06 -0700 (PDT)
+X-Received: by 2002:a2e:8e78:: with SMTP id t24mr14351650ljk.314.1593022326362;
+ Wed, 24 Jun 2020 11:12:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de>
+ <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com> <20200624175548.GA25939@lst.de>
+In-Reply-To: <20200624175548.GA25939@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 24 Jun 2020 11:11:50 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+Message-ID: <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file operations
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QCA_ROME sometimes gets into a state where it is unresponsive to
-commands. Since it doesn't have support for a reset gpio, reset the usb
-port when this occurs instead.
+On Wed, Jun 24, 2020 at 10:55 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> I don't care at all.  Based on our previous chat I assumed you
+> wanted something like this.  We might still need the uptr_t for
+> setsockopt, though.
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-On Chromebooks with this chipset, we encountered cmd_timeout after
-running suspend stress test for hundreds of iterations. Without
-a recovery mechanism, continued cmd_timeout failures eventually caused
-the suspend stress test to fail.
+No.
 
-This change will just reset the port that the Bluetooth chip is on when
-cmd_timeout is encountered. At the very least, the driver will unload
-and stop affecting suspend. It doesn't seem to restore the BT controller
-to a good state however (this still requires a power cycle).
+What I mean was *not* something like uptr_t.
 
-Changes in v2:
-- Renamed btusb_generic_usb_cmd_timeout to btusb_qca_cmd_timeout
-- Updated commit note
+Just keep the existing "set_fs()". It's not harmful if it's only used
+occasionally. We should rename it once it's rare enough, though.
 
- drivers/bluetooth/btusb.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Then, make the following changes:
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index e42fdd625eb023..df46b2a34c1803 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -573,6 +573,22 @@ static void btusb_rtl_cmd_timeout(struct hci_dev *hdev)
- 	gpiod_set_value_cansleep(reset_gpio, 0);
- }
- 
-+static void btusb_qca_cmd_timeout(struct hci_dev *hdev)
-+{
-+	struct btusb_data *data = hci_get_drvdata(hdev);
-+	int err;
-+
-+	if (++data->cmd_timeout_cnt < 5)
-+		return;
-+
-+	bt_dev_err(hdev, "Multiple cmd timeouts seen. Resetting usb device.");
-+	err = usb_autopm_get_interface(data->intf);
-+	if (!err)
-+		usb_queue_reset_device(data->intf);
-+	else
-+		bt_dev_err(hdev, "Failed usb_autopm_get_interface with %d", err);
-+}
-+
- static inline void btusb_free_frags(struct btusb_data *data)
- {
- 	unsigned long flags;
-@@ -3964,6 +3980,7 @@ static int btusb_probe(struct usb_interface *intf,
- 	if (id->driver_info & BTUSB_QCA_ROME) {
- 		data->setup_on_usb = btusb_setup_qca;
- 		hdev->set_bdaddr = btusb_set_bdaddr_ath3012;
-+		hdev->cmd_timeout = btusb_qca_cmd_timeout;
- 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
- 		btusb_check_needs_reset_resume(intf);
- 	}
--- 
-2.27.0.111.gc72c7da667-goog
+ - all the normal user access functions stop caring. They use
+TASK_SIZE_MAX and are done with it. They basically stop reacting to
+set_fs().
 
+ - then, we can have a few *very* specific cases (like setsockopt,
+maybe some random read/write) that we teach to use the new set_fs()
+thing.
+
+So in *those* cases, we'd basically just do "oh, ok, we are supposed
+to use a kernel pointer" based on the setfs value.
+
+IOW, I mean tto do something much more gradual. No new interfaces, no
+new types, just a couple of (very clearly marked!) cases of the legacy
+set_fs() behavior.
+
+                Linus
