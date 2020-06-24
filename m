@@ -2,220 +2,222 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F5A2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tILHWMKK"
+	by mail.kernel.org (Postfix) with ESMTP id 83CC62088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390100AbgFXKDB (ORCPT
+        id S2390170AbgFXKD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387647AbgFXKDA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:03:00 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F5BC061573;
-        Wed, 24 Jun 2020 03:03:00 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d27so1210587qtg.4;
-        Wed, 24 Jun 2020 03:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=x476Mn/y0mphbsxJns0lxfmywCKbgB/VcIe+XBugAac=;
-        b=tILHWMKKSrhBr5plwoYJB+nfH0X2040IojID+zPJKHwwHNXR3hDLdUmJ5qQl5gwP4/
-         Lsv5LRj+0TwOM0sQ0+rCiGd8+ROD1/Kban/bWyZzAFVhfbFKHGeEqcjq/ipMfbOsq6jF
-         QiH7uEgSr0+nHeRhmvxNwh748oDoUQbpJDpaS5gSHZZ1ki+p54VHTWXIcIqSEFwWq8hh
-         oxIi9+aRTRpxnMSc7jhtRstsZIaRpykDWxFD2oN31Tgz8iiRqB6ZiB36N7vFDkBN6tte
-         ZpwHlAmr3sBPuY2o0Hu9XzmkOsGpuWzSMPJpMZqbL9+XZBsJxHk/4ArwujkdwIk6VEmL
-         GTwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=x476Mn/y0mphbsxJns0lxfmywCKbgB/VcIe+XBugAac=;
-        b=I6H5SqTdjAK1WJKSuAWftphY7562IzqHl2WiYX8Sa0oVMEGoQjYE01LiRehY0FGOGf
-         gxGZzMr7l9U6n1qXLAAZls0NOqioqModxI2E7xhwYNWiZ8Ov37CsGaKpSQ1Aqzt9/NkS
-         c/R2WGIfyacmK9rxsDNtTOzj0TU0Ax2L2288pm0LBGBkwjn/oVzSb5TiEDv4iQ2zMK25
-         adYzkh4xJHuFAB57SOZsRDDAE5nmdSnVIptmZKYtDYkSDmqYBs4H5KzBnvgKu/lm0cJ7
-         bu15GFvrc93gZAEv2R3FR8oZAPlIsXBUp2n5z93Zxo9NeHn54fKtWxuYyhN0o1aICYcP
-         LmXw==
-X-Gm-Message-State: AOAM533TpiVNLGulliWpHV2MQf1Pc+nzoHcTBwjgsGdKhEca7AjfzrnJ
-        TCX0lTCuiLHL3ThdffSpycI=
-X-Google-Smtp-Source: ABdhPJwPqeM9iy52z0CLO/z/b8R7LjzC44iXeGd8SCklz7kHMj4I+R9PDKFx8TVwACey606Rt8wSzQ==
-X-Received: by 2002:ac8:22e5:: with SMTP id g34mr26540758qta.227.1592992979109;
-        Wed, 24 Jun 2020 03:02:59 -0700 (PDT)
-Received: from ip-172-31-24-31.ec2.internal (ec2-54-234-246-66.compute-1.amazonaws.com. [54.234.246.66])
-        by smtp.gmail.com with ESMTPSA id x26sm3092571qtr.4.2020.06.24.03.02.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 03:02:58 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:02:56 +0000
-From:   "Rodolfo C. Villordo" <rodolfovillordo@gmail.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rodolfovillordo@gmail.com
-Subject: [PATCH] drivers: staging: vt6655: replace CamelCase names on
- function s_uGetRTSCTSRsvTime
-Message-ID: <20200624100256.GA17118@ip-172-31-24-31.ec2.internal>
+        Wed, 24 Jun 2020 06:03:58 -0400
+Received: from correo.us.es ([193.147.175.20]:35342 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388197AbgFXKD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 06:03:57 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 3DD601C0233
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:03:53 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 2D38BDA722
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:03:53 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 2C197DA791; Wed, 24 Jun 2020 12:03:53 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 13876DA850;
+        Wed, 24 Jun 2020 12:03:47 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Wed, 24 Jun 2020 12:03:47 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id CE5A742EF42D;
+        Wed, 24 Jun 2020 12:03:46 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 12:03:46 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
+        twoerner@redhat.com, eparis@parisplace.org, tgraf@infradead.org
+Subject: Re: [PATCH ghak124 v3] audit: log nftables configuration change
+ events
+Message-ID: <20200624100346.GA11986@salvia>
+References: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace function and variables name from CamelCase style to snake_case style.
-Remove Hungarian notation.
+On Thu, Jun 04, 2020 at 09:20:49AM -0400, Richard Guy Briggs wrote:
+> iptables, ip6tables, arptables and ebtables table registration,
+> replacement and unregistration configuration events are logged for the
+> native (legacy) iptables setsockopt api, but not for the
+> nftables netlink api which is used by the nft-variant of iptables in
+> addition to nftables itself.
+> 
+> Add calls to log the configuration actions in the nftables netlink api.
+> 
+> This uses the same NETFILTER_CFG record format but overloads the table
+> field.
+> 
+>   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=?:0;?:0 family=unspecified entries=2 op=nft_register_gen pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
+>   ...
+>   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=firewalld:1;?:0 family=inet entries=0 op=nft_register_table pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
+>   ...
+>   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=8 op=nft_register_chain pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
+>   ...
+>   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=101 op=nft_register_rule pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
+>   ...
+>   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=87 op=nft_register_setelem pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
+>   ...
+>   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=0 op=nft_register_set pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
+> 
+> For further information please see issue
+> https://github.com/linux-audit/audit-kernel/issues/124
+> 
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+> Changelog:
+> v3:
+> - inline message type rather than table
+> 
+> v2:
+> - differentiate between xtables and nftables
+> - add set, setelem, obj, flowtable, gen
+> - use nentries field as appropriate per type
+> - overload the "tables" field with table handle and chain/set/flowtable
+> 
+>  include/linux/audit.h         |  18 ++++++++
+>  kernel/auditsc.c              |  24 ++++++++--
+>  net/netfilter/nf_tables_api.c | 103 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 142 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 3fcd9ee49734..604ede630580 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/ptrace.h>
+>  #include <uapi/linux/audit.h>
+> +#include <uapi/linux/netfilter/nf_tables.h>
+>  
+>  #define AUDIT_INO_UNSET ((unsigned long)-1)
+>  #define AUDIT_DEV_UNSET ((dev_t)-1)
+> @@ -98,6 +99,23 @@ enum audit_nfcfgop {
+>  	AUDIT_XT_OP_REGISTER,
+>  	AUDIT_XT_OP_REPLACE,
+>  	AUDIT_XT_OP_UNREGISTER,
+> +	AUDIT_NFT_OP_TABLE_REGISTER,
+> +	AUDIT_NFT_OP_TABLE_UNREGISTER,
+> +	AUDIT_NFT_OP_CHAIN_REGISTER,
+> +	AUDIT_NFT_OP_CHAIN_UNREGISTER,
+> +	AUDIT_NFT_OP_RULE_REGISTER,
+> +	AUDIT_NFT_OP_RULE_UNREGISTER,
+> +	AUDIT_NFT_OP_SET_REGISTER,
+> +	AUDIT_NFT_OP_SET_UNREGISTER,
+> +	AUDIT_NFT_OP_SETELEM_REGISTER,
+> +	AUDIT_NFT_OP_SETELEM_UNREGISTER,
+> +	AUDIT_NFT_OP_GEN_REGISTER,
+> +	AUDIT_NFT_OP_OBJ_REGISTER,
+> +	AUDIT_NFT_OP_OBJ_UNREGISTER,
+> +	AUDIT_NFT_OP_OBJ_RESET,
+> +	AUDIT_NFT_OP_FLOWTABLE_REGISTER,
+> +	AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,
+> +	AUDIT_NFT_OP_INVALID,
+>  };
+>  
+>  extern int is_audit_feature_set(int which);
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index 468a23390457..3a9100e95fda 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -75,6 +75,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/fsnotify_backend.h>
+>  #include <uapi/linux/limits.h>
+> +#include <uapi/linux/netfilter/nf_tables.h>
+>  
+>  #include "audit.h"
+>  
+> @@ -136,9 +137,26 @@ struct audit_nfcfgop_tab {
+>  };
+>  
+>  static const struct audit_nfcfgop_tab audit_nfcfgs[] = {
+> -	{ AUDIT_XT_OP_REGISTER,		"register"	},
+> -	{ AUDIT_XT_OP_REPLACE,		"replace"	},
+> -	{ AUDIT_XT_OP_UNREGISTER,	"unregister"	},
+> +	{ AUDIT_XT_OP_REGISTER,			"xt_register"		   },
+> +	{ AUDIT_XT_OP_REPLACE,			"xt_replace"		   },
+> +	{ AUDIT_XT_OP_UNREGISTER,		"xt_unregister"		   },
+> +	{ AUDIT_NFT_OP_TABLE_REGISTER,		"nft_register_table"	   },
+> +	{ AUDIT_NFT_OP_TABLE_UNREGISTER,	"nft_unregister_table"	   },
+> +	{ AUDIT_NFT_OP_CHAIN_REGISTER,		"nft_register_chain"	   },
+> +	{ AUDIT_NFT_OP_CHAIN_UNREGISTER,	"nft_unregister_chain"	   },
+> +	{ AUDIT_NFT_OP_RULE_REGISTER,		"nft_register_rule"	   },
+> +	{ AUDIT_NFT_OP_RULE_UNREGISTER,		"nft_unregister_rule"	   },
+> +	{ AUDIT_NFT_OP_SET_REGISTER,		"nft_register_set"	   },
+> +	{ AUDIT_NFT_OP_SET_UNREGISTER,		"nft_unregister_set"	   },
+> +	{ AUDIT_NFT_OP_SETELEM_REGISTER,	"nft_register_setelem"	   },
+> +	{ AUDIT_NFT_OP_SETELEM_UNREGISTER,	"nft_unregister_setelem"   },
+> +	{ AUDIT_NFT_OP_GEN_REGISTER,		"nft_register_gen"	   },
+> +	{ AUDIT_NFT_OP_OBJ_REGISTER,		"nft_register_obj"	   },
+> +	{ AUDIT_NFT_OP_OBJ_UNREGISTER,		"nft_unregister_obj"	   },
+> +	{ AUDIT_NFT_OP_OBJ_RESET,		"nft_reset_obj"		   },
+> +	{ AUDIT_NFT_OP_FLOWTABLE_REGISTER,	"nft_register_flowtable"   },
+> +	{ AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,	"nft_unregister_flowtable" },
+> +	{ AUDIT_NFT_OP_INVALID,			"nft_invalid"		   },
+>  };
+>  
+>  static int audit_match_perm(struct audit_context *ctx, int mask)
+> diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+> index 3558e76e2733..b9e7440cc87d 100644
+> --- a/net/netfilter/nf_tables_api.c
+> +++ b/net/netfilter/nf_tables_api.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/netlink.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/rhashtable.h>
+> +#include <linux/audit.h>
+>  #include <linux/netfilter.h>
+>  #include <linux/netfilter/nfnetlink.h>
+>  #include <linux/netfilter/nf_tables.h>
+> @@ -693,6 +694,16 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
+>  {
+>  	struct sk_buff *skb;
+>  	int err;
+> +	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
+> +			      ctx->table->name, ctx->table->handle);
+> +
+> +	audit_log_nfcfg(buf,
+> +			ctx->family,
+> +			ctx->table->use,
+> +			event == NFT_MSG_NEWTABLE ?
+> +				AUDIT_NFT_OP_TABLE_REGISTER :
+> +				AUDIT_NFT_OP_TABLE_UNREGISTER);
+> +	kfree(buf);
 
-Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
----
- drivers/staging/vt6655/rxtx.c | 80 +++++++++++++++++------------------
- 1 file changed, 38 insertions(+), 42 deletions(-)
+As a follow up: Would you wrap this code into a function?
 
-diff --git a/drivers/staging/vt6655/rxtx.c b/drivers/staging/vt6655/rxtx.c
-index cfab64d2b312..4778439e8757 100644
---- a/drivers/staging/vt6655/rxtx.c
-+++ b/drivers/staging/vt6655/rxtx.c
-@@ -21,7 +21,7 @@
-  *      s_uGetDataDuration - get tx data required duration
-  *      s_uFillDataHead- fulfill tx data duration header
-  *      s_uGetRTSCTSDuration- get rtx/cts required duration
-- *      s_uGetRTSCTSRsvTime- get rts/cts reserved time
-+ *      get_rtscts_time- get rts/cts reserved time
-  *      s_uGetTxRsvTime- get frame reserved time
-  *      s_vFillCTSHead- fulfill CTS ctl header
-  *      s_vFillFragParameter- Set fragment ctl parameter.
-@@ -190,45 +190,41 @@ static __le16 vnt_rxtx_rsvtime_le16(struct vnt_private *priv, u8 pkt_type,
- }
- 
- /* byFreqType: 0=>5GHZ 1=>2.4GHZ */
--static
--__le16
--s_uGetRTSCTSRsvTime(
--	struct vnt_private *pDevice,
--	unsigned char byRTSRsvType,
--	unsigned char byPktType,
--	unsigned int cbFrameLength,
--	unsigned short wCurrentRate
--)
-+static __le16 get_rtscts_time(struct vnt_private *priv,
-+			      unsigned char rts_rsvtype,
-+			      unsigned char pkt_type,
-+			      unsigned int frame_length,
-+			      unsigned short current_rate)
- {
--	unsigned int uRrvTime = 0;
--	unsigned int uRTSTime = 0;
--	unsigned int uCTSTime = 0;
--	unsigned int uAckTime = 0;
--	unsigned int uDataTime = 0;
--
--	uDataTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, cbFrameLength, wCurrentRate);
--	if (byRTSRsvType == 0) { /* RTSTxRrvTime_bb */
--		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopCCKBasicRate);
--		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
--		uCTSTime = uAckTime;
--	} else if (byRTSRsvType == 1) { /* RTSTxRrvTime_ba, only in 2.4GHZ */
--		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopCCKBasicRate);
--		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
--		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
--	} else if (byRTSRsvType == 2) { /* RTSTxRrvTime_aa */
--		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopOFDMBasicRate);
--		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
--		uCTSTime = uAckTime;
--	} else if (byRTSRsvType == 3) { /* CTSTxRrvTime_ba, only in 2.4GHZ */
--		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
--		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
--		uRrvTime = uCTSTime + uAckTime + uDataTime + 2 * pDevice->uSIFS;
--		return cpu_to_le16((u16)uRrvTime);
-+	unsigned int rrv_time = 0;
-+	unsigned int rts_time = 0;
-+	unsigned int cts_time = 0;
-+	unsigned int ack_time = 0;
-+	unsigned int data_time = 0;
-+
-+	data_time = bb_get_frame_time(priv->byPreambleType, pkt_type, frame_length, current_rate);
-+	if (rts_rsvtype == 0) { /* RTSTxRrvTime_bb */
-+		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopCCKBasicRate);
-+		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
-+		cts_time = ack_time;
-+	} else if (rts_rsvtype == 1) { /* RTSTxRrvTime_ba, only in 2.4GHZ */
-+		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopCCKBasicRate);
-+		cts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
-+		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
-+	} else if (rts_rsvtype == 2) { /* RTSTxRrvTime_aa */
-+		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopOFDMBasicRate);
-+		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
-+		cts_time = ack_time;
-+	} else if (rts_rsvtype == 3) { /* CTSTxRrvTime_ba, only in 2.4GHZ */
-+		cts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
-+		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
-+		rrv_time = cts_time + ack_time + data_time + 2 * priv->uSIFS;
-+		return cpu_to_le16((u16)rrv_time);
- 	}
- 
- 	/* RTSRrvTime */
--	uRrvTime = uRTSTime + uCTSTime + uAckTime + uDataTime + 3 * pDevice->uSIFS;
--	return cpu_to_le16((u16)uRrvTime);
-+	rrv_time = rts_time + cts_time + ack_time + data_time + 3 * priv->uSIFS;
-+	return cpu_to_le16((u16)rrv_time);
- }
- 
- /* byFreqType 0: 5GHz, 1:2.4Ghz */
-@@ -921,9 +917,9 @@ s_vGenerateTxParameter(
- 			/* Fill RsvTime */
- 			struct vnt_rrv_time_rts *buf = pvRrvTime;
- 
--			buf->rts_rrv_time_aa = s_uGetRTSCTSRsvTime(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
--			buf->rts_rrv_time_ba = s_uGetRTSCTSRsvTime(pDevice, 1, byPktType, cbFrameSize, wCurrentRate);
--			buf->rts_rrv_time_bb = s_uGetRTSCTSRsvTime(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
-+			buf->rts_rrv_time_aa = get_rtscts_time(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
-+			buf->rts_rrv_time_ba = get_rtscts_time(pDevice, 1, byPktType, cbFrameSize, wCurrentRate);
-+			buf->rts_rrv_time_bb = get_rtscts_time(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
- 			buf->rrv_time_a = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
- 			buf->rrv_time_b = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, pDevice->byTopCCKBasicRate, bNeedACK);
- 
-@@ -933,7 +929,7 @@ s_vGenerateTxParameter(
- 
- 			buf->rrv_time_a = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
- 			buf->rrv_time_b = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, pDevice->byTopCCKBasicRate, bNeedACK);
--			buf->cts_rrv_time_ba = s_uGetRTSCTSRsvTime(pDevice, 3, byPktType, cbFrameSize, wCurrentRate);
-+			buf->cts_rrv_time_ba = get_rtscts_time(pDevice, 3, byPktType, cbFrameSize, wCurrentRate);
- 
- 			/* Fill CTS */
- 			s_vFillCTSHead(pDevice, uDMAIdx, byPktType, pvCTS, cbFrameSize, bNeedACK, bDisCRC, wCurrentRate, byFBOption);
-@@ -942,7 +938,7 @@ s_vGenerateTxParameter(
- 		if (pvRTS) {/* RTS_need, non PCF mode */
- 			struct vnt_rrv_time_ab *buf = pvRrvTime;
- 
--			buf->rts_rrv_time = s_uGetRTSCTSRsvTime(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
-+			buf->rts_rrv_time = get_rtscts_time(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
- 			buf->rrv_time = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
- 
- 			/* Fill RTS */
-@@ -956,7 +952,7 @@ s_vGenerateTxParameter(
- 		if (pvRTS) {/* RTS_need, non PCF mode */
- 			struct vnt_rrv_time_ab *buf = pvRrvTime;
- 
--			buf->rts_rrv_time = s_uGetRTSCTSRsvTime(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
-+			buf->rts_rrv_time = get_rtscts_time(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
- 			buf->rrv_time = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, wCurrentRate, bNeedACK);
- 
- 			/* Fill RTS */
--- 
-2.17.1
+        nft_table_audit()
 
+Same thing for other pieces of code below.
+
+Thanks.
