@@ -2,101 +2,186 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B684E2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF292076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CH4kMR5I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404266AbgFXPSI (ORCPT
+        id S2404525AbgFXPSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:18:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40303 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390817AbgFXPSH (ORCPT
+        Wed, 24 Jun 2020 11:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390817AbgFXPSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:18:07 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jo7A1-000119-Uz; Wed, 24 Jun 2020 15:18:02 +0000
-Date:   Wed, 24 Jun 2020 17:18:01 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Wed, 24 Jun 2020 11:18:15 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9945FC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:18:15 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id g17so1163166plq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RgJ5KQQgdze1Er7yT6oG3OjYmr8lm8UCuoB+oNW30KA=;
+        b=CH4kMR5Icue6l7XK6pIFfSYjVQ5WkzRDoGH+TWwCrL7w2COxwqeOUoBa/4iQarmDBH
+         iAo8lBWn1tCcw6vScNAuFoZi/1CBw/St5Xwp2qD0ZWwbUCAQr4ESbIJZKurIxMd47X38
+         zfnwiJ49xx7O1RVasJK7rT7e7T9+JmOGX/PGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RgJ5KQQgdze1Er7yT6oG3OjYmr8lm8UCuoB+oNW30KA=;
+        b=Ki8TMshjFRVHiIW3Go5dtMCPEK7LLpkeSPFDeCVBbaI7utsSINWki3eXKekggRcjZl
+         9BxWgSo/JaT44b3HBol5UTFq8JuHjRJULXLJr2WKqfM8cPRnuSJ/RosdQ3xlH4Y58/4+
+         vq311KDSJkOVqv9V4GAefY+DRnqcDRdgrZghMIM2FRj6v6xKmQNBe9RMDAJvAVksGXfx
+         Xl+4FwtksSA142EDVcnOQorEceQ4h/4rOjKHDyEkvkRaGmmahu3moTrnpEGiPWhefil4
+         Pbc63LnkNoxJBDxXtsPfXsTxE35fkEo7x9EnF7uAINn/loY4pAoYKDC2CjSH0TwJMKqL
+         E3uQ==
+X-Gm-Message-State: AOAM53137tGhFK/ujP0938WdoImOje0ZwU9INS996IFEmFp+KT+iHfyn
+        AIvGtA2Ro0nbfB4UKIcNSunMLA==
+X-Google-Smtp-Source: ABdhPJz/jvQlWnIJQ+/9RcU2vwsimI8dKzBUFnjr+tVzjSz4qWsGj4+kxN9Be7V2A/bW/LFFoMcIeA==
+X-Received: by 2002:a17:902:b906:: with SMTP id bf6mr8910774plb.323.1593011895106;
+        Wed, 24 Jun 2020 08:18:15 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l14sm5904807pjh.50.2020.06.24.08.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:18:14 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 08:18:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH 2/6] arm64/vdso: Zap vvar pages when switching to a time
- namespace
-Message-ID: <20200624151801.y27a5joml3mxeo4o@wittgenstein>
-References: <20200624083321.144975-1-avagin@gmail.com>
- <20200624083321.144975-3-avagin@gmail.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v3 09/10] kallsyms: Hide layout
+Message-ID: <202006240815.45AAD55@keescook>
+References: <20200623172327.5701-1-kristen@linux.intel.com>
+ <20200623172327.5701-10-kristen@linux.intel.com>
+ <CAG48ez3YHoPOTZvabsNUcr=GP-rX+OXhNT54KcZT9eSQ28Fb8Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624083321.144975-3-avagin@gmail.com>
+In-Reply-To: <CAG48ez3YHoPOTZvabsNUcr=GP-rX+OXhNT54KcZT9eSQ28Fb8Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:33:17AM -0700, Andrei Vagin wrote:
-> The order of vvar pages depends on whether a task belongs to the root
-> time namespace or not. In the root time namespace, a task doesn't have a
-> per-namespace page. In a non-root namespace, the VVAR page which contains
-> the system-wide VDSO data is replaced with a namespace specific page
-> that contains clock offsets.
+On Wed, Jun 24, 2020 at 12:21:16PM +0200, Jann Horn wrote:
+> On Tue, Jun 23, 2020 at 7:26 PM Kristen Carlson Accardi
+> <kristen@linux.intel.com> wrote:
+> > This patch makes /proc/kallsyms display alphabetically by symbol
+> > name rather than sorted by address in order to hide the newly
+> > randomized address layout.
+> [...]
+> > +static int sorted_show(struct seq_file *m, void *p)
+> > +{
+> > +       struct list_head *list = m->private;
+> > +       struct kallsyms_iter_list *iter;
+> > +       int rc;
+> > +
+> > +       if (list_empty(list))
+> > +               return 0;
+> > +
+> > +       iter = list_first_entry(list, struct kallsyms_iter_list, next);
+> > +
+> > +       m->private = iter;
+> > +       rc = s_show(m, p);
+> > +       m->private = list;
+> > +
+> > +       list_del(&iter->next);
+> > +       kfree(iter);
 > 
-> Whenever a task changes its namespace, the VVAR page tables are cleared
-> and then they will be re-faulted with a corresponding layout.
-> 
-> A task can switch its time namespace only if its ->mm isn't shared with
-> another task.
-> 
-> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Reviewed-by: Dmitry Safonov <dima@arista.com>
-> Signed-off-by: Andrei Vagin <avagin@gmail.com>
-> ---
->  arch/arm64/kernel/vdso.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-> index 7c4620451fa5..bdf492a17dff 100644
-> --- a/arch/arm64/kernel/vdso.c
-> +++ b/arch/arm64/kernel/vdso.c
-> @@ -124,6 +124,37 @@ static int __vdso_init(enum vdso_abi abi)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_TIME_NS
-> +/*
-> + * The vvar mapping contains data for a specific time namespace, so when a task
-> + * changes namespace we must unmap its vvar data for the old namespace.
-> + * Subsequent faults will map in data for the new namespace.
-> + *
-> + * For more details see timens_setup_vdso_data().
-> + */
-> +int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
-> +{
-> +	struct mm_struct *mm = task->mm;
-> +	struct vm_area_struct *vma;
-> +
-> +	mmap_read_lock(mm);
+> Does anything like this kfree() happen if someone only reads the start
+> of kallsyms and then closes the file? IOW, does "while true; do head
+> -n1 /proc/kallsyms; done" leak memory?
 
-Perfect, thanks! I'll adapt my patches so that my change and this change
-don't conflict and can go in together. Once they're landed we can simply
-turn int vdso_join_timens() into void vdso_join_timens() everywhere.
+Oop, nice catch. It seems the list would need to be walked on s_stop.
 
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+> > +       return rc;
+> > +}
+> [...]
+> > +static int kallsyms_list_cmp(void *priv, struct list_head *a,
+> > +                            struct list_head *b)
+> > +{
+> > +       struct kallsyms_iter_list *iter_a, *iter_b;
+> > +
+> > +       iter_a = list_entry(a, struct kallsyms_iter_list, next);
+> > +       iter_b = list_entry(b, struct kallsyms_iter_list, next);
+> > +
+> > +       return strcmp(iter_a->iter.name, iter_b->iter.name);
+> > +}
+> 
+> This sorts only by name, but kallsyms prints more information (module
+> names and types). This means that if there are elements whose names
+> are the same, but whose module names or types are different, then some
+> amount of information will still be leaked by the ordering of elements
+> with the same name. In practice, since list_sort() is stable, this
+> means you can see the ordering of many modules, and you can see the
+> ordering of symbols with same name but different visibility (e.g. "t
+> user_read" from security/selinux/ss/policydb.c vs "T user_read" from
+> security/keys/user_defined.c, and a couple other similar cases).
 
-Thanks!
-Christian
+i.e. sub-sort by visibility?
+
+> 
+> [...]
+> > +#if defined(CONFIG_FG_KASLR)
+> > +/*
+> > + * When fine grained kaslr is enabled, we need to
+> > + * print out the symbols sorted by name rather than by
+> > + * by address, because this reveals the randomization order.
+> > + */
+> > +static int kallsyms_open(struct inode *inode, struct file *file)
+> > +{
+> > +       int ret;
+> > +       struct list_head *list;
+> > +
+> > +       list = __seq_open_private(file, &kallsyms_sorted_op, sizeof(*list));
+> > +       if (!list)
+> > +               return -ENOMEM;
+> > +
+> > +       INIT_LIST_HEAD(list);
+> > +
+> > +       ret = kallsyms_on_each_symbol(get_all_symbol_name, list);
+> > +       if (ret != 0)
+> > +               return ret;
+> > +
+> > +       list_sort(NULL, list, kallsyms_list_cmp);
+> 
+> This permits running an algorithm (essentially mergesort) with
+> secret-dependent branches and memory addresses on essentially secret
+> data, triggerable and arbitrarily repeatable (although with partly
+> different addresses on each run) by the attacker, and probably a
+> fairly low throughput (comparisons go through indirect function calls,
+> which are slowed down by retpolines, and linked list iteration implies
+> slow pointer chases). Those are fairly favorable conditions for
+> typical side-channel attacks.
+> 
+> Do you have estimates of how hard it would be to leverage such side
+> channels to recover function ordering (both on old hardware that only
+> has microcode fixes for Spectre and such, and on newer hardware with
+> enhanced IBRS and such)?
+
+I wonder, instead, if sorting should be just done once per module
+load/unload? That would make the performance and memory management
+easier too.
+
+-- 
+Kees Cook
