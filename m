@@ -2,109 +2,103 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81270C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1EFB206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593011078;
-	bh=sjyWN89n2WVn1nir58rJre28qTxK1Z7LKlW6WPjB498=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ajGDTGUYa59CC89MkNfCGJZoMryGHMIA2DNEWLIgaSyhLtqBKrjUxxjFx9EDlIEcK
-	 hITb/61FretqQ8WCPEA7tBFc9o+4Yqe3bOmDLTUqc2wopXVUMUvQGYICVhtk1UOIyz
-	 RmM62wrRDuP1iTq0k6ZYeVo6afnJ9h49dGg/cVPg=
+	by mail.kernel.org (Postfix) with ESMTP id 5CECE206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:04:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ggqKLpgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404107AbgFXPEh (ORCPT
+        id S2404162AbgFXPEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:04:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403833AbgFXPEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:04:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F352C2070A;
-        Wed, 24 Jun 2020 15:04:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593011076;
-        bh=sjyWN89n2WVn1nir58rJre28qTxK1Z7LKlW6WPjB498=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OuktBilcZV/yDm2z+dLzle3X5u04XthtuHlAreC1y/MG37F7osJCt8BQdho0fFtnr
-         Zbqy05zYZlwITMtBKJjdgZIWp5dN5nafQF6fts3sxdifBfIuD3LxBGLbx0T8m0No9r
-         Vs25zXTH+3WgSZPmxueQywLc30VHf7n177WG8R10=
-Date:   Wed, 24 Jun 2020 16:04:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
- integer and pointer types
-Message-ID: <20200624150434.GH5472@sirena.org.uk>
-References: <20200624114127.3016-1-a.hajda@samsung.com>
- <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
- <20200624114127.3016-4-a.hajda@samsung.com>
- <2203e0c2-016b-4dbe-452d-63c857f06dd1@arm.com>
- <CAHp75VfpP1cGK3FvTL0hBudRY2N_7GpXYRuUHUCipz7X2sMLmQ@mail.gmail.com>
- <be755825-b413-e5c1-7ea4-06506b20d1f0@arm.com>
+        Wed, 24 Jun 2020 11:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404118AbgFXPEl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:04:41 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97335C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:04:41 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h15so2621971wrq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:04:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+GecQ66rmlEvjIvJ7QJtrKlUl0uFGquQecFmVEnG3vQ=;
+        b=ggqKLpgIV8maJfSM69W3D1mszs39U+1t28FTlwnkcd84c+gIgGoPdF7HRsq/DM1jMk
+         9gqacJBySBP6gXjN151KeET3e+g/ISEwOAe2QvBA2VVsTUgmpGFsUvJcaS0zCbpK8PpK
+         M+aW26fbiPFWEyMUqUmXFNJBEcnnX65jccbSs+sWKgE2FztQ4DtJkHSHVvLRRa0xOXG3
+         2iYC8lTFzIXBIq6hePP2rZUhhcMAg/AbI9WcyH3NGJwRc/cwRffpnHne6STLhq0zy8Ca
+         B6tEj8wsr44ipYX9tEeaSJHZZci9T/rJQqKuCropA5cvL9bD0AGezcuGfPHafWHBXfd/
+         BZaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+GecQ66rmlEvjIvJ7QJtrKlUl0uFGquQecFmVEnG3vQ=;
+        b=PT+BiQg74Y5NdVUOkMIQGHZLXi/JzJYnEh0ZK0WTQq/IH/Uy434rg1ryNH64+bE5+S
+         Rj/SBzwV6ck+ZduQ8/kFI/McRemDTrz5t+t/rFs6yej2oemo/2Xcp+ObEnEh3NYlsetb
+         fQ6VVK00DfvZVorZvSV0uGno7+Uw5RSalRdd0dQl5dp9JTMB5Lrki/s55CWkm9ZBfThr
+         p4qFxUB6tnlcw4StN758SGNF2S0nKRb0eOv/IUaPsIOKut00ksNvGR8Mu+o3y5gVtqYN
+         wpbftuCE8kdP1xmMSYUz9FMDHO9f4uOGbNoYFmtv0GZL57puJDcYCcF2UhulslkEc47t
+         jqzg==
+X-Gm-Message-State: AOAM532jar1H0st8HFIQ9uz/o+iudXrPhDYt1jgpCwltQrXw8YlihV2s
+        t5gkKp+QYJ/3ot2g03Rqx27qTQ==
+X-Google-Smtp-Source: ABdhPJwlPY1Prth3NQ7J8sQFtWPaPtlNsxgKb6muWk22U+5w0GKI8UWdfsvMJUKmL/9pxgQ4mmDiXg==
+X-Received: by 2002:a5d:56c7:: with SMTP id m7mr31187536wrw.223.1593011080131;
+        Wed, 24 Jun 2020 08:04:40 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id f186sm8200319wmf.29.2020.06.24.08.04.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:04:39 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 0/8] Fix a bunch of W=1 warnings in Backlight
+Date:   Wed, 24 Jun 2020 15:57:13 +0100
+Message-Id: <20200624145721.2590327-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4C6bbPZ6c/S1npyF"
-Content-Disposition: inline
-In-Reply-To: <be755825-b413-e5c1-7ea4-06506b20d1f0@arm.com>
-X-Cookie: So this is it.  We're going to die.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Attempting to clean-up W=1 kernel builds, which are currently
+overwhelmingly riddled with niggly little warnings.
 
---4C6bbPZ6c/S1npyF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Lee Jones (8):
+  backlight: lms501kf03: Remove unused const variables
+  backlight: lcd: Add missing kerneldoc entry for 'struct device parent'
+  backlight: ili922x: Add missing kerneldoc descriptions for
+    CHECK_FREQ_REG() args
+  backlight: ili922x: Remove invalid use of kerneldoc syntax
+  backlight: ili922x: Add missing kerneldoc description for
+    ili922x_reg_dump()'s arg
+  backlight: backlight: Supply description for function args in existing
+    Kerneldocs
+  backlight: lm3630a_bl: Remove invalid checks for unsigned int < 0
+  backlight: qcom-wled: Remove unused configs for LED3 and LED4
 
-On Wed, Jun 24, 2020 at 03:25:33PM +0100, Robin Murphy wrote:
+ drivers/video/backlight/backlight.c  | 2 ++
+ drivers/video/backlight/ili922x.c    | 8 ++++++--
+ drivers/video/backlight/lcd.c        | 1 +
+ drivers/video/backlight/lm3630a_bl.c | 4 ++--
+ drivers/video/backlight/lms501kf03.c | 8 --------
+ drivers/video/backlight/qcom-wled.c  | 8 --------
+ 6 files changed, 11 insertions(+), 20 deletions(-)
 
-> And yeah, anyone who pipes up suggesting that places where an ERR_PTR value
-> could be passed to probe_err() could simply refactor IS_ERR() checks with
-> more uses of the god-awful PTR_ERR_OR_ZERO() obfuscator gets a long stare of
-> disapproval...
+-- 
+2.25.1
 
-We could also have a probe_err_ptr() or something that took an ERR_PTR()
-instead if there really were an issue with explicitly doing this.
-
---4C6bbPZ6c/S1npyF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7za4EACgkQJNaLcl1U
-h9ADKQf/bUGsVZLtJzgP2M/GIXNWTFrshhTPYFVHuKWmwRJL79fSW758BKdmbzdF
-fYDZdgI3NMUnfpBaL7MmdmAlazwJ97Mci7lVIckChwBKZWo7QT/oe8RZlp+mGlbr
-6kSNJDIQgTdBEtx1T6VYHhEnZgjn5KRgZHTp2SVd1SaJ6StGr2w29XvLABxfekXl
-OLdDcSIHN0eUWZoLx/fjDrB3Wic9JzbEzj7rFZ6Zfr5py3VxUseRexpXikjW9YEa
-VejUE8Z0brYa021cZqMymq0G++v+JeATDEzCsYMJ3VGsHgBfSVJrIHfxtx9dJHv+
-dHEFhwK7rmIkGPziGlBbph8Bncxuhg==
-=wsw7
------END PGP SIGNATURE-----
-
---4C6bbPZ6c/S1npyF--
