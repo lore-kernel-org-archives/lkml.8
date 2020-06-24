@@ -2,125 +2,85 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3294C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F272076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAVF2FGr"
+	by mail.kernel.org (Postfix) with ESMTP id 981132076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404580AbgFXPQr (ORCPT
+        id S2404587AbgFXPQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404564AbgFXPQk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:16:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55BE6C061573;
-        Wed, 24 Jun 2020 08:16:40 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 17so2902824wmo.1;
-        Wed, 24 Jun 2020 08:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=34hmditf+vhlxJcmEFkZgWoC7pJeDEW0sX6340LuRHw=;
-        b=QAVF2FGrKfQudyBRkn3UEh/QzSSNVI0DOwlhIyVt7j4OWP0Q1EKpaZB7h08BZ34SL5
-         xOPUwta5fN7soRtWRKATYZPdLsezxlnLx3C0yP1njOkEOzi5vwQ1wVWsSFYl46UQmRhx
-         zTRbOaYgkfnwfMea/9aKyEZMcMEW3De25mZvgPzrdK5mCyi9yvuFwNz7toArk1ExXQGr
-         vqzqH9txAcCm0C96sFblR42GmoxJWnINnyVmRpWtXXZ0fR2wTjyAkgdvpiYyxX6KbeWp
-         9Y5MzCGn0FT1gQPQ1kvcOhDRGpeAcA5WLfAy9ClOcUCzgBrD76MCrjQM1IcW5VIxPfCx
-         GAbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=34hmditf+vhlxJcmEFkZgWoC7pJeDEW0sX6340LuRHw=;
-        b=TLvLBEQKDQ+eq9uzxR4g4k0zNNmff9WKShE3uaNIafUYlvswyqnQDyy748fTR3lk0C
-         iGIJnCdYA2lqn+jAnEqvojbcYCbN68L9OWbrTrrxmJFAYrZ9Xm9TdMq/V/D7kf0g+cWY
-         /0C58wij8T9tUbRgDzp96GNly6Iana6WvNopmYznSKPm/mRB3+aIw1utfc0Mb8zv/IDi
-         JkU/8A7AAoFDu1KJUZacykhJJag6l8amOmnZgDFza4aiiP6kkzSxBTe3L75ehl2vjMpm
-         IXPQoBQKOqXYHOVzB89sTePBDgMdVzZYKn1wD5Ryi7U6gtISFGYBHIFl7gqV0CwTvSsO
-         mjFw==
-X-Gm-Message-State: AOAM533g+OnCgh+z7pl/KXPAasg4heBgqj8f8Vq5MI6vyv2B9RrIq9od
-        3E+YJmRY/H1VTfRZ79Eydda22vzPzaC4USUWMpE=
-X-Google-Smtp-Source: ABdhPJy1qPZlkbkex+2mcQ3H0P1rh2BMF6aNpxBKJx6viXiD5LP/TMlDpplYwy2FDejjx7BYrjXNvarY9HUElDbSf5M=
-X-Received: by 2002:a1c:32c4:: with SMTP id y187mr30880941wmy.79.1593011798868;
- Wed, 24 Jun 2020 08:16:38 -0700 (PDT)
+        Wed, 24 Jun 2020 11:16:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:32964 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404564AbgFXPQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:16:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EECF1FB;
+        Wed, 24 Jun 2020 08:16:52 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDDE13F73C;
+        Wed, 24 Jun 2020 08:16:49 -0700 (PDT)
+Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
+ integer and pointer types
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20200624114127.3016-1-a.hajda@samsung.com>
+ <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
+ <20200624114127.3016-4-a.hajda@samsung.com>
+ <2203e0c2-016b-4dbe-452d-63c857f06dd1@arm.com>
+ <CAHp75VfpP1cGK3FvTL0hBudRY2N_7GpXYRuUHUCipz7X2sMLmQ@mail.gmail.com>
+ <be755825-b413-e5c1-7ea4-06506b20d1f0@arm.com>
+ <20200624150434.GH5472@sirena.org.uk>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <381de683-df5e-4112-5690-13dd9272ae22@arm.com>
+Date:   Wed, 24 Jun 2020 16:16:48 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200624145418.7794-1-colin.king@canonical.com>
-In-Reply-To: <20200624145418.7794-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 24 Jun 2020 11:16:27 -0400
-Message-ID: <CADnq5_PySz6YWOMM4kosC_B83i+jsPKmf0puMt3sw2C-hExa3Q@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amdgpu: ensure 0 is returned for success in jpeg_v2_5_wait_for_idle
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>, Leo Liu <leo.liu@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200624150434.GH5472@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 10:54 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> In the cases where adev->jpeg.num_jpeg_inst is zero or the condition
-> adev->jpeg.harvest_config & (1 << i) is always non-zero the variable
-> ret is never set to an error condition and the function returns
-> an uninitialized value in ret.  Since the only exit condition at
-> the end if the function is a success then explicitly return
-> 0 rather than a potentially uninitialized value in ret.
+On 2020-06-24 16:04, Mark Brown wrote:
+> On Wed, Jun 24, 2020 at 03:25:33PM +0100, Robin Murphy wrote:
+> 
+>> And yeah, anyone who pipes up suggesting that places where an ERR_PTR value
+>> could be passed to probe_err() could simply refactor IS_ERR() checks with
+>> more uses of the god-awful PTR_ERR_OR_ZERO() obfuscator gets a long stare of
+>> disapproval...
+> 
+> We could also have a probe_err_ptr() or something that took an ERR_PTR()
+> instead if there really were an issue with explicitly doing this.
 
-We should actually never hit this condition in practice because the
-driver won't initialize this module if all of the instances are
-harvested, but better safe than sorry.  Applied.
+Yeah, for all my lyrical objection, a static inline <blah>_ptr_err() 
+helper to wrap <blah>_err() with sensible type checking might actually 
+be an OK compromise if people really feel strongly for having that utility.
 
-Thanks,
+(and then we can debate whether it should also convert NULL to -ENOMEM 
+and !IS_ERR to 0... :D)
 
-Alex
-
->
-> Addresses-Coverity: ("Uninitialized scalar variable")
-> Fixes: 14f43e8f88c5 ("drm/amdgpu: move JPEG2.5 out from VCN2.5")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
-> index f74262a22a16..7a51c615d22d 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/jpeg_v2_5.c
-> @@ -462,7 +462,7 @@ static int jpeg_v2_5_wait_for_idle(void *handle)
->                         return ret;
->         }
->
-> -       return ret;
-> +       return 0;
->  }
->
->  static int jpeg_v2_5_set_clockgating_state(void *handle,
-> --
-> 2.27.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Robin.
