@@ -2,155 +2,106 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5166EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A55FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2806E2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791EF206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rUWJCnEU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dpwRXiIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404407AbgFXPF2 (ORCPT
+        id S2404089AbgFXPHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56128 "EHLO
+        Wed, 24 Jun 2020 11:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404251AbgFXPF0 (ORCPT
+        with ESMTP id S2390817AbgFXPHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:05:26 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3452C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:05:26 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id e12so1905452qtr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:05:26 -0700 (PDT)
+        Wed, 24 Jun 2020 11:07:13 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20BDC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:13 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id o8so2649466wmh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=E2QT93q4mAHQ58Ta5MG1RGkPeXgSEsXRWz8vivK18vY=;
-        b=rUWJCnEUxL1RvWBYcZKsFagVzZ6RLMKVyhk5QTpU9kLslfZjSvrNUZE7PdQ5RxDD0P
-         YgOA8IDgoRJYQ6doK+Kmn4wJp1BUCsL2EvsAClcifu7NGqOxL4Wna4A65LbMbA/zXSAo
-         YJLyTiyHw84/1y/mS7tD0H5gncGOuqiBBsXp8Ct5eSWGJHG5bzSXFOjSCFwL0oTKYJ1I
-         9/25K65Q8GS3GQ3p6O9TuDf7hVhGfAxNsgt2gchdNg/3g9rn5kUSP7uLZhi0pqgz+Peh
-         poW+m/N88G7lC+jUnELmccQkQ3SkgUV8Kl9SA9BGzDH5TFV1Q5dbR+qdk+oW/j4sR4hB
-         1i8Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oQtVmqfMypGrk3tVAU8yj9wN9Ngmltk19ZhimPNRVF8=;
+        b=dpwRXiIeegS1OUrHliGUYM/HFbgn6RUn2COIlSHV86r8/CtI36lGc+D/qhm1yJm6Z4
+         7BLcvAvliHXyiN4pRQtQazAdCMYmCQkgd1/MfvbS3idQzeuTvt7fV3+tSx0HWmVGj5pB
+         UCXTxhKF2jaLY4JZgM+2R/dFxHJrCsoLtafBB+Y1hW/sJZ5NZGu+E5cZmSdhj9qhBVUB
+         MSeD8ZUPRVJwFe2NAbOmOxmkrPgkmRCcmXfMV84o/qgJ/J0/58kdfqPtqTVcMu7mUsBm
+         /htdnisViMsWS8nwFzO2HNzshQaLWWBwaG3ALePsbzncO3SRdlLX6G8umGtYrGmdRRpH
+         5KFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=E2QT93q4mAHQ58Ta5MG1RGkPeXgSEsXRWz8vivK18vY=;
-        b=RvVDQ6RF5G+IXhiunKLLo/gCTrsCc8iZoVAyUCdz/mss70TH8Oo0kPJRAgsfAxXRTV
-         /r4hN1NMLsgpY3iP8XZ0YWZg4m1HgqyxRorkR95zodu47HmNCIZwkNf6aobanu1M1IqS
-         m6787FSCDQoC4crJd05z0MnhG9I42YqunrnDVzQNUmxk2eueDiXfYvMpvu8ildP1vJL1
-         /M9fpaS4QNbhgsDEb9UunNGtRQAYId4l5GZCXVT3CUJM54LzWkSuqcbyf1zmykXUQ/Tb
-         3ylXDPNYogWpODDN+EJW8ptbEF3RSGeviAlMB72EuBCAVZvzW/UO4djZ0CPW/jIjyCsR
-         w6Wg==
-X-Gm-Message-State: AOAM530bjSgSOL8mFpoK+GwBOFHKTHfSZgfgTOyQNcGePBTfIQk/1x6q
-        oGGL88DBwvDIs2gsMdcewDILYtbb
-X-Google-Smtp-Source: ABdhPJw5x001LVdx99+WaRNGHXQcZtR3Mby0dQmiZDxwN8hW4lPaEGLzCbnZ64vJmPdEZnBwKRDplw==
-X-Received: by 2002:aed:25fd:: with SMTP id y58mr21018796qtc.310.1593011125659;
-        Wed, 24 Jun 2020 08:05:25 -0700 (PDT)
-Received: from localhost.localdomain ([72.53.229.195])
-        by smtp.gmail.com with ESMTPSA id x26sm3434088qtp.54.2020.06.24.08.05.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oQtVmqfMypGrk3tVAU8yj9wN9Ngmltk19ZhimPNRVF8=;
+        b=nMN5k50TQNfeh8YQe34MeoyK9bqUfr5E2Aej9bYfuOYshyrWvbl1YV7tA1c8W7dM5l
+         Tmer6G7QMjsiXGuLV+IivxpZDZ1dO2QdGD6Of3dsz2caBSZUhKabqntk71XD/UhJc7+W
+         SKqGL0fDqgDsA9K+mtri8iEjn0yUoTDd88HvN7MJkIjE+bHKIazQDK2aZHJNIVY5O3mJ
+         lPTVHQD+kNv765pBXmHlHLSjcwVxa7zpSOHfOPohvosDwAaGfuutcBc6c0y8UV2QS5oG
+         WchV7sAnLSXLYjoleyvZbmF1JJnhj1zowXBHL3SonXJO32I+Qe4RWMaqqdn5VjsC0pUb
+         xqUA==
+X-Gm-Message-State: AOAM533limnIOTf8T0ava+WlVwXGs8bQV9LGdqeDuBuWxQ3jGwcMc0di
+        wZnlys2l66qQSPuk0NW020JnSCQlY2g=
+X-Google-Smtp-Source: ABdhPJwdubJb8nmYTJqPiA2HRWouQbP/sLR/VAPY4Vda0giOWhnJptb8gzhUA5uKvnOrsKDbR8RxGQ==
+X-Received: by 2002:a1c:6408:: with SMTP id y8mr22003350wmb.122.1593011231611;
+        Wed, 24 Jun 2020 08:07:11 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id h14sm11543361wrt.36.2020.06.24.08.07.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:05:25 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     shawnguo@kernel.org, fugang.duan@nxp.com
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ARM: imx6plus: enable internal routing of clk_enet_ref where possible
-Date:   Wed, 24 Jun 2020 11:05:21 -0400
-Message-Id: <20200624150521.12196-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 24 Jun 2020 08:07:10 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     lee.jones@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/10] Fix a bunch of W=1 warnings in MFD
+Date:   Wed, 24 Jun 2020 16:06:54 +0100
+Message-Id: <20200624150704.2729736-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On imx6, the ethernet reference clock (clk_enet_ref) can be generated
-by either the imx6, or an external source (e.g. an oscillator or the
-PHY). When generated by the imx6, the clock source (from ANATOP)
-must be routed to the input of clk_enet_ref via two pads on the SoC,
-typically via a dedicated track on the PCB.
+Attempting to clean-up W=1 kernel builds, which are currently
+overwhelmingly riddled with niggly little warnings.
 
-On an imx6 plus however, there is a new setting which enables this
-clock to be routed internally on the SoC, from its ANATOP clock
-source, straight to clk_enet_ref, without having to go through
-the SoC pads.
+Lee Jones (10):
+  mfd: twl4030-irq: Fix incorrect type in assignment warning
+  mfd: twl4030-irq: Fix cast to restricted __le32 warning
+  mfd: tps6586x: Fix cast to restricted __le32 warning
+  mfd: altera-sysmgr: Fix physical address storing hacks
+  mfd: sprd-sc27xx-spi: Fix symbol 'sprd_pmic_detect_charger_type' was
+    not declared warning
+  mfd: ab3100-core: Fix incompatible types in comparison expression
+    warning
+  mfd: ab8500-debugfs: Fix incompatible types in comparison expression
+    issue
+  mfd: tc3589x: Remove invalid use of kerneldoc syntax
+  mfd: wm8400-core: Supply description for
+    wm8400_reset_codec_reg_cache's arg
+  mfd: wm831x-core: Supply description wm831x_reg_{un}lock args
 
-Board designs where the clock is generated by the imx6 should not
-be affected by routing the clock internally. Therefore on a plus,
-we can enable internal routing by default.
+ drivers/mfd/ab3100-core.c     |  2 +-
+ drivers/mfd/ab8500-debugfs.c  |  2 +-
+ drivers/mfd/altera-sysmgr.c   | 16 ++++++----------
+ drivers/mfd/sprd-sc27xx-spi.c |  1 +
+ drivers/mfd/tc3589x.c         |  2 +-
+ drivers/mfd/tps6586x.c        |  7 ++++---
+ drivers/mfd/twl4030-irq.c     |  4 ++--
+ drivers/mfd/wm831x-core.c     |  4 ++++
+ drivers/mfd/wm8400-core.c     |  2 ++
+ 9 files changed, 22 insertions(+), 18 deletions(-)
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
-
-v1 -> v2:
-  - Fabio Estevam: use of_machine_is_compatible() to determine if we
-    are running on an imx6 plus.
-
-To: Shawn Guo <shawnguo@kernel.org>
-To: Andy Duan <fugang.duan@nxp.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-
- arch/arm/mach-imx/mach-imx6q.c              | 18 ++++++++++++++++++
- include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |  1 +
- 2 files changed, 19 insertions(+)
-
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 85c084a716ab..2380329ed0b2 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -203,6 +203,24 @@ static void __init imx6q_1588_init(void)
- 	else
- 		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
- 
-+	/*
-+	 * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
-+	 * be the PTP clock source, instead of having to be routed through
-+	 * pads.
-+	 * Board designs which route the ANATOP/CCM clock through pads are
-+	 * unaffected when routing happens internally. So on these designs,
-+	 * route internally by default.
-+	 */
-+	if (clksel == IMX6Q_GPR1_ENET_CLK_SEL_ANATOP && cpu_is_imx6q() &&
-+			of_machine_is_compatible("fsl,imx6qp")) {
-+		if (!IS_ERR(gpr))
-+			regmap_update_bits(gpr, IOMUXC_GPR5,
-+					IMX6Q_GPR5_ENET_TXCLK_SEL,
-+					IMX6Q_GPR5_ENET_TXCLK_SEL);
-+		else
-+			pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
-+		}
-+
- 	clk_put(enet_ref);
- put_ptp_clk:
- 	clk_put(ptp_clk);
-diff --git a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-index d4b5e527a7a3..eb65d48da0df 100644
---- a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-+++ b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-@@ -240,6 +240,7 @@
- #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
- 
- #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
-+#define IMX6Q_GPR5_ENET_TXCLK_SEL		BIT(9)
- #define IMX6Q_GPR5_SATA_SW_PD			BIT(10)
- #define IMX6Q_GPR5_SATA_SW_RST			BIT(11)
- 
 -- 
-2.17.1
+2.25.1
 
