@@ -2,142 +2,109 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415A120738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788122077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HbBo8+WP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O9+Xgjp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404888AbgFXQPo (ORCPT
+        id S2405021AbgFXQPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404802AbgFXQPh (ORCPT
+        Wed, 24 Jun 2020 12:15:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50402 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404802AbgFXQPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:15:37 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B2AC061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:15:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so2843129wrv.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kinXBvz5+I1FgSK2RxVnBM/4h4YycBTf3sfQytiCbSA=;
-        b=HbBo8+WPRj3gAUYINsoDzCjuSTiw+4IVXg1BUTCPeS9//rIx0Msd7C2/3IOEqhT2au
-         ifH40qsXdeHZFBuxYayakoHeI5GVZtrXYa4z/w6+0z4jER+c72ovBtthOxjKcI41NM67
-         YXA/sWFk3I3nvVOvAOmNu0p9vJXZsy+n6tDOMAWADhcErgHqJsG6kn/gtiN8Efait3Vu
-         g7U8caQMJnfPSx32TxlICATow4MuWMRnhUBnVT4P0Qt7NW+LmYXoK2t0ILvx+H877gGQ
-         k9atIi2siVCtlFJt9Qsxt86a9HGAidyo95/yFVpj4YC7TNm3Lvqbki1DKAzL5+qtILlf
-         3PgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kinXBvz5+I1FgSK2RxVnBM/4h4YycBTf3sfQytiCbSA=;
-        b=J/imafKDbdPW8qgefcUBmGmM5kgMg1fBgEzPhmzEAmr+nLA0uQcpYPTy7tstq88UMx
-         lBeJ4mNimIiDchWlTkCWqwDpEwQnzFWclA3SjHSvnPvI3vIy4eGj8g1nXLuWOXWEw1dQ
-         CZs0G37+GBDlaYxULoQVsTkcJGnVj4JSCGffZtf5yhtVBVp/GKGpWSB/n+JCTVD3Rb+W
-         Rv0Z5UpLAvJppgplDX5L/JOKB61t5cmaDr+SJrOSYaKMa3MQLJf8+2nlesTMpgpALJ/W
-         ykUDCiCcKN+ss+AYob6+MXcw7JLlUl6ccG9ZXIcDJd8yoYEt7robTYLV8UZz5Tivde3g
-         j+3Q==
-X-Gm-Message-State: AOAM531sczia6Xd5tUplantL1A0ny8wjgvhlwUQtQTDXD4teSFxGHl9G
-        gcw6N3PrNCOTLHCOYB12ic+FUg==
-X-Google-Smtp-Source: ABdhPJzU5QZYipbkQZi8xo157t2PrVSjzPMHytPFcg1TfZKTGu677lOERbPf8aPK6zEzeiz5pYn3xQ==
-X-Received: by 2002:a5d:4603:: with SMTP id t3mr5463690wrq.38.1593015335565;
-        Wed, 24 Jun 2020 09:15:35 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:89ac:d9e8:f44c:b137])
-        by smtp.gmail.com with ESMTPSA id t15sm8716207wmj.14.2020.06.24.09.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 09:15:34 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>, lee.jones@linaro.org,
-        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v5 2/2] arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
-Date:   Wed, 24 Jun 2020 18:15:28 +0200
-Message-Id: <20200624161528.12664-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200624161528.12664-1-narmstrong@baylibre.com>
-References: <20200624161528.12664-1-narmstrong@baylibre.com>
+        Wed, 24 Jun 2020 12:15:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGF1cl038472;
+        Wed, 24 Jun 2020 11:15:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593015301;
+        bh=PERrQrRfdmam6H0p9AISJ5uvgazKR0B7qBwzzHc92JA=;
+        h=From:To:CC:Subject:Date;
+        b=O9+Xgjp1yiFV1ez/tC5FJaYDrH7dzhajKNpZbiK31kD8bvPAqFwo3n721Ww7l2lhT
+         3onjWEhL7U2JN3QYoO27m/SaNPniSKNqaGJwqH0OqpXi979pGI3r8pL1VTRCQYzKLN
+         p0NBdi0LROr/Bi3KAxnUkJGY0XdK+1zP3/aSPyIo=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGF120079293;
+        Wed, 24 Jun 2020 11:15:01 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 11:15:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 24 Jun 2020 11:15:00 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGF0de112577;
+        Wed, 24 Jun 2020 11:15:00 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v5 0/7] TAS2562 issue fixes and slot programming 
+Date:   Wed, 24 Jun 2020 11:14:52 -0500
+Message-ID: <20200624161459.19248-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Khadas MCU node with active FAN thermal nodes for all the
-Khadas VIM3 variants.
+Hello
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-Hi Kevin,
+This series fixes issues tih the shut-down gpio device tree allocation and a
+code format issue found.
 
-The bindings has been reviewed and merged by Lee,
-could you apply this one via the amlogic tree ?
+While working on a project slot programming for the tx and rx paths needed to be
+enabled.  In addition the vsense slot programming needed to be configurable and
+not directly a simpler adder to the isense slot.
 
-Thanks,
-Neil
+Finally the yaml conversion patch was moved to be the last patch in the series
+so that the fixes can be applied and the yaml can be reviewed appropriately
+and does not hold up the rest of the fixes.
 
- .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Dan
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 1ef1e3672b96..27408c10a811 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -183,6 +183,23 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
- 
-+&cpu_thermal {
-+	trips {
-+		cpu_active: cpu-active {
-+			temperature = <80000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "active";
-+		};
-+	};
-+
-+	cooling-maps {
-+		map {
-+			trip = <&cpu_active>;
-+			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
-+
- &ext_mdio {
- 	external_phy: ethernet-phy@0 {
- 		/* Realtek RTL8211F (0x001cc916) */
-@@ -222,6 +239,12 @@
- 	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
- 	pinctrl-names = "default";
- 
-+	khadas_mcu: system-controller@18 {
-+		compatible = "khadas,mcu";
-+		reg = <0x18>;
-+		#cooling-cells = <2>;
-+	};
-+
- 	gpio_expander: gpio-controller@20 {
- 		compatible = "ti,tca6408";
- 		reg = <0x20>;
+
+Dan Murphy (7):
+  dt-bindings: tas2562: Fix shut-down gpio property
+  ASoC: tas2562: Update shutdown GPIO property
+  ASoC: tas2562: Fix format issue for extra space before a comma
+  ASoC: tas2562: Add rx and tx slot programming
+  dt-bindings: tas2562: Add voltage sense slot property
+  ASoC: tas2562: Add voltage sense slot configuration
+  dt-bindings: tas2562: Convert the tas2562 binding to yaml
+
+ .../devicetree/bindings/sound/tas2562.txt     |   34 -
+ .../devicetree/bindings/sound/tas2562.yaml    |   77 +
+ arch/arm/boot/compressed/fdt.h                |   66 +
+ arch/arm/boot/compressed/libfdt.h             | 2072 +++++++++++++++++
+ arch/arm/boot/compressed/libfdt_internal.h    |  173 ++
+ sound/soc/codecs/tas2562.c                    |   88 +-
+ sound/soc/codecs/tas2562.h                    |    4 +
+ 7 files changed, 2462 insertions(+), 52 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
+ create mode 100644 arch/arm/boot/compressed/fdt.h
+ create mode 100644 arch/arm/boot/compressed/libfdt.h
+ create mode 100644 arch/arm/boot/compressed/libfdt_internal.h
+
 -- 
-2.22.0
+2.26.2
 
