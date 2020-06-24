@@ -2,131 +2,144 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C17C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9075EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5679A20706
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:44:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qrkILIM/"
+	by mail.kernel.org (Postfix) with ESMTP id 7307820707
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390684AbgFXLoU (ORCPT
+        id S2389327AbgFXLop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390599AbgFXLoU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:44:20 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1F4C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:44:19 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id r5so1180305vso.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=16YY60PN6u62CsdqXTLtpXufTnOGYMQ6hrz0Z45FFTE=;
-        b=qrkILIM/s15IymScgPDkRT1VNzSP3DtSXREEISXmBPELBhZGmSqntU6JBRWu3sHJV2
-         fToYdChv2KKFGXEnrMeL89QCU6jJEtDxA0Gt7gZi/EnUZqjzEbnmxkZ0oZ0HbB0+JeHw
-         WJ2FxT3ToAFsUdr0vBXqLoRihW0XMuGwLOO9Fc11lM6dL6BJJ+xeNRfpJsMokDdu990b
-         0y0QtWK+mkLZIvYZ26xJhJlObd2NgjTOto02VWkKgel4YI6f87qhR5nSu7avR5ihmNN/
-         73YFZspRgx0gdTYKjYwYIiC6wRRzPt0UDPy0+r2HrxjgM2OThCIvg8sWNqxr645btU2+
-         0z0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=16YY60PN6u62CsdqXTLtpXufTnOGYMQ6hrz0Z45FFTE=;
-        b=Sj4QcwX6Bio91yhssHWWe2VwmxMsqI2UnKdeFHGpYh/y1FCKXiPxJEi2IV3BkHpNnB
-         uHqol1JLcn53e8wBpjRDDPHHW2R3HsNvcmSZqjF6KCC/bRWB5FQmzycoUrcO+gL+gN8L
-         8tqS4cuYcb4uADmh0ICZCHYMijBCBHAoFDGJGOFbRigCI2+LpGdwSqf4Apmfbr3Alv0M
-         JSL5Dr3IYgiE6VzXmnTbAdzNqxsEJpFUk+6iAVFX3FYOd9aSqy0rWveCl4gS7rVm3GqA
-         LXw/va3vY77Nct6q95bjXTLATdEb7bIcXtcAoB248YCKd4jabH+XyacS/W1gs1qvFk4f
-         785Q==
-X-Gm-Message-State: AOAM530c6KocpaWk9ze0HaKf40bNmmJ3QcqWxNKbRmhpg5Qir8rohOSe
-        WVlsqmQkLb2b+qpETvx7Noqis5lYZcjtsQ29h4A35WR7icQ=
-X-Google-Smtp-Source: ABdhPJwSbBWkN2a607O0g2Tqflb4gBZwf9N00qj0wn7y+Nwy7jnGNQy5diTDA2kS6Fwm7lkEuJZI9MmVwAUK3tCIlRo=
-X-Received: by 2002:a67:885:: with SMTP id 127mr23594427vsi.182.1592999058930;
- Wed, 24 Jun 2020 04:44:18 -0700 (PDT)
+        Wed, 24 Jun 2020 07:44:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39432 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388844AbgFXLop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:44:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 892C4AF63;
+        Wed, 24 Jun 2020 11:44:42 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 13:44:37 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org,
+        systemd-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 2/3] nsproxy: attach to namespaces via pidfds
+Message-ID: <20200624114437.GA117125@blackbook>
+References: <20200505140432.181565-1-christian.brauner@ubuntu.com>
+ <20200505140432.181565-3-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20200623180832.254163-1-konradybcio@gmail.com> <20200623180832.254163-4-konradybcio@gmail.com>
-In-Reply-To: <20200623180832.254163-4-konradybcio@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 24 Jun 2020 17:14:08 +0530
-Message-ID: <CAHLCerOAM5j+gZWP9MUuGZ+TQfBg4Z=GoEdUfxBTwtEs5TqUuw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] arm64: dts: qcom: sdm630: Add tsens node
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Disposition: inline
+In-Reply-To: <20200505140432.181565-3-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:39 PM Konrad Dybcio <konradybcio@gmail.com> wrote:
->
-> Enable tsens on this SoC using tsens-v2 driver.
->
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  .../devicetree/bindings/thermal/qcom-tsens.yaml       |  1 +
->  arch/arm64/boot/dts/qcom/sdm630.dtsi                  | 11 +++++++++++
->  2 files changed, 12 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index d7be931b42d2..d89d5acd6e2a 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -39,6 +39,7 @@ properties:
->                - qcom,msm8996-tsens
->                - qcom,msm8998-tsens
->                - qcom,sc7180-tsens
-> +              - qcom,sdm630-tsens
->                - qcom,sdm845-tsens
->            - const: qcom,tsens-v2
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> index ea85f28032d2..92bf4ae6a590 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> @@ -566,6 +566,17 @@ anoc2_smmu: iommu@16c0000 {
->                                 <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> +               tsens: thermal-sensor@10ae000 {
-> +                       compatible = "qcom,sdm630-tsens", "qcom,tsens-v2";
-> +                       reg = <0x010ae000 0x1000>, /* TM */
-> +                                 <0x010ad000 0x1000>; /* SROT */
-> +                       #qcom,sensors = <12>;
-> +                       interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-> +                                        <GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "uplow", "critical";
-> +                       #thermal-sensor-cells = <1>;
-> +               };
+
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi.
+
+On Tue, May 05, 2020 at 04:04:31PM +0200, Christian Brauner <christian.brau=
+ner@ubuntu.com> wrote:
+> -SYSCALL_DEFINE2(setns, int, fd, int, nstype)
+> +SYSCALL_DEFINE2(setns, int, fd, int, flags)
+> [...]
+> -	file =3D proc_ns_fget(fd);
+> -	if (IS_ERR(file))
+> -		return PTR_ERR(file);
+> +	int err =3D 0;
+> =20
+> -	err =3D -EINVAL;
+> -	ns =3D get_proc_ns(file_inode(file));
+> -	if (nstype && (ns->ops->type !=3D nstype))
+> +	file =3D fget(fd);
+> +	if (!file)
+> +		return -EBADF;
 > +
+> +	if (proc_ns_file(file)) {
+> +		ns =3D get_proc_ns(file_inode(file));
+> +		if (flags && (ns->ops->type !=3D flags))
+> +			err =3D -EINVAL;
+> +		flags =3D ns->ops->type;
+> +	} else if (pidfd_pid(file)) {
+> +		err =3D check_setns_flags(flags);
+> +	} else {
+> +		err =3D -EBADF;
+> +	}
+> +	if (err)
+>  		goto out;
+> =20
+> -	err =3D prepare_nsset(ns->ops->type, &nsset);
+> +	err =3D prepare_nsset(flags, &nsset);
+>  	if (err)
+>  		goto out;
+This modification changed the returned error when a valid file
+descriptor is passed but it doesn't represent a namespace (nor pidfd).
+The error is now EBADF although originally and per man page it
+was/should be EINVAL.
 
-There should be 2 tsens controllers on this platform, the first at
-0x010AA000, the other at 0x010AD000.
+A change like below would restore it, however, I see it may be less
+consistent with other pidfd calls(?), then I'd suggest updating the
+manpage to capture this.
 
->                 tcsr_mutex_regs: syscon@1f40000 {
->                         compatible = "syscon";
->                         reg = <0x01f40000 0x20000>;
-> --
-> 2.27.0
->
+--- a/kernel/nsproxy.c
++++ b/kernel/nsproxy.c
+@@ -531,7 +531,7 @@ SYSCALL_DEFINE2(setns, int, fd, int, flags)
+        } else if (!IS_ERR(pidfd_pid(file))) {
+                err =3D check_setns_flags(flags);
+        } else {
+-               err =3D -EBADF;
++               err =3D -EINVAL;
+        }
+        if (err)
+                goto out;
+
+I noticed this breaks systemd self tests [1].
+
+Regards,
+Michal
+
+
+[1] https://github.com/systemd/systemd/blob/a1ba8c5b71164665ccb53c9cec384e5=
+eef7d3689/src/test/test-seccomp.c#L246
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl7zPKAACgkQia1+riC5
+qShOGhAAhxWTA7xASA29DshSor6gE8MSsisAOLrbdcAJxcTpEjK7SGBfiIAzRSqM
+ojDNJab5BA7AplrWQMI5dTvNC5OsdObhRe6HCzXeK/DL4st5WCHkGv084jGVtJkF
+t3uUc5yphr7K7Wyv5pTydMDYbPgVdtMLCMAJCzSSAm464cXc7yFUtLiuJTx4dWMS
+wj+dRMYjxqo8PMTo78lAOeo0Xga2sWunsc2RrvmCde1HAqEfX26xko2at3AhxJWI
+mA1qK4gYl0/0kRBKKbVH/Vc9cE3hVTwAKgLxm9JUJJoV/7zs61XPfGZZ1i1NUBJ5
+ES1ybt5h1C5rtmpBGiH1Dd+D7i1ckdqEPupwJNzYze5y2QiEVVoF7csegk30Vdq7
+0SQ9SAXOtRmfQC8VQXkWDOoqZarxPSgktRBfMZ3h18neURCFlmU0xcAY52mJODSf
+lyJPQmYUfCehLasPJJ3eUG9fhdSNuFH3Z6V2KfIjo2qKPbbEJONxb24OthyQzr6v
+kt3B/m7aseGZCxRu21SkkRIMa9aIngbkaOOiEwUd66wJtHKWJIn/D7sdcQvUGYpg
+e8J5uFPR7A0wJey2TZltEDF9nuuZarORd7BNREmm4nG1w3X3vsgUXXLfk9x8HQtg
+EG/+7T4HFcQXgeR/UBieyk0FQ98KRnJaSK6RJiShfEM2HIyvrZU=
+=zb4j
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
