@@ -2,233 +2,113 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9902FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F2C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43012082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389831AbgFXHeP (ORCPT
+        id S2389874AbgFXHe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:34:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39151 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389739AbgFXHeO (ORCPT
+        Wed, 24 Jun 2020 03:34:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37301 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388489AbgFXHe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:34:14 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t194so1495701wmt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:34:13 -0700 (PDT)
+        Wed, 24 Jun 2020 03:34:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id v13so1042225otp.4;
+        Wed, 24 Jun 2020 00:34:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:message-id:date:mime-version;
-        bh=TX46+tOYw695eoUWnWY6nEE97aD+zCO7F3ulbGdoE74=;
-        b=eogAb0jdDTupHsscvGfuvfSCCC2AgcOE6XoymMx9gm8tBf86caTajNvz5HtTQFsitZ
-         WCe04Bflw4DFGos5zN1fJuU0mwtsh/Qj61Rds2Bw1fW2qhf6CcFS4H2+eS9HjRn3j7dj
-         JSS5uCHGA226nZwdlScxtNVZZGsqiOUsCfgMlxzNglrGCh1BN9ble36mjRKVRAvdWbcp
-         nIUCbcKWRfEnhEwQ2NwZADsCqyJiSKJIFlKkPx2E1ZgM8sR3FulMT4qqVeyJ0iDnELvI
-         qUWJvXw39KehaHnqJV/tzePugPDjBMG6SEVdXy5xFvthFGnoOWIr4g6ckl++0x3SKtSL
-         zPQA==
-X-Gm-Message-State: AOAM533Cc8khXC2MIxxSdui3Zme3Sf5DqGqB98RqM0Zlaz49Fxf09jaB
-        1Gr+nJdiJKvWsuwDWhOl9Z75/Aw2a96nlw==
-X-Google-Smtp-Source: ABdhPJzttRmmUsL1CobmbB3fHgdt2fNw0uYMG/g38pQafL0EfjL0Pjr5X/PGEeEVY//tZQfETH+ZIg==
-X-Received: by 2002:a1c:29c3:: with SMTP id p186mr20850956wmp.122.1592984052051;
-        Wed, 24 Jun 2020 00:34:12 -0700 (PDT)
-Received: from darkstar ([2a04:ee41:4:5025:8295:1d2:ca0d:985e])
-        by smtp.gmail.com with ESMTPSA id y196sm7588426wmd.11.2020.06.24.00.34.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 00:34:11 -0700 (PDT)
-References: <20200619172011.5810-1-qais.yousef@arm.com> <20200619172011.5810-3-qais.yousef@arm.com>
-User-agent: mu4e 1.4.10; emacs 26.3
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] sched/uclamp: Protect uclamp fast path code with static key
-In-reply-to: <20200619172011.5810-3-qais.yousef@arm.com>
-Message-ID: <87pn9oor2t.derkling@matbug.net>
-Date:   Wed, 24 Jun 2020 09:34:02 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j5iJaAmcwIz93ZsJcMmiCbrU1gnAgWj1jKvFm1JtK38=;
+        b=NE1sTZZLk+CtEKLsY9GmDuJF+nCrHxYUXDYxESgF62X5cZZThxTBD80cg3TO0SuF0k
+         IZiim3QKwi2btGz1ucU4P/8IFZEjwSYysBJfZp79C6AiIPJ3xkTtMvPclhtGAqzqiBn5
+         452rlzZfc+bvNAjQXWpBMkMT2IQgsoCEY+d2+LiG1Ku1qWORO9WvkNfg8Hg5Jxo+vY9E
+         BdDzwUqY1S6fMVrgOiu8dXxaMCV8zvaGfhXY08KKQe83FQa5vfWkDsongQ7AG1oZFaSb
+         sBaCPi87DyeMEc49+GxvLaXz4afGpOyDcwOL3EDk7FWcjrt04cJNNy7XWE+mKS7gxbEz
+         ldiw==
+X-Gm-Message-State: AOAM531i4jVbQ8VQB6+J55vZsjX1NZ5jAJnLaq488J4NavvHtKK9Ktqf
+        6071GagnkTnwP9GtYnEnZ3JjJqgKY1Bk4FaYSG2SJAK6
+X-Google-Smtp-Source: ABdhPJysMLeTgnT1zZNYcM9UUaX0LYbwwd5YK/jR2CfMmZxWqVy6gv8jlfq9DQ03hq5B5ML5uSUVwBSO6NQzv9Qjgg8=
+X-Received: by 2002:a4a:b804:: with SMTP id g4mr22189953oop.40.1592984065134;
+ Wed, 24 Jun 2020 00:34:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200603154329.31579-1-aford173@gmail.com>
+In-Reply-To: <20200603154329.31579-1-aford173@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 24 Jun 2020 09:34:13 +0200
+Message-ID: <CAMuHMdW1radtuje+z85TLXO8EAEdVYp3gF2ZE9aYbHUHdrY-Fg@mail.gmail.com>
+Subject: Re: [PATCH V3 1/3] clk: vc5: Allow Versaclock driver to support
+ multiple instances
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Adam,
 
-On Fri, Jun 19, 2020 at 19:20:11 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+On Wed, Jun 3, 2020 at 5:44 PM Adam Ford <aford173@gmail.com> wrote:
+> Currently, the Versaclock driver is only expecting one instance and
+> uses hard-coded names for the various clock names.  Unfortunately,
+> this is a problem when there is more than one instance of the driver,
+> because the subsequent instantiations of the driver use the identical
+> name.  Each clock after the fist fails to load, because the clock
+> subsystem cannot handle two clocks with identical name.
 
-[...]
+Thanks for your patch, which is now commit f491276a51685987 ("clk: vc5:
+Allow Versaclock driver to support multiple instances") in clk-next.
 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 4265861e13e9..9ab22f699613 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -793,6 +793,25 @@ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
->  /* All clamps are required to be less or equal than these values */
->  static struct uclamp_se uclamp_default[UCLAMP_CNT];
->  
-> +/*
-> + * This static key is used to reduce the uclamp overhead in the fast path. It
-> + * only disables the call to uclamp_rq_{inc, dec}() in enqueue/dequeue_task().
-> + *
-> + * This allows users to continue to enable uclamp in their kernel config with
-> + * minimum uclamp overhead in the fast path.
-> + *
-> + * As soon as userspace modifies any of the uclamp knobs, the static key is
-> + * disabled, since we have an actual users that make use of uclamp
-> + * functionality.
-> + *
-> + * The knobs that would disable this static key are:
-> + *
-> + *   * A task modifying its uclamp value with sched_setattr().
-> + *   * An admin modifying the sysctl_sched_uclamp_{min, max} via procfs.
-> + *   * An admin modifying the cgroup cpu.uclamp.{min, max}
-> + */
-> +static DEFINE_STATIC_KEY_TRUE(sched_uclamp_unused);
+> This patch removes the hard-coded name arrays and uses kasprintf to
+> assign clock names based on names of their respective node and parent
+> node which gives each clock a unique identifying name.
+>
+> For a verasaclock node with a name like:
+>    versaclock5: versaclock_som@6a
+>
+> The updated clock names would appear like:
+>     versaclock_som.mux
+>        versaclock_som.out0_sel_i2cb
+>        versaclock_som.pfd
+>           versaclock_som.pll
+>              versaclock_som.fod3
+>                 versaclock_som.out4
+>              versaclock_som.fod2
+>                 versaclock_som.out3
+>              versaclock_som.fod1
+>                 versaclock_som.out2
+>              versaclock_som.fod0
+>                 versaclock_som.out1
 
-I would personally prefer a non negated semantic.
+I'm afraid this won't help, as all versaclock nodes should be named
+"clock-controller@<unit-address>", as per DT generic node name
+recommendations.
+Incorporating the unit-address won't help, as you can have multiple
+i2c buses in the system.
+How do other drivers handle this?
 
-Why not using 'sched_uclamp_enabled'?
+Gr{oetje,eeting}s,
 
-> +
->  /* Integer rounded range for each bucket */
->  #define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
->  
-> @@ -993,9 +1012,16 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
->  	lockdep_assert_held(&rq->lock);
->  
->  	bucket = &uc_rq->bucket[uc_se->bucket_id];
-> -	SCHED_WARN_ON(!bucket->tasks);
-> -	if (likely(bucket->tasks))
-> -		bucket->tasks--;
-> +
-> +	/*
-> +	 * This could happen if sched_uclamp_unused was disabled while the
-> +	 * current task was running, hence we could end up with unbalanced call
-> +	 * to uclamp_rq_dec_id().
-> +	 */
-> +	if (unlikely(!bucket->tasks))
-> +		return;
-> +
-> +	bucket->tasks--;
+                        Geert
 
-Since above you are not really changing the logic, why changing the
-code?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-The SCHED_WARN_ON/if(likely) is a defensive programming thing.
-I understand that SCHED_WARN_ON() can now be misleading because of the
-unbalanced calls but... why not just removing it?
-
-Maybe also adding in the comment, but I don't see valid reasons to
-change the code if the functionality is not changing.
-
-
->  	uc_se->active = false;
->  
->  	/*
-> @@ -1031,6 +1057,13 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->  {
->  	enum uclamp_id clamp_id;
->  
-> +	/*
-> +	 * Avoid any overhead until uclamp is actually used by the userspace.
-> +	 * Including the potential JMP if we use static_branch_unlikely()
-
-The comment above (about unlikely) seems not to match the code?
-
-> +	 */
-> +	if (static_branch_likely(&sched_uclamp_unused))
-> +		return;
-
-Moreover, something like:
-
-       if (static_key_false(&sched_uclamp_enabled))
-                return;
-
-is not just good enough?
-
-> +
->  	if (unlikely(!p->sched_class->uclamp_enabled))
->  		return;
-
-Since we already have these per sched_class gates, I'm wondering if it
-could make sense to just re-purpose them.
-
-Problem with the static key is that if just one RT task opts in, CFS
-will still pay the overheads, and vice versa too.
-
-So, an alternative approach could be to opt in sched classes on-demand.
-
-The above if(unlikely) is not exactly has a static key true, but I
-assume we agree the overheads we are tacking are nothing compared to
-that check, aren't they?
-
-
-> @@ -1046,6 +1079,13 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
->  {
->  	enum uclamp_id clamp_id;
->  
-> +	/*
-> +	 * Avoid any overhead until uclamp is actually used by the userspace.
-> +	 * Including the potential JMP if we use static_branch_unlikely()
-> +	 */
-> +	if (static_branch_likely(&sched_uclamp_unused))
-> +		return;
-> +
->  	if (unlikely(!p->sched_class->uclamp_enabled))
->  		return;
->  
-> @@ -1155,9 +1195,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->  		update_root_tg = true;
->  	}
->  
-> -	if (update_root_tg)
-> +	if (update_root_tg) {
->  		uclamp_update_root_tg();
->  
-> +		if (static_branch_unlikely(&sched_uclamp_unused))
-> +			static_branch_disable(&sched_uclamp_unused);
-> +	}
-> +
-
-Can we move the above into a function?
-
-Something similar to set_schedstats(bool), what about uclamp_enable(bool)?
-
->  	/*
->  	 * We update all RUNNABLE tasks only when task groups are in use.
->  	 * Otherwise, keep it simple and do just a lazy update at each next
-> @@ -1221,6 +1265,9 @@ static void __setscheduler_uclamp(struct task_struct *p,
->  	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
->  		return;
->  
-> +	if (static_branch_unlikely(&sched_uclamp_unused))
-> +		static_branch_disable(&sched_uclamp_unused);
-> +
->  	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
->  		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
->  			      attr->sched_util_min, true);
-> @@ -7315,6 +7362,9 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
->  	if (req.ret)
->  		return req.ret;
->  
-> +	if (static_branch_unlikely(&sched_uclamp_unused))
-> +		static_branch_disable(&sched_uclamp_unused);
-> +
->  	mutex_lock(&uclamp_mutex);
->  	rcu_read_lock();
-
-Best,
-Patrick
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
