@@ -2,104 +2,146 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC48EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70F2820836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592997848;
-	bh=b3FSrf++yB9EWr7RoNaTnF5CfwzB4uz45/LhmlThiLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iv91YNtSMVQJ7/uVkeQcm6UFUKlm6aRh511qqx+MZ98wGvnD0sIurP5Zk3zRR8PZb
-	 WtQr7aRyKiJzgl3oc9/sTZzzo6jr/M+UCAHb0pRrYQBaOVn6JCYWfcd3E+N08achrO
-	 h1g05+CvbIGV05QL46lAwQKNJDBByiQAfoZjWgCI=
+	by mail.kernel.org (Postfix) with ESMTP id 9BB0A20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h+qiZfi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390604AbgFXLX4 (ORCPT
+        id S2388829AbgFXLYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388986AbgFXLXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:23:55 -0400
-Received: from localhost (p54b3334b.dip0.t-ipconnect.de [84.179.51.75])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D72F20836;
-        Wed, 24 Jun 2020 11:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592997834;
-        bh=b3FSrf++yB9EWr7RoNaTnF5CfwzB4uz45/LhmlThiLs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N1hQ23gqRm+dpp1EpzYv+OrNC1GanXX5VZetcyEHmWwMX0BSLs016yImzL202xB1Q
-         HkriWQrx7HkVDg4I7EYhztkYzmOybOYf+/XyrbbVwegM8vAZBuy067bHuUqneqOYG/
-         UfYfNelP5mqeOMg5jPQfvHaFlYlpB/sIXGdvMBsk=
-Date:   Wed, 24 Jun 2020 13:23:49 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Ricardo Ribalda <ribalda@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: designware: platdrv: Set class based on dmi
-Message-ID: <20200624112349.GA2067@kunai>
-References: <20200624091239.802218-1-ribalda@kernel.org>
- <20200624104655.GD3703480@smile.fi.intel.com>
+        Wed, 24 Jun 2020 07:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390564AbgFXLYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:24:20 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFF2C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:24:19 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so2145438wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=NrvSiaDLXTBfKnuOt7hk8LUvf/vD6JGQ7WAbFA5i7Uc=;
+        b=h+qiZfi0OhOnDkgTLpZizeUC5IOa97wx3ik8VofmQ5pfxMjOrV/QZdQ1bzH0PCVdiU
+         UgreOMhRLysmM+bBtebPY7anIyh5Ho7OoqBtQmM4nX9hm9SZdRD6PwLqtvezCvD5x2bP
+         yKLL3oYAOG9YVSUhAPv2B0YkFFu+XrIW2mOMZL0AxwspP7uIhMzfAKKRW5Sjn3PfuI7I
+         8tUEK+4WbXF6HcnEghMiSEhm2Z6Z58auYOW96L/YLupOfUvseYw9YDjMWDUdRzEAqj/T
+         mPxbp9qt//mWBrqgyYQmdqSzcji9eNyItiQcmo1Ts9oa2hmbhVVJiBaLSzhtiyZR1Cab
+         UiuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=NrvSiaDLXTBfKnuOt7hk8LUvf/vD6JGQ7WAbFA5i7Uc=;
+        b=bJJgtUTEfoLtG/vJFRSSzxdEAi5osV4mqAfAWiB1NQ72LiJHay+ReDB3pl/e6rgFqe
+         Mp4MeFPEKeUnDuI7O4RLDCRb1o8GGGj1yL9tVkRZ+/9yQOQXz60maFUHqrNKJoI+jMe/
+         BehsZQJJ1ozNXo4bRByqistlVvvoVWYZixMEu2n9o4Nr3oMFuObOTyI72jCMlKiR2C7Z
+         jmmakYdEYHYx6/NzCsYqah1eyxPrcZSdXgsrBGFjwAvERr3hndoPA3QbFS5CxoP/34uA
+         +yZoEh4DACfID1DQdVWQ4+OVrl1e6fxsE8RSMmj4RZuv6VEkxV7OTtqLIseF8xl6L/p5
+         zI9A==
+X-Gm-Message-State: AOAM5309Xl/efi5eaeEa2rT7/mDSi1I/hEpK3FvnvMJSShzQcbhJPpfc
+        AkReiOXl8e0WBSPA6OfXHEUwNQ==
+X-Google-Smtp-Source: ABdhPJxnvJ/bAKboWQS8u3ig+E2OSp3FrtA0y0gJWgzooZABsBXHuo/PhR/sGO75JnZcwGDW//Wkaw==
+X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr8696211wmk.126.1592997857631;
+        Wed, 24 Jun 2020 04:24:17 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id x5sm7962485wmg.2.2020.06.24.04.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 04:24:16 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 12:24:14 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Frank Rowand <frowand.list@gmail.com>, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+Message-ID: <20200624112414.GG954398@dell>
+References: <20200611191002.2256570-1-lee.jones@linaro.org>
+ <30f03734-61fd-1b6b-bf11-21b6423a7c50@gmail.com>
+ <20200624064145.GC954398@dell>
+ <7a31b34940984b3f0921ed2d4fb29a58@walle.cc>
+ <20200624082352.GF954398@dell>
+ <c0a8ebd32ae07ae98fa56728c77f8e79@walle.cc>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200624104655.GD3703480@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c0a8ebd32ae07ae98fa56728c77f8e79@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 24 Jun 2020, Michael Walle wrote:
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Am 2020-06-24 10:23, schrieb Lee Jones:
+> > On Wed, 24 Jun 2020, Michael Walle wrote:
+> 
+> [..]
+> 
+> > > Although Rob mentioned to maybe relax that, but I sill fail to see
+> > > the advantage to have an arbitrary reg property instead of a unique
+> > > node name.
+> > 
+> > I don't have a strong opinion either way.
+> > 
+> > We can *also* add node name matching if Rob deems it fit.
+> 
+> Where do you see a use of the reg property?
 
-On Wed, Jun 24, 2020 at 01:46:55PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 24, 2020 at 11:12:39AM +0200, Ricardo Ribalda wrote:
-> > Current AMD's zen-based APUs use this core for some of its i2c-buses.
-> >=20
-> > With this patch we re-enable autodetection of hwmon-alike devices, so
-> > lm-sensors will be able to work automatically.
-> >=20
-> > It does not affect the boot-time of embedded devices, as the class is
-> > set based on the dmi information.
->=20
-> Hmm... Do we really need to have DMI? I mean wouldn't be safe just always
-> provide this to be compatible with HWMON class?
+The vast proportion of devices do and will have 'reg' properties.
 
-It is not unsafe. Embedded people might complain about increased boot
-time whenever a CLASS_HWMON driver scans the addresses it knows.
+> You already expressed
+> that you see exposing the internal offset as a hack:
+> 
+>  "Placing "internal offsets" into the 'reg' property is a hack." [1]
+> 
+> So what are you putting into reg instead? Rob suggested "anything"
+> documented in the hardware manual. But isn't this just also something
+> we make up and especially for the MFD driver. Thus IMHO it doesn't
+> qualify as a unit-address, which - as far as I understand it - is
+> unique on the parent bus. To repeat my argument, its not a defined
+> thing like an I2C address.
 
+So our argument in the past (although this is going back the best part
+of 10 years) has always been that; if devices are different, there is
+almost always a documented (in the H/W manual/datasheet) way to
+differentiate/address them.  Whether that's a physical address, an
+offset, a bank ID, an I2C/SPI address or whatever.
 
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
+As to not being able to use that address/ID due to the DT rules
+surrounding address space as per the example in your previous email,
+well that's a rule specific to DT and makes little sense in some real
+world cases (such as, dare I say it, the AB8500).
 
------BEGIN PGP SIGNATURE-----
+You'll have to take the aforementioned point and the point about using
+node names instead of 'reg' properties up with Rob and the other
+interested DT folk.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7zN8EACgkQFA3kzBSg
-KbZYdRAAl/gHJCZbqLjHdJMvv2u0BlBl40pA0PGcnFHVNRotUpKOU1YZu3n5GX6U
-i+V3UxeM5pFQJL3frL8MsM8fwufZvbXkZll7uMzW72RfwH2RD2ESGdf0o485UhP/
-JDWi07/Y2NeCR/Klvny1+sRfwSC4Au0e/+RZSQ3na2VXaIiT8QuRRmvc5gLpC+0i
-O7jcXd98I9xhxVwAlyYHcaYJCjFeVPJQv/dfVGHPJW/Ja5fU9jgtBVpFY+iRgxfD
-a08m/7AevK1PDnhaL9tWCNM3FXIgg9+lwuKHG2M4e4yBzzKgQ7wQqHC2P8Iya1/+
-kJQd+wR8GfKayJaeeIPYLzvOVnUOeItrP3X83r4iS0gc1zzldotEvcZ7qzjNWbO7
-PI0FKFP9E/YXJNDyOeifnyuceQgRQAWyqEk5XoorIH5xvP39EHql5DwCtrBiGyhe
-L+0iTN5a5i28E9AfdvHU9RpWwinkHrWyVh6Cb1RCSfFDxaZNtzORexIEm32LfjsK
-sI7tMlTtd9C22MXLT60hGualB7Orz8Lt/+cx3yypTIFFmsY8sjolfIMreFvsMZHX
-gc8onj+QX0tJWz/ADfcExNUaCmAd1EPY5N96PPlxHQBnVGi3Rqt0EfKJ/DiCCpXR
-cwgH9o75YcYzvEwzJjm46HTg+MAV2S3oGS22qRgcMGckfnmk8nI=
-=SAEo
------END PGP SIGNATURE-----
+Again, I'm happy to extend that functionality if it becomes acceptable
+practice.
 
---azLHFNyN32YCQGCU--
+> [1] https://lore.kernel.org/linux-devicetree/20200609185231.GO4106@dell/
+> 
+> -michael
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
