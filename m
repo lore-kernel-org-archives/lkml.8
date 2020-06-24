@@ -2,89 +2,145 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E236DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF01120738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCB420874
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQHlyuSV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G5rQlP4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388159AbgFXCHl (ORCPT
+        id S2387927AbgFXCOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 22:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730898AbgFXCHk (ORCPT
+        Tue, 23 Jun 2020 22:14:15 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34603 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730898AbgFXCOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 22:07:40 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B91C061573;
-        Tue, 23 Jun 2020 19:07:39 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id h10so580378pgq.10;
-        Tue, 23 Jun 2020 19:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NweuR852F/MkwNU1J1icoSJt72FTFNVF3baoyChYHNE=;
-        b=aQHlyuSVkmINthgnO8IlvQfQNiHl3Fh3Wk+SBaxME0DNd5EZwcEvTT3e7xaX1Qccaz
-         QwATpAkbCIB6NVJ//9xb/S+KdJP5krKRAN7Ewrsa1hBg7s/TMJQNQcyN157dvw165D0T
-         RCDTFl322csA0Fn9+G1N6LFFuE0TJKTspv6STQwEvCCeVxM4sgbB2S0JzcRk+6l5m19N
-         8HrnkC1ZmwwDhraCw9a0wQRm31m4gIJqesN1HwOsvrmJyaxyvCSBxK+tkr6TjrlEmXUa
-         KN7JbWfOpE/+MFUdSJ/di6832FlQpX+dbTT3ivs+ecENirdYk7cH/7XRhrq67DaucM5Q
-         lIbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NweuR852F/MkwNU1J1icoSJt72FTFNVF3baoyChYHNE=;
-        b=mBjK2vjkbEPwF5xDt2FxgcqYmb3EyKAGMC/j3TLC6eb+YSepfSI7hB/hQdK8DcLsVK
-         IT7Dx/x0iW33MRem2n0EsZNjbfHPeaWBIcAGpOW0rdFkFHjVwdZEtzBPSJsEGRTu2XZF
-         1RVO5039akZ/FG3V/Z48WwID3166azvh1t6eW7u7kzaE5HCWeWoMj9CeCjrHqT7TWg54
-         8q2n/tWF99G8GhD0anaUZm5Fo4WCt6q6oXYLNpJijAmW0JzaI5H4xq5I18KYYqzOPj4p
-         NUOoyyVVcRSvDGspLlQlgDc+l3WzDILgB+kdr4eZWt5vBW2tIdImMmzaX7p+z4mLJl0U
-         IfHA==
-X-Gm-Message-State: AOAM531+5nQJHZyHctAzkBJ/hk3O/j4I2RnDWMXvWrCzY1YP+ll+y5kp
-        qEJJwMPV7mMXZPKzOxUF7SA=
-X-Google-Smtp-Source: ABdhPJwN0Sr3ZDJbmPOu+dSoX3SV259OdHPy6OWnXG5tg87Z5TKKn7UfG3SAOcVrg/q3BJyLEtERXQ==
-X-Received: by 2002:a63:df01:: with SMTP id u1mr17901576pgg.401.1592964458724;
-        Tue, 23 Jun 2020 19:07:38 -0700 (PDT)
-Received: from sol (220-235-97-240.dyn.iinet.net.au. [220.235.97.240])
-        by smtp.gmail.com with ESMTPSA id n19sm17615649pfu.194.2020.06.23.19.07.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jun 2020 19:07:37 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:07:31 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Subject: Re: [PATCH 16/22] gpiolib: cdev: add V2 uAPI implementation to
- parity with V1 (fwd)
-Message-ID: <20200624020731.GA9728@sol>
-References: <alpine.DEB.2.22.394.2006231910320.2367@hadrien>
+        Tue, 23 Jun 2020 22:14:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592964852;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=72tXMCYAWaryjLEebqft3+tOxDV8hdqHpypK5kqi+nM=;
+        b=G5rQlP4B0lXbsEqfdspxC1b6ErqpQ4sdZezDKA15tutEKBYysmA24x/MT4RL1lzFEDSqF3
+        gwAYqpKDECuzzFyPyDEjWkrdsm9slJfYOTPjW4REQrABoT04Gb4RIoTY/Qx7FvvIl/Uq+Y
+        oqQv1cb4goHFpYRQtYYlXG4aTrcD4DE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-cLOg42qFM8SspIKJJo__wQ-1; Tue, 23 Jun 2020 22:14:10 -0400
+X-MC-Unique: cLOg42qFM8SspIKJJo__wQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BE1257094;
+        Wed, 24 Jun 2020 02:14:09 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 369521DC;
+        Wed, 24 Jun 2020 02:14:05 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 10:14:03 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200624021403.GH3346@MiWiFi-R3L-srv>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <CAPcyv4ipnZ2jXd-obBk4KMGPNz4DMu0jGXFEEPCnST+A2zR+Uw@mail.gmail.com>
+ <20200624014737.GG3346@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2006231910320.2367@hadrien>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200624014737.GG3346@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:11:49PM +0200, Julia Lawall wrote:
-> It looks like the put_device (line 891) should be one line earlier.
+On 06/24/20 at 09:47am, Baoquan He wrote:
+> On 06/23/20 at 05:21pm, Dan Williams wrote:
+> > On Tue, Jun 23, 2020 at 2:43 AM Wei Yang
+> > <richard.weiyang@linux.alibaba.com> wrote:
+> > >
+> > > For early sections, we assumes its memmap will never be partially
+> > > removed. But current behavior breaks this.
+> > 
+> > Where do we assume that?
+> > 
+> > The primary use case for this was mapping pmem that collides with
+> > System-RAM in the same 128MB section. That collision will certainly be
+> > depopulated on-demand depending on the state of the pmem device. So,
+> > I'm not understanding the problem or the benefit of this change.
 > 
+> I was also confused when review this patch, the patch log is a little
+> short and simple. From the current code, with SPARSE_VMEMMAP enabled, we
+> do build memmap for the whole memory section during boot, even though
+> some of them may be partially populated. We just mark the subsection map
+> for present pages. 
+> 
+> Later, if pmem device is mapped into the partially boot memory section,
+> we just fill the relevant subsection map, do return directly, w/o building
+> the memmap for it, in section_activate(). Because the memmap for the
+> unpresent RAM part have been there. I guess this is what Wei is trying to 
+> do to keep the behaviour be consistent for pmem device adding, or
 
-Yikes - thanks for that.
-I'll be sure to coccinelle my code before submitting from now on.
+OK, from Wei's reply I realized this patch is a necessary fix. If we
+depoluate the partial memmap for pmem removing, the later pmem re-adding
+won't have a valid memmap.
 
-Cheers,
-Kent.
+> pmem device removing and later adding again.
+> 
+> Please correct me if I am wrong.
+> 
+> To me, fixing it looks good. But a clear doc or code comment is
+> necessary so that people can understand the code with less time.
+> Leaving it as is doesn't cause harm. I personally tend to choose
+> the former.
+> 
+> 	paging_init()
+> 	    ->sparse_init()
+> 	        ->sparse_init_nid()
+> 	          {
+>                       ...
+>                       for_each_present_section_nr(pnum_begin, pnum) {
+>                           ...
+>                           map = __populate_section_memmap(pfn, PAGES_PER_SECTION,
+>                                      nid, NULL);
+>                           ...
+>                       }
+>                   }
+>              ...
+>              ->zone_sizes_init()
+>                  ->free_area_init()
+>                    {
+>                        for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+>                            subsection_map_init(start_pfn, end_pfn - start_pfn);
+>                        }
+>                    {
+> 		
+>          __add_pages()
+>              ->sparse_add_section()
+>                  ->section_activate()
+>                    {
+>                        ...
+>                        fill_subsection_map();
+>                        if (nr_pages < PAGES_PER_SECTION && early_section(ms))   <----------*********
+>                            return pfn_to_page(pfn);
+>                        ...
+>                    }
+> > 
+> 
+> 
 
