@@ -2,69 +2,75 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A55FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 791EF206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0917206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dpwRXiIe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dbjw8KGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404089AbgFXPHP (ORCPT
+        id S2404164AbgFXPHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56402 "EHLO
+        Wed, 24 Jun 2020 11:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390817AbgFXPHN (ORCPT
+        with ESMTP id S2390902AbgFXPHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:07:13 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20BDC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:13 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id o8so2649466wmh.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:13 -0700 (PDT)
+        Wed, 24 Jun 2020 11:07:14 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2748DC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:14 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so2863670wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oQtVmqfMypGrk3tVAU8yj9wN9Ngmltk19ZhimPNRVF8=;
-        b=dpwRXiIeegS1OUrHliGUYM/HFbgn6RUn2COIlSHV86r8/CtI36lGc+D/qhm1yJm6Z4
-         7BLcvAvliHXyiN4pRQtQazAdCMYmCQkgd1/MfvbS3idQzeuTvt7fV3+tSx0HWmVGj5pB
-         UCXTxhKF2jaLY4JZgM+2R/dFxHJrCsoLtafBB+Y1hW/sJZ5NZGu+E5cZmSdhj9qhBVUB
-         MSeD8ZUPRVJwFe2NAbOmOxmkrPgkmRCcmXfMV84o/qgJ/J0/58kdfqPtqTVcMu7mUsBm
-         /htdnisViMsWS8nwFzO2HNzshQaLWWBwaG3ALePsbzncO3SRdlLX6G8umGtYrGmdRRpH
-         5KFg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=g3Z/1Sd7KiUmvxa4jor9PLam8Q3K0QVIvvAftZ1YelI=;
+        b=Dbjw8KGXNnJR4/Cv9UY5wql6tvwgAVUE3t+Ql2V7uqKucZ/2lLic1lPgg7arybg/Zv
+         BPvQSpSjk+WFFTm6Ryjn5CCh5S44hDzHQealupKltEpkDgvluJwY4Vyyh1+bDYHsLFvR
+         XxeB3/USF+YNB0BiW+2J7WhBAPKe9YtuzvMBzMUN5NaIjjygKhjsdMOwmU1NEwTHTPVk
+         0Jo2DMHgKs557saxVmYCP4vImoVwz7KcSk9WdMgBLHj74Kyjb9GIOtjBuAtNQ9VIRtoD
+         V8K7Mx1uw2+Lt9rme1GVEtyg99f/y8opZ4jln0sKsUb/oiikPgu5OzLfhFqUCfbTBiNF
+         3qIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oQtVmqfMypGrk3tVAU8yj9wN9Ngmltk19ZhimPNRVF8=;
-        b=nMN5k50TQNfeh8YQe34MeoyK9bqUfr5E2Aej9bYfuOYshyrWvbl1YV7tA1c8W7dM5l
-         Tmer6G7QMjsiXGuLV+IivxpZDZ1dO2QdGD6Of3dsz2caBSZUhKabqntk71XD/UhJc7+W
-         SKqGL0fDqgDsA9K+mtri8iEjn0yUoTDd88HvN7MJkIjE+bHKIazQDK2aZHJNIVY5O3mJ
-         lPTVHQD+kNv765pBXmHlHLSjcwVxa7zpSOHfOPohvosDwAaGfuutcBc6c0y8UV2QS5oG
-         WchV7sAnLSXLYjoleyvZbmF1JJnhj1zowXBHL3SonXJO32I+Qe4RWMaqqdn5VjsC0pUb
-         xqUA==
-X-Gm-Message-State: AOAM533limnIOTf8T0ava+WlVwXGs8bQV9LGdqeDuBuWxQ3jGwcMc0di
-        wZnlys2l66qQSPuk0NW020JnSCQlY2g=
-X-Google-Smtp-Source: ABdhPJwdubJb8nmYTJqPiA2HRWouQbP/sLR/VAPY4Vda0giOWhnJptb8gzhUA5uKvnOrsKDbR8RxGQ==
-X-Received: by 2002:a1c:6408:: with SMTP id y8mr22003350wmb.122.1593011231611;
-        Wed, 24 Jun 2020 08:07:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=g3Z/1Sd7KiUmvxa4jor9PLam8Q3K0QVIvvAftZ1YelI=;
+        b=e7XrDPxM8KUrgZYhaPOpA3N1v5XtDVos6/4R7/SCFOWZu8igYDvhPQI9kqvG07cn/A
+         OTtPa7s0CcZBtpQwN3zZxZDTZiuLP3luIiYvgLsh3b+aXwR4KBttsX/hk3XvZ7tPO2q9
+         hH5p5+BsLDrjnoqK56Zjq26q2vosl+h+us/ptVO42JYi008Y/Xcr4eahvEwCr16mepmW
+         WpGjHM/MTSdVdgISU7szX4tvNuq1x9XLNkHEujY6RQsHcrEYh+8lx6y2OtWU/W50pm/Y
+         K/tfEt6VYCxkPhngIReck5aMFwqms/ieC2rHSF1TPDYd1LKWTLx7bTSjDrnfXdlEbkda
+         PBbg==
+X-Gm-Message-State: AOAM531M3VukCgSq24fSJethzoh0EYp9cTNdn5wz2T9YaPhGa0wLDMjh
+        /RY/AjmKHAdS3MM03+LKGsGWuA==
+X-Google-Smtp-Source: ABdhPJzVLUwK2s/MOqSCAQcZkXnN+fggMvRKgafQCLwEIMyGzj3cCIhqWF3b0Km0Am8CCXEcMFz0HQ==
+X-Received: by 2002:a1c:4e1a:: with SMTP id g26mr29750762wmh.148.1593011232892;
+        Wed, 24 Jun 2020 08:07:12 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id h14sm11543361wrt.36.2020.06.24.08.07.10
+        by smtp.gmail.com with ESMTPSA id h14sm11543361wrt.36.2020.06.24.08.07.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:07:10 -0700 (PDT)
+        Wed, 24 Jun 2020 08:07:12 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 00/10] Fix a bunch of W=1 warnings in MFD
-Date:   Wed, 24 Jun 2020 16:06:54 +0100
-Message-Id: <20200624150704.2729736-1-lee.jones@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Kai Svahn <kai.svahn@nokia.com>, Syed Khasim <x0khasim@ti.com>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH 01/10] mfd: twl4030-irq: Fix incorrect type in assignment warning
+Date:   Wed, 24 Jun 2020 16:06:55 +0100
+Message-Id: <20200624150704.2729736-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200624150704.2729736-1-lee.jones@linaro.org>
+References: <20200624150704.2729736-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,36 +78,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attempting to clean-up W=1 kernel builds, which are currently
-overwhelmingly riddled with niggly little warnings.
+Silences Sparse warning:
 
-Lee Jones (10):
-  mfd: twl4030-irq: Fix incorrect type in assignment warning
-  mfd: twl4030-irq: Fix cast to restricted __le32 warning
-  mfd: tps6586x: Fix cast to restricted __le32 warning
-  mfd: altera-sysmgr: Fix physical address storing hacks
-  mfd: sprd-sc27xx-spi: Fix symbol 'sprd_pmic_detect_charger_type' was
-    not declared warning
-  mfd: ab3100-core: Fix incompatible types in comparison expression
-    warning
-  mfd: ab8500-debugfs: Fix incompatible types in comparison expression
-    issue
-  mfd: tc3589x: Remove invalid use of kerneldoc syntax
-  mfd: wm8400-core: Supply description for
-    wm8400_reset_codec_reg_cache's arg
-  mfd: wm831x-core: Supply description wm831x_reg_{un}lock args
+ drivers/mfd/twl4030-irq.c:485:26: warning: incorrect type in assignment (different base types)
+ drivers/mfd/twl4030-irq.c:485:26:    expected unsigned int [usertype] word
+ drivers/mfd/twl4030-irq.c:485:26:    got restricted __le32 [usertype]
 
- drivers/mfd/ab3100-core.c     |  2 +-
- drivers/mfd/ab8500-debugfs.c  |  2 +-
- drivers/mfd/altera-sysmgr.c   | 16 ++++++----------
- drivers/mfd/sprd-sc27xx-spi.c |  1 +
- drivers/mfd/tc3589x.c         |  2 +-
- drivers/mfd/tps6586x.c        |  7 ++++---
- drivers/mfd/twl4030-irq.c     |  4 ++--
- drivers/mfd/wm831x-core.c     |  4 ++++
- drivers/mfd/wm8400-core.c     |  2 ++
- 9 files changed, 22 insertions(+), 18 deletions(-)
+Cc: <stable@vger.kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Kai Svahn <kai.svahn@nokia.com>
+Cc: Syed Khasim <x0khasim@ti.com>
+Cc: linux-omap@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mfd/twl4030-irq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/mfd/twl4030-irq.c b/drivers/mfd/twl4030-irq.c
+index 910a304b397ce..d05bc74daba32 100644
+--- a/drivers/mfd/twl4030-irq.c
++++ b/drivers/mfd/twl4030-irq.c
+@@ -477,7 +477,7 @@ static void twl4030_sih_bus_sync_unlock(struct irq_data *data)
+ 
+ 	if (agent->imr_change_pending) {
+ 		union {
+-			u32	word;
++			__le32	word;
+ 			u8	bytes[4];
+ 		} imr;
+ 
 -- 
 2.25.1
 
