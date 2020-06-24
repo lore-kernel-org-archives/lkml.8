@@ -3,94 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AED1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7574020CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272C520707
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403781AbgFXLsp (ORCPT
+        id S2389393AbgFXLtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:48:45 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:58512 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388491AbgFXLso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:48:44 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr96PPfNeWj9JAA--.553S3;
-        Wed, 24 Jun 2020 19:48:32 +0800 (CST)
-Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
-To:     Marc Zyngier <maz@kernel.org>
-References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
- <e419a2acea6c1977eaef5d049d607749@kernel.org>
- <a10e0f68-7de8-8540-f27e-17fd52216977@loongson.cn>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <73b80d45-1300-4dc3-a0d6-2333b79743b2@loongson.cn>
-Date:   Wed, 24 Jun 2020 19:48:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 24 Jun 2020 07:49:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403784AbgFXLtK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:49:10 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OBXQxR137219;
+        Wed, 24 Jun 2020 07:48:18 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d77g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:48:18 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OBXWRp137775;
+        Wed, 24 Jun 2020 07:48:16 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d75v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:48:16 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OBkbc2026374;
+        Wed, 24 Jun 2020 11:48:13 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 31uururavg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 11:48:13 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OBmAwx61079580
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 11:48:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AFA3A405C;
+        Wed, 24 Jun 2020 11:48:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 45497A4054;
+        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.4.225])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
+Date:   Wed, 24 Jun 2020 13:48:08 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr, ziy@nvidia.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
+Message-ID: <20200624134808.0c460862@thinkpad>
+In-Reply-To: <20200624110539.GC24934@oc3871087118.ibm.com>
+References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
+        <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
+        <20200624110539.GC24934@oc3871087118.ibm.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <a10e0f68-7de8-8540-f27e-17fd52216977@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxr96PPfNeWj9JAA--.553S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw4DtF4rJw1rAr4UJF1UWrg_yoWDJwb_uF
-        4kCrykCw4DAF47Ca4xKay3ArW8X3s2qwn0q34rXr17J347XFZ8JaykKw4fZ3WfJF1xJ3sx
-        Kr1Yva40v3yS9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-        1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-        cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-        1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CEbIxv
-        r21lc2xSY4AK67AK6r4kMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
-        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-        xVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
-        8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2
-        z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUdxhLUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_06:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 phishscore=0 impostorscore=0 cotscore=-2147483648
+ bulkscore=0 adultscore=0 mlxlogscore=663 mlxscore=0 priorityscore=1501
+ spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006240085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/2020 05:02 PM, Tiezhu Yang wrote:
-> On 06/24/2020 04:30 PM, Marc Zyngier wrote:
->> On 2020-06-24 08:44, Tiezhu Yang wrote:
->>> [git send-email failed due to too many commands,
->>>  so only cc the major related email and resend it,
->>>  sorry for that]
->>
->> This is becoming majorly annoying. Please fix your git setup
->> *before* dumping 57 emails for just 14 patches. You have done
->> the same thing yesterday, and I would hope you learned from your
->> mistakes.
->>
->> Also, do not repost a series more than once per week. You have
->> already exceeded your quota by quite a margin.
->
-> I am very sorry for that.
-> I will wait for some days to resend this patch series.
+On Wed, 24 Jun 2020 13:05:39 +0200
+Alexander Gordeev <agordeev@linux.ibm.com> wrote:
 
-Hi Marc,
+> On Wed, Jun 24, 2020 at 08:43:10AM +0530, Anshuman Khandual wrote:
+> 
+> [...]
+> 
+> > Hello Gerald/Christophe/Vineet,
+> > 
+> > It would be really great if you could give this series a quick test
+> > on s390/ppc/arc platforms respectively. Thank you.
+> 
+> That worked for me with the default and debug s390 configurations.
+> Would you like to try with some particular options or combinations
+> of the options?
 
-Since each patch of this series is independent, in order to avoid
-git send-email failed, I prefer to resend each patch individually
-and cc more related maintainer or supporter to review.
+It will be enabled automatically on all archs that set
+ARCH_HAS_DEBUG_VM_PGTABLE, which we do for s390 unconditionally.
+Also, DEBUG_VM has to be set, which we have only in the debug config.
+So only the s390 debug config will have it enabled, you can check
+dmesg for "debug_vm_pgtable" to see when / where it was run, and if it
+triggered any warnings.
 
-If you do not mind, I will resend each patch individually next week.
-Sorry for the noisy and inconvenience.
-
->
->>
->>         M.
-
+I also checked with the v3 series, and it works fine for s390.
