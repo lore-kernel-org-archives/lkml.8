@@ -2,114 +2,205 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C25AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8D120823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593019180;
-	bh=YEJjSSgHOTBuhnoSFcjivuGSb7q6OB7nYlugJPBBv0I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WSq/uSyKr8er6C81VDWAcjgvIogO4xrXa/eGVWlKFNPMVIV6CePLzRpVuK1JPt9SF
-	 JEwLJy4WSyCL0oH6N0aQ0/ugBhVMqm12+SEJXYLgpKZUV76wcMKkwkoYgX0HUQciKZ
-	 08tSwHafL22lOb95+cUfe32AkI/8HkCCQwYTAl6U=
+	by mail.kernel.org (Postfix) with ESMTP id B27302073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405481AbgFXRTj (ORCPT
+        id S2405511AbgFXRT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:19:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405470AbgFXRTg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:19:36 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE16DC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:19:35 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id m26so1673251lfo.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qnO8hKovA7hP7JvwvjuDQY7Jzg/02N7Frk2urzNRpI4=;
-        b=P4yma5zFPApj98Kr5mjr+nS/v3AyFaHaehqB4iRF6Laev6mPoAvKUOpXS81ZdH52io
-         MBVLjtssxRQN2czblUcwihfke8lVaDX2X0b0qkoR7A/UTBs4xokVujZODTlvBx7KgXeX
-         3VC6Jav+FZPi4s3KLN6PaNUXdSrLsqzenGGdM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qnO8hKovA7hP7JvwvjuDQY7Jzg/02N7Frk2urzNRpI4=;
-        b=GY+WFEj68VQflBlriQawXQ6eX3H/rx/oW7waYsr1lus5NqXSmoNIODL02AJY7jeRUe
-         g+6b9ENaDPsAjQKIu3fGuuii+VKYoBrHPjF5Ko4rdm5eBleb6ye20Ihgs/4gfdwRRx/w
-         DIgVTrCQhdV/ZOVQYV/QiA0GFe7P4GxSppKIyrkvfR+EsdcTOXI7E9RpK9UnuI8fr84g
-         5RAP7LXcWCG1+83468pyPHFYXsBtXR66OHFaAhiQKvWV25oI6zbKFlFDWBwT+4n25lSh
-         0XDLIxTEo4FnNGaP+kKb7P4EKs8sik1DRZ1mvB4cTOX2BhRuUSCNhPjbPSPifXurUv2a
-         kEzw==
-X-Gm-Message-State: AOAM530DF3aAKxygZgvR1YkWtGkW9K4nlLS18qI2VTO0GSkSGaG5JqKJ
-        HWQV8gYR+ecffmmoNhFp2ziOJpS7dUU=
-X-Google-Smtp-Source: ABdhPJwJLWA6vhOCf7ZUfQlrlyzFrYpUSFxypNg6W/jLAcGPNh/EH8gm4O92R7bGtN1QkRM4JRyN7g==
-X-Received: by 2002:a19:1d1:: with SMTP id 200mr16294487lfb.57.1593019173830;
+        Wed, 24 Jun 2020 13:19:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20253 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405471AbgFXRTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:19:37 -0400
+IronPort-SDR: 9oph/+HDGuYFZ87eUyVxdC0snCmcigtAfi4nb/juQ34TTjPRCzsWWbvzRZaPGiH8fEvpUSHtfA
+ 6a7mgcB2YkkQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="124213834"
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="124213834"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 10:19:36 -0700
+IronPort-SDR: hnm2hrv0XNwbJK7PtXcsR6UU2l6CfeEIiOLT1+FvIpgLywnaA7CxgfxLbIjeaiRAtGWD1PcIjQ
+ FLZ2Z5xlbAgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="452713404"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 24 Jun 2020 10:19:35 -0700
+Received: from [10.249.228.248] (abudanko-mobl.ccr.corp.intel.com [10.249.228.248])
+        by linux.intel.com (Postfix) with ESMTP id 49AF35805B5;
         Wed, 24 Jun 2020 10:19:33 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id r8sm4967356ljj.81.2020.06.24.10.19.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 10:19:33 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id d21so1696547lfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:19:32 -0700 (PDT)
-X-Received: by 2002:ac2:5093:: with SMTP id f19mr16132062lfm.10.1593019172581;
- Wed, 24 Jun 2020 10:19:32 -0700 (PDT)
+Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
+ fdarray__filter() call
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
+Date:   Wed, 24 Jun 2020 20:19:32 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de>
-In-Reply-To: <20200624162901.1814136-4-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 24 Jun 2020 10:19:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
-Message-ID: <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
-Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file operations
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 9:29 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Add two new file operations that are identical to ->read and ->write
-> except that they can also safely take kernel pointers using the uptr_t
-> type.
 
-Honestly, I think this is the wrong way to go.
+On 17.06.2020 11:35, Alexey Budankov wrote:
+> 
+> Skip fds with zeroed revents field from count and avoid fds moving
+> at fdarray__filter() call so fds indices returned by fdarray__add()
+> call stay the same and can be used for direct access and processing
+> of fd revents status field at entries array of struct fdarray object.
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  tools/lib/api/fd/array.c   | 11 +++++------
+>  tools/perf/tests/fdarray.c | 20 ++------------------
+>  2 files changed, 7 insertions(+), 24 deletions(-)
+> 
+> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+> index 58d44d5eee31..97843a837370 100644
+> --- a/tools/lib/api/fd/array.c
+> +++ b/tools/lib/api/fd/array.c
+> @@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>  		return 0;
+>  
+>  	for (fd = 0; fd < fda->nr; ++fd) {
+> +		if (!fda->entries[fd].revents)
+> +			continue;
+> +
 
-All of this new complexity and messiness, just to remove a few
-unimportant final cases?
+So it looks like this condition also filters out non signaling events fds, not only
+control and others fds, and this should be somehow avoided so such event related fds
+would be counted. Several options have been proposed so far:
 
-If somebody can't be bothered to convert a driver to
-iter_read/iter_write, why would they be bothered to convert it to
-read_uptr/write_uptr?
+1) Explicit typing of fds via API extension and filtering based on the types:
+   a) with separate fdarray__add_stat() call
+   b) with type arg of existing fdarray__add() call
+   c) various memory management design is possible
 
-And this messiness will stay around for decades.
+2) Playing tricks with fd positions inside entries and assumptions on fdarray API calls ordering
+   - looks more like a hack than a designed solution
 
-So let's not go down that path.
+3) Rewrite of fdarray class to allocate separate object for every added fds
+   - can be replaced with nonscrewing of fds by __filter()
 
-If you want to do "splice() and kernel_read() requires read_iter"
-(with a warning so that we find any cases), then that's fine. But
-let's not add yet _another_ read type.
+4) Distinct between fds types at fdarray__filter() using .revents == 0 condition
+   - seems to have corner cases and thus not applicable
 
-Why did you care so much about sysctl, and why couldn't they use the iter ops?
+5) Extension of fdarray__poll(, *arg_ptr, arg_size) with arg of fds array to atomically poll
+   on fdarray_add()-ed fds and external arg fds and then external arg fds processing
 
-                    Linus
+6) Rewrite of fdarray class on epoll() call basis
+   - introduces new scalability restrictions for Perf tool
+
+7) Anything else ...
+
+~Alexey
+
+>  		if (fda->entries[fd].revents & revents) {
+>  			if (entry_destructor)
+>  				entry_destructor(fda, fd, arg);
+>  
+> +			fda->entries[fd].revents = fda->entries[fd].events = 0;
+>  			continue;
+>  		}
+>  
+> -		if (fd != nr) {
+> -			fda->entries[nr] = fda->entries[fd];
+> -			fda->priv[nr]	 = fda->priv[fd];
+> -		}
+> -
+>  		++nr;
+>  	}
+>  
+> -	return fda->nr = nr;
+> +	return nr;
+>  }
+>  
+>  int fdarray__poll(struct fdarray *fda, int timeout)
+> diff --git a/tools/perf/tests/fdarray.c b/tools/perf/tests/fdarray.c
+> index c7c81c4a5b2b..d0c8a05aab2f 100644
+> --- a/tools/perf/tests/fdarray.c
+> +++ b/tools/perf/tests/fdarray.c
+> @@ -12,6 +12,7 @@ static void fdarray__init_revents(struct fdarray *fda, short revents)
+>  
+>  	for (fd = 0; fd < fda->nr; ++fd) {
+>  		fda->entries[fd].fd	 = fda->nr - fd;
+> +		fda->entries[fd].events  = revents;
+>  		fda->entries[fd].revents = revents;
+>  	}
+>  }
+> @@ -29,7 +30,7 @@ static int fdarray__fprintf_prefix(struct fdarray *fda, const char *prefix, FILE
+>  
+>  int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_unused)
+>  {
+> -	int nr_fds, expected_fd[2], fd, err = TEST_FAIL;
+> +	int nr_fds, err = TEST_FAIL;
+>  	struct fdarray *fda = fdarray__new(5, 5);
+>  
+>  	if (fda == NULL) {
+> @@ -55,7 +56,6 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
+>  
+>  	fdarray__init_revents(fda, POLLHUP);
+>  	fda->entries[2].revents = POLLIN;
+> -	expected_fd[0] = fda->entries[2].fd;
+>  
+>  	pr_debug("\nfiltering all but fda->entries[2]:");
+>  	fdarray__fprintf_prefix(fda, "before", stderr);
+> @@ -66,17 +66,9 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
+>  		goto out_delete;
+>  	}
+>  
+> -	if (fda->entries[0].fd != expected_fd[0]) {
+> -		pr_debug("\nfda->entries[0].fd=%d != %d\n",
+> -			 fda->entries[0].fd, expected_fd[0]);
+> -		goto out_delete;
+> -	}
+> -
+>  	fdarray__init_revents(fda, POLLHUP);
+>  	fda->entries[0].revents = POLLIN;
+> -	expected_fd[0] = fda->entries[0].fd;
+>  	fda->entries[3].revents = POLLIN;
+> -	expected_fd[1] = fda->entries[3].fd;
+>  
+>  	pr_debug("\nfiltering all but (fda->entries[0], fda->entries[3]):");
+>  	fdarray__fprintf_prefix(fda, "before", stderr);
+> @@ -88,14 +80,6 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
+>  		goto out_delete;
+>  	}
+>  
+> -	for (fd = 0; fd < 2; ++fd) {
+> -		if (fda->entries[fd].fd != expected_fd[fd]) {
+> -			pr_debug("\nfda->entries[%d].fd=%d != %d\n", fd,
+> -				 fda->entries[fd].fd, expected_fd[fd]);
+> -			goto out_delete;
+> -		}
+> -	}
+> -
+>  	pr_debug("\n");
+>  
+>  	err = 0;
+> 
