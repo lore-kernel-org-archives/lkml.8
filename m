@@ -2,102 +2,130 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7333C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA83CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C7120899
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858F220781
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MFeu6wEi"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qB6nG+KN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405070AbgFXQQN (ORCPT
+        id S2405080AbgFXQQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:16:13 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50458 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405028AbgFXQQC (ORCPT
+        Wed, 24 Jun 2020 12:16:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404629AbgFXQPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:16:02 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFMu2038566;
-        Wed, 24 Jun 2020 11:15:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593015322;
-        bh=nvx312mv4VGvwwIjEoy4EfaLo8OvbsRscw5gPQDVBlY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=MFeu6wEiXAnjuPDKovdBwGx1SJ2bEHkvAyg6AW+/DoaR16KNRR+JbPdnIQKocOzAr
-         9rUmU6mz2FZU0A96CMve8H+fp9G97CwZe8ySpRax7x+37xsXRKsUnmkk8FFfLxv+Qs
-         jT0G1NZkJnTvNMe+cAK9haS+HZcBa05QpzZV6x/I=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OGFMjD127736
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 11:15:22 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 11:15:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 11:15:22 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFLFS128610;
-        Wed, 24 Jun 2020 11:15:21 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v5 5/7] dt-bindings: tas2562: Add voltage sense slot property
-Date:   Wed, 24 Jun 2020 11:14:57 -0500
-Message-ID: <20200624161459.19248-6-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200624161459.19248-1-dmurphy@ti.com>
-References: <20200624161459.19248-1-dmurphy@ti.com>
+        Wed, 24 Jun 2020 12:15:33 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC9EC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:15:33 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so2858556wmh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7OXl1VWgKNRCb648iCdiM0hRIiCL6AhzBqKEHJfyjiU=;
+        b=qB6nG+KNrKtiZam3wMwJAbHJsDTlEi5ywCENbJGiAy/9gUHQzrWo/mlMOiLbh1UY45
+         FrhwaE4dGPrFpoPYUGYx0/+QyOMPd9NhTaEp0tECkuEMTB5zenR1AEnWfsuHPecIaS40
+         zPG2T3KkeE85K7IkzsqLajVYG6iStaPm93IThbUtJhjIy2Zr98UAhnToy2fIRJAClJRw
+         KVQcZijjd4K8ZIU86mrCYHcIKXSAWJOpajk1oWIuxk7mMZEVxYjwD3J6ubhspYyde2yl
+         tX0V6GpKBC+i2WCzq9B/yUkQnm+3BcWSMnFxexBGt582WyL6gYuSjcvkZVkqLOC8dZog
+         PP/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7OXl1VWgKNRCb648iCdiM0hRIiCL6AhzBqKEHJfyjiU=;
+        b=M2FCyviHEd3I1tUpcju5pp4AfXW1KpS3SLLj08F0Ks3aRlEcGuz/cD/YQJNiotOPey
+         zroDkv2oAKTwAm1E9pGP8jYZdkKWw18fD13Kd27GGFf/wTD3fjWpjOrlwV2DxG8TDS5m
+         n1qD5v1RH9ZlMzi7/GG1FmHAHSFYrsghyhfDrBxsaA/2CiXONcbpMbsrASL82qz+zK8F
+         UFAhBvo2ynuclo6GHmhghbvY/PouJt7m1tNi6C81wjChn5/v8vfxfc2Y8QkUuVjt9kC3
+         zeRXX4yHaPbTGzFDdLAlRdUwggKqp9dNEJYAn/bGgbrkUywxXdwloYW1v9IDphwIxLu8
+         vhGA==
+X-Gm-Message-State: AOAM532YFHGkVYXAU3Lmt7V32mSE92LNvRtzPPF7mBIzH1QBHpp1u5kb
+        9mll1giniggxw5OZU4Nk8mRp3g==
+X-Google-Smtp-Source: ABdhPJwfsCqowmEbq8vy1eMaii9xA0WfQR0mUXBz8KRSJZyN8d8xCxvc1FQZ4gDIDuT/R9Xz5DEVdw==
+X-Received: by 2002:a1c:2b81:: with SMTP id r123mr2106109wmr.72.1593015331738;
+        Wed, 24 Jun 2020 09:15:31 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:89ac:d9e8:f44c:b137])
+        by smtp.gmail.com with ESMTPSA id t15sm8716207wmj.14.2020.06.24.09.15.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 09:15:30 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com, lee.jones@linaro.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com
+Subject: [PATCH v5 0/2] *mfd: Add support for Khadas Microcontroller
+Date:   Wed, 24 Jun 2020 18:15:26 +0200
+Message-Id: <20200624161528.12664-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a property to configure the slot for the voltage sense monitoring of
-the device. Vsense data will be sent to the processor via the slot
-defined by the property
+The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
+connected via I2C.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/devicetree/bindings/sound/tas2562.txt | 3 +++
- 1 file changed, 3 insertions(+)
+This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+boards.
 
-diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
-index fd0ac8636c01..dc6d7362ded7 100644
---- a/Documentation/devicetree/bindings/sound/tas2562.txt
-+++ b/Documentation/devicetree/bindings/sound/tas2562.txt
-@@ -11,6 +11,8 @@ Required properties:
-  - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
-  - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
-  - ti,imon-slot-no:- TDM TX current sense time slot.
-+ - ti,vmon-slot-no:- TDM TX voltage sense time slot. This slot must always be
-+		     greater then ti,imon-slot-no.
- 
- Optional properties:
- - interrupt-parent: phandle to the interrupt controller which provides
-@@ -30,5 +32,6 @@ tas2562@4c {
- 
- 	shut-down-gpio = <&gpio1 15 0>;
-         ti,imon-slot-no = <0>;
-+        ti,vmon-slot-no = <1>;
- };
- 
+It has multiple boot control features like password check, power-on
+options, power-off control and system FAN control on recent boards.
+
+Thie serie adds :
+- the Thermal Cooling cell driver
+- add support into the Khadas VIM3/VIM3L DT
+
+Changes since v4 at [5]:
+- Removed ctx checks in thermal driver
+- Removed the useless khadas_mcu_fan_disable() helper in thermal driver
+- Fixed a small indentation issue in thermal driver
+
+Changes since v3 at [4]:
+- Removed Applied patches 1, 2 & 4
+- Added reviewed-by tags for patch 3 & 5
+
+Changes since v2 at [3]:
+- Removed NVMEM driver for separate submission
+- fixed MFD driver, header and Kconfig
+- fixed Thermal Kconfig
+- fixed MAINTAINERS files and path
+
+Changes since RFC v1 at [2]:
+- moved hwmon driver to thermal-only
+- moved the SM1 thermal nodes in a separate serie
+- added the bindings review tag from rob
+
+[1] http://lore.kernel.org/r/20200512093916.19676-1-narmstrong@baylibre.com
+[2] http://lore.kernel.org/r/20200421080102.22796-1-narmstrong@baylibre.com
+[3] http://lore.kernel.org/r/20200512132613.31507-1-narmstrong@baylibre.com
+[4] http://lore.kernel.org/r/20200608091739.2368-1-narmstrong@baylibre.com
+[5] http://lore.kernel.org/r/20200618133818.15857-1-narmstrong@baylibre.com
+
+Neil Armstrong (2):
+  thermal: add support for the MCU controlled FAN on Khadas boards
+  arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
+
+ .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  23 +++
+ drivers/thermal/Kconfig                       |  11 ++
+ drivers/thermal/Makefile                      |   1 +
+ drivers/thermal/khadas_mcu_fan.c              | 162 ++++++++++++++++++
+ 4 files changed, 197 insertions(+)
+ create mode 100644 drivers/thermal/khadas_mcu_fan.c
+
 -- 
-2.26.2
+2.22.0
 
