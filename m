@@ -2,110 +2,139 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7663CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F5F20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQJP9IMn"
+	by mail.kernel.org (Postfix) with ESMTP id E00A820857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391040AbgFXNl0 (ORCPT
+        id S2391060AbgFXNmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:41:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388453AbgFXNlT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:41:19 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8493FC061573;
-        Wed, 24 Jun 2020 06:41:18 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k1so1084581pls.2;
-        Wed, 24 Jun 2020 06:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YjaRnLW/TeYDKRVMhHoc45hQDjzb3Lxd9P36OWV9xUg=;
-        b=RQJP9IMnZpBzbnT/jh+2pJW2cGqgsGVYUg+jHmUFrFaiyByppGTLqtmTHID5c5IeM8
-         2n9vlkn+Lp0Ig1u5TF0mXhg82+LHraV3/WjEnJABoyKbCCbvwgQBWqb/dBUglS5aJhGk
-         RmnqImfrEqOZp2e46uO50u9GLGltFwksP9MqT8BoNY6HcuucvCFr99VhSrFxHFXfgxFq
-         xCB85l5FVyZy9bl3eqgGsh0j3SHmWiI7WrflyVMbOQz6fcPcBgDu63sUxsBAAiWrwRkT
-         BB7KGloNr+drMlgjuAKVpP31HqM/PwSEMQtyIvD3CYeZsC5M2LrFR+asVVpZLsP3F/l2
-         BIeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YjaRnLW/TeYDKRVMhHoc45hQDjzb3Lxd9P36OWV9xUg=;
-        b=GqVXt/aAAStKo2pRaEnnaI/US9MV/wChnBYLITLsRFaJl3A6APmf90pEpBgrcUNoH9
-         FkFmFzoWa3Q+LsUFhWhZq7JJ379GTc5Nn0XtdIf6MNl9vlitQtDNcMRwtmAy/JZrGlJB
-         uYSSUEI7Nf4ysbUx8dVzGITm7a8yrqgz7/aA+AVPSzbRqAZaUMkDrWZjbaoFzcBWmjC6
-         h4KSMMAqZuh1BONkYv8ijvbr9iNpUMMxdzICMRDuLCa7vCbGo9r/LOGLnb0alq1vuicF
-         P4sA329IpzL+77N8MyNG33CMEgjfvFiS/B637rKK01+H+AAb4K2pMvfqkKvWluULbGRQ
-         cTfg==
-X-Gm-Message-State: AOAM530qn1AnQeYHeNnKkPVAWowqXaP6fJkD6Oa93+SQ1zs/04i45avo
-        sf84xzsKp7WKyZ81edLZ3CYE1rABlBFOwTuI/J0=
-X-Google-Smtp-Source: ABdhPJxnOauBhHEdzF48+9LTCaK/Sq2VJQShwYVd5y7GHlmvjT3U3dmQ5AMnvw3J4EVR2S4nOo0HAMSLMzT2olab7p8=
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr28213586pjr.181.1593006078101;
- Wed, 24 Jun 2020 06:41:18 -0700 (PDT)
+        Wed, 24 Jun 2020 09:42:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:51184 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388453AbgFXNmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:42:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B1B81F1;
+        Wed, 24 Jun 2020 06:42:13 -0700 (PDT)
+Received: from [10.37.12.79] (unknown [10.37.12.79])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97BAD3F6CF;
+        Wed, 24 Jun 2020 06:42:10 -0700 (PDT)
+Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kamil Konieczny <k.konieczny@samsung.com>,
+        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+ <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+ <20200623191129.GA4171@kozik-lap>
+ <CGME20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2@eucas1p2.samsung.com>
+ <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
+ <828b0d63-4d01-48d6-5971-64855adebed2@samsung.com>
+ <20200624120651.GA20813@pi3> <55772862-ff8f-1e1d-91ae-7b4d7c3be1b6@arm.com>
+ <20200624131341.GA20905@pi3>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <c3b4d74e-0e0e-590d-0588-3ff9756f8050@arm.com>
+Date:   Wed, 24 Jun 2020 14:42:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200623145748.28877-1-geert+renesas@glider.be>
- <20200623145748.28877-3-geert+renesas@glider.be> <CAMpxmJWGckzicz6FddXybcJh-hb+-hoGbV29Z3BA61RVQ1nQDQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJWGckzicz6FddXybcJh-hb+-hoGbV29Z3BA61RVQ1nQDQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 24 Jun 2020 16:41:05 +0300
-Message-ID: <CAHp75VenuB=up5wHm+BtkQPy_N6GuE7xvHJWq-e4Fricg1M7Vw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: aggregator: Use bitmap_parselist() for parsing
- GPIO offsets
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200624131341.GA20905@pi3>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 3:16 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
->
-> wt., 23 cze 2020 o 16:57 Geert Uytterhoeven <geert+renesas@glider.be>
-> napisa=C5=82(a):
-> >
-> > Replace the custom code to parse GPIO offsets and/or GPIO offset ranges
-> > by a call to bitmap_parselist(), and an iteration over the returned bit
-> > mask.
-> >
-> > This should have no impact on the format of the configuration parameter=
-s
-> > written to the "new_device" virtual file in sysfs.
-> >
-> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > I'm not super happy with the mask[] array, which is on the stack.
-> > But there is no real limit on the number of GPIO lines provided by a
-> > single gpiochip, except for the global ARCH_NR_GPIOS.
->
-> Why not allocate it with bitmap_zalloc() then?
 
-I haven't got the original messages yet, so my thought is to actually
-extract a helper from
-gpiod_get_array_value_complex() or gpiod_set_array_value_complex() for
-bitmap allocation.
-But I didn't check if it's suitable here. So, bitmap_zalloc() would be help=
-ful.
 
---=20
-With Best Regards,
-Andy Shevchenko
+On 6/24/20 2:13 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jun 24, 2020 at 02:03:03PM +0100, Lukasz Luba wrote:
+>>
+>>
+>> On 6/24/20 1:06 PM, Krzysztof Kozlowski wrote:
+>>> My case was clearly showing wrong behavior. System was idle but not
+>>> sleeping - network working, SSH connection ongoing.  Therefore at least
+>>> one CPU was not idle and could adjust the devfreq/DMC... but this did not
+>>> happen. The system stayed for like a minute in 633 MHz OPP.
+>>>
+>>> Not-waking up idle processors - ok... so why not using power efficient
+>>> workqueue? It is exactly for this purpose - wake up from time to time on
+>>> whatever CPU to do the necessary job.
+>>
+>> IIRC I've done this experiment, still keeping in devfreq:
+>> INIT_DEFERRABLE_WORK()
+>> just applying patch [1]. It uses a system_wq which should
+>> be the same as system_power_efficient_wq when
+>> CONFIG_WQ_POWER_EFFICIENT_DEFAULT is not set (our case).
+>> This wasn't solving the issue for the deferred work. That's
+>> why the patch 2/2 following patch 1/2 [1] was needed.
+>>
+>> The deferred work uses TIMER_DEFERRABLE in it's initialization
+>> and this is the problem. When the deferred work was queued on a CPU,
+>> next that CPU went idle, the work was not migrated to some other CPU.
+>> The former cpu is also not woken up according to the documentation [2].
+> 
+> Yes, you need either workqueue.power_efficient kernel param or CONFIG
+> option to actually enable it.  But at least it could then work on any
+> CPU.
+> 
+> Another solution is to use directly WQ_UNBOUND.
+> 
+>> That's why Kamil's approach should be continue IMHO. It gives more
+>> control over important devices like: bus, dmc, gpu, which utilization
+>> does not strictly correspond to cpu utilization (which might be low or
+>> even 0 and cpu put into idle).
+>>
+>> I think Kamil was pointing out also some other issues not only dmc
+>> (buses probably), but I realized too late to help him.
+> 
+> This should not be a configurable option. Why someone would prefer to
+> use one over another and decide about this during build or run time?
+> Instead it should be just *right* all the time. Always.
+
+I had the same opinion, as you can see in my explanation to those
+patches, but I failed. That's why I agree with Kamil's approach
+because had higher chance to get into mainline and fix at least some
+of the use cases.
+
+> 
+> Argument that we want to save power so we will not wake up any CPU is
+> ridiculous if because of this system stays in high-power mode.
+> 
+> If system is idle and memory going to be idle, someone should be woken
+> up to save more power and slow down memory controller.
+> 
+> If system is idle but memory going to be busy, the currently busy CPU
+> (which performs some memory-intensive job) could do the job and ramp up
+> the devfreq performance.
+
+I agree. I think this devfreq mechanism was designed in the times
+where there was/were 1 or 2 CPUs in the system. After a while we got ~8
+and not all of them are used. This scenario was probably not
+experimented widely on mainline platforms.
+
+That is a good material for improvements, for someone who has time and
+power.
+
+Regards,
+Lukasz
+
+> 
+> Best regards,
+> Krzysztof
+> 
