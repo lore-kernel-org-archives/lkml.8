@@ -2,285 +2,136 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C61C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1712C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1C6B20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:54:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="AjjEgFuN"
+	by mail.kernel.org (Postfix) with ESMTP id B695B20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404017AbgFXOy2 (ORCPT
+        id S2404034AbgFXOzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391252AbgFXOy1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:54:27 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B84C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:54:26 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i3so2908788ljg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UvdVkukB4v6pJHs3wM26SQ3ySNLoRLpv1KxPyWDhY1Y=;
-        b=AjjEgFuNdk7hTDHZipXvQ8Eo1tQO8RhNrOo8v6X65Pu8sRwX5GqMM81pSx/+CfotL1
-         HLk+nz2FUJ5VswmAvKu2b0ydW+RRYdbtyg3zJOjEts+tieqhnAZ9WwYbnwrJR7P4+ngB
-         oVU2jd7ZFt/WJ/t7fwGMYMKBxJ7vXoFIk15krrBIxWTqj8KgHRZU2kruldyfHBRZYNSh
-         c63bc6tf0H/WrmojDDpIuLVt3xW9q27s2u/qdfuKIMhUJH4As7gaW/DZ4Pm/ciyqWmlS
-         r8W0uPMO3GxxAL3aJA/wBzrFFjhTSNTBEBgicHvaWfjEil9sG6GrGGLoxcd1cDrE+T8t
-         M/VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UvdVkukB4v6pJHs3wM26SQ3ySNLoRLpv1KxPyWDhY1Y=;
-        b=tgBOxlBa6hwMSL4vueT5grHzWi0kpEd179RCsULt4TNB/IN/GQJriGTEC/W537F9YC
-         3uzrd/nIZL7SVDZlWK2kD2Eax0E+5v+3K6Zm78dMjlFbA+Mt1PywTo8WvWjbVNQ75XfU
-         pwe1YRhah8ih6oX1kgtPJgPCmIhlqdH8tbktl63Gk0eEsXm0zhK0P/vG1rLUS86R79Jc
-         gFV7phd7IPPMCrW8rI3iAkv0kD3WT0FRxH2isDRFlBPhJ+t3mmLDtpuPUhKTlCP4vV4U
-         Ups53hpwCugsJEu6JiIfHOaSX5txOY4/1X+XwFYBUHeGVNHeru3fHWdp9IE9CSv4hg1j
-         ve1g==
-X-Gm-Message-State: AOAM533AUbNJ6+Kaoqg8qmMka8jWNfG2Pn5Y/fJ6t73aYhZvRIMU2Me+
-        gxZWd7SN9kvp+8gSFfZ3JNF6bQ==
-X-Google-Smtp-Source: ABdhPJxSdSFQ0XlSLVXpLeaY4R+JTYfToQsKL8BdtfwpzOdvtWfjZicEBNxu2lz4AUXjIaAFmCp3YQ==
-X-Received: by 2002:a2e:3314:: with SMTP id d20mr14154391ljc.359.1593010465220;
-        Wed, 24 Jun 2020 07:54:25 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id k22sm5232608lfg.69.2020.06.24.07.54.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 07:54:24 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 16:54:23 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michael@rodin.online,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
-        Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
- completion
-Message-ID: <20200624145423.GA1595450@oden.dyn.berto.se>
-References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
- <20200617105646.GB2850317@oden.dyn.berto.se>
- <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
- <20200617152857.GA2936315@oden.dyn.berto.se>
- <427325ff-e21f-91fd-6236-6d1f6615ca41@xs4all.nl>
+        Wed, 24 Jun 2020 10:55:06 -0400
+Received: from mga12.intel.com ([192.55.52.136]:3903 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389187AbgFXOzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 10:55:05 -0400
+IronPort-SDR: aK7zxTV+OdhoKwXs8JehSrqnsJwAhDJtAOzf3+Ad3ZmFXhkr8pwsGZh+meqDM0711+NJFXZZJf
+ KuCh9zNaaZTg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="124137793"
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="124137793"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 07:55:05 -0700
+IronPort-SDR: 3diYQJsZjju2gltGrThSCVqE1FJi6rWlHV1p2yw0VIgrv5bcq5+95xa+MlK87FHwj3HMI/X6Lz
+ KcG1Ae20ZWxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="310804882"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 24 Jun 2020 07:55:05 -0700
+Received: from [10.249.228.248] (abudanko-mobl.ccr.corp.intel.com [10.249.228.248])
+        by linux.intel.com (Postfix) with ESMTP id 57F5B5804D6;
+        Wed, 24 Jun 2020 07:55:03 -0700 (PDT)
+Subject: Re: [PATCH v8 12/13] perf record: implement control commands handling
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <f48c5f58-96ea-b1f0-a7e6-55315a292bce@linux.intel.com>
+ <20200623145434.GD2619137@krava>
+ <3107d9cd-03ec-34aa-4226-393547c55517@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <173bf24f-1db4-b496-c258-4e98536d23a5@linux.intel.com>
+Date:   Wed, 24 Jun 2020 17:55:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <427325ff-e21f-91fd-6236-6d1f6615ca41@xs4all.nl>
+In-Reply-To: <3107d9cd-03ec-34aa-4226-393547c55517@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
 
-On 2020-06-24 15:31:01 +0200, Hans Verkuil wrote:
-> On 17/06/2020 17:28, Niklas Söderlund wrote:
-> > Hi Michael,
-> > 
-> > On 2020-06-17 17:15:37 +0200, Michael Rodin wrote:
-> >> Hi Niklas and Steve,
-> >>
-> >> On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
-> >>> Hi Michael and Steve,
-> >>>
-> >>> On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
-> >>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>>
-> >>>> The media_device is registered during driver probe, before async
-> >>>> completion, so it is possible for .link_notify to be called before
-> >>>> all devices are bound.
-> >>>>
-> >>>> Fix this by moving media_device_register() to rvin_group_notify_complete().
-> >>>> This ensures that all devices are now bound (the rcar-csi2 subdevices and
-> >>>> and video capture devices) before .link_notify can be called.
-> >>>
-> >>> I'm curious to what situation created the need for this change. I'm 
-> >>> currently trying to take the VIN driver in the opposite direction [1] 
-> >>> with the end goal of registering video devices at probe time and then 
-> >>> allow the media graph to populate as devices becomes available.
-> >>
-> >> It looks like almost all platform drivers call media_device_register() in
-> >> the completion callback. From my understaning it is necessary to ensure
-> >> that all subdevices are bound and all links are created before the user
-> >> can enable any link (which would trigger link_notify callback execution)
-> >> and set formats. If I am not mistaken, Steve could observe an "OOPS" or
-> >> at least it is theoretically possible.
-> > 
-> > If an OOPS have been observed I would be interested to see it. That way 
-> > we can fix the OOPS and keep the media graph registration where it is 
-> > today.
-> > 
-> >>
-> >> Actually I found that this patch alone is not enough even if it is correct,
-> >> because we also have to register the media device in rvin_parallel_notify_complete()
-> >> in case if there is only a parallel video input device attached.
-> >>
-> >>> My reason for this is that we could have a functional pipeline inside 
-> >>> the graph even if it's not complete. This came out of the GMSL work done
-> >>> a while pack where I had a faulty camera that would prevent the other 7 
-> >>> in the system to function.
-> >>
-> >> I agree that if a probe of a faulty subdevice fails, this should not affect
-> >> functionality of the other attached subdevices. The "complete" callback of
-> >> the async notifier is probably not executed in this case, so I guess, we
-> >> would have to register the media device in the "bound" callback after the first
-> >> subdevice has been probed? Otherwise there is not much sense to have video
-> >> capture devices, which are not connected to any source.
-> > 
-> > Calling it in the bound callback is mostly the same as it is today, as 
-> > link_notify could then be called when not all entities are in the graph.  
-> > In fact even if we where tp move the media device registration to the t
-> > complete callback we have this problem if any of the subdevices are 
-> > unbound. Then we are back to the state with a registerd media device 
-> > where not all entities are present.
-> > 
-> > I think the solution here is to address the issue (if any) in the 
-> > link_notify callback when the graph is not fully populated.
+On 24.06.2020 17:00, Alexey Budankov wrote:
 > 
-> As I have mentioned in other threads in this mailinglist (e.g.
-> https://www.spinics.net/lists/linux-media/msg171067.html), this is part
-> of a bigger problem: what to do if only part of a graph comes up, or
-> a part disappears. Today this is not supported.
+> On 23.06.2020 17:54, Jiri Olsa wrote:
+>> On Wed, Jun 17, 2020 at 11:43:58AM +0300, Alexey Budankov wrote:
+>>>
+>>> Implement handling of 'enable' and 'disable' control commands
+>>> coming from control file descriptor.
+>>>
+>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>> ---
+>>>  tools/perf/builtin-record.c | 16 ++++++++++++++++
+>>>  1 file changed, 16 insertions(+)
+>>>
+>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>>> index d0b29a1070a0..0394e068dde8 100644
+>>> --- a/tools/perf/builtin-record.c
+>>> +++ b/tools/perf/builtin-record.c
+>>> @@ -1527,6 +1527,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>>  	bool disabled = false, draining = false;
+>>>  	int fd;
+>>>  	float ratio = 0;
+>>> +	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+>>>  
+>>>  	atexit(record__sig_exit);
+>>>  	signal(SIGCHLD, sig_handler);
+>>> @@ -1830,6 +1831,21 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>>  				alarm(rec->switch_output.time);
+>>>  		}
+>>>  
+>>> +		if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
+>>> +			switch (cmd) {
+>>> +			case EVLIST_CTL_CMD_ENABLE:
+>>> +				pr_info(EVLIST_ENABLED_MSG);
+>>> +				break;
+>>> +			case EVLIST_CTL_CMD_DISABLE:
+>>> +				pr_info(EVLIST_DISABLED_MSG);
+>>> +				break;
+>>> +			case EVLIST_CTL_CMD_ACK:
+>>> +			case EVLIST_CTL_CMD_UNSUPPORTED:
+>>> +			default:
+>>> +				break;
+>>> +			}
+>>> +		}
+>>
+>> so there's still the filter call like:
+>>
+>>                         if (evlist__filter_pollfd(rec->evlist, POLLERR | POLLHUP) == 0)
+>>                                 draining = true;
+>>
+>> it will never be 0 if the control fds are stil alive no?
 > 
-> It is certainly desirable to support this, but I want to see an RFC first
-> detailing the interaction with userspace. And remember that today the
-> expectation of applications is that device nodes are only created if all
-> components of the device probed successfully.
-> 
-> My preference is that rcar-vin is first changed to conform to current
-> expectations (i.e. /dev/mediaX is only registered at async completion).
+> Due to change in filter_pollfd() and preceding evlist__ctlfd_process() call
+> now control fd is not counted by filter_pollfd().
+And evlist__ctlfd_process() still should be called second time right
+after evlist_poll() but prior filter_polfd().
 
-I do not object to first making rcar-vin behave in this way. However for 
-that work to be truly useful it should also solve what happens with all 
-video, subdevices and media devices in the scenario where one device of 
-the graph is unbound after complete have been called and how they can 
-reregisterd if the graph becomes complete again.
-
-If I understand things correctly the idea is to register video and 
-subdevices at the time complete is called. However I'm unsure what is 
-suppose to happen when unbound is called, shall all video and subdevices 
-of the graph then be unregistered? Currently this happens for video 
-devices in rcar-vin but it has a huge drawback, if the device that was 
-unbound is rebound and complete() is called a second time the kernel 
-prints big warnings on newer kernels and crashes in older. This is due 
-to the kref involved in the V4L2 core. Also I'm unaware of how one could 
-unregister all subdevies if another subdev in the graph is removed.
-
-Figuring this out would make me happy as it's been a pet problem of mine 
-for many years. I also think making this work could help in the 
-discussion on how we can build partial initialization on top.
+~Alexey
 
 > 
-> After a proper discussion on how to handle partial initialization and
-> after we have a good plan, then this can be implemented in rcar-vin.
+> However event fds with .revents == 0 are not counted either and this breaks
+> the algorithm thus something more is still required to cover this gap.
 > 
-> Note that I really want to support partial initialization, but I want
-> to see an RFC with a proper analysis and proposal first.
+> ~Alexey
 > 
-> Regards,
-> 
-> 	Hans
-> 
-> > 
-> >>
-> >> (Delayed) population of the media graph after media device registration
-> >> sounds also like a requirement for device tree overlay support, which would
-> >> also be a nice feature.
-> >>
-> >>> 1. [PATCH 0/5] media-device: Report if graph is complete
-> >>>
-> >>>>
-> >>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-> >>>> ---
-> >>>>  drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
-> >>>>  1 file changed, 6 insertions(+), 8 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> >>>> index 7440c89..e70f83b 100644
-> >>>> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> >>>> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> >>>> @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> >>>>  	struct media_device *mdev = &group->mdev;
-> >>>>  	const struct of_device_id *match;
-> >>>>  	struct device_node *np;
-> >>>> -	int ret;
-> >>>>  
-> >>>>  	mutex_init(&group->lock);
-> >>>>  
-> >>>> @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> >>>>  	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
-> >>>>  
-> >>>>  	mdev->dev = vin->dev;
-> >>>> -	mdev->ops = &rvin_media_ops;
-> >>>>  
-> >>>>  	match = of_match_node(vin->dev->driver->of_match_table,
-> >>>>  			      vin->dev->of_node);
-> >>>> @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> >>>>  
-> >>>>  	media_device_init(mdev);
-> >>>>  
-> >>>> -	ret = media_device_register(&group->mdev);
-> >>>> -	if (ret)
-> >>>> -		rvin_group_cleanup(group);
-> >>>> -
-> >>>> -	return ret;
-> >>>> +	return 0;
-> >>>>  }
-> >>>>  
-> >>>>  static void rvin_group_release(struct kref *kref)
-> >>>> @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
-> >>>>  		return ret;
-> >>>>  	}
-> >>>>  
-> >>>> +	vin->group->mdev.ops = &rvin_media_ops;
-> >>>> +
-> >>>>  	/* Register all video nodes for the group. */
-> >>>>  	for (i = 0; i < RCAR_VIN_NUM; i++) {
-> >>>>  		if (vin->group->vin[i] &&
-> >>>> @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
-> >>>>  		}
-> >>>>  	}
-> >>>>  	mutex_unlock(&vin->group->lock);
-> >>>> +	if (ret)
-> >>>> +		return ret;
-> >>>>  
-> >>>> -	return ret;
-> >>>> +	return media_device_register(&vin->group->mdev);
-> >>>>  }
-> >>>>  
-> >>>>  static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
-> >>>> -- 
-> >>>> 2.7.4
-> >>>>
-> >>>
-> >>> -- 
-> >>> Regards,
-> >>> Niklas Söderlund
-> >>
-> >> -- 
-> >> Best Regards,
-> >> Michael
-> > 
-> 
-
--- 
-Regards,
-Niklas Söderlund
+>>
+>> jirka
+>>
