@@ -6,97 +6,137 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8117FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E73E520836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499C92084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390330AbgFXWJg (ORCPT
+        id S2390242AbgFXWJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 18:09:36 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16343 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389122AbgFXWJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 18:09:35 -0400
-IronPort-SDR: 4T8PccjApL1cNbva2EUMF28Y4n1ovlQ507NipKF0AqQcStfwmZDvTHB5bjvvZPTjKOb0OWi8IP
- icwbj9dAjtzQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="162743991"
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="162743991"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 15:09:33 -0700
-IronPort-SDR: 2SVh1mImTky8qw5v7uYe5jrIaRPakYHkCi8Im1bR39HTfEeR3VgDSbz4g1c+CN5zo5qWIASHQL
- HnQ1YZlUUXvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="275836573"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 15:09:33 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 8C58C5804D6;
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33229 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387853AbgFXWJe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 18:09:34 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h23so3115369qtr.0;
         Wed, 24 Jun 2020 15:09:33 -0700 (PDT)
-Message-ID: <e980bc2959b5a959bddfa63adb35aeae8261ab06.camel@linux.intel.com>
-Subject: Re: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
-        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-acpi@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Wed, 24 Jun 2020 15:09:33 -0700
-In-Reply-To: <20200624213757.GA2591059@bjorn-Precision-5520>
-References: <20200624213757.GA2591059@bjorn-Precision-5520>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=H/RysOR6N0zpE6c3ebPBn7+IKDXpPNRcb77mnWUMTFM=;
+        b=Ny5odRbKAi5LzNa43J7hHBhF3MbPRmVRjrmvnz+U/Xkv7pV53PZdPxZik4xpgllf7s
+         FC5izVUC/R3feViW1nLbeywuguz5V+rWlgU4558Z44CSgYkI/2UTFXL+qkUnTS7ydzCx
+         S96ktNXHp9PnsvgaG6+XqhVbaOs+al+DvsimulCoTDpMwGoedqGOgfnK6jq9YoCGzUeH
+         6a4FWCvgJr+yOZWIaWHelGodQemu8JVAjPMC20PK7o6T4ccNXyD2BgY9wtuVlnlvEc+o
+         E8PHgVha5ayseyYLn38dl413xKgKdr4yMAp31YnjJvY7qHod8byMIYyDELD335ZTLFNr
+         4KZA==
+X-Gm-Message-State: AOAM533aRnfjifDmXiT4fDcwbNvbjXjHcnltk8kPa3D/0uoQ3tKIo0/X
+        6FXnkgaKo37/xCOL54voaiU=
+X-Google-Smtp-Source: ABdhPJys6wWsK6KiL7nbAlGhSwPps/gASOoCedqRYHgNRnuTH+wOUARmK+jnpjYf0Tr5DAogt1xdjQ==
+X-Received: by 2002:aed:3386:: with SMTP id v6mr29626444qtd.187.1593036572579;
+        Wed, 24 Jun 2020 15:09:32 -0700 (PDT)
+Received: from dek-x230.localnet (pool-108-24-134-99.cmdnnj.fios.verizon.net. [108.24.134.99])
+        by smtp.gmail.com with ESMTPSA id p128sm2705938qka.47.2020.06.24.15.09.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 15:09:31 -0700 (PDT)
+From:   David Korth <gerbilsoft@gerbilsoft.com>
+To:     David Rheinsberg <david.rheinsberg@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] HID: wiimote: Initialize the controller LEDs with a device ID value
+Date:   Wed, 24 Jun 2020 18:05:38 -0400
+Message-ID: <2498150.lGaqSPkdTl@dek-x230>
+In-Reply-To: <CANq1E4T_SNUrewDQ59bonr7tTKFa=wRYwXLWHMCiNA0KN0H9Aw@mail.gmail.com>
+References: <20200622225728.330-1-gerbilsoft@gerbilsoft.com> <CANq1E4T_SNUrewDQ59bonr7tTKFa=wRYwXLWHMCiNA0KN0H9Aw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart2327861.XAFRqVoOGU"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-24 at 16:37 -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 12, 2020 at 01:48:19PM -0700, David E. Box wrote:
-> > StorageD3Enable is a boolean property that indicates that the
-> > platform
-> > wants to use D3 for PCIe storage drives during suspend-to-idle. 
+--nextPart2327861.XAFRqVoOGU
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+
+On Wednesday, June 24, 2020 6:04:55 AM EDT David Rheinsberg wrote:
+> Hi
 > 
-> Is this something that should apply to plug-in drives, or does this
-> only apply to soldered-in things?
+> On Tue, Jun 23, 2020 at 12:57 AM David Korth <gerbilsoft@gerbilsoft.com> 
+wrote:
+> > Based on a similar commit for Sony Sixaxis and DualShock 4 controllers:
+> > HID: sony: Initialize the controller LEDs with a device ID value
+> > 
+> > Wii remotes have the same player LED layout as Sixaxis controllers,
+> > so the wiimote setup is based on the Sixaxis code.
 > 
-> > It is a
-> > BIOS work around that is currently in use on shipping systems like
-> > some
-> > Intel Comet Lake platforms. 
+> Please include a description of the patch in the commit-message. It
+> took me quite a while to understand what the intention of this patch
+> is.
+
+Will do.
+
+> So what you are trying is to allocate a unique ID to each connected
+> wiimote, so they automatically display unique IDs, right?
 > 
-> What is this BIOS work around?  Is there a defect here that's being
-> worked around?  What's the defect?
+> Can you explain why this has to be done in the kernel driver? Why
+> isn't user-space assigning the right ID? User-space needs to attach
+> controllers to their respective engine anyway, in which case the IDs
+> the kernel assigns would be wrong, right? How does user-space display
+> the matching ID in their UI (e.g., for configuration use-cases)? The
+> way you set them does not allow user-space to query the ID, does it?
+> Lastly, wouldn't a device-reconnect want the same ID to be assigned
+> again? With the logic you apply, user-space would have to override
+> every ID for that to work.
+> 
+> Is there an actual use-case for this? Or is this just to align the
+> driver with the other gamepads?
+
+Most userspace programs aren't aware of controller LEDs. The only one I know 
+of that is, Steam, has its own input layer and bypasses the HID drivers 
+entirely.
+
+As far as I know, there's no simple "set player ID" API that could be used to 
+set a device-independent player number, so every program would need to support 
+each type of controller in order to set the LEDs.
+
+I've been manually setting the player IDs on Wii controllers when running 
+multiplayer games by writing to the /sys/class/leds/ directory. Having the 
+hid-wiimote driver do this itself significantly reduces setup time.
 
 > 
-> > It is meant to change default driver policy for
-> > suspend that may cause higher power consumption.
+> Thanks
+> David
 > 
-> I guess this means that by changing the driver policy from the
-> default, we can save some power?
 
-Yes. Maybe 'work around' was a poor choice of words. 'Getting around
-default driver policy' is the issue. There is no hardware defect. One
-of the uses of the suspend-to-idle flow is to support compliance with
-increasingly tighter energy regulations. One of the ways to do this on
-desktop systems is to power off the ATX power supply during s2idle and
-use the 5V standby rail for self refresh and other low power needs. But
-the platforms that support this can't shutdown the PS unless PCI ports
-are placed in D3. On Linux this won't happen with NVMe drives because
-the default driver policy is to use ASPM (NVMe APST) during s2idle.
-Windows has a related concern. So to 'get around' the driver choosing a
-policy that will result in higher power consumption, they implemented
-this _DSD to inform the OS of its preference for D3 on the PCI port.
+--nextPart2327861.XAFRqVoOGU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-David
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEBKTd2QxoniMIp2ejTC/4LR6byCgFAl7zzjIACgkQTC/4LR6b
+yChVzg//X26Y6hKZxQy4cDA1rgOX4e105gYsE80z9Qwwsm4anXZNgXsZXYfhLaW0
+hfgKIvM08EXszBIkVDXrKW7gO+irRmZfbZGVqMP4QTC6vr6FO3eFnGyH/NGX6QCI
+/SzB0Wl23BlIujOXGNCj2I/Gs7gJ1lJ2XpMcOQQpdJwWas1DWOGhSQ36hMw0D3iF
+9swjyU0HR++xg7H0B26wFgJ1ZGjC1dOvYNh8uPKPKB/Un/lN9kuSOSIowcFK17En
+Wl5TN41gIKr8IoG2EZ0EKaDLM5tdrmcdrcmQV7Qg+U/fLRZPdrrHslO8tHZhy9pc
+ldnIYbCEJ5mFBdkCDl9zaUTKXhx4dwSTqpLcFNVjnYEk8roxgk+Ur6tVwbiZs8Xd
+TOUfzuvzyIE7yaRiUXVDQo+zgtKVj7wcLHMhPkhngMYmYWSq3Jrpw3zePxDtitdd
+kE6mWZmNgnrnJFjjAVp5gnTxdSQeT3bz5PH8PTEwXW6jSE+6dbuIoPQu6ONW2PRi
+LlntfKBuqaDOU0Jbqrw/HxQsdupLNNHSi1l9SoGt3C8ET5sW9cd1SuBzDM8uaLK1
+AxhObrHrSWa0iIj64bB1QCEvghVYAg+Xqe6V1hMfdoDdg8EF3QmQFM7j0VEbXkdx
+/Cn53xTl4GkSWxnJPD3essXj4VnBSLRJKYouZkG15l5MsSZPMDQ=
+=F17s
+-----END PGP SIGNATURE-----
+
+--nextPart2327861.XAFRqVoOGU--
+
+
 
