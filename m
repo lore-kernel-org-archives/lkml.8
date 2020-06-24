@@ -2,118 +2,79 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C523C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6E7C2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4E42073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389737AbgFXHXD (ORCPT
+        id S2389753AbgFXHXb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:23:03 -0400
-Received: from ms-10.1blu.de ([178.254.4.101]:60700 "EHLO ms-10.1blu.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389684AbgFXHWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:22:47 -0400
-Received: from [78.43.71.214] (helo=marius.fritz.box)
-        by ms-10.1blu.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <mail@mariuszachmann.de>)
-        id 1jnzjy-0000VK-4y; Wed, 24 Jun 2020 09:22:38 +0200
-From:   Marius Zachmann <mail@mariuszachmann.de>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Marius Zachmann <mail@mariuszachmann.de>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH v4 2/3] hwmon: add Documentation
-Date:   Wed, 24 Jun 2020 09:21:53 +0200
-Message-Id: <20200624072154.22486-3-mail@mariuszachmann.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200624072154.22486-1-mail@mariuszachmann.de>
-References: <20200624072154.22486-1-mail@mariuszachmann.de>
+        Wed, 24 Jun 2020 03:23:31 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:33368 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389661AbgFXHX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:23:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 03BAC6089348;
+        Wed, 24 Jun 2020 09:23:26 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kIp0YWd4f9Wp; Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 987DE6246915;
+        Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id guvA4nah7l7J; Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 6A8CC6089348;
+        Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 09:23:25 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+Message-ID: <903628180.54697.1592983405305.JavaMail.zimbra@nod.at>
+In-Reply-To: <2356a78c-750b-538f-3d64-b9c78aff89cb@infradead.org>
+References: <20200529200347.2464284-1-keescook@chromium.org> <202006231610.4993DC5@keescook> <2356a78c-750b-538f-3d64-b9c78aff89cb@infradead.org>
+Subject: Re: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Con-Id: 241080
-X-Con-U: 0-mail
-X-Originating-IP: 78.43.71.214
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Topic: lkdtm: Various clean ups
+Thread-Index: AQwsBIGnKjKHDWJPXuIGObKRE4SqJA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
----
- Documentation/hwmon/corsair-cpro.rst | 40 ++++++++++++++++++++++++++++
- Documentation/hwmon/index.rst        |  1 +
- 2 files changed, 41 insertions(+)
- create mode 100644 Documentation/hwmon/corsair-cpro.rst
+----- Ursprüngliche Mail -----
+>>> Regardless, it seems arch/x86/um/asm/desc.h is not needed any more?
+> 
+>> True that, we can rip the file.
+> 
+> Has anyone fixed the uml build errors?
 
-diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-new file mode 100644
-index 000000000000..2383c6f72115
---- /dev/null
-+++ b/Documentation/hwmon/corsair-cpro.rst
-@@ -0,0 +1,40 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+Kernel driver corsair-cpro
-+==========================
-+
-+Supported devices:
-+
-+  * Corsair Commander Pro
-+  * Corsair Commander Pro (1000D)
-+
-+Author: Marius Zachmann
-+
-+Description
-+-----------
-+
-+This driver implements the sysfs interface for the Corsair Commander Pro.
-+The Corsair Commander Pro is a USB device with 6 fan connectors,
-+4 temperature sensor connectors and 2 Corsair LED connectors.
-+It can read the voltage levels on the SATA power connector.
-+
-+Usage Notes
-+-----------
-+
-+Since it is a USB device, hotswapping is possible. The device is autodetected.
-+
-+Sysfs entries
-+-------------
-+
-+======================= =====================================================================
-+in0_input		Voltage on SATA 12v
-+in1_input		Voltage on SATA 5v
-+in2_input		Voltage on SATA 3.3v
-+temp[1-4]_input		Temperature on connected temperature sensors
-+temp[1-4] label		Shows "nc" after name, when not connected
-+fan[1-6]_input		Connected fan rpm.
-+fan[1-6]_label		Shows connection status of the fan as detected by the device.
-+pwm[1-6]		Sets the fan speed. Values from 0-255.
-+			When reading, it reports the last value if it was set by the driver.
-+			Otherwise returns 0.
-+======================= =====================================================================
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 55ff4b7c5349..750d3a975d82 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -47,6 +47,7 @@ Hardware Monitoring Kernel Drivers
-    bel-pfe
-    bt1-pvt
-    coretemp
-+   corsair-cpro
-    da9052
-    da9055
-    dell-smm-hwmon
--- 
-2.27.0
+I didn't realize that this is a super urgent issue. ;-)
 
+Kees, if you want you can carry a patch in your series, I'll ack it.
+Otherwise I can also do a patch and bring it via the uml tree upstream
+as soon more fixes queued up.
+
+Thanks,
+//richard
