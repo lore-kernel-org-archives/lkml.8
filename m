@@ -4,106 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD44BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF44AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856AC207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC1220823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:15:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jpmMG0PH"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Hi2wj/sQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389616AbgFXHL0 (ORCPT
+        id S2389588AbgFXHP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389583AbgFXHLZ (ORCPT
+        Wed, 24 Jun 2020 03:15:29 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:27638 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388004AbgFXHP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:11:25 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5BE5C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:11:23 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f9so759455pfn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:11:23 -0700 (PDT)
+        Wed, 24 Jun 2020 03:15:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IaIupdZDTPQkymgBfVG+0UDzO2HZVyEhIFNy78lMOE8=;
-        b=jpmMG0PHfYi6EnAmdG5fjMx0DjviB4vfHp7oxw+UsZCuKGtKIGPQi/axyb5qwcz/QA
-         ZauxRm4oA32Nn3tJIT1A1IknQybBPHIEaqBWXeV6EZXzFaFNG1rzC+DdW/cpf5FoYqst
-         OuHNnTxKdxtEFHNy0ON5sPTSLlYJ7o0Bln868=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IaIupdZDTPQkymgBfVG+0UDzO2HZVyEhIFNy78lMOE8=;
-        b=OynXqIAACHkMn+4ANckdzVuAoknGIsPfWYu1gu+F7w8y/xg0Q7wSOMTaa80TF2Noi1
-         7hPAuiXVYuQD4kMTTK629y8la2y9fKqkY0F8gxHzR46aiBYDv3kjvGGOplgr7R5bT+qM
-         UUYlSNAG1Sz5isAEFdUHWWeSR7ALBbClp3VRc/yIqq6HNWvE/PTfvhPmuLXwBS59BPX0
-         EvnEjScj3tv0q0ubkIBYELpiAhhNPFTZtUA4cSwMwj1cWapL4Ye7iXMXdzGZACpCBhX9
-         ej9zEsmd7lCxDX1naRZLrFWO47fby9DnIlrEFU14rF5+a9LV/NkauYnzuWU8kiD63VXY
-         ViDg==
-X-Gm-Message-State: AOAM532VKH5GOWNrRIjuGLvC211g2nALU3itBwWnhpr8Pw5bEtMV23tH
-        QyQ7T6hV9pC7BswqZjQMpyMpVQ==
-X-Google-Smtp-Source: ABdhPJzQdr21ClhxdwWwshImYU97Su78pVPktGGTYd8dh+NTMu+2Fty5hs3KNmkDqlNAUGQYwOx7jw==
-X-Received: by 2002:a63:ac53:: with SMTP id z19mr19935654pgn.181.1592982683374;
-        Wed, 24 Jun 2020 00:11:23 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g9sm18897717pfm.151.2020.06.24.00.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 00:11:22 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 00:11:21 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, arjan@linux.intel.com,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com, Tony Luck <tony.luck@intel.com>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 08/10] x86: Add support for function granular KASLR
-Message-ID: <202006240007.095694C@keescook>
-References: <20200623172327.5701-1-kristen@linux.intel.com>
- <20200623172327.5701-9-kristen@linux.intel.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1592982928; x=1624518928;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=rf5tC53QUdVSMll6QyVv7dwGKxrszt6zwleP4iCPzMc=;
+  b=Hi2wj/sQYI/7zZpegIHrTl9vMLpL47r7L/AeceafP4b40IB4Frg+p+wZ
+   POpwaPfQZeXNkOCMz/1GwgbCwfKeUXEGXYgTmKfsrG4+tTBSSrOAM+S1g
+   lkD5FKueIAkHnA4YpDmoVr++DrAEZXI+k5c+qOiKmhXTF5+28ef2Pwa1B
+   o=;
+IronPort-SDR: Rmdi+JmAeXGgHoSnGcrPe4J2jcUk1TEcNatrw97dB22eksZkCAHdZJNjraI58vevKDwPm7+0H4
+ Ulk+9b9olgGg==
+X-IronPort-AV: E=Sophos;i="5.75,274,1589241600"; 
+   d="scan'208";a="54722623"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 24 Jun 2020 07:15:26 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 04475A1863;
+        Wed, 24 Jun 2020 07:15:24 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 24 Jun 2020 07:15:24 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.248) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 24 Jun 2020 07:15:20 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: linux-next: Fixes tag needs some work in the scsi-fixes tree
+Date:   Wed, 24 Jun 2020 09:14:47 +0200
+Message-ID: <20200624071447.19529-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200624170742.4e9e9c96@canb.auug.org.au> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623172327.5701-9-kristen@linux.intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.248]
+X-ClientProxiedBy: EX13D45UWA003.ant.amazon.com (10.43.160.92) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:23:25AM -0700, Kristen Carlson Accardi wrote:
-> This commit contains the changes required to re-layout the kernel text
-> sections generated by -ffunction-sections shortly after decompression.
-> Documentation of the feature is also added.
-> [...]
-> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Tested-by: Tony Luck <tony.luck@intel.com>
+On Wed, 24 Jun 2020 17:07:42 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-This looks good! I wonder about some way (in the future) to share the
-sorting routines for kallsyms, exceptions, orc, etc. For now, though, I
-think this is fine.
+> 
+> [-- Attachment #1: Type: text/plain, Size: 385 bytes --]
+> 
+> Hi all,
+> 
+> In commit
+> 
+>   46da547e21d6 ("scsi: lpfc: Avoid another null dereference in lpfc_sli4_hba_unset()")
+> 
+> Fixes tag
+> 
+>   Fixes: 1ffdd2c0440d ("scsi: lpfc: resolve static checker warning inlpfc_sli4_hba_unset")
+> 
+> has these problem(s):
+> 
+>   - Subject does not match target commit subject
+>     Just use
+> 	git log -1 --format='Fixes: %h ("%s")'
 
-> [...]
-> +	if (cmdline_find_option("fgkaslr", arg, sizeof(arg)) == 3 &&
-> +	    !strncmp(arg, "off", 3)) {
-> +		warn("FG_KASLR disabled on cmdline.");
-> +		nofgkaslr = 1;
-> +	}
+Oops, sorry for the mistake.  I will send the fixed version in reply to this.
 
-I was recently reminded by Randy Lunlap to document my new boot params,
-so I need to point out the same here. :) With a section added to
-Documentation/admin-guide/kernel-parameters.txt
-consider this:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Thanks,
+SeongJae Park
 
--- 
-Kees Cook
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
