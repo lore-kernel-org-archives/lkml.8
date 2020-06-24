@@ -2,159 +2,94 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96FCF20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43EC20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QG1IoYl2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nOPZsU1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406100AbgFXSaE (ORCPT
+        id S2406085AbgFXSaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
+        Wed, 24 Jun 2020 14:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405919AbgFXSaD (ORCPT
+        with ESMTP id S2406095AbgFXSaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:30:03 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 912DCC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:30:03 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id m23so765892vko.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:30:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5dObdCDUTrGFI/rx0m6U4tkE0B1+Fpf7lvaFecAoxjc=;
-        b=QG1IoYl2UihR1f8keD2I0PqA1hErW8jHJyqbAJ1iZ0wAfRmNkrxmOnhtgxgb0BNFeo
-         YEhwZ3GV5ICNGD42hQwAQrFo1uOiwP++NJ8FiYE12YlQvuOyzb8+zi9BAVMzydWF41Kq
-         hAYLIPpRLQfNzmkqDC5tK9B+jr8owYrnPrGwQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5dObdCDUTrGFI/rx0m6U4tkE0B1+Fpf7lvaFecAoxjc=;
-        b=ThWCS/aSIT19OX0jbI3yj0msTV9nherXTMheuWnwzzSKVOEn8Uh+phYWPrXveHlJFl
-         ytAnq23FG/Y8VK0OGdMsyLLe15R620veqhfyPgYQYu4cRC0/nJQWPcfqdAgSzZ0+oNo/
-         pGrnlpm/EbfTMF6DosRG5hyDBR9b/nE+z6/oIwpJq+1tzQBi5u4EWM07ayWc1GJuPHvs
-         bJ+ubJ3gZpNhypeo+RjHccL9mm6sdPaCkulyhLGzb8LgeihMszn6RvCQa+wd70Ep2UmL
-         t5WdrS8flfYLWJVQz3VKVX3+Ev5xaKRuF5Clxbrk+VYCD0Igs0f5iXKw0Z0vGvQy2q/U
-         Ddmw==
-X-Gm-Message-State: AOAM530c+VErVb4DDBjs9XWCaPe2MK0K+WQyzQHLc548irOb64E4KxN1
-        IGxEKmA03B8XsKoaYO6tLRdpv8tnmnA=
-X-Google-Smtp-Source: ABdhPJwwbq7m1vd+Z79qFjuQy95xbGnI9/siXLxHJUMY4ysLS9yROZUhlm6RKhay5S3rtqKwFp73PQ==
-X-Received: by 2002:a1f:9958:: with SMTP id b85mr11878891vke.48.1593023401706;
-        Wed, 24 Jun 2020 11:30:01 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id b193sm1039861vke.41.2020.06.24.11.29.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 11:30:00 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id e15so1969232vsc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:29:59 -0700 (PDT)
-X-Received: by 2002:a67:62c4:: with SMTP id w187mr23023350vsb.109.1593023398932;
- Wed, 24 Jun 2020 11:29:58 -0700 (PDT)
+        Wed, 24 Jun 2020 14:30:04 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FDD6C061573;
+        Wed, 24 Jun 2020 11:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YxfY4voDP1UhcO+l6FbB+Nx2rRw+jE/Yukegx6aKPqw=; b=nOPZsU1FrUeTZMqMVbvJKpxt8v
+        1WLdpn2e0diIqc8X8j8FaWSoYsf9Kr/RbZrEiR1MkHurJXfEK8K5fsPAToLTZWSuBYLO+nYwkovtT
+        fM+OYU9k/CamxXhQFaz+E8EUBvG4KDLwOizxmJ7TmPxQDHGSoCMIe74m+Cr+3Fm64cc+rvhixgluX
+        vqIaDTsPddb73S9NvUytR4I0KMl9pOk9Gnkp/QzhQbsvHvW2Mf3zSA3e81fDvqFvUhtgzcPFzJpnS
+        C4j0SQvz6m3NC9PRWW3g3szWZGnNWFlk6vHVLQ5gqoYfyZnI4G+sdHe5JFzQmjreCUIdFOF+Evllr
+        ZnYYxMzg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joA9Y-0004Im-IU; Wed, 24 Jun 2020 18:29:44 +0000
+Date:   Wed, 24 Jun 2020 19:29:44 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Message-ID: <20200624182944.GT21350@casper.infradead.org>
+References: <20200624162901.1814136-1-hch@lst.de>
+ <20200624162901.1814136-4-hch@lst.de>
+ <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
+ <20200624175548.GA25939@lst.de>
+ <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+ <20200624181437.GA26277@lst.de>
+ <CAHk-=wgC4a9rKrKLTHbH5cA5dyaqqy4Hnsr+re144AiJuNwv9Q@mail.gmail.com>
+ <20200624182437.GB26405@lst.de>
 MIME-Version: 1.0
-References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
- <20200612125250.7bwjfnxhurdf5bwj@e107158-lin.cambridge.arm.com>
- <CAD=FV=WuYZRO=sv4ODr0SFk0gTtvCW0dNQXbFGrBDqRgjYv-jA@mail.gmail.com>
- <20200619153851.vigshoae3ahiy63x@e107158-lin.cambridge.arm.com>
- <CAD=FV=XursDFUWL=aGUwFgXc4BugUMdT5e+Fwwo5w2gReCjUaQ@mail.gmail.com>
- <20200623164021.lcrnwpli7wdlsn5i@e107158-lin.cambridge.arm.com>
- <CAJWu+ooXdgqSGisZXnHBtYLo9oQBiaNR=HhKseBN+YFGz-L6Xg@mail.gmail.com>
- <20200624165500.idrugfgplqgi654v@e107158-lin.cambridge.arm.com>
- <CAJWu+oqHUq6fvkfRgAx4qx8x1dm-J-h6moeVskCU3gkRybCPqQ@mail.gmail.com>
- <20200624175236.nblndmg6dfq2vr2u@e107158-lin.cambridge.arm.com> <CAJWu+oreQRCAkBhNQ-n6BPjYsdOL074ff8551sF3r7OxsseEVQ@mail.gmail.com>
-In-Reply-To: <CAJWu+oreQRCAkBhNQ-n6BPjYsdOL074ff8551sF3r7OxsseEVQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 24 Jun 2020 11:29:47 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xf29qsiBSUit7xoVpxzLnoBT9vZ+0JBGN2bFefDBKG4w@mail.gmail.com>
-Message-ID: <CAD=FV=Xf29qsiBSUit7xoVpxzLnoBT9vZ+0JBGN2bFefDBKG4w@mail.gmail.com>
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-To:     Joel Fernandes <joelaf@google.com>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Quentin Perret <qperret@google.com>, ctheegal@codeaurora.org,
-        Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624182437.GB26405@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Jun 24, 2020 at 10:55 AM Joel Fernandes <joelaf@google.com> wrote:
->
-> On Wed, Jun 24, 2020 at 1:52 PM Qais Yousef <qais.yousef@arm.com> wrote:
-> >
-> > On 06/24/20 13:35, Joel Fernandes wrote:
-> >
-> > [...]
-> >
-> > > > Doing the in-kernel opt-out via API should be fine, I think. But this will
-> > > > need to be discussed in the wider circle. It will already clash with this for
-> > > > example
-> > > >
-> > > > https://lore.kernel.org/lkml/20200619172011.5810-1-qais.yousef@arm.com/
+On Wed, Jun 24, 2020 at 08:24:37PM +0200, Christoph Hellwig wrote:
+> On Wed, Jun 24, 2020 at 11:20:26AM -0700, Linus Torvalds wrote:
+> > On Wed, Jun 24, 2020 at 11:14 AM Christoph Hellwig <hch@lst.de> wrote:
 > > >
-> > > Have not yet looked closer at that patch, but are you saying this
-> > > patch clashes with that work? Sorry I am operating on 2 hours of sleep
-> > > here.
-> >
-> > The series is an optimization to remove the uclamp overhead from the scheduler
-> > fastpath until the userspace uses it. It introduces a static key that is
-> > disabled by default and will cause uclamp logic not to execute in the fast
-> > path. Once the userspace starts using util clamp, which we detect by either
-> >
-> >         1. Changing uclamp value of a task with sched_setattr()
-> >         2. Modifying the default sysctl_sched_util_clamp_{min, max}
-> >         3. Modifying the default cpu.uclamp.{min, max} value in cgroup
-> >
-> > If we start having in-kernel users changing uclamp value this means drivers
-> > will cause the system to opt-in into uclamp automatically even if the
-> > userspace doesn't actually use it.
-> >
-> > I think we can solve this by providing a special API to opt-out safely. Which
-> > is the right thing to do anyway even if we didn't have this clash.
->
-> Makes sense, thanks.
+> > > So we'd need new user copy functions for just those cases
+> > 
+> > No. We'd open-code them. They'd look at "oh, I'm supposed to use a
+> > kernel pointer" and just use those.
+> > 
+> > IOW, basically IN THE CODE that cares (and the whole argument is that
+> > this code is one or two special cases) you do
+> > 
+> >     /* This has not been converted to the new world order */
+> >     if (get_fs() == KERNEL_DS) memcpy(..) else copy_from_user();
+> > 
+> > You're overdesigning things. You're making them more complex than they
+> > need to be.
+> 
+> I wish it was so simple.  I really don't like overdesigns, trust me.
+> 
+> But please take a look at setsockopt and all the different instances
+> (count 90 .setsockopt wireups, and they then branch out into
+> various subroutines as well).  I really don't want to open code that
+> there, but we could do helper specific to setsockopt.
 
-OK, so I think the summary is:
-
-1. There are enough external dependencies that are currently in the
-works that it makes sense for those to land first without trying to
-cram my patch to cros_ec in.
-
-2. Maybe, as part of the work that's already going on, someone will
-add an API that I can use.  If so then I can write my patch once that
-lands.
-
-3. If nobody adds an API then I could look at adding the API myself
-once everything else is settled.
-
-4. It looks as if the patch you mentioned originally [1] that allows
-userspace to just fully disable uclamp for RT tasks will land
-eventually (if we're stuck for a short term solution we can pick the
-existing patch).  I believe Chrome OS will use that to just fully
-disable the default boosting for RT tasks across our system and (if
-needed) add boosts on a case-by-case basis.  Once we do that, the
-incentive to land a patch for cros_ec will be mostly gone and probably
-we could consider my patch abandoned.  While it would technically
-still be sane to land it won't have any real-world benefit.
-
-
-[1] https://lore.kernel.org/r/20200511154053.7822-1-qais.yousef@arm.com
+Can we do a setsockopt_iter() which replaces optval/optlen with an iov_iter?
