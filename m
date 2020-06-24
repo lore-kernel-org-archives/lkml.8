@@ -2,148 +2,94 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE610C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6684EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D93F20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592995606;
-	bh=6CP6qxsVEuOjCrX7ZFGs1e/lcJ7AgipGLIXDdr4Rzeo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IuyHknHSpeClJUGUg6vDddg/9Gdm+pKcBtlrsxgPW3otDdyOtEHdKsxxOZ3M3G4NY
-	 4HaZfMlJkCX3TeuwMjvP9D9c70ASzrtJbpa5djzFt4zNCtPcHIVBukwvM63JUPRMc3
-	 56JLj1nsa7l2ew4jxgLvNTjistSS0U5F6vYT/86c=
+	by mail.kernel.org (Postfix) with ESMTP id 452832088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390522AbgFXKqp (ORCPT
+        id S2403770AbgFXKq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 06:46:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:1078 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388516AbgFXKqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:46:45 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C05C21473;
-        Wed, 24 Jun 2020 10:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592995604;
-        bh=6CP6qxsVEuOjCrX7ZFGs1e/lcJ7AgipGLIXDdr4Rzeo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OGlxeWyHhToHjXuphDyewr/kdrQyHf5oTZ1Rd8L/ZPUhRgE9Oqyr8efXiLjfy1vdv
-         wlqn5JPvj4FaKpYJ6WF69t7WpuuIxuemrWnnyJi9jESZKOBx3OvSptVs38MLk1wikH
-         QJHljm0q17sC5Q87Y9duCOxbj/6cpfnUcK6K3J/4=
-Received: by mail-oi1-f178.google.com with SMTP id k4so1446032oik.2;
-        Wed, 24 Jun 2020 03:46:44 -0700 (PDT)
-X-Gm-Message-State: AOAM532yNUAWLMtyWZF+xQXb//ztaM67Sm+mft1/zJVMu5lCHJJuPvDR
-        6Ue/+dhDNr+Z92ynXj75rcq1t/FTftbuTGI8L08=
-X-Google-Smtp-Source: ABdhPJzCCS2lsuXiRvh7xwyfuolgtLv72Puo+dhV+VQ+cYin8FmuUsspPPdLhDZxpcjJd6l+eAK3mcwJ8/+MsyCgDxU=
-X-Received: by 2002:aca:b241:: with SMTP id b62mr18670182oif.47.1592995603880;
- Wed, 24 Jun 2020 03:46:43 -0700 (PDT)
+        id S2388421AbgFXKq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 06:46:56 -0400
+IronPort-SDR: v+/mzFRInUJW9/XhRGVNxWEKBbt16zrXQFcgUk+rJ5rtnfZU/g+qfiO6zmprYB020voZpQzLbV
+ Sf0w3x5jprAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="145923314"
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="145923314"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 03:46:55 -0700
+IronPort-SDR: ZchnAPrf6QB9CaYav3uX/mqqkYIaY+CaxF1hDTEi3IPLz1kVejZUDK1TXTF8byLjsgijRfhVLK
+ 8LLPtJm1J08Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="423325885"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 24 Jun 2020 03:46:54 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jo2vg-00FZ4a-0N; Wed, 24 Jun 2020 13:46:56 +0300
+Date:   Wed, 24 Jun 2020 13:46:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ricardo Ribalda <ribalda@kernel.org>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: designware: platdrv: Set class based on dmi
+Message-ID: <20200624104655.GD3703480@smile.fi.intel.com>
+References: <20200624091239.802218-1-ribalda@kernel.org>
 MIME-Version: 1.0
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org> <20200624033142.cinvg6rbg252j46d@google.com>
- <202006232143.66828CD3@keescook> <20200624104356.GA6134@willie-the-truck>
-In-Reply-To: <20200624104356.GA6134@willie-the-truck>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 24 Jun 2020 12:46:32 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
-Message-ID: <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Fangrui Song <maskray@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624091239.802218-1-ribalda@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 12:44, Will Deacon <will@kernel.org> wrote:
->
-> On Tue, Jun 23, 2020 at 09:44:11PM -0700, Kees Cook wrote:
-> > On Tue, Jun 23, 2020 at 08:31:42PM -0700, 'Fangrui Song' via Clang Built Linux wrote:
-> > > On 2020-06-23, Kees Cook wrote:
-> > > > In preparation for adding --orphan-handling=warn to more architectures,
-> > > > make sure unwanted sections don't end up appearing under the .init
-> > > > section prefix that libstub adds to itself during objcopy.
-> > > >
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > ---
-> > > > drivers/firmware/efi/libstub/Makefile | 3 +++
-> > > > 1 file changed, 3 insertions(+)
-> > > >
-> > > > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > > > index 75daaf20374e..9d2d2e784bca 100644
-> > > > --- a/drivers/firmware/efi/libstub/Makefile
-> > > > +++ b/drivers/firmware/efi/libstub/Makefile
-> > > > @@ -66,6 +66,9 @@ lib-$(CONFIG_X86)               += x86-stub.o
-> > > > CFLAGS_arm32-stub.o               := -DTEXT_OFFSET=$(TEXT_OFFSET)
-> > > > CFLAGS_arm64-stub.o               := -DTEXT_OFFSET=$(TEXT_OFFSET)
-> > > >
-> > > > +# Remove unwanted sections first.
-> > > > +STUBCOPY_FLAGS-y         += --remove-section=.note.gnu.property
-> > > > +
-> > > > #
-> > > > # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
-> > > > # .bss section, so the .bss section of the EFI stub needs to be included in the
-> > >
-> > > arch/arm64/Kconfig enables ARM64_PTR_AUTH by default. When the config is on
-> > >
-> > > ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
-> > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI) := -mbranch-protection=pac-ret+leaf+bti
-> > > else
-> > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET) := -mbranch-protection=pac-ret+leaf
-> > > endif
-> > >
-> > > This option creates .note.gnu.property:
-> > >
-> > > % readelf -n drivers/firmware/efi/libstub/efi-stub.o
-> > >
-> > > Displaying notes found in: .note.gnu.property
-> > >   Owner                Data size        Description
-> > >   GNU                  0x00000010       NT_GNU_PROPERTY_TYPE_0
-> > >       Properties: AArch64 feature: PAC
-> > >
-> > > If .note.gnu.property is not desired in drivers/firmware/efi/libstub, specifying
-> > > -mbranch-protection=none can override -mbranch-protection=pac-ret+leaf
-> >
-> > We want to keep the branch protection enabled. But since it's not a
-> > "regular" ELF, we don't need to keep the property that identifies the
-> > feature.
->
-> For the kernel Image, how do we remove these sections? The objcopy flags
-> in arch/arm64/boot/Makefile look both insufficient and out of date. My
-> vmlinux ends up with both a ".notes" and a ".init.note.gnu.property"
-> segment.
->
+On Wed, Jun 24, 2020 at 11:12:39AM +0200, Ricardo Ribalda wrote:
+> Current AMD's zen-based APUs use this core for some of its i2c-buses.
+> 
+> With this patch we re-enable autodetection of hwmon-alike devices, so
+> lm-sensors will be able to work automatically.
+> 
+> It does not affect the boot-time of embedded devices, as the class is
+> set based on the dmi information.
 
-The latter is the fault of the libstub make rules, that prepend .init
-to all section names.
+Hmm... Do we really need to have DMI? I mean wouldn't be safe just always
+provide this to be compatible with HWMON class?
 
-I'm not sure if there is a point to having PAC and/or BTI in the EFI
-stub, given that it runs under the control of the firmware, with its
-memory mappings and PAC configuration etc.
+...
+
+> +static bool dw_i2c_hwmon_bus(void)
+> +{
+> +	if (strstr(dmi_get_system_info(DMI_PRODUCT_NAME), "QT5222"))
+> +		return true;
+> +	return false;
+> +}
+
+I don't like this. Perhaps for now you may simple use dmi_get_system_info()
+directly below.
+
+...
+
+> +	adap->class = dw_i2c_hwmon_bus() ? I2C_CLASS_HWMON
+> +					 : I2C_CLASS_DEPRECATED;
+
+It's one line.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
