@@ -2,114 +2,101 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF584C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCECA2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dew2+X+x"
+	by mail.kernel.org (Postfix) with ESMTP id E73E520836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389997AbgFXWJb (ORCPT
+        id S2390330AbgFXWJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 18:09:31 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39380 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387853AbgFXWJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 18:09:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OM8bQG066351;
-        Wed, 24 Jun 2020 17:08:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593036517;
-        bh=8pxGcSuDGHL5/biPmNuRMj2l3xMNTG6V1WBrzq8DbV8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dew2+X+xSol3YYZIrkXvLmNttcwE1ukDAiVHz+Vo+ZzGEQpzssCP2gBtVQcMplq3b
-         ky9x5liGGAsvAOJtzc+3uop7JlYH0bsBpkeOe/thg+jtwRzT9POJVMmKAj/HQsf+M0
-         5l06R3bRbEpFuvwwt1xYrGfe4dKfkyKAgFpWJWkY=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OM8bUj052317
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 17:08:37 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 17:08:37 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 17:08:37 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OM8bgi092136;
-        Wed, 24 Jun 2020 17:08:37 -0500
-Subject: Re: [PATCH v6 4/7] ASoC: tas2562: Add rx and tx slot programming
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>
-References: <20200624174932.9604-1-dmurphy@ti.com>
- <20200624174932.9604-5-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c3c86e7f-de5e-dea1-98de-045bdd564fbc@ti.com>
-Date:   Wed, 24 Jun 2020 17:08:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 18:09:36 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16343 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389122AbgFXWJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 18:09:35 -0400
+IronPort-SDR: 4T8PccjApL1cNbva2EUMF28Y4n1ovlQ507NipKF0AqQcStfwmZDvTHB5bjvvZPTjKOb0OWi8IP
+ icwbj9dAjtzQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="162743991"
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="162743991"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 15:09:33 -0700
+IronPort-SDR: 2SVh1mImTky8qw5v7uYe5jrIaRPakYHkCi8Im1bR39HTfEeR3VgDSbz4g1c+CN5zo5qWIASHQL
+ HnQ1YZlUUXvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="275836573"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 15:09:33 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 8C58C5804D6;
+        Wed, 24 Jun 2020 15:09:33 -0700 (PDT)
+Message-ID: <e980bc2959b5a959bddfa63adb35aeae8261ab06.camel@linux.intel.com>
+Subject: Re: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
+        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
+        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-acpi@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Wed, 24 Jun 2020 15:09:33 -0700
+In-Reply-To: <20200624213757.GA2591059@bjorn-Precision-5520>
+References: <20200624213757.GA2591059@bjorn-Precision-5520>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200624174932.9604-5-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Wed, 2020-06-24 at 16:37 -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 12, 2020 at 01:48:19PM -0700, David E. Box wrote:
+> > StorageD3Enable is a boolean property that indicates that the
+> > platform
+> > wants to use D3 for PCIe storage drives during suspend-to-idle. 
+> 
+> Is this something that should apply to plug-in drives, or does this
+> only apply to soldered-in things?
+> 
+> > It is a
+> > BIOS work around that is currently in use on shipping systems like
+> > some
+> > Intel Comet Lake platforms. 
+> 
+> What is this BIOS work around?  Is there a defect here that's being
+> worked around?  What's the defect?
 
-On 6/24/20 12:49 PM, Dan Murphy wrote:
-> Add programming for the tdm slots for both tx and rx offsets.
->
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   sound/soc/codecs/tas2562.c | 17 ++++++++++++++++-
->   sound/soc/codecs/tas2562.h |  4 ++++
->   2 files changed, 20 insertions(+), 1 deletion(-)
->
-> diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-> index d26e30a2948c..2f1d4b697f01 100644
-> --- a/sound/soc/codecs/tas2562.c
-> +++ b/sound/soc/codecs/tas2562.c
-> @@ -208,6 +208,22 @@ static int tas2562_set_dai_tdm_slot(struct snd_soc_dai *dai,
->   	if (ret < 0)
->   		return ret;
->   
-> +	if (tx_mask > TAS2562_TX_OFF_MAX) {
-> +		dev_err(tas2562->dev, "TX slot is larger then %d",
-> +			TAS2562_TX_OFF_MAX);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = snd_soc_component_update_bits(component, TAS2562_TDM_CFG1,
-> +					    TAS2562_RX_OFF_MASK, rx_mask << 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = snd_soc_component_update_bits(component, TAS2562_TDM_CFG4,
-> +					    TAS2562_TX_OFF_MASK, tx_mask << 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
+> 
+> > It is meant to change default driver policy for
+> > suspend that may cause higher power consumption.
+> 
+> I guess this means that by changing the driver policy from the
+> default, we can save some power?
 
-I need to fix this patch to remove the slot programming during dai_fmt 
-as the code is not correct and resets the slots
+Yes. Maybe 'work around' was a poor choice of words. 'Getting around
+default driver policy' is the issue. There is no hardware defect. One
+of the uses of the suspend-to-idle flow is to support compliance with
+increasingly tighter energy regulations. One of the ways to do this on
+desktop systems is to power off the ATX power supply during s2idle and
+use the 5V standby rail for self refresh and other low power needs. But
+the platforms that support this can't shutdown the PS unless PCI ports
+are placed in D3. On Linux this won't happen with NVMe drives because
+the default driver policy is to use ASPM (NVMe APST) during s2idle.
+Windows has a related concern. So to 'get around' the driver choosing a
+policy that will result in higher power consumption, they implemented
+this _DSD to inform the OS of its preference for D3 on the PCI port.
 
-Dan
-
+David
 
