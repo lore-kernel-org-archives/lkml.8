@@ -2,135 +2,113 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C330BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4834320DD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0B620E65
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="jWwi91+6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lu853Mja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbgFXC0D (ORCPT
+        id S2388176AbgFXC1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 22:26:03 -0400
-Received: from mail-vi1eur05on2081.outbound.protection.outlook.com ([40.107.21.81]:49249
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387719AbgFXC0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 22:26:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hIp+S7T4Sl+RYxbcf3rwlrmVBfiAIt9QlYK9mQx5yYcMAfgq/ht0iKB8gWOcVpKj41BG+167VmX+BGtsQtLGtVOSbT3BtWXwqHou6kg0sSyiIAkgoTJnIuxF7D/J79W6qKTGvQZVZdBXBxBHf1qQM+GpUtln8/TgbPPxtzwZ8/o8G2A0rfiOj8J5CkAPFntS2gaTkj3whnTAnIXrWBq1rhgV9WmRBpfgEjWN7Zmfe5w7mrzlb+X6+oKo/ZiEmPvpP8rhrR5AEX8uTKt6TX1Wgx9kPNtHLofLGW4QcbG2/jGgSFHMixFLKfD/NSUh5JRN2ZVGebh8GnpXSoMlzH77Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rU9cDiMtqOvhoArBDcGrVu7PgwcUM9jJVlq3xzSYTuM=;
- b=fBhDDBak6gDXJ5uWk7Gj8SdnsJcEneSP8l6hz2OkDAgSrIYQfldgF5Z9JZNzcIE3P1ZI8tJf7JTtoBjoggUkvlxVsIhhnw9QkiAX1CDBQi2nOYushGXCWHhZi5rjyLXL8RFZwAXC2St9OoMMcnmDlIz8qC3J1hHmhUWkwrkpfvvap6uvkHexBLpSZYApTQSPdKoElLc5sgIQHiJpOQPX6ZQwwsQRSYaDUtuS9jae4wW8rSP4yObccCbe5CrwPmm1pYfZEe6rmt7RvNBuT+Nq+HLHZIO4ioLAKjYymiQDgtIz7Ijzi1X6VK043DQH2lrK/TQHI5IoDeeZs0WFMUp9Ag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rU9cDiMtqOvhoArBDcGrVu7PgwcUM9jJVlq3xzSYTuM=;
- b=jWwi91+6cKA6z69EPtB0ml2ml20JFX8PHuDrCcpip/rZKQ2jydbW2WxISVlkfWe1pJRQigt7GNrCvh9EUlzntmUA5lB4snDDdU54Q4SW6mBHfbLen3+7cJD1PLlh3qxAlJ5Z8NtAHaAcX36l8RBmmY2LA/ILoIjA3glHAndZ2IY=
-Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com (2603:10a6:4:33::14)
- by DB6PR0401MB2472.eurprd04.prod.outlook.com (2603:10a6:4:36::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
- 2020 02:25:58 +0000
-Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com
- ([fe80::444:b05a:a5:5710]) by DB6PR0401MB2438.eurprd04.prod.outlook.com
- ([fe80::444:b05a:a5:5710%9]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
- 02:25:58 +0000
-From:   "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
-CC:     Ran Wang <ran.wang_1@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiafei Pan <jiafei.pan@nxp.com>
-Subject: RE: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add
- ftm_alarm0 node
-Thread-Topic: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa:
- add ftm_alarm0 node
-Thread-Index: AQHWSc7LwUF/uYH2J0qePoDw6vPXhw==
-Date:   Wed, 24 Jun 2020 02:25:58 +0000
-Message-ID: <DB6PR0401MB2438903D0BA7650CE4B136548F950@DB6PR0401MB2438.eurprd04.prod.outlook.com>
-References: <20200614143206.24993-1-biwen.li@oss.nxp.com>
- <20200614143206.24993-3-biwen.li@oss.nxp.com> <20200623120004.GD30139@dragon>
-In-Reply-To: <20200623120004.GD30139@dragon>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f905141b-0a4f-40b4-a7f4-08d817e5ee41
-x-ms-traffictypediagnostic: DB6PR0401MB2472:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0401MB247228B0FC08997C6B847893CE950@DB6PR0401MB2472.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0444EB1997
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m5VcHEO0bcn5lBgpDvFO3NZKMtazSoHjKdUfM/IP7Xqj0w8SFcT5/nEp0bk+s+qGodx+qgoKiJKPVFRRK0dIGAhz2iPyLO1dIoalDPopqPcDlBh3GykzbSGGSYvUwF9ZWNprd7a4yN2dq6bNn9lm6rbw8rhPqvemsxrJbUItUqOYl8l4Smu4kaSL47sL4gCep51GP4BsG3Zucg8gkKQ/hhGzfqinNXyMc/458JYiOveLZlGmZkttyz3Smgo7o+SzIJEAm9F05bZEM3v7Zo/85PfZgWfeY7UbsfB7FIISIw8o3X5p3Rh1rzQ0gLfge2x1RmEYMfeKsAXRXTGJFKZQYA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(8936002)(478600001)(5660300002)(2906002)(76116006)(66946007)(64756008)(66476007)(66556008)(71200400001)(66446008)(8676002)(9686003)(7696005)(52536014)(33656002)(186003)(6506007)(4326008)(54906003)(316002)(110136005)(26005)(55016002)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: sfxdcTv0ZWzBb5bCxIg/GNYSNh2vurkS5Co4UfLK1z34oOsG5iZFVMk/u4vP82friiOYTsK6ZmNNLghy5atft0yRKxeUoBRTyLtZFGWrP4oSheXeY9i+OO6QfLLWAv9/vgvao44SP9y8DNIXp/wust5oQF4vE1aSVoZe1yX89W1wfCEu6tCUhivqQoqovDvPWNEXbalSQHQnXVgjkNQBITHcb92PYpXde27ohdpScBm+kTqNn0BPi2ZOmZkjdsNyNGVFEaut2MVvXuUx5SQVURwa967jWuKFUzVcj6RKylQDveGfRONYBT03KE61sYHPzFE/sr041YitWfspvO/4EG4Kc2LHmhGvQY5aUmIQjNPf0Ck6hmfxHJvRiLLBOLV9tURHGjBJRF35seKdap7c63/oAtXzctIxBQzI4dT/gSuO6MUf2kp9VKpY/gAF+gFimLDXIg7WJzNEqW3feIf04ARI+VtrqIrnxk/w2Pejlks=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jun 2020 22:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387719AbgFXC1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 22:27:43 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327B2C061573;
+        Tue, 23 Jun 2020 19:27:43 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 18so497803otv.6;
+        Tue, 23 Jun 2020 19:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gZQnvXpknW+rN20YHdcJ+Ylfzfin7eHSMN5K0zI8wKM=;
+        b=Lu853MjaeLGiuwcz+/VJ4vCOPidwiJ0QXUFF8p8giMtX6IQJi95CCn7a/nGfNLYt9P
+         RGpDPgW9qHlT+ZzC4HhwKfD0aRUqkmDMpxrYzUHgwQhJE7eOgk5Cp1CY/osP5xpWJsFg
+         2+htiESAWiebk1C57ehAJijBgA3LWDr8P+4GvuzefWIFFV7aBMP79mw+S1ahFDC1+HJC
+         fwIqjRRp6yS/W+YhNrKhViHvacTr/WOmUFCpeyeuiXMx7xov/Z0ER8VsVtYI5QbvJODX
+         MH6SIyz4GXWAOoO4UND2zJo+B4kWYD/cF2TqVkI+2qU41IHWEbzLO85Wo3O09ow1E19x
+         lVGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gZQnvXpknW+rN20YHdcJ+Ylfzfin7eHSMN5K0zI8wKM=;
+        b=HU/+quPlPAC/XdxTxCDw/yCPcyW/mOCQiUrWvsvgS53iSsAe+awv9J/MayfgOki0Mu
+         mKn0C6WmGeJ3rePJieGlJfvyYbI5pCFNE7O1NIgi9Y6g+O1RAKERY9+8jg/BQmx+s+1L
+         oFAp0Z5eT7Br8hds4o2j/eO8g6789nUf6K2cFtny/UKpdygF3EhroTlDnPQukeQdAX3b
+         CvC+OW14UwV6tq2/Dx5iVYFtalzXxF5hyJnRd0jh4M4uf9tLkZNw2o6Mbz/81RzHJJFL
+         9Pdr+/A+NYavDBc43uPvIdoOHLNebpTDRSyamwknWXUcSP7mDWl437DdCKiI7CeOI0v3
+         gXBQ==
+X-Gm-Message-State: AOAM5303tonGdSOxl2Q307ab2SSuQgF0JBgh1V3LaxenXmW/gObmOiij
+        Z4/mAiSL6yVM5WRfiukIC2A=
+X-Google-Smtp-Source: ABdhPJySA6GoUbHOYfx6fZOfJBu0OnsW+/ao6svZyzlL6ta5ow0SJTi5nhpXZ+Dsav1Qep4vroZROw==
+X-Received: by 2002:a9d:38a:: with SMTP id f10mr22049923otf.230.1592965662408;
+        Tue, 23 Jun 2020 19:27:42 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id b2sm4740084ooe.13.2020.06.23.19.27.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 19:27:41 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 19:27:40 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cristian Klein <cristian.klein@elastisys.com>
+Subject: Re: linux-next: build failures after merge of the hid tree
+Message-ID: <20200624022740.GA199301@ubuntu-n2-xlarge-x86>
+References: <20200621140421.7f4552df@canb.auug.org.au>
+ <20200623103736.25f67de5@canb.auug.org.au>
+ <nycvar.YFH.7.76.2006240012170.13242@cbobk.fhfr.pm>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f905141b-0a4f-40b4-a7f4-08d817e5ee41
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 02:25:58.4735
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AWY1XxLVBchHXW8LSGIKYAv1TgEKRTb9DlOLnlrl2pIbYW/NG4du2hhjPa78hrQCCXhuUbOIY2437hTWDbbu7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2472
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.2006240012170.13242@cbobk.fhfr.pm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v2:
-> > 	- use generic name
-> > 	- use definition
-> >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
-> > arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
-> > arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
-> > arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
-> > arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
-> >  5 files changed, 72 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > index 006e544..4742efe 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> > @@ -22,6 +22,7 @@
-> >  		rtic-c =3D &rtic_c;
-> >  		rtic-d =3D &rtic_d;
-> >  		sec-mon =3D &sec_mon;
-> > +		rtc1 =3D &ftm_alarm0;
->=20
-> Sorry. I did not catch it during v1 review.  But we want to keep them sor=
-t
-> alphabetically.
-Okay, got it, i will sort them in v3.
+Hi Jiri and Cristian,
 
+On Wed, Jun 24, 2020 at 12:13:57AM +0200, Jiri Kosina wrote:
+> On Tue, 23 Jun 2020, Stephen Rothwell wrote:
+> 
+> > > I don't know what caused it, but commit
+> > > 
+> > >   470376737e88 ("HID: allow building hid.ko as an external module")
+> > > 
+> > > did not fix it.  BTW, I build with "make O=...".
+> 
+> That's actually the patch that almost certainly broke it.
+> 
+> CCing Cristian (author of that patch) and Nathan, who apparently sent a 
+> fixup patch for this, but I haven't seen it, as our corporate mailserver 
+> had severe issues yesterday.
+> 
+> If there is no resolution by tomorrow, we'll just drop it.
+> 
+> -- 
+> Jiri Kosina
+> SUSE Labs
+> 
+
+Sorry, I was not clear in my message about what I was "fixing", which
+was the fact that Cristian's initial reply was top posted, which I moved
+to the bottom. I thought that would have been apparent in a mail client,
+my bad :( I have not sent a fix for this issue.
+
+Cheers,
+Nathan
