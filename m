@@ -2,159 +2,198 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E36C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF54E20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C09020675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fi+tt44d";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Tu6yhU4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388058AbgFXAbn (ORCPT
+        id S2388132AbgFXAeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 20:31:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:23661 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387693AbgFXAbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 20:31:43 -0400
-IronPort-SDR: XCxDo3OpbkRxL9sQFYSxMfHHAVo7OA0C0bHBbPa+A42UzA5z7nmOoli5T0kEZsi7CBzQ8IEMwR
- OGq/2prcDH6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="205780739"
-X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
-   d="scan'208";a="205780739"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 17:31:42 -0700
-IronPort-SDR: JuRKAVOTj0bzM5gYHe59Qpoho2OXHhXh0++ajff75JbolNyznLJ4KWTbW+rIlS5pQwJ5oGfU8t
- Lb3ul8PRwrsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
-   d="scan'208";a="452444240"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 17:31:42 -0700
-Date:   Tue, 23 Jun 2020 17:38:13 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 5/7] iommu/vt-d: Fix devTLB flush for vSVA
-Message-ID: <20200623173813.6a02353c@jacob-builder>
-In-Reply-To: <1592926996-47914-6-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1592926996-47914-6-git-send-email-jacob.jun.pan@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 23 Jun 2020 20:34:01 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:7694 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387764AbgFXAeA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 20:34:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592958840; x=1624494840;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=VFe+afEB5iG+BiIuf7N3tP09L3rTA9vQAlxAH20jnkE=;
+  b=fi+tt44d7yH1mE3JDUh/zs3WHMmMv5phQyHzLDKsT7Ky8rWVNE22+WRi
+   hu2EEdvH6so7H02as75mBGfc4G/uzBQ+EN1lkTJZcMDE0Y9+haW1DPn+F
+   W9h0XOTZprPYG4ia7015bHwZVeaFgs/VkDW+7fQlMIb2cicoDUPtCv4nc
+   rVY7PnBCh8cDSvMa/59HrSlPv2d00hYqCaXhkBWZWITPGMdFld3HzuqtP
+   y/+8vCRc7YDRJibV+0bXocn+GZBLm4fnHVirRyXj/zBOn2UHXuvF1weZG
+   8leOs/9V92uRXH4znn21KmRkBm8HgN8wlQA+jj/keANw9lZMxMz1tBPAY
+   A==;
+IronPort-SDR: fZf422GjZNBh0zeKX4GLSEwFwe7oG71jfUHnneMCJgjqzTaFes/BY3qUfkVjIzIgBob6QvJLtt
+ fLejtUN5viX/rj47Q3wXpRSDyA35T63whX+I+BT/CyPOnMmZYl7sPoTzPcVx4CuzYv7UoS2QAN
+ 0biWg7uqK53saSOsbhSDDWJh70nyJtRLeOMmpLtoSyuZW965kTx/4WLeuZJ5pvgJ9unjnYr1Rm
+ Zaxvjw3xzgin55X9/23lXGytdFOZkaQVL+QlkCFIXZ3Fk3Hk4mLil5g86+BzCtbTvf+/F7Nb+E
+ nEU=
+X-IronPort-AV: E=Sophos;i="5.75,273,1589212800"; 
+   d="scan'208";a="145074251"
+Received: from mail-bn7nam10lp2101.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.101])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Jun 2020 08:33:59 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QI0BVzOuQ0n4AaxaplriAi+usTxn1YiUzxw36eyhO/YyDvnB04gEFh/QWUIT/P2HXrSHn3P2CLU2cfXbz2raVwThe3Vtlh+WW1qjKIKKrqbp5JZpANblOqt58meYTjvpTzePrge+lgmhNJsD6vjQ2G/TniVHtwgsgHulkxtuGYjPWrJQqakQqXRrATvWZw13vKp7OVHvUOCJYzGqzY12ljy75vRGtkdd0vAiIH4xQvZN0slxE4DxcTkCxAOC2Am7thLt78Fd3bnqe248dwSIpG/Z7kwDyNtbF3zhCPTlF2JS0RIktq4Fd6Y9j+RC178kSfdKcllJBd00+qZr6vAaLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cmg+yIw9ZfZDhcnwmjUTjeRVm8tJ5CxnDgRKI4nQASw=;
+ b=Pyap4/hsbeqPrSmxxrapTMRrbjA4YIEm2aTzBsF4v1r60nTY3KH7SyW7+f01Zyy1fhgemBUDRfxhHAOWKl6UtcI0jvKAZXVvdn60gyZuTyeAtnKbtPsG2u6ZwjKKHWsGSIlH+dB920+UR3TRqEogttIHGMbm/r7kwRJS1EvP0DOKz2gODn+fDT8mYxSj4D6S8DYunQITN+MdIDNJz3nUN6CdJSsHBBQlFO5YhDgymJeVelrpwsqLo8xFEY2JTfttdm/Cg6/Qowt20hJfIiN/8REZg/swX1jwdeW/pk9tMi71+VIwEaMYU5D/Bk8rnc6NGnD3qDNT4NzHJR+cZ2GPhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cmg+yIw9ZfZDhcnwmjUTjeRVm8tJ5CxnDgRKI4nQASw=;
+ b=Tu6yhU4xhNma4a9BLl97nEY15z/LJFjFO/43OAwgo4tz5QFRsb087tkFQ+NmzkznsdIutQIObQcCFNp3EJ2qVMKHvufRzHt/jTiANBfBuCvfw2cNJ696ijM2Rm10mskfviksX7mwndt8/QCIM25b1BoCPlj6V8A6p/xO6Mznqi8=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY4PR04MB0343.namprd04.prod.outlook.com (2603:10b6:903:36::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
+ 2020 00:33:56 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3109.023; Wed, 24 Jun 2020
+ 00:33:56 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "satyat@google.com" <satyat@google.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] block: add initial kdoc over the request_queue
+Thread-Topic: [PATCH 1/2] block: add initial kdoc over the request_queue
+Thread-Index: AQHWSaobgkrHkRgd/kyqGjQRHGO3LA==
+Date:   Wed, 24 Jun 2020 00:33:56 +0000
+Message-ID: <CY4PR04MB37514525E1A0D6176BFAB11BE7950@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <20200623220311.8033-1-mcgrof@kernel.org>
+ <20200623220311.8033-2-mcgrof@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.182.57]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8ea5e32b-81f0-4806-410e-08d817d6478b
+x-ms-traffictypediagnostic: CY4PR04MB0343:
+x-microsoft-antispam-prvs: <CY4PR04MB03435D30FD01284305E768FDE7950@CY4PR04MB0343.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-forefront-prvs: 0444EB1997
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: T3PwW/8gTRx5N0EIuUqvWqsyDHfnGN7Uf0A6jSZk/xholjLVil9R8SeiGSLQBVAJTXHV7TdKJq3GyDSNLkwWlX/XFESQ3bG5AgzA1/58ZFIFDLLTDxj77kJxY2uxfp+3UM5e8rgMSaHvTd5vKyxd1A3DcwmI7Qc32KyesDsEqFdUXo34Rwstf0wfGcgwQfL5Lm8+ZgAfS2FcX4kBP5ZOnY5L/ThC2Ai5ETbK2hLtN83oxuzxI/JKjq0+0g8EoR3TyyC6Bp9sPpNE9pMv97MAIJHoiKnsJq3oDE8QAltdZMvD3QTCX6SDLLoU7fwL1OXDQpXnA0RHPOHUZR4NEvqgFA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(39860400002)(366004)(396003)(86362001)(5660300002)(8676002)(52536014)(8936002)(64756008)(66446008)(66946007)(66476007)(83380400001)(71200400001)(66556008)(76116006)(33656002)(91956017)(26005)(4326008)(53546011)(186003)(6506007)(9686003)(55016002)(2906002)(478600001)(110136005)(316002)(54906003)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: y1cwYZtHytXVyMUu0w86Vm8t1BpT+F0EptwnnxC2LH69aVOUyA/g/lZaPLxP8V5fM21yhrQB3g1mvznc3Y2c/0YyY4fiaE2VYRiIVZrzbDLWl4EcrLtQQMS0nXTaBPPb1yFfGvKCxZ+FZoxlzSjJECJV1C3mOUkgfxlZiUilRHoUsPwch5ZSTIQAlAJChoS5+7sqtIGqtOoiRjTUfC7B3REKZyA5Kxt1eVe48ulKPW6LicTHeaqIwOGcnGmXuA4mOOLz9UOnAv6JiXZ2KfNGvFgQv2a1Qk9kysjtTFyiwB7kPHByHqeHEWwF4deCGesL61IXF1yBV+KdA0tbwx9ZeWoTyq3cXWzy9SqmMapiDz7vV1R3e0QAnETPEde1r1JFoREEDEXeFwGg+uDIK7TMGSJuTxNOOAbqa0efVWn/Wxwdicz0EGf2BnUuqa45OQYWyBQj277eI/8XLmDLgDJwCm+K8z7WqGv4O35Wi/bSJy/lSitNlAsb7HgYXkS7MhzJ
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ea5e32b-81f0-4806-410e-08d817d6478b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 00:33:56.2204
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0GtN7x9tHBfdIGfsHpNYdUyyBVFb6zm1hM9WdbhbTBc6EdN+XUuK0BJFNgP3PejH63q+00XYl0YMTXrlayBI6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB0343
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 08:43:14 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-
-> From: Liu Yi L <yi.l.liu@intel.com>
-> 
-> For guest SVA usage, in order to optimize for less VMEXIT, guest
-> request of IOTLB flush also includes device TLB.
-> 
-> On the host side, IOMMU driver performs IOTLB and implicit devTLB
-> invalidation. When PASID-selective granularity is requested by the
-> guest we need to derive the equivalent address range for devTLB
-> instead of using the address information in the UAPI data. The reason
-> for that is, unlike IOTLB flush, devTLB flush does not support
-> PASID-selective granularity. This is to say, we need to set the
-> following in the PASID based devTLB invalidation descriptor:
-> - entire 64 bit range in address ~(0x1 << 63)
-> - S bit = 1 (VT-d CH 6.5.2.6).
-> 
-> Without this fix, device TLB flush range is not set properly for PASID
-> selective granularity. This patch also merged devTLB flush code for
-> both implicit and explicit cases.
-> 
-> Fixes: 6ee1b77ba3ac ("iommu/vt-d: Add svm/sva invalidate function")
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/intel/iommu.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 96340da57075..5ea5732d5ec4 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -5408,7 +5408,7 @@ intel_iommu_sva_invalidate(struct iommu_domain
-> *domain, struct device *dev, sid = PCI_DEVID(bus, devfn);
->  
->  	/* Size is only valid in address selective invalidation */
-> -	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
-> +	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
->  		size = to_vtd_size(inv_info->addr_info.granule_size,
->  				   inv_info->addr_info.nb_granules);
->  
-> @@ -5417,6 +5417,7 @@ intel_iommu_sva_invalidate(struct iommu_domain
-> *domain, struct device *dev, IOMMU_CACHE_INV_TYPE_NR) {
->  		int granu = 0;
->  		u64 pasid = 0;
-> +		u64 addr = 0;
->  
->  		granu = to_vtd_granularity(cache_type,
-> inv_info->granularity); if (granu == -EINVAL) {
-> @@ -5456,19 +5457,27 @@ intel_iommu_sva_invalidate(struct
-> iommu_domain *domain, struct device *dev, (granu ==
-> QI_GRAN_NONG_PASID) ? -1 : 1 << size, inv_info->addr_info.flags &
-> IOMMU_INV_ADDR_FLAGS_LEAF); 
-> +			if (!info->ats_enabled)
-> +				break;
->  			/*
->  			 * Always flush device IOTLB if ATS is
-> enabled. vIOMMU
->  			 * in the guest may assume IOTLB flush is
-> inclusive,
->  			 * which is more efficient.
->  			 */
-> -			if (info->ats_enabled)
-> -				qi_flush_dev_iotlb_pasid(iommu, sid,
-> -						info->pfsid, pasid,
-> -						info->ats_qdep,
-> -
-> inv_info->addr_info.addr,
-> -						size);
-> -			break;
-> +			fallthrough;
->  		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
-> +			/*
-> +			 * There is no PASID selective flush for
-> device TLB, so
-> +			 * the equivalent of that is we set the size
-> to be the
-> +			 * entire range of 64 bit. User only
-> provides PASID info
-> +			 * without address info. So we set addr to 0.
-> +			 */
-> +			if (inv_info->granularity ==
-> IOMMU_INV_GRANU_PASID) {
-> +				size = 64 - VTD_PAGE_SHIFT;
-> +				addr = 0;
-> +			} else if (inv_info->granularity ==
-> IOMMU_INV_GRANU_ADDR)
-> +				addr = inv_info->addr_info.addr;
-> +
->  			if (info->ats_enabled)
->  				qi_flush_dev_iotlb_pasid(iommu, sid,
->  						info->pfsid, pasid,
-addr should be used here. will fix in the next version. Baolu has
-pointed out this before but missed it here.
-
-Jacob
+On 2020/06/24 7:03, Luis Chamberlain wrote:=0A=
+> We start off with an initial description of the request_queue data=0A=
+> structure, followed by describing the purpose of the debugfs_mutex=0A=
+> debugfs_dir, and blk_trace.=0A=
+> =0A=
+> Suggested-by: Bart Van Assche <bvanassche@acm.org>=0A=
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>=0A=
+> ---=0A=
+>  include/linux/blkdev.h | 20 ++++++++++++++++++++=0A=
+>  1 file changed, 20 insertions(+)=0A=
+> =0A=
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h=0A=
+> index 70461b347169..ea319c2b0593 100644=0A=
+> --- a/include/linux/blkdev.h=0A=
+> +++ b/include/linux/blkdev.h=0A=
+> @@ -394,6 +394,26 @@ static inline int blkdev_zone_mgmt_ioctl(struct bloc=
+k_device *bdev,=0A=
+>  =0A=
+>  #endif /* CONFIG_BLK_DEV_ZONED */=0A=
+>  =0A=
+> +/**=0A=
+> + * struct request_queue - block device driver request queue=0A=
+> + * @debugfs_mutex: used to protect access to the @debugfs_dir=0A=
+> + * @blk_trace: used by blktrace to keep track of setup / tracing=0A=
+> + * @debugfs_dir: directory created to place debugfs information. This is=
+ always=0A=
+> + *	created for make_request and request-based block drivers upon=0A=
+> + *	initialization. blktrace requires for this directory to be created,=
+=0A=
+=0A=
+s/requires for/requires/ (may be, not sure of my English grammar on this on=
+e :))=0A=
+=0A=
+> + *	and so it will be created on demand if its block driver type does not=
+=0A=
+> + *	create it opon initialization.=0A=
+=0A=
+s/opon/upon/=0A=
+=0A=
+> + *=0A=
+> + * The request_queue is used to manage incoming block layer device drive=
+r=0A=
+> + * requests. We have three main type of block driver types which end up =
+making=0A=
+=0A=
+We have three main types of block drivers which...=0A=
+=0A=
+> + * use of the request_queue:=0A=
+> + *=0A=
+> + *   o make_request block drivers (multiqueue)=0A=
+> + *   o request-based block drivers=0A=
+=0A=
+Isn't this second one BIO based drivers, like device-mapper BIO targets ?=
+=0A=
+=0A=
+> + *   o custom solutions such as scsi-generic=0A=
+=0A=
+The SG driver does not create a request queue, it uses the one of the scsi=
+=0A=
+device created by the scsi stack. Is this what you mean here ? Saying=0A=
+scsi-generic kind of implies sg driver.=0A=
+=0A=
+> + *=0A=
+> + * All partitions share the same request_queue data structure.=0A=
+> + */=0A=
+>  struct request_queue {=0A=
+>  	struct request		*last_merge;=0A=
+>  	struct elevator_queue	*elevator;=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
