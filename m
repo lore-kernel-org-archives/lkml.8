@@ -2,63 +2,145 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18368C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC2020781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8AFE20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pekx7gKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388823AbgFXFrM (ORCPT
+        id S2388919AbgFXFsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:47:12 -0400
-Received: from verein.lst.de ([213.95.11.211]:42776 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgFXFrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:47:11 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7C6FF68AEF; Wed, 24 Jun 2020 07:47:08 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 07:47:08 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>, axboe@fb.com,
-        sagi@grimberg.me, baolin.wang7@gmail.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] nvme-pci: Add controller memory buffer supported
- macro
-Message-ID: <20200624054708.GA17008@lst.de>
-References: <cover.1592916850.git.baolin.wang@linux.alibaba.com> <eab18c7696ea0e34a6ab0371d7d17ad45d1566ce.1592916850.git.baolin.wang@linux.alibaba.com> <20200623162751.GA4846@lst.de> <20200624025817.GC1291930@dhcp-10-100-145-180.wdl.wdc.com>
+        Wed, 24 Jun 2020 01:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgFXFsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:48:04 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50EE8C061573;
+        Tue, 23 Jun 2020 22:48:03 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id e22so570908edq.8;
+        Tue, 23 Jun 2020 22:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cCVczq9jeytjg0iXZ0Ms0EAwn8o1xeP0E8gSbiKjVYc=;
+        b=pekx7gKl8X5Nm8n2yDSv4PtloQ3kGlanN+rnTGZSvPXXzE20vtVyQHAYTjN+WNgKjW
+         JK73I8W4Dpmc7qCizC38HoISfcJYI23SFa157Ci8dwtFXeNsHWqdkJ2ROKSfA98xyQJ+
+         V7sDmKfH/UmhgJAdt3DbCO42Nl4q83FYtElyoRuREhThEfGOJ8fLMIDS1/IMoS6Ujx5J
+         8tANcQiYw5hcjrOqY7MxI++rbcxPPz8nat9qT53rJ1aP2nFGeG6yJ16G8o3N58D3sa5f
+         vFYcuiQX0GgGsO5+iGevGCc6LkwMe16JvXg5+TiD2AHhIBS9zKy6d9IUTmXE2JwA6TSV
+         VSiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cCVczq9jeytjg0iXZ0Ms0EAwn8o1xeP0E8gSbiKjVYc=;
+        b=jxH4ViR+3pvlGH7Xgxj65UUGAnQPV3h0tvWqtUc4W/f5cGxKnPrkZBG5ukLO11im6E
+         lyfurRkkruSNOIdiCBw1E5/MJGKJK9/8zLrfbmYkZkUwKlkdz7QtI6t1Hw0Z80ia19xo
+         RbzBFE0zj5FIi4sz5i9LXSG88woVysrlBYcx2sXhtuw64qsrudfDcLM2wnE11jkqaCBq
+         yR5ym3dqSXTpR000Y2EW9n+CHqhXTPb8HjxWbEp6FSUT2feSs45/ksvMhrvBRx7Umyt/
+         7Y0TO9xHqm+krIOcNbh/mjk76xQ9CqR74lhLE9ijFU9/i1VdGk5sTUeeOe026thVgJEr
+         ycyw==
+X-Gm-Message-State: AOAM533uFSh7Gtyj00S6mmmsF3gSJ+tydmMLtkPXqXFasom+vdXuqZrM
+        UREDU5CRhteruyr8s338Tehnfw86sqsumPj9IIGA5EpF
+X-Google-Smtp-Source: ABdhPJz6lUsVAyNQDB1oZsYZGg9wmtAQPwNKHeMK7rsYNBqVTjNTplKqWGlw0uYl1JMxqjmkrQhme5kk1R2pBYG0FzQ=
+X-Received: by 2002:a50:fa07:: with SMTP id b7mr5401576edq.298.1592977681772;
+ Tue, 23 Jun 2020 22:48:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624025817.GC1291930@dhcp-10-100-145-180.wdl.wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200617105929.534edd34@canb.auug.org.au> <20200624113452.54b72fcc@canb.auug.org.au>
+In-Reply-To: <20200624113452.54b72fcc@canb.auug.org.au>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Wed, 24 Jun 2020 15:47:49 +1000
+Message-ID: <CAPM=9tx5b1RaN5R4awqQ-BFpDrEZL1z05ZFv2MnGGS2t3mpBhQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Emil Velikov <emil.velikov@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:58:17PM -0700, Keith Busch wrote:
-> On Tue, Jun 23, 2020 at 06:27:51PM +0200, Christoph Hellwig wrote:
-> > On Tue, Jun 23, 2020 at 09:24:33PM +0800, Baolin Wang wrote:
-> > > Introduce a new capability macro to indicate if the controller
-> > > supports the memory buffer or not, instead of reading the
-> > > NVME_REG_CMBSZ register.
-> > 
-> > This is a complex issue.  The CMBS bit was only added in NVMe 1.4 as
-> > a backwards incompatible change, as the CMB addressing scheme can lead
-> > to data corruption.  The CMBS was added as part of the horribe hack
-> > that also involves the CBA field, which we'll need to see before
-> > using it to work around the addressing issue.  At the same time we
-> > should also continue supporting the legacy pre-1.4 CMB with a warning
-> > (and may reject it if we know we run in a VM).
-> 
-> Well, a CMB from an emulated controller (like qemu's) can be used within
-> a VM. It's only if you direct assign a PCI function that CMB usage
-> breaks.
+On Wed, 24 Jun 2020 at 11:36, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> On Wed, 17 Jun 2020 10:59:29 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > After merging the drm-misc tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c: In function 'amdgpu_amdkfd_gpuvm_free_memory_of_gpu':
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c:1357:2: error: implicit declaration of function 'drm_gem_object_put_unlocked'; did you mean 'drm_gem_object_put_locked'? [-Werror=implicit-function-declaration]
+> >  1357 |  drm_gem_object_put_unlocked(&mem->bo->tbo.base);
+> >       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >       |  drm_gem_object_put_locked
+> >
+> > Caused by commit
+> >
+> >   ab15d56e27be ("drm: remove transient drm_gem_object_put_unlocked()")
+> >
+> > interacting with commit
+> >
+> >   fd9a9f8801de ("drm/amdgpu: Use GEM obj reference for KFD BOs")
+> >
+> > from Linus' tree.
+> >
+> > I have applied the following merge fix up patch for today.
+> >
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Wed, 17 Jun 2020 10:55:32 +1000
+> > Subject: [PATCH] drm/amdgpu: remove stray drm_gem_object_put_unlocked
+> >
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> > index b91b5171270f..9015c7b76d60 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> > @@ -1354,7 +1354,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
+> >       }
+> >
+> >       /* Free the BO*/
+> > -     drm_gem_object_put_unlocked(&mem->bo->tbo.base);
+> > +     drm_gem_object_put(&mem->bo->tbo.base);
+> >       mutex_destroy(&mem->lock);
+> >       kfree(mem);
+> >
+> > --
+> > 2.26.2
+>
+> This fix is now needed when I merge the drm tree :-(
+>
+> Given that the drm tree is based on v5.8-rc2 and the commit from Linus'
+> tree above was merged before v5.8-rc1, the above patch should be
+> applied to the drm tree (and should have been part of the patch that
+> merged the drm-misc tree).  I am a bit suprised that the drm tree
+> currently passes CI.
 
-But we have no idea if a controller is assigned or emulated.
+My bad, my local builds passed, as I had made the change but forgot
+the commit --amend
+
+Pushed out a new head with it in it now.
+
+Dave.
