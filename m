@@ -2,106 +2,119 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEB6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81094C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF32520738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC132078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S1QJCkhF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ccU9fEXo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405561AbgFXRgU (ORCPT
+        id S2405588AbgFXRjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:36:20 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59922 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404908AbgFXRgT (ORCPT
+        Wed, 24 Jun 2020 13:39:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405427AbgFXRju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:36:19 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OHa4PC059738;
-        Wed, 24 Jun 2020 12:36:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593020164;
-        bh=b7I1LZjktpXQtE/2SIxPlGxZJRi/hvLLHrKcEtNIZXM=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=S1QJCkhF8V2NBByGKWtk/vz55e0z8N2FwVrqdXywrH2vywZFUrpZmygqW7vY+d6VS
-         epUUkxSSnuWq2cwb/FgbEXggJWNYIj8qrsgQ2/QiwZSAd5FqGcMcAkNnKpiYKGxLD/
-         Qz8TWD/dVnP6AXrMZWTYpTFZCv+Fvzl3/uadznk4=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OHa4ap044210
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 12:36:04 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 12:36:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 12:36:03 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OHa3tG127913;
-        Wed, 24 Jun 2020 12:36:03 -0500
-Subject: Re: [PATCH v5 3/7] ASoC: tas2562: Fix format issue for extra space
- before a comma
-From:   Dan Murphy <dmurphy@ti.com>
+        Wed, 24 Jun 2020 13:39:50 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F9B2C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:39:50 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x11so1320232plo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=icPG8hObHg8yafPJKwf2o4eaI571GeN/laooKjhqnGA=;
+        b=ccU9fEXoNSEIM7OOQ/yadogIOyX0u9hfrmr0o3aOPCOthUpjuoBld3sSt+PdY3i0Qr
+         XrYjEd28vcqX+7L5zyThYAz5CZMd1Rx4YAfvSNHxP8Vf+rBZyFqtdiKeuZ67i/ak9icd
+         O3ksW4NGLZpdaE9RP9XJC3jE75u/oa2nEAAJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=icPG8hObHg8yafPJKwf2o4eaI571GeN/laooKjhqnGA=;
+        b=pbTF5UjQ0PV0UZ+7ej3JZcpYtkuWVf3zp7YyYJYYV7slCphzjghjSCyYhU9LHBWyJ3
+         DywMIgz+v7vqJNpgc8/e/ZMFfyvPBSMY2sLGc2pgk8LLHkG7x5AAriw3aqldL3Cepu7a
+         w7hFgmvBvHJuyTvt5i3s45dzu/JfOzEaRZQfQKsnxkpPeF3cRAas5Yi6jMTkdfyBK/S4
+         qW7xxqTXwWum7U3So4mrb4vwlqEkR7A087RxeJS//JDWVlX0i3cYBvz9G20d76kC0eao
+         J4M3ChieTGQkVPoy6lrwvRix9waz8egRpngHrnBvMt5m76/EyKXX/L7ShTrzDf/8XVcs
+         Wq/A==
+X-Gm-Message-State: AOAM532SXH1lJfn3nHcV4fD9kNuGvAXmZN63Kbtcn3UBbeU2fg/IbcfF
+        3oQb5qyVdQaIKlIhfNE1RiWq5w==
+X-Google-Smtp-Source: ABdhPJxEB785qbfd6S3Vxd6Ma7a0jVEjXIBDvEs8LRmaTNVuKN6yFPJfwMEa04arCunvtaU7Med6og==
+X-Received: by 2002:a17:902:b60f:: with SMTP id b15mr29521587pls.248.1593020389993;
+        Wed, 24 Jun 2020 10:39:49 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z5sm501869pfb.1.2020.06.24.10.39.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 10:39:49 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:39:48 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>
-References: <20200624161459.19248-1-dmurphy@ti.com>
- <20200624161459.19248-4-dmurphy@ti.com> <20200624162917.GK5472@sirena.org.uk>
- <c4a26be8-88cc-1dfa-61e0-844b9c19eb52@ti.com>
-Message-ID: <370c71e3-731b-3549-adb0-597abb217cfc@ti.com>
-Date:   Wed, 24 Jun 2020 12:36:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
+        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
+        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
+ state
+Message-ID: <20200624173948.GC39073@google.com>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
+ <20200624170933.GB39073@google.com>
+ <20200624171537.GL5472@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <c4a26be8-88cc-1dfa-61e0-844b9c19eb52@ti.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200624171537.GL5472@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On Wed, Jun 24, 2020 at 06:15:37PM +0100, Mark Brown wrote:
+> On Wed, Jun 24, 2020 at 10:09:33AM -0700, Matthias Kaehlcke wrote:
+> > Hi Mark,
+> > 
+> > do you plan to land this in your tree?
+> > 
+> > I know you hate contentless pings, but since you acked this patch and
+> > usually don't seem to do that when patches go through your tree I want
+> > to make sure we aren't in a situation where everybody thinks that the
+> > patch will go through someone else's tree.
+> 
+> Aren't there dependencies on earlier patches in the series?
 
-On 6/24/20 11:58 AM, Dan Murphy wrote:
-> Mark
->
-> On 6/24/20 11:29 AM, Mark Brown wrote:
->> On Wed, Jun 24, 2020 at 11:14:55AM -0500, Dan Murphy wrote:
->>> Fix the issue found that there is an extra space before a comma in the
->>> volume control.
->>>
->>> Fixes: bf726b1c86f2c ("ASoC: tas2562: Add support for digital volume 
->>> control")
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>   arch/arm/boot/compressed/fdt.h             |   66 +
->>>   arch/arm/boot/compressed/libfdt.h          | 2072 
->>> ++++++++++++++++++++
->>>   arch/arm/boot/compressed/libfdt_internal.h |  173 ++
->>>   sound/soc/codecs/tas2562.c                 |    2 +-
->> I'm guessing those libfdt changes weren't supposed to be here?
->
-> No they were not those must have been added when I verified the build.
->
-Can this patchset get a review as well so I can fix before I post v6?
+Not to my knowledge. Patch "[2/6] spi: spi-geni-qcom: Use OPP API to set
+clk/perf state" depends on a change in 'include/linux/qcom-geni-se.h' made
+by "1/6] tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state",
+however that's not true for this patch.
 
-Not sure what the current work load is for review or merge.
+I wonder if it would have been better to split this series into individual
+patches/mini-series, to avoid this kind of confusion.
 
-Dan
+> In general if someone acks something for their tree that means they don't
+> expect to apply it themselves.
 
+Yes, that was my understanding and prompted me to clarify this with you.
 
-> Dan
->
+The patch could go through the QCOM tree, but to my knowledge there is no
+reason for it.
+
+Btw, the patch "[V8,7/8] spi: spi-qcom-qspi: Add interconnect support"
+(https://patchwork.kernel.org/patch/11620285/) is in a similar situation.
+Another patch of the series for the 'spi-geni-qcom' driver has to go
+through the QCOM change due to changes in geni, but the QSPI driver
+doesn't use geni and could therefore go through your tree.
+
+Ultimately I don't really care too much through which tree the patches
+land as long as you and Bjorn agree on it :)
