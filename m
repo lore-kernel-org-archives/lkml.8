@@ -2,153 +2,147 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E805C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC58C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD0520857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HHUTbvXU"
+	by mail.kernel.org (Postfix) with ESMTP id EEB7320823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593019602;
+	bh=QhkibFX5ONiQurz+bJ7EdBVRoQ37RDI3PIq3xkhBAjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZBiGtjVdCWAzO4dl2a5VY5CCZYOlxjSBcoSncTt6sZbXOrotINhiv+NzQWTVetds1
+	 xjObZW/oY1NPddoZIC1ew+zx4W9sTFbRVNB8/zrGoXe8yM01k35fTzCoymYq9Gdf3R
+	 tG2ljN8D0yVPoEhfVyPbdvWM6SbKML4XrsCwwEgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405528AbgFXR00 (ORCPT
+        id S2405533AbgFXR0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405521AbgFXR0Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:26:25 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60F4C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:26:24 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n2so1293851pld.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MnQWlAViaAXgR6ChKk9flTU7iy/dP/Hqi3HZ30RWfcA=;
-        b=HHUTbvXU8iaNylfrBu2tKAp6t8jvzwGxJv4iQWDRdjnhiP1bSVaMJy3y6z9hlDLo5j
-         I3r9BcePoZxu3+e/4tWyl+hlZf6p8Dk3oi6OlIpMi2Bre5oCdOktwagNmvSvXj80p45/
-         qBNen7/kYI5dyPaI7TzcMXBYWgXUQStxnApBoGkLKlQUqKFCWrKmo07mBmRdo2Uq2UAY
-         SnhyDTWHaTW4W99fdN1AYeItiGEhnJVPXK8z9+1eONtpAatxhfK1DAjRnTnibVGkHFqt
-         SVfUg2fkin8g64ceJ6gtvnSPvBarq4d7rDD5V6XBCFnHYOlfMrs3xzt1x+d3BckHFWC3
-         AeRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MnQWlAViaAXgR6ChKk9flTU7iy/dP/Hqi3HZ30RWfcA=;
-        b=cFxQDJzTdJveSZR606xaIzOQYVCOh7pYD8DPZqHe1rnvi/WRxfhxyDDpn/SQDk3LNH
-         rBDDTJY/17oxD1mTzjUk3JaGYjndviw04AG+3CnTR2ffd0Xkds4cbymbyHb4bi69zLyV
-         /GdMnkzXuamC0jwih8APTl8h67X66QwmWBiFV0CExQzZzFpbHg5YBEDCoe/Rmq5sCzgw
-         fJoIG8R3rtpKJF+6uGyG18LFcAwyILcxZvD7qwLOeNqr3Uw8+vSLy7V0KG8WFXEPY5SL
-         lV3r/pB5nrFgFZabixlCSJ8+CsJSVuDUUFGsKvxKgQWMcvaNXFPnUHJtBvTJuALoLJIf
-         pOKQ==
-X-Gm-Message-State: AOAM532hVH4wmkx5L9W6+x8p5kjRWSVkd1Wbc56e5H3Ib+sfJFwP7cwp
-        VhIWP4CU9Q6w0I5N/Y+XwgF/8g==
-X-Google-Smtp-Source: ABdhPJy/02NChU1UMXqYAoZX4iMBIryqEQ4wkk5JgSfgSZouk+nUj0lvwCKX2dompigE5x6ivL/uXg==
-X-Received: by 2002:a17:90a:f3d6:: with SMTP id ha22mr29151692pjb.193.1593019583946;
-        Wed, 24 Jun 2020 10:26:23 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id i191sm21217005pfe.99.2020.06.24.10.26.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 10:26:22 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:26:20 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/9] vmlinux.lds.h: Add .symtab, .strtab, and
- .shstrtab to STABS_DEBUG
-Message-ID: <20200624172620.654hhjetiyzpgoxw@google.com>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-3-keescook@chromium.org>
- <20200624153930.GA1337895@rani.riverdale.lan>
- <20200624161643.73x6navnwryckuit@google.com>
- <20200624171121.GA1377921@rani.riverdale.lan>
+        Wed, 24 Jun 2020 13:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405427AbgFXR0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:26:40 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 457E820823;
+        Wed, 24 Jun 2020 17:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593019599;
+        bh=QhkibFX5ONiQurz+bJ7EdBVRoQ37RDI3PIq3xkhBAjs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ELZF954hFUl7p39bmYPAUW+LndZu61e7JsF7Yt55J7ik25vY9qc3b7h9sgaYOThKS
+         AYjkDzGQeoGWWEBOfXNjDhTZdqy6Rfa1mlVdYy6KDwzA+wJkCfRbd3F4XtJjiRbTo0
+         bRQFELyYmUtWcP1bTtkY7vM6BorCwy+N1Eeb/WG8=
+Date:   Wed, 24 Jun 2020 22:56:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v8 2/3] phy: zynqmp: Add PHY driver for the Xilinx ZynqMP
+ Gigabit Transceiver
+Message-ID: <20200624172635.GI2324254@vkoul-mobl>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-3-laurent.pinchart@ideasonboard.com>
+ <20200624151121.GF2324254@vkoul-mobl>
+ <20200624163927.GF5980@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624171121.GA1377921@rani.riverdale.lan>
+In-Reply-To: <20200624163927.GF5980@pendragon.ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Laurent,
 
-On 2020-06-24, Arvind Sankar wrote:
->On Wed, Jun 24, 2020 at 09:16:43AM -0700, Fangrui Song wrote:
->>
->> On 2020-06-24, Arvind Sankar wrote:
->> >On Tue, Jun 23, 2020 at 06:49:33PM -0700, Kees Cook wrote:
->> >> When linking vmlinux with LLD, the synthetic sections .symtab, .strtab,
->> >> and .shstrtab are listed as orphaned. Add them to the STABS_DEBUG section
->> >> so there will be no warnings when --orphan-handling=warn is used more
->> >> widely. (They are added above comment as it is the more common
->> >
->> >Nit 1: is "after .comment" better than "above comment"? It's above in the
->> >sense of higher file offset, but it's below in readelf output.
->>
->> I mean this order:)
->>
->>    .comment
->>    .symtab
->>    .shstrtab
->>    .strtab
->>
->> This is the case in the absence of a linker script if at least one object file has .comment (mostly for GCC/clang version information) or the linker is LLD which adds a .comment
->>
->> >Nit 2: These aren't actually debugging sections, no? Is it better to add
->> >a new macro for it, and is there any plan to stop LLD from warning about
->> >them?
->>
->> https://reviews.llvm.org/D75149 "[ELF] --orphan-handling=: don't warn/error for unused synthesized sections"
->> described that .symtab .shstrtab .strtab are different in GNU ld.
->> Since many other GNU ld synthesized sections (.rela.dyn .plt ...) can be renamed or dropped
->> via output section descriptions, I don't understand why the 3 sections
->> can't be customized.
->
->So IIUC, lld will now warn about .rela.dyn etc only if they're non-empty?
+On 24-06-20, 19:39, Laurent Pinchart wrote:
 
-HEAD and future 11.0.0 will not warn about unused synthesized sections
-like .rela.dyn
+> > > +/* Number of GT lanes */
+> > > +#define NUM_LANES			4
+> > 
+> > Should this be coded in driver like this? Maybe future versions of
+> > hardware will have more lanes..? Why not describe this in DT?
+> 
+> This macro is used to avoid hardcoding 4 in the driver, to make sure
+> that all the code that deal with the number of lanes use a consistent
+> value and is readable. There's no foreseen new version of the IP that
+> would have more lane, so I don't think this should go in DT. Otherwise
+> we'd have to encode there pretty much any parameter that could one day
+> possibly change in a different universe :-)
+> 
+> Let's also note that even when parameters change between IP versions, it
+> doesn't always make sense to specify them explicitly in DT. It's totally
+> fine to have a table of parameter values in the driver, indexed by
+> compatible string. Whether to set a parameter explicitly in DT or handle
+> it in the driver usually depends on how frequently that parameter can
+> change, if it can vary between different integrations of the same IP
+> version, ...
+> 
+> In this specific case, as there's no foreseen change, we can't really
+> tell how it would change if it did one day. I thus think hardcoding the
+> parameter in the driver is fine, and in the worst case, we can add a
+> parameter in DT later and default to 4 if not specified. Same reasoning
+> for CONTROLLERS_PER_LANE.
 
-For most synthesized sections, empty = unused.
+yeah not every parameter can be coded and we should use compatible as
+well, but I would disagree with no future revision planned. It will
+happen not now, but sometime in year or so :) Been around devices has
+taught me that only constant thing is change in hardware!
 
->>
->> I created a feature request: https://sourceware.org/bugzilla/show_bug.cgi?id=26168
->> (If this is supported, it is a consistent behavior to warn for orphan
->> .symtab/.strtab/.shstrtab
->>
->> There may be 50% chance that the maintainer decides that "LLD diverges"
->> I would disagree: there is no fundamental problems with .symtab/.strtab/.shstrtab which make them special in output section descriptions or orphan handling.)
->>
->
->.shstrtab is a little special in that it can't be discarded if the ELF
->file contains any sections at all. But yeah, there's no reason they
->can't be renamed or placed in a custom location in the file.
+Yes but this is not a deal breaker atm, will leave upto you
 
-https://sourceware.org/pipermail/binutils/2020-March/000179.html
-proposes -z nosectionheader. With this option, I believe .shstrtab is
-not needed. /DISCARD/ : { *(.shstrtab) }  should achieve a similar effect.
+> 
+> > > +
+> > > +/* SIOU SATA control register */
+> > > +#define SATA_CONTROL_OFFSET		0x0100
+> > > +
+> > > +/* Total number of controllers */
+> > > +#define CONTROLLERS_PER_LANE		5
+> > 
+> > Same question for this as well..
+> > 
+> > > +/*
+> > > + * I/O Accessors
+> > > + */
+> > > +
+> > > +static inline u32 xpsgtr_read(struct xpsgtr_dev *gtr_dev, u32 reg)
+> > > +{
+> > > +	return readl(gtr_dev->serdes + reg);
+> > > +}
+> > > +
+> > > +static inline void xpsgtr_write(struct xpsgtr_dev *gtr_dev, u32 reg, u32 value)
+> > > +{
+> > > +	writel(value, gtr_dev->serdes + reg);
+> > > +}
+> > > +
+> > > +static inline void xpsgtr_clr_set(struct xpsgtr_dev *gtr_dev, u32 reg,
+> > > +				  u32 clr, u32 set)
+> > 
+> > wouldn't it be apt to rename this to xpsgtr_modify() and with args as
+> > value and mask, somehow I find that more simpler...
+> 
+> "modify" sounds more vague to me. I've also kept xpsgtr_clr_set() as
+> that's what the original author used.
+
+yeah maybe that was a wrong choice of term, I guess update looks best.
+We really are missing update api in kernel! I see regmap does provide
+_update_bits() api
+
+> 
+> > Also, please align second line with opening brace of preceding line
+> 
+> It is aligned, the first line is affected by the + and > in the mail,
+> while the second line uses tabs and thus isn't.
+
+ok
+
+-- 
+~Vinod
