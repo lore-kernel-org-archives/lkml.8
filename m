@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E2C2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08772080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593028718;
-	bh=XXi8edY9x3wr+Y2/yPhKhdQW4BKXddtnZDL77VlPayc=;
+	s=default; t=1593028724;
+	bh=g4g7Be/7qkvvbC1GDQoBFv9ejglBBih542Chh5Bvqac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7umf5oYKWCtqincxY9VyM9DimDbAUERmZF3oz7E83xE7m6LSgmvdXD52ISTon2wx
-	 7iFRrZaRE3eVtsd13YDmYCrS515jIKAPmK2enXwya7fqihYJ+KACvG4aXmjiQQ65ZH
-	 2H0bLyh3Rm4jmEK+xu8oGtTZbWtFfM4qhWAPGeEY=
+	b=gZE4aSLFzb+Zoeq/0OxW/DLvJHBe/PUH/Tbw1cCe7pkJI+6sF2yS3SEnrVo5r+bnK
+	 mGxyK7Hxuo0hFkdmll5hfK42rZpYCcW86hBxOyQzmbnHmXY9GhPmWZAQi/U0kdslMO
+	 kNpHzn5WrUrTjdWwGbWhGw19MApRwDOBNQztJ+hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406312AbgFXT6d (ORCPT
+        id S2406336AbgFXT6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44472 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 15:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406286AbgFXT6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:58:25 -0400
+        id S2406233AbgFXT6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:58:21 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F10920899;
-        Wed, 24 Jun 2020 19:58:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 221EC2084D;
+        Wed, 24 Jun 2020 19:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593028704;
-        bh=XXi8edY9x3wr+Y2/yPhKhdQW4BKXddtnZDL77VlPayc=;
+        s=default; t=1593028700;
+        bh=g4g7Be/7qkvvbC1GDQoBFv9ejglBBih542Chh5Bvqac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WGLSqnB3UEi7yjfnGJO2DWssKlt5IgSmleLUoc9c1Qc5mqQWOU37oZfvdmWjlCgJ4
-         b0cdMIdn30C2gpoemXvXi4jS1z8cqs/RklOmtI7D/d3a85lsUPfKu/p4HuibRnqueo
-         +a8EjYjL2OXY0iPDKmx0zxc0m50yO8UeW9VgzBR4=
+        b=qOSp2COxAr/gCayi7yog1NM9GANknHo4lfonPoHiXPKG3qVDsZwjSqCELQ2Ap4RAQ
+         xfZpjuhcuOcTC9EZ7y9tqcoftZOqvowvTb/ON9kDjeBDB1M3RAeePp6RcmothdYW4L
+         vgQxucpsZKHQZJUuzWhigxfFG9IzV9zahv7rhrNU=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1joBXK-006ABu-9s; Wed, 24 Jun 2020 20:58:22 +0100
+        id 1joBXG-006ABu-KT; Wed, 24 Jun 2020 20:58:18 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -56,9 +56,9 @@ Cc:     Will Deacon <will@kernel.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
-Subject: [PATCH v2 09/17] irqchip/gic: Configure SGIs as standard interrupts
-Date:   Wed, 24 Jun 2020 20:58:03 +0100
-Message-Id: <20200624195811.435857-10-maz@kernel.org>
+Subject: [PATCH v2 04/17] ARM: Allow IPIs to be handled as normal interrupts
+Date:   Wed, 24 Jun 2020 20:57:58 +0100
+Message-Id: <20200624195811.435857-5-maz@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200624195811.435857-1-maz@kernel.org>
 References: <20200624195811.435857-1-maz@kernel.org>
@@ -73,196 +73,252 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the way we deal with GIC SGIs by turning them into proper
-IRQs, and calling into the arch code to register the interrupt range
-instead of a callback.
+In order to deal with IPIs as normal interrupts, let's add
+a new way to register them with the architecture code.
+
+set_smp_ipi_range() takes a range of interrupts, and allows
+the arch code to request them as if the were normal interrupts.
+A standard handler is then called by the core IRQ code to deal
+with the IPI.
+
+This means that we don't need to call irq_enter/irq_exit, and
+that we don't need to deal with set_irq_regs either. So let's
+move the dispatcher into its own function, and leave handle_IPI()
+as a compatibility function.
+
+On the sending side, let's make use of ipi_send_mask, which
+already exists for this purpose.
+
+One of the major difference is that we end up, in some cases
+(such as when performing IRQ time accounting on the scheduler
+IPI), end up with nested irq_enter()/irq_exit() pairs.
+Other than the (relatively small) overhead, there should be
+no consequences to it (these pairs are designed to nest
+correctly, and the accounting shouldn't be off).
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic.c | 101 +++++++++++++++++++++++---------------
- 1 file changed, 62 insertions(+), 39 deletions(-)
+ arch/arm/Kconfig           |  1 +
+ arch/arm/include/asm/smp.h |  5 ++
+ arch/arm/kernel/smp.c      | 99 ++++++++++++++++++++++++++++++++------
+ 3 files changed, 89 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 801a5a5004d6..86699761e19f 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -335,31 +335,22 @@ static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
- 		irqstat = readl_relaxed(cpu_base + GIC_CPU_INTACK);
- 		irqnr = irqstat & GICC_IAR_INT_ID_MASK;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 2ac74904a3ce..27c26d3c06f2 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -48,6 +48,7 @@ config ARM
+ 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
+ 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
+ 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
++	select GENERIC_IRQ_IPI if SMP
+ 	select GENERIC_CPU_AUTOPROBE
+ 	select GENERIC_EARLY_IOREMAP
+ 	select GENERIC_IDLE_POLL_SETUP
+diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
+index a91f21e3c5b5..0e29730295ca 100644
+--- a/arch/arm/include/asm/smp.h
++++ b/arch/arm/include/asm/smp.h
+@@ -45,6 +45,11 @@ extern void smp_init_cpus(void);
+  */
+ extern void set_smp_cross_call(void (*)(const struct cpumask *, unsigned int));
  
--		if (likely(irqnr > 15 && irqnr < 1020)) {
--			if (static_branch_likely(&supports_deactivate_key))
--				writel_relaxed(irqstat, cpu_base + GIC_CPU_EOI);
--			isb();
--			handle_domain_irq(gic->domain, irqnr, regs);
--			continue;
--		}
--		if (irqnr < 16) {
-+		if (unlikely(irqnr >= 1020))
-+			break;
++/*
++ * Register IPI interrupts with the arch SMP code
++ */
++extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
 +
-+		if (static_branch_likely(&supports_deactivate_key))
- 			writel_relaxed(irqstat, cpu_base + GIC_CPU_EOI);
--			if (static_branch_likely(&supports_deactivate_key))
--				writel_relaxed(irqstat, cpu_base + GIC_CPU_DEACTIVATE);
--#ifdef CONFIG_SMP
--			/*
--			 * Ensure any shared data written by the CPU sending
--			 * the IPI is read after we've read the ACK register
--			 * on the GIC.
--			 *
--			 * Pairs with the write barrier in gic_raise_softirq
--			 */
-+		isb();
+ /*
+  * Called from platform specific assembly code, this is the
+  * secondary CPU entry point.
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 9a6432557871..269639b14259 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -70,18 +70,28 @@ enum ipi_msg_type {
+ 	 * CPU_BACKTRACE is special and not included in NR_IPI
+ 	 * or tracable with trace_ipi_*
+ 	 */
+-	IPI_CPU_BACKTRACE,
++	IPI_CPU_BACKTRACE = NR_IPI,
+ 	/*
+ 	 * SGI8-15 can be reserved by secure firmware, and thus may
+ 	 * not be usable by the kernel. Please keep the above limited
+ 	 * to at most 8 entries.
+ 	 */
++	MAX_IPI
+ };
+ 
++static int ipi_irq_base;
++static int nr_ipi = MAX_IPI;
++static struct irq_desc *ipi_desc[MAX_IPI];
 +
-+		/*
-+		 * Ensure any shared data written by the CPU sending the IPI
-+		 * is read after we've read the ACK register on the GIC.
-+		 *
-+		 * Pairs with the write barrier in gic_ipi_send_mask
-+		 */
-+		if (irqnr <= 15)
- 			smp_rmb();
--			handle_IPI(irqnr, regs);
--#endif
--			continue;
--		}
--		break;
-+		handle_domain_irq(gic->domain, irqnr, regs);
- 	} while (1);
- }
++static void ipi_setup(int cpu);
++static void ipi_teardown(int cpu);
++
+ static DECLARE_COMPLETION(cpu_running);
  
-@@ -793,14 +784,14 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	return IRQ_SET_MASK_OK_DONE;
- }
+ static struct smp_operations smp_ops __ro_after_init;
  
--static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
-+static void gic_ipi_send_mask(struct irq_data *d, const struct cpumask *mask)
++static void ipi_setup(int cpu);
++
+ void __init smp_set_ops(const struct smp_operations *ops)
  {
- 	int cpu;
- 	unsigned long flags, map = 0;
+ 	if (ops)
+@@ -248,6 +258,7 @@ int __cpu_disable(void)
+ 	 * and we must not schedule until we're ready to give up the cpu.
+ 	 */
+ 	set_cpu_online(cpu, false);
++	ipi_teardown(cpu);
  
- 	if (unlikely(nr_cpu_ids == 1)) {
- 		/* Only one CPU? let's do a self-IPI... */
--		writel_relaxed(2 << 24 | irq,
-+		writel_relaxed(2 << 24 | d->hwirq,
- 			       gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
- 		return;
- 	}
-@@ -818,7 +809,7 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	dmb(ishst);
+ 	/*
+ 	 * OK - migrate IRQs away from this CPU
+@@ -423,6 +434,8 @@ asmlinkage void secondary_start_kernel(void)
  
- 	/* this always happens on GIC0 */
--	writel_relaxed(map << 16 | irq, gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
-+	writel_relaxed(map << 16 | d->hwirq, gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
+ 	notify_cpu_starting(cpu);
  
- 	gic_unlock_irqrestore(flags);
++	ipi_setup(cpu);
++
+ 	calibrate_delay();
+ 
+ 	smp_store_cpu_info(cpu);
+@@ -628,10 +641,9 @@ asmlinkage void __exception_irq_entry do_IPI(int ipinr, struct pt_regs *regs)
+ 	handle_IPI(ipinr, regs);
  }
-@@ -831,14 +822,28 @@ static int gic_starting_cpu(unsigned int cpu)
  
- static __init void gic_smp_init(void)
+-void handle_IPI(int ipinr, struct pt_regs *regs)
++static void do_handle_IPI(int ipinr)
  {
--	set_smp_cross_call(gic_raise_softirq);
-+	struct irq_fwspec sgi_fwspec = {
-+		.fwnode		= gic_data[0].domain->fwnode,
-+		.param_count	= 1,
-+	};
-+	int base_sgi;
-+
- 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
- 				  "irqchip/arm/gic:starting",
- 				  gic_starting_cpu, NULL);
-+
-+	base_sgi = __irq_domain_alloc_irqs(gic_data[0].domain, -1, 8,
-+					   NUMA_NO_NODE, &sgi_fwspec,
-+					   false, NULL);
-+	if (WARN_ON(base_sgi <= 0))
-+		return;
-+
-+	set_smp_ipi_range(base_sgi, 8);
- }
- #else
- #define gic_smp_init()		do { } while(0)
- #define gic_set_affinity	NULL
-+#define gic_ipi_send_mask	NULL
+ 	unsigned int cpu = smp_processor_id();
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+ 
+ 	if ((unsigned)ipinr < NR_IPI) {
+ 		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
+@@ -644,9 +656,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+ 	case IPI_TIMER:
+-		irq_enter();
+ 		tick_receive_broadcast();
+-		irq_exit();
+ 		break;
  #endif
  
- #ifdef CONFIG_BL_SWITCHER
-@@ -985,15 +990,24 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- {
- 	struct gic_chip_data *gic = d->host_data;
+@@ -655,36 +665,26 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 		break;
  
--	if (hw < 32) {
-+	switch (hw) {
-+	case 0 ... 15:
-+		irq_set_percpu_devid(irq);
-+		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
-+				    handle_percpu_devid_fasteoi_ipi,
-+				    NULL, NULL);
-+		break;
-+	case 16 ... 31:
- 		irq_set_percpu_devid(irq);
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_percpu_devid_irq, NULL, NULL);
--	} else {
-+		break;
-+	default:
- 		irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
- 				    handle_fasteoi_irq, NULL, NULL);
- 		irq_set_probe(irq);
- 		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(irq)));
-+		break;
- 	}
- 	return 0;
+ 	case IPI_CALL_FUNC:
+-		irq_enter();
+ 		generic_smp_call_function_interrupt();
+-		irq_exit();
+ 		break;
+ 
+ 	case IPI_CPU_STOP:
+-		irq_enter();
+ 		ipi_cpu_stop(cpu);
+-		irq_exit();
+ 		break;
+ 
+ #ifdef CONFIG_IRQ_WORK
+ 	case IPI_IRQ_WORK:
+-		irq_enter();
+ 		irq_work_run();
+-		irq_exit();
+ 		break;
+ #endif
+ 
+ 	case IPI_COMPLETION:
+-		irq_enter();
+ 		ipi_complete(cpu);
+-		irq_exit();
+ 		break;
+ 
+ 	case IPI_CPU_BACKTRACE:
+ 		printk_nmi_enter();
+-		irq_enter();
+-		nmi_cpu_backtrace(regs);
+-		irq_exit();
++		nmi_cpu_backtrace(get_irq_regs());
+ 		printk_nmi_exit();
+ 		break;
+ 
+@@ -696,9 +696,76 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 
+ 	if ((unsigned)ipinr < NR_IPI)
+ 		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
++}
++
++/* Legacy version, should go away once all irqchips have been converted */
++void handle_IPI(int ipinr, struct pt_regs *regs)
++{
++	struct pt_regs *old_regs = set_irq_regs(regs);
++
++	irq_enter();
++	do_handle_IPI(ipinr);
++	irq_exit();
++
+ 	set_irq_regs(old_regs);
  }
-@@ -1007,19 +1021,26 @@ static int gic_irq_domain_translate(struct irq_domain *d,
- 				    unsigned long *hwirq,
- 				    unsigned int *type)
- {
-+	if (fwspec->param_count == 1 && fwspec->param[0] < 16) {
-+		*hwirq = fwspec->param[0];
-+		*type = IRQ_TYPE_EDGE_RISING;
-+		return 0;
+ 
++static irqreturn_t ipi_handler(int irq, void *data)
++{
++	do_handle_IPI(irq - ipi_irq_base);
++	return IRQ_HANDLED;
++}
++
++static void ipi_send(const struct cpumask *target, unsigned int ipi)
++{
++	__ipi_send_mask(ipi_desc[ipi], target);
++}
++
++static void ipi_setup(int cpu)
++{
++	if (ipi_irq_base) {
++		int i;
++
++		for (i = 0; i < nr_ipi; i++)
++			enable_percpu_irq(ipi_irq_base + i, 0);
++	}
++}
++
++static void ipi_teardown(int cpu)
++{
++	if (ipi_irq_base) {
++		int i;
++
++		for (i = 0; i < nr_ipi; i++)
++			disable_percpu_irq(ipi_irq_base + i);
++	}
++}
++
++void __init set_smp_ipi_range(int ipi_base, int n)
++{
++	int i;
++
++	WARN_ON(n < MAX_IPI);
++	nr_ipi = min(n, MAX_IPI);
++
++	for (i = 0; i < nr_ipi; i++) {
++		int err;
++
++		err = request_percpu_irq(ipi_base + i, ipi_handler,
++					 "IPI", &irq_stat);
++		WARN_ON(err);
++
++		ipi_desc[i] = irq_to_desc(ipi_base + i);
++		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
 +	}
 +
- 	if (is_of_node(fwspec->fwnode)) {
- 		if (fwspec->param_count < 3)
- 			return -EINVAL;
- 
--		/* Get the interrupt number and add 16 to skip over SGIs */
--		*hwirq = fwspec->param[1] + 16;
--
--		/*
--		 * For SPIs, we need to add 16 more to get the GIC irq
--		 * ID number
--		 */
--		if (!fwspec->param[0])
--			*hwirq += 16;
-+		switch (fwspec->param[0]) {
-+		case 0:			/* SPI */
-+			*hwirq = fwspec->param[1] + 32;
-+			break;
-+		case 1:			/* PPI */
-+			*hwirq = fwspec->param[1] + 16;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
- 
- 		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
- 
-@@ -1088,8 +1109,10 @@ static void gic_init_chip(struct gic_chip_data *gic, struct device *dev,
- 		gic->chip.irq_set_vcpu_affinity = gic_irq_set_vcpu_affinity;
- 	}
- 
--	if (gic == &gic_data[0])
-+	if (gic == &gic_data[0]) {
- 		gic->chip.irq_set_affinity = gic_set_affinity;
-+		gic->chip.ipi_send_mask = gic_ipi_send_mask;
-+	}
- }
- 
- static int gic_init_bases(struct gic_chip_data *gic,
++	ipi_irq_base = ipi_base;
++	set_smp_cross_call(ipi_send);
++
++	/* Setup the boot CPU immediately */
++	ipi_setup(smp_processor_id());
++}
++
+ void smp_send_reschedule(int cpu)
+ {
+ 	smp_cross_call(cpumask_of(cpu), IPI_RESCHEDULE);
 -- 
 2.27.0
 
