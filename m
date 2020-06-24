@@ -2,225 +2,132 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF0102100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:29:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="ONFYh/dH"
+	by mail.kernel.org (Postfix) with ESMTP id 91191214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592962289;
+	bh=G4AXnWU2fiGkIDEdz6OJbeqN7xJRtpQUSd5VhzK8J+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vwbd7TQxFuxwHEJ6jqWF9x4zbT7X47mmz4A51ZEwMiWS0QWeySt9ORdu1Ur/3Vnbk
+	 wuPXsmJf0swgRYogihwN6Rl2J9CLmZtwhfro9rTguMtvd6hk5F3GzSzBNsaf8ujaQN
+	 jb2/AzGH9PscjuH2XP9GoXDAVSOhb0Jk02gG4mlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388471AbgFXB3E (ORCPT
+        id S2388413AbgFXBb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 21:29:04 -0400
-Received: from fieldses.org ([173.255.197.46]:42784 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388326AbgFXB3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 21:29:03 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B6A999238; Tue, 23 Jun 2020 21:29:01 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org B6A999238
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1592962141;
-        bh=iAGgI5588NX5gPvO7FsqFjqFQ8ZS8KJ28FbnQFG3Lhk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ONFYh/dHz3IQBn2Ut8hXriQSVgkVPs2DyZ2GcrwUZ8bI5mA2VBCBCZSne3P8h0AhR
-         ijP3f9TPNMqfSkTeKZ0kzzOgRl5pOotxaNKz37t1SQIAJbvBim34ZsiEbRHEWVVbhQ
-         FjwAB5sJAPcVI5QHAFksF48lXNilQkomrY2ObWRg=
-Date:   Tue, 23 Jun 2020 21:29:01 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Luo Xiaogang <lxgrxd@163.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fix kernel crash when load nfsd in docker
-Message-ID: <20200624012901.GC18460@fieldses.org>
-References: <20200615071211.31326-1-lxgrxd@163.com>
+        Tue, 23 Jun 2020 21:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387921AbgFXBb1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 21:31:27 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8234AC061573;
+        Tue, 23 Jun 2020 18:31:26 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g12so303711pll.10;
+        Tue, 23 Jun 2020 18:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=STvVE6RZ3Y0xoSbwRDvBmVixkdJOr1NShciDYz9YwAM=;
+        b=W0vTKcKu1k4LZL/79tI9ZWaSgDRT8dAnFbEzoztsZnuxsAdCwsWzGStWBp+QyRecCD
+         CUpj6vHksbhJgjnx02F34EzU9VSZkoU+w0V/55gsApx6Jpw5WusaCp9GSfjQGbLUIjmN
+         dhnNMzgXGSuy1Bl5Lsh2JdeS0x9Kc+IttH5obXsz2tQ6BHUdRYOP1aSTYrleoPNbXxHL
+         Vil+Zf21VuwEdfSVf/OirWzjruOs1ePNLO44R4wC6m426c5cTRulwDPOyti+Oh0Q16Eg
+         atT7+QCFMnsJy3yxnvWZ2NOKyqgbq6B3oBd86RRKLsITNob8O+MKM6eY768wVMLumQta
+         /5Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=STvVE6RZ3Y0xoSbwRDvBmVixkdJOr1NShciDYz9YwAM=;
+        b=M+WaptIZeMC0tRcLJHtWdHffPtt6Ob49sJHncmq44fTVTVNQwzqBuUmt/39xEZvma7
+         6VekuBYVXzOciyJjGq09deI+/fVPYwp7bqAYLxMMHRHl1eZBuwOYpIA1olsn5EKZeS7O
+         coQ37EuFUl0mrSljY10V8YUng5QpsYf3EViTD9ynuQZ5RVp3BUuRYzWtUMzl+tIQSrTf
+         Tjmk2MdSIDvuCs5mE78JWtD6UKjjfzMMTq2ZCn+mnEsqpfTrKKsSFScVBIY3MFzMnJ8x
+         88OvxF+5a32yUnrGBAd+EqiXIBQpQLJOjjVRHOzkeswHEh1W1nFAtNPFq6M7Tpn4dHmt
+         W82g==
+X-Gm-Message-State: AOAM530rS3LR/NP54vv8g7FrkL1CugqUSqGKLGuo+JSf36w7VFlzBLe+
+        2uGji0wGmZvoRQ0zS55BKm4=
+X-Google-Smtp-Source: ABdhPJyysnl8A9zV1eAdaECih+/1cO9iPnaZNXWpwZYi4TkGIOLdr794d0QrNa/rQMjmDGDb7OxyBA==
+X-Received: by 2002:a17:902:7208:: with SMTP id ba8mr26976478plb.217.1592962285863;
+        Tue, 23 Jun 2020 18:31:25 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id m20sm19512857pfk.52.2020.06.23.18.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 18:31:24 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 18:31:22 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        David Rientjes <rientjes@google.com>,
+        Arjun Roy <arjunroy@google.com>
+Subject: Re: [PATCH v8 0/4]  introduce memory hinting API for external process
+Message-ID: <20200624013122.GA9502@google.com>
+References: <20200622192900.22757-1-minchan@kernel.org>
+ <20200623090721.5owt4cxjji6isqe3@butterfly.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615071211.31326-1-lxgrxd@163.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200623090721.5owt4cxjji6isqe3@butterfly.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 03:12:11PM +0800, Luo Xiaogang wrote:
-> We load nfsd module in the docker container, kernel crash as following.
+Hi Oleksandr,
+
+On Tue, Jun 23, 2020 at 11:07:21AM +0200, Oleksandr Natalenko wrote:
+> On Mon, Jun 22, 2020 at 12:28:56PM -0700, Minchan Kim wrote:
+> > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+> > application could give hints to kernel what memory range are preferred to be
+> > reclaimed. However, in some platform(e.g., Android), the information
+> > required to make the hinting decision is not known to the app.
+> > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without any app
+> > involvement.
+> > 
+> > To solve the concern, this patch introduces new syscall - process_madvise(2).
+> > Bascially, it's same with madvise(2) syscall but it has some differences.
+> > 
+> > 1. It needs pidfd of target process to provide the hint
+> > 2. It supports only MADV_{COLD|PAGEOUT} at this moment.
+> >    Other hints in madvise will be opened when there are explicit requests from
+> >    community to prevent unexpected bugs we couldn't support.
+> > 3. Only privileged processes can do something for other process's address
+> >    space.
+> > 
+> > For more detail of the new API, please see "mm: introduce external memory hinting API"
+> > description in this patchset.
+> > 
+> > * from v7 -  http://lore.kernel.org/r/20200302193630.68771-1-minchan@kernel.org
+> >   * dropping pid support from new syscall and fold releated patches into syscall patch
+> >   * dropping KSM patch by discussion - Oleksandr, I lost the discussion.
+> >     Please resend the single patch against of the patchset if you resolves the discussion.
+> >     https://lore.kernel.org/linux-api/20200302193630.68771-8-minchan@kernel.org/
 > 
-> The 'current->nsproxy->net_ns->gen->ptr[nfsd_net_id]' is overflow in the
-> nfsd_init_net.
-> 
-> We should use the net_ns which is being init in the nfsd_init_net,
-> not the 'current->nsproxy->net_ns'.
+> What "next" tag this (v8) submission is based on please?
 
-Thanks!  Actually, I think my problem was that net init and exit are
-just the wrong place to be doing this--I moved them to nfsd start/stop
-instead.
-
-And then that exposed the fact that I had an inode leak.
-
-Do the following two patches help?
-
---b.
-
-From 16f954bd5c481596a63271a91963bf260e2f3f46 Mon Sep 17 00:00:00 2001
-From: "J. Bruce Fields" <bfields@redhat.com>
-Date: Tue, 23 Jun 2020 16:00:33 -0400
-Subject: [PATCH 1/2] nfsd4: fix nfsdfs reference count loop
-
-We don't drop the reference on the nfsdfs filesystem with
-mntput(nn->nfsd_mnt) until nfsd_exit_net(), but that won't be called
-until the nfsd module's unloaded, and we can't unload the module as long
-as there's a reference on nfsdfs.  So this prevents module unloading.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- fs/nfsd/nfs4state.c |  8 +++++++-
- fs/nfsd/nfsctl.c    | 22 ++++++++++++----------
- fs/nfsd/nfsd.h      |  3 +++
- 3 files changed, 22 insertions(+), 11 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index bb3d2c32664a..cce2510b2cca 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7912,9 +7912,14 @@ nfs4_state_start_net(struct net *net)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	int ret;
- 
--	ret = nfs4_state_create_net(net);
-+	ret = get_nfsdfs(net);
- 	if (ret)
- 		return ret;
-+	ret = nfs4_state_create_net(net);
-+	if (ret) {
-+		mntput(nn->nfsd_mnt);
-+		return ret;
-+	}
- 	locks_start_grace(net, &nn->nfsd4_manager);
- 	nfsd4_client_tracking_init(net);
- 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
-@@ -7984,6 +7989,7 @@ nfs4_state_shutdown_net(struct net *net)
- 
- 	nfsd4_client_tracking_exit(net);
- 	nfs4_state_destroy_net(net);
-+	mntput(nn->nfsd_mnt);
- }
- 
- void
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index b68e96681522..cf98a81ca1ea 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1424,6 +1424,18 @@ static struct file_system_type nfsd_fs_type = {
- };
- MODULE_ALIAS_FS("nfsd");
- 
-+int get_nfsdfs(struct net *net)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct vfsmount *mnt;
-+
-+	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
-+	if (IS_ERR(mnt))
-+		return PTR_ERR(mnt);
-+	nn->nfsd_mnt = mnt;
-+	return 0;
-+}
-+
- #ifdef CONFIG_PROC_FS
- static int create_proc_exports_entry(void)
- {
-@@ -1451,7 +1463,6 @@ unsigned int nfsd_net_id;
- static __net_init int nfsd_init_net(struct net *net)
- {
- 	int retval;
--	struct vfsmount *mnt;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
- 	retval = nfsd_export_init(net);
-@@ -1478,16 +1489,8 @@ static __net_init int nfsd_init_net(struct net *net)
- 	init_waitqueue_head(&nn->ntf_wq);
- 	seqlock_init(&nn->boot_lock);
- 
--	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
--	if (IS_ERR(mnt)) {
--		retval = PTR_ERR(mnt);
--		goto out_mount_err;
--	}
--	nn->nfsd_mnt = mnt;
- 	return 0;
- 
--out_mount_err:
--	nfsd_reply_cache_shutdown(nn);
- out_drc_error:
- 	nfsd_idmap_shutdown(net);
- out_idmap_error:
-@@ -1500,7 +1503,6 @@ static __net_exit void nfsd_exit_net(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
--	mntput(nn->nfsd_mnt);
- 	nfsd_reply_cache_shutdown(nn);
- 	nfsd_idmap_shutdown(net);
- 	nfsd_export_shutdown(net);
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 36cdd81b6688..57c832d1b30f 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -90,6 +90,8 @@ void		nfsd_destroy(struct net *net);
- 
- bool		i_am_nfsd(void);
- 
-+int get_nfsdfs(struct net *);
-+
- struct nfsdfs_client {
- 	struct kref cl_ref;
- 	void (*cl_release)(struct kref *kref);
-@@ -100,6 +102,7 @@ struct dentry *nfsd_client_mkdir(struct nfsd_net *nn,
- 		struct nfsdfs_client *ncl, u32 id, const struct tree_descr *);
- void nfsd_client_rmdir(struct dentry *dentry);
- 
-+
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
- #ifdef CONFIG_NFSD_V2_ACL
- extern const struct svc_version nfsd_acl_version2;
--- 
-2.26.2
-
-
-From 51de3b460b39e862f7dcfd4d600e8de0afe73e29 Mon Sep 17 00:00:00 2001
-From: "J. Bruce Fields" <bfields@redhat.com>
-Date: Tue, 23 Jun 2020 21:01:19 -0400
-Subject: [PATCH 2/2] nfsd: fix nfsdfs inode reference count leak
-
-I don't understand this code well, but  I'm seeing a warning about a
-still-referenced inode on unmount, and every other similar filesystem
-does a dput() here.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- fs/nfsd/nfsctl.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index cf98a81ca1ea..cd05732f8eaa 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1335,6 +1335,7 @@ void nfsd_client_rmdir(struct dentry *dentry)
- 	WARN_ON_ONCE(ret);
- 	fsnotify_rmdir(dir, dentry);
- 	d_delete(dentry);
-+	dput(dentry);
- 	inode_unlock(dir);
- }
- 
--- 
-2.26.2
-
+It's against on v5.8-rc1-mmots-2020-06-20-21-44 from mmotm - https://github.com/hnaz/linux-mm.git
