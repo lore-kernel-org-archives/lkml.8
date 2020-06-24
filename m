@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34135C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C447C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1690520823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD8620823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593029577;
-	bh=F1qOCDwwNfeWgzfsj20Di4HSZQFe0hO7B/XOMKoeBHE=;
+	s=default; t=1593029579;
+	bh=qFTDYEvpOJ3RBMm1xfDoDflHzs1ac1r8vdJ2u1YMMDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9NdyIbdoj+OtM6ArUDfBqGSkpkAjNpoofMAtWbx8ihQXfR3MRGoCMP4KVd22vKSa
-	 I168j2SNvlKiYef1EdL211EQiY9cAGIbnBXvrhJqBn+Pfi0VC5GgFP6H1oF4YR8gqM
-	 6qF0WVrI6HghGzRQkhyHhzjbibR0PJi8Nno8NOEg=
+	b=XI//8X2oW4Xx/hedHOdh3pjBvy5BnPzCKNwLv/A0six9sNuhnwhdMot83Ipuorvf3
+	 AZ4Dq7mSqQK+nX3NXrjq+PON7WeWVMLg1Vuyi6HAlNSoZaBSJFDIlCygYOcx5zcpF1
+	 ckADDR/jhGyrntwefcPUGLwb58d+xyJWB8tcZFU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406454AbgFXUMz (ORCPT
+        id S2406462AbgFXUM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 16:12:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406400AbgFXUMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2406396AbgFXUMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 16:12:32 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAC6721789;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3855C2184D;
         Wed, 24 Jun 2020 20:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1593029551;
-        bh=F1qOCDwwNfeWgzfsj20Di4HSZQFe0hO7B/XOMKoeBHE=;
+        bh=qFTDYEvpOJ3RBMm1xfDoDflHzs1ac1r8vdJ2u1YMMDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zkbK8ZxOIXDbds8E4RML/YUz126+1VNn/MWmc8ASW+DE6tSRn7nJv8xJaEx9lMP9H
-         tUdc72fsClxUrH2GkWXo2yZEnZh1AybkeqYvMlPLK+0Bctyt3/zpNnYZlST9ZIPfVW
-         +fEk3EvkKKetQDTq5/+g9G7gOeBoCady9WIuPHu4=
+        b=XV+frg8UIFx3EB9Gy8xujAX6JA0Z++nFYwHZNI3HD5qyXSJz2DUZFlm++CNN2w65s
+         0Me/b/D0WpmjZc0Qkbwv2XlkeHbf4Vzcc26el8YLBerGpqWEWTUVaS8tHEZpi54zoE
+         S9hsXin/LUc6B9vfygME6fRj1mHG50fF2ktvvOz0=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 17/17] lib/test_vmalloc.c: Add test cases for kvfree_rcu()
-Date:   Wed, 24 Jun 2020 13:12:26 -0700
-Message-Id: <20200624201226.21197-17-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 15/17] rcu: Support reclaim for head-less object
+Date:   Wed, 24 Jun 2020 13:12:24 -0700
+Message-Id: <20200624201226.21197-15-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200624201200.GA28901@paulmck-ThinkPad-P72>
 References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
@@ -62,155 +62,158 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-Introduce four new test cases for testing the kvfree_rcu()
-interface. Two of them belong to single argument functionality
-and another two for 2-argument functionality.
+Update the kvfree_call_rcu() function with head-less support.
+This allows RCU to reclaim objects without an embedded rcu_head.
 
-The aim is to stress and check how kvfree_rcu() behaves under
-different load and memory conditions and analyze its performance
-throughput.
+tree-RCU:
+We introduce two chains of arrays to store SLAB-backed and vmalloc
+pointers, each.  Storage in either of these arrays does not require
+embedding an rcu_head within the object.
+
+Maintaining the arrays may become impossible due to high memory
+pressure. For such cases there is an emergency path. Objects with
+rcu_head inside are just queued on a backup rcu_head list. Later on
+that list is drained. As for the head-less variant, as the current
+context can sleep, the following emergency measures are applied:
+   a) Synchronously wait until a grace period has elapsed.
+   b) Call kvfree().
+
+tiny-RCU:
+For double argument calls, there are no new changes in behavior. For
+single argument call, kvfree() is directly inlined on the current
+stack after a synchronize_rcu() call. Note that for tiny-RCU, any
+call to synchronize_rcu() is actually a quiescent state, therefore
+it does nothing.
 
 Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- lib/test_vmalloc.c | 103 ++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 95 insertions(+), 8 deletions(-)
+ include/linux/rcutiny.h | 18 +++++++++++++++++-
+ kernel/rcu/tree.c       | 45 +++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 60 insertions(+), 3 deletions(-)
 
-diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-index ddc9685..5cf2fe9 100644
---- a/lib/test_vmalloc.c
-+++ b/lib/test_vmalloc.c
-@@ -15,6 +15,8 @@
- #include <linux/delay.h>
- #include <linux/rwsem.h>
- #include <linux/mm.h>
-+#include <linux/rcupdate.h>
-+#include <linux/slab.h>
- 
- #define __param(type, name, init, msg)		\
- 	static type name = init;				\
-@@ -35,14 +37,18 @@ __param(int, test_loop_count, 1000000,
- 
- __param(int, run_test_mask, INT_MAX,
- 	"Set tests specified in the mask.\n\n"
--		"\t\tid: 1,   name: fix_size_alloc_test\n"
--		"\t\tid: 2,   name: full_fit_alloc_test\n"
--		"\t\tid: 4,   name: long_busy_list_alloc_test\n"
--		"\t\tid: 8,   name: random_size_alloc_test\n"
--		"\t\tid: 16,  name: fix_align_alloc_test\n"
--		"\t\tid: 32,  name: random_size_align_alloc_test\n"
--		"\t\tid: 64,  name: align_shift_alloc_test\n"
--		"\t\tid: 128, name: pcpu_alloc_test\n"
-+		"\t\tid: 1,    name: fix_size_alloc_test\n"
-+		"\t\tid: 2,    name: full_fit_alloc_test\n"
-+		"\t\tid: 4,    name: long_busy_list_alloc_test\n"
-+		"\t\tid: 8,    name: random_size_alloc_test\n"
-+		"\t\tid: 16,   name: fix_align_alloc_test\n"
-+		"\t\tid: 32,   name: random_size_align_alloc_test\n"
-+		"\t\tid: 64,   name: align_shift_alloc_test\n"
-+		"\t\tid: 128,  name: pcpu_alloc_test\n"
-+		"\t\tid: 256,  name: kvfree_rcu_1_arg_vmalloc_test\n"
-+		"\t\tid: 512,  name: kvfree_rcu_2_arg_vmalloc_test\n"
-+		"\t\tid: 1024, name: kvfree_rcu_1_arg_slab_test\n"
-+		"\t\tid: 2048, name: kvfree_rcu_2_arg_slab_test\n"
- 		/* Add a new test case description here. */
- );
- 
-@@ -316,6 +322,83 @@ pcpu_alloc_test(void)
- 	return rv;
+diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+index fb2eb39..5cc9637 100644
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -34,9 +34,25 @@ static inline void synchronize_rcu_expedited(void)
+ 	synchronize_rcu();
  }
  
-+struct test_kvfree_rcu {
-+	struct rcu_head rcu;
-+	unsigned char array[20];
-+};
++/*
++ * Add one more declaration of kvfree() here. It is
++ * not so straight forward to just include <linux/mm.h>
++ * where it is defined due to getting many compile
++ * errors caused by that include.
++ */
++extern void kvfree(const void *addr);
 +
-+static int
-+kvfree_rcu_1_arg_vmalloc_test(void)
-+{
-+	struct test_kvfree_rcu *p;
-+	int i;
-+
-+	for (i = 0; i < test_loop_count; i++) {
-+		p = vmalloc(1 * PAGE_SIZE);
-+		if (!p)
-+			return -1;
-+
-+		p->array[0] = 'a';
-+		kvfree_rcu(p);
+ static inline void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ {
+-	call_rcu(head, func);
++	if (head) {
++		call_rcu(head, func);
++		return;
 +	}
 +
-+	return 0;
-+}
-+
-+static int
-+kvfree_rcu_2_arg_vmalloc_test(void)
-+{
-+	struct test_kvfree_rcu *p;
-+	int i;
-+
-+	for (i = 0; i < test_loop_count; i++) {
-+		p = vmalloc(1 * PAGE_SIZE);
-+		if (!p)
-+			return -1;
-+
-+		p->array[0] = 'a';
-+		kvfree_rcu(p, rcu);
++	// kvfree_rcu(one_arg) call.
++	might_sleep();
++	synchronize_rcu();
++	kvfree((void *) func);
+ }
+ 
+ void rcu_qs(void);
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 07fb5a36..38fb3ce 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3296,6 +3296,13 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+ 			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+ 				return false;
+ 
++			/*
++			 * NOTE: For one argument of kvfree_rcu() we can
++			 * drop the lock and get the page in sleepable
++			 * context. That would allow to maintain an array
++			 * for the CONFIG_PREEMPT_RT as well if no cached
++			 * pages are available.
++			 */
+ 			bnode = (struct kvfree_rcu_bulk_data *)
+ 				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+ 		}
+@@ -3335,16 +3342,33 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ {
+ 	unsigned long flags;
+ 	struct kfree_rcu_cpu *krcp;
++	bool success;
+ 	void *ptr;
+ 
++	if (head) {
++		ptr = (void *) head - (unsigned long) func;
++	} else {
++		/*
++		 * Please note there is a limitation for the head-less
++		 * variant, that is why there is a clear rule for such
++		 * objects: it can be used from might_sleep() context
++		 * only. For other places please embed an rcu_head to
++		 * your data.
++		 */
++		might_sleep();
++		ptr = (unsigned long *) func;
 +	}
 +
-+	return 0;
-+}
+ 	krcp = krc_this_cpu_lock(&flags);
+-	ptr = (void *)head - (unsigned long)func;
+ 
+ 	// Queue the object but don't yet schedule the batch.
+ 	if (debug_rcu_head_queue(ptr)) {
+ 		// Probable double kfree_rcu(), just leak.
+ 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+ 			  __func__, head);
 +
-+static int
-+kvfree_rcu_1_arg_slab_test(void)
-+{
-+	struct test_kvfree_rcu *p;
-+	int i;
++		// Mark as success and leave.
++		success = true;
+ 		goto unlock_return;
+ 	}
+ 
+@@ -3352,10 +3376,16 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	 * Under high memory pressure GFP_NOWAIT can fail,
+ 	 * in that case the emergency path is maintained.
+ 	 */
+-	if (unlikely(!kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr))) {
++	success = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr);
++	if (!success) {
++		if (head == NULL)
++			// Inline if kvfree_rcu(one_arg) call.
++			goto unlock_return;
 +
-+	for (i = 0; i < test_loop_count; i++) {
-+		p = kmalloc(sizeof(*p), GFP_KERNEL);
-+		if (!p)
-+			return -1;
+ 		head->func = func;
+ 		head->next = krcp->head;
+ 		krcp->head = head;
++		success = true;
+ 	}
+ 
+ 	WRITE_ONCE(krcp->count, krcp->count + 1);
+@@ -3369,6 +3399,17 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 
+ unlock_return:
+ 	krc_this_cpu_unlock(krcp, flags);
 +
-+		p->array[0] = 'a';
-+		kvfree_rcu(p);
++	/*
++	 * Inline kvfree() after synchronize_rcu(). We can do
++	 * it from might_sleep() context only, so the current
++	 * CPU can pass the QS state.
++	 */
++	if (!success) {
++		debug_rcu_head_unqueue((struct rcu_head *) ptr);
++		synchronize_rcu();
++		kvfree(ptr);
 +	}
-+
-+	return 0;
-+}
-+
-+static int
-+kvfree_rcu_2_arg_slab_test(void)
-+{
-+	struct test_kvfree_rcu *p;
-+	int i;
-+
-+	for (i = 0; i < test_loop_count; i++) {
-+		p = kmalloc(sizeof(*p), GFP_KERNEL);
-+		if (!p)
-+			return -1;
-+
-+		p->array[0] = 'a';
-+		kvfree_rcu(p, rcu);
-+	}
-+
-+	return 0;
-+}
-+
- struct test_case_desc {
- 	const char *test_name;
- 	int (*test_func)(void);
-@@ -330,6 +413,10 @@ static struct test_case_desc test_case_array[] = {
- 	{ "random_size_align_alloc_test", random_size_align_alloc_test },
- 	{ "align_shift_alloc_test", align_shift_alloc_test },
- 	{ "pcpu_alloc_test", pcpu_alloc_test },
-+	{ "kvfree_rcu_1_arg_vmalloc_test", kvfree_rcu_1_arg_vmalloc_test },
-+	{ "kvfree_rcu_2_arg_vmalloc_test", kvfree_rcu_2_arg_vmalloc_test },
-+	{ "kvfree_rcu_1_arg_slab_test", kvfree_rcu_1_arg_slab_test },
-+	{ "kvfree_rcu_2_arg_slab_test", kvfree_rcu_2_arg_slab_test },
- 	/* Add a new test case here. */
- };
+ }
+ EXPORT_SYMBOL_GPL(kvfree_call_rcu);
  
 -- 
 2.9.5
