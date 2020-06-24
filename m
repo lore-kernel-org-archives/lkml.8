@@ -2,294 +2,151 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2568EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028FC2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B743B20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:01:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="itKnEQtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405261AbgFXRAj (ORCPT
+        id S2405293AbgFXRA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:00:39 -0400
-Received: from mga06.intel.com ([134.134.136.31]:38811 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404601AbgFXRAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:00:39 -0400
-IronPort-SDR: jau7bMI0x9LmRfeuAVGGpp4lgR2FkU0s16cD5HT4qwOkRzNcB/nYd9T1war9h4JhMU+SXggE3r
- HWDjYQbWdXGg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="206067297"
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="206067297"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 10:00:38 -0700
-IronPort-SDR: hfE7beMiuYc0R2y52pQnswrkmJjhAUSyrYdNZ+HuxEQJBoHHhQrC+wd/AXCvNsHlMLT3zzUxs0
- t2xV5srLbPUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="279535216"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jun 2020 10:00:37 -0700
-Date:   Wed, 24 Jun 2020 10:07:09 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 4/5] iommu/uapi: Handle data and argsz filled by
- users
-Message-ID: <20200624100709.1277f912@jacob-builder>
-In-Reply-To: <84491857-4a7e-e669-3cf5-615b010930e4@linux.intel.com>
-References: <1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1592931837-58223-5-git-send-email-jacob.jun.pan@linux.intel.com>
-        <84491857-4a7e-e669-3cf5-615b010930e4@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 24 Jun 2020 13:00:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404959AbgFXRA7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:00:59 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C32C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:00:58 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a6so4920575wmm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:00:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zzdtk8DulCgW8E9yPjMJMwgX0/d4dwgCrXDFpHfsYHM=;
+        b=itKnEQtf9w4962uaXTIWAdJr51Crw/AhozvP8Ky1wNRydCisRxtsnxKmgNzxtX974H
+         hUq0i6et9XerYTrh4ofqxE+5zUsT0ud4MIS9FkbqrX/W87elqwn+ave7p1oJ2VaH3DcF
+         w7Ar69NRMLxYraX5A7skd+Ew6q0r+97kjgOvs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zzdtk8DulCgW8E9yPjMJMwgX0/d4dwgCrXDFpHfsYHM=;
+        b=hUcNy4YIefE4BoGyXxFf0oM4vpZmldk+fGrm+JCeKNgYkU5xBlOkHWx6R65gLhhOYb
+         zErNUWRu8ceS85i2WyStHkTRhkyjFjDDeguC0lMbP382TZp8b2PVzcQD/Taq4rEQt4R2
+         YNnE0xUVAN/yVVdZoHDTKfiex75aoNXjFFDbR5mA1P0YF8gdyr05rbRh4EKaXbJFjl4c
+         AIAqxgRaYNMFxoZAhOIkuS1JEB7MDgicX1v+gtJAXTYHMadAT0Tp7xybkxNi84ZUm8tJ
+         fXjc/4nr8xKOoln4i3qmxmqx3VLSec2z3PUJ3xTTeSN47sq9n74GAE/oVWIEZSB5K+xm
+         NuNg==
+X-Gm-Message-State: AOAM533KxtFba8nIFm6zFSHpo0qqzkY5HrRm4pLGRE3pB9PMN6kt+1y5
+        /nFsn5bmoB8aVY8gKhE0UzL4EfRwkzSYTqqKkFONiHS1OLw=
+X-Google-Smtp-Source: ABdhPJx/+lRT2+hBd9KUPGRmFQSii8Z7C7Y2ImR7URuMi/+pppmPVDaua1f+kOHNlj3EjiwNboNV9qchU5FrvFlCTPc=
+X-Received: by 2002:a1c:238d:: with SMTP id j135mr1374992wmj.46.1593018057039;
+ Wed, 24 Jun 2020 10:00:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200619164132.1648-1-ignat@cloudflare.com> <20200619164132.1648-2-ignat@cloudflare.com>
+ <20200624050452.GB844@sol.localdomain> <CALrw=nFduv_X83V1Dfz+bt4bZqT19OSi3q5f7umhty1-DQ2SPg@mail.gmail.com>
+ <20200624162407.GB200774@gmail.com>
+In-Reply-To: <20200624162407.GB200774@gmail.com>
+From:   Ignat Korchagin <ignat@cloudflare.com>
+Date:   Wed, 24 Jun 2020 18:00:45 +0100
+Message-ID: <CALrw=nG-aduc2F0q=d1LXRG_mxJUSrE3xQHQDRQ_UbAx7TQeiQ@mail.gmail.com>
+Subject: Re: [dm-crypt] [RFC PATCH 1/1] Add DM_CRYPT_FORCE_INLINE flag to
+ dm-crypt target
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     agk@redhat.com, Mike Snitzer <snitzer@redhat.com>,
+        dm-devel@redhat.com, dm-crypt@saout.de,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 14:54:49 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Wed, Jun 24, 2020 at 5:24 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Wed, Jun 24, 2020 at 09:24:07AM +0100, Ignat Korchagin wrote:
+> > On Wed, Jun 24, 2020 at 6:04 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > >
+> > > On Fri, Jun 19, 2020 at 05:41:32PM +0100, Ignat Korchagin wrote:
+> > > > Sometimes extra thread offloading imposed by dm-crypt hurts IO latency. This is
+> > > > especially visible on busy systems with many processes/threads. Moreover, most
+> > > > Crypto API implementaions are async, that is they offload crypto operations on
+> > > > their own, so this dm-crypt offloading is excessive.
+> > >
+> > > This really should say "some Crypto API implementations are async" instead of
+> > > "most Crypto API implementations are async".
+> >
+> > The most accurate would probably be: most hardware-accelerated Crypto
+> > API implementations are async
+> >
+> > > Notably, the AES-NI implementation of AES-XTS is synchronous if you call it in a
+> > > context where SIMD instructions are usable.  It's only asynchronous when SIMD is
+> > > not usable.  (This seems to have been missed in your blog post.)
+> >
+> > No, it was not. This is exactly why we made xts-proxy Crypto API
+> > module as a second patch. But it seems now it does not make a big
+> > difference if a used Crypto API implementation is synchronous as well
+> > (based on some benchmarks outlined in the cover letter to this patch).
+> > I think the v2 of this patch will not require a synchronous Crypto
+> > API. This is probably a right thing to do, as the "inline" flag should
+> > control the way how dm-crypt itself handles requests, not how Crypto
+> > API handles requests. If a user wants to ensure a particular
+> > synchronous Crypto API implementation, they can already reconfigure
+> > dm-crypt and specify the implementation with a "capi:" prefix in the
+> > the dm table description.
+>
+> I think you're missing the point.  Although xts-aes-aesni has the
+> CRYPTO_ALG_ASYNC bit set, the actual implementation processes the request
+> synchronously if SIMD instructions are currently usable.  That's always the case
+> in dm-crypt, as far as I can tell.  This algorithm has the ASYNC flag only
+> because it's not synchronous when called in hardIRQ context.
+>
+> That's why your "xts-proxy" doesn't make a difference, and why it's misleading
+> to suggest that the crypto API is doing its own queueing when you're primarily
+> talking about xts-aes-aesni.  The crypto API definitely can do its own queueing,
+> mainly with hardware drivers.  But it doesn't in this common and relevant case.
 
-> Hi Jacob,
-> 
-> On 2020/6/24 1:03, Jacob Pan wrote:
-> > IOMMU UAPI data has a user filled argsz field which indicates the
-> > data length comes with the API call. User data is not trusted,
-> > argsz must be validated based on the current kernel data size,
-> > mandatory data size, and feature flags.
-> > 
-> > User data may also be extended, results in possible argsz increase.
-> > Backward compatibility is ensured based on size and flags checking.
-> > Details are documented in Documentation/userspace-api/iommu.rst
-> > 
-> > This patch adds sanity checks in both IOMMU layer and vendor code,
-> > where VT-d is the only user for now.
-> > 
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >   drivers/iommu/intel/svm.c |  3 ++
-> >   drivers/iommu/iommu.c     | 96
-> > ++++++++++++++++++++++++++++++++++++++++++++---
-> > include/linux/iommu.h     |  7 ++-- 3 files changed, 98
-> > insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-> > index 713b3a218483..237db56878c0 100644
-> > --- a/drivers/iommu/intel/svm.c
-> > +++ b/drivers/iommu/intel/svm.c
-> > @@ -244,6 +244,9 @@ int intel_svm_bind_gpasid(struct iommu_domain
-> > *domain, struct device *dev, data->format !=
-> > IOMMU_PASID_FORMAT_INTEL_VTD) return -EINVAL;
-> >   
-> > +	if (data->argsz != offsetofend(struct
-> > iommu_gpasid_bind_data, vendor.vtd))
-> > +		return -EINVAL;  
-> 
-> Need to do size check in intel_iommu_sva_invalidate() as well?
-> 
-No need. The difference is that there is no
-vendor specific union for intel_iommu_sva_invalidate().
+I think we're talking about the same things but from different points
+of view. I would like to clarify that the whole post and this change
+does not have the intention to focus on aesni (or any x86-specific
+crypto optimizations). In fact it is quite the opposite: we want to
+optimize the generic dm-crypt regardless of which crypto is used
+(that's why I just used a NULL cipher in the cover letter). We also
+have some arm64 machines [1] and I bet they would benefit here as
+well. The important point my post tries to make is that the original
+workqueue offloading in dm-crypt was added because the Crypto API was
+synchronous back in the day and, exactly as you say, you may not be
+able to use some hw-accelerated crypto in hard IRQ context as well as
+doing non-hw crypto in hard IRQ context is a bad idea. Now, most
+Crypto API are smart enough to figure out on their own if they should
+process the request inline or offload it to a workqueue, so the
+workarounds in the dm-crypt itself most likely are not needed. Though,
+the generic Crypto API "cipher walk" function does refuse to "walk"
+the buffers in hard IRQ context, so the "tasklet" functionality is
+still required.
 
-Generic flags are used to process invalidation data inside
-intel_iommu_sva_invalidate().
-> > +
-> >   	if (!dev_is_pci(dev))
-> >   		return -ENOTSUPP;
-> >   
-> > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> > index d43120eb1dc5..4a025c429b41 100644
-> > --- a/drivers/iommu/iommu.c
-> > +++ b/drivers/iommu/iommu.c
-> > @@ -1951,22 +1951,108 @@ int iommu_attach_device(struct
-> > iommu_domain *domain, struct device *dev)
-> > EXPORT_SYMBOL_GPL(iommu_attach_device); 
-> >   int iommu_cache_invalidate(struct iommu_domain *domain, struct
-> > device *dev,
-> > -			   struct iommu_cache_invalidate_info
-> > *inv_info)
-> > +			void __user *uinfo)  
-> 
-> Nit: keep it aligned.
-> 
-> >   {
-> > +	struct iommu_cache_invalidate_info inv_info;
-> > +	unsigned long minsz, maxsz;
-> > +
-> >   	if (unlikely(!domain->ops->cache_invalidate))
-> >   		return -ENODEV;
-> >   
-> > -	return domain->ops->cache_invalidate(domain, dev,
-> > inv_info);
-> > +	/* Current kernel data size is the max to be copied from
-> > user */
-> > +	maxsz = sizeof(struct iommu_cache_invalidate_info);
-> > +	memset((void *)&inv_info, 0, maxsz);
-> > +
-> > +	/*
-> > +	 * No new spaces can be added before the variable sized
-> > union, the
-> > +	 * minimum size is the offset to the union.
-> > +	 */
-> > +	minsz = offsetof(struct iommu_cache_invalidate_info,
-> > granu); +
-> > +	/* Copy minsz from user to get flags and argsz */
-> > +	if (copy_from_user(&inv_info, uinfo, minsz))
-> > +		return -EFAULT;
-> > +
-> > +	/* Fields before variable size union is mandatory */
-> > +	if (inv_info.argsz < minsz)
-> > +		return -EINVAL;
-> > +	/*
-> > +	 * User might be using a newer UAPI header, we shall let
-> > IOMMU vendor
-> > +	 * driver decide on what size it needs. Since the UAPI
-> > data extension
-> > +	 * can be vendor specific, larger argsz could be the
-> > result of extension
-> > +	 * for one vendor but it should not affect another vendor.
-> > +	 */
-> > +	/*
-> > +	 * User might be using a newer UAPI header which has a
-> > larger data
-> > +	 * size, we shall support the existing flags within the
-> > current
-> > +	 * size.
-> > +	 */
-> > +	if (inv_info.argsz > maxsz)
-> > +		inv_info.argsz = maxsz;
-> > +
-> > +	/* Checking the exact argsz based on generic flags */
-> > +	if (inv_info.granularity == IOMMU_INV_GRANU_ADDR &&
-> > +		inv_info.argsz != offsetofend(struct
-> > iommu_cache_invalidate_info,
-> > +					granu.addr_info))
-> > +		return -EINVAL;
-> > +
-> > +	if (inv_info.granularity == IOMMU_INV_GRANU_PASID &&
-> > +		inv_info.argsz != offsetofend(struct
-> > iommu_cache_invalidate_info,
-> > +					granu.pasid_info))
-> > +		return -EINVAL;
-> > +
-> > +	/* Copy the remaining user data _after_ minsz */
-> > +	if (copy_from_user((void *)&inv_info + minsz, uinfo +
-> > minsz,
-> > +				inv_info.argsz - minsz))
-> > +		return -EFAULT;
-> > +
-> > +	return domain->ops->cache_invalidate(domain, dev,
-> > &inv_info); }
-> >   EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
-> >   
-> > -int iommu_sva_bind_gpasid(struct iommu_domain *domain,
-> > -			   struct device *dev, struct
-> > iommu_gpasid_bind_data *data) +int iommu_sva_bind_gpasid(struct
-> > iommu_domain *domain, struct device *dev,
-> > +						void __user *udata)
-> >   {
-> > +
-> > +	struct iommu_gpasid_bind_data data;
-> > +	unsigned long minsz, maxsz;
-> > +
-> >   	if (unlikely(!domain->ops->sva_bind_gpasid))
-> >   		return -ENODEV;
-> >   
-> > -	return domain->ops->sva_bind_gpasid(domain, dev, data);
-> > +	/* Current kernel data size is the max to be copied from
-> > user */
-> > +	maxsz = sizeof(struct iommu_gpasid_bind_data);
-> > +	memset((void *)&data, 0, maxsz);
-> > +
-> > +	/*
-> > +	 * No new spaces can be added before the variable sized
-> > union, the
-> > +	 * minimum size is the offset to the union.
-> > +	 */
-> > +	minsz = offsetof(struct iommu_gpasid_bind_data, vendor);
-> > +
-> > +	/* Copy minsz from user to get flags and argsz */
-> > +	if (copy_from_user(&data, udata, minsz))
-> > +		return -EFAULT;
-> > +
-> > +	/* Fields before variable size union is mandatory */
-> > +	if (data.argsz < minsz)
-> > +		return -EINVAL;
-> > +	/*
-> > +	 * User might be using a newer UAPI header, we shall let
-> > IOMMU vendor
-> > +	 * driver decide on what size it needs. Since the guest
-> > PASID bind data
-> > +	 * can be vendor specific, larger argsz could be the
-> > result of extension
-> > +	 * for one vendor but it should not affect another vendor.
-> > +	 */
-> > +	if (data.argsz > maxsz)
-> > +		data.argsz = maxsz;
-> > +
-> > +	/* Copy the remaining user data _after_ minsz */
-> > +	if (copy_from_user((void *)&data + minsz, udata + minsz,
-> > +				data.argsz - minsz))
-> > +		return -EFAULT;
-> > +
-> > +
-> > +	return domain->ops->sva_bind_gpasid(domain, dev, &data);
-> >   }
-> >   EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
-> >   
-> > diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> > index 5f0b7859d2eb..a688fea42ae5 100644
-> > --- a/include/linux/iommu.h
-> > +++ b/include/linux/iommu.h
-> > @@ -432,9 +432,10 @@ extern void iommu_detach_device(struct
-> > iommu_domain *domain, struct device *dev);
-> >   extern int iommu_cache_invalidate(struct iommu_domain *domain,
-> >   				  struct device *dev,
-> > -				  struct
-> > iommu_cache_invalidate_info *inv_info);
-> > +				  void __user *uinfo);
-> > +
-> >   extern int iommu_sva_bind_gpasid(struct iommu_domain *domain,
-> > -		struct device *dev, struct iommu_gpasid_bind_data
-> > *data);
-> > +				struct device *dev, void __user
-> > *udata); extern int iommu_sva_unbind_gpasid(struct iommu_domain
-> > *domain, struct device *dev, ioasid_t pasid);
-> >   extern struct iommu_domain *iommu_get_domain_for_dev(struct
-> > device *dev); @@ -1062,7 +1063,7 @@ iommu_cache_invalidate(struct
-> > iommu_domain *domain, return -ENODEV;
-> >   }
-> >   static inline int iommu_sva_bind_gpasid(struct iommu_domain
-> > *domain,
-> > -				struct device *dev, struct
-> > iommu_gpasid_bind_data *data)
-> > +				struct device *dev, void __user
-> > *udata) {
-> >   	return -ENODEV;
-> >   }
-> >   
-> 
-> Best regards,
-> baolu
+But from the dm-crypt perspective - it should not take into account if
+a particular xts-aes-aesni implementation is MOSTLY synchronous -
+those are details of the implementation of this particular cipher
+dm-crypt has no visibility into. So it would be right to say in my
+opinion if the cipher has the CRYPTO_ALG_ASYNC flag set - it can
+offload the crypto request to a workqueue at any time. How often does
+it do it - that's another story and probably should be reviewed
+elsewhere, if it does it too often.
 
-[Jacob Pan]
+Ignat
+
+[1]: https://blog.cloudflare.com/arm-takes-wing/
+
+> - Eric
