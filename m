@@ -2,209 +2,97 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B116C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275CB20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:05:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MgAD5Kdk"
+	by mail.kernel.org (Postfix) with ESMTP id 1837020768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388763AbgFXWFk (ORCPT
+        id S2389016AbgFXWF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 18:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388383AbgFXWFj (ORCPT
+        Wed, 24 Jun 2020 18:05:57 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59471 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388778AbgFXWF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 18:05:39 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CAB7C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:05:39 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id u8so1808469pje.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:05:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xltSa+pOLgf6vSXNCg3Iy8gwRMudEIRX75C87X2gOqg=;
-        b=MgAD5KdkoqXJfDMbYByeG9yy1WHD48fSG3E81h/9u2g6EmmOWXUynVOutBJ7t4vwAB
-         psHe+EScWfsNCT5NBNrD4GqWZP9tUl+Kpp9FOICNYptFXA/r3FSM00oRybctU7BcYLkc
-         xYuC/5NF2tPShhkqyHcGrMMH1bG1eOdc5yVDaWWtA6Pacgr2HqQK7HSqkFcx8JuPz7+l
-         Bh6GmKIzyu2FWzCTSTFxVBAp3kMrEdSubXvgyg8U9SuaeGoSsA+M/E/Cs06190t4Npt5
-         nJfTobePwPdZokQYEfx1V+EhA02ju497XZgaKKA3UcFgUsazmRzB5B+R1GtnDyuhmE5I
-         0efw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xltSa+pOLgf6vSXNCg3Iy8gwRMudEIRX75C87X2gOqg=;
-        b=sekJd05k2YkRATjxi/H0wA2zXj2YdQNb1G/f2A4HD3gKqYZhMZDBH5KCZCdP4zQGae
-         QV6QdFN8eqtPSnj8OfphrYQqHFWAyyKYiTBqYycEIsNG50g6BJ4ixCwW+lAxpbAIYFxa
-         Xot9jLg/zOgvO8CrMADyWln5hTp2tzHU+3urdPfoCYrjcmFF5tjz1hTfBcyY17vXLj9B
-         mB/VITgOKELqa+zDux7G2F0cSHwZy+M8OtTS7fQUEVAgiSeM1S5estndawIoymJbKe4e
-         qis7WDA5g8dVkI9CfiBJ/mj5vQTppNP0/yr0dZYMxADjjZFI7SXmkmnjKmkB+bcyM6LS
-         Qr+A==
-X-Gm-Message-State: AOAM530VP3cmgXoVdBQ2gfWYRY4wLNUXaQxI5j1OmtmcjwwrNfXXL9A7
-        ApU8mX5fQwena1TvhVwxXyMU29II+T5xZsuKoWbJTQ==
-X-Google-Smtp-Source: ABdhPJyHAGRnDa0sY6/O0q6u9SsVNEVG0+Kq/qe9woI291mBi0WzcIUCyrpkoCKrtdGX8Zo26zOr7JzSk6uu8KVpUDY=
-X-Received: by 2002:a17:902:ab8d:: with SMTP id f13mr19785027plr.119.1593036338270;
- Wed, 24 Jun 2020 15:05:38 -0700 (PDT)
+        Wed, 24 Jun 2020 18:05:56 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U0d59pt_1593036352;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0d59pt_1593036352)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 25 Jun 2020 06:05:52 +0800
+Date:   Thu, 25 Jun 2020 06:05:52 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>, Baoquan He <bhe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200624220552.GA15016@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <20200623151828.GA31426@dhcp22.suse.cz>
+ <20200624061340.GA11552@L-31X9LVDL-1304.local>
+ <CAPcyv4gEUq0yyz00AbQQSyo_acj1wUCZPse5vEff_Bq7GmeksQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com> <20200624203200.78870-13-samitolvanen@google.com>
-In-Reply-To: <20200624203200.78870-13-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Jun 2020 15:05:26 -0700
-Message-ID: <CAKwvOdkgXpxyV6UOpwh1O-_miu4O7pMDaSys=7BYg6jDZ-ox-A@mail.gmail.com>
-Subject: Re: [PATCH 12/22] modpost: lto: strip .lto from module names
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Bill Wendling <morbo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gEUq0yyz00AbQQSyo_acj1wUCZPse5vEff_Bq7GmeksQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 1:33 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+On Wed, Jun 24, 2020 at 09:10:09AM -0700, Dan Williams wrote:
+>On Tue, Jun 23, 2020 at 11:14 PM Wei Yang
+><richard.weiyang@linux.alibaba.com> wrote:
+>>
+>> On Tue, Jun 23, 2020 at 05:18:28PM +0200, Michal Hocko wrote:
+>> >On Tue 23-06-20 17:42:58, Wei Yang wrote:
+>> >> For early sections, we assumes its memmap will never be partially
+>> >> removed. But current behavior breaks this.
+>> >>
+>> >> Let's correct it.
+>> >>
+>> >> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>> >
+>> >Can a user trigger this or is this a theoretical bug?
+>>
+>> Let me rewrite the changelog a little. Look forward any comments.
+>>
+>>    For early sections, its memmap is handled specially even sub-section is
+>>    enabled. The memmap could only be populated as a whole.
+>>
+>>    Quoted from the comment of section_activate():
+>>
+>>        * The early init code does not consider partially populated
+>>        * initial sections, it simply assumes that memory will never be
+>>        * referenced.  If we hot-add memory into such a section then we
+>>        * do not need to populate the memmap and can simply reuse what
+>>        * is already there.
+>>
+>>    While current section_deactivate() breaks this rule. When hot-remove a
+>>    sub-section, section_deactivate() would depopulate its memmap. The
+>>    consequence is if we hot-add this subsection again, its memmap never get
+>>    proper populated.
 >
-> With LTO, everything is compiled into LLVM bitcode, so we have to link
-> each module into native code before modpost. Kbuild uses the .lto.o
-> suffix for these files, which also ends up in module information. This
-> change strips the unnecessary .lto suffix from the module name.
->
-> Suggested-by: Bill Wendling <morbo@google.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  scripts/mod/modpost.c    | 16 +++++++---------
->  scripts/mod/modpost.h    |  9 +++++++++
->  scripts/mod/sumversion.c |  6 +++++-
->  3 files changed, 21 insertions(+), 10 deletions(-)
->
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 6aea65c65745..8352f8a1a138 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -17,7 +17,6 @@
->  #include <ctype.h>
->  #include <string.h>
->  #include <limits.h>
-> -#include <stdbool.h>
+>Ok, forgive the latency as re-fetched this logic into my mental cache.
+>So what I was remembering was the initial state of the code that
+>special cased early sections, and that still seems to be the case in
+>pfn_valid(). IIRC early_sections / bootmem are blocked from being
+>removed entirely. Partial / subsection removals are ok.
 
-It looks like `bool` is used in the function signatures of other
-functions in this TU, I'm not the biggest fan of hoisting the includes
-out of the .c source into the header (I'd keep it in both), but I
-don't feel strongly enough to NACK.
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->  #include <errno.h>
->  #include "modpost.h"
->  #include "../../include/linux/license.h"
-> @@ -80,14 +79,6 @@ modpost_log(enum loglevel loglevel, const char *fmt, ...)
->                 exit(1);
->  }
->
-> -static inline bool strends(const char *str, const char *postfix)
-> -{
-> -       if (strlen(str) < strlen(postfix))
-> -               return false;
-> -
-> -       return strcmp(str + strlen(str) - strlen(postfix), postfix) == 0;
-> -}
-> -
->  void *do_nofail(void *ptr, const char *expr)
->  {
->         if (!ptr)
-> @@ -1975,6 +1966,10 @@ static char *remove_dot(char *s)
->                 size_t m = strspn(s + n + 1, "0123456789");
->                 if (m && (s[n + m] == '.' || s[n + m] == 0))
->                         s[n] = 0;
-> +
-> +               /* strip trailing .lto */
-> +               if (strends(s, ".lto"))
-> +                       s[strlen(s) - 4] = '\0';
->         }
->         return s;
->  }
-> @@ -1998,6 +1993,9 @@ static void read_symbols(const char *modname)
->                 /* strip trailing .o */
->                 tmp = NOFAIL(strdup(modname));
->                 tmp[strlen(tmp) - 2] = '\0';
-> +               /* strip trailing .lto */
-> +               if (strends(tmp, ".lto"))
-> +                       tmp[strlen(tmp) - 4] = '\0';
->                 mod = new_module(tmp);
->                 free(tmp);
->         }
-> diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-> index 3aa052722233..fab30d201f9e 100644
-> --- a/scripts/mod/modpost.h
-> +++ b/scripts/mod/modpost.h
-> @@ -2,6 +2,7 @@
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <stdarg.h>
-> +#include <stdbool.h>
->  #include <string.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
-> @@ -180,6 +181,14 @@ static inline unsigned int get_secindex(const struct elf_info *info,
->         return info->symtab_shndx_start[sym - info->symtab_start];
->  }
->
-> +static inline bool strends(const char *str, const char *postfix)
-> +{
-> +       if (strlen(str) < strlen(postfix))
-> +               return false;
-> +
-> +       return strcmp(str + strlen(str) - strlen(postfix), postfix) == 0;
-> +}
-> +
->  /* file2alias.c */
->  extern unsigned int cross_build;
->  void handle_moddevtable(struct module *mod, struct elf_info *info,
-> diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
-> index d587f40f1117..760e6baa7eda 100644
-> --- a/scripts/mod/sumversion.c
-> +++ b/scripts/mod/sumversion.c
-> @@ -391,10 +391,14 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen)
->         struct md4_ctx md;
->         char *fname;
->         char filelist[PATH_MAX + 1];
-> +       int postfix_len = 1;
-> +
-> +       if (strends(modname, ".lto.o"))
-> +               postfix_len = 5;
->
->         /* objects for a module are listed in the first line of *.mod file. */
->         snprintf(filelist, sizeof(filelist), "%.*smod",
-> -                (int)strlen(modname) - 1, modname);
-> +                (int)strlen(modname) - postfix_len, modname);
->
->         buf = read_text_file(filelist);
->
-> --
-> 2.27.0.212.ge8ba1cc988-goog
->
-
+Would you mind giving more words? Partial subsection removal is ok, so no need
+to fix this?
 
 -- 
-Thanks,
-~Nick Desaulniers
+Wei Yang
+Help you, Help me
