@@ -2,101 +2,101 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E67C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC4D2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HIuiKyZ6"
+	by mail.kernel.org (Postfix) with ESMTP id B684E2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404597AbgFXPRD (ORCPT
+        id S2404266AbgFXPSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:17:03 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:47345 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404301AbgFXPRC (ORCPT
+        Wed, 24 Jun 2020 11:18:08 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40303 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390817AbgFXPSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:17:02 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id o78xjhxqrNb6lo790jtpED; Wed, 24 Jun 2020 17:16:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593011820; bh=jyWXSdrvQ+K1W5uN74FxiSFf3+Bnyjhw65V0wYj/fAI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=HIuiKyZ6DcYIYdgAQ3nl9u2grQWrlLYo0ql8stqyDBH62ttmUf1WHezeQhr/D5+P9
-         VreVW08lQr+Tm527n7HUMyf+ZyfKLVTLNgPrTM43BwMlXZ0Khniq/5QqTLToQOyB7x
-         taZQ7HLUpbZQkLTrIvH87f5Q+8O2lZ64tvyRMUAWoZFQgIW9e6g2AFITbietQI4CZK
-         wtnHuGeekKKRr+eR8YeGd/h1pLm4JMvKwc2HG983YraBYxgybSNSOujTa7WgOHoajv
-         GU4PBV+cHi6LwYTV4b/c8A74fffbwx4Pmyez3cK8f6Ma3PNyFQO62o/j2cHqyhSZYy
-         PEAaZBRxs5+zw==
-Subject: Re: [PATCH v2 0/4] Tegra Video Decoder driver power management
- corrections
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200624150847.22672-1-digetx@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <90323aa6-38b5-0a45-69a7-ccf380690a78@xs4all.nl>
-Date:   Wed, 24 Jun 2020 17:16:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 11:18:07 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jo7A1-000119-Uz; Wed, 24 Jun 2020 15:18:02 +0000
+Date:   Wed, 24 Jun 2020 17:18:01 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 2/6] arm64/vdso: Zap vvar pages when switching to a time
+ namespace
+Message-ID: <20200624151801.y27a5joml3mxeo4o@wittgenstein>
+References: <20200624083321.144975-1-avagin@gmail.com>
+ <20200624083321.144975-3-avagin@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624150847.22672-1-digetx@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNw6j5csn8oqIJl3z+qis7VF7oRJPzz79BJW74oAFalH/aIvPn0jqVXkIF5gx+CKI8CK2JDqe2xT7iBsMGfE+F8gkgsSKP2cphCliwnqLfqQc73mcWAy
- To9YZnahMnLq3OTsjxebN4xXu6ENQCxPDYXVa2v6/NYGC8nzOl3OF+iX0wajxUSzEEVCn4jmbo5N2Kq3Ipluh5jHHhM5D84rD6/DxLaHGYFTsg8KdiBG3FAw
- NIVlW3O+FItHGlrUOhOOuKsh8ebJQJZ6vDmCP+IsDR+qA+I3HmYuiky89lgOXWcGp55KAHn7LW+BNfUD23+oib/Fi7BF3TpiRb2uT9q+LFrFH/707hKH4ROd
- URlbLajmKW9SeJOp1q54KZ9926WN8+Bzr0ZxO5fw5ylzHY1c5I4gpoqtl4CvesccHErz7iem
+Content-Disposition: inline
+In-Reply-To: <20200624083321.144975-3-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2020 17:08, Dmitry Osipenko wrote:
-> Hello,
+On Wed, Jun 24, 2020 at 01:33:17AM -0700, Andrei Vagin wrote:
+> The order of vvar pages depends on whether a task belongs to the root
+> time namespace or not. In the root time namespace, a task doesn't have a
+> per-namespace page. In a non-root namespace, the VVAR page which contains
+> the system-wide VDSO data is replaced with a namespace specific page
+> that contains clock offsets.
 > 
-> This small series addresses a Runtime PM issue that was discovered during
-> of Tegra VI driver reviewing by balancing RPM usage count on RPM resume
-> failure. Secondly it fixes reboot on some Tegra devices due to bootloader
-> expecting VDE power partition to be ON at the boot time, which wasn't
-> happening in case of a warm re-booting (i.e. by PMC resetting).
+> Whenever a task changes its namespace, the VVAR page tables are cleared
+> and then they will be re-faulted with a corresponding layout.
+> 
+> A task can switch its time namespace only if its ->mm isn't shared with
+> another task.
+> 
+> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Reviewed-by: Dmitry Safonov <dima@arista.com>
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
+> ---
+>  arch/arm64/kernel/vdso.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> index 7c4620451fa5..bdf492a17dff 100644
+> --- a/arch/arm64/kernel/vdso.c
+> +++ b/arch/arm64/kernel/vdso.c
+> @@ -124,6 +124,37 @@ static int __vdso_init(enum vdso_abi abi)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_TIME_NS
+> +/*
+> + * The vvar mapping contains data for a specific time namespace, so when a task
+> + * changes namespace we must unmap its vvar data for the old namespace.
+> + * Subsequent faults will map in data for the new namespace.
+> + *
+> + * For more details see timens_setup_vdso_data().
+> + */
+> +int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+> +{
+> +	struct mm_struct *mm = task->mm;
+> +	struct vm_area_struct *vma;
+> +
+> +	mmap_read_lock(mm);
 
-Can you rebase this on top of the media_tree master branch? I think a variant
-of patch 1 has already been applied. I found a mail today where you mentioned
-that you preferred your version (it looks like I missed that) so you'll need to
-rework patch 1.
+Perfect, thanks! I'll adapt my patches so that my change and this change
+don't conflict and can go in together. Once they're landed we can simply
+turn int vdso_join_timens() into void vdso_join_timens() everywhere.
 
-Sorry about this,
+Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-	Hans
-
-> 
-> Changelog:
-> 
-> v2: - Extended the commit's message of the "Balance runtime PM use-count on
->       resume failure" patch.
-> 
->     - Re-send for 5.9 inclusion.
-> 
-> Dmitry Osipenko (4):
->   media: staging: tegra-vde: Balance runtime PM use-count on resume
->     failure
->   media: staging: tegra-vde: Runtime PM is always available on Tegra
->   media: staging: tegra-vde: Turn ON power domain on shutdown
->   media: staging: tegra-vde: Power-cycle hardware on probe
-> 
->  drivers/staging/media/tegra-vde/vde.c | 45 +++++++++++++++++----------
->  1 file changed, 29 insertions(+), 16 deletions(-)
-> 
-
+Thanks!
+Christian
