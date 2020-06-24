@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95879C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F499C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8C12084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EAB020885
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VR9flySj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IfZnlNH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406721AbgFXUe4 (ORCPT
+        id S2391446AbgFXUfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50538 "EHLO
+        Wed, 24 Jun 2020 16:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406475AbgFXUdN (ORCPT
+        with ESMTP id S2406444AbgFXUdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:33:13 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B756FC061796
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:11 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id e8so2409118qtq.22
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:11 -0700 (PDT)
+        Wed, 24 Jun 2020 16:33:07 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCE3C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:07 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id bk16so2493428qvb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=BYARsb6kk5gBajh2Z9y53LZQA7+hhrma13n1XSCdmOU=;
-        b=VR9flySjUJwP/ToHZH5/xrbg3xtifUP2l8XzNOwvghrmkrOPlt0NBT0Anzq/fEaIeF
-         KEoHKkAEPYQr1ae9axGCAMJQRNQ8Zn+uof7PhiL9L7JyAKcAQBsmFp+OoG91RU7+TJkG
-         Yd8jJUh3wkbN8zyU9bxEpyOLO9sldP4qCwirdkQYZ3Ena38i/lEtgSWPv5cRv7bJRl2N
-         UiX9uZX38aM3TP9J7+dUEiU2tJ3qLNH5BAb5fEeb58kPFpZiXEQBsf9meYLOuEa3jWcW
-         FzXtiDx3izZRRi7FrJm7yt+UOltEWjza1vZCyR1pwcnJuQrqqarBC6T6qstSc9SdhCTJ
-         LIZQ==
+        bh=E72RKePZ9QWe5v89HuDG9dmOi1TM58THK6MPfXGAxFQ=;
+        b=IfZnlNH6VN1h5kv70OdYXiwpqxbG8Fsr0lLuwZMxg60FtsN9/VTg/yfhaEKY69+/+Y
+         hyTqsTQRwHJPTGJCgx79BwJ5QVcEKyLgdthjRqbiH95tnfQghy4dm0yUNuDWrYAYeuQK
+         bXlz5RTuRnG7qvLP46Ux6LdFVV3vgejq+f8vMdwP7C0ECe86rxVnbt4+28XS5oy0e//W
+         3PvqoaOrjXwuF1y+TVGpByJgFdYpZGp3bhGDnuXbGiV8bnYHuHTTFlOLOu5U7PsEVYbS
+         zVdr70MPwdtPFtMyvFviHewEzUoy8KN1TAyWLRedjTg9ydVnxrcpJqLiET5LocVJTpl1
+         qi7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=BYARsb6kk5gBajh2Z9y53LZQA7+hhrma13n1XSCdmOU=;
-        b=NBwpiioo0kj9scwSpqtBxwmQIFCAZEXTZF4o6CDgvdRPi7scc77js+O0PviLO/uoDo
-         9RxblgneUJJWbcD87yncv9Z+Y1IhiOwLCe2pbVLrVQL/Gk/cbdLP+Y5fCD70rlrvlZhQ
-         Q3dAuSwAKhjJrnAqvNCeGz2leIKR27kTOPnkGdxBK9J6VRup9szD49hOVRqGhKEjvXLb
-         cSL2B4Z6HhUoaYzidCzY5RItBxqPFWSGBVkRF8fMMOI3wTxkk8c66dAdMA6bTmqHtHOK
-         o9RZEN54sseQ+fe6typaAMzJfWxFWgFkj0/1mbdalw5MibmVFnomp1/loWn9RhV0COKG
-         loEQ==
-X-Gm-Message-State: AOAM530u5ij4FswDyZXCpOORWVm1Z9Wa6EksB9P+KqoqIz/q3D2bXdFH
-        wqm1SA0yh0sgAv0ZKrgintam8rfyzpwDbjZXe5M=
-X-Google-Smtp-Source: ABdhPJxdPEjdTvmHsLqQfGRhGHv9oPLaWCC1GyywhBzfg/9OiO3i8xn63G4zB3hyB9DGHni9+sZkZnE+i9lcXDX/20s=
-X-Received: by 2002:a0c:9d44:: with SMTP id n4mr20638647qvf.35.1593030790865;
- Wed, 24 Jun 2020 13:33:10 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:31:45 -0700
+        bh=E72RKePZ9QWe5v89HuDG9dmOi1TM58THK6MPfXGAxFQ=;
+        b=mXukkxexqDbFY8FbIwR3w1/YSLIcalnOEnJsAXeVm2WpmeUeCDBbHcF6GlWp5QA2JM
+         B6LoZDsDm0VKl4DYTJuxU8JGWsaKImJ35Za21iPoXxvSnIj0KgNZ0Gr6MqNIvZgTsjdy
+         kCZW09etdRm8R0pBpNtRv3OLbK2oaiyqFWOoZUFmG5mOHXQFJDL8OeuzMTqF2DlvXcG8
+         pYfa23LBSwzffXNgADTH1uLHfu/wLVev66cpF620ZqW1SOPJzYd2/eJIHZ2ldiNl2AJ/
+         +LESisd3nFZgC2Pj3JYgzyOJUV9+DWS7x3kJO8Hbmz1lhxUMdIG3JSgykSUAQpWinNL5
+         mT8w==
+X-Gm-Message-State: AOAM532sK4AlNBkyKrmKSmxtn+vsy57TR9J7GtAhyHI7egrUf5Oqn7KR
+        nh9GugEDqC8MDVHmjeisGWNDXT20PFqRc0nD0fk=
+X-Google-Smtp-Source: ABdhPJzd9lgxY2ziJprOU0r6YQs1Hj+qf3c3VygR/GB4VeUCqKevsyTn5UTRuuuhSmVDqX6i9sr8ukJjhli7wtRCXdI=
+X-Received: by 2002:a0c:85a3:: with SMTP id o32mr8043763qva.189.1593030786670;
+ Wed, 24 Jun 2020 13:33:06 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:31:43 -0700
 In-Reply-To: <20200624203200.78870-1-samitolvanen@google.com>
-Message-Id: <20200624203200.78870-8-samitolvanen@google.com>
+Message-Id: <20200624203200.78870-6-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 07/22] kbuild: lto: merge module sections
+Subject: [PATCH 05/22] kbuild: lto: postpone objtool
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -80,63 +80,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LLD always splits sections with LTO, which increases module sizes. This
-change adds a linker script that merges the split sections in the final
-module and discards the .eh_frame section that LLD may generate.
+With LTO, LLVM bitcode won't be compiled into native code until
+modpost_link, or modfinal for modules. This change postpones calls
+to objtool until after these steps.
 
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- Makefile               |  2 ++
- scripts/module-lto.lds | 26 ++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 scripts/module-lto.lds
+ include/linux/compiler.h  |  2 +-
+ lib/Kconfig.debug         |  2 +-
+ scripts/Makefile.build    |  2 ++
+ scripts/Makefile.modfinal | 15 +++++++++++++++
+ 4 files changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index ee66513a5b66..9ffec5fe1737 100644
---- a/Makefile
-+++ b/Makefile
-@@ -898,6 +898,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
- # Limit inlining across translation units to reduce binary size
- LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
- KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
-+
-+KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
- endif
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 30827f82ad62..12b115152532 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -120,7 +120,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ /* Annotate a C jump table to allow objtool to follow the code flow */
+ #define __annotate_jump_table __section(.rodata..c_jump_table)
  
- ifdef CONFIG_LTO
-diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
-new file mode 100644
-index 000000000000..65884c652bf2
---- /dev/null
-+++ b/scripts/module-lto.lds
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
-+ * -ffunction-sections, which increases the size of the final module.
-+ * Merge the split sections in the final binary.
-+ */
-+SECTIONS {
-+	__patchable_function_entries : { *(__patchable_function_entries) }
+-#ifdef CONFIG_DEBUG_ENTRY
++#if defined(CONFIG_DEBUG_ENTRY) || defined(CONFIG_LTO_CLANG)
+ /* Begin/end of an instrumentation safe region */
+ #define instrumentation_begin() ({					\
+ 	asm volatile("%c0:\n\t"						\
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9ad9210d70a1..9fdba71c135a 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -399,7 +399,7 @@ config STACK_VALIDATION
+ 
+ config VMLINUX_VALIDATION
+ 	bool
+-	depends on STACK_VALIDATION && DEBUG_ENTRY && !PARAVIRT
++	depends on STACK_VALIDATION && (DEBUG_ENTRY || LTO_CLANG) && !PARAVIRT
+ 	default y
+ 
+ config DEBUG_FORCE_WEAK_PER_CPU
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 64e99f4baa5b..82977350f5a6 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -226,6 +226,7 @@ endif # CC_USING_PATCHABLE_FUNCTION_ENTRY
+ endif # CONFIG_FTRACE_MCOUNT_RECORD
+ 
+ ifdef CONFIG_STACK_VALIDATION
++ifndef CONFIG_LTO_CLANG
+ ifneq ($(SKIP_STACK_VALIDATION),1)
+ 
+ __objtool_obj := $(objtree)/tools/objtool/objtool
+@@ -258,6 +259,7 @@ objtool_obj = $(if $(patsubst y%,, \
+ 	$(__objtool_obj))
+ 
+ endif # SKIP_STACK_VALIDATION
++endif # CONFIG_LTO_CLANG
+ endif # CONFIG_STACK_VALIDATION
+ 
+ # Rebuild all objects when objtool changes, or is enabled/disabled.
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index d168f0cfe67c..9f1df2f1fab5 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -48,6 +48,21 @@ endif # CC_USING_PATCHABLE_FUNCTION_ENTRY
+ endif # CC_USING_RECORD_MCOUNT
+ endif # CONFIG_FTRACE_MCOUNT_RECORD
+ 
++ifdef CONFIG_STACK_VALIDATION
++ifneq ($(SKIP_STACK_VALIDATION),1)
++cmd_ld_ko_o +=								\
++	$(objtree)/tools/objtool/objtool				\
++		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
++		--module						\
++		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
++		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
++		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
++		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
++		$(@:.ko=$(prelink-ext).o);
 +
-+	.bss : {
-+		*(.bss .bss.[0-9a-zA-Z_]*)
-+		*(.bss..L* .bss..compoundliteral*)
-+	}
++endif # SKIP_STACK_VALIDATION
++endif # CONFIG_STACK_VALIDATION
 +
-+	.data : {
-+		*(.data .data.[0-9a-zA-Z_]*)
-+		*(.data..L* .data..compoundliteral*)
-+	}
-+
-+	.rodata : {
-+		*(.rodata .rodata.[0-9a-zA-Z_]*)
-+		*(.rodata..L* .rodata..compoundliteral*)
-+	}
-+
-+	.text : { *(.text .text.[0-9a-zA-Z_]*) }
-+}
+ endif # CONFIG_LTO_CLANG
+ 
+ quiet_cmd_ld_ko_o = LD [M]  $@
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
