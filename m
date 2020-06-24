@@ -2,89 +2,120 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8233C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B85852076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZWCTTbv"
+	by mail.kernel.org (Postfix) with ESMTP id 7CAAD2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593011488;
+	bh=nYl8l1Sm+SCWmjeb4Ljbgr5wKM1Z7Cv6vgBTchUl1N4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zT+K7LTOgyHVopTZvTsyPvxZlMApeT7FSNR5vqa6VpRUfXAWArNxcgDO1uNmdNKlm
+	 8ykW+lw1REo2hl2aZ2uWicKKEGviCK3xpoIKJYUwZa5gombfecBCYJoASzRcIQu7uT
+	 c6V7xK1KZcXrVBlmAreplZzY4jWkaUeiGtis0wAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404485AbgFXPJ4 (ORCPT
+        id S2404214AbgFXPL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404289AbgFXPJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:09:55 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C4AC061573;
-        Wed, 24 Jun 2020 08:09:55 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id ga4so2779010ejb.11;
-        Wed, 24 Jun 2020 08:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xqA0JkwflkTobMLTCr0ZvM2/SSPlycQMaw9fn8Bg9K4=;
-        b=IZWCTTbvlGPqVMTEvL+RCNLvtkr9ymy95LhJvsvrwruvDDDqo5l0my86UnhHTO7gVt
-         6OEg0WbvFoNuzHtr6gEqwafjZjinhukdU+JqzI4ImfvTa7Gps/iP/e2iws9tbIi3OOtE
-         4mqR0BKXcSEDy/lhdwjZe8KzJVQSf0dbyeiG7eMCJ03oGo1APEmJSLM2S3gtoGxqMI//
-         im5+0Abzi5O0tB4sApp5nb1fWpXXNhNplFggfPfoIK75ZaRH6Bm7VxstsH8X+rM2Ia1y
-         M4xTfNbtNL/6fLaoyf5l6/N5XC5BHgrqnbJ3HT6X5JGg8OrvQTB/bdVWIJRvvPN7zWjj
-         dlTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xqA0JkwflkTobMLTCr0ZvM2/SSPlycQMaw9fn8Bg9K4=;
-        b=N7xDPRnwwrbZwgHgzOIh8On7Q5kTK1DtsFuyzRHVSZfqlDAw6J7LzTC7vc5fY2Ievi
-         xWW8jvYAdSo5YkaDrCGrDh1+3OH/pglTZAxbbDMz9vVz5WP4yNy5Cf3KABav46ZT1mYo
-         8OSxHcGkHaDZphYGqDkyZoLVcwS8A0Gf/XTkMpsDYUf5gMtIFtAvqeRxflyMVsmwg6K8
-         8sUP1YOu7HPeYaJvilpQoQn843++CFvdwTs8ksEJoiDNVeymtd7aD0PZZ0pK9nOlyzG4
-         NVKsTz8+WGAGkgafXFt3LCNqVdYVhZKdUo48a3/rV+02eNsob6WFFQ+Vt/KFt4yNiasN
-         Bv5A==
-X-Gm-Message-State: AOAM5321Efv9wlELZ4ok9QNnjLWNS/D/6XOxcQnxG7OezMOwFr6+bjNs
-        tY0z7XgdHagYFSNbh1xG/k4D+gSBJlOgKRPwAc0=
-X-Google-Smtp-Source: ABdhPJwqURAScm61PUoBnTTiAvio3Dy0kQw/f3E/f1hDwhw+981uq2BMzaiXIVf+D/uy7kNOieVVEHrsxWb61i75Flw=
-X-Received: by 2002:a17:906:7002:: with SMTP id n2mr7502548ejj.340.1593011394401;
- Wed, 24 Jun 2020 08:09:54 -0700 (PDT)
+        Wed, 24 Jun 2020 11:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390829AbgFXPL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:11:26 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D53C320656;
+        Wed, 24 Jun 2020 15:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593011485;
+        bh=nYl8l1Sm+SCWmjeb4Ljbgr5wKM1Z7Cv6vgBTchUl1N4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PVjN7CQcIFGqOKfaSA8dQDmv6Z2sQ+55jE75SlIg41a6pZFmOIxzvBZHw5wXf99n0
+         v9yg3BrdhsDJU+uYF0L9Uv/eZjSx9SWOjZeU2ppc9bAjTwwd721aKQyt07v/CO9nmJ
+         Xw2b/a0MWS/C2uC3g9skEETF2RE2CO3dPUz00NVM=
+Date:   Wed, 24 Jun 2020 20:41:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v8 2/3] phy: zynqmp: Add PHY driver for the Xilinx ZynqMP
+ Gigabit Transceiver
+Message-ID: <20200624151121.GF2324254@vkoul-mobl>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-3-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-References: <20200623230018.303776-1-konradybcio@gmail.com>
-In-Reply-To: <20200623230018.303776-1-konradybcio@gmail.com>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Wed, 24 Jun 2020 17:09:18 +0200
-Message-ID: <CAMS8qEVHxnAwC9fK69Pb4MEMWVEa9N7ZdkQCkXwvqC-JfQEfRA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] clk: qcom: smd: Add support for MSM8992/4 rpm clocks
-To:     skrzynka@konradybcio.pl
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513172239.26444-3-laurent.pinchart@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I should also note that for quite some time a hack [1]
-has been needed on some platforms for the RPMCC to register.
+Hi Laurent,
 
-This includes 8992/94, 8956/76 and possibly many more.
+Mostly this looks fine to me, some minor nitpicks below:
 
-With that commit, RPMCC registers fine.
+On 13-05-20, 20:22, Laurent Pinchart wrote:
+> +config PHY_XILINX_ZYNQMP
+> +	tristate "Xilinx ZynqMP PHY driver"
+> +	depends on ARCH_ZYNQMP
 
-[1] https://github.com/kholk/kernel-upstream/commit/5df7bb6e337c0a41b2cc6477cddc718d622d7545
+Can we add COMPILE_TEST here so that this driver gets wider compile
+coverage?
 
-Regards
-Konrad
+> +++ b/drivers/phy/xilinx/phy-zynqmp.c
+> @@ -0,0 +1,995 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * phy-zynqmp.c - PHY driver for Xilinx ZynqMP GT.
+> + *
+> + * Copyright (C) 2018-20 Xilinx Inc.
+
+2018-2020 please
+
+> +/* Number of GT lanes */
+> +#define NUM_LANES			4
+
+Should this be coded in driver like this? Maybe future versions of
+hardware will have more lanes..? Why not describe this in DT?
+> +
+> +/* SIOU SATA control register */
+> +#define SATA_CONTROL_OFFSET		0x0100
+> +
+> +/* Total number of controllers */
+> +#define CONTROLLERS_PER_LANE		5
+
+Same question for this as well..
+
+> +/*
+> + * I/O Accessors
+> + */
+> +
+> +static inline u32 xpsgtr_read(struct xpsgtr_dev *gtr_dev, u32 reg)
+> +{
+> +	return readl(gtr_dev->serdes + reg);
+> +}
+> +
+> +static inline void xpsgtr_write(struct xpsgtr_dev *gtr_dev, u32 reg, u32 value)
+> +{
+> +	writel(value, gtr_dev->serdes + reg);
+> +}
+> +
+> +static inline void xpsgtr_clr_set(struct xpsgtr_dev *gtr_dev, u32 reg,
+> +				  u32 clr, u32 set)
+
+wouldn't it be apt to rename this to xpsgtr_modify() and with args as
+value and mask, somehow I find that more simpler...
+
+Also, please align second line with opening brace of preceding line
+
+-- 
+~Vinod
