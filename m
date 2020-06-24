@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C276CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A25A72082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A062082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="AiwPFodV"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="kfY6jX42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403926AbgFXNoW (ORCPT
+        id S2403954AbgFXNo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:44:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43440 "EHLO
+        Wed, 24 Jun 2020 09:44:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388933AbgFXNoT (ORCPT
+        with ESMTP id S2390774AbgFXNoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:44:19 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F35DC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:18 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ev7so685450pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:18 -0700 (PDT)
+        Wed, 24 Jun 2020 09:44:25 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D768AC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:25 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so1075877plo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ancI0DiJuBHXSKZ5+IbcX7oH9DUg3u3wUo5JHY1jQ8Q=;
-        b=AiwPFodV68n/l193jLQzyI/XsSDoyctwtNrxbM044mIAiYaN5Idf0LopBbgDmBJOWI
-         vyPtT4rt6HqxUOfcLkWv7b9bhuisuKUBW0H4p7pf3TZD25jphe82BK+t4tO8RNJOYgVT
-         p98cHUOskWXZgheETIpQhnsmKD2kXOzjCqBeqxd9K+S2HLuBK64T3p14jt4u/Kqi82tf
-         znMczjrtcAK/I3GgVAGf60PXbH7yNBelT+nSArxyf4vCigxINdql6cSHLJ71sROr9PBU
-         cIjkfi6HrmgGUBGPwE6Qdjy+drNXtTy+f5oF0edHZ0yn0d8iV9wsMjzFyHwFLbF/qFyd
-         rGTg==
+        bh=mlOpwt/OrDwY18/efyoHHrZ4eC1JjYFXEeCPwXIZHEk=;
+        b=kfY6jX42WbvkbvD7fYTjlqt+AAu2GI51V6oGzhE79RDtVgzGso7h42FxxF6seDohTq
+         vpUgWGkb355z437A9Iu8RSCZfU/hIUp7lJAbcjS8X5CROUBXHJHJsmvLBuTAhyYl1Lfx
+         Lp30kGfbwURHGjD35RvA9/h8rmm4iHDy7Gykq4LtBong0w1yffuHHQOv54R/smbS1VMa
+         yrHxg7b4upz6PC6NC8A907ICegiJ5in7Jyuv//AtIMdqTrb8lOgs2Sw24H8HPPII0xz8
+         lKFzB3vRfT0nG9qsfyIKWjOg3F86Kw90zEBx67CjwJGnHCq4fjhL3az5/FqmZkUWBXv1
+         TSmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ancI0DiJuBHXSKZ5+IbcX7oH9DUg3u3wUo5JHY1jQ8Q=;
-        b=IVLBg2J4Tyf0Zm8/lOoOjfQqJaGxTwzHo6taCAYZFsAsV4ZyIeNfyGaBjXdVLRZfUK
-         j5DcI2jbLDwkAlwQ+Cnsy+CYOKyrFJ9UIALN9f0/FKbZ8V3EDi4twCMLqEr5l1Zm+k1f
-         oV8zRg0o36YktCnnwtn4X3JkJlRshiKpUELdRBnn1PcSnvuFc1eSDoH0RytiRa88XFua
-         vz3R9P0Y5LEhLzWrQSoGSgxwFnLhwhxLzZxEZCURPOyxGsoMaSbHT9K2o7QLb3Om9QRo
-         FJlW6AkdisT7a9NBdNGyOZy/45gNaoS7PWULVTbPYMGoOoO31j9wVQAzbsIyish4CYWV
-         6gJw==
-X-Gm-Message-State: AOAM532Nq1/fB/2YtodnC87lu8oQZ42WOj59JYVwxSZ5tcsU/wwMCqaY
-        F7Csd8+MTBN+ybcZv55WhHQcm/MIPmg=
-X-Google-Smtp-Source: ABdhPJzmpOkmB4Il61sJRvl2YVfP7vvsx93Vsc8mJPGSsphZLsMi5RmLLCUGlqRFnjcS58AL6MbcBg==
-X-Received: by 2002:a17:90a:e384:: with SMTP id b4mr26147917pjz.134.1593006257856;
-        Wed, 24 Jun 2020 06:44:17 -0700 (PDT)
+        bh=mlOpwt/OrDwY18/efyoHHrZ4eC1JjYFXEeCPwXIZHEk=;
+        b=iXmX1lau3khTpv+rq4I5EjfXTCXKz0N+p+FKu6latqS/pJf9QpJSgbng6Z4Hs9DCbg
+         edeEq8IPAz6Nwz4NnALIiBqtEPxSYA95yi0ruaQq7zr+y1A7zCTqpDElHDkoGnfv5jKa
+         TIjFhz60JBFEv1KKLq4L6esbo7OpJ6nl9OR7rXvSpmirn80jImXo7Zdxh1jAJKXPgAUo
+         +woRbJ6yenBIC79HrGtxb+sN5jG3xanlavt7wLAlJMIDVM0qTAbB8q0Mkcs4pjJewW7q
+         bqTdhkMytI7nnk5dIg3FjaMOOnfZB4XbfA4ty+B3ztxoglyrMkPPp3UcL3eadfTWsBfE
+         7P4Q==
+X-Gm-Message-State: AOAM532PfWKHVwdSk0otfOryaUiafzoS4ZuFrvvNyfGoPTEa+F/wQlCb
+        9sWveXYP003VkRVPOL9PBfRZLg==
+X-Google-Smtp-Source: ABdhPJw9xfC2lmCF3UH+L3g/XKkPyru+Tkq5C7DHTC0wID2xmL1n9R52g41g+wh4qKlFB+WZbhd1Bw==
+X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr15273313plo.172.1593006265318;
+        Wed, 24 Jun 2020 06:44:25 -0700 (PDT)
 Received: from kaaira-HP-Pavilion-Notebook ([2401:4900:4174:4b69:7433:bb27:35ac:b181])
-        by smtp.gmail.com with ESMTPSA id i184sm19478065pfc.73.2020.06.24.06.44.16
+        by smtp.gmail.com with ESMTPSA id q13sm20909612pfk.8.2020.06.24.06.44.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 06:44:17 -0700 (PDT)
+        Wed, 24 Jun 2020 06:44:24 -0700 (PDT)
 From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
 To:     Helen Koike <helen.koike@collabora.com>,
         Shuah Khan <skhan@linuxfoundation.org>,
@@ -66,9 +66,9 @@ To:     Helen Koike <helen.koike@collabora.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         hverkuil@xs4all.nl
 Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Subject: [PATCH v5 1/3] media: tpg: change char argument to const char
-Date:   Wed, 24 Jun 2020 19:13:52 +0530
-Message-Id: <20200624134354.7023-2-kgupta@es.iitr.ac.in>
+Subject: [PATCH v5 2/3] media: tpg: Add function to return colors' order of test image
+Date:   Wed, 24 Jun 2020 19:13:53 +0530
+Message-Id: <20200624134354.7023-3-kgupta@es.iitr.ac.in>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
 References: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
@@ -77,72 +77,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the argument of type char * to const char * for function
-tpg_gen_text().
+Currently there is no method to know the correct order of the colors for
+a test image generated by tpg. Write a function that returns a string of
+colors' order given a tpg. It returns a NULL pointer in case of test
+patterns which do not have a well defined colors' order. Hence add a
+NULL check for text in tpg_gen_text().
 
 Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 ---
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 10 +++++-----
- include/media/tpg/v4l2-tpg.h                  |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 29 +++++++++++++++++--
+ include/media/tpg/v4l2-tpg.h                  |  1 +
+ 2 files changed, 28 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index 50f1e0b28b25..dde22a4cbd6c 100644
+index dde22a4cbd6c..a052b656fa6a 100644
 --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
 +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -1927,34 +1927,34 @@ typedef struct { u16 __; u8 _; } __packed x24;
- 
- static noinline void tpg_print_str_2(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- 			unsigned p, unsigned first, unsigned div, unsigned step,
--			int y, int x, char *text, unsigned len)
-+			int y, int x, const char *text, unsigned len)
- {
- 	PRINTSTR(u8);
- }
- 
- static noinline void tpg_print_str_4(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- 			unsigned p, unsigned first, unsigned div, unsigned step,
--			int y, int x, char *text, unsigned len)
-+			int y, int x, const char *text, unsigned len)
- {
- 	PRINTSTR(u16);
- }
- 
- static noinline void tpg_print_str_6(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- 			unsigned p, unsigned first, unsigned div, unsigned step,
--			int y, int x, char *text, unsigned len)
-+			int y, int x, const char *text, unsigned len)
- {
- 	PRINTSTR(x24);
- }
- 
- static noinline void tpg_print_str_8(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- 			unsigned p, unsigned first, unsigned div, unsigned step,
--			int y, int x, char *text, unsigned len)
-+			int y, int x, const char *text, unsigned len)
- {
- 	PRINTSTR(u32);
- }
- 
- void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
--		  int y, int x, char *text)
-+		  int y, int x, const char *text)
- {
+@@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
  	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
  	unsigned div = step;
+ 	unsigned first = 0;
+-	unsigned len = strlen(text);
++	unsigned len;
+ 	unsigned p;
+ 
+-	if (font8x16 == NULL || basep == NULL)
++	if (font8x16 == NULL || basep == NULL || text == NULL)
+ 		return;
+ 
++	len = strlen(text);
++
+ 	/* Checks if it is possible to show string */
+ 	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
+ 		return;
+@@ -2006,6 +2008,29 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+ }
+ EXPORT_SYMBOL_GPL(tpg_gen_text);
+ 
++const char *tpg_g_color_order(const struct tpg_data *tpg)
++{
++	switch (tpg->pattern) {
++	case TPG_PAT_75_COLORBAR:
++	case TPG_PAT_100_COLORBAR:
++	case TPG_PAT_CSC_COLORBAR:
++	case TPG_PAT_100_HCOLORBAR:
++		return "white, yellow, cyan, green, magenta, red, blue, black";
++	case TPG_PAT_BLACK:
++		return "Black";
++	case TPG_PAT_WHITE:
++		return "White";
++	case TPG_PAT_RED:
++		return "Red";
++	case TPG_PAT_GREEN:
++		return "Green";
++	case TPG_PAT_BLUE:
++		return "Blue";
++	default:
++		return NULL;
++	}
++}
++
+ void tpg_update_mv_step(struct tpg_data *tpg)
+ {
+ 	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
 diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-index eb191e85d363..9749ed409856 100644
+index 9749ed409856..0b0ddb87380e 100644
 --- a/include/media/tpg/v4l2-tpg.h
 +++ b/include/media/tpg/v4l2-tpg.h
-@@ -241,7 +241,7 @@ void tpg_log_status(struct tpg_data *tpg);
+@@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
+ bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
+ void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
+ 		const struct v4l2_rect *compose);
++const char *tpg_g_color_order(const struct tpg_data *tpg);
  
- void tpg_set_font(const u8 *f);
- void tpg_gen_text(const struct tpg_data *tpg,
--		u8 *basep[TPG_MAX_PLANES][2], int y, int x, char *text);
-+		u8 *basep[TPG_MAX_PLANES][2], int y, int x, const char *text);
- void tpg_calc_text_basep(struct tpg_data *tpg,
- 		u8 *basep[TPG_MAX_PLANES][2], unsigned p, u8 *vbuf);
- unsigned tpg_g_interleaved_plane(const struct tpg_data *tpg, unsigned buf_line);
+ static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
+ {
 -- 
 2.17.1
 
