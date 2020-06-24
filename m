@@ -2,116 +2,108 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2776C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4A420823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:15:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SR+CHrdN"
+	by mail.kernel.org (Postfix) with ESMTP id 70D9E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:15:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593018942;
+	bh=Muq+h5RYuFlDZVPELmKhrcpkrd1VTQiWegUXOVEQr1g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Tnpfe5zHwK9tQR1JUdCg3VdmF/9s6iplceiVgpdQr/fFpJ6tKHekBnT5wdbZbpHWm
+	 QrBfJS+OsZsNBQ4yVp1a/sIfGZ2zR3h7yeYUaqGTNNG62zlDxYYot5gFBD0M/sQVsM
+	 jlOmhkYoWYeOqsY9cPWNYot2C3wjjiScFgP5ictE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405412AbgFXRPP (ORCPT
+        id S2405416AbgFXRPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405372AbgFXRPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:15:14 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E214AC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:15:13 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id 18so2627171otv.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WJq1E9+4ZIKiH2IMq2/oJWvEWmQE7EtG4I/6aJCrDto=;
-        b=SR+CHrdNFIVnKcR5PuzzeRzD/q1oh/SKiAAgMxN3LTOve05sHTsCzluGm2WXe/7okI
-         6AAkZlim56rMH5brzjlld/n4iEyYw3+G08opJ6Tvnwhf+sLNA1WdTWzk6Zx/GKcztLZg
-         oZx5EokOZT6grCL1UULM3If8PSsNtCkb6oB1yF3mpAv0wDZ7GVp+3rJ4oQF7zEgRx0Wh
-         /pBD9SGJQYSSMS0cOYpoIbU4/aLQ5Vbo+GepRjU3aWwDYc8nc2V85CN5hMP0FKGClSUh
-         9jFHHnr3dZE/7hMaQ66dC95x4dJbFxvZn+2bHbr6yK76sa4OKGMfZgh5yeoLfsiH8cFg
-         5Fqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WJq1E9+4ZIKiH2IMq2/oJWvEWmQE7EtG4I/6aJCrDto=;
-        b=n+PjYudUxeDbzLBv+JFLdm/6G62tB1e9dWmdpkR8TZH76vcS3BQBuS0aaisO1cQEqk
-         cQIf7cQEOXR0DUBUGZ1dFtSKWR4x0t7EpSKrkycODEF3QAMLWADghO8uRjqYQ8z4ZGmU
-         28/SN6L8bqt1ET5X5/SoDyVwmVCGzmBpTMKhC3qljC7iBcKqzUkmhErdt5Hvl7bZGeSh
-         LXwgZfdIG3wW+1SRs2WrEhhmmpvJG7id2Yl5Tq2fuKWDa8BwcG+EezXepbwXUwMKW4MM
-         vmfwp7nOS/dsa8d0bNoKKZK7aibSW7cUL/ysEwDWxDc0Eju2Ocm+zDr9fWDktWTwHcpu
-         BEVw==
-X-Gm-Message-State: AOAM532nH/GC5a9fO8VThsgaD/6SDdy+BeZCgJLG0HUuZU4JPfJqH7FS
-        wnfsvQvvqDi8jfXgrg2VKJOObwtPDHQH1NCbt1s=
-X-Google-Smtp-Source: ABdhPJw0uBvgV2g3AF7veHKvHYWDw9aQO7TojFYpl6P4GiFvNpCq04hG1+J1+Vn/xvwfRTt/0DfkyOeKdIR/q48sUJc=
-X-Received: by 2002:a4a:db4b:: with SMTP id 11mr24595586oot.11.1593018913261;
- Wed, 24 Jun 2020 10:15:13 -0700 (PDT)
+        Wed, 24 Jun 2020 13:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405292AbgFXRPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:15:40 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E53F20823;
+        Wed, 24 Jun 2020 17:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593018939;
+        bh=Muq+h5RYuFlDZVPELmKhrcpkrd1VTQiWegUXOVEQr1g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EwnifoCn7+IjqF6gtLKCpT85y16GjBg4C1wB0knqp9+yOWx/tzQoxANfVG/aLwPIu
+         +5REGHHF03iRm70UHm/pZ05+JxovR7H1Zp0D9a12TcHDhXbX/ItF5FDLzH0Q4yrLBO
+         01oaDGxcfWHjBatC8wBwrm85pmI1JrV00GwTqdlI=
+Date:   Wed, 24 Jun 2020 18:15:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
+        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
+        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
+ state
+Message-ID: <20200624171537.GL5472@sirena.org.uk>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
+ <20200624170933.GB39073@google.com>
 MIME-Version: 1.0
-References: <20200613235331.24678-1-TheSven73@gmail.com>
-In-Reply-To: <20200613235331.24678-1-TheSven73@gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 24 Jun 2020 13:15:02 -0400
-Message-ID: <CAGngYiX1Pz3bkvT=17VUapBwZ9=zrW8rXDP4wuVK=-uD67tfqA@mail.gmail.com>
-Subject: Re: [PATCH v1] mtd: spi-nor: Add support for Winbond w25q64jv spi flash
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5LiOUhUlsRX0HDkW"
+Content-Disposition: inline
+In-Reply-To: <20200624170933.GB39073@google.com>
+X-Cookie: So this is it.  We're going to die.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Is there any way I can help to get this patch into mainline?
 
-Thank you,
-Sven
+--5LiOUhUlsRX0HDkW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 13, 2020 at 7:53 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> This chip is (nearly) identical to the Winbond w25q64 which is
-> already supported by Linux. Compared to the w25q64, the 'jv'
-> does not support Quad SPI mode, and has a different JEDEC ID.
->
-> To: Tudor Ambarus <tudor.ambarus@microchip.com>
-> To: Miquel Raynal <miquel.raynal@bootlin.com>
-> To: Richard Weinberger <richard@nod.at>
-> To: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->
-> Tree: next-20200613
->
->  drivers/mtd/spi-nor/winbond.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-> index 5062af10f138..18bdff02f57f 100644
-> --- a/drivers/mtd/spi-nor/winbond.c
-> +++ b/drivers/mtd/spi-nor/winbond.c
-> @@ -65,6 +65,7 @@ static const struct flash_info winbond_parts[] = {
->                             SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
->         { "w25x64", INFO(0xef3017, 0, 64 * 1024, 128, SECT_4K) },
->         { "w25q64", INFO(0xef4017, 0, 64 * 1024, 128, SECT_4K) },
-> +       { "w25q64jv", INFO(0xef7017, 0, 64 * 1024, 128, SECT_4K) },
->         { "w25q64dw", INFO(0xef6017, 0, 64 * 1024, 128,
->                            SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
->                            SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-> --
-> 2.17.1
->
+On Wed, Jun 24, 2020 at 10:09:33AM -0700, Matthias Kaehlcke wrote:
+> Hi Mark,
+>=20
+> do you plan to land this in your tree?
+>=20
+> I know you hate contentless pings, but since you acked this patch and
+> usually don't seem to do that when patches go through your tree I want
+> to make sure we aren't in a situation where everybody thinks that the
+> patch will go through someone else's tree.
+
+Aren't there dependencies on earlier patches in the series?  In general
+if someone acks something for their tree that means they don't expect to
+apply it themselves.
+
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
+
+--5LiOUhUlsRX0HDkW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zijgACgkQJNaLcl1U
+h9BO2gf/QRx6r/ogT5x8Wf/Nod0og1iZ+SvUc2La5+7SYbzUfNrPdN5YM07zphJH
+hRFrjNyxG1fBSG8P2ZxAgMMyjdpN2KPnLfvRmMwGqh6MfdyOcABDFLYiqKh2aLj8
+QkhwAsGCf3VI2EPmXzmCSxpEQirBs7wMZIt0X+OouO1oGpXvTFAj/4mSbrTtqo3+
+37uCx/ns42Bkypc0svYcZ+ysll9gzUGiUCe+tUkcydTCnUwxbZeNCjQ078VbJ+wu
+7k62lSnNucReS+menq32Cy6mHBY3v7iIkhaqJjIEqmhamRQ5WqUogFSkOACKGB2r
+Jm8gJ0a2KsJuJ2Oy8AE0Hj+izo/Eqg==
+=BWYp
+-----END PGP SIGNATURE-----
+
+--5LiOUhUlsRX0HDkW--
