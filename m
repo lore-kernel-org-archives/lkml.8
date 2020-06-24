@@ -2,132 +2,86 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91191214F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592962289;
-	bh=G4AXnWU2fiGkIDEdz6OJbeqN7xJRtpQUSd5VhzK8J+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vwbd7TQxFuxwHEJ6jqWF9x4zbT7X47mmz4A51ZEwMiWS0QWeySt9ORdu1Ur/3Vnbk
-	 wuPXsmJf0swgRYogihwN6Rl2J9CLmZtwhfro9rTguMtvd6hk5F3GzSzBNsaf8ujaQN
-	 jb2/AzGH9PscjuH2XP9GoXDAVSOhb0Jk02gG4mlg=
+	by mail.kernel.org (Postfix) with ESMTP id A042A2078E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388413AbgFXBb2 (ORCPT
+        id S2388331AbgFXBeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 21:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387921AbgFXBb1 (ORCPT
+        Tue, 23 Jun 2020 21:34:13 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:44391 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387804AbgFXBeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 21:31:27 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8234AC061573;
-        Tue, 23 Jun 2020 18:31:26 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g12so303711pll.10;
-        Tue, 23 Jun 2020 18:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=STvVE6RZ3Y0xoSbwRDvBmVixkdJOr1NShciDYz9YwAM=;
-        b=W0vTKcKu1k4LZL/79tI9ZWaSgDRT8dAnFbEzoztsZnuxsAdCwsWzGStWBp+QyRecCD
-         CUpj6vHksbhJgjnx02F34EzU9VSZkoU+w0V/55gsApx6Jpw5WusaCp9GSfjQGbLUIjmN
-         dhnNMzgXGSuy1Bl5Lsh2JdeS0x9Kc+IttH5obXsz2tQ6BHUdRYOP1aSTYrleoPNbXxHL
-         Vil+Zf21VuwEdfSVf/OirWzjruOs1ePNLO44R4wC6m426c5cTRulwDPOyti+Oh0Q16Eg
-         atT7+QCFMnsJy3yxnvWZ2NOKyqgbq6B3oBd86RRKLsITNob8O+MKM6eY768wVMLumQta
-         /5Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=STvVE6RZ3Y0xoSbwRDvBmVixkdJOr1NShciDYz9YwAM=;
-        b=M+WaptIZeMC0tRcLJHtWdHffPtt6Ob49sJHncmq44fTVTVNQwzqBuUmt/39xEZvma7
-         6VekuBYVXzOciyJjGq09deI+/fVPYwp7bqAYLxMMHRHl1eZBuwOYpIA1olsn5EKZeS7O
-         coQ37EuFUl0mrSljY10V8YUng5QpsYf3EViTD9ynuQZ5RVp3BUuRYzWtUMzl+tIQSrTf
-         Tjmk2MdSIDvuCs5mE78JWtD6UKjjfzMMTq2ZCn+mnEsqpfTrKKsSFScVBIY3MFzMnJ8x
-         88OvxF+5a32yUnrGBAd+EqiXIBQpQLJOjjVRHOzkeswHEh1W1nFAtNPFq6M7Tpn4dHmt
-         W82g==
-X-Gm-Message-State: AOAM530rS3LR/NP54vv8g7FrkL1CugqUSqGKLGuo+JSf36w7VFlzBLe+
-        2uGji0wGmZvoRQ0zS55BKm4=
-X-Google-Smtp-Source: ABdhPJyysnl8A9zV1eAdaECih+/1cO9iPnaZNXWpwZYi4TkGIOLdr794d0QrNa/rQMjmDGDb7OxyBA==
-X-Received: by 2002:a17:902:7208:: with SMTP id ba8mr26976478plb.217.1592962285863;
-        Tue, 23 Jun 2020 18:31:25 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id m20sm19512857pfk.52.2020.06.23.18.31.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 18:31:24 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 18:31:22 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>
-Subject: Re: [PATCH v8 0/4]  introduce memory hinting API for external process
-Message-ID: <20200624013122.GA9502@google.com>
-References: <20200622192900.22757-1-minchan@kernel.org>
- <20200623090721.5owt4cxjji6isqe3@butterfly.localdomain>
+        Tue, 23 Jun 2020 21:34:12 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R851e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U0Xwlnb_1592962448;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U0Xwlnb_1592962448)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 24 Jun 2020 09:34:08 +0800
+Date:   Wed, 24 Jun 2020 09:34:08 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, axboe@fb.com, hch@lst.de,
+        baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] nvme: Add Arbitration Burst support
+Message-ID: <20200624013408.GA40094@VM20190228-100.tbsite.net>
+Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
+References: <cover.1592916850.git.baolin.wang@linux.alibaba.com>
+ <bf3f47ba50f72d0b775ca4bd098f183056d964ba.1592916850.git.baolin.wang@linux.alibaba.com>
+ <20200623144014.GB1288900@dhcp-10-100-145-180.wdl.wdc.com>
+ <38482b1b-b1c7-bb41-b086-6ce00f6a9d1d@grimberg.me>
+ <20200623180108.GA1291100@dhcp-10-100-145-180.wdl.wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623090721.5owt4cxjji6isqe3@butterfly.localdomain>
+In-Reply-To: <20200623180108.GA1291100@dhcp-10-100-145-180.wdl.wdc.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksandr,
-
-On Tue, Jun 23, 2020 at 11:07:21AM +0200, Oleksandr Natalenko wrote:
-> On Mon, Jun 22, 2020 at 12:28:56PM -0700, Minchan Kim wrote:
-> > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
-> > application could give hints to kernel what memory range are preferred to be
-> > reclaimed. However, in some platform(e.g., Android), the information
-> > required to make the hinting decision is not known to the app.
-> > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
-> > and that daemon must be able to initiate reclaim on its own without any app
-> > involvement.
+On Tue, Jun 23, 2020 at 11:01:08AM -0700, Keith Busch wrote:
+> On Tue, Jun 23, 2020 at 10:39:01AM -0700, Sagi Grimberg wrote:
 > > 
-> > To solve the concern, this patch introduces new syscall - process_madvise(2).
-> > Bascially, it's same with madvise(2) syscall but it has some differences.
+> > > >  From the NVMe spec, "In order to make efficient use of the non-volatile
+> > > > memory, it is often advantageous to execute multiple commands from a
+> > > > Submission Queue in parallel. For Submission Queues that are using
+> > > > weighted round robin with urgent priority class or round robin
+> > > > arbitration, host software may configure an Arbitration Burst setting".
+> > > > Thus add Arbitration Burst setting support.
+> > > 
+> > > But if the user changed it to something else that better matches how
+> > > they want to use queues, the driver is just going to undo that setting
+> > > on the next reset.
 > > 
-> > 1. It needs pidfd of target process to provide the hint
-> > 2. It supports only MADV_{COLD|PAGEOUT} at this moment.
-> >    Other hints in madvise will be opened when there are explicit requests from
-> >    community to prevent unexpected bugs we couldn't support.
-> > 3. Only privileged processes can do something for other process's address
-> >    space.
-> > 
-> > For more detail of the new API, please see "mm: introduce external memory hinting API"
-> > description in this patchset.
-> > 
-> > * from v7 -  http://lore.kernel.org/r/20200302193630.68771-1-minchan@kernel.org
-> >   * dropping pid support from new syscall and fold releated patches into syscall patch
-> >   * dropping KSM patch by discussion - Oleksandr, I lost the discussion.
-> >     Please resend the single patch against of the patchset if you resolves the discussion.
-> >     https://lore.kernel.org/linux-api/20200302193630.68771-8-minchan@kernel.org/
+> > Where do we do priority class arbitration? no one sets it
 > 
-> What "next" tag this (v8) submission is based on please?
+> Not the priority class, we don't use WRR in this driver. The RR
+> arbitration can be set from user space and saved across controller
+> resets, like:
+> 
+>   # nvme set-feature -f 1 -v 3 --save
+> 
+> This patch would undo the saved feature value.
 
-It's against on v5.8-rc1-mmots-2020-06-20-21-44 from mmotm - https://github.com/hnaz/linux-mm.git
+OK, I understaood your concern. Now we will select the RR arbitration as default
+in nvme_enable_ctrl(), but for some cases, we will not set the arbitration burst
+values from userspace, and we still want to use the defaut arbitration burst that
+recommended by the controller, taking into consideration any latency requirements.
+
+So I'd like to add a parameter to decide if we can use the default arbitration
+burst like below, how do yo think? Thanks.
+
+static bool use_default_arb;
+module_param(use_default_arb, bool, 0444);
+MODULE_PARM_DESC(use_default_arb, "use default arbitration burst that
+recommended by the controller");
+
