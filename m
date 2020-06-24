@@ -2,145 +2,234 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18368C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A817DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8AFE20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27C9206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:50:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pekx7gKl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KgqQi7st"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388919AbgFXFsE (ORCPT
+        id S2388961AbgFXFua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
+        Wed, 24 Jun 2020 01:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgFXFsE (ORCPT
+        with ESMTP id S2388280AbgFXFu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:48:04 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50EE8C061573;
-        Tue, 23 Jun 2020 22:48:03 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id e22so570908edq.8;
-        Tue, 23 Jun 2020 22:48:03 -0700 (PDT)
+        Wed, 24 Jun 2020 01:50:29 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E33C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 22:50:27 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l63so847922pge.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 22:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cCVczq9jeytjg0iXZ0Ms0EAwn8o1xeP0E8gSbiKjVYc=;
-        b=pekx7gKl8X5Nm8n2yDSv4PtloQ3kGlanN+rnTGZSvPXXzE20vtVyQHAYTjN+WNgKjW
-         JK73I8W4Dpmc7qCizC38HoISfcJYI23SFa157Ci8dwtFXeNsHWqdkJ2ROKSfA98xyQJ+
-         V7sDmKfH/UmhgJAdt3DbCO42Nl4q83FYtElyoRuREhThEfGOJ8fLMIDS1/IMoS6Ujx5J
-         8tANcQiYw5hcjrOqY7MxI++rbcxPPz8nat9qT53rJ1aP2nFGeG6yJ16G8o3N58D3sa5f
-         vFYcuiQX0GgGsO5+iGevGCc6LkwMe16JvXg5+TiD2AHhIBS9zKy6d9IUTmXE2JwA6TSV
-         VSiA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H6rLvs+/Us8y7l4unv6H8vsOB7fkoJlyh65Z/byr44E=;
+        b=KgqQi7stHOlnIP+mibdRvyEyPq4zn3+Ya6DwSnQ3bDrHTa/9PrSYRFSO8HZPEMVt0J
+         4JvWt6JlDnshRFhVAn/zmYMmZ0qWMsRg1F0Jot7woGVPedMSQ45+AEuVL1gM+Xn9qmNu
+         cPqmNBOx0xlQna3IKFe6ZcaqDJ3kIHnQVfpIVAf4KrwrLwB8+F1RpHzg9zORJl/dY5cd
+         U6XQGwsCtjPkoKGLWdCkq51SdPQteTiHn1ttEx+F1dpJfYmvXpMqwVjBEOl3tEoWHRwa
+         IK1dNRZwBtWmVdk8RkK1uP8YM5EfL2UALqRdxlIQmLB1jUiaIggI7KD/yzSsVCbZoXGt
+         SJeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cCVczq9jeytjg0iXZ0Ms0EAwn8o1xeP0E8gSbiKjVYc=;
-        b=jxH4ViR+3pvlGH7Xgxj65UUGAnQPV3h0tvWqtUc4W/f5cGxKnPrkZBG5ukLO11im6E
-         lyfurRkkruSNOIdiCBw1E5/MJGKJK9/8zLrfbmYkZkUwKlkdz7QtI6t1Hw0Z80ia19xo
-         RbzBFE0zj5FIi4sz5i9LXSG88woVysrlBYcx2sXhtuw64qsrudfDcLM2wnE11jkqaCBq
-         yR5ym3dqSXTpR000Y2EW9n+CHqhXTPb8HjxWbEp6FSUT2feSs45/ksvMhrvBRx7Umyt/
-         7Y0TO9xHqm+krIOcNbh/mjk76xQ9CqR74lhLE9ijFU9/i1VdGk5sTUeeOe026thVgJEr
-         ycyw==
-X-Gm-Message-State: AOAM533uFSh7Gtyj00S6mmmsF3gSJ+tydmMLtkPXqXFasom+vdXuqZrM
-        UREDU5CRhteruyr8s338Tehnfw86sqsumPj9IIGA5EpF
-X-Google-Smtp-Source: ABdhPJz6lUsVAyNQDB1oZsYZGg9wmtAQPwNKHeMK7rsYNBqVTjNTplKqWGlw0uYl1JMxqjmkrQhme5kk1R2pBYG0FzQ=
-X-Received: by 2002:a50:fa07:: with SMTP id b7mr5401576edq.298.1592977681772;
- Tue, 23 Jun 2020 22:48:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H6rLvs+/Us8y7l4unv6H8vsOB7fkoJlyh65Z/byr44E=;
+        b=qoYmiekNldsAcG9azY2REckFLXsrbrmfAGj45H6+1AkpOCnyTJhfwwkoxq58HnhHcW
+         +W0hsZIYe+XSUljI4nLrbKD8uJeUotcSzhctEr5ejMvBbLrf4j+l98TsFw8NXjXKAGku
+         sVjaPrnF7699qEjc2SpnuCYhmEE8oYKRynSz+E/C7ebHEECq4mn2KTF04gzbdLMGto2z
+         1IYkjvds6LmXd9OsDwdEwswy/Dj0WT2xZ5iEB3eJTdlkNWqLFbwyZbEJVBP79snq2OWN
+         ExLZAAQNlKpyX+FClzbwk4XkFmgJwoTUmBjxVt1KhGPesqpTiSiNtNEEqmMYHhuD9wKV
+         UaXw==
+X-Gm-Message-State: AOAM53161BoZQao0OvtwYKJlnCSxGj1iQ6ea3oXQ7p04PDbiyLXmr+eQ
+        RLLuPFyWKwwLcC39FX1hl2Wj4A==
+X-Google-Smtp-Source: ABdhPJz4VL0of50dnc2D8fIUi41/NwAI4m1fcVKkuiOj9X7KWJRFPzKJk8bBVeHdvOBl4RAV8fRoTA==
+X-Received: by 2002:a63:f050:: with SMTP id s16mr19755583pgj.261.1592977827297;
+        Tue, 23 Jun 2020 22:50:27 -0700 (PDT)
+Received: from localhost ([122.172.111.76])
+        by smtp.gmail.com with ESMTPSA id g29sm18724321pfr.47.2020.06.23.22.50.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jun 2020 22:50:26 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 11:20:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     rjw@rjwysocki.net, rafael@kernel.org, arnd@arndb.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org
+Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
+Message-ID: <20200624055023.xofefhohf7wifme5@vireshk-i7>
+References: <20200623142138.209513-1-qperret@google.com>
+ <20200623142138.209513-3-qperret@google.com>
 MIME-Version: 1.0
-References: <20200617105929.534edd34@canb.auug.org.au> <20200624113452.54b72fcc@canb.auug.org.au>
-In-Reply-To: <20200624113452.54b72fcc@canb.auug.org.au>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Wed, 24 Jun 2020 15:47:49 +1000
-Message-ID: <CAPM=9tx5b1RaN5R4awqQ-BFpDrEZL1z05ZFv2MnGGS2t3mpBhQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Emil Velikov <emil.velikov@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623142138.209513-3-qperret@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 11:36, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> On Wed, 17 Jun 2020 10:59:29 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > After merging the drm-misc tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> >
-> > drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c: In function 'amdgpu_amdkfd_gpuvm_free_memory_of_gpu':
-> > drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c:1357:2: error: implicit declaration of function 'drm_gem_object_put_unlocked'; did you mean 'drm_gem_object_put_locked'? [-Werror=implicit-function-declaration]
-> >  1357 |  drm_gem_object_put_unlocked(&mem->bo->tbo.base);
-> >       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >       |  drm_gem_object_put_locked
-> >
-> > Caused by commit
-> >
-> >   ab15d56e27be ("drm: remove transient drm_gem_object_put_unlocked()")
-> >
-> > interacting with commit
-> >
-> >   fd9a9f8801de ("drm/amdgpu: Use GEM obj reference for KFD BOs")
-> >
-> > from Linus' tree.
-> >
-> > I have applied the following merge fix up patch for today.
-> >
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Wed, 17 Jun 2020 10:55:32 +1000
-> > Subject: [PATCH] drm/amdgpu: remove stray drm_gem_object_put_unlocked
-> >
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> > index b91b5171270f..9015c7b76d60 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> > @@ -1354,7 +1354,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
-> >       }
-> >
-> >       /* Free the BO*/
-> > -     drm_gem_object_put_unlocked(&mem->bo->tbo.base);
-> > +     drm_gem_object_put(&mem->bo->tbo.base);
-> >       mutex_destroy(&mem->lock);
-> >       kfree(mem);
-> >
-> > --
-> > 2.26.2
->
-> This fix is now needed when I merge the drm tree :-(
->
-> Given that the drm tree is based on v5.8-rc2 and the commit from Linus'
-> tree above was merged before v5.8-rc1, the above patch should be
-> applied to the drm tree (and should have been part of the patch that
-> merged the drm-misc tree).  I am a bit suprised that the drm tree
-> currently passes CI.
+On 23-06-20, 15:21, Quentin Perret wrote:
+> Currently, the only way to specify the default CPUfreq governor is via
+> Kconfig options, which suits users who can build the kernel themselves
+> perfectly.
+> 
+> However, for those who use a distro-like kernel (such as Android, with
+> the Generic Kernel Image project), the only way to use a different
+> default is to boot to userspace, and to then switch using the sysfs
+> interface. Being able to specify the default governor on the command
+> line, like is the case for cpuidle, would enable those users to specify
+> their governor of choice earlier on, and to simplify slighlty the
+> userspace boot procedure.
+> 
+> To support this use-case, add a kernel command line parameter enabling
+> to specify a default governor for CPUfreq, which takes precedence over
+> the builtin default.
+> 
+> This implementation has one notable limitation: the default governor
+> must be registered before the driver. This is solved for builtin
+> governors and drivers using appropriate *_initcall() functions. And in
+> the modular case, this must be reflected as a constraint on the module
+> loading order.
+> 
+> Signed-off-by: Quentin Perret <qperret@google.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  5 ++++
+>  Documentation/admin-guide/pm/cpufreq.rst      |  6 ++---
+>  drivers/cpufreq/cpufreq.c                     | 23 +++++++++++++++----
+>  3 files changed, 26 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index fb95fad81c79..5fd3c9f187eb 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -703,6 +703,11 @@
+>  	cpufreq.off=1	[CPU_FREQ]
+>  			disable the cpufreq sub-system
+>  
+> +	cpufreq.default_governor=
+> +			[CPU_FREQ] Name of the default cpufreq governor to use.
+> +			This governor must be registered in the kernel before
+> +			the cpufreq driver probes.
+> +
+>  	cpu_init_udelay=N
+>  			[X86] Delay for N microsec between assert and de-assert
+>  			of APIC INIT to start processors.  This delay occurs
+> diff --git a/Documentation/admin-guide/pm/cpufreq.rst b/Documentation/admin-guide/pm/cpufreq.rst
+> index 0c74a7784964..368e612145d2 100644
+> --- a/Documentation/admin-guide/pm/cpufreq.rst
+> +++ b/Documentation/admin-guide/pm/cpufreq.rst
+> @@ -147,9 +147,9 @@ CPUs in it.
+>  
+>  The next major initialization step for a new policy object is to attach a
+>  scaling governor to it (to begin with, that is the default scaling governor
+> -determined by the kernel configuration, but it may be changed later
+> -via ``sysfs``).  First, a pointer to the new policy object is passed to the
+> -governor's ``->init()`` callback which is expected to initialize all of the
+> +determined by the kernel command line or configuration, but it may be changed
+> +later via ``sysfs``).  First, a pointer to the new policy object is passed to
+> +the governor's ``->init()`` callback which is expected to initialize all of the
+>  data structures necessary to handle the given policy and, possibly, to add
+>  a governor ``sysfs`` interface to it.  Next, the governor is started by
+>  invoking its ``->start()`` callback.
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 0128de3603df..4b1a5c0173cf 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -50,6 +50,9 @@ static LIST_HEAD(cpufreq_governor_list);
+>  #define for_each_governor(__governor)				\
+>  	list_for_each_entry(__governor, &cpufreq_governor_list, governor_list)
+>  
+> +static char cpufreq_param_governor[CPUFREQ_NAME_LEN];
+> +static struct cpufreq_governor *default_governor;
+> +
+>  /**
+>   * The "cpufreq driver" - the arch- or hardware-dependent low
+>   * level driver of CPUFreq support, and its spinlock. This lock
+> @@ -1055,7 +1058,6 @@ __weak struct cpufreq_governor *cpufreq_default_governor(void)
+>  
+>  static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>  {
+> -	struct cpufreq_governor *def_gov = cpufreq_default_governor();
+>  	struct cpufreq_governor *gov = NULL;
+>  	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
+>  
+> @@ -1065,8 +1067,8 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>  		if (gov) {
+>  			pr_debug("Restoring governor %s for cpu %d\n",
+>  				 policy->governor->name, policy->cpu);
+> -		} else if (def_gov) {
+> -			gov = def_gov;
+> +		} else if (default_governor) {
+> +			gov = default_governor;
+>  		} else {
+>  			return -ENODATA;
+>  		}
+> @@ -1074,8 +1076,8 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>  		/* Use the default policy if there is no last_policy. */
+>  		if (policy->last_policy) {
+>  			pol = policy->last_policy;
+> -		} else if (def_gov) {
+> -			pol = cpufreq_parse_policy(def_gov->name);
+> +		} else if (default_governor) {
+> +			pol = cpufreq_parse_policy(default_governor->name);
+>  			/*
+>  			 * In case the default governor is neiter "performance"
+>  			 * nor "powersave", fall back to the initial policy
+> @@ -2320,6 +2322,9 @@ int cpufreq_register_governor(struct cpufreq_governor *governor)
+>  		list_add(&governor->governor_list, &cpufreq_governor_list);
+>  	}
+>  
+> +	if (!strncasecmp(cpufreq_param_governor, governor->name, CPUFREQ_NAME_LEN))
+> +		default_governor = governor;
+> +
+>  	mutex_unlock(&cpufreq_governor_mutex);
+>  	return err;
+>  }
+> @@ -2348,6 +2353,8 @@ void cpufreq_unregister_governor(struct cpufreq_governor *governor)
+>  
+>  	mutex_lock(&cpufreq_governor_mutex);
+>  	list_del(&governor->governor_list);
+> +	if (governor == default_governor)
+> +		default_governor = cpufreq_default_governor();
+>  	mutex_unlock(&cpufreq_governor_mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(cpufreq_unregister_governor);
+> @@ -2789,7 +2796,13 @@ static int __init cpufreq_core_init(void)
+>  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+>  	BUG_ON(!cpufreq_global_kobject);
+>  
+> +	mutex_lock(&cpufreq_governor_mutex);
+> +	if (!default_governor)
+> +		default_governor = cpufreq_default_governor();
+> +	mutex_unlock(&cpufreq_governor_mutex);
 
-My bad, my local builds passed, as I had made the change but forgot
-the commit --amend
+I don't think locking is required here at core-initcall level. Apart
+from that:
 
-Pushed out a new head with it in it now.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Dave.
+> +
+>  	return 0;
+>  }
+>  module_param(off, int, 0444);
+> +module_param_string(default_governor, cpufreq_param_governor, CPUFREQ_NAME_LEN, 0444);
+>  core_initcall(cpufreq_core_init);
+> -- 
+> 2.27.0.111.gc72c7da667-goog
+
+-- 
+viresh
