@@ -2,101 +2,123 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD08C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1ACE20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593005245;
-	bh=Uvzn5GGmX3qulKFklqhuFpDaBfwgpNZzFNj7oeuicfM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YBrw+3OTUmxmIH255yKwF/Nh+e3V5fgMg5YcbXjEBxwmysTWkbJeHE4enYYbKdhnq
-	 xvjzIY+4X0YXJL+d7e6v6raW7hMYqV0SzldeYojUU7NC/JW6eXUvIpSf+yhCuDdCw0
-	 IIeJ0Dp/C4qRapx2Bqb7MwVxF+pfNCrDfD5oKuxI=
+	by mail.kernel.org (Postfix) with ESMTP id 8027820738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390949AbgFXN1Y (ORCPT
+        id S2390967AbgFXN1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 09:27:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9530 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388365AbgFXN1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:27:18 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BE620738;
-        Wed, 24 Jun 2020 13:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593005236;
-        bh=Uvzn5GGmX3qulKFklqhuFpDaBfwgpNZzFNj7oeuicfM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DfCE+6p7BklpNaLNzQGhFErdJ9GEeuS7AoSebSPlnZJF5jsAgVtdGk7vUEwnjQGgM
-         Fn2nQQELoj20anBdPArhIYnmlCcO2McCZEr2SrlB22cC8+EVhVWDkjq3ApDnPNuzAW
-         6nsZgily1LPUOeIOBI2Li9olPjFfkoKLlrTYAVm0=
-Date:   Wed, 24 Jun 2020 14:27:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        andy.shevchenko@gmail.com,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Subject: Re: [RESEND PATCH v5 1/5] driver core: add probe_err log helper
-Message-ID: <20200624132714.GD5472@sirena.org.uk>
-References: <20200624114127.3016-1-a.hajda@samsung.com>
- <CGME20200624114135eucas1p26e2e4683d60cebdce7acd55177013992@eucas1p2.samsung.com>
- <20200624114127.3016-2-a.hajda@samsung.com>
+        id S2388365AbgFXN1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:27:34 -0400
+IronPort-SDR: iJoK++frYMTOh4efWO2QOAjZ1sbV5DX7KAK/aE980u73ZvwTUiCjHo16Fyq+ona96pqNjIYLAp
+ 0YD3f818uceg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="141937117"
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="141937117"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 06:27:33 -0700
+IronPort-SDR: cThq9LSaBv5fKEdVFLn7tFTuH25KgEDKBA5g3Xz7GgkH8h7JFIZkBPmbgXQukHKloiaIngpn7U
+ +2TdYLvrk33A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="265073909"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Jun 2020 06:27:33 -0700
+Received: from [10.249.228.248] (abudanko-mobl.ccr.corp.intel.com [10.249.228.248])
+        by linux.intel.com (Postfix) with ESMTP id 4DB685805B5;
+        Wed, 24 Jun 2020 06:27:28 -0700 (PDT)
+Subject: Re: [PATCH v8 07/13] perf stat: factor out event handling loop into
+ dispatch_events()
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <4d90938c-429a-586c-0cc7-767f804c6bce@linux.intel.com>
+ <20200623145622.GJ2619137@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <4aa8c212-7bc7-3689-03ad-5ce6fd0e6356@linux.intel.com>
+Date:   Wed, 24 Jun 2020 16:27:26 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
-Content-Disposition: inline
-In-Reply-To: <20200624114127.3016-2-a.hajda@samsung.com>
-X-Cookie: So this is it.  We're going to die.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200623145622.GJ2619137@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---EY/WZ/HvNxOox07X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 23.06.2020 17:56, Jiri Olsa wrote:
+> On Wed, Jun 17, 2020 at 11:40:03AM +0300, Alexey Budankov wrote:
+>>
+>> Consolidate event dispatching loops for fork, attach and system
+>> wide monitoring use cases into common dispatch_events() function.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/perf/builtin-stat.c | 35 ++++++++++++++++++++++++-----------
+>>  1 file changed, 24 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>> index 3bc538576607..39749c290508 100644
+>> --- a/tools/perf/builtin-stat.c
+>> +++ b/tools/perf/builtin-stat.c
+>> @@ -557,6 +557,27 @@ static bool is_target_alive(struct target *_target,
+>>  	return false;
+>>  }
+>>  
+>> +static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
+>> +{
+>> +	bool stop = false;
+>> +	int child = 0, status = 0;
+>> +
+>> +	while (1) {
+>> +		if (forks)
+>> +			child = waitpid(child_pid, &status, WNOHANG);
+>> +		else
+>> +			child = !is_target_alive(&target, evsel_list->core.threads) ? 1 : 0;
+> 
+> please renme child to something more accurate, so the condition
+> below makes more sense, like child_stoped or such
 
-On Wed, Jun 24, 2020 at 01:41:23PM +0200, Andrzej Hajda wrote:
-> During probe every time driver gets resource it should usually check for error
-> printk some message if it is not -EPROBE_DEFER and return the error. This
+Well, let's have it named like  child_stopped.
 
-As I said down the thread that's not a great pattern since it means that
-probe deferral errors never get displayed and users have a hard time
-figuring out why their driver isn't instantiating.
+~Alexey
 
---EY/WZ/HvNxOox07X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zVLEACgkQJNaLcl1U
-h9ATPwgAhY22sy/BHlt091VyG8FAdVlhbYN6mk0lzhvHH7Vi9lhuFnpv4CoWIPp9
-H3U6sE0bCKLDG8crEhrVfxSMYy8XdDafn37Ua0NYY/gKj3xKfLvZ6SgYAxKN9ljb
-Fsr2TgqJzAlbV3h5wI9HX8GOzK3YU6qD0lv8QzWu4UU0zkgXD1ty2jIwAa/zv4F0
-BvCMvOshZd7pXBg0unqxP0vm3dbOUbC3dup88YjidkmYYYQl8IHbPlrwtDlhVrk3
-Eq3t9t69041O+cB6Rg6QIvKAumr/d5BmCqbajAXowB67NKvxxqzOhCIntTqKEiVw
-U7DHVCCkPY49rXIH1tKz1ahQhgdu5w==
-=XUqJ
------END PGP SIGNATURE-----
-
---EY/WZ/HvNxOox07X--
+> 
+> jirka
+> 
+>> +
+>> +		if (done || stop || child)
+>> +			break;
+>> +
+>> +		nanosleep(ts, NULL);
+>> +		stop = process_timeout(timeout, interval, times);
+>> +	}
+>> +
+>> +	return status;
+>> +}
+>> +
+> 
+> SNIP
+> 
