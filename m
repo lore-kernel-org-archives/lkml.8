@@ -3,131 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AED1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F81C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 272C520707
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B759F20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389393AbgFXLtL (ORCPT
+        id S2403791AbgFXLwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:49:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38180 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403784AbgFXLtK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:49:10 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OBXQxR137219;
-        Wed, 24 Jun 2020 07:48:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d77g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 07:48:18 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OBXWRp137775;
-        Wed, 24 Jun 2020 07:48:16 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d75v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 07:48:16 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OBkbc2026374;
-        Wed, 24 Jun 2020 11:48:13 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 31uururavg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 11:48:13 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OBmAwx61079580
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 11:48:10 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6AFA3A405C;
-        Wed, 24 Jun 2020 11:48:10 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45497A4054;
-        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.4.225])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
-Date:   Wed, 24 Jun 2020 13:48:08 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr, ziy@nvidia.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Wed, 24 Jun 2020 07:52:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:39384 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389075AbgFXLwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:52:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D881E1F1;
+        Wed, 24 Jun 2020 04:52:04 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FA4E3F6CF;
+        Wed, 24 Jun 2020 04:52:03 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 12:52:01 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Dave P Martin <Dave.Martin@arm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
-Message-ID: <20200624134808.0c460862@thinkpad>
-In-Reply-To: <20200624110539.GC24934@oc3871087118.ibm.com>
-References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
-        <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
-        <20200624110539.GC24934@oc3871087118.ibm.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Will Deacon <will@kernel.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
+Message-ID: <20200624115200.GA31575@gaia>
+References: <20200617123844.29960-1-steven.price@arm.com>
+ <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
+ <20200624093846.GA11863@gaia>
+ <20200624103412.GD25945@arm.com>
+ <faa68f22-4d8e-0290-b52a-63ae7425b988@arm.com>
+ <20200624110904.GB11863@gaia>
+ <904edac0-3de7-35a6-a9bc-b983ccd3490c@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-24_06:2020-06-24,2020-06-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 phishscore=0 impostorscore=0 cotscore=-2147483648
- bulkscore=0 adultscore=0 mlxlogscore=663 mlxscore=0 priorityscore=1501
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006240085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <904edac0-3de7-35a6-a9bc-b983ccd3490c@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 13:05:39 +0200
-Alexander Gordeev <agordeev@linux.ibm.com> wrote:
-
-> On Wed, Jun 24, 2020 at 08:43:10AM +0530, Anshuman Khandual wrote:
-> 
-> [...]
-> 
-> > Hello Gerald/Christophe/Vineet,
+On Wed, Jun 24, 2020 at 12:18:46PM +0100, Steven Price wrote:
+> On 24/06/2020 12:09, Catalin Marinas wrote:
+> > On Wed, Jun 24, 2020 at 12:03:35PM +0100, Steven Price wrote:
+> > > On 24/06/2020 11:34, Dave Martin wrote:
+> > > > On Wed, Jun 24, 2020 at 10:38:48AM +0100, Catalin Marinas wrote:
+> > > > > On Tue, Jun 23, 2020 at 07:05:07PM +0100, Peter Maydell wrote:
+> > > > > > On Wed, 17 Jun 2020 at 13:39, Steven Price <steven.price@arm.com> wrote:
+> > > > > > > These patches add support to KVM to enable MTE within a guest. It is
+> > > > > > > based on Catalin's v4 MTE user space series[1].
+> > > > > > > 
+> > > > > > > [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
+> > > > > > > 
+> > > > > > > Posting as an RFC as I'd like feedback on the approach taken.
+> > > > > > 
+> > > > > > What's your plan for handling tags across VM migration?
+> > > > > > Will the kernel expose the tag ram to userspace so we
+> > > > > > can copy it from the source machine to the destination
+> > > > > > at the same time as we copy the actual ram contents ?
+> > > > > 
+> > > > > Qemu can map the guest memory with PROT_MTE and access the tags directly
+> > > > > with LDG/STG instructions. Steven was actually asking in the cover
+> > > > > letter whether we should require that the VMM maps the guest memory with
+> > > > > PROT_MTE as a guarantee that it can access the guest tags.
+> > > > > 
+> > > > > There is no architecturally visible tag ram (tag storage), that's a
+> > > > > microarchitecture detail.
+> > > > 
+> > > > If userspace maps the guest memory with PROT_MTE for dump purposes,
+> > > > isn't it going to get tag check faults when accessing the memory
+> > > > (i.e., when dumping the regular memory content, not the tags
+> > > > specifically).
+> > > > 
+> > > > Does it need to map two aliases, one with PROT_MTE and one without,
+> > > > and is that architecturally valid?
+> > > 
+> > > Userspace would either need to have two mappings (I don't believe there are
+> > > any architectural issues with that - but this could be awkward to arrange in
+> > > some situations) or be careful to avoid faults. Basically your choices with
+> > > one mapping are:
+> > > 
+> > >   1. Disable tag checking (using prctl) when touching the memory. This works
+> > > but means you lose tag checking for the VMM's own accesses during this code
+> > > sequence.
+> > > 
+> > >   2. Read the tag values and ensure you use the correct tag. This suffers
+> > > from race conditions if the VM is still running.
+> > > 
+> > >   3. Use one of the exceptions in the architecture that generates a Tag
+> > > Unchecked access. Sadly the only remotely useful thing I can see in the v8
+> > > ARM is "A base register plus immediate offset addressing form, with the SP
+> > > as the base register." - but making sure SP is in range of where you want to
+> > > access would be a pain.
 > > 
-> > It would be really great if you could give this series a quick test
-> > on s390/ppc/arc platforms respectively. Thank you.
+> > Or:
+> > 
+> > 4. Set PSTATE.TCO when accessing tagged memory in an unsafe way.
 > 
-> That worked for me with the default and debug s390 configurations.
-> Would you like to try with some particular options or combinations
-> of the options?
+> Ah yes, similar to (1) but much lower overhead ;) That's probably the best
+> option - it can be hidden in a memcpy_ignoring_tags() function. However it
+> still means that the VMM can't directly touch the guest's memory which might
+> cause issues for the VMM.
 
-It will be enabled automatically on all archs that set
-ARCH_HAS_DEBUG_VM_PGTABLE, which we do for s390 unconditionally.
-Also, DEBUG_VM has to be set, which we have only in the debug config.
-So only the s390 debug config will have it enabled, you can check
-dmesg for "debug_vm_pgtable" to see when / where it was run, and if it
-triggered any warnings.
+You are right, I don't think it's safe for the VMM to access the guest
+memory via a PROT_MTE mapping. If the guest is using memory tagging for
+for a buffer and then it is passed to qemu for virtio, the tag
+information may have been lost already (does qemu only get the IPA in
+this case?)
 
-I also checked with the v3 series, and it works fine for s390.
+So we may end up with two mappings after all, one for the normal
+execution and a new on if migration is needed.
+
+-- 
+Catalin
