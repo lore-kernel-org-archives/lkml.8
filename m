@@ -2,104 +2,157 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4542FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF05BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2080720723
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A8B2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PFUTEJVQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLWp55cC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404466AbgFXPVb (ORCPT
+        id S2404197AbgFXPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58670 "EHLO
+        Wed, 24 Jun 2020 11:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404333AbgFXPVa (ORCPT
+        with ESMTP id S2404092AbgFXPXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:21:30 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04968C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:21:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k1so1189025pls.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:21:28 -0700 (PDT)
+        Wed, 24 Jun 2020 11:23:01 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CEDFC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:23:01 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id u8so1190057qvj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:23:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hipZu7svv8YCOGWfV429rAgefIwLANWXqxhaAHNlUDs=;
-        b=PFUTEJVQwh2+4QRR1nFSJ1vpBf1P1htrZ93UyqcsZYbdOmeZSMIhkYQd42QutBKyJs
-         TJmRw7i1dvHgb8fEVkq9MnKeDv9Rz3iq8rIhQJBq5dr5O8JseercMwc1JUo8HpJOhm/L
-         hgo66dKugSbGc/w9UC2Psf+VHkXtb5H5cZmBA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=o8WO4FwPMMVJumAcMtjFKZzBUw94gPXqNMSz5go/YzA=;
+        b=fLWp55cC6brOr3WSJga3/tcSm/BlsyClXysj/n1kXkr6Gm1JOwArAv9EugsTxYhGmL
+         6fOcv6Cb6pggdB128TXaTlsWOySfTJJZ2fPiEQcDFdScieY8UDi1DBxafIlfNa2yZdaV
+         XMA4tta+xS0e4/xANOizXBlgJoNXUi0Xs+MkspK0Gy1IaNqICBRYBVVbWbKqFlizuNn+
+         2n8WjjJI1eFeDJjqoaaFAcPdai6JyjC2B6KLY3DMamJtLXeSUEWtnop14fn9elqCEGQH
+         /M9j8ivJR3mqi+wvyKRtXRYhXX43LGEKNAnfM/652TzNUF/RUpgpUToJ/YLP2GO+PUVi
+         1Gtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hipZu7svv8YCOGWfV429rAgefIwLANWXqxhaAHNlUDs=;
-        b=c7ZwM7xWSaM8j/K75ANdZOCoftSsaaOyq+Cir2sguotkquYsiIE8pq3x09thHCIG9H
-         ixFn2PrMB4UPWeD3hkDDqhGfo4O9D3nxW6qLPoz2SnimsXUZRsAZ/nSp/oFuovCHDdxj
-         LDGk68+ECtZawFNDnKCf90PpujsHx1JNNPv3dqhWoatbwhwAVg2m2MNV7bHeVRgvr8D/
-         m47s5cb14i6ruil2SZjbWEeHn1ckQOCb6yRD+PXMeFCSC1zpM+ehgy4LMJqXnTBarZUT
-         5AbF3tc3R8pmdvEqcKhGNVOn+zuN7uTBvDe26SMnlMuI49RPMTzqssO+esknOETxDXVf
-         VMYw==
-X-Gm-Message-State: AOAM531ZrzlRqSkpo0+8ykpvk7/A7P0is+su7C1lSWqA4HV80RVGOOLk
-        9S776wgj9HrwAGOjLt3gpnG2AQ==
-X-Google-Smtp-Source: ABdhPJz6Pb/Uq4DmJN0BF/hWfnaErTToTjkFKWI6VNCSQl12WLTaojfbfbhCZdSTruAF/RMm4+CkOA==
-X-Received: by 2002:a17:90a:cc09:: with SMTP id b9mr25741536pju.223.1593012088520;
-        Wed, 24 Jun 2020 08:21:28 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m8sm5504017pjk.20.2020.06.24.08.21.27
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=o8WO4FwPMMVJumAcMtjFKZzBUw94gPXqNMSz5go/YzA=;
+        b=X8m1tajDG7j+wmMyKGM7IwpoRHp/S5KOPzqFNabZjoZ6DRyQZdZ0yyhrF9H+FmDib1
+         KCaZVUwFvQ1XAkGaPn1GpdbtejEIy5lTHopHENXArd0Uxn/918z8mLPJopuDNh9TanKd
+         NFah6XLY/O28x7/5SDth7PVKo4gQUjTCf8RTYJIYkI6Rkj3XIQE571JND7FxsISQfWEN
+         YqrakCyK3xpL1UNeXNZrhSXeDYX5tFE15fa8jZhLKkNfDH8SQfBauQv32LQmeqU6DBzQ
+         lJj8ZlYR7N+t4EgpKGkgA0DcztIxm2vnoEiKcfWCvUddnC9Ln/uURtXfQiYowhrItC9s
+         28cQ==
+X-Gm-Message-State: AOAM532eMvTahfFEYgK2b/wMOkrwGd/emBhKJOwQHmwTG5PUWOhn3wi6
+        5Rkz0O3wpWAXX+vCmBvmUcI=
+X-Google-Smtp-Source: ABdhPJw+Sg4HKtlC6yNVorphDuMImKS5ITm7fR2GvW7ccjgSaqLox34vx6TRkuDqGh2xwrN9fMYagg==
+X-Received: by 2002:a0c:8d46:: with SMTP id s6mr31945947qvb.241.1593012180655;
+        Wed, 24 Jun 2020 08:23:00 -0700 (PDT)
+Received: from localhost.localdomain ([72.53.229.195])
+        by smtp.gmail.com with ESMTPSA id w1sm3558521qto.0.2020.06.24.08.22.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:21:27 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 08:21:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Fangrui Song <maskray@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-Message-ID: <202006240820.A3468F4@keescook>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org>
- <20200624033142.cinvg6rbg252j46d@google.com>
- <202006232143.66828CD3@keescook>
- <20200624104356.GA6134@willie-the-truck>
- <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+        Wed, 24 Jun 2020 08:23:00 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     shawnguo@kernel.org, fugang.duan@nxp.com
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] ARM: imx6plus: enable internal routing of clk_enet_ref where possible
+Date:   Wed, 24 Jun 2020 11:22:56 -0400
+Message-Id: <20200624152256.21937-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
-> I'm not sure if there is a point to having PAC and/or BTI in the EFI
-> stub, given that it runs under the control of the firmware, with its
-> memory mappings and PAC configuration etc.
+On imx6, the ethernet reference clock (clk_enet_ref) can be generated
+by either the imx6, or an external source (e.g. an oscillator or the
+PHY). When generated by the imx6, the clock source (from ANATOP)
+must be routed to the input of clk_enet_ref via two pads on the SoC,
+typically via a dedicated track on the PCB.
 
-Is BTI being ignored when the firmware runs?
+On an imx6 plus however, there is a new setting which enables this
+clock to be routed internally on the SoC, from its ANATOP clock
+source, straight to clk_enet_ref, without having to go through
+the SoC pads.
 
+Board designs where the clock is generated by the imx6 should not
+be affected by routing the clock internally. Therefore on a plus,
+we can enable internal routing by default.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+v2 -> v3:
+  - remove check for imx6q, which is already implied when
+    of_machine_is_compatible("fsl,imx6qp")
+v1 -> v2:
+  - Fabio Estevam: use of_machine_is_compatible() to determine if we
+    are running on an imx6 plus.
+
+To: Shawn Guo <shawnguo@kernel.org>
+To: Andy Duan <fugang.duan@nxp.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+ arch/arm/mach-imx/mach-imx6q.c              | 18 ++++++++++++++++++
+ include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |  1 +
+ 2 files changed, 19 insertions(+)
+
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index 85c084a716ab..a760779b934e 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -203,6 +203,24 @@ static void __init imx6q_1588_init(void)
+ 	else
+ 		pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
+ 
++	/*
++	 * On imx6 plus, enet_ref from ANATOP/CCM can be internally routed to
++	 * be the PTP clock source, instead of having to be routed through
++	 * pads.
++	 * Board designs which route the ANATOP/CCM clock through pads are
++	 * unaffected when routing happens internally. So on these designs,
++	 * route internally by default.
++	 */
++	if (clksel == IMX6Q_GPR1_ENET_CLK_SEL_ANATOP &&
++			of_machine_is_compatible("fsl,imx6qp")) {
++		if (!IS_ERR(gpr))
++			regmap_update_bits(gpr, IOMUXC_GPR5,
++					IMX6Q_GPR5_ENET_TXCLK_SEL,
++					IMX6Q_GPR5_ENET_TXCLK_SEL);
++		else
++			pr_err("failed to find fsl,imx6q-iomuxc-gpr regmap\n");
++		}
++
+ 	clk_put(enet_ref);
+ put_ptp_clk:
+ 	clk_put(ptp_clk);
+diff --git a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+index d4b5e527a7a3..eb65d48da0df 100644
+--- a/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
++++ b/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+@@ -240,6 +240,7 @@
+ #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
+ 
+ #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
++#define IMX6Q_GPR5_ENET_TXCLK_SEL		BIT(9)
+ #define IMX6Q_GPR5_SATA_SW_PD			BIT(10)
+ #define IMX6Q_GPR5_SATA_SW_RST			BIT(11)
+ 
 -- 
-Kees Cook
+2.17.1
+
