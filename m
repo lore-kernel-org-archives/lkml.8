@@ -2,182 +2,122 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC6120C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C350420B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:18:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PTp4jBmr"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Zs0iesBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390153AbgFXKSL (ORCPT
+        id S2390213AbgFXKSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:18:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
+        Wed, 24 Jun 2020 06:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388551AbgFXKSJ (ORCPT
+        with ESMTP id S2388551AbgFXKSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:18:09 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A2CC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:18:09 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id t6so1385969otk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:18:09 -0700 (PDT)
+        Wed, 24 Jun 2020 06:18:21 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DC1C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:18:20 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l188so1271008qkf.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4EH3Ayzk56MpDLOyZMi6Qg/VpTeqgjGr2SzN8cMmYoc=;
-        b=PTp4jBmr409uWPW5Vt6YrFOGDI30bKkNf7AC3vJo8Zwx4VR1rbjpgadDaEIZaiNFVL
-         VBJTF4XPT50EzLlvQiw8k4f2W0kd7aQGIMmlpeve9yrSDO078p6j5Vr2Ri837Rhm4jfv
-         u1+mRP5qAmpO/O+bu41SiNy9tUQ79STVe38DFeFeNP9499lp6tYg2B/9LdPxLqSViv/A
-         aEpznoyQ9vt5hdRMbFbNXOt8J3TRaPZVbdEX7KyF7CUmhSh1dbmdFYj9dqvPQj4ajKRS
-         cF2lIRn2VYT9yr1bRN5NevIgJSIw+t8chreAMLUflL4yfhZAHloKAxOl7LxOqTVI1NyJ
-         3/4w==
+         :cc:content-transfer-encoding;
+        bh=8jgfU2E0apwMh6wsaejptHHCTw5UgOkwm0wLww38xJk=;
+        b=Zs0iesBVSboLL0pPa3SmzoU3GGAhIWocMZKNz/qHAInfUbsED3WVXRTwdFNtSOLfoA
+         s3NnIhn6Oy8edwR99FVaom1dOVGIg6yLJ0AXEU/8fe2BoOdUH2ZUJ8W5FMIGNbj0PaJZ
+         xS4h/W3uokUCTPMzUX4LCrPvcTeGV/W/7ODHCVYPXG17R7e3e88iU6uDKjdZEfYLz1DO
+         SoX8Lk8wfKkLDOI9SyR675ieJCNw9l8sgtRMM7d0eXQJWapYbBR6pTCz0YOycsvICdEz
+         IwHHiKIaeCjowv8l5AzigbdoDUqnCb02xVESinUoiM5inJrLXcxnuxOQh6nw5+DIeg63
+         u9wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4EH3Ayzk56MpDLOyZMi6Qg/VpTeqgjGr2SzN8cMmYoc=;
-        b=N0GJx3++gsPmFI4yB50E2L+Li4C9gnXNLCXKydXMpUrUO3KGWTIAr+Bwy8oPnCy+Bp
-         AL02QCQtmg04CvLrAT8hhB+HR4KPLbU3y+1Q3v6x0G4ei1favNuSDMfOOzKLDNXaqaOW
-         SoerDmWo6N2n7MPCfPSnNCI1AhgDcU2YGdDAlY527+NsyvVA8x4qF7+dMl3PYMLZpqLU
-         l8uIKQJsdUqxeEttvIzK1zGiGDCvanpIvkXS2GLr4NEmPccagEnDuSC0jqMgU8EIIOBS
-         BZoNHYLX2wrrkUktLrpxtZxPwzGMC08fmoQyBVBYTlRdiAj4/HUt4xUQVVL3YewtLBia
-         gWEg==
-X-Gm-Message-State: AOAM533Do/EHlt3jkJ3rMSejxHby96XDSlPAOyu6IYkvtKJDxDg6ktJo
-        AfBlcZkBldUhxbvCFtwtEG1qW5iAlfylLC+hZcslfg==
-X-Google-Smtp-Source: ABdhPJw+WsW4dQOdXlVaB0Camas9/CrD9Jx9TYR5aNuPASM2glwnAa/P+LokVbvtPCFjZhr2vBM7U5l7wiUgv2imktE=
-X-Received: by 2002:a9d:638c:: with SMTP id w12mr18833226otk.251.1592993888296;
- Wed, 24 Jun 2020 03:18:08 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8jgfU2E0apwMh6wsaejptHHCTw5UgOkwm0wLww38xJk=;
+        b=ieafJxvvhVSmWSLjm3jsreKkGo8Zw2ES7OuXG/y3He6LDvYFDtWhUK7wieRUGoHZgQ
+         Mm/pB4Uuyw/8i57OJw0ZvpzcJJvhI1u/FPch8gwte5XmihoHksVjcNm4mSmLZLW3TEUD
+         N/+hwAq0z2+CxZUm9ah5xH1rUUSXv6vHM2NEP9TCGWk6nN0lRoKJjcgdRfia8xDmlJTK
+         1I5Wlo2Rbf7SF6HhgXzGXLTYJ17grCdKiWWWK9bQMXs53KZwJqwyX2TP3P8yB/7foKQx
+         VGW1wvhiBaUFiLR9ZLyZjA6IP94LbvIhAzVatL38QAG+1HK7XVJDBDSN8/Ci738JyElW
+         dUkg==
+X-Gm-Message-State: AOAM530K7xkIGSfIUASRGRSf6pldvrD9X4p4e8RyRZyfdPAAhVU3AyzO
+        wLRGy40WoNosqEerYB1hAZsQVTsdx6c3d3T14SD+C2y2
+X-Google-Smtp-Source: ABdhPJxNRfFJkbDxdLxofIwKZguLERV2rujyL4vJHjYoiDq6+3W5IMkv5upBRlgurYdNM8aGw0dOWaZAKREOcHxHBpQ=
+X-Received: by 2002:a37:aac4:: with SMTP id t187mr22208491qke.263.1592993899699;
+ Wed, 24 Jun 2020 03:18:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623083645.277342609@infradead.org> <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net> <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net> <20200623175957.GA106514@elver.google.com>
- <20200623181232.GB4800@hirez.programming.kicks-ass.net> <20200623202404.GE2483@worktop.programming.kicks-ass.net>
- <20200624090033.GD4800@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200624090033.GD4800@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 24 Jun 2020 12:17:56 +0200
-Message-ID: <CANpmjNMj8FZuBrZsH62V3bZEhFvT2zXwLusVOLwNuH_-kLhp2g@mail.gmail.com>
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, bigeasy@linutronix.de,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
-        "Paul E. McKenney" <paulmck@kernel.org>
+References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 24 Jun 2020 12:18:08 +0200
+Message-ID: <CAMpxmJX1YQWEiY-Oa-UvniHJcX=sM2uCVG8q+p=3Or3ZCt_kbg@mail.gmail.com>
+Subject: Re: [PATCH V4 0/7] gpio: zynq: Update on gpio-zynq driver
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, git@xilinx.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 11:01, Peter Zijlstra <peterz@infradead.org> wrote:
+=C5=9Br., 17 cze 2020 o 13:37 Srinivas Neeli <srinivas.neeli@xilinx.com> na=
+pisa=C5=82(a):
 >
-> On Tue, Jun 23, 2020 at 10:24:04PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
-> > > Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
-> > > anything happens.
-> >
-> > OK, so the below patch doesn't seem to have any nasty recursion issues
-> > here. The only 'problem' is that lockdep now sees report_lock can cause
-> > deadlocks.
-> >
-> > It is completely right about it too, but I don't suspect there's much we
-> > can do about it, it's pretty much the standard printk() with scheduler
-> > locks held report.
+> This patch series does the following:
+> -protect direction in/out with a spinlock
+> -Add binding for Versal gpio
+> -Add binding for pmc gpio node
+> -Add Versal support
+> -Disable the irq if it is not a wakeup source
+> -Add pmc gpio support
+> -Remove error prints in EPROBE_DEFER
 >
-> So I've been getting tons and tons of this:
+> ---
+> Changes in V2:
+> - In previous series [PATCH 1/8] already applied on "linux-next".
+> - Fixed checkpatch warning for spinlock description.
+> - Added description for Versal PS_GPIO and PMC_GPIO.
+> Changes in V3:
+> - Updated commit description for PATCH 4 and 6.
+> Changes in V4:
+> - Updated commit description for PATCH 2 and 3.
+> ---
 >
-> [   60.471348] ==================================================================
-> [   60.479427] BUG: KCSAN: data-race in __rcu_read_lock / __rcu_read_unlock
-> [   60.486909]
-> [   60.488572] write (marked) to 0xffff88840fff1cf0 of 4 bytes by interrupt on cpu 1:
-> [   60.497026]  __rcu_read_lock+0x37/0x60
-> [   60.501214]  cpuacct_account_field+0x1b/0x170
-> [   60.506081]  task_group_account_field+0x32/0x160
-> [   60.511238]  account_system_time+0xe6/0x110
-> [   60.515912]  update_process_times+0x1d/0xd0
-> [   60.520585]  tick_sched_timer+0xfc/0x180
-> [   60.524967]  __hrtimer_run_queues+0x271/0x440
-> [   60.529832]  hrtimer_interrupt+0x222/0x670
-> [   60.534409]  __sysvec_apic_timer_interrupt+0xb3/0x1a0
-> [   60.540052]  asm_call_on_stack+0x12/0x20
-> [   60.544434]  sysvec_apic_timer_interrupt+0xba/0x130
-> [   60.549882]  asm_sysvec_apic_timer_interrupt+0x12/0x20
-> [   60.555621]  delay_tsc+0x7d/0xe0
-> [   60.559226]  kcsan_setup_watchpoint+0x292/0x4e0
-> [   60.564284]  __rcu_read_unlock+0x73/0x2c0
-> [   60.568763]  __unlock_page_memcg+0xda/0xf0
-> [   60.573338]  unlock_page_memcg+0x32/0x40
-> [   60.577721]  page_remove_rmap+0x5c/0x200
-> [   60.582104]  unmap_page_range+0x83c/0xc10
-> [   60.586582]  unmap_single_vma+0xb0/0x150
-> [   60.590963]  unmap_vmas+0x81/0xe0
-> [   60.594663]  exit_mmap+0x135/0x2b0
-> [   60.598464]  __mmput+0x21/0x150
-> [   60.601970]  mmput+0x2a/0x30
-> [   60.605176]  exit_mm+0x2fc/0x350
-> [   60.608780]  do_exit+0x372/0xff0
-> [   60.612385]  do_group_exit+0x139/0x140
-> [   60.616571]  __do_sys_exit_group+0xb/0x10
-> [   60.621048]  __se_sys_exit_group+0xa/0x10
-> [   60.625524]  __x64_sys_exit_group+0x1b/0x20
-> [   60.630189]  do_syscall_64+0x6c/0xe0
-> [   60.634182]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   60.639820]
-> [   60.641485] read to 0xffff88840fff1cf0 of 4 bytes by task 2430 on cpu 1:
-> [   60.648969]  __rcu_read_unlock+0x73/0x2c0
-> [   60.653446]  __unlock_page_memcg+0xda/0xf0
-> [   60.658019]  unlock_page_memcg+0x32/0x40
-> [   60.662400]  page_remove_rmap+0x5c/0x200
-> [   60.666782]  unmap_page_range+0x83c/0xc10
-> [   60.671259]  unmap_single_vma+0xb0/0x150
-> [   60.675641]  unmap_vmas+0x81/0xe0
-> [   60.679341]  exit_mmap+0x135/0x2b0
-> [   60.683141]  __mmput+0x21/0x150
-> [   60.686647]  mmput+0x2a/0x30
-> [   60.689853]  exit_mm+0x2fc/0x350
-> [   60.693458]  do_exit+0x372/0xff0
-> [   60.697062]  do_group_exit+0x139/0x140
-> [   60.701248]  __do_sys_exit_group+0xb/0x10
-> [   60.705724]  __se_sys_exit_group+0xa/0x10
-> [   60.710201]  __x64_sys_exit_group+0x1b/0x20
-> [   60.714872]  do_syscall_64+0x6c/0xe0
-> [   60.718864]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   60.724503]
-> [   60.726156] Reported by Kernel Concurrency Sanitizer on:
-> [   60.732089] CPU: 1 PID: 2430 Comm: sshd Not tainted 5.8.0-rc2-00186-gb4ee11fe08b3-dirty #303
-> [   60.741510] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
-> [   60.752957] ==================================================================
+> Glenn Langedock (1):
+>   gpio: zynq: protect direction in/out with a spinlock
 >
-> And I figured a quick way to get rid of that would be something like the
-> below, seeing how volatile gets auto annotated... but that doesn't seem
-> to actually work.
+> Shubhrajyoti Datta (6):
+>   dt-bindings: gpio: Add binding for Versal gpio
+>   devicetree-binding: Add pmc gpio node
+>   gpio: zynq: Add Versal support
+>   gpio: zynq: Disable the irq if it is not a wakeup source
+>   gpio: zynq: Add pmc gpio support
+>   gpio: zynq: Remove error prints in EPROBE_DEFER
 >
-> What am I missing?
+>  .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
+>  drivers/gpio/gpio-zynq.c                           | 66 ++++++++++++++++=
++++++-
+>  2 files changed, 67 insertions(+), 3 deletions(-)
+>
+> --
+> 2.7.4
+>
 
-There's one more in include/linux/rcupdate.h. I suggested this at some point:
+Series applied to for-next.
 
-    https://lore.kernel.org/lkml/20200220213317.GA35033@google.com/
-
-To avoid volatiles as I don't think they are needed here.
-
-[ Still testing your other patches for KCSAN, will send another reply there. ]
-
-Thanks,
--- Marco
+Bart
