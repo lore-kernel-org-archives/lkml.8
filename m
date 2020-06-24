@@ -2,171 +2,115 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B16C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCAB320C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDC020767
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="GmG/iigA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zqAv7ZBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390184AbgFXKIQ (ORCPT
+        id S2390298AbgFXKIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:08:16 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:56213 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388197AbgFXKIP (ORCPT
+        Wed, 24 Jun 2020 06:08:25 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:63354 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388197AbgFXKIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:08:15 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id o2K7jtJvmx3Ajo2KAjiqc8; Wed, 24 Jun 2020 12:08:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1592993292; bh=+qt7HSOZFbWaG4XJYDTjnPTe3YUioxC7/TOQF9HvO/s=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=GmG/iigA30dc+VHvIoqZgRdORTDUAxmgYracXCbljfS35kNlavcscqJjngxMMsDHB
-         W4VOy2OzcoFQukHkly4VwsiI9+49DWhUnkJWygdG/HT6uJwLYxHs2Ry5dToaP9Gtle
-         rJO6wGOCDpdyOuKZEScoHZNitYc9YPx/oMSof3r56hYWgPIj0XMeeQLWmktFIWfU6c
-         H3BZ0hHkkud15AXGcs6dZHWZ8XnDoFnnN+vtuyUEMM+0UQMv5bQztL/0pp/Tu7Yain
-         3dE9IRIPD6uEzt8q/wW2lZKD7Cl5p2HEIHUMp/nO3jApYsSfTmJBQPeWHd06AEaeGW
-         0ElCJ9sJV+CHg==
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-To:     Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Michael Rodin <mrodin@de.adit-jv.com>, efriedrich@de.adit-jv.com,
-        erosca@de.adit-jv.com
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <32cdf1a3-1353-d3e9-66b6-82ced163d8f8@xs4all.nl>
-Date:   Wed, 24 Jun 2020 12:08:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 06:08:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592993304; x=1624529304;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=EAXOr3hlOs79DhO0LG4t6f90YgVucKjYFsY/876ySso=;
+  b=zqAv7ZBGkFKgvOZUQxRJQVXLQHTmRI8hd1pjHWIkiHzvpVVjTRNKjM2I
+   hqgiNKiPvzalUoysmGtG4cXcIzX79OVp0VOwSURKmwu6Ml2UXZU7uA4W8
+   HVaYgFRhI4LCr/8Yy4Mc1sQHTlUgR5GkQvqQgxKj56Rvn2oCqwu+Nkz7I
+   30a8UXf2S3CkAq0WLP6lkqaH41ltWxgkzq6PkvBusD6kjzCE8Gj4pjhG9
+   T2vhm7Q/k8sIZTuMgWvP9RNIMUhFsC5M5GfNUbSnH+X1lD9PdC/Xhuafo
+   ChPEEJtMfc+4FGhmfEBbSX2alWRhTxZkLqOfZQiLQ87EsNQq8IaIf92n1
+   Q==;
+IronPort-SDR: at+8gFFZR8EL0kg9YjGlyCXd/Rxnv9dhMLzPKAH/IucPJQ11u3Yyjb354UM/IFeUVvu30G41i5
+ yuQPv7HrclnxmM3MY6lcMSjTA7OcfhRg3XUB9Etpu38uaRfiP5iv6C/PbbUXAfd4ULar+uGiv0
+ 49AB01xKig17adyc40dfhdwLuGOJ559xfdJ/nxFJLGcSVxTJSrA+HOfMtoBcDwBkY+sFjxhtX6
+ 33YNjoWA+AcKRYlappjNWI992jou1upfbF0BNKi3bXK76uUsXOzYbwWlN07UB2CGw8lRQ2UgPb
+ hBA=
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="84887829"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2020 03:08:24 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 24 Jun 2020 03:08:11 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 24 Jun 2020 03:08:08 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <nicolas.ferre@microchip.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>
+CC:     <alexandre.belloni@bootlin.com>, <antoine.tenart@bootlin.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 1/2] net: macb: call pm_runtime_put_sync on failure path
+Date:   Wed, 24 Jun 2020 13:08:17 +0300
+Message-ID: <1592993298-26533-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEzhWNachN9thnW603RU1zwWw7Y6lMeMWgVmQ1fyXAjBezjMK2S5XHtBjG1FKI87//0WbR8ajesRLrWX8u9NP+LGi7SlM+aocSY5n7N/3vYdFCTNa1SR
- RC8c5dM+m0Dl3em+ZHHQfkq5B+2seB5svFDONBGfVxurxYxfz+mB1ovWnvU6nG2zUgrjpmUDzx8Rgz0r4ffOB9wpdLC76oKeYmEr8jwND89xCCgEZpTtLUjt
- 3++8Pqod7/dFwbBETHSLnAz4ArOdF+rkKHWY1A+J6/5175F5Rmr6PINYuw0dReVd2dfiA7nJWu9TDc6XJKMdUjhsB23UafyAR3/JMAEoFYnzGsN7Rdy7MQ5k
- 21TGCLmS8iuy7qg3wCvIkZFbmtpb55+in48oCuPvTXHPnVv96rF4HG/qIKNMsIb30e9Bgnbnz3cgnjvXy7g8qFkT/0HyKIb+uhxk1gf/W5JtoZWoWcD9STMO
- cSIiJP5lTIV61p0KKCc1yfmdmqJ59HQtVb8Engfty1DM7IjTSu7pP9jaxV4xUC7Mu1mHJ22jaP/9yf705Abm4cPYy/WHwxhUtJyqT9irMVV8+DyB64VAbrPR
- i8Uu5dgh8sxD12DPU1MiW7NijM3q9t23SF/lwf7JrFHVGMjA1MQpUw9g92SFAG7UNzaG84/tmW7LYyYxRntbq7HX
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/06/2020 12:00, Ramzi BEN MEFTAH wrote:
-> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> 
-> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> ioctls for use via v4l2 subdevice node.
-> 
-> This commit should probably not be pushed upstream, because the (old)
-> idea of video inputs conflicts with the newer concept of establishing
-> media links between src->sink pads.
-> 
-> However it might make sense for some subdevices to support enum/get/set
-> inputs. One example would be the analog front end subdevice for the
-> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> can be done without requiring the implementation of media entities that
-> would define the analog source for which to establish a media link.
-> 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Call pm_runtime_put_sync() on failure path of at91ether_open.
 
-Nacked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Fixes: e6a41c23df0d ("net: macb: ensure interface is not suspended on at91rm9200")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
 
-This doesn't work: these ioctls refer to physical inputs on a backplane
-of a device. But subdevices have no idea about that. This is high-level
-information that is typically only known to a bridge driver based on
-board information.
+Changes in v2:
+- this patch is new in v2
+- patch 2/2 in this series is based on this one
 
-For PCI/USB drivers this comes from card definitions in the driver itself.
+ drivers/net/ethernet/cadence/macb_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-For platform drivers this should come from the device tree, but this hasn't
-been fully implemented yet.
-
-So if this is something that you want to implement, then look at:
-
-Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-
-and add this to the DT for your board, and implement code to query this
-in the platform driver.
-
-Regards,
-
-	Hans
-
-> ---
->  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
->  include/media/v4l2-subdev.h           | 11 +++++++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index 6b989fe..73fbfe9 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  			return -ENOTTY;
->  		return v4l2_querymenu(vfh->ctrl_handler, arg);
->  
-> +	case VIDIOC_ENUMINPUT:
-> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> +
-> +	case VIDIOC_G_INPUT:
-> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> +
-> +	case VIDIOC_S_INPUT:
-> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> +
->  	case VIDIOC_G_CTRL:
->  		if (!vfh->ctrl_handler)
->  			return -ENOTTY;
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index f7fe78a..6e1a9cd 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
->   * @g_input_status: get input status. Same as the status field in the
->   *	&struct &v4l2_input
->   *
-> + * @enuminput: enumerate inputs. Should return the same input status as
-> + *      @g_input_status if the passed input index is the currently active
-> + *      input.
-> + *
-> + * @g_input: returns the currently active input index.
-> + *
-> + * @s_input: set the active input.
-> + *
->   * @s_stream: used to notify the driver that a video stream will start or has
->   *	stopped.
->   *
-> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
->  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
->  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
->  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
->  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
->  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
->  	int (*g_frame_interval)(struct v4l2_subdev *sd,
-> 
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 67933079aeea..96d62d73b933 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3835,7 +3835,7 @@ static int at91ether_open(struct net_device *dev)
+ 
+ 	ret = at91ether_start(dev);
+ 	if (ret)
+-		return ret;
++		goto pm_exit;
+ 
+ 	/* Enable MAC interrupts */
+ 	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
+@@ -3848,11 +3848,15 @@ static int at91ether_open(struct net_device *dev)
+ 
+ 	ret = macb_phylink_connect(lp);
+ 	if (ret)
+-		return ret;
++		goto pm_exit;
+ 
+ 	netif_start_queue(dev);
+ 
+ 	return 0;
++
++pm_exit:
++	pm_runtime_put_sync(&lp->pdev->dev);
++	return ret;
+ }
+ 
+ /* Close the interface */
+-- 
+2.7.4
 
