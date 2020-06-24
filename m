@@ -2,108 +2,167 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20147C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8594C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 032E1206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593022568;
-	bh=6gJ0pgJAf9oyxHpg6NQAlLYoWpIzQ4H/FOZWmg2B91k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mlx0qrWJqlABlQu2mDzhVQpFhIGchacIsC5FlB4ZhYztuCCC9HAYC12uegT1/C1pW
-	 y9SiPiXiXS3v3EVl6sDfzoE0xo3Tnp6Q1ZVMBkVbkEFiGQu+ZzZB59mT2us2izfTcJ
-	 o9IGKhtultSmdL5cd54qlIhYp2aW0vFg7DkO1WDc=
+	by mail.kernel.org (Postfix) with ESMTP id B726C206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:16:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PACeauBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406026AbgFXSQG (ORCPT
+        id S2406041AbgFXSQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406007AbgFXSQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:16:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3636420738;
-        Wed, 24 Jun 2020 18:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593022561;
-        bh=6gJ0pgJAf9oyxHpg6NQAlLYoWpIzQ4H/FOZWmg2B91k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w+72KTkZx+PH4X5DuLggcqlOgq878ARjHiNhQHuOsttvs5KEzps0SFFjKkEjZB39m
-         xzIlZbbGOtmbhGA1jAVCiJf5f10gAHbbRRiuZMIGw91qz3R1anMDfng0eBidKXbeRF
-         51SwSD0nWVVl2suldTN/WDe1NODDaYWUZ/ktgh6w=
-Date:   Wed, 24 Jun 2020 19:15:59 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
-        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
-        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
-        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-Message-ID: <20200624181559.GP5472@sirena.org.uk>
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
- <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
- <20200624170933.GB39073@google.com>
- <20200624171537.GL5472@sirena.org.uk>
- <20200624173948.GC39073@google.com>
- <20200624174417.GM5472@sirena.org.uk>
- <20200624175536.GD39073@google.com>
- <20200624180005.GO5472@sirena.org.uk>
- <20200624181245.GE39073@google.com>
+        Wed, 24 Jun 2020 14:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406031AbgFXSQJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:16:09 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A780C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:16:09 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so3213213wru.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=vEE+cCagyynmemrGijLPmssYwIESzMX1SE4z58oNTeY=;
+        b=PACeauBnHB4IRAwpME1nagEtAloxPaEYhO3RZGIWA7WpWs7UdpRkFrhqwK/38eXKTb
+         MgA2rC99nTXO06aJaeKtqBQ4hQMH3xG5mO0Vh7a1FKb85qhPoNfUlrvF01dqO8t8WHXO
+         B95BQDfyO/W7VSp0hmOZMRqNqf/zkVRJfafF6sgpHgzRLMeYHsPc6cQg/hd95Z6u1FAC
+         UerFlmDKk9lqHRVyfJ9Kz7Im84N+ZJ1HmbS613LAP3J9y6RlznzczX12e8iHtYY/SkJI
+         tGzMtxp/MOx0DztQ1Eag8fw0VrXJczxp0eOzRhC04c2i0UgUSVHFM+haxW2KibpbW/jr
+         dZxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vEE+cCagyynmemrGijLPmssYwIESzMX1SE4z58oNTeY=;
+        b=TymzSKZIA84ysiOfIV13vJjp2wBqc92ZvoVD5AptkA1dK7J4CdrXAhWFfJx76mptRx
+         oNlVH0j2aczBnWj9INZUP0lwUIw8Z5oWJsrZooFrzcQyuYdNTz0r4pG6K1JhufeqFj7y
+         6whLjfH3RCuFgLE3KSmE6B9tqSQ6jC/oPglTtdh1yFRgnGwKeBYse6+yl0ODCIqya5Le
+         WDAWMevdnU0CBQr6sN7RF/MPKYdzUIlUuQ0GmEvLuCvlqZGRWgoCRunQNw3qJm+KhDTp
+         1YN5uC/G57iGL0VJLga9EOWUGcMOX/+nwLBNWboiCUBUbHikZN/hCx7b8cPWaHKx+u3+
+         jdIw==
+X-Gm-Message-State: AOAM533iRUO25Hd2z7Q4APbqDnWtupps8TzmzQlrMMMPPwllLW8K/NCl
+        p6uljG3o41WGQ181fqfUtOMFOQ==
+X-Google-Smtp-Source: ABdhPJwthKa+x+ZDgO4Y76Lis50CaKMXrmW51/0dmqQgM1NpqUQmeO/Npa89EkAARjUX45u5QLZqgg==
+X-Received: by 2002:adf:e90d:: with SMTP id f13mr3152153wrm.146.1593022568188;
+        Wed, 24 Jun 2020 11:16:08 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id 2sm8962784wmo.44.2020.06.24.11.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 11:16:07 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 19:16:05 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to
+ simple-mfd from simple-bus
+Message-ID: <20200624181605.GJ954398@dell>
+References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
+ <20200623114614.792648-4-yamada.masahiro@socionext.com>
+ <20200623122413.GA954398@dell>
+ <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nVYOjVWOcH+Ezkzp"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200624181245.GE39073@google.com>
-X-Cookie: So this is it.  We're going to die.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 25 Jun 2020, Masahiro Yamada wrote:
 
---nVYOjVWOcH+Ezkzp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
+> >
+> > > 'make ARCH=arm dtbs_check' emits the following warning:
+> > >
+> > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> > >
+> > > Maybe, simple-mfd could be a better fit for this device.
+> >
+> > The two should be equivalent.
+> 
+> Yes, I know.
+> That's why I can change "simple-bus" to "simple-mfd"
+> with no risk.
+> 
+> The difference is schema-check.
+> 
+> The node name for "simple-bus" is checked by 'make dtbs_check'.
+> 
+> See this code:
+> https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.yaml#L17
+> 
+> Even if I rename the node, it does not accept the
+> unit name '1,1f00000'
+> 
+> > What do you mean by "maybe"?  Does this squash the warning?
+> 
+> "maybe" means I am not quite sure
+> which compatible is a better fit
+> to describe this device.
+> 
+> As mentioned above, simple-bus and simple-mfd
+> are interchangeable from a driver point of view.
+> 
+> This add-on board is integrated with various peripherals
+> such as 16550a serial, smsc9115 ether etc.
+> The address-decode is implemented in a CPLD device.
+> It has chip selects and local addresses, which are mapped to
+> the parent.
+> 
+> It can be either simple-bus or simple-mfd, I think.
+> 
+> 
+> dt-schema checks the node name of simple-bus.
+> Currently, there is no check for simple-mfd.
+> 
+> So, I think this patch is an easy solution
+> to fix the warning.
 
-On Wed, Jun 24, 2020 at 11:12:45AM -0700, Matthias Kaehlcke wrote:
-> On Wed, Jun 24, 2020 at 07:00:05PM +0100, Mark Brown wrote:
+Yes, looking at the documentation it seems as though 'simple-mfd'
+would be a better fit.  Is the device a single IP with various
+different functions?
 
-> > I'm not really reading any of this stuff for the series as a whole, as
-> > far as I could tell I'd reviewed all my bits and was hoping whatever
-> > random platform stuff needs sorting out was going to be sorted out so I
-> > stopped getting copied on revisions :(
+> Rob is in Cc. Please add comments if any.
+> 
+> > Isn't the issue caused by the ','?
+> 
+> Right.
+> 
+> The node name of simple-bus
+> must meet the regular expression:
+> "^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
+> 
+> 
+> Even if I rename the node
+> "support-card@1,1f00000"
+> to "bus@1,1f00000", the warning is still
+> displayed due to ','
+> 
+> "1,1f00000" means
+> the address 0x01f00000 of chip select 1.
 
-> Sorry this caused you extra work, I only fully realized this when the series
-> was basically ready to land :(
+Is this an officially accepted format?
 
-It's fine, mostly it's just checking to see that I'd reviewed all the
-relevant patches which takes moments.
-
---nVYOjVWOcH+Ezkzp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zmF4ACgkQJNaLcl1U
-h9Bgggf8DwSZc/JTuxWtxv+ehiv1EkC5dOKvBpCnYphj56b9f3A0XwlExxVwy59a
-O6kBdJ9PvTV4dBbYRmmx4uUs+XddJN5yScZOLWxbZEZKAYlZrjWYJpqMVVqbB4uN
-DtmlqGPM86PmesWpjIXnfzmSrO3vQCCU2/fdgTaN75AIm6hsaGk5mYPWgh7gIH3t
-a/aZY1VHgJZEbDE8NdJlUw8vInJJeJqsJjnubheKMj3bZJR/Aoaix5Odr2/MZg2k
-88rnw4RDG+M6qUUdaU9cUuBKHUHB0U7R6n6AJnsS1fbO/YOipS8j4DUDEIV+nXQk
-wwrozbaUBw5VtqkQ/j6jhgj3wrB9bg==
-=abhq
------END PGP SIGNATURE-----
-
---nVYOjVWOcH+Ezkzp--
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
