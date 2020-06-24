@@ -2,144 +2,104 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9075EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59814C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7307820707
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C0A20EDD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:46:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WOpXhTby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389327AbgFXLop (ORCPT
+        id S2389528AbgFXLq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:44:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39432 "EHLO mx2.suse.de"
+        Wed, 24 Jun 2020 07:46:57 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45094 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388844AbgFXLop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:44:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 892C4AF63;
-        Wed, 24 Jun 2020 11:44:42 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 13:44:37 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org,
-        systemd-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 2/3] nsproxy: attach to namespaces via pidfds
-Message-ID: <20200624114437.GA117125@blackbook>
-References: <20200505140432.181565-1-christian.brauner@ubuntu.com>
- <20200505140432.181565-3-christian.brauner@ubuntu.com>
+        id S2388491AbgFXLq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:46:57 -0400
+Received: from zn.tnic (p200300ec2f0a930055750ecb74485dbb.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9300:5575:ecb:7448:5dbb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F299F1EC03C5;
+        Wed, 24 Jun 2020 13:46:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592999216;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=Zv+i4nBbejEnpL9aLrtKKx1Oi4NNtt4nn4BUaSR2qOU=;
+        b=WOpXhTbyr2qhacesgTZGqBiCtlXiFG3FkSOpiJeseR8Hm5omiyx0Y4UcTOFO9h673oEfXh
+        2sMh/wV1TC9zlBm6uhlBWffK+rYj7q+0RgD1vEALX26e8w8+yCjqiK2PFytv6uiHR/Ilfq
+        4hYiV7m8lnsdkEDKN14Png/EuejoU88=
+From:   Borislav Petkov <bp@alien8.de>
+To:     X86 ML <x86@kernel.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Petteri Aimonen <jpa@kernelbug.mail.kapsi.fi>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] x86/FPU: FPU sanitization for in-kernel use
+Date:   Wed, 24 Jun 2020 13:46:44 +0200
+Message-Id: <20200624114646.28953-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-In-Reply-To: <20200505140432.181565-3-christian.brauner@ubuntu.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Borislav Petkov <bp@suse.de>
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok,
 
-Hi.
+here's v2 with build fixes and other review comments addressed.
 
-On Tue, May 05, 2020 at 04:04:31PM +0200, Christian Brauner <christian.brau=
-ner@ubuntu.com> wrote:
-> -SYSCALL_DEFINE2(setns, int, fd, int, nstype)
-> +SYSCALL_DEFINE2(setns, int, fd, int, flags)
-> [...]
-> -	file =3D proc_ns_fget(fd);
-> -	if (IS_ERR(file))
-> -		return PTR_ERR(file);
-> +	int err =3D 0;
-> =20
-> -	err =3D -EINVAL;
-> -	ns =3D get_proc_ns(file_inode(file));
-> -	if (nstype && (ns->ops->type !=3D nstype))
-> +	file =3D fget(fd);
-> +	if (!file)
-> +		return -EBADF;
-> +
-> +	if (proc_ns_file(file)) {
-> +		ns =3D get_proc_ns(file_inode(file));
-> +		if (flags && (ns->ops->type !=3D flags))
-> +			err =3D -EINVAL;
-> +		flags =3D ns->ops->type;
-> +	} else if (pidfd_pid(file)) {
-> +		err =3D check_setns_flags(flags);
-> +	} else {
-> +		err =3D -EBADF;
-> +	}
-> +	if (err)
->  		goto out;
-> =20
-> -	err =3D prepare_nsset(ns->ops->type, &nsset);
-> +	err =3D prepare_nsset(flags, &nsset);
->  	if (err)
->  		goto out;
-This modification changed the returned error when a valid file
-descriptor is passed but it doesn't represent a namespace (nor pidfd).
-The error is now EBADF although originally and per man page it
-was/should be EINVAL.
+Thx.
 
-A change like below would restore it, however, I see it may be less
-consistent with other pidfd calls(?), then I'd suggest updating the
-manpage to capture this.
+Changelog:
+----------
 
---- a/kernel/nsproxy.c
-+++ b/kernel/nsproxy.c
-@@ -531,7 +531,7 @@ SYSCALL_DEFINE2(setns, int, fd, int, flags)
-        } else if (!IS_ERR(pidfd_pid(file))) {
-                err =3D check_setns_flags(flags);
-        } else {
--               err =3D -EBADF;
-+               err =3D -EINVAL;
-        }
-        if (err)
-                goto out;
+v1:
+==
 
-I noticed this breaks systemd self tests [1].
+Hi all,
 
-Regards,
-Michal
+here's a proper submission of the work started by Petteri. I think I've
+addressed all the feedback so far. I've added the preparation work for
+the test to run, to a script run_test_fpu.sh which does some basic
+checks, loads the module and runs the test for 1000 times on all CPUs,
+by default. Thought this is a sane default, feel free to prove me wrong
+and I'll change it.
 
+Thx.
 
-[1] https://github.com/systemd/systemd/blob/a1ba8c5b71164665ccb53c9cec384e5=
-eef7d3689/src/test/test-seccomp.c#L246
+Petteri Aimonen (2):
+  x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
+  selftests/fpu: Add an FPU selftest
 
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ arch/x86/include/asm/fpu/internal.h         |  5 ++
+ arch/x86/kernel/fpu/core.c                  |  6 ++
+ lib/Kconfig.debug                           | 11 +++
+ lib/Makefile                                | 24 ++++++
+ lib/test_fpu.c                              | 89 +++++++++++++++++++++
+ tools/testing/selftests/Makefile            |  1 +
+ tools/testing/selftests/fpu/.gitignore      |  2 +
+ tools/testing/selftests/fpu/Makefile        |  9 +++
+ tools/testing/selftests/fpu/run_test_fpu.sh | 46 +++++++++++
+ tools/testing/selftests/fpu/test_fpu.c      | 61 ++++++++++++++
+ 10 files changed, 254 insertions(+)
+ create mode 100644 lib/test_fpu.c
+ create mode 100644 tools/testing/selftests/fpu/.gitignore
+ create mode 100644 tools/testing/selftests/fpu/Makefile
+ create mode 100755 tools/testing/selftests/fpu/run_test_fpu.sh
+ create mode 100644 tools/testing/selftests/fpu/test_fpu.c
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.21.0
 
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl7zPKAACgkQia1+riC5
-qShOGhAAhxWTA7xASA29DshSor6gE8MSsisAOLrbdcAJxcTpEjK7SGBfiIAzRSqM
-ojDNJab5BA7AplrWQMI5dTvNC5OsdObhRe6HCzXeK/DL4st5WCHkGv084jGVtJkF
-t3uUc5yphr7K7Wyv5pTydMDYbPgVdtMLCMAJCzSSAm464cXc7yFUtLiuJTx4dWMS
-wj+dRMYjxqo8PMTo78lAOeo0Xga2sWunsc2RrvmCde1HAqEfX26xko2at3AhxJWI
-mA1qK4gYl0/0kRBKKbVH/Vc9cE3hVTwAKgLxm9JUJJoV/7zs61XPfGZZ1i1NUBJ5
-ES1ybt5h1C5rtmpBGiH1Dd+D7i1ckdqEPupwJNzYze5y2QiEVVoF7csegk30Vdq7
-0SQ9SAXOtRmfQC8VQXkWDOoqZarxPSgktRBfMZ3h18neURCFlmU0xcAY52mJODSf
-lyJPQmYUfCehLasPJJ3eUG9fhdSNuFH3Z6V2KfIjo2qKPbbEJONxb24OthyQzr6v
-kt3B/m7aseGZCxRu21SkkRIMa9aIngbkaOOiEwUd66wJtHKWJIn/D7sdcQvUGYpg
-e8J5uFPR7A0wJey2TZltEDF9nuuZarORd7BNREmm4nG1w3X3vsgUXXLfk9x8HQtg
-EG/+7T4HFcQXgeR/UBieyk0FQ98KRnJaSK6RJiShfEM2HIyvrZU=
-=zb4j
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
