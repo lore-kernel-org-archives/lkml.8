@@ -2,99 +2,138 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99366C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6989E2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E9C20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqgsQqdG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MvLV62bG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388661AbgFXDbh (ORCPT
+        id S2388697AbgFXDbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 23:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
+        Tue, 23 Jun 2020 23:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388292AbgFXDbe (ORCPT
+        with ESMTP id S2388408AbgFXDbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 23:31:34 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861CCC061573;
-        Tue, 23 Jun 2020 20:31:34 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id i3so602833qtq.13;
-        Tue, 23 Jun 2020 20:31:34 -0700 (PDT)
+        Tue, 23 Jun 2020 23:31:46 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3C5C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 20:31:46 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b7so1801301pju.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 20:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=X456btJqa3FBWYccHsV53SG1SovSKcsEuNnigqV+tyo=;
-        b=oqgsQqdGKU5BQpM2m+Kuk1bmmqRyYz49Dv8FaIqwaBRMIfLPkivagZM8LuMx43B/bt
-         HlF4BFdHstvUefkEN+XTLhEwpnYNLcJBKQM7jNrQ9KzTmCWJOJM86wiMcjs6uB4psrbX
-         1z0gx2aXrLw5lEMk1nh9WfSzq0XCf3XM4WCIcUC/+X2iPXNkaTVx+89vYdEx+VfIiPaO
-         3gZxMJRd0inXasto8D7sdzj7i40vkY+t48vxx9P+186Jhhq8DZKnz5weswgvHscWvBpR
-         xrbzPk4rQHeO+JG4wWBADt9A2UfD/HGzMl/ZtILvo/wZZs/WNUheTxcU2/n5NkyVSl7H
-         EMWg==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IahJt8/KJJjCX5znAGwjVoLhoLAi5KgGttIopC9m27U=;
+        b=MvLV62bGP7HuCujPeBIHKz13XUI8YQmFtRra1vib+8tF+xHHQRVE/n3L2rgdukvz0W
+         tXgg5gRG56BP2uOmEc+oEMf47b4I2KLwUM3lCVukC+NRxgYxHqsxLKDUjSfA6R0sfqEo
+         TgggLZp03MNbl6iiR1g9B+Tdp9CA3YajVJsQpkFoRyIFXvFULZrBVh7rUaJHmg4R6nNH
+         1qsvb5gRGuCH3ZPUtMEqqFW/A+OofiC/qMD5DJlvOz7Ilyyt2ZStv6KM1sJPos9n372w
+         0UbUY406dJ7GN3qOL01soPCDMdymvlW2KSQp3fukKyBl3YvdOFBaJIjT8ZDn4ePN1mFb
+         xD6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=X456btJqa3FBWYccHsV53SG1SovSKcsEuNnigqV+tyo=;
-        b=FjTizpzBFIBxLumhJPv2uCRml1RyiVuJg9F9LSnxDTA3N+TusZgQJfUbcAvX/Rkj7u
-         3e8kDR9ypD8y7OoQWYjB2GNR76aD3HMirVFxul4BCYAjNPzwUuqEaSkJNtCiLImX4D0e
-         IXopdM9WCTKIgKbXVUXikQLMVVi8p1wE6pUMGoU3Ut5g66uk23vQ2yT3oQ1xDoHtUufg
-         qKjNK+4ng+8ELkrUq7nZ87ZguGxDfa+tbNfitiIg6bxGhgwSi06sC+Rk40dhNF8de43y
-         uigpRQ2aON1VTjzBfX97r3+TVUS2PRGhd7KtOJkdV2Z9V0n3gBmIv6vFziBjqAlfBzF2
-         0ykA==
-X-Gm-Message-State: AOAM531G73pfzO+s5ReKioLnP7Bm8/CjA60hVJYZLNNBOrP2kqrCD7Ou
-        00EBaWtSgEt21U2bAs+9ToI=
-X-Google-Smtp-Source: ABdhPJzSgc6HcM7S8Si0zcj1qwXLvZeru+fHPWjbRBSOkyse3VW555uFMC7ltmBEqDWgyAvV998lYw==
-X-Received: by 2002:ac8:5385:: with SMTP id x5mr16709606qtp.230.1592969493722;
-        Tue, 23 Jun 2020 20:31:33 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:596e:7d49:a74:946e])
-        by smtp.googlemail.com with ESMTPSA id d78sm2276360qkg.106.2020.06.23.20.31.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IahJt8/KJJjCX5znAGwjVoLhoLAi5KgGttIopC9m27U=;
+        b=SAlfJthZsgnIpgNSz3UlCjEAS+FKSEKDp8lYyxgUL05cfe0HvHH9IpJat6CpmcvD+E
+         KDfphZCzsanqKpOu0Q28WzxMTy3PKNcI09VlZJAliJ13W3asuA3lhm8SAhOgnqRgHQN9
+         dOGf7oMu5QyzEA8XMoNumrNEuHkVrtEOJVEFRrCv0m3MNr86MmD6RvEbIss3Dqjcb5ZE
+         WswQMQx+VlWjRIofBveq6hjD7S+seIKKPXjznWNcLxJSDCXTHL6ih+IKD6bC7y7sAISB
+         oj6emTjnaRub5cty/gCqug4SaZTs0j+q8quqcg1l/iLf+eEmHJmv0LdUohlzuFaMnaeP
+         V2xA==
+X-Gm-Message-State: AOAM533M5/KX9WCmiaOyMnNNPJDE79ZsMJQ95fnruHNLdAAG9oM98niA
+        i7LeCCYc415ZmRLyxpWbKL6Ncg==
+X-Google-Smtp-Source: ABdhPJwO/hYz95xUwT1OWmJI4vtUw4+LYaBqYL3FPsRivwPfG7ygEmvTnhPAC6hvl2WpJppN7B6bFQ==
+X-Received: by 2002:a17:90a:1ac3:: with SMTP id p61mr27689014pjp.23.1592969505744;
+        Tue, 23 Jun 2020 20:31:45 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id c2sm14702791pgk.77.2020.06.23.20.31.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 20:31:33 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org (open list:INTEL PMC CORE DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] [drivers/x86] fix bound check in pmc_core_mphy_pg_show
-Date:   Tue, 23 Jun 2020 23:31:25 -0400
-Message-Id: <20200624033126.5972-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 23 Jun 2020 20:31:45 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 20:31:42 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+Message-ID: <20200624033142.cinvg6rbg252j46d@google.com>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200624014940.1204448-4-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check bounds before accessing map[].
+On 2020-06-23, Kees Cook wrote:
+>In preparation for adding --orphan-handling=warn to more architectures,
+>make sure unwanted sections don't end up appearing under the .init
+>section prefix that libstub adds to itself during objcopy.
+>
+>Signed-off-by: Kees Cook <keescook@chromium.org>
+>---
+> drivers/firmware/efi/libstub/Makefile | 3 +++
+> 1 file changed, 3 insertions(+)
+>
+>diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+>index 75daaf20374e..9d2d2e784bca 100644
+>--- a/drivers/firmware/efi/libstub/Makefile
+>+++ b/drivers/firmware/efi/libstub/Makefile
+>@@ -66,6 +66,9 @@ lib-$(CONFIG_X86)		+= x86-stub.o
+> CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+> CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+>
+>+# Remove unwanted sections first.
+>+STUBCOPY_FLAGS-y		+= --remove-section=.note.gnu.property
+>+
+> #
+> # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
+> # .bss section, so the .bss section of the EFI stub needs to be included in the
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- drivers/platform/x86/intel_pmc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+arch/arm64/Kconfig enables ARM64_PTR_AUTH by default. When the config is on
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 7c8bdab078cf..f571f9cf7217 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -795,7 +795,7 @@ static int pmc_core_mphy_pg_show(struct seq_file *s, void *unused)
- 	msleep(10);
- 	val_high = pmc_core_reg_read(pmcdev, SPT_PMC_MFPMC_OFFSET);
- 
--	for (index = 0; map[index].name && index < 8; index++) {
-+	for (index = 0; index < 8 && map[index].name; index++) {
- 		seq_printf(s, "%-32s\tState: %s\n",
- 			   map[index].name,
- 			   map[index].bit_mask & val_low ? "Not power gated" :
--- 
-2.17.1
+ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
+branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI) := -mbranch-protection=pac-ret+leaf+bti
+else
+branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET) := -mbranch-protection=pac-ret+leaf
+endif
 
+This option creates .note.gnu.property:
+
+% readelf -n drivers/firmware/efi/libstub/efi-stub.o
+
+Displaying notes found in: .note.gnu.property
+   Owner                Data size        Description
+   GNU                  0x00000010       NT_GNU_PROPERTY_TYPE_0
+       Properties: AArch64 feature: PAC
+
+If .note.gnu.property is not desired in drivers/firmware/efi/libstub, specifying
+-mbranch-protection=none can override -mbranch-protection=pac-ret+leaf
