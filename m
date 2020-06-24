@@ -2,63 +2,65 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF60C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6BE92073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5680F2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:27:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ut9sPa9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389710AbgFXH0w (ORCPT
+        id S2389778AbgFXH1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:26:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52789 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728858AbgFXH0v (ORCPT
+        Wed, 24 Jun 2020 03:27:11 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:22094 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728858AbgFXH1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:26:51 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q15so1321328wmj.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:26:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:message-id:date:mime-version;
-        bh=wrvOwF9wh+nTXc2fUGXN2YrRPrEsDTdoftOpa9p4cx0=;
-        b=kLn/RQYGrhMQpfbxU7ns+X7GH9DEHNDG2ngdXjyvNJJ1NXz9wfqkf3OVLkCCCY1wVX
-         he9NC7Zy4WAtHWGg3cTYRnERwi4Xcg1RgcDEk2T69sH0BISjwsFlmgF0Zf/ioAVsNTo/
-         JO7IKDAvgVu75w3N94THeUx6eqOBEfnHiku2svyp1oWny4ttZFJ493VdtvNsp2N6LlY6
-         Ftj2n6WHOB3ZGQBb2PeE8pRD9yLlNW0JzKv/BJJfIQWRlVdfChIhzW0lFyzpJknf6Oi+
-         cVihz6Y/1ksm2qTUJDIDuEsEIroEX4ON/GYCp/I1Se8sPe2ggnCQG2DjV9XGdDGG/hIL
-         /W+g==
-X-Gm-Message-State: AOAM533z3mglBU4hz9IIc/QZh1zEL5fVXCSzKWkpPqsoZuhaDFng//SD
-        5if4nsmlxEhHpSSAWUiDUs+soRk7iNxLSA==
-X-Google-Smtp-Source: ABdhPJwzYXJTeznGwgPhjbbC2nK1j5xIVpef7c//pggkFTdNMhMIytRHZ/6p8NHwakJBRJWsqQ8yEg==
-X-Received: by 2002:a1c:c902:: with SMTP id f2mr235866wmb.53.1592983609207;
-        Wed, 24 Jun 2020 00:26:49 -0700 (PDT)
-Received: from darkstar ([2a04:ee41:4:5025:8295:1d2:ca0d:985e])
-        by smtp.gmail.com with ESMTPSA id a4sm17444733wrg.80.2020.06.24.00.26.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 00:26:48 -0700 (PDT)
-References: <20200619172011.5810-1-qais.yousef@arm.com> <20200619172011.5810-2-qais.yousef@arm.com>
-User-agent: mu4e 1.4.10; emacs 26.3
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] sched/uclamp: Fix initialization of strut uclamp_rq
-In-reply-to: <20200619172011.5810-2-qais.yousef@arm.com>
-Message-ID: <87sgekorfq.derkling@matbug.net>
-Date:   Wed, 24 Jun 2020 09:26:17 +0200
+        Wed, 24 Jun 2020 03:27:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592983629; x=1624519629;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=RfHl3RZzpqMqVj1MJ+mYi1DQEoWb6jQu7hXLM/jKtXU=;
+  b=Ut9sPa9RNquJgsMtxObDTKHXMPfpCd54EjfL2WTtKfz78zA27BinmOGd
+   PhqPRXk4luUUM10SAxnoW8JFvCKuvyNbO1boer5rZkWYHa5ct2I3FhkPw
+   UyvikukoZAZVuN5h/RcuFRafeKL5Pie9bpT2uiZTVC3ofcH29PQ7yyMnB
+   CAQApU3JSI+l5G1k2Vm9XOKS0F0sqlex8uGd1bLLGaPthJvm1+CuBZZFc
+   txKpAJQJtbgm4GLmD19uGK9/C/4SwC7N+BwaRrDXVm9hnn2g6PSaOIguU
+   BJ8tFQ2Ecs+tGEKsv7ajRMV06RDMTRZyRxgHrh8Au4/K/vQuwkgsUutIy
+   w==;
+IronPort-SDR: hyVLhBhfdaWkThUZp2dsDp/IIFBSVCskelv8BSUcBgavOiX5vJfggrLY/w6srmGMjT8HUC3lxB
+ 8YM5pmgqqzuInZPRPWTyVMLD/s0Jq5fSMutV7t6lhuSk7e6B9EFPRXswW1ThQLZL0CyMO32mkB
+ 9WlxKI+N3f21Br4+9kFhP/Z2RwzV2naQZ2q1oxc+9cDfAR9Nio4fv33vHUbbf8WVpPuMnEGWEb
+ jzlWR+qTkiMAzHVkN7X1RuxGqrTgZsdUPg1/3CyO4UJo3IQtxTAqAyCnjtP1Oo9NlzU0Hlz+O9
+ 0Uw=
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="81363822"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2020 00:27:09 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 24 Jun 2020 00:26:57 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 24 Jun 2020 00:26:53 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <nicolas.ferre@microchip.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>
+CC:     <antoine.tenart@bootlin.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH] net: macb: free resources on failure path of at91ether_open()
+Date:   Wed, 24 Jun 2020 10:26:54 +0300
+Message-ID: <1592983614-31485-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,92 +68,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+DMA buffers were not freed on failure path of at91ether_open().
+Along with changes for freeing the DMA buffers the enable/disable
+interrupt instructions were moved to at91ether_start()/at91ether_stop()
+functions and the operations on at91ether_stop() were done in
+their reverse order (compared with how is done in at91ether_start()):
+before this patch the operation order on interface open path
+was as follows:
+1/ alloc DMA buffers
+2/ enable tx, rx
+3/ enable interrupts
+and the order on interface close path was as follows:
+1/ disable tx, rx
+2/ disable interrupts
+3/ free dma buffers.
 
-Hi Qais,
+Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 116 +++++++++++++++++++------------
+ 1 file changed, 73 insertions(+), 43 deletions(-)
 
-On Fri, Jun 19, 2020 at 19:20:10 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
-
-> struct uclamp_rq was zeroed out entirely in assumption that in the first
-> call to uclamp_rq_inc() they'd be initialized correctly in accordance to
-> default settings.
->
-> But when next patch introduces a static key to skip
-> uclamp_rq_{inc,dec}() until userspace opts in to use uclamp, schedutil
-> will fail to perform any frequency changes because the
-> rq->uclamp[UCLAMP_MAX].value is zeroed at init and stays as such. Which
-> means all rqs are capped to 0 by default.
-
-Does not this means the problem is more likely with uclamp_rq_util_with(),
-which should be guarded?
-
-Otherwise, we will also keep doing useless min/max aggregations each
-time schedutil calls that function, thus not completely removing
-uclamp overheads while user-space has not opted in.
-
-What about dropping this and add the guard in the following patch, along
-with the others?
-
-> Fix it by making sure we do proper initialization at init without
-
->
-> Fix it by making sure we do proper initialization at init without
-> relying on uclamp_rq_inc() doing it later.
->
-> Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-> Cc: Chris Redpath <chris.redpath@arm.com>
-> Cc: Lukasz Luba <lukasz.luba@arm.com>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  kernel/sched/core.c | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index a43c84c27c6f..4265861e13e9 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1248,6 +1248,22 @@ static void uclamp_fork(struct task_struct *p)
->  	}
->  }
->  
-> +static void __init init_uclamp_rq(struct rq *rq)
-> +{
-> +	enum uclamp_id clamp_id;
-> +	struct uclamp_rq *uc_rq = rq->uclamp;
-> +
-> +	for_each_clamp_id(clamp_id) {
-> +		memset(uc_rq[clamp_id].bucket,
-> +		       0,
-> +		       sizeof(struct uclamp_bucket)*UCLAMP_BUCKETS);
-> +
-> +		uc_rq[clamp_id].value = uclamp_none(clamp_id);
-> +	}
-> +
-> +	rq->uclamp_flags = 0;
-> +}
-> +
->  static void __init init_uclamp(void)
->  {
->  	struct uclamp_se uc_max = {};
-> @@ -1256,11 +1272,8 @@ static void __init init_uclamp(void)
->  
->  	mutex_init(&uclamp_mutex);
->  
-> -	for_each_possible_cpu(cpu) {
-> -		memset(&cpu_rq(cpu)->uclamp, 0,
-> -				sizeof(struct uclamp_rq)*UCLAMP_CNT);
-> -		cpu_rq(cpu)->uclamp_flags = 0;
-> -	}
-> +	for_each_possible_cpu(cpu)
-> +		init_uclamp_rq(cpu_rq(cpu));
->  
->  	for_each_clamp_id(clamp_id) {
->  		uclamp_se_set(&init_task.uclamp_req[clamp_id],
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 5705359a3612..52582e8ed90e 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3762,15 +3762,9 @@ static int macb_init(struct platform_device *pdev)
+ 
+ static struct sifive_fu540_macb_mgmt *mgmt;
+ 
+-/* Initialize and start the Receiver and Transmit subsystems */
+-static int at91ether_start(struct net_device *dev)
++static int at91ether_alloc_coherent(struct macb *lp)
+ {
+-	struct macb *lp = netdev_priv(dev);
+ 	struct macb_queue *q = &lp->queues[0];
+-	struct macb_dma_desc *desc;
+-	dma_addr_t addr;
+-	u32 ctl;
+-	int i;
+ 
+ 	q->rx_ring = dma_alloc_coherent(&lp->pdev->dev,
+ 					 (AT91ETHER_MAX_RX_DESCR *
+@@ -3792,6 +3786,43 @@ static int at91ether_start(struct net_device *dev)
+ 		return -ENOMEM;
+ 	}
+ 
++	return 0;
++}
++
++static void at91ether_free_coherent(struct macb *lp)
++{
++	struct macb_queue *q = &lp->queues[0];
++
++	if (q->rx_ring) {
++		dma_free_coherent(&lp->pdev->dev,
++				  AT91ETHER_MAX_RX_DESCR *
++				  macb_dma_desc_get_size(lp),
++				  q->rx_ring, q->rx_ring_dma);
++		q->rx_ring = NULL;
++	}
++
++	if (q->rx_buffers) {
++		dma_free_coherent(&lp->pdev->dev,
++				  AT91ETHER_MAX_RX_DESCR *
++				  AT91ETHER_MAX_RBUFF_SZ,
++				  q->rx_buffers, q->rx_buffers_dma);
++		q->rx_buffers = NULL;
++	}
++}
++
++/* Initialize and start the Receiver and Transmit subsystems */
++static int at91ether_start(struct macb *lp)
++{
++	struct macb_queue *q = &lp->queues[0];
++	struct macb_dma_desc *desc;
++	dma_addr_t addr;
++	u32 ctl;
++	int i, ret;
++
++	ret = at91ether_alloc_coherent(lp);
++	if (ret)
++		return ret;
++
+ 	addr = q->rx_buffers_dma;
+ 	for (i = 0; i < AT91ETHER_MAX_RX_DESCR; i++) {
+ 		desc = macb_rx_desc(q, i);
+@@ -3813,9 +3844,39 @@ static int at91ether_start(struct net_device *dev)
+ 	ctl = macb_readl(lp, NCR);
+ 	macb_writel(lp, NCR, ctl | MACB_BIT(RE) | MACB_BIT(TE));
+ 
++	/* Enable MAC interrupts */
++	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
++			     MACB_BIT(RXUBR)	|
++			     MACB_BIT(ISR_TUND)	|
++			     MACB_BIT(ISR_RLE)	|
++			     MACB_BIT(TCOMP)	|
++			     MACB_BIT(ISR_ROVR)	|
++			     MACB_BIT(HRESP));
++
+ 	return 0;
+ }
+ 
++static void at91ether_stop(struct macb *lp)
++{
++	u32 ctl;
++
++	/* Disable MAC interrupts */
++	macb_writel(lp, IDR, MACB_BIT(RCOMP)	|
++			     MACB_BIT(RXUBR)	|
++			     MACB_BIT(ISR_TUND)	|
++			     MACB_BIT(ISR_RLE)	|
++			     MACB_BIT(TCOMP)	|
++			     MACB_BIT(ISR_ROVR) |
++			     MACB_BIT(HRESP));
++
++	/* Disable Receiver and Transmitter */
++	ctl = macb_readl(lp, NCR);
++	macb_writel(lp, NCR, ctl & ~(MACB_BIT(TE) | MACB_BIT(RE)));
++
++	/* Free resources. */
++	at91ether_free_coherent(lp);
++}
++
+ /* Open the ethernet interface */
+ static int at91ether_open(struct net_device *dev)
+ {
+@@ -3835,27 +3896,20 @@ static int at91ether_open(struct net_device *dev)
+ 
+ 	macb_set_hwaddr(lp);
+ 
+-	ret = at91ether_start(dev);
++	ret = at91ether_start(lp);
+ 	if (ret)
+ 		goto pm_exit;
+ 
+-	/* Enable MAC interrupts */
+-	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
+-			     MACB_BIT(RXUBR)	|
+-			     MACB_BIT(ISR_TUND)	|
+-			     MACB_BIT(ISR_RLE)	|
+-			     MACB_BIT(TCOMP)	|
+-			     MACB_BIT(ISR_ROVR)	|
+-			     MACB_BIT(HRESP));
+-
+ 	ret = macb_phylink_connect(lp);
+ 	if (ret)
+-		goto pm_exit;
++		goto stop;
+ 
+ 	netif_start_queue(dev);
+ 
+ 	return 0;
+ 
++stop:
++	at91ether_stop(lp);
+ pm_exit:
+ 	pm_runtime_put_sync(&lp->pdev->dev);
+ 	return ret;
+@@ -3865,37 +3919,13 @@ static int at91ether_open(struct net_device *dev)
+ static int at91ether_close(struct net_device *dev)
+ {
+ 	struct macb *lp = netdev_priv(dev);
+-	struct macb_queue *q = &lp->queues[0];
+-	u32 ctl;
+-
+-	/* Disable Receiver and Transmitter */
+-	ctl = macb_readl(lp, NCR);
+-	macb_writel(lp, NCR, ctl & ~(MACB_BIT(TE) | MACB_BIT(RE)));
+-
+-	/* Disable MAC interrupts */
+-	macb_writel(lp, IDR, MACB_BIT(RCOMP)	|
+-			     MACB_BIT(RXUBR)	|
+-			     MACB_BIT(ISR_TUND)	|
+-			     MACB_BIT(ISR_RLE)	|
+-			     MACB_BIT(TCOMP)	|
+-			     MACB_BIT(ISR_ROVR) |
+-			     MACB_BIT(HRESP));
+ 
+ 	netif_stop_queue(dev);
+ 
+ 	phylink_stop(lp->phylink);
+ 	phylink_disconnect_phy(lp->phylink);
+ 
+-	dma_free_coherent(&lp->pdev->dev,
+-			  AT91ETHER_MAX_RX_DESCR *
+-			  macb_dma_desc_get_size(lp),
+-			  q->rx_ring, q->rx_ring_dma);
+-	q->rx_ring = NULL;
+-
+-	dma_free_coherent(&lp->pdev->dev,
+-			  AT91ETHER_MAX_RX_DESCR * AT91ETHER_MAX_RBUFF_SZ,
+-			  q->rx_buffers, q->rx_buffers_dma);
+-	q->rx_buffers = NULL;
++	at91ether_stop(lp);
+ 
+ 	return pm_runtime_put(&lp->pdev->dev);
+ }
+-- 
+2.7.4
 
