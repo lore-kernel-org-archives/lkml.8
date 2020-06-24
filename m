@@ -2,115 +2,163 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A18C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE8020781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76A220781
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oNn5R7Qj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391234AbgFXOiy (ORCPT
+        id S2391169AbgFXOj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:38:54 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56268 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388652AbgFXOiy (ORCPT
+        Wed, 24 Jun 2020 10:39:57 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:55808 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388652AbgFXOj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:38:54 -0400
-Received: from 89-64-84-125.dynamic.chello.pl (89.64.84.125) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 45514ec22c03a9c3; Wed, 24 Jun 2020 16:38:52 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] intel_idle: Eliminate redundant static variable
-Date:   Wed, 24 Jun 2020 16:38:51 +0200
-Message-ID: <1731670.qoJTzjjlrN@kreacher>
+        Wed, 24 Jun 2020 10:39:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593009597; x=1624545597;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=5CptIMYGtLRJUOaEOQnppqBMq8qhYumr4bsnmrqP5lg=;
+  b=oNn5R7Qju6A+Ltwehv0z8SBGUFDAZO76khwSMFqK/0L32n2s/iT5kv21
+   KlZX6WubHmxCzPClZCa9w5gdarx+rzJMnKEcgobuWeFlcVbP05W4pUtxy
+   sCPZ5c/HqPKeG7Lgm8TOa3LGWBxq0aZug6sqVsLjWeFvO2GXvbuseWNBS
+   8=;
+IronPort-SDR: A3ZScZaN5pcVEarGidONVw36S6jhSY5hGDEmMARNsoO6mC2ciUVky/UU1Ven2APoflA8+in+9f
+ ViJxg/aeeqIA==
+X-IronPort-AV: E=Sophos;i="5.75,275,1589241600"; 
+   d="scan'208";a="38170872"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Jun 2020 14:39:55 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 4481CA2177;
+        Wed, 24 Jun 2020 14:39:53 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 24 Jun 2020 14:39:52 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.109) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 24 Jun 2020 14:39:44 +0000
+Subject: Re: [PATCH v4 17/18] nitro_enclaves: Add overview documentation
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-18-andraprs@amazon.com>
+ <20200623085915.GF32718@stefanha-x1.localdomain>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <746fcd7d-5946-35ec-6471-8bf8dccdf400@amazon.com>
+Date:   Wed, 24 Jun 2020 17:39:39 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200623085915.GF32718@stefanha-x1.localdomain>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.109]
+X-ClientProxiedBy: EX13D36UWA003.ant.amazon.com (10.43.160.237) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-The value of the lapic_timer_always_reliable static variable in
-the intel_idle driver reflects the boot_cpu_has(X86_FEATURE_ARAT)
-value and so it also reflects the static_cpu_has(X86_FEATURE_ARAT)
-value.
-
-Hence, the lapic_timer_always_reliable check in intel_idle() is
-redundant and apart from this lapic_timer_always_reliable is only
-used in two places in which boot_cpu_has(X86_FEATURE_ARAT) can be
-used directly.
-
-Eliminate the lapic_timer_always_reliable variable in accordance
-with the above observations.
-
-No intentional functional impact.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/idle/intel_idle.c |   11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
-
-Index: linux-pm/drivers/idle/intel_idle.c
-===================================================================
---- linux-pm.orig/drivers/idle/intel_idle.c
-+++ linux-pm/drivers/idle/intel_idle.c
-@@ -66,8 +66,6 @@ static struct cpuidle_device __percpu *i
- static unsigned long auto_demotion_disable_flags;
- static bool disable_promotion_to_c1e;
- 
--static bool lapic_timer_always_reliable;
--
- struct idle_cpu {
- 	struct cpuidle_state *state_table;
- 
-@@ -142,7 +140,7 @@ static __cpuidle int intel_idle(struct c
- 	if (state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
- 		leave_mm(cpu);
- 
--	if (!static_cpu_has(X86_FEATURE_ARAT) && !lapic_timer_always_reliable) {
-+	if (!static_cpu_has(X86_FEATURE_ARAT)) {
- 		/*
- 		 * Switch over to one-shot tick broadcast if the target C-state
- 		 * is deeper than C1.
-@@ -1562,7 +1560,7 @@ static int intel_idle_cpu_online(unsigne
- {
- 	struct cpuidle_device *dev;
- 
--	if (!lapic_timer_always_reliable)
-+	if (!boot_cpu_has(X86_FEATURE_ARAT))
- 		tick_broadcast_enable();
- 
- 	/*
-@@ -1655,16 +1653,13 @@ static int __init intel_idle_init(void)
- 		goto init_driver_fail;
- 	}
- 
--	if (boot_cpu_has(X86_FEATURE_ARAT))	/* Always Reliable APIC Timer */
--		lapic_timer_always_reliable = true;
--
- 	retval = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "idle/intel:online",
- 				   intel_idle_cpu_online, NULL);
- 	if (retval < 0)
- 		goto hp_setup_fail;
- 
- 	pr_debug("Local APIC timer is reliable in %s\n",
--		 lapic_timer_always_reliable ? "all C-states" : "C1");
-+		 boot_cpu_has(X86_FEATURE_ARAT) ? "all C-states" : "C1");
- 
- 	return 0;
- 
 
 
+On 23/06/2020 11:59, Stefan Hajnoczi wrote:
+> On Mon, Jun 22, 2020 at 11:03:28PM +0300, Andra Paraschiv wrote:
+>> +The kernel bzImage, the kernel command line, the ramdisk(s) are part of=
+ the
+>> +Enclave Image Format (EIF); plus an EIF header including metadata such =
+as magic
+>> +number, eif version, image size and CRC.
+>> +
+>> +Hash values are computed for the entire enclave image (EIF), the kernel=
+ and
+>> +ramdisk(s). That's used, for example, to check that the enclave image t=
+hat is
+>> +loaded in the enclave VM is the one that was intended to be run.
+>> +
+>> +These crypto measurements are included in a signed attestation document
+>> +generated by the Nitro Hypervisor and further used to prove the identit=
+y of the
+>> +enclave; KMS is an example of service that NE is integrated with and th=
+at checks
+>> +the attestation doc.
+>> +
+>> +The enclave image (EIF) is loaded in the enclave memory at offset 8 MiB=
+. The
+>> +init process in the enclave connects to the vsock CID of the primary VM=
+ and a
+>> +predefined port - 9000 - to send a heartbeat value - 0xb7. This mechani=
+sm is
+>> +used to check in the primary VM that the enclave has booted.
+>> +
+>> +If the enclave VM crashes or gracefully exits, an interrupt event is re=
+ceived by
+>> +the NE driver. This event is sent further to the user space enclave pro=
+cess
+>> +running in the primary VM via a poll notification mechanism. Then the u=
+ser space
+>> +enclave process can exit.
+>> +
+>> +[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
+>> +[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+>> +[3] https://lwn.net/Articles/807108/
+>> +[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameter=
+s.html
+>> +[5] https://man7.org/linux/man-pages/man7/vsock.7.html
+> Is the EIF specification and the attestation protocol available?
+
+For now, they are not publicly available. Once the refs are available =
+
+(e.g. AWS documentation, GitHub documentation), I'll include them in the =
+
+kernel documentation as well.
+
+As a note here, the NE project is currently in preview =
+
+(https://aws.amazon.com/ec2/nitro/nitro-enclaves/) and part of the =
+
+documentation / codebase will be publicly available when NE is generally =
+
+available (GA). This will be in addition to the ones already publicly =
+
+available, like the NE kernel driver.
+
+Let me know if I can help with any particular questions / clarifications.
+
+Thanks,
+Andra
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
+ Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
+omania. Registration number J22/2621/2005.
 
