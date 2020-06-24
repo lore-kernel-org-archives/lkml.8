@@ -2,244 +2,108 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1229C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01519C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA77020857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF13520789
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CygQ1MLj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdGnKZRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390646AbgFXMfS (ORCPT
+        id S2403956AbgFXMf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:35:18 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53551 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403898AbgFXMen (ORCPT
+        Wed, 24 Jun 2020 08:35:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53576 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390574AbgFXMf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:34:43 -0400
+        Wed, 24 Jun 2020 08:35:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593002080;
+        s=mimecast20190719; t=1593002156;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=9ew0dkmE9sZPBv3Fo0zDcKheH0XoZZSOf+61sV6N3AQ=;
-        b=CygQ1MLjESSOFnpaJl5hbUGJMJx8xR2T9Axlt2LBIn0B6WHspa9uF2zlu5SnOfA6+JqhpX
-        y81REAlSbIE0dUqhrPnFaRLn43Z5BVSfXo98IVNJjworOJULye20v9wrswbEiP1AHczkSr
-        cRy+enZ57i9Zb9BUBbyZpJCDV4XmOhw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-JT-F7A01NDWae3BwtJKTow-1; Wed, 24 Jun 2020 08:34:36 -0400
-X-MC-Unique: JT-F7A01NDWae3BwtJKTow-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EFE77464;
-        Wed, 24 Jun 2020 12:34:34 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C37D100EBB8;
-        Wed, 24 Jun 2020 12:34:26 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 08:34:23 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
-        twoerner@redhat.com, eparis@parisplace.org, tgraf@infradead.org
-Subject: Re: [PATCH ghak124 v3] audit: log nftables configuration change
- events
-Message-ID: <20200624123423.r2gypsdii6xgiywy@madcap2.tricolour.ca>
-References: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
- <20200624100346.GA11986@salvia>
+        bh=KXOd3FWsgxfpuN6FCKX2ClEKNWirNYpN+5hpadr6Dd4=;
+        b=CdGnKZRSdyTYjv7f0Cd78D9P0h0GtR23W+E2QxOmYEsQXDmVLerUhweEXqVP3ITF3D+zcp
+        w6yBzUEZLT+hShXpLZWTbTnlY4H3U4l3W99RF28nHlcSjXY/CYRV5+g70gvneI2J0tJHbh
+        zHi+LV0Fiv4DU+FkV/Gw6QQLDt18h20=
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
+ [209.85.167.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-BsO6dWbZNxS9SGZIG3nQFQ-1; Wed, 24 Jun 2020 08:35:52 -0400
+X-MC-Unique: BsO6dWbZNxS9SGZIG3nQFQ-1
+Received: by mail-oi1-f197.google.com with SMTP id r186so1427737oih.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:35:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KXOd3FWsgxfpuN6FCKX2ClEKNWirNYpN+5hpadr6Dd4=;
+        b=YgioO3SvRvtUAdIsfbsuGr7757WEfSGbCrv3WlRv7bFt70ILzFN3CERYKEiqUFZg4+
+         PHv0Xf3MJzVo+i3KcIpX4E+htFlMdioYKH6Rhf6YD94VhrShhfh+NTJy/Cj80w8rFQgy
+         i2BY3JokFwtzr0A6RmRRK/oNZB7lvGaqHnfc44BNnvnb6FREbzAen/J2ideaQAR5vrCd
+         cazRD08Gi0p6d4Q8v9XaOlH+Xk+tFN7/XKPF6t0e/4t5q70kxxLTT0au7EYafzkDagsA
+         2turtFygt6vLCoZHaNuuXem7vpDU6C8LZX20euawLCTV0HuGyWDWzH3m6gcYvPrBtscR
+         a0/Q==
+X-Gm-Message-State: AOAM533xUjGlZVHuJ+D77ha+a0Ep7rqZ2f1uxqGPstq3ajJsyzPPep6V
+        RVzf79eSaWzbbCoya/uI+sghDq/0gnQefJTdT0FBqmLXmnGdpEN/vAr4q98p6fnAUM0i/zMgEoc
+        ravd0fl9AlY82uLyMi2RhgAjjSUSk/b+YCEA7jkL0
+X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr20797118oto.95.1593002151758;
+        Wed, 24 Jun 2020 05:35:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxX1TWYnFwEpwDI3Wr6NaU8l9Igwlb4//wePGQRtnuC7RPWRAmd3PhYKW23yN302Duu4KI+Bsz7H4/6MJejzh8=
+X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr20797107oto.95.1593002151523;
+ Wed, 24 Jun 2020 05:35:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624100346.GA11986@salvia>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200619155036.GZ8681@bombadil.infradead.org> <20200622003215.GC2040@dread.disaster.area>
+ <CAHc6FU4b_z+vhjVPmaU46VhqoD+Y7jLN3=BRDZPrS2v=_pVpfw@mail.gmail.com> <20200622181338.GA21350@casper.infradead.org>
+In-Reply-To: <20200622181338.GA21350@casper.infradead.org>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Wed, 24 Jun 2020 14:35:40 +0200
+Message-ID: <CAHc6FU7R2vMZ9+aXLsQ+ubECbfrBTR+yh03b_T++PRxd479vsQ@mail.gmail.com>
+Subject: Re: [RFC] Bypass filesystems for reading cached pages
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 12:03, Pablo Neira Ayuso wrote:
-> On Thu, Jun 04, 2020 at 09:20:49AM -0400, Richard Guy Briggs wrote:
-> > iptables, ip6tables, arptables and ebtables table registration,
-> > replacement and unregistration configuration events are logged for the
-> > native (legacy) iptables setsockopt api, but not for the
-> > nftables netlink api which is used by the nft-variant of iptables in
-> > addition to nftables itself.
-> > 
-> > Add calls to log the configuration actions in the nftables netlink api.
-> > 
-> > This uses the same NETFILTER_CFG record format but overloads the table
-> > field.
-> > 
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=?:0;?:0 family=unspecified entries=2 op=nft_register_gen pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=firewalld:1;?:0 family=inet entries=0 op=nft_register_table pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=8 op=nft_register_chain pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=101 op=nft_register_rule pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=87 op=nft_register_setelem pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> >   ...
-> >   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=0 op=nft_register_set pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-> > 
-> > For further information please see issue
-> > https://github.com/linux-audit/audit-kernel/issues/124
-> > 
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> > Changelog:
-> > v3:
-> > - inline message type rather than table
-> > 
-> > v2:
-> > - differentiate between xtables and nftables
-> > - add set, setelem, obj, flowtable, gen
-> > - use nentries field as appropriate per type
-> > - overload the "tables" field with table handle and chain/set/flowtable
-> > 
-> >  include/linux/audit.h         |  18 ++++++++
-> >  kernel/auditsc.c              |  24 ++++++++--
-> >  net/netfilter/nf_tables_api.c | 103 ++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 142 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 3fcd9ee49734..604ede630580 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/sched.h>
-> >  #include <linux/ptrace.h>
-> >  #include <uapi/linux/audit.h>
-> > +#include <uapi/linux/netfilter/nf_tables.h>
-> >  
-> >  #define AUDIT_INO_UNSET ((unsigned long)-1)
-> >  #define AUDIT_DEV_UNSET ((dev_t)-1)
-> > @@ -98,6 +99,23 @@ enum audit_nfcfgop {
-> >  	AUDIT_XT_OP_REGISTER,
-> >  	AUDIT_XT_OP_REPLACE,
-> >  	AUDIT_XT_OP_UNREGISTER,
-> > +	AUDIT_NFT_OP_TABLE_REGISTER,
-> > +	AUDIT_NFT_OP_TABLE_UNREGISTER,
-> > +	AUDIT_NFT_OP_CHAIN_REGISTER,
-> > +	AUDIT_NFT_OP_CHAIN_UNREGISTER,
-> > +	AUDIT_NFT_OP_RULE_REGISTER,
-> > +	AUDIT_NFT_OP_RULE_UNREGISTER,
-> > +	AUDIT_NFT_OP_SET_REGISTER,
-> > +	AUDIT_NFT_OP_SET_UNREGISTER,
-> > +	AUDIT_NFT_OP_SETELEM_REGISTER,
-> > +	AUDIT_NFT_OP_SETELEM_UNREGISTER,
-> > +	AUDIT_NFT_OP_GEN_REGISTER,
-> > +	AUDIT_NFT_OP_OBJ_REGISTER,
-> > +	AUDIT_NFT_OP_OBJ_UNREGISTER,
-> > +	AUDIT_NFT_OP_OBJ_RESET,
-> > +	AUDIT_NFT_OP_FLOWTABLE_REGISTER,
-> > +	AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,
-> > +	AUDIT_NFT_OP_INVALID,
-> >  };
-> >  
-> >  extern int is_audit_feature_set(int which);
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index 468a23390457..3a9100e95fda 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -75,6 +75,7 @@
-> >  #include <linux/uaccess.h>
-> >  #include <linux/fsnotify_backend.h>
-> >  #include <uapi/linux/limits.h>
-> > +#include <uapi/linux/netfilter/nf_tables.h>
-> >  
-> >  #include "audit.h"
-> >  
-> > @@ -136,9 +137,26 @@ struct audit_nfcfgop_tab {
-> >  };
-> >  
-> >  static const struct audit_nfcfgop_tab audit_nfcfgs[] = {
-> > -	{ AUDIT_XT_OP_REGISTER,		"register"	},
-> > -	{ AUDIT_XT_OP_REPLACE,		"replace"	},
-> > -	{ AUDIT_XT_OP_UNREGISTER,	"unregister"	},
-> > +	{ AUDIT_XT_OP_REGISTER,			"xt_register"		   },
-> > +	{ AUDIT_XT_OP_REPLACE,			"xt_replace"		   },
-> > +	{ AUDIT_XT_OP_UNREGISTER,		"xt_unregister"		   },
-> > +	{ AUDIT_NFT_OP_TABLE_REGISTER,		"nft_register_table"	   },
-> > +	{ AUDIT_NFT_OP_TABLE_UNREGISTER,	"nft_unregister_table"	   },
-> > +	{ AUDIT_NFT_OP_CHAIN_REGISTER,		"nft_register_chain"	   },
-> > +	{ AUDIT_NFT_OP_CHAIN_UNREGISTER,	"nft_unregister_chain"	   },
-> > +	{ AUDIT_NFT_OP_RULE_REGISTER,		"nft_register_rule"	   },
-> > +	{ AUDIT_NFT_OP_RULE_UNREGISTER,		"nft_unregister_rule"	   },
-> > +	{ AUDIT_NFT_OP_SET_REGISTER,		"nft_register_set"	   },
-> > +	{ AUDIT_NFT_OP_SET_UNREGISTER,		"nft_unregister_set"	   },
-> > +	{ AUDIT_NFT_OP_SETELEM_REGISTER,	"nft_register_setelem"	   },
-> > +	{ AUDIT_NFT_OP_SETELEM_UNREGISTER,	"nft_unregister_setelem"   },
-> > +	{ AUDIT_NFT_OP_GEN_REGISTER,		"nft_register_gen"	   },
-> > +	{ AUDIT_NFT_OP_OBJ_REGISTER,		"nft_register_obj"	   },
-> > +	{ AUDIT_NFT_OP_OBJ_UNREGISTER,		"nft_unregister_obj"	   },
-> > +	{ AUDIT_NFT_OP_OBJ_RESET,		"nft_reset_obj"		   },
-> > +	{ AUDIT_NFT_OP_FLOWTABLE_REGISTER,	"nft_register_flowtable"   },
-> > +	{ AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,	"nft_unregister_flowtable" },
-> > +	{ AUDIT_NFT_OP_INVALID,			"nft_invalid"		   },
-> >  };
-> >  
-> >  static int audit_match_perm(struct audit_context *ctx, int mask)
-> > diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-> > index 3558e76e2733..b9e7440cc87d 100644
-> > --- a/net/netfilter/nf_tables_api.c
-> > +++ b/net/netfilter/nf_tables_api.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/netlink.h>
-> >  #include <linux/vmalloc.h>
-> >  #include <linux/rhashtable.h>
-> > +#include <linux/audit.h>
-> >  #include <linux/netfilter.h>
-> >  #include <linux/netfilter/nfnetlink.h>
-> >  #include <linux/netfilter/nf_tables.h>
-> > @@ -693,6 +694,16 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
-> >  {
-> >  	struct sk_buff *skb;
-> >  	int err;
-> > +	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-> > +			      ctx->table->name, ctx->table->handle);
-> > +
-> > +	audit_log_nfcfg(buf,
-> > +			ctx->family,
-> > +			ctx->table->use,
-> > +			event == NFT_MSG_NEWTABLE ?
-> > +				AUDIT_NFT_OP_TABLE_REGISTER :
-> > +				AUDIT_NFT_OP_TABLE_UNREGISTER);
-> > +	kfree(buf);
-> 
-> As a follow up: Would you wrap this code into a function?
-> 
->         nft_table_audit()
-> 
-> Same thing for other pieces of code below.
+On Mon, Jun 22, 2020 at 8:13 PM Matthew Wilcox <willy@infradead.org> wrote:
+> On Mon, Jun 22, 2020 at 04:35:05PM +0200, Andreas Gruenbacher wrote:
+> > I'm fine with not moving that functionality into the VFS. The problem
+> > I have in gfs2 is that taking glocks is really expensive. Part of that
+> > overhead is accidental, but we definitely won't be able to fix it in
+> > the short term. So something like the IOCB_CACHED flag that prevents
+> > generic_file_read_iter from issuing readahead I/O would save the day
+> > for us. Does that idea stand a chance?
+>
+> For the short-term fix, is switching to a trylock in gfs2_readahead()
+> acceptable?
 
-If I'm guessing right, you are asking for a supplementary follow-up
-cleanup patch to this one (or are you nacking this patch)?
+Well, it's the only thing we can do for now, right?
 
-Also, I gather you would like to see the kasprintf and kfree hidden in
-nft_table_audit(), handing this function at least 8 parameters?  This
-sounds pretty messy given the format of the table field.
+> diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
+> index 72c9560f4467..6ccd478c81ff 100644
+> --- a/fs/gfs2/aops.c
+> +++ b/fs/gfs2/aops.c
+> @@ -600,7 +600,7 @@ static void gfs2_readahead(struct readahead_control *rac)
+>         struct gfs2_inode *ip = GFS2_I(inode);
+>         struct gfs2_holder gh;
+>
+> -       gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
+> +       gfs2_holder_init(ip->i_gl, LM_ST_SHARED, LM_FLAG_TRY, &gh);
+>         if (gfs2_glock_nq(&gh))
+>                 goto out_uninit;
+>         if (!gfs2_is_stuffed(ip))
 
-> Thanks.
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Thanks,
+Andreas
 
