@@ -2,119 +2,102 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83644C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C512088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592985441;
-	bh=l3Q0LyzeB2AgJKEMBDOo81ibmsUKTKJ9tglIeoVn5pI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JP0/dvPAaNldOSgRdVtjtc4t3hP56SrHtDdt1R8sJN8fw3WjgfMU3Ks0dpfX64xkf
-	 hVNd838+VP7oD7NhLsvuIMmp/DQvSc0X5GlKEZYvw1QfiEMhTkZt+Z1DHhaybMa0G4
-	 deeYgZUVVObLG+5U/kRG37ZWU4hffUN1rwUbAZGk=
+	by mail.kernel.org (Postfix) with ESMTP id 6780C2137B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390193AbgFXH5U (ORCPT
+        id S2390206AbgFXH5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:57:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55170 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 03:57:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35694 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389965AbgFXH5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:57:19 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AC72085B;
-        Wed, 24 Jun 2020 07:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592985438;
-        bh=l3Q0LyzeB2AgJKEMBDOo81ibmsUKTKJ9tglIeoVn5pI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hwS5MOXOPRnpdHOI74XHFaf2FIoxBL8vat/VMF/rsK7OudnwwsqyaUMDA1AwNDq5I
-         5MFpl+o0l6bMIGSTBS4TLc5oi5hGBQK8kQGQwgMIkCdavlfrFxZaZtDRJVxoOiu8zg
-         tP7o7yRWzq2oR+WUQFOZXEJQrECP14c31Q5KiLQk=
-Date:   Wed, 24 Jun 2020 08:57:12 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 9/9] arm64/build: Warn on orphan section placement
-Message-ID: <20200624075712.GB5853@willie-the-truck>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-10-keescook@chromium.org>
+        id S2389965AbgFXH5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:57:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BAC60AFD5;
+        Wed, 24 Jun 2020 07:57:37 +0000 (UTC)
+Subject: Re: [PATCH 9/9] mm, slab/slub: move and improve cache_from_obj()
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
+        Roman Gushchin <guro@fb.com>, Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>
+References: <20200610163135.17364-1-vbabka@suse.cz>
+ <20200610163135.17364-10-vbabka@suse.cz> <202006171039.FBDF2D7F4A@keescook>
+ <afeda7ac-748b-33d8-a905-56b708148ad5@suse.cz>
+Message-ID: <b33e0fa7-cd28-4788-9e54-5927846329ef@suse.cz>
+Date:   Wed, 24 Jun 2020 09:57:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624014940.1204448-10-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <afeda7ac-748b-33d8-a905-56b708148ad5@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 06:49:40PM -0700, Kees Cook wrote:
-> We don't want to depend on the linker's orphan section placement
-> heuristics as these can vary between linkers, and may change between
-> versions. All sections need to be explicitly named in the linker
-> script.
+On 6/18/20 12:10 PM, Vlastimil Babka wrote:
+> ----8<----
+> From b8df607d92b37e5329ce7bda62b2b364cc249893 Mon Sep 17 00:00:00 2001
+> From: Vlastimil Babka <vbabka@suse.cz>
+> Date: Thu, 18 Jun 2020 11:52:03 +0200
+> Subject: [PATCH] mm, slab/slub: improve error reporting and overhead of
+>  cache_from_obj()
 > 
-> Avoid .eh_frame* by making sure both -fno-asychronous-unwind-tables and
-> -fno-unwind-tables are present in both CFLAGS and AFLAGS. Remove one
-> last instance of .eh_frame by removing the needless Call Frame Information
-> annotations from arch/arm64/kernel/smccc-call.S.
-> 
-> Add .plt, .data.rel.ro, .igot.*, and .iplt to discards as they are not
-> actually used. While .got.plt is also not used, it must be included
-> otherwise ld.bfd will fail to link with the error:
-> 
->     aarch64-linux-gnu-ld: discarded output section: `.got.plt'
-> 
-> However, as it'd be better to validate that it stays effectively empty,
-> add an assert.
-> 
-> Explicitly include debug sections when they're present.
-> 
-> Fix a case of needless quotes in __section(), which Clang doesn't like.
-> 
-> Finally, enable orphan section warnings.
-> 
-> Thanks to Ard Biesheuvel for many hints on correct ways to handle
-> mysterious sections. :)
 
-Sorry to be a pain, but this patch is doing 3 or 4 independent things at
-once. Please could you split it up a bit?
-e.g.
+Another small fixup, please.
 
- - Removal of cfi directives from smccc macro
- - Removal of quotes around section name for clang
- - Avoid generating .eh_frame
- - Ensure all sections are accounted for in linker script and warn on orphans
+----8<----
+From 2cd24408828a22a3cd4301afbaf98767b1a14eb1 Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Wed, 24 Jun 2020 09:49:15 +0200
+Subject: [PATCH] mm, slab/slub: improve error reporting and overhead of
+ cache_from_obj()-fix
 
-That way it's a bit easier to manage, we can revert/backport bits later if
-necessary and you get more patches in the kernel ;)
+The added VM_WARN_ON_ONCE triggers [1] with CONFIG_SLAB, as SLAB_DEBUG_FLAGS
+doesn't include SLAB_CONSISTENCY_CHECKS. Move the check under #ifdef
+SLUB_DEBUG.
 
-You can also add my Ack on all the patches:
+[1] https://lore.kernel.org/r/20200623090213.GW5535@shao2-debian
 
-Acked-by: Will Deacon <will@kernel.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/slab.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Will
+diff --git a/mm/slab.h b/mm/slab.h
+index 525260217013..e829d9f5e6ef 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -229,8 +229,8 @@ static inline void print_tracking(struct kmem_cache *s, void *object)
+  */
+ static inline bool kmem_cache_debug_flags(struct kmem_cache *s, slab_flags_t flags)
+ {
+-	VM_WARN_ON_ONCE(!(flags & SLAB_DEBUG_FLAGS));
+ #ifdef CONFIG_SLUB_DEBUG
++	VM_WARN_ON_ONCE(!(flags & SLAB_DEBUG_FLAGS));
+ 	if (static_branch_unlikely(&slub_debug_enabled))
+ 		return s->flags & flags;
+ #endif
+-- 
+2.27.0
+
+
