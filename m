@@ -2,225 +2,128 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F86C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B25BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFBD32088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593000422;
-	bh=DelhQOfEurrxPvXb+ZVq9Hz9ysbh4ZnDAcJ9Lv18tFE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y8+mWqym+ZlFXfRX6VpM2HNl14qooiNXUQ0cOA7hbDqFbW9kA3kW0YBlgETEHZdNU
-	 XXezSIKo6u7FAQC8wRUM/nQum+JCBDx5dCqpzKcD8BtLEu10/ZUHbsCNbjSQ5l/o3D
-	 SBRK4Pf+lXLvGe0bBJoDf/JN8F96Zl21VKlHaOf4=
+	by mail.kernel.org (Postfix) with ESMTP id ED29220B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iIbatgUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389400AbgFXMHA convert rfc822-to-8bit (ORCPT
+        id S2389647AbgFXMHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:07:00 -0400
-Received: from mail-ej1-f44.google.com ([209.85.218.44]:34566 "EHLO
-        mail-ej1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388522AbgFXMG7 (ORCPT
+        Wed, 24 Jun 2020 08:07:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37458 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbgFXMHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:06:59 -0400
-Received: by mail-ej1-f44.google.com with SMTP id y10so2221689eje.1;
-        Wed, 24 Jun 2020 05:06:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DIWUKwC5j7zR6xCRsdwY2boMvp3E8i9Nf4eBjr5JHPY=;
-        b=VyzvRJ92l84AlOQmqf/tStZfCbdlYQGJJPXdEeyJV6q+spGaEYp9D1zfig7MIwtOrW
-         kkEYSiCbH+7h/Om4mG1ql4HOmqCjkf1eP78IfU8IGvBtQZZ4KBs9hIbdXXVO1b4cqPpk
-         Bh1YDptkRZSjeTITcF53u4BCrDHlKnJkNuqdyD2308rlk4nEDj7qzN1ESVO7XJY3k/zU
-         WPCFC5A9h4+lX3Y5HZsF5rd+vNgrMvyKMW/C/D/u/HOUaeEfpzIjceIZHSvHsXg0gzsg
-         LR8dyJRs4fI5sMQa+wTZUjKWqNjv/yZSwZEdz9rtCc/QcD4wJg5BKHd/GHWdXOVM4lH+
-         lrdA==
-X-Gm-Message-State: AOAM532boGHg4tFvN5+HI4xEUzDxN/4uj9PozyWeDug9WwU47MrrwXc8
-        RXb8vVUzQ4v7zIa31TzwOJI=
-X-Google-Smtp-Source: ABdhPJzw7dT7DuLroeMpi/tOn6HV4dIL8x9Vwikz8xM5kRlyFgOqcL6z4RnjLqHE3ANNvd+Td26jsg==
-X-Received: by 2002:a17:906:1b45:: with SMTP id p5mr11645122ejg.51.1593000414538;
-        Wed, 24 Jun 2020 05:06:54 -0700 (PDT)
-Received: from pi3 ([194.230.155.235])
-        by smtp.googlemail.com with ESMTPSA id b98sm5452294edf.24.2020.06.24.05.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 05:06:53 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 14:06:51 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200624120651.GA20813@pi3>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
- <20200623191129.GA4171@kozik-lap>
- <CGME20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2@eucas1p2.samsung.com>
- <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
- <828b0d63-4d01-48d6-5971-64855adebed2@samsung.com>
+        Wed, 24 Jun 2020 08:07:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OC73Xq063657;
+        Wed, 24 Jun 2020 07:07:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593000423;
+        bh=urADYeKqD191XbG4nfUX5KHD6LogFmSovqRvKmsIO18=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iIbatgUS7IW5fQZvMehX7SX46NCWkYwOWiljDTn4DchTpDRXRMMpBPH1Thtiucws/
+         gRCbHrruSyMvXNSrpxuMbGRcu8xQ78W6FmIhCk2mDsxg/XpJ3w+f/nZo0IQ8SeknY8
+         oDoGHtL0pVjv13YnHiUjdM8H/+CerqsI75siF1xM=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OC72LE055309
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 07:07:02 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 07:07:02 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 24 Jun 2020 07:07:02 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OC6xjD039705;
+        Wed, 24 Jun 2020 07:07:00 -0500
+Subject: Re: DMA Engine: Transfer From Userspace
+To:     Vinod Koul <vkoul@kernel.org>, Thomas Ruf <freelancer@rufusul.de>
+CC:     Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
+ <20200622155440.GM2324254@vkoul-mobl>
+ <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+ <2077253476.601371.1592991035969@mailbusiness.ionos.de>
+ <20200624093800.GV2324254@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <3a4b1b55-7bce-2c48-b897-51e23e850127@ti.com>
+Date:   Wed, 24 Jun 2020 15:07:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <828b0d63-4d01-48d6-5971-64855adebed2@samsung.com>
+In-Reply-To: <20200624093800.GV2324254@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:18:42PM +0200, Kamil Konieczny wrote:
-> Hi,
-> 
-> On 24.06.2020 12:32, Lukasz Luba wrote:
-> > Hi Krzysztof and Willy
-> > 
-> > On 6/23/20 8:11 PM, Krzysztof Kozlowski wrote:
-> >> On Tue, Jun 23, 2020 at 09:02:38PM +0200, Krzysztof Kozlowski wrote:
-> >>> On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
-> >>>>
-> >>>> Hi everybody,
-> >>>>
-> >>>> Is DVFS for memory bus really working on Odroid XU3/4 board?
-> >>>> Using a simple microbenchmark that is doing only memory accesses, memory DVFS
-> >>>> seems to not working properly:
-> >>>>
-> >>>> The microbenchmark is doing pointer chasing by following index in an array.
-> >>>> Indices in the array are set to follow a random pattern (cutting prefetcher),
-> >>>> and forcing RAM access.
-> >>>>
-> >>>> git clone https://protect2.fireeye.com/url?k=c364e88a-9eb6fe2f-c36563c5-0cc47a31bee8-631885f0a63a11a0&q=1&u=https%3A%2F%2Fgithub.com%2Fwwilly%2Fbenchmark.git \
-> >>>>    && cd benchmark \
-> >>>>    && source env.sh \
-> >>>>    && ./bench_build.sh \
-> >>>>    && bash source/scripts/test_dvfs_mem.sh
-> >>>>
-> >>>> Python 3, cmake and sudo rights are required.
-> >>>>
-> >>>> Results:
-> >>>> DVFS CPU with performance governor
-> >>>> mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
-> >>>> benchmark is running.
-> >>>> - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
-> >>>> - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
-> >>>>
-> >>>> While forcing DVFS memory bus to use performance governor,
-> >>>> mem_gov = performance at 825000000 Hz in idle,
-> >>>> - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
-> >>>> - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
-> >>>>
-> >>>> The kernel used is the last 5.7.5 stable with default exynos_defconfig.
-> >>>
-> >>> Thanks for the report. Few thoughts:
-> >>> 1. What trans_stat are saying? Except DMC driver you can also check
-> >>> all other devfreq devices (e.g. wcore) - maybe the devfreq events
-> >>> (nocp) are not properly assigned?
-> >>> 2. Try running the measurement for ~1 minutes or longer. The counters
-> >>> might have some delay (which would require probably fixing but the
-> >>> point is to narrow the problem).
-> >>> 3. What do you understand by "mem_gov"? Which device is it?
-> >>
-> >> +Cc Lukasz who was working on this.
-> > 
-> > Thanks Krzysztof for adding me here.
-> > 
-> >>
-> >> I just run memtester and more-or-less ondemand works (at least ramps
-> >> up):
-> >>
-> >> Before:
-> >> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
-> >>       From  :   To
-> >>             : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> >> * 165000000:         0         0         0         0         0         0         0         0   1795950
-> >>    206000000:         1         0         0         0         0         0         0         0      4770
-> >>    275000000:         0         1         0         0         0         0         0         0     15540
-> >>    413000000:         0         0         1         0         0         0         0         0     20780
-> >>    543000000:         0         0         0         1         0         0         0         1     10760
-> >>    633000000:         0         0         0         0         2         0         0         0     10310
-> >>    728000000:         0         0         0         0         0         0         0         0         0
-> >>    825000000:         0         0         0         0         0         2         0         0     25920
-> >> Total transition : 9
-> >>
-> >>
-> >> $ sudo memtester 1G
-> >>
-> >> During memtester:
-> >> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
-> >>       From  :   To
-> >>             : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> >>    165000000:         0         0         0         0         0         0         0         1   1801490
-> >>    206000000:         1         0         0         0         0         0         0         0      4770
-> >>    275000000:         0         1         0         0         0         0         0         0     15540
-> >>    413000000:         0         0         1         0         0         0         0         0     20780
-> >>    543000000:         0         0         0         1         0         0         0         2     11090
-> >>    633000000:         0         0         0         0         3         0         0         0     17210
-> >>    728000000:         0         0         0         0         0         0         0         0         0
-> >> * 825000000:         0         0         0         0         0         3         0         0    169020
-> >> Total transition : 13
-> >>
-> >> However after killing memtester it stays at 633 MHz for very long time
-> >> and does not slow down. This is indeed weird...
-> > 
-> > I had issues with devfreq governor which wasn't called by devfreq
-> > workqueue. The old DELAYED vs DEFERRED work discussions and my patches
-> > for it [1]. If the CPU which scheduled the next work went idle, the
-> > devfreq workqueue will not be kicked and devfreq governor won't check
-> > DMC status and will not decide to decrease the frequency based on low
-> > busy_time.
-> > The same applies for going up with the frequency. They both are
-> > done by the governor but the workqueue must be scheduled periodically.
-> > 
-> > I couldn't do much with this back then. I have given the example that
-> > this is causing issues with the DMC [2]. There is also a description
-> > of your situation staying at 633MHz for long time:
-> > ' When it is missing opportunity
-> > to change the frequency, it can either harm the performance or power
-> > consumption, depending of the frequency the device stuck on.'
-> > 
-> > The patches were not accepted because it will cause CPU wake-up from
-> > idle, which increases the energy consumption. I know that there were
-> > some other attempts, but I don't know the status.
-> > 
-> > I had also this devfreq workqueue issue when I have been working on
-> > thermal cooling for devfreq. The device status was not updated, because
-> > the devfreq workqueue didn't check the device [3].
-> > 
-> > Let me investigate if that is the case.
-> > 
-> > Regards,
-> > Lukasz
-> > 
-> > [1] https%3A%2F%2Flkml.org%2Flkml%2F2019%2F2%2F11%2F1146
-> > [2] https%3A%2F%2Flkml.org%2Flkml%2F2019%2F2%2F12%2F383
-> > [3] https%3A%2F%2Flwn.net%2Fml%2Flinux-kernel%2F20200511111912.3001-11-lukasz.luba%40arm.com%2F
-> 
-> and here was another try to fix wq: "PM / devfreq: add possibility for delayed work"
-> 
-> https://lkml.org/lkml/2019/12/9/486
 
-My case was clearly showing wrong behavior. System was idle but not
-sleeping - network working, SSH connection ongoing.  Therefore at least
-one CPU was not idle and could adjust the devfreq/DMC... but this did not
-happen. The system stayed for like a minute in 633 MHz OPP.
 
-Not-waking up idle processors - ok... so why not using power efficient
-workqueue? It is exactly for this purpose - wake up from time to time on
-whatever CPU to do the necessary job.
+On 24/06/2020 12.38, Vinod Koul wrote:
+> On 24-06-20, 11:30, Thomas Ruf wrote:
+>=20
+>> To make it short - i have two questions:
+>> - what are the chances to revive DMA_SG?
+>=20
+> 100%, if we have a in-kernel user
 
-Best regards,
-Krzysztof
+Most DMAs can not handle differently provisioned sg_list for src and dst.=
+
+Even if they could handle non symmetric SG setup it requires entirely
+different setup (two independent channels sending the data to each
+other, one reads, the other writes?).
+
+>> - what are the chances to get my driver for memcpy like transfers from=
+
+>> user space using DMA_SG upstream? ("dma-sg-proxy")
+>=20
+> pretty bleak IMHO.
+
+fwiw, I also get requests time-to-time to DMA memcpy support from user
+space from companies trying to move from bare-metal code to Linux.
+
+What could be plausible is a generic dmabuf-to-dmabuf copy driver (V4L2
+can provide dma-buf, DRM can also).
+If there is a DMA memcpy channel available, use that, otherwise use some
+method to do the copy, user space should not care how it is done.
+
+Where things are going to get a bit more trickier is when the copy needs
+to be triggered by other DMA channel (completion of a frame reception
+triggering an interleaved sub-frame extraction copy).
+You don't want to extract from a buffer which can be modified while the
+other channel is writing to it.
+
+In Linux the DMA is used for kernel and user space can only use it
+implicitly via standard subsystems.
+Misused DMA can be very dangerous and giving full access to program a
+transfer can open a can of worms.
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
