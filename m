@@ -2,96 +2,102 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48705C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA15D21532
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E0B20899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389066AbgFXF4F (ORCPT
+        id S2389080AbgFXF4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:56:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:14787 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388280AbgFXF4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:56:04 -0400
-IronPort-SDR: g/asH8//nlEQk76LudjXvHhqlhOgB0eeFxCPF7tu/Tz7UeNbVFrVlgks8mX+4o6BqWbfvfOkCi
- JPyuFh+m3zkQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="131780348"
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="131780348"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 22:56:03 -0700
-IronPort-SDR: +WRzbudH5WccXgHhEBtGs7jLgYUfPgjlpURNgwMRnNr8taqh93vYgYIb0rMoD/QWuyHKAlqow+
- /rk7ofOMn1ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="452519601"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 22:55:58 -0700
-Date:   Wed, 24 Jun 2020 13:56:11 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v12 00/10] Introduce support for guest CET feature
-Message-ID: <20200624055611.GA14379@local-michael-cet-test>
-References: <20200506082110.25441-1-weijiang.yang@intel.com>
- <20200610165635.GB18790@linux.intel.com>
- <20200611012913.GA15497@local-michael-cet-test>
- <20200623183919.GB24107@linux.intel.com>
+        Wed, 24 Jun 2020 01:56:36 -0400
+Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:44528 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388854AbgFXF4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:56:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id EF110837F24A;
+        Wed, 24 Jun 2020 05:56:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cap36_5b0ffc026e41
+X-Filterd-Recvd-Size: 2586
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 24 Jun 2020 05:56:33 +0000 (UTC)
+Message-ID: <fa304f0ef1dba4fcf5e495f3c2feb4d3816f20ac.camel@perches.com>
+Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
+ kzalloc()
+From:   Joe Perches <joe@perches.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date:   Tue, 23 Jun 2020 22:56:32 -0700
+In-Reply-To: <20200624055535.GX2324254@vkoul-mobl>
+References: <20200619224334.GA7857@embeddedor>
+         <20200624055535.GX2324254@vkoul-mobl>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623183919.GB24107@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:39:19AM -0700, Sean Christopherson wrote:
-> On Thu, Jun 11, 2020 at 09:29:13AM +0800, Yang Weijiang wrote:
-> > On Wed, Jun 10, 2020 at 09:56:36AM -0700, Sean Christopherson wrote:
-> > > On Wed, May 06, 2020 at 04:20:59PM +0800, Yang Weijiang wrote:
-> > > > Several parts in KVM have been updated to provide VM CET support, including:
-> > > > CPUID/XSAVES config, MSR pass-through, user space MSR access interface, 
-> > > > vmentry/vmexit config, nested VM etc. These patches have dependency on CET
-> > > > kernel patches for xsaves support and CET definitions, e.g., MSR and related
-> > > > feature flags.
-> > > 
-> > > Other than the MSR and cpufeatures flags definitions, is there any direct
-> > > dependency on kernel CET support?  I.e. if/when XSAVES support is merged,
-> > > is there anything beyond the architectural definitions that are required to
-> > > merge KVM CET virtualization?
-> > No, KVM CET patches only depend on kernel CET related definitions and XSAVES 
-> > support now.
-> 
-> Neato.
-> 
-> > But to make guest CET work, we need CET patches for QEMU.
-> 
-> Ya, but we don't need to wait for host kernel support, which was the crux of
-> my question.
-> 
-> 
-> Can you please respin this series with the CET definition patches included?
-> The XSAVES support has been queued to tip/x86/fpu.  Assuming that lands in
-> kernel 5.9, I _think_ KVM support for CET can land in 5.10.
+On Wed, 2020-06-24 at 11:25 +0530, Vinod Koul wrote:
+> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
+> > Make use of the struct_size() helper instead of an open-coded version
+> > in order to avoid any potential type mistakes.
+> > 
+> > This code was detected with the help of Coccinelle and, audited and
+> > fixed manually.
+> > 
+> > Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
 
-Sure. Besides this change and the unrestricted guest case change, any
-other changes I should do to v12 patch?
+Is this odd tag really useful?
 
-Thanks for review!
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  drivers/dma/ti/k3-udma.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> > index 0d5fb154b8e2..411c54b86ba8 100644
+> > --- a/drivers/dma/ti/k3-udma.c
+> > +++ b/drivers/dma/ti/k3-udma.c
+> > @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
+> >  	u32 ring_id;
+> >  	unsigned int i;
+> >  
+> > -	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT);
+> > +	d = kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
 > 
-> Base your series on kvm/queue, i.e. don't worry about the XSAVES patches,
-> I'll merge them in from tip/x86/fpu for testing.
+> struct_size() is a * b + c but here we need, a + b * c.. the trailing
+> struct is N times here..
 > 
-> Thanks!
+> 
+> >  	if (!d)
+> >  		return NULL;
+> >  
+> > @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
+> >  	if (period_len >= SZ_4M)
+> >  		return NULL;
+> >  
+> > -	d = kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAIT);
+> > +	d = kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+> >  	if (!d)
+> >  		return NULL;
+> >  
+> > -- 
+> > 2.27.0
+
