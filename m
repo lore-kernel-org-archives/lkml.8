@@ -2,147 +2,171 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D10CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B16C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155D220B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCAB320C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="PXEf7icY"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="GmG/iigA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390288AbgFXKG7 (ORCPT
+        id S2390184AbgFXKIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:06:59 -0400
-Received: from mout.web.de ([217.72.192.78]:39809 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389824AbgFXKG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:06:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592993198;
-        bh=+L5SJ+Mb0nBjlK0ctZLEvDVG/oVzLLk6PJLWbMMjy2c=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=PXEf7icYhkcJdGvHc7ofXX0HeZqdpxiJ84VkK9Gam7Qi9b+CoUqrNuTfsm4jajOvn
-         Yf05JB/arJVaiRyaXL11reEuUKTdOvk7uN/NjECcEWMigQoXaK/Vo7Wr7jJwVx6VUr
-         1JdKxdcpm9rN9grboEP0RmkcHvIFeAE+86QfFaeA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.175.204]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MDMvE-1jfkYl3Niw-00ASwM; Wed, 24
- Jun 2020 12:06:37 +0200
-Subject: Re: [1/7] irqchip: Fix potential resource leaks
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-References: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
- <d2111f53-ca52-fedf-0257-71f0aa89b093@loongson.cn>
- <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
- <bd28aef9-ba70-0539-bdc3-6ce7162cefca@loongson.cn>
- <cc6b95ec-691e-f010-4a04-add39d706c4b@web.de>
- <423f83e0-c533-c346-ab8b-f2c6ccc828a2@loongson.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <37ff7ca4-dc7c-6a43-94a3-9628efe69b25@web.de>
-Date:   Wed, 24 Jun 2020 12:06:35 +0200
+        Wed, 24 Jun 2020 06:08:16 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:56213 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388197AbgFXKIP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 06:08:15 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id o2K7jtJvmx3Ajo2KAjiqc8; Wed, 24 Jun 2020 12:08:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1592993292; bh=+qt7HSOZFbWaG4XJYDTjnPTe3YUioxC7/TOQF9HvO/s=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=GmG/iigA30dc+VHvIoqZgRdORTDUAxmgYracXCbljfS35kNlavcscqJjngxMMsDHB
+         W4VOy2OzcoFQukHkly4VwsiI9+49DWhUnkJWygdG/HT6uJwLYxHs2Ry5dToaP9Gtle
+         rJO6wGOCDpdyOuKZEScoHZNitYc9YPx/oMSof3r56hYWgPIj0XMeeQLWmktFIWfU6c
+         H3BZ0hHkkud15AXGcs6dZHWZ8XnDoFnnN+vtuyUEMM+0UQMv5bQztL/0pp/Tu7Yain
+         3dE9IRIPD6uEzt8q/wW2lZKD7Cl5p2HEIHUMp/nO3jApYsSfTmJBQPeWHd06AEaeGW
+         0ElCJ9sJV+CHg==
+Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
+ ENUM/GET/SET INPUT
+To:     Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Steve Longerbeam <steve_longerbeam@mentor.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Michael Rodin <mrodin@de.adit-jv.com>, efriedrich@de.adit-jv.com,
+        erosca@de.adit-jv.com
+References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <32cdf1a3-1353-d3e9-66b6-82ced163d8f8@xs4all.nl>
+Date:   Wed, 24 Jun 2020 12:08:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <423f83e0-c533-c346-ab8b-f2c6ccc828a2@loongson.cn>
+In-Reply-To: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IMXO4KnNZn56RfwHXoAlmnOVJ7e/JmzCywNtaOrj30jcikpRvXC
- 92Er4hLX74IuKKmz4gpIAixxJsP7TwP9vvfDl6rM0R3kYtS4su4UTW0QYsjig43bG1o31ac
- HpR73xqrCJktGrYMoatu4ovkExJYbrmso1GIv2Pw6XjogQWVPBBlBm0eewMQRpkUgECFhUv
- +k+7Wo0hkVuO9A3ol1RVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Fepz/melSM4=:TJTSE4zHHAK4c1TGOdb5kZ
- mluub4p+3ztCL9Xl/mYpDy0+2IONNC603nC2lJlxpk0DTrilUQTcKn/sZJJgzAI6SnCgZJHB5
- /FzhkmCMGJGdMe7mblw6KOJXj/55YPbKRtJulrHazBmSP8+0LIRY5jZqygmajXYeCbPxqLLsT
- mAxgISNatHxSlyhaqCqcDIFz3MI8HUZ59etjUwSL8PwA1YQHEpsnQ2IQNsrviGe1ypB1na9d9
- S8q41TTgAWY4GLQ29oxfVp53tNlL1Vfd69y3NJK3m9mAxtT1NRvG1o0B4jwo3GENU62gDd9tC
- cZZUyeT10Lb+p/Nu3ckAEUHc7phineiPO6GBimu6Mwtxrr5Beu29Y3pR4oR+EqEhKsHorBFn3
- db+lj4pp2DWTd/ebiP1wDXWnaYz9IEQh4D5vkK9i7/aHBjAXER/ngoq24Q89z8jG3O7LoL+TR
- +TynufQrpz7Kw8hOUA+jbwzXZZBVmNGc3HpEOL8Q1ugxMAeV+RynKYx0HRHtymav3IBvQIJeg
- +tG0ybgpRjlLRNewBvuxzG15JqowzuIzSPt/lQCgC+hUHW88QCGNNZRrE5S2SdFcYHU8JqmtF
- q54ufB6+JhiX678AA2k+YN1zWpoBaQILDshtZp/6gQkCbZngnpvS9OR35waNuLqTAJltYUAIr
- ikNBYhoOHrBnZNmd4JE33MUo9PWT20hWcSCPnG50dCM/XV2ii9YL4u8DAzqhl6dPGswESZpNa
- lHOfxhQONT0rKygYoKtvlmKliJy6iCPkY4QoEamNBuuA8xMCRW6NGya0ijczeX/493sJn9UVM
- CtFq6D/texxfIREuTdQfqR8i176GUF8syNO8/1lJJlvkQaJNuYnT5hfnHLBuZfX1UKdycVtYM
- INSLShUHzGMAzSKg6a5+DYs8ZF6aKpnuT2N56QOtt9G/72BBV9AywQFwJAGt3TrpaerC15FWD
- +I5UokxnDRd/MZB3E5IM0zatc0GdERANYcG954kH5+kXuMR6Raan7QEP+BtH35GnijO96p1Mr
- +Hze5HY3Jq+gXe0oNTp/CI5rZ1StGfs/Y93GcxUo2AsWgH5yYBKLjdWCxkAM3+upFppWlZNaN
- I4eHiFi3/sZy8Tqq1fAr1B/Z/ro3ES3G+B8SnmATmK3diQVytsswKS86EecGye5agOhufOHXs
- aI2keFb1Yg6kaI7bQ11WUHrcnxh8DeI3cH4oI+M5KokPvane07bRZESqKPxue9pdgywFfP7AV
- 0ndT779mBIaAR/uyz
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEzhWNachN9thnW603RU1zwWw7Y6lMeMWgVmQ1fyXAjBezjMK2S5XHtBjG1FKI87//0WbR8ajesRLrWX8u9NP+LGi7SlM+aocSY5n7N/3vYdFCTNa1SR
+ RC8c5dM+m0Dl3em+ZHHQfkq5B+2seB5svFDONBGfVxurxYxfz+mB1ovWnvU6nG2zUgrjpmUDzx8Rgz0r4ffOB9wpdLC76oKeYmEr8jwND89xCCgEZpTtLUjt
+ 3++8Pqod7/dFwbBETHSLnAz4ArOdF+rkKHWY1A+J6/5175F5Rmr6PINYuw0dReVd2dfiA7nJWu9TDc6XJKMdUjhsB23UafyAR3/JMAEoFYnzGsN7Rdy7MQ5k
+ 21TGCLmS8iuy7qg3wCvIkZFbmtpb55+in48oCuPvTXHPnVv96rF4HG/qIKNMsIb30e9Bgnbnz3cgnjvXy7g8qFkT/0HyKIb+uhxk1gf/W5JtoZWoWcD9STMO
+ cSIiJP5lTIV61p0KKCc1yfmdmqJ59HQtVb8Engfty1DM7IjTSu7pP9jaxV4xUC7Mu1mHJ22jaP/9yf705Abm4cPYy/WHwxhUtJyqT9irMVV8+DyB64VAbrPR
+ i8Uu5dgh8sxD12DPU1MiW7NijM3q9t23SF/lwf7JrFHVGMjA1MQpUw9g92SFAG7UNzaG84/tmW7LYyYxRntbq7HX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Were any known software analysis tools involved for the detection of
->> questionable source code places?
->
-> kmemleak can detect memory leak,
-> but I do not know how to detect other kind of leaks.
+On 16/06/2020 12:00, Ramzi BEN MEFTAH wrote:
+> From: Steve Longerbeam <steve_longerbeam@mentor.com>
+> 
+> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
+> ioctls for use via v4l2 subdevice node.
+> 
+> This commit should probably not be pushed upstream, because the (old)
+> idea of video inputs conflicts with the newer concept of establishing
+> media links between src->sink pads.
+> 
+> However it might make sense for some subdevices to support enum/get/set
+> inputs. One example would be the analog front end subdevice for the
+> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
+> can be done without requiring the implementation of media entities that
+> would define the analog source for which to establish a media link.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 
-How do you think about to extend source code analysis tools accordingly?
+Nacked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
+This doesn't work: these ioctls refer to physical inputs on a backplane
+of a device. But subdevices have no idea about that. This is high-level
+information that is typically only known to a bridge driver based on
+board information.
 
-> I think consciously release resource in the error path can avoid leaks.
+For PCI/USB drivers this comes from card definitions in the driver itself.
 
-Is it often too easy to overlook relevant function calls?
+For platform drivers this should come from the device tree, but this hasn't
+been fully implemented yet.
+
+So if this is something that you want to implement, then look at:
+
+Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+
+and add this to the DT for your board, and implement code to query this
+in the platform driver.
 
 Regards,
-Markus
+
+	Hans
+
+> ---
+>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
+>  include/media/v4l2-subdev.h           | 11 +++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index 6b989fe..73fbfe9 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+>  			return -ENOTTY;
+>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
+>  
+> +	case VIDIOC_ENUMINPUT:
+> +		return v4l2_subdev_call(sd, video, enuminput, arg);
+> +
+> +	case VIDIOC_G_INPUT:
+> +		return v4l2_subdev_call(sd, video, g_input, arg);
+> +
+> +	case VIDIOC_S_INPUT:
+> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
+> +
+>  	case VIDIOC_G_CTRL:
+>  		if (!vfh->ctrl_handler)
+>  			return -ENOTTY;
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index f7fe78a..6e1a9cd 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
+>   * @g_input_status: get input status. Same as the status field in the
+>   *	&struct &v4l2_input
+>   *
+> + * @enuminput: enumerate inputs. Should return the same input status as
+> + *      @g_input_status if the passed input index is the currently active
+> + *      input.
+> + *
+> + * @g_input: returns the currently active input index.
+> + *
+> + * @s_input: set the active input.
+> + *
+>   * @s_stream: used to notify the driver that a video stream will start or has
+>   *	stopped.
+>   *
+> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
+>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
+>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
+>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
+> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
+> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
+> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
+>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
+>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
+>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
+> 
+
