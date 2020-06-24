@@ -2,144 +2,145 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF432C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D10220768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593010826;
-	bh=ADS01e6UuwaXesf7T/YCyhdR1bhuKePkQrZwLqEV8XY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EpiOMA4TzfiMaIeov+UNSN35uYNByf05Z55L7AH9qy8pIhNiaDISYMyb0jB1dg8Mf
-	 nYe4pl+L6xC7uQHW8owm5vN8/y17uKf6R44INPiWzToogReKEm41/4zOpkbAr+R1gX
-	 dziFeWhrD8iYMn81WsMQ9GMU1qvvEsgtPXeTJyAc=
+	by mail.kernel.org (Postfix) with ESMTP id ADE7F20781
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403982AbgFXPAZ (ORCPT
+        id S2404029AbgFXPAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:00:25 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41149 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389043AbgFXPAX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:00:23 -0400
-Received: by mail-ot1-f67.google.com with SMTP id k15so2167936otp.8;
-        Wed, 24 Jun 2020 08:00:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eykhWQcNNxAwrKLr1Dkv70utXgS770FMiPrM6b8KPjc=;
-        b=hkHeIouE0X74Rn2j8Igk/XY/4jOLE8DlfLi2yerUJcVKFK2NOOdBPJbwUwayFt9GQG
-         WS5VZ/1HkAVQNdCD4Qw61wOfGp6p+kXSgTgiww5uGvWDHsnEHfavrw6TnCFiUMRwADaM
-         Gd+nb664kj4N2CTEWKSFKzOnyCSUoM4CJG3iDxh/Lw+ARo+KhKTWSa8WSAFoE6O8KrIX
-         QqKdDMntr1VZNUZn6VVodgXBpCRtWjQhYS0+9AUQSTZC3SGGEvb1PV8vyNRtbJ0zOqwk
-         BQ8u0iVIWuDqnwsJPwDKJqWcWWf2h1JXRTSBmURpbESG15E4O2MZV9ck1Df4AXDW5atK
-         cjyQ==
-X-Gm-Message-State: AOAM5336mnoguDHEPE24ywgzFB52m96XoeX9G0UfGu4pFJP+u37TYJUY
-        FSdV+YfFLbHlIQYcFgyWWiYMoRFz/kyJSlvVZAw=
-X-Google-Smtp-Source: ABdhPJxTfu2nRQ0ID+eDw+0oWm7stVdBgfOBXZxtPamhCD54VzLFyKUSp9gBGIPEG0mIIAqQQkSpe0tvPBek2gXWEWg=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr22236731otn.118.1593010820398;
- Wed, 24 Jun 2020 08:00:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com> <20200608112211.12125-4-andrzej.p@collabora.com>
-In-Reply-To: <20200608112211.12125-4-andrzej.p@collabora.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 24 Jun 2020 17:00:09 +0200
-Message-ID: <CAJZ5v0j7e9TzDtEiDXmj3fLAQ7CvFHoe7Q3aYKKas3PEXrsUuw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] ACPI: button: Access input device's users under
- appropriate mutex
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Wed, 24 Jun 2020 11:00:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:59092 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404006AbgFXPAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:00:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ED351FB;
+        Wed, 24 Jun 2020 08:00:37 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B28F73F73C;
+        Wed, 24 Jun 2020 08:00:34 -0700 (PDT)
+Subject: Re: [RESEND PATCH v5 1/5] driver core: add probe_err log helper
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
-        linux-input@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Collabora Kernel ML <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20200624114127.3016-1-a.hajda@samsung.com>
+ <CGME20200624114135eucas1p26e2e4683d60cebdce7acd55177013992@eucas1p2.samsung.com>
+ <20200624114127.3016-2-a.hajda@samsung.com>
+ <20200624132714.GD5472@sirena.org.uk>
+ <CAHp75Ve9V1Vyxe3bEeHJ9H2J900wUXHMmXFJt-dn9sO5OMejHA@mail.gmail.com>
+ <20200624140207.GE5472@sirena.org.uk>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6373a4eb-2f1b-b56f-48a8-ae97b4e4476a@arm.com>
+Date:   Wed, 24 Jun 2020 16:00:34 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200624140207.GE5472@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 1:22 PM Andrzej Pietrasiewicz
-<andrzej.p@collabora.com> wrote:
->
-> Inspecting input device's 'users' member should be done under device's
-> mutex, so add appropriate invocations.
->
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+On 2020-06-24 15:02, Mark Brown wrote:
+> On Wed, Jun 24, 2020 at 04:45:28PM +0300, Andy Shevchenko wrote:
+>> On Wed, Jun 24, 2020 at 4:27 PM Mark Brown <broonie@kernel.org> wrote:
+> 
+>>> As I said down the thread that's not a great pattern since it means that
+>>> probe deferral errors never get displayed and users have a hard time
+>>> figuring out why their driver isn't instantiating.
+> 
+>> Don't we have a file in the debugfs to list deferred drivers?
+> 
+> Part of what this patch series aims to solve is that that list is not
+> very useful since it doesn't provide any information on how things got
+> deferred which means it's of no use in trying to figure out any
+> problems.
+> 
+>> In the case of deferred probes the errors out of it makes users more
+>> miserable in order to look through tons of spam and lose really useful
+>> data in the logs.
+> 
+> I seem to never manage to end up using any of the systems which generate
+> excessive deferrals.
 
-This looks like a fix that might be applied independently of the other
-patches in the series.
+Be thankful... And count me in as one of those miserable users; here's one
+of mine being bad enough without even printing any specific messages about
+deferring ;)
 
-Do you want me to pick it up?
+Robin.
 
-> ---
->  drivers/acpi/button.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-> index 78cfc70cb320..ff7ab291f678 100644
-> --- a/drivers/acpi/button.c
-> +++ b/drivers/acpi/button.c
-> @@ -456,13 +456,16 @@ static int acpi_button_resume(struct device *dev)
->  {
->         struct acpi_device *device = to_acpi_device(dev);
->         struct acpi_button *button = acpi_driver_data(device);
-> +       struct input_dev *input = button->input;
->
->         button->suspended = false;
-> -       if (button->type == ACPI_BUTTON_TYPE_LID && button->input->users) {
-> +       mutex_lock(&input->mutex);
-> +       if (button->type == ACPI_BUTTON_TYPE_LID && input->users) {
->                 button->last_state = !!acpi_lid_evaluate_state(device);
->                 button->last_time = ktime_get();
->                 acpi_lid_initialize_state(device);
->         }
-> +       mutex_unlock(&input->mutex);
->         return 0;
->  }
->  #endif
-> --
-> 2.17.1
->
+-----
+
+[robin@weasel-cheese ~]$ dmesg | grep dwmmc
+[    3.046297] dwmmc_rockchip ff0c0000.mmc: IDMAC supports 32-bit address mode.
+[    3.054312] dwmmc_rockchip ff0c0000.mmc: Using internal DMA controller.
+[    3.061774] dwmmc_rockchip ff0c0000.mmc: Version ID is 270a
+[    3.068101] dwmmc_rockchip ff0c0000.mmc: DW MMC controller at irq 30,32 bit host data width,256 deep fifo
+[    3.079638] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[    3.087678] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[    3.095134] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[    3.101480] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[    3.113071] dwmmc_rockchip ff0f0000.mmc: IDMAC supports 32-bit address mode.
+[    3.121110] dwmmc_rockchip ff0f0000.mmc: Using internal DMA controller.
+[    3.128565] dwmmc_rockchip ff0f0000.mmc: Version ID is 270a
+[    3.134886] dwmmc_rockchip ff0f0000.mmc: DW MMC controller at irq 32,32 bit host data width,256 deep fifo
+[    3.948510] dwmmc_rockchip ff0c0000.mmc: IDMAC supports 32-bit address mode.
+[    3.956475] dwmmc_rockchip ff0c0000.mmc: Using internal DMA controller.
+[    3.963884] dwmmc_rockchip ff0c0000.mmc: Version ID is 270a
+[    3.970133] dwmmc_rockchip ff0c0000.mmc: DW MMC controller at irq 30,32 bit host data width,256 deep fifo
+[    4.141231] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[    4.149178] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[    4.156582] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[    4.162823] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[    4.175606] dwmmc_rockchip ff0f0000.mmc: IDMAC supports 32-bit address mode.
+[    4.183540] dwmmc_rockchip ff0f0000.mmc: Using internal DMA controller.
+[    4.190946] dwmmc_rockchip ff0f0000.mmc: Version ID is 270a
+[    4.197196] dwmmc_rockchip ff0f0000.mmc: DW MMC controller at irq 32,32 bit host data width,256 deep fifo
+[    4.250758] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[    4.258688] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[    4.266104] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[    4.272358] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[    4.285390] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[    4.293333] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[    4.300750] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[    4.307005] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[    4.971373] dwmmc_rockchip ff0f0000.mmc: Successfully tuned phase to 134
+[    5.027225] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[    5.035339] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[    5.042769] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[    5.049050] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[   24.727583] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[   24.745541] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[   24.753003] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[   24.763289] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[   25.589620] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[   25.603066] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[   25.615283] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[   25.627911] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[   25.643469] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
+[   25.651532] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
+[   25.658960] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
+[   25.665246] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
+[   25.677154] dwmmc_rockchip ff0d0000.mmc: allocated mmc-pwrseq
