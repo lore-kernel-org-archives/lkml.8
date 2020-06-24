@@ -2,114 +2,155 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6230C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C773E2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42D22100A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qlgJbXEP"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="i3zfn7Zh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404961AbgFXQjk (ORCPT
+        id S2405019AbgFXQjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42698 "EHLO
+        Wed, 24 Jun 2020 12:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404582AbgFXQjk (ORCPT
+        with ESMTP id S2404287AbgFXQjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:39:40 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF74BC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:39:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j4so454097wrp.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9qWPTeZoKMjCXc64GQ7odtJSAM2fu8a0khctluIk9SA=;
-        b=qlgJbXEPKQLANz2j2UICh59mbu5FsUN+1x2EmtthBfmBGKY81jAJGgYjk2IndW4i4u
-         790hfR2tX8NAwv69MsJLEO9vLctpeZdh5f6rpLqqBD+iQOPo7cloqZ3LjttP6Qho3MIm
-         KPr64VH3CDONsgwHrL6kCY+19+CCzRe24uoLIrGo4NcvTcJ+sbOX1Nxp+iHeolEXt2jl
-         Upy4Mpn+tQGuSPKVcPEH3Ey3Cz2DPz6FPUKn7Avg49IxV0IQmhEthpAMrkulOqSIapp+
-         b+sDjHa8dH5oxu/Deh4hh55wDc05LLZ7Uh6kGq/5UlmFAHjf9uldZ7hDbWvrwH/icEr8
-         j2sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9qWPTeZoKMjCXc64GQ7odtJSAM2fu8a0khctluIk9SA=;
-        b=HpmGWB1WlD10Na+PUjAnO3G8EA+K1GWPn859rQGszQewM+Fsz2M1eupyINSEYHB3br
-         7e7AMSvDxOcJNZl0EJd2F7/g8LGopEeJgfuMufWEhwEhUPBHVFUm9gcu7i/m+OieTpeS
-         8BrcINcgIm1UTKa/O3v2MJ2W5XDTQC24b7azPT0Wh2viUQPXy4/4iJuyGrLxTXsCmpla
-         e0RBG01WzQn1n4QbowUjinDxevskTNdzcP9pXOWhcfGj6vL71K38XXYa9r51lBQbJG4s
-         IZghtA1Ww1qenmDtj0hdAP6gsMRylS7++6mvmeTGc9XhOax5o/o6eqhwRY2oO07vdKBd
-         nWEw==
-X-Gm-Message-State: AOAM533/ba+SREKoj/QWxqd64XQ85wdgt3fSQwTTqC6VGFHDMGP+FHoz
-        PZYvEm5n1WRDM/KbjAXgFkE6wGIpzkJX8tVM+Xs+rw==
-X-Google-Smtp-Source: ABdhPJyQDKTrL6+M1EYqgNcHeEbBrBLAxm0wfWqQmlyuqUTky28XVq0mnhNe79NFFQEHtwrvC5tKKMx2Rj7DyjgKd5U=
-X-Received: by 2002:adf:81c8:: with SMTP id 66mr27603502wra.348.1593016778290;
- Wed, 24 Jun 2020 09:39:38 -0700 (PDT)
+        Wed, 24 Jun 2020 12:39:55 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A619C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:39:55 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B99702A8;
+        Wed, 24 Jun 2020 18:39:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593016792;
+        bh=9i2y89qZaWWu2JMyrE5PZsLgt57uLSAGayseCRUjOxg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i3zfn7ZhsQBxOEupMDREq9H9diTcc8MGjWXij5MbPCSczLcG7rou6Fsnk8ADdXUys
+         9Ele22N0CnfxgKXslkakk0ROmOnl4/AyfOJwGNbThurcLQ498Vnsv/9wsEthIMu1Ty
+         Ot7WMWMYyHX79qEV66YsLHhX8hlO58pB3bDh9CY8=
+Date:   Wed, 24 Jun 2020 19:39:27 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v8 2/3] phy: zynqmp: Add PHY driver for the Xilinx ZynqMP
+ Gigabit Transceiver
+Message-ID: <20200624163927.GF5980@pendragon.ideasonboard.com>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-3-laurent.pinchart@ideasonboard.com>
+ <20200624151121.GF2324254@vkoul-mobl>
 MIME-Version: 1.0
-References: <20200622100520.143622-1-darekm@google.com> <ca796f62-7d1f-3391-0373-ec9b98b1c47a@xs4all.nl>
- <CALFZZQHuqx+H=7pd9t=XYWqKppMzze0XsXwRVA5kLZfwWYLmKQ@mail.gmail.com> <CABXOdTfyzKtT4jWLhBwV5ecG1Bc2g88vUfKB6OspmF0mTafxpA@mail.gmail.com>
-In-Reply-To: <CABXOdTfyzKtT4jWLhBwV5ecG1Bc2g88vUfKB6OspmF0mTafxpA@mail.gmail.com>
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-Date:   Wed, 24 Jun 2020 18:39:25 +0200
-Message-ID: <CALFZZQHsDV9XPyeJ4_NJ=FHF3LSk4j0aMWF3fbvDEdUrs_0O1g@mail.gmail.com>
-Subject: Re: [PATCH RESEND] media: cros-ec-cec: do not bail on
- device_init_wakeup failure
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Dariusz Marcinkiewicz <darekm@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200624151121.GF2324254@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Hi Vinod,
 
-On Wed, Jun 24, 2020 at 4:45 PM Guenter Roeck <groeck@google.com> wrote:
+On Wed, Jun 24, 2020 at 08:41:21PM +0530, Vinod Koul wrote:
+> Hi Laurent,
+> 
+> Mostly this looks fine to me, some minor nitpicks below:
+> 
+> On 13-05-20, 20:22, Laurent Pinchart wrote:
+> > +config PHY_XILINX_ZYNQMP
+> > +	tristate "Xilinx ZynqMP PHY driver"
+> > +	depends on ARCH_ZYNQMP
+> 
+> Can we add COMPILE_TEST here so that this driver gets wider compile
+> coverage?
 
-> > On Mon, Jun 22, 2020 at 12:23 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
-> > >
-> > > > Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-> > >
-> > > This can be CCed to stable, I guess?
-> > >
-> >
-> > That issue is not a recent regression but has been in there since the
-> > very beginning.  So it might be argued that is it not severe enough to
-> > warrant cc'ing stable. Happy to do that anyways if you think
-> > otherwise.
-> >
->
-> Confused. Internally you would like to have this patch applied to
-> chromeos-4.4. Here you suggest that it may not be important enough to
-> apply to stable releases. Which one is it ?
->
+Sure.
 
-It affects us on 4.4, hence the backport to 4.4. I have nothing
-against this being merged into the mainline stable. I simply wasn't
-sure if that should be considered severe enough to be backported
-there. As said before, I am happy to CC this to stable.
+> > +++ b/drivers/phy/xilinx/phy-zynqmp.c
+> > @@ -0,0 +1,995 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * phy-zynqmp.c - PHY driver for Xilinx ZynqMP GT.
+> > + *
+> > + * Copyright (C) 2018-20 Xilinx Inc.
+> 
+> 2018-2020 please
 
-Thank you and best regards.
+OK.
 
-(apologies for double post again)
+> > +/* Number of GT lanes */
+> > +#define NUM_LANES			4
+> 
+> Should this be coded in driver like this? Maybe future versions of
+> hardware will have more lanes..? Why not describe this in DT?
+
+This macro is used to avoid hardcoding 4 in the driver, to make sure
+that all the code that deal with the number of lanes use a consistent
+value and is readable. There's no foreseen new version of the IP that
+would have more lane, so I don't think this should go in DT. Otherwise
+we'd have to encode there pretty much any parameter that could one day
+possibly change in a different universe :-)
+
+Let's also note that even when parameters change between IP versions, it
+doesn't always make sense to specify them explicitly in DT. It's totally
+fine to have a table of parameter values in the driver, indexed by
+compatible string. Whether to set a parameter explicitly in DT or handle
+it in the driver usually depends on how frequently that parameter can
+change, if it can vary between different integrations of the same IP
+version, ...
+
+In this specific case, as there's no foreseen change, we can't really
+tell how it would change if it did one day. I thus think hardcoding the
+parameter in the driver is fine, and in the worst case, we can add a
+parameter in DT later and default to 4 if not specified. Same reasoning
+for CONTROLLERS_PER_LANE.
+
+> > +
+> > +/* SIOU SATA control register */
+> > +#define SATA_CONTROL_OFFSET		0x0100
+> > +
+> > +/* Total number of controllers */
+> > +#define CONTROLLERS_PER_LANE		5
+> 
+> Same question for this as well..
+> 
+> > +/*
+> > + * I/O Accessors
+> > + */
+> > +
+> > +static inline u32 xpsgtr_read(struct xpsgtr_dev *gtr_dev, u32 reg)
+> > +{
+> > +	return readl(gtr_dev->serdes + reg);
+> > +}
+> > +
+> > +static inline void xpsgtr_write(struct xpsgtr_dev *gtr_dev, u32 reg, u32 value)
+> > +{
+> > +	writel(value, gtr_dev->serdes + reg);
+> > +}
+> > +
+> > +static inline void xpsgtr_clr_set(struct xpsgtr_dev *gtr_dev, u32 reg,
+> > +				  u32 clr, u32 set)
+> 
+> wouldn't it be apt to rename this to xpsgtr_modify() and with args as
+> value and mask, somehow I find that more simpler...
+
+"modify" sounds more vague to me. I've also kept xpsgtr_clr_set() as
+that's what the original author used.
+
+> Also, please align second line with opening brace of preceding line
+
+It is aligned, the first line is affected by the + and > in the mail,
+while the second line uses tabs and thus isn't.
+
+-- 
+Regards,
+
+Laurent Pinchart
