@@ -2,120 +2,99 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA21AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B78A1207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F6F20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QSb2yx30"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jgwwd3HK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403906AbgFXV3L (ORCPT
+        id S2403921AbgFXVaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59306 "EHLO
+        Wed, 24 Jun 2020 17:30:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403865AbgFXV3K (ORCPT
+        with ESMTP id S2390437AbgFXVaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:29:10 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B956AC061796
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:29:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e18so2083462pgn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:29:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8S7wdQVFSvGinNDpzeGeM5bOvAIHO3+dn7qtS4xKvV8=;
-        b=QSb2yx30HozPwbE3cmDUoYnn/m54tkj1kAjJCdgJUPE9p9hcmMPBKaVPQ8nq6Bc1WJ
-         qB9goQOthKh59QOfHEOB0pjBNCmP4PYV/LKAx2CJEjeYgcYLuigmtDK1rd0z3GBirbjf
-         QT7+7vbSd+q2ZOzjXvTocpYNfGsOGa/P0watDoU+3ObHezue05cXmufnhVEm5Q3ZZmTa
-         XCjrJbaX5IO0+0GeI80gfIvjmkaMIwYTVrZh2tjnwzLuU1tncROVGCLiilpUzqVPfzKM
-         RIHYMVRhw56vrkubCQ6vuKEMInx200lTXE2eT3cyIagXjOxlrxuHoW9NFhenw6ZcgEPv
-         QI4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8S7wdQVFSvGinNDpzeGeM5bOvAIHO3+dn7qtS4xKvV8=;
-        b=XJ4tkVcDdaOuBJoeqOsnGT0b1W7YqYEF94QzSw8JoTQUlWYWaMTNxh5XFmUZ8GAXcQ
-         I0f/SO6mMFRkIKWd652kpdTYkYGtHfv1ZTyS6YTD2IC3DmyuaEreWyIQKDcirTtjLAhZ
-         tXAPCPfW2bU+gl0Ekdcn46Bhjlb6b/HuzHBCneb4ANUpPDNzvledd1hXcFOt2xKPFkfp
-         D9tiHs67xxIv2AsuG3cydhEzCgis+OnrJ9mUe0GBkGSXbIv3UsjVDVD+VpKFdybdauCg
-         urceKkmCVqln7zRS7VFaEbB8C983pQefjzjpS/Yo5umXEpjhqj2g3hm19bumt0dXjFrT
-         l0Ng==
-X-Gm-Message-State: AOAM532s4TBj/reNHkNDh0DIue26W8ZosgNGSUNzE1qHs6kYWB2hCHH5
-        6fPH82LScU18rZKi2rcP0eMydw==
-X-Google-Smtp-Source: ABdhPJzNztQf4xK5/Zlp8kovh17ym7/QBwLnR6UiKFeUru/SjadRA2bRjfkD85Hht24sZeCqpm8n5Q==
-X-Received: by 2002:a63:79c2:: with SMTP id u185mr6299836pgc.84.1593034148817;
-        Wed, 24 Jun 2020 14:29:08 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id q1sm22211040pfk.132.2020.06.24.14.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 14:29:08 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 14:29:02 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 02/22] kbuild: add support for Clang LTO
-Message-ID: <20200624212902.GA26253@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-3-samitolvanen@google.com>
- <CAKwvOdm=sDLVvwOAc34Q8O85SCHL-NWFjkMeAeLZ4gYRr4aE9A@mail.gmail.com>
+        Wed, 24 Jun 2020 17:30:01 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BCCAC061573;
+        Wed, 24 Jun 2020 14:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=1HvsEisY+JqAH4eB24qkTv31vmmbufpD8xgSfU5UPdM=; b=Jgwwd3HKSCGDIrGfcDNLwUtCRw
+        owE94w39EisUXpMHYIv1pbv2n5zjSMpa7/iif05p6zELIAPYkGaboNNN6TH29l13zX633oAS6RM8i
+        u+py1W93Ar3xSPtumosRbnxJhxzE/IlIJ8zzS6Msi31BJfjrcR7Li/mepAU5QxssYRUraWQyCdWh/
+        e0DBYe+ioO8w/tPmJJ0AAlXzL2Y9mhiO5Z3pKnX3q8XvSWDPiBsyiYMeVffdZCvaIkWLaSxm+lp/5
+        GzV+OHjm+HMcDNoGcHIV0nUjJZLKNJmSJLKH4rSTl33X5olQIgDM/8f26BmNOkuNFTA7+0rVin7ia
+        KLsAR9OA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joCxj-0007YQ-1Z; Wed, 24 Jun 2020 21:29:43 +0000
+Subject: Re: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
+To:     Kees Cook <keescook@chromium.org>,
+        Richard Weinberger <richard@nod.at>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+References: <20200529200347.2464284-1-keescook@chromium.org>
+ <202006231610.4993DC5@keescook>
+ <2356a78c-750b-538f-3d64-b9c78aff89cb@infradead.org>
+ <903628180.54697.1592983405305.JavaMail.zimbra@nod.at>
+ <202006241335.2C0FB5DF90@keescook>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b97853f0-c4be-7039-1d4c-96b3ab802472@infradead.org>
+Date:   Wed, 24 Jun 2020 14:29:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdm=sDLVvwOAc34Q8O85SCHL-NWFjkMeAeLZ4gYRr4aE9A@mail.gmail.com>
+In-Reply-To: <202006241335.2C0FB5DF90@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:53:52PM -0700, Nick Desaulniers wrote:
-> On Wed, Jun 24, 2020 at 1:32 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> >
-> > diff --git a/Makefile b/Makefile
-> > index ac2c61c37a73..0c7fe6fb2143 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -886,6 +886,22 @@ KBUILD_CFLAGS      += $(CC_FLAGS_SCS)
-> >  export CC_FLAGS_SCS
-> >  endif
-> >
-> > +ifdef CONFIG_LTO_CLANG
-> > +ifdef CONFIG_THINLTO
-> > +CC_FLAGS_LTO_CLANG := -flto=thin $(call cc-option, -fsplit-lto-unit)
+On 6/24/20 1:36 PM, Kees Cook wrote:
+> On Wed, Jun 24, 2020 at 09:23:25AM +0200, Richard Weinberger wrote:
+>> ----- Ursprüngliche Mail -----
+>>>>> Regardless, it seems arch/x86/um/asm/desc.h is not needed any more?
+>>>
+>>>> True that, we can rip the file.
+>>>
+>>> Has anyone fixed the uml build errors?
+>>
+>> I didn't realize that this is a super urgent issue. ;-)
+>>
+>> Kees, if you want you can carry a patch in your series, I'll ack it.
+>> Otherwise I can also do a patch and bring it via the uml tree upstream
+>> as soon more fixes queued up.
 > 
-> The kconfig change gates this on clang-11; do we still need the
-> cc-option check here, or can we hardcode the use of -fsplit-lto-unit?
-> Playing with the flag in godbolt, it looks like clang-8 had support
-> for this flag.
-
-True, we don't need cc-option here anymore. I'll remove it, thanks.
-
-> > +KBUILD_LDFLAGS += --thinlto-cache-dir=.thinlto-cache
+> I think the lkdtm change will tweak this bug, so I'm happy to carry the
+> patch (I just haven't had time to create and test one). Is it really
+> just as simple as removing arch/x86/um/asm/desc.h?
 > 
-> It might be nice to have `make distclean` or even `make clean` scrub
-> the .thinlto-cache?  Also, I verified that the `.gitignore` rule for
-> `.*` properly ignores this dir.
 
-Sure, distclean sounds appropriate to me.
+I just tried that and the build is still failing, so No, it's not that simple.
 
-Sami
+But thanks for offering.
+
+I'll just ignore the UML build errors for now.
+
+-- 
+~Randy
+
