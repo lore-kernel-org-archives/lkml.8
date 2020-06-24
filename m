@@ -2,132 +2,136 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27390C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E08C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0DCE2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMmycSCX"
+	by mail.kernel.org (Postfix) with ESMTP id 439E52073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593016863;
+	bh=uvjYsXkxFUGkhiFTCWXt307TvMmTMTKMKbqCMztuBls=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jKEVvVirIXlcT1SVOehqN0B0OrCZReO4yT84l41Pl4su9m3VLQNtDFg5ZJSRoi05U
+	 THN08UaDlFkrSxXRPs4xj310zTIAl0DJaRK+9B28qDx8P7TYQBoQckCRG/KIXpPOyY
+	 z9IfcLUZgSDyMEba/8Ho59nfYrkwrV//YekmRo3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405052AbgFXQkr (ORCPT
+        id S2405117AbgFXQlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:40:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404287AbgFXQkq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:40:46 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB9AC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:40:46 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s1so3325850ljo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XoshPN5XbNY/+bDsSl+mj1mYq+288SpY+RGYXvB3nH0=;
-        b=pMmycSCX84fqEyPLDn/+dHMpgntzzHUBCeavTF1hHDXe/Ofh8IYS28Ect1EfNF5dtj
-         omxIhxKzXsKKer8nb4qtBCSAKurhS8oimKsk/U/wXrMeICfM7U5eQesKDX+Q8spzpGhd
-         Nn5fV0GQ+4Yv92E6oyupkCZWCJK68+o32RBssbNb75u7Vaa+8qe0bYB1tCgJUzcFxpPr
-         sjSgRkyW2dvEt24cBgPv+VLe3fiGQP7Cf8vuZc78ddPjjqzssGxb2dhob9H+WhHqZKuI
-         fSLD/wk/OrmqOp5c8oQuSS1daOhpK5YdOwhNHd5DDb2Qy/+D8yySjAuXP4q4BVz2i8EP
-         8oyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XoshPN5XbNY/+bDsSl+mj1mYq+288SpY+RGYXvB3nH0=;
-        b=CM9Q1OJAKgZmib2Y4cTabQvgcSDU4VgcJCjNgTsSI0GCmavWsBAsHoAHGTF+WZx1Qa
-         1ZIgQ7Bncz3SeF6MvtUsIR2LLXohRRjzwbFn1h1JcN7Yk9w88z2rGecjoqx0rx6MSZul
-         rLh1RHiM+duj7KGYH6m+QeJYoEbcaDMIvwC1dWhJR0EIyVuEAHMJH+bbteJJJixV9kdw
-         TryzGkTYe0Dc4qq84TSsNxfyEpRosXG5zCEWVypuAD68NOZAktY51SaexMEKngUcET3U
-         dDPRkgNdUcnNpa2sZgVXkjfo09ASw5IzJeDWv0PXMSVswhkEndEwbpx7XWE4bz2v6BcV
-         teRg==
-X-Gm-Message-State: AOAM532dS9ExJNsdqWUXleZ7ywpTZB9jAENEG2ubUqV3eeqzCIoPrZ+h
-        sip2YJWmJqBslRloK+3y1C10SWJQA/SpNjPVO7AjYg==
-X-Google-Smtp-Source: ABdhPJylJsOgRZ1W0W3lxH0cw1V11QYwBOxt57YCDB7bU98TxRoT39VpdFhDOmvf5DOD1I24j2QL5ofKrPaoiPhrsuk=
-X-Received: by 2002:a2e:541e:: with SMTP id i30mr13415087ljb.156.1593016844467;
- Wed, 24 Jun 2020 09:40:44 -0700 (PDT)
+        Wed, 24 Jun 2020 12:41:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404160AbgFXQlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:41:01 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876E620899;
+        Wed, 24 Jun 2020 16:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593016860;
+        bh=uvjYsXkxFUGkhiFTCWXt307TvMmTMTKMKbqCMztuBls=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bZztcT5WZ5MWC+ENbrUuPlioKE8O69UkCFRfGBeqlJTX3EqNO3n8zbzUkG2tfbd7l
+         Kk3R7Efk7d6uJ43rzh0HLhfKa41sehWsbY6fJ5h/uZ8zqj99vlgOGvkQopY6v/rWCv
+         cXQgJ1FpRA7WmN9YaTBpWM6GygRlILWvZMyCZqyA=
+Received: by mail-oi1-f181.google.com with SMTP id x202so2364920oix.11;
+        Wed, 24 Jun 2020 09:41:00 -0700 (PDT)
+X-Gm-Message-State: AOAM532xcTdTOuecIR3ScaGbj6IsNUcHCKOVaqcPNA3q95N/w7zubqEd
+        tO2Vu7Gxj/+oJlYQY9sqi7IPDN1F0idcVgZWmEE=
+X-Google-Smtp-Source: ABdhPJyiNUJDNwC86vdpWulA3iT8f/D6K0b5Na/cqZCLSt9K49BUN6iDAZ8XtMicFhbdB0vwidSCBWPLhDa7Wo4++f4=
+X-Received: by 2002:aca:b241:: with SMTP id b62mr19900869oif.47.1593016859864;
+ Wed, 24 Jun 2020 09:40:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624154422.29166-1-vincent.guittot@linaro.org> <jhj8sgcs9v7.mognet@arm.com>
-In-Reply-To: <jhj8sgcs9v7.mognet@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 24 Jun 2020 18:40:32 +0200
-Message-ID: <CAKfTPtC0ytqNmexVFm6kzTSpj3r0kiOxs5MtHMhvR5rJuiz_Jw@mail.gmail.com>
-Subject: Re: [PATCH] sched/cfs: change initial value of runnable_avg
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org> <20200624033142.cinvg6rbg252j46d@google.com>
+ <202006232143.66828CD3@keescook> <20200624104356.GA6134@willie-the-truck>
+ <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+ <202006240820.A3468F4@keescook> <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
+ <202006240844.7BE48D2B5@keescook> <CAMj1kXHqBs44uukRSdFwA_hcmX_yKVfjqdv9RoPbbu-6Wz+RaA@mail.gmail.com>
+ <20200624162919.GH25945@arm.com>
+In-Reply-To: <20200624162919.GH25945@arm.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 24 Jun 2020 18:40:48 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE1zWCjVt8iS4fv2gQHzrTF6=Ggd16nm+4TNWAG3zSWAQ@mail.gmail.com>
+Message-ID: <CAMj1kXE1zWCjVt8iS4fv2gQHzrTF6=Ggd16nm+4TNWAG3zSWAQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fangrui Song <maskray@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 18:32, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
+On Wed, 24 Jun 2020 at 18:29, Dave Martin <Dave.Martin@arm.com> wrote:
 >
+> On Wed, Jun 24, 2020 at 05:48:41PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 24 Jun 2020 at 17:45, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Wed, Jun 24, 2020 at 05:31:06PM +0200, Ard Biesheuvel wrote:
+> > > > On Wed, 24 Jun 2020 at 17:21, Kees Cook <keescook@chromium.org> wrote:
+> > > > >
+> > > > > On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
+> > > > > > I'm not sure if there is a point to having PAC and/or BTI in the EFI
+> > > > > > stub, given that it runs under the control of the firmware, with its
+> > > > > > memory mappings and PAC configuration etc.
+> > > > >
+> > > > > Is BTI being ignored when the firmware runs?
+> > > >
+> > > > Given that it requires the 'guarded' attribute to be set in the page
+> > > > tables, and the fact that the UEFI spec does not require it for
+> > > > executables that it invokes, nor describes any means of annotating
+> > > > such executables as having been built with BTI annotations, I think we
+> > > > can safely assume that the EFI stub will execute with BTI disabled in
+> > > > the foreseeable future.
+> > >
+> > > yaaaaaay. *sigh* How long until EFI catches up?
+> > >
+> > > That said, BTI shouldn't _hurt_, right? If EFI ever decides to enable
+> > > it, we'll be ready?
+> > >
+> >
+> > Sure. Although I anticipate that we'll need to set some flag in the
+> > PE/COFF header to enable it, and so any BTI opcodes we emit without
+> > that will never take effect in practice.
 >
-> On 24/06/20 16:44, Vincent Guittot wrote:
-> > Some performance regression on reaim benchmark have been raised with
-> >   commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
-> >
-> > The problem comes from the init value of runnable_avg which is initialized
-> > with max value. This can be a problem if the newly forked task is finally
-> > a short task because the group of CPUs is wrongly set to overloaded and
-> > tasks are pulled less agressively.
-> >
-> > Set initial value of runnable_avg equals to util_avg to reflect that there
-> > is no waiting time so far.
-> >
-> > Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
-> > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  kernel/sched/fair.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 0424a0af5f87..45e467bf42fc 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -806,7 +806,7 @@ void post_init_entity_util_avg(struct task_struct *p)
-> >               }
-> >       }
-> >
-> > -     sa->runnable_avg = cpu_scale;
-> > +     sa->runnable_avg = sa->util_avg;
+> In the meantime, it is possible to build all the in-tree parts of EFI
+> for BTI, and just turn it off for out-of-tree EFI binaries?
 >
-> IIRC we didn't go for this initially because hackbench behaved slightly
-> worse with it. Did we end up re-evaluating this? Also, how does this reaim
 
-yes. hackbench was slightly worse and it was the only inputs at that
-time, that's why we decided to keep the other init. Since, Rong
-reported a significant regression for reaim which is fixed by this
-patch
+Not sure I understand the question. What do you mean by out-of-tree
+EFI binaries? And how would the firmware (which is out of tree itself,
+and is in charge of the page tables, vector table, timer interrupt etc
+when the EFI stub executes) distinguish such binaries from the EFI
+stub?
 
-> benchmark behave with it? I *think* the table from that regression thread
-> says it behaves better, but I had a hard time parsing it (seems like it got
-> damaged by line wrapping)
+
+> If there's no easy way to do this though, I guess we should wait for /
+> push for a PE/COFF flag to describe this properly.
 >
-> Conceptually I'm all for it, so as long as the tests back it up:
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
->
-> >
-> >       if (p->sched_class != &fair_sched_class) {
-> >               /*
->
+
+Yeah good point. I will take this to the forum.
