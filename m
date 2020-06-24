@@ -2,91 +2,89 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E236DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D86520738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF01120738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQHlyuSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388087AbgFXCH0 (ORCPT
+        id S2388159AbgFXCHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 22:07:26 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:53852 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730898AbgFXCHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 22:07:25 -0400
-Received: from [10.130.0.66] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2tUtfJeAAlJAA--.285S3;
-        Wed, 24 Jun 2020 10:07:18 +0800 (CST)
-Subject: Re: [PATCH RESEND] net/cisco: Fix a sleep-in-atomic-context bug in
- enic_init_affinity_hint()
-To:     Jakub Kicinski <kuba@kernel.org>
-References: <1592899989-22049-1-git-send-email-likaige@loongson.cn>
- <20200623135007.3105d067@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Christian Benvenuti <benve@cisco.com>,
-        Govindarajulu Varadarajan <_govind@gmx.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-From:   Kaige Li <likaige@loongson.cn>
-Message-ID: <f12f40fe-7c9a-6ba8-f2ff-daf315030258@loongson.cn>
-Date:   Wed, 24 Jun 2020 10:07:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 23 Jun 2020 22:07:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730898AbgFXCHk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 22:07:40 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B91C061573;
+        Tue, 23 Jun 2020 19:07:39 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id h10so580378pgq.10;
+        Tue, 23 Jun 2020 19:07:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NweuR852F/MkwNU1J1icoSJt72FTFNVF3baoyChYHNE=;
+        b=aQHlyuSVkmINthgnO8IlvQfQNiHl3Fh3Wk+SBaxME0DNd5EZwcEvTT3e7xaX1Qccaz
+         QwATpAkbCIB6NVJ//9xb/S+KdJP5krKRAN7Ewrsa1hBg7s/TMJQNQcyN157dvw165D0T
+         RCDTFl322csA0Fn9+G1N6LFFuE0TJKTspv6STQwEvCCeVxM4sgbB2S0JzcRk+6l5m19N
+         8HrnkC1ZmwwDhraCw9a0wQRm31m4gIJqesN1HwOsvrmJyaxyvCSBxK+tkr6TjrlEmXUa
+         KN7JbWfOpE/+MFUdSJ/di6832FlQpX+dbTT3ivs+ecENirdYk7cH/7XRhrq67DaucM5Q
+         lIbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NweuR852F/MkwNU1J1icoSJt72FTFNVF3baoyChYHNE=;
+        b=mBjK2vjkbEPwF5xDt2FxgcqYmb3EyKAGMC/j3TLC6eb+YSepfSI7hB/hQdK8DcLsVK
+         IT7Dx/x0iW33MRem2n0EsZNjbfHPeaWBIcAGpOW0rdFkFHjVwdZEtzBPSJsEGRTu2XZF
+         1RVO5039akZ/FG3V/Z48WwID3166azvh1t6eW7u7kzaE5HCWeWoMj9CeCjrHqT7TWg54
+         8q2n/tWF99G8GhD0anaUZm5Fo4WCt6q6oXYLNpJijAmW0JzaI5H4xq5I18KYYqzOPj4p
+         NUOoyyVVcRSvDGspLlQlgDc+l3WzDILgB+kdr4eZWt5vBW2tIdImMmzaX7p+z4mLJl0U
+         IfHA==
+X-Gm-Message-State: AOAM531+5nQJHZyHctAzkBJ/hk3O/j4I2RnDWMXvWrCzY1YP+ll+y5kp
+        qEJJwMPV7mMXZPKzOxUF7SA=
+X-Google-Smtp-Source: ABdhPJwN0Sr3ZDJbmPOu+dSoX3SV259OdHPy6OWnXG5tg87Z5TKKn7UfG3SAOcVrg/q3BJyLEtERXQ==
+X-Received: by 2002:a63:df01:: with SMTP id u1mr17901576pgg.401.1592964458724;
+        Tue, 23 Jun 2020 19:07:38 -0700 (PDT)
+Received: from sol (220-235-97-240.dyn.iinet.net.au. [220.235.97.240])
+        by smtp.gmail.com with ESMTPSA id n19sm17615649pfu.194.2020.06.23.19.07.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jun 2020 19:07:37 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:07:31 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Subject: Re: [PATCH 16/22] gpiolib: cdev: add V2 uAPI implementation to
+ parity with V1 (fwd)
+Message-ID: <20200624020731.GA9728@sol>
+References: <alpine.DEB.2.22.394.2006231910320.2367@hadrien>
 MIME-Version: 1.0
-In-Reply-To: <20200623135007.3105d067@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxr2tUtfJeAAlJAA--.285S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrKr4DJw43uF1fWw1DCFWfXwb_yoWDuFXE9r
-        4j9F93Cw4UJw43Kw4vyw40qr9a9Fy3X34kC3W29398J34fX34ru3Z8CFy3Jw1rWr47Ar1Y
-        yF12ga4rA342gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
-        bIxvr21lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VU1sYFtUUUUU==
-X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2006231910320.2367@hadrien>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 23, 2020 at 07:11:49PM +0200, Julia Lawall wrote:
+> It looks like the put_device (line 891) should be one line earlier.
+> 
 
-On 06/24/2020 04:50 AM, Jakub Kicinski wrote:
-> On Tue, 23 Jun 2020 16:13:09 +0800 Kaige Li wrote:
->> The kernel module may sleep with holding a spinlock.
->>
->> The function call paths (from bottom to top) are:
->>
->> [FUNC] zalloc_cpumask_var(GFP_KERNEL)
->> drivers/net/ethernet/cisco/enic/enic_main.c, 125: zalloc_cpumask_var in enic_init_affinity_hint
->> drivers/net/ethernet/cisco/enic/enic_main.c, 1918: enic_init_affinity_hint in enic_open
->> drivers/net/ethernet/cisco/enic/enic_main.c, 2348: enic_open in enic_reset
->> drivers/net/ethernet/cisco/enic/enic_main.c, 2341: spin_lock in enic_reset
->>
->> To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
->>
->> Signed-off-by: Kaige Li <likaige@loongson.cn>
-> I don't think this is sufficient. Calling open with a spin lock held
-> seems like a very bad idea. At a quick look the driver also calls
-> request_irq() from open - request_irq() can sleep.
+Yikes - thanks for that.
+I'll be sure to coccinelle my code before submitting from now on.
 
-You are right. Should I do spin_unlock before the enic_open, or remove
-spin_lock in enic_reset?
-
-Thank you.
+Cheers,
+Kent.
 
