@@ -2,98 +2,82 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F75C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE1C20E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D3E20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:08:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PU7bqkTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388590AbgFXDHO (ORCPT
+        id S2388618AbgFXDI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 23:07:14 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:37844 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387985AbgFXDHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 23:07:11 -0400
-Received: from ticat.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2hYw_Je_A1JAA--.474S2;
-        Wed, 24 Jun 2020 11:07:04 +0800 (CST)
-From:   Peng Fan <fanpeng@loongson.cn>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH] fs/read_write.c: Fix memory leak in read_write.c
-Date:   Wed, 24 Jun 2020 11:07:03 +0800
-Message-Id: <1592968023-20383-1-git-send-email-fanpeng@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxT2hYw_Je_A1JAA--.474S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4UXry5XFy7urWkAryxXwb_yoW8GF1fpr
-        47Ca1UKF48tr18AFs8KFn8WFyDAw4DCFZrGr43tw10vws7uF4vy3WUKry2gr4UAFZ7ArWU
-        ZF1Iy3sIyFy5AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-        Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUUVHq5UUUU
-        U==
-X-CM-SenderInfo: xidq1vtqj6z05rqj20fqof0/
+        Tue, 23 Jun 2020 23:08:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30984 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388356AbgFXDI0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 23:08:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592968106;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZsWu8ZUl1jE3k6DJkKHds2eB9NM/YRkkX3/ygvqR5AE=;
+        b=PU7bqkTKTBeVnGVSy2I0PYfBIrSN/3OSFoQtrJbX/B0GijcP0sHeaqYoEVm9DlNDOlJnJ5
+        BG0XITGxFK/hJWxvA9kUgaJsMwKTc3KDqc6St7kklIskAZCq6/sJyZNIMZeFbVGHUitIZh
+        yFlBnNBJZSGO8xpPw3mYSeq+OGMDEWg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-294-gIuNpAsLNoSQXCKeSxl5rQ-1; Tue, 23 Jun 2020 23:08:24 -0400
+X-MC-Unique: gIuNpAsLNoSQXCKeSxl5rQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F66C18585A1;
+        Wed, 24 Jun 2020 03:08:22 +0000 (UTC)
+Received: from treble (ovpn-113-107.rdu2.redhat.com [10.10.113.107])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 214CB1A836;
+        Wed, 24 Jun 2020 03:08:20 +0000 (UTC)
+Date:   Tue, 23 Jun 2020 22:08:18 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, Peter Zijlstra <peterz@infradead.org>,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com
+Subject: Re: [PATCH v3 01/10] objtool: Do not assume order of parent/child
+ functions
+Message-ID: <20200624030818.bvv3kld63sguqxxm@treble>
+References: <20200623172327.5701-1-kristen@linux.intel.com>
+ <20200623172327.5701-2-kristen@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200623172327.5701-2-kristen@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemleak report:
-unreferenced object 0x98000002bb591d00 (size 256):
-  comm "ftest03", pid 24778, jiffies 4301603810 (age 490.665s)
-  hex dump (first 32 bytes):
-    00 01 04 20 01 00 00 00 80 00 00 00 00 00 00 00  ... ............
-    f0 02 04 20 01 00 00 00 80 00 00 00 00 00 00 00  ... ............
-  backtrace:
-    [<0000000050b162cb>] __kmalloc+0x234/0x438
-    [<00000000491da9c7>] rw_copy_check_uvector+0x1ac/0x1f0
-    [<00000000b0dddb43>] import_iovec+0x50/0xe8
-    [<00000000ae843d73>] vfs_readv+0x50/0xb0
-    [<00000000c7216b06>] do_readv+0x80/0x160
-    [<00000000cad79c3f>] syscall_common+0x34/0x58
+On Tue, Jun 23, 2020 at 10:23:18AM -0700, Kristen Carlson Accardi wrote:
+> If a .cold function is examined prior to it's parent, the link
+> to the parent/child function can be overwritten when the parent
+> is examined. Only update pfunc and cfunc if they were previously
+> nil to prevent this from happening.
+> 
+> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-This is because "iov" allocated by kmalloc() is not destroyed. Under normal
-circumstances, "ret_pointer" should be equal to "iov". But if the previous 
-statements fails to execute, and the allocation is successful, then the
-block of memory will not be released, because it is necessary to 
-determine whether they are equal. So we need to change the order.
+FYI, this patch is now in the tip tree.
 
-Signed-off-by: Peng Fan <fanpeng@loongson.cn>
----
- fs/read_write.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/read_write.c b/fs/read_write.c
-index bbfa9b1..aa4f7c5 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -832,8 +832,8 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
- 		}
- 		ret += len;
- 	}
--out:
- 	*ret_pointer = iov;
-+out:
- 	return ret;
- }
- 
 -- 
-2.1.0
+Josh
 
