@@ -2,113 +2,234 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90875C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D790820823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593010562;
-	bh=Y/gtxE6J9zyG3UgKcZEj2EVSo3mVbXlNG8P19HRXH8o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i4sT2rkA6FYrGT384MiqOyFrazBL6Htd9QiKzgG5yJeyjXU1StUvRcaMNQttV0yuE
-	 Aac2wgFeQC7IQdn1YyJB3wYDEktJucZFpTIcIbYfUOlcqSHYjoqbsE9P7KDg2XPnLV
-	 /XX1zo1qXR85Gbm4msr+3RoEI2WR2qrnKVO41xsM=
+	by mail.kernel.org (Postfix) with ESMTP id 64B7020768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404055AbgFXO4A (ORCPT
+        id S2391159AbgFXPAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:56:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40280 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403931AbgFXO4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:56:00 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t25so2060208oij.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:55:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+sk9R2kZOJxwPKjhGy5eQURJ6u1u2IjgStnunJ+u8Vg=;
-        b=V/T2excaFLJWF8U1Jqu0oXKyUtZpWOG89KgjTHDGpfyJte97C4ZFOm7BM7jsPJ3FUM
-         VXuDgugWLhwsJ6ceUHVlQ+d40LGs/Jyu8abycCua01IhPm0JA5XTrYMv8ceD9VXBG1U2
-         jEakGiyyvWXviCgvdY0RnbJtkfJoyQAEgr8vYKdsHCDBsa0se0RzDnXUmG/rHtAcjlTF
-         VcEbQxORqsY+RerwIcd6NFMPIPUqCFVCkZCm0VBCYLmXuviIEC1FGFSM2uhTLBjscIiq
-         AuuZPP0UT1HK5s4AZ3/kgRSU/ne+3E5rOA2jz5p6kX8gAfb8CcfXVegg6vu3tJnp9viG
-         2zBw==
-X-Gm-Message-State: AOAM532WWgbiWhrPT0+/rwY/pdOijohuaR0V/2wsbRZ6HMybTA09l/3t
-        owFctFoC2eSHKmqqqBdtz8XNymCsVpzEw7zOdo3gtw==
-X-Google-Smtp-Source: ABdhPJzTeOBdPMvDRCz7RJI7KYiAeYGV5KLYB14SeNajPpHs7iz64SW8yis8WWbLDg2GfSHkl+OTc/iGJIpmOpN8/0g=
-X-Received: by 2002:a05:6808:99b:: with SMTP id a27mr2709013oic.68.1593010558890;
- Wed, 24 Jun 2020 07:55:58 -0700 (PDT)
+        Wed, 24 Jun 2020 11:00:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:59000 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390840AbgFXPAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:00:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2A8A1FB;
+        Wed, 24 Jun 2020 07:59:59 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 220793F73C;
+        Wed, 24 Jun 2020 07:59:54 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Maydell <Peter.Maydell@linaro.org>
+References: <20200617123844.29960-1-steven.price@arm.com>
+ <20200623174807.GD5180@gaia> <e04696b6-63de-1e25-f6f3-1da63f791754@arm.com>
+ <20200624142131.GA27945@gaia>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <66ed0732-17ee-8f5a-44af-31ab768d845f@arm.com>
+Date:   Wed, 24 Jun 2020 15:59:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
- <20200624114127.3016-1-a.hajda@samsung.com> <20200624114127.3016-4-a.hajda@samsung.com>
- <CAJZ5v0i7mU3dGGZv3sUwG2_2OCRP3=bPB7a8sstj0qLwmiwhog@mail.gmail.com> <345c10ba-b047-3ef4-0129-0ef494c8f812@samsung.com>
-In-Reply-To: <345c10ba-b047-3ef4-0129-0ef494c8f812@samsung.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 24 Jun 2020 16:55:47 +0200
-Message-ID: <CAJZ5v0gGaAgjJ_xc6etE-e_ctOiWOmbE6=P4Sb80vS0VZi39pQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
- integer and pointer types
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200624142131.GA27945@gaia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 4:44 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->
->
-> On 24.06.2020 14:14, Rafael J. Wysocki wrote:
-> > On Wed, Jun 24, 2020 at 1:41 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
-> >> Many resource acquisition functions return error value encapsulated in
-> >> pointer instead of integer value. To simplify coding we can use macro
-> >> which will accept both types of error.
-> >> With this patch user can use:
-> >>          probe_err(dev, ptr, ...)
-> >> instead of:
-> >>          probe_err(dev, PTR_ERR(ptr), ...)
-> >> Without loosing old functionality:
-> >>          probe_err(dev, err, ...)
-> >>
-> >> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> > The separation of this change from patch [1/5] looks kind of artificial to me.
-> >
-> > You are introducing a new function anyway, so why not to make it what
-> > you want right away?
->
->
-> Two reasons:
->
-> 1.This patch is my recent idea, I didn't want to mix it with already
-> reviewed code.
->
-> 2. This patch could be treated hacky by some devs due to macro
-> definition and type-casting.
+On 24/06/2020 15:21, Catalin Marinas wrote:
+> On Wed, Jun 24, 2020 at 12:16:28PM +0100, Steven Price wrote:
+>> On 23/06/2020 18:48, Catalin Marinas wrote:
+>>> On Wed, Jun 17, 2020 at 01:38:42PM +0100, Steven Price wrote:
+>>>> These patches add support to KVM to enable MTE within a guest. It is
+>>>> based on Catalin's v4 MTE user space series[1].
+>>>>
+>>>> [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
+>>>>
+>>>> Posting as an RFC as I'd like feedback on the approach taken. First a
+>>>> little background on how MTE fits within the architecture:
+>>>>
+>>>> The stage 2 page tables have limited scope for controlling the
+>>>> availability of MTE. If a page is mapped as Normal and cached in stage 2
+>>>> then it's the stage 1 tables that get to choose whether the memory is
+>>>> tagged or not. So the only way of forbidding tags on a page from the
+>>>> hypervisor is to change the cacheability (or make it device memory)
+>>>> which would cause other problems.  Note this restriction fits the
+>>>> intention that a system should have all (general purpose) memory
+>>>> supporting tags if it support MTE, so it's not too surprising.
+>>>>
+>>>> However, the upshot of this is that to enable MTE within a guest all
+>>>> pages of memory mapped into the guest as normal cached pages in stage 2
+>>>> *must* support MTE (i.e. we must ensure the tags are appropriately
+>>>> sanitised and save/restore the tags during swap etc).
+>>>>
+>>>> My current approach is that KVM transparently upgrades any pages
+>>>> provided by the VMM to be tag-enabled when they are faulted in (i.e.
+>>>> sets the PG_mte_tagged flag on the page) which has the benefit of
+>>>> requiring fewer changes in the VMM. However, save/restore of the VM
+>>>> state still requires the VMM to have a PROT_MTE enabled mapping so that
+>>>> it can access the tag values. A VMM which 'forgets' to enable PROT_MTE
+>>>> would lose the tag values when saving/restoring (tags are RAZ/WI when
+>>>> PROT_MTE isn't set).
+>>>>
+>>>> An alternative approach would be to enforce the VMM provides PROT_MTE
+>>>> memory in the first place. This seems appealing to prevent the above
+>>>> potentially unexpected gotchas with save/restore, however this would
+>>>> also extend to memory that you might not expect to have PROT_MTE (e.g. a
+>>>> shared frame buffer for an emulated graphics card).
+>>>
+>>> As you mentioned above, if memory is mapped as Normal Cacheable at Stage
+>>> 2 (whether we use FWB or not), the guest is allowed to turn MTE on via
+>>> Stage 1. There is no way for KVM to prevent a guest from using MTE other
+>>> than the big HCR_EL2.ATA knob.
+>>>
+>>> This causes potential issues since we can't guarantee that all the
+>>> Cacheable memory slots allocated by the VMM support MTE. If they do not,
+>>> the arch behaviour is "unpredictable". We also can't trust the guest to
+>>> not enable MTE on such Cacheable mappings.
+>>
+>> Architecturally it seems dodgy to export any address that isn't "normal
+>> memory" (i.e. with tag storage) to the guest as Normal Cacheable. Although
+>> I'm a bit worried this might cause a regression in some existing case.
+> 
+> What I had in mind is some persistent memory that may be given to the
+> guest for direct access. This is allowed to be cacheable (write-back)
+> but may not have tag storage.
 
-Fair enough.
+At the moment we don't have a good idea what would happen if/when the 
+guest (or host) attempts to use that memory as tagged. If we have a 
+relatively safe hardware behaviour (e.g. the tags are silently 
+dropped/read-as-zero) then that's not a big issue. But if the accesses 
+cause some form of abort then we need to understand how that would be 
+handled.
 
-There is some opposition against the $subject one, so I guess it may
-be dropped even.
+>>> On the host kernel, mmap'ing with PROT_MTE is only allowed for anonymous
+>>> mappings and shmem. So requiring the VMM to always pass PROT_MTE mapped
+>>> ranges to KVM, irrespective of whether it's guest RAM, emulated device,
+>>> virtio etc. (as long as they are Cacheable), filters unsafe ranges that
+>>> may be mapped into guest.
+>>
+>> That would be an easy way of doing the filtering, but it's not clear whether
+>> PROT_MTE is actually what the VMM wants (it most likely doesn't want to have
+>> tag checking enabled on the memory in user space).
+> 
+>  From the other sub-thread, yeah, we probably don't want to mandate
+> PROT_MTE because of potential inadvertent tag check faults in the VMM
+> itself.
+> 
+>>> Note that in the next revision of the MTE patches I'll drop the DT
+>>> memory nodes checking and rely only on the CPUID information (arch
+>>> updated promised by the architects).
+>>>
+>>> I see two possible ways to handle this (there may be more):
+>>>
+>>> 1. As in your current patches, assume any Cacheable at Stage 2 can have
+>>>      MTE enabled at Stage 1. In addition, we need to check whether the
+>>>      physical memory supports MTE and it could be something simple like
+>>>      pfn_valid(). Is there a way to reject a memory slot passed by the
+>>>      VMM?
+>>
+>> Yes pfn_valid() should have been in there. At the moment pfn_to_page() is
+>> called without any checks.
+>>
+>> The problem with attempting to reject a memory slot is that the memory
+>> backing that slot can change. So checking at the time the slot is created
+>> isn't enough (although it might be a useful error checking feature).
+> 
+> But isn't the slot changed as a result of another VMM call? So we could
+> always have such check in place.
 
-Thanks!
+Once you have created a memslot the guest's view of memory follows the 
+user space's address space. This is the KVM_CAP_SYNC_MMU capability. So 
+there's nothing stopping a VMM adding a memslot backed with perfectly 
+reasonable memory then mmap()ing over the top of it some memory which 
+isn't MTE compatible. KVM gets told the memory is being removed (via mmu 
+notifiers) but I think it waits for the next fault before (re)creating 
+the stage 2 entries.
+
+>> It's not clear to me what we can do at fault time when we discover the
+>> memory isn't tag-capable and would have been mapped cacheable other than
+>> kill the VM.
+> 
+> Indeed, I don't have a better idea other than trying not to get in this
+> situation.
+
+Sadly to me it looks like it's not really possible to avoid a 
+(malicious) VMM getting us there. But we can certainly try to avoid a 
+VMM accidentally ending up in the situation.
+
+>>> 2. Similar to 1 but instead of checking whether the pfn supports MTE, we
+>>>      require the VMM to only pass PROT_MTE ranges (filtering already done
+>>>      by the host kernel). We need a way to reject the slot and return an
+>>>      error to the VMM.
+>>>
+>>> I think rejecting a slot at the Stage 2 fault time is very late. You
+>>> probably won't be able to do much other than killing the guest.
+>>
+>> As above, we will struggle to catch all cases during slot creation, so I
+>> think we're going to have to deal with this late detection as well.
+> 
+> We can leave it in place as a safety check, killing the VM. My hope is
+> that we can detect slot creation subsequent changes.
+> 
+>>> Both 1 and 2 above risk breaking existing VMMs just because they happen
+>>> to start on an MTE-capable machine. So, can we also require the VMM to
+>>> explicitly opt in to MTE support in guests via some ioctl()? This in
+>>> turn would enable the additional checks in KVM for the MTE capability of
+>>> the memory slots (1 or 2 above).
+>>
+>> Patch 2 introduces a VCPU feature which must be explicitly enabled for the
+>> guest to have MTE. So it won't break existing VMMs. However clearly simply
+>> setting that bit will likely break some configurations where not all memory
+>> is MTE capable.
+> 
+> Ah, I missed that. At least we won't break current, unaware VMMs. I
+> suspect the CPUID is also conditioned by this explicit enabling.
+
+Yes it should be. Indeed we might need at least part of the first patch 
+in your initial series to avoid the ID register showing support before 
+we're ready for it, see the below chunk:
+
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 51db934702b6..3ae008a9b0bd 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1095,6 +1095,8 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
+>  		if (!vcpu_has_sve(vcpu))
+>  			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+>  		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+> +	} else if (id == SYS_ID_AA64PFR1_EL1) {
+> +		val &= ~(0xfUL << ID_AA64PFR1_MTE_SHIFT);
+>  	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
+>  		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+>  			 (0xfUL << ID_AA64ISAR1_API_SHIFT) 
+Steve
+
+>>> An alternative to an MTE enable ioctl(), if all the memory slots are set
+>>> up prior to the VM starting, KVM could check 1 or 2 above and decide
+>>> whether to expose MTE to guests (HCR_EL2.ATA).
+>>
+>> The VMM needs to be fully aware of MTE before it's enabled by KVM otherwise
+>> it could lose the tags (e.g. during migration). So my preference is to make
+>> it an explicit opt-in.
+> 
+> I agree.
+> 
+
