@@ -2,139 +2,131 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A33C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5D8120720
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593004427;
-	bh=UI9InE3abz+muIOqZF/fVY6j9P5IYVHAOvK/hsR8Snk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d7i3gPf/N0PTF24ABn5P5oZ6uPkdDcMVHdHJjx/65ETLoNDsK+B3su9jjC52PdVdR
-	 uXWLnjG75hlOlq1YLZaa3RExC9YSkvJt0jCTqKjEdAlRyqILEj1lxQcKjkLWUUoHrz
-	 tFg8sQJcyRgOUKXnOZYcA4tktvKn+TbDMMujrxAk=
+	by mail.kernel.org (Postfix) with ESMTP id 49B2120720
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389544AbgFXNNq (ORCPT
+        id S2390969AbgFXNNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:13:46 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:46210 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388367AbgFXNNq (ORCPT
+        Wed, 24 Jun 2020 09:13:53 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:38054 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387923AbgFXNNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:13:46 -0400
-Received: by mail-ej1-f68.google.com with SMTP id p20so2363055ejd.13;
-        Wed, 24 Jun 2020 06:13:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BDyIAIkz+outt0wjRZXFGz7XkAFPA/tTfRPsaqbeBic=;
-        b=cBoDk95Xr+/3SorCdmi317L0xPhuybVi2Gj+kAITdbJ+fXCnXFphYYW4v9MR86+/wH
-         SQCxjmOaeBaoBe/DfLIxQ/BZVeidyamSI0Xn8q6p3o7zL8QgEXkds5McYsM+tT3ouXmc
-         jvWO+m/R9IO74b22UDGPY20rbe9hZGNTFxLpkL5WiThlVd89C7sc1ZxvZ76dko5PDQG1
-         j1MCLl3K89h2z1Pp4YgC3Z1RACiA3MruyYXMUkK38jX7XE1mEv/fmKyRNb3r0OeG8LnK
-         p9PDysVc0uPFZhHQbxuOxgR4NLk83gYvG0dzR8gkWqurdrW3/Eqitf7O7pFjdWuF55yo
-         OdRA==
-X-Gm-Message-State: AOAM533KXijfBwXKl8bFvFjFROlIpzLMapfADTzEXvsb9ZNnTkju7jr1
-        N996DRO2GV7ONttBSZmBEkY=
-X-Google-Smtp-Source: ABdhPJzzPyKDomrh74GPMsORKH0aJpm0N4ocflgfVK159jT1jxEJ+S6d46lyTXjIsXY0GWgw/Bnkjg==
-X-Received: by 2002:a17:906:ca56:: with SMTP id jx22mr11630669ejb.494.1593004424202;
-        Wed, 24 Jun 2020 06:13:44 -0700 (PDT)
-Received: from pi3 ([194.230.155.235])
-        by smtp.googlemail.com with ESMTPSA id ss4sm15386027ejb.63.2020.06.24.06.13.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 06:13:43 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 15:13:41 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Kamil Konieczny <k.konieczny@samsung.com>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200624131341.GA20905@pi3>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
- <20200623191129.GA4171@kozik-lap>
- <CGME20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2@eucas1p2.samsung.com>
- <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
- <828b0d63-4d01-48d6-5971-64855adebed2@samsung.com>
- <20200624120651.GA20813@pi3>
- <55772862-ff8f-1e1d-91ae-7b4d7c3be1b6@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <55772862-ff8f-1e1d-91ae-7b4d7c3be1b6@arm.com>
+        Wed, 24 Jun 2020 09:13:53 -0400
+X-IronPort-AV: E=Sophos;i="5.75,275,1589209200"; 
+   d="scan'208";a="50489661"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 24 Jun 2020 22:13:52 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5CB5240062A1;
+        Wed, 24 Jun 2020 22:13:50 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 02/11] arm64: dts: renesas: r8a774b1-hihope-rzg2n[-ex]: Rename HiHope RZ/G2N boards
+Date:   Wed, 24 Jun 2020 14:12:01 +0100
+Message-Id: <1593004330-5039-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593004330-5039-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1593004330-5039-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 02:03:03PM +0100, Lukasz Luba wrote:
-> 
-> 
-> On 6/24/20 1:06 PM, Krzysztof Kozlowski wrote:
-> > My case was clearly showing wrong behavior. System was idle but not
-> > sleeping - network working, SSH connection ongoing.  Therefore at least
-> > one CPU was not idle and could adjust the devfreq/DMC... but this did not
-> > happen. The system stayed for like a minute in 633 MHz OPP.
-> > 
-> > Not-waking up idle processors - ok... so why not using power efficient
-> > workqueue? It is exactly for this purpose - wake up from time to time on
-> > whatever CPU to do the necessary job.
-> 
-> IIRC I've done this experiment, still keeping in devfreq:
-> INIT_DEFERRABLE_WORK()
-> just applying patch [1]. It uses a system_wq which should
-> be the same as system_power_efficient_wq when
-> CONFIG_WQ_POWER_EFFICIENT_DEFAULT is not set (our case).
-> This wasn't solving the issue for the deferred work. That's
-> why the patch 2/2 following patch 1/2 [1] was needed.
-> 
-> The deferred work uses TIMER_DEFERRABLE in it's initialization
-> and this is the problem. When the deferred work was queued on a CPU,
-> next that CPU went idle, the work was not migrated to some other CPU.
-> The former cpu is also not woken up according to the documentation [2].
+The existing DTS files for HiHope RZ/G2N boards are for Rev.2.0 version
+so reflect the same for the DTS file names so that the existing naming
+convention can be used for Rev.3.0/4.0 boards.
 
-Yes, you need either workqueue.power_efficient kernel param or CONFIG
-option to actually enable it.  But at least it could then work on any
-CPU.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/boot/dts/renesas/Makefile                        | 4 ++--
+ ...ihope-rzg2n-ex.dts => r8a774b1-hihope-rzg2n-rev2-ex.dts} | 6 +++---
+ ...74b1-hihope-rzg2n.dts => r8a774b1-hihope-rzg2n-rev2.dts} | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+ rename arch/arm64/boot/dts/renesas/{r8a774b1-hihope-rzg2n-ex.dts => r8a774b1-hihope-rzg2n-rev2-ex.dts} (56%)
+ rename arch/arm64/boot/dts/renesas/{r8a774b1-hihope-rzg2n.dts => r8a774b1-hihope-rzg2n-rev2.dts} (84%)
 
-Another solution is to use directly WQ_UNBOUND.
-
-> That's why Kamil's approach should be continue IMHO. It gives more
-> control over important devices like: bus, dmc, gpu, which utilization
-> does not strictly correspond to cpu utilization (which might be low or
-> even 0 and cpu put into idle).
-> 
-> I think Kamil was pointing out also some other issues not only dmc
-> (buses probably), but I realized too late to help him.
-
-This should not be a configurable option. Why someone would prefer to
-use one over another and decide about this during build or run time?
-Instead it should be just *right* all the time. Always.
-
-Argument that we want to save power so we will not wake up any CPU is
-ridiculous if because of this system stays in high-power mode.
-
-If system is idle and memory going to be idle, someone should be woken
-up to save more power and slow down memory controller.
-
-If system is idle but memory going to be busy, the currently busy CPU
-(which performs some memory-intensive job) could do the job and ramp up
-the devfreq performance.
-
-Best regards,
-Krzysztof
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index e8461918f441..fc171c3d6986 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -2,8 +2,8 @@
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2.dtb
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dtb
+-dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+-dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
++dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-rev2.dtb
++dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-rev2-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
+ 			       r8a774c0-ek874-idk-2121wr.dtb \
+ 			       r8a774c0-ek874-mipi-2.1.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-ex.dts b/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts
+similarity index 56%
+rename from arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-ex.dts
+rename to arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts
+index ab47c0bd9c19..2e5e1de04049 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-ex.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts
+@@ -1,15 +1,15 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Device Tree Source for the HiHope RZ/G2N sub board
++ * Device Tree Source for the HiHope RZ/G2N Rev.2.0 connected to sub board
+  *
+  * Copyright (C) 2019 Renesas Electronics Corp.
+  */
+ 
+-#include "r8a774b1-hihope-rzg2n.dts"
++#include "r8a774b1-hihope-rzg2n-rev2.dts"
+ #include "hihope-rzg2-ex.dtsi"
+ 
+ / {
+-	model = "HopeRun HiHope RZ/G2N with sub board";
++	model = "HopeRun HiHope RZ/G2N (Rev.2.0) with sub board";
+ 	compatible = "hoperun,hihope-rzg2-ex", "hoperun,hihope-rzg2n",
+ 		     "renesas,r8a774b1";
+ };
+diff --git a/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n.dts b/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2.dts
+similarity index 84%
+rename from arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n.dts
+rename to arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2.dts
+index 9910c1aa0a61..eb1206b2d97a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Device Tree Source for the HiHope RZ/G2N main board
++ * Device Tree Source for the HiHope RZ/G2N Rev.2.0 main board
+  *
+  * Copyright (C) 2019 Renesas Electronics Corp.
+  */
+@@ -10,7 +10,7 @@
+ #include "hihope-common.dtsi"
+ 
+ / {
+-	model = "HopeRun HiHope RZ/G2N main board based on r8a774b1";
++	model = "HopeRun HiHope RZ/G2N main board (Rev.2.0) based on r8a774b1";
+ 	compatible = "hoperun,hihope-rzg2n", "renesas,r8a774b1";
+ 
+ 	memory@48000000 {
+-- 
+2.17.1
 
