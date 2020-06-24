@@ -2,80 +2,74 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F57C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA9920B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592991489;
-	bh=M17U8InxXE8LD18Sq7wr8yn7Yy1fVJiTNteQrj4tOC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zOsCNAJk/Na9tDFjFnBA7vtxDmsT/its64/XcLoRScQHNazqGo8CEqnhBBy+Xt8lE
-	 PjUGDg8TA4xaaVl/j3F/fn0YegGBpM6mIhKZjcoeiFsrFyjnM8xfxZjKWof6KnIB/u
-	 mXuk6KAJ33f6iCrrGk8hTZGlVDik9yXUa4RmM7po=
+	by mail.kernel.org (Postfix) with ESMTP id BEE0920885
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389631AbgFXJiH (ORCPT
+        id S2389825AbgFXJiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:38:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43310 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 05:38:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:53582 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388998AbgFXJiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:38:07 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA8D720885;
-        Wed, 24 Jun 2020 09:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592991486;
-        bh=M17U8InxXE8LD18Sq7wr8yn7Yy1fVJiTNteQrj4tOC8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X3Qh6RONQSKJIXovrL6/xEMD1+9sjPy3PjDngBbFY878WMHZ7n0WhKV9ICBsPQeBx
-         cK+gzDnn044pdcWiud7CZ0NGtQwTEOA+2mh/XxGezkceR5PZUvu5RlkSbmAuSXRtve
-         zLowjzeJdIz7m2kL/u5QyQoQRJjcRl08OvsDqYmc=
-Date:   Wed, 24 Jun 2020 15:08:00 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Thomas Ruf <freelancer@rufusul.de>
-Cc:     Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: DMA Engine: Transfer From Userspace
-Message-ID: <20200624093800.GV2324254@vkoul-mobl>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
- <419762761.402939.1592827272368@mailbusiness.ionos.de>
- <20200622155440.GM2324254@vkoul-mobl>
- <1835214773.354594.1592843644540@mailbusiness.ionos.de>
- <2077253476.601371.1592991035969@mailbusiness.ionos.de>
+        id S2388031AbgFXJiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:38:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD8111FB;
+        Wed, 24 Jun 2020 02:38:51 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68A463F73C;
+        Wed, 24 Jun 2020 02:38:50 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:38:48 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Peter Maydell <peter.maydell@linaro.org>
+Cc:     Steven Price <steven.price@arm.com>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kvmarm@lists.cs.columbia.edu,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
+Message-ID: <20200624093846.GA11863@gaia>
+References: <20200617123844.29960-1-steven.price@arm.com>
+ <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2077253476.601371.1592991035969@mailbusiness.ionos.de>
+In-Reply-To: <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-06-20, 11:30, Thomas Ruf wrote:
+On Tue, Jun 23, 2020 at 07:05:07PM +0100, Peter Maydell wrote:
+> On Wed, 17 Jun 2020 at 13:39, Steven Price <steven.price@arm.com> wrote:
+> > These patches add support to KVM to enable MTE within a guest. It is
+> > based on Catalin's v4 MTE user space series[1].
+> >
+> > [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
+> >
+> > Posting as an RFC as I'd like feedback on the approach taken.
+> 
+> What's your plan for handling tags across VM migration?
+> Will the kernel expose the tag ram to userspace so we
+> can copy it from the source machine to the destination
+> at the same time as we copy the actual ram contents ?
 
-> To make it short - i have two questions:
-> - what are the chances to revive DMA_SG?
+Qemu can map the guest memory with PROT_MTE and access the tags directly
+with LDG/STG instructions. Steven was actually asking in the cover
+letter whether we should require that the VMM maps the guest memory with
+PROT_MTE as a guarantee that it can access the guest tags.
 
-100%, if we have a in-kernel user
-
-> - what are the chances to get my driver for memcpy like transfers from
-> user space using DMA_SG upstream? ("dma-sg-proxy")
-
-pretty bleak IMHO.
+There is no architecturally visible tag ram (tag storage), that's a
+microarchitecture detail.
 
 -- 
-~Vinod
+Catalin
