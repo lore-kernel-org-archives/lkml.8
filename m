@@ -2,280 +2,155 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C245C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5101220738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593014159;
-	bh=psUwwXM9mI+SwEdZqxZWgZzspbx1X33B7G8vF8nDbDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WEHbLvn0oD4PPVE7X+LScFZtu+JAP9l95VhcjjFJDcaBEftdDCGqKhr5o4uvbyJJv
-	 QliUmPVIdH2J+FzvWlxm6ItBu5CDK0jqK9HB85evT1+2VB0mfkOBcr2MWenxvJi2yU
-	 oOpzDnuuUI4q9axsBu6WBc54uX8FMme1o3KlH0RQ=
+	by mail.kernel.org (Postfix) with ESMTP id E8B64206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404608AbgFXPz5 (ORCPT
+        id S2404628AbgFXP4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:55:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404489AbgFXPz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:55:57 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138E4206F7;
-        Wed, 24 Jun 2020 15:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593014156;
-        bh=psUwwXM9mI+SwEdZqxZWgZzspbx1X33B7G8vF8nDbDA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wlOmHpkvWlninN9X+L/1oaWpmeBBITfzpu68jvKmd2kfh6TOHM3dFyG62D8v7jQD3
-         LKrG90OISpZD3F63ydSJpNZdshrLGSfLT9PLb5D4W18We73P1X06qUu/7tRXkBQwe4
-         DuuZ2+NT3pnpp8qzt78OYv2+4ETqFBQ7bx1rOOxQ=
-Date:   Wed, 24 Jun 2020 08:55:55 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 1/5] f2fs: fix to wait page writeback before update
-Message-ID: <20200624155555.GA215264@google.com>
-References: <20200618063625.110273-1-yuchao0@huawei.com>
- <20200618235932.GA227771@google.com>
- <f5bbb14b-52a0-9697-a8fe-c3e39f78b0a5@huawei.com>
- <20200619054922.GC227771@google.com>
- <3634ef79-5903-449d-0d52-3d5566481863@huawei.com>
- <20200619224755.GA60059@google.com>
- <3f49539a-7be1-be90-d13a-2f66a8483458@huawei.com>
- <20200621163834.GA36924@google.com>
- <da9df754-2e19-132c-9791-cac0361a1aad@huawei.com>
+        Wed, 24 Jun 2020 11:56:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14926 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404351AbgFXP4b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:56:31 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OFZ2o5114504;
+        Wed, 24 Jun 2020 11:54:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyypwr3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 11:54:57 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OFZBeS115032;
+        Wed, 24 Jun 2020 11:54:57 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyypwpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 11:54:56 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OFpKNX014534;
+        Wed, 24 Jun 2020 15:54:54 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 31uusjgsgv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 15:54:54 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OFsp9P61079756
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 15:54:51 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DB7111C069;
+        Wed, 24 Jun 2020 15:54:51 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6AB811C05C;
+        Wed, 24 Jun 2020 15:54:49 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.22.164])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Jun 2020 15:54:49 +0000 (GMT)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     mcgrof@kernel.org, ast@kernel.org, axboe@kernel.dk,
+        bfields@fieldses.org, bridge@lists.linux-foundation.org,
+        chainsaw@gentoo.org, christian.brauner@ubuntu.com,
+        chuck.lever@oracle.com, davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <20200610154923.27510-5-mcgrof@kernel.org>
+ <20200623141157.5409-1-borntraeger@de.ibm.com>
+ <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+ <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+ <20200624144311.GA5839@infradead.org>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
+Date:   Wed, 24 Jun 2020 17:54:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da9df754-2e19-132c-9791-cac0361a1aad@huawei.com>
+In-Reply-To: <20200624144311.GA5839@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_08:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 priorityscore=1501 cotscore=-2147483648
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=766
+ phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006240108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/22, Chao Yu wrote:
-> On 2020/6/22 0:38, Jaegeuk Kim wrote:
-> > On 06/20, Chao Yu wrote:
-> >> On 2020/6/20 6:47, Jaegeuk Kim wrote:
-> >>> On 06/19, Chao Yu wrote:
-> >>>> On 2020/6/19 13:49, Jaegeuk Kim wrote:
-> >>>>> On 06/19, Chao Yu wrote:
-> >>>>>> Hi Jaegeuk,
-> >>>>>>
-> >>>>>> On 2020/6/19 7:59, Jaegeuk Kim wrote:
-> >>>>>>> Hi Chao,
-> >>>>>>>
-> >>>>>>> On 06/18, Chao Yu wrote:
-> >>>>>>>> to make page content stable for special device like raid.
-> >>>>>>>
-> >>>>>>> Could you elaborate the problem a bit?
-> >>>>>>
-> >>>>>> Some devices like raid5 wants page content to be stable, because
-> >>>>>> it will calculate parity info based page content, if page is not
-> >>>>>> stable, parity info could be corrupted, result in data inconsistency
-> >>>>>> in stripe.
-> >>>>>
-> >>>>> I don't get the point, since those pages are brand new pages which were not
-> >>>>> modified before. If it's on writeback, we should not modify them regardless
-> >>>>> of whatever raid configuration. For example, f2fs_new_node_page() waits for
-> >>>>> writeback. Am I missing something?
-> >>>>
-> >>>> I think we should use f2fs_bug_on(, PageWriteback()) rather than
-> >>>> f2fs_wait_on_page_writeback() for brand new page which is allocated just now.
-> >>>> For other paths, we can keep rule that waiting for writeback before updating.
-> >>>>
-> >>>> How do you think?
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Thanks,
-> >>>>>>
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>>>> ---
-> >>>>>>>>  fs/f2fs/dir.c          |  2 ++
-> >>>>>>>>  fs/f2fs/extent_cache.c | 18 +++++++++---------
-> >>>>>>>>  fs/f2fs/f2fs.h         |  2 +-
-> >>>>>>>>  fs/f2fs/file.c         |  1 +
-> >>>>>>>>  fs/f2fs/inline.c       |  2 ++
-> >>>>>>>>  fs/f2fs/inode.c        |  3 +--
-> >>>>>>>>  6 files changed, 16 insertions(+), 12 deletions(-)
-> >>>>>>>>
-> >>>>>>>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> >>>>>>>> index d35976785e8c..91e86747a604 100644
-> >>>>>>>> --- a/fs/f2fs/dir.c
-> >>>>>>>> +++ b/fs/f2fs/dir.c
-> >>>>>>>> @@ -495,6 +495,8 @@ static int make_empty_dir(struct inode *inode,
-> >>>>>>>>  	if (IS_ERR(dentry_page))
-> >>>>>>>>  		return PTR_ERR(dentry_page);
-> >>>>>>>>  
-> >>>>>>>> +	f2fs_bug_on(F2FS_I_SB(inode), PageWriteback(dentry_page));
-> >>>>>>>> +
-> >>>>>>>>  	dentry_blk = page_address(dentry_page);
-> >>>>>>>>  
-> >>>>>>>>  	make_dentry_ptr_block(NULL, &d, dentry_blk);
-> >>>>>>>> diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-> >>>>>>>> index e60078460ad1..686c68b98610 100644
-> >>>>>>>> --- a/fs/f2fs/extent_cache.c
-> >>>>>>>> +++ b/fs/f2fs/extent_cache.c
-> >>>>>>>> @@ -325,9 +325,10 @@ static void __drop_largest_extent(struct extent_tree *et,
-> >>>>>>>>  }
-> >>>>>>>>  
-> >>>>>>>>  /* return true, if inode page is changed */
-> >>>>>>>> -static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-> >>>>>>>> +static void __f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
-> >>>>>>>>  {
-> >>>>>>>>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-> >>>>>>>> +	struct f2fs_extent *i_ext = ipage ? &F2FS_INODE(ipage)->i_ext : NULL;
-> >>>>>>>>  	struct extent_tree *et;
-> >>>>>>>>  	struct extent_node *en;
-> >>>>>>>>  	struct extent_info ei;
-> >>>>>>>> @@ -335,16 +336,18 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
-> >>>>>>>>  	if (!f2fs_may_extent_tree(inode)) {
-> >>>>>>>>  		/* drop largest extent */
-> >>>>>>>>  		if (i_ext && i_ext->len) {
-> >>>>>>>> +			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
-> >>>>>>>>  			i_ext->len = 0;
-> >>>>>>>> -			return true;
-> >>>>>>>> +			set_page_dirty(ipage);
-> >>>>>>>> +			return;
-> >>>>>>>>  		}
-> >>>>>>>> -		return false;
-> >>>>>>>> +		return;
-> >>>>>>>>  	}
-> >>>>>>>>  
-> >>>>>>>>  	et = __grab_extent_tree(inode);
-> >>>>>>>>  
-> >>>>>>>>  	if (!i_ext || !i_ext->len)
-> >>>>>>>> -		return false;
-> >>>>>>>> +		return;
-> >>>>>>>>  
-> >>>>>>>>  	get_extent_info(&ei, i_ext);
-> >>>>>>>>  
-> >>>>>>>> @@ -360,17 +363,14 @@ static bool __f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_e
-> >>>>>>>>  	}
-> >>>>>>>>  out:
-> >>>>>>>>  	write_unlock(&et->lock);
-> >>>>>>>> -	return false;
-> >>>>>>>>  }
-> >>>>>>>>  
-> >>>>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext)
-> >>>>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage)
-> >>>>>>>>  {
-> >>>>>>>> -	bool ret =  __f2fs_init_extent_tree(inode, i_ext);
-> >>>>>>>> +	__f2fs_init_extent_tree(inode, ipage);
-> >>>>>>>>  
-> >>>>>>>>  	if (!F2FS_I(inode)->extent_tree)
-> >>>>>>>>  		set_inode_flag(inode, FI_NO_EXTENT);
-> >>>>>>>> -
-> >>>>>>>> -	return ret;
-> >>>>>>>>  }
-> >>>>>>>>  
-> >>>>>>>>  static bool f2fs_lookup_extent_tree(struct inode *inode, pgoff_t pgofs,
-> >>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>>>>> index b35a50f4953c..326c12fa0da5 100644
-> >>>>>>>> --- a/fs/f2fs/f2fs.h
-> >>>>>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>>>>> @@ -3795,7 +3795,7 @@ struct rb_entry *f2fs_lookup_rb_tree_ret(struct rb_root_cached *root,
-> >>>>>>>>  bool f2fs_check_rb_tree_consistence(struct f2fs_sb_info *sbi,
-> >>>>>>>>  						struct rb_root_cached *root);
-> >>>>>>>>  unsigned int f2fs_shrink_extent_tree(struct f2fs_sb_info *sbi, int nr_shrink);
-> >>>>>>>> -bool f2fs_init_extent_tree(struct inode *inode, struct f2fs_extent *i_ext);
-> >>>>>>>> +void f2fs_init_extent_tree(struct inode *inode, struct page *ipage);
-> >>>>>>>>  void f2fs_drop_extent_tree(struct inode *inode);
-> >>>>>>>>  unsigned int f2fs_destroy_extent_node(struct inode *inode);
-> >>>>>>>>  void f2fs_destroy_extent_tree(struct inode *inode);
-> >>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >>>>>>>> index 3268f8dd59bb..1862073b96d2 100644
-> >>>>>>>> --- a/fs/f2fs/file.c
-> >>>>>>>> +++ b/fs/f2fs/file.c
-> >>>>>>>> @@ -1250,6 +1250,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
-> >>>>>>>>  				f2fs_put_page(psrc, 1);
-> >>>>>>>>  				return PTR_ERR(pdst);
-> >>>>>>>>  			}
-> >>>>>>>> +			f2fs_wait_on_page_writeback(pdst, DATA, true, true);
-> >>>
-> >>> Do you mean pdst can be under writeback?
-> >>
-> >> Use f2fs_bug_on(, dirty || writeback) here?
-> >>
-> >>>
-> >>>>>>>>  			f2fs_copy_page(psrc, pdst);
-> >>>>>>>>  			set_page_dirty(pdst);
-> >>>>>>>>  			f2fs_put_page(pdst, 1);
-> >>>>>>>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-> >>>>>>>> index dbade310dc79..4bcbc486c9e2 100644
-> >>>>>>>> --- a/fs/f2fs/inline.c
-> >>>>>>>> +++ b/fs/f2fs/inline.c
-> >>>>>>>> @@ -340,6 +340,8 @@ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
-> >>>>>>>>  	struct f2fs_dentry_ptr d;
-> >>>>>>>>  	void *inline_dentry;
-> >>>>>>>>  
-> >>>>>>>> +	f2fs_wait_on_page_writeback(ipage, NODE, true, true);
-> >>
-> >> f2fs_bug_on(, writeback)?
-> > 
-> > So, which case do you suspect unstable page for raid?
-> 
-> - gc_node_segment
->  - f2fs_move_node_page
->   - __write_node_page
->    - set_page_writeback
-> 
-> - do_read_inode
->  - f2fs_init_extent_tree
->   - __f2fs_init_extent_tree
->     i_ext->len = 0;
 
-Could you please add wait_on_writeback on this specific case only
-with this backtrace in the description?
 
-Thanks,
-
+On 24.06.20 16:43, Christoph Hellwig wrote:
+> On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
+>> Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
+>> linux-bridge on s390?
 > 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>>>>>> +
-> >>>>>>>>  	inline_dentry = inline_data_addr(inode, ipage);
-> >>>>>>>>  
-> >>>>>>>>  	make_dentry_ptr_inline(inode, &d, inline_dentry);
-> >>>>>>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> >>>>>>>> index 44582a4db513..7c156eb26dd7 100644
-> >>>>>>>> --- a/fs/f2fs/inode.c
-> >>>>>>>> +++ b/fs/f2fs/inode.c
-> >>>>>>>> @@ -367,8 +367,7 @@ static int do_read_inode(struct inode *inode)
-> >>>>>>>>  	fi->i_pino = le32_to_cpu(ri->i_pino);
-> >>>>>>>>  	fi->i_dir_level = ri->i_dir_level;
-> >>>>>>>>  
-> >>>>>>>> -	if (f2fs_init_extent_tree(inode, &ri->i_ext))
-> >>>>>>>> -		set_page_dirty(node_page);
-> >>>>>>>> +	f2fs_init_extent_tree(inode, node_page);
-> >>>>>>>>  
-> >>>>>>>>  	get_inline_info(inode, ri);
-> >>>>>>>>  
-> >>>>>>>> -- 
-> >>>>>>>> 2.18.0.rc1
-> >>>>>>> .
-> >>>>>>>
-> >>>>> .
-> >>>>>
-> >>> .
-> >>>
-> > .
-> > 
+> Are we even sure this is s390 specific and doesn't happen on other
+> architectures with the same bridge setup?
+
+Fair point. AFAIK nobody has tested this yet on x86.
