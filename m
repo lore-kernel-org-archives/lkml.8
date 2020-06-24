@@ -2,67 +2,134 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78679C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2A0206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D91206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:16:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+zT8czC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388329AbgFXXPG (ORCPT
+        id S2388331AbgFXXQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:15:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33013 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728035AbgFXXPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 19:15:04 -0400
-IronPort-SDR: Igrz60McNYelS8ECcDNXWDxK6PPyxO4WPA34mjhr0+LAnF2nozEzTZpKsFqWdW1OhnRH1PCJZN
- EuOED+XIGXwA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="142890502"
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="142890502"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 16:15:03 -0700
-IronPort-SDR: LBfHFzhA65pQlKAiBwy+Ot3pBHnQvNTj4Ck45kesN3ePh/6sOu5Ua9om7lyq01P2nqmITY3CC2
- onI2W+u3FVRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="319589948"
-Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Jun 2020 16:14:58 -0700
-Date:   Thu, 25 Jun 2020 02:14:57 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Pengfei Xu <pengfei.xu@intel.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Heng Su <heng.su@intel.com>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kai Svahn <kai.svahn@intel.com>
-Subject: Re: [PATCH v2] Kernel selftests: TPM2: upgrade TPM2 tests from
- Python 2 to Python 3
-Message-ID: <20200624231457.GB21758@linux.intel.com>
-References: <20200618081502.15302-1-pengfei.xu@intel.com>
- <20200622214613.GA22727@linux.intel.com>
- <20200622214739.GB22727@linux.intel.com>
- <20200623114155.GA15561@xpf-desktop.sh.intel.com>
+        Wed, 24 Jun 2020 19:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728035AbgFXXQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 19:16:18 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351CCC061573;
+        Wed, 24 Jun 2020 16:16:18 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id x8so923588plm.10;
+        Wed, 24 Jun 2020 16:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=J7Jgfpk0v913z31scet/MSjYO35DmH+ex3A+IPMV7fo=;
+        b=R+zT8czCoPco4eqdKUg7r//uSAx4PF4r+xr7DiUoQj3vaoQDl96ppaP14nUDjZAvLI
+         j7zqnLg5UaxrCkwWmMjEdMEHXen40Oc1YISAHUExtdOYCg70NjKdVeyLy3xoUhXDNxDl
+         gCBVxJYx7qxKt7/v4tqsVovAoIn0LM+cj/eVh9xzRmWzjVOSFwtoHHtFCO2pQ9gkslhV
+         Fxh+1ujRIbF2Ly3ZV2c+jvuKfTZwRnFeSZjdmSh3cPQmapLkRHgz8n6o/uXP+UoMBiDx
+         XYLhfGHhy5fN8PjFv34tvL6u4mkbKsvkIBQKNG4nUAmKjkYBSoF/mZ7wIKMS3YTyL3L0
+         +yYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=J7Jgfpk0v913z31scet/MSjYO35DmH+ex3A+IPMV7fo=;
+        b=OazD1vYisS1dC9fXLAWJIRqEsIaJY1lHqOKNvDWrwNVW+dk3isvoxJeIiVwieFck1a
+         2NwVX0jite0+JjobAqZrO+ydiwRM3E3NqHGZhxE9W84g14I/em6ej4lkQufZF4a1SWPf
+         XtCrOWU3U3cOqmf0mQZhkYM2C7RP+yNiFP4dvK2J0tn4jowtbSH8fQ3+PIALOZ36LdsH
+         4XlR18Bk/wzNHwnu9j8iC3ap1oN+TTqE5PmX2e6OxsC3J3fBitT5OTXmMj0ewMUQBnlc
+         5SZ7zToon+FzcdPY6prpsKqIREwM/g+i/GW+DwVbVxG545bpPuRFo1CV/uD9JCXmxqVP
+         phKQ==
+X-Gm-Message-State: AOAM5321zj7cpFppBRNVkbafJAFMhZG62huGrBNaJbbG5ZX8vnqnb7D3
+        qq0GxxwnPwtojyj++YKfhNY=
+X-Google-Smtp-Source: ABdhPJzExJ/D4yjyy69/+V/pqc43DyAgQxfe4Wi7aYkhwVa4l25RXDKHSX5vFbYxOIqwq4xVf9LSVA==
+X-Received: by 2002:a17:90b:1b06:: with SMTP id nu6mr169446pjb.106.1593040577621;
+        Wed, 24 Jun 2020 16:16:17 -0700 (PDT)
+Received: from sol (220-235-99-174.dyn.iinet.net.au. [220.235.99.174])
+        by smtp.gmail.com with ESMTPSA id v13sm6451332pjd.9.2020.06.24.16.16.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jun 2020 16:16:16 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 07:16:11 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 09/22] gpiolib: cdev: rename priv to gcdev
+Message-ID: <20200624231611.GA6751@sol>
+References: <20200623040107.22270-1-warthog618@gmail.com>
+ <20200623040107.22270-10-warthog618@gmail.com>
+ <CAMpxmJUWZGhB3eeSquOJZQegTAwyb7yyKzBSeOjG7FSzq=BAkg@mail.gmail.com>
+ <20200624141912.GB7569@sol>
+ <CAMpxmJVsPjOhHymkd=8OsNJZDZUXpU83=m1M4+winaUE0RO2sg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200623114155.GA15561@xpf-desktop.sh.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJVsPjOhHymkd=8OsNJZDZUXpU83=m1M4+winaUE0RO2sg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:41:55PM +0800, Pengfei Xu wrote:
->   I tried to use bytes(parm, encoding='UTF-8') way, it met the situation
->   that sometimes parm is string, sometimes parm is bytes.
+On Wed, Jun 24, 2020 at 04:20:49PM +0200, Bartosz Golaszewski wrote:
+> śr., 24 cze 2020 o 16:19 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > On Wed, Jun 24, 2020 at 04:04:09PM +0200, Bartosz Golaszewski wrote:
+> > > wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > >
+> > > > Rename priv to gcdev to improve readability.
+> > > >
+> > > > The name "priv" indicates that the object is pointed to by
+> > > > file->private_data, not what the object is actually is.
+> > > > It is always used to point to a struct gpio_chardev_data so renaming
+> > > > it to gcdev seemed as good as anything, and certainly clearer than "priv".
+> > > >
+> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > >
+> > >
+> > > Ugh now it's gcdev and gdev everywhere and it doesn't really make it
+> > > more readable. Maybe chardev_data or cdev_data?
+> > >
+> >
+> > Agreed, it isn't ideal visually, but is at least more unique than priv.
+> > Linus was going for short names recently (e.g. gc for gpiochip), so I was
+> > going for something short.
+> >
+> > And I try avoid names ending in _data or _state or similar where they
+> > don't really add anything.
+> >
+> > Would chardev or gchardev work for you?
+> >
+> 
+> Yes, chardev is fine. Even cdev is fine for me: gdev vs gcdev is
+> confusing but gdev vs cdev looks better IMO.
+> 
 
-We need to do right things right, i.e. you should fix in the call site,
-not in the implementation.
+OK, I was avoiding cdev to try to make the name more likely to be
+globally unique, hence the leading "g".
 
-/Jarkko
+To try to keep it short, how about attacking it from the other end and
+reducing it to gcd?
+That would also be in keeping with the naming convention I use in later
+patches, e.g. glv for gpioline_values.
+So gcd for gpio_chardev_data. Hmmm, or maybe gcdd?
+
+Why is it that naming things is always the hardest part ;-)?
+
+Cheers,
+Kent.
