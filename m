@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 952A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEE22078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C97206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 01:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j28MIPdY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HU0okjxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388643AbgFXBuN (ORCPT
+        id S2388659AbgFXBuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 21:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
+        Tue, 23 Jun 2020 21:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388542AbgFXBt4 (ORCPT
+        with ESMTP id S2388530AbgFXBtw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 21:49:56 -0400
+        Tue, 23 Jun 2020 21:49:52 -0400
 Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01459C061798
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 18:49:55 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k6so327165pll.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 18:49:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9089AC061796
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 18:49:52 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k1so342664pls.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 18:49:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NMAZshRZgRqtOcF48FwBwSDWqy/EeeOlwf50Pbmu5Nk=;
-        b=j28MIPdYYt3rY4/fE2dihfZR9TtTRv8EMgAkzm1ilSN6UZi55d+226fwO0IcvhUj4K
-         vHHrxFoODLtRR/epcOqkEuSfW+ofLwENnqR5DFbYOepfBQg9RkNmTQqNF+kXA9wtnTS1
-         Tk9UTZMAwnTwdOtIjCCjIuRRK9aYxJ1pREKZs=
+        bh=l5ovQdOa53Wq08SUrbeqBNAB7olZAVfsR3FjDV/m7eY=;
+        b=HU0okjxiFMvFctCffkQ7z2I5GXmLT1gaNRYMQRFcgYl5tSYJfuUMDlXvZKj80rjKKa
+         yDPcFEuDuT1buIkUcXQlmVdjIfloGs7ZqN0zimqyc3ma6N3SZKtRnjISbLa1WJUqrcLr
+         i29IZiC5pQBaTbC59gJVAGqy18hz7C2vTrLUU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NMAZshRZgRqtOcF48FwBwSDWqy/EeeOlwf50Pbmu5Nk=;
-        b=hCN0HfVIKRHk0fnvGqPR51y84i4ZiZ62Gzf94ZwZ3wosgLm/r+Sz4qqoWoAF6bnssU
-         bYTKW9OoxSOWmtrMtO0SZLlfsmGV4gAWMoeYfv0Uf+K30zq9nOJNuXMBISzAydzL1URi
-         9E2mfMT2k+JB4L/2ruI786OO+/QgMYYEopgID8JHPEKNByuLp+vFHMKBUaiaeOiq5MbE
-         q66sMErAZXVtDaC7GeKMRkjS2h3Ol5wLIYBv9tvitbngoRs7oIHZNj5Yn58FRDk4X+m0
-         MtiE8T1BTpYD621asAyglY7gY8VSE7yJkXj5Ofb49eXh+4qRLcKA7CZhQVS86svrmO1Z
-         5Zdw==
-X-Gm-Message-State: AOAM5334I8/CiaCoaeJkkqFXTYRzIyVkndf31/P/NNLp8tb2DbGC/SK/
-        uxt+yk6z4e03nsWpHRh1fzMDHQ==
-X-Google-Smtp-Source: ABdhPJx8Traz2lKjHxXn0KSX6VTp95qm0SkAntTLnpPXidTYMSKWi0+Ran7jdJt/zuP45e018upD0A==
-X-Received: by 2002:a17:90a:2843:: with SMTP id p3mr24514257pjf.187.1592963394576;
-        Tue, 23 Jun 2020 18:49:54 -0700 (PDT)
+        bh=l5ovQdOa53Wq08SUrbeqBNAB7olZAVfsR3FjDV/m7eY=;
+        b=isl0CKPA59H04awgRHzF47jzUxVLm+q0dMtJW3utRjap0FV+bLDhXSHf7XIYQhxn2H
+         kKRndFopzZFKWTSO69iruHfTT+uwT8UN+aiWT26w9wjUyBKcl922bfqhlWocX4Z9ccby
+         7L8i5m+JqBw92jVxG70khfTClUGcfGU4h5pn16btQmWmQ7DssTXFtH6tb7Ls2Vumg0aN
+         hx6QDZXjlsKFQdQbm1gFIAkx2FimTblW+2M4VnrDfUQAEPI0o3y1v0fE86x/6zjyOW6o
+         X4JJyiznW/hq4lifP826aO28H81bxENNs7B9wQsBFVK99FrS4InDdmQXdhNsfQC/RxG7
+         R4lg==
+X-Gm-Message-State: AOAM533jmLMb2FwQya6CRqHPvhj8alwvWlLkP0BTILTimcKqO4+tiJsn
+        W6rtWtFQ2CAnYRiRpECfPhJuJQ==
+X-Google-Smtp-Source: ABdhPJwzVxoBS+bR4nUcdi2cBNUW1MxtFXQkch5ct6ivADYFpQcNz0i+34vFO2Sqx+gzfU7fOMW1Zg==
+X-Received: by 2002:a17:902:b184:: with SMTP id s4mr26340353plr.148.1592963392122;
+        Tue, 23 Jun 2020 18:49:52 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cv3sm3283177pjb.45.2020.06.23.18.49.48
+        by smtp.gmail.com with ESMTPSA id 25sm18020100pfi.7.2020.06.23.18.49.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 23 Jun 2020 18:49:50 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -76,9 +76,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
         linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 8/9] arm64/build: Use common DISCARDS in linker script
-Date:   Tue, 23 Jun 2020 18:49:39 -0700
-Message-Id: <20200624014940.1204448-9-keescook@chromium.org>
+Subject: [PATCH v3 6/9] arm/build: Warn on orphan section placement
+Date:   Tue, 23 Jun 2020 18:49:37 -0700
+Message-Id: <20200624014940.1204448-7-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200624014940.1204448-1-keescook@chromium.org>
 References: <20200624014940.1204448-1-keescook@chromium.org>
@@ -89,40 +89,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the common DISCARDS rule for the linker script in an effort to
-regularize the linker script to prepare for warning on orphaned
-sections. Additionally clean up left-over no-op macros.
+We don't want to depend on the linker's orphan section placement
+heuristics as these can vary between linkers, and may change between
+versions. All sections need to be explicitly named in the linker
+script.
+
+Specifically, this would have made a recently fixed bug very obvious:
+
+ld: warning: orphan section `.fixup' from `arch/arm/lib/copy_from_user.o' being placed in section `.fixup'
+
+Refactor linker script include file for use in standard and XIP linker
+scripts, as well as in the coming boot linker script changes. Add debug
+sections explicitly. Create ARM_COMMON_DISCARD macro with unneeded
+sections .ARM.attributes, .iplt, .rel.iplt, .igot.plt, and .modinfo.
+Create ARM_STUBS_TEXT macro with missed text stub sections .vfp11_veneer,
+and .v4_bx. Finally enable orphan section warning.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Will Deacon <will@kernel.org>
 ---
- arch/arm64/kernel/vmlinux.lds.S | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/Makefile                             |  4 ++++
+ .../arm/{kernel => include/asm}/vmlinux.lds.h | 22 ++++++++++++++-----
+ arch/arm/kernel/vmlinux-xip.lds.S             |  5 ++---
+ arch/arm/kernel/vmlinux.lds.S                 |  5 ++---
+ 4 files changed, 25 insertions(+), 11 deletions(-)
+ rename arch/arm/{kernel => include/asm}/vmlinux.lds.h (92%)
 
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 6827da7f3aa5..5427f502c3a6 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -6,6 +6,7 @@
-  */
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 59fde2d598d8..e414e3732b3a 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -16,6 +16,10 @@ LDFLAGS_vmlinux	+= --be8
+ KBUILD_LDFLAGS_MODULE	+= --be8
+ endif
  
- #define RO_EXCEPTION_TABLE_ALIGN	8
-+#define RUNTIME_DISCARD_EXIT
++# We never want expected sections to be placed heuristically by the
++# linker. All sections should be explicitly named in the linker script.
++LDFLAGS_vmlinux += --orphan-handling=warn
++
+ ifeq ($(CONFIG_ARM_MODULE_PLTS),y)
+ KBUILD_LDS_MODULE	+= $(srctree)/arch/arm/kernel/module.lds
+ endif
+diff --git a/arch/arm/kernel/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
+similarity index 92%
+rename from arch/arm/kernel/vmlinux.lds.h
+rename to arch/arm/include/asm/vmlinux.lds.h
+index 381a8e105fa5..3d88ea74f4cd 100644
+--- a/arch/arm/kernel/vmlinux.lds.h
++++ b/arch/arm/include/asm/vmlinux.lds.h
+@@ -1,4 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++#include <asm-generic/vmlinux.lds.h>
  
- #include <asm-generic/vmlinux.lds.h>
- #include <asm/cache.h>
-@@ -89,10 +90,8 @@ SECTIONS
- 	 * matching the same input section name.  There is no documented
- 	 * order of matching.
- 	 */
-+	DISCARDS
- 	/DISCARD/ : {
--		EXIT_CALL
--		*(.discard)
+ #ifdef CONFIG_HOTPLUG_CPU
+ #define ARM_CPU_DISCARD(x)
+@@ -37,6 +38,13 @@
+ 		*(.idmap.text)						\
+ 		__idmap_text_end = .;					\
+ 
++#define ARM_COMMON_DISCARD						\
++		*(.ARM.attributes)					\
++		*(.iplt) *(.rel.iplt) *(.igot.plt)			\
++		*(.modinfo)						\
++		*(.discard)						\
++		*(.discard.*)
++
+ #define ARM_DISCARD							\
+ 		*(.ARM.exidx.exit.text)					\
+ 		*(.ARM.extab.exit.text)					\
+@@ -49,8 +57,14 @@
+ 		EXIT_CALL						\
+ 		ARM_MMU_DISCARD(*(.text.fixup))				\
+ 		ARM_MMU_DISCARD(*(__ex_table))				\
+-		*(.discard)						\
 -		*(.discard.*)
- 		*(.interp .dynamic)
- 		*(.dynsym .dynstr .hash .gnu.hash)
- 		*(.eh_frame)
++		ARM_COMMON_DISCARD
++
++#define ARM_STUBS_TEXT							\
++		*(.gnu.warning)						\
++		*(.glue_7t)						\
++		*(.glue_7)						\
++		*(.vfp11_veneer)					\
++		*(.v4_bx)
+ 
+ #define ARM_TEXT							\
+ 		IDMAP_TEXT						\
+@@ -64,9 +78,7 @@
+ 		CPUIDLE_TEXT						\
+ 		LOCK_TEXT						\
+ 		KPROBES_TEXT						\
+-		*(.gnu.warning)						\
+-		*(.glue_7)						\
+-		*(.glue_7t)						\
++		ARM_STUBS_TEXT						\
+ 		. = ALIGN(4);						\
+ 		*(.got)			/* Global offset table */	\
+ 		ARM_CPU_KEEP(PROC_INFO)
+diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
+index 6d2be994ae58..0807f40844a2 100644
+--- a/arch/arm/kernel/vmlinux-xip.lds.S
++++ b/arch/arm/kernel/vmlinux-xip.lds.S
+@@ -9,15 +9,13 @@
+ 
+ #include <linux/sizes.h>
+ 
+-#include <asm-generic/vmlinux.lds.h>
++#include <asm/vmlinux.lds.h>
+ #include <asm/cache.h>
+ #include <asm/thread_info.h>
+ #include <asm/memory.h>
+ #include <asm/mpu.h>
+ #include <asm/page.h>
+ 
+-#include "vmlinux.lds.h"
+-
+ OUTPUT_ARCH(arm)
+ ENTRY(stext)
+ 
+@@ -152,6 +150,7 @@ SECTIONS
+ 	_end = .;
+ 
+ 	STABS_DEBUG
++	DWARF_DEBUG
+ }
+ 
+ /*
+diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+index 7f24bc08403e..969205f125ca 100644
+--- a/arch/arm/kernel/vmlinux.lds.S
++++ b/arch/arm/kernel/vmlinux.lds.S
+@@ -9,15 +9,13 @@
+ #else
+ 
+ #include <linux/pgtable.h>
+-#include <asm-generic/vmlinux.lds.h>
++#include <asm/vmlinux.lds.h>
+ #include <asm/cache.h>
+ #include <asm/thread_info.h>
+ #include <asm/memory.h>
+ #include <asm/mpu.h>
+ #include <asm/page.h>
+ 
+-#include "vmlinux.lds.h"
+-
+ OUTPUT_ARCH(arm)
+ ENTRY(stext)
+ 
+@@ -151,6 +149,7 @@ SECTIONS
+ 	_end = .;
+ 
+ 	STABS_DEBUG
++	DWARF_DEBUG
+ }
+ 
+ #ifdef CONFIG_STRICT_KERNEL_RWX
 -- 
 2.25.1
 
