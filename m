@@ -2,168 +2,261 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D167CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ADEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 981A320C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F4E20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="0jvmCkm1"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="aKsabX9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391121AbgFXNtG (ORCPT
+        id S2391100AbgFXNvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391102AbgFXNtB (ORCPT
+        Wed, 24 Jun 2020 09:51:49 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:45301 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391067AbgFXNvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:49:01 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19A8C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:49:01 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id z2so2136896ilq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HMgVoQ0NH17cOLvd+EMrZ4qMVzF5NeVckkBSBDB5GLs=;
-        b=0jvmCkm1uxOa1uyi4BAYlDRMMqRDa38wgi9E8/XIDdGrA9oQ5L4spIW2A1eGA4BtF2
-         S8zElmWx4UIeuMFNfhPYYnWZuScbEVueJuWuV4FXywiqce4LL2run2a4ymvcOzIu/C/+
-         6Fe7gIuaYQNI6sGKgF4WgNb2BUsmVdRrHfRKrtAsfldLg5IvcbHl6PWauCZhmFQojQhm
-         9a7Q5RrPl/lbr4+33xEC9+RPw7xZD15uxySVT5i1FJFwQookYTDkrFsYT0wH0jVU3Rlu
-         L9Tp3z1r1c62MEmeG50kWokbFvxn6cOtU/lGUbjrNM0wFfDadl3nZISJG+6IalJfMcDf
-         33mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HMgVoQ0NH17cOLvd+EMrZ4qMVzF5NeVckkBSBDB5GLs=;
-        b=UhQOk5MbUGWm3JtRytqindywQIGmjd2xlqya67ROJQgRfumpGmFWe8GFCaC/0jkWcd
-         kBSLhwF6Ss1dkt6zcPRNi4tYi9vt90RBob7Kgy44oiUrXsdbBt9E+7evS1MaKeGa53eZ
-         UK7IxnH2gqKbtWEtRsC1orDKG6B3DVFVoKaaskpN+POEjo6qR1lnMShlQOz2CIX2642h
-         u7C1djOUWxsOuzC037ZR3U0C0CtfKWQfuLtLcqqUUG7SMD5And8NgH+ZE1cQIPPc3Wa+
-         2SuqLqd16bQCRuIODorsXsWuVE7s8RWxmPEvyKS5E7XmIA2HDiCsIG8Nc6tamwlmJUbV
-         g6Qg==
-X-Gm-Message-State: AOAM533+UCmECAAuQrkmJemMHThhF8qfhyvMbTfi1lZlWD0MTODPna18
-        0F4bMEzZVOkBdN1uYSFVaBQ7uyCpFMv9BkjLnHy6SQ==
-X-Google-Smtp-Source: ABdhPJxdX8ruFrJVm8CZiU93LA3RvFI3WisGoVFQmLOi9T6/smGz8KDwDETgwAqF6p43r34eXBRDqfcPxFBj5bX92S8=
-X-Received: by 2002:a92:de10:: with SMTP id x16mr29799293ilm.6.1593006540971;
- Wed, 24 Jun 2020 06:49:00 -0700 (PDT)
+        Wed, 24 Jun 2020 09:51:48 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id o5oUjhZcINb6lo5oXjtbkZ; Wed, 24 Jun 2020 15:51:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593006705; bh=HxQAeRhVoQwn+m5aHodWTIPViMzpa+vjSNJRDVmJFhs=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=aKsabX9qBbNe3TiCqiUL3xe7rXBwAduI27s3LX4vOI+jfyWL4eoIm0EMTc/gFB+no
+         fbZKbjM5mSYSfANo5q6yUdBxNqqDM0yyHSn5TPmlbAU0/Mm9Beb11+zKjCku7h9zHP
+         CrgWqOySsO2AvO6EZenh487lOREOi3DpDaSKW8gOqQ5kNLjt9w5M+F4JSTbjoamoDI
+         7GmdoxZf6i3oUV1JcgNi1r05PVkfxiu3iG0Hc/JyqnJkNb85gKDfMM9O2iv8EXIXzb
+         u//gfvIjmUoGtRPEA9orztINOhpYTnxKKI3iql0FNmh4WYguj35uM4mSnw2WZOzaLF
+         3gZsytS0uLesg==
+Subject: Re: [PATCH v5 3/3] media: vimc: Add a control to display info on test
+ image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
+ <20200624134354.7023-4-kgupta@es.iitr.ac.in>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f913db5f-7a81-50cf-73cd-ef258a370a17@xs4all.nl>
+Date:   Wed, 24 Jun 2020 15:51:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-10-brgl@bgdev.pl>
- <20200622133940.GL338481@lunn.ch> <20200622135106.GK4560@sirena.org.uk>
- <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com> <20200624094302.GA5472@sirena.org.uk>
-In-Reply-To: <20200624094302.GA5472@sirena.org.uk>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 24 Jun 2020 15:48:50 +0200
-Message-ID: <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
-Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY registration
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200624134354.7023-4-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNG/S+/ZjBe3phDQQHSj1gKqlizK8LbxwU8fz/FWvCtsMZfIuK9xwMfBcuH+6VXKW09ICHI9RJVuAO56IwuTrsZkFv0uwXK9jqWJwnOksgkPVSzoTsD2
+ L6En4Fg7mqfFaTxo81uwMm11mQJUuPChYIm1wIZlaIACWPJUt4SO1oZRSMVqNKbtfDe3zL9AG6tzK0Tr6pxGwxf5FwPx2PeB/NVWdzkgW5ujFfeHWuXdd89R
+ Ih35+cwNVJePhdK0U8iyB5/yPTazjmmZIKgybhRlpLplhxXfGJVhwFfTD+qC/7GEInb4kHqNo6oCgR5g9rAYSXzUZMOcGyBCbO+LB2e91VvTsAymevAgwEsZ
+ 2EBgoR/7r6+J/9Inf1IOXsEwI3NYrj4m4TJ1brNXKrmh11BS0p8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 24 cze 2020 o 11:43 Mark Brown <broonie@kernel.org> napisa=C5=82(=
-a):
->
-> On Tue, Jun 23, 2020 at 12:49:15PM -0700, Florian Fainelli wrote:
-> > On 6/22/20 6:51 AM, Mark Brown wrote:
->
-> > > If the bus includes power management for the devices on the bus the
-> > > controller is generally responsible for that rather than the devices,
-> > > the devices access this via facilities provided by the bus if needed.
-> > > If the device is enumerated by firmware prior to being physically
-> > > enumerable then the bus will generally instantiate the device model
-> > > device and then arrange to wait for the physical device to appear and
-> > > get joined up with the device model device, typically in such situati=
-ons
-> > > the physical device might appear and disappear dynamically at runtime
-> > > based on what the driver is doing anyway.
->
-> > In premise there is nothing that prevents the MDIO bus from taking care
-> > of the regulators, resets, prior to probing the PHY driver, what is
-> > complicated here is that we do need to issue a read of the actual PHY t=
-o
-> > know its 32-bit unique identifier and match it with an appropriate
-> > driver. The way that we have worked around this with if you do not wish
-> > such a hardware access to be made, is to provide an Ethernet PHY node
-> > compatible string that encodes that 32-bit OUI directly. In premise the
-> > same challenges exist with PCI devices/endpoints as well as USB, would
-> > they have reset or regulator typically attached to them.
->
-> That all sounds very normal and is covered by both cases I describe?
->
-> > > We could use a pre-probe stage in the device model for hotpluggable
-> > > buses in embedded contexts where you might need to bring things out o=
-f
-> > > reset or power them up before they'll appear on the bus for enumerati=
-on
-> > > but buses have mostly handled that at their level.
->
-> > That sounds like a better solution, are there any subsystems currently
-> > implementing that, or would this be a generic Linux device driver model
-> > addition that needs to be done?
->
-> Like I say I'm suggesting doing something at the device model level.
+On 24/06/2020 15:43, Kaaira Gupta wrote:
+> Add a control in VIMC to display information such as the correct order of
+> colors for a given test pattern, brightness, hue, saturation, contrast,
+> width and height at sensor over test image.
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>  drivers/media/test-drivers/vimc/Kconfig       |  2 +
+>  drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+>  drivers/media/test-drivers/vimc/vimc-core.c   | 10 ++++
+>  drivers/media/test-drivers/vimc/vimc-sensor.c | 57 +++++++++++++++++++
+>  4 files changed, 70 insertions(+)
+> 
+> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+> index 4068a67585f9..da4b2ad6e40c 100644
+> --- a/drivers/media/test-drivers/vimc/Kconfig
+> +++ b/drivers/media/test-drivers/vimc/Kconfig
+> @@ -2,6 +2,8 @@
+>  config VIDEO_VIMC
+>  	tristate "Virtual Media Controller Driver (VIMC)"
+>  	depends on VIDEO_DEV && VIDEO_V4L2
+> +	select FONT_SUPPORT
+> +	select FONT_8x16
+>  	select MEDIA_CONTROLLER
+>  	select VIDEO_V4L2_SUBDEV_API
+>  	select VIDEOBUF2_VMALLOC
+> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+> index ae163dec2459..afda52253402 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+> @@ -20,6 +20,7 @@
+>  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+>  #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+> +#define VIMC_CID_SHOW_INFO		(VIMC_CID_VIMC_BASE + 2)
+>  
+>  #define VIMC_FRAME_MAX_WIDTH 4096
+>  #define VIMC_FRAME_MAX_HEIGHT 2160
+> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+> index 11210aaa2551..461320ae965c 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-core.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
+> @@ -5,10 +5,12 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> +#include <linux/font.h>
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <media/media-device.h>
+> +#include <media/tpg/v4l2-tpg.h>
+>  #include <media/v4l2-device.h>
+>  
+>  #include "vimc-common.h"
+> @@ -263,6 +265,7 @@ static int vimc_register_devices(struct vimc_device *vimc)
+>  
+>  static int vimc_probe(struct platform_device *pdev)
+>  {
+> +	const struct font_desc *font = find_font("VGA8x16");
+>  	struct vimc_device *vimc;
+>  	int ret;
+>  
+> @@ -272,6 +275,13 @@ static int vimc_probe(struct platform_device *pdev)
+>  	if (!vimc)
+>  		return -ENOMEM;
+>  
+> +	if (!font) {
+> +		dev_err(&pdev->dev, "vimc: could not find font\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	tpg_set_font(font->data);
+> +
+>  	vimc->pipe_cfg = &pipe_cfg;
+>  
+>  	/* Link the media device within the v4l2_device */
+> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> index a2f09ac9a360..d776fdcdc3bf 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> @@ -19,6 +19,8 @@ struct vimc_sen_device {
+>  	struct v4l2_subdev sd;
+>  	struct tpg_data tpg;
+>  	u8 *frame;
+> +	unsigned show_info;
+> +	unsigned ns;
 
-I didn't expect to open such a can of worms...
+That name is a bit vague. How about 'start_stream_ts' (ts == timestamp)?
 
-This has evolved into several new concepts being proposed vs my
-use-case which is relatively simple. The former will probably take
-several months of development, reviews and discussions and it will
-block supporting the phy supply on pumpkin boards upstream. I would
-prefer not to redo what other MAC drivers do (phy-supply property on
-the MAC node, controlling it from the MAC driver itself) if we've
-already established it's wrong.
+Note also that ktime_get_ns() returns a u64, not an unsigned.
 
-Is there any compromise we could reach to add support for a basic,
-common use-case of a single regulator supplying a PHY that needs
-enabling before reading its ID short-term (just like we currently
-support a single reset or reset-gpios property for PHYs) and
-introducing a whole new concept to the device model for more advanced
-(but currently mostly hypothetical) cases long-term?
+Regards,
 
-Bart
+	Hans
+
+>  	/* The active format */
+>  	struct v4l2_mbus_framefmt mbus_format;
+>  	struct v4l2_ctrl_handler hdl;
+> @@ -185,10 +187,43 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
+>  static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>  				    const void *sink_frame)
+>  {
+> +	u8 *basep[TPG_MAX_PLANES][2];
+> +	char str[100];
+> +	int line = 1;
+>  	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>  						    ved);
+>  
+>  	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+> +
+> +	if (vsen->show_info <= 1) {
+> +		unsigned ms;
+> +
+> +		ms = (ktime_get_ns() - vsen->ns) / 1000000;
+> +		snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
+> +			 (ms / (60 * 60 * 1000)) % 24,
+> +			 (ms / (60 * 1000)) % 60,
+> +			 (ms / 1000) % 60,
+> +			 ms % 1000);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+> +	}
+> +
+> +	if (vsen->show_info == 0) {
+> +		const char *order = tpg_g_color_order(&vsen->tpg);
+> +
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, order);
+> +		snprintf(str, sizeof(str),
+> +			 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
+> +			 vsen->tpg.brightness,
+> +			 vsen->tpg.contrast,
+> +			 vsen->tpg.saturation,
+> +			 vsen->tpg.hue);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+> +		snprintf(str, sizeof(str), "sensor size: %dx%d",
+> +			 vsen->mbus_format.width, vsen->mbus_format.height);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
+> +	}
+> +
+>  	return vsen->frame;
+>  }
+>  
+> @@ -201,6 +236,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>  		const struct vimc_pix_map *vpix;
+>  		unsigned int frame_size;
+>  
+> +		vsen->ns = ktime_get_ns();
+> +
+>  		/* Calculate the frame size */
+>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+>  		frame_size = vsen->mbus_format.width * vpix->bpp *
+> @@ -269,6 +306,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+>  	case V4L2_CID_SATURATION:
+>  		tpg_s_saturation(&vsen->tpg, ctrl->val);
+>  		break;
+> +	case VIMC_CID_SHOW_INFO:
+> +		vsen->show_info = ctrl->val;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -307,6 +347,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>  	.qmenu = tpg_pattern_strings,
+>  };
+>  
+> +static const char * const vimc_ctrl_show_info_strings[] = {
+> +	"All",
+> +	"Counters Only",
+> +	"None",
+> +	NULL,
+> +};
+> +
+> +static const struct v4l2_ctrl_config vimc_sen_ctrl_show_info = {
+> +	.ops = &vimc_sen_ctrl_ops,
+> +	.id = VIMC_CID_SHOW_INFO,
+> +	.name = "Show Information",
+> +	.type = V4L2_CTRL_TYPE_MENU,
+> +	.max = ARRAY_SIZE(vimc_ctrl_show_info_strings) - 2,
+> +	.qmenu = vimc_ctrl_show_info_strings,
+> +};
+> +
+>  static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>  					    const char *vcfg_name)
+>  {
+> @@ -323,6 +379,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>  
+>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_show_info, NULL);
+>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+> 
+
