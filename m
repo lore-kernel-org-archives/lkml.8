@@ -2,62 +2,119 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11843C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64D392076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA58B2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593012415;
+	bh=kbsPqR41mDQFRVRa/Xnpp1Pv9SDbHGBQli339a9qb5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AvRpKiW5PmSEOnX1Lzll/H0Fvjp05evC/fBjyO7Tp+ePVhmPeNnTJSCEnrurV29b/
+	 oF9S+EBfFuRZG9PvOQLVqBMSsLTXiOJXxNCcuYWudR4c1JQC4bs9tAWiW+rV++vtQL
+	 SEM9SrmMYTzGJhI4oPyV9vhKN/XLxRbYrKAqaPyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404488AbgFXPZt convert rfc822-to-8bit (ORCPT
+        id S2404504AbgFXP0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:25:49 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35495 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404017AbgFXPZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:25:48 -0400
-Received: from sogo6.sd4.0x35.net (sogo6.sd4.0x35.net [10.200.201.56])
-        (Authenticated sender: kerneldev@karsmulder.nl)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPA id 5FE581C000A;
-        Wed, 24 Jun 2020 15:25:45 +0000 (UTC)
-From:   "Kars Mulder" <kerneldev@karsmulder.nl>
-In-Reply-To: <20200624131016.GA1807770@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-Date:   Wed, 24 Jun 2020 17:25:45 +0200
-Cc:     "Pavel Machek" <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
-To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        Wed, 24 Jun 2020 11:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404162AbgFXP0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:26:54 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1DC420723;
+        Wed, 24 Jun 2020 15:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593012413;
+        bh=kbsPqR41mDQFRVRa/Xnpp1Pv9SDbHGBQli339a9qb5g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r3bJkm2MXiop59E/l6uaJdpBwnsGC+S1xUHZEXGDiL9v5WJjP6SMvcWpkPkWKQwDR
+         hIEtVuLG9LyErnHjnp7nb3rWM4L4oiqJF0/Vnan8sFUoo2M+2SQcdbSXcCA6n/7TaZ
+         OJwgw+Tte6/JzW6hAJvlS1k70DYSB7MB0dJPcdU0=
+Date:   Wed, 24 Jun 2020 16:26:46 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+Message-ID: <20200624152646.GA6768@willie-the-truck>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org>
+ <20200624033142.cinvg6rbg252j46d@google.com>
+ <202006232143.66828CD3@keescook>
+ <20200624104356.GA6134@willie-the-truck>
+ <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+ <20200624112647.GC6134@willie-the-truck>
+ <20200624134854.GF25945@arm.com>
 MIME-Version: 1.0
-Message-ID: <1da2-5ef37080-31-6d4cde00@228034409>
-Subject: =?utf-8?q?Re=3A?= Writing to a const =?utf-8?q?pointer=3A?= is this 
- supposed to =?utf-8?q?happen=3F?=
-User-Agent: SOGoMail 4.3.0
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624134854.GF25945@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, June 24, 2020 15:10 CEST, Greg Kroah-Hartman wrote: 
-> Have you hit any runtime issues with this code doing this?  These
-> strings should be held in writable memory, right?  Or do you see a
-> codepath where that is not the case?
+On Wed, Jun 24, 2020 at 02:48:55PM +0100, Dave Martin wrote:
+> On Wed, Jun 24, 2020 at 12:26:47PM +0100, Will Deacon wrote:
+> > On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
+> > > On Wed, 24 Jun 2020 at 12:44, Will Deacon <will@kernel.org> wrote:
+> > > > For the kernel Image, how do we remove these sections? The objcopy flags
+> > > > in arch/arm64/boot/Makefile look both insufficient and out of date. My
+> > > > vmlinux ends up with both a ".notes" and a ".init.note.gnu.property"
+> > > > segment.
+> > > 
+> > > The latter is the fault of the libstub make rules, that prepend .init
+> > > to all section names.
+> > 
+> > Hmm. I tried adding -mbranch-protection=none to arm64 cflags for the stub,
+> > but I still see this note in vmlinux. It looks like it comes in via the
+> > stub copy of lib-ctype.o, but I don't know why that would force the
+> > note. The cflags look ok to me [1] and I confirmed that the note is
+> > being generated by the compiler.
+> > 
+> > > I'm not sure if there is a point to having PAC and/or BTI in the EFI
+> > > stub, given that it runs under the control of the firmware, with its
+> > > memory mappings and PAC configuration etc.
+> > 
+> > Agreed, I just can't figure out how to get rid of the note.
+> 
+> Because this section is generated by the linker itself I think you might
+> have to send it to /DISCARD/ in the link, or strip it explicitly after
+> linking.
 
-I haven't ran into any issues with it; I was just looking at the code
-as reference for a patch I'm working on.
+Right, but why is the linker generating that section in the first place? I'm
+compiling with -mbranch-protection=none and all the other objects linked
+into the stub do not have the section.
 
-I initially assumed that casting a const pointer to non-const and
-writing to it would be undefined behaviour, but after reading through
-the C99 standard I can't find an unambiguous statement whether it is
-undefined behaviour even if the const pointer points to an object that
-was originally non-const (like char* -> const char* -> char* casts); it
-only says it is undefined behaviour if the object was defined with the
-const qualifier.
+I wonder if it's because lib/ctype.c doesn't have any executable code...
 
-I should probably stop bothering you with my newbie questions.
-
+Will
