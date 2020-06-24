@@ -2,141 +2,114 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A87C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6230C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA4B72082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C773E2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2pAbu44"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qlgJbXEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404941AbgFXQi1 (ORCPT
+        id S2404961AbgFXQjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42508 "EHLO
+        Wed, 24 Jun 2020 12:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404107AbgFXQi0 (ORCPT
+        with ESMTP id S2404582AbgFXQjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:38:26 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3433C061573;
-        Wed, 24 Jun 2020 09:38:25 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d12so1272909ply.1;
-        Wed, 24 Jun 2020 09:38:25 -0700 (PDT)
+        Wed, 24 Jun 2020 12:39:40 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF74BC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:39:39 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j4so454097wrp.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=WjBSvIESIlBFwXybQQC+lA/YuWEUcT/s5uupLCvE9QQ=;
-        b=H2pAbu44bwW7Kbn0oKlERjuJJGpE98Q6Ix082Ul/bqmIuqYxdw4dP02XIRJG9uFD9R
-         hBUIaHpE0YT9sqRZyMcrH5pHDfciIPp6E71vEaJfW2arP6HQKO34Ax0UnZXJ2If5GM+5
-         Y1BOnh36LSfNuVwADNVBWC0ltbSe0AFmj+yPvUBeFMzDf29d1GPYPpHrLAS59C+heNmx
-         GMkWo9eT76G+F5eCOVi+I4IyHDMNfh6Q1PO0n2U1gw1RwiIKQo1As1MIQgS/QVpnUdWi
-         S9/7SOsvFFTpyn8oYT9CiMcCssZ1WxGnnYrv/nN/4mTbbuk9ZinmyCjWHfZqdoKdzDeH
-         3q+g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9qWPTeZoKMjCXc64GQ7odtJSAM2fu8a0khctluIk9SA=;
+        b=qlgJbXEPKQLANz2j2UICh59mbu5FsUN+1x2EmtthBfmBGKY81jAJGgYjk2IndW4i4u
+         790hfR2tX8NAwv69MsJLEO9vLctpeZdh5f6rpLqqBD+iQOPo7cloqZ3LjttP6Qho3MIm
+         KPr64VH3CDONsgwHrL6kCY+19+CCzRe24uoLIrGo4NcvTcJ+sbOX1Nxp+iHeolEXt2jl
+         Upy4Mpn+tQGuSPKVcPEH3Ey3Cz2DPz6FPUKn7Avg49IxV0IQmhEthpAMrkulOqSIapp+
+         b+sDjHa8dH5oxu/Deh4hh55wDc05LLZ7Uh6kGq/5UlmFAHjf9uldZ7hDbWvrwH/icEr8
+         j2sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=WjBSvIESIlBFwXybQQC+lA/YuWEUcT/s5uupLCvE9QQ=;
-        b=EtFNwHOZbHNYYI980Wu4n96e84w7gGPcw+cDZVjhTZR3d6W2VJhHjs/uQ9imn7Gd4V
-         74Kki9i5X0kQzn/IJSY/R1nQVq+WFEYGxAJw6FwfTPN2jjGBAYwE3VKSjBygVZgG+up8
-         gM29DO1lbIhEE+nzy67oOqbxRU23cRkSf2B1d1y9mhwLkf2cxxyTMGHrPDgM1C9u8ucF
-         pNl/tUe0Druy+OtmLwlfTPx3CL6I4aC9sJmO01kEp0Aco6ngRizFfv9eHljwerddRPSW
-         Yz6RkqAMjOuYJpJo6N0cS+cKkf/xVZpbrZvx5TvKNZcxi2BYwPG/LGC6Dpvs5G/n0shm
-         3FCg==
-X-Gm-Message-State: AOAM530Tpn45CfQLsDQRcoKb3G8+EzlePVsvWsYRbFbjHvMYTWmKhA6v
-        PSnG0/f8frye9fjjacbJKfmDqj2u
-X-Google-Smtp-Source: ABdhPJxbhilHC7OCkFvNZ12wGkdVygkLZHkXDUU/ZXdRSKmel5DBsxUd81gUaKqZ+XXqG8PzhDdCWw==
-X-Received: by 2002:a17:90a:d809:: with SMTP id a9mr30783941pjv.212.1593016705408;
-        Wed, 24 Jun 2020 09:38:25 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h13sm20493323pfk.25.2020.06.24.09.38.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 09:38:24 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 09:38:23 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chu Lin <linchuyuan@google.com>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        Jason Ling <jasonling@google.com>,
-        Kais Belgaied <belgaied@google.com>,
-        Zhongqi Li <zhongqil@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon:max6697: Make sure the OVERT mask is set correctly
-Message-ID: <20200624163823.GA215518@roeck-us.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9qWPTeZoKMjCXc64GQ7odtJSAM2fu8a0khctluIk9SA=;
+        b=HpmGWB1WlD10Na+PUjAnO3G8EA+K1GWPn859rQGszQewM+Fsz2M1eupyINSEYHB3br
+         7e7AMSvDxOcJNZl0EJd2F7/g8LGopEeJgfuMufWEhwEhUPBHVFUm9gcu7i/m+OieTpeS
+         8BrcINcgIm1UTKa/O3v2MJ2W5XDTQC24b7azPT0Wh2viUQPXy4/4iJuyGrLxTXsCmpla
+         e0RBG01WzQn1n4QbowUjinDxevskTNdzcP9pXOWhcfGj6vL71K38XXYa9r51lBQbJG4s
+         IZghtA1Ww1qenmDtj0hdAP6gsMRylS7++6mvmeTGc9XhOax5o/o6eqhwRY2oO07vdKBd
+         nWEw==
+X-Gm-Message-State: AOAM533/ba+SREKoj/QWxqd64XQ85wdgt3fSQwTTqC6VGFHDMGP+FHoz
+        PZYvEm5n1WRDM/KbjAXgFkE6wGIpzkJX8tVM+Xs+rw==
+X-Google-Smtp-Source: ABdhPJyQDKTrL6+M1EYqgNcHeEbBrBLAxm0wfWqQmlyuqUTky28XVq0mnhNe79NFFQEHtwrvC5tKKMx2Rj7DyjgKd5U=
+X-Received: by 2002:adf:81c8:: with SMTP id 66mr27603502wra.348.1593016778290;
+ Wed, 24 Jun 2020 09:39:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200622100520.143622-1-darekm@google.com> <ca796f62-7d1f-3391-0373-ec9b98b1c47a@xs4all.nl>
+ <CALFZZQHuqx+H=7pd9t=XYWqKppMzze0XsXwRVA5kLZfwWYLmKQ@mail.gmail.com> <CABXOdTfyzKtT4jWLhBwV5ecG1Bc2g88vUfKB6OspmF0mTafxpA@mail.gmail.com>
+In-Reply-To: <CABXOdTfyzKtT4jWLhBwV5ecG1Bc2g88vUfKB6OspmF0mTafxpA@mail.gmail.com>
+From:   Dariusz Marcinkiewicz <darekm@google.com>
+Date:   Wed, 24 Jun 2020 18:39:25 +0200
+Message-ID: <CALFZZQHsDV9XPyeJ4_NJ=FHF3LSk4j0aMWF3fbvDEdUrs_0O1g@mail.gmail.com>
+Subject: Re: [PATCH RESEND] media: cros-ec-cec: do not bail on
+ device_init_wakeup failure
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Dariusz Marcinkiewicz <darekm@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:13:08PM +0000, Chu Lin wrote:
-> Per the datasheet for max6697, OVERT mask and ALERT mask is different.
-> For example, the 7th bit of OVERT is the local channel but for alert
-> mask, the 6th bit is the local channel. Therefore, we can't apply the
-> same mask for both reg. In addition to that, max6697 driver is suppose
-> to be compatibale with different models. I mannually went over all the
-> listed chip and made sure all the chip type has the same layout.
-> 
-> Testing;
->     mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
-> I used iotool to read the reg value back to verify. I only tested this
-> change on max6581
-> 
-> Reference:
-> https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
-> https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
-> https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
-> 
-> Signed-off-by: Chu Lin <linchuyuan@google.com>
+Hi.
 
-Nice catch.
+On Wed, Jun 24, 2020 at 4:45 PM Guenter Roeck <groeck@google.com> wrote:
 
-Applied, thanks
+> > On Mon, Jun 22, 2020 at 12:23 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+> > >
+> > > > Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> > >
+> > > This can be CCed to stable, I guess?
+> > >
+> >
+> > That issue is not a recent regression but has been in there since the
+> > very beginning.  So it might be argued that is it not severe enough to
+> > warrant cc'ing stable. Happy to do that anyways if you think
+> > otherwise.
+> >
+>
+> Confused. Internally you would like to have this patch applied to
+> chromeos-4.4. Here you suggest that it may not be important enough to
+> apply to stable releases. Which one is it ?
+>
 
-Guenter
+It affects us on 4.4, hence the backport to 4.4. I have nothing
+against this being merged into the mainline stable. I simply wasn't
+sure if that should be considered severe enough to be backported
+there. As said before, I am happy to CC this to stable.
 
-> ---
->  drivers/hwmon/max6697.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
-> index 743752a2467a..64122eb38060 100644
-> --- a/drivers/hwmon/max6697.c
-> +++ b/drivers/hwmon/max6697.c
-> @@ -38,8 +38,9 @@ static const u8 MAX6697_REG_CRIT[] = {
->   * Map device tree / platform data register bit map to chip bit map.
->   * Applies to alert register and over-temperature register.
->   */
-> -#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
-> +#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
->  				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
-> +#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
->  
->  #define MAX6697_REG_STAT(n)		(0x44 + (n))
->  
-> @@ -562,12 +563,12 @@ static int max6697_init_chip(struct max6697_data *data,
->  		return ret;
->  
->  	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
-> -					MAX6697_MAP_BITS(pdata->alert_mask));
-> +				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
->  	if (ret < 0)
->  		return ret;
->  
->  	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
-> -				MAX6697_MAP_BITS(pdata->over_temperature_mask));
-> +			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
->  	if (ret < 0)
->  		return ret;
->  
-> -- 
-> 2.27.0.111.gc72c7da667-goog
-> 
+Thank you and best regards.
+
+(apologies for double post again)
