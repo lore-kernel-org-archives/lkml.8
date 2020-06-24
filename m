@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64252C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ECFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4264E2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453FC2081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MpnW9sRj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D5jMBEz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406651AbgFXUeH (ORCPT
+        id S2406659AbgFXUeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50630 "EHLO
+        Wed, 24 Jun 2020 16:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406562AbgFXUd3 (ORCPT
+        with ESMTP id S2406550AbgFXUd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:33:29 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1793C061796
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:27 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id z26so2426944qto.15
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:27 -0700 (PDT)
+        Wed, 24 Jun 2020 16:33:26 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0993DC06179A
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:26 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id i62so2469570qkd.18
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Y5ofKWtW7b37fMwYLfPdHt3IGKVdbeQxX7e2DATRt0o=;
-        b=MpnW9sRj+tNBN3TDOB0E4bCD73iqcMpQvhC/oM2fJsIoYTK0vvtDvbgVlrqJ4oIK0n
-         hUkrO/tMTdR+N69BPrGONWoZVqr/PGTcGNGx7KoFKTb76Da/RvpOWxtl8VBxl/EZOrgt
-         5F9d69yFBuUFcdmnwtkp0D0VXoRY0s2h1Yr7OuAvRe5TUtgm7VwUMLCUarJXBYi3YH1w
-         ecgv9j79/kdCnb16j6h9hpiIIbrE81Rw7ot9VeyVU18a4/rQr8YcJy/lwnjNPlRdogMZ
-         F7b/c1lcoIWNDz5L2rbw2gGQuBQXJi1K+B1Nnm4G09LoPyPmFpMaZH6DTHw/IetIWtiC
-         Gcqg==
+        bh=wwQ0FnciQOJFFrw9pZwNR1174M1Ii6KWK+Cwx1DZR0E=;
+        b=D5jMBEz7Lm5U+UfoGelxUyQqWOYc6Z+dLXzaDR1SoyT3D0mSDtKUxokHJAk6ca9TzV
+         4mueVog2jOcmVS+jVjlFOcthTwG/yiHbkE9KBrSSXn5wKv43C8TlR+Cgbt0KoNrOQO9O
+         owGlgSWarEMzSBvxtlWzfcQXQKNdv2ZE3V35XOQO9JLobrLz8Yl2Oqg2ofnVQSUcX7cV
+         WTnphEXJJam/USPXIaROhEV6UnjgXvvwGpug+fLsCxrQtPsDK3qYgboxAvYEWoFvxtr6
+         m6eXCYH8PEMH1MvefhDCIQOQ3Zw+2VmFPtKpPIPHPwUqkF/2Zm2/4J+lIul1mO034S+9
+         DBng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Y5ofKWtW7b37fMwYLfPdHt3IGKVdbeQxX7e2DATRt0o=;
-        b=D3xlS41dhsBIycE4N+o2jkiJ2Z1gts6gNkeLNGaKzNYJcr1Ja81gjrjFPVErxiXod0
-         q9T7eTX/Qb1aTpPOG8ejI52Y9cZxjeslZ+j6Ed7wLqTegq1YFkk7iqCvCpjX4yhaHVMd
-         YJSUJwUZRD+roIXG2agvcqHEyhPBVIWxmzeaOzYoIwg8xKcEg7QIVvf53ucs6UkLUQh4
-         /ImGbAeU6wVnI7Rl2ArnrwYjM6cAqdyCwCJf4flJ37tkI6ucCgilTv4JqLhl0Kzl1mal
-         FxQwa6fzVg5uGJ10+hCLjyMFORV7wUl5Bd63MmztxULlOkfK0DmrD2aF7GwOItgeIrVg
-         Ktlg==
-X-Gm-Message-State: AOAM533pm05lhUHDERenkVGjTKZsynYkkpgM9M6SrDxl0aWdFDoLdSFV
-        nYUYlmfi553AgbW6GgVLgvGiliuzRyyo5vRIamo=
-X-Google-Smtp-Source: ABdhPJyJOTQdckiniPybTRC01pO0CmjbQctgmf229uGzKfKGpm1EtRROJM8c/GsGd5lxXSpfxv2hqLta+vkNePH8WAU=
-X-Received: by 2002:ad4:4ae1:: with SMTP id cp1mr752045qvb.91.1593030807024;
- Wed, 24 Jun 2020 13:33:27 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:31:54 -0700
+        bh=wwQ0FnciQOJFFrw9pZwNR1174M1Ii6KWK+Cwx1DZR0E=;
+        b=l0/YMajXrmz7qLudnKbgjfPKaIYA7bkkVxhvXm8gup/h85AvQ9kZFB5bfPV+314gtF
+         g4whtvJKt5vl4rRnQLvo+iHTEJt1h5zX/kzld0WbvrC7JGpfj2dbzKdJM5EpwQv26AiK
+         9n9udnlDSp+Y8KC/WYsWm1qlTbE0tiUrxsAOGvQ2ZaRslWqY01DBMGDG2OxdFkznEUM5
+         ILZ8bTzz8DnuHiE0ZxEo5jtBMoak6EXzMjb6lxpqDQAY/7z5swencwhVFdjx1GF8kSGu
+         MUVidakxrtN96C2L2alzg72nIC5UVG8qrsHu8x3CkUaU2FNtKwN37HkNYwPI6qonGHEW
+         VRvQ==
+X-Gm-Message-State: AOAM531KUQ0b1wbJHZgf8i8Eg9HXGqmpvxZQB5VrIiWAE8R3iH1P7huF
+        CRsx9+ne/iP6OCiEq+O18G47TncC4xGFGGZtdPU=
+X-Google-Smtp-Source: ABdhPJxdY2l3AI8wfRrd83iTVnOoqT0z2xypmyGa8SBbcpKlWTHBGxwu1psE5fER0U56oerLL9wNd1erMNW/Ru+uB28=
+X-Received: by 2002:ad4:4cc1:: with SMTP id i1mr3207160qvz.249.1593030805093;
+ Wed, 24 Jun 2020 13:33:25 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:31:53 -0700
 In-Reply-To: <20200624203200.78870-1-samitolvanen@google.com>
-Message-Id: <20200624203200.78870-17-samitolvanen@google.com>
+Message-Id: <20200624203200.78870-16-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 16/22] arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
+Subject: [PATCH 15/22] drivers/misc/lkdtm: disable LTO for rodata.o
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -80,27 +81,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since arm64 does not use -pg in CC_FLAGS_FTRACE with
-DYNAMIC_FTRACE_WITH_REGS, skip running recordmcount by
-exporting CC_USING_PATCHABLE_FUNCTION_ENTRY.
+Disable LTO for rodata.o to allow objcopy to be used to
+manipulate sections.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/Makefile | 1 +
+ drivers/misc/lkdtm/Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index a0d94d063fa8..fc6c20a10291 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -115,6 +115,7 @@ endif
- ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_REGS),y)
-   KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-   CC_FLAGS_FTRACE := -fpatchable-function-entry=2
-+  export CC_USING_PATCHABLE_FUNCTION_ENTRY := 1
- endif
+diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
+index c70b3822013f..dd4c936d4d73 100644
+--- a/drivers/misc/lkdtm/Makefile
++++ b/drivers/misc/lkdtm/Makefile
+@@ -13,6 +13,7 @@ lkdtm-$(CONFIG_LKDTM)		+= cfi.o
  
- # Default value
+ KASAN_SANITIZE_stackleak.o	:= n
+ KCOV_INSTRUMENT_rodata.o	:= n
++CFLAGS_REMOVE_rodata.o		+= $(CC_FLAGS_LTO)
+ 
+ OBJCOPYFLAGS :=
+ OBJCOPYFLAGS_rodata_objcopy.o	:= \
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
