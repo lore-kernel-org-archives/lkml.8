@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD63C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B482076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C45C2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:03:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHFn0H7R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NYlFaiDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388942AbgFXXDj (ORCPT
+        id S2388868AbgFXXDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:03:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44038 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388733AbgFXXDi (ORCPT
+        Wed, 24 Jun 2020 19:03:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32113 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388138AbgFXXDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 19:03:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593039817;
+        s=mimecast20190719; t=1593039816;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k3U3JCwO4VzQgWa/F4AMchtTgG5L8l0WvWQNM/P/cZc=;
-        b=dHFn0H7Rh0hfYdSf3LWCrvoad1DwuLeD4BGXwNtbC9ihT4qWS6b5dT9HnTJV7uSP7e4A+5
-        FE+W28wqY4qIffT+1NgS6rLbNQ4nnzpFfEdjXTxxIkmbpHOHjeMBJnzWncVlv9di7/Mcxs
-        9G7+kvaZv0qSRqgX3SJo004Q6TSv218=
+        bh=lSAb/eseSEs/+a9Bniw5lJiSCdPpLF6HO9i3q2ob+7o=;
+        b=NYlFaiDjbMpoE95UmIl1YVJs3HqEyd76lWQWKE3bJMOuvU3eRaRRUGWxn075+wbEeMg2dd
+        r81hfon4xz8bhAocSJiKm7yZX90G6O0PS9YUB87KLIVGS/EHzYBQO10vfVv4lFX3dfk9OG
+        J9S07ve5dXSkKjbW2nspcgtuF0cYmbs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-147-gjx9PDlrPjGM0EWb1v3kuw-1; Wed, 24 Jun 2020 19:03:35 -0400
-X-MC-Unique: gjx9PDlrPjGM0EWb1v3kuw-1
+ us-mta-508-0k3ZHR23Oni8grtQSTeCIQ-1; Wed, 24 Jun 2020 19:03:33 -0400
+X-MC-Unique: 0k3ZHR23Oni8grtQSTeCIQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 302A28015F0;
-        Wed, 24 Jun 2020 23:03:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFA54107ACCA;
+        Wed, 24 Jun 2020 23:03:30 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-115-214.rdu2.redhat.com [10.10.115.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A4B71011396;
-        Wed, 24 Jun 2020 23:03:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94EBD1001B07;
+        Wed, 24 Jun 2020 23:03:28 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
 Cc:     Daniel Vetter <daniel@ffwll.ch>,
@@ -55,9 +55,9 @@ Cc:     Daniel Vetter <daniel@ffwll.ch>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v7 02/11] drm/vblank: Use spin_(un)lock_irq() in drm_crtc_vblank_off()
-Date:   Wed, 24 Jun 2020 19:03:09 -0400
-Message-Id: <20200624230318.126256-3-lyude@redhat.com>
+Subject: [RFC v7 01/11] drm/vblank: Register drmm cleanup action once per drm_vblank_crtc
+Date:   Wed, 24 Jun 2020 19:03:08 -0400
+Message-Id: <20200624230318.126256-2-lyude@redhat.com>
 In-Reply-To: <20200624230318.126256-1-lyude@redhat.com>
 References: <20200624230318.126256-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -69,59 +69,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This got me confused for a bit while looking over this code: I had been
-planning on adding some blocking function calls into this function, but
-seeing the irqsave/irqrestore variants of spin_(un)lock() didn't make it
-very clear whether or not that would actually be safe.
+Since we'll be allocating resources for kthread_create_worker() in the
+next commit (which could fail and require us to clean up the mess),
+let's simplify the cleanup process a bit by registering a
+drm_vblank_init_release() action for each drm_vblank_crtc so they're
+still cleaned up if we fail to initialize one of them.
 
-So I went ahead and reviewed every single driver in the kernel that uses
-this function, and they all fall into three categories:
+Changes since v3:
+* Use drmm_add_action_or_reset() - Daniel Vetter
 
-* Driver probe code
-* ->atomic_disable() callbacks
-* Legacy modesetting callbacks
-
-All of these will be guaranteed to have IRQs enabled, which means it's
-perfectly safe to block here. Just to make things a little less
-confusing to others in the future, let's switch over to
-spin_lock_irq()/spin_unlock_irq() to make that fact a little more
-obvious.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
 Cc: Daniel Vetter <daniel@ffwll.ch>
 Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/drm_vblank.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_vblank.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index ce5c1e1d29963..e895f5331fdb4 100644
+index 85e5f2db16085..ce5c1e1d29963 100644
 --- a/drivers/gpu/drm/drm_vblank.c
 +++ b/drivers/gpu/drm/drm_vblank.c
-@@ -1283,13 +1283,12 @@ void drm_crtc_vblank_off(struct drm_crtc *crtc)
- 	struct drm_pending_vblank_event *e, *t;
+@@ -492,16 +492,12 @@ static void vblank_disable_fn(struct timer_list *t)
  
- 	ktime_t now;
--	unsigned long irqflags;
- 	u64 seq;
+ static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
+ {
+-	unsigned int pipe;
+-
+-	for (pipe = 0; pipe < dev->num_crtcs; pipe++) {
+-		struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
++	struct drm_vblank_crtc *vblank = ptr;
  
- 	if (drm_WARN_ON(dev, pipe >= dev->num_crtcs))
- 		return;
+-		drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
+-			    drm_core_check_feature(dev, DRIVER_MODESET));
++	drm_WARN_ON(dev, READ_ONCE(vblank->enabled) &&
++		    drm_core_check_feature(dev, DRIVER_MODESET));
  
--	spin_lock_irqsave(&dev->event_lock, irqflags);
-+	spin_lock_irq(&dev->event_lock);
+-		del_timer_sync(&vblank->disable_timer);
+-	}
++	del_timer_sync(&vblank->disable_timer);
+ }
  
- 	spin_lock(&dev->vbl_lock);
- 	drm_dbg_vbl(dev, "crtc %d, vblank enabled %d, inmodeset %d\n",
-@@ -1325,7 +1324,7 @@ void drm_crtc_vblank_off(struct drm_crtc *crtc)
- 		drm_vblank_put(dev, pipe);
- 		send_vblank_event(dev, e, seq, now);
+ /**
+@@ -511,7 +507,7 @@ static void drm_vblank_init_release(struct drm_device *dev, void *ptr)
+  *
+  * This function initializes vblank support for @num_crtcs display pipelines.
+  * Cleanup is handled automatically through a cleanup function added with
+- * drmm_add_action().
++ * drmm_add_action_or_reset().
+  *
+  * Returns:
+  * Zero on success or a negative error code on failure.
+@@ -530,10 +526,6 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
+ 
+ 	dev->num_crtcs = num_crtcs;
+ 
+-	ret = drmm_add_action(dev, drm_vblank_init_release, NULL);
+-	if (ret)
+-		return ret;
+-
+ 	for (i = 0; i < num_crtcs; i++) {
+ 		struct drm_vblank_crtc *vblank = &dev->vblank[i];
+ 
+@@ -542,6 +534,11 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
+ 		init_waitqueue_head(&vblank->queue);
+ 		timer_setup(&vblank->disable_timer, vblank_disable_fn, 0);
+ 		seqlock_init(&vblank->seqlock);
++
++		ret = drmm_add_action_or_reset(dev, drm_vblank_init_release,
++					       vblank);
++		if (ret)
++			return ret;
  	}
--	spin_unlock_irqrestore(&dev->event_lock, irqflags);
-+	spin_unlock_irq(&dev->event_lock);
  
- 	/* Will be reset by the modeset helpers when re-enabling the crtc by
- 	 * calling drm_calc_timestamping_constants(). */
+ 	return 0;
 -- 
 2.26.2
 
