@@ -2,122 +2,98 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B466C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF4B02088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592998287;
-	bh=55zvNE05ZrvmYGTKbqcYIdKeiGfLu+9inT+nvPx0ddw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aAQJlHBFZ9R5wrVWE35wpNOkFY6utH8hn5tF+QZz6SOB49WJIZ0khjLwZCzwdMX95
-	 cVUVikEkEuYw/HAW1G+boKsyL4Vjr1hYIFAiDPBxJcdYfm0m5ndPWqqturFLPjetv6
-	 kVnvUYkCwbTjrDDkojHrRz9nNokiKUkMTela/w1w=
+	by mail.kernel.org (Postfix) with ESMTP id 0C7C02088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bVa580UV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390616AbgFXLb0 (ORCPT
+        id S2390656AbgFXLb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388470AbgFXLbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:31:24 -0400
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0610C2088E;
-        Wed, 24 Jun 2020 11:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592998284;
-        bh=55zvNE05ZrvmYGTKbqcYIdKeiGfLu+9inT+nvPx0ddw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=znhnOspUf0ZfFz17cYXkM7AcTZQvTU/t+55ntiFjXOb9WhGHWIJ4IJQDMLNfG1fMB
-         glSEDcEh9mduQaCCRs+3whd6AzskjTYR4yfGuYKIZTHNZqs0xM9m4QW/f1tVoQGBxl
-         18ni3nfIKMIUFUbJS5bYBB9uIelmx9sxSHWJ6Ync=
-Received: by mail-lj1-f170.google.com with SMTP id q19so2167606lji.2;
-        Wed, 24 Jun 2020 04:31:23 -0700 (PDT)
-X-Gm-Message-State: AOAM5337tfvN9vlAz/BDIRqO7vTEKIbkswOh4mzUgKNXP/4x5OmlwRlY
-        ZQB+YEUFXi/03qvJsdGYvBEbfGQYQyyu1ZJ65aQ=
-X-Google-Smtp-Source: ABdhPJwSX23zf9KGrk5xab5Jb8TFl62SZoDeRlG1/FxZyyK/z2k7zeavc9Mlp4gLl0DO8EobqupLKJLtQ8O7Ns+uysE=
-X-Received: by 2002:a2e:3914:: with SMTP id g20mr2616095lja.19.1592998282326;
- Wed, 24 Jun 2020 04:31:22 -0700 (PDT)
+        Wed, 24 Jun 2020 07:31:59 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:1806 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388470AbgFXLb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:31:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592998319; x=1624534319;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ytChrvYAloZwmq/t2qRRQKdJIdRvD5ZigkU1TGR2Ylk=;
+  b=bVa580UVe4P1eOQ12ADT9omVfi6UrO5iWvaOKpAx4IbEmphNp2rK5l3H
+   BvlZJQHFqgHk4OxoNmgqDh9LMvAzlfmBDstqyp8fq+y4KJfOXe/x9/pow
+   JzLGrUgStCHwOoLYb6Pj7N84rSRNDieSOTNPCsVRQdFn/fJpqVJ+1wFry
+   K7kRXgNxvkjNBstCUoX1QcR8Gvo2UhPDkpf1hlHe4I0EPI19ZY7br/k0n
+   NuilMum9892bk2HrHL94dnfh2+G7Dk+MVC2ebE7BKWOsN/QW8gSw4+Dk7
+   +4YlcIPOYYJGI+7nOvwCEhZhbrhJXPGhvmUcKUldw7KVr3orl8BYnNMpr
+   A==;
+IronPort-SDR: Otnu5zaWQnGtJeKyFJ4oY4LrHRbzk1keJeICfFcy3n7QvBPhI2tkHpler6TjeFRsQFjTIuLjPC
+ rkecIdjwTgPbC8cAWgWHGOXs6mw/g5SasaeFeB0YK4KvfLFJUHEGihqloZ65K7PL/lZxfIr4Fm
+ 7bxyS1Tz1FAqbTSy9xla2EBe36cvR913P/g+auO53KwNyUsPmLK5fp5p9+7cLZTUyEh/rmkz0t
+ pMhLUnLKC5RO9XsCiX/Gj6QjIjxUs4bdhOr9VTfq1BFJjJmRbYk6fflBU2r6/d4GLH6Kz7J1Bn
+ sgM=
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="80727156"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2020 04:31:59 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 24 Jun 2020 04:31:57 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Wed, 24 Jun 2020 04:31:57 -0700
+Date:   Wed, 24 Jun 2020 13:31:56 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <netdev@vger.kernel.org>,
+        <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net v2 0/2] bridge: mrp: Update MRP_PORT_ROLE
+Message-ID: <20200624113156.hsutqewk4xntmkld@soft-dev3.localdomain>
+References: <20200623090541.2964760-1-horatiu.vultur@microchip.com>
+ <20200623.143821.491798381160245817.davem@davemloft.net>
 MIME-Version: 1.0
-References: <20200624091239.802218-1-ribalda@kernel.org> <20200624104655.GD3703480@smile.fi.intel.com>
-In-Reply-To: <20200624104655.GD3703480@smile.fi.intel.com>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Wed, 24 Jun 2020 13:31:06 +0200
-X-Gmail-Original-Message-ID: <CAPybu_1g=RAHca3=UyG2Tk6mo1E56NgCXoo0j=zc9MAa7A7r2Q@mail.gmail.com>
-Message-ID: <CAPybu_1g=RAHca3=UyG2Tk6mo1E56NgCXoo0j=zc9MAa7A7r2Q@mail.gmail.com>
-Subject: Re: [PATCH] i2c: designware: platdrv: Set class based on dmi
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200623.143821.491798381160245817.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy
-
-On Wed, Jun 24, 2020 at 12:46 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Jun 24, 2020 at 11:12:39AM +0200, Ricardo Ribalda wrote:
-> > Current AMD's zen-based APUs use this core for some of its i2c-buses.
+The 06/23/2020 14:38, David Miller wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> From: Horatiu Vultur <horatiu.vultur@microchip.com>
+> Date: Tue, 23 Jun 2020 11:05:39 +0200
+> 
+> > This patch series does the following:
+> > - fixes the enum br_mrp_port_role_type. It removes the port role none(0x2)
+> >   because this is in conflict with the standard. The standard defines the
+> >   interconnect port role as value 0x2.
+> > - adds checks regarding current defined port roles: primary(0x0) and
+> >   secondary(0x1).
 > >
-> > With this patch we re-enable autodetection of hwmon-alike devices, so
-> > lm-sensors will be able to work automatically.
-> >
-> > It does not affect the boot-time of embedded devices, as the class is
-> > set based on the dmi information.
->
-> Hmm... Do we really need to have DMI? I mean wouldn't be safe just always
-> provide this to be compatible with HWMON class?
->
+> > v2:
+> >  - add the validation code when setting the port role.
+> 
+> Series applied, thank you.
 
-I do not care :), I was just trying to follow the logic of
-70fba8302adecfa08a087c6f1dd39537a55f5bd3
+Thanks. Will these patches be applied also on net-next?
+Because if I start now to add support for the interconnect port, these
+patches are needed on net-next. Or do I need to add these patches to the
+patch series for the interconnect port?
+What is the correct way of doing this?
 
-If it is decided otherwise I can change it, no problem ;)
-
-> ...
->
-> > +static bool dw_i2c_hwmon_bus(void)
-> > +{
-> > +     if (strstr(dmi_get_system_info(DMI_PRODUCT_NAME), "QT5222"))
-> > +             return true;
-> > +     return false;
-> > +}
->
-> I don't like this. Perhaps for now you may simple use dmi_get_system_info()
-> directly below.
-
-I just realised that if there is no DMI, then we get a NULL, so we
-need to add that check.
-
-With the two ifs, I still prefer to put it on other function like now
-(check v2).
-
-If you still dont like it I will move it into the main function.
-
->
-> ...
->
-> > +     adap->class = dw_i2c_hwmon_bus() ? I2C_CLASS_HWMON
-> > +                                      : I2C_CLASS_DEPRECATED;
->
-> It's one line.
-
-Fixed thanks
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+-- 
+/Horatiu
