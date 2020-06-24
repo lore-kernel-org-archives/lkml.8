@@ -2,133 +2,89 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE13B20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RutPLeiK"
+	by mail.kernel.org (Postfix) with ESMTP id 3A23820823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405002AbgFXQcR (ORCPT
+        id S2405168AbgFXQcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404692AbgFXQ3Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:29:25 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA41EC0613ED;
-        Wed, 24 Jun 2020 09:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=CNk/aSiWmmbV6EV6DanHCszvKlV+254CO/X+KDTk2bo=; b=RutPLeiKe6pB5IbiaUm72jhFLG
-        MlClnq7utWReRPV633zRff0I6qSvq7hy2NV+KiIFdwOX7vs9hc22h8j78nNavOr9ReVGnpHq8NIeG
-        6uMnXtaN/XLoo0dV/lYr7h+nScNlmiG6oqCu5H6fYe/kxh1FlJ3PR6wJaJsa+Jtp65dRtnvN8FlvF
-        QD73Vg1VIUcEdqDcTtjhbtZ+bhxo7EOpuxfOAL1ZY6qRXg484Rt9tYHGmUdleVvrFxPlykR/EkR7x
-        SRHsZDWGW6hKoBmooVTYu4tqYvvVTlGxy9rxPV0Ef97df46BEGuKKiswVMB3Lvaza2B2OeSqpiNo5
-        bhM/du8A==;
-Received: from [2001:4bb8:180:a3:5c7c:8955:539d:955b] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jo8Gn-0006nz-0a; Wed, 24 Jun 2020 16:29:05 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 02/11] fs: factor out a set_fmode_can_read_write helper
-Date:   Wed, 24 Jun 2020 18:28:52 +0200
-Message-Id: <20200624162901.1814136-3-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200624162901.1814136-1-hch@lst.de>
-References: <20200624162901.1814136-1-hch@lst.de>
+        Wed, 24 Jun 2020 12:32:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:41130 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404692AbgFXQcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:32:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFEA81FB;
+        Wed, 24 Jun 2020 09:32:18 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5932F3F73C;
+        Wed, 24 Jun 2020 09:32:17 -0700 (PDT)
+References: <20200624154422.29166-1-vincent.guittot@linaro.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        rong.a.chen@intel.com, pauld@redhat.com, hdanton@sina.com
+Subject: Re: [PATCH] sched/cfs: change initial value of runnable_avg
+In-reply-to: <20200624154422.29166-1-vincent.guittot@linaro.org>
+Date:   Wed, 24 Jun 2020 17:32:12 +0100
+Message-ID: <jhj8sgcs9v7.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to set the FMODE_CAN_READ and FMODE_CAN_WRITE logic
-instead of duplicating it in two places.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/file_table.c |  7 +------
- fs/internal.h   | 10 ++++++++++
- fs/open.c       |  8 +-------
- 3 files changed, 12 insertions(+), 13 deletions(-)
+On 24/06/20 16:44, Vincent Guittot wrote:
+> Some performance regression on reaim benchmark have been raised with
+>   commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
+>
+> The problem comes from the init value of runnable_avg which is initialized
+> with max value. This can be a problem if the newly forked task is finally
+> a short task because the group of CPUs is wrongly set to overloaded and
+> tasks are pulled less agressively.
+>
+> Set initial value of runnable_avg equals to util_avg to reflect that there
+> is no waiting time so far.
+>
+> Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 0424a0af5f87..45e467bf42fc 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -806,7 +806,7 @@ void post_init_entity_util_avg(struct task_struct *p)
+>  		}
+>  	}
+>  
+> -	sa->runnable_avg = cpu_scale;
+> +	sa->runnable_avg = sa->util_avg;
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 656647f9575a7c..646b83f07a9589 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -199,16 +199,11 @@ static struct file *alloc_file(const struct path *path, int flags,
- 	file->f_mapping = path->dentry->d_inode->i_mapping;
- 	file->f_wb_err = filemap_sample_wb_err(file->f_mapping);
- 	file->f_sb_err = file_sample_sb_err(file);
--	if ((file->f_mode & FMODE_READ) &&
--	     likely(fop->read || fop->read_iter))
--		file->f_mode |= FMODE_CAN_READ;
--	if ((file->f_mode & FMODE_WRITE) &&
--	     likely(fop->write || fop->write_iter))
--		file->f_mode |= FMODE_CAN_WRITE;
- 	file->f_mode |= FMODE_OPENED;
- 	file->f_op = fop;
- 	if ((file->f_mode & (FMODE_READ | FMODE_WRITE)) == FMODE_READ)
- 		i_readcount_inc(path->dentry->d_inode);
-+	set_fmode_can_read_write(file);
- 	return file;
- }
- 
-diff --git a/fs/internal.h b/fs/internal.h
-index 9b863a7bd70892..242f2845b3428b 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -185,3 +185,13 @@ int sb_init_dio_done_wq(struct super_block *sb);
-  */
- int do_statx(int dfd, const char __user *filename, unsigned flags,
- 	     unsigned int mask, struct statx __user *buffer);
-+
-+static inline void set_fmode_can_read_write(struct file *f)
-+{
-+	if ((f->f_mode & FMODE_READ) &&
-+	    (f->f_op->read || f->f_op->read_iter))
-+		f->f_mode |= FMODE_CAN_READ;
-+	if ((f->f_mode & FMODE_WRITE) &&
-+	    (f->f_op->write || f->f_op->write_iter))
-+		f->f_mode |= FMODE_CAN_WRITE;
-+}
-diff --git a/fs/open.c b/fs/open.c
-index 6cd48a61cda3b9..01f2de93c91710 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -832,13 +832,7 @@ static int do_dentry_open(struct file *f,
- 	f->f_mode |= FMODE_OPENED;
- 	if ((f->f_mode & (FMODE_READ | FMODE_WRITE)) == FMODE_READ)
- 		i_readcount_inc(inode);
--	if ((f->f_mode & FMODE_READ) &&
--	     likely(f->f_op->read || f->f_op->read_iter))
--		f->f_mode |= FMODE_CAN_READ;
--	if ((f->f_mode & FMODE_WRITE) &&
--	     likely(f->f_op->write || f->f_op->write_iter))
--		f->f_mode |= FMODE_CAN_WRITE;
--
-+	set_fmode_can_read_write(f);
- 	f->f_write_hint = WRITE_LIFE_NOT_SET;
- 	f->f_flags &= ~(O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC);
- 
--- 
-2.26.2
+IIRC we didn't go for this initially because hackbench behaved slightly
+worse with it. Did we end up re-evaluating this? Also, how does this reaim
+benchmark behave with it? I *think* the table from that regression thread
+says it behaves better, but I had a hard time parsing it (seems like it got
+damaged by line wrapping)
+
+Conceptually I'm all for it, so as long as the tests back it up:
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+
+>  
+>  	if (p->sched_class != &fair_sched_class) {
+>  		/*
 
