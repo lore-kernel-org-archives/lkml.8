@@ -2,141 +2,149 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4333AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD21C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E06320781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="Vj1AKSYS"
+	by mail.kernel.org (Postfix) with ESMTP id 249A42076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404489AbgFXPPT (ORCPT
+        id S2404496AbgFXPP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404271AbgFXPPT (ORCPT
+        Wed, 24 Jun 2020 11:15:56 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:47750 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404144AbgFXPPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:15:19 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F20C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:15:18 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id r8so2126946oij.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kyLX8XtKSQSzf1u6tUVRGJzXgpczRRSln3I+Nwk++to=;
-        b=Vj1AKSYSjNfcC1ZEGsOotC3bvnMg/g3G6pdJ1ezAjge4evUCcp6G54UVl+P0pl2XZ9
-         D5PYHPbigj3NQsF43eqvZMOMXqnHeLeqmbwUWm5N4ZXQ+iaC9sLoGXyOwfQBaN/xdGxF
-         EX9STuY8CFF+v0Roz73C7FMcFUfGJuvS+ppHUZc6jzJwhekuT3NkkyzQQsgpiq95a89f
-         sMSbPPC9pem/c0dzqukXGni1r3DXchx1qsDuoXeJ8V6ZXR/Yw/0XxhhlW0ONpsDNdyPq
-         m0oiQrwmvjNBFHhU9los18X9rXQNu4pOPm2EZCzgbGK7VOZZGektkzCEBs/Z3B/iprcG
-         bvNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kyLX8XtKSQSzf1u6tUVRGJzXgpczRRSln3I+Nwk++to=;
-        b=POurC9tfpXxZ4RfOmJ5MeWrmpI8ST3IwCuEhcqLpZEsjNq5b4vZxXg+H8AqK+R1oqC
-         Mxd9VdhhATFswLt+uRq6XPfNKolAg/Vzt1QWnpn3rf9P+68WFOMLpTSB6myCra9JU1Ul
-         P9eRF92syiVmRkE/cSSkhfKLMFXbtXqLuIYAuIBlUcIXOYX7r0LGm/6Uh0fgegoa+DU2
-         tMEv7DYaMwY0fajaj7IhC2snmKEqOfTfNgXgq3x3VQOXm6gUAv+oO73hobgOzjeiz2tq
-         1t6cm5WSEuRHfFiYEDLhK62UbbeVykxbVJPu3e6q4jup+VuA9b9Hy12jDE0AJ0IJunQU
-         948w==
-X-Gm-Message-State: AOAM532knFFvYLIaG5cJEjyl9Zjwn9Q0qyUw68JAA5P4o3wdiSEsfqrv
-        xcg97k1hPQ4v+v/AfwSQ/fvc0VR209nJCj5hlVNDiQ==
-X-Google-Smtp-Source: ABdhPJzCR3yd5XHXF9590lIiwlLynD3w2IpHXEDDTWn+2h5TtW5v8YCR6G6I4/aCJNPxCV49xX4Wa8O69i9VV7cQUtI=
-X-Received: by 2002:aca:554c:: with SMTP id j73mr21109662oib.172.1593011717984;
- Wed, 24 Jun 2020 08:15:17 -0700 (PDT)
+        Wed, 24 Jun 2020 11:15:55 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OEvnKF023504;
+        Wed, 24 Jun 2020 11:15:54 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 31uuqvjet3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 11:15:54 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 05OFFq5i044824
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 24 Jun 2020 11:15:52 -0400
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 24 Jun 2020 08:15:51 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 24 Jun 2020 08:15:49 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 24 Jun 2020 08:15:50 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05OFFdRw023607;
+        Wed, 24 Jun 2020 11:15:48 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v5 7/7] dt-bindings: hwmon: Add bindings for ADM1266
+Date:   Wed, 24 Jun 2020 18:17:36 +0300
+Message-ID: <20200624151736.95785-8-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200624151736.95785-1-alexandru.tachici@analog.com>
+References: <20200624151736.95785-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-References: <20200624095007.141f0357@canb.auug.org.au>
-In-Reply-To: <20200624095007.141f0357@canb.auug.org.au>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Wed, 24 Jun 2020 08:15:06 -0700
-Message-ID: <CAJ+vNU25ycoSGros7_SbHfZ4ShP5=oT2RMM74OtCsk6B3k2Bhg@mail.gmail.com>
-Subject: Re: linux-next: build warnings after merge of the imx-mxs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_08:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 cotscore=-2147483648 priorityscore=1501 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 suspectscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 4:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the imx-mxs tree, today's linux-next build (arm
-> multi_v7_defconfig) produced these warnings:
->
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:350.4-27: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:353.5-28: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:356.6-29: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0/pcie@4,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6dl-gw53xx.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6dl-gw53xx.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6dl-gw53xx.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:349.14-360.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:349.14-360.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:352.15-359.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:352.15-359.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:355.22-358.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0/pcie@4,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:355.22-358.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0/pcie@4,0,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:407.4-27: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:410.5-28: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:413.6-29: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0/pcie@8,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6dl-gw54xx.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6dl-gw54xx.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6dl-gw54xx.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:406.14-417.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:406.14-417.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:409.15-416.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:409.15-416.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:412.22-415.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0/pcie@8,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:412.22-415.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0/pcie@8,0,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:350.4-27: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:353.5-28: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:356.6-29: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0/pcie@4,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6q-gw53xx.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6q-gw53xx.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6q-gw53xx.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:349.14-360.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:349.14-360.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:352.15-359.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:352.15-359.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:355.22-358.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0/pcie@4,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw53xx.dtsi:355.22-358.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,4,0/pcie@4,0,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:407.4-27: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:410.5-28: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:413.6-29: Warning (reg_format): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0/pcie@8,0,0:reg: property has invalid length (20 bytes) (#address-cells == 2, #size-cells == 1)
-> arch/arm/boot/dts/imx6q-gw54xx.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6q-gw54xx.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6q-gw54xx.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:406.14-417.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:406.14-417.5: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:409.15-416.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:409.15-416.6: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0: Relying on default #size-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:412.22-415.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0/pcie@8,0,0: Relying on default #address-cells value
-> arch/arm/boot/dts/imx6qdl-gw54xx.dtsi:412.22-415.7: Warning (avoid_default_addr_size): /soc/pcie@1ffc000/pcie@0,0,0/pcie@1,0,0/pcie@2,8,0/pcie@8,0,0: Relying on default #size-cells value
->
-> Introduced by commits
->
->   26d7c769d460 ("ARM: dts: imx6qdl-gw53xx: allow boot firmware to set eth1 MAC")
->   48d799918adf ("ARM: dts: imx6qdl-gw54xx: allow boot firmware to set eth1 MAC")
->
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Stephen,
+Add bindings for the Analog Devices ADM1266 sequencer.
 
-Thanks for the catch - sorry about that. I will submit a new version
-of those that have the missing #address-cells and #size-cells that
-caused the warnings.
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ .../bindings/hwmon/adi,adm1266.yaml           | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
 
-Tim
+diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+new file mode 100644
+index 000000000000..76b62be48d56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
++  Control and Fault Recording
++
++maintainers:
++  - Alexandru Tachici <alexandru.tachici@analog.com>
++
++description: |
++  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
++  Control and Fault Recording.
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,adm1266
++
++  reg:
++    description: |
++      I2C address of slave device.
++    items:
++      minimum: 0x40
++      maximum: 0x4F
++
++  avcc-supply:
++    description: |
++      Phandle to the Avcc power supply.
++
++  adi,master-adm1266:
++    description: |
++      Represents phandle of a master ADM1266 device cascaded through the IDB.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adm1266@40 {
++                compatible = "adi,adm1266";
++                reg = <0x40>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++        };
++    };
++...
+-- 
+2.20.1
+
