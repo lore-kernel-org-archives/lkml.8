@@ -4,67 +4,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BA3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9615920B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D1220B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389197AbgFXItc (ORCPT
+        id S2389263AbgFXItl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:49:32 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5596 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388830AbgFXItZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:49:25 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5ef31384808-51d08; Wed, 24 Jun 2020 16:49:08 +0800 (CST)
-X-RM-TRANSID: 2eec5ef31384808-51d08
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.105.0.242])
-        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15ef31383538-2ae1e;
-        Wed, 24 Jun 2020 16:49:08 +0800 (CST)
-X-RM-TRANSID: 2ee15ef31383538-2ae1e
-From:   Ding Xiang <dingxiang@cmss.chinamobile.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] loop: fix passing zero to 'PTR_ERR' warning
-Date:   Wed, 24 Jun 2020 16:48:42 +0800
-Message-Id: <1592988522-4350-1-git-send-email-dingxiang@cmss.chinamobile.com>
+        Wed, 24 Jun 2020 04:49:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:1309 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388913AbgFXItE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:49:04 -0400
+IronPort-SDR: Sz7rPHSjVSe5wPBT/oWXGkLFpCRSJ67uOkW9bRYloZL87hOVAOn9zAemEwM1I8yQJNZRMlKSAC
+ mYqW75pGZdmg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="162484888"
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="162484888"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 01:48:57 -0700
+IronPort-SDR: NZ7BSxtJikNVPALknIpfd8Y5zn1lr07WGKCF0SseHKBjTTjrYjk1sSEIJFHaoEweL5NrqzVDov
+ mRwKvnqc5kxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="275624532"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 01:48:56 -0700
+From:   Liu Yi L <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, eric.auger@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org
+Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, jun.j.tian@intel.com,
+        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
+        hao.wu@intel.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 13/14] vfio: Document dual stage control
+Date:   Wed, 24 Jun 2020 01:55:26 -0700
+Message-Id: <1592988927-48009-14-git-send-email-yi.l.liu@intel.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a static code checker warning:
-    drivers/block/loop.c:798 loop_attr_backing_file_show()
-    warn: passing zero to 'PTR_ERR'
+From: Eric Auger <eric.auger@redhat.com>
 
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+The VFIO API was enhanced to support nested stage control: a bunch of
+new iotcls and usage guideline.
+
+Let's document the process to follow to set up nested mode.
+
+Cc: Kevin Tian <kevin.tian@intel.com>
+CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Eric Auger <eric.auger@redhat.com>
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 ---
- drivers/block/loop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2 -> v3:
+*) address comments from Stefan Hajnoczi
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 475e1a7..bcada87 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -795,7 +795,7 @@ static ssize_t loop_attr_backing_file_show(struct loop_device *lo, char *buf)
- 	spin_unlock_irq(&lo->lo_lock);
+v1 -> v2:
+*) new in v2, compared with Eric's original version, pasid table bind
+   and fault reporting is removed as this series doesn't cover them.
+   Original version from Eric.
+   https://lkml.org/lkml/2020/3/20/700
+
+ Documentation/driver-api/vfio.rst | 67 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+
+diff --git a/Documentation/driver-api/vfio.rst b/Documentation/driver-api/vfio.rst
+index f1a4d3c..639890f 100644
+--- a/Documentation/driver-api/vfio.rst
++++ b/Documentation/driver-api/vfio.rst
+@@ -239,6 +239,73 @@ group and can access them as follows::
+ 	/* Gratuitous device reset and go... */
+ 	ioctl(device, VFIO_DEVICE_RESET);
  
- 	if (IS_ERR_OR_NULL(p))
--		ret = PTR_ERR(p);
-+		ret = PTR_ERR_OR_ZERO(p);
- 	else {
- 		ret = strlen(p);
- 		memmove(buf, p, ret);
++IOMMU Dual Stage Control
++------------------------
++
++Some IOMMUs support 2 stages/levels of translation. Stage corresponds to
++the ARM terminology while level corresponds to Intel's VTD terminology.
++In the following text we use either without distinction.
++
++This is useful when the guest is exposed with a virtual IOMMU and some
++devices are assigned to the guest through VFIO. Then the guest OS can use
++stage 1 (GIOVA -> GPA or GVA->GPA), while the hypervisor uses stage 2 for
++VM isolation (GPA -> HPA).
++
++Under dual stage translation, the guest gets ownership of the stage 1 page
++tables and also owns stage 1 configuration structures. The hypervisor owns
++the root configuration structure (for security reason), including stage 2
++configuration. This works as long as configuration structures and page table
++formats are compatible between the virtual IOMMU and the physical IOMMU.
++
++Assuming the HW supports it, this nested mode is selected by choosing the
++VFIO_TYPE1_NESTING_IOMMU type through:
++
++    ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_NESTING_IOMMU);
++
++This forces the hypervisor to use the stage 2, leaving stage 1 available
++for guest usage. The guest stage 1 format depends on IOMMU vendor, and
++it is the same with the nesting configuration method. User space should
++check the format and configuration method after setting nesting type by
++using:
++
++    ioctl(container->fd, VFIO_IOMMU_GET_INFO, &nesting_info);
++
++Details can be found in Documentation/userspace-api/iommu.rst. For Intel
++VT-d, each stage 1 page table is bound to host by:
++
++    nesting_op->flags = VFIO_IOMMU_NESTING_OP_BIND_PGTBL;
++    memcpy(&nesting_op->data, &bind_data, sizeof(bind_data));
++    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
++
++As mentioned above, guest OS may use stage 1 for GIOVA->GPA or GVA->GPA.
++GVA->GPA page tables are available when PASID (Process Address Space ID)
++is exposed to guest. e.g. guest with PASID-capable devices assigned. For
++such page table binding, the bind_data should include PASID info, which
++is allocated by guest itself or by host. This depends on hardware vendor
++e.g. Intel VT-d requires to allocate PASID from host. This requirement is
++defined by the Virtual Command Support in VT-d 3.0 spec, guest software
++running on VT-d should allocate PASID from host kernel. To allocate PASID
++from host, user space should +check the IOMMU_NESTING_FEAT_SYSWIDE_PASID
++bit of the nesting info reported from host kernel. VFIO reports the nesting
++info by VFIO_IOMMU_GET_INFO. User space could allocate PASID from host by:
++
++    req.flags = VFIO_IOMMU_ALLOC_PASID;
++    ioctl(container, VFIO_IOMMU_PASID_REQUEST, &req);
++
++With first stage/level page table bound to host, it allows to combine the
++guest stage 1 translation along with the hypervisor stage 2 translation to
++get final address.
++
++When the guest invalidates stage 1 related caches, invalidations must be
++forwarded to the host through
++
++    nesting_op->flags = VFIO_IOMMU_NESTING_OP_CACHE_INVLD;
++    memcpy(&nesting_op->data, &inv_data, sizeof(inv_data));
++    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
++
++Those invalidations can happen at various granularity levels, page, context,
++...
++
+ VFIO User API
+ -------------------------------------------------------------------------------
+ 
 -- 
 2.7.4
-
-
 
