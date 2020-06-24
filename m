@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C916C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0780220874
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629E520874
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390086AbgFXHpv (ORCPT
+        id S2390098AbgFXHpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:45:51 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:35824 "EHLO loongson.cn"
+        Wed, 24 Jun 2020 03:45:53 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:35770 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389983AbgFXHpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387849AbgFXHpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 03:45:21 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2qIBPNevCZJAA--.660S13;
-        Wed, 24 Jun 2020 15:45:17 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2qIBPNevCZJAA--.660S10;
+        Wed, 24 Jun 2020 15:45:16 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 11/14 RESEND] irqchip/omap-intc: Fix potential resource leak
-Date:   Wed, 24 Jun 2020 15:45:08 +0800
-Message-Id: <1592984711-3130-12-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 08/14 RESEND] irqchip/ls1x: Fix potential resource leaks
+Date:   Wed, 24 Jun 2020 15:45:05 +0800
+Message-Id: <1592984711-3130-9-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9DxD2qIBPNevCZJAA--.660S13
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF4rtF1xAryrCFyfWw1xZrb_yoW3AFc_u3
-        Wqgas3Wr4xAr4rGr1Igw13ZryYvrWkWFn7uF40q3ZxJ3y3Xw10yr42vrZ3JF10kFWUCr97
-        Gr4UurWxAw1IyjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbBxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+X-CM-TRANSID: AQAAf9DxD2qIBPNevCZJAA--.660S10
+X-Coremail-Antispam: 1UD129KBjvdXoWrurWUWFykJF48Zr47Zr4xJFb_yoWDZFgE9r
+        1Sg3s3WayIyr1fJ3yIgw13ZFW7trZYgFs2vFW0kF13ta4xWw1rur4xZr1fJF4xuFWjkF97
+        C3yjvr10y34xAjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbB8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
         6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
         IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
         F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
@@ -50,39 +50,45 @@ X-Coremail-Antispam: 1UD129KBjvdXoW7GF4rtF1xAryrCFyfWw1xZrb_yoW3AFc_u3
         CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCa
         FVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
         Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26F1j
-        6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rV
-        WUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_GcCE
-        3sUvcSsGvfC2KfnxnUUI43ZEXa7sR_ksqPUUUUU==
+        6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r
+        1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW0oVCq
+        3bIYCTnIWIevJa73UjIFyTuYvjTRX2-nDUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists potential resource leak in the error path, fix it.
+There exists potential resource leaks in the error path, fix them.
 
-Fixes: 8598066cddd1 ("arm: omap: irq: move irq.c to drivers/irqchip/")
+Fixes: 9e543e22e204 ("irqchip: Add driver for Loongson-1 interrupt controller")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-omap-intc.c | 4 +++-
+ drivers/irqchip/irq-ls1x.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-omap-intc.c b/drivers/irqchip/irq-omap-intc.c
-index d360a6e..e711530 100644
---- a/drivers/irqchip/irq-omap-intc.c
-+++ b/drivers/irqchip/irq-omap-intc.c
-@@ -254,8 +254,10 @@ static int __init omap_init_irq_of(struct device_node *node)
- 	omap_irq_soft_reset();
+diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
+index 353111a..409001b 100644
+--- a/drivers/irqchip/irq-ls1x.c
++++ b/drivers/irqchip/irq-ls1x.c
+@@ -131,7 +131,7 @@ static int __init ls1x_intc_of_init(struct device_node *node,
+ 	if (!priv->domain) {
+ 		pr_err("ls1x-irq: cannot add IRQ domain\n");
+ 		err = -ENOMEM;
+-		goto out_iounmap;
++		goto out_dispose_irq;
+ 	}
  
- 	ret = omap_alloc_gc_of(domain, omap_irq_base);
--	if (ret < 0)
-+	if (ret < 0) {
- 		irq_domain_remove(domain);
-+		iounmap(omap_irq_base);
-+	}
+ 	err = irq_alloc_domain_generic_chips(priv->domain, 32, 2,
+@@ -182,6 +182,8 @@ static int __init ls1x_intc_of_init(struct device_node *node,
  
- 	return ret;
- }
+ out_free_domain:
+ 	irq_domain_remove(priv->domain);
++out_dispose_irq:
++	irq_dispose_mapping(parent_irq);
+ out_iounmap:
+ 	iounmap(priv->intc_base);
+ out_free_priv:
 -- 
 2.1.0
 
