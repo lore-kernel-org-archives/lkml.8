@@ -2,106 +2,67 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC7BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 397AB20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGje8u9Q"
+	by mail.kernel.org (Postfix) with ESMTP id 0AF3E20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbgFXGVt (ORCPT
+        id S2389088AbgFXGW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:21:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28782 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388090AbgFXGVs (ORCPT
+        Wed, 24 Jun 2020 02:22:29 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:53592 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388090AbgFXGW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:21:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592979706;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C48Rlxjz3s2bpLiAzhYiEAvH82Yp8YGVubELaSeN8Pg=;
-        b=UGje8u9QfzheDS9VtWYDC9DvD8kz7Zs6ZMJfQj2OvYKUHbMw46Sjc9cVwMRTjcOFqZTuFF
-        pQf0OxA9HQTYUnzjCxckHRLaewaN01lHwoZYDPXB02GjpClkt+qIiLkGIDtgeLC0lI8/a1
-        7TTbZGlCf6VynszlpcVV6tJ+jFZsveU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-IYV_CO7lP2SgkKj9wmwBFw-1; Wed, 24 Jun 2020 02:21:44 -0400
-X-MC-Unique: IYV_CO7lP2SgkKj9wmwBFw-1
-Received: by mail-wm1-f70.google.com with SMTP id v24so1893349wmh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 23:21:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C48Rlxjz3s2bpLiAzhYiEAvH82Yp8YGVubELaSeN8Pg=;
-        b=iQRu3T4iXrkQZvOhkiFwli+dhl19aGKEAE2xNbogKORw4GxZgYyBtub6ErDx7p1OrM
-         yIfOYfIOyyR2Y41HTNayC7XIR8bCWPfyVecas7RRuyB4yBOBSUwRrH7tr6hdgc54oMk/
-         tAN0Y01uTX4Eba6YVXO6U21tdJmARJJht/01PZsl+5QgxH6/l1U3EyOQ5RQpHl/Xf2/S
-         zwT+vMrlbGQbr2AKbcI1xjqsAazu3TQNoI/5xYfA3UiS7m1Jl60fUt6BKXxPQTv27pkq
-         lqXEhTM9Dxr6x8pXrxwjxLmIBUO5VPWEI3/wDDV74OllxEvvsA0hRlEH4TCsd7ZADkzf
-         82sQ==
-X-Gm-Message-State: AOAM531gf5wNxdFLTh/Td4Hi+MLGaVlUNDdinBuUoNxgXT7XHrWpkItG
-        YQnGNP1HaMlOTxf7WpnRQnargnvgWMVAcUNg6lNj0v4FYoDSSsiJBjIp4Ae4p9xd92RWGwkSHzW
-        zmzaCxTinikukUFYmSra1K60o
-X-Received: by 2002:a7b:cb98:: with SMTP id m24mr15268696wmi.98.1592979703739;
-        Tue, 23 Jun 2020 23:21:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzRAU2gwlNqxDRRrpybYnMbwiytF23tZXMxgIgM8yxFkpT3cgJWPq+jOHz3hg3ByDv4mtlB/Q==
-X-Received: by 2002:a7b:cb98:: with SMTP id m24mr15268688wmi.98.1592979703545;
-        Tue, 23 Jun 2020 23:21:43 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:24f5:23b:4085:b879? ([2001:b07:6468:f312:24f5:23b:4085:b879])
-        by smtp.gmail.com with ESMTPSA id t4sm400429wmf.4.2020.06.23.23.21.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 23:21:43 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] selftests: pidfd: do not use ksft_exit_skip after
- ksft_set_plan
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, keescook@chromium.org
-References: <20200623001547.22255-1-pbonzini@redhat.com>
- <20200623001547.22255-5-pbonzini@redhat.com>
- <20200623204441.phngiwlj2idonpe6@wittgenstein>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9ddfac6e-473d-1856-3ab7-ff61ccf11ac6@redhat.com>
-Date:   Wed, 24 Jun 2020 08:21:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 24 Jun 2020 02:22:28 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DW;RN=7;SR=0;TI=W4_5899425_DEFAULT_0AB1016B_1592979481825_o7001c244;
+Received: from WS-web (baolin.wang@linux.alibaba.com[W4_5899425_DEFAULT_0AB1016B_1592979481825_o7001c244]) by e01f04396.eu6 at Wed, 24 Jun 2020 14:22:24 +0800
+Date:   Wed, 24 Jun 2020 14:22:24 +0800
+From:   "Baolin Wang" <baolin.wang@linux.alibaba.com>
+To:     "Christoph Hellwig" <hch@lst.de>
+Cc:     "kbusch" <kbusch@kernel.org>, "axboe" <axboe@fb.com>,
+        "sagi" <sagi@grimberg.me>, "baolin.wang7" <baolin.wang7@gmail.com>,
+        "linux-nvme" <linux-nvme@lists.infradead.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>
+Reply-To: "Baolin Wang" <baolin.wang@linux.alibaba.com>
+Message-ID: <0cc93c56-57ba-42d7-8af9-348076e9d3ea.baolin.wang@linux.alibaba.com>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAyLzNdIG52bWUtcGNpOiBBZGQgY29udHJvbGxlciBtZW1vcnkgYnVmZmVy?=
+  =?UTF-8?B?IHN1cHBvcnRlZCBtYWNybw==?=
+X-Mailer: [Alimail-Mailagent][W4_5899425][DEFAULT][Chrome]
 MIME-Version: 1.0
-In-Reply-To: <20200623204441.phngiwlj2idonpe6@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1592916850.git.baolin.wang@linux.alibaba.com> <eab18c7696ea0e34a6ab0371d7d17ad45d1566ce.1592916850.git.baolin.wang@linux.alibaba.com> <20200623162751.GA4846@lst.de>,<20200624020716.GB40094@VM20190228-100.tbsite.net>
+x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzgzLjAuNDEwMy45NyBTYWZhcmkvNTM3LjM2TM
+In-Reply-To: <20200624020716.GB40094@VM20190228-100.tbsite.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/20 22:44, Christian Brauner wrote:
->>  	ret = sys_pidfd_send_signal(pidfd, 0, NULL, 0);
->>  	if (ret < 0) {
->> -		if (errno == ENOSYS)
->> -			ksft_exit_skip(
->> +		if (errno == ENOSYS) {
->> +			ksft_test_result_skip(
->>  				"%s test: pidfd_send_signal() syscall not supported\n",
->>  				test_name);
-> If pidfd_send_signal() is not supported, you're falling through and then
-> you're reporting:
-> 
-> ok 5 # SKIP pidfd_send_signal check for support test: pidfd_send_signal() syscall not supported
-> ok 6 pidfd_send_signal check for support test: pidfd_send_signal() syscall is supported. Tests can be executed
-
-You're right, this needs a "return".
-
-Paolo
-
+PiBPbiBUdWUsIEp1biAyMywgMjAyMCBhdCAwNjoyNzo1MVBNICswMjAwLCBDaHJpc3RvcGggSGVs
+bHdpZyB3cm90ZToKPiA+IE9uIFR1ZSwgSnVuIDIzLCAyMDIwIGF0IDA5OjI0OjMzUE0gKzA4MDAs
+IEJhb2xpbiBXYW5nIHdyb3RlOgo+ID4gPiBJbnRyb2R1Y2UgYSBuZXcgY2FwYWJpbGl0eSBtYWNy
+byB0byBpbmRpY2F0ZSBpZiB0aGUgY29udHJvbGxlcgo+ID4gPiBzdXBwb3J0cyB0aGUgbWVtb3J5
+IGJ1ZmZlciBvciBub3QsIGluc3RlYWQgb2YgcmVhZGluZyB0aGUKPiA+ID4gTlZNRV9SRUdfQ01C
+U1ogcmVnaXN0ZXIuCj4gPiAKPiA+IFRoaXMgaXMgYSBjb21wbGV4IGlzc3VlLiAgVGhlIENNQlMg
+Yml0IHdhcyBvbmx5IGFkZGVkIGluIE5WTWUgMS40IGFzCj4gPiBhIGJhY2t3YXJkcyBpbmNvbXBh
+dGlibGUgY2hhbmdlLCBhcyB0aGUgQ01CIGFkZHJlc3Npbmcgc2NoZW1lIGNhbiBsZWFkCj4gCj4g
+QWgsIHJpZ2h0LCBJIHRoaW5rIEkgc2hvdWxkIGFkZCBhbm90aGVyIHZlcnNpb24gY29uZGl0aW9u
+Ogo+IGlmICgoY3RybC0+dnMgPj0gTlZNRV9WUygxLCA0LCAwKSAmJiAhTlZNRV9DQVBfQ01CUyhk
+ZXYtPmN0cmwuY2FwKSkgfHwKPiAgICAgZGV2LT5jbWJfc2l6ZSkKPiAgICByZXR1cm47CgpBZnRl
+ciBtb3JlIHRoaW5raW5nLCBub3cgd2Ugc2hvdWxkIHJlYWQgTlZNRV9SRUdfVlMgcmVnaXN0ZXIg
+dG8gZ2V0IHRoZSBjb250cm9sbGVyIHZlcnNpb24Kd2hlbiB1c2luZyB0aGUgQ01CUyBiaXQgaW4g
+Q2FwYWJpbGl0aWVzIHJlZ2lzdGVyLCB0aGVyZSBpcyBubyBiZW5lZml0LCBzbyBJJ2xsIGRyb3Ag
+dGhpcyBwYXRjaC4gVGhhbmtzLgoKPiA+IHRvIGRhdGEgY29ycnVwdGlvbi4gIFRoZSBDTUJTIHdh
+cyBhZGRlZCBhcyBwYXJ0IG9mIHRoZSBob3JyaWJlIGhhY2sKPiA+IHRoYXQgYWxzbyBpbnZvbHZl
+cyB0aGUgQ0JBIGZpZWxkLCB3aGljaCB3ZSdsbCBuZWVkIHRvIHNlZSBiZWZvcmUKPiA+IHVzaW5n
+IGl0IHRvIHdvcmsgYXJvdW5kIHRoZSBhZGRyZXNzaW5nIGlzc3VlLiAgQXQgdGhlIHNhbWUgdGlt
+ZSB3ZQo+ID4gc2hvdWxkIGFsc28gY29udGludWUgc3VwcG9ydGluZyB0aGUgbGVnYWN5IHByZS0x
+LjQgQ01CIHdpdGggYSB3YXJuaW5nCj4gPiAoYW5kIG1heSByZWplY3QgaXQgaWYgd2Uga25vdyB3
+ZSBydW4gaW4gYSBWTSku
