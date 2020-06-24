@@ -2,120 +2,135 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6801C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A55C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAC2206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE34720781
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbAR3hxG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcsjg+WO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404768AbgFXP51 (ORCPT
+        id S2404687AbgFXP47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
+        Wed, 24 Jun 2020 11:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404751AbgFXP5V (ORCPT
+        with ESMTP id S2404657AbgFXP4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:57:21 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB92C061573;
-        Wed, 24 Jun 2020 08:57:21 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g17so1203184plq.12;
-        Wed, 24 Jun 2020 08:57:21 -0700 (PDT)
+        Wed, 24 Jun 2020 11:56:52 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15F1C061573;
+        Wed, 24 Jun 2020 08:56:51 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h15so2796128wrq.8;
+        Wed, 24 Jun 2020 08:56:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ptn2w5e6anRr1NlNku10i3q3CyuFAMfWr3pdlWZGFp4=;
-        b=IbAR3hxGsMrhz5UYf7u/9VpJa12J4CTZ1s9fwmcXSWa0Q6L6+pu22ca03mkDFu49/g
-         AZ2/Xe114B9qUmNQDYqo4yo/4LSBw/u/cY0nap9cgwy3p5NTBRUzPg6k2HKoUfGJ44o7
-         ScnG5V6Gm1l5wDr8Hx9R/YAvlmszfqo7yHBhMJDKQhouMPIH8ZciRX5RJkKEs5RtbOYY
-         8rHA+ejnuGXfMqZKCChz83nPmQCidGEXC04y4EOzxG6O2S0ctult5PC0GuZvHv0o51HW
-         z+tVpIZcdSUq0J95eYVYbn+DL+ZXViXu38qV5FxtSoUgO4L3QIfRKii8qPOlC3B0s+LW
-         Jp1w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SsocOkhsEBGPt4ylLwY4+agknd5SdHwSbE5z/lYrnUg=;
+        b=vcsjg+WOdUVNUUl3OoEfJ4yxqra7MFSyrqsQSozD6FzBjgLAEOBa3tnynCqcCuAgeB
+         k0fDK564QFFUmRe3JRopIl33gBrXT8IzO4FMF9R5Dja/gOC6H0pD0tUnh9yeuIH1Wc5Q
+         iUoNDVkVCgc7kA82GVR5M01YGkq39+cXy4k9AZYwDzJNPLX6RNeaVkCBR22Rps1RTBxT
+         1utl693aWjNHtjfjiLd/OUYJit8PCL2Ea9+RY3JsNHQYtuffqy+Xnty3l2alonoYT9yY
+         GHUxCZFrCjrRICPullT8Vj9oT1vpJ8ZbUIoetRmabfMM1NutXO1FTXmUMlM2C9LN2Hnd
+         noMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ptn2w5e6anRr1NlNku10i3q3CyuFAMfWr3pdlWZGFp4=;
-        b=IgqxkHC3Hqxw42pi2g+vBMVlmNJvWiCaWKiThRQRwob0q9ll5UUHykaF7C6jQ5judA
-         NHpfAioX5RyAmkIOgPoB5KthyIsLT7AGg+KmGcRMqFbtw5d8Nu9cDH9tsIfdl4JAwq2e
-         eVHoEbcNjS4QhV6Su887A+DchTB2nHOXO/RqngtfuZzRKjGc8ZrVN4AAbPvH/ItBm9Cv
-         D88ZECMb2UXOMVoowCVss9K3ZI0AfJTPhi2bBWk8ikoACIQkUDqSWQCeVVXUy25wCuM9
-         vPJ66nAAdvJfkiDm8aggC1E5m+Zp2D1IWnOdQ8o7ZAg2y2/EL7cOxSGd+XlqsL31XtmV
-         6pFA==
-X-Gm-Message-State: AOAM532eUXlNBR2gX5i6wXsoTOmiKG2KqQOJnrCrWa1QDLJG0XTsaQMR
-        A7V3ykYD+w6WTOy4Tv/sJNrZ+J6XYEBc6Q==
-X-Google-Smtp-Source: ABdhPJyC+UOBAzTeiwiePlhrYtQ9wecg7FvR4wH0+t6Tb7uk0Hisqzgm9WozyaDsa2zMh466xF65Vw==
-X-Received: by 2002:a17:90a:d709:: with SMTP id y9mr6546265pju.30.1593014240728;
-        Wed, 24 Jun 2020 08:57:20 -0700 (PDT)
-Received: from sol (220-235-99-174.dyn.iinet.net.au. [220.235.99.174])
-        by smtp.gmail.com with ESMTPSA id h8sm17082362pgm.16.2020.06.24.08.57.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 08:57:19 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 23:57:14 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 10/22] gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
-Message-ID: <20200624155714.GB8622@sol>
-References: <20200623040107.22270-1-warthog618@gmail.com>
- <20200623040107.22270-11-warthog618@gmail.com>
- <CAHp75VdG4r95ZU8G9TfL+jkT63+Gppb8w5TRvAtCR_pAk0o=NA@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SsocOkhsEBGPt4ylLwY4+agknd5SdHwSbE5z/lYrnUg=;
+        b=n0FasC+6xucT/c0s2Gc/yVilp9TK02AJbCzHM9v9SdvMCnIKtDsbDAAh+BYKl9py+6
+         qdB5bbpPrU7IzeqA+skbk5pMDPDUXGt6Cu5hr5Pq4/3X4x5okEZdFDy3vPHAd2WUz/xu
+         aTtc3P0+orXwFJfTMsQjvf4hhev/1WJUaThhNm9wSP1Ee6CrbpnFG1NQMZYtK5L+GFb4
+         /X7vuvkNS5mpuufa7Ob1zdtjSp3lu1+dsHQB4/2c3oqc4O6Kx5/ooTDCrhxkaFCyW8XV
+         83EkBpOw8VS1CqTmaob5Zu7RxRhDZF8CG2wLtkIwQJwlmwxP7IIYcSDCxc1MLE8qGdZe
+         he1w==
+X-Gm-Message-State: AOAM532PldRy47X1YnyHz7ctnG47BVp6EOGs8Hg7EBMpJwTQcGLkyw7y
+        7OMqFpQF3E3veU05asbyBrw=
+X-Google-Smtp-Source: ABdhPJxv8Mb6sKrct1+QA79hTd2qvGoOEFPmWrTsskj8dTeDfsa31O6Yjmj85VeNIi0zhmcw5FYHzQ==
+X-Received: by 2002:a5d:664e:: with SMTP id f14mr31903766wrw.6.1593014210501;
+        Wed, 24 Jun 2020 08:56:50 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id a22sm8289031wmb.4.2020.06.24.08.56.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 08:56:49 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH v3 2/6] dt-bindings: power: supply: Extend max17040 compatibility
+Date:   Wed, 24 Jun 2020 18:56:29 +0300
+Message-Id: <20200624155633.3557401-3-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200624155633.3557401-1-iskren.chernev@gmail.com>
+References: <20200624155633.3557401-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdG4r95ZU8G9TfL+jkT63+Gppb8w5TRvAtCR_pAk0o=NA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 05:46:33PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 23, 2020 at 7:03 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Merge separate usage of test_bit/set_bit into test_and_set_bit to remove
-> > the possibility of a race between the test and set.
-> >
-> > Similarly test_bit and clear_bit.
-> >
-> > In the existing code it is possible for two threads to race past the
-> > test_bit and then set or clear the watch bit, and neither return EBUSY.
-> 
-> I stumbled over this myself, but...
-> 
-> > -               if (test_bit(hwgpio, gcdev->watched_lines))
-> > +               if (test_and_set_bit(hwgpio, gcdev->watched_lines))
-> >                         return -EBUSY;
-> >
-> >                 gpio_desc_to_lineinfo(desc, &lineinfo);
-> > @@ -897,7 +897,6 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> >                 if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
-> >                         return -EFAULT;
-> >
-> > -               set_bit(hwgpio, gcdev->watched_lines);
-> >                 return 0;
-> 
-> ...I think it's not an equivalent despite races involved. If you set
-> bit and return error code, you will have the wrong state.
-> 
+Maxim max17040 is a fuel gauge from a larger family utilising the Model
+Gauge technology. Document all different compatible strings that the
+max17040 driver recognizes.
 
-Not quite sure what you mean.  There is only an error if the bit is
-already set, so you've changed nothing.
+Some devices in the wild report double the capacity. The
+maxim,double-soc (from State-Of-Charge) property fixes that.
 
-And the watched state is not part of the lineinfo, so the state returned is
-the same either way.
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+---
+ .../bindings/power/supply/max17040_battery.txt    | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-Cheers,
-Kent.
+diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+index 4e0186b8380fa..554bce82a08e6 100644
+--- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+@@ -2,7 +2,9 @@ max17040_battery
+ ~~~~~~~~~~~~~~~~
+ 
+ Required properties :
+- - compatible : "maxim,max17040" or "maxim,max77836-battery"
++ - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
++ 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
++		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+  - reg: i2c slave address
+ 
+ Optional properties :
+@@ -11,6 +13,10 @@ Optional properties :
+ 				generated. Can be configured from 1 up to 32
+ 				(%). If skipped the power up default value of
+ 				4 (%) will be used.
++- maxim,double-soc : 		Certain devices return double the capacity.
++				Specify this boolean property to divide the
++				reported value in 2 and thus normalize it.
++				SOC == State of Charge == Capacity.
+ - interrupts : 			Interrupt line see Documentation/devicetree/
+ 				bindings/interrupt-controller/interrupts.txt
+ - wakeup-source :		This device has wakeup capabilities. Use this
+@@ -31,3 +37,10 @@ Example:
+ 		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+ 		wakeup-source;
+ 	};
++
++	battery-fuel-gauge@36 {
++		compatible = "maxim,max17048";
++		reg = <0x36>;
++		maxim,alert-low-soc-level = <10>;
++		maxim,double-soc;
++	};
+-- 
+2.27.0
 
