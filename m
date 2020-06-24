@@ -2,93 +2,99 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9451CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A03E92088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7442920B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592986778;
+	bh=fgExhjyrAR43tXlRTdI8WWUCluEJes8lAjTFdOgFp4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QIK4gYeaikeJKEsATeglCDcM9EHc5S9y1/Mfds9036nDbWWyWYcLkxnWhzcIK+SP9
+	 MObahvjhEkVJvMHdPmyU8YRrrj19lC1k+7a3bhDYo6oBRhFNqx3o5tnKlnF/pq1uGh
+	 8CKxgBFfr73jBEUVoo706RMsi7kSJTQ6qQMAgCNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390305AbgFXITc (ORCPT
+        id S2390331AbgFXITh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:19:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47504 "EHLO mx2.suse.de"
+        Wed, 24 Jun 2020 04:19:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388296AbgFXITb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:19:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CBEDEB12D;
-        Wed, 24 Jun 2020 08:19:29 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 10:19:29 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: build failure after merge of the printk tree
-Message-ID: <20200624081929.GD8444@alley>
-References: <20200621131554.5a662afe@canb.auug.org.au>
- <20200623102655.6d16e610@canb.auug.org.au>
- <20200623121637.GA8444@alley>
- <20200623121937.GA9671@gondor.apana.org.au>
- <20200623142858.GB8444@alley>
- <20200624002057.GA12716@gondor.apana.org.au>
+        id S2388296AbgFXITf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:19:35 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C9982082F;
+        Wed, 24 Jun 2020 08:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592986774;
+        bh=fgExhjyrAR43tXlRTdI8WWUCluEJes8lAjTFdOgFp4k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LxtM6dbYSDQRM+QVzBP+DtFg54XGuBddaQfotfsLmUwsFBddn9lvxwBc1myBWsHhp
+         y1ZpueIOm0Qaf8SQjykmjIMSVc4K2RehGwVwWYrrI+fFS+rDcU/NJvVWkg/av/Ow1d
+         rffA+NB4C05F+x/zJCrKohwnzJTywKbJSxWpUt40=
+Date:   Wed, 24 Jun 2020 13:49:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/13] dmaengine: pl330: Add quirk
+ 'arm,pl330-periph-burst'
+Message-ID: <20200624081929.GU2324254@vkoul-mobl>
+References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
+ <1591665267-37713-3-git-send-email-sugar.zhang@rock-chips.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624002057.GA12716@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1591665267-37713-3-git-send-email-sugar.zhang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-06-24 10:20:58, Herbert Xu wrote:
-> On Tue, Jun 23, 2020 at 04:28:58PM +0200, Petr Mladek wrote:
-> >
-> > It is similar cycle:
-> > 
-> > spinlock_types.h -> lockdep.h -> printk.h -> ratelimit.h -> spinlock_types.h
-> > 
-> > But this time it happens via list.h -> kernel.h ->printk.h.
-> > Where list.h needs READ_ONCE() stuff from compiler.h.
+On 09-06-20, 09:14, Sugar Zhang wrote:
+> This patch adds the qurik to use busrt transfers only
+
+s/busrt/burst
+
+> for pl330 controller, even for request with a length of 1.
 > 
-> But this is exactly the loop that's fixed by the lockdep_types
-> patch.
-
-I think that this problem is similar to the one on s390 that was
-solved by compiler.h in arch/s390/include/asm/bug.h
-
-It is related to
-https://lore.kernel.org/r/20200613142901.65xieioomt6bbqa6@ltop.local
-
-It seems that we need the same change also in list.h.
-
-
-> Did you get a compile failure with *just* the lockdep
-> patch?
-
-No, I see the problem only with both patches.
-
-
-> > PS: And yes, it makes sense to push both patches via a single tree to
-> > make sure that the lockdep.h split is done first.
+> Although, the correct way should be: if the peripheral request
+> length is 1, the peripheral should use SINGLE request, and then
+> notify the dmac using SINGLE mode by src/dst_maxburst with 1.
 > 
-> OK, can I repost this patch with your ack then?
+> For example, on the Rockchip SoCs, all the peripherals can use
+> SINGLE or BURST request by setting GRF registers. it is possible
+> that if these peripheral drivers are used only for Rockchip SoCs.
+> Unfortunately, it's not, such as dw uart, which is used so widely,
+> and we can't set src/dst_maxburst according to the SoCs' specific
+> to compatible with all the other SoCs.
+> 
+> So, for convenience, all the peripherals are set as BURST request
+> by default on the Rockchip SoCs. even for request with a length of 1.
+> the current pl330 driver will perform SINGLE transfer if the client's
+> maxburst is 1, which still should be working according to chapter 2.6.6
+> of datasheet which describe how DMAC performs SINGLE transfers for
+> a BURST request. unfortunately, it's broken on the Rockchip SoCs,
 
-Do you mean to repost the 2nd patch with the change in
-include/linux/list.h?
+s/unfortunately/Unfortunately
 
-This would be great.
+> which support only matching transfers, such as BURST transfer for
+> BURST request, SINGLE transfer for SINGLE request.
+> 
+> Finaly, we add the quirk to specify pl330 to use burst transfers only.
 
-Best Regards,
-Petr
+s/Finaly/Finally
+
+Below looks fine, pls reorder the series and have binding patch come
+first and then the use of binding. Below looks fine though
+
+-- 
+~Vinod
