@@ -2,238 +2,177 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF74C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5C9220857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36DA2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="qvjLO7bO"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HjVGcQ9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403811AbgFXMEf (ORCPT
+        id S2390829AbgFXME4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:04:35 -0400
-Received: from mail-eopbgr150077.outbound.protection.outlook.com ([40.107.15.77]:32802
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388522AbgFXMEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:04:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lq3GgHb3iHcPnkYZd2lMVB5kzqq15uNPphBUr8YggNOOvJFft/4tnvotJ7sWTbR50HPwdkrguRlPDxDqg+pWAX3n5SpytjbQLVvLKs7PNwfR+Gq9LIfFxsuuwRW6hLRknWQhqAu2kna+whbFdnqYAV3MNN8lG9yDy6Uug1sfmqyLIWoVK+d+SXIoeI18TSM8SpSkmgcB8g5gaImbW9TlHlPlmr8mZAaZU8sYv3Bp2RdL2yUwl/HUA2Sx7Z1RWC0aN7E+PiLzs7FCKNY11dQdO0O/I3lCInkl//XF8UKlHscaG10YssaWGNs6Qjtb4yhoBu/M6UJRdSL9GAn4nl5M5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aFpvu0WFJcI5hP1acYFbk98nI6Cbz/9Cz8j3+nMUhqU=;
- b=mp0Btn4Q2sWFnsbxG2lc8H0UjyGmKTfMRBSdCeytvqb+qGr+Kmj+Nju7/rRh//+5d5M9wXNi3vdtuVtpyKln5JjvwxcpN+qhElwmwIKzUiafHJ/dY6/4YWSg4ihlTajjUTO/XrZ9uiDgjS+nSSKgbAEb7P/CVgxNLU7u+1MDko+O53HFr5oblR81LSFAUQ6O6uahgT3zJchowjHeqOypla+7mjRFwgOgoFnah3x/69AowhHH8vPPZsZzXRYrRr5KOuKtG4jp/066ediidN1TVqo6TXM35yz9As3xDEUhg3Ii5Vcku5EgiY8hFz0arM+FxTYk3YOua3tsiXrDDmajrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aFpvu0WFJcI5hP1acYFbk98nI6Cbz/9Cz8j3+nMUhqU=;
- b=qvjLO7bOn9ov1Gj/J3VN5p316fr0eYpfr4Bhn94Hj4W+tCwUDwaSKS43IWX12z5V8CUyqNfJhVR9eyKnuo4iZ9JcfNwfPGsd/WDYqZ4uSFq1Byb4zrYM9/xBAYfI08a4AJDPlTNffKmOFzOWyYQ5n5WhJMPfaugqLhq4R+vNPEo=
-Received: from DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:11c::13)
- by DB8PR10MB2891.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:38::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Wed, 24 Jun
- 2020 12:04:24 +0000
-Received: from DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::843a:1bdd:adc4:3a56]) by DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::843a:1bdd:adc4:3a56%8]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
- 12:04:24 +0000
-From:   Roy Im <roy.im.opensource@diasemi.com>
-To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Roy Im <roy.im.opensource@diasemi.com>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: RE: [RESEND PATCH V13 3/3] Input: new da7280 haptic driver
-Thread-Topic: [RESEND PATCH V13 3/3] Input: new da7280 haptic driver
-Thread-Index: AQHWQwzBfFR7uhdm1kyQ3q9kXzA/B6jmUoyAgAC/zIA=
-Date:   Wed, 24 Jun 2020 12:04:24 +0000
-Message-ID: <DB8PR10MB3356697B41C0FB97F5FD330185950@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1592221223.git.Roy.Im@diasemi.com>
- <135761fd309eb9424faeb631b6e6c66147b57666.1592221223.git.Roy.Im@diasemi.com>
- <20200623144105.mxhcrtezbghjb2vb@taurus.defre.kleine-koenig.org>
-In-Reply-To: <20200623144105.mxhcrtezbghjb2vb@taurus.defre.kleine-koenig.org>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=diasemi.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [1.234.57.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 37565279-34ff-4415-f879-08d81836bcab
-x-ms-traffictypediagnostic: DB8PR10MB2891:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR10MB28912A2B21CD6479AD90C92FA2950@DB8PR10MB2891.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0444EB1997
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 52r3d9dlD53LmiKaV++M7U8KT4CFDJC/v4P6NyK7eGPSKzR8O/xOuHZ+3T076rpZ6AxxbNHZUmNcNrOEwE/LH8Gi198ADwV+LeBZhLQvsZAynNuNbqaNVKLuZHvUQnBG5eQRJDx63BM0a3jWvtLHB70mIpOjWdfPsixqv7mby1hc2JN117KuKv78KJQmBtSQzrdyEdqsALMOZIlEcxKvy6Kwx/2plY20A45VuIanw2WQVOtiP1KB94i4Ar/jQXPYiZ61727/JBbiRCRx1fwhJm9MqMi7pVSARfyHMWpVeH3qciWNHTjyxDX+AjJcIGZAulSApmpnDAyV+6Lpfd14RSiCtW9m2mveowp2P7unHcKN+waamyXeUyIqMeYT8ZP+OQzepA6JSIhxYBlhxt0ORQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(366004)(396003)(39850400004)(186003)(66556008)(66446008)(53546011)(66946007)(26005)(76116006)(66476007)(64756008)(7696005)(6506007)(110136005)(316002)(2906002)(4326008)(5660300002)(8676002)(8936002)(52536014)(83080400001)(54906003)(55016002)(66574015)(83380400001)(9686003)(86362001)(478600001)(966005)(7416002)(33656002)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 6QZ3MGIPtdhyizFe5D/HQWzLJu6jCbDasYkB83avfQQxeEaOZHRedZkEU5TXz4oo89xJuZw9rFwQbvLCpjx7o1Y4RCc+Xe/aNIvpGNucIihITqV/j1BN7eKyI8F+Ss6cGcIq7XsavUP37YvTT9QfEMD2G8UzqUkbknpixzenDgzR3/JBoXydhJUSlR0J+SYj03/BPeX9Ucf04t+MIuCT2vagsAoTWxMDArhUlJemuNx7wOlebMrNW6RDoEpI+X9SHi98KhYmI/L/0cQHcCgQ7sjpwlP3H5MMUOPp+cUonR9TzrTzfQ8g6dWf/ZcVprW8UpBn5BIbuJnDAd2ZmY9R/LitFR4SZNS65A44Q21zZIPj1/TPGC+sP8sAfFm15HHfOBhy7CQpbfh8WyB301MiBNDMbhtsoKa3RrZNmy/ezh5K+S7QHlpQcvVuRXdO0ZUvUrss++IaANodnQm6NTDYCmMddYiRozmGAbpRoa2ibJQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 24 Jun 2020 08:04:56 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:39417 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388522AbgFXME4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:04:56 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id o493ju2n0x3Ajo496jjKoK; Wed, 24 Jun 2020 14:04:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593000293; bh=PiKVba03XEk87JSU9wAB4cyFQf3xBDIadjtktZ1G4m8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=HjVGcQ9u7mHkoBRxM/kmERQO2BFIoUaFyUTJjNCqDiVpPtdbFmu2ga52d8oTKMWrf
+         HZMbcm/2oWH/7SX+k3fOYfgV6V9IO7n4euxcHm8vFEJU/dOiIOIz3kmjGYkh9IHFOP
+         rIdknvhPfpR2sSfypufPdXTppK7ue2Z9M6PD22rHkC/Gzd6WMNfLe5GNE67wjhWpvW
+         Tl+w5nFbQzNgB0CAf6bb6zopvDXwlttYLZhTLA2LYaM8JfhwSjlrR6GhTiAMwmge1D
+         zM5LNUSViuihkXP2rrcBTFN4VGTvFH6CDX6P6He7QTZj3oFLo9utrBzlnWukxU3fpa
+         FYBG2H9IQU7+Q==
+Subject: Re: [PATCH v2 15/17] media: cros-ec-cec: Use cros_ec_cmd()
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     kbuild test robot <lkp@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>
+References: <20200205190028.183069-1-pmalani@chromium.org>
+ <20200205190028.183069-16-pmalani@chromium.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <9f4cd932-c7ec-c755-17f3-503327450256@xs4all.nl>
+Date:   Wed, 24 Jun 2020 14:04:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37565279-34ff-4415-f879-08d81836bcab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 12:04:24.4527
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TdEhxXQnMNEzS9reOvo9IZC8ec9Ybrk5yb/hITfxgdHT9bhLEqDEQeWJN05LMBrBNewMP886FeEMnSvDqlrtWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB2891
+In-Reply-To: <20200205190028.183069-16-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKQpS1I0B/qMvD15NGvod0w0zHQ3gqPbjQYpqjAOEFCWwyEG/zXbBTP7KvsXD4c/nq3FTVGhd/eYhQmdirT5EgkmDOKATP6GByn2LzrTURY31/CJHt0G
+ SSykfn0ef9Z1nLjfngGe1MW5dKbSlGp1KZ8HMf6OjhR1TCurBmDkCMnUP2/vVTAhZcHixgFVbo3uQpEDKd6B5NLn5LsbKqFbKKeheYYuBePZSnphcPIu0off
+ KQ+hkpMO3crG4JnFOCLNPkPIAkcHFNPGN22l/chR3OlcCKcGjvyjj2uTe/OBqvXRXB1uOmDN4gcUmivzWDNNbB8+CG1wYDgVbweNJR3aNHcNoQy5mio+aITF
+ PjXEttFL7IzrhbElO3KF4IQeTb8nnfGKbH7Zp2Nh54pq5P7wPUfVoQGjidZWWKCGglOof7egrVdG69L33Zhf0GFskyiRcPwn0e7wtRZpLPVzGZ+mMWBPnDFJ
+ nnIeokPhZWXKtERO1//Q0Clxozu1NoLpZG2fCK3DMFD7LU0kWH3vh1QfRfk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Uwe,
+Hi Prashant,
 
-On Tue, June 23, 2020 11:41 PM, Uwe Kleine-K=F6nig wrote:
->=20
-> Hello,
->=20
-> On Mon, Jun 15, 2020 at 08:40:23PM +0900, Roy Im wrote:
-> > Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with multiple
-> > mode and integrated waveform memory and wideband support.
-> > It communicates via an I2C bus to the device.
-> >
-> > Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
->=20
-> Just some picky comments below.
->=20
-> > +	error =3D pwm_apply_state(haptics->pwm_dev, &state);
-> > +	if (error)
-> > +		dev_err(haptics->dev,
-> > +			"failed to apply pwm state: %pE\n",
-> > +			ERR_PTR(error));
->=20
-> You can save some horizontal space here by dropping the \n after the firs=
-t comma. (There are a few more occurences.)
->=20
-Ok, is this what you want?
-	error =3D pwm_apply_state(haptics->pwm_dev, &state);
-	if (error)
-		dev_err(haptics->dev, "failed to apply pwm state: %pE\n",
-			ERR_PTR(error));
+On 05/02/2020 20:00, Prashant Malani wrote:
+> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd() which does the
+> message buffer setup and cleanup, but is located in platform/chrome
+> and used by other drivers.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-> > +	return error;
-> > +}
-> > +[...]
-> > +
-> > +		/* Sync up PWM state and ensure it is off. */
-> > +		pwm_init_state(haptics->pwm_dev, &state);
-> > +		state.enabled =3D false;
-> > +		error =3D pwm_apply_state(haptics->pwm_dev, &state);
-> > +		if (error) {
-> > +			dev_err(dev,
-> > +				"failed to apply initial PWM state: %pE\n",
-> > +				ERR_PTR(error));
-> > +			return error;
-> > +		}
-> > +
-> > +		/* Check PWM Period, it must be in 10k ~ 250kHz */
->=20
-> The unit of a PWM period is in (nano)seconds, to it cannot be in the rang=
-e [10kHz, 250kHz]. (Is this too picky?)
+This source has moved to drivers/media/cec/platform/cros-ec/cros-ec-cec.c.
 
-No, it isn't. The 'Period' should be changed to 'frequency', I will fix thi=
-s as below.
+Can you rebase/repost?
 
-		/* Check PWM frequency, valid range: 10k ~ 250kHz */
+Regards,
 
->=20
-> > +		period2freq =3D 1000000 / state.period;
-> > +		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
-> > +		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
-> > +			dev_err(dev, "Not supported PWM frequency(%d)\n",
-> > +				period2freq);
->=20
-> Doesn't the compiler warn here about period2freq being unsigned and %d be=
-ing for signed int values?
->=20
-> For my (non-native) English ear s/Not supported/Unsupported/ sounds bette=
-r. Also my eyes would be pleases by a space
-> before the opening brace.
+	Hans
 
-I didn't see any warning message, but I will change/improve them to proper =
-one and the log as below.
+> ---
+> 
+> Changes in v2:
+> - Updated to use new function name and parameter list.
+> - Used C99 element setting to initialize struct.
+> 
+>  .../media/platform/cros-ec-cec/cros-ec-cec.c  | 45 +++++++------------
+>  1 file changed, 16 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> index 0e7e2772f08f96..a462af1c9ae04b 100644
+> --- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> +++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> @@ -93,18 +93,14 @@ static int cros_ec_cec_set_log_addr(struct cec_adapter *adap, u8 logical_addr)
+>  {
+>  	struct cros_ec_cec *cros_ec_cec = adap->priv;
+>  	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		struct ec_params_cec_set data;
+> -	} __packed msg = {};
+> +	struct ec_params_cec_set data = {
+> +		.cmd = CEC_CMD_LOGICAL_ADDRESS,
+> +		.val = logical_addr,
+> +	};
+>  	int ret;
+>  
+> -	msg.msg.command = EC_CMD_CEC_SET;
+> -	msg.msg.outsize = sizeof(msg.data);
+> -	msg.data.cmd = CEC_CMD_LOGICAL_ADDRESS;
+> -	msg.data.val = logical_addr;
+> -
+> -	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
+> +	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_SET, &data, sizeof(data),
+> +			  NULL, 0, NULL);
+>  	if (ret < 0) {
+>  		dev_err(cros_ec->dev,
+>  			"error setting CEC logical address on EC: %d\n", ret);
+> @@ -119,17 +115,12 @@ static int cros_ec_cec_transmit(struct cec_adapter *adap, u8 attempts,
+>  {
+>  	struct cros_ec_cec *cros_ec_cec = adap->priv;
+>  	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		struct ec_params_cec_write data;
+> -	} __packed msg = {};
+> +	struct ec_params_cec_write data = {};
+>  	int ret;
+>  
+> -	msg.msg.command = EC_CMD_CEC_WRITE_MSG;
+> -	msg.msg.outsize = cec_msg->len;
+> -	memcpy(msg.data.msg, cec_msg->msg, cec_msg->len);
+> -
+> -	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
+> +	memcpy(data.msg, cec_msg->msg, cec_msg->len);
+> +	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_WRITE_MSG, &data,
+> +			  sizeof(cec_msg->len), NULL, 0, NULL);
+>  	if (ret < 0) {
+>  		dev_err(cros_ec->dev,
+>  			"error writing CEC msg on EC: %d\n", ret);
+> @@ -143,18 +134,14 @@ static int cros_ec_cec_adap_enable(struct cec_adapter *adap, bool enable)
+>  {
+>  	struct cros_ec_cec *cros_ec_cec = adap->priv;
+>  	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
+> -	struct {
+> -		struct cros_ec_command msg;
+> -		struct ec_params_cec_set data;
+> -	} __packed msg = {};
+> +	struct ec_params_cec_set data = {
+> +		.cmd = CEC_CMD_ENABLE,
+> +		.val = enable,
+> +	};
+>  	int ret;
+>  
+> -	msg.msg.command = EC_CMD_CEC_SET;
+> -	msg.msg.outsize = sizeof(msg.data);
+> -	msg.data.cmd = CEC_CMD_ENABLE;
+> -	msg.data.val = enable;
+> -
+> -	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
+> +	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_SET, &data, sizeof(data),
+> +			  NULL, 0, NULL);
+>  	if (ret < 0) {
+>  		dev_err(cros_ec->dev,
+>  			"error %sabling CEC on EC: %d\n",
+> 
 
-		period2freq =3D 1000000 / state.period;
-		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
-		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
-			dev_err(dev, "Unsupported PWM frequency (%u)\n",
-				period2freq);
-			return -EINVAL;
-		}
-If you look ok, let me update this so.
-
->=20
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> > +
-> > +[...]
-> > +static struct i2c_driver da7280_driver =3D {
-> > +	.driver	=3D {
-> > +		.name		=3D "da7280",
-> > +		.of_match_table	=3D of_match_ptr(da7280_of_match),
-> > +		.pm		=3D &da7280_pm_ops,
->=20
-> I don't like alignment of =3D, but I'm aware this is a subjective thing.
-> (The reason for me is that adding a new member that is longer than the al=
-ready existing requires touching all lines. So I
-> stick to a single space before a =3D.)
-
-OK, I will do as you said.
-
->=20
-> > +	},
-> > +	.probe	  =3D da7280_probe,
-> > +	.id_table =3D da7280_i2c_id,
-> > +};
-> > +module_i2c_driver(da7280_driver);
-> > +
-> > +MODULE_DESCRIPTION("DA7280 haptics driver"); MODULE_AUTHOR("Roy Im
-> > +<Roy.Im.Opensource@diasemi.com>");
-> > +MODULE_LICENSE("GPL");
-> > --
-> > end-of-patch for RESEND PATCH V13
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
-  |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
