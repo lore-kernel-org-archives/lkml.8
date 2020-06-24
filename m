@@ -2,187 +2,182 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A793C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED672084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC6120C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TtD0zw/T"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PTp4jBmr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388659AbgFXKQl (ORCPT
+        id S2390153AbgFXKSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:16:41 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:57965 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387962AbgFXKQk (ORCPT
+        Wed, 24 Jun 2020 06:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388551AbgFXKSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:16:40 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id o2SHjtNNrx3Ajo2SKjit7o; Wed, 24 Jun 2020 12:16:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1592993797; bh=dTrkPOhP9OEblUbJ6sxH+uNo185PXfKyVBQch1+IaBQ=;
-        h=Subject:From:To:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=TtD0zw/T5kwEbY9lxN3GUUhVYf+JKYycv02PavNAyOZRW7jdpL87368RO++nHs3X+
-         O9S2xxciPr3Fu6WUHSGGCgoU1cepOJ1TweQkH1LUrq6YLSmpWG1jTm0cQAoVzD9//M
-         nqTAFPaT4sqfTHq230yvBGukXKNNuLrkehKBm1n5tijY3Z8dujz4PYUEl8giHRxdWX
-         K0n1zjf9QKdQupSF1QPTMVtSEZiJH4+r5UVtkXViIiNz35P6A3nw6HQbQs8Jpdddvh
-         tQQHq8vZNEX64bpi3zCuib9rDnCRpWfvWMUQdiYViNiBnvfouLc1nVv/O24x2le5rA
-         cynqHp9m3jZbA==
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Michael Rodin <mrodin@de.adit-jv.com>, efriedrich@de.adit-jv.com,
-        erosca@de.adit-jv.com
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <32cdf1a3-1353-d3e9-66b6-82ced163d8f8@xs4all.nl>
-Message-ID: <cc072f11-c562-af95-58a9-ebfcf3dfdfcd@xs4all.nl>
-Date:   Wed, 24 Jun 2020 12:16:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 06:18:09 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A2CC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:18:09 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id t6so1385969otk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4EH3Ayzk56MpDLOyZMi6Qg/VpTeqgjGr2SzN8cMmYoc=;
+        b=PTp4jBmr409uWPW5Vt6YrFOGDI30bKkNf7AC3vJo8Zwx4VR1rbjpgadDaEIZaiNFVL
+         VBJTF4XPT50EzLlvQiw8k4f2W0kd7aQGIMmlpeve9yrSDO078p6j5Vr2Ri837Rhm4jfv
+         u1+mRP5qAmpO/O+bu41SiNy9tUQ79STVe38DFeFeNP9499lp6tYg2B/9LdPxLqSViv/A
+         aEpznoyQ9vt5hdRMbFbNXOt8J3TRaPZVbdEX7KyF7CUmhSh1dbmdFYj9dqvPQj4ajKRS
+         cF2lIRn2VYT9yr1bRN5NevIgJSIw+t8chreAMLUflL4yfhZAHloKAxOl7LxOqTVI1NyJ
+         3/4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4EH3Ayzk56MpDLOyZMi6Qg/VpTeqgjGr2SzN8cMmYoc=;
+        b=N0GJx3++gsPmFI4yB50E2L+Li4C9gnXNLCXKydXMpUrUO3KGWTIAr+Bwy8oPnCy+Bp
+         AL02QCQtmg04CvLrAT8hhB+HR4KPLbU3y+1Q3v6x0G4ei1favNuSDMfOOzKLDNXaqaOW
+         SoerDmWo6N2n7MPCfPSnNCI1AhgDcU2YGdDAlY527+NsyvVA8x4qF7+dMl3PYMLZpqLU
+         l8uIKQJsdUqxeEttvIzK1zGiGDCvanpIvkXS2GLr4NEmPccagEnDuSC0jqMgU8EIIOBS
+         BZoNHYLX2wrrkUktLrpxtZxPwzGMC08fmoQyBVBYTlRdiAj4/HUt4xUQVVL3YewtLBia
+         gWEg==
+X-Gm-Message-State: AOAM533Do/EHlt3jkJ3rMSejxHby96XDSlPAOyu6IYkvtKJDxDg6ktJo
+        AfBlcZkBldUhxbvCFtwtEG1qW5iAlfylLC+hZcslfg==
+X-Google-Smtp-Source: ABdhPJw+WsW4dQOdXlVaB0Camas9/CrD9Jx9TYR5aNuPASM2glwnAa/P+LokVbvtPCFjZhr2vBM7U5l7wiUgv2imktE=
+X-Received: by 2002:a9d:638c:: with SMTP id w12mr18833226otk.251.1592993888296;
+ Wed, 24 Jun 2020 03:18:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <32cdf1a3-1353-d3e9-66b6-82ced163d8f8@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPD8p6E/bxNdK79QwTZHHOQ4YjMlsjCCwNQ5xIW+7DdpeA++iQUfsI/TsnR+5CtWOQ7ExrSd7etNlEk6wjrc922oI4wo4aGl3QEQIt/v0fD8IicEH1Bp
- waXXc6Y69bM0CTviLJ2msol4gmQE+lH9cLUghPhP1VWOoowFmYSLT4PhkkTgn4NUuXzFQFFPl6p14XIQFrnfHOLe0slHzOlaj0f1WYlkmbF1XLIFWTpNRJl8
- nA+P8J1ne2ZyyRWqzcYg0esieF0ZYf2yAd27lE2tPGb6oHa86EuOcBkYi6hdnwzOLU0voEdnDSPbW36POfXqiFXNdwohOh8cdof/GTWJYSjUnRSa8CtsHZln
- CVN7VPXrAZuhhMJaaWn4315RrRA9FxqnxRieKEPqlagdEcpV/DnQzctng+6UohX2d4W+1GkG/uCwSlJymIcHqoJ4JsfLa7ZEMsJzfqyw8UtJn13DR+TpoXgX
- +usbmbJiHAAzMQC47ZuRF/Xb7bDwenlWqwsM2R4MgZcOAlQ+3LA3J84qgahLVcx9DXrT+UyADYfADZHs/ckX4Joe24xjNefuUaV4xyprKeDxcFj4UaTzqog/
- hLQvqLs9LPMqITJgQLg6pmXzitOky7s6tLNquiRHwtw9dQ==
+References: <20200623083645.277342609@infradead.org> <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net> <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net> <20200623175957.GA106514@elver.google.com>
+ <20200623181232.GB4800@hirez.programming.kicks-ass.net> <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+ <20200624090033.GD4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200624090033.GD4800@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 24 Jun 2020 12:17:56 +0200
+Message-ID: <CANpmjNMj8FZuBrZsH62V3bZEhFvT2zXwLusVOLwNuH_-kLhp2g@mail.gmail.com>
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, bigeasy@linutronix.de,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2020 12:08, Hans Verkuil wrote:
-> On 16/06/2020 12:00, Ramzi BEN MEFTAH wrote:
->> From: Steve Longerbeam <steve_longerbeam@mentor.com>
->>
->> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
->> ioctls for use via v4l2 subdevice node.
->>
->> This commit should probably not be pushed upstream, because the (old)
->> idea of video inputs conflicts with the newer concept of establishing
->> media links between src->sink pads.
->>
->> However it might make sense for some subdevices to support enum/get/set
->> inputs. One example would be the analog front end subdevice for the
->> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
->> can be done without requiring the implementation of media entities that
->> would define the analog source for which to establish a media link.
->>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> 
-> Nacked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> 
-> This doesn't work: these ioctls refer to physical inputs on a backplane
-> of a device. But subdevices have no idea about that. This is high-level
-> information that is typically only known to a bridge driver based on
-> board information.
-> 
-> For PCI/USB drivers this comes from card definitions in the driver itself.
-> 
-> For platform drivers this should come from the device tree, but this hasn't
-> been fully implemented yet.
-> 
-> So if this is something that you want to implement, then look at:
-> 
-> Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> 
-> and add this to the DT for your board, and implement code to query this
-> in the platform driver.
+On Wed, 24 Jun 2020 at 11:01, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Jun 23, 2020 at 10:24:04PM +0200, Peter Zijlstra wrote:
+> > On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
+> > > Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
+> > > anything happens.
+> >
+> > OK, so the below patch doesn't seem to have any nasty recursion issues
+> > here. The only 'problem' is that lockdep now sees report_lock can cause
+> > deadlocks.
+> >
+> > It is completely right about it too, but I don't suspect there's much we
+> > can do about it, it's pretty much the standard printk() with scheduler
+> > locks held report.
+>
+> So I've been getting tons and tons of this:
+>
+> [   60.471348] ==================================================================
+> [   60.479427] BUG: KCSAN: data-race in __rcu_read_lock / __rcu_read_unlock
+> [   60.486909]
+> [   60.488572] write (marked) to 0xffff88840fff1cf0 of 4 bytes by interrupt on cpu 1:
+> [   60.497026]  __rcu_read_lock+0x37/0x60
+> [   60.501214]  cpuacct_account_field+0x1b/0x170
+> [   60.506081]  task_group_account_field+0x32/0x160
+> [   60.511238]  account_system_time+0xe6/0x110
+> [   60.515912]  update_process_times+0x1d/0xd0
+> [   60.520585]  tick_sched_timer+0xfc/0x180
+> [   60.524967]  __hrtimer_run_queues+0x271/0x440
+> [   60.529832]  hrtimer_interrupt+0x222/0x670
+> [   60.534409]  __sysvec_apic_timer_interrupt+0xb3/0x1a0
+> [   60.540052]  asm_call_on_stack+0x12/0x20
+> [   60.544434]  sysvec_apic_timer_interrupt+0xba/0x130
+> [   60.549882]  asm_sysvec_apic_timer_interrupt+0x12/0x20
+> [   60.555621]  delay_tsc+0x7d/0xe0
+> [   60.559226]  kcsan_setup_watchpoint+0x292/0x4e0
+> [   60.564284]  __rcu_read_unlock+0x73/0x2c0
+> [   60.568763]  __unlock_page_memcg+0xda/0xf0
+> [   60.573338]  unlock_page_memcg+0x32/0x40
+> [   60.577721]  page_remove_rmap+0x5c/0x200
+> [   60.582104]  unmap_page_range+0x83c/0xc10
+> [   60.586582]  unmap_single_vma+0xb0/0x150
+> [   60.590963]  unmap_vmas+0x81/0xe0
+> [   60.594663]  exit_mmap+0x135/0x2b0
+> [   60.598464]  __mmput+0x21/0x150
+> [   60.601970]  mmput+0x2a/0x30
+> [   60.605176]  exit_mm+0x2fc/0x350
+> [   60.608780]  do_exit+0x372/0xff0
+> [   60.612385]  do_group_exit+0x139/0x140
+> [   60.616571]  __do_sys_exit_group+0xb/0x10
+> [   60.621048]  __se_sys_exit_group+0xa/0x10
+> [   60.625524]  __x64_sys_exit_group+0x1b/0x20
+> [   60.630189]  do_syscall_64+0x6c/0xe0
+> [   60.634182]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   60.639820]
+> [   60.641485] read to 0xffff88840fff1cf0 of 4 bytes by task 2430 on cpu 1:
+> [   60.648969]  __rcu_read_unlock+0x73/0x2c0
+> [   60.653446]  __unlock_page_memcg+0xda/0xf0
+> [   60.658019]  unlock_page_memcg+0x32/0x40
+> [   60.662400]  page_remove_rmap+0x5c/0x200
+> [   60.666782]  unmap_page_range+0x83c/0xc10
+> [   60.671259]  unmap_single_vma+0xb0/0x150
+> [   60.675641]  unmap_vmas+0x81/0xe0
+> [   60.679341]  exit_mmap+0x135/0x2b0
+> [   60.683141]  __mmput+0x21/0x150
+> [   60.686647]  mmput+0x2a/0x30
+> [   60.689853]  exit_mm+0x2fc/0x350
+> [   60.693458]  do_exit+0x372/0xff0
+> [   60.697062]  do_group_exit+0x139/0x140
+> [   60.701248]  __do_sys_exit_group+0xb/0x10
+> [   60.705724]  __se_sys_exit_group+0xa/0x10
+> [   60.710201]  __x64_sys_exit_group+0x1b/0x20
+> [   60.714872]  do_syscall_64+0x6c/0xe0
+> [   60.718864]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   60.724503]
+> [   60.726156] Reported by Kernel Concurrency Sanitizer on:
+> [   60.732089] CPU: 1 PID: 2430 Comm: sshd Not tainted 5.8.0-rc2-00186-gb4ee11fe08b3-dirty #303
+> [   60.741510] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
+> [   60.752957] ==================================================================
+>
+> And I figured a quick way to get rid of that would be something like the
+> below, seeing how volatile gets auto annotated... but that doesn't seem
+> to actually work.
+>
+> What am I missing?
 
-Follow-up: in system with a media device and v4l-subdev devices (so MC-centric)
-this might make sense, provided the connector data is obtained from the DT.
+There's one more in include/linux/rcupdate.h. I suggested this at some point:
 
-An alternative is to expose the connectors in the media topology and use
-SETUP_LINK to choose which connector to pick.
+    https://lore.kernel.org/lkml/20200220213317.GA35033@google.com/
 
-I don't have a strong preference, but in both cases this information should
-come from the device tree.
+To avoid volatiles as I don't think they are needed here.
 
-Regards,
+[ Still testing your other patches for KCSAN, will send another reply there. ]
 
-	Hans
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
->> ---
->>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
->>  include/media/v4l2-subdev.h           | 11 +++++++++++
->>  2 files changed, 20 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
->> index 6b989fe..73fbfe9 100644
->> --- a/drivers/media/v4l2-core/v4l2-subdev.c
->> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
->> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->>  			return -ENOTTY;
->>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
->>  
->> +	case VIDIOC_ENUMINPUT:
->> +		return v4l2_subdev_call(sd, video, enuminput, arg);
->> +
->> +	case VIDIOC_G_INPUT:
->> +		return v4l2_subdev_call(sd, video, g_input, arg);
->> +
->> +	case VIDIOC_S_INPUT:
->> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
->> +
->>  	case VIDIOC_G_CTRL:
->>  		if (!vfh->ctrl_handler)
->>  			return -ENOTTY;
->> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
->> index f7fe78a..6e1a9cd 100644
->> --- a/include/media/v4l2-subdev.h
->> +++ b/include/media/v4l2-subdev.h
->> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
->>   * @g_input_status: get input status. Same as the status field in the
->>   *	&struct &v4l2_input
->>   *
->> + * @enuminput: enumerate inputs. Should return the same input status as
->> + *      @g_input_status if the passed input index is the currently active
->> + *      input.
->> + *
->> + * @g_input: returns the currently active input index.
->> + *
->> + * @s_input: set the active input.
->> + *
->>   * @s_stream: used to notify the driver that a video stream will start or has
->>   *	stopped.
->>   *
->> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
->>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
->>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
->>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
->> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
->> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
->> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
->>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
->>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
->>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
->>
-> 
-
+Thanks,
+-- Marco
