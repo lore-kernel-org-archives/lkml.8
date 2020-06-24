@@ -2,264 +2,77 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F020220857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="yCXpDacc"
+	by mail.kernel.org (Postfix) with ESMTP id DEB742082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403976AbgFXNog (ORCPT
+        id S2391064AbgFXNpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:44:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403965AbgFXNoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:44:34 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B9AC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:33 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s10so1459622pgm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iM73EbV6XOUeBC+wR5Qm4CpII2WHWhiiOOPcLrbaXTg=;
-        b=yCXpDaccX4/N/O76ew0CdlQzBhhkqlosUOa3l36YVRnrR6qtkOzy55FmvBia0GAav7
-         CPYrrj29f6IxqJ3tnaS5ClaKbfkDc9T+3bYgGYsXt7TK9T706K+qFGoosMR3l3jTEpk7
-         J2lN1B8lzHk1Vugu91WlBt36+BFhkZbtdX9Af12nIJwxLAxob6l20XmkN/mhEj2cLr64
-         OeoyLHHl9PtCNqncnBql8i4/UVUZAHzTn3jwb+rp+rStlvo8AOuN+BfRifZK/ocQJuNf
-         StET6j65+mFuUdNEC6SDPuRFgd5ihPuU4ookVPc3DMGuPw6vcm7KQmUg2VDI/lY6LUkT
-         4/lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iM73EbV6XOUeBC+wR5Qm4CpII2WHWhiiOOPcLrbaXTg=;
-        b=Eh/Q/RI9kcM7dY5OSTHwDWts9FCciFVIIMGeY02JUEfAfch6LxbPVKH/p8J/0ZVmY/
-         qID4bd1FEVooJ/+ERk8mcMm4zoyv3DIJotzHGybV6JLZrQuXgaQyfhsBfzQzdEz6F/1p
-         cMi1W6pBVqYByMBLSTxPrSzH6vThlPmk2gDW5uaX260DigXWV+61Hfm5CcqvAkzo5Agg
-         pwH2cmLIplq2FikCGd6nZ0RiQo7vXGpDZFBMxG6w/zOWTovx0FcrwZzGbPPi0OCbwrq6
-         AgQ8pIoLT2aIiK/vfOGOdgUFbCV0sw9zBZdQvupY+jWvvzjnpdqEMEfmJqD1wABQUd6Z
-         y1JA==
-X-Gm-Message-State: AOAM533D90Awzkw/OdGame77+Vtg0LoqLybiPygZoiydlW8/7DhavdIx
-        Kx3Jcxp1OIi8s2lrm4MP5jiiJw==
-X-Google-Smtp-Source: ABdhPJx8ECx2jEBlQKAsRpppx6m27ThrtmnU6xExkgs2pR1oorouLmURYXc7+x9hjrK52PF0y4b37g==
-X-Received: by 2002:a63:7c5e:: with SMTP id l30mr21806399pgn.276.1593006273335;
-        Wed, 24 Jun 2020 06:44:33 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([2401:4900:4174:4b69:7433:bb27:35ac:b181])
-        by smtp.gmail.com with ESMTPSA id b14sm2329634pfb.186.2020.06.24.06.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 06:44:32 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        hverkuil@xs4all.nl
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Subject: [PATCH v5 3/3] media: vimc: Add a control to display info on test image
-Date:   Wed, 24 Jun 2020 19:13:54 +0530
-Message-Id: <20200624134354.7023-4-kgupta@es.iitr.ac.in>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
-References: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
+        Wed, 24 Jun 2020 09:45:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:11012 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390774AbgFXNpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:45:30 -0400
+IronPort-SDR: Bltt1TY/9uvuvIZ2Xi4dHwsrSwo7f5OhZk11UprwgDQ1dHfQ38rVJWGPrghy+/4tRo0kYrezcv
+ DNqbqC47jH1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="141942263"
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="141942263"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 06:45:30 -0700
+IronPort-SDR: Mq/SO21xQZePfU1/Id2YHl4HnxiF0C/hF6HttxwuJf/GpSnTCqptenjm5QFJQasYqQO/32hUk7
+ VqYTJtjcUFpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="291742582"
+Received: from mylly.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga007.jf.intel.com with ESMTP; 24 Jun 2020 06:45:28 -0700
+Subject: Re: [PATCH v2] i2c: designware: platdrv: Set class based on dmi
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ricardo Ribalda <ribalda@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+References: <20200624112530.852254-1-ribalda@kernel.org>
+ <20200624132231.GF3703480@smile.fi.intel.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <f71e301f-f205-1236-a8b7-a448132b94a8@linux.intel.com>
+Date:   Wed, 24 Jun 2020 16:45:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200624132231.GF3703480@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a control in VIMC to display information such as the correct order of
-colors for a given test pattern, brightness, hue, saturation, contrast,
-width and height at sensor over test image.
+On 6/24/20 4:22 PM, Andy Shevchenko wrote:
+> On Wed, Jun 24, 2020 at 01:25:30PM +0200, Ricardo Ribalda wrote:
+>> Current AMD's zen-based APUs use this core for some of its i2c-buses.
+>>
+>> With this patch we re-enable autodetection of hwmon-alike devices, so
+>> lm-sensors will be able to work automatically.
+>>
+>> It does not affect the boot-time of embedded devices, as the class is
+>> set based on the dmi information.
+> 
+> I think it misses Fixes tag. And...
+> 
+I don't think we have regression here. Commit 70fba8302ade ("i2c: 
+i2c-designware-platdrv: Drop class based scanning to improve bootup 
+time") was done before any of those AMD ACPI IDs were added.
 
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
----
- drivers/media/test-drivers/vimc/Kconfig       |  2 +
- drivers/media/test-drivers/vimc/vimc-common.h |  1 +
- drivers/media/test-drivers/vimc/vimc-core.c   | 10 ++++
- drivers/media/test-drivers/vimc/vimc-sensor.c | 57 +++++++++++++++++++
- 4 files changed, 70 insertions(+)
-
-diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
-index 4068a67585f9..da4b2ad6e40c 100644
---- a/drivers/media/test-drivers/vimc/Kconfig
-+++ b/drivers/media/test-drivers/vimc/Kconfig
-@@ -2,6 +2,8 @@
- config VIDEO_VIMC
- 	tristate "Virtual Media Controller Driver (VIMC)"
- 	depends on VIDEO_DEV && VIDEO_V4L2
-+	select FONT_SUPPORT
-+	select FONT_8x16
- 	select MEDIA_CONTROLLER
- 	select VIDEO_V4L2_SUBDEV_API
- 	select VIDEOBUF2_VMALLOC
-diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
-index ae163dec2459..afda52253402 100644
---- a/drivers/media/test-drivers/vimc/vimc-common.h
-+++ b/drivers/media/test-drivers/vimc/vimc-common.h
-@@ -20,6 +20,7 @@
- #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
- #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
- #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
-+#define VIMC_CID_SHOW_INFO		(VIMC_CID_VIMC_BASE + 2)
- 
- #define VIMC_FRAME_MAX_WIDTH 4096
- #define VIMC_FRAME_MAX_HEIGHT 2160
-diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
-index 11210aaa2551..461320ae965c 100644
---- a/drivers/media/test-drivers/vimc/vimc-core.c
-+++ b/drivers/media/test-drivers/vimc/vimc-core.c
-@@ -5,10 +5,12 @@
-  * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
-  */
- 
-+#include <linux/font.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <media/media-device.h>
-+#include <media/tpg/v4l2-tpg.h>
- #include <media/v4l2-device.h>
- 
- #include "vimc-common.h"
-@@ -263,6 +265,7 @@ static int vimc_register_devices(struct vimc_device *vimc)
- 
- static int vimc_probe(struct platform_device *pdev)
- {
-+	const struct font_desc *font = find_font("VGA8x16");
- 	struct vimc_device *vimc;
- 	int ret;
- 
-@@ -272,6 +275,13 @@ static int vimc_probe(struct platform_device *pdev)
- 	if (!vimc)
- 		return -ENOMEM;
- 
-+	if (!font) {
-+		dev_err(&pdev->dev, "vimc: could not find font\n");
-+		return -ENODEV;
-+	}
-+
-+	tpg_set_font(font->data);
-+
- 	vimc->pipe_cfg = &pipe_cfg;
- 
- 	/* Link the media device within the v4l2_device */
-diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-index a2f09ac9a360..d776fdcdc3bf 100644
---- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-+++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-@@ -19,6 +19,8 @@ struct vimc_sen_device {
- 	struct v4l2_subdev sd;
- 	struct tpg_data tpg;
- 	u8 *frame;
-+	unsigned show_info;
-+	unsigned ns;
- 	/* The active format */
- 	struct v4l2_mbus_framefmt mbus_format;
- 	struct v4l2_ctrl_handler hdl;
-@@ -185,10 +187,43 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
- static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
- 				    const void *sink_frame)
- {
-+	u8 *basep[TPG_MAX_PLANES][2];
-+	char str[100];
-+	int line = 1;
- 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
- 						    ved);
- 
- 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
-+	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
-+
-+	if (vsen->show_info <= 1) {
-+		unsigned ms;
-+
-+		ms = (ktime_get_ns() - vsen->ns) / 1000000;
-+		snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
-+			 (ms / (60 * 60 * 1000)) % 24,
-+			 (ms / (60 * 1000)) % 60,
-+			 (ms / 1000) % 60,
-+			 ms % 1000);
-+		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
-+	}
-+
-+	if (vsen->show_info == 0) {
-+		const char *order = tpg_g_color_order(&vsen->tpg);
-+
-+		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, order);
-+		snprintf(str, sizeof(str),
-+			 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
-+			 vsen->tpg.brightness,
-+			 vsen->tpg.contrast,
-+			 vsen->tpg.saturation,
-+			 vsen->tpg.hue);
-+		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
-+		snprintf(str, sizeof(str), "sensor size: %dx%d",
-+			 vsen->mbus_format.width, vsen->mbus_format.height);
-+		tpg_gen_text(&vsen->tpg, basep, line++ * 16, 16, str);
-+	}
-+
- 	return vsen->frame;
- }
- 
-@@ -201,6 +236,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct vimc_pix_map *vpix;
- 		unsigned int frame_size;
- 
-+		vsen->ns = ktime_get_ns();
-+
- 		/* Calculate the frame size */
- 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
- 		frame_size = vsen->mbus_format.width * vpix->bpp *
-@@ -269,6 +306,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_SATURATION:
- 		tpg_s_saturation(&vsen->tpg, ctrl->val);
- 		break;
-+	case VIMC_CID_SHOW_INFO:
-+		vsen->show_info = ctrl->val;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -307,6 +347,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
- 	.qmenu = tpg_pattern_strings,
- };
- 
-+static const char * const vimc_ctrl_show_info_strings[] = {
-+	"All",
-+	"Counters Only",
-+	"None",
-+	NULL,
-+};
-+
-+static const struct v4l2_ctrl_config vimc_sen_ctrl_show_info = {
-+	.ops = &vimc_sen_ctrl_ops,
-+	.id = VIMC_CID_SHOW_INFO,
-+	.name = "Show Information",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(vimc_ctrl_show_info_strings) - 2,
-+	.qmenu = vimc_ctrl_show_info_strings,
-+};
-+
- static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 					    const char *vcfg_name)
- {
-@@ -323,6 +379,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
-+	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_show_info, NULL);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
- 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
 -- 
-2.17.1
-
+Jarkko
