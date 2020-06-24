@@ -2,127 +2,146 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 720B42082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDA72082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404844AbgFXQ1E (ORCPT
+        id S2404796AbgFXQ2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:27:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:40466 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404691AbgFXQ1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:27:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D02891FB;
-        Wed, 24 Jun 2020 09:27:02 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A0A93F73C;
-        Wed, 24 Jun 2020 09:26:59 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 17:26:58 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
+        Wed, 24 Jun 2020 12:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404535AbgFXQ2c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:28:32 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1635C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:28:32 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jo8G6-0006OA-8S; Wed, 24 Jun 2020 18:28:22 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jo8G3-0006Yi-29; Wed, 24 Jun 2020 18:28:19 +0200
+Date:   Wed, 24 Jun 2020 18:28:18 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Roy Im <roy.im.opensource@diasemi.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        X86 ML <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-Message-ID: <20200624162657.GG25945@arm.com>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org>
- <20200624033142.cinvg6rbg252j46d@google.com>
- <202006232143.66828CD3@keescook>
- <20200624104356.GA6134@willie-the-truck>
- <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
- <20200624112647.GC6134@willie-the-truck>
- <20200624134854.GF25945@arm.com>
- <20200624152646.GA6768@willie-the-truck>
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [RESEND PATCH V13 3/3] Input: new da7280 haptic driver
+Message-ID: <20200624162818.zjdtdlocxxndbsld@taurus.defre.kleine-koenig.org>
+References: <cover.1592221223.git.Roy.Im@diasemi.com>
+ <135761fd309eb9424faeb631b6e6c66147b57666.1592221223.git.Roy.Im@diasemi.com>
+ <20200623144105.mxhcrtezbghjb2vb@taurus.defre.kleine-koenig.org>
+ <DB8PR10MB3356697B41C0FB97F5FD330185950@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
+ <20200624133726.en7q52rpdtzvhajz@taurus.defre.kleine-koenig.org>
+ <DB8PR10MB3356AFC38358881B471E76A285950@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ssqstu72niiomjy3"
 Content-Disposition: inline
-In-Reply-To: <20200624152646.GA6768@willie-the-truck>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <DB8PR10MB3356AFC38358881B471E76A285950@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 04:26:46PM +0100, Will Deacon wrote:
-> On Wed, Jun 24, 2020 at 02:48:55PM +0100, Dave Martin wrote:
-> > On Wed, Jun 24, 2020 at 12:26:47PM +0100, Will Deacon wrote:
-> > > On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
-> > > > On Wed, 24 Jun 2020 at 12:44, Will Deacon <will@kernel.org> wrote:
-> > > > > For the kernel Image, how do we remove these sections? The objcopy flags
-> > > > > in arch/arm64/boot/Makefile look both insufficient and out of date. My
-> > > > > vmlinux ends up with both a ".notes" and a ".init.note.gnu.property"
-> > > > > segment.
-> > > > 
-> > > > The latter is the fault of the libstub make rules, that prepend .init
-> > > > to all section names.
-> > > 
-> > > Hmm. I tried adding -mbranch-protection=none to arm64 cflags for the stub,
-> > > but I still see this note in vmlinux. It looks like it comes in via the
-> > > stub copy of lib-ctype.o, but I don't know why that would force the
-> > > note. The cflags look ok to me [1] and I confirmed that the note is
-> > > being generated by the compiler.
-> > > 
-> > > > I'm not sure if there is a point to having PAC and/or BTI in the EFI
-> > > > stub, given that it runs under the control of the firmware, with its
-> > > > memory mappings and PAC configuration etc.
-> > > 
-> > > Agreed, I just can't figure out how to get rid of the note.
-> > 
-> > Because this section is generated by the linker itself I think you might
-> > have to send it to /DISCARD/ in the link, or strip it explicitly after
-> > linking.
-> 
-> Right, but why is the linker generating that section in the first place? I'm
-> compiling with -mbranch-protection=none and all the other objects linked
-> into the stub do not have the section.
-> 
-> I wonder if it's because lib/ctype.c doesn't have any executable code...
 
-What compiler and flags are you using for the affected object?  I don't
-see this with gcc so far.
+--ssqstu72niiomjy3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I wonder if this is a hole in the specs: the property could logically
-be emitted in any codeless object, since turning on BTI will obviously
-not break that object.
+Hello,
 
-For different linkers and compilers to interoperate though, the specs
-would need to say what to do in that situation.
+On Wed, Jun 24, 2020 at 03:39:52PM +0000, Roy Im wrote:
+> On Wed, Jun 24, 2020 at 10:37 PM, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Jun 24, 2020 at 12:04:24PM +0900, Roy Im wrote:
+> > > 		period2freq =3D 1000000 / state.period;
+> > > 		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
+> > > 		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
+> > > 			dev_err(dev, "Unsupported PWM frequency (%u)\n",
+> > > 				period2freq);
+> > > 			return -EINVAL;
+> > > 		}
+> > > If you look ok, let me update this so.
+> >=20
+> > looks fine.
+> >=20
+> > Note that you don't need the division if you check for:
+> >=20
+> > 	if (state.period > 100000 || state.period < 4000) {
+> > 		...
+> >=20
+> > (maybe the compiler is already clever enough to get rid of the division=
+ for you, but then the check is:
+> >=20
+> > 	if (state.period > 100000 || state.period < 3985) {
+> >=20
+> > because of rounding errors.)
+>=20
+> OK, you are right, that will be better. So let me change that as below
+> if you look fine.
 
-Cheers
----Dave
+I look fine, the code however is wrong. :-)
 
+> 	/* Check PWM period, PWM freq =3D 1000000 / state.period.
+> 	 * The valid PWM freq range: 10k ~ 250kHz.
+> 	 */
+> 	if (state.period > 100000 || state.period < 3985) {
 
+You want 4000 here ---------------------------------^^^^, don't you?
 
-> 
-> Will
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 		dev_err(dev, "Unsupported PWM period (%u)\n",
+> 			state.period);
+> 		return -EINVAL;
+> 	}
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ssqstu72niiomjy3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7zfx8ACgkQwfwUeK3K
+7AniMQf/dBjyVOi2QoJQg3cVZrxy9KBfFrnyeVumg/hVSCwc8hsLVMbdFBRn6dkZ
+FwPNz8m/VierY1+XotTGKhco99rqJOi78sBcXMBRwnEaLry7iPurnDVktCfDCeAu
+LMI29s2kqKh/+3jCT/H04Vdt/a5nT7+ZEcoONf2sXqbovRKd1BE3HHvNMIO+6xTY
+Rgk0wNbRTsC4U3msBGrZcrqKD3lBCTlIaWae0zDkAkrlFS590UCsJNWUoKA07WnC
+waGAfJwAGHYy7jOB/iQoDbNr8n+ENEyh7kGeAlch4+4nyNKsATERH9LrvLFAFL0+
+S3zijgTEyMRzyTfY4DFLqjyp98NqjA==
+=Q+Ni
+-----END PGP SIGNATURE-----
+
+--ssqstu72niiomjy3--
