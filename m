@@ -2,261 +2,249 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F159FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0C4620DD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EDC212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZx5N0RS"
+	dkim=pass (1024-bit key) header.d=elastisys.com header.i=@elastisys.com header.b="gVD+9kSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389781AbgFXIBW (ORCPT
+        id S2390251AbgFXIBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47182 "EHLO
+        Wed, 24 Jun 2020 04:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387650AbgFXIBV (ORCPT
+        with ESMTP id S2387650AbgFXIBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:01:21 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD97C061573;
-        Wed, 24 Jun 2020 01:01:21 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id g18so1307602wrm.2;
-        Wed, 24 Jun 2020 01:01:20 -0700 (PDT)
+        Wed, 24 Jun 2020 04:01:51 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68AACC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 01:01:51 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id i27so1504191ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 01:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=elastisys.com; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ff095JW8oYzVPcA6w3J52BpgeRH7KWoM7ayC0lmndtU=;
-        b=tZx5N0RSb6jkzNmNahEEiKJwPzEuT/scDoWx8lSV93588W1idC3T/cFC8g0oUwR+dJ
-         SqUv97R3K6VZqs32bMmDkMsqtvLpbxQFvTnHOn1jmHzkoM8tFQI2dMdribE8bDMsqtxe
-         zVSWen0pguU8L0jyZ3sb8Vfd0ApMEYEII0noWPOecy8tBdxCLtBKjY3utTraZiAQ/oRb
-         FICEPmpsp4a5cJtfO57nA8HeyihnePvJENwzAsJDII0XjQ4IZzsQCNekTatH2Mpb0SKK
-         p8zZm9+2ICDJE9L+c77ST3xFMu5/6wI+gmCxzoFjRJTOV5atRuIjxkTB3Y+nk0wtk8lt
-         f7ww==
+         :content-disposition:in-reply-to:user-agent;
+        bh=rvEDmmCkDmr2sv+i4rKqiz+/VceV2jQu8SKbuqtS5QA=;
+        b=gVD+9kSb6d2bDiZdIimjWfchl/Jb1lw+nSC8+mHtOT8OxuNkMaobZXINYFDXGoIrI5
+         zmlfBDt4spX85QpUcY1ByKfJntsVkMiPt9+jofLcEdYMhE4au6cCFfjLe5ALZeIVaAZ4
+         s98Yl11j3Vi2O4QMuFSB22eyaTGyOIK+T8yIs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ff095JW8oYzVPcA6w3J52BpgeRH7KWoM7ayC0lmndtU=;
-        b=dsEN19bn7J6XHGS476CsTjz/y/6/ZNy7bKNlL8QVHJlB4V2GT+6L19lxo9bTYRPXDP
-         vy7y/u0YW/4ksEKdRjkH4/G1AuzP5h1oNW4vIDasWpqwt6kBPHYi4huNxVe0+mBkmPAk
-         hHEGhFeqvuqs4FV1yj6hiRL7YYiqrcznSu+4eqtvdIzKMtA6tIJtEnto7aAq8aP4emuZ
-         mQ/H38zQNB5WgygV5RJCBEJB2yLkoVCDuAugh34fyKQxa7Xrb/nozKiywXJnsxn4zhUF
-         R4RsytPRfRdUWikkVmIpXBCXeSiMVZmvG3s65g8OhM45hEeU1SvRz511yjGRD7fecMdz
-         kITQ==
-X-Gm-Message-State: AOAM530+KumsGFCrbiRSc3ekkVuLAwrgjoosm4D2KAOvKXOtNohjlkif
-        d1Y1iYf0nOfTiJaoEnoKzjLv6SO4
-X-Google-Smtp-Source: ABdhPJyXAEGE/s3H+cIQzr4JLHjCH60NZodTnxqdileYvj08Qui4Sanh+mSVawVIq9fLlkUa9yJP3Q==
-X-Received: by 2002:a05:6000:1cf:: with SMTP id t15mr14115855wrx.180.1592985679537;
-        Wed, 24 Jun 2020 01:01:19 -0700 (PDT)
-Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
-        by smtp.gmail.com with ESMTPSA id a10sm26396204wrm.21.2020.06.24.01.01.18
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rvEDmmCkDmr2sv+i4rKqiz+/VceV2jQu8SKbuqtS5QA=;
+        b=gvhP9A6WZ00E13IjW7bOHrSC0tMv4n9Fta+r1jK86Cit0wmhBeXQhSmC8DIkvmKa98
+         0BGSpwdPD7kiEZGDtBPddELU/062rwB5KjjsdiyZQ693V1cE64AjMhin9TKOPDUMsr7Z
+         Km4QxC8PW7GJdaQzk+k9zbN48vyZaRrKVdZVYu+zfzAO/aDG3dap0nTTYBH3d9r9XxvH
+         ATidtvxjtAGBgnAZcZZEgm4LKCPvWihGkAthmoocheO/mMUMtIG21Bc+gfVoTzljUitg
+         Xhjo6I8vz6MDvzgfJ8b1KvhfWU+m5jdKpy2FzB8NeC74KIBz/ybcacBhfA/C9B+30Qvc
+         +dnQ==
+X-Gm-Message-State: AOAM532sDoD25+aHohReEG42oJt1X1MndqQKQoTLl8oPSYvhJwYXQ6x2
+        qEr4eWTym03+f4LgcHmFjFIs+A==
+X-Google-Smtp-Source: ABdhPJw5s+B0Ey6w2mRHbujd5H08dVn8viUmtvyCBNg9M0FKk842x/FnNBYgV5Tr/vgrzdoY62EzwA==
+X-Received: by 2002:a2e:8545:: with SMTP id u5mr14382838ljj.141.1592985709699;
+        Wed, 24 Jun 2020 01:01:49 -0700 (PDT)
+Received: from minitrue (90-224-48-115-no56.tbcn.telia.com. [90.224.48.115])
+        by smtp.gmail.com with ESMTPSA id l16sm4874586lfg.2.2020.06.24.01.01.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 01:01:18 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:01:17 +0200
-From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200624080117.fzgowkpgyhs6tbzx@macmini.local>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
- <20200623191129.GA4171@kozik-lap>
+        Wed, 24 Jun 2020 01:01:48 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:01:47 +0200
+From:   Cristian Klein <cristian.klein@elastisys.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: linux-next: build failures after merge of the hid tree
+Message-ID: <20200624080147.GA3144@minitrue>
+References: <20200621140421.7f4552df@canb.auug.org.au>
+ <20200623103736.25f67de5@canb.auug.org.au>
+ <nycvar.YFH.7.76.2006240012170.13242@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2006240930110.13242@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="1yeeQ81UyVL57Vl7"
 Content-Disposition: inline
-In-Reply-To: <20200623191129.GA4171@kozik-lap>
+In-Reply-To: <nycvar.YFH.7.76.2006240930110.13242@cbobk.fhfr.pm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
-Thanks to look at it.
 
-mem_gov is /sys/class/devfreq/10c20000.memory-controller/governor
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Here some numbers after increasing the running time:
-
-Running using simple_ondemand:
-Before:
-     From  :   To                                                                                     
-           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-* 165000000:         0         0         0         0         0         0         0         4   4528600
-  206000000:         5         0         0         0         0         0         0         0     57780
-  275000000:         0         5         0         0         0         0         0         0     50060
-  413000000:         0         0         5         0         0         0         0         0     46240
-  543000000:         0         0         0         5         0         0         0         0     48970
-  633000000:         0         0         0         0         5         0         0         0     47330
-  728000000:         0         0         0         0         0         0         0         0         0
-  825000000:         0         0         0         0         0         5         0         0    331300
-Total transition : 34
-
-
-After:
-     From  :   To
-           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-* 165000000:         0         0         0         0         0         0         0         4   5098890
-  206000000:         5         0         0         0         0         0         0         0     57780
-  275000000:         0         5         0         0         0         0         0         0     50060
-  413000000:         0         0         5         0         0         0         0         0     46240
-  543000000:         0         0         0         5         0         0         0         0     48970
-  633000000:         0         0         0         0         5         0         0         0     47330
-  728000000:         0         0         0         0         0         0         0         0         0
-  825000000:         0         0         0         0         0         5         0         0    331300
-Total transition : 34
-
-With a running time of:
-LITTLE => 283.699 s (680.877 c per mem access)
-big => 284.47 s (975.327 c per mem access)
-
-
-And when I set to the performance governor:
-Before:
-     From  :   To
-           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-  165000000:         0         0         0         0         0         0         0         5   5099040
-  206000000:         5         0         0         0         0         0         0         0     57780
-  275000000:         0         5         0         0         0         0         0         0     50060
-  413000000:         0         0         5         0         0         0         0         0     46240
-  543000000:         0         0         0         5         0         0         0         0     48970
-  633000000:         0         0         0         0         5         0         0         0     47330
-  728000000:         0         0         0         0         0         0         0         0         0
-* 825000000:         0         0         0         0         0         5         0         0    331350
-Total transition : 35
-
-After:
-     From  :   To
-           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-  165000000:         0         0         0         0         0         0         0         5   5099040
-  206000000:         5         0         0         0         0         0         0         0     57780
-  275000000:         0         5         0         0         0         0         0         0     50060
-  413000000:         0         0         5         0         0         0         0         0     46240
-  543000000:         0         0         0         5         0         0         0         0     48970
-  633000000:         0         0         0         0         5         0         0         0     47330
-  728000000:         0         0         0         0         0         0         0         0         0
-* 825000000:         0         0         0         0         0         5         0         0    472980
-Total transition : 35
-
-With a running time of:
-LITTLE: 68.8428 s (165.223 c per mem access)
-big: 71.3268 s (244.549 c per mem access)
-
-
-I see some transition, but not occuring during the benchmark.
-I haven't dive into the code, but maybe it is the heuristic behind that is not
-well defined? If you know how it's working that would be helpfull before I dive
-in it.
-
-I run your test as well, and indeed, it seems to work for large bunch of memory,
-and there is some delay before making a transition (seems to be around 10s).
-When you kill memtester, it reduces the freq stepwisely every ~10s.
-
-Note that the timing shown above account for the critical path, and the code is
-looping on reading only, there is no write in the critical path.
-Maybe memtester is doing writes and devfreq heuristic uses only write info?
-
-Cheers,
-Willy
-
-On 2020-06-23-21-11-29, Krzysztof Kozlowski wrote:
-> On Tue, Jun 23, 2020 at 09:02:38PM +0200, Krzysztof Kozlowski wrote:
-> > On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
-> > >
-> > > Hi everybody,
-> > >
-> > > Is DVFS for memory bus really working on Odroid XU3/4 board?
-> > > Using a simple microbenchmark that is doing only memory accesses, memory DVFS
-> > > seems to not working properly:
-> > >
-> > > The microbenchmark is doing pointer chasing by following index in an array.
-> > > Indices in the array are set to follow a random pattern (cutting prefetcher),
-> > > and forcing RAM access.
-> > >
-> > > git clone https://github.com/wwilly/benchmark.git \
-> > >   && cd benchmark \
-> > >   && source env.sh \
-> > >   && ./bench_build.sh \
-> > >   && bash source/scripts/test_dvfs_mem.sh
-> > >
-> > > Python 3, cmake and sudo rights are required.
-> > >
-> > > Results:
-> > > DVFS CPU with performance governor
-> > > mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
-> > > benchmark is running.
-> > > - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
-> > > - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
-> > >
-> > > While forcing DVFS memory bus to use performance governor,
-> > > mem_gov = performance at 825000000 Hz in idle,
-> > > - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
-> > > - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
-> > >
-> > > The kernel used is the last 5.7.5 stable with default exynos_defconfig.
+On Wed, Jun 24, 2020 at 09:30:23AM +0200, Jiri Kosina wrote:
+> On Wed, 24 Jun 2020, Jiri Kosina wrote:
+> 
+> > > > I don't know what caused it, but commit
+> > > > 
+> > > >   470376737e88 ("HID: allow building hid.ko as an external module")
+> > > > 
+> > > > did not fix it.  BTW, I build with "make O=...".
 > > 
-> > Thanks for the report. Few thoughts:
-> > 1. What trans_stat are saying? Except DMC driver you can also check
-> > all other devfreq devices (e.g. wcore) - maybe the devfreq events
-> > (nocp) are not properly assigned?
-> > 2. Try running the measurement for ~1 minutes or longer. The counters
-> > might have some delay (which would require probably fixing but the
-> > point is to narrow the problem).
-> > 3. What do you understand by "mem_gov"? Which device is it?
+> > That's actually the patch that almost certainly broke it.
+> > 
+> > CCing Cristian (author of that patch) and Nathan, who apparently sent a 
+> > fixup patch for this, but I haven't seen it, as our corporate mailserver 
+> > had severe issues yesterday.
 > 
-> +Cc Lukasz who was working on this.
+> I've now dropped the patch from hid.git
 > 
-> I just run memtester and more-or-less ondemand works (at least ramps
-> up):
+> -- 
+> Jiri Kosina
+> SUSE Labs
 > 
-> Before:
-> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
->      From  :   To
->            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> * 165000000:         0         0         0         0         0         0         0         0   1795950
->   206000000:         1         0         0         0         0         0         0         0      4770
->   275000000:         0         1         0         0         0         0         0         0     15540
->   413000000:         0         0         1         0         0         0         0         0     20780
->   543000000:         0         0         0         1         0         0         0         1     10760
->   633000000:         0         0         0         0         2         0         0         0     10310
->   728000000:         0         0         0         0         0         0         0         0         0
->   825000000:         0         0         0         0         0         2         0         0     25920
-> Total transition : 9
-> 
-> 
-> $ sudo memtester 1G
-> 
-> During memtester:
-> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
->      From  :   To
->            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
->   165000000:         0         0         0         0         0         0         0         1   1801490
->   206000000:         1         0         0         0         0         0         0         0      4770
->   275000000:         0         1         0         0         0         0         0         0     15540
->   413000000:         0         0         1         0         0         0         0         0     20780
->   543000000:         0         0         0         1         0         0         0         2     11090
->   633000000:         0         0         0         0         3         0         0         0     17210
->   728000000:         0         0         0         0         0         0         0         0         0
-> * 825000000:         0         0         0         0         0         3         0         0    169020
-> Total transition : 13
-> 
-> However after killing memtester it stays at 633 MHz for very long time
-> and does not slow down. This is indeed weird...
-> 
-> Best regards,
-> Krzysztof
+
+Hi,
+
+I tried several times, but I cannot reproduce. Attached the full compile
+log.
+
+Any pointers of why compilation fails on 0day-ci?
+
+--
+Cristian Klein, PhD
+Cloud-Native Expert
+Elastisys AB
+
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="compile.log"
+
+cklein@minitrue:~/linux$ git log -3 | cat
+commit 35f098c7cdba4e9ec2fcdf5e75411fb96bb8c289
+Author: Cristian Klein <cristian.klein@elastisys.com>
+Date:   Mon Jun 22 09:59:02 2020 +0200
+
+    linux-next: Signed-off-by missing for commit in the hid tree
+    
+    On Sun, Jun 21, 2020 at 07:51:24AM +1000, Stephen Rothwell wrote:
+    > Hi all,
+    >
+    > Commit
+    >
+    >   470376737e88 ("HID: allow building hid.ko as an external module")
+    >
+    > is missing a Signed-off-by from its author.
+    >
+    > --
+    > Cheers,
+    > Stephen Rothwell
+    
+    Hi,
+    
+    My bad. Please find attached the corrected patch.
+    
+    Cheers,
+    Cristian
+    
+    From 8005724373d8cecb241c013d16b2242c7c1fb39e Mon Sep 17 00:00:00 2001
+    From: Cristian Klein <cristian.klein@elastisys.com>
+    Date: Mon, 22 Jun 2020 08:47:58 +0200
+    Subject: [PATCH] Allow building hid.ko as an "external" module
+    
+    For quickly testing USB HID quirks with a larger community, it is useful
+    to be able to build hid.ko as an external module, e.g., against the
+    source code of the running kernel.
+    
+    Before this patch this failed as follows:
+    ```
+    $ make -C /lib/modules/$(uname -r)/build M=$PWD/drivers/hid
+    make: Entering directory '/usr/src/linux-headers-5.3.0-51-generic'
+      CC [M]  /home/cklein/linux/drivers/hid/i2c-hid/i2c-hid-core.o
+      CC [M]  /home/cklein/linux/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.o
+      LD [M]  /home/cklein/linux/drivers/hid/i2c-hid/i2c-hid.o
+      CC [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/ishtp/init.o
+      CC [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/ishtp/hbm.o
+      CC [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/ishtp/client.o
+      CC [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/ishtp/bus.o
+      CC [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/ishtp/dma-if.o
+      CC [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/ishtp/client-buffers.o
+      LD [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/intel-ishtp.o
+      CC [M]  /home/cklein/linux/drivers/hid/intel-ish-hid/ipc/ipc.o
+    /home/cklein/linux/drivers/hid/intel-ish-hid/ipc/ipc.c:12:10: fatal error: client.h: No such file or directory
+       12 | #include "client.h"
+          |          ^~~~~~~~~~
+    compilation terminated.
+    make[2]: *** [scripts/Makefile.build:290: /home/cklein/linux/drivers/hid/intel-ish-hid/ipc/ipc.o] Error 1
+    make[1]: *** [scripts/Makefile.build:519: /home/cklein/linux/drivers/hid/intel-ish-hid] Error 2
+    make: *** [Makefile:1656: _module_/home/cklein/linux/drivers/hid] Error 2
+    make: Leaving directory '/usr/src/linux-headers-5.3.0-51-generic'
+    ```
+    
+    Signed-off-by: Cristian Klein <cristian.klein@elastisys.com>
+
+commit c1a371cf80fbc06280cc0064ca99a39d0428ded3
+Author: Randy Dunlap <rdunlap@infradead.org>
+Date:   Mon Apr 13 09:14:35 2020 -0700
+
+    printk: fix global comment
+    
+    Fix typo/spello.
+    
+    Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+    Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+    Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+
+commit 20607434113b8f7d74cfc98e27a4199535c1d4fa
+Author: Randy Dunlap <rdunlap@infradead.org>
+Date:   Mon Mar 30 17:22:11 2020 -0700
+
+    lib/bitmap.c: fix spello
+    
+    Fix typo/spello for whitespaces.
+    
+    Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+    Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+cklein@minitrue:~/linux$ cat drivers/hid/intel-ish-hid/Makefile 
+# SPDX-License-Identifier: GPL-2.0
+#
+# Makefile - Intel ISH HID drivers
+# Copyright (c) 2014-2016, Intel Corporation.
+#
+#
+obj-$(CONFIG_INTEL_ISH_HID) += intel-ishtp.o
+intel-ishtp-objs := ishtp/init.o
+intel-ishtp-objs += ishtp/hbm.o
+intel-ishtp-objs += ishtp/client.o
+intel-ishtp-objs += ishtp/bus.o
+intel-ishtp-objs += ishtp/dma-if.o
+intel-ishtp-objs += ishtp/client-buffers.o
+
+obj-$(CONFIG_INTEL_ISH_HID) += intel-ish-ipc.o
+intel-ish-ipc-objs := ipc/ipc.o
+intel-ish-ipc-objs += ipc/pci-ish.o
+
+obj-$(CONFIG_INTEL_ISH_HID) += intel-ishtp-hid.o
+intel-ishtp-hid-objs := ishtp-hid.o
+intel-ishtp-hid-objs += ishtp-hid-client.o
+
+obj-$(CONFIG_INTEL_ISH_FIRMWARE_DOWNLOADER) += intel-ishtp-loader.o
+intel-ishtp-loader-objs += ishtp-fw-loader.o
+
+ccflags-y += -I $(src)/ishtp
+cklein@minitrue:~/linux$ make W=1 ARCH=x86_64 -j4
+  DESCEND  objtool
+  CALL    scripts/atomic/check-atomics.sh
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  TEST    posttest
+  MODPOST 2315 modules
+arch/x86/tools/insn_decoder_test: success: Decoded and checked 6276029 instructions
+  TEST    posttest
+arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0xbc0b57f0)
+Kernel: arch/x86/boot/bzImage is ready  (#1)
+
+--1yeeQ81UyVL57Vl7--
