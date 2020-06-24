@@ -2,177 +2,135 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE66C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 032CF20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4834320DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BKYvQqVY"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="jWwi91+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388244AbgFXCZ2 (ORCPT
+        id S2388297AbgFXC0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 22:25:28 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35027 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbgFXCZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 22:25:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592965524; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=yKqRxzK5CgSW8RmcYWIU6RCr/r6LK8FTWdS99NGEJHw=; b=BKYvQqVY/2i7VuwvrWhc/CWvFdPO9n4lnNhqZ6KYPpquf8/p7FkvlfLlIp3edgoDrumMQUs9
- Pnji+ZGsj9eSbsQzy+O91VSxJgCePy8Jxp3Ixwad3i+kTPMJoLtWHbGBNhP2CrlXiADItrvp
- +fW2svB3D7SJrsagFGhMibOHaA8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5ef2b980117610c7ff5431fc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 24 Jun 2020 02:25:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B63D8C433C6; Wed, 24 Jun 2020 02:25:04 +0000 (UTC)
-Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 77B97C43395;
-        Wed, 24 Jun 2020 02:25:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 77B97C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
-From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
-To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, sidgup@codeaurora.org, elder@ieee.org,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v6 2/2] remoteproc: qcom: Add notification types to SSR
-Date:   Tue, 23 Jun 2020 19:23:28 -0700
-Message-Id: <1592965408-16908-3-git-send-email-rishabhb@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592965408-16908-1-git-send-email-rishabhb@codeaurora.org>
-References: <1592965408-16908-1-git-send-email-rishabhb@codeaurora.org>
+        Tue, 23 Jun 2020 22:26:03 -0400
+Received: from mail-vi1eur05on2081.outbound.protection.outlook.com ([40.107.21.81]:49249
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387719AbgFXC0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 22:26:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hIp+S7T4Sl+RYxbcf3rwlrmVBfiAIt9QlYK9mQx5yYcMAfgq/ht0iKB8gWOcVpKj41BG+167VmX+BGtsQtLGtVOSbT3BtWXwqHou6kg0sSyiIAkgoTJnIuxF7D/J79W6qKTGvQZVZdBXBxBHf1qQM+GpUtln8/TgbPPxtzwZ8/o8G2A0rfiOj8J5CkAPFntS2gaTkj3whnTAnIXrWBq1rhgV9WmRBpfgEjWN7Zmfe5w7mrzlb+X6+oKo/ZiEmPvpP8rhrR5AEX8uTKt6TX1Wgx9kPNtHLofLGW4QcbG2/jGgSFHMixFLKfD/NSUh5JRN2ZVGebh8GnpXSoMlzH77Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rU9cDiMtqOvhoArBDcGrVu7PgwcUM9jJVlq3xzSYTuM=;
+ b=fBhDDBak6gDXJ5uWk7Gj8SdnsJcEneSP8l6hz2OkDAgSrIYQfldgF5Z9JZNzcIE3P1ZI8tJf7JTtoBjoggUkvlxVsIhhnw9QkiAX1CDBQi2nOYushGXCWHhZi5rjyLXL8RFZwAXC2St9OoMMcnmDlIz8qC3J1hHmhUWkwrkpfvvap6uvkHexBLpSZYApTQSPdKoElLc5sgIQHiJpOQPX6ZQwwsQRSYaDUtuS9jae4wW8rSP4yObccCbe5CrwPmm1pYfZEe6rmt7RvNBuT+Nq+HLHZIO4ioLAKjYymiQDgtIz7Ijzi1X6VK043DQH2lrK/TQHI5IoDeeZs0WFMUp9Ag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rU9cDiMtqOvhoArBDcGrVu7PgwcUM9jJVlq3xzSYTuM=;
+ b=jWwi91+6cKA6z69EPtB0ml2ml20JFX8PHuDrCcpip/rZKQ2jydbW2WxISVlkfWe1pJRQigt7GNrCvh9EUlzntmUA5lB4snDDdU54Q4SW6mBHfbLen3+7cJD1PLlh3qxAlJ5Z8NtAHaAcX36l8RBmmY2LA/ILoIjA3glHAndZ2IY=
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com (2603:10a6:4:33::14)
+ by DB6PR0401MB2472.eurprd04.prod.outlook.com (2603:10a6:4:36::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
+ 2020 02:25:58 +0000
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710]) by DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710%9]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
+ 02:25:58 +0000
+From:   "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+CC:     Ran Wang <ran.wang_1@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiafei Pan <jiafei.pan@nxp.com>
+Subject: RE: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add
+ ftm_alarm0 node
+Thread-Topic: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa:
+ add ftm_alarm0 node
+Thread-Index: AQHWSc7LwUF/uYH2J0qePoDw6vPXhw==
+Date:   Wed, 24 Jun 2020 02:25:58 +0000
+Message-ID: <DB6PR0401MB2438903D0BA7650CE4B136548F950@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+References: <20200614143206.24993-1-biwen.li@oss.nxp.com>
+ <20200614143206.24993-3-biwen.li@oss.nxp.com> <20200623120004.GD30139@dragon>
+In-Reply-To: <20200623120004.GD30139@dragon>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f905141b-0a4f-40b4-a7f4-08d817e5ee41
+x-ms-traffictypediagnostic: DB6PR0401MB2472:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0401MB247228B0FC08997C6B847893CE950@DB6PR0401MB2472.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0444EB1997
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m5VcHEO0bcn5lBgpDvFO3NZKMtazSoHjKdUfM/IP7Xqj0w8SFcT5/nEp0bk+s+qGodx+qgoKiJKPVFRRK0dIGAhz2iPyLO1dIoalDPopqPcDlBh3GykzbSGGSYvUwF9ZWNprd7a4yN2dq6bNn9lm6rbw8rhPqvemsxrJbUItUqOYl8l4Smu4kaSL47sL4gCep51GP4BsG3Zucg8gkKQ/hhGzfqinNXyMc/458JYiOveLZlGmZkttyz3Smgo7o+SzIJEAm9F05bZEM3v7Zo/85PfZgWfeY7UbsfB7FIISIw8o3X5p3Rh1rzQ0gLfge2x1RmEYMfeKsAXRXTGJFKZQYA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(8936002)(478600001)(5660300002)(2906002)(76116006)(66946007)(64756008)(66476007)(66556008)(71200400001)(66446008)(8676002)(9686003)(7696005)(52536014)(33656002)(186003)(6506007)(4326008)(54906003)(316002)(110136005)(26005)(55016002)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: sfxdcTv0ZWzBb5bCxIg/GNYSNh2vurkS5Co4UfLK1z34oOsG5iZFVMk/u4vP82friiOYTsK6ZmNNLghy5atft0yRKxeUoBRTyLtZFGWrP4oSheXeY9i+OO6QfLLWAv9/vgvao44SP9y8DNIXp/wust5oQF4vE1aSVoZe1yX89W1wfCEu6tCUhivqQoqovDvPWNEXbalSQHQnXVgjkNQBITHcb92PYpXde27ohdpScBm+kTqNn0BPi2ZOmZkjdsNyNGVFEaut2MVvXuUx5SQVURwa967jWuKFUzVcj6RKylQDveGfRONYBT03KE61sYHPzFE/sr041YitWfspvO/4EG4Kc2LHmhGvQY5aUmIQjNPf0Ck6hmfxHJvRiLLBOLV9tURHGjBJRF35seKdap7c63/oAtXzctIxBQzI4dT/gSuO6MUf2kp9VKpY/gAF+gFimLDXIg7WJzNEqW3feIf04ARI+VtrqIrnxk/w2Pejlks=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f905141b-0a4f-40b4-a7f4-08d817e5ee41
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 02:25:58.4735
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AWY1XxLVBchHXW8LSGIKYAv1TgEKRTb9DlOLnlrl2pIbYW/NG4du2hhjPa78hrQCCXhuUbOIY2437hTWDbbu7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2472
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SSR subdevice only adds callback for the unprepare event. Add callbacks
-for prepare, start and prepare events. The client driver for a particular
-remoteproc might be interested in knowing the status of the remoteproc
-while undergoing SSR, not just when the remoteproc has finished shutting
-down.
-
-Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
----
- drivers/remoteproc/qcom_common.c      | 44 ++++++++++++++++++++++++++++++++++-
- include/linux/remoteproc/qcom_rproc.h | 16 +++++++++++++
- 2 files changed, 59 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-index 7a7384c..7ec4597 100644
---- a/drivers/remoteproc/qcom_common.c
-+++ b/drivers/remoteproc/qcom_common.c
-@@ -265,6 +265,44 @@ int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb)
- }
- EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
- 
-+static int ssr_notify_prepare(struct rproc_subdev *subdev)
-+{
-+	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-+	struct qcom_ssr_notify_data data = {
-+		.name = ssr->info->name,
-+		.crashed = false,
-+	};
-+
-+	srcu_notifier_call_chain(&ssr->info->notifier_list,
-+				 QCOM_SSR_BEFORE_POWERUP, &data);
-+	return 0;
-+}
-+
-+static int ssr_notify_start(struct rproc_subdev *subdev)
-+{
-+	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-+	struct qcom_ssr_notify_data data = {
-+		.name = ssr->info->name,
-+		.crashed = false,
-+	};
-+
-+	srcu_notifier_call_chain(&ssr->info->notifier_list,
-+				 QCOM_SSR_AFTER_POWERUP, &data);
-+	return 0;
-+}
-+
-+static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
-+{
-+	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-+	struct qcom_ssr_notify_data data = {
-+		.name = ssr->info->name,
-+		.crashed = crashed,
-+	};
-+
-+	srcu_notifier_call_chain(&ssr->info->notifier_list,
-+				 QCOM_SSR_BEFORE_SHUTDOWN, &data);
-+}
-+
- static void ssr_notify_unprepare(struct rproc_subdev *subdev)
- {
- 	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
-@@ -273,7 +311,8 @@ static void ssr_notify_unprepare(struct rproc_subdev *subdev)
- 		.crashed = false,
- 	};
- 
--	srcu_notifier_call_chain(&ssr->info->notifier_list, 0, &data);
-+	srcu_notifier_call_chain(&ssr->info->notifier_list,
-+				 QCOM_SSR_AFTER_SHUTDOWN, &data);
- }
- 
- /**
-@@ -298,6 +337,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
- 	}
- 
- 	ssr->info = info;
-+	ssr->subdev.prepare = ssr_notify_prepare;
-+	ssr->subdev.start = ssr_notify_start;
-+	ssr->subdev.stop = ssr_notify_stop;
- 	ssr->subdev.unprepare = ssr_notify_unprepare;
- 
- 	rproc_add_subdev(rproc, &ssr->subdev);
-diff --git a/include/linux/remoteproc/qcom_rproc.h b/include/linux/remoteproc/qcom_rproc.h
-index 2a1d6d0..6470516 100644
---- a/include/linux/remoteproc/qcom_rproc.h
-+++ b/include/linux/remoteproc/qcom_rproc.h
-@@ -5,6 +5,22 @@ struct notifier_block;
- 
- #if IS_ENABLED(CONFIG_QCOM_RPROC_COMMON)
- 
-+/**
-+ * enum qcom_ssr_notify_type - Startup/Shutdown events related to a remoteproc
-+ * processor.
-+ *
-+ * @QCOM_SSR_BEFORE_POWERUP:	Remoteproc about to start (prepare stage)
-+ * @QCOM_SSR_AFTER_POWERUP:	Remoteproc is running (start stage)
-+ * @QCOM_SSR_BEFORE_SHUTDOWN:	Remoteproc crashed or shutting down (stop stage)
-+ * @QCOM_SSR_AFTER_SHUTDOWN:	Remoteproc is down (unprepare stage)
-+ */
-+enum qcom_ssr_notify_type {
-+	QCOM_SSR_BEFORE_POWERUP,
-+	QCOM_SSR_AFTER_POWERUP,
-+	QCOM_SSR_BEFORE_SHUTDOWN,
-+	QCOM_SSR_AFTER_SHUTDOWN,
-+};
-+
- struct qcom_ssr_notify_data {
- 	const char *name;
- 	bool crashed;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> > Change in v2:
+> > 	- use generic name
+> > 	- use definition
+> >
+> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
+> >  5 files changed, 72 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > index 006e544..4742efe 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > @@ -22,6 +22,7 @@
+> >  		rtic-c =3D &rtic_c;
+> >  		rtic-d =3D &rtic_d;
+> >  		sec-mon =3D &sec_mon;
+> > +		rtc1 =3D &ftm_alarm0;
+>=20
+> Sorry. I did not catch it during v1 review.  But we want to keep them sor=
+t
+> alphabetically.
+Okay, got it, i will sort them in v3.
 
