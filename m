@@ -2,228 +2,109 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168F2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74D3920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIcfSoxu"
+	by mail.kernel.org (Postfix) with ESMTP id E397A20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593020662;
+	bh=bvusmCWIESHEAj0e+z3a1cGAYmpjANA+c6koHZdoHoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dw6yxip5KZfvOCqyGenbOnE4GGKOdE68e6GGU962qopXwvK41KmjGJYlnbcD3Eyu7
+	 8fce6XKW0WfEQOxQj+Qkk0mAhur40YMHmSDbq7HCqTKIqcgF4I9w6wylcxAbkMnD2s
+	 P/Kv79sX6nBwCNCOWMuXPCp7bM7NSJnfRlxBaIHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405636AbgFXRoG (ORCPT
+        id S2405649AbgFXRoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405567AbgFXRoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:44:05 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08553C061573;
-        Wed, 24 Jun 2020 10:44:05 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id d6so1443484pjs.3;
-        Wed, 24 Jun 2020 10:44:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q66XZq5tVZm4QZtVyx5dc+LjQt4l89O1YXK816M5JxU=;
-        b=YIcfSoxuvmqeZqXnEhrXfx8fYBfSN0iMclikZiiCR5tBm9HHdSFD5NRwBxD7MXShRC
-         cr3NgoGcbi4Ej15eKzuVdIvJLODfLC1QSwxQK0qIsmbp5gTPZE5NAKYv/JhyvGA8Y7SI
-         qJr/L+gTb5nv0ENifRNbg9tb1geqMfATxqBPw/btSLsnB7zp0xRzdpOT9AkXlw7gbq5k
-         z17ITLqdTALlvqdpIP3lHIv62ifAxvAzlk35pZHvc4xdiIcA0geGw+6bEnElErTDiW8j
-         Xnq0ekf1vYiA2Zlw5LltLYPk6cqo7a6m8hX5XPTZtYo42RrAWo03FR7ILKdNlSjmZ1CY
-         qlog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q66XZq5tVZm4QZtVyx5dc+LjQt4l89O1YXK816M5JxU=;
-        b=sz/AGABnG9tQIK4rPen5LPlFhPRcDc6lMsrrY4SeU3j5h/l4KWT8HN+Pyq/9anmQAc
-         FwFqytdtQ8jQL+dLkwQLr028eF2QNyb1iFCfWYgAN2/TQJD7RKwBgzkhg2OUGr9fL4LE
-         Ko6vFdHvVYQB7I2t60IuPFcYc+Yl0CqYrOyc8TrTZUg4Yep9YNIq8Hdec47gZigfWWWY
-         5iEqooXjdsMcAQcwQKM145JxiqqB5uu1NXRzFwmXdcdfeg5G/vgQyNQ1tQ8LxfqJ6zPW
-         3IT7FQLXRkFqZsC5QLLsQ80X33fotEWfLBX8UwmSNKaXWoONqMhMSFT1Y3dkoTyVmudB
-         Y7rw==
-X-Gm-Message-State: AOAM532KHkPeKF+DRdBKD4r3O7QggsrPyq/tJ2p8GQvTnPDej3CHlYCo
-        idc06luBqpjUUe2F/rWOPUU=
-X-Google-Smtp-Source: ABdhPJzpC59BuAnXFlgkDpWoDCbUH8H2Ug5AMUQQO3WqUefsyf5wUAv8yEorWyaV4YgvzGvawPvwPQ==
-X-Received: by 2002:a17:902:7896:: with SMTP id q22mr29894001pll.237.1593020644480;
-        Wed, 24 Jun 2020 10:44:04 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id b71sm11079297pfb.125.2020.06.24.10.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 10:44:03 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: [PATCH v1] orinoco: use generic power management
-Date:   Wed, 24 Jun 2020 23:10:49 +0530
-Message-Id: <20200624174048.64754-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 24 Jun 2020 13:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405639AbgFXRoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:44:20 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DC0320738;
+        Wed, 24 Jun 2020 17:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593020659;
+        bh=bvusmCWIESHEAj0e+z3a1cGAYmpjANA+c6koHZdoHoE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AyXen/QaFox7J1zFBnpVX4/PK81hmX8JLHCM155tV/YRT6FXQSmg57opeqx8XsYvd
+         kErfA2rh5Kyyz5kFbezKJwIbmVPB06thKUmi5X6rkoBf4s4yIJmWeeS26kZiKU8LfY
+         KQPY6dLasmXWkgkkGWjVMbv8EmjyZGlxfXeg4qac=
+Date:   Wed, 24 Jun 2020 18:44:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
+        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
+        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
+ state
+Message-ID: <20200624174417.GM5472@sirena.org.uk>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
+ <20200624170933.GB39073@google.com>
+ <20200624171537.GL5472@sirena.org.uk>
+ <20200624173948.GC39073@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="I4g3zIzscEHdx6fd"
+Content-Disposition: inline
+In-Reply-To: <20200624173948.GC39073@google.com>
+X-Cookie: So this is it.  We're going to die.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the support of generic PM callbacks, drivers no longer need to use
-legacy .suspend() and .resume() in which they had to maintain PCI states
-changes and device's power state themselves. The required operations are
-done by PCI core.
 
-PCI drivers are not expected to invoke PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(),
-pci_set_power_state(), etc. Their tasks are completed by PCI core itself.
+--I4g3zIzscEHdx6fd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Compile-tested only.
+On Wed, Jun 24, 2020 at 10:39:48AM -0700, Matthias Kaehlcke wrote:
+> On Wed, Jun 24, 2020 at 06:15:37PM +0100, Mark Brown wrote:
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- .../intersil/orinoco/orinoco_nortel.c         |  3 +-
- .../wireless/intersil/orinoco/orinoco_pci.c   |  3 +-
- .../wireless/intersil/orinoco/orinoco_pci.h   | 32 ++++++-------------
- .../wireless/intersil/orinoco/orinoco_plx.c   |  3 +-
- .../wireless/intersil/orinoco/orinoco_tmd.c   |  3 +-
- 5 files changed, 13 insertions(+), 31 deletions(-)
+> > Aren't there dependencies on earlier patches in the series?
 
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c b/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c
-index 048693b6c6c2..96a03d10a080 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_nortel.c
-@@ -290,8 +290,7 @@ static struct pci_driver orinoco_nortel_driver = {
- 	.id_table	= orinoco_nortel_id_table,
- 	.probe		= orinoco_nortel_init_one,
- 	.remove		= orinoco_nortel_remove_one,
--	.suspend	= orinoco_pci_suspend,
--	.resume		= orinoco_pci_resume,
-+	.driver.pm	= &orinoco_pci_pm_ops,
- };
- 
- static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_pci.c b/drivers/net/wireless/intersil/orinoco/orinoco_pci.c
-index 4938a2208a37..f3c86b07b1b9 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_pci.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_pci.c
-@@ -230,8 +230,7 @@ static struct pci_driver orinoco_pci_driver = {
- 	.id_table	= orinoco_pci_id_table,
- 	.probe		= orinoco_pci_init_one,
- 	.remove		= orinoco_pci_remove_one,
--	.suspend	= orinoco_pci_suspend,
--	.resume		= orinoco_pci_resume,
-+	.driver.pm	= &orinoco_pci_pm_ops,
- };
- 
- static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_pci.h b/drivers/net/wireless/intersil/orinoco/orinoco_pci.h
-index 43f5b9f5a0b0..d49d940864b4 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_pci.h
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_pci.h
-@@ -18,51 +18,37 @@ struct orinoco_pci_card {
- 	void __iomem *attr_io;
- };
- 
--#ifdef CONFIG_PM
--static int orinoco_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused orinoco_pci_suspend(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct orinoco_private *priv = pci_get_drvdata(pdev);
- 
- 	orinoco_down(priv);
- 	free_irq(pdev->irq, priv);
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, PCI_D3hot);
- 
- 	return 0;
- }
- 
--static int orinoco_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused orinoco_pci_resume(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct orinoco_private *priv = pci_get_drvdata(pdev);
- 	struct net_device *dev = priv->ndev;
- 	int err;
- 
--	pci_set_power_state(pdev, PCI_D0);
--	err = pci_enable_device(pdev);
--	if (err) {
--		printk(KERN_ERR "%s: pci_enable_device failed on resume\n",
--		       dev->name);
--		return err;
--	}
--	pci_restore_state(pdev);
--
- 	err = request_irq(pdev->irq, orinoco_interrupt, IRQF_SHARED,
- 			  dev->name, priv);
- 	if (err) {
- 		printk(KERN_ERR "%s: cannot re-allocate IRQ on resume\n",
- 		       dev->name);
--		pci_disable_device(pdev);
- 		return -EBUSY;
- 	}
- 
--	err = orinoco_up(priv);
--
--	return err;
-+	return orinoco_up(priv);
- }
--#else
--#define orinoco_pci_suspend NULL
--#define orinoco_pci_resume NULL
--#endif
-+
-+static SIMPLE_DEV_PM_OPS(orinoco_pci_pm_ops,
-+			 orinoco_pci_suspend,
-+			 orinoco_pci_resume);
- 
- #endif /* _ORINOCO_PCI_H */
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_plx.c b/drivers/net/wireless/intersil/orinoco/orinoco_plx.c
-index 221352027779..16dada94c774 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_plx.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_plx.c
-@@ -336,8 +336,7 @@ static struct pci_driver orinoco_plx_driver = {
- 	.id_table	= orinoco_plx_id_table,
- 	.probe		= orinoco_plx_init_one,
- 	.remove		= orinoco_plx_remove_one,
--	.suspend	= orinoco_pci_suspend,
--	.resume		= orinoco_pci_resume,
-+	.driver.pm	= &orinoco_pci_pm_ops,
- };
- 
- static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c b/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c
-index 20ce569b8a43..9a9d335611ac 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_tmd.c
-@@ -213,8 +213,7 @@ static struct pci_driver orinoco_tmd_driver = {
- 	.id_table	= orinoco_tmd_id_table,
- 	.probe		= orinoco_tmd_init_one,
- 	.remove		= orinoco_tmd_remove_one,
--	.suspend	= orinoco_pci_suspend,
--	.resume		= orinoco_pci_resume,
-+	.driver.pm	= &orinoco_pci_pm_ops,
- };
- 
- static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
--- 
-2.27.0
+> Not to my knowledge. Patch "[2/6] spi: spi-geni-qcom: Use OPP API to set
+> clk/perf state" depends on a change in 'include/linux/qcom-geni-se.h' made
+> by "1/6] tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state",
+> however that's not true for this patch.
 
+Wait, so *some* of the series should go together but not other bits?
+But you want them split up for some reason?
+
+> I wonder if it would have been better to split this series into individual
+> patches/mini-series, to avoid this kind of confusion.
+
+Yes, if there's no dependencies then bundling things up into a series
+just causes confusion.
+
+--I4g3zIzscEHdx6fd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zkPEACgkQJNaLcl1U
+h9C5Ygf/eV7zcb0/VTGIuud8txsdBua20mrq0v0NJgg3eJsuQ6dIRslZTDgvayp7
+gusdaqd6gG5MVof8R2japp1a5S2XU7GNEBKnkSQIJK2ytFdcr+9Jbm+6AIisDg47
+UsRnOxCxuMvpC/P7J8+n9tnENxfQ8eN0vlrw3j+YH0DiQqrqFfxxR9qLlA4ccAAH
+dbpKrCr7Y/dz4W9JL8j1l0xiXvoDjgdH4JW9y/BfdU3F71N7SfQkQhWHe6Zc+EMZ
+TCMhZUE1b08cL+joxAxkE1Jn6V8i667Cy/VzKYDY63+18FKBGi/MzzvPwvxxuxUM
+jQLWU2TmIsu1hxy6fDy4xvidDxmxUw==
+=eBq2
+-----END PGP SIGNATURE-----
+
+--I4g3zIzscEHdx6fd--
