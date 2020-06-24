@@ -2,89 +2,92 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA137C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD5320767
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FC520B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q6kqbVLJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xZqQbfz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390356AbgFXKJE (ORCPT
+        id S2390161AbgFXKLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:09:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
+        Wed, 24 Jun 2020 06:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388197AbgFXKJD (ORCPT
+        with ESMTP id S2390066AbgFXKLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:09:03 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73957C061573;
-        Wed, 24 Jun 2020 03:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fbvRV6I4MBKKb4K8TrGIAwzpXd/13MRtwyrauhi7npU=; b=Q6kqbVLJjFSnrHUaLUDHBxAx2J
-        DP6uYFxBRY0BI9u/Mz+o8baPWJMqA2bYcFOIYiMN118gIMH2twE8hwHR+0crdqL51FEV+V/QqZBkU
-        Hdv70Aeymlqi94y7LpZ5VelzI7DcQXJMOr95LJQaYuq9Zqoo2YTtMR/MU5eV/pL5CiWWzCctczM/o
-        DBd9gzUMQ0QbAfAjKbQnJtmqVn42N4tEnLz7UvalJSZ2z3kJRDM7TTqIlrX0CryIGb9Hn987ZQhOg
-        sE6aZBlqkpFRJk3dnFNMsC2I9KOVuppRzHwfn8z9a2qa+0O1dc0VYkuVxLN5tYYLAZojlKNwUO/cw
-        1AzLNyiQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jo2KC-0004Cq-9D; Wed, 24 Jun 2020 10:08:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3AD79300261;
-        Wed, 24 Jun 2020 12:08:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AB40D20D94FEC; Wed, 24 Jun 2020 12:08:06 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 12:08:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
-        sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com
-Subject: Re: [PATCH v3 0/3] Preventing job distribution to isolated CPUs
-Message-ID: <20200624100806.GE4800@hirez.programming.kicks-ass.net>
-References: <20200623192331.215557-1-nitesh@redhat.com>
+        Wed, 24 Jun 2020 06:11:33 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D35B7C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:11:32 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l2so464112wmf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=igZtrvoVRESa1OptkNZlf7jr2wxCNuT6tHPjKiqOH2Y=;
+        b=xZqQbfz7SczvKrDSaN7j6UnsFBhfXGEAdKPoRtxIkkmU+Fk1A8U0WuWhj5RlUn36gb
+         oEdZRYnoMZkHbxbJghWTTAMIJIqMVxEYZTo9Jd5xA6pP5bVkRp2d6HKhFk4dWN1ecwfR
+         XjADbrLnuibFwLv4BfXq7ioG8MA7dwNhVp2e3wFZBxzUrmrRUtMTvpNXr7H9G5Ii5M3W
+         Nw9o/HnY4pR5O8udEAuE+VEiln7XxBF9FJzVAr1isdys++0iL8KX1oztEPOwhluKnbRC
+         03uIWzrzxjOQfBxjxcr5URfZp4vn1+Tx/cNWWKNUfX+EcGUNJc4YeDO0jInCBVgis3V7
+         Rbsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=igZtrvoVRESa1OptkNZlf7jr2wxCNuT6tHPjKiqOH2Y=;
+        b=H09QTLEN3S8PyUK7iV4qq/V9kNdI3y9TSYRDfhev7X/JOJj9o4qMbasXXHYlV2El33
+         WfK6La9t5x3DpMVnS9XrSJFEipic7wOcSoU8yY58eNhI75YHR3pBs3IpII68VpQ4vBOg
+         prHkMr8p6SftuZ3rYiK+YYjM+kfiQw5e3yJ44ipVBiV5ikarcbJuyzWAzKIj/GGMeosP
+         p2YvNhAhWkjTkCyLtxj03hhfckSiGI1ktF0G1bzv8Q4571fVYuZ7ZPoyYLdValtJf9Be
+         h76DuZiunO+f26H5OMLNH5dLkhlLJOwyCoXAXvNS25ICn4hTqtfreMPRCWzZP0SogOsL
+         EPUA==
+X-Gm-Message-State: AOAM532xrnVPHOf7yfiXwzhVk7ioeGAA8UUgKMQyr9bxSn+28AUDc0Ht
+        54WeT8hyLXQ0ptjK27+ps8MUcg==
+X-Google-Smtp-Source: ABdhPJwgLFr0/kRDRVXP8K8wBpQtcOlMyFUgKez+F/Ly7c+/i/o83wAuC+PTRyhhEUV32a5BV3tn7A==
+X-Received: by 2002:a7b:c158:: with SMTP id z24mr30586736wmi.12.1592993491424;
+        Wed, 24 Jun 2020 03:11:31 -0700 (PDT)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id 92sm18571397wrr.96.2020.06.24.03.11.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 03:11:30 -0700 (PDT)
+References: <20200610083012.5024-1-narmstrong@baylibre.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] clk: meson: g12a: Add the NNA source clocks
+In-reply-to: <20200610083012.5024-1-narmstrong@baylibre.com>
+Date:   Wed, 24 Jun 2020 12:11:29 +0200
+Message-ID: <1jpn9oixim.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623192331.215557-1-nitesh@redhat.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 03:23:28PM -0400, Nitesh Narayan Lal wrote:
-> This patch-set is originated from one of the patches that have been
-> posted earlier as a part of "Task_isolation" mode [1] patch series
-> by Alex Belits <abelits@marvell.com>. There are only a couple of
-> changes that I am proposing in this patch-set compared to what Alex
-> has posted earlier.
 
-> 
-> Alex Belits (3):
->   lib: Restrict cpumask_local_spread to houskeeping CPUs
->   PCI: Restrict probe functions to housekeeping CPUs
->   net: Restrict receive packets queuing to housekeeping CPUs
-> 
->  drivers/pci/pci-driver.c |  5 ++++-
->  lib/cpumask.c            | 16 +++++++++++-----
->  net/core/net-sysfs.c     | 10 +++++++++-
->  3 files changed, 24 insertions(+), 7 deletions(-)
+On Wed 10 Jun 2020 at 10:30, Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-This looks reasonable to me; who is expected to merge this? Should I
-take it through the scheduler tree like most of the nohz_full, or what
-do we do?
+> This patchset adds the Neural Network Accelerator source clocks present
+> on the Amlogic SM1 SoCs family.
+>
+> Dmitry Shmidt (2):
+>   dt-bindings: clk: g12a-clkc: Add NNA CLK Source clock IDs
+>   clk: meson: g12a: Add support for NNA CLK source clocks
+>
+>  drivers/clk/meson/g12a.c              | 119 ++++++++++++++++++++++++++
+>  drivers/clk/meson/g12a.h              |   7 +-
+>  include/dt-bindings/clock/g12a-clkc.h |   2 +
+>  3 files changed, 127 insertions(+), 1 deletion(-)
+
+Applied, Thx
