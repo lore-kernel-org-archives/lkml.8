@@ -3,120 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D6320823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229652072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0Do7bcU"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="QvbmWrGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389182AbgFXVCW (ORCPT
+        id S2389038AbgFXVGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388770AbgFXVCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:02:21 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05346C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:21 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id y10so3861504eje.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q65HneRMVLhdg5SVAjawRKs3e4Na9FxPWBLgo8PD4DM=;
-        b=C0Do7bcUEx1h891atQwx7sZfQK/co/oG5+keMt+dphDsjEoV7ElA4VRaEUwwl2WyPx
-         jHFcXosSdWbwdjNXrPQxg54FGXbeidn6T6UwSBKPV2zT/kEGYOLm5PlqKumfRtYP19XB
-         0J/jcMXrC4Bvk7fpoY5iO0GjQIkfjaxC6VxlizzfQF+Y9EcaBcxNMfroMIR9v5Ekv71/
-         lqrH5fypCSpjQRp6EM5ptJLlTafD3hlK1WfBrk2cGJTLj00RpS7NPn+q2RVmbQCAq1y4
-         jAV+g8VmpC+rw49LdR13HpfUq3/5A0BanSQd8KUpiKvr3x+RuDFX8cl8khwrrvvTC7SR
-         MVNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q65HneRMVLhdg5SVAjawRKs3e4Na9FxPWBLgo8PD4DM=;
-        b=F08eJaDhleu8g/TZZJ8oX/ZDSIsiitDzbiZuEgFx95cpU0PUiXhpwWqY5NHleKDKue
-         vvMEp6Tjs41Ksp4BqCqQd0xt7oWxWHzUIObH4AbKCBvrjIUdWVmzqxgsTWEZJPGbq4Fh
-         iD0rCEpCU7Ej5frK9ugYzASA9Su6O6Pn8wO/WPaSHaY2Evx3JHkYh9jy1AdAT3lduly2
-         e9gStrmmNlYI62K1NmBpFqpMBSZeeixABDTFnvkNB4ArcSJl/UyGdQ59e8UR5zyKE7nh
-         lHQF+LtINxfaGMzR4SfbXMymMnJi93wgPzpNdFBmnbtB69GlFMePyGvl54GddeJpJpvX
-         dI7A==
-X-Gm-Message-State: AOAM532h+1nBj3XOPDHtZW7b6lXidCou7TN4K9VvGBIRuj7u3ZtOhH02
-        JlTyW6gitW0O+XI95yTEioErjJ6lXSEB//XKGR8=
-X-Google-Smtp-Source: ABdhPJxMbkTVZFeqafVKJn8HY0wcCBMIsoXT8hVjSV2RB0oGms2P5ENEgkeFqhXyUNeyiMWdtYbU3LLL5pFCTAlnd2s=
-X-Received: by 2002:a17:906:7751:: with SMTP id o17mr28009624ejn.111.1593032539710;
- Wed, 24 Jun 2020 14:02:19 -0700 (PDT)
+        Wed, 24 Jun 2020 17:06:12 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:55127 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387853AbgFXVGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 17:06:10 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id b68c71cc;
+        Wed, 24 Jun 2020 20:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
+        :cc:subject:message-id:references:mime-version:content-type
+        :in-reply-to; s=mail; bh=XO6Q6GrJbI1v85reC8HtPS6cVqo=; b=QvbmWrG
+        e2VM3MG/tsvnOvOZc/bFhccLnV5iS+24BMhVYdHI1JLK97eP/dPNkq+XIb3bUpFx
+        SgF5jzedxu6g3DRB+D03hJN4M+3SkDJiXRaqx89QXGeUvaWyZQrVdyRi7HNYT20n
+        nHgxGDNobQsBKa8lFh8tgp2ZB4GkZ0J64H7dnefE3RccBX758gS0aY9KB63JT5du
+        aH2+ljjmDBN6MLBaIzdyTv8EwZb/ive6Yvkszyx0HoMR+88S35Wex4NKuDypru1B
+        T+Rr57Z5gkuDCtoLZXuX9wF9a2g4LfuGQLCa1objJqp7MNTfUFG0RrQUjIRpAXS7
+        PzCRjUG6hRscXOA==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d236ac31 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Wed, 24 Jun 2020 20:47:05 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 15:06:06 -0600
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL
+ in napi_gro_receive()
+Message-ID: <20200624210606.GA1362687@zx2c4.com>
+References: <20191014080033.12407-1-alobakin@dlink.ru>
 MIME-Version: 1.0
-References: <20200624191417.16735-1-chris@chris-wilson.co.uk>
- <20200624192116.GO6578@ziepe.ca> <CAHbLzkoy2kz7yirch7t9ruzJjNTyCCZHJFZst7OEz_DdmQyaaA@mail.gmail.com>
-In-Reply-To: <CAHbLzkoy2kz7yirch7t9ruzJjNTyCCZHJFZst7OEz_DdmQyaaA@mail.gmail.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Wed, 24 Jun 2020 14:02:07 -0700
-Message-ID: <CAHbLzkomoxKE73SgZvRD0cLELBtx71jx+g07zZ5YMajUPPcRLw@mail.gmail.com>
-Subject: Re: [PATCH] mm: Skip opportunistic reclaim for dma pinned pages
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191014080033.12407-1-alobakin@dlink.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 1:23 PM Yang Shi <shy828301@gmail.com> wrote:
->
-> On Wed, Jun 24, 2020 at 12:21 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Wed, Jun 24, 2020 at 08:14:17PM +0100, Chris Wilson wrote:
-> > > A general rule of thumb is that shrinkers should be fast and effective.
-> > > They are called from direct reclaim at the most incovenient of times when
-> > > the caller is waiting for a page. If we attempt to reclaim a page being
-> > > pinned for active dma [pin_user_pages()], we will incur far greater
-> > > latency than a normal anonymous page mapped multiple times. Worse the
-> > > page may be in use indefinitely by the HW and unable to be reclaimed
-> > > in a timely manner.
-> >
-> > A pinned page can't be migrated, discarded or swapped by definition -
-> > it would cause data corruption.
-> >
-> > So, how do things even get here and/or work today at all? I think the
-> > explanation is missing something important.
->
-> The __remove_mapping() will try to freeze page count if the count is
-> expected otherwise just not discard the page. I'm not quite sure why
-> the check is done that late, my wild guess is to check the refcount at
-> the last minute so there might be a chance the pin gets released right
-> before it.
->
-> But I noticed a bug in __remove_ampping() for THP since THP's dma
-> pinned count is recorded in the tail page's hpage_pinned_refcount
-> instead of refcount. So, the refcount freeze might be successful for
-> pinned THP.  Chris's patch could solve this issue too, but I'm not
+Hi Alexander,
 
-This bug is not valid. I just realized try_grab_page() would increase
-both refcount and hpage_pinned_refcount.
+This patch introduced a behavior change around GRO_DROP:
 
-> sure if it is worth backing earlier once dma pinned page is met. If it
-> is worth, the follow-up question is why not just skip such page in
-> scan phase?
+napi_skb_finish used to sometimes return GRO_DROP:
+
+> -static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
+> +static gro_result_t napi_skb_finish(struct napi_struct *napi,
+> +				    struct sk_buff *skb,
+> +				    gro_result_t ret)
+>  {
+>  	switch (ret) {
+>  	case GRO_NORMAL:
+> -		if (netif_receive_skb_internal(skb))
+> -			ret = GRO_DROP;
+> +		gro_normal_one(napi, skb);
 >
-> >
-> > Jason
-> >
+
+But under your change, gro_normal_one and the various calls that makes
+never propagates its return value, and so GRO_DROP is never returned to
+the caller, even if something drops it.
+
+Was this intentional? Or should I start looking into how to restore it?
+
+Thanks,
+Jason
