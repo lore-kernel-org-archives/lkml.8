@@ -2,92 +2,100 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1881AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7B220738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592960133;
-	bh=1kVrMxBiKSycFlWt7uEzeLT5TpFlYM1CtHJfu5ByQJk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FEqqqlEpc5qrXcuvicUtgC73/z5nTOHrQKUnJ5BKMbvDeEf/OA7DDWEzMqQPp5uub
-	 R7QCYRc7RlpMqjLkEU0MTGKEuesVWdW1WiOQ76kcsjPHbiiilaxgx/joE3kMlLJejX
-	 7ECNsKxL3IzlowuqFvcn+AoEwbr3N5ehxRKnsY1s=
+	by mail.kernel.org (Postfix) with ESMTP id D6EC520DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:56:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FB7Wp9k2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388336AbgFXAzb (ORCPT
+        id S2388353AbgFXA4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 20:55:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387586AbgFXAza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 20:55:30 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF1520738;
-        Wed, 24 Jun 2020 00:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592960130;
-        bh=1kVrMxBiKSycFlWt7uEzeLT5TpFlYM1CtHJfu5ByQJk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zaHROeN+UvEh5rRvaZom6G5GvzRCzzxaxpkCEu/fB4xd+VBBEuDFwi04cAAACRaU5
-         q0V6zACovYPeKAKnKi2xXXIFhcYQjkDMSnkaVE1BFwxG6giHJo/pgLoiw6ZrvMMzJZ
-         Wxem7uc8HBfqDpz+Dt+FwjMiXHDUGROD3uQrWXBQ=
-Date:   Tue, 23 Jun 2020 20:55:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 4.19 066/206] soundwire: slave: dont init debugfs on
- device registration error
-Message-ID: <20200624005528.GE1931@sasha-vm>
-References: <20200623195316.864547658@linuxfoundation.org>
- <20200623195320.204985936@linuxfoundation.org>
- <20200623211102.GB4401@amd>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200623211102.GB4401@amd>
+        Tue, 23 Jun 2020 20:56:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729700AbgFXA4M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 20:56:12 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A29C061573;
+        Tue, 23 Jun 2020 17:56:12 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f18so380622qkh.1;
+        Tue, 23 Jun 2020 17:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=B5VfZpM+X8knN3/rl+qFLVkBLatYrIcGjOd49U7irJo=;
+        b=FB7Wp9k2DtXFJmIaWB3oECTv0wgsvU24hTRkD4h0tPWO/EJgiINucfpnNW9ronDECQ
+         /mB9Oagm3HakllppJyaBINmmTIdGBEV54UhW+vGVaXKeGiegR0uXTEOFiiDdCGXcasyL
+         vI6WD398RSOslpNrFEHeWr8LPjdkUuoYptEt3BSiH5B0ZS4OFWXZUoDzpLir4yE84jhK
+         Bn2MBzmxWmnA6ZIzCScOtRSzArNGUTdFu2BZ4IZKkwqB2QZOgqa425DXdFrljROvcXit
+         mq7V4WgmPozFZSBuQ6shyRvgEzJ71PDSCbQhiYEeO9bc4WPIHbcwbPkOu5sfwcoby4GI
+         DySg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=B5VfZpM+X8knN3/rl+qFLVkBLatYrIcGjOd49U7irJo=;
+        b=NpD7JMC/6vLH/eoYtR7OXJk+Xb5CctuV2T1ETrGY12qVgz+FWjNrnolj+1IZ3oY6+F
+         Q+ASAy/E8qAGfRrXjME8RyICr4EVotlRMHpm2ptr3HgdC5ugkyW6RhFenChL5pwQCAbA
+         Qm4XcKfuORKaoCcfyVdZ5Zcu9WIml6sydUZlYePTEBS0cebLrGlyw5qSvGyIGkVI0Saj
+         2EbcHQjoqpKhCuXaTuKCdke+3nDx1hE1gSNU+R2MFchx/Uoz3ErbTAuKf8yfFz3jUduz
+         cBfOl8dg6VQrBQC7YbXWS+NBTXtkl+lw5O76045qIQLQC0nS64M52xIW9CoRpGwNm8a8
+         ZQiw==
+X-Gm-Message-State: AOAM532EZKDS6e8i0iifcEJzmlZln1n8zqHJBZ7EC0URsnL8RXbwvmYu
+        ew4nfKgzC5MCPWf3NmsujN7QyBud8F3erA==
+X-Google-Smtp-Source: ABdhPJznmQh0zjKtoWJeyATq6kU0U7s3P+5svTFZ+MIG/nWMp+29V+NExqsIW9laipwnG8iSiP7Gvw==
+X-Received: by 2002:a05:620a:635:: with SMTP id 21mr22919093qkv.491.1592960171903;
+        Tue, 23 Jun 2020 17:56:11 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:596e:7d49:a74:946e])
+        by smtp.googlemail.com with ESMTPSA id u20sm1096681qtj.39.2020.06.23.17.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 17:56:11 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [net/ethernet] do_reset: remove dev null check
+Date:   Tue, 23 Jun 2020 20:55:45 -0400
+Message-Id: <20200624005600.2221-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:11:03PM +0200, Pavel Machek wrote:
->Hi!
->
->> [ Upstream commit 8893ab5e8ee5d7c12e0fc1dca4a309475064473d ]
->>
->> The error handling flow seems incorrect, there is no reason to try and
->> add debugfs support if the device registration did not
->> succeed. Return on error.
->
->> +++ b/drivers/soundwire/slave.c
->> @@ -55,6 +55,8 @@ static int sdw_slave_add(struct sdw_bus *bus,
->>  		list_del(&slave->node);
->>  		mutex_unlock(&bus->bus_lock);
->>  		put_device(&slave->dev);
->> +
->> +		return ret;
->>  	}
->>
->>  	return ret;
->
->Mainline is significantly different here; this patch does not make
->sense in v4.19 -- as it does not do anything.
+dev cannot be NULL here since its already being accessed
+before. Remove the redundant null check.
 
-I've dropped it from 4.19, thanks!
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ drivers/net/ethernet/xircom/xirc2ps_cs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/xircom/xirc2ps_cs.c b/drivers/net/ethernet/xircom/xirc2ps_cs.c
+index 480ab7251515..3e3883ad88b0 100644
+--- a/drivers/net/ethernet/xircom/xirc2ps_cs.c
++++ b/drivers/net/ethernet/xircom/xirc2ps_cs.c
+@@ -1473,7 +1473,7 @@ do_reset(struct net_device *dev, int full)
+     unsigned int ioaddr = dev->base_addr;
+     unsigned value;
+ 
+-    pr_debug("%s: do_reset(%p,%d)\n", dev? dev->name:"eth?", dev, full);
++    pr_debug("%s: do_reset(%p,%d)\n", dev->name, dev, full);
+ 
+     hardreset(dev);
+     PutByte(XIRCREG_CR, SoftReset); /* set */
 -- 
-Thanks,
-Sasha
+2.17.1
+
