@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31143C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE541C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A3D20FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9457420899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389198AbgFXGdZ (ORCPT
+        id S2389213AbgFXGd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:33:25 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:45240 "EHLO loongson.cn"
+        Wed, 24 Jun 2020 02:33:28 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45206 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389113AbgFXGdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389061AbgFXGdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 02:33:20 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj9+j8_Je2R5JAA--.564S4;
-        Wed, 24 Jun 2020 14:33:10 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj9+j8_Je2R5JAA--.564S9;
+        Wed, 24 Jun 2020 14:33:12 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 02/14] irqchip/csky-apb-intc: Fix potential resource leaks
-Date:   Wed, 24 Jun 2020 14:32:35 +0800
-Message-Id: <1592980367-1816-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 07/14] irqchip/dw-apb-ictl: Fix potential resource leaks
+Date:   Wed, 24 Jun 2020 14:32:40 +0800
+Message-Id: <1592980367-1816-8-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1592980367-1816-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1592980367-1816-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxj9+j8_Je2R5JAA--.564S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF1DWw18XF4Utr1UZFyxZrb_yoW8Gry5pF
-        WUG39I9rZ7tw1xWrn7uF1DZr98u348KrZFk34fCas2vrnxWws0kryrAF1j9Fn8C3yxG3WF
-        9Fs5ta45Ca1UAFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9l14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
-        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-        6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26F
-        4UJVW0obIYCTnIWIevJa73UjIFyTuYvjfUjTm6UUUUU
+X-CM-TRANSID: AQAAf9Dxj9+j8_Je2R5JAA--.564S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7KrWxZr43Ww48KFWDtFy7ZFb_yoW8WF43pF
+        4fW39YkryfJF17XFn3ArWUX3s3t3W8tay7C3yIkan3Xr9xC34DCryFyFyjvF15AFWxG3WS
+        kF4vyFyDCa1DJa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9E14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+        z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+        4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE
+        3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2I
+        x0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8
+        JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vIr4
+        1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+        67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+        8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+        wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267
+        AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7VUj_HUJUUUUU==
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,45 +60,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 There exists potential resource leaks in the error path, fix them.
 
-Fixes: edff1b4835b7 ("irqchip: add C-SKY APB bus interrupt controller")
+Fixes: 350d71b94fc9 ("irqchip: add DesignWare APB ICTL interrupt controller")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-csky-apb-intc.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-dw-apb-ictl.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-csky-apb-intc.c b/drivers/irqchip/irq-csky-apb-intc.c
-index 5a2ec43..11a35eb 100644
---- a/drivers/irqchip/irq-csky-apb-intc.c
-+++ b/drivers/irqchip/irq-csky-apb-intc.c
-@@ -118,7 +118,8 @@ ck_intc_init_comm(struct device_node *node, struct device_node *parent)
- 					    &irq_generic_chip_ops, NULL);
- 	if (!root_domain) {
- 		pr_err("C-SKY Intc irq_domain_add failed.\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_iounmap;
+diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
+index e4550e9..bc9b750 100644
+--- a/drivers/irqchip/irq-dw-apb-ictl.c
++++ b/drivers/irqchip/irq-dw-apb-ictl.c
+@@ -86,12 +86,13 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 	ret = of_address_to_resource(np, 0, &r);
+ 	if (ret) {
+ 		pr_err("%pOF: unable to get resource\n", np);
+-		return ret;
++		goto err_irq_dispose;
  	}
  
- 	ret = irq_alloc_domain_generic_chips(root_domain, 32, 1,
-@@ -126,10 +127,17 @@ ck_intc_init_comm(struct device_node *node, struct device_node *parent)
- 			IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN, 0, 0);
- 	if (ret) {
- 		pr_err("C-SKY Intc irq_alloc_gc failed.\n");
+ 	if (!request_mem_region(r.start, resource_size(&r), np->full_name)) {
+ 		pr_err("%pOF: unable to request mem region\n", np);
 -		return -ENOMEM;
 +		ret = -ENOMEM;
++		goto err_irq_dispose;
+ 	}
+ 
+ 	iobase = ioremap(r.start, resource_size(&r));
+@@ -133,7 +134,7 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 					     IRQ_GC_INIT_MASK_CACHE);
+ 	if (ret) {
+ 		pr_err("%pOF: unable to alloc irq domain gc\n", np);
+-		goto err_unmap;
 +		goto err_domain_remove;
  	}
  
- 	return 0;
-+
-+err_domain_remove:
-+	irq_domain_remove(root_domain);
-+err_iounmap:
-+	iounmap(reg_base);
-+	return ret;
- }
+ 	for (i = 0; i < DIV_ROUND_UP(nrirqs, 32); i++) {
+@@ -150,10 +151,14 @@ static int __init dw_apb_ictl_init(struct device_node *np,
  
- static inline bool handle_irq_perbit(struct pt_regs *regs, u32 hwirq,
+ 	return 0;
+ 
++err_domain_remove:
++	irq_domain_remove(domain);
+ err_unmap:
+ 	iounmap(iobase);
+ err_release:
+ 	release_mem_region(r.start, resource_size(&r));
++err_irq_dispose:
++	irq_dispose_mapping(irq);
+ 	return ret;
+ }
+ IRQCHIP_DECLARE(dw_apb_ictl,
 -- 
 2.1.0
 
