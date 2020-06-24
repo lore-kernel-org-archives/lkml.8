@@ -2,67 +2,119 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0D620E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593003719;
-	bh=xIgR4etzuuD/XhDz5yuOShAfik5HvT9HtcNcSGjDtYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vZETq49xDS4j2m2fNJ3ISBXm0SouFjTXI7/8ozjA+52GZbTrmjr4d4gF+OzrqT5Pd
-	 TiHJ6aDR1d9Jm4B4EjI0vaqTgW2CudkHvhQhuxiwVj2KLHgz8leW8LyGCIsZkjsD27
-	 Ph0dGZOSDF4C6Ek6hqwdISkKJO4VBj7CgLEBqKw4=
+	by mail.kernel.org (Postfix) with ESMTP id 2018620786
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403781AbgFXNB6 (ORCPT
+        id S2390916AbgFXNDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 09:03:09 -0400
+Received: from correo.us.es ([193.147.175.20]:42552 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390686AbgFXNB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:01:57 -0400
-Received: from localhost (unknown [171.61.66.58])
+        id S2390317AbgFXNDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:03:08 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 9CC7E1C442D
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:03:07 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 8EA14DA73D
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:03:07 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 76E94DA722; Wed, 24 Jun 2020 15:03:07 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 483A8DA73D;
+        Wed, 24 Jun 2020 15:03:05 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Wed, 24 Jun 2020 15:03:05 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201C320786;
-        Wed, 24 Jun 2020 13:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593003717;
-        bh=xIgR4etzuuD/XhDz5yuOShAfik5HvT9HtcNcSGjDtYI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IGw7tGnRPSN/oz+Nfm5oXVPChhbogO7X6Ayqr7/I8r+6DHOcqvnFofqJ2S+HEszig
-         d8qiGt8fS/wZUl68abat2h7bRpTYsPNLDKMV6lG4hHcz+h91c1U5UWCVXiHXw5X9XN
-         ciXFfANesn54t4GLwVME1p079cUqPt1lxC/4K8n4=
-Date:   Wed, 24 Jun 2020 18:31:52 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v2 1/2] phy: rockchip: Fix return value of
- inno_dsidphy_probe()
-Message-ID: <20200624130152.GE2324254@vkoul-mobl>
-References: <1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn>
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 10BDD42EF42B;
+        Wed, 24 Jun 2020 15:03:05 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 15:03:04 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
+        twoerner@redhat.com, eparis@parisplace.org, tgraf@infradead.org
+Subject: Re: [PATCH ghak124 v3] audit: log nftables configuration change
+ events
+Message-ID: <20200624130304.GA549@salvia>
+References: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
+ <20200624100346.GA11986@salvia>
+ <20200624123423.r2gypsdii6xgiywy@madcap2.tricolour.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20200624123423.r2gypsdii6xgiywy@madcap2.tricolour.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-05-20, 21:08, Tiezhu Yang wrote:
-> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-> to check the return value and return PTR_ERR() if failed.
+On Wed, Jun 24, 2020 at 08:34:23AM -0400, Richard Guy Briggs wrote:
+> On 2020-06-24 12:03, Pablo Neira Ayuso wrote:
+> > On Thu, Jun 04, 2020 at 09:20:49AM -0400, Richard Guy Briggs wrote:
+[...]
+> > > diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+> > > index 3558e76e2733..b9e7440cc87d 100644
+> > > --- a/net/netfilter/nf_tables_api.c
+> > > +++ b/net/netfilter/nf_tables_api.c
+> > > @@ -12,6 +12,7 @@
+> > >  #include <linux/netlink.h>
+> > >  #include <linux/vmalloc.h>
+> > >  #include <linux/rhashtable.h>
+> > > +#include <linux/audit.h>
+> > >  #include <linux/netfilter.h>
+> > >  #include <linux/netfilter/nfnetlink.h>
+> > >  #include <linux/netfilter/nf_tables.h>
+> > > @@ -693,6 +694,16 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
+> > >  {
+> > >  	struct sk_buff *skb;
+> > >  	int err;
+> > > +	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
+> > > +			      ctx->table->name, ctx->table->handle);
+> > > +
+> > > +	audit_log_nfcfg(buf,
+> > > +			ctx->family,
+> > > +			ctx->table->use,
+> > > +			event == NFT_MSG_NEWTABLE ?
+> > > +				AUDIT_NFT_OP_TABLE_REGISTER :
+> > > +				AUDIT_NFT_OP_TABLE_UNREGISTER);
+> > > +	kfree(buf);
+> > 
+> > As a follow up: Would you wrap this code into a function?
+> > 
+> >         nft_table_audit()
+> > 
+> > Same thing for other pieces of code below.
+> 
+> If I'm guessing right, you are asking for a supplementary follow-up
+> cleanup patch to this one (or are you nacking this patch)?
 
-Applied both, thanks
--- 
-~Vinod
+No nack, it's just that I'd prefer to see this wrapped in a function.
+I think your patch is already in the audit tree.
+
+> Also, I gather you would like to see the kasprintf and kfree hidden in
+> nft_table_audit(), handing this function at least 8 parameters?  This
+> sounds pretty messy given the format of the table field.
+
+I think you can pass ctx and the specific object, e.g. table, in most
+cases? There is also event and the gfp_flags. That counts 4 here, but
+maybe I'm overlooking something.
+
+Thanks.
