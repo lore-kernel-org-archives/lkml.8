@@ -2,226 +2,131 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89FE2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDF1206EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593021591;
+	bh=lqF4UvFTuSVPWPvYKcQ8+owOKSTEFacagpA6y42+2I4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZDQ78G8ccStrIyL9o1st/0I8+8RtZKxu/ChFxMt+J9nkz5POxuHRudrI682MrQLkF
+	 Ij7dd7nPsgtdIoGCcm31wBg0i7G4yXz6/wPx8YlbdA6xUKP91ouv4IpzRd/oNBRd86
+	 cL8UPZ+RbJ1+SfDUTzU0VH7latsu0G0coKlwIrs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405938AbgFXR7K (ORCPT
+        id S2405956AbgFXR7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:59:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405788AbgFXR7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:59:09 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OHYUYL037358;
-        Wed, 24 Jun 2020 13:58:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysahmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 13:58:45 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OHZ2RA039769;
-        Wed, 24 Jun 2020 13:58:45 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysahk9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 13:58:44 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OHibFb031155;
-        Wed, 24 Jun 2020 17:58:41 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 31uus70wu3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 17:58:41 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OHwd2W27590710
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 17:58:39 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79AC4A4055;
-        Wed, 24 Jun 2020 17:58:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11C24A4053;
-        Wed, 24 Jun 2020 17:58:38 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.22.164])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Jun 2020 17:58:37 +0000 (GMT)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <20200610154923.27510-5-mcgrof@kernel.org>
- <20200623141157.5409-1-borntraeger@de.ibm.com>
- <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
- <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
- <20200624144311.GA5839@infradead.org>
- <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
- <20200624160953.GH4332@42.do-not-panic.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
-Date:   Wed, 24 Jun 2020 19:58:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 13:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405808AbgFXR7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:59:49 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47F00207DD;
+        Wed, 24 Jun 2020 17:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593021588;
+        bh=lqF4UvFTuSVPWPvYKcQ8+owOKSTEFacagpA6y42+2I4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=2OyEwIQ2W+yC8MeIiJn+zg6EpblYaMgeW1W2KIyhIYSiWBv27LoWjQc7whL/xeVKv
+         y88icKjpG7HCb5h5QohX0bjtTPKL9DqECdzfBD8KC9GTdN07U3EonUUVOnBxKcXHUo
+         yqYasuZpBgXc5lZj44gwka4tdlhLxCPXuN8CH3H4=
+Date:   Wed, 24 Jun 2020 10:59:47 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+cc:     Peng Fan <peng.fan@nxp.com>, sstabellini@kernel.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        konrad.wilk@oracle.com, jasowang@redhat.com, x86@kernel.org,
+        xen-devel@lists.xenproject.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org, linux-imx@nxp.com
+Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
+In-Reply-To: <20200624050355-mutt-send-email-mst@kernel.org>
+Message-ID: <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
+References: <20200624091732.23944-1-peng.fan@nxp.com> <20200624050355-mutt-send-email-mst@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200624160953.GH4332@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-24_11:2020-06-24,2020-06-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- cotscore=-2147483648 mlxscore=0 phishscore=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 impostorscore=0 bulkscore=0
- mlxlogscore=748 priorityscore=1501 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006240117
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 24.06.20 18:09, Luis Chamberlain wrote:
-> On Wed, Jun 24, 2020 at 05:54:46PM +0200, Christian Borntraeger wrote:
->>
->>
->> On 24.06.20 16:43, Christoph Hellwig wrote:
->>> On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
->>>> Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
->>>> linux-bridge on s390?
->>>
->>> Are we even sure this is s390 specific and doesn't happen on other
->>> architectures with the same bridge setup?
->>
->> Fair point. AFAIK nobody has tested this yet on x86.
+On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
+> On Wed, Jun 24, 2020 at 05:17:32PM +0800, Peng Fan wrote:
+> > Export xen_swiotlb for all platforms using xen swiotlb
+> > 
+> > Use xen_swiotlb to determine when vring should use dma APIs to map the
+> > ring: when xen_swiotlb is enabled the dma API is required. When it is
+> > disabled, it is not required.
+> > 
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > 
-> Regardless, can you enable dynamic debug prints, to see if the kernel
-> reveals anything on the bridge code which may be relevant:
+> Isn't there some way to use VIRTIO_F_IOMMU_PLATFORM for this?
+> Xen was there first, but everyone else is using that now.
+
+Unfortunately it is complicated and it is not related to
+VIRTIO_F_IOMMU_PLATFORM :-(
+
+
+The Xen subsystem in Linux uses dma_ops via swiotlb_xen to translate
+foreign mappings (memory coming from other VMs) to physical addresses.
+On x86, it also uses dma_ops to translate Linux's idea of a physical
+address into a real physical address (this is unneeded on ARM.)
+
+
+So regardless of VIRTIO_F_IOMMU_PLATFORM, dma_ops should be used on Xen/x86
+always and on Xen/ARM if Linux is Dom0 (because it has foreign
+mappings.) That is why we have the if (xen_domain) return true; in
+vring_use_dma_api.
+
+You might have noticed that I missed one possible case above: Xen/ARM
+DomU :-)
+
+Xen/ARM domUs don't need swiotlb_xen, it is not even initialized. So if
+(xen_domain) return true; would give the wrong answer in that case.
+Linux would end up calling the "normal" dma_ops, not swiotlb-xen, and
+the "normal" dma_ops fail.
+
+
+The solution I suggested was to make the check in vring_use_dma_api more
+flexible by returning true if the swiotlb_xen is supposed to be used,
+not in general for all Xen domains, because that is what the check was
+really meant to do.
+
+
+In this regards I have two more comments:
+
+- the comment on top of the check in vring_use_dma_api is still valid
+- the patch looks broken on x86: it should always return true, but it
+  returns false instead
+
+ 
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index a2de775801af..768afd79f67a 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -252,7 +252,7 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+> >  	 * the DMA API if we're a Xen guest, which at least allows
+> >  	 * all of the sensible Xen configurations to work correctly.
+> >  	 */
+> > -	if (xen_domain())
+> > +	if (xen_vring_use_dma())
+> >  		return true;
+> >  
+> >  	return false;
 > 
-> echo "file net/bridge/* +p" > /sys/kernel/debug/dynamic_debug/control
 > 
->   Luis
+> The comment above this should probably be fixed.
 
-When I start a guest the following happens with the patch:
-
-[   47.420237] virbr0: port 2(vnet0) entered blocking state
-[   47.420242] virbr0: port 2(vnet0) entered disabled state
-[   47.420315] device vnet0 entered promiscuous mode
-[   47.420365] virbr0: port 2(vnet0) event 16
-[   47.420366] virbr0: br_fill_info event 16 port vnet0 master virbr0
-[   47.420373] virbr0: toggle option: 12 state: 0 -> 0
-[   47.420536] virbr0: port 2(vnet0) entered blocking state
-[   47.420538] virbr0: port 2(vnet0) event 16
-[   47.420539] virbr0: br_fill_info event 16 port vnet0 master virbr0
-
-and the nothing happens.
-
-
-without the patch
-[   33.805410] virbr0: hello timer expired
-[   35.805413] virbr0: hello timer expired
-[   36.184349] virbr0: port 2(vnet0) entered blocking state
-[   36.184353] virbr0: port 2(vnet0) entered disabled state
-[   36.184427] device vnet0 entered promiscuous mode
-[   36.184479] virbr0: port 2(vnet0) event 16
-[   36.184480] virbr0: br_fill_info event 16 port vnet0 master virbr0
-[   36.184487] virbr0: toggle option: 12 state: 0 -> 0
-[   36.184636] virbr0: port 2(vnet0) entered blocking state
-[   36.184638] virbr0: port 2(vnet0) entered listening state
-[   36.184639] virbr0: port 2(vnet0) event 16
-[   36.184640] virbr0: br_fill_info event 16 port vnet0 master virbr0
-[   36.184645] virbr0: port 2(vnet0) event 16
-[   36.184646] virbr0: br_fill_info event 16 port vnet0 master virbr0
-[   37.805478] virbr0: hello timer expired
-[   38.205413] virbr0: port 2(vnet0) forward delay timer
-[   38.205414] virbr0: port 2(vnet0) entered learning state
-[   38.205427] virbr0: port 2(vnet0) event 16
-[   38.205430] virbr0: br_fill_info event 16 port vnet0 master virbr0
-[   38.765414] virbr0: port 2(vnet0) hold timer expired
-[   39.805415] virbr0: hello timer expired
-[   40.285410] virbr0: port 2(vnet0) forward delay timer
-[   40.285411] virbr0: port 2(vnet0) entered forwarding state
-[   40.285418] virbr0: topology change detected, propagating
-[   40.285420] virbr0: decreasing ageing time to 400
-[   40.285427] virbr0: port 2(vnet0) event 16
-[   40.285432] virbr0: br_fill_info event 16 port vnet0 master virbr0
-[   40.765408] virbr0: port 2(vnet0) hold timer expired
-[   41.805415] virbr0: hello timer expired
-[   42.765426] virbr0: port 2(vnet0) hold timer expired
-[   43.805425] virbr0: hello timer expired
-[   44.765426] virbr0: port 2(vnet0) hold timer expired
-[   45.805418] virbr0: hello timer expired
-
-and continuing....
-
-
-
-
+> 
