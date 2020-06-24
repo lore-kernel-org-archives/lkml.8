@@ -2,199 +2,133 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D459BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF68120823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F72720823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRKzCEB2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GDbX4i4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404851AbgFXQU4 (ORCPT
+        id S2404878AbgFXQWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        Wed, 24 Jun 2020 12:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404748AbgFXQUx (ORCPT
+        with ESMTP id S2404350AbgFXQWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:20:53 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3F9C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:20:52 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d12so1254381ply.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:20:52 -0700 (PDT)
+        Wed, 24 Jun 2020 12:22:20 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C06F2C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:22:19 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id w9so2567347ilk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wYBvUfi2A+ioRIdIU5MH+/mg58TfJOgAJmMFcgk5hp0=;
-        b=eRKzCEB2rU6Cuma3uKKecAKmdD5CrUoDIMByA1ykI0K2Rb3+ZdEtXH+WxbLSK08db2
-         OWGIDVKzncS4rqKyhOtVUldl7SuNjy5CBuRtLqdiQznaKrshDS5AiPcGugPUadvCKxNc
-         HtyAVydJb0LMV4Vz2ZYJEfwRH+RDSsZVyq6bTpEvjvObH+8BAKLY9ATh6bChhOyycYue
-         cRSiVbfRmJR1Qw0DsqHvV2P7Yl0wJMb31epmZexrqXLOAmBj63DpCYfvR9TjRXyjucHl
-         DKztLwYjlBgixAvo3YB0t0Yq9Vs+o8H0u58ypN1R02dUM+B3XiEWA/JXjmER8ltPceBm
-         uJJQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=STD7qLvWtpSzAtO1gXjXJztLXOvVuvn065ZWjIwBzm8=;
+        b=GDbX4i4/9sFa2QnOyFKV3sAmgpvbd4H9sf69kAM0V93uCHV4aw7EViw8WQGFnmGhGL
+         RCC+okJfghc3Wz2bz8HZeO7YwxG7/oL/0OfQHSSw8KaxqyDX+3pN+o3xIH3aODH5BQjK
+         vTgBiV68m+YydOFw1YZbI/IzAxH09eBSYoeOnD2WwMhuNy5dRivxMDq8sxhdaJcPIFVE
+         xpNn8lwne15R7K3Ux72CJTplglE9cuR4bjD2TZvXf3CiAqo230jAdvO8oHmtF2Psgl2p
+         YadWLDh4Bl411uJHkly3hQX/7NFaklwQk0TAShizwVTPmjXzGeqZOsMfxFNXOJwnROdt
+         D35Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wYBvUfi2A+ioRIdIU5MH+/mg58TfJOgAJmMFcgk5hp0=;
-        b=UI37lmSnf134bUhBkbxtsUZPxxXI8gx9ptg/c/EkiNHUhWmlWnF5iPpI7ryI2Hv5Ry
-         B0YOye7NkkgLuoABxYUvFA5oPFMkWxp4Y9E40nGXC4ozFHtIVQa0OkxyvLFdPDhog6zT
-         dfpwyuZ6uubP+KU5y+/q8+VEcIrk6No52rZYPERaZhTz8OiPMs+gTnkLUMcHSRW8LMdY
-         t2P3Toi8DjaajeVNWhllzsUqdq2EDCQ4TL8gfVbqitbnBXBHO6G4vZ39a//DO/QNvhwc
-         3Tzos0aE7kuODFB94ML4Ea0TDBlSEFZvEc88jJ33pBk830ERm8Tz1DPUi9EOPxmDuHS3
-         Xphg==
-X-Gm-Message-State: AOAM530y9Wf1ngIeF4zbQYzePFBySoIGr7b33GVdgrtTct5Fgm/iMocL
-        vq1u9txKFrk9PkCPIVDvftU=
-X-Google-Smtp-Source: ABdhPJwtWbxHDZMZnThJDNH2knyPkYVioW+IORCS4FHACy4BZg7jbFn82M7itshG5xTU7om/ViF2Pg==
-X-Received: by 2002:a17:90a:e08f:: with SMTP id q15mr31074376pjy.178.1593015652518;
-        Wed, 24 Jun 2020 09:20:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 7sm7283263pgh.80.2020.06.24.09.20.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 09:20:51 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 09:20:50 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Rientjes <rientjes@google.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v2] dma-pool: Fix too large DMA pools on medium systems
-Message-ID: <20200624162050.GA214193@roeck-us.net>
-References: <20200608132217.29945-1-geert@linux-m68k.org>
- <20200620200936.GA106151@roeck-us.net>
- <20200624073815.GE18609@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=STD7qLvWtpSzAtO1gXjXJztLXOvVuvn065ZWjIwBzm8=;
+        b=G7M7fUfAZ9AVn/jqCm69FC2ARO8JgmncC+PmhOcepHvzV4OL9WUGbwek6vuPzfMW2D
+         IF2jt10c8TDKrfGPPfJVL4KKK6qo/PniJUxMR0VYs21P8ntheYHrquvoVuVzeJLZX8j9
+         lojUxGl29jeepi69gd5pgaAqjgCNiOLMuZO/O2LhY0YPBPgVsV4msfw7+j8CFOf9ErC0
+         DPB2a0S+MxR/Wsm7VjSsFtnvOIvABMMueVY7t9TxdVlzAJ4UPpGPpLLu5+XS7cw/xmj9
+         QtHDno4rjeE417Rs7pJ2T30wIj6odRkgCLr2LeZ7AFT/zdznKY+j97t6g+8UugRPZLEu
+         eh6w==
+X-Gm-Message-State: AOAM530e9vyFOnu6xRWI00I8BfvMmXPV0fX+6Lu3UNTUMETOgRSWaFrV
+        85zZnffq/KwgtQnHBOi8rYInStH2B07dqZgBeV3jiQ==
+X-Google-Smtp-Source: ABdhPJyCu6OdPyGuzSe1OJNhDF0LoYbiaX834HuGofRmFkCh2g6eAXaOlNsVAMtygwLHq1VOlmz7okN+XaK4lvMSMqk=
+X-Received: by 2002:a92:c509:: with SMTP id r9mr28062372ilg.189.1593015739191;
+ Wed, 24 Jun 2020 09:22:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624073815.GE18609@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-6-brgl@bgdev.pl>
+ <1da91144-076d-bf1e-f12a-2b4fe242febc@gmail.com>
+In-Reply-To: <1da91144-076d-bf1e-f12a-2b4fe242febc@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 24 Jun 2020 18:22:08 +0200
+Message-ID: <CAMRc=MeCTNuwY4-h=OhVVT1RHWYfi-VwEZMvm0RNrS_qNu_EPw@mail.gmail.com>
+Subject: Re: [PATCH 05/15] net: phy: reset the PHY even if probe() is not implemented
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 09:38:15AM +0200, Christoph Hellwig wrote:
-> Hi Guenter,
-> 
-> can you try the patch below?  This just converts the huge allocations
-> in mptbase to use GFP_KERNEL.  Christophe (added to Cc) actually has
-> a scripted conversion for the rest that he hasn't posted yet, so I'll
-> aim for the minimal version here.
-> 
+wt., 23 cze 2020 o 21:14 Florian Fainelli <f.fainelli@gmail.com> napisa=C5=
+=82(a):
+>
+> On 6/22/20 2:37 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently we only call phy_device_reset() if the PHY driver implements
+> > the probe() callback. This is not mandatory and many drivers (e.g.
+> > realtek) don't need probe() for most devices but still can have reset
+> > GPIOs defined. There's no reason to depend on the presence of probe()
+> > here so pull the reset code out of the if clause.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> OK, but now let's imagine that a PHY device has two or more reset lines,
+> one of them is going to be managed by the core PHY library and the rest
+> is going to be under the responsibility of the PHY driver, that does not
+> sound intuitive or convenient at all. This is a hypothetical case, but
+> it could conceivable happen, so how about adding a flag to the driver
+> that says "let me manage it a all"?
 
-The previously failing test passes with this patch applied on top of the
-mainline kernel.
+This sounds good as a new feature idea but doesn't seem to be related
+to what this patch is trying to do. The only thing it does is improve
+the current behavior. I'll note your point for the future work on the
+pre-probe stage.
 
-Guenter
-
-> 
-> diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
-> index 68aea22f2b8978..5216487db4fbea 100644
-> --- a/drivers/message/fusion/mptbase.c
-> +++ b/drivers/message/fusion/mptbase.c
-> @@ -1324,13 +1324,13 @@ mpt_host_page_alloc(MPT_ADAPTER *ioc, pIOCInit_t ioc_init)
->  			return 0; /* fw doesn't need any host buffers */
->  
->  		/* spin till we get enough memory */
-> -		while(host_page_buffer_sz > 0) {
-> -
-> -			if((ioc->HostPageBuffer = pci_alloc_consistent(
-> -			    ioc->pcidev,
-> -			    host_page_buffer_sz,
-> -			    &ioc->HostPageBuffer_dma)) != NULL) {
-> -
-> +		while (host_page_buffer_sz > 0) {
-> +			ioc->HostPageBuffer =
-> +				dma_alloc_coherent(&ioc->pcidev->dev,
-> +						host_page_buffer_sz,
-> +						&ioc->HostPageBuffer_dma,
-> +						GFP_KERNEL);
-> +			if (ioc->HostPageBuffer) {
->  				dinitprintk(ioc, printk(MYIOC_s_DEBUG_FMT
->  				    "host_page_buffer @ %p, dma @ %x, sz=%d bytes\n",
->  				    ioc->name, ioc->HostPageBuffer,
-> @@ -2741,8 +2741,8 @@ mpt_adapter_disable(MPT_ADAPTER *ioc)
->  		sz = ioc->alloc_sz;
->  		dexitprintk(ioc, printk(MYIOC_s_INFO_FMT "free  @ %p, sz=%d bytes\n",
->  		    ioc->name, ioc->alloc, ioc->alloc_sz));
-> -		pci_free_consistent(ioc->pcidev, sz,
-> -				ioc->alloc, ioc->alloc_dma);
-> +		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->alloc,
-> +				ioc->alloc_dma);
->  		ioc->reply_frames = NULL;
->  		ioc->req_frames = NULL;
->  		ioc->alloc = NULL;
-> @@ -2751,8 +2751,8 @@ mpt_adapter_disable(MPT_ADAPTER *ioc)
->  
->  	if (ioc->sense_buf_pool != NULL) {
->  		sz = (ioc->req_depth * MPT_SENSE_BUFFER_ALLOC);
-> -		pci_free_consistent(ioc->pcidev, sz,
-> -				ioc->sense_buf_pool, ioc->sense_buf_pool_dma);
-> +		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->sense_buf_pool,
-> +				ioc->sense_buf_pool_dma);
->  		ioc->sense_buf_pool = NULL;
->  		ioc->alloc_total -= sz;
->  	}
-> @@ -2802,7 +2802,7 @@ mpt_adapter_disable(MPT_ADAPTER *ioc)
->  			"HostPageBuffer free  @ %p, sz=%d bytes\n",
->  			ioc->name, ioc->HostPageBuffer,
->  			ioc->HostPageBuffer_sz));
-> -		pci_free_consistent(ioc->pcidev, ioc->HostPageBuffer_sz,
-> +		dma_free_coherent(&ioc->pcidev->dev, ioc->HostPageBuffer_sz,
->  		    ioc->HostPageBuffer, ioc->HostPageBuffer_dma);
->  		ioc->HostPageBuffer = NULL;
->  		ioc->HostPageBuffer_sz = 0;
-> @@ -4497,7 +4497,8 @@ PrimeIocFifos(MPT_ADAPTER *ioc)
->  			 	ioc->name, sz, sz, num_chain));
->  
->  		total_size += sz;
-> -		mem = pci_alloc_consistent(ioc->pcidev, total_size, &alloc_dma);
-> +		mem = dma_alloc_coherent(&ioc->pcidev->dev, total_size,
-> +				&alloc_dma, GFP_KERNEL);
->  		if (mem == NULL) {
->  			printk(MYIOC_s_ERR_FMT "Unable to allocate Reply, Request, Chain Buffers!\n",
->  				ioc->name);
-> @@ -4574,8 +4575,8 @@ PrimeIocFifos(MPT_ADAPTER *ioc)
->  		spin_unlock_irqrestore(&ioc->FreeQlock, flags);
->  
->  		sz = (ioc->req_depth * MPT_SENSE_BUFFER_ALLOC);
-> -		ioc->sense_buf_pool =
-> -			pci_alloc_consistent(ioc->pcidev, sz, &ioc->sense_buf_pool_dma);
-> +		ioc->sense_buf_pool = dma_alloc_coherent(&ioc->pcidev->dev, sz,
-> +				&ioc->sense_buf_pool_dma, GFP_KERNEL);
->  		if (ioc->sense_buf_pool == NULL) {
->  			printk(MYIOC_s_ERR_FMT "Unable to allocate Sense Buffers!\n",
->  				ioc->name);
-> @@ -4613,18 +4614,16 @@ PrimeIocFifos(MPT_ADAPTER *ioc)
->  
->  	if (ioc->alloc != NULL) {
->  		sz = ioc->alloc_sz;
-> -		pci_free_consistent(ioc->pcidev,
-> -				sz,
-> -				ioc->alloc, ioc->alloc_dma);
-> +		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->alloc,
-> +				ioc->alloc_dma);
->  		ioc->reply_frames = NULL;
->  		ioc->req_frames = NULL;
->  		ioc->alloc_total -= sz;
->  	}
->  	if (ioc->sense_buf_pool != NULL) {
->  		sz = (ioc->req_depth * MPT_SENSE_BUFFER_ALLOC);
-> -		pci_free_consistent(ioc->pcidev,
-> -				sz,
-> -				ioc->sense_buf_pool, ioc->sense_buf_pool_dma);
-> +		dma_free_coherent(&ioc->pcidev->dev, sz, ioc->sense_buf_pool,
-> +				ioc->sense_buf_pool_dma);
->  		ioc->sense_buf_pool = NULL;
->  	}
->  
+Bartosz
