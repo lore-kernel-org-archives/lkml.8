@@ -2,70 +2,131 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B0920899
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B5820899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592978200;
-	bh=T9HGZgQSFhYHhphxCCK/tAU7Drx348osXhVkKUhD8AU=;
+	s=default; t=1592978232;
+	bh=2lsFqyU8P0hr8E82YY+KRZpjYFvt+d061bicFKiQlRc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dBmDMH6Qcw1+757ZhZWKfUHWZQuJQZ+d/cIIy/zgoBKTURMN6xIX15NTrHrtULXWd
-	 KmOOnHe4WzKBl8VMXsHfT07lU5HRoTH7OA67aJBrPk3ThPK3xYvn0PNVGGpo5T7HSk
-	 KsCYfBIXcczz84JW0Q/9sdnZs/BMeLIInNuWrPuo=
+	b=UHJBhtwIsrLVzhBU6L8TIEdXQjZqCThLr3xnLyzCFBt0W+loKqtFvDlLx+ocRKjZF
+	 WWSdBoO1r28rYOqAGjzrPR7rjXE7BwU49V6NWXJTVUjtZ/Eb37D3s6ElFuEbQ3FO08
+	 WW8pRhWJZbU2PV+r7QDAdSTB1hZ2MLjnKXGNPT1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389095AbgFXF4i (ORCPT
+        id S2389108AbgFXF5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59414 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 01:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388854AbgFXF4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:56:37 -0400
-Received: from localhost (unknown [171.61.66.58])
+        id S2388724AbgFXF5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:57:10 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 479F2207DD;
-        Wed, 24 Jun 2020 05:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DCC22085B;
+        Wed, 24 Jun 2020 05:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592978197;
-        bh=T9HGZgQSFhYHhphxCCK/tAU7Drx348osXhVkKUhD8AU=;
+        s=default; t=1592978229;
+        bh=2lsFqyU8P0hr8E82YY+KRZpjYFvt+d061bicFKiQlRc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sb0bLB0DmCTNrKV6F2FraehEKEMOkcrzAAYSYexm7OAEXPPZDuOD7NLhJkzIYsypn
-         Zbn1lnR2tnb+aQNldKxBinmXX27vWFI2FBKYkkRnU+ZBo7KGw5t2sFFtPIaOcIqnlm
-         2gyFyB9DSyH0ysHUu2b8ljunJvWBiWxTVInddTeQ=
-Date:   Wed, 24 Jun 2020 11:26:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Zhou Wang <wangzhou1@hisilicon.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH][next] dmaengine: hisilicon: Use struct_size() in
- devm_kzalloc()
-Message-ID: <20200624055633.GY2324254@vkoul-mobl>
-References: <20200617211135.GA8660@embeddedor>
+        b=lbxsf9ik4Ybnb1VNbbAkDP+AkNKZAjMqErfEG+Qv5FJjpqdXBrE0v20o6fKaxGDjU
+         6IbwyTMIIAryhYBDmhFPRgTRIvcrOwKn8x8VQtZkIfd6G07QWTXk8aEvAPsrzSaFLQ
+         hTu4hRjCUpgjrPNmucpIRCRbHtnLrLbiJjgdLxRY=
+Date:   Tue, 23 Jun 2020 22:57:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v9 2/4] fs: Add standard casefolding support
+Message-ID: <20200624055707.GG844@sol.localdomain>
+References: <20200624043341.33364-1-drosen@google.com>
+ <20200624043341.33364-3-drosen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617211135.GA8660@embeddedor>
+In-Reply-To: <20200624043341.33364-3-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-06-20, 16:11, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
+On Tue, Jun 23, 2020 at 09:33:39PM -0700, Daniel Rosenberg wrote:
+> This adds general supporting functions for filesystems that use
+> utf8 casefolding. It provides standard dentry_operations and adds the
+> necessary structures in struct super_block to allow this standardization.
 > 
-> This code was detected with the help of Coccinelle and, audited and
-> fixed manually.
+> Ext4 and F2fs will switch to these common implementations.
+> 
+> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> ---
+>  fs/libfs.c         | 101 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/fs.h |  22 ++++++++++
+>  2 files changed, 123 insertions(+)
+> 
+> diff --git a/fs/libfs.c b/fs/libfs.c
+> index 4d08edf19c782..f7345a5ed562f 100644
+> --- a/fs/libfs.c
+> +++ b/fs/libfs.c
+> @@ -20,6 +20,8 @@
+>  #include <linux/fs_context.h>
+>  #include <linux/pseudo_fs.h>
+>  #include <linux/fsnotify.h>
+> +#include <linux/unicode.h>
+> +#include <linux/fscrypt.h>
+>  
+>  #include <linux/uaccess.h>
+>  
+> @@ -1363,3 +1365,102 @@ bool is_empty_dir_inode(struct inode *inode)
+>  	return (inode->i_fop == &empty_dir_operations) &&
+>  		(inode->i_op == &empty_dir_inode_operations);
+>  }
+> +
+> +#ifdef CONFIG_UNICODE
+> +/**
+> + * needs_casefold - generic helper to determine if a filename should be casefolded
+> + * @dir: Parent directory
+> + *
+> + * Generic helper for filesystems to use to determine if the name of a dentry
+> + * should be casefolded. It does not make sense to casefold the no-key token of
+> + * an encrypted filename.
+> + *
+> + * Return: if names will need casefolding
+> + */
+> +bool needs_casefold(const struct inode *dir)
+> +{
+> +	return IS_CASEFOLDED(dir) && dir->i_sb->s_encoding &&
+> +			(!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir));
+> +}
+> +EXPORT_SYMBOL(needs_casefold);
 
-Applied, thanks
+Note that the '!IS_ENCRYPTED(dir) || fscrypt_has_encryption_key(dir)' check can
+be racy, because a process can be looking up a no-key token in a directory while
+concurrently another process initializes the directory's ->i_crypt_info, causing
+fscrypt_has_encryption_key(dir) to suddenly start returning true.
 
--- 
-~Vinod
+In my rework of filename handling in f2fs, I actually ended up removing all
+calls to needs_casefold(), thus avoiding this race.  f2fs now decides whether
+the name is going to need casefolding early on, in __f2fs_setup_filename(),
+where it knows in a race-free way whether the filename is a no-key token or not.
+
+Perhaps ext4 should work the same way?  It did look like there would be some
+extra complexity due to how the ext4 directory hashing works in comparison to
+f2fs's, but I haven't had a chance to properly investigate it.
+
+- Eric
