@@ -2,106 +2,163 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A23C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C824EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2D120720
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:19:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RIPooS+K"
+	by mail.kernel.org (Postfix) with ESMTP id A806220C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390496AbgFXNTm (ORCPT
+        id S2389445AbgFXNU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:19:42 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60940 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389445AbgFXNTk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:19:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05ODIWE1064154;
-        Wed, 24 Jun 2020 13:19:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=/CHyyqyPX91FA7D+EZofQoOQ+oKgF27GewZ7ADCObvI=;
- b=RIPooS+K44BtWf7/FbFv5ISdxykDc2HG28LCHlWqNMntLN2gMNY0ybH8crRudp+YhHj4
- oIo7KmD1Q+j8rW5N8n4y9Y4GIwO3qqyeNu+ZmwMdGesQ22eCKcUyvwkzkCsz3XeuIk8y
- 91rZTre8GL1oVeUaHqtR6/GSIgdCqCspXizzOtY6PGZqvlDtlH/NnjIw1+ap4Z3uQA4m
- dqdFDFT+ntFgGqiP15JcmOg/BRez0ZlwNz9o2ns65cpzIQZWG149Ys2YWR0G82js3t8r
- CRXgbc5ALccH99P2yHaAAQ7Tzw3K2L8wK7DrDagJtxsHFw5e7Qn0YH1MI1BPan3XDXEO AA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31uustjtd5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 13:19:34 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05ODJJd5160990;
-        Wed, 24 Jun 2020 13:19:34 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 31uurqtbcx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 13:19:34 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05ODJW7t005612;
-        Wed, 24 Jun 2020 13:19:32 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jun 2020 13:19:28 +0000
-Date:   Wed, 24 Jun 2020 16:19:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] intel_idle: Fix uninitialized variable bug
-Message-ID: <20200624131921.GB9972@mwanda>
+        Wed, 24 Jun 2020 09:20:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14085 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387687AbgFXNU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:20:57 -0400
+IronPort-SDR: dhq/oymItepQ3iYKtIX4FXrPxaxnGJAgpXFABLcF1dzrVZZF2rYyuDc2gVrovvlsO93AKIKVKS
+ 4sS0Obk5TMcQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="145958119"
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="145958119"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 06:20:55 -0700
+IronPort-SDR: BY5EJYm6T9Uz5+auy6YyodqB73Oa5pKcLMtEMuL7y+bmne7kG8UtBXZs7FalPeclp8y7xLziU8
+ UZhPYFH4lT0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="311639730"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 06:20:54 -0700
+Received: from [10.249.228.248] (abudanko-mobl.ccr.corp.intel.com [10.249.228.248])
+        by linux.intel.com (Postfix) with ESMTP id B58275805B5;
+        Wed, 24 Jun 2020 06:20:52 -0700 (PDT)
+Subject: Re: [PATCH v8 03/13] perf evlist: implement control command handling
+ functions
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <d47ef616-e2cf-9131-159f-5be1a31438a7@linux.intel.com>
+ <20200623145613.GI2619137@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <3ab05af5-b882-ffde-8311-307b6c373fd3@linux.intel.com>
+Date:   Wed, 24 Jun 2020 16:20:51 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006240096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
- cotscore=-2147483648 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
- suspectscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1011
- impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006240096
+In-Reply-To: <20200623145613.GI2619137@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "tick" variable isn't initialized if "lapic_timer_always_reliable"
-is true.
 
-Fixes: 40ab82e08d78 ("intel_idle: Simplify LAPIC timer reliability checks")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/idle/intel_idle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 23.06.2020 17:56, Jiri Olsa wrote:
+> On Wed, Jun 17, 2020 at 11:36:46AM +0300, Alexey Budankov wrote:
+> 
+> SNIP
+> 
+>> +static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
+>> +			      char *cmd_data, size_t data_size)
+>> +{
+>> +	int err;
+>> +	char c;
+>> +	size_t bytes_read = 0;
+>> +
+>> +	memset(cmd_data, 0, data_size--);
+>> +
+>> +	do {
+>> +		err = read(evlist->ctl_fd.fd, &c, 1);
+>> +		if (err > 0) {
+>> +			if (c == '\n' || c == '\0')
+>> +				break;
+>> +			cmd_data[bytes_read++] = c;
+>> +			if (bytes_read == data_size)
+>> +				break;
+>> +		} else {
+>> +			if (err == -1)
+>> +				pr_err("Failed to read from ctlfd %d: %m\n", evlist->ctl_fd.fd);
+>> +			break;
+>> +		}
+>> +	} while (1);
+>> +
+>> +	pr_debug("Message from ctl_fd: \"%s%s\"\n", cmd_data,
+>> +		 bytes_read == data_size ? "" : c == '\n' ? "\\n" : "\\0");
+> 
+> do you want to display the message above only if (err > 0) ?
 
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index aae53e650638..6c9152f303a6 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -132,7 +132,7 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
- 	struct cpuidle_state *state = &drv->states[index];
- 	unsigned long eax = flg2MWAIT(state->flags);
- 	unsigned long ecx = 1; /* break on interrupt flag */
--	bool tick;
-+	bool tick = false;
- 	int cpu = smp_processor_id();
- 
- 	/*
--- 
-2.27.0
+I do, only for err >= 0. For err == -1 there is already the error message.
 
+> 
+>> +
+>> +	if (err > 0) {
+>> +		if (!strncmp(cmd_data, EVLIST_CTL_CMD_ENABLE_TAG,
+>> +			     strlen(EVLIST_CTL_CMD_ENABLE_TAG))) {
+>> +			*cmd = EVLIST_CTL_CMD_ENABLE;
+>> +		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
+>> +				    strlen(EVLIST_CTL_CMD_DISABLE_TAG))) {
+>> +			*cmd = EVLIST_CTL_CMD_DISABLE;
+>> +		}
+>> +	}
+>> +
+>> +	return err;
+>> +}
+> 
+> SNIP
+> 
+>> +	int ctlfd_pos = evlist->ctl_fd.pos;
+>> +	struct pollfd *entries = evlist->core.pollfd.entries;
+>> +
+>> +	if (ctlfd_pos == -1 || !entries[ctlfd_pos].revents)
+>> +		return 0;
+>> +
+>> +	if (entries[ctlfd_pos].revents & POLLIN) {
+>> +		err = evlist__ctlfd_recv(evlist, cmd, cmd_data,
+>> +					 EVLIST_CTL_CMD_MAX_LEN);
+>> +		if (err > 0) {
+>> +			switch (*cmd) {
+>> +			case EVLIST_CTL_CMD_ENABLE:
+>> +				evlist__enable(evlist);
+>> +				break;
+>> +			case EVLIST_CTL_CMD_DISABLE:
+>> +				evlist__disable(evlist);
+>> +				break;
+>> +			case EVLIST_CTL_CMD_ACK:
+>> +			case EVLIST_CTL_CMD_UNSUPPORTED:
+>> +			default:
+>> +				pr_debug("ctlfd: unsupported %d\n", *cmd);
+>> +				break;
+>> +			}
+>> +			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED))
+>> +				evlist__ctlfd_ack(evlist);
+>> +		}
+>> +	}
+>> +
+>> +	if (entries[ctlfd_pos].revents & (POLLHUP | POLLERR))
+>> +		evlist__finalize_ctlfd(evlist);
+> 
+> should this error be propagated via err?
+
+I don't think so. Currently it returns 0 only and there is no need to 
+stop collection or skip processing in caller in this case.
+
+~Alexey
+
+> 
+> jirka
+> 
