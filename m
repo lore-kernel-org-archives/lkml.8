@@ -2,181 +2,446 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44BE92081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11EF72081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="Vq+DLiSV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H5Esc7pp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388615AbgFXUxb (ORCPT
+        id S2388930AbgFXUyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
+        Wed, 24 Jun 2020 16:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387735AbgFXUxa (ORCPT
+        with ESMTP id S2387735AbgFXUyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:53:30 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA04C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:53:30 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id 72so3273403otc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:53:30 -0700 (PDT)
+        Wed, 24 Jun 2020 16:54:06 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DBE7C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:54:06 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d66so1768489pfd.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:54:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qPg2nm0p2LJEb0R7qtNhU1AWPUuDqXO1JJw+ZdVHnzc=;
-        b=Vq+DLiSVnp2R+eWXBa8mX0P4to5wreqQRe0uV/MSjLKa8CEuNrl73jJgEarufgjtvl
-         +60JLvnSEKvSZd8rVWarfWPS+TA7Zc5YXiGOXxPbbEe9WSaHZKZvP8LEAWC/a2dXCh57
-         bBB4Yld75nkFW/u+BxUNontB/5XPnqXk+peIwhnaZYsNCk5GaYBbnfRb/nrlp2QqMHky
-         AByi/FjgCH99muKrioAO8smcNotJxESNG/+08NeaHhqMp05sJKv3u0HsSZThu96zZPvH
-         kJxjJrg7x3oWe+UrKQOyPIYOgH2HUaKXs2X14giMsx2nxPTe/tdf7gnEuFCx8ar6Bxed
-         HQug==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d0EL9NFdX5f9VfIfl2NFPx5y5hXz1Uyj4y9f4db/Xvs=;
+        b=H5Esc7ppD7ajcasVMCC9fu37qF19lnhoSuCsYVEphUWeKPRLGblJ7gMQbDirrPeLjB
+         H4PxO8V2ZaXlA5meAPPCKB5+e5pzJ7UOzoF6IU/U8d6FsYlEtDIx1I9bxHj1zI+YTSdj
+         PMgMTWllqkCYFyVJ6ZCIirHAbngjxGCg+ul0OHsGciPvla7qeUDRGIY6wvrwgfeumG49
+         R0F9mMk6qdSGbUFyBpYTnmu6wZjeWFVCsjGn7/8+YqXD99mo1UkupOfj2AzfMjdRRhbM
+         RmWXRheMoqG1CNNWluHFzSx0tEnXxjdU0O0MP2rI+350qKgrYwjZBkXCoehod3GJa6xl
+         4ulg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qPg2nm0p2LJEb0R7qtNhU1AWPUuDqXO1JJw+ZdVHnzc=;
-        b=dhrMFpPcIDUAwUeUD0CpVuLFBz6Gm2VLGxN0IEmjdctHXtEaqb9p494ZGu4Rw9r01d
-         vYPKXaRT8M7U5bQ6FTlbztj4nlGShga24WhIDwt5m/Gl+dDfdCsbGfN2Xo0h00yLdo9I
-         pRQfrYe/TLPdCvbgCII0NBPkbpXQ8KPMWKmpSBY4SfVf05wCHaEsjUtBYzt8DO/RAKow
-         hTFvOp2BGN1FqC/Ogh/9CUsuAZSITJw6li5/lbIuRlWMI5gjlD7gMrO8Ruiq98Mi5SB9
-         41D0xsCO6bwaHKrUVcHRW6RKT59IWOKo3jgcvRFtLHM4CewzGefcOMQZt6RYyL/fw8fM
-         ts2A==
-X-Gm-Message-State: AOAM5336wLWMdkP8xpLAnXUTb4vneuI3xQdlnSTDeFG86RxeyWJKIjZm
-        ZNWTC2IYIfZgVVeDEUPW3Lb97A==
-X-Google-Smtp-Source: ABdhPJzGskhMMsYQPdg3waInJvFhOQo3838h7lZweIxa/TkshrcYEemQyUETgTZh8c1QKIP5t3IcsQ==
-X-Received: by 2002:a9d:6c8b:: with SMTP id c11mr24009320otr.275.1593032009336;
-        Wed, 24 Jun 2020 13:53:29 -0700 (PDT)
-Received: from minyard.net ([2001:470:b8f6:1b:6d79:306:b4b0:35c1])
-        by smtp.gmail.com with ESMTPSA id p11sm4933468oip.56.2020.06.24.13.53.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 13:53:28 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 15:53:27 -0500
-From:   Corey Minyard <cminyard@mvista.com>
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     netdev@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Michael Tuexen <Michael.Tuexen@lurchi.franken.de>,
-        Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] sctp: Don't advertise IPv4 addresses if ipv6only is
- set on the socket
-Message-ID: <20200624205327.GK3258@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20200623160417.12418-1-minyard@acm.org>
- <991916791cdcc37456ccb061779d485063b97129.1593030427.git.marcelo.leitner@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d0EL9NFdX5f9VfIfl2NFPx5y5hXz1Uyj4y9f4db/Xvs=;
+        b=iUqqihIgV96K8KlgihZxOfJNwnXvhnxs96gM2GESevo3hgsPGCyPiPdjBZ4fpgMYiY
+         RsmDhM2kmNtaThjGdBPc7g+nfQLaS2doGdcnpshAvQLSPb8UofrtEYxLlZrMY06DAdw3
+         DskN+3f4q0EBBW8nmt0jz5ImQnf7lARhkRshXDTgeMwfebW+Uvzj8cjYas8r6PqZYp5O
+         rbm0JYFGU7bv+ik0wp3i0ZWLqEc01fgtbpYwl4+TFzN8SzUfCWmaqCvSWsPb50ikbbrr
+         aDWy2lozkBYRJhHsJ27p93n2y1q9pKob04LgOSFcS/YA7qflQv96S3oBdvUJrqOJ2JEF
+         1xLw==
+X-Gm-Message-State: AOAM530vQF8eaJZA7eAe11dH8foMpXRI1GdCt25Cy8XnDClN21hSRVSo
+        y3FUNEa3+emITl4/vFl1JLRinCZlAbAfsWwbgXzZAQ==
+X-Google-Smtp-Source: ABdhPJxdRg4CyimepZFl3TlhMYwN3sqV9wabjVBLqFbFsA/AUlxHXR9UblJJuAxFnem4caWlJ6BIBXmEJEr28D+Xgl4=
+X-Received: by 2002:a63:7e55:: with SMTP id o21mr12841493pgn.263.1593032044935;
+ Wed, 24 Jun 2020 13:54:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <991916791cdcc37456ccb061779d485063b97129.1593030427.git.marcelo.leitner@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200624203200.78870-3-samitolvanen@google.com>
+In-Reply-To: <20200624203200.78870-3-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 24 Jun 2020 13:53:52 -0700
+Message-ID: <CAKwvOdm=sDLVvwOAc34Q8O85SCHL-NWFjkMeAeLZ4gYRr4aE9A@mail.gmail.com>
+Subject: Re: [PATCH 02/22] kbuild: add support for Clang LTO
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 05:34:18PM -0300, Marcelo Ricardo Leitner wrote:
-> If a socket is set ipv6only, it will still send IPv4 addresses in the
-> INIT and INIT_ACK packets. This potentially misleads the peer into using
-> them, which then would cause association termination.
-> 
-> The fix is to not add IPv4 addresses to ipv6only sockets.
-
-Fixes the issue for me.
-
-Tested-by: Corey Minyard <cminyard@mvista.com>
-
-Thanks a bunch.
-
--corey
-
-> 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Reported-by: Corey Minyard <cminyard@mvista.com>
-> Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+On Wed, Jun 24, 2020 at 1:32 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> This change adds build system support for Clang's Link Time
+> Optimization (LTO). With -flto, instead of ELF object files, Clang
+> produces LLVM bitcode, which is compiled into native code at link
+> time, allowing the final binary to be optimized globally. For more
+> details, see:
+>
+>   https://llvm.org/docs/LinkTimeOptimization.html
+>
+> The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
+> which defaults to LTO being disabled. To use LTO, the architecture
+> must select ARCH_SUPPORTS_LTO_CLANG and support:
+>
+>   - compiling with Clang,
+>   - compiling inline assembly with Clang's integrated assembler,
+>   - and linking with LLD.
+>
+> While using full LTO results in the best runtime performance, the
+> compilation is not scalable in time or memory. CONFIG_THINLTO
+> enables ThinLTO, which allows parallel optimization and faster
+> incremental builds. ThinLTO is used by default if the architecture
+> also selects ARCH_SUPPORTS_THINLTO:
+>
+>   https://clang.llvm.org/docs/ThinLTO.html
+>
+> To enable LTO, LLVM tools must be used to handle bitcode files. The
+> easiest way is to pass the LLVM=1 option to make:
+>
+>   $ make LLVM=1 defconfig
+>   $ scripts/config -e LTO_CLANG
+>   $ make LLVM=1
+>
+> Alternatively, at least the following LLVM tools must be used:
+>
+>   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
+>
+> To prepare for LTO support with other compilers, common parts are
+> gated behind the CONFIG_LTO option, and LTO can be disabled for
+> specific files by filtering out CC_FLAGS_LTO.
+>
+> Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
+> follow-up patches.
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 > ---
->  include/net/sctp/constants.h | 8 +++++---
->  net/sctp/associola.c         | 5 ++++-
->  net/sctp/bind_addr.c         | 1 +
->  net/sctp/protocol.c          | 3 ++-
->  4 files changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/net/sctp/constants.h b/include/net/sctp/constants.h
-> index 15b4d9aec7ff278e67a7183f10c14be237227d6b..122d9e2d8dfde33b787d575fc42d454732550698 100644
-> --- a/include/net/sctp/constants.h
-> +++ b/include/net/sctp/constants.h
-> @@ -353,11 +353,13 @@ enum {
->  	 ipv4_is_anycast_6to4(a))
->  
->  /* Flags used for the bind address copy functions.  */
-> -#define SCTP_ADDR6_ALLOWED	0x00000001	/* IPv6 address is allowed by
-> +#define SCTP_ADDR4_ALLOWED	0x00000001	/* IPv4 address is allowed by
->  						   local sock family */
-> -#define SCTP_ADDR4_PEERSUPP	0x00000002	/* IPv4 address is supported by
-> +#define SCTP_ADDR6_ALLOWED	0x00000002	/* IPv6 address is allowed by
-> +						   local sock family */
-> +#define SCTP_ADDR4_PEERSUPP	0x00000004	/* IPv4 address is supported by
->  						   peer */
-> -#define SCTP_ADDR6_PEERSUPP	0x00000004	/* IPv6 address is supported by
-> +#define SCTP_ADDR6_PEERSUPP	0x00000008	/* IPv6 address is supported by
->  						   peer */
->  
->  /* Reasons to retransmit. */
-> diff --git a/net/sctp/associola.c b/net/sctp/associola.c
-> index 72315137d7e7f20d5182291ef4b01102f030078b..8d735461fa196567ab19c583703aad098ef8e240 100644
-> --- a/net/sctp/associola.c
-> +++ b/net/sctp/associola.c
-> @@ -1565,12 +1565,15 @@ void sctp_assoc_rwnd_decrease(struct sctp_association *asoc, unsigned int len)
->  int sctp_assoc_set_bind_addr_from_ep(struct sctp_association *asoc,
->  				     enum sctp_scope scope, gfp_t gfp)
->  {
-> +	struct sock *sk = asoc->base.sk;
->  	int flags;
->  
->  	/* Use scoping rules to determine the subset of addresses from
->  	 * the endpoint.
->  	 */
-> -	flags = (PF_INET6 == asoc->base.sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
-> +	flags = (PF_INET6 == sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
-> +	if (!inet_v6_ipv6only(sk))
-> +		flags |= SCTP_ADDR4_ALLOWED;
->  	if (asoc->peer.ipv4_address)
->  		flags |= SCTP_ADDR4_PEERSUPP;
->  	if (asoc->peer.ipv6_address)
-> diff --git a/net/sctp/bind_addr.c b/net/sctp/bind_addr.c
-> index 53bc61537f44f4e766c417fcef72234df52ecd04..701c5a4e441d9c248df9472f22db5b78987f9e44 100644
-> --- a/net/sctp/bind_addr.c
-> +++ b/net/sctp/bind_addr.c
-> @@ -461,6 +461,7 @@ static int sctp_copy_one_addr(struct net *net, struct sctp_bind_addr *dest,
->  		 * well as the remote peer.
->  		 */
->  		if ((((AF_INET == addr->sa.sa_family) &&
-> +		      (flags & SCTP_ADDR4_ALLOWED) &&
->  		      (flags & SCTP_ADDR4_PEERSUPP))) ||
->  		    (((AF_INET6 == addr->sa.sa_family) &&
->  		      (flags & SCTP_ADDR6_ALLOWED) &&
-> diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
-> index 092d1afdee0d23cd974210839310fbf406dd443f..cde29f3c7fb3c40ee117636fa3b4b7f0a03e4fba 100644
-> --- a/net/sctp/protocol.c
-> +++ b/net/sctp/protocol.c
-> @@ -148,7 +148,8 @@ int sctp_copy_local_addr_list(struct net *net, struct sctp_bind_addr *bp,
->  		 * sock as well as the remote peer.
->  		 */
->  		if (addr->a.sa.sa_family == AF_INET &&
-> -		    !(copy_flags & SCTP_ADDR4_PEERSUPP))
-> +		    (!(copy_flags & SCTP_ADDR4_ALLOWED) ||
-> +		     !(copy_flags & SCTP_ADDR4_PEERSUPP)))
->  			continue;
->  		if (addr->a.sa.sa_family == AF_INET6 &&
->  		    (!(copy_flags & SCTP_ADDR6_ALLOWED) ||
-> -- 
-> 2.25.4
-> 
+>  Makefile                          | 16 ++++++++
+>  arch/Kconfig                      | 66 +++++++++++++++++++++++++++++++
+>  include/asm-generic/vmlinux.lds.h | 11 ++++--
+>  scripts/Makefile.build            |  9 ++++-
+>  scripts/Makefile.modfinal         |  9 ++++-
+>  scripts/Makefile.modpost          | 24 ++++++++++-
+>  scripts/link-vmlinux.sh           | 32 +++++++++++----
+>  7 files changed, 151 insertions(+), 16 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index ac2c61c37a73..0c7fe6fb2143 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -886,6 +886,22 @@ KBUILD_CFLAGS      += $(CC_FLAGS_SCS)
+>  export CC_FLAGS_SCS
+>  endif
+>
+> +ifdef CONFIG_LTO_CLANG
+> +ifdef CONFIG_THINLTO
+> +CC_FLAGS_LTO_CLANG := -flto=thin $(call cc-option, -fsplit-lto-unit)
+
+The kconfig change gates this on clang-11; do we still need the
+cc-option check here, or can we hardcode the use of -fsplit-lto-unit?
+Playing with the flag in godbolt, it looks like clang-8 had support
+for this flag.
+
+> +KBUILD_LDFLAGS += --thinlto-cache-dir=.thinlto-cache
+
+It might be nice to have `make distclean` or even `make clean` scrub
+the .thinlto-cache?  Also, I verified that the `.gitignore` rule for
+`.*` properly ignores this dir.
+
+> +else
+> +CC_FLAGS_LTO_CLANG := -flto
+> +endif
+> +CC_FLAGS_LTO_CLANG += -fvisibility=default
+> +endif
+> +
+> +ifdef CONFIG_LTO
+> +CC_FLAGS_LTO   := $(CC_FLAGS_LTO_CLANG)
+> +KBUILD_CFLAGS  += $(CC_FLAGS_LTO)
+> +export CC_FLAGS_LTO
+> +endif
+> +
+>  # arch Makefile may override CC so keep this after arch Makefile is included
+>  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+>
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 8cc35dc556c7..e00b122293f8 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -552,6 +552,72 @@ config SHADOW_CALL_STACK
+>           reading and writing arbitrary memory may be able to locate them
+>           and hijack control flow by modifying the stacks.
+>
+> +config LTO
+> +       bool
+> +
+> +config ARCH_SUPPORTS_LTO_CLANG
+> +       bool
+> +       help
+> +         An architecture should select this option if it supports:
+> +         - compiling with Clang,
+> +         - compiling inline assembly with Clang's integrated assembler,
+> +         - and linking with LLD.
+> +
+> +config ARCH_SUPPORTS_THINLTO
+> +       bool
+> +       help
+> +         An architecture should select this option if it supports Clang's
+> +         ThinLTO.
+> +
+> +config THINLTO
+> +       bool "Clang ThinLTO"
+> +       depends on LTO_CLANG && ARCH_SUPPORTS_THINLTO
+> +       default y
+> +       help
+> +         This option enables Clang's ThinLTO, which allows for parallel
+> +         optimization and faster incremental compiles. More information
+> +         can be found from Clang's documentation:
+> +
+> +           https://clang.llvm.org/docs/ThinLTO.html
+> +
+> +choice
+> +       prompt "Link Time Optimization (LTO)"
+> +       default LTO_NONE
+> +       help
+> +         This option enables Link Time Optimization (LTO), which allows the
+> +         compiler to optimize binaries globally.
+> +
+> +         If unsure, select LTO_NONE.
+> +
+> +config LTO_NONE
+> +       bool "None"
+> +
+> +config LTO_CLANG
+> +       bool "Clang's Link Time Optimization (EXPERIMENTAL)"
+> +       depends on CC_IS_CLANG && CLANG_VERSION >= 110000 && LD_IS_LLD
+> +       depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
+> +       depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
+> +       depends on ARCH_SUPPORTS_LTO_CLANG
+> +       depends on !FTRACE_MCOUNT_RECORD
+> +       depends on !KASAN
+> +       depends on !MODVERSIONS
+> +       select LTO
+> +       help
+> +          This option enables Clang's Link Time Optimization (LTO), which
+> +          allows the compiler to optimize the kernel globally. If you enable
+> +          this option, the compiler generates LLVM bitcode instead of ELF
+> +          object files, and the actual compilation from bitcode happens at
+> +          the LTO link step, which may take several minutes depending on the
+> +          kernel configuration. More information can be found from LLVM's
+> +          documentation:
+> +
+> +           https://llvm.org/docs/LinkTimeOptimization.html
+> +
+> +         To select this option, you also need to use LLVM tools to handle
+> +         the bitcode by passing LLVM=1 to make.
+> +
+> +endchoice
+> +
+>  config HAVE_ARCH_WITHIN_STACK_FRAMES
+>         bool
+>         help
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index db600ef218d7..78079000c05a 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -89,15 +89,18 @@
+>   * .data. We don't want to pull in .data..other sections, which Linux
+>   * has defined. Same for text and bss.
+>   *
+> + * With LTO_CLANG, the linker also splits sections by default, so we need
+> + * these macros to combine the sections during the final link.
+> + *
+>   * RODATA_MAIN is not used because existing code already defines .rodata.x
+>   * sections to be brought in with rodata.
+>   */
+> -#ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+> +#if defined(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION) || defined(CONFIG_LTO_CLANG)
+>  #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
+> -#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
+> +#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..L* .data..compoundliteral*
+>  #define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
+> -#define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
+> -#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
+> +#define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]* .rodata..L*
+> +#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral*
+>  #define SBSS_MAIN .sbss .sbss.[0-9a-zA-Z_]*
+>  #else
+>  #define TEXT_MAIN .text
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 2e8810b7e5ed..f307e708a1b7 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -108,7 +108,7 @@ endif
+>  # ---------------------------------------------------------------------------
+>
+>  quiet_cmd_cc_s_c = CC $(quiet_modtag)  $@
+> -      cmd_cc_s_c = $(CC) $(filter-out $(DEBUG_CFLAGS), $(c_flags)) $(DISABLE_LTO) -fverbose-asm -S -o $@ $<
+> +      cmd_cc_s_c = $(CC) $(filter-out $(DEBUG_CFLAGS) $(CC_FLAGS_LTO), $(c_flags)) -fverbose-asm -S -o $@ $<
+>
+>  $(obj)/%.s: $(src)/%.c FORCE
+>         $(call if_changed_dep,cc_s_c)
+> @@ -424,8 +424,15 @@ $(obj)/lib.a: $(lib-y) FORCE
+>  # Do not replace $(filter %.o,^) with $(real-prereqs). When a single object
+>  # module is turned into a multi object module, $^ will contain header file
+>  # dependencies recorded in the .*.cmd file.
+> +ifdef CONFIG_LTO_CLANG
+> +quiet_cmd_link_multi-m = AR [M]  $@
+> +cmd_link_multi-m =                                             \
+> +       rm -f $@;                                               \
+> +       $(AR) rcsTP$(KBUILD_ARFLAGS) $@ $(filter %.o,$^)
+> +else
+>  quiet_cmd_link_multi-m = LD [M]  $@
+>        cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ $(filter %.o,$^)
+> +endif
+>
+>  $(multi-used-m): FORCE
+>         $(call if_changed,link_multi-m)
+> diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+> index 411c1e600e7d..1005b147abd0 100644
+> --- a/scripts/Makefile.modfinal
+> +++ b/scripts/Makefile.modfinal
+> @@ -6,6 +6,7 @@
+>  PHONY := __modfinal
+>  __modfinal:
+>
+> +include $(objtree)/include/config/auto.conf
+>  include $(srctree)/scripts/Kbuild.include
+>
+>  # for c_flags
+> @@ -29,6 +30,12 @@ quiet_cmd_cc_o_c = CC [M]  $@
+>
+>  ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+>
+> +ifdef CONFIG_LTO_CLANG
+> +# With CONFIG_LTO_CLANG, reuse the object file we compiled for modpost to
+> +# avoid a second slow LTO link
+> +prelink-ext := .lto
+> +endif
+> +
+>  quiet_cmd_ld_ko_o = LD [M]  $@
+>        cmd_ld_ko_o =                                                     \
+>         $(LD) -r $(KBUILD_LDFLAGS)                                      \
+> @@ -37,7 +44,7 @@ quiet_cmd_ld_ko_o = LD [M]  $@
+>                 -o $@ $(filter %.o, $^);                                \
+>         $(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+>
+> -$(modules): %.ko: %.o %.mod.o $(KBUILD_LDS_MODULE) FORCE
+> +$(modules): %.ko: %$(prelink-ext).o %.mod.o $(KBUILD_LDS_MODULE) FORCE
+>         +$(call if_changed,ld_ko_o)
+>
+>  targets += $(modules) $(modules:.ko=.mod.o)
+> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+> index 3651cbf6ad49..9ced8aecd579 100644
+> --- a/scripts/Makefile.modpost
+> +++ b/scripts/Makefile.modpost
+> @@ -102,12 +102,32 @@ $(input-symdump):
+>         @echo >&2 'WARNING: Symbol version dump "$@" is missing.'
+>         @echo >&2 '         Modules may not have dependencies or modversions.'
+>
+> +ifdef CONFIG_LTO_CLANG
+> +# With CONFIG_LTO_CLANG, .o files might be LLVM bitcode, so we need to run
+> +# LTO to compile them into native code before running modpost
+> +prelink-ext = .lto
+> +
+> +quiet_cmd_cc_lto_link_modules = LTO [M] $@
+> +cmd_cc_lto_link_modules =                                              \
+> +       $(LD) $(ld_flags) -r -o $@                                      \
+> +               --whole-archive $(filter-out FORCE,$^)
+> +
+> +%.lto.o: %.o FORCE
+> +       $(call if_changed,cc_lto_link_modules)
+> +
+> +PHONY += FORCE
+> +FORCE:
+> +
+> +endif
+> +
+> +modules := $(sort $(shell cat $(MODORDER)))
+> +
+>  # Read out modules.order to pass in modpost.
+>  # Otherwise, allmodconfig would fail with "Argument list too long".
+>  quiet_cmd_modpost = MODPOST $@
+> -      cmd_modpost = sed 's/ko$$/o/' $< | $(MODPOST) -T -
+> +      cmd_modpost = sed 's/\.ko$$/$(prelink-ext)\.o/' $< | $(MODPOST) -T -
+>
+> -$(output-symdump): $(MODORDER) $(input-symdump) FORCE
+> +$(output-symdump): $(MODORDER) $(input-symdump) $(modules:.ko=$(prelink-ext).o) FORCE
+>         $(call if_changed,modpost)
+>
+>  targets += $(output-symdump)
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index 92dd745906f4..a681b3b6722e 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -52,6 +52,14 @@ modpost_link()
+>                 ${KBUILD_VMLINUX_LIBS}                          \
+>                 --end-group"
+>
+> +       if [ -n "${CONFIG_LTO_CLANG}" ]; then
+> +               # This might take a while, so indicate that we're doing
+> +               # an LTO link
+> +               info LTO ${1}
+> +       else
+> +               info LD ${1}
+> +       fi
+> +
+>         ${LD} ${KBUILD_LDFLAGS} -r -o ${1} ${objects}
+>  }
+>
+> @@ -99,13 +107,22 @@ vmlinux_link()
+>         fi
+>
+>         if [ "${SRCARCH}" != "um" ]; then
+> -               objects="--whole-archive                        \
+> -                       ${KBUILD_VMLINUX_OBJS}                  \
+> -                       --no-whole-archive                      \
+> -                       --start-group                           \
+> -                       ${KBUILD_VMLINUX_LIBS}                  \
+> -                       --end-group                             \
+> -                       ${@}"
+> +               if [ -n "${CONFIG_LTO_CLANG}" ]; then
+> +                       # Use vmlinux.o instead of performing the slow LTO
+> +                       # link again.
+> +                       objects="--whole-archive                \
+> +                               vmlinux.o                       \
+> +                               --no-whole-archive              \
+> +                               ${@}"
+> +               else
+> +                       objects="--whole-archive                \
+> +                               ${KBUILD_VMLINUX_OBJS}          \
+> +                               --no-whole-archive              \
+> +                               --start-group                   \
+> +                               ${KBUILD_VMLINUX_LIBS}          \
+> +                               --end-group                     \
+> +                               ${@}"
+> +               fi
+>
+>                 ${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}      \
+>                         ${strip_debug#-Wl,}                     \
+> @@ -270,7 +287,6 @@ fi;
+>  ${MAKE} -f "${srctree}/scripts/Makefile.build" obj=init need-builtin=1
+>
+>  #link vmlinux.o
+> -info LD vmlinux.o
+>  modpost_link vmlinux.o
+>  objtool_link vmlinux.o
+>
+> --
+> 2.27.0.212.ge8ba1cc988-goog
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
