@@ -2,280 +2,110 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF98820738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14ED20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P0VYXq6c"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CaulDa6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391012AbgFXN26 (ORCPT
+        id S2391026AbgFXN3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:28:58 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59549 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389957AbgFXN2k (ORCPT
+        Wed, 24 Jun 2020 09:29:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53732 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389957AbgFXN3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:28:40 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200624132837euoutp01c4709f0ac9391d449173bdce7eb160ab~bfeVPJma71666016660euoutp01O
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:28:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200624132837euoutp01c4709f0ac9391d449173bdce7eb160ab~bfeVPJma71666016660euoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593005317;
-        bh=+BVFHsIaHxxf5sNngKe2tcvXYhFFq09+cJEbPx8Juh0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=P0VYXq6cWGPU4+3SgaotVxlpxRuqpm0FwLThGtgxwgxfcPShlfT8cyNYzGusFVibG
-         UoEcSSRZL2ttROnKTbG0a1y92LbDJ8Ogjpx+wBhQW8iIq4h2KoIUxjzzE9+vD9KTLp
-         zljawienuQrDhpRXefwKVyuoL4IWZ9XzGm6poDH0=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200624132836eucas1p168afaff6bfae6863178963b94c201008~bfeU2nsjZ3176931769eucas1p1L;
-        Wed, 24 Jun 2020 13:28:36 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id F9.30.05997.40553FE5; Wed, 24
-        Jun 2020 14:28:36 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200624132836eucas1p13876eb90301f41ada796d6ed4e84df67~bfeUhNix_2578925789eucas1p1F;
-        Wed, 24 Jun 2020 13:28:36 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200624132836eusmtrp2f2c8409c0fbe659b7fb303e5ec6e4064~bfeUgdWFi3192631926eusmtrp2R;
-        Wed, 24 Jun 2020 13:28:36 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-dc-5ef355047b6f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 94.E4.06314.40553FE5; Wed, 24
-        Jun 2020 14:28:36 +0100 (BST)
-Received: from [106.210.85.205] (unknown [106.210.85.205]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200624132835eusmtip20a653f6e73b772478b9a0069e23e93f3~bfeTji1Ld0065300653eusmtip2B;
-        Wed, 24 Jun 2020 13:28:35 +0000 (GMT)
-Subject: Re: [RESEND PATCH v5 2/5] driver core: add deferring probe reason
- to devices_deferred property
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <2d01c2eb-ad40-f510-f4a9-392a0a2494a9@samsung.com>
-Date:   Wed, 24 Jun 2020 15:28:34 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        Wed, 24 Jun 2020 09:29:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05ODQZlF097807;
+        Wed, 24 Jun 2020 13:28:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=p4ox0G9tfn5BkyOURp1tMeS4J12nEb+dLm6PqLBmaz0=;
+ b=CaulDa6B4qhSB3acd1yoZckNMKQA+tTyJkax8rEes4b+LhgVFc5M3JUQE7H0fjfnk7Ld
+ 7MIy82qBCxBCSkSPSqK2QUXmBnsFm6hU1WPMsfiEhKsAGy/dPYO6Hj2p4FGdML/kUAnw
+ WbG2HzNMsOyDsho870NgN3WQxBSXvM7yA6AJ6GeKrMys/3Q9dbOGn6vqa6UFQ4lSrCJZ
+ 5zHMObRIoz5ZheIxpWlu15glb50aHrvqmw1qhBzHw1WJvnyMcTwmb61PtUFBgcZrAsQ5
+ EQsf6wVHLEGYf/zwdPJeHA2nh7wsTQ4Sk7YTNgNglP2CLGSK3yycz4/aG0CgauPvnxEI zw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31uut5jue8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 13:28:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05ODOCcd083287;
+        Wed, 24 Jun 2020 13:26:55 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31uur7cese-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 13:26:55 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05ODQlML010340;
+        Wed, 24 Jun 2020 13:26:48 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jun 2020 13:26:47 +0000
+Date:   Wed, 24 Jun 2020 16:26:40 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: ingenic: cleanup ARRAY_SIZE() vs sizeof() use
+Message-ID: <20200624132640.GC9972@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hv-jKSegVtNQ2uMde5A6hQ0_ksK0m1CBapqaXZWmV_zg@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: pl
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTYRDN191ul4aSpUA6KnjUI8ED72SNioqabOIf+WE8UHSRBYm0YAsK
-        /hCMSAAFiora0nogaoMYtAJCRcFqBCIQEIp4AB5EU1KshlODVNqFyL83b+bNvJcMiUl/CmeS
-        McoETqVkY+WEGK949bt5Gb5rIHxFwdW5tE3zAtEPr5YK6fzPvQTdPuQg6DO3SgnaOmLD6Aa7
-        Facz84pEtOlrh5BuM+sJ2pL/FNH3X3aJaEtOGG0YzMc2ezFtHa0Y4+g8K2KqdF0ipiBDK2RM
-        xZkEU695I2BqDCUipudcnYB5VJTC5JQVI6Y2+yLODJhm7/TcJ94QycXGHOdUy4MPiY8Yzmah
-        +JagpJt3v+OpaGB+FvIggVoDldXZeBYSk1LKiKDkfh7GF4MIzO+NiC8GEHz4lotNSZzdtUK+
-        cRdBi94+qXcguPS2U+Sa8qFioMBZ71b4UkugqNDq3otRYzg01owKXQ2CCoS/j94RLiyhguGr
-        6ZpbjFMLYfx2lpv3ow7A+Z4+jJ/xhgZtL+7CHlQoPCstdGOMmgOP+/UYj32h80ua2zdQWhKG
-        vukR73sbNPQbcR77QF9dmYjH/uCsui7gcQr0GNMwXpyBoPxB1WTo9fCx+c+EI3LiQiCUmpfz
-        9BboNj9300B5QWe/N+/BCy5UXMF4WgIZ6VJ+eh70NJVPLpTB7ZYhQoPkumnJdNPS6Kal0f2/
-        ewPhxUjGJaoV0Zx6lZI7EaRmFepEZXTQ4TiFCU384evxusFKZB6LsCCKRHJPyYNPv8KlQva4
-        OllhQUBicl9JSNPrcKkkkk0+yaniDqoSYzm1Bc0icblMsrrQdkBKRbMJ3FGOi+dUU10B6TEz
-        FR1LHd7DPfEPXxvQZXFE7VizG0UsavdOiFfkRNq3BuyPanWWbD86fEpikO1oTOsIeX9xb4lx
-        dfY6/SatZ1HoIoVP5jLxiY/s9QDD0pFbudrcuMtsvzFpVFNNdvsJrgzXLNg4wxr21PBdRX2m
-        06Pr7nTb7hWfbq+3mQLDOPuZHyONclx9hF25GFOp2X/79ULXgwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42I5/e/4PV2W0M9xBg92cFm8nHCY0WLjjPWs
-        FlMfPmGzuPL1PZtF8+L1bBZXv79ktjj55iqLRefEJewWmx5fY7W4vGsOm8WhqXsZLdYeuctu
-        cagv2mLul6nMDnwel69dZPZ4f6OV3WPnrLvsHrM7ZrJ6bFrVyeZxYsIlJo/9c9ewe9zvPs7k
-        sXlJvUffllWMHgd6J7N4fN4kF8ATpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtl
-        ZKqkb2eTkpqTWZZapG+XoJcxt7WLseCCXsXC5c9ZGhg/K3cxcnJICJhI/L93gLWLkYtDSGAp
-        o8TpWxMYIRLiErvnv2WGsIUl/lzrYoMoesso0fZhBztIQlggU+LM1uNsILaIgLbEkkVXmUGK
-        mAX+sEj8OrCCEaKjgUni1f7FYFVsApoSfzffBLN5BewkHm+aBzaJRUBV4t/SLrC4qECsRPfi
-        H+wQNYISJ2c+YQGxOQUCJfatXwRmMwuYSczb/JAZwpaX2P52DpQtInHjUQvjBEahWUjaZyFp
-        mYWkZRaSlgWMLKsYRVJLi3PTc4sN9YoTc4tL89L1kvNzNzECE8C2Yz8372C8tDH4EKMAB6MS
-        D++GBx/jhFgTy4orcw8xSnAwK4nwOp09HSfEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cDk
-        lFcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgbHpAv/Gsjd/+/b1
-        nG/Ns+8tn6jTccjOgm97+6fjjU93x/iazFeastMlgm8xW+7OX1N+GFonnDQu6Irbd39JpN9f
-        s5lLGSdmhaUr/Pl+ZXrRq/if51rmnMv6Wxq82K4tb7IIy+1rf19cTOhtNhQ5EW04t+rJy4oU
-        Wd2EB8UOnxOfmjCfl5ROb1RiKc5INNRiLipOBAAK6VOwFgMAAA==
-X-CMS-MailID: 20200624132836eucas1p13876eb90301f41ada796d6ed4e84df67
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200624114136eucas1p1a3a31d95d86754201c7965f26ccd5de0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200624114136eucas1p1a3a31d95d86754201c7965f26ccd5de0
-References: <CGME20200624114136eucas1p1a3a31d95d86754201c7965f26ccd5de0@eucas1p1.samsung.com>
-        <20200624114127.3016-1-a.hajda@samsung.com>
-        <20200624114127.3016-3-a.hajda@samsung.com>
-        <CAJZ5v0hv-jKSegVtNQ2uMde5A6hQ0_ksK0m1CBapqaXZWmV_zg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 suspectscore=0
+ phishscore=0 impostorscore=0 cotscore=-2147483648 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006240097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The ARRAY_SIZE() is the number of elements but we want to use sizeof()
+here for the number of bytes.  Fortunately, they are the same thing
+because it's an array of u8 so this has no effect on runtime.
 
-On 24.06.2020 14:11, Rafael J. Wysocki wrote:
-> On Wed, Jun 24, 2020 at 1:41 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
->> This list does not contain reason why the driver deferred probe, the patch
->> improves it.
->> The natural place to set the reason is probe_err function introduced recently,
->> ie. if probe_err will be called with -EPROBE_DEFER instead of printk the message
->> will be attached to deferred device and printed when user read devices_deferred
->> property.
->>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Reviewed-by: Mark Brown <broonie@kernel.org>
->> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> ---
->>   drivers/base/base.h |  3 +++
->>   drivers/base/core.c | 10 ++++++----
->>   drivers/base/dd.c   | 21 ++++++++++++++++++++-
->>   3 files changed, 29 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/base/base.h b/drivers/base/base.h
->> index 95c22c0f9036..93ef1c2f4c1f 100644
->> --- a/drivers/base/base.h
->> +++ b/drivers/base/base.h
->> @@ -93,6 +93,7 @@ struct device_private {
->>          struct klist_node knode_class;
->>          struct list_head deferred_probe;
->>          struct device_driver *async_driver;
->> +       char *deferred_probe_msg;
-> What about calling this deferred_probe_reason?
->
->>          struct device *device;
->>          u8 dead:1;
->>   };
->> @@ -134,6 +135,8 @@ extern void device_release_driver_internal(struct device *dev,
->>   extern void driver_detach(struct device_driver *drv);
->>   extern int driver_probe_device(struct device_driver *drv, struct device *dev);
->>   extern void driver_deferred_probe_del(struct device *dev);
->> +extern void __deferred_probe_set_msg(const struct device *dev,
->> +                                    struct va_format *vaf);
-> I'd call this device_set_deferred_probe_reson() to follow the naming
-> convention for the function names in this header file.
->
->>   static inline int driver_match_device(struct device_driver *drv,
->>                                        struct device *dev)
->>   {
->> diff --git a/drivers/base/core.c b/drivers/base/core.c
->> index ee9da66bff1b..2a96954d5460 100644
->> --- a/drivers/base/core.c
->> +++ b/drivers/base/core.c
->> @@ -3962,6 +3962,8 @@ define_dev_printk_level(_dev_info, KERN_INFO);
->>    *
->>    * This helper implements common pattern present in probe functions for error
->>    * checking: print message if the error is not -EPROBE_DEFER and propagate it.
->> + * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
->> + * later by reading devices_deferred debugfs attribute.
->>    * It replaces code sequence:
->>    *     if (err != -EPROBE_DEFER)
->>    *             dev_err(dev, ...);
->> @@ -3977,14 +3979,14 @@ int probe_err(const struct device *dev, int err, const char *fmt, ...)
->>          struct va_format vaf;
->>          va_list args;
->>
->> -       if (err == -EPROBE_DEFER)
->> -               return err;
->> -
->>          va_start(args, fmt);
->>          vaf.fmt = fmt;
->>          vaf.va = &args;
->>
->> -       dev_err(dev, "error %d: %pV", err, &vaf);
->> +       if (err == -EPROBE_DEFER)
->> +               __deferred_probe_set_msg(dev, &vaf);
->> +       else
->> +               dev_err(dev, "error %d: %pV", err, &vaf);
->>
->>          va_end(args);
->>
->> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
->> index 9a1d940342ac..f44d26454b6a 100644
->> --- a/drivers/base/dd.c
->> +++ b/drivers/base/dd.c
->> @@ -27,6 +27,7 @@
->>   #include <linux/async.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pinctrl/devinfo.h>
->> +#include <linux/slab.h>
->>
->>   #include "base.h"
->>   #include "power/power.h"
->> @@ -136,6 +137,8 @@ void driver_deferred_probe_del(struct device *dev)
->>          if (!list_empty(&dev->p->deferred_probe)) {
->>                  dev_dbg(dev, "Removed from deferred list\n");
->>                  list_del_init(&dev->p->deferred_probe);
->> +               kfree(dev->p->deferred_probe_msg);
->> +               dev->p->deferred_probe_msg = NULL;
->>          }
->>          mutex_unlock(&deferred_probe_mutex);
->>   }
->> @@ -211,6 +214,21 @@ void device_unblock_probing(void)
->>          driver_deferred_probe_trigger();
->>   }
->>
->> +/*
->> + * __deferred_probe_set_msg() - Set defer probe reason message for device
-> I'd change this into a full kerneldoc comment.
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/mtd/nand/raw/ingenic/jz4740_ecc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
+index 13fea645c7f0..54e377754a6c 100644
+--- a/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
++++ b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
+@@ -90,8 +90,8 @@ static int jz4740_ecc_calculate(struct ingenic_ecc *ecc,
+ 	 * If the written data is completely 0xff, we also want to write 0xff as
+ 	 * ECC, otherwise we will get in trouble when doing subpage writes.
+ 	 */
+-	if (memcmp(ecc_code, empty_block_ecc, ARRAY_SIZE(empty_block_ecc)) == 0)
+-		memset(ecc_code, 0xff, ARRAY_SIZE(empty_block_ecc));
++	if (memcmp(ecc_code, empty_block_ecc, sizeof(empty_block_ecc)) == 0)
++		memset(ecc_code, 0xff, sizeof(empty_block_ecc));
+ 
+ 	return 0;
+ }
+-- 
+2.27.0
 
-OK I will apply all changes in next version. Thx for review.
-
-
-Regards
-
-Andrzej
-
-
->
->> + */
->> +void __deferred_probe_set_msg(const struct device *dev, struct va_format *vaf)
->> +{
->> +       const char *drv = dev_driver_string(dev);
->> +
->> +       mutex_lock(&deferred_probe_mutex);
->> +
->> +       kfree(dev->p->deferred_probe_msg);
->> +       dev->p->deferred_probe_msg = kasprintf(GFP_KERNEL, "%s: %pV", drv, vaf);
->> +
->> +       mutex_unlock(&deferred_probe_mutex);
->> +}
->> +
->>   /*
->>    * deferred_devs_show() - Show the devices in the deferred probe pending list.
->>    */
->> @@ -221,7 +239,8 @@ static int deferred_devs_show(struct seq_file *s, void *data)
->>          mutex_lock(&deferred_probe_mutex);
->>
->>          list_for_each_entry(curr, &deferred_probe_pending_list, deferred_probe)
->> -               seq_printf(s, "%s\n", dev_name(curr->device));
->> +               seq_printf(s, "%s\t%s", dev_name(curr->device),
->> +                          curr->device->p->deferred_probe_msg ?: "\n");
->>
->>          mutex_unlock(&deferred_probe_mutex);
->>
->> --
->> 2.17.1
->>
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://protect2.fireeye.com/url?k=5adb7884-070fc5c0-5adaf3cb-0cc47a31381a-5588a624ab84213e&q=1&u=https%3A%2F%2Flists.freedesktop.org%2Fmailman%2Flistinfo%2Fdri-devel
->
