@@ -2,97 +2,127 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69629C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1837020768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C88D207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="brcPr/qd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbgFXWF5 (ORCPT
+        id S2390052AbgFXWG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 18:05:57 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59471 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388778AbgFXWF4 (ORCPT
+        Wed, 24 Jun 2020 18:06:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389453AbgFXWGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 18:05:56 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U0d59pt_1593036352;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0d59pt_1593036352)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 25 Jun 2020 06:05:52 +0800
-Date:   Thu, 25 Jun 2020 06:05:52 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>, Baoquan He <bhe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-Message-ID: <20200624220552.GA15016@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
- <20200623151828.GA31426@dhcp22.suse.cz>
- <20200624061340.GA11552@L-31X9LVDL-1304.local>
- <CAPcyv4gEUq0yyz00AbQQSyo_acj1wUCZPse5vEff_Bq7GmeksQ@mail.gmail.com>
+        Wed, 24 Jun 2020 18:06:23 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB9FC061573;
+        Wed, 24 Jun 2020 15:06:22 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y18so2094523lfh.11;
+        Wed, 24 Jun 2020 15:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UgyMArw4CzkOtjq5ORhsXeOYAj7kLhbHa9ROjF5N1ZA=;
+        b=brcPr/qdwolNKlQ2seNrW+NR5dn3F8qzG/5QSrP5Uvzqyojcl+GZUA33WwbzgAcUpQ
+         J4HFOf5CWTkwIKQOAvIi7Nl3+3d+D5CPJ9s+e3POhZZbTliBmMb5a4mjKqR/Ncj93rm8
+         OKxUFVvEAFTjS/MH3GX1V3tHhI6eKR8ieKjHheZ3zU54uVGBQLwNvX6cB2waHX29T7H0
+         w4CJ6AuMuIsb6NvZipexg3gLOsXnZrMMxyt0fEa04d5oIfxPT1kfrTVh9Fvix4wV+ZyT
+         VPvcaCGITS2n9Wl0i2hPkqumA2s6XPuw5PvSLeuCjRis6U6u988o1lDIBTVTmk39pUTk
+         S6bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UgyMArw4CzkOtjq5ORhsXeOYAj7kLhbHa9ROjF5N1ZA=;
+        b=ky8ZCwh51IFDSyyYzmAoCEQEYukKuCwdew17fXZWd5KF4KoRKcAzPQw+R7rNZ3u+29
+         MrTroFR0/UStoNMSKqD1XWDIH3Okr/uqM08fwhTFxDtVG0NHFEaOLJlX3e3YbkpZQHkk
+         1fd9mcNMVrHZdjvff9KxPPVTnlM0B8XojbvL3MDEm+aDm571vgZTdce7LArQpHit5ezF
+         noAMFO67BbcGHLw3ugnAz3eM79ZF5akWoOdPU+3iN87s2z5hUWUx/wA2PH5GpBueD4dc
+         670Ir84E2UrxV9cWc2oJAXdWsmU/VSRZOrGFHx7FWPB2AyGNxbH0JNdMYnbOaSgH8Atb
+         X0kA==
+X-Gm-Message-State: AOAM532mCloLUOfIrc/5a6UYxs2+L4R+ev1SUySrurIwRjzJk4BDSvce
+        uZ9KClJIGAyvTBKxRjsujkGRcn0L1ST5wtjp3A==
+X-Google-Smtp-Source: ABdhPJziBSIPd70JafmfjsSZBN5adlm7ZLw/+u52IOWV9W91ao6QMegxNcu8vWfFtx2lhET9gfIAJ60yhX40DrLEejc=
+X-Received: by 2002:ac2:5c09:: with SMTP id r9mr16809657lfp.176.1593036380605;
+ Wed, 24 Jun 2020 15:06:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gEUq0yyz00AbQQSyo_acj1wUCZPse5vEff_Bq7GmeksQ@mail.gmail.com>
+References: <1592410366125160@kroah.com>
+In-Reply-To: <1592410366125160@kroah.com>
+From:   Gabriel C <nix.or.die@googlemail.com>
+Date:   Thu, 25 Jun 2020 00:05:54 +0200
+Message-ID: <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+Subject: Re: Linux 5.7.3
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>, angrypenguinpoland@gmail.com,
+        Qiujun Huang <hqjagain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 09:10:09AM -0700, Dan Williams wrote:
->On Tue, Jun 23, 2020 at 11:14 PM Wei Yang
-><richard.weiyang@linux.alibaba.com> wrote:
->>
->> On Tue, Jun 23, 2020 at 05:18:28PM +0200, Michal Hocko wrote:
->> >On Tue 23-06-20 17:42:58, Wei Yang wrote:
->> >> For early sections, we assumes its memmap will never be partially
->> >> removed. But current behavior breaks this.
->> >>
->> >> Let's correct it.
->> >>
->> >> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->> >> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> >
->> >Can a user trigger this or is this a theoretical bug?
->>
->> Let me rewrite the changelog a little. Look forward any comments.
->>
->>    For early sections, its memmap is handled specially even sub-section is
->>    enabled. The memmap could only be populated as a whole.
->>
->>    Quoted from the comment of section_activate():
->>
->>        * The early init code does not consider partially populated
->>        * initial sections, it simply assumes that memory will never be
->>        * referenced.  If we hot-add memory into such a section then we
->>        * do not need to populate the memmap and can simply reuse what
->>        * is already there.
->>
->>    While current section_deactivate() breaks this rule. When hot-remove a
->>    sub-section, section_deactivate() would depopulate its memmap. The
->>    consequence is if we hot-add this subsection again, its memmap never get
->>    proper populated.
+Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
+<gregkh@linuxfoundation.org>:
 >
->Ok, forgive the latency as re-fetched this logic into my mental cache.
->So what I was remembering was the initial state of the code that
->special cased early sections, and that still seems to be the case in
->pfn_valid(). IIRC early_sections / bootmem are blocked from being
->removed entirely. Partial / subsection removals are ok.
+> I'm announcing the release of the 5.7.3 kernel.
+>
 
-Would you mind giving more words? Partial subsection removal is ok, so no need
-to fix this?
+Hello Greg,
 
--- 
-Wei Yang
-Help you, Help me
+> Qiujun Huang (5):
+>       ath9k: Fix use-after-free Read in htc_connect_service
+>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+>
+
+We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
+while working fine on <5.7.3.
+
+I don't have myself such HW, and the reported doesn't have any experience
+in bisecting the kernel, so we build kernels, each with one of the
+above commits reverted,
+to find the bad commit.
+
+The winner is:
+
+commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
+Author: Qiujun Huang <hqjagain@gmail.com>
+Date:   Sat Apr 4 12:18:38 2020 +0800
+
+    ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+
+    commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+...
+
+Reverting this one fixed his problem.
+
+I don't have so much info about the HW, besides a dmesg showing the
+phy breaking.
+I also added the reporter to CC too.
+
+https://gist.github.com/AngryPenguinPL/1e545f0da3c2339e443b9e5044fcccea
+
+If you need more info, please let me know and I'll try my best to get
+it as fast as possible for you.
+
+
+Best Regards,
+
+Gabriel C
