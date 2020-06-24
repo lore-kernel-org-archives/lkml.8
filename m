@@ -2,231 +2,170 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07166C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A7D20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xYiyFDHu"
+	by mail.kernel.org (Postfix) with ESMTP id D925B2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593001815;
+	bh=HlA6luu4r6/yFqJBEksA5pntocBrVJtjQggo8uE7V0w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cVmpmM9K7vriT8R/aJjHHnIZGK0y0XF0FQj/zcHTp6qcBSSmzk1b5DiXz0N3Cu2dj
+	 4s4KNZJ+ib1I59QNKYAVOHyiXcqcxnYhRbFwjXudIul7pj5pUIsUQP/cpLtDq1uQhT
+	 1XiH0lCfBn/0JNaYSFjyFw1kr3Yc6aL+Vfk/TKAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390530AbgFXM3u (ORCPT
+        id S2390580AbgFXMaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:29:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388790AbgFXM3s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:29:48 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8078C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:29:46 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id fc4so939078qvb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1ESt58ClxWv93YRbwFQwd7bo2ar4KSmZx3txl2ZmTe0=;
-        b=xYiyFDHuq3J3EHlfdliFFKnN9LCOnNLT0paQ463HnqgNSeTRpQCTPu5hjDhYbHNuoH
-         /1sGE2iqIzdvmBypochamuXx3XqSFXyoN1vSblZYyOMUppTq00HysGVcsvgoouVvBJLQ
-         P4j7pCTsPXnenTPW/R+olPXS2aksvwRwDspW6Qa5P40yokgQJ6DBrj3ww1wCsiBrHiHh
-         trqL8BNelt1GFW30dSbMZ2Fvy7GwmcFzRKmUE6zZxW24mwZRJue9rvVDojB58rHIFbVI
-         3nLpUdcjOtZmOzvmXDltbnyjSKHdcmZuV+kkvu4aLHTURWhtDhECk1S2ccsZ4araYj3r
-         lVxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1ESt58ClxWv93YRbwFQwd7bo2ar4KSmZx3txl2ZmTe0=;
-        b=nmo4rdNhDwdfhJac/cKKGBjCTTeHVhAg1E9qDiX0eqwVRx1nMnsvVTZimmvCLCZjkL
-         NXtV/mb4kTm7AD2gVDZCEZT6rfiS5D3x8kzzERhUZVFqkvudDD95ixHBezxiFWX2Z2V9
-         /vn9vG9e0ZJ30flWAa0AOg970XT7XVBV09uAltSxgIezdME/orZhhWh42jrfb79A3rj5
-         Orn9ptbXQ4fvjETJr9E8z4yGK+Bt2lG7dkqjV0nDZMgs1FsB3rJcbIzLei9OqX3MXC6O
-         aNpFyqoH+S/R9yYCV2t81Xq5VQK06I0r8lFDvtGt0RwEFhVf3mTq+9c7RhGuOU1+JBC2
-         xjbQ==
-X-Gm-Message-State: AOAM531v6gVN8n4XjFmJRwzHZTFOAVU0/y3IoetUgDtfstOe4DoVPADI
-        sn7P4E9+8eQcUAphLIBoH49xzCw8hekYJCQoJbaKthXJzhU=
-X-Google-Smtp-Source: ABdhPJyv25a16rucBL7z8NoN7u87LJnE8BXZfa1mh6MVjMVuXFoeA5NYyDvAaKn0vScJcB1guOtyb7iid8m74FTpCGI=
-X-Received: by 2002:ad4:580e:: with SMTP id dd14mr14571376qvb.96.1593001786088;
- Wed, 24 Jun 2020 05:29:46 -0700 (PDT)
+        Wed, 24 Jun 2020 08:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388790AbgFXMaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:30:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2250820707;
+        Wed, 24 Jun 2020 12:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593001811;
+        bh=HlA6luu4r6/yFqJBEksA5pntocBrVJtjQggo8uE7V0w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NLDoURA/Gn5X4R0JA1WB+sDEtFPFY6RMrIYYtzI6+p20500eW6YGrD95nff0+Atb4
+         Bf/596jKYcvwaopyzU6z+xyJMHjuS0q2gVnPfPEWbO0QQ7fQ2P7ArAW/Lszfn1uNeY
+         TfjK+yTMTXr6Ep9Y6Ml98NDBB/d/eNHz9nnaKy4Q=
+Date:   Wed, 24 Jun 2020 14:30:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
+ integer and pointer types
+Message-ID: <20200624123008.GA1773782@kroah.com>
+References: <20200624114127.3016-1-a.hajda@samsung.com>
+ <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
+ <20200624114127.3016-4-a.hajda@samsung.com>
 MIME-Version: 1.0
-References: <20200623060526.29922-1-mans0n@gorani.run>
-In-Reply-To: <20200623060526.29922-1-mans0n@gorani.run>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 24 Jun 2020 14:29:35 +0200
-Message-ID: <CAMpxmJVvU1Q2OHYfqqAMcojniQ6TSK+n5AejddwZ=pArtUWNYg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624114127.3016-4-a.hajda@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 cze 2020 o 08:05 Sungbo Eo <mans0n@gorani.run> napisa=C5=82(a):
->
-> This patch adds support for the PCA9570 I2C GPO expander.
->
-> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-
-Hi Sungbo, this looks pretty good, but there are some nits listed below.
-
+On Wed, Jun 24, 2020 at 01:41:25PM +0200, Andrzej Hajda wrote:
+> Many resource acquisition functions return error value encapsulated in
+> pointer instead of integer value. To simplify coding we can use macro
+> which will accept both types of error.
+> With this patch user can use:
+> 	probe_err(dev, ptr, ...)
+> instead of:
+> 	probe_err(dev, PTR_ERR(ptr), ...)
+> Without loosing old functionality:
+> 	probe_err(dev, err, ...)
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 > ---
-> Tested in kernel 5.4 on an ipq40xx platform.
->
-> This is my first time submitting a whole driver patch, and I'm not really=
- familiar with this PCA expander series.
-> Please let me know how I can improve this patch further. (Do I also need =
-to document the DT compatible string?)
->
-
-Yes, you should send a separate patch to DT maintainers with DT
-binding document (preferably in YAML). Please see
-Documentations/devicetree/bindings for more info.
-
-> FYI there's an unmerged patch for this chip.
-> http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-Ma=
-y/105602.html
-> I don't have PCA9571 either so I didn't add support for it.
-> ---
->  drivers/gpio/Kconfig        |   8 ++
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-pca9570.c | 159 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 168 insertions(+)
->  create mode 100644 drivers/gpio/gpio-pca9570.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index c6b5c65c8405..d10dcb81b841 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
->           Say yes here to enable the pca953x to be used as an interrupt
->           controller. It requires the driver to be built in the kernel.
->
-> +config GPIO_PCA9570
-> +       tristate "PCA9570 4-Bit I2C GPO expander"
-> +       help
-> +         Say yes here to enable the GPO driver for the NXP PCA9570 chip.
-> +
-> +         To compile this driver as a module, choose M here: the module w=
-ill
-> +         be called gpio-pca9570.
-> +
->  config GPIO_PCF857X
->         tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expander=
-s"
->         select GPIOLIB_IRQCHIP
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 1e4894e0bf0f..33cb40c28a61 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)           +=3D gpio-octeon.=
-o
->  obj-$(CONFIG_GPIO_OMAP)                        +=3D gpio-omap.o
->  obj-$(CONFIG_GPIO_PALMAS)              +=3D gpio-palmas.o
->  obj-$(CONFIG_GPIO_PCA953X)             +=3D gpio-pca953x.o
-> +obj-$(CONFIG_GPIO_PCA9570)             +=3D gpio-pca9570.o
->  obj-$(CONFIG_GPIO_PCF857X)             +=3D gpio-pcf857x.o
->  obj-$(CONFIG_GPIO_PCH)                 +=3D gpio-pch.o
->  obj-$(CONFIG_GPIO_PCIE_IDIO_24)                +=3D gpio-pcie-idio-24.o
-> diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
-> new file mode 100644
-> index 000000000000..9ed01554f5df
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-pca9570.c
-> @@ -0,0 +1,159 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Driver for PCA9570 I2C GPO expander
-> + *
-> + * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
-> + *
-> + * Based on gpio-tpic2810.c
-> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com=
-/
-> + *     Andrew F. Davis <afd@ti.com>
-> + */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
+>  drivers/base/core.c    | 25 ++-----------------------
+>  include/linux/device.h | 25 ++++++++++++++++++++++++-
+>  2 files changed, 26 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 2a96954d5460..df283c62d9c0 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3953,28 +3953,7 @@ define_dev_printk_level(_dev_info, KERN_INFO);
+>  
+>  #endif
+>  
+> -/**
+> - * probe_err - probe error check and log helper
+> - * @dev: the pointer to the struct device
+> - * @err: error value to test
+> - * @fmt: printf-style format string
+> - * @...: arguments as specified in the format string
+> - *
+> - * This helper implements common pattern present in probe functions for error
+> - * checking: print message if the error is not -EPROBE_DEFER and propagate it.
+> - * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
+> - * later by reading devices_deferred debugfs attribute.
+> - * It replaces code sequence:
+> - * 	if (err != -EPROBE_DEFER)
+> - * 		dev_err(dev, ...);
+> - * 	return err;
+> - * with
+> - * 	return probe_err(dev, err, ...);
+> - *
+> - * Returns @err.
+> - *
+> - */
+> -int probe_err(const struct device *dev, int err, const char *fmt, ...)
+> +int __probe_err(const struct device *dev, int err, const char *fmt, ...)
+>  {
+>  	struct va_format vaf;
+>  	va_list args;
+> @@ -3992,7 +3971,7 @@ int probe_err(const struct device *dev, int err, const char *fmt, ...)
+>  
+>  	return err;
+>  }
+> -EXPORT_SYMBOL_GPL(probe_err);
+> +EXPORT_SYMBOL_GPL(__probe_err);
+>  
+>  static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
+>  {
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 40a90d9bf799..22d3c3d4f461 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -965,7 +965,30 @@ void device_links_supplier_sync_state_pause(void);
+>  void device_links_supplier_sync_state_resume(void);
+>  
+>  extern __printf(3, 4)
+> -int probe_err(const struct device *dev, int err, const char *fmt, ...);
+> +int __probe_err(const struct device *dev, int err, const char *fmt, ...);
 > +
 > +/**
-> + * struct pca9570 - GPIO driver data
-> + * @chip: GPIO controller chip
-> + * @client: I2C device pointer
-> + * @buffer: Buffer for device register
-> + * @lock: Protects write sequences
+> + * probe_err - probe error check and log helper
+> + * @dev: the pointer to the struct device
+> + * @err: error value to test, can be integer or pointer type
+> + * @fmt: printf-style format string
+> + * @...: arguments as specified in the format string
+> + *
+> + * This helper implements common pattern present in probe functions for error
+> + * checking: print message if the error is not -EPROBE_DEFER and propagate it.
+> + * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
+> + * later by reading devices_deferred debugfs attribute.
+> + * It replaces code sequence:
+> + * 	if (err != -EPROBE_DEFER)
+> + * 		dev_err(dev, ...);
+> + * 	return err;
+> + * with
+> + * 	return probe_err(dev, err, ...);
+> + *
+> + * Returns @err.
+> + *
 > + */
-> +struct pca9570 {
-> +       struct gpio_chip chip;
-> +       struct i2c_client *client;
-> +       u8 buffer;
-> +       struct mutex lock;
-> +};
-> +
-> +static void pca9570_set(struct gpio_chip *chip, unsigned offset, int val=
-ue);
-> +
+> +#define probe_err(dev, err, args...) __probe_err(dev, (long)(err), args)
 
-Please just move this function here instead of declaring it and
-implementing it later.
+Shouldn't that be "unsigned long" instead of "long"?  That's what we put
+pointers in last I looked...
 
-[snip!]
+thanks,
 
-> +
-> +static int pca9570_probe(struct i2c_client *client,
-> +                        const struct i2c_device_id *id)
-> +{
-> +       struct pca9570 *gpio;
-> +       int ret;
-> +
-> +       gpio =3D devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-> +       if (!gpio)
-> +               return -ENOMEM;
-> +
-> +       i2c_set_clientdata(client, gpio);
-> +
-> +       gpio->chip =3D template_chip;
-> +       gpio->chip.parent =3D &client->dev;
-> +
-> +       gpio->client =3D client;
-> +
-> +       mutex_init(&gpio->lock);
-> +
-> +       ret =3D gpiochip_add_data(&gpio->chip, gpio);
-
-Why not devm_gpiochip_add_data()? You could drop the remove callback.
-
-> +       if (ret < 0) {
-> +               dev_err(&client->dev, "Unable to register gpiochip\n");
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int pca9570_remove(struct i2c_client *client)
-> +{
-> +       struct pca9570 *gpio =3D i2c_get_clientdata(client);
-> +
-> +       gpiochip_remove(&gpio->chip);
-> +
-> +       return 0;
-> +}
-> +
-
-[snip!]
-
-Bartosz
+greg k-h
