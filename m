@@ -2,220 +2,104 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D69BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B54C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3416320663
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4A520663
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593003081;
-	bh=gN5PKas9CvuWwK/weRNNyuR8Fc9CxY8OZRwT+G269wE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ER6t9gnYfOiWlsNMMKDuoz5u3vN13M1nX82SvKykiUrTMBb5QN7IQVWiOZj3uDveF
-	 eEZJsEnsj/lHRf4Vsm9oefUmGRwnt28kRFGwrifF22JAiA19IzZGcTfUB/cFKenrus
-	 DjKGTb8eFdYUS7P/6vd2/dI/vpRLe/eSxrLF3JCY=
+	s=default; t=1593003160;
+	bh=bGKLOzXs0g6SkMcsLecR7cl0qPhgg12HGv1cwNX6TYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NigBjq4ggS/fxrfSRD7oLBeTj1hiXTDEtNXkDu+QgLS4tzuxLRoYmsRcPgfEdZ68B
+	 gWkijWTIxFxZmTSalqH1h9NqGYPbs+2y0LsPL2S8JT49Zxop4miD0rESCycyrWN9RN
+	 u4c4n2fW5GG1RQoXRNNYyEwZDRrIwe2t0n/q6ncI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390907AbgFXMvT (ORCPT
+        id S2390913AbgFXMwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:51:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42833 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388942AbgFXMvS (ORCPT
+        Wed, 24 Jun 2020 08:52:40 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37541 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388942AbgFXMwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:51:18 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t6so1758499otk.9;
-        Wed, 24 Jun 2020 05:51:18 -0700 (PDT)
+        Wed, 24 Jun 2020 08:52:39 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j1so1135725pfe.4;
+        Wed, 24 Jun 2020 05:52:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/bkPQJyEuJLLZDCNPTwD8zOfuXTt/HbpVEXhGvvUkU=;
-        b=AI94apMJFjRHFuRxILGcYWcD/kU95W6XXd2KMuZ56rAQHH7lYg5c1easXanf/m/r76
-         z45CTt6gtMPVFy35cFUBmJQj8bn/gq150S5KxyXhe7KBMm86AkdkWVXRarZdxK0VOVLo
-         l+yka3SSE/uEzlgwpS7NLgWQ1CqUrz5wl538GOMlQ/OMSOJDsTzGpUiO9GUxplW1+4Zh
-         MtX+MXDMEfM0VV1+V8+6/Wc0QLk/7LBx7rf2XhtVwj+UMvJegB8tlid7eLWDO7WDsGRm
-         rLt3KblNMIQ4EdSXlgh3crnmoA+tlFCC9FArFCBn3A3YsacJT9KPk2fUCPzhOvNOTx8l
-         12bw==
-X-Gm-Message-State: AOAM533bz9me+GccRnfVXO83Xf/ZjgWRu611+S/nF/w4GgbV+Rht1CU4
-        KzOSR5GV4PLZEbBxT36Q7aqZP4PAQ4ny2PQno0Y=
-X-Google-Smtp-Source: ABdhPJyJaj4dGUTvhHBRNMjHUnZdGheAZvOfYIAiAj6lGBGPOY3/8KAhD1pS066Sr/l31WOleOmCuvjLIX/i+LSdSPM=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr21740160otn.118.1593003077552;
- Wed, 24 Jun 2020 05:51:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ImZMVmJ6KLEqHAgKJ4c32f0nuRv6OUnQsFfctRSAXJo=;
+        b=aq9B/Xquq7abP5W46czT/Y6R0AfQt6SMY2t56fsDVPTTUuHqh3n8759IC7LiWzKPjk
+         9pDrbuCKE43BMY5yyu/DY1+aaThShdSqVPXLqw9Ej/9nAZXswXwjlsCFApCp9A5wk4Ia
+         56S2A65e3tXtjajxVqXh62RTMBac/9gncxFJ+VeC1QzS3MKKKEeSJ7To01F2bX0iUe/Z
+         ZjYqnXEb2hJico4bcPuA2YtGDQHBafYVX8ZC91dStxzivDf+BFItv5QlwXG2hS+3aJig
+         A9F2IjgU/b0SspwnpAkV9fHvG8IFGKRTBhwmO+t3FT6J7dl+E+QTt7XxhpLXperTQb3I
+         zmyA==
+X-Gm-Message-State: AOAM533kBqFXjfTD7+5zoUuwN2YIhwPhXX7YRzOpUOgpr6Bow1FnP1sW
+        IzZhNl7SxijYa+6z7KnLn2A=
+X-Google-Smtp-Source: ABdhPJzddnf/uaOk9Rgp8vbxcf8lUTdU8rjuvn4Wiik8YZvkhsAy30AnlKe/2Lxzs/SCBU/Spfu6GQ==
+X-Received: by 2002:a63:2a8a:: with SMTP id q132mr21027891pgq.279.1593003158753;
+        Wed, 24 Jun 2020 05:52:38 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id z11sm20679101pfk.141.2020.06.24.05.52.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 05:52:37 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id BAA8F40430; Wed, 24 Jun 2020 12:52:36 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 12:52:36 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+        Emese Revfy <re.emese@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Mathias Krause <minipli@googlemail.com>,
+        PaX Team <pageexec@freemail.hu>,
+        Brad Spengler <spender@grsecurity.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
+Subject: Re: [PATCH v2 2/5] ARM: vdso: Don't use gcc plugins for building
+ vgettimeofday.c
+Message-ID: <20200624125236.GF4332@42.do-not-panic.com>
+References: <20200624123330.83226-1-alex.popov@linux.com>
+ <20200624123330.83226-3-alex.popov@linux.com>
 MIME-Version: 1.0
-References: <20200623142138.209513-1-qperret@google.com> <20200623142138.209513-3-qperret@google.com>
- <20200624055023.xofefhohf7wifme5@vireshk-i7>
-In-Reply-To: <20200624055023.xofefhohf7wifme5@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 24 Jun 2020 14:51:04 +0200
-Message-ID: <CAJZ5v0ja_rM7i=psW1HRyzEpW=8QwP2u9p+ihN3FS8_53bbxTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Quentin Perret <qperret@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624123330.83226-3-alex.popov@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 7:50 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 23-06-20, 15:21, Quentin Perret wrote:
-> > Currently, the only way to specify the default CPUfreq governor is via
-> > Kconfig options, which suits users who can build the kernel themselves
-> > perfectly.
-> >
-> > However, for those who use a distro-like kernel (such as Android, with
-> > the Generic Kernel Image project), the only way to use a different
-> > default is to boot to userspace, and to then switch using the sysfs
-> > interface. Being able to specify the default governor on the command
-> > line, like is the case for cpuidle, would enable those users to specify
-> > their governor of choice earlier on, and to simplify slighlty the
-> > userspace boot procedure.
-> >
-> > To support this use-case, add a kernel command line parameter enabling
-> > to specify a default governor for CPUfreq, which takes precedence over
-> > the builtin default.
-> >
-> > This implementation has one notable limitation: the default governor
-> > must be registered before the driver. This is solved for builtin
-> > governors and drivers using appropriate *_initcall() functions. And in
-> > the modular case, this must be reflected as a constraint on the module
-> > loading order.
-> >
-> > Signed-off-by: Quentin Perret <qperret@google.com>
-> > ---
-> >  .../admin-guide/kernel-parameters.txt         |  5 ++++
-> >  Documentation/admin-guide/pm/cpufreq.rst      |  6 ++---
-> >  drivers/cpufreq/cpufreq.c                     | 23 +++++++++++++++----
-> >  3 files changed, 26 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index fb95fad81c79..5fd3c9f187eb 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -703,6 +703,11 @@
-> >       cpufreq.off=1   [CPU_FREQ]
-> >                       disable the cpufreq sub-system
-> >
-> > +     cpufreq.default_governor=
-> > +                     [CPU_FREQ] Name of the default cpufreq governor to use.
-> > +                     This governor must be registered in the kernel before
-> > +                     the cpufreq driver probes.
-> > +
-> >       cpu_init_udelay=N
-> >                       [X86] Delay for N microsec between assert and de-assert
-> >                       of APIC INIT to start processors.  This delay occurs
-> > diff --git a/Documentation/admin-guide/pm/cpufreq.rst b/Documentation/admin-guide/pm/cpufreq.rst
-> > index 0c74a7784964..368e612145d2 100644
-> > --- a/Documentation/admin-guide/pm/cpufreq.rst
-> > +++ b/Documentation/admin-guide/pm/cpufreq.rst
-> > @@ -147,9 +147,9 @@ CPUs in it.
-> >
-> >  The next major initialization step for a new policy object is to attach a
-> >  scaling governor to it (to begin with, that is the default scaling governor
-> > -determined by the kernel configuration, but it may be changed later
-> > -via ``sysfs``).  First, a pointer to the new policy object is passed to the
-> > -governor's ``->init()`` callback which is expected to initialize all of the
-> > +determined by the kernel command line or configuration, but it may be changed
-> > +later via ``sysfs``).  First, a pointer to the new policy object is passed to
-> > +the governor's ``->init()`` callback which is expected to initialize all of the
-> >  data structures necessary to handle the given policy and, possibly, to add
-> >  a governor ``sysfs`` interface to it.  Next, the governor is started by
-> >  invoking its ``->start()`` callback.
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 0128de3603df..4b1a5c0173cf 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -50,6 +50,9 @@ static LIST_HEAD(cpufreq_governor_list);
-> >  #define for_each_governor(__governor)                                \
-> >       list_for_each_entry(__governor, &cpufreq_governor_list, governor_list)
-> >
-> > +static char cpufreq_param_governor[CPUFREQ_NAME_LEN];
-> > +static struct cpufreq_governor *default_governor;
-> > +
-> >  /**
-> >   * The "cpufreq driver" - the arch- or hardware-dependent low
-> >   * level driver of CPUFreq support, and its spinlock. This lock
-> > @@ -1055,7 +1058,6 @@ __weak struct cpufreq_governor *cpufreq_default_governor(void)
-> >
-> >  static int cpufreq_init_policy(struct cpufreq_policy *policy)
-> >  {
-> > -     struct cpufreq_governor *def_gov = cpufreq_default_governor();
-> >       struct cpufreq_governor *gov = NULL;
-> >       unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
-> >
-> > @@ -1065,8 +1067,8 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
-> >               if (gov) {
-> >                       pr_debug("Restoring governor %s for cpu %d\n",
-> >                                policy->governor->name, policy->cpu);
-> > -             } else if (def_gov) {
-> > -                     gov = def_gov;
-> > +             } else if (default_governor) {
-> > +                     gov = default_governor;
-> >               } else {
-> >                       return -ENODATA;
-> >               }
-> > @@ -1074,8 +1076,8 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
-> >               /* Use the default policy if there is no last_policy. */
-> >               if (policy->last_policy) {
-> >                       pol = policy->last_policy;
-> > -             } else if (def_gov) {
-> > -                     pol = cpufreq_parse_policy(def_gov->name);
-> > +             } else if (default_governor) {
-> > +                     pol = cpufreq_parse_policy(default_governor->name);
-> >                       /*
-> >                        * In case the default governor is neiter "performance"
-> >                        * nor "powersave", fall back to the initial policy
-> > @@ -2320,6 +2322,9 @@ int cpufreq_register_governor(struct cpufreq_governor *governor)
-> >               list_add(&governor->governor_list, &cpufreq_governor_list);
-> >       }
-> >
-> > +     if (!strncasecmp(cpufreq_param_governor, governor->name, CPUFREQ_NAME_LEN))
-> > +             default_governor = governor;
-> > +
-> >       mutex_unlock(&cpufreq_governor_mutex);
-> >       return err;
-> >  }
-> > @@ -2348,6 +2353,8 @@ void cpufreq_unregister_governor(struct cpufreq_governor *governor)
-> >
-> >       mutex_lock(&cpufreq_governor_mutex);
-> >       list_del(&governor->governor_list);
-> > +     if (governor == default_governor)
-> > +             default_governor = cpufreq_default_governor();
-> >       mutex_unlock(&cpufreq_governor_mutex);
-> >  }
-> >  EXPORT_SYMBOL_GPL(cpufreq_unregister_governor);
-> > @@ -2789,7 +2796,13 @@ static int __init cpufreq_core_init(void)
-> >       cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
-> >       BUG_ON(!cpufreq_global_kobject);
-> >
-> > +     mutex_lock(&cpufreq_governor_mutex);
-> > +     if (!default_governor)
-> > +             default_governor = cpufreq_default_governor();
-> > +     mutex_unlock(&cpufreq_governor_mutex);
->
-> I don't think locking is required here at core-initcall level.
+On Wed, Jun 24, 2020 at 03:33:27PM +0300, Alexander Popov wrote:
+> Don't use gcc plugins for building arch/arm/vdso/vgettimeofday.c to
+> avoid unneeded instrumentation.
+> 
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
 
-It isn't necessary AFAICS, but it may as well be regarded as
-annotation (kind of instead of having a comment explaining why it need
-not be used).
+But why is skipping it safe?
+
+  Luis
