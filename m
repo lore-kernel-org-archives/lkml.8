@@ -2,199 +2,134 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A468920720
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795512072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:30:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oqtEbpKe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389019AbgFXFaj (ORCPT
+        id S2389030AbgFXFaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:30:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:1688 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727957AbgFXFai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:30:38 -0400
-IronPort-SDR: v8ILFtiBF85zpjC40f6kNwjLMiT+vDYHZDGj8HXdR9a8wZOJuDlQ39c2Vx9fXNU2ULNllvq5Hq
- FJ0f5731mFoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="132755847"
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="132755847"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 22:30:38 -0700
-IronPort-SDR: AX6BEU/hi0QVfeqgPIlj85D0U7tQnybRt/1vxf5ni1340eJYkoc8cqjKOd8hpkaPlbYaKxj/3t
- rkzT9VjR08aA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="452513566"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 22:30:32 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-Subject: [PATCH 8/9] soundwire: intel: add wake interrupt support
-Date:   Wed, 24 Jun 2020 01:35:45 +0800
-Message-Id: <20200623173546.21870-9-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
-References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
+        Wed, 24 Jun 2020 01:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389021AbgFXFap (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:30:45 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA92AC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 22:30:44 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k6so561227pll.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 22:30:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AblS5WrjyJMgnznkFBkF2GKSBo5MmuL1G6F8BwHXeHU=;
+        b=oqtEbpKemfXPO2FVCAZvOcjGa868wColw/w7N0/yn1PF29yObXn8tzs3OSrkgXiLpi
+         LcPeGnm4YkEzRAFbHhKXwuU3ULzEVIicC/I+gMx0QzQ6amybRVLjmTgycXMnj1rFx3o7
+         LQ/DPmnuFeIwg4eTFAsMbrfmc7Oj3NjYk0K5qMkebCw838Eaz8Ba5GkENK87fJTZmm8x
+         Y456j7fT9fg1TOA8hbMMBjcxXrjWa0C+n93sWs5LI9rk7UceWECyEGWoqDoWtADzHVjV
+         r0IpBYbuuoUKn76+TBnwvw5OxXNXelrJaddFFC8T342w/At3WuVGLzu9tOgPX+zBXbr0
+         2a0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AblS5WrjyJMgnznkFBkF2GKSBo5MmuL1G6F8BwHXeHU=;
+        b=fgdpPreZcwcXPXS+1WO55F5PGBoX3AwThkGMKYYWVNTdzK1KrwZOkoe8DwVdEE6/mr
+         K8zqzMxMgA++KnoXN/N2C+l/ZDMMt8CChwjSceAWugJWg33spsq5fBLyx6xZy53XfXvZ
+         I2rpJumLiKi6KoXDPCMERNrocElQIp3WI1BFufIQT6L2lzg+h8H0lcQsVTFNO6kOHTJ8
+         xHTOdCmj4hAY8RAq2hBMMLBzZKG8atnlt57CxG7aDJKMXRl1kYsaNwBj7cgLPD9JpRo/
+         E9N+sxNRY7WJM6n2xmhe99QL5jIjAPq87cRAJjXIKbD7mvPBCEN0sDAFTmjYt9CPXy1A
+         u/pQ==
+X-Gm-Message-State: AOAM532DM0ChnPoEM2DHEKHvet2glqUH6qOOY3OkOnUeUwJhyRHRP7el
+        jl3AD8jTNiTZBa9ZbQNg3zdjgg==
+X-Google-Smtp-Source: ABdhPJwUa5UccNgom3SX6tJgM3PGNd4oZV4WMtpb21CaWdbbeGvZlwQm1FwLDDx0gewj6Zuz8U+RzQ==
+X-Received: by 2002:a17:90b:23c8:: with SMTP id md8mr28079444pjb.72.1592976644282;
+        Tue, 23 Jun 2020 22:30:44 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d25sm15203124pgn.2.2020.06.23.22.30.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 22:30:43 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 22:28:01 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     rishabhb@codeaurora.org
+Cc:     Alex Elder <elder@ieee.org>, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] remoteproc: qcom: Add per subsystem SSR
+ notification
+Message-ID: <20200624052801.GB407764@builder.lan>
+References: <1592874271-26697-1-git-send-email-rishabhb@codeaurora.org>
+ <1592874271-26697-2-git-send-email-rishabhb@codeaurora.org>
+ <8ed72321-6f6a-1083-9af9-a80aa945edeb@ieee.org>
+ <cb31dfb50079a1377cf27807a7b2eb3e@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb31dfb50079a1377cf27807a7b2eb3e@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@intel.com>
+On Tue 23 Jun 18:41 PDT 2020, rishabhb@codeaurora.org wrote:
 
-When system is suspended in clock stop mode on intel platforms, both
-master and slave are in clock stop mode and soundwire bus is taken
-over by a glue hardware. The bus message for jack event is processed
-by this glue hardware, which will trigger an interrupt to resume audio
-pci device. Then audio pci driver will resume soundwire master and slave,
-transfer bus ownership to master, finally slave will report jack event
-to master and codec driver is triggered to check jack status.
+> On 2020-06-23 14:45, Alex Elder wrote:
+> > On 6/22/20 8:04 PM, Rishabh Bhatnagar wrote:
+> > > Currently there is a single notification chain which is called
+> > > whenever any
+> > > remoteproc shuts down. This leads to all the listeners being
+> > > notified, and
+> > > is not an optimal design as kernel drivers might only be interested in
+> > > listening to notifications from a particular remoteproc. Create a
+> > > global
+> > > list of remoteproc notification info data structures. This will hold
+> > > the
+> > > name and notifier_list information for a particular remoteproc. The
+> > > API
+> > > to register for notifications will use name argument to retrieve the
+> > > notification info data structure and the notifier block will be
+> > > added to
+> > > that data structure's notification chain. Also move from blocking
+> > > notifier
+> > > to srcu notifer based implementation to support dynamic notifier head
+> > > creation.
+> > > 
+> > > Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> > > Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> > 
+> > Sorry, a few more comments, but I think your next one will
+> > likely be fine.
+> > 
+> > General:
+> > - SSR subsystems are added but never removed.  Note that
+> >   "qcom_common.o" can be built as a module, and if that
+> >   module were ever removed, memory allocated for these
+> >   subsystems would be leaked.
+> Hi Alex,
+> Thank you for reviewing this patchset quickly. This point was
+> brought up by Bjorn and it was decided that I will push another patch on
+> top in which I'll do the cleanup during module exit.
+> > - Will a remoteproc subdev (and in particular, an SSR subdev)
+> >   ever be removed?  What happens to entities that have
+> >   registered for SSR notifications in that case?
+> In practice it should never be removed. If it is clients will
+> never get notification about subsystem shutdown/powerup.
 
-if a slave has been attached to a bus, the slave->dev_num_sticky
-should be non-zero, so we can check this value to skip the
-ghost devices defined in ACPI table but not populated in hardware.
+Given that clients make direct function calls into qcom_common.ko,
+qcom_common.ko would not be possible to rmmod until all clients has been
+rmmod'ed. As such there shouldn't be any remaining listeners, or
+subdevices, when this happens.
 
-Signed-off-by: Rander Wang <rander.wang@intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- drivers/soundwire/intel.c      | 48 +++++++++++++++++++++++++++++++++-
- drivers/soundwire/intel.h      |  1 +
- drivers/soundwire/intel_init.c | 22 ++++++++++++++++
- 3 files changed, 70 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 06c553d94890..22d9fd3e34fa 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -13,6 +13,7 @@
- #include <linux/io.h>
- #include <linux/platform_device.h>
- #include <sound/pcm_params.h>
-+#include <linux/pm_runtime.h>
- #include <sound/soc.h>
- #include <linux/soundwire/sdw_registers.h>
- #include <linux/soundwire/sdw.h>
-@@ -436,7 +437,7 @@ static int intel_shim_init(struct sdw_intel *sdw, bool clock_stop)
- 	return ret;
- }
- 
--static void __maybe_unused intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
-+static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
- {
- 	void __iomem *shim = sdw->link_res->shim;
- 	unsigned int link_id = sdw->instance;
-@@ -1337,6 +1338,51 @@ static int intel_master_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+int intel_master_process_wakeen_event(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sdw_intel *sdw;
-+	struct sdw_bus *bus;
-+	struct sdw_slave *slave;
-+	void __iomem *shim;
-+	u16 wake_sts;
-+
-+	sdw = platform_get_drvdata(pdev);
-+	bus = &sdw->cdns.bus;
-+
-+	if (bus->prop.hw_disabled) {
-+		dev_dbg(dev,
-+			"SoundWire master %d is disabled, ignoring\n",
-+			bus->link_id);
-+		return 0;
-+	}
-+
-+	shim = sdw->link_res->shim;
-+	wake_sts = intel_readw(shim, SDW_SHIM_WAKESTS);
-+
-+	if (!(wake_sts & BIT(sdw->instance)))
-+		return 0;
-+
-+	/* disable WAKEEN interrupt ASAP to prevent interrupt flood */
-+	intel_shim_wake(sdw, false);
-+
-+	/*
-+	 * wake up master and slave so that slave can notify master
-+	 * the wakeen event and let codec driver check codec status
-+	 */
-+	list_for_each_entry(slave, &bus->slaves, node) {
-+		/*
-+		 * discard devices that are defined in ACPI tables but
-+		 * not physically present and devices that cannot
-+		 * generate wakes
-+		 */
-+		if (slave->dev_num_sticky && slave->prop.wake_capable)
-+			pm_request_resume(&slave->dev);
-+	}
-+
-+	return 0;
-+}
-+
- static struct platform_driver sdw_intel_drv = {
- 	.probe = intel_master_probe,
- 	.remove = intel_master_remove,
-diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
-index bf127c88eb51..4ea3d262d249 100644
---- a/drivers/soundwire/intel.h
-+++ b/drivers/soundwire/intel.h
-@@ -47,5 +47,6 @@ struct sdw_intel {
- #define SDW_INTEL_QUIRK_MASK_BUS_DISABLE      BIT(1)
- 
- int intel_master_startup(struct platform_device *pdev);
-+int intel_master_process_wakeen_event(struct platform_device *pdev);
- 
- #endif /* __SDW_INTEL_LOCAL_H */
-diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-index 63b3beda443d..eff4e385bb59 100644
---- a/drivers/soundwire/intel_init.c
-+++ b/drivers/soundwire/intel_init.c
-@@ -415,5 +415,27 @@ void sdw_intel_exit(struct sdw_intel_ctx *ctx)
- }
- EXPORT_SYMBOL_NS(sdw_intel_exit, SOUNDWIRE_INTEL_INIT);
- 
-+void sdw_intel_process_wakeen_event(struct sdw_intel_ctx *ctx)
-+{
-+	struct sdw_intel_link_res *link;
-+	u32 link_mask;
-+	int i;
-+
-+	if (!ctx->links)
-+		return;
-+
-+	link = ctx->links;
-+	link_mask = ctx->link_mask;
-+
-+	/* Startup SDW Master devices */
-+	for (i = 0; i < ctx->count; i++, link++) {
-+		if (!(link_mask & BIT(i)))
-+			continue;
-+
-+		intel_master_process_wakeen_event(link->pdev);
-+	}
-+}
-+EXPORT_SYMBOL_NS(sdw_intel_process_wakeen_event, SOUNDWIRE_INTEL_INIT);
-+
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_DESCRIPTION("Intel Soundwire Init Library");
--- 
-2.17.1
-
+Regards,
+Bjorn
