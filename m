@@ -2,104 +2,159 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7553AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95DCF2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555E42080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kk7RsrcZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uawx1Hym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731184AbgFXUba (ORCPT
+        id S2390632AbgFXUcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50190 "EHLO
+        Wed, 24 Jun 2020 16:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgFXUb3 (ORCPT
+        with ESMTP id S2388133AbgFXUcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:31:29 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A65DC061573;
-        Wed, 24 Jun 2020 13:31:28 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id r22so3167775qke.13;
-        Wed, 24 Jun 2020 13:31:28 -0700 (PDT)
+        Wed, 24 Jun 2020 16:32:48 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05762C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:32:47 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 186so3453635yby.19
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:32:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=P+8CNlZ9Qpc5ZgQ40v352IfRPP/wLIfYxQwvpVM2BK8=;
-        b=kk7RsrcZrq+EWEq1RkGL2qELTGIfWZ+7A5f8uxNPVPEibrKo6usG/U0X0c/K+WQBaK
-         I0Vwu1ij+04Cm4N7N3hudYLfDj4vowAhndJiBzYXBiACSt71ZxTEXRs6VcfVL0KDPyjR
-         H5dwoZ2YW2q6AHbmuSGodnv9tfTkh+oXgN0UtmZW0NQBaFPV78w3U6SbYtPkS+0iSm+g
-         rnrzLxXzGuGRRRpHjzVX3PNAKgAJ+sgg24MjZrzAWiniIlFI/d+6rlJnYP3HKvOhAG5v
-         cIAaii2PEC3/5lT+LK9jL2EzJ1WsYy12heloFZpwlSbpRJmdZcTlTK1cquFc+jfo0O0J
-         A8XQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=geZqQu8Pc2IZyEmyfjSbirVoyCHoNCVPX8WSrD5/a0I=;
+        b=Uawx1HymTuOmFuIsE6m0edc2JOJkrIL4ohCvAqVmbJ8lL51+F8GFU8Edzr7cqZcv2w
+         HodyjPnW3CEUXq8PkZVULO6ZyoUtxp9+p+vdtGUCMz8qqae3fj+ztQ8oZGg5KLQxzxtv
+         WsCNEibFNfuA+bNlcIR8b4sSEDOv2SkH85c5Dy7chvY+wP/aaRR1NsYEhp1bKM54GsoI
+         2QcLu0Jhfop40Tu+FeyQ89Qe5QVYishLUcPnbhRan/pilxFWfHclHWVyGJPxpvvrwTh0
+         JNHLSYYTI2a6tpFbw45+Zc3Ez5EH+jMImL6HifoQ7sZW+Y10m8LKlencaSHV2sNpKm9n
+         vXag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=P+8CNlZ9Qpc5ZgQ40v352IfRPP/wLIfYxQwvpVM2BK8=;
-        b=s3oHTi3mDFAoU+7V0fWbyBH0xa8p+EdYilSaPLOEGvcnFjuq4kTjgBiNoX2XDTDs13
-         wYniwaQXuDreXHSP/4HsJVFdGscSCHtSEmv4ekkMApundTOsvZyg7TZEpBrv7LOB7AbP
-         qTwJG1Pppu4mV8vFg4NEgQq8d6IkxE6yi9QwWMBdQK0ndSKsZ+vYzuukUEQq9BEhzEBX
-         TurVWpUheaP/3uCpURhiaOlv3CttEGM2QWSp2RjBnh3j4PonBW0lBNIMIh0jqwkFA7YJ
-         3iGBVGPJf/H8wb4Ce6DCC45JLeKhJOAQyPmU4eRmzLMJf3iBOlq/3lmPgv26nUuM6E5D
-         rZAg==
-X-Gm-Message-State: AOAM532aizxMmseNUW71i8mcWi9NhS2l+gIehJ2dYArDxAuASn8iAXNO
-        SNXiirbXtslUE8ejqhyJ4l5pLMmW
-X-Google-Smtp-Source: ABdhPJxFGJjPPJsul4HY8UXD+hfA7PTPvAdjeGqHA32bUhuExyZhqZvYUt5TGM9WxXxqkE8f8Hufew==
-X-Received: by 2002:a05:620a:15da:: with SMTP id o26mr24463049qkm.304.1593030687577;
-        Wed, 24 Jun 2020 13:31:27 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f016:65e9:974:aec1:b314:98ea])
-        by smtp.gmail.com with ESMTPSA id p7sm3647794qki.61.2020.06.24.13.31.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 13:31:26 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id E8370C3123; Wed, 24 Jun 2020 17:31:23 -0300 (-03)
-Date:   Wed, 24 Jun 2020 17:31:23 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     minyard@acm.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        Michael Tuexen <Michael.Tuexen@lurchi.franken.de>,
-        Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        linux-sctp@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH] sctp: Don't advertise IPv4 addresses if ipv6only is set
- on the socket
-Message-ID: <20200624203123.GC47547@localhost.localdomain>
-References: <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
- <20200623160417.12418-1-minyard@acm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623160417.12418-1-minyard@acm.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=geZqQu8Pc2IZyEmyfjSbirVoyCHoNCVPX8WSrD5/a0I=;
+        b=Q47Zmb4LkoaLFBjNBMnaC276nnHrKGHhG9+AhKT2DfTwxEXm/7w59EdhDWSwwQoACH
+         29hFd1nSoq5v3JjQqEujZdh1K/9n/vR6L43bS0321ZaKv/mdjzkbMAlVB8Z9d0HV7Lrs
+         5G7YVoyDi9V4K5onzWI4KViY6y02ggfH/wIyrEb66SvPsVeNAMrLwOTmdbFAH2xkIKHH
+         Vl9QV/qNHO7C6FQ47npLIV5cqsmmKrmKh0Fmz095Jd3zeirXw6KY2/u4Y2N2o0bkUQFo
+         94OfyytxKzanJp/uCFZ3XSsdb6bda98JX68imDfJzJ+8G71D6CTqTo5oBnKX3gHe9BOT
+         wYIg==
+X-Gm-Message-State: AOAM532nqB9CywAIiGrmDZscU/n4YVxkmiHZ4iCMsDe5EGhJqLYCOPTZ
+        EHtJeXDam+uwpqwfEixl7WgfREsUxbZCghOOr3U=
+X-Google-Smtp-Source: ABdhPJxWR9GEuM9Xe3hags9/hH99MHEAXvV4G6BQoWnGF1JJpG+hf2xaFzi6meCZqAzm99eCovUBw+L4m3sg7uT3BU4=
+X-Received: by 2002:a25:3342:: with SMTP id z63mr44129932ybz.200.1593030767109;
+ Wed, 24 Jun 2020 13:32:47 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:31:38 -0700
+Message-Id: <20200624203200.78870-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH 00/22] add support for Clang LTO
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:04:17AM -0500, minyard@acm.org wrote:
-> From: Corey Minyard <cminyard@mvista.com>
-> 
-> If a socket was set ipv6only, it would still send IPv4 addresses in the
-> init and init ack packets.  So don't add IPv4 addresses to ipv6only
-> sockets.
-> 
-> Based on a patch by Xin Long <lucien.xin@gmail.com>
-> 
-> Signed-off-by: Corey Minyard <cminyard@mvista.com>
-> ---
-> I have tested this and it seem to fix the issue.  However, I'm wondering
-> if it might be better to fix it where the addresses are put into the
-> association as opposed to where they are put into the message.
+This patch series adds support for building x86_64 and arm64 kernels
+with Clang's Link Time Optimization (LTO).
 
-Yes, it is. It even highlights why this issue was there in the first
-place. Sending a patch right after this email.
+In addition to performance, the primary motivation for LTO is to allow
+Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+Pixel devices have shipped with LTO+CFI kernels since 2018.
 
-  Marcelo
+Most of the patches are build system changes for handling LLVM bitcode,
+which Clang produces with LTO instead of ELF object files, postponing
+ELF processing until a later stage, and ensuring initcall ordering.
+
+Note that first objtool patch in the series is already in linux-next,
+but as it's needed with LTO, I'm including it also here to make testing
+easier.
+
+Sami Tolvanen (22):
+  objtool: use sh_info to find the base for .rela sections
+  kbuild: add support for Clang LTO
+  kbuild: lto: fix module versioning
+  kbuild: lto: fix recordmcount
+  kbuild: lto: postpone objtool
+  kbuild: lto: limit inlining
+  kbuild: lto: merge module sections
+  kbuild: lto: remove duplicate dependencies from .mod files
+  init: lto: ensure initcall ordering
+  init: lto: fix PREL32 relocations
+  pci: lto: fix PREL32 relocations
+  modpost: lto: strip .lto from module names
+  scripts/mod: disable LTO for empty.c
+  efi/libstub: disable LTO
+  drivers/misc/lkdtm: disable LTO for rodata.o
+  arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
+  arm64: vdso: disable LTO
+  arm64: allow LTO_CLANG and THINLTO to be selected
+  x86, vdso: disable LTO only for vDSO
+  x86, ftrace: disable recordmcount for ftrace_make_nop
+  x86, relocs: Ignore L4_PAGE_OFFSET relocations
+  x86, build: allow LTO_CLANG and THINLTO to be selected
+
+ .gitignore                            |   1 +
+ Makefile                              |  27 ++-
+ arch/Kconfig                          |  65 +++++++
+ arch/arm64/Kconfig                    |   2 +
+ arch/arm64/Makefile                   |   1 +
+ arch/arm64/kernel/vdso/Makefile       |   4 +-
+ arch/x86/Kconfig                      |   2 +
+ arch/x86/Makefile                     |   5 +
+ arch/x86/entry/vdso/Makefile          |   5 +-
+ arch/x86/kernel/ftrace.c              |   1 +
+ arch/x86/tools/relocs.c               |   1 +
+ drivers/firmware/efi/libstub/Makefile |   2 +
+ drivers/misc/lkdtm/Makefile           |   1 +
+ include/asm-generic/vmlinux.lds.h     |  12 +-
+ include/linux/compiler-clang.h        |   4 +
+ include/linux/compiler.h              |   2 +-
+ include/linux/compiler_types.h        |   4 +
+ include/linux/init.h                  |  78 +++++++-
+ include/linux/pci.h                   |  15 +-
+ kernel/trace/ftrace.c                 |   1 +
+ lib/Kconfig.debug                     |   2 +-
+ scripts/Makefile.build                |  55 +++++-
+ scripts/Makefile.lib                  |   6 +-
+ scripts/Makefile.modfinal             |  40 +++-
+ scripts/Makefile.modpost              |  26 ++-
+ scripts/generate_initcall_order.pl    | 270 ++++++++++++++++++++++++++
+ scripts/link-vmlinux.sh               | 100 +++++++++-
+ scripts/mod/Makefile                  |   1 +
+ scripts/mod/modpost.c                 |  16 +-
+ scripts/mod/modpost.h                 |   9 +
+ scripts/mod/sumversion.c              |   6 +-
+ scripts/module-lto.lds                |  26 +++
+ scripts/recordmcount.c                |   3 +-
+ tools/objtool/elf.c                   |   2 +-
+ 34 files changed, 737 insertions(+), 58 deletions(-)
+ create mode 100755 scripts/generate_initcall_order.pl
+ create mode 100644 scripts/module-lto.lds
+
+
+base-commit: 26e122e97a3d0390ebec389347f64f3730fdf48f
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
