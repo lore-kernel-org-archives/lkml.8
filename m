@@ -2,102 +2,90 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA75C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79742C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC77C20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:50:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDSwQ/Sq"
+	by mail.kernel.org (Postfix) with ESMTP id 4F7BE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593003055;
+	bh=+Kf1QO6wgC2hEGOUt0o6CDJuByakQhbWMS2qb5q4egs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bv/mVbyH3JP/U7YnuijcZYrNxOLM2J6ViPiQB3jNNPfF4sUKtdy6Ml+xgBMpFDNDO
+	 yUPKpw9CUFd3oTnwiGixZ91P1aIPR6nIr9dYGGv2NOxQtpbB4X/rsUx3JvCY+SQkoh
+	 8kvDJnYBB5xVuyyldDvtRUXiGb3k3DqTme/i9vCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390904AbgFXMuz (ORCPT
+        id S2390889AbgFXMuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:50:55 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46204 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388942AbgFXMuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390845AbgFXMuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 08:50:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593003048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TOxBs2AuO1pUP4DqRoz2j9gAHwAjHmTBtWWCzWPuC7s=;
-        b=jDSwQ/SqqUko1So4/VlXpZlFPp2JbHcU2l5le+hOihZiN3AVAUNmIWD7YlTteo+ttc1O6y
-        CE+pfv6asMEJRkUUZIC2ARnzbLtxK4xJ7B/5AFTlJMlBM8zoOcm31KqnxNDederHi3xF6X
-        b0RMrME/FgQVwfvLjqKa0tCsU12IMEk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-igigxKaOM0ScstJE1tP5EA-1; Wed, 24 Jun 2020 08:50:46 -0400
-X-MC-Unique: igigxKaOM0ScstJE1tP5EA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20AC8800597;
-        Wed, 24 Jun 2020 12:50:45 +0000 (UTC)
-Received: from krava (unknown [10.40.193.204])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 48D1279317;
-        Wed, 24 Jun 2020 12:50:43 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 14:50:42 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] [perf] lsdir_bid_tail_filter: fix index check
-Message-ID: <20200624125042.GB2719003@krava>
-References: <20200624013524.10836-1-gaurav1086@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E2620663;
+        Wed, 24 Jun 2020 12:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593003050;
+        bh=+Kf1QO6wgC2hEGOUt0o6CDJuByakQhbWMS2qb5q4egs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KexdEXajkBXXkeJHwCLviB9dTD51SZqHb8XJi6GVgBXNgsjULPBftkc0BH5bpeWLE
+         E8ijx24xCKlZTug1Mtc61oVCw2GfLQGPm4rpURBMcYk7gsgmS1LgtS4pFkij1G+v4C
+         Ctyam3S+A5Wq516L02qIULTEP32y9k3tu/CqGMqc=
+Date:   Wed, 24 Jun 2020 13:50:46 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     mark.rutland@arm.com, tuanphan@os.amperecomputing.com,
+        john.garry@huawei.com, linux-kernel@vger.kernel.org,
+        shameerali.kolothum.thodi@huawei.com, harb@amperecomputing.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH] perf/smmuv3: Fix shared interrupt handling
+Message-ID: <20200624125045.GC6270@willie-the-truck>
+References: <d73dd8c3579fbf713d6215317404549aede8ad2d.1586363449.git.robin.murphy@arm.com>
+ <b7d056f7-3a3d-568d-ea6d-24bb30b4761b@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624013524.10836-1-gaurav1086@gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <b7d056f7-3a3d-568d-ea6d-24bb30b4761b@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:35:22PM -0400, Gaurav Singh wrote:
-> Check bounds before accessing d->d_name[].
+On Wed, Jun 24, 2020 at 12:48:14PM +0100, Robin Murphy wrote:
+> On 2020-04-08 17:49, Robin Murphy wrote:
+> > IRQF_SHARED is dangerous, since it allows other agents to retarget the
+> > IRQ's affinity without migrating PMU contexts to match, breaking the way
+> > in which perf manages mutual exclusion for accessing events. Although
+> > this means it's not realistically possible to support PMU IRQs being
+> > shared with other drivers, we *can* handle sharing between multiple PMU
+> > instances with some explicit affinity bookkeeping and manual interrupt
+> > multiplexing.
+> > 
+> > RCU helps us handle interrupts efficiently without having to worry about
+> > fine-grained locking for relatively-theoretical race conditions with the
+> > probe/remove/CPU hotplug slow paths. The resulting machinery ends up
+> > looking largely generic, so it should be feasible to factor out with a
+> > "system PMU" base class for similar multi-instance drivers.
+> > 
+> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> > ---
+> > 
+> > RFC because I don't have the means to test it, and if the general
+> > approach passes muster then I'd want to tackle the aforementioned
+> > factoring-out before merging anything anyway.
 > 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->  tools/perf/util/build-id.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-> index c076fc7fe025..8c35cbe93f10 100644
-> --- a/tools/perf/util/build-id.c
-> +++ b/tools/perf/util/build-id.c
-> @@ -431,7 +431,7 @@ static bool lsdir_bid_tail_filter(const char *name __maybe_unused,
->  				  struct dirent *d)
->  {
->  	int i = 0;
-> -	while (isxdigit(d->d_name[i]) && i < SBUILD_ID_SIZE - 3)
-> +	while (i < SBUILD_ID_SIZE - 3 && isxdigit(d->d_name[i]))
+> Any comments on whether it's worth pursuing this?
 
-hum, I guess it looks better, but technicaly this is not a problem right?
+Sorry, I don't really get the problem that it's solving. Is there a crash
+log somewhere I can look at? If all the users of the IRQ are managed by
+this driver, why is IRQF_SHARED dangerous?
 
-isxdigit will return false on zero byte which is always present in d->d_name
-so it will never get out of bounds
-
-jirka
-
->  		i++;
->  	return (i == SBUILD_ID_SIZE - 3) && (d->d_name[i] == '\0');
->  }
-> -- 
-> 2.17.1
-> 
-
+Will
