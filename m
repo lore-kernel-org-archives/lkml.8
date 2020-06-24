@@ -2,85 +2,91 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD71C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F34C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09BA72076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="poono5pq"
+	by mail.kernel.org (Postfix) with ESMTP id E06B620823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593008123;
+	bh=b7QM/AnAF2FLjRffq2R666yrcagu50c8AB3ZQJKmq98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r6PbyNtd02YctM+RFVP7vUMTJtPScS9Fe3k7PiCZNtPYf7TTM1N1IT6hOkiT9P6uk
+	 sb5wlwFyZ4t1PsXVjAQgg4mUpRRqfWcNZKlIW2Ihp4GikVUsuUfQ6Dei61ae6E+xtN
+	 d3qA64jBBTsbaBfIOmsGgzttQH6+9sjisCXimqfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391195AbgFXON4 (ORCPT
+        id S2391146AbgFXOPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389583AbgFXONz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:13:55 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24BA6C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:13:55 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id dm12so1076026qvb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:13:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RKz3cdJXe2hoM5GIr6id15i/IZKe76FR3EXbaf6TXp4=;
-        b=poono5pq6vhzbjvFd1OHrtxuikcrummcCc9v5GctMBp+PBK+7qT4Ah+iRf7eEmqxAo
-         kyKRtRFGZcOpcEaJTzBCgMCNyx9vTN63XF3B5HeEUeah5Pc3bmj6Wwd7vBu4pjMlORv8
-         vLc9wcXyue/fRjof9G4UbxEBkDsaG7i4TSQQdhkNN4fZGDN9qtV79HsbGjk6pMHB9aHm
-         6YkdDuvB8qEN3smb8RHmwmyui58Azd/wuGnjgJi79zqlioBBBsKjTvE9CydYqpN1RC11
-         ojjjRKfB4yh6PYC/udhxXDkilYPjZtPLTP4rxJAMakk+6xW7qzCvBTg3ZkWjX22yIj5t
-         3+nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RKz3cdJXe2hoM5GIr6id15i/IZKe76FR3EXbaf6TXp4=;
-        b=XWIpNEDEnoOWKr600uKvXJJu4Ys73a4mkFYo6g45ye3NttQM15LXmlqqKrPaQ7v6Jm
-         ZhMDtXgU8nFnZRZzh1Ji3PnXr8rCJB3QkV/DdLBMKwA+QP+3fwpNRcBIIYoUmgzu6e03
-         w4+e+ony7+pw3zIzCepIH30oMNv9CM3lNGTxbKk9UF6Q8GfvzoGR94D20aGRA0hsUyD0
-         sDNDF7LVH3/ovLZTEYy1ZnZlkxFePB128OMtZLfge+N5bXtQpTfQE8aeV8WAnKcdpn7f
-         Egi1EVDCjWJV6KYl+aBk/RcK/dNQQAznioa/L8pDtswR2Jzjx3BQtA+HGHVgf4SWJMto
-         jUZQ==
-X-Gm-Message-State: AOAM531k5/D8tvPcz+BER/NI4FQEwVZxxXHcglP7loUNZemf0ZyTbruF
-        NJzveZtrwGWs/tHiHJpIekWVaOw9FVtNL6TXQHgCwfdgJNg=
-X-Google-Smtp-Source: ABdhPJzjZVkc+0RLZRhtJ29bxW4+QyWZnwLuZLqaiYpbA6r0BirJY7A4w8Ts5NlMx7xoDMQDxDjJkTSV0PixXgvXrUk=
-X-Received: by 2002:ad4:580e:: with SMTP id dd14mr14998492qvb.96.1593008034313;
- Wed, 24 Jun 2020 07:13:54 -0700 (PDT)
+        Wed, 24 Jun 2020 10:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389682AbgFXOPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 10:15:22 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 806132076E;
+        Wed, 24 Jun 2020 14:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593008121;
+        bh=b7QM/AnAF2FLjRffq2R666yrcagu50c8AB3ZQJKmq98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DOahzyNiRhEpLN5dUFOi42BNnIooay0Op/7I7YVPOOm8VDNPk48W/QwucjAF7hizb
+         YkeCU3EKTwrUERjUHBSDaJLTIOeU1A255t/d0el+aEkmiTgOcyURiX08GP4QYD7h00
+         ApMHDwF21UoDCm4KeXgiwAaPUUjoV4ccFw/y4xB4=
+Date:   Wed, 24 Jun 2020 10:15:20 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>
+Subject: Re: [PATCH 4.14 038/190] KVM: x86: only do L1TF workaround on
+ affected processors
+Message-ID: <20200624141520.GF1931@sasha-vm>
+References: <20200619141633.446429600@linuxfoundation.org>
+ <20200619141635.473250358@linuxfoundation.org>
+ <6610924417787ad9e2332d399b5948ce19fbd6fc.camel@nokia.com>
 MIME-Version: 1.0
-References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-13-warthog618@gmail.com>
-In-Reply-To: <20200623040107.22270-13-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 24 Jun 2020 16:13:43 +0200
-Message-ID: <CAMpxmJUu2g7qORShk8C2WpGyh2btcyZsRqrQwP1JwKAhUW+CCA@mail.gmail.com>
-Subject: Re: [PATCH 12/22] gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <6610924417787ad9e2332d399b5948ce19fbd6fc.camel@nokia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
-:
+On Wed, Jun 24, 2020 at 12:00:59PM +0000, Rantala, Tommi T. (Nokia - FI/Espoo) wrote:
+>On Fri, 2020-06-19 at 16:31 +0200, Greg Kroah-Hartman wrote:
+>> From: Paolo Bonzini <pbonzini@redhat.com>
+>>
+>> [ Upstream commit d43e2675e96fc6ae1a633b6a69d296394448cc32 ]
+>>
+>> KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are
+>> split
+>> in two parts, as in "[high 11111 low]", to thwart any attempt to use these
+>> bits
+>> in an L1TF attack.  This works as long as there are 5 free bits between
+>> MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
+>> access triggers a reserved-bit-set page fault.
 >
-> Replace constant array sizes with a macro constant to clarify the source
-> of array sizes, provide a place to document any constraints on the size,
-> and to simplify array sizing in userspace if constructing structs
-> from their composite fields.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
->
+>Hi, I'm now seeing this warning in VM bootup with 4.14.y
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Thanks for the report!
+
+>Not seen with 4.19.129 and 5.4.47 that also included this commit.
+>
+>Any ideas what's missing in 4.14 ?
+
+I think that this was because we're missing 6129ed877d40 ("KVM: x86/mmu:
+Set mmio_value to '0' if reserved #PF can't be generated"). I've queued
+it up (along with a few other related commits) and a new -rc cycle
+should be underway for those.
+
+-- 
+Thanks,
+Sasha
