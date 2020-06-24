@@ -2,186 +2,98 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7496CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF292076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC3E2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CH4kMR5I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IiAut47R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404525AbgFXPSQ (ORCPT
+        id S2404503AbgFXPTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
+        Wed, 24 Jun 2020 11:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390817AbgFXPSP (ORCPT
+        with ESMTP id S2404017AbgFXPTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:18:15 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9945FC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:18:15 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g17so1163166plq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:18:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RgJ5KQQgdze1Er7yT6oG3OjYmr8lm8UCuoB+oNW30KA=;
-        b=CH4kMR5Icue6l7XK6pIFfSYjVQ5WkzRDoGH+TWwCrL7w2COxwqeOUoBa/4iQarmDBH
-         iAo8lBWn1tCcw6vScNAuFoZi/1CBw/St5Xwp2qD0ZWwbUCAQr4ESbIJZKurIxMd47X38
-         zfnwiJ49xx7O1RVasJK7rT7e7T9+JmOGX/PGQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RgJ5KQQgdze1Er7yT6oG3OjYmr8lm8UCuoB+oNW30KA=;
-        b=Ki8TMshjFRVHiIW3Go5dtMCPEK7LLpkeSPFDeCVBbaI7utsSINWki3eXKekggRcjZl
-         9BxWgSo/JaT44b3HBol5UTFq8JuHjRJULXLJr2WKqfM8cPRnuSJ/RosdQ3xlH4Y58/4+
-         vq311KDSJkOVqv9V4GAefY+DRnqcDRdgrZghMIM2FRj6v6xKmQNBe9RMDAJvAVksGXfx
-         Xl+4FwtksSA142EDVcnOQorEceQ4h/4rOjKHDyEkvkRaGmmahu3moTrnpEGiPWhefil4
-         Pbc63LnkNoxJBDxXtsPfXsTxE35fkEo7x9EnF7uAINn/loY4pAoYKDC2CjSH0TwJMKqL
-         E3uQ==
-X-Gm-Message-State: AOAM53137tGhFK/ujP0938WdoImOje0ZwU9INS996IFEmFp+KT+iHfyn
-        AIvGtA2Ro0nbfB4UKIcNSunMLA==
-X-Google-Smtp-Source: ABdhPJz/jvQlWnIJQ+/9RcU2vwsimI8dKzBUFnjr+tVzjSz4qWsGj4+kxN9Be7V2A/bW/LFFoMcIeA==
-X-Received: by 2002:a17:902:b906:: with SMTP id bf6mr8910774plb.323.1593011895106;
-        Wed, 24 Jun 2020 08:18:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l14sm5904807pjh.50.2020.06.24.08.18.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:18:14 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 08:18:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v3 09/10] kallsyms: Hide layout
-Message-ID: <202006240815.45AAD55@keescook>
-References: <20200623172327.5701-1-kristen@linux.intel.com>
- <20200623172327.5701-10-kristen@linux.intel.com>
- <CAG48ez3YHoPOTZvabsNUcr=GP-rX+OXhNT54KcZT9eSQ28Fb8Q@mail.gmail.com>
+        Wed, 24 Jun 2020 11:19:11 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBC6C061573;
+        Wed, 24 Jun 2020 08:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OzpoSzSO3ZwwkTaaz+DbzEmnMWM/twLb1Ew9uO9Omg4=; b=IiAut47R5a9gS07Hg7ZrLDUswa
+        MPDOrqrb35FNW7KA4s0pUdZ+xW7oaaLhOoeJiu9J+UTLn/Qj+ir5baR9VA7kEydjQwVr4EB3fZcl1
+        UDWmBsrI+TkqD4KDiZAQKns4WXZ8EvOchOT2GpbdTro1j6tZQa9K4MwEydqHn12TfL+dOAUZbtzk6
+        knDrzkV/e9M9xycx+wIfsS57Dwf6vaVxcQkDVYa96lmKIONLDVeVIGvZLcKENzqqTC7rZJHYnTbf3
+        aKNMRDwBPvihLQrDIWqXFNrvsBzZsruACWqWCs1VrhRRLtKG9pkW8T7/p0yi5CvGJhUvk1loFIU9p
+        +Q/nmH+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jo7AG-0003Sa-Sx; Wed, 24 Jun 2020 15:18:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97715301A7A;
+        Wed, 24 Jun 2020 17:18:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8CDC9203CDC50; Wed, 24 Jun 2020 17:18:14 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 17:18:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
+        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
+        paulmck@kernel.org
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200624151814.GI4781@hirez.programming.kicks-ass.net>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net>
+ <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net>
+ <20200623175957.GA106514@elver.google.com>
+ <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+ <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+ <20200624113246.GA170324@elver.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez3YHoPOTZvabsNUcr=GP-rX+OXhNT54KcZT9eSQ28Fb8Q@mail.gmail.com>
+In-Reply-To: <20200624113246.GA170324@elver.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 12:21:16PM +0200, Jann Horn wrote:
-> On Tue, Jun 23, 2020 at 7:26 PM Kristen Carlson Accardi
-> <kristen@linux.intel.com> wrote:
-> > This patch makes /proc/kallsyms display alphabetically by symbol
-> > name rather than sorted by address in order to hide the newly
-> > randomized address layout.
-> [...]
-> > +static int sorted_show(struct seq_file *m, void *p)
-> > +{
-> > +       struct list_head *list = m->private;
-> > +       struct kallsyms_iter_list *iter;
-> > +       int rc;
-> > +
-> > +       if (list_empty(list))
-> > +               return 0;
-> > +
-> > +       iter = list_first_entry(list, struct kallsyms_iter_list, next);
-> > +
-> > +       m->private = iter;
-> > +       rc = s_show(m, p);
-> > +       m->private = list;
-> > +
-> > +       list_del(&iter->next);
-> > +       kfree(iter);
+On Wed, Jun 24, 2020 at 01:32:46PM +0200, Marco Elver wrote:
+> From: Marco Elver <elver@google.com>
+> Date: Wed, 24 Jun 2020 11:23:22 +0200
+> Subject: [PATCH] kcsan: Make KCSAN compatible with new IRQ state tracking
 > 
-> Does anything like this kfree() happen if someone only reads the start
-> of kallsyms and then closes the file? IOW, does "while true; do head
-> -n1 /proc/kallsyms; done" leak memory?
-
-Oop, nice catch. It seems the list would need to be walked on s_stop.
-
+> The new IRQ state tracking code does not honor lockdep_off(), and as
+> such we should again permit tracing by using non-raw functions in
+> core.c. Update the lockdep_off() comment in report.c, to reflect the
+> fact there is still a potential risk of deadlock due to using printk()
+> from scheduler code.
 > 
-> > +       return rc;
-> > +}
-> [...]
-> > +static int kallsyms_list_cmp(void *priv, struct list_head *a,
-> > +                            struct list_head *b)
-> > +{
-> > +       struct kallsyms_iter_list *iter_a, *iter_b;
-> > +
-> > +       iter_a = list_entry(a, struct kallsyms_iter_list, next);
-> > +       iter_b = list_entry(b, struct kallsyms_iter_list, next);
-> > +
-> > +       return strcmp(iter_a->iter.name, iter_b->iter.name);
-> > +}
-> 
-> This sorts only by name, but kallsyms prints more information (module
-> names and types). This means that if there are elements whose names
-> are the same, but whose module names or types are different, then some
-> amount of information will still be leaked by the ordering of elements
-> with the same name. In practice, since list_sort() is stable, this
-> means you can see the ordering of many modules, and you can see the
-> ordering of symbols with same name but different visibility (e.g. "t
-> user_read" from security/selinux/ss/policydb.c vs "T user_read" from
-> security/keys/user_defined.c, and a couple other similar cases).
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-i.e. sub-sort by visibility?
+Thanks!
 
-> 
-> [...]
-> > +#if defined(CONFIG_FG_KASLR)
-> > +/*
-> > + * When fine grained kaslr is enabled, we need to
-> > + * print out the symbols sorted by name rather than by
-> > + * by address, because this reveals the randomization order.
-> > + */
-> > +static int kallsyms_open(struct inode *inode, struct file *file)
-> > +{
-> > +       int ret;
-> > +       struct list_head *list;
-> > +
-> > +       list = __seq_open_private(file, &kallsyms_sorted_op, sizeof(*list));
-> > +       if (!list)
-> > +               return -ENOMEM;
-> > +
-> > +       INIT_LIST_HEAD(list);
-> > +
-> > +       ret = kallsyms_on_each_symbol(get_all_symbol_name, list);
-> > +       if (ret != 0)
-> > +               return ret;
-> > +
-> > +       list_sort(NULL, list, kallsyms_list_cmp);
-> 
-> This permits running an algorithm (essentially mergesort) with
-> secret-dependent branches and memory addresses on essentially secret
-> data, triggerable and arbitrarily repeatable (although with partly
-> different addresses on each run) by the attacker, and probably a
-> fairly low throughput (comparisons go through indirect function calls,
-> which are slowed down by retpolines, and linked list iteration implies
-> slow pointer chases). Those are fairly favorable conditions for
-> typical side-channel attacks.
-> 
-> Do you have estimates of how hard it would be to leverage such side
-> channels to recover function ordering (both on old hardware that only
-> has microcode fixes for Spectre and such, and on newer hardware with
-> enhanced IBRS and such)?
-
-I wonder, instead, if sorting should be just done once per module
-load/unload? That would make the performance and memory management
-easier too.
-
--- 
-Kees Cook
+I've put this in front of the series at hand. I'll wait a little while
+longer for arch people to give feedback on their header patches before I
+stuff the lot into tip/locking/core.
