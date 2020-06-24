@@ -2,93 +2,120 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9352C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B54D2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904FE2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDOefWcR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C3Aq1EOx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405214AbgFXQvv (ORCPT
+        id S2405274AbgFXQw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404870AbgFXQvu (ORCPT
+        Wed, 24 Jun 2020 12:52:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35974 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404017AbgFXQw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:51:50 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE2E1C061573;
-        Wed, 24 Jun 2020 09:51:49 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so2949568wrs.11;
-        Wed, 24 Jun 2020 09:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nM2coQx7hoysPBegeDWFljq+2PbJajIfawopODzY7HY=;
-        b=QDOefWcRSdTcVLuz57YrVXwp86RPEQjL9ojg7Dfb5qoAbejpNUE4RhStfS8SDTkEpe
-         Vi465cUzgzTjsjL+LIt9nsqhDq1T7/A8XaMZjzrMQqqKTK+zvaU612ttIVxOa3NZUMlV
-         tikYFlnVGX7QO1Tfj7KVqZSYPozYieOMthgYLJba9YkGdOXsH+jGpNb4pffhuFIceOzy
-         1gpD2SZMqxB4cA4K5Wor6Aeh8e6fQ/ombzLYGUtZBAoaA9YxcdxNDjttM1UOFEv29RZQ
-         qpUM2WDG6DH0u4hOAiMmyoIqduPXiRpzcAl8A2MAw+LP9pkqdcIy9gKAk6q7MNFwp8uw
-         tYwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nM2coQx7hoysPBegeDWFljq+2PbJajIfawopODzY7HY=;
-        b=ZgFZiHFhB1e9IGhNZlY/cQ0Xs5BWv8OYzvSW+rkL5Wry8Ms0qwtx/zManpV+2Z/vfn
-         1cAwHctL+FCkZHVlklGLj84I44BD4itGGhIjtVAugfvxQ5Qa/tap2sZkL5dnL2j/T68w
-         4GiOpRrSQF+lfJI6iNmVcXAvndofzhDfixeIW0wVes/+H3CAcwdMMniRrSso0/0ob9X/
-         CruQVpn7atTKi+aChZK2xE8HQ9sSiWaX32BV2nmtqLxQofSSGzynsyH7q8eiw7EnzuF9
-         cu7EU9X753Dw/GzgT1qLRu86JT9pholoYOZFklBxoX1r2M56mWFtvbegMJUradzPOCo1
-         Py4Q==
-X-Gm-Message-State: AOAM533Nm8OsE3I2lBu0VYv3QAkUA74Zx2NiGttan+HQkjZNTC88gBXq
-        hPWW5kO9x2dVoZ8nLKBF0X1F2Sx4
-X-Google-Smtp-Source: ABdhPJyhQ6lSSJ5174IhjiBn/zN4r7Js4yfDcmKEZbGVPLkaGrI0M1b4bmY161qeoZ1KUvVyGEueag==
-X-Received: by 2002:a5d:6412:: with SMTP id z18mr30112920wru.310.1593017508365;
-        Wed, 24 Jun 2020 09:51:48 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.85])
-        by smtp.gmail.com with ESMTPSA id z16sm18138182wrr.35.2020.06.24.09.51.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 09:51:47 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] iopoll fixes
-Date:   Wed, 24 Jun 2020 19:50:06 +0300
-Message-Id: <cover.1593016907.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 24 Jun 2020 12:52:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593017546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=YgOG3Qn9UrbkC82Csvd2S1YBbX7wsXZhXBrd7kB7GaE=;
+        b=C3Aq1EOxuQXfzCxHMRimNJ+GXjogDz2LvE7uonKeZwnQqWLNMMHAX240bo06L360qLJeia
+        Jwk+i62GJ9eAnMeMb6grGCoAwCgKEGzplRcDWuIMUUH4W6CSnuSZFLUcOcva+7RkFK/1BO
+        NtL/Pd57oecoq0dB17BNYgTunDsYClw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-9XDBz30yN5y-jP_osSf3Ow-1; Wed, 24 Jun 2020 12:52:24 -0400
+X-MC-Unique: 9XDBz30yN5y-jP_osSf3Ow-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE81A107ACF4;
+        Wed, 24 Jun 2020 16:52:22 +0000 (UTC)
+Received: from jsavitz.bos.com (ovpn-112-219.rdu2.redhat.com [10.10.112.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8C552B4AB;
+        Wed, 24 Jun 2020 16:52:18 +0000 (UTC)
+From:   Joel Savitz <jsavitz@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joel Savitz <jsavitz@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rafael Aquini <aquini@redhat.com>,
+        Fabrizio D'Angelo <fdangelo@redhat.com>, linux-mm@kvack.org
+Subject: [PATCH v2] mm/page_alloc: fix documentation error and remove magic numbers
+Date:   Wed, 24 Jun 2020 12:49:43 -0400
+Message-Id: <20200624164943.32048-1-jsavitz@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Did more comprehensive iopoll testing and found some more problems.
+When I increased the upper bound of the min_free_kbytes value in
+ee8eb9a5fe863, I forgot to tweak the above comment to reflect
+the new value. This patch fixes that mistake.
 
-[1] is from the previous series. Actually, v2 for this one, addressing
-the double-reissue bug found by Jens. It maybe not as efficient, but
-simple and easy to backport.
+In addition, this patch replaces the magic number bounds with symbolic
+constants to clarify the logic.
 
-[2,3] current->mm NULL deref
+changes from v1:
+- declare constants via enum instead of separate integers
 
-Pavel Begunkov (3):
-  io_uring: fix hanging iopoll in case of -EAGAIN
-  io_uring: fix current->mm NULL dereference on exit
-  io_uring: fix NULL-mm for linked reqs
+Suggested-by: John Hubbard <jhubbard@nvidia.com>
+Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+---
+ mm/page_alloc.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
- fs/io_uring.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
-
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 48eb0f1410d4..733c81678b0e 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7832,7 +7832,7 @@ void setup_per_zone_wmarks(void)
+  * Initialise min_free_kbytes.
+  *
+  * For small machines we want it small (128k min).  For large machines
+- * we want it large (64MB max).  But it is not linear, because network
++ * we want it large (256MB max).  But it is not linear, because network
+  * bandwidth does not increase linearly with machine size.  We use
+  *
+  *	min_free_kbytes = 4 * sqrt(lowmem_kbytes), for better accuracy:
+@@ -7852,6 +7852,8 @@ void setup_per_zone_wmarks(void)
+  * 8192MB:	11584k
+  * 16384MB:	16384k
+  */
++static enum { MIN_FREE_KBYTES_LOWER_BOUND = 1 << 7, MIN_FREE_KBYTES_UPPER_BOUND = 1 << 18 };
++
+ int __meminit init_per_zone_wmark_min(void)
+ {
+ 	unsigned long lowmem_kbytes;
+@@ -7862,10 +7864,10 @@ int __meminit init_per_zone_wmark_min(void)
+ 
+ 	if (new_min_free_kbytes > user_min_free_kbytes) {
+ 		min_free_kbytes = new_min_free_kbytes;
+-		if (min_free_kbytes < 128)
+-			min_free_kbytes = 128;
+-		if (min_free_kbytes > 262144)
+-			min_free_kbytes = 262144;
++		if (min_free_kbytes < MIN_FREE_KBYTES_LOWER_BOUND)
++			min_free_kbytes = MIN_FREE_KBYTES_LOWER_BOUND;
++		if (min_free_kbytes > MIN_FREE_KBYTES_UPPER_BOUND)
++			min_free_kbytes = MIN_FREE_KBYTES_UPPER_BOUND;
+ 	} else {
+ 		pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
+ 				new_min_free_kbytes, user_min_free_kbytes);
 -- 
-2.24.0
+2.23.0
 
