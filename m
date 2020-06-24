@@ -2,203 +2,68 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F257F20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052C020857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592990995;
+	bh=o8Wph+So75oI/F7OPTg6XWFj9P7CXmEWmmnGKYyDUJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GUasZDc+ubIRLX9eDE9e9x1o1u8gWCwc502mN46ZVTYGpzOwn6g9F5pXbktXKlcAl
+	 thfQCyr9WuJo+8byaW8oo7CzmIBqKvB04rEpPLunUpNwFDKFe3KB7yT2MOsYI1Z0fM
+	 yxe0QSZKk4NNzvfbAJ7d3V2EQ5QFyex2f06rYHbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389611AbgFXJ3p (ORCPT
+        id S2389657AbgFXJ3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:29:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31652 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388336AbgFXJ3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:29:41 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05O94A7L183574;
-        Wed, 24 Jun 2020 05:29:28 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31uwyehxx2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 05:29:28 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05O94RaN184884;
-        Wed, 24 Jun 2020 05:29:28 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31uwyehxwd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 05:29:27 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05O9JuKP021164;
-        Wed, 24 Jun 2020 09:29:26 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma01fra.de.ibm.com with ESMTP id 31uurur89p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 09:29:25 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05O9TNO59503170
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 09:29:23 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B20E25206B;
-        Wed, 24 Jun 2020 09:29:23 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.102.29.235])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 335C752057;
-        Wed, 24 Jun 2020 09:29:17 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0 offline
-Date:   Wed, 24 Jun 2020 14:58:46 +0530
-Message-Id: <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
-References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-24_04:2020-06-24,2020-06-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- impostorscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 phishscore=0
- malwarescore=0 cotscore=-2147483648 lowpriorityscore=0 bulkscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006240063
+        Wed, 24 Jun 2020 05:29:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388336AbgFXJ3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:29:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3737D20857;
+        Wed, 24 Jun 2020 09:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592990991;
+        bh=o8Wph+So75oI/F7OPTg6XWFj9P7CXmEWmmnGKYyDUJI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HVacYQmFlK7ihe4yQ1EQnDH096602cBbZIObeyph6W4qQdOFjLCP5APTDCD48iEAO
+         KwLoiZ+kiblJ3pKG5qFipJLeC8JOnYa+GXXa37oHqcWrnRVYdNt8jbNWn5DxxEOa7/
+         9cV9dT7ekyYvbvIYdaDRweGvCPcjNOCBuk90MABo=
+Date:   Wed, 24 Jun 2020 11:29:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIHVzYjog?= =?utf-8?Q?gadget?=
+ =?utf-8?Q?=3A?= function: printer: Add gadget dev interface status judgment
+Message-ID: <20200624092950.GA1751086@kroah.com>
+References: <20200615094608.26179-1-qiang.zhang@windriver.com>
+ <BYAPR11MB26324BC70657061DA849A384FF950@BYAPR11MB2632.namprd11.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR11MB26324BC70657061DA849A384FF950@BYAPR11MB2632.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently Linux kernel with CONFIG_NUMA on a system with multiple
-possible nodes, marks node 0 as online at boot.  However in practice,
-there are systems which have node 0 as memoryless and cpuless.
+On Wed, Jun 24, 2020 at 08:59:40AM +0000, Zhang, Qiang wrote:
+> Hello, Greg KH
+> Please have you review the patch?
 
-This can cause numa_balancing to be enabled on systems with only one node
-with memory and CPUs. The existence of this dummy node which is cpuless and
-memoryless node can confuse users/scripts looking at output of lscpu /
-numactl.
+I am not the gadget driver maintainer :)
 
-By marking, N_ONLINE as NODE_MASK_NONE, lets stop assuming that Node 0 is
-always online.
+Give Felipe a chance to catch up...
 
-v5.8-rc2
- available: 2 nodes (0,2)
- node 0 cpus:
- node 0 size: 0 MB
- node 0 free: 0 MB
- node 2 cpus: 0 1 2 3 4 5 6 7
- node 2 size: 32625 MB
- node 2 free: 31490 MB
- node distances:
- node   0   2
-   0:  10  20
-   2:  20  10
-
-proc and sys files
-------------------
- /sys/devices/system/node/online:            0,2
- /proc/sys/kernel/numa_balancing:            1
- /sys/devices/system/node/has_cpu:           2
- /sys/devices/system/node/has_memory:        2
- /sys/devices/system/node/has_normal_memory: 2
- /sys/devices/system/node/possible:          0-31
-
-v5.8-rc2 + patch
-------------------
- available: 1 nodes (2)
- node 2 cpus: 0 1 2 3 4 5 6 7
- node 2 size: 32625 MB
- node 2 free: 31487 MB
- node distances:
- node   2
-   2:  10
-
-proc and sys files
-------------------
-/sys/devices/system/node/online:            2
-/proc/sys/kernel/numa_balancing:            0
-/sys/devices/system/node/has_cpu:           2
-/sys/devices/system/node/has_memory:        2
-/sys/devices/system/node/has_normal_memory: 2
-/sys/devices/system/node/possible:          0-31
-
-Note: On Powerpc, cpu_to_node of possible but not present cpus would
-previously return 0. Hence this commit depends on commit ("powerpc/numa: Set
-numa_node for all possible cpus") and commit ("powerpc/numa: Prefer node id
-queried from vphn"). Without the 2 commits, Powerpc system might crash.
-
-1. User space applications like Numactl, lscpu, that parse the sysfs tend to
-believe there is an extra online node. This tends to confuse users and
-applications. Other user space applications start believing that system was
-not able to use all the resources (i.e missing resources) or the system was
-not setup correctly.
-
-2. Also existence of dummy node also leads to inconsistent information. The
-number of online nodes is inconsistent with the information in the
-device-tree and resource-dump
-
-3. When the dummy node is present, single node non-Numa systems end up showing
-up as NUMA systems and numa_balancing gets enabled. This will mean we take
-the hit from the unnecessary numa hinting faults.
-
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Christopher Lameter <cl@linux.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v4:->v5:
-- rebased to v5.8-rc2
-link v4: http://lore.kernel.org/lkml/20200512132937.19295-1-srikar@linux.vnet.ibm.com/t/#u
-
-Changelog v1:->v2:
-- Rebased to v5.7-rc3
-Link v2: https://lore.kernel.org/linuxppc-dev/20200428093836.27190-1-srikar@linux.vnet.ibm.com/t/#u
-
- mm/page_alloc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 48eb0f1410d4..5187664558e1 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -117,8 +117,10 @@ EXPORT_SYMBOL(latent_entropy);
-  */
- nodemask_t node_states[NR_NODE_STATES] __read_mostly = {
- 	[N_POSSIBLE] = NODE_MASK_ALL,
-+#ifdef CONFIG_NUMA
-+	[N_ONLINE] = NODE_MASK_NONE,
-+#else
- 	[N_ONLINE] = { { [0] = 1UL } },
--#ifndef CONFIG_NUMA
- 	[N_NORMAL_MEMORY] = { { [0] = 1UL } },
- #ifdef CONFIG_HIGHMEM
- 	[N_HIGH_MEMORY] = { { [0] = 1UL } },
--- 
-2.18.1
-
+greg k-h
