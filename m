@@ -2,87 +2,120 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B68C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2647C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B7220706
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNso/P9n"
+	by mail.kernel.org (Postfix) with ESMTP id AC3FB20720
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403922AbgFXNKt (ORCPT
+        id S2403933AbgFXNMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:10:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57610 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728843AbgFXNKs (ORCPT
+        Wed, 24 Jun 2020 09:12:24 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:19703 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728843AbgFXNMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:10:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593004247;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AjjjuOuQA9xfPFn+NEdIeAaJBoXrFuGSdN2W9j81pr4=;
-        b=WNso/P9n9VUJ1Z/vPD0dNobGPiRCaJEjfNCiy/N4DVv9OY5qa7LK9UwxUhzGuHqkg53CNG
-        5M//mhRy7ZyHtSYwO72WCzkXROr4Qf/8jZ5rQC/aZ1RF8hkNjCTJyThw18zsoTuAJVy9we
-        ILt1V6nLN+Pwa0HSmt3i3WmgNFCwqwk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-x8hRrT6EOtWF7Iz6QEFzEQ-1; Wed, 24 Jun 2020 09:10:43 -0400
-X-MC-Unique: x8hRrT6EOtWF7Iz6QEFzEQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36A1F800597;
-        Wed, 24 Jun 2020 13:10:42 +0000 (UTC)
-Received: from krava (unknown [10.40.193.204])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3748A1C8;
-        Wed, 24 Jun 2020 13:10:40 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 15:10:39 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Remi Bernon <rbernon@codeweavers.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jacek Caban <jacek@codeweavers.com>
-Subject: Re: [PATCH 3/3] perf tests: Add test for PE binary format support
-Message-ID: <20200624131039.GC2719003@krava>
-References: <20200624103041.825746-1-rbernon@codeweavers.com>
- <20200624103041.825746-3-rbernon@codeweavers.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624103041.825746-3-rbernon@codeweavers.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Wed, 24 Jun 2020 09:12:23 -0400
+X-IronPort-AV: E=Sophos;i="5.75,275,1589209200"; 
+   d="scan'208";a="50489587"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 24 Jun 2020 22:12:21 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 688D740062CE;
+        Wed, 24 Jun 2020 22:12:19 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 00/11] Add support for HiHope RZ/G2M[N] Rev.3.0/4.0
+Date:   Wed, 24 Jun 2020 14:11:59 +0100
+Message-Id: <1593004330-5039-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 12:30:41PM +0200, Remi Bernon wrote:
-> This adds a precompiled file in PE binary format, with split debug file,
-> and tries to read its build_id and .gnu_debuglink sections, as well as
-> looking up the main symbol from the debug file. This should succeed if
-> libbfd is supported.
+Hi All,
 
-SNIP
+This patch series adds supports for HiHope RZ/G2M[N] Rev.3.0/4.0
+boards.
 
-> diff --git a/tools/perf/tests/pe-file.exe b/tools/perf/tests/pe-file.exe
-> new file mode 100644
+Patches are based on top of renesas-arm-dt-for-v5.9 branch [1].
 
-dreams coming true.. windows.exe file in perf sources ;-)
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git
 
-awesome, thanks for the test
+Changes for v2:
+* Added Reviewed-by tag from Geert
+* Renamed hihope-common-rev2.dtsi to hihope-rev2.dtsi
+* Added comment wrt SW43 in r8a774a1-hihope-rzg2m-rev2-ex.dts
+* Renamed hihope-common-rev4.dtsi to hihope-rev4.dtsi
+* LED node names in hihope-common.dtsi are updated according to Rev.4.0
+* Removed extra line from patch 10/11
 
-jirka
+Cheers,
+Prabhakar
+
+Lad Prabhakar (11):
+  arm64: dts: renesas: r8a774a1-hihope-rzg2m[-ex/-ex-idk-1110wr]: Rename
+    HiHope RZ/G2M boards
+  arm64: dts: renesas: r8a774b1-hihope-rzg2n[-ex]: Rename HiHope RZ/G2N
+    boards
+  arm64: dts: renesas: hihope-common: Separate out Rev.2.0 specific into
+    hihope-common-rev2.dtsi file
+  arm64: dts: renesas: Add HiHope RZ/G2M[N] Rev.3.0/4.0 specific into
+    common file
+  arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 main board support
+  arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 sub board support
+  arm64: dts: renesas: hihope-rzg2-ex: Separate out lvds specific nodes
+    into common file
+  arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 board with
+    idk-1110wr display
+  arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 main board support
+  arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 sub board support
+  arm64: dts: renesas: Add HiHope RZ/G2N Rev2.0/3.0/4.0 board with
+    idk-1110wr display
+
+ arch/arm64/boot/dts/renesas/Makefile          |  17 ++-
+ .../arm64/boot/dts/renesas/hihope-common.dtsi |  71 +---------
+ arch/arm64/boot/dts/renesas/hihope-rev2.dtsi  |  86 ++++++++++++
+ arch/arm64/boot/dts/renesas/hihope-rev4.dtsi  | 124 ++++++++++++++++++
+ .../boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi |  52 ++++++++
+ .../boot/dts/renesas/hihope-rzg2-ex.dtsi      |  37 ------
+ .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts   |  43 +-----
+ .../dts/renesas/r8a774a1-hihope-rzg2m-ex.dts  |   6 +-
+ ...a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts |  15 +++
+ .../renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts |  20 +++
+ .../renesas/r8a774a1-hihope-rzg2m-rev2.dts    |  37 ++++++
+ .../dts/renesas/r8a774a1-hihope-rzg2m.dts     |   6 +-
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi     |   2 +
+ .../r8a774b1-hihope-rzg2n-ex-idk-1110wr.dts   |  15 +++
+ .../dts/renesas/r8a774b1-hihope-rzg2n-ex.dts  |   5 +-
+ ...a774b1-hihope-rzg2n-rev2-ex-idk-1110wr.dts |  15 +++
+ .../renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts |  15 +++
+ .../renesas/r8a774b1-hihope-rzg2n-rev2.dts    |  41 ++++++
+ .../dts/renesas/r8a774b1-hihope-rzg2n.dts     |   6 +-
+ arch/arm64/boot/dts/renesas/r8a774b1.dtsi     |   2 +
+ 20 files changed, 456 insertions(+), 159 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-rev2.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-rev4.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-ex-idk-1110wr.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex-idk-1110wr.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2.dts
+
+-- 
+2.17.1
 
