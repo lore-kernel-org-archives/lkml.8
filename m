@@ -2,323 +2,141 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97836C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBB820679
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B4320679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="L93/Euke"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="gP/8uj2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403915AbgFYK1D (ORCPT
+        id S2404011AbgFYK2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:27:03 -0400
-Received: from mail-mw2nam10on2066.outbound.protection.outlook.com ([40.107.94.66]:6093
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        Thu, 25 Jun 2020 06:28:37 -0400
+Received: from mail-vi1eur05on2059.outbound.protection.outlook.com ([40.107.21.59]:35150
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2403773AbgFYK0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:26:46 -0400
+        id S2403810AbgFYK2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:28:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oFMivYkG6xWRwD3+Fe5TYHqNYgnXVuVWrOwEXiksv+RWlj9MGuMpeWmg0S6cDVuxVP+Hd6mtT2Xy41cOtHCqQYiwrNEZvtSc+vznYrJCtMpCrp48miBLTVtn+hrDzXd5FNEomOJo15ZO512JjfWhE1yP3GYVhVPRaXxhg6mnpYzGKRammilCZ/MHxlRDi73JJhHyFK1nUPffkpHY9C8E+aBrLmePu+HcWF9rI6zIUVdw5mqeS8kNyHJJkxroea+lO9rXgUNi+P4Wpu0SSADrJLFDBkxtbz+qiu3YZzLcPsQOCOSrsW5tgUezrfRyD0jij0LMVRyxpMjbXVKT2FdSyg==
+ b=Lb45cpSMTzRp48zrRgdIygHTLkbxKvFLvO9W4cMA8d8rPoDIqHeeeigYWBTqPQhKjuHV25fv8bv4XXOgEhYN1o7BQtluGtw4HMuKGlNjxXx2gjp0vAM6Db7MpqSI/Ok22Y6MNbjtVAjr7NQD1RHj+fIvEdPZrCc3xDWTefF1iBl6kK2ol/4Hz+nmLcCifQ4S2v+LlmKQB6mwZx/+8blDrrGLzoRrHIl5NoSc50/QlG+wmUMR2bmITRX+IY2Q2L+cP2RgxSzDGSpz+qn0CsKdXsiSUa8CPxT1DbdxbZUfJR4qKD/L527FkfvFpqD/UHAMUMgQfxsgsMuhO6oLnaLdOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MAxtKyg3NxuiRxT7de4qr06yLluAcmBjT7ukPQ1Wk6Y=;
- b=OuVGQaQJI4sSsgql96w4K/MTW160SlE7BTdJx+1Nxv1VXbwbONb8ZvqLwShcAwJ4iDNG4V0xY7Ko7VtBpLOTzvPqdf/wI0AxfV38Pfsy1CkuyVeydIbHc/KfLWAgiognqHgWm3rSPBr3RtzDdGw0cmLE+L3u+aOeRQh9X0m9SWFsZVnYziH2PE7xR0BngYYzhaUV/AH3fRIPq3rP5KMYk4bFkJKoYyOv0S65ecTR8kIPUPGxyj654rw4BvrUScFpfTYodgvO3ZPEw+vQ2taB23xxhFBIX1oNPVVUkHN1tPL7nHsKeWVO1M50TksCjUPUh8lhl65A9ErKrcNrpvGO0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
+ bh=8uZqx/J6gcNz90L8lNaJWmiAZJFzUjGU3aKVjrhu2I0=;
+ b=mRbyrDvfRROLco4FRvEq6wEDil+ipOV6Z/Qqcb1827i4dBwuG1MLqe4eddRLfJVo6KLkCPkAoTAA9NEfCoF5vsKbZR8FBbekZkL1JynuM24p4+0vfxvT30byXvzXiJqL18Oy5zPIcQwlNpF7J6Y4KUErEZ0Kbw0JmVd0zQWSPq3e0GxZ7EvJBVrXYIxfiWyvZERhFl2dtLVwxvaEMhJ+tb4AIHVcvzYZ9Ifu5DHupRkx6YTs1SPZwO6J1EwgEWJzLyXCwy4o20wm+XzuZvQW9mDVeRgbAWWaXWueDbHPyP92SeJlBFXWcm7VFki8U0xMlqiH336uy9nsafthcPHGkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 193.240.239.45) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=diasemi.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MAxtKyg3NxuiRxT7de4qr06yLluAcmBjT7ukPQ1Wk6Y=;
- b=L93/EukeiIaYc9Ti1mGojo2MYdXE1JjiJyZYAlYtl8w1xkIALEITJ5Tsc3ctbLfaGry0hOPOU+KEou90XW2kSaE5dEhBT/aHeISbqTw+SbmK6q4Ba8Wb9AeLwyRBRo/dG/iJFrLJKPfwVqC0MeJhijBC6UkokYxEE6klpRnpi7g=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (2603:10b6:408:35::23)
- by BN7PR08MB4323.namprd08.prod.outlook.com (2603:10b6:406:f4::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Thu, 25 Jun
- 2020 10:26:41 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::5d19:e0b5:75e1:40b8]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::5d19:e0b5:75e1:40b8%7]) with mapi id 15.20.3109.027; Thu, 25 Jun 2020
- 10:26:41 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
-CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
-        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
-Subject: RE: [EXT] [PATCH v2] scsi: ufs: Disable WriteBooster capability in
- non-supported UFS device
-Thread-Topic: [EXT] [PATCH v2] scsi: ufs: Disable WriteBooster capability in
- non-supported UFS device
-Thread-Index: AQHWSp1b4+/jX4X5T0+517Im0/M4b6jpIHNA
-Date:   Thu, 25 Jun 2020 10:26:41 +0000
-Message-ID: <BN7PR08MB568428CA4AC7FA9E6BB854FADB920@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <20200625030430.25048-1-stanley.chu@mediatek.com>
-In-Reply-To: <20200625030430.25048-1-stanley.chu@mediatek.com>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTU5NDA0MDlmLWI2Y2UtMTFlYS04Yjk3LWRjNzE5?=
- =?us-ascii?Q?NjFmOWRkM1xhbWUtdGVzdFw1OTQwNDBhMS1iNmNlLTExZWEtOGI5Ny1kYzcx?=
- =?us-ascii?Q?OTYxZjlkZDNib2R5LnR4dCIgc3o9IjM5OTMiIHQ9IjEzMjM3NTU0Mzk3NTQ3?=
- =?us-ascii?Q?MjcxMiIgaD0iazFreEdwelNnWUNKV3cxN09Yb2p6L29GOS9VPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBRkFLQUFC?=
- =?us-ascii?Q?SWJwc2IyMHJXQVluNzEzMm5Hd3BSaWZ2WGZhY2JDbEVRQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBRGdDUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVCQVFBQkFBQUFWUThDamdBQUFBQUFBQUFBQUFBQUFKNEFBQUJ0QUdrQVl3?=
- =?us-ascii?Q?QnlBRzhBYmdCZkFHNEFZUUJ1QUdRQVh3QndBSElBYVFCdEFHRUFjZ0I1QUY4?=
- =?us-ascii?Q?QWF3QmxBSGtBZHdCdkFISUFaQUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHMEFhUUJqQUhJQWJ3QnVBRjhBYmdC?=
- =?us-ascii?Q?aEFHNEFaQUJmQUhNQVpRQmpBRzhBYmdCa0FHRUFjZ0I1QUY4QWF3QmxBSGtB?=
- =?us-ascii?Q?ZHdCdkFISUFaQUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBYmdCaEFHNEFaQUJmQUdjQWJBQnZBR0lBWVFCc0FBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQnVBR0VB?=
- =?us-ascii?Q?YmdCa0FGOEFhQUJwQUdjQWFBQmZBR01BYndCdUFHWUFhUUJrQUdVQWJnQmpB?=
- =?us-ascii?Q?R1VBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUc0QVlRQnVBR1FBWHdCdEFHRUFj?=
- =?us-ascii?Q?d0JyQUdrQWJnQm5BRjhBYkFCaEFIa0FaUUJ5QUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFiZ0JoQUc0QVpBQmZBRzBBWVFCMEFHVUFjZ0JwQUdFQWJB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCdUFH?=
- =?us-ascii?Q?RUFiZ0JrQUY4QWJRQnZBR1FBZFFCc0FHVUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBRzRBWVFCdUFHUUFYd0J3QUhJ?=
- =?us-ascii?Q?QWJ3QmpBR1VBY3dCekFGOEFaUUJ4QUhVQWFRQndBRzBBWlFCdUFIUUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQWJnQmhBRzRBWkFCZkFITUFNUUF6QURBQVh3QmtBR1VB?=
- =?us-ascii?Q?Y3dCcEFHY0FiZ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ1?=
- =?us-ascii?Q?QUdFQWJnQmtBRjhBY3dBeEFETUFNQUJmQUhBQVlRQnlBSFFBWXdCdkFHUUFa?=
- =?us-ascii?Q?UUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHNEFZUUJ1QUdRQVh3QnpB?=
- =?us-ascii?Q?REVBTkFBd0FGOEFaQUJsQUhNQWFRQm5BRzRBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBYmdCaEFHNEFaQUJmQUhNQU1RQTBBREFBWHdCd0FH?=
- =?us-ascii?Q?RUFjZ0IwQUdNQWJ3QmtBR1VBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnVBR0VBYmdCa0FGOEFjd0F4QURVQU1BQmZBR1FBWlFCekFHa0Fad0J1QUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUc0QVlRQnVBR1FBWHdC?=
- =?us-ascii?Q?ekFERUFOUUF3QUY4QWNBQmhBSElBZEFCakFHOEFaQUJsQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFDZUFBQUFiZ0JoQUc0QVpBQmZBSE1BTVFBMkFEQUFYd0Jr?=
- =?us-ascii?Q?QUdVQWN3QnBBR2NBYmdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRB?=
- =?us-ascii?Q?QUFCdUFHRUFiZ0JrQUY4QWN3QXhBRFlBTUFCZkFIQUFZUUJ5QUhRQVl3QnZB?=
- =?us-ascii?Q?R1FBWlFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQSIvPjwvbWV0YT4=3D?=
-x-dg-rorf: true
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=micron.com;
-x-originating-ip: [165.225.77.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b07a64e3-208d-464d-435a-08d818f24061
-x-ms-traffictypediagnostic: BN7PR08MB4323:
-x-microsoft-antispam-prvs: <BN7PR08MB432312212C0EC6D7E1706E81DB920@BN7PR08MB4323.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0445A82F82
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dWq1Pz5pNUfW0mse8JfTr5272nSZr61mqKKVq0sLPSUCbgD9QKUSHua06xotkvc78bXuVqPlOMmZTzg6T8k2XHYPv7R6L9hhZa1YpRSk3UUxMUXY7c/TlI7x4tFjkNez3ACdidUSedgcug59BTWlEf8QZmIxjUutr56wEEp/Q2S8tQWsj1G/mJVAXe8AOFgv5WmzA9gO98jgXk0OOL3/extK/8AtY5UHdjIC6+veDSxW+baDbOABAyzHyP0JbAX59SboJI+OTI1wsl8SAgWHt9sRmkcmpd0I0813R9jQq1tjY60hYOTJAzAtrQ37HRKFK+yJD1uOWbJfAOPPK230kA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR08MB5684.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(346002)(376002)(136003)(26005)(71200400001)(110136005)(54906003)(316002)(478600001)(83380400001)(7696005)(186003)(4326008)(2906002)(55016002)(5660300002)(9686003)(86362001)(33656002)(52536014)(55236004)(6506007)(76116006)(66556008)(8936002)(64756008)(8676002)(7416002)(66446008)(66476007)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: t8bMr3J8HY9TuUodUgcAy/XSWrrx8lCdEqNHmzE+qbOqplQh1XN/+QZ33l5VbrYE8PgBOX6X90uL4L5HS332rIrCjlpbEdtnwMllWvw1gQYT8QRrWDxaAYkibMtZ3CKtLlLCjwupdjasYXQs8tN2GulSHrfmnmN7xMRzxnujkUVKLnV/AbeLGaIdMHNVka7i7vdFTKAcTIfkGM7YnSehn0fDVa2te/1ChB8JjjGZGyQEW60YfABTaTh7eFjho84tpHSsS9OgmSmbtcFgkjnaHau1PxybWeXdPLCQdogUriiW2cDgPKjBOmi/5giyK1GaiVkLu7DRMT9NwB+LzPo4RB987xyd2aisdX1fL266ZGWTv74b5iO7rX9jLTxtoPbiFWTEtk1iRecZXnEhLsvWB9VOiXNd55w0KfOleo3v99Yt9ab0ICMGUlkKxNOi0zOk8JSaSjdiE2A44spA0UA9VHbeupy93wtQb7XYu0PkpwY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=8uZqx/J6gcNz90L8lNaJWmiAZJFzUjGU3aKVjrhu2I0=;
+ b=gP/8uj2lnIe/eZRVBnseXkiF3l+R/g+c//lBeP0W4zHuFZAs7FxZ8KXWsD/Pof1pXpkHAfkE//lz+aEWv2divY2i2HwWbsodWm0VmFVWLcbxJwgXrvlrHZ06uPqImxxTK4dg1AlbClTye00R5NTF/EOHoZFaxbmqG2saVYcLcVk=
+Received: from AM6PR01CA0072.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:e0::49) by DB8PR10MB3193.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:114::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Thu, 25 Jun
+ 2020 10:28:28 +0000
+Received: from HE1EUR02FT031.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:20b:e0:cafe::8f) by AM6PR01CA0072.outlook.office365.com
+ (2603:10a6:20b:e0::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend
+ Transport; Thu, 25 Jun 2020 10:28:28 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; linuxfoundation.org; dkim=none
+ (message not signed) header.d=none;linuxfoundation.org; dmarc=fail
+ action=none header.from=diasemi.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ diasemi.com discourages use of 193.240.239.45 as permitted sender)
+Received: from mailrelay1.diasemi.com (193.240.239.45) by
+ HE1EUR02FT031.mail.protection.outlook.com (10.152.10.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3131.20 via Frontend Transport; Thu, 25 Jun 2020 10:28:28 +0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 25 Jun 2020 12:28:27 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ A5E2913F671; Thu, 25 Jun 2020 19:28:25 +0900 (KST)
+Message-ID: <cover.1593017969.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Thu, 25 Jun 2020 01:59:29 +0900
+Subject: [PATCH v14 0/3]  da7280: haptic driver submission
+To:     "David S. Miller" <davem@davemloft.net>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR08MB5684.namprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b07a64e3-208d-464d-435a-08d818f24061
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2020 10:26:41.2154
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39850400004)(346002)(396003)(376002)(46966005)(316002)(82740400003)(81166007)(110136005)(4744005)(36756003)(83380400001)(7416002)(33310700002)(36906005)(86362001)(356005)(82310400002)(2906002)(5660300002)(70206006)(26005)(186003)(70586007)(8676002)(426003)(478600001)(8936002)(42186006)(6266002)(54906003)(336012)(47076004)(2616005)(4326008)(921003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7c82ce1d-bfde-464c-3938-08d818f28042
+X-MS-TrafficTypeDiagnostic: DB8PR10MB3193:
+X-Microsoft-Antispam-PRVS: <DB8PR10MB3193BDBE40FEE9C00E954207A2920@DB8PR10MB3193.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0445A82F82
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Gbe8+Tj2Cl3bYCNYXbHnIa5XHiTNGVz0PfjlXpGOz1KaHZjzM9SPR2asouzDIVK/NPh0Olt/+J2ZaFVtdpxSe5BuwqArURFHJcC2Uu6DWWylDz9AYTw1iU/8+fPWqGflIW5BxL1kyIb+89c0rp1fgXCrvroPoTPDEiWDD465NOIllYECVg7NIFyLGUFMnbS25jaeRorwwtHf9pC0XvCmqQoPL6QSujB7PMhqtBPc+kz5ODYSDdjqJFKVlKd1YfY+jC3bl7rJlpnQD0x4XWgpmA33X7sOc8+BwHvdZhN+oIFjLnX+r2DU/lzuagRpUIEmM72Le7udS6D2s3YYObDSUpgsY82H5GiLCs0Ho+2aDi2exPAdAb5gLhnbtH93A0V9kHg505G1VMTPuVdalnu3k3+jpjNx/u8OFARxKLuy8weuNXLjm0rcmyGn25ifdQ6V
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2020 10:28:28.3172
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rNDrY/pM/YYh96ZkJWbMOA6PHLV79H4X4xOQl3Sj4dG9d8teQiMzXiN7ggFFVrqK3J+x0gMWnvHwwRRWBzgv5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4323
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c82ce1d-bfde-464c-3938-08d818f28042
+X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT031.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> If UFS device is not qualified to enter the detection of WriteBooster pro=
-bing by
-> disallowed UFS version or device quirks, then WriteBooster capability in =
-host
-> shall be disabled to prevent any WriteBooster operations in the future.
->=20
-> Fixes: 3d17b9b5ab11 ("scsi: ufs: Add write booster feature support")
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> Tested-by: Steev Klimaszewski <steev@kali.org>
-> Reviewed-by: Avri Altman <avri.altman@wdc.com>
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-Thanks fix this.
+In this patch set the following is provided:
 
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+[PATCH v14 1/3] MAINTAINERS file update for DA7280
+[PATCH v14 2/3] DA7280 DT Binding
+[PATCH v14 3/3] DA7280 Driver
 
-Bean
+This patch applies against linux-next and v5.8-rc2
 
-> ---
->  drivers/scsi/ufs/ufshcd.c | 35 +++++++++++++++++++----------------
->  1 file changed, 19 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
-> f173ad1bd79f..c62bd47beeaa 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6847,21 +6847,31 @@ static int ufshcd_scsi_add_wlus(struct ufs_hba
-> *hba)
->=20
->  static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)  {
-> +	struct ufs_dev_info *dev_info =3D &hba->dev_info;
->  	u8 lun;
->  	u32 d_lu_wb_buf_alloc;
->=20
->  	if (!ufshcd_is_wb_allowed(hba))
->  		return;
-> +	/*
-> +	 * Probe WB only for UFS-2.2 and UFS-3.1 (and later) devices or
-> +	 * UFS devices with quirk
-> UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES
-> +	 * enabled
-> +	 */
-> +	if (!(dev_info->wspecversion >=3D 0x310 ||
-> +	      dev_info->wspecversion =3D=3D 0x220 ||
-> +	     (hba->dev_quirks &
-> UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES)))
-> +		goto wb_disabled;
->=20
->  	if (hba->desc_size[QUERY_DESC_IDN_DEVICE] <
->  	    DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP + 4)
->  		goto wb_disabled;
->=20
-> -	hba->dev_info.d_ext_ufs_feature_sup =3D
-> +	dev_info->d_ext_ufs_feature_sup =3D
->  		get_unaligned_be32(desc_buf +
->=20
-> DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP);
->=20
-> -	if (!(hba->dev_info.d_ext_ufs_feature_sup &
-> UFS_DEV_WRITE_BOOSTER_SUP))
-> +	if (!(dev_info->d_ext_ufs_feature_sup &
-> UFS_DEV_WRITE_BOOSTER_SUP))
->  		goto wb_disabled;
->=20
->  	/*
-> @@ -6870,17 +6880,17 @@ static void ufshcd_wb_probe(struct ufs_hba *hba,
-> u8 *desc_buf)
->  	 * a max of 1 lun would have wb buffer configured.
->  	 * Now only shared buffer mode is supported.
->  	 */
-> -	hba->dev_info.b_wb_buffer_type =3D
-> +	dev_info->b_wb_buffer_type =3D
->  		desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
->=20
-> -	hba->dev_info.b_presrv_uspc_en =3D
-> +	dev_info->b_presrv_uspc_en =3D
->  		desc_buf[DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN];
->=20
-> -	if (hba->dev_info.b_wb_buffer_type =3D=3D WB_BUF_MODE_SHARED) {
-> -		hba->dev_info.d_wb_alloc_units =3D
-> +	if (dev_info->b_wb_buffer_type =3D=3D WB_BUF_MODE_SHARED) {
-> +		dev_info->d_wb_alloc_units =3D
->  		get_unaligned_be32(desc_buf +
->=20
-> DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS);
-> -		if (!hba->dev_info.d_wb_alloc_units)
-> +		if (!dev_info->d_wb_alloc_units)
->  			goto wb_disabled;
->  	} else {
->  		for (lun =3D 0; lun < UFS_UPIU_MAX_WB_LUN_ID; lun++) { @@ -
-> 6891,7 +6901,7 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8
-> *desc_buf)
->  					(u8 *)&d_lu_wb_buf_alloc,
->  					sizeof(d_lu_wb_buf_alloc));
->  			if (d_lu_wb_buf_alloc) {
-> -				hba->dev_info.wb_dedicated_lu =3D lun;
-> +				dev_info->wb_dedicated_lu =3D lun;
->  				break;
->  			}
->  		}
-> @@ -6977,14 +6987,7 @@ static int ufs_get_device_desc(struct ufs_hba *hba=
-)
->=20
->  	ufs_fixup_device_setup(hba);
->=20
-> -	/*
-> -	 * Probe WB only for UFS-3.1 devices or UFS devices with quirk
-> -	 * UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES enabled
-> -	 */
-> -	if (dev_info->wspecversion >=3D 0x310 ||
-> -	    dev_info->wspecversion =3D=3D 0x220 ||
-> -	    (hba->dev_quirks &
-> UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES))
-> -		ufshcd_wb_probe(hba, desc_buf);
-> +	ufshcd_wb_probe(hba, desc_buf);
->=20
->  	/*
->  	 * ufshcd_read_string_desc returns size of the string
-> --
-> 2.18.0
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
+
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
+
+ .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1880 ++++++++++++++++++++
+ 5 files changed, 2005 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+
+-- 
+end-of-patch for PATCH v14
+
