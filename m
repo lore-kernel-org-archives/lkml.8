@@ -2,156 +2,104 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C525C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E361C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8D420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB9620885
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592990832;
+	bh=sz9dFsvgElJPSubu1rXAM7K6qMOH0Op/lpJbVq77JSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vJS4+Rk0g1zs9nrAoI3BSOUElDlmzg99MHknq4CZ4ynKPDYc6PP6Os6sy8BFX5m/F
+	 CN1dayxH1Hcj4hQ3t1/NSKV4hJptRXOEDMwTe0wXylBgZsvuJT5L7doIR8JuncWr4a
+	 JHKWc8HiaNP/QeR5Zk5+CvZqx4CZexPdv1RfK+kU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389479AbgFXJ0z (ORCPT
+        id S2389524AbgFXJ1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:26:55 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:34796 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389368AbgFXJ0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:26:52 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxNupIHPNe6zFJAA--.493S2;
-        Wed, 24 Jun 2020 17:26:32 +0800 (CST)
-From:   Bibo Mao <maobibo@loongson.cn>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Silsby <dansilsby@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 1/3] mm: set page fault address for update_mmu_cache_pmd
-Date:   Wed, 24 Jun 2020 17:26:30 +0800
-Message-Id: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9AxNupIHPNe6zFJAA--.493S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF1fAry7ArW7CrW7XrW3GFg_yoW5uFWDpF
-        97Can5XFsIqw1kuayfXr4qkr15J3s2qay7Kry2k3ZYv3Waqr1S9w1DAwn5Ar98Jry8ua13
-        CF4YgFZ8Xw4fZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IY
-        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-        vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-        jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU56c_DUUUUU==
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Wed, 24 Jun 2020 05:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387495AbgFXJ1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:27:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5C9D20874;
+        Wed, 24 Jun 2020 09:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592990829;
+        bh=sz9dFsvgElJPSubu1rXAM7K6qMOH0Op/lpJbVq77JSY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iSZxGLXrqkpIi+HrdkKJOWxRMXfCXaz/q9N/4epJGnp9QBX0eNuRQTw9EWBMTtGr7
+         37xiwGQb7ER9IhHHmMACOqJ9hDzajgcbJOXRhCh5iGSC0DUl+bXiRw66t/iEf1n/H7
+         S1sT0a5gURcQYYYWSWcbcbDVIbgm+jF2idYiwRqE=
+Date:   Wed, 24 Jun 2020 11:27:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Cc:     Tejun Heo <tj@kernel.org>, Ian Kent <raven@themaw.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+Message-ID: <20200624092708.GA1749737@kroah.com>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+ <20200619153833.GA5749@mtj.thefacebook.com>
+ <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+ <20200619222356.GA13061@mtj.duckdns.org>
+ <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
+ <20200622175343.GC13061@mtj.duckdns.org>
+ <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
+ <20200623231348.GD13061@mtj.duckdns.org>
+ <a3e9414e-4740-3013-947d-e1839a20227c@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3e9414e-4740-3013-947d-e1839a20227c@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-update_mmu_cache_pmd is used to update tlb for the pmd entry by
-software. On MIPS system, the tlb entry indexed by page fault
-address maybe exists already, only that tlb entry may be small
-page, also it may be huge page. Before updating pmd entry with
-huge page size, older tlb entry need to be invalidated.
+On Wed, Jun 24, 2020 at 02:04:15AM -0700, Rick Lindsley wrote:
+> In contrast, the provided patch fixes the observed problem with no ripple
+> effect to other subsystems or utilities.
 
-Here page fault address is passed to function update_mmu_cache_pmd,
-rather than pmd huge page start address. The page fault address
-can be used for invalidating older tlb entry.
+Your patch, as-is, is fine, but to somehow think that this is going to
+solve your real problem here is the issue we keep raising.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/mips/include/asm/pgtable.h | 9 +++++++++
- mm/huge_memory.c                | 7 ++++---
- mm/memory.c                     | 2 +-
- 3 files changed, 14 insertions(+), 4 deletions(-)
+The real problem is you have way too many devices that somehow need to
+all get probed at boot time before you can do anything else.
 
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index dd7a0f5..bd81661 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -554,11 +554,20 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
- #define	__HAVE_ARCH_UPDATE_MMU_TLB
- #define update_mmu_tlb	update_mmu_cache
- 
-+extern void local_flush_tlb_page(struct vm_area_struct *vma,
-+				unsigned long page);
- static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 	unsigned long address, pmd_t *pmdp)
- {
- 	pte_t pte = *(pte_t *)pmdp;
- 
-+	/*
-+	 * If pmd_none is true, older tlb entry will be normal page.
-+	 * here to invalidate older tlb entry indexed by address
-+	 * parameter address must be page fault address rather than
-+	 * start address of pmd huge page
-+	 */
-+	local_flush_tlb_page(vma, address);
- 	__update_tlb(vma, address, pte);
- }
- 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 78c84be..0f9187b 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -780,6 +780,7 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		pgtable_t pgtable)
- {
- 	struct mm_struct *mm = vma->vm_mm;
-+	unsigned long start = addr & PMD_MASK;
- 	pmd_t entry;
- 	spinlock_t *ptl;
- 
-@@ -792,7 +793,7 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
- 			}
- 			entry = pmd_mkyoung(*pmd);
- 			entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
--			if (pmdp_set_access_flags(vma, addr, pmd, entry, 1))
-+			if (pmdp_set_access_flags(vma, start, pmd, entry, 1))
- 				update_mmu_cache_pmd(vma, addr, pmd);
- 		}
- 
-@@ -813,7 +814,7 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		pgtable = NULL;
- 	}
- 
--	set_pmd_at(mm, addr, pmd, entry);
-+	set_pmd_at(mm, start, pmd, entry);
- 	update_mmu_cache_pmd(vma, addr, pmd);
- 
- out_unlock:
-@@ -864,7 +865,7 @@ vm_fault_t vmf_insert_pfn_pmd_prot(struct vm_fault *vmf, pfn_t pfn,
- 
- 	track_pfn_insert(vma, &pgprot, pfn);
- 
--	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
-+	insert_pfn_pmd(vma, vmf->address, vmf->pmd, pfn, pgprot, write, pgtable);
- 	return VM_FAULT_NOPAGE;
- }
- EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd_prot);
-diff --git a/mm/memory.c b/mm/memory.c
-index dc7f354..c703458 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3592,7 +3592,7 @@ static vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
- 
- 	set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
- 
--	update_mmu_cache_pmd(vma, haddr, vmf->pmd);
-+	update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
- 
- 	/* fault is handled */
- 	ret = 0;
--- 
-1.8.3.1
+> Greg had suggested
+>     Treat the system as a whole please, don't go for a short-term
+>     fix that we all know is not solving the real problem here.
+> 
+> Your solution affects multiple subsystems; this one affects one.  Which is
+> the whole system approach in terms of risk?  You mentioned you support 30k
+> scsi disks but only because they are slow so the inefficiencies of kernfs
+> don't show.  That doesn't bother you?
 
+Systems with 30k of devices do not have any problems that I know of
+because they do not do foolish things like stall booting before they are
+all discovered :)
+
+What's the odds that if we take this patch, you all have to come back in
+a few years with some other change to the api due to even larger memory
+sizes happening?  What happens if you boot on a system with this change
+and with 10x the memory you currently have?  Try simulating that by
+creating 10x the number of devices and see what happens.  Does the
+bottleneck still remain in kernfs or is it somewhere else?
+
+thanks,
+
+greg k-h
