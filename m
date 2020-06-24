@@ -2,85 +2,142 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F740C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54CF920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415A120738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fnAZxTCY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HbBo8+WP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405007AbgFXQPk (ORCPT
+        id S2404888AbgFXQPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
+        Wed, 24 Jun 2020 12:15:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404787AbgFXQOE (ORCPT
+        with ESMTP id S2404802AbgFXQPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:14:04 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17CAC061796;
-        Wed, 24 Jun 2020 09:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=Bo298b9PL3Uu2rIZ3OmLGqOnn53VokHDlRvRjRJg3qI=; b=fnAZxTCYz/46Hcw/7kbJSkEbDK
-        05LcYXy0b8pLZLaxU37cOfNzAFQ1pKuXoGE2mC3eqDscLeBF/BbSpfA2DwSaZ50j4sntWpFsTmwe/
-        +TBIxX7OSmc4f6OMj8ER5Y25pIPmMTEZPbFsZeqSIImK6DKarl54m6sV3KhR+q9zFzWf/0H+CaPHb
-        xi9Y4Jes8UT3Uy6dT3HuyuieKRTC7PmfItuM64IOgYkTARY+vYpEXMDNKAzaWmAktxtYwQxuUMQgj
-        k8tpSIWVCzD2LM/45GycHOcLIQg5VPAsjWlu/r1htWKFCZ7wqNuxUpflQiu0IUF4WqBa/5Sl2oLDd
-        S52L5C+Q==;
-Received: from [2001:4bb8:180:a3:5c7c:8955:539d:955b] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jo81u-0005xs-Ab; Wed, 24 Jun 2020 16:13:42 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: [PATCH 04/14] fs: unexport __kernel_write
-Date:   Wed, 24 Jun 2020 18:13:25 +0200
-Message-Id: <20200624161335.1810359-5-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200624161335.1810359-1-hch@lst.de>
-References: <20200624161335.1810359-1-hch@lst.de>
+        Wed, 24 Jun 2020 12:15:37 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B2AC061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:15:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id o11so2843129wrv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kinXBvz5+I1FgSK2RxVnBM/4h4YycBTf3sfQytiCbSA=;
+        b=HbBo8+WPRj3gAUYINsoDzCjuSTiw+4IVXg1BUTCPeS9//rIx0Msd7C2/3IOEqhT2au
+         ifH40qsXdeHZFBuxYayakoHeI5GVZtrXYa4z/w6+0z4jER+c72ovBtthOxjKcI41NM67
+         YXA/sWFk3I3nvVOvAOmNu0p9vJXZsy+n6tDOMAWADhcErgHqJsG6kn/gtiN8Efait3Vu
+         g7U8caQMJnfPSx32TxlICATow4MuWMRnhUBnVT4P0Qt7NW+LmYXoK2t0ILvx+H877gGQ
+         k9atIi2siVCtlFJt9Qsxt86a9HGAidyo95/yFVpj4YC7TNm3Lvqbki1DKAzL5+qtILlf
+         3PgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kinXBvz5+I1FgSK2RxVnBM/4h4YycBTf3sfQytiCbSA=;
+        b=J/imafKDbdPW8qgefcUBmGmM5kgMg1fBgEzPhmzEAmr+nLA0uQcpYPTy7tstq88UMx
+         lBeJ4mNimIiDchWlTkCWqwDpEwQnzFWclA3SjHSvnPvI3vIy4eGj8g1nXLuWOXWEw1dQ
+         CZs0G37+GBDlaYxULoQVsTkcJGnVj4JSCGffZtf5yhtVBVp/GKGpWSB/n+JCTVD3Rb+W
+         Rv0Z5UpLAvJppgplDX5L/JOKB61t5cmaDr+SJrOSYaKMa3MQLJf8+2nlesTMpgpALJ/W
+         ykUDCiCcKN+ss+AYob6+MXcw7JLlUl6ccG9ZXIcDJd8yoYEt7robTYLV8UZz5Tivde3g
+         j+3Q==
+X-Gm-Message-State: AOAM531sczia6Xd5tUplantL1A0ny8wjgvhlwUQtQTDXD4teSFxGHl9G
+        gcw6N3PrNCOTLHCOYB12ic+FUg==
+X-Google-Smtp-Source: ABdhPJzU5QZYipbkQZi8xo157t2PrVSjzPMHytPFcg1TfZKTGu677lOERbPf8aPK6zEzeiz5pYn3xQ==
+X-Received: by 2002:a5d:4603:: with SMTP id t3mr5463690wrq.38.1593015335565;
+        Wed, 24 Jun 2020 09:15:35 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:89ac:d9e8:f44c:b137])
+        by smtp.gmail.com with ESMTPSA id t15sm8716207wmj.14.2020.06.24.09.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 09:15:34 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, lee.jones@linaro.org,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v5 2/2] arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
+Date:   Wed, 24 Jun 2020 18:15:28 +0200
+Message-Id: <20200624161528.12664-3-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200624161528.12664-1-narmstrong@baylibre.com>
+References: <20200624161528.12664-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a very special interface that skips sb_writes protection, and not
-used by modules anymore.
+Add the Khadas MCU node with active FAN thermal nodes for all the
+Khadas VIM3 variants.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- fs/read_write.c | 1 -
- 1 file changed, 1 deletion(-)
+Hi Kevin,
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index bbfa9b12b15eb7..2c601d853ff3d8 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -522,7 +522,6 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t
- 	inc_syscw(current);
- 	return ret;
- }
--EXPORT_SYMBOL(__kernel_write);
+The bindings has been reviewed and merged by Lee,
+could you apply this one via the amlogic tree ?
+
+Thanks,
+Neil
+
+ .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 1ef1e3672b96..27408c10a811 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -183,6 +183,23 @@
+ 	hdmi-phandle = <&hdmi_tx>;
+ };
  
- ssize_t kernel_write(struct file *file, const void *buf, size_t count,
- 			    loff_t *pos)
++&cpu_thermal {
++	trips {
++		cpu_active: cpu-active {
++			temperature = <80000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "active";
++		};
++	};
++
++	cooling-maps {
++		map {
++			trip = <&cpu_active>;
++			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
+ &ext_mdio {
+ 	external_phy: ethernet-phy@0 {
+ 		/* Realtek RTL8211F (0x001cc916) */
+@@ -222,6 +239,12 @@
+ 	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
+ 	pinctrl-names = "default";
+ 
++	khadas_mcu: system-controller@18 {
++		compatible = "khadas,mcu";
++		reg = <0x18>;
++		#cooling-cells = <2>;
++	};
++
+ 	gpio_expander: gpio-controller@20 {
+ 		compatible = "ti,tca6408";
+ 		reg = <0x20>;
 -- 
-2.26.2
+2.22.0
 
