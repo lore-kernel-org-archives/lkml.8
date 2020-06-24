@@ -2,201 +2,103 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67574C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E81420768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6C2206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388445AbgFXGaC (ORCPT
+        id S2389075AbgFXGak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:30:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6135 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388262AbgFXGaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:30:02 -0400
-IronPort-SDR: FucgLOVTk94fsZ1QmUtKkxLN8IYLI4O4BSwTMFuA5eMx4UQunjt/hcFzYRbxpkIbUTCTJeIm7g
- WDaJU4FaYKZw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="132778391"
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="132778391"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 23:30:01 -0700
-IronPort-SDR: heLb5YqZ34s7Gf1o2pn7jMTrEA/w/dhHL5mZWjYGISN0S7EVZuUpysveKoBos56JldFv7oufvg
- RcmiUtbsKi7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="423268446"
-Received: from msaix-mobl2.ccr.corp.intel.com (HELO [10.255.28.245]) ([10.255.28.245])
-  by orsmga004.jf.intel.com with ESMTP; 23 Jun 2020 23:29:58 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v3 3/5] iommu/uapi: Use named union for user data
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1592931837-58223-4-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <96f6d717-e9b3-2a6b-5cff-c38dbe97aa7c@linux.intel.com>
-Date:   Wed, 24 Jun 2020 14:29:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1592931837-58223-4-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jun 2020 02:30:40 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:10678 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388262AbgFXGaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:30:39 -0400
+Received: from localhost.localdomain (unknown [210.32.144.65])
+        by mail-app3 (Coremail) with SMTP id cC_KCgBn0ngB8_JeaRw2AQ--.20084S4;
+        Wed, 24 Jun 2020 14:30:29 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] media: venus: core: Fix runtime PM imbalance in venus_probe
+Date:   Wed, 24 Jun 2020 14:30:24 +0800
+Message-Id: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgBn0ngB8_JeaRw2AQ--.20084S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1fur1xGw48ur4DArb_yoW8Gry8pr
+        4qgayIyry0ganFkw18Jw17WF9xC3yftFWUWFyDuwn7Z3yrG3Z8tF1FyFyYyF1DAFWDAa4U
+        JaySqrW3ZFWFvF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUkhLnUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggBBlZdtOzhhgABs4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced. For other error
+paths after this call, things are the same.
 
-On 2020/6/24 1:03, Jacob Pan wrote:
-> IOMMU UAPI data size is filled by the user space which must be validated
-> by ther kernel. To ensure backward compatibility, user data can only be
-> extended by either re-purpose padding bytes or extend the variable sized
-> union at the end. No size change is allowed before the union. Therefore,
-> the minimum size is the offset of the union.
-> 
-> To use offsetof() on the union, we must make it named.
-> 
-> Link: https://lkml.org/lkml/2020/6/11/834
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   drivers/iommu/intel/iommu.c | 24 ++++++++++++------------
->   drivers/iommu/intel/svm.c   |  2 +-
->   include/uapi/linux/iommu.h  |  4 ++--
->   3 files changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 50fc62413a35..59cba214ef13 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -5409,8 +5409,8 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   
->   	/* Size is only valid in address selective invalidation */
->   	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
-> -		size = to_vtd_size(inv_info->addr_info.granule_size,
-> -				   inv_info->addr_info.nb_granules);
-> +		size = to_vtd_size(inv_info->granu.addr_info.granule_size,
-> +				   inv_info->granu.addr_info.nb_granules);
->   
->   	for_each_set_bit(cache_type,
->   			 (unsigned long *)&inv_info->cache,
-> @@ -5431,20 +5431,20 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   		 * granularity.
->   		 */
->   		if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
-> -		    (inv_info->pasid_info.flags & IOMMU_INV_PASID_FLAGS_PASID))
-> -			pasid = inv_info->pasid_info.pasid;
-> +		    (inv_info->granu.pasid_info.flags & IOMMU_INV_PASID_FLAGS_PASID))
-> +			pasid = inv_info->granu.pasid_info.pasid;
->   		else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
-> -			 (inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
-> -			pasid = inv_info->addr_info.pasid;
-> +			 (inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
-> +			pasid = inv_info->granu.addr_info.pasid;
->   
->   		switch (BIT(cache_type)) {
->   		case IOMMU_CACHE_INV_TYPE_IOTLB:
->   			/* HW will ignore LSB bits based on address mask */
->   			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
->   			    size &&
-> -			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
-> +				(inv_info->granu.addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
-Nit: Keep it aligned. With this tweaked,
+Changelog:
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+v2: - Add pm_runtime_get_noresume() on failure of
+      pm_runtime_put_sync() to balance PM counter instead of
+      releasing everything here.
+---
+ drivers/media/platform/qcom/venus/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Best regards,
-baolu
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 203c6538044f..b0b932bf8c02 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -287,8 +287,10 @@ static int venus_probe(struct platform_device *pdev)
+ 		goto err_core_deinit;
+ 
+ 	ret = pm_runtime_put_sync(dev);
+-	if (ret)
++	if (ret) {
++		pm_runtime_get_noresume(dev);
+ 		goto err_dev_unregister;
++	}
+ 
+ 	return 0;
+ 
+@@ -299,6 +301,7 @@ static int venus_probe(struct platform_device *pdev)
+ err_venus_shutdown:
+ 	venus_shutdown(core);
+ err_runtime_disable:
++	pm_runtime_put_noidle(dev);
+ 	pm_runtime_set_suspended(dev);
+ 	pm_runtime_disable(dev);
+ 	hfi_destroy(core);
+-- 
+2.17.1
 
->   				WARN_ONCE(1, "Address out of range, 0x%llx, size order %llu\n",
-> -					  inv_info->addr_info.addr, size);
-> +					  inv_info->granu.addr_info.addr, size);
->   			}
->   
->   			/*
-> @@ -5452,9 +5452,9 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   			 * We use npages = -1 to indicate that.
->   			 */
->   			qi_flush_piotlb(iommu, did, pasid,
-> -					mm_to_dma_pfn(inv_info->addr_info.addr),
-> +					mm_to_dma_pfn(inv_info->granu.addr_info.addr),
->   					(granu == QI_GRAN_NONG_PASID) ? -1 : 1 << size,
-> -					inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
-> +					inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
->   
->   			if (!info->ats_enabled)
->   				break;
-> @@ -5475,13 +5475,13 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   				size = 64 - VTD_PAGE_SHIFT;
->   				addr = 0;
->   			} else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
-> -				addr = inv_info->addr_info.addr;
-> +				addr = inv_info->granu.addr_info.addr;
->   
->   			if (info->ats_enabled)
->   				qi_flush_dev_iotlb_pasid(iommu, sid,
->   						info->pfsid, pasid,
->   						info->ats_qdep,
-> -						inv_info->addr_info.addr,
-> +						inv_info->granu.addr_info.addr,
->   						size);
->   			else
->   				pr_warn_ratelimited("Passdown device IOTLB flush w/o ATS!\n");
-> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-> index d386853121a2..713b3a218483 100644
-> --- a/drivers/iommu/intel/svm.c
-> +++ b/drivers/iommu/intel/svm.c
-> @@ -338,7 +338,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
->   	spin_lock(&iommu->lock);
->   	ret = intel_pasid_setup_nested(iommu, dev,
->   				       (pgd_t *)(uintptr_t)data->gpgd,
-> -				       data->hpasid, &data->vtd, dmar_domain,
-> +				       data->hpasid, &data->vendor.vtd, dmar_domain,
->   				       data->addr_width);
->   	spin_unlock(&iommu->lock);
->   	if (ret) {
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index 303f148a5cd7..1afc6610b0ad 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -263,7 +263,7 @@ struct iommu_cache_invalidate_info {
->   	union {
->   		struct iommu_inv_pasid_info pasid_info;
->   		struct iommu_inv_addr_info addr_info;
-> -	};
-> +	} granu;
->   };
->   
->   /**
-> @@ -329,7 +329,7 @@ struct iommu_gpasid_bind_data {
->   	/* Vendor specific data */
->   	union {
->   		struct iommu_gpasid_bind_data_vtd vtd;
-> -	};
-> +	} vendor;
->   };
->   
->   #endif /* _UAPI_IOMMU_H */
-> 
