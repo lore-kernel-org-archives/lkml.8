@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F499C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8781FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAB020885
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681AB2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IfZnlNH6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xm0pw21C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391446AbgFXUfD (ORCPT
+        id S2391465AbgFXUc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50510 "EHLO
+        Wed, 24 Jun 2020 16:32:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406444AbgFXUdH (ORCPT
+        with ESMTP id S2391451AbgFXUcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:33:07 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCE3C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:07 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id bk16so2493428qvb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:07 -0700 (PDT)
+        Wed, 24 Jun 2020 16:32:53 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A754FC061796
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:32:53 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id c3so3488653ybi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=E72RKePZ9QWe5v89HuDG9dmOi1TM58THK6MPfXGAxFQ=;
-        b=IfZnlNH6VN1h5kv70OdYXiwpqxbG8Fsr0lLuwZMxg60FtsN9/VTg/yfhaEKY69+/+Y
-         hyTqsTQRwHJPTGJCgx79BwJ5QVcEKyLgdthjRqbiH95tnfQghy4dm0yUNuDWrYAYeuQK
-         bXlz5RTuRnG7qvLP46Ux6LdFVV3vgejq+f8vMdwP7C0ECe86rxVnbt4+28XS5oy0e//W
-         3PvqoaOrjXwuF1y+TVGpByJgFdYpZGp3bhGDnuXbGiV8bnYHuHTTFlOLOu5U7PsEVYbS
-         zVdr70MPwdtPFtMyvFviHewEzUoy8KN1TAyWLRedjTg9ydVnxrcpJqLiET5LocVJTpl1
-         qi7Q==
+        bh=xQdUf2OUslJj5DjDkMf3WWk6yA/Z9kKXMPQTw/J6IlI=;
+        b=Xm0pw21CFWwXKUCWT9uv8sjRFTZSZ2FxFwksg6PZZFhaViOtrXe11fAV4rmUtsA/iD
+         yw79dp1HbVFKYB9IyYfau+MusfZUyo7hsiV4z3U+B+VERxLsAmDLIOjA6ZbmwYQrk90b
+         ude2AkBLX9/aWcsdUn0At059rWaNafFELeyyTNpWfaIPQWe975NuzYbO2Y2+sB6z99TZ
+         DkeatZZ3I3Kg3WrJcfsykfzzNiGAFFIiaZ9KHBKGVzxxZKDwbNS3dVYdRS4I3s6IiWF7
+         F9FQwIOY90ZeHvihhQegbpcF6vQYY7VW45ZJstmN7BQcaqrs2XDnMXsRYKvPnePBoQiK
+         Uk5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=E72RKePZ9QWe5v89HuDG9dmOi1TM58THK6MPfXGAxFQ=;
-        b=mXukkxexqDbFY8FbIwR3w1/YSLIcalnOEnJsAXeVm2WpmeUeCDBbHcF6GlWp5QA2JM
-         B6LoZDsDm0VKl4DYTJuxU8JGWsaKImJ35Za21iPoXxvSnIj0KgNZ0Gr6MqNIvZgTsjdy
-         kCZW09etdRm8R0pBpNtRv3OLbK2oaiyqFWOoZUFmG5mOHXQFJDL8OeuzMTqF2DlvXcG8
-         pYfa23LBSwzffXNgADTH1uLHfu/wLVev66cpF620ZqW1SOPJzYd2/eJIHZ2ldiNl2AJ/
-         +LESisd3nFZgC2Pj3JYgzyOJUV9+DWS7x3kJO8Hbmz1lhxUMdIG3JSgykSUAQpWinNL5
-         mT8w==
-X-Gm-Message-State: AOAM532sK4AlNBkyKrmKSmxtn+vsy57TR9J7GtAhyHI7egrUf5Oqn7KR
-        nh9GugEDqC8MDVHmjeisGWNDXT20PFqRc0nD0fk=
-X-Google-Smtp-Source: ABdhPJzd9lgxY2ziJprOU0r6YQs1Hj+qf3c3VygR/GB4VeUCqKevsyTn5UTRuuuhSmVDqX6i9sr8ukJjhli7wtRCXdI=
-X-Received: by 2002:a0c:85a3:: with SMTP id o32mr8043763qva.189.1593030786670;
- Wed, 24 Jun 2020 13:33:06 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:31:43 -0700
+        bh=xQdUf2OUslJj5DjDkMf3WWk6yA/Z9kKXMPQTw/J6IlI=;
+        b=LSnK56oywgWg1t1z9cTJs1Zr6Ls2ya51bBGsi7zMLvlrNDCruirabo+jmQppOwO0w/
+         ccPJhkMstGx2XICd1mWA8pzwMxVbXgsgyw/EsyQSe0DaVWqhw8GgBjIjfkHJBa8TsXEl
+         VNYeMnjU7sN+WC+GC4A5QKL5yI/vMoMJY6/WkaZHdmrz/amnU8d/0o+yebJHM559rXEw
+         cazvQNkz1K4ErjENl2c4wVyPT029O4ZQVo1he+/TNQlLyuSf5uysYf/dIHCTKMoyrfu0
+         Ei5/9JP8Om/KPq9v6NiqrXDSLOB2ftLM/HqBGcXdGHtrHKdPf0HdE2cHw9Fkv9LC5vlh
+         yQpw==
+X-Gm-Message-State: AOAM530sb8aVLTyzM910UU2KwP85aqIZYpC3ld68u2dEHI2FZl5XIrNU
+        /JnehC2B0ctwGaIYsdVb1+7tEMkZv8yARPB+RIM=
+X-Google-Smtp-Source: ABdhPJyaNd4T7jCJ2XxtqDk7As6bELzRlErz6uaK57hfCOoUmajW51Nj+2rWe6ZzApbtPE/D/8XgpW5QlQwx29+bABU=
+X-Received: by 2002:a25:4cca:: with SMTP id z193mr43175648yba.510.1593030771779;
+ Wed, 24 Jun 2020 13:32:51 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:31:39 -0700
 In-Reply-To: <20200624203200.78870-1-samitolvanen@google.com>
-Message-Id: <20200624203200.78870-6-samitolvanen@google.com>
+Message-Id: <20200624203200.78870-2-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 05/22] kbuild: lto: postpone objtool
+Subject: [PATCH 01/22] objtool: use sh_info to find the base for .rela sections
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -73,97 +73,42 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With LTO, LLVM bitcode won't be compiled into native code until
-modpost_link, or modfinal for modules. This change postpones calls
-to objtool until after these steps.
+ELF doesn't require .rela section names to match the base section. Use
+the section index in sh_info to find the section instead of looking it
+up by name.
+
+LLD, for example, generates a .rela section that doesn't match the base
+section name when we merge sections in a linker script for a binary
+compiled with -ffunction-sections.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/compiler.h  |  2 +-
- lib/Kconfig.debug         |  2 +-
- scripts/Makefile.build    |  2 ++
- scripts/Makefile.modfinal | 15 +++++++++++++++
- 4 files changed, 19 insertions(+), 2 deletions(-)
+ tools/objtool/elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 30827f82ad62..12b115152532 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -120,7 +120,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- /* Annotate a C jump table to allow objtool to follow the code flow */
- #define __annotate_jump_table __section(.rodata..c_jump_table)
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 84225679f96d..c1ba92abaa03 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -502,7 +502,7 @@ static int read_relas(struct elf *elf)
+ 		if (sec->sh.sh_type != SHT_RELA)
+ 			continue;
  
--#ifdef CONFIG_DEBUG_ENTRY
-+#if defined(CONFIG_DEBUG_ENTRY) || defined(CONFIG_LTO_CLANG)
- /* Begin/end of an instrumentation safe region */
- #define instrumentation_begin() ({					\
- 	asm volatile("%c0:\n\t"						\
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9ad9210d70a1..9fdba71c135a 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -399,7 +399,7 @@ config STACK_VALIDATION
- 
- config VMLINUX_VALIDATION
- 	bool
--	depends on STACK_VALIDATION && DEBUG_ENTRY && !PARAVIRT
-+	depends on STACK_VALIDATION && (DEBUG_ENTRY || LTO_CLANG) && !PARAVIRT
- 	default y
- 
- config DEBUG_FORCE_WEAK_PER_CPU
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 64e99f4baa5b..82977350f5a6 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -226,6 +226,7 @@ endif # CC_USING_PATCHABLE_FUNCTION_ENTRY
- endif # CONFIG_FTRACE_MCOUNT_RECORD
- 
- ifdef CONFIG_STACK_VALIDATION
-+ifndef CONFIG_LTO_CLANG
- ifneq ($(SKIP_STACK_VALIDATION),1)
- 
- __objtool_obj := $(objtree)/tools/objtool/objtool
-@@ -258,6 +259,7 @@ objtool_obj = $(if $(patsubst y%,, \
- 	$(__objtool_obj))
- 
- endif # SKIP_STACK_VALIDATION
-+endif # CONFIG_LTO_CLANG
- endif # CONFIG_STACK_VALIDATION
- 
- # Rebuild all objects when objtool changes, or is enabled/disabled.
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index d168f0cfe67c..9f1df2f1fab5 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -48,6 +48,21 @@ endif # CC_USING_PATCHABLE_FUNCTION_ENTRY
- endif # CC_USING_RECORD_MCOUNT
- endif # CONFIG_FTRACE_MCOUNT_RECORD
- 
-+ifdef CONFIG_STACK_VALIDATION
-+ifneq ($(SKIP_STACK_VALIDATION),1)
-+cmd_ld_ko_o +=								\
-+	$(objtree)/tools/objtool/objtool				\
-+		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
-+		--module						\
-+		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
-+		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
-+		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
-+		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
-+		$(@:.ko=$(prelink-ext).o);
-+
-+endif # SKIP_STACK_VALIDATION
-+endif # CONFIG_STACK_VALIDATION
-+
- endif # CONFIG_LTO_CLANG
- 
- quiet_cmd_ld_ko_o = LD [M]  $@
+-		sec->base = find_section_by_name(elf, sec->name + 5);
++		sec->base = find_section_by_index(elf, sec->sh.sh_info);
+ 		if (!sec->base) {
+ 			WARN("can't find base section for rela section %s",
+ 			     sec->name);
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
