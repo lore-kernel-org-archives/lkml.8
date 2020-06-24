@@ -2,82 +2,112 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4542C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B282081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07AAB2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:39:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AYAlBFRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391316AbgFXTjJ (ORCPT
+        id S2391330AbgFXTj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:39:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:13095 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391239AbgFXTjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:39:08 -0400
-IronPort-SDR: sh2HLpSHbWTmsQffGvS51YCwNwucBblOlJCFBUIOD9spQ/27dAJLPdIVeur5wzb9q5KQKQ/nR5
- a+DpjpvnG2nw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="133039948"
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="133039948"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 12:39:08 -0700
-IronPort-SDR: z6nfZQhPv6nuVQFeUgr2r64l76Au49sOAqbkao9966p02ZnG72vHFKXI02Sr/mMBU5QJql8KRS
- zGLWFpgHM0XA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="275798065"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 12:39:08 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 0257D5804D6;
-        Wed, 24 Jun 2020 12:39:08 -0700 (PDT)
-Message-ID: <06eff8e884b7bddd155fcaad5ef25b9db80a12d5.camel@linux.intel.com>
-Subject: Re: [PATCH V2 0/2] nvme: Add support for ACPI StorageD3Enable
- property
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "N, Shyjumon" <shyjumon.n@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
-Date:   Wed, 24 Jun 2020 12:39:07 -0700
-In-Reply-To: <CAPcyv4iYGgjmAUiKUgFBF+nm=axamYFueCkN5Jyu7yQ6w1HxLg@mail.gmail.com>
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
-         <20200612204820.20111-1-david.e.box@linux.intel.com>
-         <12d36fdcdbcf438dd3aac7769e8366afd9d5aa1a.camel@linux.intel.com>
-         <CAPcyv4iYGgjmAUiKUgFBF+nm=axamYFueCkN5Jyu7yQ6w1HxLg@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Wed, 24 Jun 2020 15:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391239AbgFXTj3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:39:29 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67946C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:39:27 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id x8so587112plm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/a69U9KUnIP/MnmiwpDT352wL+s+ti3tEpAhYbHbhGY=;
+        b=AYAlBFRXRnMYtO6R47l2rcLiuVa9KKhciaa9QjRn234ngZHMngLpLvpIIVxxPcK9Fz
+         lDiPEIS19OvPsoe07mKHu4PMw/IFQn7FUwE+znyljSnnGCk0jLLyAeK/xdnYBsQ6DDwv
+         sLU0mFEqZi25KhCzuV/V57AU21Cu4ZX++JTYM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/a69U9KUnIP/MnmiwpDT352wL+s+ti3tEpAhYbHbhGY=;
+        b=r+xKj8/tCKyFjbnSMuyCwQ+NAZUb/l5dAh8M2HIdrToe2/mhYUbIcVMW1SAV3Kz3xq
+         tujKDztT87YI/G2B95Y8OQWtVeXIngIRppQglyftj0OWGEHTfu+BjUq2xpQ6amoWF+ju
+         ruFNnDd1agxHZ/x8dE3g86VE5YoXjA5lB1xQvwxw2H3ocQVRf48zHapdoT8dEgWjKPc7
+         lK/X+foxglwrEwvWphgYo0tHY541sdD5m+dVN1xFGtgPDA36FZ/kFJMtHkDt30XBbiLB
+         0Rn8EObtWwwORJq2xT87v1oK0yBv31YheCCrAhK+cJN82/cQ0URIVzVS2PqKppvhF6Ga
+         u6Pw==
+X-Gm-Message-State: AOAM532HA6oPOo+53eux/YCDzUJorwLTQP9iH/DqbPhMhGuJz2Aia8X5
+        jO50oEFEuDBQotvrYN8sC9jLYg==
+X-Google-Smtp-Source: ABdhPJxsIhSY4LIpPRCeVYP27MH+CcQ1yP3o8etmQfid2B35Utc+FwSfostKkdFyMVSQ/x0hv8EWxg==
+X-Received: by 2002:a17:902:ab8e:: with SMTP id f14mr30733842plr.80.1593027566653;
+        Wed, 24 Jun 2020 12:39:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n12sm17153037pgr.88.2020.06.24.12.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 12:39:25 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 12:39:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Christian Kujau <lists@nerdbynature.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org
+Subject: Re: process '/usr/bin/rsync' started with executable stack
+Message-ID: <202006241238.E9CB1CE85B@keescook>
+References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
+ <20200624165148.GD31008@kadam>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624165148.GD31008@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-24 at 12:10 -0700, Dan Williams wrote:
-> On Wed, Jun 24, 2020 at 11:55 AM David E. Box
-> <david.e.box@linux.intel.com> wrote:
-> > Friendly reminder. Thanks.
+On Wed, Jun 24, 2020 at 07:51:48PM +0300, Dan Carpenter wrote:
+> In Debian testing the initrd triggers the warning.
 > 
-> Are you looking for this to be merged by ACPI with an NVMe ack, or
-> merged by NVMe with an ACPI ack? It sometimes helps to be explicit to
-> break the log jam.
+> [   34.529809] process '/usr/bin/fstype' started with executable stack
 
-Ah. NVMe merge with ACPI ack. Thanks.
+Where does fstype come from there? I am going to guess it is either
+busybox or linked against klibc?
 
+klibc has known problems with executable stacks due to its trampoline
+implementation:
+https://wiki.ubuntu.com/SecurityTeam/Roadmap/ExecutableStacks
+
+> 
+> $ checksec --format=json --extended --file=/var/tmp/mkinitramfs_eTyMPQ/bin/fstype | jq
+> {
+>   "file": {
+>     "relro": "no",
+>     "canary": "no",
+>     "nx": "no",
+>     "pie": "no",
+>     "clangcfi": "no",
+>     "safestack": "no",
+>     "rpath": "no",
+>     "runpath": "no",
+>     "symbols": "no",
+>     "fortify_source": "no",
+>     "fortified": "0",
+>     "fortify-able": "0"
+>   }
+> }
+
+Wow. _nothing_ implemented. :(
+
+-- 
+Kees Cook
