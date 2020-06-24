@@ -2,89 +2,109 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80A3D207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4236D2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:32:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ope4PDxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389909AbgFXHan (ORCPT
+        id S2389867AbgFXHcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:30:43 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:59652 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388375AbgFXH3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:29:54 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_93mAPNezSRJAA--.399S13;
-        Wed, 24 Jun 2020 15:29:48 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 11/14] irqchip/omap-intc: Fix potential resource leak
-Date:   Wed, 24 Jun 2020 15:29:39 +0800
-Message-Id: <1592983782-8842-12-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dx_93mAPNezSRJAA--.399S13
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF4rtF1xAryrCFyfWw1xZrb_yoW3AFc_u3
-        Wqgas3Wr4xAr4rGr1Igw13ZryYvrWkWFn7uF40q3ZxJ3y3Xw10yr42vrZ3JF10kFWUCr97
-        Gr4UurWxAw1IyjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbmxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-        F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-        1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-        3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-        IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-        kIc2xKxwCY1x0262kKe7AKxVWUAVWUtwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l
-        4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-        cVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26c
-        xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x02
-        67AKxVW0oVCq3bIYCTnIWIevJa73UjIFyTuYvjfUeQ6JUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 24 Jun 2020 03:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388375AbgFXHcM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:32:12 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50873C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:32:11 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh7so701387plb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:32:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XiffTKYWfkRx2OuMiP/252mjsVT01Skep/qWi8vbGWk=;
+        b=Ope4PDxZMKqo33DrekdQIdllBSDMkIlNiHCxw3yYG5stm7pwHar0QsGYxUv1ivqW1Z
+         SRN16VM0aa5Mc9iKJyZnIz0LvX4yjs+p4eJ3aQeOtnZOvdchEvfZpHiutoDpAlcQwMug
+         OSmVWqM98/0yw7XUkxvFRykp2Q2gCAgkNvEe7k+WplncMKqzuaatAWOXW+/8cGV1DBRP
+         LjeBl/8cO8V89B5ICJpFG3VSGMgKkIIAuiJ3yfS5KGpv9inZK1+xFpgLIUzbieNES2lS
+         NXgVHWc7cn5EjOaUNf3CDQumo78W0+VhABf/oM3A5Fb7M4cME54HpW8KUiEGo4oeauq3
+         jMDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XiffTKYWfkRx2OuMiP/252mjsVT01Skep/qWi8vbGWk=;
+        b=EtTR/ZoB7eKN+5NsmJmD2ldA/mnlM6iDaKB4s4vLlLMNCILaiS5tZ8hgawA2LXJvu+
+         XIQK5n+mShe1OqgT7FUzsn4Vjy1g2safz7xyrGCeU5r35ouf+9fshuviLInQBwqGsrWb
+         N5sZ+eLs6bvCWr1SDPwy5gb5irLrY2tsOlmifZZny50+tKtyo7e51X15h02goOtBY0N0
+         EpbwFL6ykCeYpSXy9M5BuvZOI0uuG3C0CnDNlAJ27MRP/eURBs9EImq7rJkCsCVqQLQr
+         uLOx83haUgWrj4QFRfkj/6oVau0tBCkJMiyxbg1nDl3qxAwXR0joWnt6I/RthYlQmlKM
+         G62A==
+X-Gm-Message-State: AOAM533XKYz3jy8snVyR/AJFEl35HgT5C3b2+IVD3nzkdxSnqX5WXSXy
+        g4VAECkQM+cZI1ouBB4ycpW1WQ==
+X-Google-Smtp-Source: ABdhPJzmmQR87baMbd/6VHklCBu0rFXvmKlmotKOEGTSQbtK8VLZjuez9jqsDKFhQIepFUxhRZLPwQ==
+X-Received: by 2002:a17:90a:5c82:: with SMTP id r2mr16853142pji.161.1592983930591;
+        Wed, 24 Jun 2020 00:32:10 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g21sm18765157pfh.134.2020.06.24.00.32.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 00:32:09 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 00:29:27 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 06/12] arm64: dts: qcom: msm8994: Add SCM node
+Message-ID: <20200624072927.GT128451@builder.lan>
+References: <20200623224813.297077-1-konradybcio@gmail.com>
+ <20200623224813.297077-7-konradybcio@gmail.com>
+ <20200623231919.GL128451@builder.lan>
+ <CAMS8qEXeFO0vNKHoJeDKKprdECFLVtXOWnphc6iRjOBigeFe1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMS8qEXeFO0vNKHoJeDKKprdECFLVtXOWnphc6iRjOBigeFe1Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists potential resource leak in the error path, fix it.
+On Tue 23 Jun 16:30 PDT 2020, Konrad Dybcio wrote:
 
-Fixes: 8598066cddd1 ("arm: omap: irq: move irq.c to drivers/irqchip/")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-omap-intc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> >Shouldn't this be "qcom,scm-msm8992", "qcom,scm" ?
+> >
+> >(Or rather "qcom,scm-msm8994", "qcom,scm")
+> 
+> Some DTs only have the SoC-specific one, and some also
+> have the generic one. But I can add the generic one if
+> you wish.
+> 
+> I went with 8992, as I added it in the 8992 series
+> (gonna update that one soon, too, so we can get it merged)
+> and I didn't want to needlessly duplicate it. Ideally maybe we
+> could switch to just qcom,scm for clockless SCM compats?
+> 
 
-diff --git a/drivers/irqchip/irq-omap-intc.c b/drivers/irqchip/irq-omap-intc.c
-index d360a6e..e711530 100644
---- a/drivers/irqchip/irq-omap-intc.c
-+++ b/drivers/irqchip/irq-omap-intc.c
-@@ -254,8 +254,10 @@ static int __init omap_init_irq_of(struct device_node *node)
- 	omap_irq_soft_reset();
- 
- 	ret = omap_alloc_gc_of(domain, omap_irq_base);
--	if (ret < 0)
-+	if (ret < 0) {
- 		irq_domain_remove(domain);
-+		iounmap(omap_irq_base);
-+	}
- 
- 	return ret;
- }
--- 
-2.1.0
+It's fairly common practice to specify both a specific and a generic
+compatible, this would allow us to in the driver do special handling of
+the specific in the future if we need to - without having to update the
+devicetree.
 
+Regards,
+Bjorn
