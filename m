@@ -2,98 +2,114 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75459C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7B420E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578E920B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wcDBGubu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fC/zHVXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390748AbgFXLrG (ORCPT
+        id S2390765AbgFXLrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:47:06 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:38299 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388491AbgFXLrE (ORCPT
+        Wed, 24 Jun 2020 07:47:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39522 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388491AbgFXLrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:47:04 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id o3rljtvnKx3Ajo3rojjFim; Wed, 24 Jun 2020 13:47:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1592999222; bh=0N5Pf8Y/JNRKBG/KjHTyL7Jl316+lteapCAvH0k5IAU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=wcDBGubuJirFwVCybDoTMNCTSSYLIqvHwwUt3h9tHhIDSKZ3o/yS7ZERA52WfwVXk
-         wK9wnOfqaVrhrxssHMtaXBei++8oHpmCkE+t0+wnyZIpcP856qVZRs3Z+G2HTv6b75
-         SPtqPMW9BtMJPDJNaI2bMTUF5hfh4u+vNXuILysSJ5/7BFzzg7xrnwFSNan9/I1iDx
-         60QWgNfFq8KeRtbpI2HFiYQ79Wv2mzULwQudHWGb8AbH8lTPdwIryU/A1VVRBimQao
-         z4YPDXcT+pRe/jbZ0e9cUYHzTnZO1jnzIVkvecbXAY42AiERx55SwopC0sZV/nCQuw
-         uS/2n10J391Lg==
-Subject: Re: [PATCH] staging: media: soc_camera: Enclose macro with
- parentheses
-To:     Guilherme Ricioli <guilherme.riciolic@gmail.com>,
-        linux-media@vger.kernel.org
-Cc:     lkcamp@lists.libreplanetbr.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, mchehab@kernel.org,
-        gregkh@linuxfoundation.org
-References: <1587758184-17867-1-git-send-email-guilherme.riciolic@gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <be40fdf1-b75d-bca0-f1eb-798f234df7ac@xs4all.nl>
-Date:   Wed, 24 Jun 2020 13:46:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 07:47:24 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OBjo1k091844;
+        Wed, 24 Jun 2020 06:45:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592999150;
+        bh=bjbtiNoFP+h73n0U4OOkVxf8+tj7HqP/e0mgYCiHNb0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=fC/zHVXQ4FDKULA9y3I/ZeJloco/w5BGkh08TBSUbT8V6jtvqKRbLgw+CbMI429S8
+         muLysdm5EAYLIKmB7pU5GofTAAYbsOuS8ow4cMo6Lk9PpxjWJ8N1WJpsX18DomvKDs
+         tLGxuoJ1QlUt1ZqSGlu4zCVJ94ue6yd4Qmk4W3ZA=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OBjogs076319;
+        Wed, 24 Jun 2020 06:45:50 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 06:45:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 24 Jun 2020 06:45:49 -0500
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OBjkCM118804;
+        Wed, 24 Jun 2020 06:45:48 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <linux-watchdog@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <jan.kiszka@siemens.com>
+Subject: [PATCH 1/2] watchdog: use __watchdog_ping in startup
+Date:   Wed, 24 Jun 2020 14:45:33 +0300
+Message-ID: <20200624114534.1362-2-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200624114534.1362-1-t-kristo@ti.com>
+References: <20200624114534.1362-1-t-kristo@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1587758184-17867-1-git-send-email-guilherme.riciolic@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAItO1RfSTL7qNqv6XXo3S3PnTFX5rVX8z5QJbSqlin67t3YYsAb6H8ofboI785WCy0Xvkpk1g3fknj5W7vDUzTgYA3ik86mkMHsn3vhnjxeWIA263+q
- u5CSl5mTXhgJCTXndmJh4FDSkcdkIIwJgFnbwy5W7fDQALrFQOpYQBhRrZg3J7EOLbk5JwWmQPXcI/6jPyV4hoOZVn8n+K1ebvncHCMxexOKoiF89FyP5Q+w
- 4BhyzF/NsWsvFYDF3YvoO4itHNZMWvAPUcF/j3Jj6XAnhc2DnykLluy25ryB6WTCXgWkrfHwRruReKiD/nBsS8FHzxXkEtejkarjoQKjMp3P74HpTihxiJ1L
- C73lC3jBA3afnCjFr78wZkFf30s9VfCEYVEeWy+XpOOffeHjnH9/kDxfJ158S8FQca9VdKhy
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/04/2020 21:56, Guilherme Ricioli wrote:
-> Fix checkpatch error "ERROR: Macros with complex values should be
-> enclosed in parentheses" in soc_camera.c:241.
-> 
-> Signed-off-by: Guilherme Ricioli <guilherme.riciolic@gmail.com>
-> ---
->  drivers/staging/media/soc_camera/soc_camera.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/media/soc_camera/soc_camera.c b/drivers/staging/media/soc_camera/soc_camera.c
-> index 39f513f..c2f96ea 100644
-> --- a/drivers/staging/media/soc_camera/soc_camera.c
-> +++ b/drivers/staging/media/soc_camera/soc_camera.c
-> @@ -238,8 +238,8 @@ unsigned long soc_camera_apply_board_flags(struct soc_camera_subdev_desc *ssdd,
->  }
->  EXPORT_SYMBOL(soc_camera_apply_board_flags);
->  
-> -#define pixfmtstr(x) (x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, \
-> -	((x) >> 24) & 0xff
-> +#define pixfmtstr(x) ((x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, \
-> +	((x) >> 24) & 0xff)
->  
->  static int soc_camera_try_fmt(struct soc_camera_device *icd,
->  			      struct v4l2_format *f)
-> 
+Current watchdog startup functionality does not respect the minimum hw
+heartbeat setup and the last watchdog ping timeframe when watchdog is
+already running and userspace process attaches to it. Fix this by using
+the __watchdog_ping from the startup also. For this code path, we can
+also let the __watchdog_ping handle the bookkeeping for the worker and
+last keepalive times.
 
-Thank you for the patch, but this driver is deprecated and in fact depends on BROKEN
-(so it is never build).
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ drivers/watchdog/watchdog_dev.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-Because of that I'll drop this patch.
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 7e4cd34a8c20..bc1cfa288553 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -275,15 +275,18 @@ static int watchdog_start(struct watchdog_device *wdd)
+ 	set_bit(_WDOG_KEEPALIVE, &wd_data->status);
+ 
+ 	started_at = ktime_get();
+-	if (watchdog_hw_running(wdd) && wdd->ops->ping)
+-		err = wdd->ops->ping(wdd);
+-	else
++	if (watchdog_hw_running(wdd) && wdd->ops->ping) {
++		err = __watchdog_ping(wdd);
++		if (err == 0)
++			set_bit(WDOG_ACTIVE, &wdd->status);
++	} else {
+ 		err = wdd->ops->start(wdd);
+-	if (err == 0) {
+-		set_bit(WDOG_ACTIVE, &wdd->status);
+-		wd_data->last_keepalive = started_at;
+-		wd_data->last_hw_keepalive = started_at;
+-		watchdog_update_worker(wdd);
++		if (err == 0) {
++			set_bit(WDOG_ACTIVE, &wdd->status);
++			wd_data->last_keepalive = started_at;
++			wd_data->last_hw_keepalive = started_at;
++			watchdog_update_worker(wdd);
++		}
+ 	}
+ 
+ 	return err;
+-- 
+2.17.1
 
-Regards,
-
-	Hans
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
