@@ -2,138 +2,119 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43444C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C012085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6y+cPs/"
+	by mail.kernel.org (Postfix) with ESMTP id 69C512088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592985441;
+	bh=l3Q0LyzeB2AgJKEMBDOo81ibmsUKTKJ9tglIeoVn5pI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JP0/dvPAaNldOSgRdVtjtc4t3hP56SrHtDdt1R8sJN8fw3WjgfMU3Ks0dpfX64xkf
+	 hVNd838+VP7oD7NhLsvuIMmp/DQvSc0X5GlKEZYvw1QfiEMhTkZt+Z1DHhaybMa0G4
+	 deeYgZUVVObLG+5U/kRG37ZWU4hffUN1rwUbAZGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390181AbgFXH5F (ORCPT
+        id S2390193AbgFXH5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:57:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389965AbgFXH5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:57:02 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91DC0C061573;
-        Wed, 24 Jun 2020 00:57:02 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id m81so1163974ioa.1;
-        Wed, 24 Jun 2020 00:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xwsl5Y0blEJP4hTqwqLpH/L66f7CdWeL56/kOIm2dJo=;
-        b=O6y+cPs/buepS39s0exMrI3koN/Sen7jwoqQPnmuMWk/wBsZ+cLRFVwOm3nxSCGGJP
-         M/fRROA3unTVnVtgq6bgytS8qJ1POHYJ3aWedi/q/8FNB9G/n3n3/oISsY2AJSPKlp+n
-         3JDgvM7zQcVccKXGTCrNJ6h+nMPziCzKzm6K/AaLPjmyQf83MOgedijrw+o/nAim1wgy
-         rBTWrtxDQ9/lOuKGCMXSyHOmR6VhLTD20F8lp4fRyDaRMRbPQCFa0E44A/zXX5IpiJ0Y
-         xlf9nPT4CZgcC6UglwQ3mRBhdSdqM9pclA/K4UnJFFRQOX1W2cSNXuUw03d9zgwYjzYw
-         wVuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xwsl5Y0blEJP4hTqwqLpH/L66f7CdWeL56/kOIm2dJo=;
-        b=rLa9WNnRgSUI9fKHa33P5aUfsENln4gKRseEF4wANKHF3vAWoInABi4/YKfJ8ThaeZ
-         NoEj3uaa0kgNxf6AWywiHEfEUaAUlNbXnwHkdUqiscVapCMX0HgbdrLu7blnXCfTBTC8
-         22ndoxBpGfWMw+0Avn658jpoR2qXxgjVVGPNI8h7n4Vquf0xXwdgKLCqRuqYu6n5GrCK
-         Dm7/l/kER9yFiJCB5LkdcFYELQ4M43oPhmbJPdyGkY97Ja9en8EH+2B4itdqHl8vhV8v
-         czBkBuPpNZfi85Knu0VxgaG0wZYh+ak+tOQE7HwT65iVcWoYkUK+HF9PAAsoZ7LBAyNA
-         gnsA==
-X-Gm-Message-State: AOAM530cJ1BlAnjSWbSmQM5LYbyelx4PNyDrVFgqDzQCqYbsB3UbLGd9
-        SJxbQ+qGHG7VsA7M6nUNEpfCj1fAFQiQIBUrNdo=
-X-Google-Smtp-Source: ABdhPJyFJAP4+TaXCF2Tt+Wk3tGrJYPg7JNM1+dgJ26YdHRQBoShmqhUXw3+uFALNZOy1RB4yAS6Jsq3KbHg3t1PB14=
-X-Received: by 2002:a05:6602:2d95:: with SMTP id k21mr30336056iow.59.1592985421897;
- Wed, 24 Jun 2020 00:57:01 -0700 (PDT)
+        Wed, 24 Jun 2020 03:57:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389965AbgFXH5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:57:19 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4AC72085B;
+        Wed, 24 Jun 2020 07:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592985438;
+        bh=l3Q0LyzeB2AgJKEMBDOo81ibmsUKTKJ9tglIeoVn5pI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hwS5MOXOPRnpdHOI74XHFaf2FIoxBL8vat/VMF/rsK7OudnwwsqyaUMDA1AwNDq5I
+         5MFpl+o0l6bMIGSTBS4TLc5oi5hGBQK8kQGQwgMIkCdavlfrFxZaZtDRJVxoOiu8zg
+         tP7o7yRWzq2oR+WUQFOZXEJQrECP14c31Q5KiLQk=
+Date:   Wed, 24 Jun 2020 08:57:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 9/9] arm64/build: Warn on orphan section placement
+Message-ID: <20200624075712.GB5853@willie-the-truck>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-10-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20200603193648.19190-1-navid.emamdoost@gmail.com> <20200624074015.GP2324254@vkoul-mobl>
-In-Reply-To: <20200624074015.GP2324254@vkoul-mobl>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Wed, 24 Jun 2020 02:56:51 -0500
-Message-ID: <CAEkB2ERfzxwkixX75CzCMeRRv51v-fM2zo2gpQrjtgaBZ_nNHQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: stm32-dmamux: fix pm_runtime_get_sync fialure cases
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624014940.1204448-10-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 2:40 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 03-06-20, 14:36, Navid Emamdoost wrote:
->
-> s/fialure/failure
->
-> > Calling pm_runtime_get_sync increments the counter even in case of
-> > failure, causing incorrect ref count. Call pm_runtime_put_sync if
-> > pm_runtime_get_sync fails.
-> >
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >  drivers/dma/stm32-dmamux.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
-> > index 12f7637e13a1..ab250d7eed29 100644
-> > --- a/drivers/dma/stm32-dmamux.c
-> > +++ b/drivers/dma/stm32-dmamux.c
-> > @@ -140,6 +140,7 @@ static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
-> >       ret = pm_runtime_get_sync(&pdev->dev);
-> >       if (ret < 0) {
-> >               spin_unlock_irqrestore(&dmamux->lock, flags);
-> > +             pm_runtime_put_sync(&pdev->dev);
->
-> why put_sync()
->
-> >               goto error;
-> >       }
-> >       spin_unlock_irqrestore(&dmamux->lock, flags);
-> > @@ -340,8 +341,10 @@ static int stm32_dmamux_suspend(struct device *dev)
-> >       int i, ret;
-> >
-> >       ret = pm_runtime_get_sync(dev);
-> > -     if (ret < 0)
-> > +     if (ret < 0) {
-> > +             pm_runtime_put_sync(dev);
->
-> here too
+On Tue, Jun 23, 2020 at 06:49:40PM -0700, Kees Cook wrote:
+> We don't want to depend on the linker's orphan section placement
+> heuristics as these can vary between linkers, and may change between
+> versions. All sections need to be explicitly named in the linker
+> script.
+> 
+> Avoid .eh_frame* by making sure both -fno-asychronous-unwind-tables and
+> -fno-unwind-tables are present in both CFLAGS and AFLAGS. Remove one
+> last instance of .eh_frame by removing the needless Call Frame Information
+> annotations from arch/arm64/kernel/smccc-call.S.
+> 
+> Add .plt, .data.rel.ro, .igot.*, and .iplt to discards as they are not
+> actually used. While .got.plt is also not used, it must be included
+> otherwise ld.bfd will fail to link with the error:
+> 
+>     aarch64-linux-gnu-ld: discarded output section: `.got.plt'
+> 
+> However, as it'd be better to validate that it stays effectively empty,
+> add an assert.
+> 
+> Explicitly include debug sections when they're present.
+> 
+> Fix a case of needless quotes in __section(), which Clang doesn't like.
+> 
+> Finally, enable orphan section warnings.
+> 
+> Thanks to Ard Biesheuvel for many hints on correct ways to handle
+> mysterious sections. :)
 
-Is put_noidle() better?
+Sorry to be a pain, but this patch is doing 3 or 4 independent things at
+once. Please could you split it up a bit?
+e.g.
 
->
-> >               return ret;
-> > +     }
-> >
-> >       for (i = 0; i < stm32_dmamux->dma_requests; i++)
-> >               stm32_dmamux->ccr[i] = stm32_dmamux_read(stm32_dmamux->iomem,
-> > --
-> > 2.17.1
->
-> --
-> ~Vinod
+ - Removal of cfi directives from smccc macro
+ - Removal of quotes around section name for clang
+ - Avoid generating .eh_frame
+ - Ensure all sections are accounted for in linker script and warn on orphans
 
+That way it's a bit easier to manage, we can revert/backport bits later if
+necessary and you get more patches in the kernel ;)
 
+You can also add my Ack on all the patches:
 
--- 
-Navid.
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
