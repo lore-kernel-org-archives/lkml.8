@@ -3,61 +3,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F97C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F900C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA620706
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M4LcVYqR"
+	by mail.kernel.org (Postfix) with ESMTP id 7F70020706
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593013736;
+	bh=SiOccSYDq3Ujl7Qm6Nh9lr81LZ11ZdVVR+s/kwlHeOU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qn5p4FpyAvgc5HTsRK07DkhG/AMDEtDsOXd425U0D6vPXAlhovvKGEhNfaQvhcfQv
+	 5MSI9m3D2Qbp1cEKPwhsu4f+j0hbV/Mv1Us6YNuatJzgfDs5766pA2xnHNRpaoMfn3
+	 PCaqDJMZy3cOz5W9P7QlrKnesuSmQgLsqhHC/KYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404468AbgFXPpv (ORCPT
+        id S2404497AbgFXPsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404108AbgFXPpv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:45:51 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E13C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:45:50 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id w2so800037pgg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:45:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hK2U0EQ30BnaoNQF4dntRJJsTATOCoxIawSQhDYIzmg=;
-        b=M4LcVYqRbaeMeIINijtdkTk9Mq9ZlKIrJ+b+Wa23FTDNWKj72NHGbG+3MUPtzF/6HD
-         fnXAyak2M9Dn2IqmZW3TBp+BiHYeQLI/IrliERUvgTRtYlT9Vi7yCIjCmWObVj1WZxoy
-         OoxYZil7tVXXusQocI3bVFLIuNl0lf9VLeTJU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hK2U0EQ30BnaoNQF4dntRJJsTATOCoxIawSQhDYIzmg=;
-        b=kzqj3B38iH8W/XfI9O07Y0ye+3U68UAEDjyBtvXnO9fBtlf0BQyZlzYdGDAE9XEToL
-         AHJoVoxSz108g5n6inLb7tLsvDJ2BhCoKa+J2yrKKw7elkASCKMFaRLo2FJHzfY616Tj
-         F/ItRYMoj+BY0wRmNYycjns89ar+IKVGYr1KheKHSzqdzHbH5ilb9jLAiU56BB6bGl9p
-         2der6S/N+sQwxR9QF71W3l2tcI+uHCrwMLkVlcV2nY648uOh/xQvxiFiQJLPNUfa2apZ
-         a2ulX2l2zFBrcurjHxgoMXFMFIB960MZ5k41smWNcsBUBHQrdwKy7z9ggLcSgYxUBE74
-         THdQ==
-X-Gm-Message-State: AOAM531VqRsjbY/liV1GHb1KcjYKYSGEFRveE6AqBdJbEKVgcLdFKTeO
-        3Gk5xkMw1XcpMDYSd7RGBYHZ3g==
-X-Google-Smtp-Source: ABdhPJyO4OF6FOKJDg0GWgqo8d8vGoNOrouABB2h+m/a+MKK/rMjyCtOyVbd34SFBAt5h7VZPF0kvw==
-X-Received: by 2002:a63:a84d:: with SMTP id i13mr21644988pgp.342.1593013549628;
-        Wed, 24 Jun 2020 08:45:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s197sm20482307pfc.188.2020.06.24.08.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:45:48 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 08:45:47 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
+        Wed, 24 Jun 2020 11:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404137AbgFXPsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:48:54 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB7C20A8B;
+        Wed, 24 Jun 2020 15:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593013733;
+        bh=SiOccSYDq3Ujl7Qm6Nh9lr81LZ11ZdVVR+s/kwlHeOU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nmm+51b9WSfuZVeBEdjeJFGECh07l9JW/yiiBpt1qkXd8cZx7k0aHGwmZnPz6pZG8
+         g8/1xJgtXyTnlK37REkGB5d+Ukr9b6G2pTfuGkkt3Kf46J6KyT/tw5sd0IjX4FSrDT
+         6g9b7KPsamhuad8caHmHZPS6HfQh/caZs2MDUlZU=
+Received: by mail-ot1-f50.google.com with SMTP id n5so2373531otj.1;
+        Wed, 24 Jun 2020 08:48:53 -0700 (PDT)
+X-Gm-Message-State: AOAM531py8qiC6uBuO651wgI2n9EvG8A6aerPh55tTLNikdij6ZlElkR
+        pI0VImorSsqheznzE+3v/tX5gkvgtxKLy12yWP8=
+X-Google-Smtp-Source: ABdhPJy7f5kUbglm41IsevGTp/GRt9FgnT8Y+c1SPNB4P7tPiV04yjmDIrwCKi5qqnP9kihr/urjcaBCWYo7IocupoA=
+X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr393127otf.77.1593013732575;
+ Wed, 24 Jun 2020 08:48:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org> <20200624033142.cinvg6rbg252j46d@google.com>
+ <202006232143.66828CD3@keescook> <20200624104356.GA6134@willie-the-truck>
+ <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+ <202006240820.A3468F4@keescook> <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
+ <202006240844.7BE48D2B5@keescook>
+In-Reply-To: <202006240844.7BE48D2B5@keescook>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 24 Jun 2020 17:48:41 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHqBs44uukRSdFwA_hcmX_yKVfjqdv9RoPbbu-6Wz+RaA@mail.gmail.com>
+Message-ID: <CAMj1kXHqBs44uukRSdFwA_hcmX_yKVfjqdv9RoPbbu-6Wz+RaA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Will Deacon <will@kernel.org>, Fangrui Song <maskray@google.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -77,46 +78,37 @@ Cc:     Will Deacon <will@kernel.org>, Fangrui Song <maskray@google.com>,
         linux-efi <linux-efi@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-Message-ID: <202006240844.7BE48D2B5@keescook>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org>
- <20200624033142.cinvg6rbg252j46d@google.com>
- <202006232143.66828CD3@keescook>
- <20200624104356.GA6134@willie-the-truck>
- <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
- <202006240820.A3468F4@keescook>
- <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 05:31:06PM +0200, Ard Biesheuvel wrote:
-> On Wed, 24 Jun 2020 at 17:21, Kees Cook <keescook@chromium.org> wrote:
+On Wed, 24 Jun 2020 at 17:45, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Jun 24, 2020 at 05:31:06PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 24 Jun 2020 at 17:21, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
+> > > > I'm not sure if there is a point to having PAC and/or BTI in the EFI
+> > > > stub, given that it runs under the control of the firmware, with its
+> > > > memory mappings and PAC configuration etc.
+> > >
+> > > Is BTI being ignored when the firmware runs?
 > >
-> > On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
-> > > I'm not sure if there is a point to having PAC and/or BTI in the EFI
-> > > stub, given that it runs under the control of the firmware, with its
-> > > memory mappings and PAC configuration etc.
-> >
-> > Is BTI being ignored when the firmware runs?
-> 
-> Given that it requires the 'guarded' attribute to be set in the page
-> tables, and the fact that the UEFI spec does not require it for
-> executables that it invokes, nor describes any means of annotating
-> such executables as having been built with BTI annotations, I think we
-> can safely assume that the EFI stub will execute with BTI disabled in
-> the foreseeable future.
+> > Given that it requires the 'guarded' attribute to be set in the page
+> > tables, and the fact that the UEFI spec does not require it for
+> > executables that it invokes, nor describes any means of annotating
+> > such executables as having been built with BTI annotations, I think we
+> > can safely assume that the EFI stub will execute with BTI disabled in
+> > the foreseeable future.
+>
+> yaaaaaay. *sigh* How long until EFI catches up?
+>
+> That said, BTI shouldn't _hurt_, right? If EFI ever decides to enable
+> it, we'll be ready?
+>
 
-yaaaaaay. *sigh* How long until EFI catches up?
-
-That said, BTI shouldn't _hurt_, right? If EFI ever decides to enable
-it, we'll be ready?
-
--- 
-Kees Cook
+Sure. Although I anticipate that we'll need to set some flag in the
+PE/COFF header to enable it, and so any BTI opcodes we emit without
+that will never take effect in practice.
