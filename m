@@ -2,62 +2,136 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B27C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71345C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B43D207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572AF207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404134AbgFXVdo (ORCPT
+        id S2404223AbgFXVdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403906AbgFXVdo (ORCPT
+        Wed, 24 Jun 2020 17:33:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41998 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403906AbgFXVdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 17:33:51 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OLXDA1173483;
         Wed, 24 Jun 2020 17:33:44 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09359C061573;
-        Wed, 24 Jun 2020 14:33:44 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 02C89127249CF;
-        Wed, 24 Jun 2020 14:33:40 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 14:33:37 -0700 (PDT)
-Message-Id: <20200624.143337.2058889098376110329.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        richardcochran@gmail.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        allan.nielsen@microchip.com, foss@0leil.net
-Subject: Re: [PATCH net-next v4 0/8] net: phy: mscc: PHC and timestamping
- support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200623143014.47864-1-antoine.tenart@bootlin.com>
-References: <20200623143014.47864-1-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 24 Jun 2020 14:33:41 -0700 (PDT)
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vbmtdeav-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 17:33:44 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OLXha9175906;
+        Wed, 24 Jun 2020 17:33:43 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vbmtdeah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 17:33:43 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OLFp4U009833;
+        Wed, 24 Jun 2020 21:33:42 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 31uurugn58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 21:33:42 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OLXfBx53674464
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 21:33:41 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96A39B2064;
+        Wed, 24 Jun 2020 21:33:41 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D5321B205F;
+        Wed, 24 Jun 2020 21:33:40 +0000 (GMT)
+Received: from DESKTOP-AV6EVPG.localdomain (unknown [9.160.33.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Jun 2020 21:33:40 +0000 (GMT)
+From:   Maurizio Drocco <maurizio.drocco@ibm.com>
+To:     stefanb@linux.ibm.com
+Cc:     Silviu.Vlasceanu@huawei.com, bmeneg@redhat.com,
+        dmitry.kasatkin@gmail.com, jejb@linux.ibm.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, maurizio.drocco@ibm.com,
+        mdrocco@linux.vnet.ibm.com, roberto.sassu@huawei.com,
+        serge@hallyn.com, zohar@linux.ibm.com
+Subject: [PATCH] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
+Date:   Wed, 24 Jun 2020 17:33:37 -0400
+Message-Id: <20200624213337.4214-1-maurizio.drocco@ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <92a0d170-8157-476b-8083-ae567b11f364@linux.ibm.com>
+References: <92a0d170-8157-476b-8083-ae567b11f364@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_16:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ bulkscore=0 impostorscore=0 suspectscore=1 adultscore=0 spamscore=0
+ phishscore=0 clxscore=1015 cotscore=-2147483648 mlxlogscore=918
+ lowpriorityscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006240139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Tue, 23 Jun 2020 16:30:06 +0200
+From: Maurizio <maurizio.drocco@ibm.com>
 
-> This series aims at adding support for PHC and timestamping operations
-> in the MSCC PHY driver, for the VSC858x and VSC8575. Those PHYs are
-> capable of timestamping in 1-step and 2-step for both L2 and L4 traffic.
- ...
+cal_bootaggr should include PCRs 8-9 in non-SHA1 digests.
 
-Series applied to net-next, thank you.
+Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+---
+Changelog:
+v3:
+- Fixed patch description
+v2:
+- Always include PCRs 8 & 9 to non-sha1 hashes
+v1:
+- Include non-zero PCRs 8 & 9 to boot aggregates
+
+ src/evmctl.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/src/evmctl.c b/src/evmctl.c
+index 1d065ce..46b7092 100644
+--- a/src/evmctl.c
++++ b/src/evmctl.c
+@@ -1930,6 +1930,16 @@ static void calc_bootaggr(struct tpm_bank_info *bank)
+ 		}
+ 	}
+ 
++	if (strcmp(bank->algo_name, "sha1") != 0) {
++		for (i = 8; i < 10; i++) {
++			err = EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size);
++			if (!err) {
++				log_err("EVP_DigestUpdate() failed\n");
++				return;
++			}
++		}
++	}
++
+ 	err = EVP_DigestFinal(pctx, bank->digest, &mdlen);
+ 	if (!err) {
+ 		log_err("EVP_DigestFinal() failed\n");
+@@ -1972,8 +1982,9 @@ static int append_bootaggr(char *bootaggr, struct tpm_bank_info *tpm_banks)
+ /*
+  * The IMA measurement list boot_aggregate is the link between the preboot
+  * event log and the IMA measurement list.  Read and calculate all the
+- * possible per TPM bank boot_aggregate digests based on the existing
+- * PCRs 0 - 7 to validate against the IMA boot_aggregate record.
++ * possible per TPM bank boot_aggregate digests based on the existing PCRs
++ * 0 - 9 to validate against the IMA boot_aggregate record. If the digest
++ * algorithm is SHA1, only PCRs 0 - 7 are considered to avoid ambiguity.
+  */
+ static int cmd_ima_bootaggr(struct command *cmd)
+ {
+-- 
+2.17.1
+
