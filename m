@@ -2,257 +2,118 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F005C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C37BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE1B20EDD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BiPP8GF8"
+	by mail.kernel.org (Postfix) with ESMTP id 3D1C82082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390629AbgFXLSs (ORCPT
+        id S2390637AbgFXLSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:18:48 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:50122 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390617AbgFXLSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:18:47 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200624111844euoutp02a8782a7d4a1c6c5549874b64d31f5873~bds7ujeqt0161001610euoutp02s
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:18:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200624111844euoutp02a8782a7d4a1c6c5549874b64d31f5873~bds7ujeqt0161001610euoutp02s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592997524;
-        bh=XnIpEzS+JmByzmKCFEgupSV6PWDHMERPPPnvUIciVls=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=BiPP8GF8KmiErqx/xS9B9a7xU4QuFLogP38GTlimY3lOZe3im16I/0PYEJab+rLuZ
-         ap5tUVBIwlMT97KexJCq03jhLP15jAJHH3XyIzBdMk0Zp1+3qsnuRzC6cj+57LPWgM
-         OfcIlxP/kKa90xWpOJ6fdP9A13z2xi3Ed3k4hQrs=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200624111844eucas1p2e327f4f369148d4623addc19d7722351~bds7fImUx2492924929eucas1p2Q;
-        Wed, 24 Jun 2020 11:18:44 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id A0.6B.05997.49633FE5; Wed, 24
-        Jun 2020 12:18:44 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200624111843eucas1p1bcf65cc0939f6176937e43c8824bdd4a~bds7LyxFI2735727357eucas1p1n;
-        Wed, 24 Jun 2020 11:18:43 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200624111843eusmtrp2a279f69527ec990b732e8841e624d9d9~bds7LGTVI1412614126eusmtrp2i;
-        Wed, 24 Jun 2020 11:18:43 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-9d-5ef33694e65e
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A2.01.06314.39633FE5; Wed, 24
-        Jun 2020 12:18:43 +0100 (BST)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200624111843eusmtip27b23e45fbb32e0228cbbad65b02eabe7~bds6hf9Jg1274412744eusmtip2f;
-        Wed, 24 Jun 2020 11:18:43 +0000 (GMT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Lukasz Luba <lukasz.luba@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <828b0d63-4d01-48d6-5971-64855adebed2@samsung.com>
-Date:   Wed, 24 Jun 2020 13:18:42 +0200
+        Wed, 24 Jun 2020 07:18:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:36028 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390586AbgFXLSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:18:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44A0B1F1;
+        Wed, 24 Jun 2020 04:18:50 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 588F53F6CF;
+        Wed, 24 Jun 2020 04:18:48 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Dave P Martin <Dave.Martin@arm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>
+References: <20200617123844.29960-1-steven.price@arm.com>
+ <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
+ <20200624093846.GA11863@gaia> <20200624103412.GD25945@arm.com>
+ <faa68f22-4d8e-0290-b52a-63ae7425b988@arm.com> <20200624110904.GB11863@gaia>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <904edac0-3de7-35a6-a9bc-b983ccd3490c@arm.com>
+Date:   Wed, 24 Jun 2020 12:18:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKKsWRmVeSWpSXmKPExsWy7djPc7pTzD7HGXyYxmxx/ctzVov+x6+Z
-        Lc6f38BucbbpDbvFpsfXWC0u75rDZvG59wijxYzz+5gsFja1sFvcblzBZvHtxCNGB26PNfPW
-        MHrsnHWX3WPTqk42j81L6j36tqxi9Pi8SS6ALYrLJiU1J7MstUjfLoEr4+a6LqaCzzYVD1r7
-        mRoYZ5h0MXJySAiYSJybdZK1i5GLQ0hgBaPElrPb2SCcL4wSv/bOYYJwPjNKzLo8gQ2m5WLH
-        PaiW5YwSfacus0A4bxklbn7ZxAJSJSxgJzH/2i5WEFtEoFLi1szvYHOZBd4ySez5extsFJuA
-        vsTBsyfBGniBGt6dOc0MYrMIqEr09nwAs0UFIiSOd09mh6gRlDg58wlYPaeAtcSSWW+ZQGxm
-        AXGJW0/mQ9nyEs1bZzODLJMQuMYuseLRBFaIu10kjm/byw5hC0u8Or4FypaR+L9zPhNEQzOj
-        xOmGqewQTg+jxN4vW6C+tpb4/PEAkM0BtEJTYv0ufYiwo8S5P0+YQcISAnwSN94KQhzBJzFp
-        23SoMK9ER5sQRLWqxPNTPUwQtrRE1/91rBMYlWYheW0WkndmIXlnFsLeBYwsqxjFU0uLc9NT
-        i43yUsv1ihNzi0vz0vWS83M3MQIT1+l/x7/sYNz1J+kQowAHoxIP74YHH+OEWBPLiitzDzFK
-        cDArifA6nT0dJ8SbklhZlVqUH19UmpNafIhRmoNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwen
-        VAPjpO4d0wL+f9nzLz/A5HBhc3369Y1+Utv7ij4qPMnmDt5UbbOsIuCEkPTzO0Hn5t5Tq9l1
-        mkGT1YLld6NXV0J0Tv2FPWe1vn19O3Pv2Vv7NolFZvxVMpFz32cdcKVV9r7ZSis7Sfcbul7F
-        tzj/Gya/DF0SsuB6d3pdVbHODsu5X9oj2Y3vLU1QYinOSDTUYi4qTgQAlNccUlgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsVy+t/xe7qTzT7HGfTt0LG4/uU5q0X/49fM
-        FufPb2C3ONv0ht1i0+NrrBaXd81hs/jce4TRYsb5fUwWC5ta2C1uN65gs/h24hGjA7fHmnlr
-        GD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfAFqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2Ri
-        qWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXcXNdF1PBZ5uKB639TA2MM0y6GDk5JARMJC523GPt
-        YuTiEBJYyiix4fMeFoiEtETj6dVMELawxJ9rXWwQRa8ZJSa8bWIFSQgL2EnMv7YLzBYRqJS4
-        //MOM0gRs8B7Jom/J2YyQXSsZpJo/bKeEaSKTUBf4uDZk2AreIG63505zQxiswioSvT2fACz
-        RQUiJFru/2GHqBGUODnzCVg9p4C1xJJZb8FOYhZQl/gz7xIzhC0ucevJfKi4vETz1tnMExiF
-        ZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy021CtOzC0uzUvXS87P3cQIjNRtx35u3sF4aWPw
-        IUYBDkYlHt4NDz7GCbEmlhVX5h5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQoynQcxOZ
-        pUST84FJJK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA2PNjd0b
-        ZXvWTwpqEjep+Su36ujWPzevRa9m9P5tyTSbwZor4quzkcONlCnT+a59NayVu/H4zYa/3u+/
-        Xm/2y6/gXaBvknlP/FJBt8j30OULmBwL+/ZwP13PN/POBlOND7431H0/OU+bx+9UsFBqieT8
-        mECTSW4CHpFJ147MkE9+u5x93qbXLyOUWIozEg21mIuKEwFVhWFS6gIAAA==
-X-CMS-MailID: 20200624111843eucas1p1bcf65cc0939f6176937e43c8824bdd4a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-        <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-        <20200623191129.GA4171@kozik-lap>
-        <CGME20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2@eucas1p2.samsung.com>
-        <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
+In-Reply-To: <20200624110904.GB11863@gaia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 24.06.2020 12:32, Lukasz Luba wrote:
-> Hi Krzysztof and Willy
-> 
-> On 6/23/20 8:11 PM, Krzysztof Kozlowski wrote:
->> On Tue, Jun 23, 2020 at 09:02:38PM +0200, Krzysztof Kozlowski wrote:
->>> On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
+On 24/06/2020 12:09, Catalin Marinas wrote:
+> On Wed, Jun 24, 2020 at 12:03:35PM +0100, Steven Price wrote:
+>> On 24/06/2020 11:34, Dave Martin wrote:
+>>> On Wed, Jun 24, 2020 at 10:38:48AM +0100, Catalin Marinas wrote:
+>>>> On Tue, Jun 23, 2020 at 07:05:07PM +0100, Peter Maydell wrote:
+>>>>> On Wed, 17 Jun 2020 at 13:39, Steven Price <steven.price@arm.com> wrote:
+>>>>>> These patches add support to KVM to enable MTE within a guest. It is
+>>>>>> based on Catalin's v4 MTE user space series[1].
+>>>>>>
+>>>>>> [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
+>>>>>>
+>>>>>> Posting as an RFC as I'd like feedback on the approach taken.
+>>>>>
+>>>>> What's your plan for handling tags across VM migration?
+>>>>> Will the kernel expose the tag ram to userspace so we
+>>>>> can copy it from the source machine to the destination
+>>>>> at the same time as we copy the actual ram contents ?
 >>>>
->>>> Hi everybody,
+>>>> Qemu can map the guest memory with PROT_MTE and access the tags directly
+>>>> with LDG/STG instructions. Steven was actually asking in the cover
+>>>> letter whether we should require that the VMM maps the guest memory with
+>>>> PROT_MTE as a guarantee that it can access the guest tags.
 >>>>
->>>> Is DVFS for memory bus really working on Odroid XU3/4 board?
->>>> Using a simple microbenchmark that is doing only memory accesses, memory DVFS
->>>> seems to not working properly:
->>>>
->>>> The microbenchmark is doing pointer chasing by following index in an array.
->>>> Indices in the array are set to follow a random pattern (cutting prefetcher),
->>>> and forcing RAM access.
->>>>
->>>> git clone https://protect2.fireeye.com/url?k=c364e88a-9eb6fe2f-c36563c5-0cc47a31bee8-631885f0a63a11a0&q=1&u=https%3A%2F%2Fgithub.com%2Fwwilly%2Fbenchmark.git \
->>>>    && cd benchmark \
->>>>    && source env.sh \
->>>>    && ./bench_build.sh \
->>>>    && bash source/scripts/test_dvfs_mem.sh
->>>>
->>>> Python 3, cmake and sudo rights are required.
->>>>
->>>> Results:
->>>> DVFS CPU with performance governor
->>>> mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
->>>> benchmark is running.
->>>> - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
->>>> - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
->>>>
->>>> While forcing DVFS memory bus to use performance governor,
->>>> mem_gov = performance at 825000000 Hz in idle,
->>>> - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
->>>> - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
->>>>
->>>> The kernel used is the last 5.7.5 stable with default exynos_defconfig.
+>>>> There is no architecturally visible tag ram (tag storage), that's a
+>>>> microarchitecture detail.
 >>>
->>> Thanks for the report. Few thoughts:
->>> 1. What trans_stat are saying? Except DMC driver you can also check
->>> all other devfreq devices (e.g. wcore) - maybe the devfreq events
->>> (nocp) are not properly assigned?
->>> 2. Try running the measurement for ~1 minutes or longer. The counters
->>> might have some delay (which would require probably fixing but the
->>> point is to narrow the problem).
->>> 3. What do you understand by "mem_gov"? Which device is it?
+>>> If userspace maps the guest memory with PROT_MTE for dump purposes,
+>>> isn't it going to get tag check faults when accessing the memory
+>>> (i.e., when dumping the regular memory content, not the tags
+>>> specifically).
+>>>
+>>> Does it need to map two aliases, one with PROT_MTE and one without,
+>>> and is that architecturally valid?
 >>
->> +Cc Lukasz who was working on this.
-> 
-> Thanks Krzysztof for adding me here.
-> 
+>> Userspace would either need to have two mappings (I don't believe there are
+>> any architectural issues with that - but this could be awkward to arrange in
+>> some situations) or be careful to avoid faults. Basically your choices with
+>> one mapping are:
 >>
->> I just run memtester and more-or-less ondemand works (at least ramps
->> up):
+>>   1. Disable tag checking (using prctl) when touching the memory. This works
+>> but means you lose tag checking for the VMM's own accesses during this code
+>> sequence.
 >>
->> Before:
->> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
->>       From  :   To
->>             : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
->> * 165000000:         0         0         0         0         0         0         0         0   1795950
->>    206000000:         1         0         0         0         0         0         0         0      4770
->>    275000000:         0         1         0         0         0         0         0         0     15540
->>    413000000:         0         0         1         0         0         0         0         0     20780
->>    543000000:         0         0         0         1         0         0         0         1     10760
->>    633000000:         0         0         0         0         2         0         0         0     10310
->>    728000000:         0         0         0         0         0         0         0         0         0
->>    825000000:         0         0         0         0         0         2         0         0     25920
->> Total transition : 9
+>>   2. Read the tag values and ensure you use the correct tag. This suffers
+>> from race conditions if the VM is still running.
 >>
->>
->> $ sudo memtester 1G
->>
->> During memtester:
->> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
->>       From  :   To
->>             : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
->>    165000000:         0         0         0         0         0         0         0         1   1801490
->>    206000000:         1         0         0         0         0         0         0         0      4770
->>    275000000:         0         1         0         0         0         0         0         0     15540
->>    413000000:         0         0         1         0         0         0         0         0     20780
->>    543000000:         0         0         0         1         0         0         0         2     11090
->>    633000000:         0         0         0         0         3         0         0         0     17210
->>    728000000:         0         0         0         0         0         0         0         0         0
->> * 825000000:         0         0         0         0         0         3         0         0    169020
->> Total transition : 13
->>
->> However after killing memtester it stays at 633 MHz for very long time
->> and does not slow down. This is indeed weird...
+>>   3. Use one of the exceptions in the architecture that generates a Tag
+>> Unchecked access. Sadly the only remotely useful thing I can see in the v8
+>> ARM is "A base register plus immediate offset addressing form, with the SP
+>> as the base register." - but making sure SP is in range of where you want to
+>> access would be a pain.
 > 
-> I had issues with devfreq governor which wasn't called by devfreq
-> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
-> for it [1]. If the CPU which scheduled the next work went idle, the
-> devfreq workqueue will not be kicked and devfreq governor won't check
-> DMC status and will not decide to decrease the frequency based on low
-> busy_time.
-> The same applies for going up with the frequency. They both are
-> done by the governor but the workqueue must be scheduled periodically.
+> Or:
 > 
-> I couldn't do much with this back then. I have given the example that
-> this is causing issues with the DMC [2]. There is also a description
-> of your situation staying at 633MHz for long time:
-> ' When it is missing opportunity
-> to change the frequency, it can either harm the performance or power
-> consumption, depending of the frequency the device stuck on.'
+> 4. Set PSTATE.TCO when accessing tagged memory in an unsafe way.
 > 
-> The patches were not accepted because it will cause CPU wake-up from
-> idle, which increases the energy consumption. I know that there were
-> some other attempts, but I don't know the status.
-> 
-> I had also this devfreq workqueue issue when I have been working on
-> thermal cooling for devfreq. The device status was not updated, because
-> the devfreq workqueue didn't check the device [3].
-> 
-> Let me investigate if that is the case.
-> 
-> Regards,
-> Lukasz
-> 
-> [1] https%3A%2F%2Flkml.org%2Flkml%2F2019%2F2%2F11%2F1146
-> [2] https%3A%2F%2Flkml.org%2Flkml%2F2019%2F2%2F12%2F383
-> [3] https%3A%2F%2Flwn.net%2Fml%2Flinux-kernel%2F20200511111912.3001-11-lukasz.luba%40arm.com%2F
 
-and here was another try to fix wq: "PM / devfreq: add possibility for delayed work"
+Ah yes, similar to (1) but much lower overhead ;) That's probably the 
+best option - it can be hidden in a memcpy_ignoring_tags() function. 
+However it still means that the VMM can't directly touch the guest's 
+memory which might cause issues for the VMM.
 
-https://lkml.org/lkml/2019/12/9/486
-
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
-
+Steve
