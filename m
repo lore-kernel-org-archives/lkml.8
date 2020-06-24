@@ -2,165 +2,131 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E623DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A46C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85AD02082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:59:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="CQMztYP4"
+	by mail.kernel.org (Postfix) with ESMTP id A66BE2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406179AbgFXS75 (ORCPT
+        id S2406216AbgFXTAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:59:57 -0400
-Received: from mail-eopbgr680087.outbound.protection.outlook.com ([40.107.68.87]:53582
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405469AbgFXS74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:59:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DdxPKB4OWvDU4AOTYs1w1/xmu3shfznXel78WykeuaILpGftu/8PmVmwkbVcpIqkq7HdePCEtQStHBFM1ZxeueVUCn3yjDthAYXVoIQSWC6JIaIfMP0Hew8aPicmPhSDG7gGyO1kYPvjDBWfCBchR0gl+TaxcdbGTbVzinrnhMpCkOUa7cNokMsZQOWpOSYesy5u29F/6P1qzh+IVzbExWaFUayV3gW7wHVxwhApXX5Sr+Y3gDlpAbU4UbLdkJzy8zKM71aFmJy8qZQZUsJsJomQjC6zncYcKVUZ1F3NEvk53C+SyGxUDY4vcXM78mnTLl/QMUJd0mTpsFf/AN46ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WhgzuVucgavlCVQ5FLNtm/UDZ+1a6gSilUbYMAKGFrM=;
- b=YedB5xcZcIhhTxvgZ5kyjq/nm6kuyU/IRw1NmVFWG3nhf5xb9AcqT2EWxlq32V2KFh+dotOG5iHzUVQNSpNlK3f/CfiKghki1ELbRocQGMCfrbw40wC0/0uYbcDN6WozTMZANwv9hkq0JtCbwWBgWeEx3A2FZA6kP+WS9o+SKBOpI0CdI4rpdHHZtGagNAu54YhgAdQpwUHq2IysFO3COBGmZQJX5qws480e46z8QIcwz9RYHXaR3HmsHwXB/7LhNwsrciQrBve2ppcpAEtXCGrpSm/mOnxctUlPTI/VxAVj5GvAp4UzmP/u1j/uEAs4OAnSObumc3oWlWsUvVB39w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
- dkim=pass header.d=infinera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WhgzuVucgavlCVQ5FLNtm/UDZ+1a6gSilUbYMAKGFrM=;
- b=CQMztYP4Sw72VVE8NZi4sW38mnUutvn0ZKsGmysIZwyrq4SLpZz4LajeQk0Q61aSK2ivHH3uj+sbUs94ck1klnTcK16OdR88MgVOieKoVCq95YYmzuMv8IwIaRI4rkULluRurRBWOjqJdVcYomaR4+SsbHXai/kaS5aluDtukx8=
-Received: from MWHPR1001MB2190.namprd10.prod.outlook.com
- (2603:10b6:301:2e::20) by MWHPR10MB1680.namprd10.prod.outlook.com
- (2603:10b6:301:7::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
- 2020 18:59:52 +0000
-Received: from MWHPR1001MB2190.namprd10.prod.outlook.com
- ([fe80::b439:ba0:98d6:c2d1]) by MWHPR1001MB2190.namprd10.prod.outlook.com
- ([fe80::b439:ba0:98d6:c2d1%5]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
- 18:59:52 +0000
-From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "lizhe67@huawei.com" <lizhe67@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "richard@nod.at" <richard@nod.at>
-CC:     "zhongjubin@huawei.com" <zhongjubin@huawei.com>,
-        "chenjie6@huawei.com" <chenjie6@huawei.com>,
-        "wangfangpeng1@huawei.com" <wangfangpeng1@huawei.com>,
-        "qiuxi1@huawei.com" <qiuxi1@huawei.com>
-Subject: Re: [PATCH] jffs2: fix UAF problem
-Thread-Topic: [PATCH] jffs2: fix UAF problem
-Thread-Index: AQHWRhkioXhOUXpJp0C2OVljdhi7G6joJxSA
-Date:   Wed, 24 Jun 2020 18:59:52 +0000
-Message-ID: <e0d04d70ce674584a71af1a5a00984dd26729891.camel@infinera.com>
-References: <20200619090635.58548-1-lizhe67@huawei.com>
-In-Reply-To: <20200619090635.58548-1-lizhe67@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.3 
-authentication-results: lists.infradead.org; dkim=none (message not signed)
- header.d=none;lists.infradead.org; dmarc=none action=none
- header.from=infinera.com;
-x-originating-ip: [88.131.87.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c29c404-aacb-41e1-3c83-08d81870c71c
-x-ms-traffictypediagnostic: MWHPR10MB1680:
-x-microsoft-antispam-prvs: <MWHPR10MB1680CD16C45F9AC7D2838888F4950@MWHPR10MB1680.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 0444EB1997
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vIMxxT0offJiK7I67jzVEGsQi6fNxbd1ighlrqgxGputR9RI6jQXEnT46jwGS0yvXYWmmLud1GXwueW74M+Pm/MGYU5kaWjvh+xio+2ZaUBZt7NGkFij0kAI5fV4JIrDc3MhO6FhC26fs6toMVnW4/0ABuxHB93PvEtFTMzcKbR2rl51KHxYlF+zAVfRlek1RmJTsvfxHa0icUeo7WFoxnD3nOET7n39zsnF9a7VUWzmu5yDy3+WaN0W7umRTH1ZvhVl7j78FJq+5+vDEGTng/u/0bW46JD1IXSj961O9pGqwO6bu16t+lDDOkNawgo+FbyuZ5STkCedxG55HAi9tPllhWDg2njGYeoZ7Zqk/z6v/+qM5TCsPf7ce/KOkFzw59fAiRxybYZdutP0CjuBZQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2190.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(346002)(136003)(376002)(83380400001)(5660300002)(76116006)(54906003)(91956017)(478600001)(86362001)(6512007)(36756003)(66446008)(2906002)(66556008)(66476007)(71200400001)(316002)(110136005)(6486002)(64756008)(45080400002)(66946007)(186003)(26005)(8676002)(966005)(8936002)(6506007)(2616005)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: zEIytsR7K/A/UHBz6tOgaHVrMmXz2Kzjg8uH2krmWIg43goXGA47F43+VwKPrLAn/2MKeKaZ0pqswr4Lrnu+fJ4U3bDLGbglnAm3xWV8+A+p8owP2PtWhUgDKexi9MF+iqfK+bINRxeOiYN3AcTvx/YaeVIiqWTq30GBCp7MFH2hl1cuWShcLJOVXu9fQSTsCsRVRRClZhs3m7mR/WBhp9y9rEWC3BGMFusBPtPQEhmgCbr7HcaDtKmVytB3ZZlyWaYlzqub05CpJj8gnpfn/F22aKYJxFIfqE3JmbHCxMeaAZuN4J9fRLdyao86W4LBFhobLW4pTb6HaQwUU/UkFod8AZDrhgT4iNLVHHAdGTMsbvvlr+j9+Jn9erB1npz6PrspVUCxQJevNU3bRG18e1jen+4d0OhKA+T3kiRPgJdo9qZ8N4luhI/L5CMV7rvi7MCs1qbVHpPapG4IY5FMhHzjNdgbYZfawJha+wUGZSs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C2BF9CA22F8C4B46BC745821FFF3A7AE@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Jun 2020 15:00:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:56106 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405469AbgFXTAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:00:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA3121F1;
+        Wed, 24 Jun 2020 12:00:04 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 470C13F71E;
+        Wed, 24 Jun 2020 11:59:59 -0700 (PDT)
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
+ registration
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        netdev <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
+ <20200622135106.GK4560@sirena.org.uk>
+ <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
+ <20200624094302.GA5472@sirena.org.uk>
+ <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
+ <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
+ <20200624165016.GA1551@shell.armlinux.org.uk>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0c78a4ab-5aae-a45c-babd-e860c6cfc3c8@arm.com>
+Date:   Wed, 24 Jun 2020 19:59:57 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c29c404-aacb-41e1-3c83-08d81870c71c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 18:59:52.7466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: p+vdIIgcMGmBCSsAwVkPW2CBYXLAAdphvrrVevu/nlgIQSA++Fe/p7mEiNYUIY9W779AUxMJ7dOWdkX2SgxGNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR10MB1680
+In-Reply-To: <20200624165016.GA1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TmljZSBmaW5kLCBJIGp1c3QgY2FtZSBhY3Jvc3MgYSBkZWFkbG9jayB3cnQgR0MgYW5kIHJtZGly
-LA0KaG9wZWZ1bGx5IHRoaXMgaXMgaGUgZml4Lg0KDQpUaGlzIG5lZWRzIHRvIGdvIHRvIHN0YWJs
-ZSB0b28sIHNvb25lciByYXRoZXIgdGhhbiBsYXRlci4NCg0KIEpvY2tlDQoNCk9uIEZyaSwgMjAy
-MC0wNi0xOSBhdCAxNzowNiArMDgwMCwgWmhlIExpIHdyb3RlOg0KPiANCj4gVGhlIGxvZyBvZiBV
-QUYgcHJvYmxlbSBpcyBsaXN0ZWQgYmVsb3cuDQo+IEJVRzogS0FTQU46IHVzZS1hZnRlci1mcmVl
-IGluIGpmZnMyX3JtZGlyKzB4YTQvMHgxY2MgW2pmZnMyXSBhdCBhZGRyIGMxZjE2NWZjDQo+IFJl
-YWQgb2Ygc2l6ZSA0IGJ5IHRhc2sgcm0vODI4Mw0KPiA9PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiBC
-VUcga21hbGxvYy0zMiAoVGFpbnRlZDogUCAgICBCICAgICAgTyAgICk6IGthc2FuOiBiYWQgYWNj
-ZXNzIGRldGVjdGVkDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IA0KPiBJTkZPOiBBbGxvY2F0
-ZWQgaW4gMHhiYmJiYmJiYiBhZ2U9MzA1NDM2NCBjcHU9MCBwaWQ9MA0KPiAgICAgICAgIDB4YjBi
-YmE2ZWYNCj4gICAgICAgICBqZmZzMl93cml0ZV9kaXJlbnQrMHgxMWMvMHg5YzggW2pmZnMyXQ0K
-PiAgICAgICAgIF9fc2xhYl9hbGxvYy5pc3JhLjIxLmNvbnN0cHJvcC4yNSsweDJjLzB4NDQNCj4g
-ICAgICAgICBfX2ttYWxsb2MrMHgxZGMvMHgzNzANCj4gICAgICAgICBqZmZzMl93cml0ZV9kaXJl
-bnQrMHgxMWMvMHg5YzggW2pmZnMyXQ0KPiAgICAgICAgIGpmZnMyX2RvX3VubGluaysweDMyOC8w
-eDVmYyBbamZmczJdDQo+ICAgICAgICAgamZmczJfcm1kaXIrMHgxMTAvMHgxY2MgW2pmZnMyXQ0K
-PiAgICAgICAgIHZmc19ybWRpcisweDE4MC8weDI2OA0KPiAgICAgICAgIGRvX3JtZGlyKzB4MmNj
-LzB4MzAwDQo+ICAgICAgICAgcmV0X2Zyb21fc3lzY2FsbCsweDAvMHgzYw0KPiBJTkZPOiBGcmVl
-ZCBpbiAweDIwNWIgYWdlPTMwNTQzNjQgY3B1PTAgcGlkPTANCj4gICAgICAgICAweDJlOTE3Mw0K
-PiAgICAgICAgIGpmZnMyX2FkZF9mZF90b19saXN0KzB4MTM4LzB4MWRjIFtqZmZzMl0NCj4gICAg
-ICAgICBqZmZzMl9hZGRfZmRfdG9fbGlzdCsweDEzOC8weDFkYyBbamZmczJdDQo+ICAgICAgICAg
-amZmczJfZ2FyYmFnZV9jb2xsZWN0X2RpcmVudC5pc3JhLjMrMHgyMWMvMHgyODggW2pmZnMyXQ0K
-PiAgICAgICAgIGpmZnMyX2dhcmJhZ2VfY29sbGVjdF9saXZlKzB4MTZiYy8weDE4MDAgW2pmZnMy
-XQ0KPiAgICAgICAgIGpmZnMyX2dhcmJhZ2VfY29sbGVjdF9wYXNzKzB4Njc4LzB4MTFkNCBbamZm
-czJdDQo+ICAgICAgICAgamZmczJfZ2FyYmFnZV9jb2xsZWN0X3RocmVhZCsweDFlOC8weDNiMCBb
-amZmczJdDQo+ICAgICAgICAga3RocmVhZCsweDFhOC8weDFiMA0KPiAgICAgICAgIHJldF9mcm9t
-X2tlcm5lbF90aHJlYWQrMHg1Yy8weDY0DQo+IENhbGwgVHJhY2U6DQo+IFtjMTdkZGQyMF0gW2Mw
-MjQ1MmQ0XSBrYXNhbl9yZXBvcnQucGFydC4wKzB4Mjk4LzB4NzJjICh1bnJlbGlhYmxlKQ0KPiBb
-YzE3ZGRkYTBdIFtkMjUwOTY4MF0gamZmczJfcm1kaXIrMHhhNC8weDFjYyBbamZmczJdDQo+IFtj
-MTdkZGRkMF0gW2MwMjZkYTA0XSB2ZnNfcm1kaXIrMHgxODAvMHgyNjgNCj4gW2MxN2RkZTAwXSBb
-YzAyNmY0ZTRdIGRvX3JtZGlyKzB4MmNjLzB4MzAwDQo+IFtjMTdkZGY0MF0gW2MwMDFhNjU4XSBy
-ZXRfZnJvbV9zeXNjYWxsKzB4MC8weDNjDQo+IA0KPiBUaGUgcm9vdCBjYXVzZSBpcyB0aGF0IHdl
-IGRvbid0IGdldCAiamZmczJfaW5vZGVfaW5mby5zZW0iIGJlZm9yZQ0KPiB3ZSBzY2FuIGxpc3Qg
-ImpmZnMyX2lub2RlX2luZm8uZGVudHMiIGluIGZ1bmN0aW9uIGpmZnMyX3JtZGlyLg0KPiBUaGlz
-IHBhdGNoIGFkZCBjb2RlcyB0byBnZXQgImpmZnMyX2lub2RlX2luZm8uc2VtIiBiZWZvcmUgd2Ug
-c2Nhbg0KPiAiamZmczJfaW5vZGVfaW5mby5kZW50cyIgdG8gc2xvdmUgdGhlIFVBRiBwcm9ibGVt
-Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogWmhlIExpIDxsaXpoZTY3QGh1YXdlaS5jb20+DQo+IC0t
-LQ0KPiAgZnMvamZmczIvZGlyLmMgfCA2ICsrKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2ZzL2pmZnMyL2Rp
-ci5jIGIvZnMvamZmczIvZGlyLmMNCj4gaW5kZXggZjIwY2ZmMS4uNzc2NDkzNyAxMDA2NDQNCj4g
-LS0tIGEvZnMvamZmczIvZGlyLmMNCj4gKysrIGIvZnMvamZmczIvZGlyLmMNCj4gQEAgLTU5MCwx
-MCArNTkwLDE0IEBAIHN0YXRpYyBpbnQgamZmczJfcm1kaXIgKHN0cnVjdCBpbm9kZSAqZGlyX2ks
-IHN0cnVjdCBkZW50cnkgKmRlbnRyeSkNCj4gICAgICAgICBpbnQgcmV0Ow0KPiAgICAgICAgIHVp
-bnQzMl90IG5vdyA9IEpGRlMyX05PVygpOw0KPiANCj4gKyAgICAgICBtdXRleF9sb2NrKCZmLT5z
-ZW0pOw0KPiAgICAgICAgIGZvciAoZmQgPSBmLT5kZW50cyA7IGZkOyBmZCA9IGZkLT5uZXh0KSB7
-DQo+IC0gICAgICAgICAgICAgICBpZiAoZmQtPmlubykNCj4gKyAgICAgICAgICAgICAgIGlmIChm
-ZC0+aW5vKSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIG11dGV4X3VubG9jaygmZi0+c2Vt
-KTsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9URU1QVFk7DQo+ICsgICAg
-ICAgICAgICAgICB9DQo+ICAgICAgICAgfQ0KPiArICAgICAgIG11dGV4X3VubG9jaygmZi0+c2Vt
-KTsNCj4gDQo+ICAgICAgICAgcmV0ID0gamZmczJfZG9fdW5saW5rKGMsIGRpcl9mLCBkZW50cnkt
-PmRfbmFtZS5uYW1lLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZW50cnktPmRf
-bmFtZS5sZW4sIGYsIG5vdyk7DQo+IC0tDQo+IDIuNy40DQo+IA0KPiANCj4gDQo+IF9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eCBN
-VEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QNCj4gaHR0cHM6Ly9uYW0wMy5zYWZlbGlua3MucHJv
-dGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZsaXN0cy5pbmZyYWRlYWQub3Jn
-JTJGbWFpbG1hbiUyRmxpc3RpbmZvJTJGbGludXgtbXRkJTJGJmFtcDtkYXRhPTAyJTdDMDElN0Nq
-b2FraW0udGplcm5sdW5kJTQwaW5maW5lcmEuY29tJTdDMzM5YTExODQ3NDViNGM3NmJkZjkwOGQ4
-MTQzMDQzYjIlN0MyODU2NDNkZTVmNWI0YjAzYTE1MzBhZTJkYzhhYWY3NyU3QzElN0MxJTdDNjM3
-MjgxNTQ0ODE1Njk3NTgyJmFtcDtzZGF0YT1qS285N2ZjM2o2alZjalZwUzJleG0wc0RMJTJCV3I2
-RHFrVGU2anFlOEc5dDglM0QmYW1wO3Jlc2VydmVkPTANCg0K
+On 2020-06-24 17:50, Russell King - ARM Linux admin wrote:
+> On Wed, Jun 24, 2020 at 09:06:28AM -0700, Florian Fainelli wrote:
+>> On 6/24/2020 6:48 AM, Bartosz Golaszewski wrote:
+>>> I didn't expect to open such a can of worms...
+>>>
+>>> This has evolved into several new concepts being proposed vs my
+>>> use-case which is relatively simple. The former will probably take
+>>> several months of development, reviews and discussions and it will
+>>> block supporting the phy supply on pumpkin boards upstream. I would
+>>> prefer not to redo what other MAC drivers do (phy-supply property on
+>>> the MAC node, controlling it from the MAC driver itself) if we've
+>>> already established it's wrong.
+>>
+>> You are not new to Linux development, so none of this should come as a
+>> surprise to you. Your proposed solution has clearly short comings and is
+>> a hack, especially around the PHY_ID_NONE business to get a phy_device
+>> only then to have the real PHY device ID. You should also now that "I
+>> need it now because my product deliverable depends on it" has never been
+>> received as a valid argument to coerce people into accepting a solution
+>> for which there are at review time known deficiencies to the proposed
+>> approach.
+> 
+> It /is/ a generic issue.  The same problem exists for AMBA Primecell
+> devices, and that code has an internal deferred device list that it
+> manages.  See drivers/amba/bus.c, amba_deferred_retry_func(),
+> amba_device_try_add(), and amba_device_add().
+> 
+> As we see more devices gain this property, it needs to be addressed
+> in a generic way, rather than coming up with multiple bus specific
+> implementations.
+> 
+> Maybe struct bus_type needs a method to do the preparation to add
+> a device (such as reading IDs etc), which is called by device_add().
+> If that method returns -EPROBE_DEFER, the device gets added to a
+> deferred list, which gets retried when drivers are successfully
+> probed.  Possible maybe?
+
+FWIW that would be ideal for solving an ordering a problem we have in 
+the IOMMU subsystem too (which we currently sort-of-handle by deferring 
+driver probe from dma_configure(), but it really needs to be done 
+earlier and not depend on drivers being present at all).
+
+Robin.
