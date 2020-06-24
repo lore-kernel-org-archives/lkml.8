@@ -2,95 +2,110 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A29AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAB1220738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D9720738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdolZ//B"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fTiXdWrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406068AbgFXSY2 (ORCPT
+        id S2406077AbgFXSYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58948 "EHLO
+        Wed, 24 Jun 2020 14:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405469AbgFXSY1 (ORCPT
+        with ESMTP id S2405469AbgFXSYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:24:27 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB62C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:24:27 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 72so2854322otc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:24:27 -0700 (PDT)
+        Wed, 24 Jun 2020 14:24:36 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65120C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:24:36 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b5so1513243pfp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 11:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5fiC75NJfdMCXZC7LLyYkEHeo9SJKqVNZZjtejNnwUY=;
-        b=VdolZ//B0vbO+nqOABrxt/TQqumPP8dm3PBBw6wxjb3BZaQLon7d4HxYj7QekO55r7
-         PTMDAgZ0bKRznEmUR1M/viffG7wws5jRlLdYJLfxhgBuqHjW9XlFg0cNO2Y+9pkYMUab
-         OGubD6ryQcXuUja8DZHRX0BGldb0+I2+q9bZpcrurlekJdEkcdJZEk+lw+1knTBLMu6Z
-         UmHrUnE4+e759VfZ/VWtzLqDKCoCHtMrdoohEEmvB5QXYomatapUKoDvwB7a5QKKKjPR
-         e9YSEp2vrtBglC9PzKY5fmLPjPYYw1xLijL+eHfkFNWlYrFj9OkM2SGF2VAWQPy/CSyH
-         X/NA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9lLOK81twl/FSwqjR5V402nJJvfN+JrXUUdr5SEYJXY=;
+        b=fTiXdWrLnppoFCxoKkJuIDXUFodq6DG+1Y2Jjz7CMkEzbk8K+tYADM34DoiMq4Ffg5
+         kLowrWac63p2CapGAfAMrdAaGh87PMr0E6gApO+gx1d1fNhGo7UgKpnKU9tIWGqOkce0
+         9m5Iu8uuC8glYdO4JNUQL+yJFknhSL8TObdfo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5fiC75NJfdMCXZC7LLyYkEHeo9SJKqVNZZjtejNnwUY=;
-        b=ThUcr13dp9EscyonKv7yB4C0YwZO7D/gmJHprIlh2LBQDOzm8krnCydk92EItulUJF
-         up8NY4DmY3Q4mf9iJyd5I22rzWzU8E6s5Qoj8mbwSa6VPEHJ+GRqsB2VtrIg3mTW5zkx
-         Pt/ZO9tOTg3ZFVtqBPJGFToJl4xnV571nq52EqbuCnwd6lHNAPcWBRBJmpXRR6AhdOQ+
-         GOdz5Wvv8UG+GRORfguh9V09rN5HMTUFwOqtCftZOhWb4F/aRx0TPvjOhhA1Jy11esLO
-         wcA18ujzWFt84qK2Vqk3h8aao9YxwinFd26YWrqrMLG7dOoNarCVEUBmR3PKf3S8qVyS
-         IlWg==
-X-Gm-Message-State: AOAM530wyhgFCpIfvmaJJOBwvUs96sGaRV9kgzQGb1ycd/Sll9Mu8/OG
-        T3KmN4x7AtykUZ+JOMKkBYdBke7CCXr4KtxOrZU=
-X-Google-Smtp-Source: ABdhPJzKQMdT7gRIlOY7dhJHDLJhz9lvvrvE6buoaQObV1gp4fP3MtE1pQQkjUyTWTjJM3neZxYW91CZsKD+jwz6Ia0=
-X-Received: by 2002:a4a:5209:: with SMTP id d9mr23832706oob.28.1593023067063;
- Wed, 24 Jun 2020 11:24:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9lLOK81twl/FSwqjR5V402nJJvfN+JrXUUdr5SEYJXY=;
+        b=QJB5/bI5InPeGecvLXkmcdVjVuIZS1n3jLNC4cJR9SS0VGY9yiy0YwckOmzArhUgRm
+         ICkYxDPpE9mSOzEysWgGOHg2s6LU5HHHh9EcXffgy3pguTRT37s1NIK9BS6lIqoBSezS
+         vuSRaTJ/SSGmSXjzZ7MxG9VATGX0EkrcaFyZaH9k1q3iWunTQ0OnQQVUzJYsDlzLDYaH
+         2yMypual2Z+tP9xRWHQDwyglrFyLqLM1Hw3v2h3RWYDGxEzj7nAlK3FkvEr/FNkFd+31
+         nWTEOX3EDbnMu3VybSYSrZhCrCZqzlr9szAEXlJ1a69no2YX94XP8Od4TB/vOF34U4Kn
+         +5Mg==
+X-Gm-Message-State: AOAM5321EM+/IqfXIhyMNRmOmqNwIltrYC5yiPISUyojQSQWpq7liCKI
+        OejAzr6rcd+ikMqR0STPZ0lcNw==
+X-Google-Smtp-Source: ABdhPJz4+rcX+rL/L5DgXKGJqcpQlcupEbsXhdvyJc+ljmHfgrLOIJdIZ3KvQwlbsStIhH+HLY2SOg==
+X-Received: by 2002:a62:78d0:: with SMTP id t199mr29026301pfc.77.1593023075852;
+        Wed, 24 Jun 2020 11:24:35 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id v1sm9396772pfn.210.2020.06.24.11.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 11:24:35 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: btusb: BTUSB_WAKEUP_DISABLE prevents wake
+Date:   Wed, 24 Jun 2020 11:24:30 -0700
+Message-Id: <20200624112428.1.Ib42ab202cfd82e7734571c302071da30a24ea27b@changeid>
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
 MIME-Version: 1.0
-References: <20200624152256.21937-1-TheSven73@gmail.com> <CAOMZO5Ca8D-eBe9iKsDnc=zRnasUN2d0WttDS8XEcGmF_H2gEQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5Ca8D-eBe9iKsDnc=zRnasUN2d0WttDS8XEcGmF_H2gEQ@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 24 Jun 2020 14:24:16 -0400
-Message-ID: <CAGngYiWg=HHVO00D=3OCEfS_inC3CMY-MQg6iMj9OLxUNFtygA@mail.gmail.com>
-Subject: Re: [PATCH v3] ARM: imx6plus: enable internal routing of clk_enet_ref
- where possible
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
+When the BTUSB_WAKEUP_DISABLE flag is set, always return true for
+prevent wake. This tells the suspend notifier not to prepare the
+controller for reconnections during suspend.
 
-On Wed, Jun 24, 2020 at 1:55 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> We could avoid checking for if (!IS_ERR(gpr)) two times in a row if
-> the following patch is applied before yours:
-> https://pastebin.com/raw/Ftkq2VVp
->
-> What do you think?
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+Realtek chipsets currently lose their firmware when suspending (except
+in autosuspend where they assert remote_wakeup on the usb interface).
+There's no need to configure the Bluetooth stack for wake-up in this
+case so use the BTUSB_WAKEUP_DISABLE flag to also prevent wakeup from
+being configured.
 
-I think this is a good idea.
-I was never fully comfortable with checking IS_ERR(gpr) twice, but I
-know from experience that minimal patches are more likely
-to be accepted.
+This was tested on Chromebooks with Realtek chipsets running both 4.14
+and 5.4 kernel. It was tested with suspend functional tests and
+a suspend stress test for 50 iterations.
 
-Shawn / Andy, what do you think? Should I re-spin this as a patch
-set, with Fabio's patch in front?
+ drivers/bluetooth/btusb.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index e42fdd625eb023..7627d79696b5aa 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3727,6 +3727,9 @@ static bool btusb_prevent_wake(struct hci_dev *hdev)
+ {
+ 	struct btusb_data *data = hci_get_drvdata(hdev);
+ 
++	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
++		return true;
++
+ 	return !device_may_wakeup(&data->udev->dev);
+ }
+ 
+-- 
+2.27.0.111.gc72c7da667-goog
+
