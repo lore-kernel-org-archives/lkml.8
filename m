@@ -2,68 +2,160 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E10C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052C020857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592990995;
-	bh=o8Wph+So75oI/F7OPTg6XWFj9P7CXmEWmmnGKYyDUJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GUasZDc+ubIRLX9eDE9e9x1o1u8gWCwc502mN46ZVTYGpzOwn6g9F5pXbktXKlcAl
-	 thfQCyr9WuJo+8byaW8oo7CzmIBqKvB04rEpPLunUpNwFDKFe3KB7yT2MOsYI1Z0fM
-	 yxe0QSZKk4NNzvfbAJ7d3V2EQ5QFyex2f06rYHbE=
+	by mail.kernel.org (Postfix) with ESMTP id 8905820767
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389657AbgFXJ3x (ORCPT
+        id S2389679AbgFXJar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:29:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388336AbgFXJ3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:29:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3737D20857;
-        Wed, 24 Jun 2020 09:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592990991;
-        bh=o8Wph+So75oI/F7OPTg6XWFj9P7CXmEWmmnGKYyDUJI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HVacYQmFlK7ihe4yQ1EQnDH096602cBbZIObeyph6W4qQdOFjLCP5APTDCD48iEAO
-         KwLoiZ+kiblJ3pKG5qFipJLeC8JOnYa+GXXa37oHqcWrnRVYdNt8jbNWn5DxxEOa7/
-         9cV9dT7ekyYvbvIYdaDRweGvCPcjNOCBuk90MABo=
-Date:   Wed, 24 Jun 2020 11:29:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0hdIHVzYjog?= =?utf-8?Q?gadget?=
- =?utf-8?Q?=3A?= function: printer: Add gadget dev interface status judgment
-Message-ID: <20200624092950.GA1751086@kroah.com>
-References: <20200615094608.26179-1-qiang.zhang@windriver.com>
- <BYAPR11MB26324BC70657061DA849A384FF950@BYAPR11MB2632.namprd11.prod.outlook.com>
+        Wed, 24 Jun 2020 05:30:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:51329 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388336AbgFXJaq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:30:46 -0400
+Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
+ mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MA7X0-1jguBi1Qz4-00Bbjz; Wed, 24 Jun 2020 11:30:36 +0200
+Date:   Wed, 24 Jun 2020 11:30:35 +0200 (CEST)
+From:   Thomas Ruf <freelancer@rufusul.de>
+Reply-To: Thomas Ruf <freelancer@rufusul.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <2077253476.601371.1592991035969@mailbusiness.ionos.de>
+In-Reply-To: <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
+ <20200622155440.GM2324254@vkoul-mobl>
+ <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+Subject: Re: DMA Engine: Transfer From Userspace
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR11MB26324BC70657061DA849A384FF950@BYAPR11MB2632.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:JkjbXB6gIjXfWDHn+zaE2EgMRkWzkoxUNZFoGem1EWo9Jk0UvLN
+ nz1KSGrDEbmmEuVy4jD516504w4qAR+6Ld0pxsBJrF6us2/oyChcD+QWH7co+Fm1ygXhq3w
+ ncW/Us9qaI2sTfEHiyjwfLaNlLZOuA9vMQe5UvGXd6mP/M98NMYijYKIOAaSg8R557NjLIX
+ zWOeOsFuqG9aLvupjWOIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:H4Cu/Gae8GU=:QRgYdJ56wIDVlNDJg1/hua
+ 1J5QhHWN8CLVGd6NKOSSDAN7YTt2zEgMC+b3Dbrz+nsHfRO13lRRrTE5bYmdW3I6adYIyIS8y
+ LOogwO3axds+sqr/OllgiSnCHfKLKI9tCkECZ9o/h9VtLtS88obxdGBXsMP5saL9ik8mfjeIm
+ mDO1akk0JBMdsxu7Q0SeeYRemCZVHqGY2CO3ArxsGxqd0D+MGu769WZXDNYyXxSzYM+djwEN0
+ 67rGEigJL74clXe2DoLYz5uc48GTBtIJ5K1/BowUhV/B5hppdzzGy2PXZ1Q8Tr55RHD2IzbPG
+ lUvP3//QtuqazlpGna3xqRzW67u3BUuYD6CurhyoT0XOWXV7OdfB4bP9sPMB7nZSBEEJ3e1Br
+ o7X29erl3KBGJJDZC9ZvHSjivv/TKIuguPEm/HzlYG8R6KLAObsNamQWmInhErAytHyxDgF9t
+ qlhWjEJI8Gg96X5p1v7og5OZjL2ePrGb1d0F0puVNX9iupZrkSVviSUGauPKansENqdBBEMwS
+ vAbb1d4xsjm/E5fZY7hdCNMtb+ULljPefOHS5AGDyveb59538j8gTlw3yXOsUoTSkwpiVvPbV
+ P0PaYYz2BEFhpQgSmKUK09qMFhPS3trrJmTJQPwU9Y2X6ttr6Za7WpNuksLTqbtB1R803gvwN
+ W7dvglY3iW2xyrYT6iDuUCz6ixq/MFfZhmTEKfY1J+ABScCKmZGGSRFeTYsH3oVNCzrHnvqFD
+ K0g3iGb2AtoNTqyMqJWuWNJbRtaLzNDPjI+PTSaSqED49b1O0qI1U403pVyLx51JeJZNqnjxt
+ 8tJa48rSKmq9sy4cxe3SG/1fiijYIt8O+hA4HXzeMWJY+7rKQI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:59:40AM +0000, Zhang, Qiang wrote:
-> Hello, Greg KH
-> Please have you review the patch?
 
-I am not the gadget driver maintainer :)
+> On 22 June 2020 at 18:34 Thomas Ruf <freelancer@rufusul.de> wrote:
+> 
+> 
+> 
+> > On 22 June 2020 at 17:54 Vinod Koul <vkoul@kernel.org> wrote:
+> > 
+> > 
+> > On 22-06-20, 14:01, Thomas Ruf wrote:
+> > > > On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
+> > > > 
+> > > > On 21-06-20, 22:36, Federico Vaga wrote:
+> > > > > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
+> > > > > > On 19-06-20, 16:31, Dave Jiang wrote:
+> > > > > > > 
+> > > > > > > 
+> > > > > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> > > > > > > > Hello,
+> > > > > > > >
+> > > > > > > > is there the possibility of using a DMA engine channel from userspace?
+> > > > > > > >
+> > > > > > > > Something like:
+> > > > > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
+> > > > > > > > - read() or write() to trigger the transfer
+> > > > > > > >
+> > > > > > > 
+> > > > > > > I may have supposedly promised Vinod to look into possibly providing
+> > > > > > > something like this in the future. But I have not gotten around to do that
+> > > > > > > yet. Currently, no such support.
+> > > > > > 
+> > > > > > And I do still have serious reservations about this topic :) Opening up
+> > > > > > userspace access to DMA does not sound very great from security point of
+> > > > > > view.
+> > > > > 
+> > > > > I was thinking about a dedicated module, and not something that the DMA engine
+> > > > > offers directly. You load the module only if you need it (like the test module)
+> > > > 
+> > > > But loading that module would expose dma to userspace. 
+> > > > > 
+> > > > > > Federico, what use case do you have in mind?
+> > > > > 
+> > > > > Userspace drivers
+> > > > 
+> > > > more the reason not do do so, why cant a kernel driver be added for your
+> > > > usage?
+> > > 
+> > > by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
+> > > now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
+> > > 
+> > > just let me introduce myself and the project:
+> > > - coding in C since '91
+> > > - coding in C++ since '98
+> > > - a lot of stuff not relevant for this ;-)
+> > > - working as a freelancer since Nov '19
+> > > - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
+> > > - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
+> > > - subscribed to dmaengine on friday, saw the start of this discussion on saturday
+> > > - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
+> > 
+> > DMA_SG was removed as it had no users, if we have a user (in-kernel) we
+> > can certainly revert that removal patch.
+> 
+> yeah, already understood that.
+> 
+> > > 
+> > > here the struct for the ioctl:
+> > > 
+> > > typedef struct {
+> > >   unsigned int struct_size;
+> > >   const void *src_user_ptr;
+> > >   void *dst_user_ptr;
+> > >   unsigned long length;
+> > >   unsigned int timeout_in_ms;
+> > > } dma_sg_proxy_arg_t;
+> > 
+> > Again, am not convinced opening DMA to userspace like this is a great
+> > idea. Why not have Xilinx camera driver invoke the dmaengine and do
+> > DMA_SG ?
+> 
+> In our case we have several camera pipelines, in some cases uncached memory is okay (e. g. image goes directly to display framebuffer), in some cases not because we need to process the images on cpu or gpu and we for that need to copy to oridinary user memoy first. This seems easier to do by decoupling the driver code.
+> And one more thing: in case we engage the dma memcpy we want to copy to target memory which is prepared for IPC because we want to share these images with another process. The v4l2 interface did not look to be made for such cases but is possible by this "memcpy" approach.
 
-Give Felipe a chance to catch up...
+To make it short - i have two questions:
+- what are the chances to revive DMA_SG?
+- what are the chances to get my driver for memcpy like transfers from user space using DMA_SG upstream? ("dma-sg-proxy")
 
-greg k-h
+Best regards,
+Thomas
