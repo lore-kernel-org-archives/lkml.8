@@ -2,98 +2,103 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2008BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C43672082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:46:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1ttHOWHt"
+	by mail.kernel.org (Postfix) with ESMTP id 02D0420836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:49:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593028186;
+	bh=GtKiru20fiulDY/NNMBRlZM0+jD6z1T1x8F4QT9oAwI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kuEBEZlJx3SECYlKr0v4/Hc4VsYrsLPPU0KzblgHX/QBZ84IF3kZWW3gJbq2tvhc4
+	 +OUEz0iGVFkGtSBPczQG/hfLg3cgWt8crzDmazrK7a5B7bZJnCY9yiVEot9EKchcoY
+	 r+DNDIKuQua0Xp1ctk9tQhhl5gyW5sJm/2/rvRec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391364AbgFXTqU (ORCPT
+        id S2405057AbgFXTto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391324AbgFXTqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:46:18 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A1EC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:46:17 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ft14so568371pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=etcC5SCWJE9q5GKdy+4hZU308fzw/ff8X68zPO6H23o=;
-        b=1ttHOWHtWCaWFJVfcE2SivyYk2ulxNbtSjixxOQfHds2kZGP6Gc9XkIqkFyUu81A3l
-         zVxwmONzVkY/1212l1Ohi1ILWSpgMjCfcSvQhbHxD4nZskRCMuc72cy4JeucvNJCgDX6
-         CenroNIIg0Q5c6VjeWCsiLarTiCDSXL4er3ejHU6M2DFrrFTrfJHNzO6GTZgZFtESrtB
-         hD6VDL+P7kH7+lBwdCnvXqSCgpXQ1kmTRiBCReupOsYSyrJW8NY//clp62BhHDyH9/t3
-         hflvA9iK6GxL77waLEyDKc5iv8fXY4gEAKJOwOjHGT0bOfb8O1JXj/ls4Rp0xE4nv0rP
-         Yz5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=etcC5SCWJE9q5GKdy+4hZU308fzw/ff8X68zPO6H23o=;
-        b=RzVIrZoNffykDBIRdX+Lbbr8G4Yqn2XYx+9gRImqh5dXivLtpchef9V23ukP3Nw5ni
-         A7q6sBTPpbXfdeyNxz89+d7hYSJQYAzUXqmqFZyrbyYITvzYK+ZZJs2uEmXV69pgXNvX
-         qxasdgjBHsbUf91Qxh8UU4zZ7uzk6K+ZEqB7SsoMPTAGCFUjwKf2+C/NV5ndlhjxFAiF
-         2C4z+RPGfzXDF+wxIikj0XNKSIren0sVM/Ex2G23feten5E7qS2mSuZ1r0LQO3HBHcBw
-         bEqPFDupYZd3XMqo6KP3V8eMWrmmqFO2Bk/+UOsojmf9L/M8biT2ZYJZlfWGKrqYlmGv
-         q81w==
-X-Gm-Message-State: AOAM531X+NqmvkQtTqMBSnjTI46KBkagOgsZsjIar6Lq8JCqxkndl6Xi
-        gt7YvZcvCCmylCOj0L2zIo5x6ghBx3M=
-X-Google-Smtp-Source: ABdhPJyEiH6lN1BP8U0UF2zar+GhMc8QVt8uZMBCSOvg0OFQqtKiGklvgIkVtpT4o5C259KRtBu70w==
-X-Received: by 2002:a17:90a:de1:: with SMTP id 88mr31019016pjv.124.1593027974219;
-        Wed, 24 Jun 2020 12:46:14 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id 27sm6036508pjg.19.2020.06.24.12.46.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 12:46:13 -0700 (PDT)
-Subject: Re: [PATCH 0/3] iopoll fixes
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1593016907.git.asml.silence@gmail.com>
- <32dc23ae-bc73-b4e2-f9aa-cab59280cae4@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6d253bcb-8953-d975-1a39-78310ff2e723@kernel.dk>
-Date:   Wed, 24 Jun 2020 13:46:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <32dc23ae-bc73-b4e2-f9aa-cab59280cae4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 24 Jun 2020 15:49:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391349AbgFXTtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:49:43 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BA5E2077D;
+        Wed, 24 Jun 2020 19:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593028182;
+        bh=GtKiru20fiulDY/NNMBRlZM0+jD6z1T1x8F4QT9oAwI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ikKhPfp3m7n0bBgValXK5Syf2rtX7Uxg67z+h7W1VJPRI+78DWVrafptZHHHuMoNB
+         3CuD8QMd7bxaGfF5MRZG/BpL0/gjYrhqy7oeGWxu7/uxOPcWjfyxxJfRH1EsgQ3bk1
+         VaFOCm0S8fgjIgEfLGGN+jtolxp0vk28GHgl46h4=
+Date:   Wed, 24 Jun 2020 12:49:42 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm: set page fault address for update_mmu_cache_pmd
+Message-Id: <20200624124942.374359af3a745e7386f9fc65@linux-foundation.org>
+In-Reply-To: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
+References: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/20 11:03 AM, Pavel Begunkov wrote:
-> On 24/06/2020 19:50, Pavel Begunkov wrote:
->> Did more comprehensive iopoll testing and found some more problems.
->>
->> [1] is from the previous series. Actually, v2 for this one, addressing
->> the double-reissue bug found by Jens. It maybe not as efficient, but
->> simple and easy to backport.
->>
->> [2,3] current->mm NULL deref
+On Wed, 24 Jun 2020 17:26:30 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+
+> update_mmu_cache_pmd is used to update tlb for the pmd entry by
+> software. On MIPS system, the tlb entry indexed by page fault
+> address maybe exists already, only that tlb entry may be small
+> page, also it may be huge page. Before updating pmd entry with
+> huge page size, older tlb entry need to be invalidated.
 > 
-> And yet there are issues left... I'll resend
+> Here page fault address is passed to function update_mmu_cache_pmd,
+> rather than pmd huge page start address. The page fault address
+> can be used for invalidating older tlb entry.
+> 
+> ...
+>
+> --- a/arch/mips/include/asm/pgtable.h
+> +++ b/arch/mips/include/asm/pgtable.h
+> @@ -554,11 +554,20 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
+>  #define	__HAVE_ARCH_UPDATE_MMU_TLB
+>  #define update_mmu_tlb	update_mmu_cache
+>  
+> +extern void local_flush_tlb_page(struct vm_area_struct *vma,
+> +				unsigned long page);
 
-Can you also please have them separated in terms of what's for 5.8 and
-what's for 5.9?
+This is unfortunate.  We can't #include <asm/'tlbflush.h>?
 
--- 
-Jens Axboe
+>  static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+>  	unsigned long address, pmd_t *pmdp)
+>  {
+>  	pte_t pte = *(pte_t *)pmdp;
+>  
+> +	/*
+> +	 * If pmd_none is true, older tlb entry will be normal page.
+> +	 * here to invalidate older tlb entry indexed by address
+> +	 * parameter address must be page fault address rather than
+> +	 * start address of pmd huge page
+> +	 */
+> +	local_flush_tlb_page(vma, address);
+>  	__update_tlb(vma, address, pte);
+>  }
+>  
 
