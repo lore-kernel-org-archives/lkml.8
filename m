@@ -2,120 +2,110 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 904FE2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933CF20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C3Aq1EOx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gEsIwJTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405274AbgFXQw2 (ORCPT
+        id S2405283AbgFXQwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:52:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35974 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404017AbgFXQw1 (ORCPT
+        Wed, 24 Jun 2020 12:52:36 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40360 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404017AbgFXQwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593017546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=YgOG3Qn9UrbkC82Csvd2S1YBbX7wsXZhXBrd7kB7GaE=;
-        b=C3Aq1EOxuQXfzCxHMRimNJ+GXjogDz2LvE7uonKeZwnQqWLNMMHAX240bo06L360qLJeia
-        Jwk+i62GJ9eAnMeMb6grGCoAwCgKEGzplRcDWuIMUUH4W6CSnuSZFLUcOcva+7RkFK/1BO
-        NtL/Pd57oecoq0dB17BNYgTunDsYClw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-9XDBz30yN5y-jP_osSf3Ow-1; Wed, 24 Jun 2020 12:52:24 -0400
-X-MC-Unique: 9XDBz30yN5y-jP_osSf3Ow-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE81A107ACF4;
-        Wed, 24 Jun 2020 16:52:22 +0000 (UTC)
-Received: from jsavitz.bos.com (ovpn-112-219.rdu2.redhat.com [10.10.112.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8C552B4AB;
-        Wed, 24 Jun 2020 16:52:18 +0000 (UTC)
-From:   Joel Savitz <jsavitz@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joel Savitz <jsavitz@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
-        John Hubbard <jhubbard@nvidia.com>,
+        Wed, 24 Jun 2020 12:52:35 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05OGpsjw150780;
+        Wed, 24 Jun 2020 16:52:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=GqtsLr0XN/uA8zUbxgxcU20i7Gv21Vga+H3y1OhQf3A=;
+ b=gEsIwJTS/vRyx0UP5ZRtuKgee0oJWW+QReARjY6jEalDhOk1K5Kq/7YPxnhTNcHbCPg1
+ Qs7Mr7L3+JB0JWLWA4+Zd703z+BZy3Ww60uocrXQdmUcgk6XlUv9NXG2ZQ4tuzesc3DA
+ tHtIWiPDOFOKNfpqsqHvy0UDHkgaSbqQoepS+8RSS/b5guFTsjpFHqiQJnWe8ZtaiYU9
+ +X2IMozPqZG7KzKh402yOV6mdDDxlyQM+Tc/upCZqOCx3rfdTTe19D7dVouETmtddXVo
+ eCFAof5p4aAtEMwjtTOhK8cjV9/Jq/6R9oK0UrSIhzsFaVpt8pBII0O4R5vvXIxwh46o QQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31uustv0yh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 16:52:03 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05OGnJjU098319;
+        Wed, 24 Jun 2020 16:52:02 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31uurr3hyk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 16:52:02 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05OGpvDk022975;
+        Wed, 24 Jun 2020 16:51:57 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jun 2020 16:51:56 +0000
+Date:   Wed, 24 Jun 2020 19:51:48 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christian Kujau <lists@nerdbynature.de>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        Fabrizio D'Angelo <fdangelo@redhat.com>, linux-mm@kvack.org
-Subject: [PATCH v2] mm/page_alloc: fix documentation error and remove magic numbers
-Date:   Wed, 24 Jun 2020 12:49:43 -0400
-Message-Id: <20200624164943.32048-1-jsavitz@redhat.com>
+        Willy Tarreau <w@1wt.eu>, Kees Kook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: process '/usr/bin/rsync' started with executable stack
+Message-ID: <20200624165148.GD31008@kadam>
+References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I increased the upper bound of the min_free_kbytes value in
-ee8eb9a5fe863, I forgot to tweak the above comment to reflect
-the new value. This patch fixes that mistake.
+In Debian testing the initrd triggers the warning.
 
-In addition, this patch replaces the magic number bounds with symbolic
-constants to clarify the logic.
+[   34.529809] process '/usr/bin/fstype' started with executable stack
 
-changes from v1:
-- declare constants via enum instead of separate integers
+$ checksec --format=json --extended --file=/var/tmp/mkinitramfs_eTyMPQ/bin/fstype | jq
+{
+  "file": {
+    "relro": "no",
+    "canary": "no",
+    "nx": "no",
+    "pie": "no",
+    "clangcfi": "no",
+    "safestack": "no",
+    "rpath": "no",
+    "runpath": "no",
+    "symbols": "no",
+    "fortify_source": "no",
+    "fortified": "0",
+    "fortify-able": "0"
+  }
+}
 
-Suggested-by: John Hubbard <jhubbard@nvidia.com>
-Suggested-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Joel Savitz <jsavitz@redhat.com>
----
- mm/page_alloc.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 48eb0f1410d4..733c81678b0e 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7832,7 +7832,7 @@ void setup_per_zone_wmarks(void)
-  * Initialise min_free_kbytes.
-  *
-  * For small machines we want it small (128k min).  For large machines
-- * we want it large (64MB max).  But it is not linear, because network
-+ * we want it large (256MB max).  But it is not linear, because network
-  * bandwidth does not increase linearly with machine size.  We use
-  *
-  *	min_free_kbytes = 4 * sqrt(lowmem_kbytes), for better accuracy:
-@@ -7852,6 +7852,8 @@ void setup_per_zone_wmarks(void)
-  * 8192MB:	11584k
-  * 16384MB:	16384k
-  */
-+static enum { MIN_FREE_KBYTES_LOWER_BOUND = 1 << 7, MIN_FREE_KBYTES_UPPER_BOUND = 1 << 18 };
-+
- int __meminit init_per_zone_wmark_min(void)
- {
- 	unsigned long lowmem_kbytes;
-@@ -7862,10 +7864,10 @@ int __meminit init_per_zone_wmark_min(void)
- 
- 	if (new_min_free_kbytes > user_min_free_kbytes) {
- 		min_free_kbytes = new_min_free_kbytes;
--		if (min_free_kbytes < 128)
--			min_free_kbytes = 128;
--		if (min_free_kbytes > 262144)
--			min_free_kbytes = 262144;
-+		if (min_free_kbytes < MIN_FREE_KBYTES_LOWER_BOUND)
-+			min_free_kbytes = MIN_FREE_KBYTES_LOWER_BOUND;
-+		if (min_free_kbytes > MIN_FREE_KBYTES_UPPER_BOUND)
-+			min_free_kbytes = MIN_FREE_KBYTES_UPPER_BOUND;
- 	} else {
- 		pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
- 				new_min_free_kbytes, user_min_free_kbytes);
--- 
-2.23.0
+regards,
+dan carpenter
 
