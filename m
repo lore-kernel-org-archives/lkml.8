@@ -2,143 +2,159 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D52C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7EF20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9091B20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZGlh5RxW"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fNofrvXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405191AbgFXQuy (ORCPT
+        id S2405206AbgFXQvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:50:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
+        Wed, 24 Jun 2020 12:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404017AbgFXQux (ORCPT
+        with ESMTP id S2404017AbgFXQvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:50:53 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0716C061573;
-        Wed, 24 Jun 2020 09:50:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u1F8tzMKngdxJFt6gQRkq7xv28jRUmanHyUKEBsVcpo=; b=ZGlh5RxW4InxZ7Jr34mRSgpIP
-        BC2ZXdwKmi/rqOnIyw8h6eqsHXyNX5FojKj6InS5slHvG3YMArCT54vpxpu/7MGSLfuaGmwGzbjv+
-        z/F3ILATxpDuv6PPr5chSvFdCgfo4Pi+HjIZ9EfUnKQ4q5mLqCx8/LNBM3Tl8h28x2JUtDhFCi5hl
-        xP9NWxSApDu96csu/sWRtzkhfjU7KWm5HOnwDz4bM8JRzCxtv2hAmeo9GTJ1biToCaETwYv2b+9h9
-        Nb67L1V53qnsN8mxbjmrZqWHzVcqXEiI5d3te+Xn/oBrbQErI5XzcXyRpZ6S6nA1ckuLGZVIpMs+P
-        fapGRzjCg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59220)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jo8bQ-0003Ld-UJ; Wed, 24 Jun 2020 17:50:24 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jo8bI-00027P-9n; Wed, 24 Jun 2020 17:50:16 +0100
-Date:   Wed, 24 Jun 2020 17:50:16 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
- registration
-Message-ID: <20200624165016.GA1551@shell.armlinux.org.uk>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-10-brgl@bgdev.pl>
- <20200622133940.GL338481@lunn.ch>
- <20200622135106.GK4560@sirena.org.uk>
- <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
- <20200624094302.GA5472@sirena.org.uk>
- <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
- <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
+        Wed, 24 Jun 2020 12:51:00 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D17C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:50:59 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id i16so2223190qtr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CJ/zC3i7uCzBrZdCj1lkfa2qkxImL6pVZToepDWiydA=;
+        b=fNofrvXCudeSmx5WZQAI95REcbM9q5qe8B5GgBeLz1AQDJ9q8fVr6Liu0M1HeFNR9t
+         vDLzyn3jzM/PlfbV+oOQ4Ade4v9F3kraTj9mPDUWLh95/G3qpnGZ+o23sKoEvRoLmeTP
+         QyyJD2gbAsaTk1e33GlQsdAUFLd7IOt/TQ+PnVtLmAENZumTprYOQGPzI9c3vtWDlvDV
+         WxQMPTTmmU70MhWwFsxLpBSY7BRPdCWA7HpGv7V/iDK33NI5lw2vC39Xx2jYI8pfDm3B
+         jL/kbwjuMqLE82rWq8+ksr8Ekmt4QkTmpsYoyP7ujjxWl59agDEhkJUvc1IVbskO3CTy
+         rrYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CJ/zC3i7uCzBrZdCj1lkfa2qkxImL6pVZToepDWiydA=;
+        b=KsWC/rHurMzEDUyJv5h+UIVm6adepz6Q2MF0ogbYdKCgyHHqdlSRbtDmxabwYzHiTX
+         jVxTdMb0Q2wDN6iHoAmlRDIrLZ0Dm4Eu1W1NkxxmSZ6h6gyrbSBVux6RVBKFDqYtB/e6
+         GPYKCbLnqXTo867OXecb/qXYc06wGeb/5y7utvCa5C8yhzjtIA0blYPJss0boeH+Cras
+         ZhF+rYglzBITO7X/nIWTf6t8vuy7Sak+Cdmf1dVjL6+Ttrwk54ZtKxV4Zkp77VrcmirJ
+         mzosL6O4C1ae+L/VOwZ6zl7dBXITm3NjggB8mQnoddCBG3vTCqcgA2FllQ08YPgSc66S
+         XlEg==
+X-Gm-Message-State: AOAM5321niKIx4xln97uA8Vfdg9xWIMxYd9SRg6ZJte/Wmqun3V/ToTE
+        lUPA/t8Ettld54D33NHctf4WnBZB9TWmhA==
+X-Google-Smtp-Source: ABdhPJxXiUpQ+IwyKRJYOkeapuUApsWhRsPzjsWzdixzDzM/nldiWeHsm/fBSUu2FiJNnggqRfkR2A==
+X-Received: by 2002:ac8:8a4:: with SMTP id v33mr18850490qth.392.1593017458806;
+        Wed, 24 Jun 2020 09:50:58 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id g16sm4579452qko.5.2020.06.24.09.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 09:50:58 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jo8bx-00DYYk-89; Wed, 24 Jun 2020 13:50:57 -0300
+Date:   Wed, 24 Jun 2020 13:50:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] mm/mmu_notifier: Mark up direct reclaim paths with
+ MAYFAIL
+Message-ID: <20200624165057.GJ6578@ziepe.ca>
+References: <20200624080248.3701-1-chris@chris-wilson.co.uk>
+ <20200624121053.GD6578@ziepe.ca>
+ <159300126338.4527.3968787379471939056@build.alporthouse.com>
+ <20200624123910.GA3178169@ziepe.ca>
+ <159300796224.4527.2014771396582759689@build.alporthouse.com>
+ <20200624141604.GH6578@ziepe.ca>
+ <159300850942.4527.8335506003268197914@build.alporthouse.com>
+ <20200624142544.GI6578@ziepe.ca>
+ <159300945202.4527.4366416413140642633@build.alporthouse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <159300945202.4527.4366416413140642633@build.alporthouse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 09:06:28AM -0700, Florian Fainelli wrote:
-> On 6/24/2020 6:48 AM, Bartosz Golaszewski wrote:
-> > I didn't expect to open such a can of worms...
+On Wed, Jun 24, 2020 at 03:37:32PM +0100, Chris Wilson wrote:
+> Quoting Jason Gunthorpe (2020-06-24 15:25:44)
+> > On Wed, Jun 24, 2020 at 03:21:49PM +0100, Chris Wilson wrote:
+> > > Quoting Jason Gunthorpe (2020-06-24 15:16:04)
+> > > > On Wed, Jun 24, 2020 at 03:12:42PM +0100, Chris Wilson wrote:
+> > > > > Quoting Jason Gunthorpe (2020-06-24 13:39:10)
+> > > > > > On Wed, Jun 24, 2020 at 01:21:03PM +0100, Chris Wilson wrote:
+> > > > > > > Quoting Jason Gunthorpe (2020-06-24 13:10:53)
+> > > > > > > > On Wed, Jun 24, 2020 at 09:02:47AM +0100, Chris Wilson wrote:
+> > > > > > > > > When direct reclaim enters the shrinker and tries to reclaim pages, it
+> > > > > > > > > has to opportunitically unmap them [try_to_unmap_one]. For direct
+> > > > > > > > > reclaim, the calling context is unknown and may include attempts to
+> > > > > > > > > unmap one page of a dma object while attempting to allocate more pages
+> > > > > > > > > for that object. Pass the information along that we are inside an
+> > > > > > > > > opportunistic unmap that can allow that page to remain referenced and
+> > > > > > > > > mapped, and let the callback opt in to avoiding a recursive wait.
+> > > > > > > > 
+> > > > > > > > i915 should already not be holding locks shared with the notifiers
+> > > > > > > > across allocations that can trigger reclaim. This is already required
+> > > > > > > > to use notifiers correctly anyhow - why do we need something in the
+> > > > > > > > notifiers?
+> > > > > > > 
+> > > > > > > for (n = 0; n < num_pages; n++)
+> > > > > > >       pin_user_page()
+> > > > > > > 
+> > > > > > > may call try_to_unmap_page from the lru shrinker for [0, n-1].
+> > > > > > 
+> > > > > > Yes, of course you can't hold any locks that intersect with notifiers
+> > > > > > across pin_user_page()/get_user_page()
+> > > > > 
+> > > > > What lock though? It's just the page refcount, shrinker asks us to drop
+> > > > > it [via mmu], we reply we would like to keep using that page as freeing
+> > > > > it for the current allocation is "robbing Peter to pay Paul".
+> > > > 
+> > > > Maybe I'm unclear what this series is actually trying to fix? 
+> > > > 
+> > > > You said "avoiding a recursive wait" which sounds like some locking
+> > > > deadlock to me.
+> > > 
+> > > It's the shrinker being called while we are allocating for/on behalf of
+> > > the object. As we are actively using the object, we don't want to free
+> > > it -- the partial object allocation being the clearest, if the object
+> > > consists of 2 pages, trying to free page 0 in order to allocate page 1
+> > > has to fail (and the shrinker should find another candidate to reclaim,
+> > > or fail the allocation).
 > > 
-> > This has evolved into several new concepts being proposed vs my
-> > use-case which is relatively simple. The former will probably take
-> > several months of development, reviews and discussions and it will
-> > block supporting the phy supply on pumpkin boards upstream. I would
-> > prefer not to redo what other MAC drivers do (phy-supply property on
-> > the MAC node, controlling it from the MAC driver itself) if we've
-> > already established it's wrong.
+> > mmu notifiers are not for influencing policy of the mm.
 > 
-> You are not new to Linux development, so none of this should come as a
-> surprise to you. Your proposed solution has clearly short comings and is
-> a hack, especially around the PHY_ID_NONE business to get a phy_device
-> only then to have the real PHY device ID. You should also now that "I
-> need it now because my product deliverable depends on it" has never been
-> received as a valid argument to coerce people into accepting a solution
-> for which there are at review time known deficiencies to the proposed
-> approach.
+> It's policy is "this may fail" regardless of the mmu notifier at this
+> point. That is not changed.
 
-It /is/ a generic issue.  The same problem exists for AMBA Primecell
-devices, and that code has an internal deferred device list that it
-manages.  See drivers/amba/bus.c, amba_deferred_retry_func(),
-amba_device_try_add(), and amba_device_add().
+MMU notifiers are for tracking updates, they are not allowed to fail.
+The one slightly weird case of non-blocking is the only exception.
 
-As we see more devices gain this property, it needs to be addressed
-in a generic way, rather than coming up with multiple bus specific
-implementations.
+> Your suggestion is that we move the pages to the unevictable mapping so
+> that the shrinker LRU is never invoked on pages we have grabbed with
+> pin_user_page. Does that work with the rest of the mmu notifiers?
 
-Maybe struct bus_type needs a method to do the preparation to add
-a device (such as reading IDs etc), which is called by device_add().
-If that method returns -EPROBE_DEFER, the device gets added to a
-deferred list, which gets retried when drivers are successfully
-probed.  Possible maybe?
+That is beyond what I'm familiar with - but generally - if you want to
+influence decisions the MM is making then it needs to be at the
+front of the process and not inside notifiers. 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+So what you describe seems broadly appropriate to me.
+
+I'm still a little unclear on what you are trying to fix - pinned
+pages are definitely not freed, do you have some case where pages
+which are pinned are being cleaned out from the MM despite being
+pinned? Sounds a bit strange, maybe that is worth adressing directly?
+
+Jason
