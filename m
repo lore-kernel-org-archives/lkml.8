@@ -2,264 +2,196 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB11C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4771BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88DD620767
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:05:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSd/2NsV"
+	by mail.kernel.org (Postfix) with ESMTP id 2CDB520767
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390223AbgFXKFK (ORCPT
+        id S2390242AbgFXKFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:05:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387927AbgFXKFI (ORCPT
+        Wed, 24 Jun 2020 06:05:53 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:33576 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388513AbgFXKFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:05:08 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D7EBC061573;
-        Wed, 24 Jun 2020 03:05:08 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id v19so1187037qtq.10;
-        Wed, 24 Jun 2020 03:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z5maTgbwq1mBVwGkwVDUzGasDeReJzYQw9cSssN0qDc=;
-        b=CSd/2NsVZaadxg2J7hRL9VtzsuIkYfWnGji5R1eNqe8DlU6PEEBLYFUn4JZTQJt5eP
-         sSEiRsZDCD2H2dY5ZH7RDA2EysUuehQp5H3yAI3CUJBb1XD8rfD5Xrunctov4hmgLxKg
-         uq5HigZN5pcA27k7m5rm4rjuyZ9YUSj4tC5xLVFbGX0vZt94Ls1o4F83Bnvf/sZjgE9G
-         JI5rtbrWXpSN0moSsB9kZvOuNHPtF8HvJpa5Mx8aqpZLiIm5zyVKVEk8f547b5c6oGsE
-         GPTbMhbI+7Ez8tJfeVdrMvxTw8j+7L0Sm5Nb1tr0yinPH4zCV4BTzNuiLF/IdYbiB2NI
-         vljQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z5maTgbwq1mBVwGkwVDUzGasDeReJzYQw9cSssN0qDc=;
-        b=NmBj2lFEWxgKRF/W+2cYkm3gvmSKw78vFrTwtublAUEXtWelGqudjpRxN+pCIhIrnF
-         d01GOEbfzYPBBdwL0edxc7S2P1nlQQ0mtc3AHG+YSOijo3bYozCr7VF0LRHfsVh9iFf9
-         k8OJxrwQAvPjNFBp8hxajDzSCrpN88zzeV2Wnngv38LSlWlc1PdYYvzKscEYqof1qijY
-         qSZ8zdZhpWFm5l7pbye3plY7f7ZzquxH5lUEm4aTItX6K2kToEhB2LaELVcEssc6YDgJ
-         hWYVHn+zhY1SC8+rgPV8sth6BSONF7c8Jn8leDKlxvwdGbp7ssXF2jPzPR64WLLFBgPT
-         25Cg==
-X-Gm-Message-State: AOAM5320kiteWY37Fpt69+wuDVNmadgIirhfov58M8qhUxF0zvLtKCGZ
-        71se9raitjkTz25I9pNYeT9JaRGmMQXaPtzmoeRjUg==
-X-Google-Smtp-Source: ABdhPJzaue1H3muo3r9o+r2OeMQI4vyL6SMZvtfU5NWe2avMvZxkRwTSUwKxuRaX6jsD8sFvVC/rd2WnA3Gwx+m32NE=
-X-Received: by 2002:ac8:357b:: with SMTP id z56mr26595034qtb.107.1592993107331;
- Wed, 24 Jun 2020 03:05:07 -0700 (PDT)
+        Wed, 24 Jun 2020 06:05:53 -0400
+X-IronPort-AV: E=Sophos;i="5.75,274,1589234400"; 
+   d="scan'208";a="456419970"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 12:05:49 +0200
+Date:   Wed, 24 Jun 2020 12:05:49 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     "Rodolfo C. Villordo" <rodolfovillordo@gmail.com>
+cc:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: staging: vt6655: replace CamelCase names on
+ function s_uGetRTSCTSRsvTime
+In-Reply-To: <20200624100256.GA17118@ip-172-31-24-31.ec2.internal>
+Message-ID: <alpine.DEB.2.22.394.2006241205210.2433@hadrien>
+References: <20200624100256.GA17118@ip-172-31-24-31.ec2.internal>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-References: <20200622225728.330-1-gerbilsoft@gerbilsoft.com>
-In-Reply-To: <20200622225728.330-1-gerbilsoft@gerbilsoft.com>
-From:   David Rheinsberg <david.rheinsberg@gmail.com>
-Date:   Wed, 24 Jun 2020 12:04:55 +0200
-Message-ID: <CANq1E4T_SNUrewDQ59bonr7tTKFa=wRYwXLWHMCiNA0KN0H9Aw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] HID: wiimote: Initialize the controller LEDs with a
- device ID value
-To:     David Korth <gerbilsoft@gerbilsoft.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
 
-On Tue, Jun 23, 2020 at 12:57 AM David Korth <gerbilsoft@gerbilsoft.com> wrote:
+
+On Wed, 24 Jun 2020, Rodolfo C. Villordo wrote:
+
+> Replace function and variables name from CamelCase style to snake_case style.
+> Remove Hungarian notation.
 >
-> Based on a similar commit for Sony Sixaxis and DualShock 4 controllers:
-> HID: sony: Initialize the controller LEDs with a device ID value
->
-> Wii remotes have the same player LED layout as Sixaxis controllers,
-> so the wiimote setup is based on the Sixaxis code.
-
-Please include a description of the patch in the commit-message. It
-took me quite a while to understand what the intention of this patch
-is.
-
-> Signed-off-by: David Korth <gerbilsoft@gerbilsoft.com>
+> Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
 > ---
->  drivers/hid/hid-wiimote-core.c    | 57 ++++++++++++++++++++++++++++++-
->  drivers/hid/hid-wiimote-modules.c |  7 ----
->  drivers/hid/hid-wiimote.h         |  1 +
->  3 files changed, 57 insertions(+), 8 deletions(-)
+>  drivers/staging/vt6655/rxtx.c | 80 +++++++++++++++++------------------
+>  1 file changed, 38 insertions(+), 42 deletions(-)
 >
-> diff --git a/drivers/hid/hid-wiimote-core.c b/drivers/hid/hid-wiimote-core.c
-> index 92874dbe4d4a..9662c2ce5e99 100644
-> --- a/drivers/hid/hid-wiimote-core.c
-> +++ b/drivers/hid/hid-wiimote-core.c
-> @@ -14,9 +14,12 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/spinlock.h>
-> +#include <linux/idr.h>
->  #include "hid-ids.h"
->  #include "hid-wiimote.h"
->
-> +static DEFINE_IDA(wiimote_device_id_allocator);
-> +
->  /* output queue handling */
->
->  static int wiimote_hid_send(struct hid_device *hdev, __u8 *buffer,
-> @@ -694,6 +697,10 @@ static void wiimote_modules_unload(struct wiimote_data *wdata)
->         wdata->state.devtype = WIIMOTE_DEV_UNKNOWN;
->         spin_unlock_irqrestore(&wdata->state.lock, flags);
->
-> +       if (wdata->device_id >= 0)
-> +               ida_simple_remove(&wiimote_device_id_allocator,
-> +                                       wdata->device_id);
-> +
->         /* find end of list */
->         for (iter = mods; *iter != WIIMOD_NULL; ++iter)
->                 /* empty */ ;
-> @@ -802,6 +809,20 @@ static const char *wiimote_devtype_names[WIIMOTE_DEV_NUM] = {
->         [WIIMOTE_DEV_PRO_CONTROLLER] = "Nintendo Wii U Pro Controller",
->  };
->
-> +static __u8 wiimote_set_leds_from_id(int id)
-> +{
-> +       static const __u8 wiimote_leds[10] = {
-> +               0x01, 0x02, 0x04, 0x08,
-> +               0x09, 0x0A, 0x0C, 0x0D,
-> +               0x0E, 0x0F
-> +       };
-> +
-> +       if (id < 0)
-> +               return wiimote_leds[0];
-> +
-> +       return wiimote_leds[id % 10];
-> +}
-> +
->  /* Try to guess the device type based on all collected information. We
->   * first try to detect by static extension types, then VID/PID and the
->   * device name. If we cannot detect the device, we use
-> @@ -810,8 +831,10 @@ static void wiimote_init_set_type(struct wiimote_data *wdata,
->                                   __u8 exttype)
->  {
->         __u8 devtype = WIIMOTE_DEV_GENERIC;
-> +       __u8 leds;
->         __u16 vendor, product;
->         const char *name;
-> +       int device_id;
->
->         vendor = wdata->hdev->vendor;
->         product = wdata->hdev->product;
-> @@ -858,6 +881,24 @@ static void wiimote_init_set_type(struct wiimote_data *wdata,
->                          wiimote_devtype_names[devtype]);
->
->         wiimote_modules_load(wdata, devtype);
-> +
-> +       /* set player number to stop initial LED-blinking */
-> +       device_id = ida_simple_get(&wiimote_device_id_allocator, 0, 0,
-> +                               GFP_KERNEL);
-> +       if (device_id < 0) {
-> +               /* Unable to get a device ID. */
-> +               /* Set LED1 anyway to stop the blinking. */
-> +               leds = WIIPROTO_FLAG_LED1;
-> +               wdata->device_id = -1;
-> +       } else {
-> +               /* Device ID obtained. */
-> +               leds = wiimote_set_leds_from_id(device_id);
-> +               wdata->device_id = device_id;
-> +       }
-> +
-> +       spin_lock_irq(&wdata->state.lock);
-> +       wiiproto_req_leds(wdata, leds);
-> +       spin_unlock_irq(&wdata->state.lock);
+> diff --git a/drivers/staging/vt6655/rxtx.c b/drivers/staging/vt6655/rxtx.c
+> index cfab64d2b312..4778439e8757 100644
+> --- a/drivers/staging/vt6655/rxtx.c
+> +++ b/drivers/staging/vt6655/rxtx.c
+> @@ -21,7 +21,7 @@
+>   *      s_uGetDataDuration - get tx data required duration
+>   *      s_uFillDataHead- fulfill tx data duration header
+>   *      s_uGetRTSCTSDuration- get rtx/cts required duration
+> - *      s_uGetRTSCTSRsvTime- get rts/cts reserved time
+> + *      get_rtscts_time- get rts/cts reserved time
+>   *      s_uGetTxRsvTime- get frame reserved time
+>   *      s_vFillCTSHead- fulfill CTS ctl header
+>   *      s_vFillFragParameter- Set fragment ctl parameter.
 
-So what you are trying is to allocate a unique ID to each connected
-wiimote, so they automatically display unique IDs, right?
+Why is only one of these done?
 
-Can you explain why this has to be done in the kernel driver? Why
-isn't user-space assigning the right ID? User-space needs to attach
-controllers to their respective engine anyway, in which case the IDs
-the kernel assigns would be wrong, right? How does user-space display
-the matching ID in their UI (e.g., for configuration use-cases)? The
-way you set them does not allow user-space to query the ID, does it?
-Lastly, wouldn't a device-reconnect want the same ID to be assigned
-again? With the logic you apply, user-space would have to override
-every ID for that to work.
+julia
 
-Is there an actual use-case for this? Or is this just to align the
-driver with the other gamepads?
-
-Thanks
-David
-
+> @@ -190,45 +190,41 @@ static __le16 vnt_rxtx_rsvtime_le16(struct vnt_private *priv, u8 pkt_type,
 >  }
 >
->  static void wiimote_init_detect(struct wiimote_data *wdata)
-> @@ -1750,6 +1791,8 @@ static struct wiimote_data *wiimote_create(struct hid_device *hdev)
->         wdata->state.drm = WIIPROTO_REQ_DRM_K;
->         wdata->state.cmd_battery = 0xff;
->
-> +       wdata->device_id = -1;
-> +
->         INIT_WORK(&wdata->init_worker, wiimote_init_worker);
->         timer_setup(&wdata->timer, wiimote_init_timeout, 0);
->
-> @@ -1879,7 +1922,19 @@ static struct hid_driver wiimote_hid_driver = {
->         .remove = wiimote_hid_remove,
->         .raw_event = wiimote_hid_event,
->  };
-> -module_hid_driver(wiimote_hid_driver);
-> +
-> +static int __init wiimote_init(void)
-> +{
-> +       return hid_register_driver(&wiimote_hid_driver);
-> +}
-> +
-> +static void __exit wiimote_exit(void)
-> +{
-> +       ida_destroy(&wiimote_device_id_allocator);
-> +       hid_unregister_driver(&wiimote_hid_driver);
-> +}
-> +module_init(wiimote_init);
-> +module_exit(wiimote_exit);
->
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("David Herrmann <dh.herrmann@gmail.com>");
-> diff --git a/drivers/hid/hid-wiimote-modules.c b/drivers/hid/hid-wiimote-modules.c
-> index 2c3925357857..0cdd6c219b5d 100644
-> --- a/drivers/hid/hid-wiimote-modules.c
-> +++ b/drivers/hid/hid-wiimote-modules.c
-> @@ -362,13 +362,6 @@ static int wiimod_led_probe(const struct wiimod_ops *ops,
->         if (ret)
->                 goto err_free;
->
-> -       /* enable LED1 to stop initial LED-blinking */
-> -       if (ops->arg == 0) {
-> -               spin_lock_irqsave(&wdata->state.lock, flags);
-> -               wiiproto_req_leds(wdata, WIIPROTO_FLAG_LED1);
-> -               spin_unlock_irqrestore(&wdata->state.lock, flags);
-> -       }
+>  /* byFreqType: 0=>5GHZ 1=>2.4GHZ */
+> -static
+> -__le16
+> -s_uGetRTSCTSRsvTime(
+> -	struct vnt_private *pDevice,
+> -	unsigned char byRTSRsvType,
+> -	unsigned char byPktType,
+> -	unsigned int cbFrameLength,
+> -	unsigned short wCurrentRate
+> -)
+> +static __le16 get_rtscts_time(struct vnt_private *priv,
+> +			      unsigned char rts_rsvtype,
+> +			      unsigned char pkt_type,
+> +			      unsigned int frame_length,
+> +			      unsigned short current_rate)
+>  {
+> -	unsigned int uRrvTime = 0;
+> -	unsigned int uRTSTime = 0;
+> -	unsigned int uCTSTime = 0;
+> -	unsigned int uAckTime = 0;
+> -	unsigned int uDataTime = 0;
 > -
->         return 0;
+> -	uDataTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, cbFrameLength, wCurrentRate);
+> -	if (byRTSRsvType == 0) { /* RTSTxRrvTime_bb */
+> -		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopCCKBasicRate);
+> -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
+> -		uCTSTime = uAckTime;
+> -	} else if (byRTSRsvType == 1) { /* RTSTxRrvTime_ba, only in 2.4GHZ */
+> -		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopCCKBasicRate);
+> -		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
+> -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
+> -	} else if (byRTSRsvType == 2) { /* RTSTxRrvTime_aa */
+> -		uRTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 20, pDevice->byTopOFDMBasicRate);
+> -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
+> -		uCTSTime = uAckTime;
+> -	} else if (byRTSRsvType == 3) { /* CTSTxRrvTime_ba, only in 2.4GHZ */
+> -		uCTSTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopCCKBasicRate);
+> -		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, pDevice->byTopOFDMBasicRate);
+> -		uRrvTime = uCTSTime + uAckTime + uDataTime + 2 * pDevice->uSIFS;
+> -		return cpu_to_le16((u16)uRrvTime);
+> +	unsigned int rrv_time = 0;
+> +	unsigned int rts_time = 0;
+> +	unsigned int cts_time = 0;
+> +	unsigned int ack_time = 0;
+> +	unsigned int data_time = 0;
+> +
+> +	data_time = bb_get_frame_time(priv->byPreambleType, pkt_type, frame_length, current_rate);
+> +	if (rts_rsvtype == 0) { /* RTSTxRrvTime_bb */
+> +		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopCCKBasicRate);
+> +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
+> +		cts_time = ack_time;
+> +	} else if (rts_rsvtype == 1) { /* RTSTxRrvTime_ba, only in 2.4GHZ */
+> +		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopCCKBasicRate);
+> +		cts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
+> +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
+> +	} else if (rts_rsvtype == 2) { /* RTSTxRrvTime_aa */
+> +		rts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 20, priv->byTopOFDMBasicRate);
+> +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
+> +		cts_time = ack_time;
+> +	} else if (rts_rsvtype == 3) { /* CTSTxRrvTime_ba, only in 2.4GHZ */
+> +		cts_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopCCKBasicRate);
+> +		ack_time = bb_get_frame_time(priv->byPreambleType, pkt_type, 14, priv->byTopOFDMBasicRate);
+> +		rrv_time = cts_time + ack_time + data_time + 2 * priv->uSIFS;
+> +		return cpu_to_le16((u16)rrv_time);
+>  	}
 >
->  err_free:
-> diff --git a/drivers/hid/hid-wiimote.h b/drivers/hid/hid-wiimote.h
-> index b2a26a0a8f12..800849427947 100644
-> --- a/drivers/hid/hid-wiimote.h
-> +++ b/drivers/hid/hid-wiimote.h
-> @@ -160,6 +160,7 @@ struct wiimote_data {
->         struct wiimote_queue queue;
->         struct wiimote_state state;
->         struct work_struct init_worker;
-> +       int device_id;
->  };
+>  	/* RTSRrvTime */
+> -	uRrvTime = uRTSTime + uCTSTime + uAckTime + uDataTime + 3 * pDevice->uSIFS;
+> -	return cpu_to_le16((u16)uRrvTime);
+> +	rrv_time = rts_time + cts_time + ack_time + data_time + 3 * priv->uSIFS;
+> +	return cpu_to_le16((u16)rrv_time);
+>  }
 >
->  /* wiimote modules */
+>  /* byFreqType 0: 5GHz, 1:2.4Ghz */
+> @@ -921,9 +917,9 @@ s_vGenerateTxParameter(
+>  			/* Fill RsvTime */
+>  			struct vnt_rrv_time_rts *buf = pvRrvTime;
+>
+> -			buf->rts_rrv_time_aa = s_uGetRTSCTSRsvTime(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+> -			buf->rts_rrv_time_ba = s_uGetRTSCTSRsvTime(pDevice, 1, byPktType, cbFrameSize, wCurrentRate);
+> -			buf->rts_rrv_time_bb = s_uGetRTSCTSRsvTime(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+> +			buf->rts_rrv_time_aa = get_rtscts_time(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+> +			buf->rts_rrv_time_ba = get_rtscts_time(pDevice, 1, byPktType, cbFrameSize, wCurrentRate);
+> +			buf->rts_rrv_time_bb = get_rtscts_time(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+>  			buf->rrv_time_a = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
+>  			buf->rrv_time_b = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, pDevice->byTopCCKBasicRate, bNeedACK);
+>
+> @@ -933,7 +929,7 @@ s_vGenerateTxParameter(
+>
+>  			buf->rrv_time_a = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
+>  			buf->rrv_time_b = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, pDevice->byTopCCKBasicRate, bNeedACK);
+> -			buf->cts_rrv_time_ba = s_uGetRTSCTSRsvTime(pDevice, 3, byPktType, cbFrameSize, wCurrentRate);
+> +			buf->cts_rrv_time_ba = get_rtscts_time(pDevice, 3, byPktType, cbFrameSize, wCurrentRate);
+>
+>  			/* Fill CTS */
+>  			s_vFillCTSHead(pDevice, uDMAIdx, byPktType, pvCTS, cbFrameSize, bNeedACK, bDisCRC, wCurrentRate, byFBOption);
+> @@ -942,7 +938,7 @@ s_vGenerateTxParameter(
+>  		if (pvRTS) {/* RTS_need, non PCF mode */
+>  			struct vnt_rrv_time_ab *buf = pvRrvTime;
+>
+> -			buf->rts_rrv_time = s_uGetRTSCTSRsvTime(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+> +			buf->rts_rrv_time = get_rtscts_time(pDevice, 2, byPktType, cbFrameSize, wCurrentRate);
+>  			buf->rrv_time = vnt_rxtx_rsvtime_le16(pDevice, byPktType, cbFrameSize, wCurrentRate, bNeedACK);
+>
+>  			/* Fill RTS */
+> @@ -956,7 +952,7 @@ s_vGenerateTxParameter(
+>  		if (pvRTS) {/* RTS_need, non PCF mode */
+>  			struct vnt_rrv_time_ab *buf = pvRrvTime;
+>
+> -			buf->rts_rrv_time = s_uGetRTSCTSRsvTime(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+> +			buf->rts_rrv_time = get_rtscts_time(pDevice, 0, byPktType, cbFrameSize, wCurrentRate);
+>  			buf->rrv_time = vnt_rxtx_rsvtime_le16(pDevice, PK_TYPE_11B, cbFrameSize, wCurrentRate, bNeedACK);
+>
+>  			/* Fill RTS */
 > --
-> 2.27.0
+> 2.17.1
+>
 >
