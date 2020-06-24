@@ -2,127 +2,150 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1867AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 528F920C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EBF20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592991785;
-	bh=KASGkkb2+9TZ5D3MTFps6xxCzzfzZnMWkY3aYuoNZBY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1TkbfsXgK6Khxb7F85SnEH9kUCLpVXgrM/AiMuq67rPUl+rZvkMNfElo6pjvM5sr5
-	 H1ZUBVIp2ASfPHGS6RgQBxXsooHOQOo0Ymzc80gjdXqV7phVwSGBiM5ahR+iao73ko
-	 HibOedbHoXw91le2J4l8PK7Ljebx036NTBrfH/l8=
+	s=default; t=1592991792;
+	bh=rYiMLNyH6eejq1M7FI0t8GXIQIY1y4HUlGHPYP73bvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GstAM5dP6NlRxbdcl2vQgVft/FmWHuov0XJ8GT4ggnbBmblQzCQ/N8mqHsTYASI53
+	 OaJzDD3u7aWfEz95gCdtIhCQ7nu7+1KjPKbixeR/UuRQi9JaaV+rvAsY4yZnrfFkfH
+	 Yo5lDpLeP3o/+Vr9tnT4Lev9mgEhyWy30BFkeo04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389906AbgFXJnD (ORCPT
+        id S2389940AbgFXJnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:43:03 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:33683 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388005AbgFXJnD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:43:03 -0400
-Received: by mail-ej1-f65.google.com with SMTP id n24so1830997ejd.0;
-        Wed, 24 Jun 2020 02:43:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tuRg7gxTgMVv/uknaC+ELM+anUqsXoZl+UXIEfmUtI8=;
-        b=nCVNzS09I7YYKan0SKKC5cycBPYap9XyBDmHfAKVAoI0hgAgYJ3o6v8mYJGN90Pseq
-         YRTYTxhQ4Vdl3SbeVO/ukqqLzWsiigvjbpKdxGBhiQuj0q10o+s6SHn4DyvCGhVtAG4+
-         JgcLvfJpfmq4xmIt8Pt3oNZDImC3FXxnXNQOfEKG6teRhVfPdZN20wId+5/Fi9UWfUoV
-         n4e07rDhiUdt+zH8o6wYfHtSs/+N1dasoJkxCFM46PuXj5TAFot1nt+T4qK2OMAKYtSO
-         fXBP+PQKS3vewYNtO1sZY/GQN6IbeTQLC2SgyiGzhMgFMDo4RYgTbmQxtPIqd7PbYqKj
-         YtJw==
-X-Gm-Message-State: AOAM533KsAdgEWoOjEcEKcf/tdg7nRDbkueWdTzFjCYfTYFOq6rQPkLG
-        IvrK2b0onkLwvKoBIgRhf1s=
-X-Google-Smtp-Source: ABdhPJyXuw1w74SJp+f5TnTPPdp4LJtBdwIvxmYExbMYBQxxIMYMugMnVTgU9jBcDGAcIDuY7XsGyw==
-X-Received: by 2002:a17:906:7ad7:: with SMTP id k23mr25079698ejo.439.1592991780914;
-        Wed, 24 Jun 2020 02:43:00 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id f17sm3036261ejr.71.2020.06.24.02.43.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 02:43:00 -0700 (PDT)
-Subject: Re: [PATCH] tty: serial_core: Fix uart_state refcnt leak when the
- port startup
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-References: <1592052738-95202-1-git-send-email-xiyuyang19@fudan.edu.cn>
- <20200624093407.GB1751086@kroah.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <954840f0-2078-fe0f-1e52-d985a4997564@kernel.org>
-Date:   Wed, 24 Jun 2020 11:42:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 05:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388005AbgFXJnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:43:06 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7102C20885;
+        Wed, 24 Jun 2020 09:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592991785;
+        bh=rYiMLNyH6eejq1M7FI0t8GXIQIY1y4HUlGHPYP73bvA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iMQawrP4gD/kEbaeFzV0OLvI9+7NVkmw8/GoJ2aEPtRKA/jirfzwFYy0L5Y/OzPCu
+         xisKHDnJn2fl+MFySaTny0zOqs4oZxopj5XvUAjHuCdvuRhKkw4v/EbNApMnkwuGh8
+         +rPE3Bwi4OtimVg+6yswW8FMP+j9M58H929pco0w=
+Date:   Wed, 24 Jun 2020 10:43:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
+ registration
+Message-ID: <20200624094302.GA5472@sirena.org.uk>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-10-brgl@bgdev.pl>
+ <20200622133940.GL338481@lunn.ch>
+ <20200622135106.GK4560@sirena.org.uk>
+ <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624093407.GB1751086@kroah.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+In-Reply-To: <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
+X-Cookie: So this is it.  We're going to die.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24. 06. 20, 11:34, Greg Kroah-Hartman wrote:
-> On Sat, Jun 13, 2020 at 08:52:18PM +0800, Xiyu Yang wrote:
->> uart_port_startup() invokes uart_port_lock(), which returns a reference
->> of the uart_port object if increases the refcount of the uart_state
->> object successfully or returns NULL if fails.
->>
->> However, uart_port_startup() don't take the return value of
->> uart_port_lock() as the new uart_port object to "uport" and use the old
->> "uport" instead to balance refcount in uart_port_unlock(), which may
->> cause a redundant decrement of refcount occurred when the new "uport"
->> equals to NULL and then cause a potential memory leak.
->>
->> Fix this issue by update the "uport" object to the return value of
->> uart_port_lock() when invoking uart_port_lock().
->>
->> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
->> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
->> ---
->>  drivers/tty/serial/serial_core.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
->> index 57840cf90388..968fd619aec0 100644
->> --- a/drivers/tty/serial/serial_core.c
->> +++ b/drivers/tty/serial/serial_core.c
->> @@ -205,7 +205,7 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
->>  	if (!page)
->>  		return -ENOMEM;
->>  
->> -	uart_port_lock(state, flags);
->> +	uport = uart_port_lock(state, flags);
-> 
-> How is this a different pointer than you originally had?
 
-Was this patch sent twice? As I had very same questions on the other
-one, but never received a feedback:
-https://lore.kernel.org/linux-serial/bf6c1e7b-3dc6-aba6-955a-fee351a6d800@suse.com/
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, Jun 23, 2020 at 12:49:15PM -0700, Florian Fainelli wrote:
+> On 6/22/20 6:51 AM, Mark Brown wrote:
 
-Oh, wait: this is uart_port_startup, I commented on the uart_shutdown
-one. But whatever, I would scratch both of them.
+> > If the bus includes power management for the devices on the bus the
+> > controller is generally responsible for that rather than the devices,
+> > the devices access this via facilities provided by the bus if needed.
+> > If the device is enumerated by firmware prior to being physically
+> > enumerable then the bus will generally instantiate the device model
+> > device and then arrange to wait for the physical device to appear and
+> > get joined up with the device model device, typically in such situations
+> > the physical device might appear and disappear dynamically at runtime
+> > based on what the driver is doing anyway.
 
-> And if it is a different pointer, shouldn't you be calling this function
-> and using the pointer much earlier in the function instead of just here?
-> 
-> Can you trigger a problem that this patch solves?  If so, how?
+> In premise there is nothing that prevents the MDIO bus from taking care
+> of the regulators, resets, prior to probing the PHY driver, what is
+> complicated here is that we do need to issue a read of the actual PHY to
+> know its 32-bit unique identifier and match it with an appropriate
+> driver. The way that we have worked around this with if you do not wish
+> such a hardware access to be made, is to provide an Ethernet PHY node
+> compatible string that encodes that 32-bit OUI directly. In premise the
+> same challenges exist with PCI devices/endpoints as well as USB, would
+> they have reset or regulator typically attached to them.
 
-thanks,
--- 
-js
-suse labs
+That all sounds very normal and is covered by both cases I describe?
+
+> > We could use a pre-probe stage in the device model for hotpluggable
+> > buses in embedded contexts where you might need to bring things out of
+> > reset or power them up before they'll appear on the bus for enumeration
+> > but buses have mostly handled that at their level.
+
+> That sounds like a better solution, are there any subsystems currently
+> implementing that, or would this be a generic Linux device driver model
+> addition that needs to be done?
+
+Like I say I'm suggesting doing something at the device model level.
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zICMACgkQJNaLcl1U
+h9Ca2Af/csONj6LtRsNrXjMLjw4BGVBnwP/tZBvSxig6MizM80Yd7HzvQiUWDAQW
+opLo3gkpbl+73elKt2hSf5gktte6pl5jBepYzqd54u71xWQ6bZE4U3ONtKN2Q7eb
+b2CIxsthUl15y6Y+spJAGYjqB7+3JSU4j60NpuRAnH25gsxkJyokoyDQNwz3/itl
+CJcvpaKru9uCPKXfk960C6SkRpX0kNfFc3yBm7yFTIMeiicFei9o/qdEBzqaRC/8
+Plrsjw9hilHtWP4/3AhHXk98OGzuTzYSS78XVYRGBC58Wj7IDO+ytY5mCR7mZdtg
+gZPYYA7XHRNX3252/FCJO39GTfJMCg==
+=ttw3
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
