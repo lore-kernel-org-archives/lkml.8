@@ -2,101 +2,121 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA1220899
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m66E90HB"
+	by mail.kernel.org (Postfix) with ESMTP id AC5462088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389508AbgFXIje (ORCPT
+        id S2389544AbgFXIj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:39:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388276AbgFXIjd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:39:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F073FC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 01:39:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h15so1397878wrq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 01:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kyuzSJ+zSyOew8Gu2fEZImboOCEZH6hUeCFJWJHgt7E=;
-        b=m66E90HBKSxS0u5rU8kdHg9Z9vc9ul9wMkD31XW+AxI1WCLoTPh1ysXeRM5tQ+dN//
-         Kikmg9HnnpMYfikaUeVlW3jc4UZa2JWROZ7Kbqh7n2txJTyONU3ZXezZsGvavGuILGQB
-         4SGOOF4juD9mHCI+wGW8lvu2+sDnOyE4We+qw/F8P6mGiMJyfOeN4kOvpAHrBXYvRVIu
-         HKvECidd29eqQeTvd+CuxkRzC/3heT7NRjmoCarKgi6ZaSK4dKUIMMr6cDixNo0mdYdq
-         V1UI5uUkEmzSOnVKGkWgQYqo9qET4ShoOfiCH5MyJrPKHxpnVehmTUAkKe2MD+RwLyc4
-         RdPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kyuzSJ+zSyOew8Gu2fEZImboOCEZH6hUeCFJWJHgt7E=;
-        b=oP5HDo4w/C3PMeq8bkvf9kOdR/HAv5bchxR5m1T9dLwyHHDuWKK7X8JRzf5cj009am
-         MQ/9QaNAUDtHj3WKtaMhiU5v33Kd7vKOOTkZrW/XuUWs6h8D7lN6n9EkKPM/6Kx56im3
-         kePx7uFhdZh+TCm2V10Wvr1a9RhR3xqEx9+2ykVJ3htHkpPoG/ETyrAOqdMt6maPQUEy
-         ABnrTCwDUX0tUkxU2axidloE96hYo6oFRLhQo25wLhryoDAge8av8on8AfNAuQHc9cWA
-         b7giKZ9IOHM4nCR2mbrJ4U7/qyTTYBPx7zUsnSZIrurV1z7HuUXdl6x2tWQJ95znb5gj
-         TRDg==
-X-Gm-Message-State: AOAM531RMBHE5b5NQGrnTEvMBg9MW3iIii9gumQtZeRwvbGyBXBMNgKv
-        HnBRl85B9f74SeaRxGDBWAOUhbNk
-X-Google-Smtp-Source: ABdhPJxxwle8hBJ+V9kED+fnL5hLN5Ng/Yl2wbebhZLTI9Uf6pUoJvGlK7KMgzEuqDm1FDtXVXdenA==
-X-Received: by 2002:adf:e901:: with SMTP id f1mr22636685wrm.80.1592987971218;
-        Wed, 24 Jun 2020 01:39:31 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id e5sm24486544wrs.33.2020.06.24.01.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 01:39:30 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH] habanalabs: increase h/w timer when checking idle
-Date:   Wed, 24 Jun 2020 12:45:34 +0300
-Message-Id: <20200624094534.3549-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 24 Jun 2020 04:39:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60224 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388836AbgFXIj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:39:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EBB7BAC2E;
+        Wed, 24 Jun 2020 08:39:55 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 10:39:55 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
+        Justin Cook <justin.cook@linaro.org>,
+        lkft-triage@lists.linaro.org, Miroslav Benes <mbenes@suse.cz>,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH 1/2] selftests/lkdtm: Don't clear dmesg when running tests
+Message-ID: <20200624083955.GF8444@alley>
+References: <20200508065356.2493343-1-mpe@ellerman.id.au>
+ <CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com>
+ <c5b77970-ecaf-24ad-c34d-134acc1a6063@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5b77970-ecaf-24ad-c34d-134acc1a6063@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+On Tue 2020-06-23 23:48:36, Joe Lawrence wrote:
+> On 6/22/20 4:51 AM, Naresh Kamboju wrote:
+> > On Fri, 8 May 2020 at 12:23, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> > > 
+> > > It is Very Rude to clear dmesg in test scripts. That's because the
+> > > script may be part of a larger test run, and clearing dmesg
+> > > potentially destroys the output of other tests.
+> > > 
+> > > We can avoid using dmesg -c by saving the content of dmesg before the
+> > > test, and then using diff to compare that to the dmesg afterward,
+> > > producing a log with just the added lines.
+> > >
+> > > > > > diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+> > > index dadf819148a4..0b409e187c7b 100755
+> > > --- a/tools/testing/selftests/lkdtm/run.sh
+> > > +++ b/tools/testing/selftests/lkdtm/run.sh
+> > >   # Record and dump the results
+> > > -dmesg -c >"$LOG"
+> > > +dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
+> > 
+> > We are facing problems with the diff `=%>` part of the option.
+> > This report is from the OpenEmbedded environment.
+> > We have the same problem from livepatch_testcases.
+> > 
+> > # selftests lkdtm BUG.sh
+> > lkdtm: BUG.sh_ #
+> > # diff unrecognized option '--changed-group-format=%>'
+> > unrecognized: option_'--changed-group-format=%>' #
+> > # BusyBox v1.27.2 (2020-03-30 164108 UTC) multi-call binary.
+> > v1.27.2: (2020-03-30_164108 #
+> > #
+> > : _ #
+> > # Usage diff [-abBdiNqrTstw] [-L LABEL] [-S FILE] [-U LINES] FILE1 FILE2
+> > diff: [-abBdiNqrTstw]_[-L #
+> > # BUG missing 'kernel BUG at' [FAIL]
+> > 
+> > Full test output log,
+> > https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200621/testrun/2850083/suite/kselftest/test/lkdtm_BUG.sh/log
+> > 
+> 
+> D'oh!  Using diff's changed/unchanged group format was a nice trick to
+> easily fetch the new kernel log messages.
+> 
+> I can't think of any simple alternative off the top of my head, so here's a
+> kludgy tested-once awk script:
+> 
+>  SAVED_DMESG="$(dmesg | tail -n1)"
+>  ... tests ...
+>  NEW_DMESG=$(dmesg | awk -v last="$SAVED_DMESG" 'p; $0 == last{p=1}')
+> 
+> I think timestamps should make each log line unique, but this probably won't
+> handle kernel log buffer overflow.
 
-In GAUDI the current timer value for the hardware to check if it is
-in IDLE state is too low. As a result, there are occasions where the H/W
-wrongly reports it is not IDLE. The driver checks that before submitting
-work on behalf of the driver during initialization, so a false report might
-cause the driver to fail during device initialization.
+The test would fail anyway if there was log buffer overflow.
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/gaudi/gaudi.c | 2 ++
- 1 file changed, 2 insertions(+)
+We could check if the last line was still there and
+suggest to increase the log buffer size in the error message.
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 69317d2ebdfa..834470d10b46 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -1893,6 +1893,8 @@ static void gaudi_init_pci_dma_qman(struct hl_device *hdev, int dma_id,
- 	WREG32(mmDMA0_QM_CP_MSG_BASE3_ADDR_LO_0 + q_off, so_base_ws_lo);
- 	WREG32(mmDMA0_QM_CP_MSG_BASE3_ADDR_HI_0 + q_off, so_base_ws_hi);
- 
-+	WREG32(mmDMA0_QM_CP_BARRIER_CFG_0 + q_off, 0x100);
-+
- 	/* The following configuration is needed only once per QMAN */
- 	if (qman_id == 0) {
- 		/* Configure RAZWI IRQ */
--- 
-2.17.1
+> Maybe it would be easier to log a known unique test delimiter msg and then
+> fetch all new messages after that?
 
+The timestamp should be enough to distinguish any message.
+
+But some visual separator between each test is useful anyway. And
+it might include some random string...
+
+Best Regards,
+Petr
