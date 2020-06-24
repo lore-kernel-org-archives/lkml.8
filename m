@@ -2,87 +2,96 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE29C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A9F2078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:52:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i0fzv4O/"
+	by mail.kernel.org (Postfix) with ESMTP id 9B6082077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405835AbgFXRwl (ORCPT
+        id S2405844AbgFXRwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:52:41 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37238 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405615AbgFXRwk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:52:40 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OHpwY8130169;
-        Wed, 24 Jun 2020 12:51:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593021118;
-        bh=NAp9DR/7JXVAXVwsq4PWt4yrvcZTuC0RDz0tyTPF19I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=i0fzv4O/eJCWYYYZVR0/9l1A8UJbIdRAfxtDUBD/pr2XbgrlwMXRcHbuyKeep1bPt
-         QCEi11KYPwB0NNTHC/CX+YTgZCOUFu4ZyepHEIUA68ai/5Gga+adm5HtJMMaxl2C7l
-         H5lo/8sYvV1qD/COe/K3pfPZ7z7S+eo8YTAvKeQ4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OHpwut073572
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 12:51:58 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 12:51:58 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 12:51:58 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OHpvwh039637;
-        Wed, 24 Jun 2020 12:51:57 -0500
-Subject: Re: [PATCH v5 3/7] ASoC: tas2562: Fix format issue for extra space
- before a comma
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>
-References: <20200624161459.19248-1-dmurphy@ti.com>
- <20200624161459.19248-4-dmurphy@ti.com> <20200624162917.GK5472@sirena.org.uk>
- <c4a26be8-88cc-1dfa-61e0-844b9c19eb52@ti.com>
- <370c71e3-731b-3549-adb0-597abb217cfc@ti.com>
- <20200624174813.GN5472@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <d2227f18-7585-d5a2-8438-57ee8717318a@ti.com>
-Date:   Wed, 24 Jun 2020 12:51:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 13:52:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:49038 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405615AbgFXRwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:52:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38DD91FB;
+        Wed, 24 Jun 2020 10:52:42 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0FE63F71E;
+        Wed, 24 Jun 2020 10:52:40 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 18:52:38 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        hsinyi@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Quentin Perret <qperret@google.com>, ctheegal@codeaurora.org,
+        Guenter Roeck <groeck@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
+ cpu freq
+Message-ID: <20200624175236.nblndmg6dfq2vr2u@e107158-lin.cambridge.arm.com>
+References: <20200610151818.1.I666ecd9c6f3c6405bd75831a21001b8109b6438c@changeid>
+ <20200612125250.7bwjfnxhurdf5bwj@e107158-lin.cambridge.arm.com>
+ <CAD=FV=WuYZRO=sv4ODr0SFk0gTtvCW0dNQXbFGrBDqRgjYv-jA@mail.gmail.com>
+ <20200619153851.vigshoae3ahiy63x@e107158-lin.cambridge.arm.com>
+ <CAD=FV=XursDFUWL=aGUwFgXc4BugUMdT5e+Fwwo5w2gReCjUaQ@mail.gmail.com>
+ <20200623164021.lcrnwpli7wdlsn5i@e107158-lin.cambridge.arm.com>
+ <CAJWu+ooXdgqSGisZXnHBtYLo9oQBiaNR=HhKseBN+YFGz-L6Xg@mail.gmail.com>
+ <20200624165500.idrugfgplqgi654v@e107158-lin.cambridge.arm.com>
+ <CAJWu+oqHUq6fvkfRgAx4qx8x1dm-J-h6moeVskCU3gkRybCPqQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624174813.GN5472@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJWu+oqHUq6fvkfRgAx4qx8x1dm-J-h6moeVskCU3gkRybCPqQ@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On 06/24/20 13:35, Joel Fernandes wrote:
 
-On 6/24/20 12:48 PM, Mark Brown wrote:
-> On Wed, Jun 24, 2020 at 12:36:02PM -0500, Dan Murphy wrote:
->
->> Can this patchset get a review as well so I can fix before I post v6?
->> Not sure what the current work load is for review or merge.
-> Well, it's less work to review if it's been fixed...
+[...]
 
-Ok fixed and sent v6
+> > Doing the in-kernel opt-out via API should be fine, I think. But this will
+> > need to be discussed in the wider circle. It will already clash with this for
+> > example
+> >
+> > https://lore.kernel.org/lkml/20200619172011.5810-1-qais.yousef@arm.com/
+> 
+> Have not yet looked closer at that patch, but are you saying this
+> patch clashes with that work? Sorry I am operating on 2 hours of sleep
+> here.
 
+The series is an optimization to remove the uclamp overhead from the scheduler
+fastpath until the userspace uses it. It introduces a static key that is
+disabled by default and will cause uclamp logic not to execute in the fast
+path. Once the userspace starts using util clamp, which we detect by either
+
+	1. Changing uclamp value of a task with sched_setattr()
+	2. Modifying the default sysctl_sched_util_clamp_{min, max}
+	3. Modifying the default cpu.uclamp.{min, max} value in cgroup
+
+If we start having in-kernel users changing uclamp value this means drivers
+will cause the system to opt-in into uclamp automatically even if the
+userspace doesn't actually use it.
+
+I think we can solve this by providing a special API to opt-out safely. Which
+is the right thing to do anyway even if we didn't have this clash.
+
+Hope this makes sense.
+
+Cheers
+
+--
+Qais Yousef
