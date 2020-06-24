@@ -2,166 +2,116 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FB720836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC8820836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mojatatu-com.20150623.gappssmtp.com header.i=@mojatatu-com.20150623.gappssmtp.com header.b="ADAC9Nm+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Abuv2fru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390877AbgFXMoj (ORCPT
+        id S2390823AbgFXMpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34254 "EHLO
+        Wed, 24 Jun 2020 08:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388942AbgFXMoi (ORCPT
+        with ESMTP id S2389802AbgFXMpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:44:38 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BABC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:44:38 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id u12so1482280qth.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:44:38 -0700 (PDT)
+        Wed, 24 Jun 2020 08:45:21 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58ABC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:45:21 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e8so1376528pgc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mojatatu-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K+GGZXKgpzdCsUctXsT0qtaMFmUhAglO46kKwDBE35k=;
-        b=ADAC9Nm+AjdV8L4TTS7PIGLMY15VNal3PX2tkETlMZKLDRFTA5Zq7fyeasnJFbp8aQ
-         u35RXtvdaqiOl2B34/rDKVfk/KU5yGbvLGjLj5uBbsgbgxlieYKMYe61G7Aa3nJSqNsJ
-         aSS1D/M+o9/ClQ8ZDo9o+Cm+Ywc+anYTuJfGUyz91nsTQAtPlOnm+eEintzNQG/V67me
-         duDxwZV4JBFW67bkT02/tyvtt63LcTnGQu03PsWedd0d7bGH4vD2mrADYMwcQpgn8Tw9
-         CBSjxkARtflMFT8a0pxLNB3Ihb+pE571AonOVTeiVD9S+18zwm1RX5bPUeYKjJEuo3Om
-         USUw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c0tzWmwEnL1LNuOR840NxOvrYGVoBsalkkpC/ourtLA=;
+        b=Abuv2fru6/Pff6od6rE13vinRzDiQx++f7JKLMmu51TFcFV1zrwEaqJEO5XjB7RG/E
+         xVdLOln4m0d1V8forlHVaME8RsaMSblfkAZSDWg7OHLWzCboQHUeKzpQPLcnGLlPWdgO
+         TEhn/hQRFfgJQSS6WHJBuEzCdCcjhiSaio1s40nc77N5QcdWKT2BIFPQZBs+yszWK3uT
+         Wrf5wPK7oHaLNCT02CNNlO6KobDMMQrpHxCNqCRr1EuZn0PvnfsDbObtjnDbQOx6yiC0
+         DIx64uiTWmrTYB3WqS6/r1wpneEFSz4SSPh9NMH4h+DXESO+SaP2SYSg8zznMoa/EkYK
+         BPIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K+GGZXKgpzdCsUctXsT0qtaMFmUhAglO46kKwDBE35k=;
-        b=kxEqoRjTeYk3kklM0sKBxw+sTOTPHPAdpOsJlqXyKC/06azT+4KEHEx67Q0FZyQ88+
-         dI2/CGUGEGZvavxokWNg9WNlK+W3xHcGwMi1b9pnnLeaUwF++TIprJ0IBsNW9uQ63y92
-         9Xx0N7Zr0aKHFyFq+mD3kncgoXT0u/9HIUMiUoRY0MHMQNrJaU8iJ4IuU2fjytsP3NKM
-         4OmRU4i+2CEVNJQUP+3wtU1wj7i6G99Q4n5ba5mlz0jM+LuDL7rhfBo2ukxybu+1LjGF
-         l492LG7himWxEM0/3uJZje1vPKeqHm+otc34nD+rHtekpb38MLlyKF2mcuWdWLZIDZn6
-         F2hA==
-X-Gm-Message-State: AOAM530+k0lOiO11ZxXB0YL9fYui86Xzsn6X8zLTBaQUiSZtjXwkVEb7
-        z1VoYze35+cV6ElQq24YAkr8/w==
-X-Google-Smtp-Source: ABdhPJyQIqA1QaiDwKbaPsVfBf/aqoPaaAgynomS8v8sVwttSlNATi+gb0yJ2j0k/hkgTxeCYTLIeQ==
-X-Received: by 2002:ac8:794c:: with SMTP id r12mr26584071qtt.201.1593002677309;
-        Wed, 24 Jun 2020 05:44:37 -0700 (PDT)
-Received: from [192.168.1.117] (23-233-27-60.cpe.pppoe.ca. [23.233.27.60])
-        by smtp.googlemail.com with ESMTPSA id f65sm1914390qtd.61.2020.06.24.05.44.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 05:44:36 -0700 (PDT)
-Subject: Re: [v1,net-next 3/4] net: qos: police action add index for tc flower
- offloading
-To:     Po Liu <po.liu@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "idosch@idosch.org" <idosch@idosch.org>
-Cc:     "jiri@resnulli.us" <jiri@resnulli.us>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "vlad@buslov.dev" <vlad@buslov.dev>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
-        "vishal@chelsio.com" <vishal@chelsio.com>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "idosch@mellanox.com" <idosch@mellanox.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "moshe@mellanox.com" <moshe@mellanox.com>,
-        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
-        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        Edward Cree <ecree@solarflare.com>
-References: <VE1PR04MB6496AD2BE9868D72A475935492940@VE1PR04MB6496.eurprd04.prod.outlook.com>
-From:   Jamal Hadi Salim <jhs@mojatatu.com>
-Message-ID: <18e0ceb0-7cc7-12cc-624d-286cfbd70b94@mojatatu.com>
-Date:   Wed, 24 Jun 2020 08:44:34 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c0tzWmwEnL1LNuOR840NxOvrYGVoBsalkkpC/ourtLA=;
+        b=b2rNdNlPakqC2aGmoyhxXMviE3iPMIZ+m2/CfmIiOXaHIxTR5WqGwqmIq8WjrLr8sN
+         qgu/9oKpttZycJHvuShqBK1hEVz4h8B+3ChrSnxr/2JtvvKaXIEhPLMJ25ZFbGltN3v9
+         ykhKb1/i+fiHusAb52ZdyswQGyHVoXw2lqF/V04GDB6aqyKSnUItaUkRAyND0eR6bz6G
+         XFS14Cv8nXU6+VT8kBkQGyYCgItUryEuduDTHSxAygnzU8WOT9RupYAXpagFJUeUEIuS
+         kSUBBTU5fZYg1008JzVq/D9Hr+wnmQ29vkpAEmU99xb9KW1+zwl5isB9wEsnDA5XJcth
+         IhPA==
+X-Gm-Message-State: AOAM530GKm139N1IjRje5jO1IckersduCz+6XPpAxUGNytZHFB2vn99d
+        BYHKIkLbj1ubgEKdYpZGyOws62+EhcD4MhkFPXiKrA==
+X-Google-Smtp-Source: ABdhPJxSy9Ws3muDQ004JfgPOJ/nj14xUipC5iE0Q+QQT/5t0ysEqLOJsiaMrjk8zg9GtaCMZEVvF+lqcH7Wfb093P8=
+X-Received: by 2002:a65:64d8:: with SMTP id t24mr15238480pgv.286.1593002721077;
+ Wed, 24 Jun 2020 05:45:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <VE1PR04MB6496AD2BE9868D72A475935492940@VE1PR04MB6496.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000009a6e9805a8c57c58@google.com>
+In-Reply-To: <0000000000009a6e9805a8c57c58@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 24 Jun 2020 14:45:10 +0200
+Message-ID: <CAAeHK+yu4H=2BuVhv7UMt4S0qtx_3Ngn4YLFni6nTNAQsWkK0Q@mail.gmail.com>
+Subject: Re: BUG: corrupted list in corrupted (3)
+To:     syzbot <syzbot+0b3de1d31a24da20947b@syzkaller.appspotmail.com>
+Cc:     akpm@osdl.org, Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-23 7:52 p.m., Po Liu wrote:
-> Hi Jamal,
-> 
-> 
+On Tue, Jun 23, 2020 at 9:37 PM syzbot
+<syzbot+0b3de1d31a24da20947b@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    f8f02d5c USB: OTG: rename product list of devices
+> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11bfddf1100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fbe5dc26525767f1
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0b3de1d31a24da20947b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11abf20d100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ea5a11100000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+0b3de1d31a24da20947b@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> kernel BUG at lib/list_debug.c:26!
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000009a6e9805a8c57c58%40google.com.
 
->>>> My question: Is this any different from how stats are structured?
->>>
-
-[..]
->> My question: Why cant you apply the same semantics for the counters?
->> Does your hardware have an indexed counter/stats table? If yes then you
-> 
-> Yes, 
-
-That is the point i was trying to get to. Basically:
-You have a counter table which is referenced by "index"
-You also have a meter/policer table which is referenced by "index".
-
-For policers, they maintain their own stats. So when i say:
-tc ... flower ... action police ... index 5
-The index referred to is in the policer table
-
-But for other actions, example when i say:
-tc ... flower ... action drop index 10
-The index is in the counter/stats table.
-It is not exactly "10" in hardware, the driver magically hides
-it from the user - so it could be hw counter index 1234
-
-The old approach is to assume the classifier (flower in this
-case) has a counter. The reason for this assumption is older
-hardware was designed to deal with a single action per match.
-So a counter to the filter is also the counter to the
-(single) action. I get the feeling your hardware fits in that
-space.
-
-Modern use cases have evolved from the ACL single match and action
-approach. Maintaining the old thought/architecture breaks in two
-use cases:
-1) when you have multiple actions per policy filter. You need
-counter-per-action for various reasons
-2) Sharing of counters across filters and action. This can
-be achieve
-
-tc supports the above and is sufficient to cover the old use
-cases.
-I am just worried, architecturally, we are restricting ourselves
-to the old scheme.
-
-Another reason this is important is for the sake of analytics.
-A user space app can poll just for the stats table in hardware
-(or the cached version in the kernel) and reduce the amount of
-data crossing to user space..
-
-cheers,
-jamal
-
-
-
-
-
+#syz dup: BUG: corrupted list in em28xx_init_extension
