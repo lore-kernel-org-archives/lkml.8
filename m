@@ -2,152 +2,126 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C155DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999112082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="vZbPyq5Z"
+	by mail.kernel.org (Postfix) with ESMTP id CED2C2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391097AbgFXNrd (ORCPT
+        id S2391108AbgFXNtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:47:33 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:46019 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389590AbgFXNrc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:47:32 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id o5kKjhYOHNb6lo5kOjtb27; Wed, 24 Jun 2020 15:47:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593006450; bh=JAfq/32k3tkEWMaQptV/OjgB7hA+rl6xijjyAZW6YWU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=vZbPyq5ZTeBsbO+i+HXYzvUtE47hJxYsNnNI28Ffi1SYRacsqRjhDR+N4Cs1pvMuN
-         TxcJbQwqHOoL5bre/mFIorJdzL3d80K+aiFPK/Mf/JdK0db9oluMOg3Ju3Cwu37FZz
-         evg6ebpXEmXEWxhpFSL3igpMOK5GABOCHmI+D/EtZUInhb1x3TQk0Udszu3Ml3ZEbf
-         Oi4ta93ENQwL4hDkUUErFA8X0F0JelYBTtYChDx/5BcmBp4xDdKQ4dMHVKi4nnVq5Z
-         DpA0VDyaFWgXtWKxwSaKpSAQjOZNC02lR2LOsdFoHzUSRkcKKS8zP0NKiS0r+wSb8T
-         F1dXrqulhIprQ==
-Subject: Re: [PATCH v5 2/3] media: tpg: Add function to return colors' order
- of test image
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
- <20200624134354.7023-3-kgupta@es.iitr.ac.in>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c3e047f2-84eb-e697-3a69-fd930f67339d@xs4all.nl>
-Date:   Wed, 24 Jun 2020 15:47:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 09:49:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:51856 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389590AbgFXNtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:49:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F21631B;
+        Wed, 24 Jun 2020 06:49:00 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E3913F6CF;
+        Wed, 24 Jun 2020 06:48:57 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 14:48:55 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Fangrui Song <maskray@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+Message-ID: <20200624134854.GF25945@arm.com>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org>
+ <20200624033142.cinvg6rbg252j46d@google.com>
+ <202006232143.66828CD3@keescook>
+ <20200624104356.GA6134@willie-the-truck>
+ <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+ <20200624112647.GC6134@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200624134354.7023-3-kgupta@es.iitr.ac.in>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEwKybCLDMwepSzmhWYyrrC8+AiV1Vwf8zoe5kRfofIWt2BcktSgQGYFE4uhiTgt7LuYlF2GLoCYhmzi9J4jSHdlgYelrbpLdfAtCsrZHvYIDxXPniRu
- cUgQ2aKGNbULvLrhGDaIB0OM5693jzz8XQB4qyu12kqRzTOcIHKKouc5RkJvZ4zNt5l4EVG9ZqsxOTa5LpntE0uY7ImRuNpgcAgQ2eRGmQ6hwuCVvU5cxfeS
- aP/FNCSByHBrRk3/OQXyMVUQIVwAuV/Ld09Ss5FSZJtBNNsRv0ViWlcJZ5ngP4l24vp386EAKotbcZ6L+OLkTODBxfrpIKAxILzV+mqEYtPFMJYamAnRxHNe
- zWz5uQoSftA0rA78QUM5eq4jLvGSyDqmKw/sKLHhi/xZVTHzBCQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624112647.GC6134@willie-the-truck>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2020 15:43, Kaaira Gupta wrote:
-> Currently there is no method to know the correct order of the colors for
-> a test image generated by tpg. Write a function that returns a string of
-> colors' order given a tpg. It returns a NULL pointer in case of test
-> patterns which do not have a well defined colors' order. Hence add a
-> NULL check for text in tpg_gen_text().
+On Wed, Jun 24, 2020 at 12:26:47PM +0100, Will Deacon wrote:
+> On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 24 Jun 2020 at 12:44, Will Deacon <will@kernel.org> wrote:
+> > > On Tue, Jun 23, 2020 at 09:44:11PM -0700, Kees Cook wrote:
+> > > > On Tue, Jun 23, 2020 at 08:31:42PM -0700, 'Fangrui Song' via Clang Built Linux wrote:
+> > > > > arch/arm64/Kconfig enables ARM64_PTR_AUTH by default. When the config is on
+> > > > >
+> > > > > ifeq ($(CONFIG_ARM64_BTI_KERNEL),y)
+> > > > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI) := -mbranch-protection=pac-ret+leaf+bti
+> > > > > else
+> > > > > branch-prot-flags-$(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET) := -mbranch-protection=pac-ret+leaf
+> > > > > endif
+> > > > >
+> > > > > This option creates .note.gnu.property:
+> > > > >
+> > > > > % readelf -n drivers/firmware/efi/libstub/efi-stub.o
+> > > > >
+> > > > > Displaying notes found in: .note.gnu.property
+> > > > >   Owner                Data size        Description
+> > > > >   GNU                  0x00000010       NT_GNU_PROPERTY_TYPE_0
+> > > > >       Properties: AArch64 feature: PAC
+> > > > >
+> > > > > If .note.gnu.property is not desired in drivers/firmware/efi/libstub, specifying
+> > > > > -mbranch-protection=none can override -mbranch-protection=pac-ret+leaf
+> > > >
+> > > > We want to keep the branch protection enabled. But since it's not a
+> > > > "regular" ELF, we don't need to keep the property that identifies the
+> > > > feature.
+> > >
+> > > For the kernel Image, how do we remove these sections? The objcopy flags
+> > > in arch/arm64/boot/Makefile look both insufficient and out of date. My
+> > > vmlinux ends up with both a ".notes" and a ".init.note.gnu.property"
+> > > segment.
+> > >
+> > 
+> > The latter is the fault of the libstub make rules, that prepend .init
+> > to all section names.
 > 
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> ---
->  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 29 +++++++++++++++++--
->  include/media/tpg/v4l2-tpg.h                  |  1 +
->  2 files changed, 28 insertions(+), 2 deletions(-)
+> Hmm. I tried adding -mbranch-protection=none to arm64 cflags for the stub,
+> but I still see this note in vmlinux. It looks like it comes in via the
+> stub copy of lib-ctype.o, but I don't know why that would force the
+> note. The cflags look ok to me [1] and I confirmed that the note is
+> being generated by the compiler.
 > 
-> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> index dde22a4cbd6c..a052b656fa6a 100644
-> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> @@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
->  	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
->  	unsigned div = step;
->  	unsigned first = 0;
-> -	unsigned len = strlen(text);
-> +	unsigned len;
->  	unsigned p;
->  
-> -	if (font8x16 == NULL || basep == NULL)
-> +	if (font8x16 == NULL || basep == NULL || text == NULL)
->  		return;
->  
-> +	len = strlen(text);
-> +
->  	/* Checks if it is possible to show string */
->  	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
->  		return;
-> @@ -2006,6 +2008,29 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
->  }
->  EXPORT_SYMBOL_GPL(tpg_gen_text);
->  
-> +const char *tpg_g_color_order(const struct tpg_data *tpg)
-> +{
-> +	switch (tpg->pattern) {
-> +	case TPG_PAT_75_COLORBAR:
-> +	case TPG_PAT_100_COLORBAR:
-> +	case TPG_PAT_CSC_COLORBAR:
-> +	case TPG_PAT_100_HCOLORBAR:
-> +		return "white, yellow, cyan, green, magenta, red, blue, black";
-> +	case TPG_PAT_BLACK:
-> +		return "Black";
-> +	case TPG_PAT_WHITE:
-> +		return "White";
-> +	case TPG_PAT_RED:
-> +		return "Red";
-> +	case TPG_PAT_GREEN:
-> +		return "Green";
-> +	case TPG_PAT_BLUE:
-> +		return "Blue";
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-
-Missing EXPORT_SYMBOL_GPL().
-
-Regards,
-
-	Hans
-
-> +
->  void tpg_update_mv_step(struct tpg_data *tpg)
->  {
->  	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
-> diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-> index 9749ed409856..0b0ddb87380e 100644
-> --- a/include/media/tpg/v4l2-tpg.h
-> +++ b/include/media/tpg/v4l2-tpg.h
-> @@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
->  bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
->  void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
->  		const struct v4l2_rect *compose);
-> +const char *tpg_g_color_order(const struct tpg_data *tpg);
->  
->  static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
->  {
+> > I'm not sure if there is a point to having PAC and/or BTI in the EFI
+> > stub, given that it runs under the control of the firmware, with its
+> > memory mappings and PAC configuration etc.
 > 
+> Agreed, I just can't figure out how to get rid of the note.
 
+Because this section is generated by the linker itself I think you might
+have to send it to /DISCARD/ in the link, or strip it explicitly after
+linking.
+
+Cheers
+---Dave
