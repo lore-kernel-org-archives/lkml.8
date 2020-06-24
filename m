@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1265FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2FE1212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF12220FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390264AbgFXID1 (ORCPT
+        id S2390279AbgFXIDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:03:27 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:62453 "EHLO
+        Wed, 24 Jun 2020 04:03:31 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:62455 "EHLO
         fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387606AbgFXID1 (ORCPT
+        with ESMTP id S2387606AbgFXID3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:03:27 -0400
+        Wed, 24 Jun 2020 04:03:29 -0400
 X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
 Received: from build.alporthouse.com (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 21599206-1500050 
-        for multiple; Wed, 24 Jun 2020 09:03:20 +0100
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 21599198-1500050 
+        for multiple; Wed, 24 Jun 2020 09:02:53 +0100
 From:   Chris Wilson <chris@chris-wilson.co.uk>
 To:     linux-mm@kvack.org
 Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: [PATCH 2/2] drm/i915/gem: Use mmu_notifier_range_mayfail() to avoid waiting inside reclaim
-Date:   Wed, 24 Jun 2020 09:02:48 +0100
-Message-Id: <20200624080248.3701-2-chris@chris-wilson.co.uk>
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: [PATCH 1/2] mm/mmu_notifier: Mark up direct reclaim paths with MAYFAIL
+Date:   Wed, 24 Jun 2020 09:02:47 +0100
+Message-Id: <20200624080248.3701-1-chris@chris-wilson.co.uk>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200624080248.3701-1-chris@chris-wilson.co.uk>
-References: <20200624080248.3701-1-chris@chris-wilson.co.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,48 +42,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The direct reclaim path may trigger the mmu_notifier callback as part of
-try_to_unmap_one. As this is purely an opportunitistic attempt to
-reclaim pages, and will be called from any allocation context under
-unknown conditions (that include attempting to allocate pages for the
-userptr object itself and subsequently trying to reclaim parts of the
-partially acquired object) we have to be careful never to wait on
-anything being held by the calling context. Since that is unknown, we
-have to avoid waiting from inside direct reclaim.
+When direct reclaim enters the shrinker and tries to reclaim pages, it
+has to opportunitically unmap them [try_to_unmap_one]. For direct
+reclaim, the calling context is unknown and may include attempts to
+unmap one page of a dma object while attempting to allocate more pages
+for that object. Pass the information along that we are inside an
+opportunistic unmap that can allow that page to remain referenced and
+mapped, and let the callback opt in to avoiding a recursive wait.
 
 Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+CC: Jason Gunthorpe <jgg@ziepe.ca>
 ---
- drivers/gpu/drm/i915/gem/i915_gem_userptr.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ include/linux/mmu_notifier.h | 15 ++++++++++++++-
+ mm/mmu_notifier.c            |  3 +++
+ mm/rmap.c                    |  5 +++--
+ 3 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-index 9c53eb883400..72cfb91230ea 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-@@ -103,6 +103,7 @@ userptr_mn_invalidate_range_start(struct mmu_notifier *_mn,
- 	it = interval_tree_iter_first(&mn->objects, range->start, end);
- 	while (it) {
- 		struct drm_i915_gem_object *obj;
-+		unsigned int flags;
+diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+index fc68f3570e19..ee1ad008951c 100644
+--- a/include/linux/mmu_notifier.h
++++ b/include/linux/mmu_notifier.h
+@@ -48,7 +48,8 @@ enum mmu_notifier_event {
+ 	MMU_NOTIFY_RELEASE,
+ };
  
- 		if (!mmu_notifier_range_blockable(range)) {
- 			ret = -EAGAIN;
-@@ -126,9 +127,12 @@ userptr_mn_invalidate_range_start(struct mmu_notifier *_mn,
- 		}
- 		spin_unlock(&mn->lock);
+-#define MMU_NOTIFIER_RANGE_BLOCKABLE (1 << 0)
++#define MMU_NOTIFIER_RANGE_BLOCKABLE	BIT(0)
++#define MMU_NOTIFIER_RANGE_MAYFAIL	BIT(1)
  
--		ret = i915_gem_object_unbind(obj,
--					     I915_GEM_OBJECT_UNBIND_ACTIVE |
--					     I915_GEM_OBJECT_UNBIND_BARRIER);
-+		flags = (I915_GEM_OBJECT_UNBIND_ACTIVE |
-+			 I915_GEM_OBJECT_UNBIND_BARRIER);
-+		if (mmu_notifier_range_mayfail(range))
-+			flags = 0;
+ struct mmu_notifier_ops {
+ 	/*
+@@ -169,6 +170,12 @@ struct mmu_notifier_ops {
+ 	 * a non-blocking behavior then the same applies to
+ 	 * invalidate_range_end.
+ 	 *
++	 * If mayfail is set then the callback may return -EAGAIN while still
++	 * holding its page references. This flag is set inside direct
++	 * reclaim paths that are opportunistically trying to unmap pages
++	 * from unknown contexts. The callback must be prepared to handle
++	 * the matching invalidate_range_end even after failing the
++	 * invalidate_range_start.
+ 	 */
+ 	int (*invalidate_range_start)(struct mmu_notifier *subscription,
+ 				      const struct mmu_notifier_range *range);
+@@ -397,6 +404,12 @@ mmu_notifier_range_blockable(const struct mmu_notifier_range *range)
+ 	return (range->flags & MMU_NOTIFIER_RANGE_BLOCKABLE);
+ }
+ 
++static inline bool
++mmu_notifier_range_mayfail(const struct mmu_notifier_range *range)
++{
++	return (range->flags & MMU_NOTIFIER_RANGE_MAYFAIL);
++}
 +
-+		ret = i915_gem_object_unbind(obj, flags);
- 		if (ret == 0)
- 			ret = __i915_gem_object_put_pages(obj);
- 		i915_gem_object_put(obj);
+ static inline void mmu_notifier_release(struct mm_struct *mm)
+ {
+ 	if (mm_has_notifiers(mm))
+diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+index 352bb9f3ecc0..95b89cee7af4 100644
+--- a/mm/mmu_notifier.c
++++ b/mm/mmu_notifier.c
+@@ -493,6 +493,9 @@ static int mn_hlist_invalidate_range_start(
+ 			_ret = ops->invalidate_range_start(subscription, range);
+ 			if (!mmu_notifier_range_blockable(range))
+ 				non_block_end();
++			if (_ret == -EAGAIN &&
++			    mmu_notifier_range_mayfail(range))
++				_ret = 0;
+ 			if (_ret) {
+ 				pr_info("%pS callback failed with %d in %sblockable context.\n",
+ 					ops->invalidate_range_start, _ret,
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 5fe2dedce1fc..912b737a3353 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1406,8 +1406,9 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
+ 	 * Note that the page can not be free in this function as call of
+ 	 * try_to_unmap() must hold a reference on the page.
+ 	 */
+-	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, vma->vm_mm,
+-				address,
++	mmu_notifier_range_init(&range,
++				MMU_NOTIFY_CLEAR, MMU_NOTIFIER_RANGE_MAYFAIL,
++				vma, vma->vm_mm, address,
+ 				min(vma->vm_end, address + page_size(page)));
+ 	if (PageHuge(page)) {
+ 		/*
 -- 
 2.20.1
 
