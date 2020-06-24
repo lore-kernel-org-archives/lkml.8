@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7692080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1A22080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593028727;
-	bh=vOk/KS2oyObq/ip/FzPtbh8Z4MzVJ5vpZhAYl4vAmQA=;
+	s=default; t=1593028732;
+	bh=EgZrAvWzDmQAMyLU+ZPmEcgF2njzyvDT7jV5rtH7w0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2XFcEp+PMqLpY2U+HibSA+J7QYPhXMdOP9/yb95zyvMHq4FFF73HRsk23ZJP8kkj
-	 DFnd37vmuud7GQhIvHY/HUvxamnHbaTmgwRiK59djsiwH99na8OhOJt/XBWDyC66km
-	 E1n6koWhkrX6ztW6ZvUu+Yl/PYx3kIz6yYDFEoQY=
+	b=GrQflSkXf9JuICvn5zDOVW0WtmOVfpttBLU20bpT96PJZea8M1fAX50jleaKXxNSZ
+	 SSxRzLL24i+0Vyd0IUIGhxonVqjz/9Y0Qtdfi6fe6ITjFlYI7CtekJRYE353JNhTI9
+	 O9rYPeBOfUc6sMlzoDEhz8P389j0mB83862cDmj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406328AbgFXT6l (ORCPT
+        id S2391392AbgFXT6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 15:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406258AbgFXT6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:58:21 -0400
+        id S2391358AbgFXT6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:58:19 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0EE920857;
-        Wed, 24 Jun 2020 19:58:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BAA22080C;
+        Wed, 24 Jun 2020 19:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593028700;
-        bh=vOk/KS2oyObq/ip/FzPtbh8Z4MzVJ5vpZhAYl4vAmQA=;
+        s=default; t=1593028698;
+        bh=EgZrAvWzDmQAMyLU+ZPmEcgF2njzyvDT7jV5rtH7w0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulkROwrwBWOMiGUW0j1tU8lpQdzifIfL01uXD9FZ5tAiD3A6sZF4HOfA4grkerbaS
-         XA9sLyoNn71o9M6MmpIbv1uVHjYgEx/LFqsFtv0NJQi2IYUJ5vA+FamrUojSawDTKO
-         S4LWeDs6/noYGPGtMzLI2+WNvQZRaJ9QHP4JHDas=
+        b=Qevz0sOswH+NYnVEoqfSDe22ab9oUfxyRZNGZJBSDbk++UGCVphPSQ2CZQBqLmLNb
+         xci9U1vvF0gEzVY0bOIYzIkX+AHRIgYQtE7Md+mylPQ0yHPJm2ek4ex6xmU7iBDKUy
+         8XgVq4vw4z/JFGGwDf+sdrhSMxkRzeyL26pFUuXc=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1joBXH-006ABu-81; Wed, 24 Jun 2020 20:58:19 +0100
+        id 1joBXE-006ABu-N4; Wed, 24 Jun 2020 20:58:16 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -56,9 +56,9 @@ Cc:     Will Deacon <will@kernel.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
-Subject: [PATCH v2 05/17] irqchip/gic-v3: Describe the SGI range
-Date:   Wed, 24 Jun 2020 20:57:59 +0100
-Message-Id: <20200624195811.435857-6-maz@kernel.org>
+Subject: [PATCH v2 01/17] genirq: Add fasteoi IPI flow
+Date:   Wed, 24 Jun 2020 20:57:55 +0100
+Message-Id: <20200624195811.435857-2-maz@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200624195811.435857-1-maz@kernel.org>
 References: <20200624195811.435857-1-maz@kernel.org>
@@ -73,77 +73,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we are about to start making use of SGIs in a more conventional
-way, let's describe it is the GICv3 list of interrupt types.
+For irqchips using the fasteoi flow, IPIs are a bit special.
+They need to be EOI'd early (before calling the handler), as
+funny things may happen in the handler (they do not necessarily
+behave like a normal interrupt).
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ include/linux/irq.h |  1 +
+ kernel/irq/chip.c   | 27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index cc46bc2d634b..19b294ed48ba 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -112,6 +112,7 @@ static DEFINE_PER_CPU(bool, has_rss);
- #define DEFAULT_PMR_VALUE	0xf0
- 
- enum gic_intid_range {
-+	SGI_RANGE,
- 	PPI_RANGE,
- 	SPI_RANGE,
- 	EPPI_RANGE,
-@@ -123,6 +124,8 @@ enum gic_intid_range {
- static enum gic_intid_range __get_intid_range(irq_hw_number_t hwirq)
- {
- 	switch (hwirq) {
-+	case 0 ... 15:
-+		return SGI_RANGE;
- 	case 16 ... 31:
- 		return PPI_RANGE;
- 	case 32 ... 1019:
-@@ -148,15 +151,22 @@ static inline unsigned int gic_irq(struct irq_data *d)
- 	return d->hwirq;
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 8d5bc2c237d7..726f94d8b8cc 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -621,6 +621,7 @@ static inline int irq_set_parent(int irq, int parent_irq)
+  */
+ extern void handle_level_irq(struct irq_desc *desc);
+ extern void handle_fasteoi_irq(struct irq_desc *desc);
++extern void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc);
+ extern void handle_edge_irq(struct irq_desc *desc);
+ extern void handle_edge_eoi_irq(struct irq_desc *desc);
+ extern void handle_simple_irq(struct irq_desc *desc);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 41e7e37a0928..b9c49a61f8bb 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -955,6 +955,33 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
+ 		chip->irq_eoi(&desc->irq_data);
  }
  
--static inline int gic_irq_in_rdist(struct irq_data *d)
-+static inline bool gic_irq_in_rdist(struct irq_data *d)
- {
--	enum gic_intid_range range = get_intid_range(d);
--	return range == PPI_RANGE || range == EPPI_RANGE;
-+	switch (get_intid_range(d)) {
-+	case SGI_RANGE:
-+	case PPI_RANGE:
-+	case EPPI_RANGE:
-+		return true;
-+	default:
-+		return false;
-+	}
- }
- 
- static inline void __iomem *gic_dist_base(struct irq_data *d)
- {
- 	switch (get_intid_range(d)) {
-+	case SGI_RANGE:
- 	case PPI_RANGE:
- 	case EPPI_RANGE:
- 		/* SGI+PPI -> SGI_base for this CPU */
-@@ -253,6 +263,7 @@ static void gic_enable_redist(bool enable)
- static u32 convert_offset_index(struct irq_data *d, u32 offset, u32 *index)
- {
- 	switch (get_intid_range(d)) {
-+	case SGI_RANGE:
- 	case PPI_RANGE:
- 	case SPI_RANGE:
- 		*index = d->hwirq;
-@@ -1277,6 +1288,7 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 		chip = &gic_eoimode1_chip;
- 
- 	switch (__get_intid_range(hw)) {
-+	case SGI_RANGE:
- 	case PPI_RANGE:
- 	case EPPI_RANGE:
- 		irq_set_percpu_devid(irq);
++/**
++ * handle_percpu_devid_fasteoi_ipi - Per CPU local IPI handler with per cpu
++ *				     dev ids
++ * @desc:	the interrupt description structure for this irq
++ *
++ * The biggest difference with the IRQ version is that the interrupt is
++ * EOIed early, as the IPI could result in a context switch, and we need to
++ * make sure the IPI can fire again. We also assume that the arch code has
++ * registered an action. If not, we are positively doomed.
++ */
++void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct irqaction *action = desc->action;
++	unsigned int irq = irq_desc_get_irq(desc);
++	irqreturn_t res;
++
++	__kstat_incr_irqs_this_cpu(desc);
++
++	if (chip->irq_eoi)
++		chip->irq_eoi(&desc->irq_data);
++
++	trace_irq_handler_entry(irq, action);
++	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
++	trace_irq_handler_exit(irq, action, res);
++}
++
+ /**
+  * handle_percpu_devid_fasteoi_nmi - Per CPU local NMI handler with per cpu
+  *				     dev ids
 -- 
 2.27.0
 
