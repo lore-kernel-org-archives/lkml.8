@@ -2,284 +2,135 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 504DE20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CC220857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FolcO0Lh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403854AbgFXL5L (ORCPT
+        id S2390351AbgFXL5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:57:11 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:20068 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403801AbgFXL5K (ORCPT
+        Wed, 24 Jun 2020 07:57:31 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19503 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbgFXL52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:57:10 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 24 Jun 2020 04:57:07 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Jun 2020 04:57:06 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 24 Jun 2020 17:26:42 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 921DE4A40; Wed, 24 Jun 2020 17:26:40 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH] drm/msm/dpu: add support for dither block in display
-Date:   Wed, 24 Jun 2020 17:26:36 +0530
-Message-Id: <1592999796-30501-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 24 Jun 2020 07:57:28 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef33f9b0000>; Wed, 24 Jun 2020 04:57:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 24 Jun 2020 04:57:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 24 Jun 2020 04:57:27 -0700
+Received: from [10.26.73.205] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jun
+ 2020 11:57:26 +0000
+Subject: Re: linux-next: Tree for Jun 24 [build failure on arm64]
+To:     Will Deacon <will@kernel.org>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200624165323.3dffcde5@canb.auug.org.au>
+ <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
+ <20200624105528.GB6134@willie-the-truck>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b561e663-a9aa-d600-e23b-09793199141e@nvidia.com>
+Date:   Wed, 24 Jun 2020 12:57:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200624105528.GB6134@willie-the-truck>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592999835; bh=rOGvVUO5Jofmog2XlYA47AUYPd77eAO/iMznUOpsZTA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FolcO0Lhu102UNN+IOpFKapnSg1QpiGhx0+13N/cRopcM27ErziLlkX/cCH586W+R
+         9SQ9Hjv3LYB+o0qFGxJDBN8LDJSJ+x7JffjkWqoASG9sTA/grgUjrN86dnPm3vVAoT
+         05atCNOtOG8rqu76ihP+ZS877I7aC8T0JM+2ZNIomdxdagplu4XcibnxCf14+K1KOh
+         E0csrlL//kHH8znL5/tlrwye/1iMBBzutvUIRBuow6kID9osQHebg6mI2osqR3EV0H
+         6GfOt1DlcHorgQ8tJGYhb4nzpO3/GKrb6u9PnqJSWMZUGjuTq3R7u5IjSZNlEYzNWY
+         srcy8+o0nq6aw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change enables dither block for primary interface
-in display.
 
-Enabled for 6bpc in the current version.
+On 24/06/2020 11:55, Will Deacon wrote:
+> On Wed, Jun 24, 2020 at 05:08:56PM +0800, Shaokun Zhang wrote:
+>> +Will Deacon,
+>>
+>> Hi Will,
+>>
+>> There's a build failure on arm64:
+>>
+>>   CALL    scripts/atomic/check-atomics.sh
+>>   CALL    scripts/checksyscalls.sh
+>>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
+>> ld: unrecognized option '--no-eh-frame-hdr'
+>> ld: use the --help option for usage information
+>> arch/arm64/kernel/vdso/Makefile:64: recipe for target
+>> 'arch/arm64/kernel/vdso/vdso.so.dbg' failed
+>> make[1]: *** [arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
+>> arch/arm64/Makefile:175: recipe for target 'vdso_prepare' failed
+>> make: *** [vdso_prepare] Error 2
+>>
+>> GCC version is followed:
+>> gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609
+>>
+>> It seems caused by
+>> 87676cfca141 arm64: vdso: Disable dwarf unwinding through the sigreturn
+>> trampoline
+> 
+> Urgh, binutils quality strikes again. If you're able to reproduce locally,
+> can you try the diff below, please? All the linkers I have kicking around
+> seem to support --no-eh-frame-hdr.
+> 
+> Will
+> 
+> --->8
+> 
+> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+> index 1e5a940532da..97d3d3632093 100644
+> --- a/arch/arm64/kernel/vdso/Makefile
+> +++ b/arch/arm64/kernel/vdso/Makefile
+> @@ -23,8 +23,9 @@ btildflags-$(CONFIG_ARM64_BTI_KERNEL) += -z force-bti
+>  # potential future proofing if we end up with internal calls to the exported
+>  # routines, as x86 does (see 6f121e548f83 ("x86, vdso: Reimplement vdso.so
+>  # preparation in build-time C")).
+> -ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
+> -               -Bsymbolic --no-eh-frame-hdr --build-id -n $(btildflags-y) -T
+> +ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv       \
+> +            -Bsymbolic $(call ld-option, --no-eh-frame-hdr) --build-id -n      \
+> +            $(btildflags-y) -T
+>  
+>  ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
+>  ccflags-y += -DDISABLE_BRANCH_PROFILING
+> 
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c     | 45 +++++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c | 66 +++++++++++++++++++++----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h | 28 +++++++++++
- 3 files changed, 130 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 63976dc..26e870a 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -208,6 +208,42 @@ struct dpu_encoder_virt {
- 
- #define to_dpu_encoder_virt(x) container_of(x, struct dpu_encoder_virt, base)
- 
-+static u32 dither_matrix[DITHER_MATRIX_SZ] = {
-+	15, 7, 13, 5, 3, 11, 1, 9, 12, 4, 14, 6, 0, 8, 2, 10
-+};
-+
-+static void _dpu_encoder_setup_dither(struct dpu_encoder_phys *phys)
-+{
-+	struct dpu_hw_dither_cfg dither_cfg = { 0 };
-+	struct drm_display_info *info;
-+
-+	if (!phys || !phys->connector || !phys->hw_pp ||
-+		!phys->hw_pp->ops.setup_dither)
-+		return;
-+
-+	info = &phys->connector->display_info;
-+	if (!info)
-+		return;
-+
-+	switch (phys->connector->display_info.bpc) {
-+	case 6:
-+		dither_cfg.c0_bitdepth = 6;
-+		dither_cfg.c1_bitdepth = 6;
-+		dither_cfg.c2_bitdepth = 6;
-+		dither_cfg.c3_bitdepth = 6;
-+		dither_cfg.temporal_en = 0;
-+		break;
-+	default:
-+		phys->hw_pp->ops.setup_dither(phys->hw_pp, NULL);
-+		return;
-+	}
-+
-+	memcpy(&dither_cfg.matrix, dither_matrix,
-+			sizeof(u32) * DITHER_MATRIX_SZ);
-+
-+	phys->hw_pp->ops.setup_dither(phys->hw_pp, &dither_cfg);
-+}
-+
- void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys *phys_enc,
- 		enum dpu_intr_idx intr_idx)
- {
-@@ -1082,6 +1118,7 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
- 	struct dpu_encoder_virt *dpu_enc = NULL;
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
-+	int i;
- 
- 	if (!drm_enc || !drm_enc->dev) {
- 		DPU_ERROR("invalid parameters\n");
-@@ -1104,6 +1141,14 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
- 				dpu_kms->catalog);
- 
- 	_dpu_encoder_update_vsync_source(dpu_enc, &dpu_enc->disp_info);
-+
-+	if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
-+		for (i = 0; i < dpu_enc->num_phys_encs; i++) {
-+			struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
-+
-+			_dpu_encoder_setup_dither(phys);
-+		}
-+	}
- }
- 
- void dpu_encoder_virt_runtime_resume(struct drm_encoder *drm_enc)
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-index d110a40..cf7603d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-@@ -28,6 +28,16 @@
- #define PP_FBC_BUDGET_CTL               0x038
- #define PP_FBC_LOSSY_MODE               0x03C
- 
-+#define PP_DITHER_EN			0x000
-+#define PP_DITHER_BITDEPTH		0x004
-+#define PP_DITHER_MATRIX		0x008
-+
-+#define DITHER_DEPTH_MAP_INDEX 9
-+
-+static u32 dither_depth_map[DITHER_DEPTH_MAP_INDEX] = {
-+	0, 0, 0, 0, 0, 0, 0, 1, 2
-+};
-+
- static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
- 		const struct dpu_mdss_cfg *m,
- 		void __iomem *addr,
-@@ -49,6 +59,40 @@ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static void dpu_hw_pp_setup_dither(struct dpu_hw_pingpong *pp,
-+				    struct dpu_hw_dither_cfg *cfg)
-+{
-+	struct dpu_hw_blk_reg_map *c;
-+	u32 i, base, data = 0;
-+
-+	if (!pp)
-+		return;
-+
-+	c = &pp->hw;
-+	base = pp->caps->sblk->dither.base;
-+	if (!cfg) {
-+		DPU_REG_WRITE(c, base + PP_DITHER_EN, 0);
-+		return;
-+	}
-+
-+	data = dither_depth_map[cfg->c0_bitdepth] & REG_MASK(2);
-+	data |= (dither_depth_map[cfg->c1_bitdepth] & REG_MASK(2)) << 2;
-+	data |= (dither_depth_map[cfg->c2_bitdepth] & REG_MASK(2)) << 4;
-+	data |= (dither_depth_map[cfg->c3_bitdepth] & REG_MASK(2)) << 6;
-+	data |= (cfg->temporal_en) ? (1 << 8) : 0;
-+
-+	DPU_REG_WRITE(c, base + PP_DITHER_BITDEPTH, data);
-+
-+	for (i = 0; i < DITHER_MATRIX_SZ - 3; i += 4) {
-+		data = (cfg->matrix[i] & REG_MASK(4)) |
-+			((cfg->matrix[i + 1] & REG_MASK(4)) << 4) |
-+			((cfg->matrix[i + 2] & REG_MASK(4)) << 8) |
-+			((cfg->matrix[i + 3] & REG_MASK(4)) << 12);
-+		DPU_REG_WRITE(c, base + PP_DITHER_MATRIX + i, data);
-+	}
-+	DPU_REG_WRITE(c, base + PP_DITHER_EN, 1);
-+}
-+
- static int dpu_hw_pp_setup_te_config(struct dpu_hw_pingpong *pp,
- 		struct dpu_hw_tear_check *te)
- {
-@@ -180,15 +224,19 @@ static u32 dpu_hw_pp_get_line_count(struct dpu_hw_pingpong *pp)
- 	return line;
- }
- 
--static void _setup_pingpong_ops(struct dpu_hw_pingpong_ops *ops,
--	const struct dpu_pingpong_cfg *hw_cap)
-+static void _setup_pingpong_ops(struct dpu_hw_pingpong *c,
-+				unsigned long features)
- {
--	ops->setup_tearcheck = dpu_hw_pp_setup_te_config;
--	ops->enable_tearcheck = dpu_hw_pp_enable_te;
--	ops->connect_external_te = dpu_hw_pp_connect_external_te;
--	ops->get_vsync_info = dpu_hw_pp_get_vsync_info;
--	ops->poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
--	ops->get_line_count = dpu_hw_pp_get_line_count;
-+	c->ops.setup_tearcheck = dpu_hw_pp_setup_te_config;
-+	c->ops.enable_tearcheck = dpu_hw_pp_enable_te;
-+	c->ops.connect_external_te = dpu_hw_pp_connect_external_te;
-+	c->ops.get_vsync_info = dpu_hw_pp_get_vsync_info;
-+	c->ops.poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
-+	c->ops.get_line_count = dpu_hw_pp_get_line_count;
-+
-+	if (test_bit(DPU_PINGPONG_DITHER, &features) &&
-+		IS_SC7180_TARGET(c->hw.hwversion))
-+		c->ops.setup_dither = dpu_hw_pp_setup_dither;
- };
- 
- static struct dpu_hw_blk_ops dpu_hw_ops;
-@@ -212,7 +260,7 @@ struct dpu_hw_pingpong *dpu_hw_pingpong_init(enum dpu_pingpong idx,
- 
- 	c->idx = idx;
- 	c->caps = cfg;
--	_setup_pingpong_ops(&c->ops, c->caps);
-+	_setup_pingpong_ops(c, c->caps->features);
- 
- 	dpu_hw_blk_init(&c->base, DPU_HW_BLK_PINGPONG, idx, &dpu_hw_ops);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-index d73cb73..065996b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-@@ -10,6 +10,8 @@
- #include "dpu_hw_util.h"
- #include "dpu_hw_blk.h"
- 
-+#define DITHER_MATRIX_SZ 16
-+
- struct dpu_hw_pingpong;
- 
- struct dpu_hw_tear_check {
-@@ -35,6 +37,26 @@ struct dpu_hw_pp_vsync_info {
- };
- 
- /**
-+ * struct dpu_hw_dither_cfg - dither feature structure
-+ * @flags: for customizing operations
-+ * @temporal_en: temperal dither enable
-+ * @c0_bitdepth: c0 component bit depth
-+ * @c1_bitdepth: c1 component bit depth
-+ * @c2_bitdepth: c2 component bit depth
-+ * @c3_bitdepth: c2 component bit depth
-+ * @matrix: dither strength matrix
-+ */
-+struct dpu_hw_dither_cfg {
-+	u64 flags;
-+	u32 temporal_en;
-+	u32 c0_bitdepth;
-+	u32 c1_bitdepth;
-+	u32 c2_bitdepth;
-+	u32 c3_bitdepth;
-+	u32 matrix[DITHER_MATRIX_SZ];
-+};
-+
-+/**
-  *
-  * struct dpu_hw_pingpong_ops : Interface to the pingpong Hw driver functions
-  *  Assumption is these functions will be called after clocks are enabled
-@@ -82,6 +104,12 @@ struct dpu_hw_pingpong_ops {
- 	 * Obtain current vertical line counter
- 	 */
- 	u32 (*get_line_count)(struct dpu_hw_pingpong *pp);
-+
-+	/**
-+	 * Setup dither matix for pingpong block
-+	 */
-+	void (*setup_dither)(struct dpu_hw_pingpong *pp,
-+			struct dpu_hw_dither_cfg *cfg);
- };
- 
- struct dpu_hw_pingpong {
+I am seeing the same build failure and the above does fix it for me.
+
+Thanks
+Jon
+
 -- 
-1.9.1
-
+nvpublic
