@@ -2,183 +2,116 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B325BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2776C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92EF920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4A420823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:15:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dhgOe/Af"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SR+CHrdN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405404AbgFXRO6 (ORCPT
+        id S2405412AbgFXRPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48144 "EHLO
+        Wed, 24 Jun 2020 13:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405383AbgFXRO4 (ORCPT
+        with ESMTP id S2405372AbgFXRPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:14:56 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E8EC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:14:55 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id u25so1706009lfm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:14:55 -0700 (PDT)
+        Wed, 24 Jun 2020 13:15:14 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E214AC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:15:13 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 18so2627171otv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZsgvS5eYmAYqLEt5t2pg0zXr4rjMsOpUQ+Mv09+uT9U=;
-        b=dhgOe/AfuCTgrAfOIsnP6QsDThWL6LWP4gkVPBkQ0HFQ0nDvQ285cmUbwrZ3C9WLMG
-         mIczaM0yf99jOmLzxoU/WLZrnwvn1vDWUr32fCofsBRaHUVGxMcThMl/KOLgEYcGGeoC
-         QqN5X2mmWiZnfx1Knp+2flbKuhDgbdgdyG5SdOQwe5gT7S6B2CBeCdmaO7xng6CSiVJh
-         TpLD9nguElZUSUV3a7GRDZC9TBdHqUPHCoaH0vCSEIiObO1LSm49FjcHJoz7DSlSCZod
-         Fek/XQxxIIp2yiXD/fA7A6jLRpE7ah9cJSlPOnbxRJtevgWspgb5mkf/r5b0/n7psewz
-         rkSw==
+         :cc;
+        bh=WJq1E9+4ZIKiH2IMq2/oJWvEWmQE7EtG4I/6aJCrDto=;
+        b=SR+CHrdNFIVnKcR5PuzzeRzD/q1oh/SKiAAgMxN3LTOve05sHTsCzluGm2WXe/7okI
+         6AAkZlim56rMH5brzjlld/n4iEyYw3+G08opJ6Tvnwhf+sLNA1WdTWzk6Zx/GKcztLZg
+         oZx5EokOZT6grCL1UULM3If8PSsNtCkb6oB1yF3mpAv0wDZ7GVp+3rJ4oQF7zEgRx0Wh
+         /pBD9SGJQYSSMS0cOYpoIbU4/aLQ5Vbo+GepRjU3aWwDYc8nc2V85CN5hMP0FKGClSUh
+         9jFHHnr3dZE/7hMaQ66dC95x4dJbFxvZn+2bHbr6yK76sa4OKGMfZgh5yeoLfsiH8cFg
+         5Fqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZsgvS5eYmAYqLEt5t2pg0zXr4rjMsOpUQ+Mv09+uT9U=;
-        b=YEc4qWAPzqsLSk6q6P+ANRLm4MpGTt9CKfM4toDJLm5ArUB2B3J5J7ddiwxer8/CGY
-         rODJttCeIGc1qUAhN8s0kUiQDn4xjzZJe38rXGewEAh3F5H4xf0IBuNe2/3tfolgGeqg
-         /Bnts8MVtRIWy9xTYxdSvCw2l7dAl8bH5exr+bajQo9IWIF58xHHQMnn/A8TaQl8B6f7
-         mp4/kwK1DCXQYvS4pqUGZaDnFm+7bGte3SmoRmlCheIcgRHGrs5hnqLSiQf/fkAL/DBq
-         kPM1ivT7YFMVNH8hCzuxtR77ONDKRBTC1BM2utDkyAd91KMqaxCqfMZasGXB8B8P18IZ
-         uvCw==
-X-Gm-Message-State: AOAM532GE5bAPIKXCf7hzt5ypyAwZsS1iKeVFW/LqSnlRY2cfICHHaOO
-        589L/ct1XBxRkGo81oYCILqQuD1DFLdoII9IUEzENw==
-X-Google-Smtp-Source: ABdhPJxbz97BjBqquUp6Rq5IB5nZBfqi6aY0GZayWZabh02gMNVJdHAYiJp0Z5KR+tq5aXJtj753l37jdG9LtnUF9Vk=
-X-Received: by 2002:ac2:5226:: with SMTP id i6mr16122581lfl.55.1593018893879;
- Wed, 24 Jun 2020 10:14:53 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=WJq1E9+4ZIKiH2IMq2/oJWvEWmQE7EtG4I/6aJCrDto=;
+        b=n+PjYudUxeDbzLBv+JFLdm/6G62tB1e9dWmdpkR8TZH76vcS3BQBuS0aaisO1cQEqk
+         cQIf7cQEOXR0DUBUGZ1dFtSKWR4x0t7EpSKrkycODEF3QAMLWADghO8uRjqYQ8z4ZGmU
+         28/SN6L8bqt1ET5X5/SoDyVwmVCGzmBpTMKhC3qljC7iBcKqzUkmhErdt5Hvl7bZGeSh
+         LXwgZfdIG3wW+1SRs2WrEhhmmpvJG7id2Yl5Tq2fuKWDa8BwcG+EezXepbwXUwMKW4MM
+         vmfwp7nOS/dsa8d0bNoKKZK7aibSW7cUL/ysEwDWxDc0Eju2Ocm+zDr9fWDktWTwHcpu
+         BEVw==
+X-Gm-Message-State: AOAM532nH/GC5a9fO8VThsgaD/6SDdy+BeZCgJLG0HUuZU4JPfJqH7FS
+        wnfsvQvvqDi8jfXgrg2VKJOObwtPDHQH1NCbt1s=
+X-Google-Smtp-Source: ABdhPJw0uBvgV2g3AF7veHKvHYWDw9aQO7TojFYpl6P4GiFvNpCq04hG1+J1+Vn/xvwfRTt/0DfkyOeKdIR/q48sUJc=
+X-Received: by 2002:a4a:db4b:: with SMTP id 11mr24595586oot.11.1593018913261;
+ Wed, 24 Jun 2020 10:15:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624055849.358124048@linuxfoundation.org>
-In-Reply-To: <20200624055849.358124048@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 24 Jun 2020 22:44:42 +0530
-Message-ID: <CA+G9fYsaT3_5vZHaDF+oJgcyE3a5gUrXQptO+HgPb5yQpzEZJw@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/135] 4.14.186-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <20200613235331.24678-1-TheSven73@gmail.com>
+In-Reply-To: <20200613235331.24678-1-TheSven73@gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Wed, 24 Jun 2020 13:15:02 -0400
+Message-ID: <CAGngYiX1Pz3bkvT=17VUapBwZ9=zrW8rXDP4wuVK=-uD67tfqA@mail.gmail.com>
+Subject: Re: [PATCH v1] mtd: spi-nor: Add support for Winbond w25q64jv spi flash
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 11:39, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Is there any way I can help to get this patch into mainline?
+
+Thank you,
+Sven
+
+On Sat, Jun 13, 2020 at 7:53 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
 >
-> This is the start of the stable review cycle for the 4.14.186 release.
-> There are 135 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> This chip is (nearly) identical to the Winbond w25q64 which is
+> already supported by Linux. Compared to the w25q64, the 'jv'
+> does not support Quad SPI mode, and has a different JEDEC ID.
 >
-> Responses should be made by Fri, 26 Jun 2020 05:58:15 +0000.
-> Anything received after that time might be too late.
+> To: Tudor Ambarus <tudor.ambarus@microchip.com>
+> To: Miquel Raynal <miquel.raynal@bootlin.com>
+> To: Richard Weinberger <richard@nod.at>
+> To: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.186-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
+> Tree: next-20200613
 >
-> thanks,
+>  drivers/mtd/spi-nor/winbond.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.14.186-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 1c6114e2593492f39e02c775d117c95d86f9ae83
-git describe: v4.14.185-136-g1c6114e25934
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.185-136-g1c6114e25934
-
-No regressions (compared to build v4.14.184-191-ge26bcff6a5af)
-
-No fixes (compared to build v4.14.184-191-ge26bcff6a5af)
-
-Ran 30986 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* v4l2-compliance
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kvm-unit-tests
-* ltp-cve-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
+> index 5062af10f138..18bdff02f57f 100644
+> --- a/drivers/mtd/spi-nor/winbond.c
+> +++ b/drivers/mtd/spi-nor/winbond.c
+> @@ -65,6 +65,7 @@ static const struct flash_info winbond_parts[] = {
+>                             SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+>         { "w25x64", INFO(0xef3017, 0, 64 * 1024, 128, SECT_4K) },
+>         { "w25q64", INFO(0xef4017, 0, 64 * 1024, 128, SECT_4K) },
+> +       { "w25q64jv", INFO(0xef7017, 0, 64 * 1024, 128, SECT_4K) },
+>         { "w25q64dw", INFO(0xef6017, 0, 64 * 1024, 128,
+>                            SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+>                            SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+> --
+> 2.17.1
+>
