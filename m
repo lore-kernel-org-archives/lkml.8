@@ -4,118 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C15C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9567FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6E120789
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5760720857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="T1CWLk9B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gcHcQCPl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390691AbgFXMjN (ORCPT
+        id S2389772AbgFXMjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33410 "EHLO
+        Wed, 24 Jun 2020 08:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389677AbgFXMjM (ORCPT
+        with ESMTP id S2388132AbgFXMjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:39:12 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA42C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:39:12 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l17so1587905qki.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:39:12 -0700 (PDT)
+        Wed, 24 Jun 2020 08:39:39 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B6DC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:39:38 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id n23so2361572ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:39:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=O/0cdThP5fAQ+/smPXNv+odghzJr2Q1Aqw1IMd91wZA=;
-        b=T1CWLk9BQg8bxbXVlDHiZ1HNK9aWUgDyhnwXlvf7G1lp4EM9sfXD7Q96jVRjiz4yrZ
-         lY9Rk9EgtMdOZNia1/0n1xS5Mjy1TvArYxGBRmc0xwkGY/PrAUeLiHUHCDzap5ESq+xn
-         je4qakoryfYVA737t+MaVGU0Oar7bLHbZmOMAbAm/JXvDJETc6f1D3NY/LWERUg9I2AV
-         D2I4p2/CHPScP0wpsmK89qHyw43+Rk+uqjpdjydVUuL3TDulgH9u+cv45WsODs4qD1Mu
-         s4aihH09jLgE/IZaZb8127eRoffii0+tGVlAT9cDjZ9XpFo5Gp3mAI/4yPigpo7hbbl/
-         WHBQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t6dHoa2SQqWS2UVn2iygD6BVJh+DwvTd7prD5cDECPg=;
+        b=gcHcQCPl+lkOrioTn9Q/LQU6Edl+FdOosES4h6JFW5+2dk6+HHFU+yUaT0TX03yfTO
+         N4tvexjL0SK4N7TAH6w9gRuFhRZGHuFAPZUBPyHL52s5AAMCecvJ+R1ouHKAUKLA/G5Z
+         KprxZUu8iBE8QBx4TXtLZs95yqmrbQuP785vWVuK6aef9kBbtKsYTwCSjI1jzoPH27ZF
+         RmDctUJFy7IcB3R98or4l1yrU6Vgvp18Z4KitHi/h+UyHNmErwCGvBhYOFTtD4aAEN6H
+         hIpSd38qrin3Ix8hxwIgIIh8GbGfsOlsPnfzZixoyGzcRFTBfxaf176jCJCqdK4s0XmE
+         cDug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O/0cdThP5fAQ+/smPXNv+odghzJr2Q1Aqw1IMd91wZA=;
-        b=mF5wdK9K+mmhaJ98ClMMSHQE7vGwdlu753i9gNgBSLVmORo84LtKkHDX6bHF82wEqt
-         NA5tLeoHKFbeEsj39ZJMNcYjdJiLLULaNjbhRkNekKozDaKS7Rp1kFEp+vvFTsr8Z3rO
-         4dirSk/HzQKebjdBw+fuiyXokydV4dP14lNfQ3KeMIEfA9LygW01pb4/7SbjGyO0QsCC
-         u9bQtC4K9bKMy5Il8kFqW98Gutnd6Uvaw/SMudjCUilb1XFlnkgND+6hrGanqye808pL
-         d6jmo1NuEOnVnkKN/9vY6veLpaTu1s9VwNWLDbJ75JVgcA05RjBI6MMnFISPgF8OsF1/
-         TLuQ==
-X-Gm-Message-State: AOAM532o2ig6fQcTCdaqIyQqBpbWFFBnJ0pXqrJow85H9DUzFmJCKquH
-        yz92choa7RZJYdoRo/PTDBH8aw==
-X-Google-Smtp-Source: ABdhPJzsppi/TSTervD1YOTkftKCwoEPTx4uYqETqOWiNzYhzo6xfHzVvPg4ru+tFHHQY6xy8smpbw==
-X-Received: by 2002:a37:ef08:: with SMTP id j8mr25034888qkk.442.1593002351998;
-        Wed, 24 Jun 2020 05:39:11 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id x19sm3587303qtc.36.2020.06.24.05.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 05:39:10 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jo4gI-00DKtq-DH; Wed, 24 Jun 2020 09:39:10 -0300
-Date:   Wed, 24 Jun 2020 09:39:10 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/2] mm/mmu_notifier: Mark up direct reclaim paths with
- MAYFAIL
-Message-ID: <20200624123910.GA3178169@ziepe.ca>
-References: <20200624080248.3701-1-chris@chris-wilson.co.uk>
- <20200624121053.GD6578@ziepe.ca>
- <159300126338.4527.3968787379471939056@build.alporthouse.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t6dHoa2SQqWS2UVn2iygD6BVJh+DwvTd7prD5cDECPg=;
+        b=C/k5zcmcgChvTCT3AFUM0nttU2w4MxxzIwQw3Q89G9HMYvP7z984VpJauhBlD6Bjlw
+         QQ+r1Y2ok27/3aipkFyATdYgBR5Jw6xtGsEdyejWW6aZKFY7Ycnav/SLPEu1Nn5yky6F
+         CiEXlsDRhnY3FAnUya6NPADG/1q2ABRZQakIQW+2jiaiN4QcdDwF3sQZ3JYegTJZWEhQ
+         vuAUdESg+2lxWUpiMWN0We+SSdIM3dXiThgCI1xb/tDrZ01aaMX+81Vpmk8yb6Qf9brp
+         DZpy3Fu2B+lWWHSAF8iAyndIk1xlUmhW6y5bDOjCpMN8VCwRWGG4abPTIza3QRNAAnPT
+         ACeA==
+X-Gm-Message-State: AOAM531ZtlO47Bka1ImK/R24KHX8T47ZYzNwuBTZiU2yX/Y+4Lhgps7a
+        ajE5eIS2LZ758HlTYhs5HAJ3p6O31e145p5OkWIb1g==
+X-Google-Smtp-Source: ABdhPJwTvHyB27Rcb5g25rtHdVlN2YTkt0oU8J4Sx2+2NIpC3Qprb6xh32YCy6zG6h+iJjbN4aTsIiEywQG61YMjNmE=
+X-Received: by 2002:a2e:541e:: with SMTP id i30mr12930521ljb.156.1593002377467;
+ Wed, 24 Jun 2020 05:39:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159300126338.4527.3968787379471939056@build.alporthouse.com>
+References: <CAEU1=PkNtyznCms3jjp-oZHW=UAinnNKqG144VuzO5M7MLkO3Q@mail.gmail.com>
+In-Reply-To: <CAEU1=PkNtyznCms3jjp-oZHW=UAinnNKqG144VuzO5M7MLkO3Q@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 24 Jun 2020 14:39:25 +0200
+Message-ID: <CAKfTPtCVF-pw0cjuivuirNpBHRXZNJLihhJtGgkuTi7VdFpWbQ@mail.gmail.com>
+Subject: Re: Looping more in detach_tasks() when RT and CFS tasks are present
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, Lei Wen <leiwen@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:21:03PM +0100, Chris Wilson wrote:
-> Quoting Jason Gunthorpe (2020-06-24 13:10:53)
-> > On Wed, Jun 24, 2020 at 09:02:47AM +0100, Chris Wilson wrote:
-> > > When direct reclaim enters the shrinker and tries to reclaim pages, it
-> > > has to opportunitically unmap them [try_to_unmap_one]. For direct
-> > > reclaim, the calling context is unknown and may include attempts to
-> > > unmap one page of a dma object while attempting to allocate more pages
-> > > for that object. Pass the information along that we are inside an
-> > > opportunistic unmap that can allow that page to remain referenced and
-> > > mapped, and let the callback opt in to avoiding a recursive wait.
-> > 
-> > i915 should already not be holding locks shared with the notifiers
-> > across allocations that can trigger reclaim. This is already required
-> > to use notifiers correctly anyhow - why do we need something in the
-> > notifiers?
-> 
-> for (n = 0; n < num_pages; n++)
-> 	pin_user_page()
-> 
-> may call try_to_unmap_page from the lru shrinker for [0, n-1].
+Hi Pavan,
 
-Yes, of course you can't hold any locks that intersect with notifiers
-across pin_user_page()/get_user_page()
+On Wed, 24 Jun 2020 at 13:42, Pavan Kondeti <pkondeti@codeaurora.org> wrote:
+>
+> Hi Vincent/Peter,
+>
+> in load_balance(), we derive env->loop_max based on rq->nr_running.
+> When the busiest rq has both RT and CFS tasks, we do more loops in
+> detach_tasks(). Is there any reason for not using
+> rq->cfs.h_nr_running?
 
-It has always been that way.
+Using cfs.h_nr_running seems fine for loop_max
 
-I consolidated all this tricky locking into interval notifiers, maybe
-updating i915 to use them will give it a solution. I looked at it
-once, it was straightforward enough until it got to all the #ifdefery
+>
+> Lei Wen attempted to fix this before.
+> https://lore.kernel.org/lkml/1376814322-7320-2-git-send-email-leiwen@marvell.com/
 
-> We're in the middle of allocating the object, how are we best to untangle
-> that?
+The 1st part of the patch is wrong because even if h_nr_running == 1
+but nr_running > 1, we can pull the cfs thread without using active
+balance
 
-I don't know anything about i915, but this is clearly i915 not using
-notifiers properly, it needs proper fixing, not hacking up notifiers.
-
-Jason
+>
+> Thanks,
+> Pavan
+>
+> --
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
+> Linux Foundation Collaborative Project
