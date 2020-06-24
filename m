@@ -2,149 +2,128 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8706C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933EE2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593040994;
-	bh=kQtCitqr90TElMj046frbD0bFP3tilXjxP7DsKE96eY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jAhwslV3+hSsJvmRv0y1iIbU9OqxkIkGcisiIGzYR0A0Xw+6I0j12YsanRYl9Iqf4
-	 ld11FP/jCzmF/vuo+5W1AECBwdzD3r2pgKfsz+iGzmzJ7Q6T+Mj2K1P304u3mBGB1f
-	 sDwJERloc40L3Qjtq2qgjuXTTPWZrEiW9BYU2+Hc=
+	by mail.kernel.org (Postfix) with ESMTP id CB6B7207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1wwfU36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388962AbgFXXXN (ORCPT
+        id S2389109AbgFXXXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:23:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728791AbgFXXXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 19:23:12 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B10B207DD;
-        Wed, 24 Jun 2020 23:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593040991;
-        bh=kQtCitqr90TElMj046frbD0bFP3tilXjxP7DsKE96eY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=W0YhXIv6Sel9qkgqzk7nPOroaDvZ2GyrwhShx5egKLCxayIgxxxKnsovyywQzJilG
-         vgEeEV9BBfgg5XasU0tF6taNfy4FtXF5w339fQ7Vv/aiBiOquHDBdlhjMCLJW/C/tg
-         I8kf28/ehtHXkSJKebCqOGEYkDvbdHhWsLkDydGs=
-Date:   Wed, 24 Jun 2020 18:23:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiang Zheng <zhengxiang9@huawei.com>
-Cc:     bhelgaas@google.com, willy@infradead.org,
-        wangxiongfeng2@huawei.com, wanghaibin.wang@huawei.com,
-        guoheyi@huawei.com, yebiaoxiang@huawei.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rjw@rjwysocki.net, tglx@linutronix.de, guohanjun@huawei.com,
-        yangyingliang@huawei.com
-Subject: Re: [PATCH v3] PCI: Lock the pci_cfg_wait queue for the consistency
- of data
-Message-ID: <20200624232309.GA2601999@bjorn-Precision-5520>
+        Wed, 24 Jun 2020 19:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388985AbgFXXXR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 19:23:17 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCFBC061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 16:23:17 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id s21so3334714oic.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 16:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dGipXZ9X17I+u12oD4DZ2rzNuQVhucODHVNdBawnSmI=;
+        b=M1wwfU36UoerE5HtEt7AEffn18uiUdtoM8XXl0AWGojXJGk3IpAdJ2M0usNyP93xIJ
+         C4K+tOo4fi/6g4LDkLfnGygf2naXQEjHsl+hfIdob42HpSMDH+RoiClBIpgTZBx++Gwz
+         F071ruwPJDr/lHuDqNMAs+amwuavPxIJt1JaWWxFc3xFISohL1QELXY5uKA9Dywb7DaN
+         A20RNPw7+ZloQGbS1jfx4jB/8WXiwu33UjOTyKHHu0VlWpJLIrtQtLaEzmdXeT9EE5GB
+         owoWOoO1ON0J7TmZDzZtNI5C/NRXNrd0BXcvAjC8iei4HAH1VMd+PspPMOJfibAazSDi
+         2QXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dGipXZ9X17I+u12oD4DZ2rzNuQVhucODHVNdBawnSmI=;
+        b=gib9GuP+1RJvO4/pjaS2JbnaiFtGVU2pjfGclXlqPt+0gluNXCWstiCJl9knVEwyDp
+         v6Wdz7yQrsxeWc3NUdnUJYWVBjnUkYXKeYzGwKR1pxqo1c/Q3JDYAophOF1EI7/qYIX4
+         sgNdkQ/R6qL0K9TAiNCDrTMm4rus+/0EGO1utaf81AInsn+0mzWy5uGSERt7tZfiUSor
+         y2I2uxsibPoWTLocfhGXW1sO/3fG1S0Rdd/+NLvlYNIkLOm05xpCCyBOpSfvHAxGAeXv
+         p4YTHW6Whgszt+yMVNGND/kFb1c98nY13UMe+ZXhsMUl7/3rfP/brSO/YC7k34t8et3m
+         ojrw==
+X-Gm-Message-State: AOAM530vtkxZx43ccGiigNZGpPZygzW5zk1f6VMCjcveZ+p1OQVp0jPD
+        dnqb3tk0dhXgLbzlA0S7xMFMkMgbD+1SGQzLpd4vgA==
+X-Google-Smtp-Source: ABdhPJx5V5Rup3zninLm3/4nlfZ5WpzvvNUIwQf1nRP1tGt6s55UEoBgS6WnEaNkB6yHnFN0OU4E08/nB8eF6a04daw=
+X-Received: by 2002:aca:6208:: with SMTP id w8mr126619oib.69.1593040996906;
+ Wed, 24 Jun 2020 16:23:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210031527.40136-1-zhengxiang9@huawei.com>
+References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
+ <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
+ <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
+ <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
+ <CAGETcx-rHFthf-aLb_S-ST6Evozvgis5XX5u0LNxyvfMoJOLKQ@mail.gmail.com>
+ <CAMuHMdXW0jM-A5cvYtFVcgc1Gm3tKkvr0+kWpeJqpJDzNOuYeA@mail.gmail.com>
+ <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com>
+ <CAGETcx87JNfKEu4brQ3S-9wObv=OwXkAoDBSREQH5dAD68TPsA@mail.gmail.com> <CAMuHMdUsWAQ3XUGh1Jg_Y3LWz4G5aaZfHqL8JjNZv3DrW3TjvQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUsWAQ3XUGh1Jg_Y3LWz4G5aaZfHqL8JjNZv3DrW3TjvQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 24 Jun 2020 16:22:40 -0700
+Message-ID: <CAGETcx_gOQWbxUAS6joxEgLDx_wuXwn3AFqDuio_42XeeG++PQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
+ top level devices
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Ji Luo <ji.luo@nxp.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:15:27AM +0800, Xiang Zheng wrote:
-> 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-> device") suggests that the "pci_lock" is sufficient, and all the
-> callers of pci_wait_cfg() are wrapped with the "pci_lock".
-> 
-> However, since the commit cdcb33f98244 ("PCI: Avoid possible deadlock on
-> pci_lock and p->pi_lock") merged, the accesses to the pci_cfg_wait queue
-> are not safe anymore. This would cause kernel panic in a very low chance
-> (See more detailed information from the below link). A "pci_lock" is
-> insufficient and we need to hold an additional queue lock while read/write
-> the wait queue.
-> 
-> So let's use the add_wait_queue()/remove_wait_queue() instead of
-> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
-> functionality around the "schedule()" function to avoid reintroducing
-> the deadlock addressed by "cdcb33f98244".
+On Mon, Jun 22, 2020 at 8:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Saravana,
+>
+> On Sat, Jun 20, 2020 at 4:33 AM Saravana Kannan <saravanak@google.com> wrote:
+> > On Fri, Jun 19, 2020 at 1:07 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > I think instead of deferred_probe_work_func() moving the device to the
+> > > end of the dpm_list, I think the device probing successfully is what
+> > > should move it to the end of the dpm_list. That way, the dpm_list is
+> > > actually ordered by when the devices become functional and not the
+> > > random order in DT or random probe order which can get pretty
+> > > convoluted with multiple deferred probes. This feels right and will
+> > > make suspend/resume more robust against DT ordering -- but I'm not
+> > > sure what other wide ranging impact this has for other platforms.
+> >
+> > If you want to play around with a potential fix to test my hypothesis,
+> > I think it's just adding this one line to driver_bound():
+> > ============
+> > klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
+> > device_links_driver_bound(dev);
+> > +device_pm_move_to_tail(dev);
+> >
+> > device_pm_check_callbacks(dev);
+> > ============
+>
+> Thanks, that seems to fix the issue for me, on both affected systems!
+> Note that this has quite some impact on the order devices are suspended,
+> but this seems harmless.
+>
+> Will try on more systems later...
 
-I see that add_wait_queue() acquires the wq_head->lock, while
-__add_wait_queue() does not.
+Thanks for testing. Maybe I should just send that change as a patch
+and see what Greg/Rafael have to say to that.
 
-But I don't understand why the existing pci_lock is insufficient.  
-pci_cfg_wait is only used in pci_wait_cfg() and
-pci_cfg_access_unlock().
+It's a general fix anyway. So, might as well send it out.
 
-In pci_wait_cfg(), both __add_wait_queue() and __remove_wait_queue()
-are called while holding pci_lock, so that doesn't seem like the
-problem.
-
-In pci_cfg_access_unlock(), we have:
-
-  pci_cfg_access_unlock
-    wake_up_all(&pci_cfg_wait)
-      __wake_up(&pci_cfg_wait, ...)
-        __wake_up_common_lock(&pci_cfg_wait, ...)
-	  spin_lock(&pci_cfg_wait->lock)
-	  __wake_up_common(&pci_cfg_wait, ...)
-	    list_for_each_entry_safe_from(...)
-	      list_add_tail(...)                <-- problem?
-	  spin_unlock(&pci_cfg_wait->lock)
-
-Is the problem that the wake_up_all() modifies the pci_cfg_wait list
-without holding pci_lock?
-
-If so, I don't quite see how the patch below fixes it.  Oh, wait,
-maybe I do ... by using add_wait_queue(), we protect the list using
-the *same* lock used by __wake_up_common_lock.  Is that it?
-
-> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
-> Cc: Heyi Guo <guoheyi@huawei.com>
-> Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
-> Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/
-> ---
-> 
-> v3:
->   Improve the commit subject and message.
-> 
-> v2:
->   Move the wait queue functionality around the "schedule()".
-> 
-> ---
->  drivers/pci/access.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 2fccb5762c76..09342a74e5ea 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
->  {
->  	DECLARE_WAITQUEUE(wait, current);
->  
-> -	__add_wait_queue(&pci_cfg_wait, &wait);
->  	do {
->  		set_current_state(TASK_UNINTERRUPTIBLE);
->  		raw_spin_unlock_irq(&pci_lock);
-> +		add_wait_queue(&pci_cfg_wait, &wait);
->  		schedule();
-> +		remove_wait_queue(&pci_cfg_wait, &wait);
->  		raw_spin_lock_irq(&pci_lock);
->  	} while (dev->block_cfg_access);
-> -	__remove_wait_queue(&pci_cfg_wait, &wait);
->  }
->  
->  /* Returns 0 on success, negative values indicate error. */
-> -- 
-> 2.19.1
-> 
-> 
+-Saravana
