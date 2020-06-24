@@ -2,79 +2,128 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F375C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3936320781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A78F20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rq0rCm88"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WUXn+tHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403986AbgFXN4f (ORCPT
+        id S2404010AbgFXN50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45364 "EHLO
+        Wed, 24 Jun 2020 09:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389544AbgFXN4f (ORCPT
+        with ESMTP id S2389484AbgFXN5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:56:35 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79732C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:56:34 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 9so2654251ljv.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:56:34 -0700 (PDT)
+        Wed, 24 Jun 2020 09:57:25 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B5C1C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:57:25 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id i16so1701188qtr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=jMjn+YLTAoGvoS/PZ7suZPzIVqWbA5OFcx5acEPKkgM=;
-        b=rq0rCm88NpiP8bRWLoqludCMA3DJG5Js27QIjVIA7hjLsQ/Q5Olux0Hpd1UvjRYl8v
-         0GfIb2KlCfXWIC6EJg6n8rnVrayde08jkUBhEcddpBZ+UuOASXVVuU71Qv5h3DtCUPU5
-         oz5eQhV9PF2xzwx8zyqHfi/PHqHsxo+6ei1G0QrfOK1At2OKd1UpDfTaW93YIX6s2+El
-         fW1uo1iIHLAa9tvKh5fE6GjnmjkBByV9tp7tOu7XjBTwaPJkT6tCiy94+nYiARhxHjSC
-         QWUhcWAZwaOdSlkKGN2Nkdf4565LUVn7WS0HWmFrYr9I39EUOZWqYSSBLYow6LB2qwjb
-         k6hQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=44Zh5+rYkVPRlcsTE32vj+QjrYC3xiG5xkvOUL+shI0=;
+        b=WUXn+tHmUYJ3O6KTmdkdwRxhdE4KXCLlCWezz/4E+B8cxgC7yT/oaR4YVS7tiq6vzg
+         CsitnkYos8ET5+PD9GPZP+TU457iWx/Wipeo8KdEYgkpJoqSIdGTON17D/LN0cM0tAoh
+         mofaSSCrvvNrdAq6kLL5xH/MxUhwhmdx2pPDAwLSoFvrzqasNfaJ8DLOsj8/1q7LTqGT
+         vHpDJQ0Ay0wyLU0vDJOIjsrUaa3/Pj4R7rWLs+phtRQyiEvc2SrVwmb7bBNyxN6eHNzU
+         cgk4qnbmDz2P0/3f2POyEPI/qSDOagWjJjbBNIW6lGkHieT8SDVNsspYDqHPCQLXfk/c
+         usUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=jMjn+YLTAoGvoS/PZ7suZPzIVqWbA5OFcx5acEPKkgM=;
-        b=fEGHGYAIPD1e32RNPyKF0T7pOumbhq/q0HtMl4SgnWs/7BNsFtCtGYw0oL/RSwq7EB
-         LzuLTRQnxmHJOtGIRVzSJX3d9qZwaht8OZR7WRlOlNRmBMRcKsBwxVEK8Y/tjP2Lr/bN
-         Risf3rqKNGnblaJ/X1rDwZzn5XuDnRqZWq7tDlxZ1ODK1umAG1SdaCV88Vk4iWSA4uY9
-         nzT6lFygEMoxr3FnGyk1k5AUncZpOaWJQPDbLgi+Uom4JMSJUSo2yrT/Hp6ouJ1T0xNg
-         cKUUAmBOTUiP6O9vV/L1kZipgH5MXK0awcESrm5QlyfPpquMI8cKSCmFFH4hUDtjk6kf
-         O6Uw==
-X-Gm-Message-State: AOAM531i8MAgGO5Ln9T8FnzCote/zLcJ/e1Pj+1v2LNq72P8JT6k/hN9
-        +GdPpPYfMVUakNc3pIbQ3tiTSwn+5qs/NY98L6PqczN2cxhMIA==
-X-Google-Smtp-Source: ABdhPJwrl6NDAkY2AQRXGW9TaaYlh4LJPqtI1G2BH0+NT3o46H/BkmCHc+3BInFAMElTeNa11l850/U+cBd26cXS2qo=
-X-Received: by 2002:a2e:7c03:: with SMTP id x3mr13408091ljc.227.1593006992517;
- Wed, 24 Jun 2020 06:56:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=44Zh5+rYkVPRlcsTE32vj+QjrYC3xiG5xkvOUL+shI0=;
+        b=bilROJR58moTVBzFWPbZI7KT92K7eKixx4aPEOviKEfBdlwIFgpjSQyr2U4mzxgRGc
+         1B4TZgH/QSpl4WiYtXef+4Rs4UowakbD6uXH0h85VqaTKHjuadQwi28N53hcgqkbwN6D
+         XBe6y8WE8QOlv6vcyWZ+wioNtDlRWvf3ioFpYDEyO7JMW4HAZxWdKTW0s9KXuJxcUu46
+         ij5/iR79pgxctvVs2Wcr9xd2YLuokUqRAG8iYni6RDrfThh0mc2qA2TgQMqquYt2dhVX
+         piKdoyyeaAohY6l492un9ElCMPcwu8NZY8p72HqCIeNSeAhMYqJfVlPPPDWLzB/WVx+v
+         dhQg==
+X-Gm-Message-State: AOAM5331CXAKOE6Ybl+CF42slWJ0xVe25sQeypS5qXbUN1hDaFKlfndk
+        8cvZsx+wUWD+GN4HlgoOlCFTsg==
+X-Google-Smtp-Source: ABdhPJwkMI/JftIxqN/iLg8ct/1eBzUEBqBCm0HCslUHTKYsntACTZcO1US258+V9p0mp/S/6P33OQ==
+X-Received: by 2002:ac8:6bc8:: with SMTP id b8mr26418117qtt.198.1593007044568;
+        Wed, 24 Jun 2020 06:57:24 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id q24sm3464757qkj.103.2020.06.24.06.57.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 06:57:23 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jo5ty-00DVH3-PZ; Wed, 24 Jun 2020 10:57:22 -0300
+Date:   Wed, 24 Jun 2020 10:57:22 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>, dianders@chromium.org,
+        groeck@chromium.org
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+Message-ID: <20200624135722.GF6578@ziepe.ca>
+References: <20200624084524.259560-1-drinkcat@chromium.org>
 MIME-Version: 1.0
-From:   Eric Curtin <ericcurtin17@gmail.com>
-Date:   Wed, 24 Jun 2020 14:56:20 +0100
-Message-ID: <CANpvso42Y23uTjSj+O+FETBwsFeG6uNjBBWr4KDVk_9_fpyzYg@mail.gmail.com>
-Subject: inotify question on modify events and openat
-To:     Kernel development list <linux-kernel@vger.kernel.org>
-Cc:     ttb@tentacle.dhs.org, rlove@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624084524.259560-1-drinkcat@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guys,
+On Wed, Jun 24, 2020 at 04:45:24PM +0800, Nicolas Boichat wrote:
+> trace_printk is only meant as a debugging tool, and should never be
+> compiled into production code without source code changes, as
+> indicated by the warning that shows up on boot if any trace_printk
+> is called:
+>  **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+>  **                                                      **
+>  ** trace_printk() being used. Allocating extra memory.  **
+>  **                                                      **
+>  ** This means that this is a DEBUG kernel and it is     **
+>  ** unsafe for production use.                           **
+> 
+> If this option is set to n, the kernel will generate a build-time
+> error if trace_printk is used.
+> 
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+>  include/linux/kernel.h | 17 ++++++++++++++++-
+>  kernel/trace/Kconfig   |  9 +++++++++
+>  2 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 196607aaf653082..b6addc6ba669e85 100644
+> +++ b/include/linux/kernel.h
+> @@ -721,10 +721,15 @@ do {									\
+>  #define trace_printk(fmt, ...)				\
+>  do {							\
+>  	char _______STR[] = __stringify((__VA_ARGS__));	\
+> +							\
+> +	__static_assert(				\
+> +		IS_ENABLED(CONFIG_TRACING_ALLOW_PRINTK),\
+> +		"trace_printk called, please enable CONFIG_TRACING_ALLOW_PRINTK."); \
+> +							\
 
-In the manpages "man inotify" it is suggested that function calls like
-write and truncate are modify events. But from this opened issue it
-appears like openat might be a modify event to inotify also?
+Why __static_assert not normal static_assert?
 
-https://github.com/inotify-tools/inotify-tools/issues/116
-
-Just curious, is this expected, should I update the documentation?
-
-Regards,
-Eric
+Jason
