@@ -2,98 +2,110 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC77C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F91C20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66062088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592996069;
-	bh=17HsD0S2DwoaJk72Px33RJQQ3gZ+iYWU0EbiEkKf4Ro=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=a0eV6LgmClDEs8LUqYgT5pAjfICI9WG4rq6qG1hrsZTtrcMkB5cIwFf45kZnrw8oc
-	 BNJS8zXw5oA5APpXJwQskIfbALlACv8Epp/s9ecM1GmMS6TsBHh4kVOrw8bWLDjzWy
-	 UqtzNFJSsCY3gJ93Xj79S0PGnORcLh3mOuk6JSFY=
+	s=default; t=1592996135;
+	bh=nSECj9C8zuSXkIqMFZ5C/ZsscNsZzqwo0LwvBlsTjG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F7b/NBuS6lyu98ARFTGoZNtyfARpuucUhzY8lXcimk/UdWOYy/eRi1cr+XGxobixT
+	 6kLZjUL88KkqhgVHclrs+xDEWOMIWjMqK/DPNMLqILtH/oyl2rryG+xpGcFkB07HPK
+	 QF0aQSeyz6vZ/Cbu97870agloh6UjrF9XN/giqAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388652AbgFXKy2 (ORCPT
+        id S2390445AbgFXKze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 06:55:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727100AbgFXKy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:54:27 -0400
-Received: from localhost (unknown [213.57.247.131])
+        id S1727100AbgFXKzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 06:55:33 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94A822084D;
-        Wed, 24 Jun 2020 10:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B92EA2084D;
+        Wed, 24 Jun 2020 10:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592996067;
-        bh=17HsD0S2DwoaJk72Px33RJQQ3gZ+iYWU0EbiEkKf4Ro=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VpoLCrnRxhJ9t0qLYtfKn9Y8ADwmdYyywHTQ/zPl4WOyr7dpGHqnyYn8KDBhzzJdF
-         WUo1Uqij5ZfJ0FvBSB9tYopQ1Q7AAAa0WlRPKk3Mk+xqiNSti5ilfCtiYaOhrITCo0
-         SG205qIESqUf7dZpjaZBPGV9RD+TnmTnmp8qOv5s=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Lijun Ou <oulijun@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Weihang Li <liweihang@huawei.com>,
-        "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: [PATCH rdma-next 0/5] ib_core allocation patches
-Date:   Wed, 24 Jun 2020 13:54:17 +0300
-Message-Id: <20200624105422.1452290-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        s=default; t=1592996132;
+        bh=nSECj9C8zuSXkIqMFZ5C/ZsscNsZzqwo0LwvBlsTjG0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OHC6H/V2p2QfoaxvZlrvePG1axfxm0gguyFK2nFzFHuL2KPWlDiTyk/7Cs1NFh3fl
+         Qv89fTvWxnsSCwlmNlo4IifCe/S+kvUxQ99tjEnJG7lDjl+DaoWlF/0tmrXwO6RCVW
+         uu36Vf1fGT2Fj/xJgWNrXCAx0X571f+ftQR8i2bE=
+Date:   Wed, 24 Jun 2020 11:55:28 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Jun 24 [build failure on arm64]
+Message-ID: <20200624105528.GB6134@willie-the-truck>
+References: <20200624165323.3dffcde5@canb.auug.org.au>
+ <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+On Wed, Jun 24, 2020 at 05:08:56PM +0800, Shaokun Zhang wrote:
+> +Will Deacon,
+> 
+> Hi Will,
+> 
+> There's a build failure on arm64:
+> 
+>   CALL    scripts/atomic/check-atomics.sh
+>   CALL    scripts/checksyscalls.sh
+>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
+> ld: unrecognized option '--no-eh-frame-hdr'
+> ld: use the --help option for usage information
+> arch/arm64/kernel/vdso/Makefile:64: recipe for target
+> 'arch/arm64/kernel/vdso/vdso.so.dbg' failed
+> make[1]: *** [arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
+> arch/arm64/Makefile:175: recipe for target 'vdso_prepare' failed
+> make: *** [vdso_prepare] Error 2
+> 
+> GCC version is followed:
+> gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609
+> 
+> It seems caused by
+> 87676cfca141 arm64: vdso: Disable dwarf unwinding through the sigreturn
+> trampoline
 
-Let's continue my allocation work.
+Urgh, binutils quality strikes again. If you're able to reproduce locally,
+can you try the diff below, please? All the linkers I have kicking around
+seem to support --no-eh-frame-hdr.
 
-Leon Romanovsky (5):
-  RDMA/core: Create and destroy counters in the ib_core
-  RDMA: Clean MW allocation and free flows
-  RDMA: Move XRCD to be under ib_core responsibility
-  RDMA/core: Delete not-used create RWQ table function
-  RDMA/core: Convert RWQ table logic to ib_core allocation scheme
+Will
 
- drivers/infiniband/core/device.c              |  4 +
- drivers/infiniband/core/uverbs.h              |  2 +-
- drivers/infiniband/core/uverbs_cmd.c          | 63 ++++++++-----
- drivers/infiniband/core/uverbs_main.c         | 10 +-
- drivers/infiniband/core/uverbs_std_types.c    | 16 +++-
- .../core/uverbs_std_types_counters.c          | 17 ++--
- drivers/infiniband/core/verbs.c               | 94 +++++--------------
- drivers/infiniband/hw/cxgb4/iw_cxgb4.h        |  5 +-
- drivers/infiniband/hw/cxgb4/mem.c             | 35 +++----
- drivers/infiniband/hw/cxgb4/provider.c        |  4 +-
- drivers/infiniband/hw/hns/hns_roce_device.h   |  5 +-
- drivers/infiniband/hw/hns/hns_roce_main.c     |  2 +
- drivers/infiniband/hw/hns/hns_roce_mr.c       | 31 ++----
- drivers/infiniband/hw/mlx4/main.c             | 43 ++++-----
- drivers/infiniband/hw/mlx4/mlx4_ib.h          | 17 ++--
- drivers/infiniband/hw/mlx4/mr.c               | 32 ++-----
- drivers/infiniband/hw/mlx4/qp.c               | 40 +++-----
- drivers/infiniband/hw/mlx5/main.c             | 27 +++---
- drivers/infiniband/hw/mlx5/mlx5_ib.h          | 18 ++--
- drivers/infiniband/hw/mlx5/mr.c               | 42 ++++-----
- drivers/infiniband/hw/mlx5/qp.c               | 77 +++++----------
- include/rdma/ib_verbs.h                       | 33 +++----
- 22 files changed, 249 insertions(+), 368 deletions(-)
+--->8
 
---
-2.26.2
+diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+index 1e5a940532da..97d3d3632093 100644
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -23,8 +23,9 @@ btildflags-$(CONFIG_ARM64_BTI_KERNEL) += -z force-bti
+ # potential future proofing if we end up with internal calls to the exported
+ # routines, as x86 does (see 6f121e548f83 ("x86, vdso: Reimplement vdso.so
+ # preparation in build-time C")).
+-ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
+-               -Bsymbolic --no-eh-frame-hdr --build-id -n $(btildflags-y) -T
++ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv       \
++            -Bsymbolic $(call ld-option, --no-eh-frame-hdr) --build-id -n      \
++            $(btildflags-y) -T
+ 
+ ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
+ ccflags-y += -DDISABLE_BRANCH_PROFILING
 
