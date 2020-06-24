@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6160C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 529952082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F58920836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lkvN4/Zo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BYmF1uoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405111AbgFXQ3z (ORCPT
+        id S2405119AbgFXQaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41094 "EHLO
+        Wed, 24 Jun 2020 12:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404782AbgFXQ31 (ORCPT
+        with ESMTP id S2404764AbgFXQ31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 12:29:27 -0400
 Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF591C061795;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAAFC061573;
         Wed, 24 Jun 2020 09:29:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=AYFB+Z0RU8R831U4cx7G5n0/06yd4vKHvkQQiVELYcc=; b=lkvN4/ZoodNqqMV2cXxhBSLzWu
-        CfYlslhKWkfLn2dHg/ETf3XsFO7e4jkbaUvl0EAmC4oiNAxmBzo0DiPGbMnxEJJQMKkanElt/VcVp
-        iSt46GH9LEODydo+p5UPJdPPpiN7Uhce8jOdOej3/oOS39QjLn+ptNV5G6UxbCAwTQxM0MP0Ottm3
-        KsJ137m9E51U6FAMfaxSJ/V6dpVEUxNY6p6C9otT8x6bD7QHRQ1FCjcBhiNkfmcuBEnAFNANLCMdh
-        uQeEMzLY11Bf2Rp2p+pUqrt24S7O79O3c7ziyHouFOkjIkSWewyzn3e6J4/+aQdG+5ZEjWlgC6wV1
-        xZQpk0SA==;
+        bh=VHv8vV/zSvtU7OOAqr9Qu8tuddmtuvpgD3IE+DOaLXs=; b=BYmF1uoU37E5NXUZV/N5uUhN8L
+        kLfdntSaS1J2sHkhwgkQe1bigYHTeSylJDZtb0graYXEYbmzBB/X1PKcIzLUdTGqiwdoGPIJYlHnQ
+        OnLOhoqF3MsIvho4MQa1Fl/Kw4SPil8+tSFfLpz4IhRWZfeHevlBOXTM95MFt+XE8p1RDB0mAWdZ2
+        5o+O1PQpPEIo21Ku67TdxawC5gZLVT41G+f9UwWgaOQOZjxSYimoFsNCWostJL/bXWCi7HatkdbdP
+        gswGXJi/BNohjkC15q0HPX5FGlteXfDKsg1poy8KnwRs4m1RAN2LNGqmULVAytMvxnq/yP9d3k3A1
+        6SwKDAIg==;
 Received: from [2001:4bb8:180:a3:5c7c:8955:539d:955b] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jo8Gr-0006oy-R1; Wed, 24 Jun 2020 16:29:10 +0000
+        id 1jo8Go-0006oQ-EA; Wed, 24 Jun 2020 16:29:06 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -46,9 +46,9 @@ Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Iurii Zaikin <yzaikin@google.com>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 05/11] fs: refactor new_sync_read
-Date:   Wed, 24 Jun 2020 18:28:55 +0200
-Message-Id: <20200624162901.1814136-6-hch@lst.de>
+Subject: [PATCH 03/11] fs: add new read_uptr and write_uptr file operations
+Date:   Wed, 24 Jun 2020 18:28:53 +0200
+Message-Id: <20200624162901.1814136-4-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200624162901.1814136-1-hch@lst.de>
 References: <20200624162901.1814136-1-hch@lst.de>
@@ -60,62 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass the read_iter method as a parameter and mark the function
-non-static.  This allows reusing it for additional callsites e.g.
-in procfs.
+Add two new file operations that are identical to ->read and ->write
+except that they can also safely take kernel pointers using the uptr_t
+type.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/read_write.c    | 8 +++++---
- include/linux/fs.h | 2 ++
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ fs/internal.h      |  4 ++--
+ fs/read_write.c    | 18 ++++++++++++++----
+ include/linux/fs.h |  3 +++
+ 3 files changed, 19 insertions(+), 6 deletions(-)
 
+diff --git a/fs/internal.h b/fs/internal.h
+index 242f2845b3428b..b6777a47b05163 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -189,9 +189,9 @@ int do_statx(int dfd, const char __user *filename, unsigned flags,
+ static inline void set_fmode_can_read_write(struct file *f)
+ {
+ 	if ((f->f_mode & FMODE_READ) &&
+-	    (f->f_op->read || f->f_op->read_iter))
++	    (f->f_op->read || f->f_op->read_uptr || f->f_op->read_iter))
+ 		f->f_mode |= FMODE_CAN_READ;
+ 	if ((f->f_mode & FMODE_WRITE) &&
+-	    (f->f_op->write || f->f_op->write_iter))
++	    (f->f_op->write || f->f_op->write_uptr || f->f_op->write_iter))
+ 		f->f_mode |= FMODE_CAN_WRITE;
+ }
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 24ffbf3cbda243..b92c222ca886ca 100644
+index e7f36b15683049..24ffbf3cbda243 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
-@@ -401,7 +401,8 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
- 				read_write == READ ? MAY_READ : MAY_WRITE);
- }
+@@ -430,7 +430,9 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
  
--static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos)
-+ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
-+		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter))
- {
- 	struct iovec iov = { .iov_base = buf, .iov_len = len };
- 	struct kiocb kiocb;
-@@ -412,7 +413,7 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
- 	kiocb.ki_pos = (ppos ? *ppos : 0);
- 	iov_iter_init(&iter, READ, &iov, 1, len);
+ 	if (count > MAX_RW_COUNT)
+ 		count =  MAX_RW_COUNT;
+-	if (file->f_op->read) {
++	if (file->f_op->read_uptr) {
++		ret = file->f_op->read_uptr(file, KERNEL_UPTR(buf), count, pos);
++	} else if (file->f_op->read) {
+ 		mm_segment_t old_fs = get_fs();
  
--	ret = call_read_iter(filp, &kiocb, &iter);
-+	ret = cb(&kiocb, &iter);
- 	BUG_ON(ret == -EIOCBQUEUED);
- 	if (ppos)
- 		*ppos = kiocb.ki_pos;
-@@ -492,7 +493,8 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
- 	else if (file->f_op->read)
+ 		set_fs(KERNEL_DS);
+@@ -485,7 +487,9 @@ ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+ 	if (count > MAX_RW_COUNT)
+ 		count =  MAX_RW_COUNT;
+ 
+-	if (file->f_op->read)
++	if (file->f_op->read_uptr)
++		ret = file->f_op->read_uptr(file, USER_UPTR(buf), count, pos);
++	else if (file->f_op->read)
  		ret = file->f_op->read(file, buf, count, pos);
  	else if (file->f_op->read_iter)
--		ret = new_sync_read(file, buf, count, pos);
-+		ret = iter_read(file, buf, count, pos,
-+				file->f_op->read_iter);
- 	else
- 		ret = -EINVAL;
- 	if (ret > 0) {
+ 		ret = new_sync_read(file, buf, count, pos);
+@@ -530,7 +534,10 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count,
+ 
+ 	if (count > MAX_RW_COUNT)
+ 		count =  MAX_RW_COUNT;
+-	if (file->f_op->write) {
++	if (file->f_op->write_uptr) {
++		ret = file->f_op->write_uptr(file, KERNEL_UPTR((void *)buf),
++				count, pos);
++	} else if (file->f_op->write) {
+ 		mm_segment_t old_fs = get_fs();
+ 
+ 		set_fs(KERNEL_DS);
+@@ -592,7 +599,10 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
+ 	if (count > MAX_RW_COUNT)
+ 		count =  MAX_RW_COUNT;
+ 	file_start_write(file);
+-	if (file->f_op->write)
++	if (file->f_op->write_uptr)
++		ret = file->f_op->write_uptr(file,
++				USER_UPTR((char __user *)buf), count, pos);
++	else if (file->f_op->write)
+ 		ret = file->f_op->write(file, buf, count, pos);
+ 	else if (file->f_op->write_iter)
+ 		ret = new_sync_write(file, buf, count, pos);
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index d8fc3015f5a197..d0fea0281ef29b 100644
+index fac6aead402a98..d8fc3015f5a197 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1919,6 +1919,8 @@ ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
- 			      unsigned long nr_segs, unsigned long fast_segs,
- 			      struct iovec *fast_pointer,
- 			      struct iovec **ret_pointer);
-+ssize_t iter_read(struct file *filp, char __user *buf, size_t len, loff_t *ppos,
-+		ssize_t (*cb)(struct kiocb *iocb, struct iov_iter *iter));
+@@ -39,6 +39,7 @@
+ #include <linux/fs_types.h>
+ #include <linux/build_bug.h>
+ #include <linux/stddef.h>
++#include <linux/uptr.h>
  
- extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
- extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
+ #include <asm/byteorder.h>
+ #include <uapi/linux/fs.h>
+@@ -1830,6 +1831,8 @@ struct file_operations {
+ 	ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
+ 	ssize_t (*read_iter) (struct kiocb *, struct iov_iter *);
+ 	ssize_t (*write_iter) (struct kiocb *, struct iov_iter *);
++	ssize_t (*read_uptr) (struct file *, uptr_t, size_t, loff_t *);
++	ssize_t (*write_uptr) (struct file *, uptr_t, size_t, loff_t *);
+ 	int (*iopoll)(struct kiocb *kiocb, bool spin);
+ 	int (*iterate) (struct file *, struct dir_context *);
+ 	int (*iterate_shared) (struct file *, struct dir_context *);
 -- 
 2.26.2
 
