@@ -2,135 +2,110 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A47BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40CC220857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397BE20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FolcO0Lh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mh1QeBar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390351AbgFXL5b (ORCPT
+        id S2403813AbgFXL6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:57:31 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19503 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388522AbgFXL52 (ORCPT
+        Wed, 24 Jun 2020 07:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390753AbgFXL6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:57:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef33f9b0000>; Wed, 24 Jun 2020 04:57:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 24 Jun 2020 04:57:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 24 Jun 2020 04:57:27 -0700
-Received: from [10.26.73.205] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jun
- 2020 11:57:26 +0000
-Subject: Re: linux-next: Tree for Jun 24 [build failure on arm64]
-To:     Will Deacon <will@kernel.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200624165323.3dffcde5@canb.auug.org.au>
- <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
- <20200624105528.GB6134@willie-the-truck>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b561e663-a9aa-d600-e23b-09793199141e@nvidia.com>
-Date:   Wed, 24 Jun 2020 12:57:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 07:58:52 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E86C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:58:51 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n24so2200803ejd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bfoFbTp1jr2I0obymTUaIsffNufAQrxCZnD5n4W9cLQ=;
+        b=mh1QeBarXUNA+BpPNkuVYPczl6ELMrnlr7iG8xE/noQvhbCpusVzCoBhSnKDAuHh6W
+         LlTBWpRYN88ysR3tnIIqi6NS9JG11ypRdeDuCdEPLvKedQBvEpwiCQbf2QGSlTDO9R7K
+         PpVq0v8UXTXcsDkLtvJ2TdJn0e335AK1FJNeM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bfoFbTp1jr2I0obymTUaIsffNufAQrxCZnD5n4W9cLQ=;
+        b=ARVhuYdvrCUPCZgAWz5j5ccxfZ/aWhUHxsYvttmPI3FoHqr6V1k2Na3zJMafmjYUX7
+         6T2bGnR00mEPVI5cEOtDjfLfZQa7idNNBg4MQudP+HnS1PBy2oBHkzlDe7nMtskn0K6E
+         ulqUL0yUuAxstRF8FJZcZgofsyI/FqBOghgM3Ga9EkMGTPuq77ESbI6snaG9u1E9NgcZ
+         TDNMzIy7H5B3Gy1IZiO9ZXnwOhLlLafvZz7R8DlbzDp8RXNEuoOYj90Fqb9t1KVkcGBv
+         uJWEgqwV286CHBc+nxEqXo70vI8OGaLtuA2eVpqIPbqB2ZxuNxOtqeZeEFMJa8GbbFgk
+         PCXA==
+X-Gm-Message-State: AOAM532C8M0PN3ejqblrXRPhOglfeFrQn7TMkq2pheZEE7W2CNw85SaG
+        IvBHxF4LXiprxQRY/8rsk/q/6m8Xn+xbsQ==
+X-Google-Smtp-Source: ABdhPJzAO5j61DeFn836fT0sxN/WhEYNpEdhPdiM0YpBPjvejqRX73c7xnVH8apC10bJSHcvFvCWaQ==
+X-Received: by 2002:a17:906:8d2:: with SMTP id o18mr16696208eje.183.1592999930029;
+        Wed, 24 Jun 2020 04:58:50 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id n17sm15301116ejj.75.2020.06.24.04.58.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 04:58:49 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id o8so2053564wmh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:58:48 -0700 (PDT)
+X-Received: by 2002:a7b:c2a9:: with SMTP id c9mr30008672wmk.11.1592999928401;
+ Wed, 24 Jun 2020 04:58:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200624105528.GB6134@willie-the-truck>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592999835; bh=rOGvVUO5Jofmog2XlYA47AUYPd77eAO/iMznUOpsZTA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FolcO0Lhu102UNN+IOpFKapnSg1QpiGhx0+13N/cRopcM27ErziLlkX/cCH586W+R
-         9SQ9Hjv3LYB+o0qFGxJDBN8LDJSJ+x7JffjkWqoASG9sTA/grgUjrN86dnPm3vVAoT
-         05atCNOtOG8rqu76ihP+ZS877I7aC8T0JM+2ZNIomdxdagplu4XcibnxCf14+K1KOh
-         E0csrlL//kHH8znL5/tlrwye/1iMBBzutvUIRBuow6kID9osQHebg6mI2osqR3EV0H
-         6GfOt1DlcHorgQ8tJGYhb4nzpO3/GKrb6u9PnqJSWMZUGjuTq3R7u5IjSZNlEYzNWY
-         srcy8+o0nq6aw==
+References: <BN6PR04MB06602E7221CC7455F3142540A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <07fb9000-ae00-efcd-e91a-48765ff3d4bf@xs4all.nl> <20200624115419.GA20764@pi3>
+In-Reply-To: <20200624115419.GA20764@pi3>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 24 Jun 2020 13:58:37 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5CW0CL-s6=UOPsm37Mg+kswM_DTXEEnQMHC3kc2LxAY5w@mail.gmail.com>
+Message-ID: <CAAFQd5CW0CL-s6=UOPsm37Mg+kswM_DTXEEnQMHC3kc2LxAY5w@mail.gmail.com>
+Subject: Re: [PATCH 00/11] media: exynos4-is: Improve support for s5pv210 and
+ parallel ports
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>, kgene@kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 24, 2020 at 1:54 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Wed, Jun 24, 2020 at 01:39:50PM +0200, Hans Verkuil wrote:
+> > Can someone from Samsung or someone who knows this SoC take a look at this series?
+> >
+> > This series looks sane to me, so I'll probably merge this if nobody replies
+> > in the next two weeks or so.
+>
+> Unfortunately I don't know the media part on S5Pv210 at all so I cannot
+> provide any feedback. There are not many active users of these SoCs
+> nowadays. One of hem is Jonathan, so if he wants to change something he will
+> mostly break/affect his own setup. :) Therefore I think it is safe to merge.
 
-On 24/06/2020 11:55, Will Deacon wrote:
-> On Wed, Jun 24, 2020 at 05:08:56PM +0800, Shaokun Zhang wrote:
->> +Will Deacon,
->>
->> Hi Will,
->>
->> There's a build failure on arm64:
->>
->>   CALL    scripts/atomic/check-atomics.sh
->>   CALL    scripts/checksyscalls.sh
->>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
->> ld: unrecognized option '--no-eh-frame-hdr'
->> ld: use the --help option for usage information
->> arch/arm64/kernel/vdso/Makefile:64: recipe for target
->> 'arch/arm64/kernel/vdso/vdso.so.dbg' failed
->> make[1]: *** [arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
->> arch/arm64/Makefile:175: recipe for target 'vdso_prepare' failed
->> make: *** [vdso_prepare] Error 2
->>
->> GCC version is followed:
->> gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609
->>
->> It seems caused by
->> 87676cfca141 arm64: vdso: Disable dwarf unwinding through the sigreturn
->> trampoline
-> 
-> Urgh, binutils quality strikes again. If you're able to reproduce locally,
-> can you try the diff below, please? All the linkers I have kicking around
-> seem to support --no-eh-frame-hdr.
-> 
-> Will
-> 
-> --->8
-> 
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> index 1e5a940532da..97d3d3632093 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -23,8 +23,9 @@ btildflags-$(CONFIG_ARM64_BTI_KERNEL) += -z force-bti
->  # potential future proofing if we end up with internal calls to the exported
->  # routines, as x86 does (see 6f121e548f83 ("x86, vdso: Reimplement vdso.so
->  # preparation in build-time C")).
-> -ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
-> -               -Bsymbolic --no-eh-frame-hdr --build-id -n $(btildflags-y) -T
-> +ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv       \
-> +            -Bsymbolic $(call ld-option, --no-eh-frame-hdr) --build-id -n      \
-> +            $(btildflags-y) -T
->  
->  ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
->  ccflags-y += -DDISABLE_BRANCH_PROFILING
-> 
+I think this driver is also used on Exynos4210 and on some setups with
+4412 where the ISP is not used.
 
+I can't promise anything, but I'll try to do a high level review.
+Hopefully I still have some memory from the time I used to play with
+this hardware.
 
-I am seeing the same build failure and the above does fix it for me.
-
-Thanks
-Jon
-
--- 
-nvpublic
+Best regards,
+Tomasz
