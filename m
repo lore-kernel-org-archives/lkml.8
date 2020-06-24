@@ -2,234 +2,146 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E09C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86659C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9B72206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6E62081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RtvOzEiP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cGo19hyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391449AbgFXUi6 (ORCPT
+        id S2391489AbgFXUkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:38:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32867 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729833AbgFXUi5 (ORCPT
+        Wed, 24 Jun 2020 16:40:55 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22306 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388670AbgFXUkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:38:57 -0400
+        Wed, 24 Jun 2020 16:40:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593031135;
+        s=mimecast20190719; t=1593031252;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=vUi/+DScXWXvcmI6mZvIMIGP00wUsF08zYoV1rgtSTs=;
-        b=RtvOzEiP2c6UecNF5oX+KbAzDICim5+1DckT3C10Rs+WY9fO37EDxONI8IQyKo7UHi5Hkb
-        pWtcelvSVCQPyy6T4/nq3D7eK5ivzXlkiw6/ErFHbYyChYeN4cLImOn5oTp5kh7SJd5HQ7
-        +1KODRPzw57K1XkO/buGEqu/X/QbcBU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-nHyUdhzXM_qhevbm4Aoczw-1; Wed, 24 Jun 2020 16:38:51 -0400
-X-MC-Unique: nHyUdhzXM_qhevbm4Aoczw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9768805EE2;
-        Wed, 24 Jun 2020 20:38:48 +0000 (UTC)
-Received: from [10.10.115.152] (ovpn-115-152.rdu2.redhat.com [10.10.115.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A6561002393;
-        Wed, 24 Jun 2020 20:38:40 +0000 (UTC)
-Subject: Re: [Patch v3 1/3] lib: Restrict cpumask_local_spread to houskeeping
- CPUs
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
-        sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com, yuqi jin <jinyuqi@huawei.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-References: <20200623192331.215557-1-nitesh@redhat.com>
- <20200623192331.215557-2-nitesh@redhat.com>
- <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <3207c75f-39e4-fc8c-6a40-6bd797dd98ce@redhat.com>
-Date:   Wed, 24 Jun 2020 16:38:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+         in-reply-to:in-reply-to:references:references;
+        bh=s/Q+RsZBYMOAhrMPCGGxWYAFNZoQJnDuY4/Qu5DbXBw=;
+        b=cGo19hyg1lEv1BEwzv+MYIVL9q89DC5V2rj4iRHHuoyrUnA9Lre9IdCgAgAYKuFY/Gl86f
+        GUhGi/x4TV4+QepuoQ7/xZebYXTZnrBdG0Bvui0TsDm9hc1o4N5GbeSINsKHnham5NkHil
+        1qTzGrbOxj1dTB8r/IbV/+/7Ka5R2qc=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-82-8rzD4phpN3WSS4ZxMW8ElQ-1; Wed, 24 Jun 2020 16:40:51 -0400
+X-MC-Unique: 8rzD4phpN3WSS4ZxMW8ElQ-1
+Received: by mail-qt1-f199.google.com with SMTP id b1so2462292qti.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s/Q+RsZBYMOAhrMPCGGxWYAFNZoQJnDuY4/Qu5DbXBw=;
+        b=jLckSEsxTFnBm2+umsK1FeEwmUvuVnIWSnVWgIJSdXIipwsVOSfzHWB42nYi0r75NM
+         OyE2uOqLeZHmTDJvdu58w0LvUc9Z4Dyz75EeV8ib/rfR1OXeAaguIlHjGhZ4CuuyLSlt
+         uZTn6RhXExxKWsxlHl1XawKMwPU10oaKzZNHYVi16RRrIVXNheaT9AgE5GElF0xK8S4D
+         QDNqiuPmDFydX4hOU6u670LTMDHHhs2qTQixg96zIerCLPgEjennzsyaU3HIskauXPL6
+         xxc0401lmCKVhmHxy0gUuIinFuiqfaoRtuvf+jPY91Hhek9O9MyqGD/Jtxvq1oUQrFqa
+         V9eg==
+X-Gm-Message-State: AOAM533/g07lRzmXwiSXQ2T2Kj8cnbQBJbgpF3sgCsqi4E4CHvJTg+M6
+        ZRSCUJnVm1LgI9QQTegXPjW69vK/uKQR7YDV0OMzRU5qT+xzUEAY/uLVoTK6Xn7x/D7f/v8FqVJ
+        ne0dqOm5E2xEGuhPERKdYKD8Z
+X-Received: by 2002:ac8:4d4d:: with SMTP id x13mr27918963qtv.289.1593031250300;
+        Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxDdof3kQnRWMH/ZuwYgHnSQWiMQJJVG8ff1Lps2dKtAX8O4FtVpVCamC1ozXzBQ9kDQ5TqUw==
+X-Received: by 2002:ac8:4d4d:: with SMTP id x13mr27918944qtv.289.1593031250075;
+        Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id p3sm4444095qtl.21.2020.06.24.13.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 13:40:49 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 16:40:47 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 18/26] mm/s390: Use general page fault accounting
+Message-ID: <20200624204047.GC64004@xz-x1>
+References: <20200619160538.8641-1-peterx@redhat.com>
+ <20200619161335.9664-1-peterx@redhat.com>
+ <20200624204930.2445bcd6@thinkpad>
 MIME-Version: 1.0
-In-Reply-To: <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200624204930.2445bcd6@thinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO
-Content-Type: multipart/mixed; boundary="mO6dZvU5p3VwI6OBaMAWK5DEZKjmFJpF9"
+On Wed, Jun 24, 2020 at 08:49:30PM +0200, Gerald Schaefer wrote:
+> On Fri, 19 Jun 2020 12:13:35 -0400
+> Peter Xu <peterx@redhat.com> wrote:
+> 
+> > Use the general page fault accounting by passing regs into handle_mm_fault().
+> > It naturally solve the issue of multiple page fault accounting when page fault
+> > retry happened.
+> > 
+> > CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > CC: Vasily Gorbik <gor@linux.ibm.com>
+> > CC: Christian Borntraeger <borntraeger@de.ibm.com>
+> > CC: linux-s390@vger.kernel.org
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > ---
+> >  arch/s390/mm/fault.c | 16 +---------------
+> >  1 file changed, 1 insertion(+), 15 deletions(-)
+> > 
+> > diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> > index ab6d7eedcfab..4d62ca7d3e09 100644
+> > --- a/arch/s390/mm/fault.c
+> > +++ b/arch/s390/mm/fault.c
+> > @@ -479,7 +479,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+> >  	 * make sure we exit gracefully rather than endlessly redo
+> >  	 * the fault.
+> >  	 */
+> > -	fault = handle_mm_fault(vma, address, flags, NULL);
+> > +	fault = handle_mm_fault(vma, address, flags, regs);
+> >  	if (fault_signal_pending(fault, regs)) {
+> >  		fault = VM_FAULT_SIGNAL;
+> >  		if (flags & FAULT_FLAG_RETRY_NOWAIT)
+> > @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+> >  	if (unlikely(fault & VM_FAULT_ERROR))
+> >  		goto out_up;
+> 
+> There are two cases here where we skipped the accounting,
+> fault_signal_pending() and VM_FAULT_ERROR, similar to other archs.
+> 
+> fault_signal_pending() should be ok, because that only seems to be true
+> for fault & VM_FAULT_RETRY, in which case the new approach also skips
+> the accounting.
 
---mO6dZvU5p3VwI6OBaMAWK5DEZKjmFJpF9
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+IMHO it's still possible to have fault_signal_pending() return true even if the
+fault is not with VM_FAULT_RETRY, e.g., when the signal is delivered right
+after the fault is correctly handled for the thread.  However I hope we can
+avoid considering that too even if so...
 
+> 
+> But for VM_FAULT_ERROR, the new approach would do accounting, IIUC. Is
+> that changed on purpose? See also my reply on [PATCH 01/26].
 
-On 6/24/20 3:26 PM, Andrew Morton wrote:
-> On Tue, 23 Jun 2020 15:23:29 -0400 Nitesh Narayan Lal <nitesh@redhat.com>=
- wrote:
->
->> From: Alex Belits <abelits@marvell.com>
->>
->> The current implementation of cpumask_local_spread() does not respect th=
-e
->> isolated CPUs, i.e., even if a CPU has been isolated for Real-Time task,
->> it will return it to the caller for pinning of its IRQ threads. Having
->> these unwanted IRQ threads on an isolated CPU adds up to a latency
->> overhead.
->>
->> Restrict the CPUs that are returned for spreading IRQs only to the
->> available housekeeping CPUs.
->>
->> ...
->>
->> --- a/lib/cpumask.c
->> +++ b/lib/cpumask.c
->> @@ -6,6 +6,7 @@
->>  #include <linux/export.h>
->>  #include <linux/memblock.h>
->>  #include <linux/numa.h>
->> +#include <linux/sched/isolation.h>
->> =20
->>  /**
->>   * cpumask_next - get the next cpu in a cpumask
->> @@ -205,22 +206,27 @@ void __init free_bootmem_cpumask_var(cpumask_var_t=
- mask)
->>   */
->>  unsigned int cpumask_local_spread(unsigned int i, int node)
->>  {
->> -=09int cpu;
->> +=09int cpu, hk_flags;
->> +=09const struct cpumask *mask;
->> =20
->> +=09hk_flags =3D HK_FLAG_DOMAIN | HK_FLAG_WQ;
->> +=09mask =3D housekeeping_cpumask(hk_flags);
->>  =09/* Wrap: we always want a cpu. */
->> -=09i %=3D num_online_cpus();
->> +=09i %=3D cpumask_weight(mask);
->> =20
->>  =09if (node =3D=3D NUMA_NO_NODE) {
->> -=09=09for_each_cpu(cpu, cpu_online_mask)
->> +=09=09for_each_cpu(cpu, mask) {
->>  =09=09=09if (i-- =3D=3D 0)
->>  =09=09=09=09return cpu;
->> +=09=09}
->>  =09} else {
->>  =09=09/* NUMA first. */
->> -=09=09for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
->> +=09=09for_each_cpu_and(cpu, cpumask_of_node(node), mask) {
->>  =09=09=09if (i-- =3D=3D 0)
->>  =09=09=09=09return cpu;
->> +=09=09}
->> =20
->> -=09=09for_each_cpu(cpu, cpu_online_mask) {
->> +=09=09for_each_cpu(cpu, mask) {
->>  =09=09=09/* Skip NUMA nodes, done above. */
->>  =09=09=09if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
->>  =09=09=09=09continue;
-> Are you aware of these changes to cpu_local_spread()?
-> https://lore.kernel.org/lkml/1582768688-2314-1-git-send-email-zhangshaoku=
-n@hisilicon.com/
->
-> I don't see a lot of overlap but it would be nice for you folks to
-> check each other's homework ;)
+(replied in the other thread)
 
-Sure, I will take a look.
-Thanks
+Thanks,
 
->
---=20
-Nitesh
-
-
---mO6dZvU5p3VwI6OBaMAWK5DEZKjmFJpF9--
-
---oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl7zuc8ACgkQo4ZA3AYy
-ozkNURAAz7cs8+fTdmMQKxVrRFFxpOzfHgJSdfVunT4T/jHSr8CMLQvT1qmV3tvo
-EwSuBaurwWOcdSIDFn6VPfZOOtr3OGSpZ4S8wkWlWrHfkAy1f3NDffQPQ/6+dE+H
-9U3zZJpnuI8DK6zTlypuBGfBm2WHUUGnm97trdNzWFKASiTdhQPhncCZJxQ7PftJ
-R/vWSadHhNzFBiZ1w2k84izP0shVXfG5dQVqMq9rtBrK8qRZIhqCAHnfmMum0XS9
-mDW7sE1ErXN77wsP2M+xXkRy+t8m+Y2ziYGrFjpqJpIxxnLQdWAra6L6+Ikw8eej
-r57d9KghKFxd3FnvSHq1yekOPUvCUjqGVIUIV3WZxA3gvy5aQmxpO/nEkRakt1k7
-xn4FfcUNFINB0S+lXcSk8AJXgw01gmUEpKdVaIsUpJojCPXW88MAArOmA2Q5Cpuz
-lgfcYQV09eRNVzVv2xpMbIlELY0IWeLRQxxtuRPqOlWrTxhGI+GyaBuJ5Pag5oHv
-4dMlzGiBvJcUf8+dRj9PbiZENAcY2xicCK8+E5XIT2w5t7PkU91vFLpqVBFKkEWN
-18TzY6VQXojBj964/woJTtbo6oSATsg9otFubsO8IKt8X3r9nZUkhBCR92ay/clW
-Wd0NXK5mF3X/iyfq2Iprdqe/UU8bHPZaDE4Ngz7h5xr+1ifeIPA=
-=fACU
------END PGP SIGNATURE-----
-
---oyKSyWZ1LjXDNeJYNyMs8QccfZHOfRtMO--
+-- 
+Peter Xu
 
