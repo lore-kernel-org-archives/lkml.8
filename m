@@ -2,86 +2,75 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD12C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F52C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358F720E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ssqhSLNF"
+	by mail.kernel.org (Postfix) with ESMTP id 3EDB620B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387959AbgFXAVU (ORCPT
+        id S2388034AbgFXAVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 20:21:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387693AbgFXAVT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 20:21:19 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0AFC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:21:19 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id e15so160936edr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YjofI1mwRo44tuHI1N5pBCiCgd6VCF1mc9VUJRDcqIs=;
-        b=ssqhSLNFQwECvtfaqEByEmRnEvWZatoj9uZz/B5DwW54j2FQkD+Mz8lf986nWsFj/O
-         1VC/kYFfNJO2rSdKjYE0GZCOUe5M5hJ5dg2KoN+JnjPhFOOrYlBmMlFRDatO0eEcxkR0
-         ksGOcOp+yRJistWUEvSGzHGi0hWfgHApW536ZGxkx/ImlMQKKXTcRuHSTIeBt7JQ81Yh
-         HPEW+6hx5rs1StxvLyah0FQP6QKXp7MUU5rjy9rgkp9osi1jCGckkybB+xUVoa19Tskt
-         VcALBCPvxE2v4E3Do0asAE3bqTsJ2fs0G4MkURwA7zCpig8K7hrKmGW86vThgpxSuA/t
-         QChg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YjofI1mwRo44tuHI1N5pBCiCgd6VCF1mc9VUJRDcqIs=;
-        b=FLGDMhYy1jIBJcj24YV5o0BA1B0JkzvRAxW26HGRB4a53ZA//9WITeSB2qKNRLM7Zm
-         SmPVqH11BL3jYR8GlUREQBa+wNnDsgLspdTHA1KZtW1Jv3l6KYfZuix/0lgAUmX9MSCQ
-         nVompBSfP5pys/fKKKXEQYvE4ixvtBjNAXR7l6w0hnIMhrlfcb5NYTv/ioKE1i9DAURV
-         dQXLqqNLuWyN2ge1MmBrtXxwkoFubvCAPVvnBH6zaUyF4s19EiTcDJj8Irti8nrLYcY6
-         FtgjVZreFIVs3L7X3Mo2VYkkvesnLT5sGZn1pDrn9NXWm7NT6+ZsdtZSxAY/vvFTz9Ut
-         cJEg==
-X-Gm-Message-State: AOAM532Xtcs2Eg9FCxeIrUGCIBwmIOA0FqWZxi+y0FXOT5Jn9XTnfqr+
-        Grbc4LhQiTDG9cR6Nm8yWxkPbhXGbvm+dGJMJjzTEzd3
-X-Google-Smtp-Source: ABdhPJw83ckqM7XvH578t3C1pW3kyuRas4cnGlU5TxmWEVYr+CfscQ2B8N8wRKhF8WgJl+y1psSndTTLHtMHgYWVAto=
-X-Received: by 2002:a05:6402:21c2:: with SMTP id bi2mr24132581edb.296.1592958078019;
- Tue, 23 Jun 2020 17:21:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
-In-Reply-To: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 23 Jun 2020 17:21:06 -0700
-Message-ID: <CAPcyv4ipnZ2jXd-obBk4KMGPNz4DMu0jGXFEEPCnST+A2zR+Uw@mail.gmail.com>
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>,
+        Tue, 23 Jun 2020 20:21:25 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:47114 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387693AbgFXAVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 20:21:23 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jnt9u-0007Sc-28; Wed, 24 Jun 2020 10:20:59 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 24 Jun 2020 10:20:58 +1000
+Date:   Wed, 24 Jun 2020 10:20:58 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: build failure after merge of the printk tree
+Message-ID: <20200624002057.GA12716@gondor.apana.org.au>
+References: <20200621131554.5a662afe@canb.auug.org.au>
+ <20200623102655.6d16e610@canb.auug.org.au>
+ <20200623121637.GA8444@alley>
+ <20200623121937.GA9671@gondor.apana.org.au>
+ <20200623142858.GB8444@alley>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623142858.GB8444@alley>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 2:43 AM Wei Yang
-<richard.weiyang@linux.alibaba.com> wrote:
+On Tue, Jun 23, 2020 at 04:28:58PM +0200, Petr Mladek wrote:
 >
-> For early sections, we assumes its memmap will never be partially
-> removed. But current behavior breaks this.
+> It is similar cycle:
+> 
+> spinlock_types.h -> lockdep.h -> printk.h -> ratelimit.h -> spinlock_types.h
+> 
+> But this time it happens via list.h -> kernel.h ->printk.h.
+> Where list.h needs READ_ONCE() stuff from compiler.h.
 
-Where do we assume that?
+But this is exactly the loop that's fixed by the lockdep_types
+patch.  Did you get a compile failure with *just* the lockdep
+patch?
 
-The primary use case for this was mapping pmem that collides with
-System-RAM in the same 128MB section. That collision will certainly be
-depopulated on-demand depending on the state of the pmem device. So,
-I'm not understanding the problem or the benefit of this change.
+> PS: And yes, it makes sense to push both patches via a single tree to
+> make sure that the lockdep.h split is done first.
+
+OK, can I repost this patch with your ack then?
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
