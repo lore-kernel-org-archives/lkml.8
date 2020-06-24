@@ -2,238 +2,140 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B93C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B25A20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Y7MI90oF"
+	by mail.kernel.org (Postfix) with ESMTP id 9902920823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403966AbgFXNbO (ORCPT
+        id S2403931AbgFXNdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:31:14 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:51011 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403950AbgFXNbN (ORCPT
+        Wed, 24 Jun 2020 09:33:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43725 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388896AbgFXNdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:31:13 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id o5UTjhTn1Nb6lo5UXjtYFd; Wed, 24 Jun 2020 15:31:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593005469; bh=MDEddShRHZ2kQyBZBQSICoZD5Jdb8Z94kNEjYu7s8DE=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Y7MI90oFR2JYlXXzwNsONDV7XaAFWkwG/xyfFgI3Ol0igF6PjvcgQdrOLQPsm+c98
-         M6fgZDDvgqM83xfHXdQqd2SjHIqQjsyrxszqCXg87sIYepKmTDwk9dOB15tApagnvB
-         wWVOAYx9/KeCnunGkUKgJ3++d90kaw+x/0lJgp58sY2uGCMOyM27c61RNMhD08Z7KN
-         wV8N44paRL79PrZABbKT6ylOIvOoBAbFbtgfdMOdMayfZlrytrO7JpVyiTXz6hDfA2
-         DOW0n/MNg+CntALZbSWk+PkiJ9wNEqPZxSlmDi0uMgHKFDniPV2f0gOjsPnK5HVopc
-         G350vPytAdIyw==
-Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
- completion
-To:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Michael Rodin <mrodin@de.adit-jv.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michael@rodin.online,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
-        Steve Longerbeam <steve_longerbeam@mentor.com>
-References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
- <20200617105646.GB2850317@oden.dyn.berto.se>
- <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
- <20200617152857.GA2936315@oden.dyn.berto.se>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <427325ff-e21f-91fd-6236-6d1f6615ca41@xs4all.nl>
-Date:   Wed, 24 Jun 2020 15:31:01 +0200
+        Wed, 24 Jun 2020 09:33:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w2so628977pgg.10;
+        Wed, 24 Jun 2020 06:33:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=M9l6txOTKX6NW4WDDCYiUemnZ4OCGm3jGi3nT3lueA8=;
+        b=cNJmu1KWcUatEyL0b5OdGr4/eAUq9pZTFa4h2Joi0ATIT6jPCKOAe7lsYt76cU7eaN
+         agymxF2lwl11j5JFGHm+IwyRIX5xRtbAdI2u9Qb1TuoWzTxT+Ii50h8JqsmPWQ37C2X+
+         3GG16Lev3az0OEY5/l6sQIU+5B4wsfXwWLVLMli1JvwCYvrB+E5yu+Wls/1dQFCzLnKA
+         Cyc4zXS/CVXos//EP2OCdq00sbRY+0onrcRQBEtZqI2Ph0WJGcT4gG6poSqn6DZNBAU6
+         D0vzBLXFhvz7VA/ijZoW5oeMAmGzPWa0D09Bw4TKMGQ/8+ahb8A9ekwbvfdeNWSoKC4i
+         WZJA==
+X-Gm-Message-State: AOAM5307jLnf3VI06zgm8NQWdRfabptKIRb+lrbMq6NAj4KXtAyov1VG
+        VgcAat9o+nxusg1XfM88U4I=
+X-Google-Smtp-Source: ABdhPJy84ZYwI8uYwYLoAXr770aOJpQHyK6PLjP0ow9VARewgz8PHOTpgz8nyMy49jOSJZ8muGQyNg==
+X-Received: by 2002:a65:63d4:: with SMTP id n20mr718566pgv.213.1593005600062;
+        Wed, 24 Jun 2020 06:33:20 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id 199sm11480185pgc.79.2020.06.24.06.33.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 06:33:19 -0700 (PDT)
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
+Date:   Wed, 24 Jun 2020 06:33:17 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200617152857.GA2936315@oden.dyn.berto.se>
+In-Reply-To: <20200623111018.31954-1-martin.kepplinger@puri.sm>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfAVplMJPHvtR2aXNKfwkT4KgjUl73JGbwOXzs3eY1Rkn/wL4GbwHFIJmDehJwHa5ARGtdcYU6afiWeFGOLB6IsaMrnEfLn5AJEmjvmRCvulKGKnlhnU0
- 5V/P/i4uOk+yDl2A2HXfOUxZgzVJXxvyAVV2c7+nX3LT8xxpd2sQflmdXNQysnM9om6O4oPtfLAF+5z0WV47mC8YGPMdfi92dMtpvMVe1/Tc0jcDn71sKEHJ
- 2DOv6BokZ+htfdoOQDZYGuqj6AlC4rft2AQ7t0pqPS28KypTaJo6HFHDBHWZktW+NUGp89AqOauerGWjN2WfZHoKz24YE+B4wGxBP+6HQ/1Fl2AolQTj2p7+
- VlgUo2XuT3nEq68rMFuPqo1SRYBKMRN3YL0KAjhXUFAaO+qj1BvE51GDOHR0F9FIoCMI5ny+FX5BTddSfYhoIGL0L5LAkMusHuPvL8mGS5BfHDkBJXVT1PdY
- SAgvJ8lini11xCiEndLsldjhIfkXDLfr1aKKB1DcSiBtgXyRNfuxcvlsVP4=
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 17:28, Niklas Söderlund wrote:
-> Hi Michael,
+On 2020-06-23 04:10, Martin Kepplinger wrote:
+> This add a very conservative but simple implementation for runtime PM
+> to the sd scsi driver:
+> Resume when opened (mounted) and suspend when released (unmounted).
 > 
-> On 2020-06-17 17:15:37 +0200, Michael Rodin wrote:
->> Hi Niklas and Steve,
->>
->> On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
->>> Hi Michael and Steve,
->>>
->>> On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
->>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>>
->>>> The media_device is registered during driver probe, before async
->>>> completion, so it is possible for .link_notify to be called before
->>>> all devices are bound.
->>>>
->>>> Fix this by moving media_device_register() to rvin_group_notify_complete().
->>>> This ensures that all devices are now bound (the rcar-csi2 subdevices and
->>>> and video capture devices) before .link_notify can be called.
->>>
->>> I'm curious to what situation created the need for this change. I'm 
->>> currently trying to take the VIN driver in the opposite direction [1] 
->>> with the end goal of registering video devices at probe time and then 
->>> allow the media graph to populate as devices becomes available.
->>
->> It looks like almost all platform drivers call media_device_register() in
->> the completion callback. From my understaning it is necessary to ensure
->> that all subdevices are bound and all links are created before the user
->> can enable any link (which would trigger link_notify callback execution)
->> and set formats. If I am not mistaken, Steve could observe an "OOPS" or
->> at least it is theoretically possible.
+> Improvements that allow suspending while a device is "open" can
+> be added later, but now we save power when no filesystem is mounted
+> and runtime PM is enabled.
 > 
-> If an OOPS have been observed I would be interested to see it. That way 
-> we can fix the OOPS and keep the media graph registration where it is 
-> today.
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  drivers/scsi/sd.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
->>
->> Actually I found that this patch alone is not enough even if it is correct,
->> because we also have to register the media device in rvin_parallel_notify_complete()
->> in case if there is only a parallel video input device attached.
->>
->>> My reason for this is that we could have a functional pipeline inside 
->>> the graph even if it's not complete. This came out of the GMSL work done
->>> a while pack where I had a faulty camera that would prevent the other 7 
->>> in the system to function.
->>
->> I agree that if a probe of a faulty subdevice fails, this should not affect
->> functionality of the other attached subdevices. The "complete" callback of
->> the async notifier is probably not executed in this case, so I guess, we
->> would have to register the media device in the "bound" callback after the first
->> subdevice has been probed? Otherwise there is not much sense to have video
->> capture devices, which are not connected to any source.
-> 
-> Calling it in the bound callback is mostly the same as it is today, as 
-> link_notify could then be called when not all entities are in the graph.  
-> In fact even if we where tp move the media device registration to the t
-> complete callback we have this problem if any of the subdevices are 
-> unbound. Then we are back to the state with a registerd media device 
-> where not all entities are present.
-> 
-> I think the solution here is to address the issue (if any) in the 
-> link_notify callback when the graph is not fully populated.
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index d90fefffe31b..fe4cb7c50ec1 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -1372,6 +1372,7 @@ static int sd_open(struct block_device *bdev, fmode_t mode)
+>  	SCSI_LOG_HLQUEUE(3, sd_printk(KERN_INFO, sdkp, "sd_open\n"));
+>  
+>  	sdev = sdkp->device;
+> +	scsi_autopm_get_device(sdev);
+>  
+>  	/*
+>  	 * If the device is in error recovery, wait until it is done.
+> @@ -1418,6 +1419,9 @@ static int sd_open(struct block_device *bdev, fmode_t mode)
+>  
+>  error_out:
+>  	scsi_disk_put(sdkp);
+> +
+> +	scsi_autopm_put_device(sdev);
+> +
+>  	return retval;	
+>  }
+>  
+> @@ -1441,6 +1445,8 @@ static void sd_release(struct gendisk *disk, fmode_t mode)
+>  
+>  	SCSI_LOG_HLQUEUE(3, sd_printk(KERN_INFO, sdkp, "sd_release\n"));
+>  
+> +	scsi_autopm_put_device(sdev);
+> +
+>  	if (atomic_dec_return(&sdkp->openers) == 0 && sdev->removable) {
+>  		if (scsi_block_when_processing_errors(sdev))
+>  			scsi_set_medium_removal(sdev, SCSI_REMOVAL_ALLOW);
 
-As I have mentioned in other threads in this mailinglist (e.g.
-https://www.spinics.net/lists/linux-media/msg171067.html), this is part
-of a bigger problem: what to do if only part of a graph comes up, or
-a part disappears. Today this is not supported.
+My understanding of the above patch is that it introduces a regression,
+namely by disabling runtime suspend as long as an sd device is held open.
 
-It is certainly desirable to support this, but I want to see an RFC first
-detailing the interaction with userspace. And remember that today the
-expectation of applications is that device nodes are only created if all
-components of the device probed successfully.
+Bart.
 
-My preference is that rcar-vin is first changed to conform to current
-expectations (i.e. /dev/mediaX is only registered at async completion).
-
-After a proper discussion on how to handle partial initialization and
-after we have a good plan, then this can be implemented in rcar-vin.
-
-Note that I really want to support partial initialization, but I want
-to see an RFC with a proper analysis and proposal first.
-
-Regards,
-
-	Hans
-
-> 
->>
->> (Delayed) population of the media graph after media device registration
->> sounds also like a requirement for device tree overlay support, which would
->> also be a nice feature.
->>
->>> 1. [PATCH 0/5] media-device: Report if graph is complete
->>>
->>>>
->>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
->>>> ---
->>>>  drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
->>>>  1 file changed, 6 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
->>>> index 7440c89..e70f83b 100644
->>>> --- a/drivers/media/platform/rcar-vin/rcar-core.c
->>>> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
->>>> @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
->>>>  	struct media_device *mdev = &group->mdev;
->>>>  	const struct of_device_id *match;
->>>>  	struct device_node *np;
->>>> -	int ret;
->>>>  
->>>>  	mutex_init(&group->lock);
->>>>  
->>>> @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
->>>>  	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
->>>>  
->>>>  	mdev->dev = vin->dev;
->>>> -	mdev->ops = &rvin_media_ops;
->>>>  
->>>>  	match = of_match_node(vin->dev->driver->of_match_table,
->>>>  			      vin->dev->of_node);
->>>> @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
->>>>  
->>>>  	media_device_init(mdev);
->>>>  
->>>> -	ret = media_device_register(&group->mdev);
->>>> -	if (ret)
->>>> -		rvin_group_cleanup(group);
->>>> -
->>>> -	return ret;
->>>> +	return 0;
->>>>  }
->>>>  
->>>>  static void rvin_group_release(struct kref *kref)
->>>> @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
->>>>  		return ret;
->>>>  	}
->>>>  
->>>> +	vin->group->mdev.ops = &rvin_media_ops;
->>>> +
->>>>  	/* Register all video nodes for the group. */
->>>>  	for (i = 0; i < RCAR_VIN_NUM; i++) {
->>>>  		if (vin->group->vin[i] &&
->>>> @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
->>>>  		}
->>>>  	}
->>>>  	mutex_unlock(&vin->group->lock);
->>>> +	if (ret)
->>>> +		return ret;
->>>>  
->>>> -	return ret;
->>>> +	return media_device_register(&vin->group->mdev);
->>>>  }
->>>>  
->>>>  static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
->>>> -- 
->>>> 2.7.4
->>>>
->>>
->>> -- 
->>> Regards,
->>> Niklas Söderlund
->>
->> -- 
->> Best Regards,
->> Michael
-> 
 
