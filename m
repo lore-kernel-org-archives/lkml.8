@@ -2,131 +2,71 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCE9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D19207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF812078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbgFXGRT (ORCPT
+        id S2389111AbgFXGSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:17:19 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:48324 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388815AbgFXGRS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:17:18 -0400
-Received: by mail-io1-f69.google.com with SMTP id l16so688959ioc.15
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 23:17:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5CAUOdrn145t33RyDsvFuRNtproPZrRG5wbaIt1noKk=;
-        b=Oa3sYJCU69LNOiNNyVfJtUOhQW1A0jHndbZv6YK0Ngu8f97PxRL/7+scNr+3jiy4Nj
-         M98RSn8rJgBuiPeL2dBTR8esjXNaBZe3XEivbLb5SjigzaCQZE5naMsMKT6EoOytid6P
-         CwO6oqWmQfSWDjo4s0S1dvRcULeA3Pe/UGgWD+6YEb5QeDuu99tFZUEmzWn3nGcBAhib
-         ZZlBOpSSQEGMqYgbFAaFNGA8rqxFL4/57h0whPXy8ruB/TKnU2Nbom78VVrQ8oYjJkrV
-         bJEdLyzO2Ak7Iwy1M2SL2L+ZqDs2MIDIObiA1QNpGG+Is05ssGoIjPLrroxP/lsH1Q/H
-         pNzw==
-X-Gm-Message-State: AOAM533IbZJcqnSq+LD+qOFoG3ve4bLfdpRIsnZihvyOCVTOSC25LwgL
-        TDOYx19+lPAGntilTZoLeErrx1J1UORBISEph/euS9Nwa8xz
-X-Google-Smtp-Source: ABdhPJyELxw2qLKuuPok9m57oshaB2ZfSKHTA8VbOzvPFtYhWR3PH5aIWU1WALFsdrHxgeH3qH9ye4Gc1bt+Us2ddP1+eZIjKJN4
+        Wed, 24 Jun 2020 02:18:34 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:9278 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388815AbgFXGSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:18:34 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Wed, 24 Jun 2020 14:18:21
+ +0800 (GMT+08:00)
+X-Originating-IP: [210.32.144.65]
+Date:   Wed, 24 Jun 2020 14:18:21 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Stanimir Varbanov" <stanimir.varbanov@linaro.org>
+Cc:     kjlu@umn.edu, "Andy Gross" <agross@kernel.org>,
+        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] media: venus: core: Fix runtime PM imbalance in
+ venus_probe
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <42a2a6cc-d873-1ec6-daaa-a4d5aebe619f@linaro.org>
+References: <20200524052933.10529-1-dinghao.liu@zju.edu.cn>
+ <42a2a6cc-d873-1ec6-daaa-a4d5aebe619f@linaro.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-X-Received: by 2002:a02:cf3b:: with SMTP id s27mr16670340jar.72.1592979436970;
- Tue, 23 Jun 2020 23:17:16 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 23:17:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000079a77705a8ce6da7@google.com>
-Subject: general protection fault in qrtr_endpoint_post
-From:   syzbot <syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com>
-To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <28ec484e.24c89.172e4fa332d.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgDX3uIt8PJeE+01AQ--.21839W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggBBlZdtOzhhgAAs5
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGCS07vEb7Iv0x
+        C_JF4lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUGVWUXwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r47MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_Zr0_Wr1UMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12c27f79100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
-dashboard link: https://syzkaller.appspot.com/bug?extid=03e343dbccf82a5242a2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1715f03d100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17dc0db6100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-CPU: 0 PID: 6780 Comm: syz-executor827 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:qrtr_endpoint_post+0x92/0xfa0 net/qrtr/qrtr.c:440
-Code: 44 89 e6 e8 80 27 4e fe 48 85 c0 48 89 c5 0f 84 57 0e 00 00 e8 4f 7a 9e f9 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 48 89 da 83 e2 07 38 d0 7f 08 84 c0 0f 85 f7 0c 00 00
-RSP: 0018:ffffc900016a7c48 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000010 RCX: ffffffff86237e4b
-RDX: 0000000000000002 RSI: ffffffff87d55471 RDI: ffff888090444150
-RBP: ffff888090444140 R08: ffff8880954ca340 R09: ffffed1011e43c5d
-R10: ffff88808f21e2e3 R11: ffffed1011e43c5c R12: 0000000000000000
-R13: ffff88809a089100 R14: ffffc900016a7eb0 R15: 0000000000000000
-FS:  0000000000a65880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000000 CR3: 0000000099699000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- qrtr_tun_write_iter+0xf5/0x180 net/qrtr/tun.c:92
- call_write_iter include/linux/fs.h:1917 [inline]
- new_sync_write+0x426/0x650 fs/read_write.c:484
- __vfs_write+0xc9/0x100 fs/read_write.c:497
- vfs_write+0x268/0x5d0 fs/read_write.c:559
- ksys_write+0x12d/0x250 fs/read_write.c:612
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x4401b9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff99653dd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401b9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a40
-R13: 0000000000401ad0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 5199d7949b247ba3 ]---
-RIP: 0010:qrtr_endpoint_post+0x92/0xfa0 net/qrtr/qrtr.c:440
-Code: 44 89 e6 e8 80 27 4e fe 48 85 c0 48 89 c5 0f 84 57 0e 00 00 e8 4f 7a 9e f9 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 48 89 da 83 e2 07 38 d0 7f 08 84 c0 0f 85 f7 0c 00 00
-RSP: 0018:ffffc900016a7c48 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000010 RCX: ffffffff86237e4b
-RDX: 0000000000000002 RSI: ffffffff87d55471 RDI: ffff888090444150
-RBP: ffff888090444140 R08: ffff8880954ca340 R09: ffffed1011e43c5d
-R10: ffff88808f21e2e3 R11: ffffed1011e43c5c R12: 0000000000000000
-R13: ffff88809a089100 R14: ffffc900016a7eb0 R15: 0000000000000000
-FS:  0000000000a65880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000000 CR3: 0000000099699000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+PiAKPiBDb3VsZCB5b3UganVzdCByZW9yZGVyIGVycm9yIGxhYmVscyBiZWxvdyBpbnN0ZWFkIG9m
+IHJlbGVhc2luZwo+IGV2ZXJ5dGhpbmcgaGVyZT8KClRoYW5rIHlvdSBmb3IgeW91ciBhZHZpY2Uh
+IEknbGwgZml4IHRoaXMgaW4gdGhlIG5leHQgdmVyc2lvbiBvZiBwYXRjaC4KClJlZ2FyZHMsCkRp
+bmdoYW8KCg==
