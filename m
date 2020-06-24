@@ -2,136 +2,166 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E08C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71996C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439E52073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593016863;
-	bh=uvjYsXkxFUGkhiFTCWXt307TvMmTMTKMKbqCMztuBls=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jKEVvVirIXlcT1SVOehqN0B0OrCZReO4yT84l41Pl4su9m3VLQNtDFg5ZJSRoi05U
-	 THN08UaDlFkrSxXRPs4xj310zTIAl0DJaRK+9B28qDx8P7TYQBoQckCRG/KIXpPOyY
-	 z9IfcLUZgSDyMEba/8Ho59nfYrkwrV//YekmRo3s=
+	by mail.kernel.org (Postfix) with ESMTP id 4AD382073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUGYdJZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405117AbgFXQlC (ORCPT
+        id S2405144AbgFXQlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404160AbgFXQlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:41:01 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876E620899;
-        Wed, 24 Jun 2020 16:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593016860;
-        bh=uvjYsXkxFUGkhiFTCWXt307TvMmTMTKMKbqCMztuBls=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bZztcT5WZ5MWC+ENbrUuPlioKE8O69UkCFRfGBeqlJTX3EqNO3n8zbzUkG2tfbd7l
-         Kk3R7Efk7d6uJ43rzh0HLhfKa41sehWsbY6fJ5h/uZ8zqj99vlgOGvkQopY6v/rWCv
-         cXQgJ1FpRA7WmN9YaTBpWM6GygRlILWvZMyCZqyA=
-Received: by mail-oi1-f181.google.com with SMTP id x202so2364920oix.11;
-        Wed, 24 Jun 2020 09:41:00 -0700 (PDT)
-X-Gm-Message-State: AOAM532xcTdTOuecIR3ScaGbj6IsNUcHCKOVaqcPNA3q95N/w7zubqEd
-        tO2Vu7Gxj/+oJlYQY9sqi7IPDN1F0idcVgZWmEE=
-X-Google-Smtp-Source: ABdhPJyiNUJDNwC86vdpWulA3iT8f/D6K0b5Na/cqZCLSt9K49BUN6iDAZ8XtMicFhbdB0vwidSCBWPLhDa7Wo4++f4=
-X-Received: by 2002:aca:b241:: with SMTP id b62mr19900869oif.47.1593016859864;
- Wed, 24 Jun 2020 09:40:59 -0700 (PDT)
+        Wed, 24 Jun 2020 12:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404160AbgFXQlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:41:23 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B259CC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:41:21 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id t9so1631649lfl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B/MCASNnVi/ALzgM3WNJvUmY0h2sFHWtkBBpH4Al5bc=;
+        b=SUGYdJZr+bMHYsVax8gJ9zldqlptd5kT4BBRGeENSZ+lBC2aiViK4YZ21YlKWckWtj
+         78rogfijxVPK+wCfNKOEsnWws25VJFVUqOMZ74hBCT/b+V7//3IX5LmoPpT73wLr6UyE
+         f9Or3PmrEO4tzctBFixp7xguO8JiV1I21ldwJUXWqgFRU9s9sRiMnelghsFX1qj5r387
+         qN9gkK0f6h9/H7ZwGB2j0IMzDyJcMQ2UZMPvL9SCVasAlSKcpc1EoVJgatnaPih5GTGW
+         xFlpqTdOrQIDUPF3HBr4SWcJYM9EzzINKaFEIKuenUhJwTGpyHMkKavREhDOlpHEHyfo
+         O63A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B/MCASNnVi/ALzgM3WNJvUmY0h2sFHWtkBBpH4Al5bc=;
+        b=jxjrBd9OFg0STPUvLht2sd4CRASp60pHnR06/Qvcr8aZIN4h5or5xWIt0CCKGVlaEa
+         r98OC1OrV3lOGG23NcqRgBWES5hP+WBhvpBDvv6bngS0N/KksAYhO7L2ROQE4mcl/inI
+         9LhqNGqe18LWbZP88/OCWnKgB4/uUB9072BExK6XYF8/rQSW+hM3ly6ptIpVN7jMwNA0
+         oIRjyBQ5p7TDgzmaY+QtfZ7wmgnc9a5dq0bxIz1MPaAB5A5NOtB9D64m+o8P0xBJyD6L
+         uFT+OhAyF5pGY6FrfP4pd9tlu2aUCdSeJ+HHpVHMS2SMo+XopECy12woZZ73TmkRNTO7
+         gThA==
+X-Gm-Message-State: AOAM532wq5iJTYlUCCNsNR6eDbdVKAT7FbQyp473ZCxLyblLnt76vezl
+        KD/prBDJUgArB0RnQvUOV/+f1GESaek7dk7807sXxU8qjqU=
+X-Google-Smtp-Source: ABdhPJyuFuqWzMzN0VCDv0hj3tUOZeuC5C7P9H6qKjUhTu9qMY0DiAXyK0/rc0u9PDV26qXkjvqHI3MZ8FO+htkdFHg=
+X-Received: by 2002:a19:6c6:: with SMTP id 189mr15947269lfg.94.1593016880059;
+ Wed, 24 Jun 2020 09:41:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org> <20200624033142.cinvg6rbg252j46d@google.com>
- <202006232143.66828CD3@keescook> <20200624104356.GA6134@willie-the-truck>
- <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
- <202006240820.A3468F4@keescook> <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
- <202006240844.7BE48D2B5@keescook> <CAMj1kXHqBs44uukRSdFwA_hcmX_yKVfjqdv9RoPbbu-6Wz+RaA@mail.gmail.com>
- <20200624162919.GH25945@arm.com>
-In-Reply-To: <20200624162919.GH25945@arm.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 24 Jun 2020 18:40:48 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE1zWCjVt8iS4fv2gQHzrTF6=Ggd16nm+4TNWAG3zSWAQ@mail.gmail.com>
-Message-ID: <CAMj1kXE1zWCjVt8iS4fv2gQHzrTF6=Ggd16nm+4TNWAG3zSWAQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fangrui Song <maskray@google.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1592913499-15558-1-git-send-email-jrdr.linux@gmail.com>
+ <c68a3805-080f-22c3-a4d3-f03be6b32176@oracle.com> <CAFqt6zZo4ZZ9sHGqMGiYoGoA8HQ2z_ijwnpr_b+PHuAzq31scw@mail.gmail.com>
+ <c2130c7c-b545-218b-f2cf-69f5059f220c@oracle.com>
+In-Reply-To: <c2130c7c-b545-218b-f2cf-69f5059f220c@oracle.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Wed, 24 Jun 2020 22:11:08 +0530
+Message-ID: <CAFqt6zaO06gAJjWTLP4fGooLPHcm+oUJtpvhfpr6A0Zsj4PE7g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Juergen Gross <jgross@suse.com>, sstabellini@kernel.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>, paul@xen.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 18:29, Dave Martin <Dave.Martin@arm.com> wrote:
+On Wed, Jun 24, 2020 at 9:07 PM Boris Ostrovsky
+<boris.ostrovsky@oracle.com> wrote:
 >
-> On Wed, Jun 24, 2020 at 05:48:41PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 24 Jun 2020 at 17:45, Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Wed, Jun 24, 2020 at 05:31:06PM +0200, Ard Biesheuvel wrote:
-> > > > On Wed, 24 Jun 2020 at 17:21, Kees Cook <keescook@chromium.org> wrote:
-> > > > >
-> > > > > On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
-> > > > > > I'm not sure if there is a point to having PAC and/or BTI in the EFI
-> > > > > > stub, given that it runs under the control of the firmware, with its
-> > > > > > memory mappings and PAC configuration etc.
-> > > > >
-> > > > > Is BTI being ignored when the firmware runs?
-> > > >
-> > > > Given that it requires the 'guarded' attribute to be set in the page
-> > > > tables, and the fact that the UEFI spec does not require it for
-> > > > executables that it invokes, nor describes any means of annotating
-> > > > such executables as having been built with BTI annotations, I think we
-> > > > can safely assume that the EFI stub will execute with BTI disabled in
-> > > > the foreseeable future.
-> > >
-> > > yaaaaaay. *sigh* How long until EFI catches up?
-> > >
-> > > That said, BTI shouldn't _hurt_, right? If EFI ever decides to enable
-> > > it, we'll be ready?
-> > >
-> >
-> > Sure. Although I anticipate that we'll need to set some flag in the
-> > PE/COFF header to enable it, and so any BTI opcodes we emit without
-> > that will never take effect in practice.
+> On 6/23/20 9:36 PM, Souptick Joarder wrote:
+> > On Tue, Jun 23, 2020 at 11:11 PM Boris Ostrovsky
+> > <boris.ostrovsky@oracle.com> wrote:
+> >> On 6/23/20 7:58 AM, Souptick Joarder wrote:
+> >>> In 2019, we introduced pin_user_pages*() and now we are converting
+> >>> get_user_pages*() to the new API as appropriate. [1] & [2] could
+> >>> be referred for more information. This is case 5 as per document [1].
+> >>>
+> >>> As discussed, pages need to be marked as dirty before unpinned it.
+> >>>
+> >>> Previously, if lock_pages() end up partially mapping pages, it used
+> >>> to return -ERRNO due to which unlock_pages() have to go through
+> >>> each pages[i] till *nr_pages* to validate them. This can be avoided
+> >>> by passing correct number partially mapped pages & -ERRNO separately
+> >>> while returning from lock_pages() due to error.
+> >>> With this fix unlock_pages() doesn't need to validate pages[i] till
+> >>> *nr_pages* for error scenario.
+> >>
+> >> This should be split into two patches please. The first one will fix the
+> >> return value bug (and will need to go to stable branches) and the second
+> >> will use new routine to pin pages.
+> > Initially I split the patches into 2 commits. But at last moment I
+> > figure out that,
+> > this bug fix ( better to call coding error, doesn't looks like lead to
+> > any runtime bug) is tightly coupled to 2nd commit for
+> > pin_user_pages*() conversion,
+> > which means we don't need the bug fix patch if we are not converting the API to
+> > pin_user_pages*()/ unpin_user_pages_dirty_lock(). That's the reason to
+> > clubbed these two
+> > commits into a single one.
 >
-> In the meantime, it is possible to build all the in-tree parts of EFI
-> for BTI, and just turn it off for out-of-tree EFI binaries?
 >
-
-Not sure I understand the question. What do you mean by out-of-tree
-EFI binaries? And how would the firmware (which is out of tree itself,
-and is in charge of the page tables, vector table, timer interrupt etc
-when the EFI stub executes) distinguish such binaries from the EFI
-stub?
-
-
-> If there's no easy way to do this though, I guess we should wait for /
-> push for a PE/COFF flag to describe this properly.
+> I am not sure I understand why the two issues are connected. Failure of
+> either get_user_pages_fast() or pin_user_pages() will result in the same
+> kind of overall ioctl failure, won't it?
 >
 
-Yeah good point. I will take this to the forum.
+Sorry, I think, I need to go through the bug again for my clarity.
+
+My understanding is ->
+
+First, In case of success lock_pages() returns 0, so what privcmd_ioctl_dm_op()
+will return to user is depend on the return value of HYPERVISOR_dm_op()
+and at last all the pages are unpinned. At present I am not clear about the
+return value of HYPERVISOR_dm_op(). But this path of code looks to be correct.
+
+second, incase of failure from lock_pages() will return either -ENOSPC / -ERRNO
+receive from {get|pin|_user_pages_fast() inside for loop. (at that
+point there might
+be some partially mapped pages as it is mapping inside the loop). Upon
+receiving
+-ERRNO privcmd_ioctl_dm_op() will pass the same -ERRNO to user (not the partial
+mapped page count). This looks to be correct behaviour from user space.
+
+The problem I was trying to address is, in the second scenario when
+lock_pages() returns
+-ERRNO and there are already existing mapped pages. In this scenario,
+when unlcok_pages()
+is called it will iterate till *nr_pages* to validate and unmap the
+pages. But it is supposed to
+unmap only the mapped pages which I am trying to address as part of bug fix.
+
+Let me know if I am able to be in sync with what you are expecting ?
+
+
+> One concern though is that we are changing how user will see this error.
+
+My understanding from above is user will always see right -ERRNO and
+will not be impacted.
+
+Another scenario I was thinking, if {get|pin|_user_pages_fast() return
+number of pages pinned
+which may be fewer than the number requested. Then lock_pages()
+returns 0 to caller
+and caller/user space will continue with the assumption that all pages
+are pinned correctly.
+Is this an expected behaviour as per current code ?
+
+
+> Currently Xen devicemodel (which AFAIK is the only caller) ignores it,
+> which is I think is wrong. So another option would be to fix this in Xen
+> and continue returning positive number here. I guess it's back to Paul
+> again.
+>
+>
+> -boris
+>
+>
