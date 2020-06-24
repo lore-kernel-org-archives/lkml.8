@@ -2,142 +2,77 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2800C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D54DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A4E2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L87UOx1r"
+	by mail.kernel.org (Postfix) with ESMTP id 253F920706
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404230AbgFXPgZ (ORCPT
+        id S2404280AbgFXPhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404193AbgFXPgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:36:23 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD67C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:36:22 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so1602128pgq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XJUzgH5TgVAKrlAz/oLGoEzf+4q4DR2SPe5g3v8Hoz0=;
-        b=L87UOx1rFbEBv6EAXMjq42JQm86UtPUvAjrSDFUjZV7/S2Fdwtz80FtkbJzD8kccUr
-         iRuRTc98qsUUvW4wRLaZIRPNfFKjSXe1ODNggmES4VHyXOVp9NEfQINR136Asyjj1o/J
-         v+lhjyzt2oK0bGeFeFUl+FR9FpGwVWyk6cXTQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XJUzgH5TgVAKrlAz/oLGoEzf+4q4DR2SPe5g3v8Hoz0=;
-        b=H5vDnsHhbk2GHh7+IoA4u469BCrZ1OOlOwc5mFajjJ4RnXDf+ouFs+ZIkAkW1pc64p
-         3ABL0COq3jIzfxwx3mNywbz+antxl/4rPTQ7iSuWzU0j1Ts8GVV8RTjHsVUxLmcQNf/t
-         5joWE/kKXlX99w7YSDCAL1ZkUNG+Ns3V/hZtAd/u0aDdv+VjG6WNXf3TH+eI0PEpu/zL
-         9pDDCHaH9+03Ep/EsaQK5k07akHBFkNOvFPvRpqcdKNPn8hwIoOOz4AEZcQ2TgnVfqXH
-         jUve0Tak8eHu/o+b9wYFwtCU0iT4FngrU4FGM+1w3RZg2khnD24dYhVHuTvi217CGsoE
-         pi+g==
-X-Gm-Message-State: AOAM531MPrIeDL/RjfO6/fozIiqCJRXmEv5lqznkrvCcyvCScRX1nvIl
-        lUoasZNYN6tYvYS5VqmNqYE7uA==
-X-Google-Smtp-Source: ABdhPJzh0NIgxXcoqTxHGxMf5jIULfS15W7YCEH1YCRk0fdSR5z7SraN22S3afSROtaHxZ0aAd1AOA==
-X-Received: by 2002:a63:aa42:: with SMTP id x2mr21604671pgo.361.1593012982182;
-        Wed, 24 Jun 2020 08:36:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j36sm17984549pgj.39.2020.06.24.08.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:36:21 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 08:36:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 9/9] arm64/build: Warn on orphan section placement
-Message-ID: <202006240835.E474048BBF@keescook>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-10-keescook@chromium.org>
- <20200624075712.GB5853@willie-the-truck>
+        Wed, 24 Jun 2020 11:37:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44168 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404137AbgFXPhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:37:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C7799AC40;
+        Wed, 24 Jun 2020 15:37:13 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 17:37:13 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Matt Helsley <mhelsley@vmware.com>
+cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH v5 01/51] objtool: Factor out reasons to build
+ objtool
+In-Reply-To: <6ac0671bef706812b1751a7a04d1854e9586e890.1592510545.git.mhelsley@vmware.com>
+Message-ID: <alpine.LSU.2.21.2006241734560.24656@pobox.suse.cz>
+References: <cover.1592510545.git.mhelsley@vmware.com> <6ac0671bef706812b1751a7a04d1854e9586e890.1592510545.git.mhelsley@vmware.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624075712.GB5853@willie-the-truck>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:57:12AM +0100, Will Deacon wrote:
-> On Tue, Jun 23, 2020 at 06:49:40PM -0700, Kees Cook wrote:
-> > We don't want to depend on the linker's orphan section placement
-> > heuristics as these can vary between linkers, and may change between
-> > versions. All sections need to be explicitly named in the linker
-> > script.
-> > 
-> > Avoid .eh_frame* by making sure both -fno-asychronous-unwind-tables and
-> > -fno-unwind-tables are present in both CFLAGS and AFLAGS. Remove one
-> > last instance of .eh_frame by removing the needless Call Frame Information
-> > annotations from arch/arm64/kernel/smccc-call.S.
-> > 
-> > Add .plt, .data.rel.ro, .igot.*, and .iplt to discards as they are not
-> > actually used. While .got.plt is also not used, it must be included
-> > otherwise ld.bfd will fail to link with the error:
-> > 
-> >     aarch64-linux-gnu-ld: discarded output section: `.got.plt'
-> > 
-> > However, as it'd be better to validate that it stays effectively empty,
-> > add an assert.
-> > 
-> > Explicitly include debug sections when they're present.
-> > 
-> > Fix a case of needless quotes in __section(), which Clang doesn't like.
-> > 
-> > Finally, enable orphan section warnings.
-> > 
-> > Thanks to Ard Biesheuvel for many hints on correct ways to handle
-> > mysterious sections. :)
-> 
-> Sorry to be a pain, but this patch is doing 3 or 4 independent things at
-> once. Please could you split it up a bit?
-> e.g.
-> 
->  - Removal of cfi directives from smccc macro
->  - Removal of quotes around section name for clang
->  - Avoid generating .eh_frame
->  - Ensure all sections are accounted for in linker script and warn on orphans
-> 
-> That way it's a bit easier to manage, we can revert/backport bits later if
-> necessary and you get more patches in the kernel ;)
+Hi,
 
-Yeah, this one patch did grow a bit. ;) I've split it up now.
+this is a nice improvement.
 
-> You can also add my Ack on all the patches:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
+> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+> index 7770edcda3a0..aa0c6d3d2d46 100644
+> --- a/tools/objtool/Makefile
+> +++ b/tools/objtool/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  include ../scripts/Makefile.include
+>  include ../scripts/Makefile.arch
+> +include $(OUTPUT)/../../include/config/auto.conf
+>  
+>  # always use the host compiler
+>  ifneq ($(LLVM),)
+> @@ -47,8 +48,8 @@ CFLAGS += $(if $(elfshdr),,-DLIBELF_USE_DEPRECATED)
+>  
+>  AWK = awk
+>  
+> -SUBCMD_CHECK := n
+> -SUBCMD_ORC := n
+> +SUBCMD_CHECK := $(CONFIG_OBJTOOL_SUBCMD_CHECK)
+> +SUBCMD_ORC := $(CONFIG_OBJTOOL_SUBCMD_ORC)
+>  
+>  ifeq ($(SRCARCH),x86)
+>  	SUBCMD_CHECK := y
 
-Thanks!
+I guess you can remove ifeq for x86 in this patch, right? You do it later 
+in 3/51, but it seems to belong here.
 
--- 
-Kees Cook
+Miroslav
