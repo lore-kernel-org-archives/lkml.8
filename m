@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D61AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED279C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1CA2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB5E2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o2nKUag0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ri578dhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406467AbgFXUdK (ORCPT
+        id S2406460AbgFXUdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50494 "EHLO
+        Wed, 24 Jun 2020 16:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406429AbgFXUdE (ORCPT
+        with ESMTP id S2406459AbgFXUdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:33:04 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA1CC061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:04 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id o140so3475240yba.16
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:04 -0700 (PDT)
+        Wed, 24 Jun 2020 16:33:10 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECE7C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:09 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id t32so2448253qth.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=apr/xMGBKChEUgpglsm7SLvi5EseZ2l0OlujVaKR1Ng=;
-        b=o2nKUag0MXeHuoSKSFhp/2yxKJkh8hAOHialsc33tV/1JSfo0TJojZo+VuCF4S6ZRY
-         PJwi10LKoYCbiPOrkzHTUEfAUWmM7MV5pavS+ujf8z9kqFAkGJMn76qrC/ISP5TMbOuH
-         NWhJVmLgx8VSte4AMQa5oT2WtZHD/UJbi+0enN0abVOBDQKl9KFP4iSE8eOxixypsh+7
-         CZmNKXOqoKAd7nHxvuAyJLrPosBE5H6H65Vt11cAxLLnu6zssUE1KTIDPjDEDqosAFVV
-         6xMtAb9eD/uiFznILS60wEDxDxtXlynPVf8HZroMB/go75xgue2MDW3nqDwn8gsT4XNb
-         CQRg==
+        bh=7CIu5VjUyqeUAWF5g9yThD8i7PrniBSkPgVIeHI/Dgw=;
+        b=ri578dhLvQe03PuVkYI/KosO3BmuE994j1VVuunF6mqXcSxoUchnm+hnogX96YG7Yx
+         yI/MHeu9q9kVZVlnIIydNSi+r5iCLXjTZcnO6Uxh+hmUL4ed/4KhiHZWp/xtvwTh9cIK
+         SomuMXc3FlUpv/wxq+AMmks9S70kXGIVSq6hdIig9pY/BRVFkIkq59gCCp2yYhdgtpZ+
+         TZxSgxiOsR9AcdF9rr0muiREjAZMfpam4EUBzlvonJ5mc1omg9Z9rzCkOz4lybvX42iW
+         cfZVoIgjekwd1lX3DuJT3IjQ4IeC9YVCNgBTDnUF1CG7cfbw3hlLKLyVFbznVgBNgaOl
+         aGRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=apr/xMGBKChEUgpglsm7SLvi5EseZ2l0OlujVaKR1Ng=;
-        b=JWW2blF290i3A9WwbRQOJX6ShShqD/CYLyG4xupEVcTnjeEzia73hSOfYC8I+y5Sf1
-         6n6BkC1r5QtZJu1xlRc71tArFCTCaLCUJ9p1cq72P+/XGADsO4RE4hfkfCX3UaK/Oqlz
-         /4jgCuDkud02fR4ieIvIRV0laMXcobVfHwn3qFu2mSZS0ngPk1WSrTvlQraruoOik+2Z
-         wM8g5TnuzQeztlyPy3qzvFnGW5Olujpw39SFmIXGdg1K2ykow2rkEZN4spRgJ+IxxUJX
-         EeB75lLbSzLtPZTekH+QDPDbt1gjqrvYLXUoSUDP0MtKJokvi9um0uGXsruH7oCAeelE
-         GU3Q==
-X-Gm-Message-State: AOAM530I5jHgieVSm9esHi5oOt+ICtyZoDMpIU0r2dOhXZHMifWqyuea
-        MWoPPU0CyOqH2VDvpQrTLOkUKJt6lUGoitlLXnA=
-X-Google-Smtp-Source: ABdhPJwRZVZ6E3lpX9oZxZVYWkChT+cVfPRtENzCGkVOHvnXVJtjGTH1c7VF2FTPmKEfqFgTY7AiMicZV760XUsik/0=
-X-Received: by 2002:a25:df15:: with SMTP id w21mr44302291ybg.210.1593030783493;
- Wed, 24 Jun 2020 13:33:03 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:31:42 -0700
+        bh=7CIu5VjUyqeUAWF5g9yThD8i7PrniBSkPgVIeHI/Dgw=;
+        b=LWoT1VB4I9jnvM7bnJxXjgyQuLPCowwOm3xENmb5+LWrja2mtRl8BtV1k1QP7s5Mzp
+         nd+BUr4jecvXh/GO2l2Vo+WFcv90dnhoU0M/2x/MqMU57etH3TjnsBqSKYEYVaqQoWLS
+         4CeVFI8eG+rzrQDbyv4UqrbFb+oESERfKMUCVx3sFlOsXaUo8uq87F1lOmHgKvzsHHHT
+         rcu0kp0yHajUsJz1y4c34xkDYTsvoLokrCLL0dZ6npyz1ZZsdmxTTsUsMjC2v1MfMjeX
+         ayDl6vLYJvCqLQ+6eShTyZuiBITlhdzJX/BC1TnizVVS2mrofrLXTLpzkqpa7aTCksDo
+         kZnQ==
+X-Gm-Message-State: AOAM533506mfXWKliplJK44l4m40HX+/H8ITVJYNZQX4xdf0u5qtXLzY
+        qm1qkwZJ4kectc2Cnn3DjwrEyWeKrxgIOSg84dY=
+X-Google-Smtp-Source: ABdhPJwCkKca/LbhSSbnwwC5SMdz9q9IjLlaNhvBawmgAX2Ds09jajOGxxF388XJGbRiV3n2n5vnK/squwZiJ1CODnM=
+X-Received: by 2002:ad4:47b2:: with SMTP id a18mr33619619qvz.121.1593030789019;
+ Wed, 24 Jun 2020 13:33:09 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:31:44 -0700
 In-Reply-To: <20200624203200.78870-1-samitolvanen@google.com>
-Message-Id: <20200624203200.78870-5-samitolvanen@google.com>
+Message-Id: <20200624203200.78870-7-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 04/22] kbuild: lto: fix recordmcount
+Subject: [PATCH 06/22] kbuild: lto: limit inlining
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -73,243 +73,43 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        George Burgess IV <gbiv@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With LTO, LLVM bitcode won't be compiled into native code until
-modpost_link. This change postpones calls to recordmcount until after
-this step.
+This change limits function inlining across translation unit
+boundaries in order to reduce the binary size with LTO.
 
-In order to exclude specific functions from inspection, we add a new
-code section .text..nomcount, which we tell recordmcount to ignore, and
-a __nomcount attribute for moving functions to this section.
+The -import-instr-limit flag defines a size limit, as the number
+of LLVM IR instructions, for importing functions from other TUs.
+The default value is 100, and decreasing it to 5 reduces the size
+of a stripped arm64 defconfig vmlinux by 11%.
 
+Suggested-by: George Burgess IV <gbiv@google.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- Makefile                          |  2 +-
- arch/Kconfig                      |  2 +-
- include/asm-generic/vmlinux.lds.h |  1 +
- include/linux/compiler-clang.h    |  4 ++++
- include/linux/compiler_types.h    |  4 ++++
- kernel/trace/ftrace.c             |  1 +
- scripts/Makefile.build            |  9 +++++++++
- scripts/Makefile.modfinal         | 18 ++++++++++++++++--
- scripts/link-vmlinux.sh           | 29 +++++++++++++++++++++++++++++
- scripts/recordmcount.c            |  3 ++-
- 10 files changed, 68 insertions(+), 5 deletions(-)
+ Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Makefile b/Makefile
-index 161ad0d1f77f..3a7e5e5c17b9 100644
+index 3a7e5e5c17b9..ee66513a5b66 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -861,7 +861,7 @@ KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
- ifdef CONFIG_DYNAMIC_FTRACE
- 	ifdef CONFIG_HAVE_C_RECORDMCOUNT
- 		BUILD_C_RECORDMCOUNT := y
--		export BUILD_C_RECORDMCOUNT
-+		export BUILD_C_RECORDMCOUNT RECORDMCOUNT_WARN
- 	endif
+@@ -894,6 +894,10 @@ else
+ CC_FLAGS_LTO_CLANG := -flto
  endif
+ CC_FLAGS_LTO_CLANG += -fvisibility=default
++
++# Limit inlining across translation units to reduce binary size
++LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
++KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
  endif
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 87488fe1e6b8..85b2044b927d 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -598,7 +598,7 @@ config LTO_CLANG
- 	depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
- 	depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
- 	depends on ARCH_SUPPORTS_LTO_CLANG
--	depends on !FTRACE_MCOUNT_RECORD
-+	depends on !FTRACE_MCOUNT_RECORD || HAVE_C_RECORDMCOUNT
- 	depends on !KASAN
- 	select LTO
- 	help
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 78079000c05a..a1c902b808d0 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -565,6 +565,7 @@
- 		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
- 		NOINSTR_TEXT						\
- 		*(.text..refcount)					\
-+		*(.text..nomcount)					\
- 		*(.ref.text)						\
- 	MEM_KEEP(init.text*)						\
- 	MEM_KEEP(exit.text*)						\
-diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-index ee37256ec8bd..fd78475c0642 100644
---- a/include/linux/compiler-clang.h
-+++ b/include/linux/compiler-clang.h
-@@ -55,3 +55,7 @@
- #if __has_feature(shadow_call_stack)
- # define __noscs	__attribute__((__no_sanitize__("shadow-call-stack")))
- #endif
-+
-+#if defined(CONFIG_LTO_CLANG) && defined(CONFIG_FTRACE_MCOUNT_RECORD)
-+#define __nomcount	__attribute__((__section__(".text..nomcount")))
-+#endif
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index e368384445b6..1470c9703a25 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -233,6 +233,10 @@ struct ftrace_likely_data {
- # define __noscs
- #endif
  
-+#ifndef __nomcount
-+# define __nomcount
-+#endif
-+
- #ifndef asm_volatile_goto
- #define asm_volatile_goto(x...) asm goto(x)
- #endif
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1903b80db6eb..8e3ddb8123d9 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6062,6 +6062,7 @@ static int ftrace_cmp_ips(const void *a, const void *b)
- 	return 0;
- }
- 
-+__nomcount
- static int ftrace_process_locs(struct module *mod,
- 			       unsigned long *start,
- 			       unsigned long *end)
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 5c0bbb6ddfcf..64e99f4baa5b 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -187,6 +187,9 @@ endif
- 
- ifdef CONFIG_FTRACE_MCOUNT_RECORD
- ifndef CC_USING_RECORD_MCOUNT
-+ifndef CC_USING_PATCHABLE_FUNCTION_ENTRY
-+# With LTO, we postpone recordmcount until we compile a native binary
-+ifndef CONFIG_LTO_CLANG
- # compiler will not generate __mcount_loc use recordmcount or recordmcount.pl
- ifdef BUILD_C_RECORDMCOUNT
- ifeq ("$(origin RECORDMCOUNT_WARN)", "command line")
-@@ -200,6 +203,8 @@ sub_cmd_record_mcount =					\
- 	if [ $(@) != "scripts/mod/empty.o" ]; then	\
- 		$(objtree)/scripts/recordmcount $(RECORDMCOUNT_FLAGS) "$(@)";	\
- 	fi;
-+endif # CONFIG_LTO_CLANG
-+
- recordmcount_source := $(srctree)/scripts/recordmcount.c \
- 		    $(srctree)/scripts/recordmcount.h
- else
-@@ -209,11 +214,15 @@ sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
- 	"$(OBJDUMP)" "$(OBJCOPY)" "$(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS)" \
- 	"$(LD) $(KBUILD_LDFLAGS)" "$(NM)" "$(RM)" "$(MV)" \
- 	"$(if $(part-of-module),1,0)" "$(@)";
-+
- recordmcount_source := $(srctree)/scripts/recordmcount.pl
- endif # BUILD_C_RECORDMCOUNT
-+ifndef CONFIG_LTO_CLANG
- cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
- 	$(sub_cmd_record_mcount))
-+endif # CONFIG_LTO_CLANG
- endif # CC_USING_RECORD_MCOUNT
-+endif # CC_USING_PATCHABLE_FUNCTION_ENTRY
- endif # CONFIG_FTRACE_MCOUNT_RECORD
- 
- ifdef CONFIG_STACK_VALIDATION
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 1005b147abd0..d168f0cfe67c 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -34,10 +34,24 @@ ifdef CONFIG_LTO_CLANG
- # With CONFIG_LTO_CLANG, reuse the object file we compiled for modpost to
- # avoid a second slow LTO link
- prelink-ext := .lto
--endif
-+
-+# ELF processing was skipped earlier because we didn't have native code,
-+# so let's now process the prelinked binary before we link the module.
-+
-+ifdef CONFIG_FTRACE_MCOUNT_RECORD
-+ifndef CC_USING_RECORD_MCOUNT
-+ifndef CC_USING_PATCHABLE_FUNCTION_ENTRY
-+cmd_ld_ko_o += $(objtree)/scripts/recordmcount $(RECORDMCOUNT_FLAGS)	\
-+			$(@:.ko=$(prelink-ext).o);
-+
-+endif # CC_USING_PATCHABLE_FUNCTION_ENTRY
-+endif # CC_USING_RECORD_MCOUNT
-+endif # CONFIG_FTRACE_MCOUNT_RECORD
-+
-+endif # CONFIG_LTO_CLANG
- 
- quiet_cmd_ld_ko_o = LD [M]  $@
--      cmd_ld_ko_o =                                                     \
-+      cmd_ld_ko_o +=                                                    \
- 	$(LD) -r $(KBUILD_LDFLAGS)					\
- 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
- 		$(addprefix -T , $(KBUILD_LDS_MODULE))			\
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 69a6d7254e28..c72f5d0238f1 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -108,6 +108,29 @@ objtool_link()
- 	fi
- }
- 
-+# If CONFIG_LTO_CLANG is selected, we postpone running recordmcount until
-+# we have compiled LLVM IR to an object file.
-+recordmcount()
-+{
-+	if [ "${CONFIG_LTO_CLANG} ${CONFIG_FTRACE_MCOUNT_RECORD}" != "y y" ]; then
-+		return
-+	fi
-+
-+	if [ -n "${CC_USING_RECORD_MCOUNT}" ]; then
-+		return
-+	fi
-+	if [ -n "${CC_USING_PATCHABLE_FUNCTION_ENTRY}" ]; then
-+		return
-+	fi
-+
-+	local flags=""
-+
-+	[ -n "${RECORDMCOUNT_WARN}" ] && flags="-w"
-+
-+	info MCOUNT $*
-+	${objtree}/scripts/recordmcount ${flags} $*
-+}
-+
- # Link of vmlinux
- # ${1} - output file
- # ${2}, ${3}, ... - optional extra .o files
-@@ -316,6 +339,12 @@ objtool_link vmlinux.o
- # modpost vmlinux.o to check for section mismatches
- ${MAKE} -f "${srctree}/scripts/Makefile.modpost" MODPOST_VMLINUX=1
- 
-+if [ -n "${CONFIG_LTO_CLANG}" ]; then
-+	# If we postponed ELF processing steps due to LTO, process
-+	# vmlinux.o instead.
-+	recordmcount vmlinux.o
-+fi
-+
- info MODINFO modules.builtin.modinfo
- ${OBJCOPY} -j .modinfo -O binary vmlinux.o modules.builtin.modinfo
- info GEN modules.builtin
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 7225107a9aaf..9e9f10b4d649 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -404,7 +404,8 @@ static uint32_t (*w2)(uint16_t);
- /* Names of the sections that could contain calls to mcount. */
- static int is_mcounted_section_name(char const *const txtname)
- {
--	return strncmp(".text",          txtname, 5) == 0 ||
-+	return (strncmp(".text",           txtname, 5) == 0 &&
-+		 strcmp(".text..nomcount", txtname) != 0) ||
- 		strcmp(".init.text",     txtname) == 0 ||
- 		strcmp(".ref.text",      txtname) == 0 ||
- 		strcmp(".sched.text",    txtname) == 0 ||
+ ifdef CONFIG_LTO
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
