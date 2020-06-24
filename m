@@ -2,104 +2,124 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E33DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC172072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:56:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t1LMOmzs"
+	by mail.kernel.org (Postfix) with ESMTP id 88402206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389567AbgFXG4N (ORCPT
+        id S2389506AbgFXHAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:56:13 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:53594 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389383AbgFXG4M (ORCPT
+        Wed, 24 Jun 2020 03:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728948AbgFXHAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:56:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592981772; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=tdJMc4rQpzxOPWFJB10qMVMMhBp0QU5JBeHsCYxYnzo=;
- b=t1LMOmzs1YEmEQd/9eMHWwx6JNeqGuOZgl+QYZWHh5Z8BOu8IhHFCAcU7PHCaH0/j7AiYd5q
- FotH3wJDotjPXDvAESbAWct4Z8i2PB18lsdlpt7IUsraUeXZmkJwi5y0Gb/9NZa/Foxu/cKH
- 82ybepIpf3FXfhtFHFUKC4K6MZI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5ef2f90ba3d8a447438a0e97 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 24 Jun 2020 06:56:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 30B35C4339C; Wed, 24 Jun 2020 06:56:11 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AAA86C433C8;
-        Wed, 24 Jun 2020 06:56:10 +0000 (UTC)
+        Wed, 24 Jun 2020 03:00:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595B4C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 00:00:51 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jnzOr-0006Wj-8u; Wed, 24 Jun 2020 09:00:49 +0200
+Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jnzOq-0002xb-IF; Wed, 24 Jun 2020 09:00:48 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        kernel@pengutronix.de, Russell King <linux@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH 2/2] net: ethernet: mvneta: Add back interface mode validation
+Date:   Wed, 24 Jun 2020 09:00:45 +0200
+Message-Id: <20200624070045.8878-2-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200624070045.8878-1-s.hauer@pengutronix.de>
+References: <20200624070045.8878-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 24 Jun 2020 12:26:10 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH 2/4] arm64: dts: qcom: sc7180: Add iommus property to ETR
-In-Reply-To: <f40621b2b01f836a8a97686707599dd0@codeaurora.org>
-References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <2312c9a10e7251d69e31e4f51c0f1d70e6f2f2f5.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <20200621072213.GG128451@builder.lan>
- <f40621b2b01f836a8a97686707599dd0@codeaurora.org>
-Message-ID: <e270acd3f7db076c043f1b982b1efea0@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+When writing the serdes configuration register was moved to
+mvneta_config_interface() the whole code block was removed from
+mvneta_port_power_up() in the assumption that its only purpose was to
+write the serdes configuration register. As mentioned by Russell King
+its purpose was also to check for valid interface modes early so that
+later in the driver we do not have to care for unexpected interface
+modes.
+Add back the test to let the driver bail out early on unhandled
+interface modes.
 
-On 2020-06-21 13:39, Sai Prakash Ranjan wrote:
-> Hi Bjorn,
-> 
-> On 2020-06-21 12:52, Bjorn Andersson wrote:
->> On Tue 09 Jun 06:30 PDT 2020, Sai Prakash Ranjan wrote:
->> 
->>> Define iommus property for Coresight ETR component in
->>> SC7180 SoC with the SID and mask to enable SMMU
->>> translation for this master.
->>> 
->> 
->> We don't have &apps_smmu in linux-next, as we've yet to figure out how
->> to disable the boot splash or support the stream mapping handover.
->> 
->> So I'm not able to apply this.
->> 
-> 
-> This is for SC7180 which has apps_smmu not SM8150.
-> 
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/net/ethernet/marvell/mvneta.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-Please let me know if this needs further explanation.
-
-Thanks,
-Sai
-
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index c4552f868157c..c639e3a293024 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -5009,10 +5009,18 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
+ }
+ 
+ /* Power up the port */
+-static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
++static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+ {
+ 	/* MAC Cause register should be cleared */
+ 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
++
++	if (phy_mode != PHY_INTERFACE_MODE_QSGMII &&
++	    phy_mode != PHY_INTERFACE_MODE_SGMII &&
++	    !phy_interface_mode_is_8023z(phy_mode) &&
++	    !phy_interface_mode_is_rgmii(phy_mode))
++		return -EINVAL;
++
++	return 0;
+ }
+ 
+ /* Device initialization routine */
+@@ -5198,7 +5206,11 @@ static int mvneta_probe(struct platform_device *pdev)
+ 	if (err < 0)
+ 		goto err_netdev;
+ 
+-	mvneta_port_power_up(pp, phy_mode);
++	err = mvneta_port_power_up(pp, pp->phy_interface);
++	if (err < 0) {
++		dev_err(&pdev->dev, "can't power up port\n");
++		return err;
++	}
+ 
+ 	/* Armada3700 network controller does not support per-cpu
+ 	 * operation, so only single NAPI should be initialized.
+@@ -5352,7 +5364,11 @@ static int mvneta_resume(struct device *device)
+ 		}
+ 	}
+ 	mvneta_defaults_set(pp);
+-	mvneta_port_power_up(pp, pp->phy_interface);
++	err = mvneta_port_power_up(pp, pp->phy_interface);
++	if (err < 0) {
++		dev_err(device, "can't power up port\n");
++		return err;
++	}
+ 
+ 	netif_device_attach(dev);
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.27.0
+
