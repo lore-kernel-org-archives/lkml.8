@@ -2,226 +2,88 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8835C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78A022082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="eEhOVFSD"
+	by mail.kernel.org (Postfix) with ESMTP id EBA8320823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388296AbgFXITu (ORCPT
+        id S2390434AbgFXIV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387606AbgFXITt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:19:49 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFABDC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 01:19:48 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h5so1342527wrc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 01:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Wv1AjMOuj4JRAMUGr5+fFc8v4YLKY5jvII8okZDpzHw=;
-        b=eEhOVFSDKpCIqdFMNN+kW8KleYbcUrovSfm7ne7wnV7CvUvqw7kffrtuERcj/5lgzJ
-         Sw8ypnbR8gU4OYH3S8MkAlWbIc+sJ8+JOaXYN/0eSPyqOJiCLv0gtsDRjA4m6EM/lZAS
-         47GRZPSCZ9kLEj1DRF/uTvXodI7hpYq9b7hF0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Wv1AjMOuj4JRAMUGr5+fFc8v4YLKY5jvII8okZDpzHw=;
-        b=Yc309cnWHqtJVHlAuyjeoLEP3lw5kP3NKpENCaG90wGwiCife4444Vbj05Fs0CO8P5
-         RXJEqcMvlnRJXQF0wmLpQAQgVLjUXWy6JD6wr7P/phk01NJ4Cl42Y0Npdcuox7HXGaw/
-         oDHZnLuI7BB/PK4LKSAp15bt0FGfmwZ0m3wCRz4EMdhyBRzG9gsRuXkktygoznoZM4bH
-         biw6Fh+6kUTfUnWFkLeWQ6+sKmk4OuTx3Zrg4X7F6LzY8SI92ojHdKYJkRROkokhK21P
-         lU8KkgaY5Vfd+tbtnqunr/3qTlNA/p4HV0c3blSv9uy+FSr8ojpVnUrTlyTr7hbIqcKU
-         DUCw==
-X-Gm-Message-State: AOAM531NPyTbZSDDWqbufzA43gMY1FQZp5MvTSWsRceCx9Vy6oxw9K7c
-        zsyyOprq9m4z4kO9lw5TkDwzvw==
-X-Google-Smtp-Source: ABdhPJyqIqvdIITABaqhCFCT4u+RjtdItZIopohvDn/w+G/Qri7dsna/47US192pjp+Uv8cCJHknPA==
-X-Received: by 2002:a05:6000:1006:: with SMTP id a6mr11083820wrx.332.1592986787435;
-        Wed, 24 Jun 2020 01:19:47 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id o15sm26156699wrv.48.2020.06.24.01.19.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 01:19:46 -0700 (PDT)
-Subject: Re: [PATCH net-next] bridge: mrp: Extend MRP netlink interface with
- IFLA_BRIDGE_MRP_CLEAR
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bridge@lists.linux-foundation.org
-References: <20200624080537.3154332-1-horatiu.vultur@microchip.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <84c1e063-f49b-ee5a-c5ed-ab6ba5346991@cumulusnetworks.com>
-Date:   Wed, 24 Jun 2020 11:19:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 04:21:58 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:48412 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388916AbgFXIV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:21:58 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jo0f3-0005oy-3q; Wed, 24 Jun 2020 18:21:38 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 24 Jun 2020 18:21:37 +1000
+Date:   Wed, 24 Jun 2020 18:21:37 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: build failure after merge of the printk tree
+Message-ID: <20200624082137.GA14282@gondor.apana.org.au>
+References: <20200621131554.5a662afe@canb.auug.org.au>
+ <20200623102655.6d16e610@canb.auug.org.au>
+ <20200623121637.GA8444@alley>
+ <20200623121937.GA9671@gondor.apana.org.au>
+ <20200623142858.GB8444@alley>
+ <20200624002057.GA12716@gondor.apana.org.au>
+ <20200624081929.GD8444@alley>
 MIME-Version: 1.0
-In-Reply-To: <20200624080537.3154332-1-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624081929.GD8444@alley>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2020 11:05, Horatiu Vultur wrote:
-> In case the userspace daemon dies, then when is restarted it doesn't
-> know if there are any MRP instances in the kernel. Therefore extend the
-> netlink interface to allow the daemon to clear all MRP instances when is
-> started.
+On Wed, Jun 24, 2020 at 10:19:29AM +0200, Petr Mladek wrote:
+> On Wed 2020-06-24 10:20:58, Herbert Xu wrote:
+> > On Tue, Jun 23, 2020 at 04:28:58PM +0200, Petr Mladek wrote:
+> > >
+> > > It is similar cycle:
+> > > 
+> > > spinlock_types.h -> lockdep.h -> printk.h -> ratelimit.h -> spinlock_types.h
+> > > 
+> > > But this time it happens via list.h -> kernel.h ->printk.h.
+> > > Where list.h needs READ_ONCE() stuff from compiler.h.
+> > 
+> > But this is exactly the loop that's fixed by the lockdep_types
+> > patch.
 > 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  include/uapi/linux/if_bridge.h |  8 ++++++++
->  net/bridge/br_mrp.c            | 15 +++++++++++++++
->  net/bridge/br_mrp_netlink.c    | 26 ++++++++++++++++++++++++++
->  net/bridge/br_private_mrp.h    |  1 +
->  4 files changed, 50 insertions(+)
+> I think that this problem is similar to the one on s390 that was
+> solved by compiler.h in arch/s390/include/asm/bug.h
 > 
-> diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-> index caa6914a3e53a..2ae7d0c0d46b8 100644
-> --- a/include/uapi/linux/if_bridge.h
-> +++ b/include/uapi/linux/if_bridge.h
-> @@ -166,6 +166,7 @@ enum {
->  	IFLA_BRIDGE_MRP_RING_STATE,
->  	IFLA_BRIDGE_MRP_RING_ROLE,
->  	IFLA_BRIDGE_MRP_START_TEST,
-> +	IFLA_BRIDGE_MRP_CLEAR,
->  	__IFLA_BRIDGE_MRP_MAX,
->  };
->  
-> @@ -228,6 +229,13 @@ enum {
->  
->  #define IFLA_BRIDGE_MRP_START_TEST_MAX (__IFLA_BRIDGE_MRP_START_TEST_MAX - 1)
->  
-> +enum {
-> +	IFLA_BRIDGE_MRP_CLEAR_UNSPEC,
-> +	__IFLA_BRIDGE_MRP_CLEAR_MAX,
-> +};
-
-Out of curiousity - do you plan to have any clean attributes?
-In case you don't this can simply be a flag that clears the MRP instances instead
-of a nested attribute.
-
-> +
-> +#define IFLA_BRIDGE_MRP_CLEAR_MAX (__IFLA_BRIDGE_MRP_CLEAR_MAX - 1)
-> +
->  struct br_mrp_instance {
->  	__u32 ring_id;
->  	__u32 p_ifindex;
-> diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-> index 24986ec7d38cc..02d102edaaaad 100644
-> --- a/net/bridge/br_mrp.c
-> +++ b/net/bridge/br_mrp.c
-> @@ -372,6 +372,21 @@ int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance)
->  	return 0;
->  }
->  
-> +/* Deletes all MRP instances on the bridge
-> + * note: called under rtnl_lock
-> + */
-> +int br_mrp_clear(struct net_bridge *br)
-> +{
-> +	struct br_mrp *mrp;
-> +
-> +	list_for_each_entry_rcu(mrp, &br->mrp_list, list,
-> +				lockdep_rtnl_is_held()) {
-> +		br_mrp_del_impl(br, mrp);
-
-I don't think you're in RCU-protected region here, as the lockdep above confirms, which
-means br_mrp_del_impl() can free mrp and you can access freed memory while walking the list
-(trying to access of the next element).
-
-You should be using list_for_each_entry_safe() to delete elements while walking the list.
-
-Cheers,
- Nik
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /* Set port state, port state can be forwarding, blocked or disabled
->   * note: already called with rtnl_lock
->   */
-> diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-> index 34b3a8776991f..5e743538464f6 100644
-> --- a/net/bridge/br_mrp_netlink.c
-> +++ b/net/bridge/br_mrp_netlink.c
-> @@ -14,6 +14,7 @@ static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
->  	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_NESTED },
->  	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_NESTED },
->  	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_NESTED },
-> +	[IFLA_BRIDGE_MRP_CLEAR]		= { .type = NLA_NESTED },
->  };
->  
->  static const struct nla_policy
-> @@ -235,6 +236,25 @@ static int br_mrp_start_test_parse(struct net_bridge *br, struct nlattr *attr,
->  	return br_mrp_start_test(br, &test);
->  }
->  
-> +static const struct nla_policy
-> +br_mrp_clear_policy[IFLA_BRIDGE_MRP_CLEAR_MAX + 1] = {
-> +	[IFLA_BRIDGE_MRP_CLEAR_UNSPEC]		= { .type = NLA_REJECT },
-> +};
-> +
-> +static int br_mrp_clear_parse(struct net_bridge *br, struct nlattr *attr,
-> +			      struct netlink_ext_ack *extack)
-> +{
-> +	struct nlattr *tb[IFLA_BRIDGE_MRP_START_TEST_MAX + 1];
-> +	int err;
-> +
-> +	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_CLEAR_MAX, attr,
-> +			       br_mrp_clear_policy, extack);
-> +	if (err)
-> +		return err;
-> +
-> +	return br_mrp_clear(br);
-> +}
-> +
->  int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
->  		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
->  {
-> @@ -301,6 +321,12 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
->  			return err;
->  	}
->  
-> +	if (tb[IFLA_BRIDGE_MRP_CLEAR]) {
-> +		err = br_mrp_clear_parse(br, tb[IFLA_BRIDGE_MRP_CLEAR], extack);
-> +		if (err)
-> +			return err;
-> +	}
-> +
->  	return 0;
->  }
->  
-> diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-> index 33b255e38ffec..25c3b8596c25b 100644
-> --- a/net/bridge/br_private_mrp.h
-> +++ b/net/bridge/br_private_mrp.h
-> @@ -36,6 +36,7 @@ struct br_mrp {
->  /* br_mrp.c */
->  int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance);
->  int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance);
-> +int br_mrp_clear(struct net_bridge *br);
->  int br_mrp_set_port_state(struct net_bridge_port *p,
->  			  enum br_mrp_port_state_type state);
->  int br_mrp_set_port_role(struct net_bridge_port *p,
+> It is related to
+> https://lore.kernel.org/r/20200613142901.65xieioomt6bbqa6@ltop.local
 > 
+> It seems that we need the same change also in list.h.
 
+Oh I see.  I misunderstood what you said in the first email.
+ 
+> Do you mean to repost the 2nd patch with the change in
+> include/linux/list.h?
+
+OK let me test this and repost.
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
