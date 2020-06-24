@@ -2,131 +2,248 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A46C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A66BE2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E049C2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cyDE02eH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406216AbgFXTAH (ORCPT
+        id S2406224AbgFXTAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:00:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:56106 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405469AbgFXTAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:00:08 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47884 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404079AbgFXTAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 15:00:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA3121F1;
-        Wed, 24 Jun 2020 12:00:04 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 470C13F71E;
-        Wed, 24 Jun 2020 11:59:59 -0700 (PDT)
-Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
- registration
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
- <20200622135106.GK4560@sirena.org.uk>
- <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
- <20200624094302.GA5472@sirena.org.uk>
- <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
- <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
- <20200624165016.GA1551@shell.armlinux.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <0c78a4ab-5aae-a45c-babd-e860c6cfc3c8@arm.com>
-Date:   Wed, 24 Jun 2020 19:59:57 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 5B7182C3FC9;
+        Wed, 24 Jun 2020 15:00:04 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ckXT-CuOZLLN; Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id C82C72C3C73;
+        Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C82C72C3C73
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593025203;
+        bh=DGH1GYSZBoon4ZWwCZH/B+1D5oPNjfnq5dqQoCBvZzU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=cyDE02eHz1qW1JNlNRD6qHzjFRJhkh/+QUTsNRqwzbsuxoWykluJo+dpCU07r840c
+         zeQZxTyoqYqa04/piJ/2qWPQVKV1VJ/pavhHP4hlNV7CEEDzG4ezlplNMwSfceFStq
+         tZxc0/c8TeB5DQAjgjkeqxxZskmN9oWT8qHGOfL5hO6xmMCrj3EZ4qWnFsUDwBH+or
+         kAtgC4luBOgsmti2kArltg6TxqF2YjEVMWxk5qPPxQOAqvDQvaEYVcNRuprC3gKADB
+         8kWT7pqYa8zzLMRG9WQCTkyt3FgJFHsgBPS/mj4OuyRzORBrqobnOrVv83yFuZS8EK
+         iF/zZTt+2PlfA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 66nNyDA9j72v; Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 93DA42C4048;
+        Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
+Date:   Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1158112159.11628.1593025203438.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87d05obl4w.fsf@oldenburg2.str.redhat.com>
+References: <20200622180803.1449-1-mathieu.desnoyers@efficios.com> <20200622180803.1449-2-mathieu.desnoyers@efficios.com> <87d05obl4w.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH 1/3] glibc: Perform rseq registration at C startup and
+ thread creation (v21)
 MIME-Version: 1.0
-In-Reply-To: <20200624165016.GA1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v21)
+Thread-Index: mL9vamfSXFjzYkqlBsqyTfQOebVEtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 17:50, Russell King - ARM Linux admin wrote:
-> On Wed, Jun 24, 2020 at 09:06:28AM -0700, Florian Fainelli wrote:
->> On 6/24/2020 6:48 AM, Bartosz Golaszewski wrote:
->>> I didn't expect to open such a can of worms...
->>>
->>> This has evolved into several new concepts being proposed vs my
->>> use-case which is relatively simple. The former will probably take
->>> several months of development, reviews and discussions and it will
->>> block supporting the phy supply on pumpkin boards upstream. I would
->>> prefer not to redo what other MAC drivers do (phy-supply property on
->>> the MAC node, controlling it from the MAC driver itself) if we've
->>> already established it's wrong.
->>
->> You are not new to Linux development, so none of this should come as a
->> surprise to you. Your proposed solution has clearly short comings and is
->> a hack, especially around the PHY_ID_NONE business to get a phy_device
->> only then to have the real PHY device ID. You should also now that "I
->> need it now because my product deliverable depends on it" has never been
->> received as a valid argument to coerce people into accepting a solution
->> for which there are at review time known deficiencies to the proposed
->> approach.
-> 
-> It /is/ a generic issue.  The same problem exists for AMBA Primecell
-> devices, and that code has an internal deferred device list that it
-> manages.  See drivers/amba/bus.c, amba_deferred_retry_func(),
-> amba_device_try_add(), and amba_device_add().
-> 
-> As we see more devices gain this property, it needs to be addressed
-> in a generic way, rather than coming up with multiple bus specific
-> implementations.
-> 
-> Maybe struct bus_type needs a method to do the preparation to add
-> a device (such as reading IDs etc), which is called by device_add().
-> If that method returns -EPROBE_DEFER, the device gets added to a
-> deferred list, which gets retried when drivers are successfully
-> probed.  Possible maybe?
+----- On Jun 24, 2020, at 10:20 AM, Florian Weimer fweimer@redhat.com wrote=
+:
 
-FWIW that would be ideal for solving an ordering a problem we have in 
-the IOMMU subsystem too (which we currently sort-of-handle by deferring 
-driver probe from dma_configure(), but it really needs to be done 
-earlier and not depend on drivers being present at all).
+> * Mathieu Desnoyers:
+>=20
+>> diff --git a/manual/threads.texi b/manual/threads.texi
+>> index bb7a42c655..d5069d5581 100644
+>> --- a/manual/threads.texi
+>> +++ b/manual/threads.texi
+>=20
+>> +@deftypevar {struct rseq} __rseq_abi
+>> +@standards{Linux, sys/rseq.h}
+>> +@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with
+>> +the Restartable Sequences system call.  The layout of this structure is
+>> +defined by the @file{sys/rseq.h} header.  Registration of each thread's
+>> +@code{__rseq_abi} is performed by @theglibc{} at library initialization
+>> +and thread creation. The manual for the rseq system call can be found
+>> +at
+>> @uref{https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/m=
+an/rseq.2}.
+>=20
+> Should be =E2=80=9Ccreation.  The=E2=80=9D (two spaces after a sentence-e=
+nding period).
 
-Robin.
+OK
+
+>=20
+>> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h
+>> b/sysdeps/unix/sysv/linux/sys/rseq.h
+>> new file mode 100644
+>> index 0000000000..5e118c1781
+>> --- /dev/null
+>> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
+>=20
+>> +#ifdef __cplusplus
+>> +# if  __cplusplus >=3D 201103L
+>> +#  define __rseq_static_assert(expr, diagnostic) static_assert (expr,
+>> diagnostic)
+>> +#  define __rseq_alignof(type)                   alignof (type)
+>> +#  define __rseq_tls_storage_class               thread_local
+>> +# endif
+>> +#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
+>> +# define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr,
+>> diagnostic)
+>> +# define __rseq_alignof(type)                    _Alignof (type)
+>> +# define __rseq_tls_storage_class                _Thread_local
+>> +#endif
+>> +
+>> +#ifndef __rseq_static_assert
+>> +/* Try to use _Static_assert macro from sys/cdefs.h.  */
+>> +# ifdef _Static_assert
+>> +#  define __rseq_static_assert(expr, diagnostic) _Static_assert (expr,
+>> diagnostic)
+>> +# else
+>> +#  define __rseq_static_assert(expr, diagnostic) /* Nothing.  */
+>> +# endif
+>> +#endif
+>> +
+>> +/* Rely on GNU extensions for older standards and tls model.  */
+>> +#ifdef __GNUC__
+>> +# ifndef __rseq_alignof
+>> +#  define __rseq_alignof(x) __alignof__ (x)
+>> +# endif
+>> +# define __rseq_tls_model_ie __attribute__ ((__tls_model__ ("initial-ex=
+ec")))
+>> +#else
+>> +/* Specifying the TLS model on the declaration is optional.  */
+>> +# define __rseq_tls_model_ie /* Nothing.  */
+>> +#endif
+>=20
+> I'm still worried that __rseq_static_assert and __rseq_alignof will show
+> up in the UAPI with textually different definitions.  (This does not
+> apply to __rseq_tls_model_ie.)
+
+What makes this worry not apply to __rseq_tls_model_ie ?
+
+>=20
+> Is my worry unfounded?
+
+So AFAIU you worry that eventually sys/rseq.h and linux/rseq.h carry differ=
+ent
+definitions of __rseq_static_assert and __rseq_alignof.
+
+Indeed, I did not surround those #define with #ifndef/#endif. Maybe we shou=
+ld ?
+
+Just in case the definitions end up being different (worse case scenario), =
+we
+should expect their behavior to be pretty much equivalent. So going for the
+following should address your concern I think:
+
+#ifdef __cplusplus
+# if  __cplusplus >=3D 201103L
+#  ifndef __rseq_static_assert
+#   define __rseq_static_assert(expr, diagnostic) static_assert (expr, diag=
+nostic)
+#  endif
+#  ifndef __rseq_alignof
+#   define __rseq_alignof(type)                   alignof (type)
+#  endif
+#  ifndef __rseq_tls_storage_class
+#   define __rseq_tls_storage_class               thread_local
+#  endif
+# endif
+#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
+# ifndef __rseq_static_assert
+#  define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr, dia=
+gnostic)
+# endif
+# ifndef __rseq_alignof
+#  define __rseq_alignof(type)                    _Alignof (type)
+# endif
+# ifndef __rseq_tls_storage_class
+#  define __rseq_tls_storage_class                _Thread_local
+# endif
+#endif
+
+#ifndef __rseq_static_assert
+/* Try to use _Static_assert macro from sys/cdefs.h.  */
+# ifdef _Static_assert
+#  define __rseq_static_assert(expr, diagnostic) _Static_assert (expr, diag=
+nostic)
+# else
+#  define __rseq_static_assert(expr, diagnostic) /* Nothing.  */
+# endif
+#endif
+
+/* Rely on GNU extensions for older standards and tls model.  */
+#ifdef __GNUC__
+# ifndef __rseq_alignof
+#  define __rseq_alignof(x) __alignof__ (x)
+# endif
+# ifndef __rseq_tls_model_ie
+#  define __rseq_tls_model_ie __attribute__ ((__tls_model__ ("initial-exec"=
+)))
+# endif
+#else
+/* Specifying the TLS model on the declaration is optional.  */
+# ifndef __rseq_tls_model_ie
+#  define __rseq_tls_model_ie /* Nothing.  */
+# endif
+#endif
+
+/* Fall back to __thread for TLS storage class.  */
+#ifndef __rseq_tls_storage_class
+# define __rseq_tls_storage_class __thread
+#endif
+
+Thoughts ?
+
+Thanks,
+
+Mathieu
+
+
+
+>=20
+> Thanks,
+> Florian
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
