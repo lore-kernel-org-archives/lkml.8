@@ -2,163 +2,89 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C824EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C470BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A806220C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD42520CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389445AbgFXNU7 (ORCPT
+        id S2390144AbgFXNVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:20:59 -0400
-Received: from mga09.intel.com ([134.134.136.24]:14085 "EHLO mga09.intel.com"
+        Wed, 24 Jun 2020 09:21:15 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51673 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387687AbgFXNU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:20:57 -0400
-IronPort-SDR: dhq/oymItepQ3iYKtIX4FXrPxaxnGJAgpXFABLcF1dzrVZZF2rYyuDc2gVrovvlsO93AKIKVKS
- 4sS0Obk5TMcQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="145958119"
+        id S2387687AbgFXNVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:21:14 -0400
+IronPort-SDR: phv/UE7Gkz9MSem8h4881+yn5Di4aBsV/zAJUnwnzMyQ1ft0QRdB/YCS+wTQ7viIqLEh8OiRiz
+ CFWL+6zfowzg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="131894868"
 X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
-   d="scan'208";a="145958119"
+   d="scan'208";a="131894868"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 06:20:55 -0700
-IronPort-SDR: BY5EJYm6T9Uz5+auy6YyodqB73Oa5pKcLMtEMuL7y+bmne7kG8UtBXZs7FalPeclp8y7xLziU8
- UZhPYFH4lT0g==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 06:21:14 -0700
+IronPort-SDR: G+IkHUKjLawvwudJtxi4G5cY9mI00b4glz6WVDZOyT0uSzNTRKVQacF6LSNEVS6oopoUedUnDe
+ vL7qUu298cQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
-   d="scan'208";a="311639730"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 06:20:54 -0700
-Received: from [10.249.228.248] (abudanko-mobl.ccr.corp.intel.com [10.249.228.248])
-        by linux.intel.com (Postfix) with ESMTP id B58275805B5;
-        Wed, 24 Jun 2020 06:20:52 -0700 (PDT)
-Subject: Re: [PATCH v8 03/13] perf evlist: implement control command handling
- functions
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
- <d47ef616-e2cf-9131-159f-5be1a31438a7@linux.intel.com>
- <20200623145613.GI2619137@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <3ab05af5-b882-ffde-8311-307b6c373fd3@linux.intel.com>
-Date:   Wed, 24 Jun 2020 16:20:51 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+   d="scan'208";a="275686949"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 06:21:12 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jo5I6-00FaSz-R9; Wed, 24 Jun 2020 16:18:14 +0300
+Date:   Wed, 24 Jun 2020 16:18:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: designware: platdrv: Set class based on dmi
+Message-ID: <20200624131814.GE3703480@smile.fi.intel.com>
+References: <20200624091239.802218-1-ribalda@kernel.org>
+ <20200624104655.GD3703480@smile.fi.intel.com>
+ <CAPybu_1g=RAHca3=UyG2Tk6mo1E56NgCXoo0j=zc9MAa7A7r2Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200623145613.GI2619137@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPybu_1g=RAHca3=UyG2Tk6mo1E56NgCXoo0j=zc9MAa7A7r2Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 24, 2020 at 01:31:06PM +0200, Ricardo Ribalda Delgado wrote:
+> On Wed, Jun 24, 2020 at 12:46 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Wed, Jun 24, 2020 at 11:12:39AM +0200, Ricardo Ribalda wrote:
+> > > Current AMD's zen-based APUs use this core for some of its i2c-buses.
+> > >
+> > > With this patch we re-enable autodetection of hwmon-alike devices, so
+> > > lm-sensors will be able to work automatically.
+> > >
+> > > It does not affect the boot-time of embedded devices, as the class is
+> > > set based on the dmi information.
+> >
+> > Hmm... Do we really need to have DMI? I mean wouldn't be safe just always
+> > provide this to be compatible with HWMON class?
+> >
+> 
+> I do not care :), I was just trying to follow the logic of
+> 70fba8302adecfa08a087c6f1dd39537a55f5bd3
+> 
+> If it is decided otherwise I can change it, no problem ;)
 
-On 23.06.2020 17:56, Jiri Olsa wrote:
-> On Wed, Jun 17, 2020 at 11:36:46AM +0300, Alexey Budankov wrote:
-> 
-> SNIP
-> 
->> +static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
->> +			      char *cmd_data, size_t data_size)
->> +{
->> +	int err;
->> +	char c;
->> +	size_t bytes_read = 0;
->> +
->> +	memset(cmd_data, 0, data_size--);
->> +
->> +	do {
->> +		err = read(evlist->ctl_fd.fd, &c, 1);
->> +		if (err > 0) {
->> +			if (c == '\n' || c == '\0')
->> +				break;
->> +			cmd_data[bytes_read++] = c;
->> +			if (bytes_read == data_size)
->> +				break;
->> +		} else {
->> +			if (err == -1)
->> +				pr_err("Failed to read from ctlfd %d: %m\n", evlist->ctl_fd.fd);
->> +			break;
->> +		}
->> +	} while (1);
->> +
->> +	pr_debug("Message from ctl_fd: \"%s%s\"\n", cmd_data,
->> +		 bytes_read == data_size ? "" : c == '\n' ? "\\n" : "\\0");
-> 
-> do you want to display the message above only if (err > 0) ?
+I guess you need to send a kinda revert with a fixes tag.
 
-I do, only for err >= 0. For err == -1 there is already the error message.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> 
->> +
->> +	if (err > 0) {
->> +		if (!strncmp(cmd_data, EVLIST_CTL_CMD_ENABLE_TAG,
->> +			     strlen(EVLIST_CTL_CMD_ENABLE_TAG))) {
->> +			*cmd = EVLIST_CTL_CMD_ENABLE;
->> +		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
->> +				    strlen(EVLIST_CTL_CMD_DISABLE_TAG))) {
->> +			*cmd = EVLIST_CTL_CMD_DISABLE;
->> +		}
->> +	}
->> +
->> +	return err;
->> +}
-> 
-> SNIP
-> 
->> +	int ctlfd_pos = evlist->ctl_fd.pos;
->> +	struct pollfd *entries = evlist->core.pollfd.entries;
->> +
->> +	if (ctlfd_pos == -1 || !entries[ctlfd_pos].revents)
->> +		return 0;
->> +
->> +	if (entries[ctlfd_pos].revents & POLLIN) {
->> +		err = evlist__ctlfd_recv(evlist, cmd, cmd_data,
->> +					 EVLIST_CTL_CMD_MAX_LEN);
->> +		if (err > 0) {
->> +			switch (*cmd) {
->> +			case EVLIST_CTL_CMD_ENABLE:
->> +				evlist__enable(evlist);
->> +				break;
->> +			case EVLIST_CTL_CMD_DISABLE:
->> +				evlist__disable(evlist);
->> +				break;
->> +			case EVLIST_CTL_CMD_ACK:
->> +			case EVLIST_CTL_CMD_UNSUPPORTED:
->> +			default:
->> +				pr_debug("ctlfd: unsupported %d\n", *cmd);
->> +				break;
->> +			}
->> +			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED))
->> +				evlist__ctlfd_ack(evlist);
->> +		}
->> +	}
->> +
->> +	if (entries[ctlfd_pos].revents & (POLLHUP | POLLERR))
->> +		evlist__finalize_ctlfd(evlist);
-> 
-> should this error be propagated via err?
 
-I don't think so. Currently it returns 0 only and there is no need to 
-stop collection or skip processing in caller in this case.
-
-~Alexey
-
-> 
-> jirka
-> 
