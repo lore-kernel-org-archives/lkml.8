@@ -2,201 +2,100 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C475C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:09:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gF21QlSi"
+	by mail.kernel.org (Postfix) with ESMTP id 2888820707
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405363AbgFXRJg (ORCPT
+        id S2405368AbgFXRKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405168AbgFXRJg (ORCPT
+        Wed, 24 Jun 2020 13:10:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43993 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405229AbgFXRKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:09:36 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CE6C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:09:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s10so1722890pgm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9MySW4mbbBRod9QicumBO9ww7psBdNIV6ZgeYYG3ji8=;
-        b=gF21QlSigEqiKv7/jVfmhqua9KO64A4aVbVCZVSLvBaDQxKJevZAxFOLUwNNYPO678
-         oayFnL1yrtvZgJRSW+vlUylUtSudu9ugCMeZBvkv9I9z7EExjeqvz6p4jELGHqNp2bxM
-         vGhMKmBo4E1ScaprADwWQWgpWVjbFKRrdMXUQ=
+        Wed, 24 Jun 2020 13:10:15 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <seth.forshee@canonical.com>)
+        id 1jo8ub-0000XK-8I
+        for linux-kernel@vger.kernel.org; Wed, 24 Jun 2020 17:10:13 +0000
+Received: by mail-il1-f200.google.com with SMTP id l20so2009098ilk.22
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:10:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9MySW4mbbBRod9QicumBO9ww7psBdNIV6ZgeYYG3ji8=;
-        b=osnnGAHZIA9EHwiXcqxiX80hu4qck0orQWgmyeE9vUE2Gp4qsPELawafNXxk9r+p08
-         UlYFjylhTVpdofv5lne7hWm1wBFvTrXXQYzNvzLgSZwzv8Th3/9Ede+3aw0NAaI9heOd
-         Yocpm5ldGzhUFFn1XeWSiNtzuFaILGfREIebQQPIy+a87DBCiBxTupn7l4GXpOcdekXl
-         +lxN8vQWmpXkpL+lhA0CTmGWM6I4IQbApakk8G72QGt5AA/aUH4zsUh1/3c20TEmDxp1
-         967opApKDV9Lu/I/MRGPlTMp9UUQm3gF8w+svyaNx0aA44mhucsoVhAPhS9VKCyyZwO5
-         ydVQ==
-X-Gm-Message-State: AOAM533abYZPB/lRXVYZqwB5Kaz3J5vtS74vPf0nL8DIrmwcpBZY8+BO
-        7HaQmC/lPYMWbCLu12Hl6DtdDA==
-X-Google-Smtp-Source: ABdhPJycIWyjj9ea8bDVyXiRPwvu/3OunzszllngvVvuQDju1IWGrE2OaTYnFqWhsLFiJtbA+QzeZQ==
-X-Received: by 2002:a62:a110:: with SMTP id b16mr23448214pff.102.1593018574868;
-        Wed, 24 Jun 2020 10:09:34 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id k7sm10422125pgh.46.2020.06.24.10.09.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 10:09:34 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:09:33 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
-        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
-        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
-        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-Message-ID: <20200624170933.GB39073@google.com>
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
- <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kgKpiNpGwHDOQMosQGkPXdFtHsQOqDrWGR8l3ZM7PP0=;
+        b=oHKhK12h3T67Ak3CC58GZ7FYI1mPu+G8pt7ihscCaluaGSIk9NoUNpoSDKVjGYTY/1
+         1FOnyegT/lkdteQT1tuhzLUWnC+RbxTz9JPdV9q1I3AvBjkLzj+SRKRuVcMSM8XtmKvv
+         JMviUvp15hEh+2hI4xrxIN0pbco5UoJK3wkWHernhNvi8IRcSUHITgGFnrC5g6jdDRwE
+         zuBr6KoSplUu1RC698cnT+Nh3iriFpyKcaEJMnHTCOJ080IU1TQfG89khlq/ZJXbPF9l
+         2Z7mUjAy7EO94SU4Nqk/g+PMZAFVElFjaDeV8ZNZgbeYOVUGdei6Mu7cWyJzfY5LWwHt
+         /a+g==
+X-Gm-Message-State: AOAM5317zPzB0a2WIQrLAG9sHEBEmLkuqtqfJqhkIuyi6RnJT9wkddvE
+        53765WtKZ2l7lIfi8TcQvIPj/oeGxQIVQgyCiCt7EpKQ/w+En5lgEewLsfGtVjQhz/qioiewM8f
+        hgnqRNPZkhwpa5ZpD1u5WtQslNVfs+7WS5Cpfj9K7Ew==
+X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr32079842iow.75.1593018612199;
+        Wed, 24 Jun 2020 10:10:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxqMBP8roE762qfwjNqRPrTKS40lTKfWlkCH86fkBnaZJ2nVaRDqTa0p+NTUGIlZS6OXM2GQ==
+X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr32079809iow.75.1593018611787;
+        Wed, 24 Jun 2020 10:10:11 -0700 (PDT)
+Received: from localhost ([2605:a601:ac0f:820:f090:1573:c2fc:6389])
+        by smtp.gmail.com with ESMTPSA id w15sm11370028ilq.4.2020.06.24.10.10.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 10:10:11 -0700 (PDT)
+From:   Seth Forshee <seth.forshee@canonical.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: rename da903x to da903x-regulator
+Date:   Wed, 24 Jun 2020 12:10:10 -0500
+Message-Id: <20200624171010.845271-1-seth.forshee@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+This module shares the same name as its parent PMIC driver, which
+confuses tools like kmod. Rename the regulator driver to avoid
+such problems.
 
-do you plan to land this in your tree?
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+---
+ drivers/regulator/Makefile                         | 2 +-
+ drivers/regulator/{da903x.c => da903x-regulator.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename drivers/regulator/{da903x.c => da903x-regulator.c} (100%)
 
-I know you hate contentless pings, but since you acked this patch and
-usually don't seem to do that when patches go through your tree I want
-to make sure we aren't in a situation where everybody thinks that the
-patch will go through someone else's tree.
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index e8f163371071..0796e4a47afa 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -31,7 +31,7 @@ obj-$(CONFIG_REGULATOR_BD70528) += bd70528-regulator.o
+ obj-$(CONFIG_REGULATOR_BD71828) += bd71828-regulator.o
+ obj-$(CONFIG_REGULATOR_BD718XX) += bd718x7-regulator.o
+ obj-$(CONFIG_REGULATOR_BD9571MWV) += bd9571mwv-regulator.o
+-obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
++obj-$(CONFIG_REGULATOR_DA903X)	+= da903x-regulator.o
+ obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
+ obj-$(CONFIG_REGULATOR_DA9055)	+= da9055-regulator.o
+ obj-$(CONFIG_REGULATOR_DA9062)	+= da9062-regulator.o
+diff --git a/drivers/regulator/da903x.c b/drivers/regulator/da903x-regulator.c
+similarity index 100%
+rename from drivers/regulator/da903x.c
+rename to drivers/regulator/da903x-regulator.c
+-- 
+2.27.0
 
-Thanks
-
-Matthias
-
-On Mon, Jun 15, 2020 at 05:32:44PM +0530, Rajendra Nayak wrote:
-> QSPI needs to vote on a performance state of a power domain depending on
-> the clock rate. Add support for it by specifying the perf state/clock rate
-> as an OPP table in device tree.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-spi@vger.kernel.org
-> ---
-> No functional change in v6, rebased over 5.8-rc1
-> 
->  drivers/spi/spi-qcom-qspi.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-> index 3c4f83b..ef51982 100644
-> --- a/drivers/spi/spi-qcom-qspi.c
-> +++ b/drivers/spi/spi-qcom-qspi.c
-> @@ -8,6 +8,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/spi/spi.h>
->  #include <linux/spi/spi-mem.h>
->  
-> @@ -139,6 +140,8 @@ struct qcom_qspi {
->  	struct device *dev;
->  	struct clk_bulk_data *clks;
->  	struct qspi_xfer xfer;
-> +	struct opp_table *opp_table;
-> +	bool has_opp_table;
->  	/* Lock to protect xfer and IRQ accessed registers */
->  	spinlock_t lock;
->  };
-> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->  		speed_hz = xfer->speed_hz;
->  
->  	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
-> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
-> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
->  	if (ret) {
->  		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
->  		return ret;
-> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  	master->handle_err = qcom_qspi_handle_err;
->  	master->auto_runtime_pm = true;
->  
-> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
-> +	if (IS_ERR(ctrl->opp_table)) {
-> +		ret = PTR_ERR(ctrl->opp_table);
-> +		goto exit_probe_master_put;
-> +	}
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		ctrl->has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
-> +		goto exit_probe_master_put;
-> +	}
-> +
->  	pm_runtime_enable(dev);
->  
->  	ret = spi_register_master(master);
-> @@ -488,6 +505,9 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  		return 0;
->  
->  	pm_runtime_disable(dev);
-> +	if (ctrl->has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(ctrl->opp_table);
->  
->  exit_probe_master_put:
->  	spi_master_put(master);
-> @@ -498,11 +518,15 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  static int qcom_qspi_remove(struct platform_device *pdev)
->  {
->  	struct spi_master *master = platform_get_drvdata(pdev);
-> +	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
->  
->  	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
->  	spi_unregister_master(master);
->  
->  	pm_runtime_disable(&pdev->dev);
-> +	if (ctrl->has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(ctrl->opp_table);
->  
->  	return 0;
->  }
-> @@ -512,6 +536,8 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
->  	struct spi_master *master = dev_get_drvdata(dev);
->  	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
->  
-> +	/* Drop the performance state vote */
-> +	dev_pm_opp_set_rate(dev, 0);
->  	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
->  
->  	return 0;
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
