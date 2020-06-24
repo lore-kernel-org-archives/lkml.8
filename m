@@ -2,157 +2,121 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4445F207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D6320823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ERVcY1k3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0Do7bcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388950AbgFXVCN (ORCPT
+        id S2389182AbgFXVCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:02:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
+        Wed, 24 Jun 2020 17:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388770AbgFXVCM (ORCPT
+        with ESMTP id S2388770AbgFXVCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:02:12 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB312C061796
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:11 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d66so1784275pfd.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:11 -0700 (PDT)
+        Wed, 24 Jun 2020 17:02:21 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05346C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:21 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id y10so3861504eje.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=F0CH5zhnz6ayOh3mQsnUEqy/k37rjt1CS3Xrl+QPqsk=;
-        b=ERVcY1k3sSjCpLOAr8awDULH6hHwCvyEkuApK5Qd/yy5SDCViDdkIB8JSQ5L/xRD+d
-         8Y592Pat2k/ChLh9OYujlbJnjlGNVLx/ZpfbEt1sE8kMlvWJzHlDhj0x+JLWI/sCQ71m
-         Qc98XVDBN4Tj5eQLSTeQur2SwoHWInWoHJEhUCCE5GXRfarr8qGepXCtm5phPzsnQ/fx
-         r0chNzaABXZLlufMpQ+880lEY1eRlM2cvfZqGUG3SBnyMqYm4bUW8z+wyLj5pHtSzavu
-         pLpwIlYwlO/U6gNgApMNdpJIBGZ6tRJTmGgBOtagYfhNoPIS0UxFZGw9u/o29RNxq2va
-         8lJA==
+        bh=Q65HneRMVLhdg5SVAjawRKs3e4Na9FxPWBLgo8PD4DM=;
+        b=C0Do7bcUEx1h891atQwx7sZfQK/co/oG5+keMt+dphDsjEoV7ElA4VRaEUwwl2WyPx
+         jHFcXosSdWbwdjNXrPQxg54FGXbeidn6T6UwSBKPV2zT/kEGYOLm5PlqKumfRtYP19XB
+         0J/jcMXrC4Bvk7fpoY5iO0GjQIkfjaxC6VxlizzfQF+Y9EcaBcxNMfroMIR9v5Ekv71/
+         lqrH5fypCSpjQRp6EM5ptJLlTafD3hlK1WfBrk2cGJTLj00RpS7NPn+q2RVmbQCAq1y4
+         jAV+g8VmpC+rw49LdR13HpfUq3/5A0BanSQd8KUpiKvr3x+RuDFX8cl8khwrrvvTC7SR
+         MVNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=F0CH5zhnz6ayOh3mQsnUEqy/k37rjt1CS3Xrl+QPqsk=;
-        b=BjzclJM5TEdLR9fD+WWv6eXwFX3Q7ZzuMwPFUxw01arCpJsVgMtXcLLaNow5VdUrPw
-         N+eGaCErzX7Li/ksQxiUbulabVa/ItY1+h72onohVwmcJoHs4Y42XNtjMfm4vgI0NU2M
-         atb/4sw7U6ZnoYaFBSPOwlP6Zbrgchwijmiwillj/zGjT/c9wQihotvVqZfFzMzwVNy0
-         NZNoVGbPl8i4Iew7xYwBERh7GLlWmQOoTZZkGN0m9g70FmbHiRT1XgrTRMhPHlroJnf9
-         xMJj0FBQjAW90LpXdxnjiH05PT7cOQnZNws0/uhPZj+7MnIks7kQ/9DmdL3c8V148Ysr
-         vYnA==
-X-Gm-Message-State: AOAM530jNCUYgsbYDdCx22ajHyIx9fNBlFK9Kc1YD9pxk8rCQV9If68v
-        E1pM3Bu8lb5/m9iX+mPqAhxmqw+hP8f9u8qI5TzRQw==
-X-Google-Smtp-Source: ABdhPJy3pMPiQAGPmTVujSMRX6922OqjtLRlYCZUOTerucVNVRzOs/5XjS34LxJ/ndw7kmB1zYWqmSiQ8V38zGtrKuE=
-X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr31723451pfu.169.1593032530992;
- Wed, 24 Jun 2020 14:02:10 -0700 (PDT)
+        bh=Q65HneRMVLhdg5SVAjawRKs3e4Na9FxPWBLgo8PD4DM=;
+        b=F08eJaDhleu8g/TZZJ8oX/ZDSIsiitDzbiZuEgFx95cpU0PUiXhpwWqY5NHleKDKue
+         vvMEp6Tjs41Ksp4BqCqQd0xt7oWxWHzUIObH4AbKCBvrjIUdWVmzqxgsTWEZJPGbq4Fh
+         iD0rCEpCU7Ej5frK9ugYzASA9Su6O6Pn8wO/WPaSHaY2Evx3JHkYh9jy1AdAT3lduly2
+         e9gStrmmNlYI62K1NmBpFqpMBSZeeixABDTFnvkNB4ArcSJl/UyGdQ59e8UR5zyKE7nh
+         lHQF+LtINxfaGMzR4SfbXMymMnJi93wgPzpNdFBmnbtB69GlFMePyGvl54GddeJpJpvX
+         dI7A==
+X-Gm-Message-State: AOAM532h+1nBj3XOPDHtZW7b6lXidCou7TN4K9VvGBIRuj7u3ZtOhH02
+        JlTyW6gitW0O+XI95yTEioErjJ6lXSEB//XKGR8=
+X-Google-Smtp-Source: ABdhPJxMbkTVZFeqafVKJn8HY0wcCBMIsoXT8hVjSV2RB0oGms2P5ENEgkeFqhXyUNeyiMWdtYbU3LLL5pFCTAlnd2s=
+X-Received: by 2002:a17:906:7751:: with SMTP id o17mr28009624ejn.111.1593032539710;
+ Wed, 24 Jun 2020 14:02:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com> <20200624203200.78870-8-samitolvanen@google.com>
-In-Reply-To: <20200624203200.78870-8-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Jun 2020 14:01:59 -0700
-Message-ID: <CAKwvOdkY2M9+BgA5FELK+7bjv1sZYMuTmVOztCYijas_OHfVDQ@mail.gmail.com>
-Subject: Re: [PATCH 07/22] kbuild: lto: merge module sections
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+References: <20200624191417.16735-1-chris@chris-wilson.co.uk>
+ <20200624192116.GO6578@ziepe.ca> <CAHbLzkoy2kz7yirch7t9ruzJjNTyCCZHJFZst7OEz_DdmQyaaA@mail.gmail.com>
+In-Reply-To: <CAHbLzkoy2kz7yirch7t9ruzJjNTyCCZHJFZst7OEz_DdmQyaaA@mail.gmail.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 24 Jun 2020 14:02:07 -0700
+Message-ID: <CAHbLzkomoxKE73SgZvRD0cLELBtx71jx+g07zZ5YMajUPPcRLw@mail.gmail.com>
+Subject: Re: [PATCH] mm: Skip opportunistic reclaim for dma pinned pages
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 1:33 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+On Wed, Jun 24, 2020 at 1:23 PM Yang Shi <shy828301@gmail.com> wrote:
 >
-> LLD always splits sections with LTO, which increases module sizes. This
-> change adds a linker script that merges the split sections in the final
-> module and discards the .eh_frame section that LLD may generate.
+> On Wed, Jun 24, 2020 at 12:21 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Wed, Jun 24, 2020 at 08:14:17PM +0100, Chris Wilson wrote:
+> > > A general rule of thumb is that shrinkers should be fast and effective.
+> > > They are called from direct reclaim at the most incovenient of times when
+> > > the caller is waiting for a page. If we attempt to reclaim a page being
+> > > pinned for active dma [pin_user_pages()], we will incur far greater
+> > > latency than a normal anonymous page mapped multiple times. Worse the
+> > > page may be in use indefinitely by the HW and unable to be reclaimed
+> > > in a timely manner.
+> >
+> > A pinned page can't be migrated, discarded or swapped by definition -
+> > it would cause data corruption.
+> >
+> > So, how do things even get here and/or work today at all? I think the
+> > explanation is missing something important.
+>
+> The __remove_mapping() will try to freeze page count if the count is
+> expected otherwise just not discard the page. I'm not quite sure why
+> the check is done that late, my wild guess is to check the refcount at
+> the last minute so there might be a chance the pin gets released right
+> before it.
+>
+> But I noticed a bug in __remove_ampping() for THP since THP's dma
+> pinned count is recorded in the tail page's hpage_pinned_refcount
+> instead of refcount. So, the refcount freeze might be successful for
+> pinned THP.  Chris's patch could solve this issue too, but I'm not
 
-For discarding .eh_frame, Kees is currently fighting with a series
-that I would really like to see land that enables warnings on orphan
-section placement.  I don't see any new flags to inhibit .eh_frame
-generation, or discard it in the linker script, so I'd expect it to be
-treated as an orphan section and kept.  Was that missed, or should
-that be removed from the commit message?
+This bug is not valid. I just realized try_grab_page() would increase
+both refcount and hpage_pinned_refcount.
 
+> sure if it is worth backing earlier once dma pinned page is met. If it
+> is worth, the follow-up question is why not just skip such page in
+> scan phase?
 >
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  Makefile               |  2 ++
->  scripts/module-lto.lds | 26 ++++++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644 scripts/module-lto.lds
->
-> diff --git a/Makefile b/Makefile
-> index ee66513a5b66..9ffec5fe1737 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -898,6 +898,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
->  # Limit inlining across translation units to reduce binary size
->  LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
->  KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
-> +
-> +KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
->  endif
->
->  ifdef CONFIG_LTO
-> diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
-> new file mode 100644
-> index 000000000000..65884c652bf2
-> --- /dev/null
-> +++ b/scripts/module-lto.lds
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
-> + * -ffunction-sections, which increases the size of the final module.
-> + * Merge the split sections in the final binary.
-> + */
-> +SECTIONS {
-> +       __patchable_function_entries : { *(__patchable_function_entries) }
-> +
-> +       .bss : {
-> +               *(.bss .bss.[0-9a-zA-Z_]*)
-> +               *(.bss..L* .bss..compoundliteral*)
-> +       }
-> +
-> +       .data : {
-> +               *(.data .data.[0-9a-zA-Z_]*)
-> +               *(.data..L* .data..compoundliteral*)
-> +       }
-> +
-> +       .rodata : {
-> +               *(.rodata .rodata.[0-9a-zA-Z_]*)
-> +               *(.rodata..L* .rodata..compoundliteral*)
-> +       }
-> +
-> +       .text : { *(.text .text.[0-9a-zA-Z_]*) }
-> +}
-> --
-> 2.27.0.212.ge8ba1cc988-goog
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> >
+> > Jason
+> >
