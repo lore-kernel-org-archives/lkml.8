@@ -2,127 +2,113 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B536DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD97C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926822078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:35:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Il6fK4QN"
+	by mail.kernel.org (Postfix) with ESMTP id 3C1EE20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388168AbgFXAfL (ORCPT
+        id S2388084AbgFXAkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 20:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387757AbgFXAfI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 20:35:08 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C7E3C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:35:08 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id w7so182782edt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 17:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+/TMyKbqoSzMGZ/AAiVOjNfJfvqMvVU1A+eHQRRA5RQ=;
-        b=Il6fK4QN3tYHRegbTX3T3xxgdNRK5bhnoaFX2nMUJ+Y1ejGKz2mICnpBctazU0eFYI
-         +6WYLhCDE5IutdeL6ipgrxuodVn0WCfWMCh+6ZjduvztoIRvdYwvs+tLmVdloyVBKiKd
-         Xd+vTYw8xNdYoCfPjbV2eezQeBcRSM44RaXGj8NkQxehNrlsHYyXRmkwpyHmy1siSgO6
-         ZFYlVPr2FiXxrnQJ36LJoAm40RFBS9bsdAG8NX38Q6o9LJ9GpiteFIUbzRViVzxjz2QG
-         dtjlJa9eIfNen/2eoSRu75VwCM/b6Rv/nw0czAWfLNCBBqW2ylJSvPSws70uAz6eaETU
-         GddA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+/TMyKbqoSzMGZ/AAiVOjNfJfvqMvVU1A+eHQRRA5RQ=;
-        b=ZODDk4ompdzQTFDIYgj+JXGaa9nfAVbvG0ZUcCDv+9Ylkm6mEIP5WGV6kb+0Z2WC2q
-         9I0NRYoI4U0PCx47LmD/SYI/dIphGVPTTYzdZ3lGhM3bwqRULS8L5pXMGWuYY+Oxs5Ho
-         gtMP29BOujD2lYzdjVQE9fpBnhKin9l8sxy5V7ypamBv8FLvIS1or0K+iwY/9S/Ecziy
-         iIPcDTkvfRi0hN670ZEWqNo2AGd2KvPrS6zfE9VUQOiR8pzD8mUTZ+z0KttWl2d/24wh
-         kbSj8x68RB5GhScNUX20ACLaO62CpBaHwhoQy44h+3p2DtbnMZYn+hOQZxPFo2T8KTYG
-         ctlg==
-X-Gm-Message-State: AOAM530/Vzui8Ajbci5oOst8DuEGtID5z9oefIJKnJS9i3PhJuMEc5NV
-        mpKT9hQb70uKmSvtz05uiug5Op76T63mEfAfcAlM
-X-Google-Smtp-Source: ABdhPJzCoP7TVvW+uzKj9SzidO2EBCvvtbfilZfpp8veq16/F/lTMvRYgUtkcV+HaRYoxjS+CxUYyH2LxC0Ele3/EA8=
-X-Received: by 2002:aa7:da46:: with SMTP id w6mr23979297eds.31.1592958906753;
- Tue, 23 Jun 2020 17:35:06 -0700 (PDT)
+        Tue, 23 Jun 2020 20:40:17 -0400
+Received: from mga05.intel.com ([192.55.52.43]:5063 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387586AbgFXAkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 20:40:17 -0400
+IronPort-SDR: qTpRyEPjTfSu2eBUZYRGqgxCVIIFpMVDv12Wxua2ksdPaWEFQtZ10ESRWEL25e+tDTPh7A9wj0
+ XHBMmwQDHOWQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="228964118"
+X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
+   d="scan'208";a="228964118"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 17:40:16 -0700
+IronPort-SDR: 4rbmInvG3yqk+WGpQtfSk6qnzq3kaKehHPA+gtmKCH/MeZoC06bDIFTP15RgNt94gjrQ2xLe45
+ gvXEiYEPfrSw==
+X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
+   d="scan'208";a="452446201"
+Received: from cli46-mobl2.ccr.corp.intel.com (HELO [10.255.29.15]) ([10.255.29.15])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 17:40:13 -0700
+Subject: Re: [PATCH v2 1/7] KVM: X86: Reset vcpu->arch.cpuid_nent to 0 if
+ SET_CPUID fails
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200623115816.24132-1-xiaoyao.li@intel.com>
+ <20200623115816.24132-2-xiaoyao.li@intel.com>
+ <CALMp9eRsWqM-OAKO+y7EpoX7Oq1Qee0vAzgOBpYixUVH8Df1JA@mail.gmail.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <59535ddb-373a-952f-f049-91d8f142c6a9@intel.com>
+Date:   Wed, 24 Jun 2020 08:40:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
-In-Reply-To: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 23 Jun 2020 20:34:55 -0400
-Message-ID: <CAHC9VhT_dzkoOuoQF5-D9KFDiAUUjX2UJJbKPWAeXkf7fddKsA@mail.gmail.com>
-Subject: Re: [PATCH ghak124 v3] audit: log nftables configuration change events
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        Ondrej Mosnacek <omosnace@redhat.com>, fw@strlen.de,
-        twoerner@redhat.com, Eric Paris <eparis@parisplace.org>,
-        tgraf@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALMp9eRsWqM-OAKO+y7EpoX7Oq1Qee0vAzgOBpYixUVH8Df1JA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 9:21 AM Richard Guy Briggs <rgb@redhat.com> wrote:
->
-> iptables, ip6tables, arptables and ebtables table registration,
-> replacement and unregistration configuration events are logged for the
-> native (legacy) iptables setsockopt api, but not for the
-> nftables netlink api which is used by the nft-variant of iptables in
-> addition to nftables itself.
->
-> Add calls to log the configuration actions in the nftables netlink api.
->
-> This uses the same NETFILTER_CFG record format but overloads the table
-> field.
->
->   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=?:0;?:0 family=unspecified entries=2 op=nft_register_gen pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
->   ...
->   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=firewalld:1;?:0 family=inet entries=0 op=nft_register_table pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
->   ...
->   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=8 op=nft_register_chain pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
->   ...
->   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=101 op=nft_register_rule pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
->   ...
->   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=87 op=nft_register_setelem pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
->   ...
->   type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=0 op=nft_register_set pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
->
-> For further information please see issue
-> https://github.com/linux-audit/audit-kernel/issues/124
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
-> Changelog:
-> v3:
-> - inline message type rather than table
->
-> v2:
-> - differentiate between xtables and nftables
-> - add set, setelem, obj, flowtable, gen
-> - use nentries field as appropriate per type
-> - overload the "tables" field with table handle and chain/set/flowtable
->
->  include/linux/audit.h         |  18 ++++++++
->  kernel/auditsc.c              |  24 ++++++++--
->  net/netfilter/nf_tables_api.c | 103 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 142 insertions(+), 3 deletions(-)
+On 6/24/2020 2:20 AM, Jim Mattson wrote:
+> On Tue, Jun 23, 2020 at 4:58 AM Xiaoyao Li <xiaoyao.li@intel.com> wrote:
+>>
+>> It needs to invalidate CPUID configruations if usersapce provides
+> 
+> Nits: configurations, userspace
 
-I'm not seeing any additional comments from the netfilter folks so
-I've gone ahead and merged this into audit/next.  Thanks Richard.
+oh, I'll fix it.
 
--- 
-paul moore
-www.paul-moore.com
+>> illegal input.
+>>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>>   arch/x86/kvm/cpuid.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>> index 8a294f9747aa..1d13bad42bf9 100644
+>> --- a/arch/x86/kvm/cpuid.c
+>> +++ b/arch/x86/kvm/cpuid.c
+>> @@ -207,6 +207,8 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>>          kvm_apic_set_version(vcpu);
+>>          kvm_x86_ops.cpuid_update(vcpu);
+>>          r = kvm_update_cpuid(vcpu);
+>> +       if (r)
+>> +               vcpu->arch.cpuid_nent = 0;
+>>
+>>          kvfree(cpuid_entries);
+>>   out:
+>> @@ -230,6 +232,8 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>>          kvm_apic_set_version(vcpu);
+>>          kvm_x86_ops.cpuid_update(vcpu);
+>>          r = kvm_update_cpuid(vcpu);
+>> +       if (r)
+>> +               vcpu->arch.cpuid_nent = 0;
+>>   out:
+>>          return r;
+>>   }
+>> --
+>> 2.18.2
+> 
+> What if vcpu->arch.cpuid_nent was greater than 0 before the ioctl in question?
+>
+
+Nice catch!
+
+If considering it, then we have to restore the old CPUID configuration. 
+So how about making it simpler to just add one line of comment in API doc:
+If KVM_SET_CPUID{2} fails, the old valid configuration is cleared as a 
+side effect.
+
