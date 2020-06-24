@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC03C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09D62082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504B02080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593028709;
-	bh=i7sYsd8Ga+ZjBELmbSSBvT4KIlV2W3RsMMLZb1hOncw=;
+	s=default; t=1593028715;
+	bh=kIopbaSlxI9IxmzdO27nH3x6GiRwuJzENWU1kETjWDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ftgq7rLAUvJ8N7zDXJhMqcU913rW2aoE38e725rmKDtkDOCKeM5FM3h7j2jl0z91L
-	 kq7bTgNZXTKBQBQogWaU34z6n3qKLZyu6mry70a3KRVIuG4v81AAtLFqlNG9gnfZke
-	 hDgOKFUMUNEquar9L9v6bU31kB1PCII3of4y7wgU=
+	b=J0f2JQT+G3qA3LwcWIn3zldRa7oiCXL83aafj40IPNaa5AmuQMkhd1VL3SBlD4TBj
+	 Sf7uS+oU50p0Ss/kb3xdiLr/WrmBB+LbOXJVYEZBXvaHMBh0VM6tqZ55Ahpo8KgU8c
+	 Ur8atVjMJISUit153umvxbUaN5/jrwPmTzhA/qoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406302AbgFXT61 (ORCPT
+        id S2406320AbgFXT6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 15:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406281AbgFXT6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:58:23 -0400
+        id S2406284AbgFXT6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:58:24 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8031820B80;
-        Wed, 24 Jun 2020 19:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3240A20A8B;
+        Wed, 24 Jun 2020 19:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593028702;
-        bh=i7sYsd8Ga+ZjBELmbSSBvT4KIlV2W3RsMMLZb1hOncw=;
+        s=default; t=1593028703;
+        bh=kIopbaSlxI9IxmzdO27nH3x6GiRwuJzENWU1kETjWDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7dg3z/tAbtltsq55ijfvVu9NdhupXLF+PMlBtImpqEB64PBFk0cao1DigtMH8pCr
-         t/0iB6kGRurHtTt53wzpjR1ibmrYrFrLJKr1ZxYSe8N/si8M1W9oERIL7p9vMvu2e1
-         XEsggnw02b8a8vyptXffOqpNjYyrpYSxBvV7wgTc=
+        b=rRPjlq4Doo6J5anXh19WC+MMWf4cYbEzhZu7uJ7RZXqFdfD4CEhUsqNVuy2VC5QDz
+         C6ZSpjJL9IxyHXE5Yn9bNECk6eZUgLeGko1hEpL6vtXE4ZXGWiKYq5DkGJRx12Lyi0
+         eYyWQZ4/hyiXyT9SvFfaZc1c9eVjsqp/hIhKwjw8=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1joBXI-006ABu-UM; Wed, 24 Jun 2020 20:58:21 +0100
+        id 1joBXJ-006ABu-Lv; Wed, 24 Jun 2020 20:58:21 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -55,18 +55,17 @@ Cc:     Will Deacon <will@kernel.org>,
         Valentin Schneider <Valentin.Schneider@arm.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com,
-        stable@vger.kernel.org
-Subject: [PATCH v2 07/17] irqchip/gic: Atomically update affinity
-Date:   Wed, 24 Jun 2020 20:58:01 +0100
-Message-Id: <20200624195811.435857-8-maz@kernel.org>
+        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
+Subject: [PATCH v2 08/17] irqchip/gic: Refactor SMP configuration
+Date:   Wed, 24 Jun 2020 20:58:02 +0100
+Message-Id: <20200624195811.435857-9-maz@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200624195811.435857-1-maz@kernel.org>
 References: <20200624195811.435857-1-maz@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, Valentin.Schneider@arm.com, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, kernel-team@android.com, stable@vger.kernel.org
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, Valentin.Schneider@arm.com, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, kernel-team@android.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,58 +73,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GIC driver uses a RMW sequence to update the affinity, and
-relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
-to update it atomically.
+As we are about to change quite a lot of the SMP support code,
+let's start by moving it around so that it minimizes the amount
+of #ifdefery.
 
-But these sequences only expend into anything meaningful if
-the BL_SWITCHER option is selected, which almost never happens.
-
-It also turns out that using a RMW and locks is just as silly,
-as the GIC distributor supports byte accesses for the GICD_TARGETRn
-registers, which when used make the update atomic by definition.
-
-Drop the terminally broken code and replace it by a byte write.
-
-Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
-Cc: stable@vger.kernel.org
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/irqchip/irq-gic.c | 76 ++++++++++++++++++++-------------------
+ 1 file changed, 40 insertions(+), 36 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 00de05abd3c3..c17fabd6741e 100644
+index c17fabd6741e..801a5a5004d6 100644
 --- a/drivers/irqchip/irq-gic.c
 +++ b/drivers/irqchip/irq-gic.c
-@@ -329,10 +329,8 @@ static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
- static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 			    bool force)
+@@ -325,28 +325,6 @@ static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_SMP
+-static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+-			    bool force)
+-{
+-	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
+-	unsigned int cpu;
+-
+-	if (!force)
+-		cpu = cpumask_any_and(mask_val, cpu_online_mask);
+-	else
+-		cpu = cpumask_first(mask_val);
+-
+-	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
+-		return -EINVAL;
+-
+-	writeb_relaxed(gic_cpu_map[cpu], reg);
+-	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+-
+-	return IRQ_SET_MASK_OK_DONE;
+-}
+-#endif
+-
+ static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
  {
--	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
--	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
--	u32 val, mask, bit;
--	unsigned long flags;
+ 	u32 irqstat, irqnr;
+@@ -795,6 +773,26 @@ static int gic_pm_init(struct gic_chip_data *gic)
+ #endif
+ 
+ #ifdef CONFIG_SMP
++static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
++			    bool force)
++{
 +	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
 +	unsigned int cpu;
- 
- 	if (!force)
- 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
-@@ -342,13 +340,7 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
- 		return -EINVAL;
- 
--	gic_lock_irqsave(flags);
--	mask = 0xff << shift;
--	bit = gic_cpu_map[cpu] << shift;
--	val = readl_relaxed(reg) & ~mask;
--	writel_relaxed(val | bit, reg);
--	gic_unlock_irqrestore(flags);
--
++
++	if (!force)
++		cpu = cpumask_any_and(mask_val, cpu_online_mask);
++	else
++		cpu = cpumask_first(mask_val);
++
++	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
++		return -EINVAL;
++
 +	writeb_relaxed(gic_cpu_map[cpu], reg);
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
++	irq_data_update_effective_affinity(d, cpumask_of(cpu));
++
++	return IRQ_SET_MASK_OK_DONE;
++}
++
+ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
+ {
+ 	int cpu;
+@@ -824,6 +822,23 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
  
- 	return IRQ_SET_MASK_OK_DONE;
+ 	gic_unlock_irqrestore(flags);
+ }
++
++static int gic_starting_cpu(unsigned int cpu)
++{
++	gic_cpu_init(&gic_data[0]);
++	return 0;
++}
++
++static __init void gic_smp_init(void)
++{
++	set_smp_cross_call(gic_raise_softirq);
++	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
++				  "irqchip/arm/gic:starting",
++				  gic_starting_cpu, NULL);
++}
++#else
++#define gic_smp_init()		do { } while(0)
++#define gic_set_affinity	NULL
+ #endif
+ 
+ #ifdef CONFIG_BL_SWITCHER
+@@ -1027,12 +1042,6 @@ static int gic_irq_domain_translate(struct irq_domain *d,
+ 	return -EINVAL;
+ }
+ 
+-static int gic_starting_cpu(unsigned int cpu)
+-{
+-	gic_cpu_init(&gic_data[0]);
+-	return 0;
+-}
+-
+ static int gic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 				unsigned int nr_irqs, void *arg)
+ {
+@@ -1079,10 +1088,8 @@ static void gic_init_chip(struct gic_chip_data *gic, struct device *dev,
+ 		gic->chip.irq_set_vcpu_affinity = gic_irq_set_vcpu_affinity;
+ 	}
+ 
+-#ifdef CONFIG_SMP
+ 	if (gic == &gic_data[0])
+ 		gic->chip.irq_set_affinity = gic_set_affinity;
+-#endif
+ }
+ 
+ static int gic_init_bases(struct gic_chip_data *gic,
+@@ -1199,12 +1206,7 @@ static int __init __gic_init_bases(struct gic_chip_data *gic,
+ 		 */
+ 		for (i = 0; i < NR_GIC_CPU_IF; i++)
+ 			gic_cpu_map[i] = 0xff;
+-#ifdef CONFIG_SMP
+-		set_smp_cross_call(gic_raise_softirq);
+-#endif
+-		cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
+-					  "irqchip/arm/gic:starting",
+-					  gic_starting_cpu, NULL);
++
+ 		set_handle_irq(gic_handle_irq);
+ 		if (static_branch_likely(&supports_deactivate_key))
+ 			pr_info("GIC: Using split EOI/Deactivate mode\n");
+@@ -1221,6 +1223,8 @@ static int __init __gic_init_bases(struct gic_chip_data *gic,
+ 	ret = gic_init_bases(gic, handle);
+ 	if (ret)
+ 		kfree(name);
++	else if (gic == &gic_data[0])
++		gic_smp_init();
+ 
+ 	return ret;
+ }
 -- 
 2.27.0
 
