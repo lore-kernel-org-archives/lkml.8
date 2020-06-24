@@ -2,132 +2,108 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D2DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33A32088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C4B206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388845AbgFXFNX (ORCPT
+        id S2388811AbgFXFPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:13:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47028 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbgFXFNW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:13:22 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id B1D7D2A3349
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v9 1/4] unicode: Add utf8_casefold_hash
-Organization: Collabora
-References: <20200624043341.33364-1-drosen@google.com>
-        <20200624043341.33364-2-drosen@google.com>
-Date:   Wed, 24 Jun 2020 01:13:17 -0400
-In-Reply-To: <20200624043341.33364-2-drosen@google.com> (Daniel Rosenberg's
-        message of "Tue, 23 Jun 2020 21:33:38 -0700")
-Message-ID: <87h7v1gi6q.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Wed, 24 Jun 2020 01:15:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47644 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727957AbgFXFPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:15:30 -0400
+IronPort-SDR: 660xc90y3KVV4bLk+hZm/6SVFFd75CoQ9JIwT2wFmAi7Fsth3WMpf6delxqwyG/gA1sOlLV1t1
+ GQUFulAsbQQw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="162419109"
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="162419109"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 22:15:29 -0700
+IronPort-SDR: /Dt28ta8rN+tZIFIxUGmlX1VPGaRWT9vksDFxOabvmB8rrnT9glL1nmSXUdQdyvGojTsAd71jw
+ 9LiSq+fYg92A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="319347138"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Jun 2020 22:15:29 -0700
+Date:   Tue, 23 Jun 2020 22:15:29 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] libnvdimm/security: Fix key lookup permissions
+Message-ID: <20200624051529.GC2617015@iweiny-DESK2.sc.intel.com>
+References: <159297332630.1304143.237026690015653759.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159297332630.1304143.237026690015653759.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Rosenberg <drosen@google.com> writes:
+On Tue, Jun 23, 2020 at 09:35:26PM -0700, Dan Williams wrote:
+> As of commit 8c0637e950d6 ("keys: Make the KEY_NEED_* perms an enum rather
+> than a mask") lookup_user_key() needs an explicit declaration of what it
+> wants to do with the key. Add KEY_NEED_SEARCH to fix a warning with the
+> below signature, and fixes the inability to retrieve a key.
+> 
+>     WARNING: CPU: 15 PID: 6276 at security/keys/permission.c:35 key_task_permission+0xd3/0x140
+>     [..]
+>     RIP: 0010:key_task_permission+0xd3/0x140
+>     [..]
+>     Call Trace:
+>      lookup_user_key+0xeb/0x6b0
+>      ? vsscanf+0x3df/0x840
+>      ? key_validate+0x50/0x50
+>      ? key_default_cmp+0x20/0x20
+>      nvdimm_get_user_key_payload.part.0+0x21/0x110 [libnvdimm]
+>      nvdimm_security_store+0x67d/0xb20 [libnvdimm]
+>      security_store+0x67/0x1a0 [libnvdimm]
+>      kernfs_fop_write+0xcf/0x1c0
+>      vfs_write+0xde/0x1d0
+>      ksys_write+0x68/0xe0
+>      do_syscall_64+0x5c/0xa0
+>      entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
 
-> This adds a case insensitive hash function to allow taking the hash
-> without needing to allocate a casefolded copy of the string.
->
-> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+> Suggested-by: David Howells <dhowells@redhat.com>
+> Fixes: 8c0637e950d6 ("keys: Make the KEY_NEED_* perms an enum rather than a mask")
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  fs/unicode/utf8-core.c  | 23 ++++++++++++++++++++++-
->  include/linux/unicode.h |  3 +++
->  2 files changed, 25 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/unicode/utf8-core.c b/fs/unicode/utf8-core.c
-> index 2a878b739115d..90656b9980720 100644
-> --- a/fs/unicode/utf8-core.c
-> +++ b/fs/unicode/utf8-core.c
-> @@ -6,6 +6,7 @@
->  #include <linux/parser.h>
->  #include <linux/errno.h>
->  #include <linux/unicode.h>
-> +#include <linux/stringhash.h>
+>  drivers/nvdimm/security.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+> index 89b85970912d..4cef69bd3c1b 100644
+> --- a/drivers/nvdimm/security.c
+> +++ b/drivers/nvdimm/security.c
+> @@ -95,7 +95,7 @@ static struct key *nvdimm_lookup_user_key(struct nvdimm *nvdimm,
+>  	struct encrypted_key_payload *epayload;
+>  	struct device *dev = &nvdimm->dev;
 >  
->  #include "utf8n.h"
+> -	keyref = lookup_user_key(id, 0, 0);
+> +	keyref = lookup_user_key(id, 0, KEY_NEED_SEARCH);
+>  	if (IS_ERR(keyref))
+>  		return NULL;
 >  
-> @@ -122,9 +123,29 @@ int utf8_casefold(const struct unicode_map *um, const struct qstr *str,
->  	}
->  	return -EINVAL;
->  }
-> -
->  EXPORT_SYMBOL(utf8_casefold);
->  
-> +int utf8_casefold_hash(const struct unicode_map *um, const void *salt,
-> +		       struct qstr *str)
-> +{
-> +	const struct utf8data *data = utf8nfdicf(um->version);
-> +	struct utf8cursor cur;
-> +	int c;
-> +	unsigned long hash = init_name_hash(salt);
-> +
-> +	if (utf8ncursor(&cur, data, str->name, str->len) < 0)
-> +		return -EINVAL;
-> +
-> +	while ((c = utf8byte(&cur))) {
-> +		if (c < 0)
-> +			return c;
-
-Return -EINVAL here to match other unicode functions, since utf8byte
-will return -1 on a binary blob, which doesn't make sense for this.
-
-Other than that, looks good to me.
-
-Reviewed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-
-> +		hash = partial_name_hash((unsigned char)c, hash);
-> +	}
-> +	str->hash = end_name_hash(hash);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(utf8_casefold_hash);
-> +
->  int utf8_normalize(const struct unicode_map *um, const struct qstr *str,
->  		   unsigned char *dest, size_t dlen)
->  {
-> diff --git a/include/linux/unicode.h b/include/linux/unicode.h
-> index 990aa97d80496..74484d44c7554 100644
-> --- a/include/linux/unicode.h
-> +++ b/include/linux/unicode.h
-> @@ -27,6 +27,9 @@ int utf8_normalize(const struct unicode_map *um, const struct qstr *str,
->  int utf8_casefold(const struct unicode_map *um, const struct qstr *str,
->  		  unsigned char *dest, size_t dlen);
->  
-> +int utf8_casefold_hash(const struct unicode_map *um, const void *salt,
-> +		       struct qstr *str);
-> +
->  struct unicode_map *utf8_load(const char *version);
->  void utf8_unload(struct unicode_map *um);
-
--- 
-Gabriel Krisman Bertazi
+> 
