@@ -2,87 +2,116 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD38C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 502C020874
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:46:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aSJxMgcM"
+	by mail.kernel.org (Postfix) with ESMTP id 0D69721655
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390122AbgFXHqA (ORCPT
+        id S2390113AbgFXHp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:46:00 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:11222 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387849AbgFXHp6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:45:58 -0400
-X-UUID: e46efcd3d1fc4c74a44b55eddf7cc0b1-20200624
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SPetk4kZUoYNJi6rJL6mv4fVDX9vdX+a9jDyyxj20yw=;
-        b=aSJxMgcMtN8F8I+4arR4F7BvEYd4C2BgczA9tYtDqBdfozggctRSh30qH8JshLIBSf6m/iX6Cn/y27CrkHl1Z18YUJsuRlvlJnjV9ZQawwwTkyQVOGzFiZt87zGQkXb0ffizOyP25f7i4Uz5nMWl3N5jGO54YisPrCvqbz4wkuw=;
-X-UUID: e46efcd3d1fc4c74a44b55eddf7cc0b1-20200624
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 889084295; Wed, 24 Jun 2020 15:45:55 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 24 Jun 2020 15:45:45 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 24 Jun 2020 15:45:45 +0800
-Message-ID: <1592984747.3278.3.camel@mtkswgap22>
-Subject: RE: [PATCH v1] scsi: ufs: Disable WriteBooster capability in
- non-supported UFS device
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
-        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
-Date:   Wed, 24 Jun 2020 15:45:47 +0800
-In-Reply-To: <SN6PR04MB4640974695F782566A83F2EFFC950@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200624025119.6509-1-stanley.chu@mediatek.com>
-         <SN6PR04MB4640974695F782566A83F2EFFC950@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 890E395327D2A2AB1231F6866800CD93D5D3E8BD799D6CB9814E4EB784F355C92000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 24 Jun 2020 03:45:59 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:35816 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389979AbgFXHpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:45:20 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2qIBPNevCZJAA--.660S8;
+        Wed, 24 Jun 2020 15:45:15 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v3 06/14 RESEND] irqchip/digicolor: Fix potential resource leaks
+Date:   Wed, 24 Jun 2020 15:45:03 +0800
+Message-Id: <1592984711-3130-7-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9DxD2qIBPNevCZJAA--.660S8
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZFy3Cr4fWF17Zw1kCFW8tFb_yoW8Cw4fpF
+        WUWa9IgrWIvw4xWFn2kFyDZF98Kr4xKa9ru3yxC3Z2vrn5C34qka4UAF1j9FyrCrWxZa1j
+        vFs7ta48C3WUKaDanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUQK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+        z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+        4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE
+        3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c
+        02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE
+        4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mx
+        kF7I0En4kS14v26r4a6rW5MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMI
+        IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvE
+        x4A2jsIEc7CjxVAFwI0_GcCE3sUvcSsGvfC2KfnxnUUI43ZEXa7sR_ksqPUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KT24gV2VkLCAyMDIwLTA2LTI0IGF0IDA3OjI2ICswMDAwLCBBdnJpIEFsdG1h
-biB3cm90ZToNCj4gPiANCj4gPiANCj4gPiBJZiBVRlMgZGV2aWNlIGlzIG5vdCBxdWFsaWZpZWQg
-dG8gZW50ZXIgdGhlIGRldGVjdGlvbiBvZiBXcml0ZUJvb3N0ZXINCj4gPiBwcm9iaW5nIGJ5IGRp
-c2FsbG93ZWQgVUZTIHZlcnNpb24gb3IgZGV2aWNlIHF1aXJrcywgdGhlbiBXcml0ZUJvb3N0ZXIN
-Cj4gPiBjYXBhYmlsaXR5IGluIGhvc3Qgc2hhbGwgYmUgZGlzYWJsZWQgdG8gcHJldmVudCBhbnkg
-V3JpdGVCb29zdGVyDQo+ID4gb3BlcmF0aW9ucyBpbiB0aGUgZnV0dXJlLg0KPiANCj4gRml4ZXM6
-ID8NCg0KSSdsbCBhZGQgaXQgaW4gdjIsIHRoYW5rcyENCg0KU3RhbmxleSBDaHUNCg0KDQo=
+There exists potential resource leaks in the error path, fix them.
+
+Fixes: 8041dfbd31cf ("irqchip: Conexant CX92755 interrupts controller driver")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/irqchip/irq-digicolor.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/irqchip/irq-digicolor.c b/drivers/irqchip/irq-digicolor.c
+index fc38d2d..18c6e77 100644
+--- a/drivers/irqchip/irq-digicolor.c
++++ b/drivers/irqchip/irq-digicolor.c
+@@ -89,7 +89,8 @@ static int __init digicolor_of_init(struct device_node *node,
+ 	ucregs = syscon_regmap_lookup_by_phandle(node, "syscon");
+ 	if (IS_ERR(ucregs)) {
+ 		pr_err("%pOF: unable to map UC registers\n", node);
+-		return PTR_ERR(ucregs);
++		ret = PTR_ERR(ucregs);
++		goto err_iounmap;
+ 	}
+ 	/* channel 1, regular IRQs */
+ 	regmap_write(ucregs, UC_IRQ_CONTROL, 1);
+@@ -98,7 +99,8 @@ static int __init digicolor_of_init(struct device_node *node,
+ 		irq_domain_add_linear(node, 64, &irq_generic_chip_ops, NULL);
+ 	if (!digicolor_irq_domain) {
+ 		pr_err("%pOF: unable to create IRQ domain\n", node);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_iounmap;
+ 	}
+ 
+ 	ret = irq_alloc_domain_generic_chips(digicolor_irq_domain, 32, 1,
+@@ -106,7 +108,7 @@ static int __init digicolor_of_init(struct device_node *node,
+ 					     clr, 0, 0);
+ 	if (ret) {
+ 		pr_err("%pOF: unable to allocate IRQ gc\n", node);
+-		return ret;
++		goto err_domain_remove;
+ 	}
+ 
+ 	digicolor_set_gc(reg_base, 0, IC_INT0ENABLE_LO, IC_FLAG_CLEAR_LO);
+@@ -115,5 +117,11 @@ static int __init digicolor_of_init(struct device_node *node,
+ 	set_handle_irq(digicolor_handle_irq);
+ 
+ 	return 0;
++
++err_domain_remove:
++	irq_domain_remove(digicolor_irq_domain);
++err_iounmap:
++	iounmap(reg_base);
++	return ret;
+ }
+ IRQCHIP_DECLARE(conexant_digicolor_ic, "cnxt,cx92755-ic", digicolor_of_init);
+-- 
+2.1.0
 
