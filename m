@@ -2,131 +2,141 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A87C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7D12073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593016636;
-	bh=EAQvVuKoFFR8by9QDcgCPxQQ6QeUaSzOqzGExTCodow=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KPSoESzsYA0rmUNqQpDXiorUOty9nn1NfgmrIvlXJtTrBp1bC6Ct2PDn2He11Esi8
-	 QBc1/fk09yeMDYf/3Xa3FvD2bbeKWSPupLpRVR7eCCcckCxqFC6L4U7tpH3YJ9X78N
-	 jNqd2cjTGaSQxxY0h7gJNfj31l5Rx67hT84Xdq0w=
+	by mail.kernel.org (Postfix) with ESMTP id DA4B72082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:38:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2pAbu44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404625AbgFXQhP (ORCPT
+        id S2404941AbgFXQi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42316 "EHLO
+        Wed, 24 Jun 2020 12:38:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404107AbgFXQhO (ORCPT
+        with ESMTP id S2404107AbgFXQi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:37:14 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496DDC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:37:14 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id c11so1620776lfh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:37:14 -0700 (PDT)
+        Wed, 24 Jun 2020 12:38:26 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3433C061573;
+        Wed, 24 Jun 2020 09:38:25 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d12so1272909ply.1;
+        Wed, 24 Jun 2020 09:38:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=62Xj7hKS4iEXybqtWTP7dnf8W0/FDnwKOHv5t4Clvfs=;
-        b=A9ZFAvp+DcDIrnvTU7ulPWhWIMO3wpzNjYwLVpIwktgIf91CDC5v94hx9IjsgdxhKe
-         ck2W2i/2sarX6PKxigSzQRGWCEorMt9AcZ6ZgA5tzNeH/lALioTZVQeUYVoYwxg1Hbzt
-         N5fF8GVFnnWgnj2iINWgizdaygBT4g2zP7QNg=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WjBSvIESIlBFwXybQQC+lA/YuWEUcT/s5uupLCvE9QQ=;
+        b=H2pAbu44bwW7Kbn0oKlERjuJJGpE98Q6Ix082Ul/bqmIuqYxdw4dP02XIRJG9uFD9R
+         hBUIaHpE0YT9sqRZyMcrH5pHDfciIPp6E71vEaJfW2arP6HQKO34Ax0UnZXJ2If5GM+5
+         Y1BOnh36LSfNuVwADNVBWC0ltbSe0AFmj+yPvUBeFMzDf29d1GPYPpHrLAS59C+heNmx
+         GMkWo9eT76G+F5eCOVi+I4IyHDMNfh6Q1PO0n2U1gw1RwiIKQo1As1MIQgS/QVpnUdWi
+         S9/7SOsvFFTpyn8oYT9CiMcCssZ1WxGnnYrv/nN/4mTbbuk9ZinmyCjWHfZqdoKdzDeH
+         3q+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=62Xj7hKS4iEXybqtWTP7dnf8W0/FDnwKOHv5t4Clvfs=;
-        b=bT/LzaJAKrbzrS+OPnK4vh2bm/JPewMjbgEu9B9/EASZ4nbpshlkKstpXbOILd/TTv
-         m0z2JWwenfcDZDV+6SLcYpSg8HL/Dix/70pnVqBIeDSrf2dO7XfiL48auUpJ55BMfsx3
-         vVQnhTKbcMsSzfU/8I72pkvD4zb+tcjBm/UyUEJjfjjTHelfHntPKfrynioWDh20P0Wg
-         u1KSyYAmH0nRoj9Q1LwYaB/4qg+ExbbfbyYfFfAQysCjtDQkpwKYnGrsyt6eFuWy902e
-         OiJ011o6/97YwZiCFYSWi2GrRyXquDJjm41N9Th4nepdiK7quuJCqX4A8TpNBuPdQp3Q
-         wKPQ==
-X-Gm-Message-State: AOAM533kPK1EHZm3dn5iF4zqJBDOh6nbmYwk76u9YZCynVjzuNyKb0Cz
-        MwSUQbAnXKhxim4BQIwEwOPWAp321Qg=
-X-Google-Smtp-Source: ABdhPJyGzhoZUiWoth20X4qiEP/xTOTQABOGug3J8Zxb0n6tAXSkhqvij9WxKNekjP9xBdHbalOSjg==
-X-Received: by 2002:a19:806:: with SMTP id 6mr15533418lfi.171.1593016632264;
-        Wed, 24 Jun 2020 09:37:12 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id v5sm4261869lji.73.2020.06.24.09.37.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 09:37:11 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id n23so3277461ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:37:11 -0700 (PDT)
-X-Received: by 2002:a2e:9b42:: with SMTP id o2mr385264ljj.102.1593016630687;
- Wed, 24 Jun 2020 09:37:10 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=WjBSvIESIlBFwXybQQC+lA/YuWEUcT/s5uupLCvE9QQ=;
+        b=EtFNwHOZbHNYYI980Wu4n96e84w7gGPcw+cDZVjhTZR3d6W2VJhHjs/uQ9imn7Gd4V
+         74Kki9i5X0kQzn/IJSY/R1nQVq+WFEYGxAJw6FwfTPN2jjGBAYwE3VKSjBygVZgG+up8
+         gM29DO1lbIhEE+nzy67oOqbxRU23cRkSf2B1d1y9mhwLkf2cxxyTMGHrPDgM1C9u8ucF
+         pNl/tUe0Druy+OtmLwlfTPx3CL6I4aC9sJmO01kEp0Aco6ngRizFfv9eHljwerddRPSW
+         Yz6RkqAMjOuYJpJo6N0cS+cKkf/xVZpbrZvx5TvKNZcxi2BYwPG/LGC6Dpvs5G/n0shm
+         3FCg==
+X-Gm-Message-State: AOAM530Tpn45CfQLsDQRcoKb3G8+EzlePVsvWsYRbFbjHvMYTWmKhA6v
+        PSnG0/f8frye9fjjacbJKfmDqj2u
+X-Google-Smtp-Source: ABdhPJxbhilHC7OCkFvNZ12wGkdVygkLZHkXDUU/ZXdRSKmel5DBsxUd81gUaKqZ+XXqG8PzhDdCWw==
+X-Received: by 2002:a17:90a:d809:: with SMTP id a9mr30783941pjv.212.1593016705408;
+        Wed, 24 Jun 2020 09:38:25 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h13sm20493323pfk.25.2020.06.24.09.38.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jun 2020 09:38:24 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 09:38:23 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chu Lin <linchuyuan@google.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        Jason Ling <jasonling@google.com>,
+        Kais Belgaied <belgaied@google.com>,
+        Zhongqi Li <zhongqil@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon:max6697: Make sure the OVERT mask is set correctly
+Message-ID: <20200624163823.GA215518@roeck-us.net>
 MIME-Version: 1.0
-References: <20200624161142.GA12184@redhat.com> <20200624162042.GA12238@redhat.com>
-In-Reply-To: <20200624162042.GA12238@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 24 Jun 2020 09:36:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
-Message-ID: <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
-Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss wakeup?
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>, Davidlohr Bueso <dave@stgolabs.net>,
-        Andi Kleen <ak@linux.intel.com>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 9:20 AM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> If T1 is killed it is TASK_RUNNING, try_to_wake_up() should return 0.
+On Tue, Jun 23, 2020 at 10:13:08PM +0000, Chu Lin wrote:
+> Per the datasheet for max6697, OVERT mask and ALERT mask is different.
+> For example, the 7th bit of OVERT is the local channel but for alert
+> mask, the 6th bit is the local channel. Therefore, we can't apply the
+> same mask for both reg. In addition to that, max6697 driver is suppose
+> to be compatibale with different models. I mannually went over all the
+> listed chip and made sure all the chip type has the same layout.
+> 
+> Testing;
+>     mask value of 0x9 should map to 0x44 for ALERT and 0x84 for OVERT.
+> I used iotool to read the reg value back to verify. I only tested this
+> change on max6581
+> 
+> Reference:
+> https://datasheets.maximintegrated.com/en/ds/MAX6581.pdf
+> https://datasheets.maximintegrated.com/en/ds/MAX6697.pdf
+> https://datasheets.maximintegrated.com/en/ds/MAX6699.pdf
+> 
+> Signed-off-by: Chu Lin <linchuyuan@google.com>
 
-Hmm. I already acknowledge your bug, but yeah, this is subtle.
+Nice catch.
 
-But I think the bug still exists.
+Applied, thanks
 
-So the requirement is:
+Guenter
 
- - bit_is_set returns false so we don't call io_schedule: we're still
-TASK_KILLABLE
-
- - somebody else gets the lock, so the test_and_set_bit_lock() fails
-
- - that somebody else releases the lock almost immediately, and wakes
-us up because we're still on the wait-queue (and still TASK_KILLABLE,
-not TASK_RUNNING)
-
- - another party sends us a SIGKILL
-
- - we see the signal_pending_state() and exit
-
- - we've now been woken up, but didn't wake anybody else up, and the
-lock is released but there may be waiters who came in at the same time
-and never saw the wakeup.
-
-I think this is basically impossible to hit in practice, but it does
-look like a real bug.
-
-Maybe I'm missing something. This code is subtle.
-
-But as mentioned, I _think_ the real problem is that "don't do
-io_schedule()" optimization, because that's the thing that means that
-we can miss the wakeup.
-
-If we only had a single "test_and_set_bit_lock()" thing, we'd be ok.
-Either we got the lock or we didn't, and if we didn't we'd schedule
-and re-try, and we'd never have the race between testing signals and
-bits while we're "sleeping" and can be woken up and try_to_wake_up()
-thought we took it.
-
-                Linus
+> ---
+>  drivers/hwmon/max6697.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/max6697.c b/drivers/hwmon/max6697.c
+> index 743752a2467a..64122eb38060 100644
+> --- a/drivers/hwmon/max6697.c
+> +++ b/drivers/hwmon/max6697.c
+> @@ -38,8 +38,9 @@ static const u8 MAX6697_REG_CRIT[] = {
+>   * Map device tree / platform data register bit map to chip bit map.
+>   * Applies to alert register and over-temperature register.
+>   */
+> -#define MAX6697_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
+> +#define MAX6697_ALERT_MAP_BITS(reg)	((((reg) & 0x7e) >> 1) | \
+>  				 (((reg) & 0x01) << 6) | ((reg) & 0x80))
+> +#define MAX6697_OVERT_MAP_BITS(reg) (((reg) >> 1) | (((reg) & 0x01) << 7))
+>  
+>  #define MAX6697_REG_STAT(n)		(0x44 + (n))
+>  
+> @@ -562,12 +563,12 @@ static int max6697_init_chip(struct max6697_data *data,
+>  		return ret;
+>  
+>  	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_ALERT_MASK,
+> -					MAX6697_MAP_BITS(pdata->alert_mask));
+> +				MAX6697_ALERT_MAP_BITS(pdata->alert_mask));
+>  	if (ret < 0)
+>  		return ret;
+>  
+>  	ret = i2c_smbus_write_byte_data(client, MAX6697_REG_OVERT_MASK,
+> -				MAX6697_MAP_BITS(pdata->over_temperature_mask));
+> +			MAX6697_OVERT_MAP_BITS(pdata->over_temperature_mask));
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -- 
+> 2.27.0.111.gc72c7da667-goog
+> 
