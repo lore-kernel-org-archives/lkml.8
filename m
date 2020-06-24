@@ -2,85 +2,122 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E29AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B2F20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592999672;
-	bh=4Kz40kxtuYw6HyJAzgomtBa4kIuyPe7+H+RuU6G51Ls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mGdsdU/0DFRhRlQYUo2GH88LKWCPUlAAu5l20uyiu0CTRc66MxtnD3fpCPXgxFVSA
-	 SMjINKWn8Zir2+MLqHIJVpD3uP+0PEr4CJ6ip/NJUiGoiWQIf+g7N0hMGtxpmb7KK8
-	 avjUXi9/3BM86BCYQhpDCzpC4K0kfYNtyxArZicw=
+	by mail.kernel.org (Postfix) with ESMTP id 201C020B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403820AbgFXLya (ORCPT
+        id S2403833AbgFXLzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:54:30 -0400
-Received: from mail-ej1-f45.google.com ([209.85.218.45]:37971 "EHLO
-        mail-ej1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403776AbgFXLyZ (ORCPT
+        Wed, 24 Jun 2020 07:55:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59042 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403776AbgFXLzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:54:25 -0400
-Received: by mail-ej1-f45.google.com with SMTP id w16so2168054ejj.5;
-        Wed, 24 Jun 2020 04:54:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ufsL1RSHA0Qgz7G5/lHH40o6RzNzgQ4/McWZWanPBsY=;
-        b=Fg7OZxm087+vNsfLY5urGBRXysy6moHFaVEtbAvms/H1VBzoefwpVOOIVcWkNP+OGH
-         92lzC1cfAQlpUicXO+sOEmEYQr+z0egzUvPyKOi5gnuJt51LTMN/1taNT3FLiU4r+LPr
-         SnJOdjPuINkMWyWf0JjvNoInvms9EQxR7/V+Egl7WqAHdzEFQt4ghjJh4V0O3vFRdVdy
-         XXj1smbzRoX/wobem0uD7EJSfnO0g8Zhp+FjldEqg082VFkhk7RpDghMSwAgNugGj0mZ
-         BvRv8XtdRbxEdT5s3PRmlfV6PgwjZqpeA8WxzGs5ni9+3+NFmwiEEc0CHHPuoWp+AaW+
-         ZswA==
-X-Gm-Message-State: AOAM530s6WDrXtTLceJ9CQdN+IkMWoxF3LwpWr0Gzx+gE1UjNvFgnqFU
-        m3yX7WkqdSVLZ0dkMZhQZLs=
-X-Google-Smtp-Source: ABdhPJxZdMjAfmb/JyEFCVwoJTo0S1v0Zs4pAvQ4nQtg9i0282GzbVAxxPadw/CghDQJQ1NdFjPSGQ==
-X-Received: by 2002:a17:906:4045:: with SMTP id y5mr15995409ejj.261.1592999662614;
-        Wed, 24 Jun 2020 04:54:22 -0700 (PDT)
-Received: from pi3 ([194.230.155.235])
-        by smtp.googlemail.com with ESMTPSA id n16sm6577049ejo.54.2020.06.24.04.54.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 04:54:21 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:54:19 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Jonathan Bakker <xc-racer2@live.ca>, kyungmin.park@samsung.com,
-        s.nawrocki@samsung.com, mchehab@kernel.org, kgene@kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH 00/11] media: exynos4-is: Improve support for s5pv210 and
- parallel ports
-Message-ID: <20200624115419.GA20764@pi3>
-References: <BN6PR04MB06602E7221CC7455F3142540A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <07fb9000-ae00-efcd-e91a-48765ff3d4bf@xs4all.nl>
+        Wed, 24 Jun 2020 07:55:01 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jo3zV-0001JU-Me; Wed, 24 Jun 2020 11:54:57 +0000
+Date:   Wed, 24 Jun 2020 13:54:56 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org,
+        systemd-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 2/3] nsproxy: attach to namespaces via pidfds
+Message-ID: <20200624115456.rvzlgn77jol2a2oc@wittgenstein>
+References: <20200505140432.181565-1-christian.brauner@ubuntu.com>
+ <20200505140432.181565-3-christian.brauner@ubuntu.com>
+ <20200624114437.GA117125@blackbook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <07fb9000-ae00-efcd-e91a-48765ff3d4bf@xs4all.nl>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624114437.GA117125@blackbook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:39:50PM +0200, Hans Verkuil wrote:
-> Can someone from Samsung or someone who knows this SoC take a look at this series?
+On Wed, Jun 24, 2020 at 01:44:37PM +0200, Michal Koutný wrote:
+> Hi.
 > 
-> This series looks sane to me, so I'll probably merge this if nobody replies
-> in the next two weeks or so.
+> On Tue, May 05, 2020 at 04:04:31PM +0200, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > -SYSCALL_DEFINE2(setns, int, fd, int, nstype)
+> > +SYSCALL_DEFINE2(setns, int, fd, int, flags)
+> > [...]
+> > -	file = proc_ns_fget(fd);
+> > -	if (IS_ERR(file))
+> > -		return PTR_ERR(file);
+> > +	int err = 0;
+> >  
+> > -	err = -EINVAL;
+> > -	ns = get_proc_ns(file_inode(file));
+> > -	if (nstype && (ns->ops->type != nstype))
+> > +	file = fget(fd);
+> > +	if (!file)
+> > +		return -EBADF;
+> > +
+> > +	if (proc_ns_file(file)) {
+> > +		ns = get_proc_ns(file_inode(file));
+> > +		if (flags && (ns->ops->type != flags))
+> > +			err = -EINVAL;
+> > +		flags = ns->ops->type;
+> > +	} else if (pidfd_pid(file)) {
+> > +		err = check_setns_flags(flags);
+> > +	} else {
+> > +		err = -EBADF;
+> > +	}
+> > +	if (err)
+> >  		goto out;
+> >  
+> > -	err = prepare_nsset(ns->ops->type, &nsset);
+> > +	err = prepare_nsset(flags, &nsset);
+> >  	if (err)
+> >  		goto out;
+> This modification changed the returned error when a valid file
+> descriptor is passed but it doesn't represent a namespace (nor pidfd).
+> The error is now EBADF although originally and per man page it
+> was/should be EINVAL.
+> 
+> A change like below would restore it, however, I see it may be less
+> consistent with other pidfd calls(?), then I'd suggest updating the
+> manpage to capture this.
+> 
+> --- a/kernel/nsproxy.c
+> +++ b/kernel/nsproxy.c
+> @@ -531,7 +531,7 @@ SYSCALL_DEFINE2(setns, int, fd, int, flags)
+>         } else if (!IS_ERR(pidfd_pid(file))) {
+>                 err = check_setns_flags(flags);
+>         } else {
+> -               err = -EBADF;
+> +               err = -EINVAL;
+>         }
+>         if (err)
+>                 goto out;
+> 
+> I noticed this breaks systemd self tests [1].
 
-Unfortunately I don't know the media part on S5Pv210 at all so I cannot
-provide any feedback. There are not many active users of these SoCs
-nowadays. One of hem is Jonathan, so if he wants to change something he will
-mostly break/affect his own setup. :) Therefore I think it is safe to merge.
+Yep, I already have a fix for this in my tree based on a previous report
+from LTP. It's sitting in linux-next:
+https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=e571d4ee334719727f22cce30c4c74471d4ef68a
+with selftests:
+https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=fixes&id=86f56395feb2b106b125c47e72192e37da5dd088
 
-Best regards,
-Krzysztof
+I'll send it to Linus this week.
+
+Thanks!
+Christian
