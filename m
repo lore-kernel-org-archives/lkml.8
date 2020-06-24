@@ -2,116 +2,106 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C397AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD03206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A6D20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aSZwJ24D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDWmm+sf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404310AbgFXPIi (ORCPT
+        id S2404398AbgFXPI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:08:38 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57014 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390817AbgFXPIh (ORCPT
+        Wed, 24 Jun 2020 11:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390817AbgFXPI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:08:37 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OEt93L010328;
-        Wed, 24 Jun 2020 17:08:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=Cu4nJcdjPPiXb+n9YzK3G3D0pd94rG3fyGCZHC0HXdU=;
- b=aSZwJ24DpUjFZhrkHkWOa1/MEMhBLZcaESz0n0A0LYGLkrYGTtSp9nsVZO2Zq5S6PIAl
- tqyrFHJLTI36HFsQznZsq+/mZJsV9vm1dEAXPnj+DAfSGOgGLVV2i/YHxDziQS3ue1tE
- 2/tBAfSPPmTt8M9h+ZooVyP2dMpLGA77//FaQUcCfbrScsb8Gfl5UqARSf53mcOOBnTc
- 4fpceT1xIVdROqbFzg8+I/ARBnBjO/URtsh+eWKHnA2+lH9FAGlTDy8xc5rlURMYtRvl
- +QV8ngb4Q1NIk8Ggm769qCmWH/CzS5oAukuCKd3EZN/WS1D+tSnOH72+DR8Z0c8cBsjo LQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31uuuccr50-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 17:08:24 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7F47710002A;
-        Wed, 24 Jun 2020 17:08:22 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF46520D8D2;
-        Wed, 24 Jun 2020 17:08:22 +0200 (CEST)
-Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 24 Jun
- 2020 17:08:22 +0200
-Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
- SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
- 15.00.1473.003; Wed, 24 Jun 2020 17:08:22 +0200
-From:   Yannick FERTRE <yannick.fertre@st.com>
-To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH] drm/bridge: dw-mipi-dsi.c: remove unused header file
-Thread-Topic: [PATCH] drm/bridge: dw-mipi-dsi.c: remove unused header file
-Thread-Index: AQHWCbwe7FvpTwh4cUii/3igo3RUm6joPZmA
-Date:   Wed, 24 Jun 2020 15:08:22 +0000
-Message-ID: <669d5484-b1e5-dd5c-b4e5-f3b5a8b436b4@st.com>
-References: <171ff1fb3918664a570dc8f2f34b446612505f76.1585832665.git.angelo.ribeiro@synopsys.com>
-In-Reply-To: <171ff1fb3918664a570dc8f2f34b446612505f76.1585832665.git.angelo.ribeiro@synopsys.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4F4842D5A8AC36458A785A495C391551@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Jun 2020 11:08:58 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68613C061573;
+        Wed, 24 Jun 2020 08:08:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q19so2963585lji.2;
+        Wed, 24 Jun 2020 08:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OJu1Q0OHeIZeVEh+ckAdP5ZEp1YytGAeyJAi+Zqho8o=;
+        b=TDWmm+sfBmEAHIhAD02JMvmJrggOBK77LVf6ttg1uMpkQdgH3FO0cT95zb8WwaQwTY
+         x4wH+pcwf/tAQ0xOXg46gDjlozBqMfiBYY/iEnoMLwd4w6UJYHCr6z8eL1d9W+y6e85k
+         5qg1ferl6r/GRDevW4sjloXzJI5ewMwM+QlytNusMfAIQB0CEdmYp0G7KOzSW5Ed0FXT
+         IWW1Qwb5EDhWKq0M+ZTh9ppYeDK+xIyumu4u1GfUqXzvVtu+6xGAWEVvFZIiiHe2AyQ6
+         FTX8AS2PiEMgI+c9BFDDXyeU/auyjMNU8oN2KqRZ6ihAGdiGrPZhYB7zPxxT+NBGpIum
+         mQ6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OJu1Q0OHeIZeVEh+ckAdP5ZEp1YytGAeyJAi+Zqho8o=;
+        b=oMQ7PiKgbjujSRTMKrSAscpxT78vBnxp+z3q086qszlsTerDO6vjrLA8sQJX3cLv79
+         xO5ZSU4u3I5IQTJ86wKSRMKUsLaYfcH7so3qXfN5AQ5bSIY1P0WjyUvTcbvoWce3g+Uq
+         myuaS1EGieUAowTzUFifPzSM3b+QOOE2lQH0lKXLr7WubYSiV1umZ4ip2JvDPqPat0+m
+         1aRyVn2Zze/RQP1NIyOJGl6f+u0fsj967sBgU7PIwBPMoznOBpujWWhSAhoR0WFPSZhe
+         J0G1UPr0dMmb+aU3opFy90t0Sf0WGnycvCtifuqqAkwKgfC6dJ1ypx0MMXl+tRtFUMCD
+         hP8Q==
+X-Gm-Message-State: AOAM531dhU5+YtdhCIOPaG8eIHtVDtcYoBOPcHp28k0mK6e6Glg4dwxb
+        zekzPVsE8ypGEsfW7BMXv5Y=
+X-Google-Smtp-Source: ABdhPJziT+8B80my7R9pbnPEEhLTjHgFhdsFgVB2yEpHxvGMDM9iqS0l4bcw31+Nyzs3kOiL43/4rg==
+X-Received: by 2002:a2e:4b12:: with SMTP id y18mr12711346lja.117.1593011335949;
+        Wed, 24 Jun 2020 08:08:55 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id z1sm4182049lja.47.2020.06.24.08.08.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:08:55 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] Tegra Video Decoder driver power management corrections
+Date:   Wed, 24 Jun 2020 18:08:43 +0300
+Message-Id: <20200624150847.22672-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-24_08:2020-06-24,2020-06-24 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQW5nZWxvLA0KdGhhbmsgZm9yIHBhdGNoLg0KDQpSZXZpZXdlZC1ieTogWWFubmljayBG
-ZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCg0KDQoNCk9uIDQvMy8yMCAzOjMwIFBNLCBB
-bmdlbG8gUmliZWlybyB3cm90ZToNCj4gZHctbWlwaS1kc2kgZG9lcyBub3QgdXNlIGFueSBkZWZp
-bml0aW9uIGZyb20gZHJtX3Byb2JlX2hlbHBlci4NCj4gDQo+IENvdmVyaXR5IG91dHB1dDoNCj4g
-RXZlbnQgdW5uZWNlc3NhcnlfaGVhZGVyOg0KPiBJbmNsdWRpbmcgLi4uL2luY2x1ZGUvZHJtL2Ry
-bV9wcm9iZV9oZWxwZXIuaCBkb2VzIG5vdCBwcm92aWRlIGFueQ0KPiBuZWVkZWQgc3ltYm9scy4N
-Cj4gDQo+IENjOiBHdXN0YXZvIFBpbWVudGVsIDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNv
-bT4NCj4gQ2M6IEpvYW8gUGludG8gPGpwaW50b0BzeW5vcHN5cy5jb20+DQo+IENjOiBKb3NlIEFi
-cmV1IDxqb3NlLmFicmV1QHN5bm9wc3lzLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogQW5nZWxvIFJp
-YmVpcm8gPGFuZ2Vsby5yaWJlaXJvQHN5bm9wc3lzLmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIHwgMSAtDQo+ICAgMSBmaWxlIGNo
-YW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5
-bm9wc3lzL2R3LW1pcGktZHNpLmMNCj4gaW5kZXggMDI0YWNhZC4uNTgyNjM1ZCAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jDQo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYw0KPiBAQCAt
-MjcsNyArMjcsNiBAQA0KPiAgICNpbmNsdWRlIDxkcm0vZHJtX21vZGVzLmg+DQo+ICAgI2luY2x1
-ZGUgPGRybS9kcm1fb2YuaD4NCj4gICAjaW5jbHVkZSA8ZHJtL2RybV9wcmludC5oPg0KPiAtI2lu
-Y2x1ZGUgPGRybS9kcm1fcHJvYmVfaGVscGVyLmg+DQo+ICAgDQo+ICAgI2RlZmluZSBIV1ZFUl8x
-MzEJCQkweDMxMzMzMTAwCS8qIElQIHZlcnNpb24gMS4zMSAqLw0KPiAgIA0KPiA=
+Hello,
+
+This small series addresses a Runtime PM issue that was discovered during
+of Tegra VI driver reviewing by balancing RPM usage count on RPM resume
+failure. Secondly it fixes reboot on some Tegra devices due to bootloader
+expecting VDE power partition to be ON at the boot time, which wasn't
+happening in case of a warm re-booting (i.e. by PMC resetting).
+
+Changelog:
+
+v2: - Extended the commit's message of the "Balance runtime PM use-count on
+      resume failure" patch.
+
+    - Re-send for 5.9 inclusion.
+
+Dmitry Osipenko (4):
+  media: staging: tegra-vde: Balance runtime PM use-count on resume
+    failure
+  media: staging: tegra-vde: Runtime PM is always available on Tegra
+  media: staging: tegra-vde: Turn ON power domain on shutdown
+  media: staging: tegra-vde: Power-cycle hardware on probe
+
+ drivers/staging/media/tegra-vde/vde.c | 45 +++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 16 deletions(-)
+
+-- 
+2.26.0
+
