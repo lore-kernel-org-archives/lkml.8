@@ -2,73 +2,70 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6845C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9352C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9EF20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B54D2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWjR63Oa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDOefWcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405267AbgFXQwP (ORCPT
+        id S2405214AbgFXQvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44608 "EHLO
+        Wed, 24 Jun 2020 12:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404017AbgFXQvy (ORCPT
+        with ESMTP id S2404870AbgFXQvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:51:54 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C785FC0613ED;
-        Wed, 24 Jun 2020 09:51:52 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 22so2971588wmg.1;
-        Wed, 24 Jun 2020 09:51:52 -0700 (PDT)
+        Wed, 24 Jun 2020 12:51:50 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE2E1C061573;
+        Wed, 24 Jun 2020 09:51:49 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so2949568wrs.11;
+        Wed, 24 Jun 2020 09:51:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=SK/e5vP7M6ohq5nkty8Hp7ehFT7bTOqt8+HLXcuKNbU=;
-        b=NWjR63Oa5eenCo3FEW0tIQajmtVUOom0fwJQedcDSdHN6QNteFZCObuoLUxATpP2nm
-         y/QdIZ6MEF+luEyR9IyI9B4Ik2SAqakU5YUtfXde2+TiaGe0SL/uIurMbU7iO+eeR5GD
-         LTLynX9CBiqR0aojZJzXyY10jjIDQWA1q/ZDMDc+Bu3XdTX6NbCTKJ7ODKAZhbtkO3BX
-         5ec0YjLheYkdFINmLEH4XzVJ3zAC9tvsm4PDOyciWWjXCvNyRhSoM2JGJk9anoni88c4
-         ubihIt7/p7Sp57LRxt1/n7g9FcOq93heOSf+uJDEW1IsdSKr5BKP87ie61CAzgMMCeon
-         bf4w==
+        bh=nM2coQx7hoysPBegeDWFljq+2PbJajIfawopODzY7HY=;
+        b=QDOefWcRSdTcVLuz57YrVXwp86RPEQjL9ojg7Dfb5qoAbejpNUE4RhStfS8SDTkEpe
+         Vi465cUzgzTjsjL+LIt9nsqhDq1T7/A8XaMZjzrMQqqKTK+zvaU612ttIVxOa3NZUMlV
+         tikYFlnVGX7QO1Tfj7KVqZSYPozYieOMthgYLJba9YkGdOXsH+jGpNb4pffhuFIceOzy
+         1gpD2SZMqxB4cA4K5Wor6Aeh8e6fQ/ombzLYGUtZBAoaA9YxcdxNDjttM1UOFEv29RZQ
+         qpUM2WDG6DH0u4hOAiMmyoIqduPXiRpzcAl8A2MAw+LP9pkqdcIy9gKAk6q7MNFwp8uw
+         tYwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SK/e5vP7M6ohq5nkty8Hp7ehFT7bTOqt8+HLXcuKNbU=;
-        b=gZQ/Z9296RQ/9+oktK6dJWp/Ia3MW1x3rTR1Y33rM/KScvdmuMy73iPiNG04M4sM9S
-         yo8nK0h5aZYeFOEoQpZ5cK+XQ/42ygpOOJg8VnfVS6ZOZUsgd/7vdXmr+fSgISyePhuS
-         uSFf3UrM+DqTr3tN8991C86tHAHQQsKzZt4ngr/ugZYM9coJGTj3fau6LG6hqH1f+DXF
-         mTh1mBX09GRunrARv5swOQ2VeOSTJKLJotGivBcVPWHxJ/h1aty7C+lGvSzsNucfHFJX
-         elkKDBsdFL4lRS45vkfFd9UkDSGWHkwHO3qDOOg7Bsw5KaWN3HX6cVVXl3QBl0KCR9ox
-         8ILw==
-X-Gm-Message-State: AOAM533pzpUiLP5wUsCOoAUaXmI0mUH+YRzk53lZwGrmEBSFLmT0Vsl9
-        EjYFB5sxfzOibHpCzdnib1Y=
-X-Google-Smtp-Source: ABdhPJzjoGAgCdgms0gyBzPVtelZ90wmSdC9lkBXCP8uhk4uONrUcYGH/VL1KIj0q728dJKxckhv2w==
-X-Received: by 2002:a1c:4989:: with SMTP id w131mr2124051wma.34.1593017511441;
-        Wed, 24 Jun 2020 09:51:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nM2coQx7hoysPBegeDWFljq+2PbJajIfawopODzY7HY=;
+        b=ZgFZiHFhB1e9IGhNZlY/cQ0Xs5BWv8OYzvSW+rkL5Wry8Ms0qwtx/zManpV+2Z/vfn
+         1cAwHctL+FCkZHVlklGLj84I44BD4itGGhIjtVAugfvxQ5Qa/tap2sZkL5dnL2j/T68w
+         4GiOpRrSQF+lfJI6iNmVcXAvndofzhDfixeIW0wVes/+H3CAcwdMMniRrSso0/0ob9X/
+         CruQVpn7atTKi+aChZK2xE8HQ9sSiWaX32BV2nmtqLxQofSSGzynsyH7q8eiw7EnzuF9
+         cu7EU9X753Dw/GzgT1qLRu86JT9pholoYOZFklBxoX1r2M56mWFtvbegMJUradzPOCo1
+         Py4Q==
+X-Gm-Message-State: AOAM533Nm8OsE3I2lBu0VYv3QAkUA74Zx2NiGttan+HQkjZNTC88gBXq
+        hPWW5kO9x2dVoZ8nLKBF0X1F2Sx4
+X-Google-Smtp-Source: ABdhPJyhQ6lSSJ5174IhjiBn/zN4r7Js4yfDcmKEZbGVPLkaGrI0M1b4bmY161qeoZ1KUvVyGEueag==
+X-Received: by 2002:a5d:6412:: with SMTP id z18mr30112920wru.310.1593017508365;
+        Wed, 24 Jun 2020 09:51:48 -0700 (PDT)
 Received: from localhost.localdomain ([5.100.193.85])
-        by smtp.gmail.com with ESMTPSA id z16sm18138182wrr.35.2020.06.24.09.51.50
+        by smtp.gmail.com with ESMTPSA id z16sm18138182wrr.35.2020.06.24.09.51.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 09:51:51 -0700 (PDT)
+        Wed, 24 Jun 2020 09:51:47 -0700 (PDT)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] io_uring: fix current->mm NULL dereference on exit
-Date:   Wed, 24 Jun 2020 19:50:08 +0300
-Message-Id: <c57f2702db6a13acc194b20a34bdef06eafcc00f.1593016907.git.asml.silence@gmail.com>
+Subject: [PATCH 0/3] iopoll fixes
+Date:   Wed, 24 Jun 2020 19:50:06 +0300
+Message-Id: <cover.1593016907.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1593016907.git.asml.silence@gmail.com>
-References: <cover.1593016907.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,72 +73,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't reissue requests from io_iopoll_reap_events(), the task may not
-have mm, which ends up with NULL. It's better to kill everything off on
-exit anyway.
+Did more comprehensive iopoll testing and found some more problems.
 
-[  677.734670] RIP: 0010:io_iopoll_complete+0x27e/0x630
-...
-[  677.734679] Call Trace:
-[  677.734695]  ? __send_signal+0x1f2/0x420
-[  677.734698]  ? _raw_spin_unlock_irqrestore+0x24/0x40
-[  677.734699]  ? send_signal+0xf5/0x140
-[  677.734700]  io_iopoll_getevents+0x12f/0x1a0
-[  677.734702]  io_iopoll_reap_events.part.0+0x5e/0xa0
-[  677.734703]  io_ring_ctx_wait_and_kill+0x132/0x1c0
-[  677.734704]  io_uring_release+0x20/0x30
-[  677.734706]  __fput+0xcd/0x230
-[  677.734707]  ____fput+0xe/0x10
-[  677.734709]  task_work_run+0x67/0xa0
-[  677.734710]  do_exit+0x35d/0xb70
-[  677.734712]  do_group_exit+0x43/0xa0
-[  677.734713]  get_signal+0x140/0x900
-[  677.734715]  do_signal+0x37/0x780
-[  677.734717]  ? enqueue_hrtimer+0x41/0xb0
-[  677.734718]  ? recalibrate_cpu_khz+0x10/0x10
-[  677.734720]  ? ktime_get+0x3e/0xa0
-[  677.734721]  ? lapic_next_deadline+0x26/0x30
-[  677.734723]  ? tick_program_event+0x4d/0x90
-[  677.734724]  ? __hrtimer_get_next_event+0x4d/0x80
-[  677.734726]  __prepare_exit_to_usermode+0x126/0x1c0
-[  677.734741]  prepare_exit_to_usermode+0x9/0x40
-[  677.734742]  idtentry_exit_cond_rcu+0x4c/0x60
-[  677.734743]  sysvec_reschedule_ipi+0x92/0x160
-[  677.734744]  ? asm_sysvec_reschedule_ipi+0xa/0x20
-[  677.734745]  asm_sysvec_reschedule_ipi+0x12/0x20
+[1] is from the previous series. Actually, v2 for this one, addressing
+the double-reissue bug found by Jens. It maybe not as efficient, but
+simple and easy to backport.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+[2,3] current->mm NULL deref
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index fb88a537f471..578ec2e39712 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -884,6 +884,7 @@ enum io_mem_account {
- 	ACCT_PINNED,
- };
- 
-+static void io_complete_rw_common(struct kiocb *kiocb, long res);
- static void io_wq_submit_work(struct io_wq_work **workptr);
- static void io_cqring_fill_event(struct io_kiocb *req, long res);
- static void io_put_req(struct io_kiocb *req);
-@@ -1756,6 +1757,14 @@ static void io_iopoll_queue(struct list_head *again)
- 	do {
- 		req = list_first_entry(again, struct io_kiocb, list);
- 		list_del(&req->list);
-+
-+		/* shouldn't happen unless io_uring is dying, cancel reqs */
-+		if (unlikely(!current->mm)) {
-+			io_complete_rw_common(&req->rw.kiocb, -EAGAIN);
-+			io_put_req(req);
-+			continue;
-+		}
-+
- 		refcount_inc(&req->refs);
- 		io_queue_async_work(req);
- 	} while (!list_empty(again));
+Pavel Begunkov (3):
+  io_uring: fix hanging iopoll in case of -EAGAIN
+  io_uring: fix current->mm NULL dereference on exit
+  io_uring: fix NULL-mm for linked reqs
+
+ fs/io_uring.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
+
 -- 
 2.24.0
 
