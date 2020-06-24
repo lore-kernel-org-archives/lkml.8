@@ -2,129 +2,110 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F81C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B759F20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B64720B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592999531;
+	bh=ckU0SB6EAkHjRga7NI2sunQSh/3vEnohN5m6AxLYtB4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QBor41/xOClwVCJch8KaZB/0rh3/eMloB5vZgYMj+LlQ3WO9F3KquQfCtoo2A2EYY
+	 ItfDeO8YlbSvGiAIM1SP0N/6JEsii6MOaGkjOne859KJfeLApRn+qIKAxqOA9GQrL+
+	 iUClic4MaOqmJ5TNaeguYFhmNgrBK+GAz4apSKWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403791AbgFXLwG (ORCPT
+        id S2403804AbgFXLwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:52:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:39384 "EHLO foss.arm.com"
+        Wed, 24 Jun 2020 07:52:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389075AbgFXLwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:52:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D881E1F1;
-        Wed, 24 Jun 2020 04:52:04 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FA4E3F6CF;
-        Wed, 24 Jun 2020 04:52:03 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 12:52:01 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Dave P Martin <Dave.Martin@arm.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
-Message-ID: <20200624115200.GA31575@gaia>
-References: <20200617123844.29960-1-steven.price@arm.com>
- <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
- <20200624093846.GA11863@gaia>
- <20200624103412.GD25945@arm.com>
- <faa68f22-4d8e-0290-b52a-63ae7425b988@arm.com>
- <20200624110904.GB11863@gaia>
- <904edac0-3de7-35a6-a9bc-b983ccd3490c@arm.com>
+        id S2403794AbgFXLwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:52:07 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0EC220857;
+        Wed, 24 Jun 2020 11:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592999526;
+        bh=ckU0SB6EAkHjRga7NI2sunQSh/3vEnohN5m6AxLYtB4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=M0tybKRM3p/3jC/ZQNANbwlhQUEDDfPjouRzfIRTZxRWLsVM9CNh3jkxFpGVxgE7g
+         jHkjvsftEczEcXcXJHqKLkWHEhmwGFQOBPfTpDCMnvYdBNhRbwytPGfhmvRM+lgYz8
+         Tiw/YACOzbVnfwOoecK3gbakMBWm66mPQyuuFZOk=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jo3wj-0062oL-BH; Wed, 24 Jun 2020 12:52:05 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <904edac0-3de7-35a6-a9bc-b983ccd3490c@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 24 Jun 2020 12:52:05 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
+In-Reply-To: <73b80d45-1300-4dc3-a0d6-2333b79743b2@loongson.cn>
+References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
+ <e419a2acea6c1977eaef5d049d607749@kernel.org>
+ <a10e0f68-7de8-8540-f27e-17fd52216977@loongson.cn>
+ <73b80d45-1300-4dc3-a0d6-2333b79743b2@loongson.cn>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <87817a29a1e2b0ca580108ffb86e1d05@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yangtiezhu@loongson.cn, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, lixuefeng@loongson.cn
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 12:18:46PM +0100, Steven Price wrote:
-> On 24/06/2020 12:09, Catalin Marinas wrote:
-> > On Wed, Jun 24, 2020 at 12:03:35PM +0100, Steven Price wrote:
-> > > On 24/06/2020 11:34, Dave Martin wrote:
-> > > > On Wed, Jun 24, 2020 at 10:38:48AM +0100, Catalin Marinas wrote:
-> > > > > On Tue, Jun 23, 2020 at 07:05:07PM +0100, Peter Maydell wrote:
-> > > > > > On Wed, 17 Jun 2020 at 13:39, Steven Price <steven.price@arm.com> wrote:
-> > > > > > > These patches add support to KVM to enable MTE within a guest. It is
-> > > > > > > based on Catalin's v4 MTE user space series[1].
-> > > > > > > 
-> > > > > > > [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
-> > > > > > > 
-> > > > > > > Posting as an RFC as I'd like feedback on the approach taken.
-> > > > > > 
-> > > > > > What's your plan for handling tags across VM migration?
-> > > > > > Will the kernel expose the tag ram to userspace so we
-> > > > > > can copy it from the source machine to the destination
-> > > > > > at the same time as we copy the actual ram contents ?
-> > > > > 
-> > > > > Qemu can map the guest memory with PROT_MTE and access the tags directly
-> > > > > with LDG/STG instructions. Steven was actually asking in the cover
-> > > > > letter whether we should require that the VMM maps the guest memory with
-> > > > > PROT_MTE as a guarantee that it can access the guest tags.
-> > > > > 
-> > > > > There is no architecturally visible tag ram (tag storage), that's a
-> > > > > microarchitecture detail.
-> > > > 
-> > > > If userspace maps the guest memory with PROT_MTE for dump purposes,
-> > > > isn't it going to get tag check faults when accessing the memory
-> > > > (i.e., when dumping the regular memory content, not the tags
-> > > > specifically).
-> > > > 
-> > > > Does it need to map two aliases, one with PROT_MTE and one without,
-> > > > and is that architecturally valid?
-> > > 
-> > > Userspace would either need to have two mappings (I don't believe there are
-> > > any architectural issues with that - but this could be awkward to arrange in
-> > > some situations) or be careful to avoid faults. Basically your choices with
-> > > one mapping are:
-> > > 
-> > >   1. Disable tag checking (using prctl) when touching the memory. This works
-> > > but means you lose tag checking for the VMM's own accesses during this code
-> > > sequence.
-> > > 
-> > >   2. Read the tag values and ensure you use the correct tag. This suffers
-> > > from race conditions if the VM is still running.
-> > > 
-> > >   3. Use one of the exceptions in the architecture that generates a Tag
-> > > Unchecked access. Sadly the only remotely useful thing I can see in the v8
-> > > ARM is "A base register plus immediate offset addressing form, with the SP
-> > > as the base register." - but making sure SP is in range of where you want to
-> > > access would be a pain.
-> > 
-> > Or:
-> > 
-> > 4. Set PSTATE.TCO when accessing tagged memory in an unsafe way.
+On 2020-06-24 12:48, Tiezhu Yang wrote:
+> On 06/24/2020 05:02 PM, Tiezhu Yang wrote:
+>> On 06/24/2020 04:30 PM, Marc Zyngier wrote:
+>>> On 2020-06-24 08:44, Tiezhu Yang wrote:
+>>>> [git send-email failed due to too many commands,
+>>>>  so only cc the major related email and resend it,
+>>>>  sorry for that]
+>>> 
+>>> This is becoming majorly annoying. Please fix your git setup
+>>> *before* dumping 57 emails for just 14 patches. You have done
+>>> the same thing yesterday, and I would hope you learned from your
+>>> mistakes.
+>>> 
+>>> Also, do not repost a series more than once per week. You have
+>>> already exceeded your quota by quite a margin.
+>> 
+>> I am very sorry for that.
+>> I will wait for some days to resend this patch series.
 > 
-> Ah yes, similar to (1) but much lower overhead ;) That's probably the best
-> option - it can be hidden in a memcpy_ignoring_tags() function. However it
-> still means that the VMM can't directly touch the guest's memory which might
-> cause issues for the VMM.
+> Hi Marc,
+> 
+> Since each patch of this series is independent, in order to avoid
+> git send-email failed, I prefer to resend each patch individually
+> and cc more related maintainer or supporter to review.
 
-You are right, I don't think it's safe for the VMM to access the guest
-memory via a PROT_MTE mapping. If the guest is using memory tagging for
-for a buffer and then it is passed to qemu for virtio, the tag
-information may have been lost already (does qemu only get the IPA in
-this case?)
+Don't do that. Just fix your GIT setup.
 
-So we may end up with two mappings after all, one for the normal
-execution and a new on if migration is needed.
+> If you do not mind, I will resend each patch individually next week.
+> Sorry for the noisy and inconvenience.
 
+They are perfectly fine as a series. As the person that will ultimately
+merge these patches, I don't want to go and fish individual patches,
+which is the best way to miss some.
+
+         M.
 -- 
-Catalin
+Jazz is not dead. It just smells funny...
