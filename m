@@ -2,72 +2,139 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B909C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8D12078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B113207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592979336;
+	bh=+2ifJ5qyTzzo8WHwSQDmoxhEJggCz1bEjLqjCJez3qY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SCGS2cWBZwfBcW0IEZrTpgGLFOn7XqA9tX1N0mIFEDmGa6iQQF/ZgLh3rlI5ZnCRQ
+	 +mbUK7zSfwAuvB+LbUTrelDChCPIcHiNcmvFTvygHsK89w1aRbPOgZybmyk7lrHmEs
+	 e0aoNBO8Taa/zNYj/bQMV9idQDLbdTJALZF4rkPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389081AbgFXGO0 (ORCPT
+        id S2389091AbgFXGPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:14:26 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:8768 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387817AbgFXGOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:14:25 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Wed, 24 Jun 2020 14:14:14
- +0800 (GMT+08:00)
-X-Originating-IP: [210.32.144.65]
-Date:   Wed, 24 Jun 2020 14:14:14 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Stanimir Varbanov" <stanimir.varbanov@linaro.org>
-Cc:     kjlu@umn.edu, "Andy Gross" <agross@kernel.org>,
-        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] media: venus: vdec: Fix runtime PM imbalance in
- vdec_open
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <5d88210d-db4c-e171-5d4b-5dffe22d4d48@linaro.org>
-References: <20200522111357.2613-1-dinghao.liu@zju.edu.cn>
- <5d88210d-db4c-e171-5d4b-5dffe22d4d48@linaro.org>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Wed, 24 Jun 2020 02:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387817AbgFXGPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:15:35 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 225022078A;
+        Wed, 24 Jun 2020 06:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592979334;
+        bh=+2ifJ5qyTzzo8WHwSQDmoxhEJggCz1bEjLqjCJez3qY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k8BvXRazexy8f25Y8p2nmzQZmuOsD1OjLnJBHPxcjmfE7/O/5MKS5PNKZGZ7yMwsA
+         AWxbO/39muxLIQGZCjTOnM+4OD/lCYDGEJGyTAuk/ypdloPBdZAj1SJYTSb5tOm5t3
+         Gn1lrqsTL6R4nCXa9PxgNPU6/qd0L14eOk8ZYvbc=
+Date:   Wed, 24 Jun 2020 11:45:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     andre.przywara@arm.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, dan.j.williams@intel.com,
+        cristian.ciocaltea@gmail.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
+ engine
+Message-ID: <20200624061529.GF2324254@vkoul-mobl>
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
 MIME-Version: 1.0
-Message-ID: <516b94f.24c29.172e4f66de8.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgBXwng27_Jekt81AQ--.45803W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUBBlZdtOzhLwABsc
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXIS07vEb7Iv0x
-        C_JF4lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8AwCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RhbmltaXIsCgo+IAo+IFRoaXMgcGF0Y2ggaXMgbm90IGFwcGxpY2FibGUgYW55bW9yZSBh
-ZnRlciBbMV0uCj4gCj4gWzFdIDYzMzQyYWZlYTY1ZSAoIm1lZGlhOiB2ZW51czogdmRlYzogVXNl
-IHBtcnVudGltZSBhdXRvc3VzcGVuZCIpCj4gCgpTaW5jZSBwbV9ydW50aW1lX2dldF9zeW5jKCkg
-aGFzIGJlZW4gcmVtb3ZlZCBmcm9tIHZkZWNfb3BlbigpLCAKdGhpcyBwYXRjaCBpcyBubyBsb25n
-ZXIgbmVlZGVkLgoKUmVnYXJkcywKRGluZ2hhbw==
+Hi Amit,
+
+On 09-06-20, 15:47, Amit Singh Tomar wrote:
+
+> @@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>  				  struct dma_slave_config *sconfig,
+>  				  bool is_cyclic)
+>  {
+> +	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
+>  	u32 mode, ctrlb;
+>  
+>  	mode = OWL_DMA_MODE_PW(0);
+> @@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>  	lli->hw[OWL_DMADESC_DADDR] = dst;
+>  	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
+>  	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
+> -	/*
+> -	 * Word starts from offset 0xC is shared between frame length
+> -	 * (max frame length is 1MB) and frame count, where first 20
+> -	 * bits are for frame length and rest of 12 bits are for frame
+> -	 * count.
+> -	 */
+> -	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+> -	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+> +
+> +	if (od->devid == S700_DMA) {
+> +		/* Max frame length is 1MB */
+> +		lli->hw[OWL_DMADESC_FLEN] = len;
+> +		/*
+> +		 * On S700, word starts from offset 0x1C is shared between
+> +		 * frame count and ctrlb, where first 12 bits are for frame
+> +		 * count and rest of 20 bits are for ctrlb.
+> +		 */
+> +		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
+> +	} else {
+> +		/*
+> +		 * On S900, word starts from offset 0xC is shared between
+> +		 * frame length (max frame length is 1MB) and frame count,
+> +		 * where first 20 bits are for frame length and rest of
+> +		 * 12 bits are for frame count.
+> +		 */
+> +		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+> +		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+
+Unfortunately this wont scale, we will keep adding new conditions for
+newer SoC's! So rather than this why not encode max frame length in
+driver_data rather than S900_DMA/S700_DMA.. In future one can add values
+for newer SoC and not code above logic again.
+
+> +static const struct of_device_id owl_dma_match[] = {
+> +	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
+> +	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
+
+Is the .compatible documented, Documentation patch should come before
+the driver use patch in a series
+
+>  static int owl_dma_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+>  	struct owl_dma *od;
+>  	int ret, i, nr_channels, nr_requests;
+> +	const struct of_device_id *of_id =
+> +				of_match_device(owl_dma_match, &pdev->dev);
+
+You care about driver_data rather than of_id, so using
+of_device_get_match_data() would be better..
+
+>  	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+>  	if (!od)
+> @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
+>  	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
+>  		 nr_channels, nr_requests);
+>  
+> +	od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
+
+Funny casts, I dont think you need uintptr_t!
+-- 
+~Vinod
