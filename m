@@ -2,157 +2,70 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D475C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B43852073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:58:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzQGKKjB"
+	by mail.kernel.org (Postfix) with ESMTP id 1A25520857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593017948;
+	bh=+QLzWa9R9qN9FxhHozL3Pq3dhOGQ4gOItfeEArrS5+s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IYFz7oTRe1N9cijbPZoLICBDBhQPe0JNbAFnfDMyCWe35Ehv7+WixID1SH73P0U0d
+	 zwJF7vIndaVh0UMdfLB7/O/9XhA9a4HrYa/q3HOrDJBvIJjCsG1ZxUWhQwSvkcD9OV
+	 Oj1bZPVhBd3xQ+SpQHehqUN+Ke90uhckZ0fUupRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405309AbgFXQ6f (ORCPT
+        id S2405323AbgFXQ7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404796AbgFXQ6e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:58:34 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075B4C061573;
-        Wed, 24 Jun 2020 09:58:34 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f18so3210967wml.3;
-        Wed, 24 Jun 2020 09:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2UyvtHsqWot1NDK5U0I1dkujPWgBcNc0l066O4UC3WU=;
-        b=QzQGKKjB2zrV1FB2V51Yt3V22mpPXhweNha+MvQDlcRbOsJNRG2Wk5JGhuUSwoFMPf
-         DMmfAgxK2J0WXI7xlIxNxBY4S3yc44P2r9rWd/qJfYQn8LUqKC2UhetZzphiN+wSTq/z
-         6ren5y5oTJDNaeFLuuHF8KofYYRiGpYMbhH4YHU9dce90/+rJpiBd1AGApLJ8ooRS79O
-         SPTZpgWUZrOWoQcdo/arhUnhNh4z0yJyLzcOD7XQVdzyBITgkefeIs9X/h/Om0MgCwbS
-         yvG4FAgEZ5qX1y30outPkQRsI5foQm1NeRsPgD73ku64d6GmGzzMFO+a63/btb/U/C2Q
-         9wDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2UyvtHsqWot1NDK5U0I1dkujPWgBcNc0l066O4UC3WU=;
-        b=eHnO7lEASsN2tjjZ3gpCi/A81tMn25EjCKeS6uSFvDioKAGhQGwvftHGcoQxe99A3R
-         4NKoW5y1zpSoMUj7XOjiuKCjCAWFm7lA/QqQGTEvORS1jd8sK4L9pFgQZd9PAiXP67Z8
-         usaDC3pfJcH0BKytx5izFzPeu7TfF0bezzJmEH4ECP/1dl30eWcKMoBDSyHFKdd6mRAm
-         mdb78C35OgvwsVtc4w1AgAyX5ySK2pCisK0/gGxyRQJIvBZpg3k5CUTe39Y5g4qE3KNC
-         0l3xXWDcPCvdha41EbV7BmnVglDXGIORRrEQFKGYLLGYUHnCBEZyqJtDQki1SAl/RzX1
-         dEkg==
-X-Gm-Message-State: AOAM532QGoP3RLvDXnS8VRKdRqaNVMITLwq8JBVGyyCcW+J0JrrICRAk
-        wSfCUHy8OA1AaO1K4WUxQWPjT8y8
-X-Google-Smtp-Source: ABdhPJzSwdqI/juqSfmw/8tO7p/3CHHnLcGUqCMfYg6R08O0A5vsCG9H3wPtUmsNQncTgAzC1zhEHQ==
-X-Received: by 2002:a05:600c:204d:: with SMTP id p13mr30334237wmg.88.1593017912508;
-        Wed, 24 Jun 2020 09:58:32 -0700 (PDT)
-Received: from [192.168.43.31] ([5.100.193.85])
-        by smtp.gmail.com with ESMTPSA id f186sm8569839wmf.29.2020.06.24.09.58.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 09:58:32 -0700 (PDT)
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1592863245.git.asml.silence@gmail.com>
- <0301f35644823a01cbae87e440df7d58ebcf2279.1592863245.git.asml.silence@gmail.com>
- <95b720a6-926c-a208-e929-1d0203fa8701@kernel.dk>
- <e05fc48b-684d-2980-3986-47a77af403e0@kernel.dk>
- <6714cb8f-894c-9ff1-7b3a-4f86d7dbe52a@gmail.com>
- <d33e9006-b7ef-4925-ff3f-332ab655f2ae@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH 1/4] io_uring: fix hanging iopoll in case of -EAGAIN
-Message-ID: <9488620d-3dec-700d-b211-cd192b4060b0@gmail.com>
-Date:   Wed, 24 Jun 2020 19:56:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 24 Jun 2020 12:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404796AbgFXQ7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:59:06 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E35520738;
+        Wed, 24 Jun 2020 16:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593017945;
+        bh=+QLzWa9R9qN9FxhHozL3Pq3dhOGQ4gOItfeEArrS5+s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=M7EO0Oa2tAuWUQQ4HrLCHt1tVRMpWu9sENgmQJkgSRpaR1MNvt8hmBJyXdLGu/v/q
+         Q+TzpCdAF29Jxrl23coDDJ5vKHRN4tq3DgTaU39b/WLtbYXq7U73e1eRAVoy9kMTpr
+         vI14CzqT1kRyQw7M9DJXAdVGSSUMxZmFVONa93fQ=
+Date:   Wed, 24 Jun 2020 09:59:03 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     "Christian Benvenuti (benve)" <benve@cisco.com>
+Cc:     Kaige Li <likaige@loongson.cn>, David Miller <davem@davemloft.net>,
+        "_govind@gmx.com" <_govind@gmx.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lixuefeng@loongson.cn" <lixuefeng@loongson.cn>,
+        "yangtiezhu@loongson.cn" <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH RESEND] net/cisco: Fix a sleep-in-atomic-context bug in
+ enic_init_affinity_hint()
+Message-ID: <20200624095903.71a01271@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <BYAPR11MB37994715A3DD8259DF16A34DBA950@BYAPR11MB3799.namprd11.prod.outlook.com>
+References: <20200623.143311.995885759487352025.davem@davemloft.net>
+        <20200623.152626.2206118203643133195.davem@davemloft.net>
+        <7533075e-0e8e-2fde-c8fa-72e2ea222176@loongson.cn>
+        <20200623.202324.442008830004872069.davem@davemloft.net>
+        <70519029-1cfa-5fce-52f3-cfb13bf00f7d@loongson.cn>
+        <BYAPR11MB37994715A3DD8259DF16A34DBA950@BYAPR11MB3799.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <d33e9006-b7ef-4925-ff3f-332ab655f2ae@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 22:01, Jens Axboe wrote:
-> On 6/23/20 5:57 AM, Pavel Begunkov wrote:
->> On 23/06/2020 05:18, Jens Axboe wrote:
->>> On 6/22/20 8:07 PM, Jens Axboe wrote:
->>>> On 6/22/20 4:16 PM, Pavel Begunkov wrote:
->>>>> io_do_iopoll() won't do anything with a request unless
->>>>> req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
->>>>> it, otherwise io_do_iopoll() will poll a file again and again even
->>>>> though the request of interest was completed long ago.
->>>>
->>>> I need to look at this again, because with this change, I previously
->>>> got various use-after-free. I haven't seen any issues with it, but
->>>> I agree, from a quick look that I'm not quite sure how it's currently
->>>> not causing hangs. Yet I haven't seen any, with targeted -EAGAIN
->>>> testing.
->>
->> Can io_complete_rw_iopoll() get -EAGAIN after being successfully enqueued
->> (i.e. EIOCBQUEUED)? It's reliably fails for me, because my hacked nullblk
->> _can_ (i.e. probabilistically returns BLK_STS_AGAIN from ->iopoll()).
-> 
-> Yes it can. The primary example would be a polled bio that gets split, into
-> let's say 4 bio's. First one queues fine, but one of the subsequent ones
-> run into request allocation failures and it gets marked as -EAGAIN.
+On Wed, 24 Jun 2020 06:32:36 +0000 Christian Benvenuti (benve) wrote:
+> We/Cisco will also look into it, hopefully a small code reorg will be sufficient.
 
-Right, thanks for the explanation. And that's the case where io_uring fails.
-Now I tested all kinds of -EAGAIN to be sure.
-
--- 
-Pavel Begunkov
+Make sure you enable CONFIG_DEBUG_ATOMIC_SLEEP when you test.
