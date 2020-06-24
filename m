@@ -2,145 +2,111 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF432C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93909C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE7F20781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6923D206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:00:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qsvuBeQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404029AbgFXPAi (ORCPT
+        id S2404066AbgFXPAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:00:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:59092 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404006AbgFXPAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:00:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ED351FB;
-        Wed, 24 Jun 2020 08:00:37 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B28F73F73C;
-        Wed, 24 Jun 2020 08:00:34 -0700 (PDT)
-Subject: Re: [RESEND PATCH v5 1/5] driver core: add probe_err log helper
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <20200624114127.3016-1-a.hajda@samsung.com>
- <CGME20200624114135eucas1p26e2e4683d60cebdce7acd55177013992@eucas1p2.samsung.com>
- <20200624114127.3016-2-a.hajda@samsung.com>
- <20200624132714.GD5472@sirena.org.uk>
- <CAHp75Ve9V1Vyxe3bEeHJ9H2J900wUXHMmXFJt-dn9sO5OMejHA@mail.gmail.com>
- <20200624140207.GE5472@sirena.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6373a4eb-2f1b-b56f-48a8-ae97b4e4476a@arm.com>
-Date:   Wed, 24 Jun 2020 16:00:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 11:00:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404006AbgFXPAt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:00:49 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14DDC061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:00:49 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cm23so1261930pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q/jaQeCVttGzGBo3E3lk1QjN0UoCwQgqot3lYK2zXtk=;
+        b=qsvuBeQgO4niMQcI2gC+VVoIgpUqo5H4wRPLlaR/5qawyoXdMx/bjxy7jtPw3aL8Dl
+         cRg0StjUcxNFOmQnJunhva1NegHntMT8fa77CMkohiT1LX1ydJgW8uGuDjysJPCp/35R
+         znrly6bkXru8zbZenMv52ZiGlSJ91NS8nCH0gnNyaTgbSN91QAtpFb9Pizp9ez9VUpZR
+         lkCSizcvK1T9hmpEE8ePUTS0LPXCQRR/r7Kz54/FhrDGancf3WJTukegFfSwMmgTEQw7
+         jqA687/rpGcmCpsu5xlVqxiDBCSFTSyk7tjMNs+8LBV//NZ7jPB012Xm3BxjFW42Ee5C
+         w2jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q/jaQeCVttGzGBo3E3lk1QjN0UoCwQgqot3lYK2zXtk=;
+        b=FHmJR6WLRNuTRlvK8x94P8qTIiKixThCwOGo0M3KlVjCz/B1JwjJTqOMQefHIAs6wY
+         BVo922XWR5h0uexWMI6S3eyQhX35vYT1uQ3kbpmbfMMKTHk1jbWRpAX/kolcBldRrW8A
+         Sn0ELqmKS4TFzHOiLD7KYRH1fIr0jhjq6se9IBhZmHgXYjzvCTSVmaoGgTb7obDMDb5/
+         jZaileDYOCYrpJjOI4P+2S0iUG1Rw5s1K27AWl7/megoLekARxhfh3sCZU8vRJ9u+ahh
+         B26nt8N6DYjfF2vhk4LzrbzTSsRAJMk5m5AY2rG+N+I+8AsxZii01YooCRc7auiOjuim
+         Db5g==
+X-Gm-Message-State: AOAM53206V/JJiw8sSFqcW54tH7uhDFk5qrjtYholjD6dWPM2AgcBV77
+        v7ssVwgQL07rMCun4Ed1hkOc9w==
+X-Google-Smtp-Source: ABdhPJySN748/btTbadKTHVRipOZVFkvJAeaRPC1DlqdK8kxD+Mddoxrv8JQ5kTFSMXrj12Wq4V18g==
+X-Received: by 2002:a17:90a:2070:: with SMTP id n103mr29733694pjc.109.1593010849032;
+        Wed, 24 Jun 2020 08:00:49 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id m8sm5470354pjk.20.2020.06.24.08.00.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 08:00:48 -0700 (PDT)
+Subject: Re: [PATCH 05/15] mm: allow read-ahead with IOCB_NOWAIT set
+To:     Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>
+References: <20200618144355.17324-1-axboe@kernel.dk>
+ <20200618144355.17324-6-axboe@kernel.dk>
+ <20200624010253.GB5369@dread.disaster.area>
+ <20200624014645.GJ21350@casper.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <bad52be9-ae44-171b-8dbf-0d98eedcadc0@kernel.dk>
+Date:   Wed, 24 Jun 2020 09:00:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200624140207.GE5472@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
+In-Reply-To: <20200624014645.GJ21350@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 15:02, Mark Brown wrote:
-> On Wed, Jun 24, 2020 at 04:45:28PM +0300, Andy Shevchenko wrote:
->> On Wed, Jun 24, 2020 at 4:27 PM Mark Brown <broonie@kernel.org> wrote:
+On 6/23/20 7:46 PM, Matthew Wilcox wrote:
+> On Wed, Jun 24, 2020 at 11:02:53AM +1000, Dave Chinner wrote:
+>> On Thu, Jun 18, 2020 at 08:43:45AM -0600, Jens Axboe wrote:
+>>> The read-ahead shouldn't block, so allow it to be done even if
+>>> IOCB_NOWAIT is set in the kiocb.
+>>
+>> Doesn't think break preadv2(RWF_NOWAIT) semantics for on buffered
+>> reads? i.e. this can now block on memory allocation for the page
+>> cache, which is something RWF_NOWAIT IO should not do....
 > 
->>> As I said down the thread that's not a great pattern since it means that
->>> probe deferral errors never get displayed and users have a hard time
->>> figuring out why their driver isn't instantiating.
+> Yes.  This eventually ends up in page_cache_readahead_unbounded()
+> which gets its gfp flags from readahead_gfp_mask(mapping).
 > 
->> Don't we have a file in the debugfs to list deferred drivers?
-> 
-> Part of what this patch series aims to solve is that that list is not
-> very useful since it doesn't provide any information on how things got
-> deferred which means it's of no use in trying to figure out any
-> problems.
-> 
->> In the case of deferred probes the errors out of it makes users more
->> miserable in order to look through tons of spam and lose really useful
->> data in the logs.
-> 
-> I seem to never manage to end up using any of the systems which generate
-> excessive deferrals.
+> I'd be quite happy to add a gfp_t to struct readahead_control.
+> The other thing I've been looking into for other reasons is adding
+> a memalloc_nowait_{save,restore}, which would avoid passing down
+> the gfp_t.
 
-Be thankful... And count me in as one of those miserable users; here's one
-of mine being bad enough without even printing any specific messages about
-deferring ;)
+That was my first thought, having the memalloc_foo_save/restore for
+this. I don't think adding a gfp_t to readahead_control is going
+to be super useful, seems like the kind of thing that should be
+non-blocking by default.
 
-Robin.
+-- 
+Jens Axboe
 
------
-
-[robin@weasel-cheese ~]$ dmesg | grep dwmmc
-[    3.046297] dwmmc_rockchip ff0c0000.mmc: IDMAC supports 32-bit address mode.
-[    3.054312] dwmmc_rockchip ff0c0000.mmc: Using internal DMA controller.
-[    3.061774] dwmmc_rockchip ff0c0000.mmc: Version ID is 270a
-[    3.068101] dwmmc_rockchip ff0c0000.mmc: DW MMC controller at irq 30,32 bit host data width,256 deep fifo
-[    3.079638] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[    3.087678] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[    3.095134] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[    3.101480] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[    3.113071] dwmmc_rockchip ff0f0000.mmc: IDMAC supports 32-bit address mode.
-[    3.121110] dwmmc_rockchip ff0f0000.mmc: Using internal DMA controller.
-[    3.128565] dwmmc_rockchip ff0f0000.mmc: Version ID is 270a
-[    3.134886] dwmmc_rockchip ff0f0000.mmc: DW MMC controller at irq 32,32 bit host data width,256 deep fifo
-[    3.948510] dwmmc_rockchip ff0c0000.mmc: IDMAC supports 32-bit address mode.
-[    3.956475] dwmmc_rockchip ff0c0000.mmc: Using internal DMA controller.
-[    3.963884] dwmmc_rockchip ff0c0000.mmc: Version ID is 270a
-[    3.970133] dwmmc_rockchip ff0c0000.mmc: DW MMC controller at irq 30,32 bit host data width,256 deep fifo
-[    4.141231] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[    4.149178] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[    4.156582] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[    4.162823] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[    4.175606] dwmmc_rockchip ff0f0000.mmc: IDMAC supports 32-bit address mode.
-[    4.183540] dwmmc_rockchip ff0f0000.mmc: Using internal DMA controller.
-[    4.190946] dwmmc_rockchip ff0f0000.mmc: Version ID is 270a
-[    4.197196] dwmmc_rockchip ff0f0000.mmc: DW MMC controller at irq 32,32 bit host data width,256 deep fifo
-[    4.250758] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[    4.258688] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[    4.266104] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[    4.272358] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[    4.285390] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[    4.293333] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[    4.300750] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[    4.307005] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[    4.971373] dwmmc_rockchip ff0f0000.mmc: Successfully tuned phase to 134
-[    5.027225] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[    5.035339] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[    5.042769] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[    5.049050] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[   24.727583] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[   24.745541] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[   24.753003] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[   24.763289] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[   25.589620] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[   25.603066] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[   25.615283] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[   25.627911] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[   25.643469] dwmmc_rockchip ff0d0000.mmc: IDMAC supports 32-bit address mode.
-[   25.651532] dwmmc_rockchip ff0d0000.mmc: Using internal DMA controller.
-[   25.658960] dwmmc_rockchip ff0d0000.mmc: Version ID is 270a
-[   25.665246] dwmmc_rockchip ff0d0000.mmc: DW MMC controller at irq 31,32 bit host data width,256 deep fifo
-[   25.677154] dwmmc_rockchip ff0d0000.mmc: allocated mmc-pwrseq
