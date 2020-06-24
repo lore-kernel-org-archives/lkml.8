@@ -2,233 +2,105 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A66C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D17F620706
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C95F2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="baM/hVab"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMkCoL5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390394AbgFXK0x (ORCPT
+        id S2388797AbgFXK1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:26:53 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33940 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387962AbgFXK0x (ORCPT
+        Wed, 24 Jun 2020 06:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388176AbgFXK1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:26:53 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OAQoVv008419;
-        Wed, 24 Jun 2020 05:26:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592994410;
-        bh=3d+dfb4oHTkTtmlTJ7R3Bg06ZNgxLk207tvorVnD36A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=baM/hVabuTXttyv3UXOUhiB7dNMv5FfDm4Gyxk2Xit2M8NiZeKPcDR+BRUItsApo7
-         ju6gLl5MK2YTpRxsHRhmsmjHKEP71lyFeNdDD4NPevwOS40ZiZMWGNHnoZEeW2x5vE
-         Wo2CQHoBp1R0zJvnPAwhd06lwW7jV02jKldl+pyw=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OAQoxn005008
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 05:26:50 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 05:26:50 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 05:26:50 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OAQnge013371;
-        Wed, 24 Jun 2020 05:26:49 -0500
-Subject: Re: [PATCH v2] dt-bindings: usb: ti,keystone-dwc3.yaml: Improve
- schema
-To:     Rob Herring <robh@kernel.org>
-CC:     <balbi@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200602124055.1680-1-rogerq@ti.com>
- <5f81187b-0558-3815-051b-e40685fd047a@ti.com>
- <20200615174156.GA2008179@bogus>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <b7dc1ee0-36a8-259f-391e-61c256623301@ti.com>
-Date:   Wed, 24 Jun 2020 13:26:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 06:27:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A32C061573;
+        Wed, 24 Jun 2020 03:27:21 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h19so1913507ljg.13;
+        Wed, 24 Jun 2020 03:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J2MV0mam45EwIsPoyMX/nBi9KSxxMizw5CtJ6VCGjo8=;
+        b=hMkCoL5ZOxiq80mZR2E1yBYK4igFfXdls3natzutOiX8GHy2vAgudRg0pSCXgf5aei
+         fqORfN9MsDaLDNrrREl/+9/kGSgfynXkVDwdJTctDVVLN5VyntxkGjJ+EEdM+iEqOmLH
+         ZGTpNJkGcfv1TYwLr0ySGtlQyzyygrPTWVGgycTvvj8qES7Q4NFsKESznJF6DKpCQFeh
+         w5gSuzwvrJMAJeufx3TuENz0uFon7l/MBmrvjhrnUi/b4BbnLH20yLBX94yJN3RdTtM4
+         vQnbqttXBjNVR4f+26QzFou0j8m050xHuvF4zl7OnpiUwpuvk3ahFPZaLoc8k7QvDqo0
+         6V9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J2MV0mam45EwIsPoyMX/nBi9KSxxMizw5CtJ6VCGjo8=;
+        b=FNBZyYxKxXtBDT5phSvqY0zEEMcPVSHM8Y5acUDQiMQWBRzqt+Qlinu/VzAVIqFVYe
+         Zy37L4Nd9EhhMbpS5mE1YsrZFwxmcTxrFUJL5FguwImMszE4hj3if7gYA/UO3g4fXti3
+         kRfysVNnfWV2u3A1qZlhTBF3TYxIql+TNIDL2yPJZARBdJqYn5/6ZYvD+rvEgvk0oJ6j
+         H6khOQNIuINBuhy3FVBG43j3WKnPZoCzixTx/TDwLeDKdRLNsN0hrV8YENEzwSs++pW/
+         CbuP360SVuhxjVmfkXRFtdGBP4SQUogqf69f1T/fg1YG+YCI2bkq0qq+NxUtqxvNXE1b
+         Bt+A==
+X-Gm-Message-State: AOAM533o3Rstz8RZNpZNX4hDbmyILLyHP7acUHSJI8Js4RLYMLWgtP6X
+        0SY6nDNPgMacSoY4zVIJAydgihGroIAWEEHMK+k=
+X-Google-Smtp-Source: ABdhPJwnBG/FDVDXsJX7ZVeVksmpwY9Fy+BMeTQ4IyHtEGNMeGi/EEoFgXsRrbtj7CwQuPPGJyFiPAZ/R8VsDmfNepI=
+X-Received: by 2002:a2e:95d9:: with SMTP id y25mr14201341ljh.167.1592994440297;
+ Wed, 24 Jun 2020 03:27:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200615174156.GA2008179@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200615154114.13184-1-mayflowerera@gmail.com>
+ <20200615.182343.221546986577273426.davem@davemloft.net> <CAMdQvKvJ7MXihELmPW2LC3PAgXMK2OG6bJjPNJkCgE6eZftDVw@mail.gmail.com>
+ <CAMdQvKtrzFtg9PwZhyMQ96S48ZLG5gAu3gk8m=k+tFVMHeshXQ@mail.gmail.com>
+In-Reply-To: <CAMdQvKtrzFtg9PwZhyMQ96S48ZLG5gAu3gk8m=k+tFVMHeshXQ@mail.gmail.com>
+From:   Era Mayflower <mayflowerera@gmail.com>
+Date:   Wed, 24 Jun 2020 19:23:28 +0900
+Message-ID: <CAMdQvKubUYCMRt0V+koj8nKAq+nZNABJZMAXX7jB-_fRiPeJog@mail.gmail.com>
+Subject: Re: [PATCH] macsec: Support 32bit PN netlink attribute for XPN links
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 17, 2020 at 1:32 AM Era Mayflower <mayflowerera@gmail.com> wrote:
+>
+> On Wed, Jun 17, 2020 at 10:02 AM Era Mayflower <mayflowerera@gmail.com> wrote:
+> >
+> > On Tue, Jun 16, 2020 at 1:23 AM David Miller <davem@davemloft.net> wrote:
+> > >
+> > > From: Era Mayflower <mayflowerera@gmail.com>
+> > > Date: Tue, 16 Jun 2020 00:41:14 +0900
+> > >
+> > > > +     if (tb_sa[MACSEC_SA_ATTR_PN]) {
+> > >
+> > > validate_add_rxsa() requires that MACSET_SA_ATTR_PN be non-NULL, so
+> > > you don't need to add this check here.
+> > >
+> >
+> > validate_add_rxsa() did not originally contain that requirement.
+> > It does exist in validate_add_txsa(), which means that providing a PN
+> > is necessary only when creating TXSA.
+> > When creating an RXSA without providing a PN it will be set to 1
+> > (init_rx_sa+15).
+> > This is the original behavior which of course can be changed.
+> >
+> > - Era.
+>
+> Sorry for the time issues, just noticed I sent the previous mail with
+> future time.
+> Fixed it permanently on my computer.
 
-On 15/06/2020 20:41, Rob Herring wrote:
-> On Fri, Jun 05, 2020 at 10:52:15AM +0300, Roger Quadros wrote:
->> There were some review comments after the patch was integrated.
->> Address those.
->>
->> Fixes: 1883a934e156 ("dt-bindings: usb: convert keystone-usb.txt to YAML")
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>
->> Changelog:
->> v2
->> - don't use quotes for enum/const string
->> - use phandle instead of phandle-array for phys
->> - add maxItems for phy-names
->>
->>   .../bindings/usb/ti,keystone-dwc3.yaml        | 50 ++++++++++++++-----
->>   1 file changed, 37 insertions(+), 13 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
->> index f127535feb0b..394e47d2f5d7 100644
->> --- a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
->> +++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
->> @@ -11,64 +11,88 @@ maintainers:
->>   properties:
->>     compatible:
->> -    oneOf:
->> -      - const: "ti,keystone-dwc3"
->> -      - const: "ti,am654-dwc3"
->> +    items:
->> +      - enum:
->> +        - ti,keystone-dwc3
->> +        - ti,am654-dwc3
->>     reg:
->>       maxItems: 1
->> -    description: Address and length of the register set for the USB subsystem on
->> -      the SOC.
->> +
->> +  '#address-cells':
->> +    const: 1
->> +
->> +  '#size-cells':
->> +    const: 1
->> +
->> +  ranges: true
-> 
-> blank line
+Hello, is there any news?
 
-There is a blank line before interrupts.
-
-> 
->>     interrupts:
->>       maxItems: 1
->> -    description: The irq number of this device that is used to interrupt the MPU.
->> -
->>     clocks:
->> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> 
-> Common property. It already has a type and doesn't need to be
-> redefined here.
-> 
-> Just "maxItems: 1" if it is a single clock is enough, or an 'items' list
-> for each entry if more than 1.
-
-Some nodes need 1 and some need 2. So "minItems: 1" and "maxItems: 2"?
-The driver doesn't really care, and relies of device/clock framework
-to just set the right clock parent.
-
-In this case do I need to add items list?
-
-cheers,
--roger
-
-> 
->>       description: Clock ID for USB functional clock.
-> 
-> Drop.
-> 
->> +  assigned-clocks:
->> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> 
-> 
->> +
->> +  assigned-clock-parents:
->> +    $ref: /schemas/types.yaml#definitions/phandle-array
->> +
->>     power-domains:
->> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> 
-> Same as 'clocks'.
-> 
->>       description: Should contain a phandle to a PM domain provider node
->>         and an args specifier containing the USB device id
->>         value. This property is as per the binding,
->>         Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>     phys:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
-> 
-> Same as 'clocks'.
-> 
->>       description:
->>         PHY specifier for the USB3.0 PHY. Some SoCs need the USB3.0 PHY
->>         to be turned on before the controller.
->>         Documentation/devicetree/bindings/phy/phy-bindings.txt
->>     phy-names:
->> +    maxItems: 1
->>       items:
->> -      - const: "usb3-phy"
->> +      - const: usb3-phy
-> 
-> Don't need maxItems as that's implied by the length of 'items'.
-> 
->> +
->> +  dma-coherent: true
->> -  dwc3:
->> +  dma-ranges: true
->> +
->> +patternProperties:
->> +  "usb@[a-f0-9]+$":
->> +    type: object
->>       description: This is the node representing the DWC3 controller instance
->>         Documentation/devicetree/bindings/usb/dwc3.txt
->>   required:
->>     - compatible
->>     - reg
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - ranges
->>     - interrupts
->> -  - clocks
->> +
->> +additionalProperties: false
->>   examples:
->>     - |
->>       #include <dt-bindings/interrupt-controller/arm-gic.h>
->> -    usb: usb@2680000 {
->> +    dwc3@2680000 {
->>         compatible = "ti,keystone-dwc3";
->>         #address-cells = <1>;
->>         #size-cells = <1>;
->>         reg = <0x2680000 0x10000>;
->>         clocks = <&clkusb>;
->> -      clock-names = "usb";
->>         interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
->>         ranges;
->> -      dwc3@2690000 {
->> +      usb@2690000 {
->>           compatible = "synopsys,dwc3";
->>           reg = <0x2690000 0x70000>;
->>           interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
->> -- 
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
->>
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+- Era.
