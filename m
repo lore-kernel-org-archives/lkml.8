@@ -2,163 +2,129 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76A220781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3CD20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:41:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oNn5R7Qj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LdqUQaQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391169AbgFXOj5 (ORCPT
+        id S2391097AbgFXOlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:39:57 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:55808 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388652AbgFXOj5 (ORCPT
+        Wed, 24 Jun 2020 10:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389836AbgFXOlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:39:57 -0400
+        Wed, 24 Jun 2020 10:41:19 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19457C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:41:19 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id d12so1150259ply.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593009597; x=1624545597;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=5CptIMYGtLRJUOaEOQnppqBMq8qhYumr4bsnmrqP5lg=;
-  b=oNn5R7Qju6A+Ltwehv0z8SBGUFDAZO76khwSMFqK/0L32n2s/iT5kv21
-   KlZX6WubHmxCzPClZCa9w5gdarx+rzJMnKEcgobuWeFlcVbP05W4pUtxy
-   sCPZ5c/HqPKeG7Lgm8TOa3LGWBxq0aZug6sqVsLjWeFvO2GXvbuseWNBS
-   8=;
-IronPort-SDR: A3ZScZaN5pcVEarGidONVw36S6jhSY5hGDEmMARNsoO6mC2ciUVky/UU1Ven2APoflA8+in+9f
- ViJxg/aeeqIA==
-X-IronPort-AV: E=Sophos;i="5.75,275,1589241600"; 
-   d="scan'208";a="38170872"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 24 Jun 2020 14:39:55 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 4481CA2177;
-        Wed, 24 Jun 2020 14:39:53 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 24 Jun 2020 14:39:52 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.109) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 24 Jun 2020 14:39:44 +0000
-Subject: Re: [PATCH v4 17/18] nitro_enclaves: Add overview documentation
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-18-andraprs@amazon.com>
- <20200623085915.GF32718@stefanha-x1.localdomain>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <746fcd7d-5946-35ec-6471-8bf8dccdf400@amazon.com>
-Date:   Wed, 24 Jun 2020 17:39:39 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Fbp7umasnXh+ke7N+beUAyOfPReUM2Tp6A+dzgB7eMs=;
+        b=LdqUQaQQ73lvg2EH4zB5b0fAHY6pDsTgO5VkTlBIIFPTWFDt6KEfeGjsb0w6+bZ9Ow
+         NITWE6F0NiNBcydTH1X5G5v/4LVNjJl2xkptnKSgFVRZwIBSdg7/4DIa9E/LMGsAb6fD
+         enidR4CvnWPaAtnjb4zwOOo4tT4QsgRPZnifk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Fbp7umasnXh+ke7N+beUAyOfPReUM2Tp6A+dzgB7eMs=;
+        b=YRxNt/O6/dKTAetJjwWlcRe+IsnX8+2QCs3/P9eLKkH7Yx/lcfqNyHVXi8RRzEns7R
+         IgRS4d/I4vs9b4geEE1Jf/lNRSDKHSCXvb5RhEIfJo93CtBKBqgOB/lWeROBWKzJemJK
+         C84deZpQehzxwsfndKdIHcnxUUbG51WTPsehiTv1epcFu7yCTwGiUO+hHEutABKQGzPj
+         tUg1AlF/PYLW9CXqLfyG/9bpMRsnto1flseflu0og3Kq3Zf6HYY6w8qPlyFKBG95y4fF
+         +BoWS7mSbtgson9O13iblMbm06haI34Ia5N4qL59fC88I76dDTaQOLwoyXQd6ME98mk1
+         rZgA==
+X-Gm-Message-State: AOAM532iEixbcgt3tVcMalZh2jGaYUZ6g0jcBrtqEZhGeEAexlEcCv67
+        Eg2RvkGIerTBeZ/qFuVC37K+dg==
+X-Google-Smtp-Source: ABdhPJyLzb6qwq/8MBqHXf8uzinIy/tV8mWrOCrHPE7Fwn5qlWt9b5nzHsWE+x0soPiCSmy2JH0LLA==
+X-Received: by 2002:a17:90a:7185:: with SMTP id i5mr2257473pjk.175.1593009678562;
+        Wed, 24 Jun 2020 07:41:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s23sm15899769pfs.157.2020.06.24.07.41.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 07:41:17 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 07:41:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jann Horn <jannh@google.com>,
+        Emese Revfy <re.emese@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Mathias Krause <minipli@googlemail.com>,
+        PaX Team <pageexec@freemail.hu>,
+        Brad Spengler <spender@grsecurity.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
+Subject: Re: [PATCH v2 5/5] gcc-plugins/stackleak: Add 'verbose' plugin
+ parameter
+Message-ID: <202006240740.5AF6369E53@keescook>
+References: <20200624123330.83226-1-alex.popov@linux.com>
+ <20200624123330.83226-6-alex.popov@linux.com>
+ <20200624125305.GG4332@42.do-not-panic.com>
+ <d7b118c1-0369-9aef-bd34-afc9bafc7e7b@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <20200623085915.GF32718@stefanha-x1.localdomain>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.109]
-X-ClientProxiedBy: EX13D36UWA003.ant.amazon.com (10.43.160.237) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7b118c1-0369-9aef-bd34-afc9bafc7e7b@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 24, 2020 at 04:09:20PM +0300, Alexander Popov wrote:
+> On 24.06.2020 15:53, Luis Chamberlain wrote:
+> > On Wed, Jun 24, 2020 at 03:33:30PM +0300, Alexander Popov wrote:
+> >> Add 'verbose' plugin parameter for stackleak gcc plugin.
+> >> It can be used for printing additional info about the kernel code
+> >> instrumentation.
+> >>
+> >> For using it add the following to scripts/Makefile.gcc-plugins:
+> >>   gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STACKLEAK) \
+> >>     += -fplugin-arg-stackleak_plugin-verbose
+> > 
+> > Would be nice if we instead could pass an argument to make which lets
+> > us enable this.
+> 
+> This feature is useful only for debugging stackleak gcc plugin.
+> 
+> The cflag that enables it is similar to -fplugin-arg-structleak_plugin-verbose,
+> which is used for debugging the structleak plugin.
+> 
+> This debugging feature clutters the kernel build output, I don't think that many
+> people will use it. So IMO creating a separate argument for make is not really
+> needed.
 
+Yup, agreed. The precedent for plugin verbosity is via CONFIGs. They're
+not really general purpose enough to justify a "make" argument.
 
-On 23/06/2020 11:59, Stefan Hajnoczi wrote:
-> On Mon, Jun 22, 2020 at 11:03:28PM +0300, Andra Paraschiv wrote:
->> +The kernel bzImage, the kernel command line, the ramdisk(s) are part of=
- the
->> +Enclave Image Format (EIF); plus an EIF header including metadata such =
-as magic
->> +number, eif version, image size and CRC.
->> +
->> +Hash values are computed for the entire enclave image (EIF), the kernel=
- and
->> +ramdisk(s). That's used, for example, to check that the enclave image t=
-hat is
->> +loaded in the enclave VM is the one that was intended to be run.
->> +
->> +These crypto measurements are included in a signed attestation document
->> +generated by the Nitro Hypervisor and further used to prove the identit=
-y of the
->> +enclave; KMS is an example of service that NE is integrated with and th=
-at checks
->> +the attestation doc.
->> +
->> +The enclave image (EIF) is loaded in the enclave memory at offset 8 MiB=
-. The
->> +init process in the enclave connects to the vsock CID of the primary VM=
- and a
->> +predefined port - 9000 - to send a heartbeat value - 0xb7. This mechani=
-sm is
->> +used to check in the primary VM that the enclave has booted.
->> +
->> +If the enclave VM crashes or gracefully exits, an interrupt event is re=
-ceived by
->> +the NE driver. This event is sent further to the user space enclave pro=
-cess
->> +running in the primary VM via a poll notification mechanism. Then the u=
-ser space
->> +enclave process can exit.
->> +
->> +[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
->> +[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
->> +[3] https://lwn.net/Articles/807108/
->> +[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameter=
-s.html
->> +[5] https://man7.org/linux/man-pages/man7/vsock.7.html
-> Is the EIF specification and the attestation protocol available?
-
-For now, they are not publicly available. Once the refs are available =
-
-(e.g. AWS documentation, GitHub documentation), I'll include them in the =
-
-kernel documentation as well.
-
-As a note here, the NE project is currently in preview =
-
-(https://aws.amazon.com/ec2/nitro/nitro-enclaves/) and part of the =
-
-documentation / codebase will be publicly available when NE is generally =
-
-available (GA). This will be in addition to the ones already publicly =
-
-available, like the NE kernel driver.
-
-Let me know if I can help with any particular questions / clarifications.
-
-Thanks,
-Andra
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
-
+-- 
+Kees Cook
