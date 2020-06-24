@@ -2,205 +2,111 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F151C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C472082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A854D2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390554AbgFXLIE (ORCPT
+        id S2390574AbgFXLJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:08:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:34894 "EHLO foss.arm.com"
+        Wed, 24 Jun 2020 07:09:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:35088 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728734AbgFXLIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:08:04 -0400
+        id S1728656AbgFXLJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:09:45 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EABF1F1;
-        Wed, 24 Jun 2020 04:08:03 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D6E53F6CF;
-        Wed, 24 Jun 2020 04:08:01 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 12:07:59 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] sched/uclamp: Protect uclamp fast path code with
- static key
-Message-ID: <20200624110758.oewxkpdk5fzxwxod@e107158-lin.cambridge.arm.com>
-References: <20200619172011.5810-1-qais.yousef@arm.com>
- <20200619172011.5810-3-qais.yousef@arm.com>
- <87pn9oor2t.derkling@matbug.net>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 127161F1;
+        Wed, 24 Jun 2020 04:09:45 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFCF53F6CF;
+        Wed, 24 Jun 2020 04:09:43 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 12:09:33 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
+Message-ID: <20200624110904.GB11863@gaia>
+References: <20200617123844.29960-1-steven.price@arm.com>
+ <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
+ <20200624093846.GA11863@gaia>
+ <20200624103412.GD25945@arm.com>
+ <faa68f22-4d8e-0290-b52a-63ae7425b988@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87pn9oor2t.derkling@matbug.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <faa68f22-4d8e-0290-b52a-63ae7425b988@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/20 09:34, Patrick Bellasi wrote:
+On Wed, Jun 24, 2020 at 12:03:35PM +0100, Steven Price wrote:
+> On 24/06/2020 11:34, Dave Martin wrote:
+> > On Wed, Jun 24, 2020 at 10:38:48AM +0100, Catalin Marinas wrote:
+> > > On Tue, Jun 23, 2020 at 07:05:07PM +0100, Peter Maydell wrote:
+> > > > On Wed, 17 Jun 2020 at 13:39, Steven Price <steven.price@arm.com> wrote:
+> > > > > These patches add support to KVM to enable MTE within a guest. It is
+> > > > > based on Catalin's v4 MTE user space series[1].
+> > > > > 
+> > > > > [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
+> > > > > 
+> > > > > Posting as an RFC as I'd like feedback on the approach taken.
+> > > > 
+> > > > What's your plan for handling tags across VM migration?
+> > > > Will the kernel expose the tag ram to userspace so we
+> > > > can copy it from the source machine to the destination
+> > > > at the same time as we copy the actual ram contents ?
+> > > 
+> > > Qemu can map the guest memory with PROT_MTE and access the tags directly
+> > > with LDG/STG instructions. Steven was actually asking in the cover
+> > > letter whether we should require that the VMM maps the guest memory with
+> > > PROT_MTE as a guarantee that it can access the guest tags.
+> > > 
+> > > There is no architecturally visible tag ram (tag storage), that's a
+> > > microarchitecture detail.
+> > 
+> > If userspace maps the guest memory with PROT_MTE for dump purposes,
+> > isn't it going to get tag check faults when accessing the memory
+> > (i.e., when dumping the regular memory content, not the tags
+> > specifically).
+> > 
+> > Does it need to map two aliases, one with PROT_MTE and one without,
+> > and is that architecturally valid?
 > 
-> On Fri, Jun 19, 2020 at 19:20:11 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+> Userspace would either need to have two mappings (I don't believe there are
+> any architectural issues with that - but this could be awkward to arrange in
+> some situations) or be careful to avoid faults. Basically your choices with
+> one mapping are:
 > 
-> [...]
+>  1. Disable tag checking (using prctl) when touching the memory. This works
+> but means you lose tag checking for the VMM's own accesses during this code
+> sequence.
 > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 4265861e13e9..9ab22f699613 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -793,6 +793,25 @@ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
-> >  /* All clamps are required to be less or equal than these values */
-> >  static struct uclamp_se uclamp_default[UCLAMP_CNT];
-> >  
-> > +/*
-> > + * This static key is used to reduce the uclamp overhead in the fast path. It
-> > + * only disables the call to uclamp_rq_{inc, dec}() in enqueue/dequeue_task().
-> > + *
-> > + * This allows users to continue to enable uclamp in their kernel config with
-> > + * minimum uclamp overhead in the fast path.
-> > + *
-> > + * As soon as userspace modifies any of the uclamp knobs, the static key is
-> > + * disabled, since we have an actual users that make use of uclamp
-> > + * functionality.
-> > + *
-> > + * The knobs that would disable this static key are:
-> > + *
-> > + *   * A task modifying its uclamp value with sched_setattr().
-> > + *   * An admin modifying the sysctl_sched_uclamp_{min, max} via procfs.
-> > + *   * An admin modifying the cgroup cpu.uclamp.{min, max}
-> > + */
-> > +static DEFINE_STATIC_KEY_TRUE(sched_uclamp_unused);
+>  2. Read the tag values and ensure you use the correct tag. This suffers
+> from race conditions if the VM is still running.
 > 
-> I would personally prefer a non negated semantic.
-> 
-> Why not using 'sched_uclamp_enabled'?
+>  3. Use one of the exceptions in the architecture that generates a Tag
+> Unchecked access. Sadly the only remotely useful thing I can see in the v8
+> ARM is "A base register plus immediate offset addressing form, with the SP
+> as the base register." - but making sure SP is in range of where you want to
+> access would be a pain.
 
-This was already discussed and already changed to sched_uclamp_used which
-I will post in v3, which is already ready.
+Or:
 
-> 
-> > +
-> >  /* Integer rounded range for each bucket */
-> >  #define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
-> >  
-> > @@ -993,9 +1012,16 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
-> >  	lockdep_assert_held(&rq->lock);
-> >  
-> >  	bucket = &uc_rq->bucket[uc_se->bucket_id];
-> > -	SCHED_WARN_ON(!bucket->tasks);
-> > -	if (likely(bucket->tasks))
-> > -		bucket->tasks--;
-> > +
-> > +	/*
-> > +	 * This could happen if sched_uclamp_unused was disabled while the
-> > +	 * current task was running, hence we could end up with unbalanced call
-> > +	 * to uclamp_rq_dec_id().
-> > +	 */
-> > +	if (unlikely(!bucket->tasks))
-> > +		return;
-> > +
-> > +	bucket->tasks--;
-> 
-> Since above you are not really changing the logic, why changing the
-> code?
+4. Set PSTATE.TCO when accessing tagged memory in an unsafe way.
 
-The logic has changed. We return immediately now.
-
-> 
-> The SCHED_WARN_ON/if(likely) is a defensive programming thing.
-> I understand that SCHED_WARN_ON() can now be misleading because of the
-> unbalanced calls but... why not just removing it?
-
-Do you think we need to execute the rest of the code if bucket->tasks is 0? It
-would be good to know if there's a corner case you're worried about. AFAIU if
-it is 0, this means there's nothing to do.
-
-> 
-> Maybe also adding in the comment, but I don't see valid reasons to
-> change the code if the functionality is not changing.
-
-If it means a lot to you, I could put it back as it was. I just don't see why
-we can't return immediately instead.
-
-> 
-> 
-> >  	uc_se->active = false;
-> >  
-> >  	/*
-> > @@ -1031,6 +1057,13 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-> >  {
-> >  	enum uclamp_id clamp_id;
-> >  
-> > +	/*
-> > +	 * Avoid any overhead until uclamp is actually used by the userspace.
-> > +	 * Including the potential JMP if we use static_branch_unlikely()
-> 
-> The comment above (about unlikely) seems not to match the code?
-
-It does. The comment says if we use unlikely() when uclamp is not used we'll
-incur an extra jump/branch. Hence we use likely to avoid this potential
-overhead.
-
-> 
-> > +	 */
-> > +	if (static_branch_likely(&sched_uclamp_unused))
-> > +		return;
-> 
-> Moreover, something like:
-> 
->        if (static_key_false(&sched_uclamp_enabled))
->                 return;
-> 
-> is not just good enough?
-
-Aren't they both good enough?
-
-Use of static_key_false() is deprecated AFAICS.
-
-> 
-> > +
-> >  	if (unlikely(!p->sched_class->uclamp_enabled))
-> >  		return;
-> 
-> Since we already have these per sched_class gates, I'm wondering if it
-> could make sense to just re-purpose them.
-> 
-> Problem with the static key is that if just one RT task opts in, CFS
-> will still pay the overheads, and vice versa too.
-> 
-> So, an alternative approach could be to opt in sched classes on-demand.
-
-I'll defer to Peter here.
-
-Re-purposing the sched_class->uclamp_enable means we can't use a static key and
-we'll potentially still incur a cache penalty in there even if uclamp is not
-used. Based on RT sysctl discussion, this won't be okay if we can do better.
-
-> 
-> The above if(unlikely) is not exactly has a static key true, but I
-> assume we agree the overheads we are tacking are nothing compared to
-> that check, aren't they?
-
-I'm not sure we can agree on that. The overhead seems to be system specific. On
-juno-r2 it seemed I$, but on 2 sockets systems it seems the D$. So I can't say
-for sure no one will care. The current approach gives stronger guarantees.
-
-Thanks
-
---
-Qais Yousef
+-- 
+Catalin
