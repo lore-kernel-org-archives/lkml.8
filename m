@@ -2,183 +2,271 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923182088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:17:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x0pLiyZ5"
+	by mail.kernel.org (Postfix) with ESMTP id 37D8B2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593001273;
+	bh=ubm037DjoqhWp5F5sJ1u0TjSw4h4hwKqC/VMwTuOQV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=An7U3U0OkAOHxylzWzopfW1IKh6XfOBCSCndQaY84eoo2Ri6nXm8H1Y1SPNB2OEp/
+	 ZAjfhLPSAyiuw4sApF1907RxgZwU7/BBHgNXiFa/Hql/OcSY9vTLb2AaYxjj94Cs0q
+	 coP15piAZ4J3P/WIOjNTAcxiG5aI0yzkrepgtWMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403915AbgFXMRB (ORCPT
+        id S2390367AbgFXMVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:17:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46700 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388296AbgFXMQj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:16:39 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OCGXHn035823;
-        Wed, 24 Jun 2020 07:16:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593000993;
-        bh=iLdvMCbgjuB3IvjEffc3VbBTcvc2wltvJLix5r4FFus=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=x0pLiyZ5s+7x8WEcXpib0Yo6FL/i3Q02d0Gebu0nejNEiSyf/8K8KsjPL/0gwVgOt
-         U42T/U0VruFuK4qZzcdv/jPwaXvSrp+eOfdqIDW20Ik3qKivOAbBDpuTO8c+Rdo6yt
-         DodgUCQYnH0SHXRK3Gnvbruwl4YroISC8SJXvDGM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OCGXtl116765;
-        Wed, 24 Jun 2020 07:16:33 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 07:16:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 07:16:33 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OCGXO8040834;
-        Wed, 24 Jun 2020 07:16:33 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v11 4/5] net: dp83869: Add RGMII internal delay configuration
-Date:   Wed, 24 Jun 2020 07:16:04 -0500
-Message-ID: <20200624121605.18259-5-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200624121605.18259-1-dmurphy@ti.com>
-References: <20200624121605.18259-1-dmurphy@ti.com>
+        Wed, 24 Jun 2020 08:21:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388548AbgFXMVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:21:08 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 660BF2065F;
+        Wed, 24 Jun 2020 12:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593001267;
+        bh=ubm037DjoqhWp5F5sJ1u0TjSw4h4hwKqC/VMwTuOQV0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xmb12H8k4I/htKdxidiwU427lNKY2KKHuxv3zKvwevJ/lPnJQ+Z/AKwIzkmNyUNyX
+         vUYSD3lc8BC0bhWkW2DyKvpmpRk2V3EiVGL2Bzc5mD62zUpCJzkWI8Xap+beE0Hnyv
+         pulOF6Qk6kh+1sWwkx4tO/YG58KRooDU7pH59MOU=
+Date:   Wed, 24 Jun 2020 17:51:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] phy: qcom-snps: Add runtime suspend and resume
+ handlers
+Message-ID: <20200624122103.GC2324254@vkoul-mobl>
+References: <1590112200-1110-1-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590112200-1110-1-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add RGMII internal delay configuration for Rx and Tx.
+Hi Wesley,
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83869.c | 53 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 50 insertions(+), 3 deletions(-)
+On 21-05-20, 18:50, Wesley Cheng wrote:
+> Allow for the PHY to be put into a powered down state when possible.
+> Add the required suspend and resume callbacks, which will determine
+> what resources can be turned off depending on the cable status.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> 
+> ---
+> Changes in v2:
+>  - Addressed checkpatch alignment/line length warnings.
+>  - Removed superfluous init in qcom_snps_hsphy_resume().
+> 
+>  drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 100 ++++++++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+> index 4d74045..0a4e77af 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+> @@ -76,7 +76,9 @@
+>   * @iface_clk: phy interface clock
+>   * @phy_reset: phy reset control
+>   * @vregs: regulator supplies bulk data
+> + * @suspended: PHY is in the suspended state
+>   * @phy_initialized: if PHY has been initialized correctly
+> + * @mode: contains the current mode the PHY is in
+>   */
+>  struct qcom_snps_hsphy {
+>  	struct phy *phy;
+> @@ -87,7 +89,9 @@ struct qcom_snps_hsphy {
+>  	struct reset_control *phy_reset;
+>  	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+>  
+> +	bool suspended;
+>  	bool phy_initialized;
+> +	enum phy_mode mode;
+>  };
+>  
+>  static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+> @@ -104,6 +108,84 @@ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+>  	readl_relaxed(base + offset);
+>  }
+>  
+> +static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
+> +{
+> +	if (hsphy->suspended)
+> +		return 0;
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index 53ed3abc26c9..58103152c601 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -64,6 +64,10 @@
- #define DP83869_RGMII_TX_CLK_DELAY_EN		BIT(1)
- #define DP83869_RGMII_RX_CLK_DELAY_EN		BIT(0)
- 
-+/* RGMIIDCTL */
-+#define DP83869_RGMII_CLK_DELAY_SHIFT		4
-+#define DP83869_CLK_DELAY_DEF			7
-+
- /* STRAP_STS1 bits */
- #define DP83869_STRAP_OP_MODE_MASK		GENMASK(2, 0)
- #define DP83869_STRAP_STS1_RESERVED		BIT(11)
-@@ -78,9 +82,6 @@
- #define DP83869_PHYCR_FIFO_DEPTH_MASK	GENMASK(15, 12)
- #define DP83869_PHYCR_RESERVED_MASK	BIT(11)
- 
--/* RGMIIDCTL bits */
--#define DP83869_RGMII_TX_CLK_DELAY_SHIFT	4
--
- /* IO_MUX_CFG bits */
- #define DP83869_IO_MUX_CFG_IO_IMPEDANCE_CTRL	0x1f
- 
-@@ -108,6 +109,8 @@ enum {
- struct dp83869_private {
- 	int tx_fifo_depth;
- 	int rx_fifo_depth;
-+	s32 rx_int_delay;
-+	s32 tx_int_delay;
- 	int io_impedance;
- 	int port_mirroring;
- 	bool rxctrl_strap_quirk;
-@@ -177,11 +180,16 @@ static int dp83869_set_strapped_mode(struct phy_device *phydev)
- }
- 
- #if IS_ENABLED(CONFIG_OF_MDIO)
-+static const int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500,
-+					     1750, 2000, 2250, 2500, 2750, 3000,
-+					     3250, 3500, 3750, 4000};
-+
- static int dp83869_of_init(struct phy_device *phydev)
- {
- 	struct dp83869_private *dp83869 = phydev->priv;
- 	struct device *dev = &phydev->mdio.dev;
- 	struct device_node *of_node = dev->of_node;
-+	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
- 	int ret;
- 
- 	if (!of_node)
-@@ -235,6 +243,20 @@ static int dp83869_of_init(struct phy_device *phydev)
- 				 &dp83869->tx_fifo_depth))
- 		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
- 
-+	dp83869->rx_int_delay = phy_get_internal_delay(phydev, dev,
-+						       &dp83869_internal_delay[0],
-+						       delay_size, true);
-+	if (dp83869->rx_int_delay < 0)
-+		dp83869->rx_int_delay =
-+				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
-+
-+	dp83869->tx_int_delay = phy_get_internal_delay(phydev, dev,
-+						       &dp83869_internal_delay[0],
-+						       delay_size, false);
-+	if (dp83869->tx_int_delay < 0)
-+		dp83869->tx_int_delay =
-+				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
-+
- 	return ret;
- }
- #else
-@@ -397,6 +419,31 @@ static int dp83869_config_init(struct phy_device *phydev)
- 				     dp83869->clk_output_sel <<
- 				     DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT);
- 
-+	if (phy_interface_is_rgmii(phydev)) {
-+		ret = phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIIDCTL,
-+				    dp83869->rx_int_delay |
-+			dp83869->tx_int_delay << DP83869_RGMII_CLK_DELAY_SHIFT);
-+		if (ret)
-+			return ret;
-+
-+		val = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL);
-+		val &= ~(DP83869_RGMII_TX_CLK_DELAY_EN |
-+			 DP83869_RGMII_RX_CLK_DELAY_EN);
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
-+			val |= (DP83869_RGMII_TX_CLK_DELAY_EN |
-+				DP83869_RGMII_RX_CLK_DELAY_EN);
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+			val |= DP83869_RGMII_TX_CLK_DELAY_EN;
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+			val |= DP83869_RGMII_RX_CLK_DELAY_EN;
-+
-+		ret = phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL,
-+				    val);
-+	}
-+
- 	return ret;
- }
- 
+Am still not convinced why this would be called when we are already
+suspended :)
+
+> +
+> +	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY, mode:%d\n",
+> +		hsphy->mode);
+
+Remove debug artifacts here?
+
+> +
+> +	if (hsphy->mode == PHY_MODE_USB_HOST) {
+> +		/* Enable auto-resume to meet remote wakeup timing */
+> +		qcom_snps_hsphy_write_mask(hsphy->base,
+> +						USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +						USB2_AUTO_RESUME,
+> +						USB2_AUTO_RESUME);
+
+Lets align the lines above to opening brace please..
+If you run checkpatch with --strict option you would get this CHECK: Alignment should match open parenthesis
+
+> +		usleep_range(500, 1000);
+> +		qcom_snps_hsphy_write_mask(hsphy->base,
+> +						USB2_PHY_USB_PHY_HS_PHY_CTRL2,
+> +						0, USB2_AUTO_RESUME);
+> +	}
+> +
+> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
+> +	hsphy->suspended = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
+> +{
+> +	int ret;
+> +
+> +	if (!hsphy->suspended)
+> +		return 0;
+> +
+> +	dev_dbg(&hsphy->phy->dev, "Resume QCOM SNPS PHY, mode:%d\n",
+> +		hsphy->mode);
+
+here as well
+
+> +
+> +	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
+> +	if (ret) {
+> +		dev_err(&hsphy->phy->dev,
+> +			"failed to enable cfg ahb clock, %d\n", ret);
+
+single line should be okay now :)
+
+> +		return ret;
+> +	}
+> +
+> +	hsphy->suspended = false;
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused qcom_snps_hsphy_runtime_suspend(struct device *dev)
+> +{
+> +	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
+> +
+> +	if (!hsphy->phy_initialized)
+> +		return 0;
+> +
+> +	qcom_snps_hsphy_suspend(hsphy);
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused qcom_snps_hsphy_runtime_resume(struct device *dev)
+> +{
+> +	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
+> +
+> +	if (!hsphy->phy_initialized)
+> +		return 0;
+> +
+> +	qcom_snps_hsphy_resume(hsphy);
+> +	return 0;
+> +}
+> +
+> +static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode,
+> +					int submode)
+> +{
+> +	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
+> +
+> +	hsphy->mode = mode;
+> +	return 0;
+> +}
+> +
+>  static int qcom_snps_hsphy_init(struct phy *phy)
+>  {
+>  	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
+> @@ -175,6 +257,7 @@ static int qcom_snps_hsphy_init(struct phy *phy)
+>  					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
+>  
+>  	hsphy->phy_initialized = true;
+> +	hsphy->suspended = false;
+>  
+>  	return 0;
+>  
+> @@ -201,6 +284,7 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
+>  static const struct phy_ops qcom_snps_hsphy_gen_ops = {
+>  	.init		= qcom_snps_hsphy_init,
+>  	.exit		= qcom_snps_hsphy_exit,
+> +	.set_mode	= qcom_snps_hsphy_set_mode,
+
+This should be a separate patch, whats set_mode got to do with suspend
+support :)
+
+>  	.owner		= THIS_MODULE,
+>  };
+>  
+> @@ -212,6 +296,11 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
+>  
+> +static const struct dev_pm_ops qcom_snps_hsphy_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(qcom_snps_hsphy_runtime_suspend,
+> +			   qcom_snps_hsphy_runtime_resume, NULL)
+> +};
+> +
+>  static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -255,6 +344,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +	/*
+> +	 * Prevent runtime pm from being ON by default. Users can enable
+> +	 * it using power/control in sysfs.
+> +	 */
+> +	pm_runtime_forbid(dev);
+> +
+>  	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
+>  	if (IS_ERR(generic_phy)) {
+>  		ret = PTR_ERR(generic_phy);
+> @@ -269,6 +366,8 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+>  	if (!IS_ERR(phy_provider))
+>  		dev_dbg(dev, "Registered Qcom-SNPS HS phy\n");
+> +	else
+> +		pm_runtime_disable(dev);
+>  
+>  	return PTR_ERR_OR_ZERO(phy_provider);
+>  }
+> @@ -277,6 +376,7 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+>  	.probe		= qcom_snps_hsphy_probe,
+>  	.driver = {
+>  		.name	= "qcom-snps-hs-femto-v2-phy",
+> +		.pm = &qcom_snps_hsphy_pm_ops,
+>  		.of_match_table = qcom_snps_hsphy_of_match_table,
+>  	},
+>  };
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
 -- 
-2.26.2
-
+~Vinod
