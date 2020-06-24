@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C476C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28485C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 648DC2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0623B206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lFmz9hEr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ff5473UI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404331AbgFXPHc (ORCPT
+        id S2404316AbgFXPH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
+        Wed, 24 Jun 2020 11:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404237AbgFXPHX (ORCPT
+        with ESMTP id S2404198AbgFXPHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:07:23 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78A9C061798
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:22 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h15so2631231wrq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:22 -0700 (PDT)
+        Wed, 24 Jun 2020 11:07:20 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861F7C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j94so2667041wrj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HqgBI5p9cdp/gbRtc5/Vf5SqfkaArMfvY8eaitdy6zc=;
-        b=lFmz9hEr/UQJ+lwMW8roCnq3g4o/1IdbpIbo0yOY9Gr1j8oubjm/YxUQtoUtEG4z0u
-         iDnDFflx74sHdoX4yqDg6oV4pfxet8NvFU2/FHLuALUQr3an4yKs9S+Fs79eIDpc3dcb
-         JtXFXWW12p27qVi6qpB5nk9/t1ogYLmnsm7xyLKp4i3FT22qLqFqH+ICOvXShxjlQnys
-         fqySQyjcMI+FVhbec+8k44RhRNFhvVdmz31l5lW8qOFH+vEQucZDKToab5H7wXcx15lc
-         lpA6UmZdV5LtxK5uhrMDob/Slw1ZsJUiIbWJiEEXLvXoJKmphPdN8AP4XYBMgBlADmQW
-         sBBA==
+        bh=Ka6N3pIS5SMpHS3Dkd8MuBcyOJ38IwtNTJ67x9HE/gM=;
+        b=Ff5473UIxYPsdW4pi6CB5QPFSge/HWs1GPIn1OasdcMvQPjvlEK+g8lSeufiA1UwKm
+         H6KDcmB3IgwAsPz//203sr/5lItNIy2VU8gLEnAju1bDpqSAA+snoMXXBbUKVTtwRhw+
+         iYvztLUTfNwIJqWObVgXcpCcC997bPMIODvu8fKaIJsBfDZOWCccn9tKIqHndpm41ykY
+         Mq5NnAMV9jctWKT/2bpdtVs0PMXEScf5SNuIIaSmmhtv+vlqdMu/JvyKU4itIlO1CcGf
+         tVbYtwzeO0StF89eiamELfZGSFWzF039y0cQjpkDunjzUqt5nyJcW9aNz0PxKD3gXnrL
+         vAgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HqgBI5p9cdp/gbRtc5/Vf5SqfkaArMfvY8eaitdy6zc=;
-        b=E+9TjXk7vxGsIrxp8nhWTIi6bexIczj/DXT4EUGXYi/AMseYXp8ZU+GjEu9VWwZPgD
-         9+mS3n0euaDdV1Xlc10Tc9dC9sS/SgDPnNB9+maSEabulQ4+PCaJ91cghi+hUPq6QuyH
-         pxT1KQdmIZ79RDsLKPPXMyyZHlJqOXwd7w1BTUx6OXLSCMzPUgD4mhya/Mr7UMOAN2mr
-         /OAlgBNSE2KA5q249Hei4ABQX/5K54VZV1PxqiJhyW6Y22P27ufetxY7zQnHRepZw9IR
-         0lMPVNaStDH6SvvZEStbtgUS0t8p0qrZRaDugy1H8tPAwQKSSGECGzUbzUqsz9dvR3YP
-         aGmA==
-X-Gm-Message-State: AOAM532TQ7BmM29T62ug3iYZUl8JCEDI4xmpDmB2sYB/rIe7ZuProfw1
-        ZEweh8Vfxpg1yCv4tuWlt3VcJg==
-X-Google-Smtp-Source: ABdhPJwOvWTMTp+xIS2/s8zG18Vu4DqV2sM9Odv7Zzraz2b8w8qwdPgvlZ7TBTtcClG7K1YLPU2I8A==
-X-Received: by 2002:a05:6000:10c4:: with SMTP id b4mr18542660wrx.50.1593011241512;
-        Wed, 24 Jun 2020 08:07:21 -0700 (PDT)
+        bh=Ka6N3pIS5SMpHS3Dkd8MuBcyOJ38IwtNTJ67x9HE/gM=;
+        b=oMNFoYhAv9m+iXI6IHjadorlX28eFucQ0LiOzi4I9yj0lEQrtyNU/NZlicBL7LBShO
+         HuHfIYeVWiTmKqPMuxpolYJOya9Z5yj7CiTGdtKsPC/7rFdV4h3goaaDljzGQ8T1Nu8G
+         FRwdpuHiqiK4LdwhxCApxRwVCQjz6jjbWvEsJTrNkrb/44QUOBjgEa8YU+qer0YUDTAK
+         RaEcF8bxHBs4kSVwT+lrj7q/TKtY7NifRZglXJbImzUjb78RB0oZzBerEqa8kiN5v9Qr
+         nP1BPB455CjaY/MVYUoQE2/DiIMGuIT3vtr1fvnSVQsm+mPModn+o4SfJgzkBGCto0V6
+         IX/A==
+X-Gm-Message-State: AOAM532Yo/e49F5jfh/Fejnfq7iuHZpXYSc5kjuyC7HAa97ahGuH+XLJ
+        rCYLjrVpil4N/oN9TOV83Lahxw==
+X-Google-Smtp-Source: ABdhPJzsQZaqGp6yo+Gvy/E7GwTgHGlfZMJUpo8UcdCxDQEq3FwvOrTnZtBe+XexIjSK/+7zMSJxFA==
+X-Received: by 2002:a5d:6749:: with SMTP id l9mr31134388wrw.63.1593011239284;
+        Wed, 24 Jun 2020 08:07:19 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id h14sm11543361wrt.36.2020.06.24.08.07.20
+        by smtp.gmail.com with ESMTPSA id h14sm11543361wrt.36.2020.06.24.08.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:07:21 -0700 (PDT)
+        Wed, 24 Jun 2020 08:07:18 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH 08/10] mfd: tc3589x: Remove invalid use of kerneldoc syntax
-Date:   Wed, 24 Jun 2020 16:07:02 +0100
-Message-Id: <20200624150704.2729736-9-lee.jones@linaro.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 06/10] mfd: ab3100-core: Fix incompatible types in comparison expression warning
+Date:   Wed, 24 Jun 2020 16:07:00 +0100
+Message-Id: <20200624150704.2729736-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200624150704.2729736-1-lee.jones@linaro.org>
 References: <20200624150704.2729736-1-lee.jones@linaro.org>
@@ -76,37 +76,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc is for documenting function arguments and return values.
+Smatch reports:
 
-Prevents warnings like:
+ drivers/mfd/ab3100-core.c:501:20: error: incompatible types in comparison expression (different type sizes):
+ drivers/mfd/ab3100-core.c:501:20:    unsigned int *
+ drivers/mfd/ab3100-core.c:501:20:    unsigned long *
+ drivers/mfd/ab8500-debugfs.c:1804:20: error: incompatible types in comparison expression (different type sizes):
+ drivers/mfd/ab8500-debugfs.c:1804:20:    unsigned int *
+ drivers/mfd/ab8500-debugfs.c:1804:20:    unsigned long *
 
- drivers/mfd/tc3589x.c:32: warning: Enum value 'TC3589X_TC35890' not described in enum 'tc3589x_version'
- drivers/mfd/tc3589x.c:32: warning: Enum value 'TC3589X_TC35892' not described in enum 'tc3589x_version'
- drivers/mfd/tc3589x.c:32: warning: Enum value 'TC3589X_TC35893' not described in enum 'tc3589x_version'
- drivers/mfd/tc3589x.c:32: warning: Enum value 'TC3589X_TC35894' not described in enum 'tc3589x_version'
- drivers/mfd/tc3589x.c:32: warning: Enum value 'TC3589X_TC35895' not described in enum 'tc3589x_version'
- drivers/mfd/tc3589x.c:32: warning: Enum value 'TC3589X_TC35896' not described in enum 'tc3589x_version'
- drivers/mfd/tc3589x.c:32: warning: Enum value 'TC3589X_UNKNOWN' not described in enum 'tc3589x_version'
+Since the second min() argument can be less than 0 a signed
+variable is required for assignment.  However, the non-sized
+type size_t is passed in from the userspace handlers.  In order
+to firstly compare, then assign the smallest value, we firstly
+need to cast them both to the same as the receiving size_t typed
+variable.
 
 Cc: <stable@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mfd/tc3589x.c | 2 +-
+ drivers/mfd/ab3100-core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/tc3589x.c b/drivers/mfd/tc3589x.c
-index 67c9995bb1aa6..7882a37ffc352 100644
---- a/drivers/mfd/tc3589x.c
-+++ b/drivers/mfd/tc3589x.c
-@@ -18,7 +18,7 @@
- #include <linux/mfd/tc3589x.h>
- #include <linux/err.h>
+diff --git a/drivers/mfd/ab3100-core.c b/drivers/mfd/ab3100-core.c
+index 57723f116bb58..ee71ae04b5e63 100644
+--- a/drivers/mfd/ab3100-core.c
++++ b/drivers/mfd/ab3100-core.c
+@@ -498,7 +498,7 @@ static ssize_t ab3100_get_set_reg(struct file *file,
+ 	int i = 0;
  
--/**
-+/*
-  * enum tc3589x_version - indicates the TC3589x version
-  */
- enum tc3589x_version {
+ 	/* Get userspace string and assure termination */
+-	buf_size = min(count, (sizeof(buf)-1));
++	buf_size = min((ssize_t)count, (ssize_t)(sizeof(buf)-1));
+ 	if (copy_from_user(buf, user_buf, buf_size))
+ 		return -EFAULT;
+ 	buf[buf_size] = 0;
 -- 
 2.25.1
 
