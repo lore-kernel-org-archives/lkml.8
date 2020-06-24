@@ -2,105 +2,115 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA417C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDAE920723
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C060A20723
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:24:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E27hEDFR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lneLGurg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404256AbgFXPYE (ORCPT
+        id S2404366AbgFXPYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:24:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59078 "EHLO
+        Wed, 24 Jun 2020 11:24:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404017AbgFXPYE (ORCPT
+        with ESMTP id S2404017AbgFXPYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:24:04 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844FCC061573;
-        Wed, 24 Jun 2020 08:24:03 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id y13so1483594lfe.9;
-        Wed, 24 Jun 2020 08:24:03 -0700 (PDT)
+        Wed, 24 Jun 2020 11:24:19 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EACC061573;
+        Wed, 24 Jun 2020 08:24:19 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id mb16so2866465ejb.4;
+        Wed, 24 Jun 2020 08:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7ouKIzv9lcqviAIR01eC0zUDPcbdP0WKdUxuCP9SSpw=;
-        b=E27hEDFRxtZsQruEYVPTKunSsgJg6aALuxPxpQbSwxDRgiJZXbVdVQJKazLD8M5Wjo
-         om0KM0Faci6ftvWbxcquMgWXyDdqtOfBWWlErm0YTPMPTa03xNpBHyYwVibyb2Zzo0M2
-         lLUKMh7OyfZEu106pZZ0RNyuGDGS/S4uk2L6AOrXY+Jh1/LOzcsft59VuVdAXRCw8/UI
-         tcjTk82W9LuJXvGO7esKypzBLAlzPsyTJqqSq9tTMUXUgl0I+StFKkE/jGlxVfZXHQng
-         5tBnnQZgaSockOreNNvEUaLFcdjWc5LD4DodWFz7Xw5DP5j7+DI7/+krFCr1JuaAiZiq
-         yuPg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D5fcBmctUqkWRaCAlEquaCo151xfdRO5uLvWNbrg/T4=;
+        b=lneLGurgH4ESLltEQrI6RKR+MKIH5cMowieW6nb3PawBpUTe8dVgXXy8oMVUK4D+zC
+         61WQaa5yJ1WzosFIDyQOD1CeZNhfkijfHCaT6mJAdif+JAeN342vfOojjhY8ewmYPOzq
+         I4kosKQDArhuQ2/XphencidtJupidiJX+nZ5H6E7oaqCqRewZQ3U+4o3EzmxXdA3Rr7j
+         4qmsbilXgqZ0HMl8Ur1ZL0mPzVIuxqRV1viDITxeKOkGQl11bsqz6AevPORWx6Bp15Vr
+         TjnOlBl9Mn2pzwKcOnHs6/3+0411yKC2rOwo5wP78mP9XfNzXPI6N131Rmc32t+nTZth
+         gmeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7ouKIzv9lcqviAIR01eC0zUDPcbdP0WKdUxuCP9SSpw=;
-        b=a1xGszQOqrl8mVakOWEcsD5EL4zA6M+a1lBNRSGDlhN1ZtNEn7J977PGFWdWNEcChy
-         C2H0RyfbGx4IBD+TwwLSbCHqIMcuZV36tDQqO8DlKka3/2UcGuh/07+8KbqFdt5HcHF7
-         yQ10H08cHyPhkHu059btIIlVEvYygF5GIuON7ZFkm3i14PD6PxuGjx8tm0qhBQiDnMCX
-         cjgUmaGzlg6Daq9gU2cChTBomW3yIR4G6UBPjNtdkhh/WdzoidstvG8tFu8t5wW4Mact
-         ktoqEnv1LxUiEgP7HiGWl3w6GnAfmk5G6vUBiEENC94efQioC8L7Nf+7fsrI7VkfGs/W
-         d9zQ==
-X-Gm-Message-State: AOAM5327AR6hfLXbl9hAnX0jWL9kYGAODVL0L7lKM5YPdhbVfG4rp61m
-        R9zSX2HVNWY8ezznqESNhbOKFnuY
-X-Google-Smtp-Source: ABdhPJw5CK19plm3sDVgaQZ/FaKkfb0UTJA6gbhs1PnwT7h7YAvOtoMlEmVpoVoZxpLFP0oqUejuXQ==
-X-Received: by 2002:ac2:47e7:: with SMTP id b7mr15661708lfp.68.1593012241393;
-        Wed, 24 Jun 2020 08:24:01 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id d20sm5262732lfi.22.2020.06.24.08.24.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 08:24:00 -0700 (PDT)
-Subject: Re: [PATCH v2 0/4] Tegra Video Decoder driver power management
- corrections
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200624150847.22672-1-digetx@gmail.com>
- <90323aa6-38b5-0a45-69a7-ccf380690a78@xs4all.nl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <23cbaa18-9461-8f72-3d43-aa14cd0c1095@gmail.com>
-Date:   Wed, 24 Jun 2020 18:23:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D5fcBmctUqkWRaCAlEquaCo151xfdRO5uLvWNbrg/T4=;
+        b=pX5G4sSYWmn+mPK4+7RfzNCfl/J284ocKLVLy3MDgiNGoV6rgdGlVMnShRPDz2vDEQ
+         Pfi6o2VuqiTuGBiYuC1b+bogHdmPOpmA9MvYlw7vLOR3qXkMFdwayPLwoOjfuzR9TM4e
+         OSPY6DSyXV5PELv6LuKV6JS7gWwamVXQeL2rZzf0XYRqFQHpubZbpCNeld5rLRpK46ss
+         HC+iSZaEQaYwZFsZRDDW/mY55lNDRp2GAbwp1bb5dqC+V0s4z2GRhMcQSPtKBEtgQJe9
+         kqsrXB03ZXT8Jd5m/QRfBtw1H9Q1S8CZfbco0GvGP+KRrbjcn/dZAW8iqXh8WKGeO7qj
+         niXw==
+X-Gm-Message-State: AOAM530SiHeud6uFxSRQ+YDj7se6d+W/LUM/h3K+m33jSE5jPosw/fGD
+        5fu1rSi/0ZEKSRmHvIv/4Y9HuGC/GC98PjZvs4YQxw==
+X-Google-Smtp-Source: ABdhPJxXGFYEUDzodXY4S+pGgiGRko+o5hHsygS3MwblQ/K5dQVLFwuQYt/iX5NoNFt1e3/nk2D1FtPqKZ2S2whWJAI=
+X-Received: by 2002:a17:906:5949:: with SMTP id g9mr7426231ejr.305.1593012258194;
+ Wed, 24 Jun 2020 08:24:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <90323aa6-38b5-0a45-69a7-ccf380690a78@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200623090541.2964760-1-horatiu.vultur@microchip.com>
+ <20200623.143821.491798381160245817.davem@davemloft.net> <20200624113156.hsutqewk4xntmkld@soft-dev3.localdomain>
+In-Reply-To: <20200624113156.hsutqewk4xntmkld@soft-dev3.localdomain>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 24 Jun 2020 18:24:07 +0300
+Message-ID: <CA+h21hogZsJZUksYY66_=-qkdG3kDA+byfX0tV=C-80M6mfYMA@mail.gmail.com>
+Subject: Re: [PATCH net v2 0/2] bridge: mrp: Update MRP_PORT_ROLE
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        bridge@lists.linux-foundation.org, netdev <netdev@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.06.2020 18:16, Hans Verkuil пишет:
-> On 24/06/2020 17:08, Dmitry Osipenko wrote:
->> Hello,
->>
->> This small series addresses a Runtime PM issue that was discovered during
->> of Tegra VI driver reviewing by balancing RPM usage count on RPM resume
->> failure. Secondly it fixes reboot on some Tegra devices due to bootloader
->> expecting VDE power partition to be ON at the boot time, which wasn't
->> happening in case of a warm re-booting (i.e. by PMC resetting).
-> 
-> Can you rebase this on top of the media_tree master branch? I think a variant
-> of patch 1 has already been applied. I found a mail today where you mentioned
-> that you preferred your version (it looks like I missed that) so you'll need to
-> rework patch 1.
+Hi Horatiu,
 
-Hello Hans,
+On Wed, 24 Jun 2020 at 14:34, Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
+>
+> The 06/23/2020 14:38, David Miller wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> >
+> > From: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > Date: Tue, 23 Jun 2020 11:05:39 +0200
+> >
+> > > This patch series does the following:
+> > > - fixes the enum br_mrp_port_role_type. It removes the port role none(0x2)
+> > >   because this is in conflict with the standard. The standard defines the
+> > >   interconnect port role as value 0x2.
+> > > - adds checks regarding current defined port roles: primary(0x0) and
+> > >   secondary(0x1).
+> > >
+> > > v2:
+> > >  - add the validation code when setting the port role.
+> >
+> > Series applied, thank you.
+>
+> Thanks. Will these patches be applied also on net-next?
+> Because if I start now to add support for the interconnect port, these
+> patches are needed on net-next. Or do I need to add these patches to the
+> patch series for the interconnect port?
+> What is the correct way of doing this?
+>
+> --
+> /Horatiu
 
-I'll take a look at what patches has been applied, my bad for sending
-the v2 too late. Thank you for the heads up!
+The "net" tree is merged weekly (or so) by David into "net-next". So,
+your patches should be available at the beginning of the next week.
+
+Cheers,
+-Vladimir
