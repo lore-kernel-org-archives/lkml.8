@@ -2,114 +2,108 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9085CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4353520823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593021610;
-	bh=2UitKT4K/Va+jamxjwCKoZ96M6fFhFnTIM3vNCb7ews=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RlRtK9frRaoL8WtojcVdHLbk9bkt+rftQ5KqfHvQ9rUIadIYleKHWfNutcT15olY+
-	 rmBPXoLrFAPWYR0kG5CTp90VsCwBSKjMSI4XTdWKZUAh0Omo0gmTeouoLc9FUf2HRw
-	 hdtjy0XiOXHRG6c7STaO3w+pEybLtR6GEsEn5vUE=
+	by mail.kernel.org (Postfix) with ESMTP id 6BDF6206EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405961AbgFXSAI (ORCPT
+        id S2405967AbgFXSCF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405538AbgFXSAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:00:08 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B05320823;
-        Wed, 24 Jun 2020 18:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593021608;
-        bh=2UitKT4K/Va+jamxjwCKoZ96M6fFhFnTIM3vNCb7ews=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jxGGDXD+7FCXVcwlZhZqXBvq1DvyW+uYJzZaxydTJA9wNhMM48Hg5B07C2qbyhUL7
-         0N81zxTi7/Yc7UgSCqScAA9ETzJLN54jI09xUJuyiIkWZKqd6Sj+Nu2lk8uhLWH+GT
-         PyW14MTtkb3MRiWt9bG4/hf0QASBtnHr7eLWoP/Y=
-Date:   Wed, 24 Jun 2020 19:00:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
-        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
-        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
-        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-Message-ID: <20200624180005.GO5472@sirena.org.uk>
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
- <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
- <20200624170933.GB39073@google.com>
- <20200624171537.GL5472@sirena.org.uk>
- <20200624173948.GC39073@google.com>
- <20200624174417.GM5472@sirena.org.uk>
- <20200624175536.GD39073@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oJAv8lSwuaQsYd0G"
-Content-Disposition: inline
-In-Reply-To: <20200624175536.GD39073@google.com>
-X-Cookie: So this is it.  We're going to die.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 24 Jun 2020 14:02:05 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:35670 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405538AbgFXSCE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:02:04 -0400
+Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
+        by mail.holtmann.org (Postfix) with ESMTPSA id B4340CECDA;
+        Wed, 24 Jun 2020 20:11:55 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] Bluetooth: btusb: Reset port on cmd timeout
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200624105737.1.Ibae403db54245c458d14297f1892c77c5055da41@changeid>
+Date:   Wed, 24 Jun 2020 20:02:02 +0200
+Cc:     Rocky Liao <rjliao@codeaurora.org>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <825D1018-9453-4D7F-8978-0E54784CF3D2@holtmann.org>
+References: <20200624105737.1.Ibae403db54245c458d14297f1892c77c5055da41@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Abhishek,
 
---oJAv8lSwuaQsYd0G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> QCA_ROME doesn't have support for the reset gpio but sometimes gets into
+> a state where it is unresponsive to commands. When this happens, reset
+> the port to attempt to revive the chip.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> On Chromebooks with this chipset, we encountered cmd_timeout after
+> running suspend stress test for hundreds of iterations. Without
+> a recovery mechanism, continued cmd_timeout failures eventually caused
+> the suspend stress test to fail.
+> 
+> This change will just reset the port that the Bluetooth chip is on when
+> cmd_timeout is encountered. At the very least, the driver will unload
+> and stop affecting suspend. It doesn't seem to restore the BT controller
+> to a good state however (this still requires a power cycle).
+> 
+> drivers/bluetooth/btusb.c | 17 +++++++++++++++++
+> 1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index e42fdd625eb023..b806a88702328b 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -573,6 +573,22 @@ static void btusb_rtl_cmd_timeout(struct hci_dev *hdev)
+> 	gpiod_set_value_cansleep(reset_gpio, 0);
+> }
+> 
+> +static void btusb_generic_usb_cmd_timeout(struct hci_dev *hdev)
+> +{
+> +	struct btusb_data *data = hci_get_drvdata(hdev);
+> +	int err;
+> +
+> +	if (++data->cmd_timeout_cnt < 5)
+> +		return;
+> +
+> +	bt_dev_err(hdev, "Multiple cmd timeouts seen. Resetting usb device.");
+> +	err = usb_autopm_get_interface(data->intf);
+> +	if (!err)
+> +		usb_queue_reset_device(data->intf);
+> +	else
+> +		bt_dev_err(hdev, "Failed usb_autopm_get_interface with %d", err);
+> +}
+> +
+> static inline void btusb_free_frags(struct btusb_data *data)
+> {
+> 	unsigned long flags;
+> @@ -3964,6 +3980,7 @@ static int btusb_probe(struct usb_interface *intf,
+> 	if (id->driver_info & BTUSB_QCA_ROME) {
+> 		data->setup_on_usb = btusb_setup_qca;
+> 		hdev->set_bdaddr = btusb_set_bdaddr_ath3012;
+> +		hdev->cmd_timeout = btusb_generic_usb_cmd_timeout;
 
-On Wed, Jun 24, 2020 at 10:55:36AM -0700, Matthias Kaehlcke wrote:
-> On Wed, Jun 24, 2020 at 06:44:17PM +0100, Mark Brown wrote:
+lets give this a btusb_qca_cmd_timeout name. If it ever gets generic, we can rename it, but right now it is specific to QCA.
 
-> > Wait, so *some* of the series should go together but not other bits?
-> > But you want them split up for some reason?
+Regards
 
-> Yes, this will almost certainly be the case, even if not for this patch.
-> I brought this up earlier (https://patchwork.kernel.org/cover/11604623/#23428709).
+Marcel
 
-I'm not really reading any of this stuff for the series as a whole, as
-far as I could tell I'd reviewed all my bits and was hoping whatever
-random platform stuff needs sorting out was going to be sorted out so I
-stopped getting copied on revisions :(
-
-> For the QSPI patch you could argue to just take it through QCOM since the SPI
-> patch of this series goes through this tree, up to you, I just want to make
-> sure everybody is on the same page.
-
-If there are some part of this that don't have a connection with the
-rest of the series and should be applied separately please split them
-out and send them separately so it's clear what's going on.
-
---oJAv8lSwuaQsYd0G
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zlKQACgkQJNaLcl1U
-h9CrTQf/Vg2E6duvaq65qFsFKS/aluS0uK8RMRY4XebTQ8EzKerzfY2M5BG+G78p
-rXdzGDqWdLhmofORK0GP8dFjJO8SQPuGs1yMyQSSNom7oe816OOF3H4zP0y3g09u
-teC+rFX5q4vtZlqsiiLkO7dscWNR6Ee2ezUWFVNIfIpQR8xTzL63shWO5dYTWsI6
-+fYLfWPWRQkTUxTP6R46j4SoTIikF6clMqsXocztZG+UapaLlf5ttfQTRyNv+fGU
-IK1TOePE14Cb2f47WxSnccI6BE+Pj7V/ixQHF9JMjR2veIYzKQ3poRoSNj+OiN3j
-sv2FJuPzEyc4agZNugHJlMZvCPvDfA==
-=ZMZQ
------END PGP SIGNATURE-----
-
---oJAv8lSwuaQsYd0G--
