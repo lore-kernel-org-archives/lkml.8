@@ -2,106 +2,136 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57956206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4D5206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IROJTaKw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txxQqYan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404128AbgFXPBl (ORCPT
+        id S2404139AbgFXPBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55444 "EHLO
+        Wed, 24 Jun 2020 11:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404107AbgFXPBf (ORCPT
+        with ESMTP id S2404102AbgFXPBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:01:35 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17872C061796
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:35 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a45so2371544pje.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:35 -0700 (PDT)
+        Wed, 24 Jun 2020 11:01:34 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F7EDC061573;
+        Wed, 24 Jun 2020 08:01:34 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so2844109wmh.2;
+        Wed, 24 Jun 2020 08:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I2Wt5QedxvLGXCfHxOenkohT0DiZJGHo6D4kFEJ4uE8=;
-        b=IROJTaKwsSOIpl0WW4Gu8mPbIi0eaibrEp+f3DVWW4zt3amjINeZfRPvIwLOalIy8e
-         7/XPatvV30fEzPY0uKnRbynudIVhi6EssJ1mMT8B0TpQ+xVtlNJaRmhqmbE5EsBsogHQ
-         GLEFs2DhZ7YwDKffHihrNoQ1dDx5eYIzFeiuTHCZj3zodndYdrl1fLKXzPBNaUzA7o91
-         53gctfr2I7K6XZakW8edfoI4f2Jrfi5hIjR+g+50Do4ywZoOQSBko7nkRRaC/tKXERdn
-         ep6h0uze29S8PrWVjY8q8UiafF0Ba0EyrQW9/ORpTST41Pj5CDvvpAGBdLbMdY/8gWpg
-         584A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bVP8UZ4IHKrL+X8gjnWR8bdS5bGguU8e2dXcySpdCyo=;
+        b=txxQqYanhxjipxL7sbiuRoaplL6XH1yoiMXbPpam3DlZQQQCPEo89KUSvsIwOFnCpE
+         XPgDt3TMKRiGVbqV/ocfa0PtnuQVnA1cXDs+9pKY3Jepyf7g7/vm4WfAB90k+PEYTHJG
+         HquMXSy7G0l0C2YKUuk/CeWWVFNaQcsEPMN3jm7QozCQ6idLmuynOOOgOw5W9ASYbPif
+         UZkPer+wR1Kvblddgq/bVI374V1irJVBciGM8LH7kJl7He2wGxY8mrNX2Vym6T3ycOx4
+         QVpH+aaA4DIMVOv27o6Rjp57CAzdxnqfyf2KuJ4axu+JK+mpzYo9S2C8dbJDHnvDLSns
+         WJLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I2Wt5QedxvLGXCfHxOenkohT0DiZJGHo6D4kFEJ4uE8=;
-        b=QrFBNEtQuRyL0DIALoiVHpCVTZAy7oE66Cl7GbhdhjFSQ0HWsY3aLfLYE9CJkt4rkL
-         ty6KY4Xh5+TMoohOoW6km+6H4v9Rf78D/xneez2Ne00eYrW5vTLCcDFL01JbHq1gg2D9
-         0FU/RA8aOGEUIiW4pDIK1QD2emqmmpA0VojuFxUMRech3hn3jVqLOwyV4jUurMbtwen5
-         rDw3tk6RFaffQEf9eI1VVoK17ypJoLSEx7WFi/UA0mv2lSRmW4A4ThfglLEi7iYTJUR1
-         hR7/DMDUqiCN60thBcugeNAgQ5hWBVHT3xM7GKsUg8ZSIe4e4APjHUYDpJtV8m+l4HS8
-         Hy6Q==
-X-Gm-Message-State: AOAM532DUus5sRZzurcIhKXpfRo7KaGi8nt5LgzRsIdGqgMt7ChbElo9
-        Yz8Yx6KJ6tZBjRpv3wMrLvF3Ug==
-X-Google-Smtp-Source: ABdhPJwdFv++0X60Vw2UpSgX2H9PZx08FyjXGhCZ+1Q4IXV3Ir3kUVavKO4Ae3tjd6c7WpUnLLyOGw==
-X-Received: by 2002:a17:90a:d485:: with SMTP id s5mr27344721pju.61.1593010894581;
-        Wed, 24 Jun 2020 08:01:34 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id p30sm21012287pfq.59.2020.06.24.08.01.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bVP8UZ4IHKrL+X8gjnWR8bdS5bGguU8e2dXcySpdCyo=;
+        b=EA7IeyJXSAp+6Mb11i8gbKektzurktOpianKn6XFyycUeIKseYyaarvAPInOAatBuY
+         um7XC1R4c13uERH32U0UreU6CDOAqJzGbFuFhuy5HI2lJbWi/cs9lz7Y4ZGxcx7MFkOq
+         sinjoueDP9Rk+Jv1jKYwi2ZVYpXlYWSBMnlPG6NC8WsOTcSljRsi6Ph0L/dsFBfiUoog
+         n9eKbiPGq7gD5D6FPdkhLyw6ionx1s53JMQKgu/VIbvmLIZh8X2Lecz+8Uw2GZ+7ugcI
+         OHiH7NG6joVlvVbuY94RqKdsZljRxVOZ6bAp3DP8kmMS3lWOEgUntWmuJCXGcsy9EZZp
+         xgNg==
+X-Gm-Message-State: AOAM5332h5/3qUdl0OooBCN10bitKn6pYkQyK50FYL8FmxFDFA13+PPj
+        41frYcUVfefNySHS1IL44RE=
+X-Google-Smtp-Source: ABdhPJwsj3r17OahPuQ/1bBpEarwkSDglbOUxSUYkoEdopFSJoCPQHptlXiIXYnlLKwN8GKOtMqQJg==
+X-Received: by 2002:a05:600c:2dc1:: with SMTP id e1mr17000897wmh.108.1593010893119;
         Wed, 24 Jun 2020 08:01:33 -0700 (PDT)
-Subject: Re: [PATCH 05/15] mm: allow read-ahead with IOCB_NOWAIT set
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>
-References: <20200618144355.17324-1-axboe@kernel.dk>
- <20200618144355.17324-6-axboe@kernel.dk>
- <20200624043814.GC5369@dread.disaster.area>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8248e187-1b4a-83c8-0ba8-afc253ed69da@kernel.dk>
-Date:   Wed, 24 Jun 2020 09:01:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id s8sm21339390wru.38.2020.06.24.08.01.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:01:32 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 5/8] mailbox: qcom: Add msm8994 apcs compatible
+Date:   Wed, 24 Jun 2020 17:01:03 +0200
+Message-Id: <20200624150107.76234-6-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200624150107.76234-1-konradybcio@gmail.com>
+References: <20200624150107.76234-1-konradybcio@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624043814.GC5369@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/20 10:38 PM, Dave Chinner wrote:
-> On Thu, Jun 18, 2020 at 08:43:45AM -0600, Jens Axboe wrote:
->> The read-ahead shouldn't block, so allow it to be done even if
->> IOCB_NOWAIT is set in the kiocb.
->>
->> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
-> BTW, Jens, in case nobody had mentioned it, the Reply-To field for
-> the patches in this patchset is screwed up:
-> 
-> | Reply-To: Add@vger.kernel.org, support@vger.kernel.org, for@vger.kernel.org,
-> |         async@vger.kernel.org, buffered@vger.kernel.org,
-> | 	        reads@vger.kernel.org
+MSM8994 has an APCS block similar to 8916, but
+with a different clock driver due to the former
+one having 2 clusters.
 
-Yeah, I pasted the subject line into the wrong spot for git send-email,
-hence the reply-to is boogered, and the subject line was empty for the
-cover letter...
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml   | 1 +
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 5 +++++
+ 2 files changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+index 12eff942708d..5125ca3533d2 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+@@ -18,6 +18,7 @@ properties:
+     enum:
+       - qcom,ipq8074-apcs-apps-global
+       - qcom,msm8916-apcs-kpss-global
++      - qcom,msm8994-apcs-kpss-global
+       - qcom,msm8996-apcs-hmss-global
+       - qcom,msm8998-apcs-hmss-global
+       - qcom,qcs404-apcs-apps-global
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index cec34f0af6ce..6d892136e0e6 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -41,6 +41,10 @@ static const struct qcom_apcs_ipc_data msm8916_apcs_data = {
+ 	.offset = 8, .clk_name = "qcom-apcs-msm8916-clk"
+ };
+ 
++static const struct qcom_apcs_ipc_data msm8994_apcs_data = {
++	.offset = 8, .clk_name = NULL
++};
++
+ static const struct qcom_apcs_ipc_data msm8996_apcs_data = {
+ 	.offset = 16, .clk_name = NULL
+ };
+@@ -146,6 +150,7 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
+ 	{ .compatible = "qcom,ipq6018-apcs-apps-global", .data = &ipq6018_apcs_data },
+ 	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = &ipq8074_apcs_data },
+ 	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = &msm8916_apcs_data },
++	{ .compatible = "qcom,msm8994-apcs-kpss-global", .data = &msm8994_apcs_data },
+ 	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = &msm8996_apcs_data },
+ 	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = &msm8998_apcs_data },
+ 	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = &msm8916_apcs_data },
 -- 
-Jens Axboe
+2.27.0
 
