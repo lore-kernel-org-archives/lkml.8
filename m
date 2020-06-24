@@ -2,110 +2,161 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC77C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0499C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C66062088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592996135;
-	bh=nSECj9C8zuSXkIqMFZ5C/ZsscNsZzqwo0LwvBlsTjG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F7b/NBuS6lyu98ARFTGoZNtyfARpuucUhzY8lXcimk/UdWOYy/eRi1cr+XGxobixT
-	 6kLZjUL88KkqhgVHclrs+xDEWOMIWjMqK/DPNMLqILtH/oyl2rryG+xpGcFkB07HPK
-	 QF0aQSeyz6vZ/Cbu97870agloh6UjrF9XN/giqAM=
+	by mail.kernel.org (Postfix) with ESMTP id A92FC2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:57:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jsrHEYsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390445AbgFXKze (ORCPT
+        id S2390553AbgFXK5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727100AbgFXKzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:55:33 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B92EA2084D;
-        Wed, 24 Jun 2020 10:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592996132;
-        bh=nSECj9C8zuSXkIqMFZ5C/ZsscNsZzqwo0LwvBlsTjG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OHC6H/V2p2QfoaxvZlrvePG1axfxm0gguyFK2nFzFHuL2KPWlDiTyk/7Cs1NFh3fl
-         Qv89fTvWxnsSCwlmNlo4IifCe/S+kvUxQ99tjEnJG7lDjl+DaoWlF/0tmrXwO6RCVW
-         uu36Vf1fGT2Fj/xJgWNrXCAx0X571f+ftQR8i2bE=
-Date:   Wed, 24 Jun 2020 11:55:28 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jun 24 [build failure on arm64]
-Message-ID: <20200624105528.GB6134@willie-the-truck>
-References: <20200624165323.3dffcde5@canb.auug.org.au>
- <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
+        Wed, 24 Jun 2020 06:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgFXK5N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 06:57:13 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B8BC061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:57:12 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id v1so1115359vsb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 03:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vn4droilz5xGM4KfZXgTLDdDZ7pkVwg0FkXdJSTh6us=;
+        b=jsrHEYsjYaln2VseebXDq9KSHpUlVCIp31IbwlZNiLEWvQQUW3jOQYJyYJ7ilWsi8t
+         N4yIdR3YaRGUPVNKe7i4mRT46gYHqXTnBpAYFx6g326/StBM1zMIZgqE/Il1qOv3STOn
+         fxiahpFUpRclnlN6ofiAe89/gsyxluoR8eawmKIV9o+dvNVy1/F0Jl2dJ7hK2dxOREOc
+         YXbt1vQ34xDe+W0KAHfmGph3WghyiCvx0EDecfobr2KxmbamtlyrwfbCgjpWvdza+gsD
+         BGzm8TnsM3OhMG8PgIzFCF995Q9nxS7OXOXKBdJQhWQ7HGO4f0RZSlTPw1OZeUPe4Fex
+         JV0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vn4droilz5xGM4KfZXgTLDdDZ7pkVwg0FkXdJSTh6us=;
+        b=rlr8JTN2hKeH+3vEB7708dZnr69naRC+h7Y/3KEi1f/rvuff8l/01mPXUDSs7dqANH
+         jx19HLC0l2qNBOmumwirDurTdYmsMvgGbHdy1GbWfIlNiplPzz6jLFSTClqBcywXAalz
+         usRJINtyxrOZ0ihHHThErQMbC2GVD2UzCkVI0TA3246eRNSfNQT7uIVF5QuRjsrVcY4t
+         ofhk1hiT56R0W3X8ibpjCbYtAfyXThs3yvEpe0KdGo2fiaw8B1qLk2YSbR8fznBeDSr4
+         UVycKs9ISfWSUg/GJDMea7j6d9oLXdGVEb9AvRzqxFMRHzcI5eNt397Zrv7BFz7Z7ufB
+         lpUg==
+X-Gm-Message-State: AOAM530kw1pjEQmWsUkrBK5HB++rv9beZUWjhqurFz9Q2KzFgCgmudWM
+        yeAL9387gHMC7gUfxjVq/zMF+rMML2qbeSrqU6/81VjZiNE=
+X-Google-Smtp-Source: ABdhPJwsxJpI/X+t50qo0pfoptqsNIIaJYL0e6gqFMktW+4P7dgIwXfmwMKeXKnC5Tvh/SK00ZCwC18Bi+FEfhZtYJ4=
+X-Received: by 2002:a67:e10d:: with SMTP id d13mr23383320vsl.27.1592996231712;
+ Wed, 24 Jun 2020 03:57:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a7e31a8-9a7b-2428-ad83-2264f20bdc2d@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cbd70c2f0f5ddae0d8e418fcb1e03101e408f6c2.1585753313.git.amit.kucheria@linaro.org>
+ <20200414164357.GA11178@bogus>
+In-Reply-To: <20200414164357.GA11178@bogus>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 24 Jun 2020 16:27:00 +0530
+Message-ID: <CAHLCerM7hwKS=jNtMLnoCXr6z9ckOo1879e-MR-BnOC0JO=adA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: Get rid of thermal.txt and replace references
+To:     Rob Herring <robh@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Talel Shenhar <talel@amazon.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-tegra@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 05:08:56PM +0800, Shaokun Zhang wrote:
-> +Will Deacon,
-> 
-> Hi Will,
-> 
-> There's a build failure on arm64:
-> 
->   CALL    scripts/atomic/check-atomics.sh
->   CALL    scripts/checksyscalls.sh
->   LD      arch/arm64/kernel/vdso/vdso.so.dbg
-> ld: unrecognized option '--no-eh-frame-hdr'
-> ld: use the --help option for usage information
-> arch/arm64/kernel/vdso/Makefile:64: recipe for target
-> 'arch/arm64/kernel/vdso/vdso.so.dbg' failed
-> make[1]: *** [arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
-> arch/arm64/Makefile:175: recipe for target 'vdso_prepare' failed
-> make: *** [vdso_prepare] Error 2
-> 
-> GCC version is followed:
-> gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609
-> 
-> It seems caused by
-> 87676cfca141 arm64: vdso: Disable dwarf unwinding through the sigreturn
-> trampoline
+On Tue, Apr 14, 2020 at 10:14 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed,  1 Apr 2020 20:35:50 +0530, Amit Kucheria wrote:
+> > Now that we have yaml bindings for the thermal subsystem, get rid of the
+> > old bindings (thermal.txt).
+> >
+> > Replace all references to thermal.txt in the Documentation with a link
+> > to the appropriate YAML bindings using the following search and replace
+> > pattern:
+> >  - If the reference is specific to the thermal-sensor-cells property,
+> >  replace with a pointer to thermal-sensor.yaml
+> >  - If the reference is to the cooling-cells property, replace with a
+> >  pointer to thermal-cooling-devices.yaml
+> >  - If the reference is generic thermal bindings, replace with a
+> >  reference to thermal*.yaml.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
+> >  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
+> >  .../arm/marvell/ap80x-system-controller.txt   |   2 +-
+> >  .../arm/marvell/cp110-system-controller.txt   |   2 +-
+> >  .../bindings/cpufreq/cpufreq-dt.txt           |   3 +-
+> >  .../bindings/cpufreq/cpufreq-mediatek.txt     |   4 +-
+> >  .../devicetree/bindings/hwmon/gpio-fan.txt    |   3 +-
+> >  .../devicetree/bindings/hwmon/lm90.txt        |   4 +-
+> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     |   2 +-
+> >  .../bindings/thermal/amazon,al-thermal.txt    |   2 +-
+> >  .../bindings/thermal/brcm,avs-ro-thermal.yaml |   2 +-
+> >  .../bindings/thermal/brcm,bcm2835-thermal.txt |   2 +-
+> >  .../bindings/thermal/hisilicon-thermal.txt    |   2 +-
+> >  .../bindings/thermal/max77620_thermal.txt     |   6 +-
+> >  .../bindings/thermal/mediatek-thermal.txt     |   2 +-
+> >  .../thermal/nvidia,tegra124-soctherm.txt      |  10 +-
+> >  .../thermal/nvidia,tegra186-bpmp-thermal.txt  |   2 +-
+> >  .../bindings/thermal/qcom-spmi-temp-alarm.txt |   2 +-
+> >  .../bindings/thermal/rockchip-thermal.txt     |   2 +-
+> >  .../bindings/thermal/tango-thermal.txt        |   2 +-
+> >  .../bindings/thermal/thermal-generic-adc.txt  |   2 +-
+> >  .../devicetree/bindings/thermal/thermal.txt   | 586 ------------------
+> >  .../bindings/thermal/uniphier-thermal.txt     |   2 +-
+> >  23 files changed, 33 insertions(+), 615 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Urgh, binutils quality strikes again. If you're able to reproduce locally,
-can you try the diff below, please? All the linkers I have kicking around
-seem to support --no-eh-frame-hdr.
+Daniel, Rob,
 
-Will
+This seems to have been missed in the 5.8 merge window. I suspect this
+should go in through the thermal tree.
 
---->8
-
-diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-index 1e5a940532da..97d3d3632093 100644
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -23,8 +23,9 @@ btildflags-$(CONFIG_ARM64_BTI_KERNEL) += -z force-bti
- # potential future proofing if we end up with internal calls to the exported
- # routines, as x86 does (see 6f121e548f83 ("x86, vdso: Reimplement vdso.so
- # preparation in build-time C")).
--ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
--               -Bsymbolic --no-eh-frame-hdr --build-id -n $(btildflags-y) -T
-+ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv       \
-+            -Bsymbolic $(call ld-option, --no-eh-frame-hdr) --build-id -n      \
-+            $(btildflags-y) -T
- 
- ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
- ccflags-y += -DDISABLE_BRANCH_PROFILING
-
+Regards,
+Amit
