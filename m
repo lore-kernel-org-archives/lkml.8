@@ -2,113 +2,104 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF660C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4542FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8852320723
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2080720723
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jnpRf2uO";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="jnpRf2uO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PFUTEJVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404190AbgFXPVM (ORCPT
+        id S2404466AbgFXPVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:21:12 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51730 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403781AbgFXPVM (ORCPT
+        Wed, 24 Jun 2020 11:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404333AbgFXPVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:21:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id C06958EE16A;
-        Wed, 24 Jun 2020 08:21:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1593012070;
-        bh=DOfXn7+KwCf/KpOq0sgZgebZBq+AocK/Mz+BMpU//pw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jnpRf2uO2k/DXOOIyuh7s7drZDKCrsxIQ5uRzBjEtPAVaoVdvmXcbKggYo1Rh65vS
-         VfJkjwHplAQLF/lGQPdl5jUDMKDhZc/FIpzMMIXZ94UN26BGDD98CPfXMCzFqC5H0J
-         0vTwpXwEgOkLBHllHmNZ8p2QKY+LswhDsnzeujJI=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qYj7yQLOuoXC; Wed, 24 Jun 2020 08:21:10 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 1BBFB8EE0E9;
-        Wed, 24 Jun 2020 08:21:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1593012070;
-        bh=DOfXn7+KwCf/KpOq0sgZgebZBq+AocK/Mz+BMpU//pw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jnpRf2uO2k/DXOOIyuh7s7drZDKCrsxIQ5uRzBjEtPAVaoVdvmXcbKggYo1Rh65vS
-         VfJkjwHplAQLF/lGQPdl5jUDMKDhZc/FIpzMMIXZ94UN26BGDD98CPfXMCzFqC5H0J
-         0vTwpXwEgOkLBHllHmNZ8p2QKY+LswhDsnzeujJI=
-Message-ID: <1593012069.28403.11.camel@HansenPartnership.com>
-Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Jerome Forissier <jerome@forissier.org>,
-        Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
-Date:   Wed, 24 Jun 2020 08:21:09 -0700
-In-Reply-To: <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
-References: <20200604175851.758-1-maxim.uvarov@linaro.org>
-         <20200604175851.758-2-maxim.uvarov@linaro.org>
-         <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
-         <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
-         <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
-         <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
-         <1592507935.15159.5.camel@HansenPartnership.com>
-         <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
-         <1592578844.4369.5.camel@HansenPartnership.com>
-         <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jun 2020 11:21:30 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04968C061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:21:28 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k1so1189025pls.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hipZu7svv8YCOGWfV429rAgefIwLANWXqxhaAHNlUDs=;
+        b=PFUTEJVQwh2+4QRR1nFSJ1vpBf1P1htrZ93UyqcsZYbdOmeZSMIhkYQd42QutBKyJs
+         TJmRw7i1dvHgb8fEVkq9MnKeDv9Rz3iq8rIhQJBq5dr5O8JseercMwc1JUo8HpJOhm/L
+         hgo66dKugSbGc/w9UC2Psf+VHkXtb5H5cZmBA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hipZu7svv8YCOGWfV429rAgefIwLANWXqxhaAHNlUDs=;
+        b=c7ZwM7xWSaM8j/K75ANdZOCoftSsaaOyq+Cir2sguotkquYsiIE8pq3x09thHCIG9H
+         ixFn2PrMB4UPWeD3hkDDqhGfo4O9D3nxW6qLPoz2SnimsXUZRsAZ/nSp/oFuovCHDdxj
+         LDGk68+ECtZawFNDnKCf90PpujsHx1JNNPv3dqhWoatbwhwAVg2m2MNV7bHeVRgvr8D/
+         m47s5cb14i6ruil2SZjbWEeHn1ckQOCb6yRD+PXMeFCSC1zpM+ehgy4LMJqXnTBarZUT
+         5AbF3tc3R8pmdvEqcKhGNVOn+zuN7uTBvDe26SMnlMuI49RPMTzqssO+esknOETxDXVf
+         VMYw==
+X-Gm-Message-State: AOAM531ZrzlRqSkpo0+8ykpvk7/A7P0is+su7C1lSWqA4HV80RVGOOLk
+        9S776wgj9HrwAGOjLt3gpnG2AQ==
+X-Google-Smtp-Source: ABdhPJz6Pb/Uq4DmJN0BF/hWfnaErTToTjkFKWI6VNCSQl12WLTaojfbfbhCZdSTruAF/RMm4+CkOA==
+X-Received: by 2002:a17:90a:cc09:: with SMTP id b9mr25741536pju.223.1593012088520;
+        Wed, 24 Jun 2020 08:21:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m8sm5504017pjk.20.2020.06.24.08.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:21:27 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 08:21:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Fangrui Song <maskray@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+Message-ID: <202006240820.A3468F4@keescook>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org>
+ <20200624033142.cinvg6rbg252j46d@google.com>
+ <202006232143.66828CD3@keescook>
+ <20200624104356.GA6134@willie-the-truck>
+ <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
-> Apologies for delay in my reply as I was busy with some other stuff.
-> 
-> On Fri, 19 Jun 2020 at 20:30, James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-[...]
-> > it's about consistency with what the kernel types mean.  When some
-> > checker detects your using little endian operations on a big endian
-> > structure (like in the prink for instance) they're going to keep
-> > emailing you about it.
-> 
-> As mentioned above, using different terminology is meant to cause
-> more confusion than just difference in endianness which is manageable
-> inside TEE.
-> 
-> And I think it's safe to say that the kernel implements UUID in big
-> endian format and thus uses %pUb whereas OP-TEE implements UUID in
-> little endian format and thus uses %pUl.
+On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
+> I'm not sure if there is a point to having PAC and/or BTI in the EFI
+> stub, given that it runs under the control of the firmware, with its
+> memory mappings and PAC configuration etc.
 
-So what I think you're saying is that if we still had uuid_be and
-uuid_le you'd use uuid_le, because that's exactly the structure
-described in the docs.  But because we renamed
+Is BTI being ignored when the firmware runs?
 
-uuid_be -> uuid_t
-uuid_le -> guid_t
-
-You can't use guid_t as a kernel type because it has the wrong name?
-
-James
-
+-- 
+Kees Cook
