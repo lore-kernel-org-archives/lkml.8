@@ -2,93 +2,131 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A048EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806B520702
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB90B20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9pv2nHl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UDwsCRqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403831AbgFXOp2 (ORCPT
+        id S2391258AbgFXOp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52890 "EHLO
+        Wed, 24 Jun 2020 10:45:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389583AbgFXOp1 (ORCPT
+        with ESMTP id S2389253AbgFXOp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:45:27 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39699C061573;
-        Wed, 24 Jun 2020 07:45:27 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m21so1672703eds.13;
-        Wed, 24 Jun 2020 07:45:27 -0700 (PDT)
+        Wed, 24 Jun 2020 10:45:56 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B72C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:45:56 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id b15so1688707edy.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:45:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lIqE2NUHHN1jnUVxaUmChf7C6YexvjrFTau9YkSeGiI=;
-        b=K9pv2nHlMVvSHQxXmeTLh5YhPo9Sh8Wa0zWK8/oJRYyq/CxzmT6VibZSbU2AJfOJoD
-         YLLAaqK232+a5+4euM+JfWcfO/W3Bu+vexN4cJJAr2VQU1V0DrrUSecC//LcB9Hos5io
-         ey63LchdWVEMuDX5ydsGrtLiHsbW2sLirb9GmhBOj7a9Fay5YE+Vz/PjkHm3gStQzG/K
-         rFNDqack3cRru/QmKslBSZniphwZHwtDn22yQWkQ8ft8cNEKKhiNmOlB26Xpp5k3zt2H
-         AAC8EfonHmBHH4tt7EEbIzzP3S8qG1fIujJPqJtg8hUi25fxyPsNjVLMczj9rKCBii0y
-         apWw==
+        bh=V6zGdXUAqtZ8TMJ1p/Ja4LOic56oWXGysX+nGE4qGOk=;
+        b=UDwsCRqVx8pfOz08W/2ltgAZty0p1HIWOlxDs9wZvrc42865oOIHY6SxuI2wLxKSK4
+         oX1qfEtOdm91IM9CbQ5mvylgn9KaJlFQafwX3iRPPyO10cQ/e0DDKvcdVFFjFnPCw6v+
+         m0aztYbQKOtK/DNy4DXRqaeAzOAMX7wkrVtXSFUUSIXPNuFi3g2Xluz02EDJTGM1PVdo
+         L3mlYBDLQHsEixw6Hwg0iGqWlyeVIwA6L0psHpwzAQuipMKp/9BStuN5A4XoXmbTmg+Y
+         5p8/tYN4bjKWIt2LuHADfiTGe980AsUeFyyhbeuJ/eM+Y0rb7YzET0ARqw4MzChKo9st
+         gRdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lIqE2NUHHN1jnUVxaUmChf7C6YexvjrFTau9YkSeGiI=;
-        b=rhgrIldcMbHil8S+YvBAlZbJw/PzzES4AljkRE439zM0X08ttzAXNFJntEa4UeCdj8
-         1s1oL21ZNwFjzctYaMxy5MwHzoszpp51t9JG/14/VSdLG8S78OJ5TTwv5CyvsuEkNkDL
-         h8xQmbcbwcCB13hwknMs2tHislkoPuzRy0wa0XwvrAciZ1Wp/PENzvkxfxpLV8pjlUhc
-         IT40apqt/ta8ZDKrsq04hc6XpL8H8e9M/eFAusb4k3X7Ucwpasi7qDeCl33aAp6a23gN
-         QyV2y98JrS18aCDAo0qpt3Qq5iBZLb74bGun+3eYrcXe9RCjcGlf7RMzTzuAG6tICO2x
-         FUxw==
-X-Gm-Message-State: AOAM5335vb7jt4IzEgIq56oVEORz70VX4oxHDpaK3Odjq6/ZgE5+7r7C
-        3ngeHDMGVDy3OOUhU94g4LRh3xcY/NXBtPf5NnQ=
-X-Google-Smtp-Source: ABdhPJzKndG7kjOCV6qRQ1De7msGegvxr+SwDBcGbUH2E5WIx6mrl3d5FCmeYs2bOfsAruUh15NvQ6YhfaxPpkA0kao=
-X-Received: by 2002:a50:e08c:: with SMTP id f12mr27130963edl.233.1593009925988;
- Wed, 24 Jun 2020 07:45:25 -0700 (PDT)
+        bh=V6zGdXUAqtZ8TMJ1p/Ja4LOic56oWXGysX+nGE4qGOk=;
+        b=ZXXRENlhHzEbPVqf35QG/HJ7ObjE5ua7qxJHEKNBE2DmXdRR4n2ya9ktwQKyvWuEDw
+         zyJMTd6oIDprZWawQqRCS6bP2dLnzWyV8wf6QgvhfLfMwXKUaduw5lqCCpKkgpNX6ec7
+         G6v8pv5R8aG80Ui1FCg8XkJ+blNSLvD3xZDb4rP2U6FuNNbGgTMm5JeLU3GBKcKpgc9o
+         5eSeYJ36NnOGDGqQLpc2DraSROPlSRzXqHM8Q45IYg7Mgv6xJeIt49sjsyR1kWzJBG4U
+         UzITBG4qyvae1PNELPftG5gEwcBOH8OipI6Ih7rlPA/FWfv/ilRRlfY7TJHmI+NKA54D
+         wYdA==
+X-Gm-Message-State: AOAM533SrDITS4WuerBEKTL8/L+a5jszyO6+TP9iC8gq0HMPRgqwFTE4
+        gcBlhUq3v/ZtKbk31MvqDroyTM4u+/XbKJoeY88H1g==
+X-Google-Smtp-Source: ABdhPJwnXbWDY/gO5ncGRvDs4eTqLBVgcBQOPmSnBTcgFXDGWRsIjoHMLm/gVmNqWNiWnV8W/5Ahy7gdx/MLPcryIlg=
+X-Received: by 2002:a05:6402:22f0:: with SMTP id dn16mr21977111edb.83.1593009954891;
+ Wed, 24 Jun 2020 07:45:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623224813.297077-1-konradybcio@gmail.com>
- <20200623224813.297077-13-konradybcio@gmail.com> <20200623232705.GR128451@builder.lan>
-In-Reply-To: <20200623232705.GR128451@builder.lan>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Wed, 24 Jun 2020 16:44:50 +0200
-Message-ID: <CAMS8qEVzThnfonhczz_X_idXQr28EzhwbCW6T9UhZKb_dDfSuA@mail.gmail.com>
-Subject: Re: [PATCH v2 12/12] arm64: dts: qcom: Add support for Sony Xperia Z5
- (SoMC Sumire-RoW)
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200622100520.143622-1-darekm@google.com> <ca796f62-7d1f-3391-0373-ec9b98b1c47a@xs4all.nl>
+ <CALFZZQHuqx+H=7pd9t=XYWqKppMzze0XsXwRVA5kLZfwWYLmKQ@mail.gmail.com>
+In-Reply-To: <CALFZZQHuqx+H=7pd9t=XYWqKppMzze0XsXwRVA5kLZfwWYLmKQ@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Wed, 24 Jun 2020 07:45:43 -0700
+Message-ID: <CABXOdTfyzKtT4jWLhBwV5ecG1Bc2g88vUfKB6OspmF0mTafxpA@mail.gmail.com>
+Subject: Re: [PATCH RESEND] media: cros-ec-cec: do not bail on
+ device_init_wakeup failure
+To:     Dariusz Marcinkiewicz <darekm@google.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Dariusz Marcinkiewicz <darekm@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->This does worry me...
+On Wed, Jun 24, 2020 at 5:40 AM Dariusz Marcinkiewicz <darekm@google.com> wrote:
+>
+> Hello.
+>
+> I realized that I sent the previous answer using HTML, and as a
+> consequence it was blocked from mailing lists. Sending it again
+> (apologies for double posting).
+>
+> On Mon, Jun 22, 2020 at 12:23 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+> >
+> > On 22/06/2020 12:05, Dariusz Marcinkiewicz wrote:
+> > > Do not fail probing when device_init_wakeup fails.
+> > >
+> > > device_init_wakeup fails when the device is already enabled as wakeup
+> > > device. Hence, the driver fails to probe the device if:
+> > > - The device has already been enabled for wakeup (via e.g. sysfs)
+> > > - The driver has been unloaded and is being loaded again.
+> > >
+> > > This goal of the patch is to fix the above cases.
+> > >
+> > > Overwhelming majority of the drivers do not check device_init_wakeup
+> > > return value.
+> > >
+> > > Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> >
+> > This can be CCed to stable, I guess?
+> >
+>
+> That issue is not a recent regression but has been in there since the
+> very beginning.  So it might be argued that is it not severe enough to
+> warrant cc'ing stable. Happy to do that anyways if you think
+> otherwise.
+>
 
-Yeah, sadly the only way to get SMP on every msm8916/39 and
-*some* 92/94 mobile devices is to use something along this: [1]
+Confused. Internally you would like to have this patch applied to
+chromeos-4.4. Here you suggest that it may not be important enough to
+apply to stable releases. Which one is it ?
 
-But for now, 1 core is enough. We will worry when more peripherals
-are brought up.
+Thanks,
+Guenter
 
-[1] https://github.com/msm8916-mainline/linux/commit/1b12cb1f8e718175bcff5734cdb3903e83d8aa89
-
-Regards
-Konrad
+> > Can you provide a Fixes: tag as well?
+> >
+>
+> Done, submitted v2 with that a couple of days ago.
+>
+> Thank you and best regards.
