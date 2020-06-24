@@ -2,146 +2,216 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD29720857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C7E20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:04:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="t1xUB6mn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f/TMaPAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388836AbgFXJE2 (ORCPT
+        id S2389043AbgFXJEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:04:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41800 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728463AbgFXJE1 (ORCPT
+        Wed, 24 Jun 2020 05:04:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728463AbgFXJEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:04:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05O8ueHj171497;
-        Wed, 24 Jun 2020 09:04:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=ZYQ2xCkDc27HNFzn89I9CQa/ymQsML6ht09SlJYJgJE=;
- b=t1xUB6mnXyrnfTu6YBtn1eobBVCaBWBiZPLUGGYC4VDjZvr1AP6tr3zuxQROYA0zXbxG
- z8GnBvbVb/wUEWlH9HZdVmuY4GoEG0x1glJ7xRYGzGdhahkkQsR5XZerFW3zU673dIXj
- wDkgcMOpdFTSbehO3PsKC2z7vvGsaO523XziDQAsa2AQl6+95Xjo4JDIWcrlZic5ycED
- z74P5zt0WLgBmgmYWrEb/2PSTKylC8AG0Ak1e+Un+g/1beAJ2RNUFA8wb5RiyAss9XG/
- VWt7dHBXHQpwvx+N8LRM/wCXtWFYuciiDYZl0DYwWVW95RGw51pWwFcGMRJQE5CdvNCo Tg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31uut5hrnj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 09:04:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05O93HHq066120;
-        Wed, 24 Jun 2020 09:04:16 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 31uurqgms8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 09:04:16 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05O94EIe006865;
-        Wed, 24 Jun 2020 09:04:14 GMT
-Received: from dhcp-10-175-205-73.vpn.oracle.com (/10.175.205.73)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jun 2020 09:04:13 +0000
-Date:   Wed, 24 Jun 2020 10:04:05 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     David Gow <davidgow@google.com>
-cc:     Frank Rowand <frowand.list@gmail.com>,
-        "Bird, Tim" <Tim.Bird@sony.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: RFC: KTAP documentation - expected messages
-In-Reply-To: <CABVgOSkwZUAEjxrqO46kqj=uY5HDzr-E_LR9i04yXEKqjp91Og@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.2006240954590.25863@localhost>
-References: <d38bf9f9-8a39-87a6-8ce7-d37e4a641675@gmail.com> <CABVgOSkwZUAEjxrqO46kqj=uY5HDzr-E_LR9i04yXEKqjp91Og@mail.gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 24 Jun 2020 05:04:48 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755F1C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 02:04:48 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id n24so1709248lji.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 02:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W75Vyxutbx3kUBYjxcYLfUDoT9Gq5ndxaYo4aaQYbA8=;
+        b=f/TMaPATghI6Y8C+kjh7zI0RupMMLaAD6+NPBHo+CirJoIHPWV3brfOtAz3LMyS0K2
+         XG1Az7BYSTHcS3KZUMGwl26JQCu4RcZ4BZsz10thydmZri1ka70xg4Ywsm3c57IIWhI/
+         6LpqqXuzHNNejjdk1l6Rn+/xsSH7DgtkaRvlEDXR9OxX/ChlIqQjdalYnChZp1JFBN/4
+         3eUMcvfBV0rRz5HpZJMggbSGRyqkqoAcsTM8PldUgpCDRuMxgI1GFnCKAzH+q6rEzuFN
+         dUrFOfJytbW9nXWjdpbNBGWoEPqpuJ/VCkDHGZVoXg1tNNRGOWwwbXPN2u+NQc5sbWF8
+         rRAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W75Vyxutbx3kUBYjxcYLfUDoT9Gq5ndxaYo4aaQYbA8=;
+        b=dKD1v9rejjmq9jNE1ZiWfbaDBErf02FYBUQv94dY+/CadjVf5wtCInu5CIgZl5TY+H
+         9IS4nGZmAM0IR+e8fThI/z+rkyfE+VyCx6OZdrUGprWbRfTEr3QbVs7CNjLl01ZZ8NtJ
+         ouheHFO07XOwAQOBbAXiZ0B8QgXKYULh4WQuu7gAU8trKrExavyPQxeZxQmx8pGNJgw7
+         qqit4Bf5dcJVYuxr0fv5QkXbFh+osd+GI0vUGHiO4hodUb2QXmz5spGSj03gPfY2+abU
+         TlTkaW6C10mrMv+ZxxlkapU0YOJpIIeYEuuSbn6XAGWKPmYi7CAaA6GprLMF5Xjwt1Hg
+         5g/g==
+X-Gm-Message-State: AOAM530v5bJAbRlVXjVt24n/ptRNlio7udtY2NK+9SLpWUIU+8mBd/yk
+        7TX9eEhnIuEt3WIbGKtAXGuvlpvKpKDzmQzubWc4Yw==
+X-Google-Smtp-Source: ABdhPJzUsGWNLAWqDlwrozMpTeRmx1S40/m5sNUP0zYDWflbtU5BH6oXjgtsX+CrWeDEbbQVhS1ZuhImSMk7/Oq1fX0=
+X-Received: by 2002:a2e:b8d4:: with SMTP id s20mr13839910ljp.177.1592989486852;
+ Wed, 24 Jun 2020 02:04:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006240067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 suspectscore=0
- phishscore=0 impostorscore=0 cotscore=-2147483648 priorityscore=1501
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006240066
+References: <20200319023819.GO11705@shao2-debian> <20200612110616.20264-1-hdanton@sina.com>
+ <90f4036d-bb16-af67-8776-a2cbe67dfe7f@linux.intel.com> <20200615081041.GA16990@vingu-book>
+ <d60343e9-b3a0-bdc7-84f4-e8c912f92c46@linux.intel.com> <20200616065432.GA18401@vingu-book>
+ <3de4937b-1dcd-6d2e-836f-fed1c295dd7c@linux.intel.com> <20200617145725.GA12524@vingu-book>
+ <987fd281-cf22-c17f-b156-4b6f904c5a5b@linux.intel.com> <CAKfTPtB3ay_q2XuAegszyt5gFdSVTz9ndGDemKkZ0iFihDXsPQ@mail.gmail.com>
+In-Reply-To: <CAKfTPtB3ay_q2XuAegszyt5gFdSVTz9ndGDemKkZ0iFihDXsPQ@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 24 Jun 2020 11:04:35 +0200
+Message-ID: <CAKfTPtA-7c+=3q-V6wG+tDp=0q+tm=kCqfAVERbvK5r-EazN8g@mail.gmail.com>
+Subject: Re: [LKP] [sched/fair] 070f5e860e: reaim.jobs_per_min -10.5% regression
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020, David Gow wrote:
-
-> On Mon, Jun 22, 2020 at 6:45 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> >
-> > Tim Bird started a thread [1] proposing that he document the selftest result
-> > format used by Linux kernel tests.
-> >
-> > [1] https://lore.kernel.org/r/CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com
-> >
-> > The issue of messages generated by the kernel being tested (that are not
-> > messages directly created by the tests, but are instead triggered as a
-> > side effect of the test) came up.  In this thread, I will call these
-> > messages "expected messages".  Instead of sidetracking that thread with
-> > a proposal to handle expected messages, I am starting this new thread.
-> 
-> Thanks for doing this: I think there are quite a few tests which could
-> benefit from something like this.
-> 
-> I think there were actually two separate questions: what do we do with
-> unexpected messages (most of which I expect are useless, but some of
-> which may end up being related to an unexpected test failure), and how
-> to have tests "expect" a particular message to appear. I'll stick to
-> talking about the latter for this thread, but even there there's two
-> possible interpretations of "expected messages" we probably want to
-> explicitly distinguish between: a message which must be present for
-> the test to pass (which I think best fits the "expected message"
-> name), and a message which the test is likely to produce, but which
-> shouldn't alter the result (an "ignored message"). I don't see much
-> use for the latter at present, but if we wanted to do more things with
-> messages and had some otherwise very verbose tests, it could
-> potentially be useful.
-> 
-> The other thing I'd note here is that this proposal seems to be doing
-> all of the actual message filtering in userspace, which makes a lot of
-> sense for kselftest tests, but does mean that the kernel can't know if
-> the test has passed or failed. There's definitely a tradeoff between
-> trying to put too much needless string parsing in the kernel and
-> having to have a userland tool determine the test results. The
-> proposed KCSAN test suite[1] is using tracepoints to do this in the
-> kernel. It's not the cleanest thing, but there's no reason KUnit or
-> similar couldn't implement a nicer API around it.
-> 
-> [1]: https://lkml.org/lkml/2020/6/22/1506
+On Fri, 19 Jun 2020 at 09:15, Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
 >
+> On Fri, 19 Jun 2020 at 06:55, Xing Zhengjun
+> <zhengjun.xing@linux.intel.com> wrote:
+> > On 6/17/2020 10:57 PM, Vincent Guittot wrote:
+> > > Le mercredi 17 juin 2020 =C3=A0 08:30:21 (+0800), Xing Zhengjun a =C3=
+=A9crit :
+>
+> ...
+>
+> > > OK. So the regression disappears when the conditions on runnable_avg =
+are removed.
+> > >
+> > > In the meantime, I have been able to understand more deeply what was =
+happeningi
+> > > for this bench and how it is impacted by
+> > >    commit: 070f5e860ee2 ("sched/fair: Take into account runnable_avg =
+to classify group")
+> > >
+> > > This bench forks a new thread for each and every new step. But a newl=
+y forked
+> > > threads start with a load_avg and a runnable_avg set to max whereas t=
+he threads
+> > > are running shortly before exiting. This makes the CPU to be set over=
+loaded in
+> > > some case whereas it isn't.
+> > >
+> > > Could you try the patch below ?
+> > > It fixes the problem on my setup (I have finally been able to reprodu=
+ce the problem)
+> > >
+> > > ---
+> > >   kernel/sched/fair.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index 0aeffff62807..b33a4a9e1491 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -807,7 +807,7 @@ void post_init_entity_util_avg(struct task_struct=
+ *p)
+> > >               }
+> > >       }
+> > >
+> > > -     sa->runnable_avg =3D cpu_scale;
+> > > +     sa->runnable_avg =3D sa->util_avg;
+> > >
+> > >       if (p->sched_class !=3D &fair_sched_class) {
+> > >               /*
+> > >
+> >
+> > I apply the patch above based on v5.7, the test result is as the follow=
+ing:
+>
+> Thanks for the tests.
+>
+> This patch fixes the regression on the test. I'm going to run more
+> tests to make sure that it doesn't regress others benchmarks. I
+> remember that some were slightly better with the original behavior but
+> others patches and fixes have been added in the meantime that might
+> change the results.
 
-For KTF the way we handled this was to use the APIs for catching
-function entry and return (via kprobes), specifying printk as the
-function to catch, and checking its argument string to verify
-the expected message was seen. That allows you to verify
-that messages appear in kernel testing context, but it's
-not ideal as printk() has not yet filled in the arguments in
-the buffer for display (there may be a better place to trace).
-If it seems like it could be useful I  could have a go at 
-porting the kprobe stuff to KUnit, as it helps expand the vocabulary 
-for what can be tested in kernel context; for example we can 
-also override return values for kernel functions to simulate errors.
+I have run more test on large and small system and the results are
+balanced. I might see a small regression on some hackbenchs results on
+large system but it's in the range of the stdev and might not be
+significant
 
-Alan
+I'm going to send  a clean patch with a commit message.
+
+Thanks for your help
+Vincent
+
+>
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup=
+/test/cpufreq_governor/ucode:
+> >
+> > lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s=
+/100%/test/five_sec/performance/0x21
+> >
+> > commit:
+> >    9f68395333ad7f5bfe2f83473fed363d4229f11c
+> >    070f5e860ee2bf588c99ef7b4c202451faa48236
+> >    v5.7
+> >    cbb4d668e7431479a7978fa79d64c2271adefab0 ( the test patch which modi=
+fy
+> > post_init_entity_util_avg())
+> >
+> > 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.=
+7
+> > cbb4d668e7431479a7978fa79d6
+> > ---------------- --------------------------- --------------------------=
+-
+> > ---------------------------
+> >           %stddev     %change         %stddev     %change
+> > %stddev     %change         %stddev
+> >               \          |                \          |                \
+> >          |                \
+> >        0.69           -10.3%       0.62            -9.1%       0.62
+> >        +0.6%       0.69        reaim.child_systime
+> >        0.62            -1.0%       0.61            +0.5%       0.62
+> >        -0.3%       0.62        reaim.child_utime
+> >       66870           -10.0%      60187            -7.6%      61787
+> >        +0.7%      67335        reaim.jobs_per_min
+>
+>
+>
+> >       16717           -10.0%      15046            -7.6%      15446
+> >        +0.7%      16833        reaim.jobs_per_min_child
+> >       97.84            -1.1%      96.75            -0.4%      97.43
+> >        +0.2%      98.05        reaim.jti
+> >       72000           -10.8%      64216            -8.3%      66000
+> >        +0.0%      72000        reaim.max_jobs_per_min
+> >        0.36           +10.6%       0.40            +7.8%       0.39
+> >        -0.6%       0.36        reaim.parent_time
+> >        1.58 =C2=B1  2%     +71.0%       2.70 =C2=B1  2%     +26.9%     =
+  2.01 =C2=B1
+> > 2%      -8.8%       1.44 =C2=B1  2%  reaim.std_dev_percent
+> >        0.00 =C2=B1  5%    +110.4%       0.01 =C2=B1  3%     +48.8%     =
+  0.01 =C2=B1
+> > 7%     -24.6%       0.00 =C2=B1  7%  reaim.std_dev_time
+> >       50800            -2.4%      49600            -1.6%      50000
+> >        +0.0%      50800        reaim.workload
+> >
+> >
+> > --
+> > Zhengjun Xing
