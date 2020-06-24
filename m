@@ -2,112 +2,125 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B594920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5A620836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="auf2iFpA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOiY63xN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390913AbgFXNdm (ORCPT
+        id S2390962AbgFXNeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:33:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41792 "EHLO
+        Wed, 24 Jun 2020 09:34:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388896AbgFXNdl (ORCPT
+        with ESMTP id S2388896AbgFXNeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:33:41 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC990C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:33:41 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF0DF2A8;
-        Wed, 24 Jun 2020 15:33:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593005618;
-        bh=oPJEvSxFywT0HtSvWf+oYQN0nglSD0Pg3DxsenVJifA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=auf2iFpAChhJJIWZ9TisQswT+bIVmoKFlQW95iQKJQVWs3bMMT7uQ6RfH56HAw1pZ
-         ZzYszaWvqO2EipE8fawFGnN7dnfKgamv5GIAuPTJYQtSm2xtIfR9GCkkMlTYUzTwI0
-         yBu2zitEIkXkq8uzUTxZ8S5RceksgVDUoIsb3be8=
-Date:   Wed, 24 Jun 2020 16:33:12 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Subject: Re: [RESEND PATCH v5 5/5] drm/bridge: lvds-codec: simplify error
- handling code
-Message-ID: <20200624133312.GC5980@pendragon.ideasonboard.com>
-References: <20200624114127.3016-1-a.hajda@samsung.com>
- <CGME20200624114138eucas1p262505da3ad1067720080d20209ff32de@eucas1p2.samsung.com>
- <20200624114127.3016-6-a.hajda@samsung.com>
+        Wed, 24 Jun 2020 09:34:10 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC748C061573;
+        Wed, 24 Jun 2020 06:34:10 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b7so2320959pju.0;
+        Wed, 24 Jun 2020 06:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o2BDas5hPmBEDguTVlPQc/PXdhVs9KoBO9DKMp79/t8=;
+        b=dOiY63xNlCtO6ROQwhWxekDmNHRcu81tw9rgW8ErlqUMS3bJVQwyM9WT/XzBbXbs/c
+         fSZluzQB9tQsVN/+WHJW/yyc6kSKLB2eIvpXsZnAuuA3gHAkq6GGuDMA5fFFKOe1iPzd
+         Z7QOmN/HO3l299Gmkev2X5d1Q0SJpkomAKN26FwBUw4pf1HXI/EpsXRUpeOfRR9kCf9Z
+         1cgCYwSq9t1x47cBOIz901HtbuOmAAeMt2yvA+dJPZHdoRhLoGETux31qxGfYN73zc7F
+         q+TJeie2XdbU663c7a9+8lIxIDvVBCHNk+pCEiiBOfnznp/HKNx3WfPvlPpf4PcYKqY5
+         y4tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o2BDas5hPmBEDguTVlPQc/PXdhVs9KoBO9DKMp79/t8=;
+        b=nAFU/AqniABPJuG+eak+fec7vWcxXt50LWQByMQKBGyWl5bXZs6j/wDzbIh1XS7hi7
+         m3Lq9dvxSjAohIuHxkjZ25wmEuDE2nJzQCrGhdQaeN+GHuGNeC6yHDgfhUmc9vuEfdXs
+         rKWdgylPd0Oc4nPGtB4LtE0II6IP2lDkBDahjNlV/2STRJZbPbWdTx/kofoxO6CdyKTk
+         CMPaXsmL8htevEf4CeXoE95XsZYgbleOuyXYH6M9j2eL44eNl78UtKMqXB+546Ps9S1q
+         0puWbnRUYDaqiPeceY/ANw5jgHJF4IHUv1Ta1qJV05+sIdbde1jtTWqokkRhAehcLNCE
+         ys2g==
+X-Gm-Message-State: AOAM532SUQXCZBZAFNkrRTBD2xignNc3eVhDU6i3dl+Ia2WgD9ZtcbYH
+        TOGI+omgqrmHV5VKZzF4EySbZ0jq8kXsjlJViyE=
+X-Google-Smtp-Source: ABdhPJxO8lO9U9avc+ALq1eRKS741/9RjAwHrIKzMzoMF6efsYE758//OT2ZAZ2BFZRrCvJAOlQXVT+6z5l2RF0e7mE=
+X-Received: by 2002:a17:902:7288:: with SMTP id d8mr29144476pll.18.1593005650232;
+ Wed, 24 Jun 2020 06:34:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200624114127.3016-6-a.hajda@samsung.com>
+References: <20200623060526.29922-1-mans0n@gorani.run> <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
+ <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run> <69f5d1a1970838b8c4bd8d6e8dba6cac@walle.cc>
+In-Reply-To: <69f5d1a1970838b8c4bd8d6e8dba6cac@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 24 Jun 2020 16:33:57 +0300
+Message-ID: <CAHp75Vfc2udv2mLLJCFO6P+n8_kcO7OZKhH_XkOy7Cf4fnxgtA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
+To:     Michael Walle <michael@walle.cc>
+Cc:     Sungbo Eo <mans0n@gorani.run>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej,
+On Tue, Jun 23, 2020 at 3:48 PM Michael Walle <michael@walle.cc> wrote:
+> Am 2020-06-23 14:22, schrieb Sungbo Eo:
+> > On 2020-06-23 17:31, Michael Walle wrote:
+> >> Am 2020-06-23 08:05, schrieb Sungbo Eo:
 
-On Wed, Jun 24, 2020 at 01:41:27PM +0200, Andrzej Hajda wrote:
-> Using probe_err code has following advantages:
-> - shorter code,
-> - recorded defer probe reason for debugging,
-> - uniform error code logging.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  drivers/gpu/drm/bridge/lvds-codec.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
-> index 24fb1befdfa2..c76fa0239e39 100644
-> --- a/drivers/gpu/drm/bridge/lvds-codec.c
-> +++ b/drivers/gpu/drm/bridge/lvds-codec.c
-> @@ -71,13 +71,8 @@ static int lvds_codec_probe(struct platform_device *pdev)
->  	lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
->  	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
->  							     GPIOD_OUT_HIGH);
-> -	if (IS_ERR(lvds_codec->powerdown_gpio)) {
-> -		int err = PTR_ERR(lvds_codec->powerdown_gpio);
-> -
-> -		if (err != -EPROBE_DEFER)
-> -			dev_err(dev, "powerdown GPIO failure: %d\n", err);
-> -		return err;
-> -	}
-> +	if (IS_ERR(lvds_codec->powerdown_gpio))
-> +		return probe_err(dev, lvds_codec->powerdown_gpio, "powerdown GPIO failure\n");
+...
 
-Line wrap please.
+> >> Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
+> >> to be simple enough to be easily integrated with that. If you need a
+> >> blueprint; because at the moment there is no driver in the kernel
+> >> using that, you could have a look at:
+> >> https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
+> >
+> > Thanks for your advice. I didn't really know what regmap is for...
+> > It seems gpio-regmap is for gpio controllers having val/dir registers.
+> > But pca9570 does not use port registers. The master only sends a data
+> > byte without reg address.
+>
+> Ahh I missed that :(
+>
+> > I'm not sure how to apply gpio-regmap or
+> > regmap-i2c here.
+> > I'll try to investigate if setting reg_size or reg_bits to zero is
+> > possible.
+> >
+> > Please correct me if I'm in the wrong direction.
+>
+> That won't work because the underlying regmap expects the address bits
+> to be either 8 or 16. In this case I'd guess gpio-regmap, doesn't make
+> sense, because there is actually no real gain.
 
-It bothers me that the common pattern of writing the error code at the
-end of the message isn't possible anymore. Maybe I'll get used to it,
-but it removes some flexibility.
+From the DS:
+"The device acknowledges and the master sends the data byte for P7 to
+P0 and is acknowledged by the device. Writes to P7 to P4 are ignored
+in the PCA9570 as only P3 through P0 are available. The 4-bit data is
+presented on the port lines after it has been acknowledged by the
+device. The number of data bytes that can be sent successively is not
+limited. The previous data is overwritten every time a data byte has
+been sent."
 
->  
->  	/* Locate the panel DT node. */
->  	panel_node = of_graph_get_remote_node(dev->of_node, 1, 0);
+So, basically writing to the register the value of register can
+simulate register map, but the question is do we gain anything from
+that abstraction because it means that all 256 (or 16 for 4-bit
+variant) registers are possible?
 
--- 
-Regards,
 
-Laurent Pinchart
+--
+With Best Regards,
+Andy Shevchenko
