@@ -2,105 +2,87 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B68C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED4A520706
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593004221;
-	bh=mbZPHUQba6BG0lJ28HQorVolz/PNkBErnBcBS+nEeNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TjwXvSYAczUg8Unr2EEtVltUIVaGuzSAqJ+l4Gl+I9bcEoljYSsog3/hqH3W6UP3C
-	 uIg7WeyayFbSt7uEQ9cj52k4RfdAapDOKQB6uMGo0h17rwTiCr8zTPjS0EzEnpYF+L
-	 5tHXhe2bkZu1QLQmMCruzTpo+00OHI4WmU9f1/To=
+	by mail.kernel.org (Postfix) with ESMTP id C1B7220706
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:10:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WNso/P9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403887AbgFXNKT (ORCPT
+        id S2403922AbgFXNKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728843AbgFXNKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:10:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 24 Jun 2020 09:10:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57610 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728843AbgFXNKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:10:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593004247;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AjjjuOuQA9xfPFn+NEdIeAaJBoXrFuGSdN2W9j81pr4=;
+        b=WNso/P9n9VUJ1Z/vPD0dNobGPiRCaJEjfNCiy/N4DVv9OY5qa7LK9UwxUhzGuHqkg53CNG
+        5M//mhRy7ZyHtSYwO72WCzkXROr4Qf/8jZ5rQC/aZ1RF8hkNjCTJyThw18zsoTuAJVy9we
+        ILt1V6nLN+Pwa0HSmt3i3WmgNFCwqwk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-x8hRrT6EOtWF7Iz6QEFzEQ-1; Wed, 24 Jun 2020 09:10:43 -0400
+X-MC-Unique: x8hRrT6EOtWF7Iz6QEFzEQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D28F3206C3;
-        Wed, 24 Jun 2020 13:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593004218;
-        bh=mbZPHUQba6BG0lJ28HQorVolz/PNkBErnBcBS+nEeNs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K1Euf7Zo5LI3vSzQzd2/QYz4kv+sUQbd2zDMizOMqKv04r6KRWhIOKgwA8YqlRMBi
-         YvZmUBdjT3cx6FRk5hlxAe+LAqwZJNaGoR8c4/XtCk2McSMvvA3ZfAGBarU14Ro9nv
-         eu7RPGT4GonnvfOAnfUwffEWyVvB21vwC4UtdyIY=
-Date:   Wed, 24 Jun 2020 15:10:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kars Mulder <kerneldev@karsmulder.nl>
-Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: Writing to a const pointer: is this supposed to happen?
-Message-ID: <20200624131016.GA1807770@kroah.com>
-References: <20200623195520.GA24965@duo.ucw.cz>
- <db0-5ef34880-ab-10c623c0@12577330>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36A1F800597;
+        Wed, 24 Jun 2020 13:10:42 +0000 (UTC)
+Received: from krava (unknown [10.40.193.204])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3748A1C8;
+        Wed, 24 Jun 2020 13:10:40 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 15:10:39 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Remi Bernon <rbernon@codeweavers.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jacek Caban <jacek@codeweavers.com>
+Subject: Re: [PATCH 3/3] perf tests: Add test for PE binary format support
+Message-ID: <20200624131039.GC2719003@krava>
+References: <20200624103041.825746-1-rbernon@codeweavers.com>
+ <20200624103041.825746-3-rbernon@codeweavers.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <db0-5ef34880-ab-10c623c0@12577330>
+In-Reply-To: <20200624103041.825746-3-rbernon@codeweavers.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 02:34:45PM +0200, Kars Mulder wrote:
-> On Tuesday, June 23, 2020 21:55 CEST, Pavel Machek wrote:
-> > Odd, indeed... but not likely to cause immediate problems.
-> >
-> > You may want to cc relevant maintainers, or even run git
-> > blame and contact author.
-> 
-> Thank you for your response.
-> 
-> The code was written by Kai-Heng Feng, whom I shall CC. The code is
-> part of the usbcore module, which does not have a maintainer listed in
-> MAINTAINERS, but the patch and most other recent patches to usbcore
-> were signed off exclusively by Greg Kroah-Hartman, so I guess that
-> makes him the de facto maintainer? I'll CC him as well.
-> 
-> I'm not sure whether it is easy to read the previous messages of this
-> thread if you got CC'ed just now, so I'll repeat/paraphrase the
-> important part of my initial mail for your convenience:
-> 
-> > In the file drivers/usb/core/quirks.c, I noticed that the function
-> > quirks_param_set writes to a const pointer, and would like to check
-> > whether this is ok with the kernel programming practices. Here are
-> > the relevant lines from the function (several lines omitted):
-> >
-> > 	static int quirks_param_set(const char *val, const struct kernel_param *kp) {
-> > 		char *p, *field;
-> > 		for (i = 0, p = (char *)val; p && *p;) {
-> > 			field = strsep(&p, ":");
-> >
-> > In here a const pointer *val is cast into a non-const pointer and
-> > then written to by the function strsep, which replaces the first
-> > occurrence of the ':' token with a null-byte. Is this allowed?
-> 
-> CC: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, Jun 24, 2020 at 12:30:41PM +0200, Remi Bernon wrote:
+> This adds a precompiled file in PE binary format, with split debug file,
+> and tries to read its build_id and .gnu_debuglink sections, as well as
+> looking up the main symbol from the debug file. This should succeed if
+> libbfd is supported.
 
-It's not the nicest thing, but as you have noticed, it all works just
-fine, right?
+SNIP
 
-Have you hit any runtime issues with this code doing this?  These
-strings should be held in writable memory, right?  Or do you see a
-codepath where that is not the case?  If so, please feel free to submit
-a patch to fix this up (and probably fix up a number of other "set"
-functions that deal with struct kernel_param as well.)
+> diff --git a/tools/perf/tests/pe-file.exe b/tools/perf/tests/pe-file.exe
+> new file mode 100644
 
-thanks,
+dreams coming true.. windows.exe file in perf sources ;-)
 
-greg k-h
+awesome, thanks for the test
+
+jirka
+
