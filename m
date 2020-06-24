@@ -2,177 +2,130 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF74C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96626C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F36DA2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HjVGcQ9u"
+	by mail.kernel.org (Postfix) with ESMTP id 73E0620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593000353;
+	bh=u3Xg1+OrtR/w/BCDvGuluYxSB8j0A3CoAUzjh5xGdp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K/YiszKoZJNHQu5v7N1bkciSC+SQd2yKxBOMdOS49RORLaqaMtaQe9koEJpjYdQ0S
+	 iFew1mjhSAcfDu2q4CsfhtOcEyyWTcb7vglKEel/uL1YTXdkVPOGQLcYrwbVjCrv7Y
+	 FBO1hsM7lZNvfO1aLduiFgftnBEqgjSiWyj+Keqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390829AbgFXME4 (ORCPT
+        id S2390843AbgFXMFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:04:56 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:39417 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388522AbgFXME4 (ORCPT
+        Wed, 24 Jun 2020 08:05:51 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39921 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbgFXMFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:04:56 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id o493ju2n0x3Ajo496jjKoK; Wed, 24 Jun 2020 14:04:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593000293; bh=PiKVba03XEk87JSU9wAB4cyFQf3xBDIadjtktZ1G4m8=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=HjVGcQ9u7mHkoBRxM/kmERQO2BFIoUaFyUTJjNCqDiVpPtdbFmu2ga52d8oTKMWrf
-         HZMbcm/2oWH/7SX+k3fOYfgV6V9IO7n4euxcHm8vFEJU/dOiIOIz3kmjGYkh9IHFOP
-         rIdknvhPfpR2sSfypufPdXTppK7ue2Z9M6PD22rHkC/Gzd6WMNfLe5GNE67wjhWpvW
-         Tl+w5nFbQzNgB0CAf6bb6zopvDXwlttYLZhTLA2LYaM8JfhwSjlrR6GhTiAMwmge1D
-         zM5LNUSViuihkXP2rrcBTFN4VGTvFH6CDX6P6He7QTZj3oFLo9utrBzlnWukxU3fpa
-         FYBG2H9IQU7+Q==
-Subject: Re: [PATCH v2 15/17] media: cros-ec-cec: Use cros_ec_cmd()
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     kbuild test robot <lkp@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>
-References: <20200205190028.183069-1-pmalani@chromium.org>
- <20200205190028.183069-16-pmalani@chromium.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <9f4cd932-c7ec-c755-17f3-503327450256@xs4all.nl>
-Date:   Wed, 24 Jun 2020 14:04:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 08:05:49 -0400
+Received: by mail-pl1-f193.google.com with SMTP id s14so982132plq.6;
+        Wed, 24 Jun 2020 05:05:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4rW66tKgMxqam/uZ0Bz8Bt7qxGkjsWEZUtUfdcWMRhc=;
+        b=XMlLF2B+pioEMrPQZj3RDmyozPWMTSp2Y5bUwU8DkblV2+DkldHhM/ppyp+n6jb396
+         7D5v7nJ5LaAunRH33dwATmcG8zWn1i0HLZb+fGQZwma8/1i6zvq0obF1XuGnMLlQe2OX
+         Hwr3KJyWXWQHnSFjR/vzXwgC5cqb776738drwoOUJtuNVsGcuzSInbk+I553bPA/Bi4T
+         zQoZF27Ozxnw/LvU+Itrjb1AuwBZiIZQGRrepaINNMj7ekTsYcw+PcvICKaCafLfciCa
+         /lmz/x6dKy8+Ru2OZ7YPV9SmeLIFmmQdPicPfFg0jhiV8pqPG6OyO7X3PdPynSBi/6pM
+         hAHw==
+X-Gm-Message-State: AOAM5301N0bJedtkn+VakeApif5q6cYp4Ix5Aot4P4qHyqEi7eb/YlUp
+        Fn65emJE2mgPTo+hxRONy7U=
+X-Google-Smtp-Source: ABdhPJx9eNUtUf3wuLMsAQaZO33hgDdcCinYPWgXgNxzY43C5jkpxbcvMxqvxkaY5VupgSIqvNCnfQ==
+X-Received: by 2002:a17:90a:30c2:: with SMTP id h60mr3388528pjb.23.1593000348658;
+        Wed, 24 Jun 2020 05:05:48 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y3sm20167541pff.37.2020.06.24.05.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 05:05:47 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 3F48940430; Wed, 24 Jun 2020 12:05:46 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 12:05:46 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200624120546.GC4332@42.do-not-panic.com>
+References: <20200610154923.27510-5-mcgrof@kernel.org>
+ <20200623141157.5409-1-borntraeger@de.ibm.com>
+ <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+ <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200205190028.183069-16-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKQpS1I0B/qMvD15NGvod0w0zHQ3gqPbjQYpqjAOEFCWwyEG/zXbBTP7KvsXD4c/nq3FTVGhd/eYhQmdirT5EgkmDOKATP6GByn2LzrTURY31/CJHt0G
- SSykfn0ef9Z1nLjfngGe1MW5dKbSlGp1KZ8HMf6OjhR1TCurBmDkCMnUP2/vVTAhZcHixgFVbo3uQpEDKd6B5NLn5LsbKqFbKKeheYYuBePZSnphcPIu0off
- KQ+hkpMO3crG4JnFOCLNPkPIAkcHFNPGN22l/chR3OlcCKcGjvyjj2uTe/OBqvXRXB1uOmDN4gcUmivzWDNNbB8+CG1wYDgVbweNJR3aNHcNoQy5mio+aITF
- PjXEttFL7IzrhbElO3KF4IQeTb8nnfGKbH7Zp2Nh54pq5P7wPUfVoQGjidZWWKCGglOof7egrVdG69L33Zhf0GFskyiRcPwn0e7wtRZpLPVzGZ+mMWBPnDFJ
- nnIeokPhZWXKtERO1//Q0Clxozu1NoLpZG2fCK3DMFD7LU0kWH3vh1QfRfk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
-
-On 05/02/2020 20:00, Prashant Malani wrote:
-> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd() which does the
-> message buffer setup and cleanup, but is located in platform/chrome
-> and used by other drivers.
+On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
-
-This source has moved to drivers/media/cec/platform/cros-ec/cros-ec-cec.c.
-
-Can you rebase/repost?
-
-Regards,
-
-	Hans
-
-> ---
 > 
-> Changes in v2:
-> - Updated to use new function name and parameter list.
-> - Used C99 element setting to initialize struct.
+> On 23.06.20 16:23, Christian Borntraeger wrote:
+> > 
+> > 
+> > On 23.06.20 16:11, Christian Borntraeger wrote:
+> >> Jens Markwardt reported a regression in the linux-next runs.  with "umh: fix
+> >> processed error when UMH_WAIT_PROC is used" (from linux-next) a linux bridge
+> >> with an KVM guests no longer activates :
+> >>
+> >> without patch
+> >> # ip addr show dev virbr1
+> >> 6: virbr1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+> >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+> >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+> >>        valid_lft forever preferred_lft forever
+> >>
+> >> with this patch the bridge stays DOWN with NO-CARRIER
+> >>
+> >> # ip addr show dev virbr1
+> >> 6: virbr1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+> >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+> >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+> >>        valid_lft forever preferred_lft forever
+> >>
+> >> This was bisected in linux-next. Reverting from linux-next also fixes the issue.
+> >>
+> >> Any idea?
+> > 
+> > FWIW, s390 is big endian. Maybe some of the shifts inn the __KW* macros are wrong.
 > 
->  .../media/platform/cros-ec-cec/cros-ec-cec.c  | 45 +++++++------------
->  1 file changed, 16 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> index 0e7e2772f08f96..a462af1c9ae04b 100644
-> --- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> +++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> @@ -93,18 +93,14 @@ static int cros_ec_cec_set_log_addr(struct cec_adapter *adap, u8 logical_addr)
->  {
->  	struct cros_ec_cec *cros_ec_cec = adap->priv;
->  	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
-> -	struct {
-> -		struct cros_ec_command msg;
-> -		struct ec_params_cec_set data;
-> -	} __packed msg = {};
-> +	struct ec_params_cec_set data = {
-> +		.cmd = CEC_CMD_LOGICAL_ADDRESS,
-> +		.val = logical_addr,
-> +	};
->  	int ret;
->  
-> -	msg.msg.command = EC_CMD_CEC_SET;
-> -	msg.msg.outsize = sizeof(msg.data);
-> -	msg.data.cmd = CEC_CMD_LOGICAL_ADDRESS;
-> -	msg.data.val = logical_addr;
-> -
-> -	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
-> +	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_SET, &data, sizeof(data),
-> +			  NULL, 0, NULL);
->  	if (ret < 0) {
->  		dev_err(cros_ec->dev,
->  			"error setting CEC logical address on EC: %d\n", ret);
-> @@ -119,17 +115,12 @@ static int cros_ec_cec_transmit(struct cec_adapter *adap, u8 attempts,
->  {
->  	struct cros_ec_cec *cros_ec_cec = adap->priv;
->  	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
-> -	struct {
-> -		struct cros_ec_command msg;
-> -		struct ec_params_cec_write data;
-> -	} __packed msg = {};
-> +	struct ec_params_cec_write data = {};
->  	int ret;
->  
-> -	msg.msg.command = EC_CMD_CEC_WRITE_MSG;
-> -	msg.msg.outsize = cec_msg->len;
-> -	memcpy(msg.data.msg, cec_msg->msg, cec_msg->len);
-> -
-> -	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
-> +	memcpy(data.msg, cec_msg->msg, cec_msg->len);
-> +	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_WRITE_MSG, &data,
-> +			  sizeof(cec_msg->len), NULL, 0, NULL);
->  	if (ret < 0) {
->  		dev_err(cros_ec->dev,
->  			"error writing CEC msg on EC: %d\n", ret);
-> @@ -143,18 +134,14 @@ static int cros_ec_cec_adap_enable(struct cec_adapter *adap, bool enable)
->  {
->  	struct cros_ec_cec *cros_ec_cec = adap->priv;
->  	struct cros_ec_device *cros_ec = cros_ec_cec->cros_ec;
-> -	struct {
-> -		struct cros_ec_command msg;
-> -		struct ec_params_cec_set data;
-> -	} __packed msg = {};
-> +	struct ec_params_cec_set data = {
-> +		.cmd = CEC_CMD_ENABLE,
-> +		.val = enable,
-> +	};
->  	int ret;
->  
-> -	msg.msg.command = EC_CMD_CEC_SET;
-> -	msg.msg.outsize = sizeof(msg.data);
-> -	msg.data.cmd = CEC_CMD_ENABLE;
-> -	msg.data.val = enable;
-> -
-> -	ret = cros_ec_cmd_xfer_status(cros_ec, &msg.msg);
-> +	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_CEC_SET, &data, sizeof(data),
-> +			  NULL, 0, NULL);
->  	if (ret < 0) {
->  		dev_err(cros_ec->dev,
->  			"error %sabling CEC on EC: %d\n",
-> 
+> Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
+> linux-bridge on s390?
 
+glibc for instance defines __WEXITSTATUS in only one location: bits/waitstatus.h
+and it does not special case it per architecture, so at this point I'd
+have to say we have to look somewhere else for why this is happening.
+
+The commmit which caused this is issuing a correct error code down the
+pipeline, nothing more. I'll make taking a look at this a priority right
+now. Let us see what I come up with today.
+
+  Luis
