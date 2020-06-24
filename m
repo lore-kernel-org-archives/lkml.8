@@ -2,143 +2,313 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B924C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1304320CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE8D206F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFBN12aB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D2keQxyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404570AbgFXPvh (ORCPT
+        id S2404581AbgFXPvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
+        Wed, 24 Jun 2020 11:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403931AbgFXPvg (ORCPT
+        with ESMTP id S2390702AbgFXPvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:51:36 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D06AC061573;
-        Wed, 24 Jun 2020 08:51:36 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id u17so2084595qtq.1;
-        Wed, 24 Jun 2020 08:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OCTRPctFFpx+aJELBCUccAzQ7DxE/nJNw3rXnEquQLM=;
-        b=oFBN12aBhFMNm20MuO5zZdopwr4turKFOKrM2v9T/yy/tIjWIqwNmv9lhfJ7GEo1nJ
-         3JhvlgHrTy6opzdGbl0JEJjwOfGSj6MB15M7ASOJ8eLdH9dTMQ6T0IecnVoPoLCxNw6F
-         47wJdrzDzY62KMrt9DuAE+vrfnfHXh9aG0vOuMqNvW/bsYhFH27yshh8OZ5qXgkHSDU+
-         e0jcliItYSTHk4yTlfXACT8Gm2F6DkzWpIKgMiGBWuVrEFbJ9QxY35173+gzBD9O11H3
-         wawthk3A4yMRakY/o7nv3iqLB3RSPFZGL9txRkPlwW8wbgV0wMxwwEmDoBxyDMm/7Olo
-         W5Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OCTRPctFFpx+aJELBCUccAzQ7DxE/nJNw3rXnEquQLM=;
-        b=R6EVE17iXbBRzc6SGnuwYJk/yBrvwpj5oZHlNoeKSO/kPbBhY9pV/iZUOrirfwk28H
-         0tF9slRpVep0KN5sY/MveuFu9IzXirBsHfZb6ALJ+fmftDjamXD4ctpr09E6FtEgOghD
-         JanSzjS81nhJTFjOxi/R1P0xOS77blbhYnP2M4mm9adApYbQeOrLC6+3q/a1HrGJhoWk
-         y9WqKw9oCVdwrxDYACN3O7ivF0SkbpojDal8TBJaB1NXIvh7meYLh57zUAjQf3O+7KaR
-         rvgB6e5QchQsIw9Fiyta1I1jfCpenQ3bryDf3BAr/aO0N1Q57Q8+QRmTI/REq5t9m8at
-         72FQ==
-X-Gm-Message-State: AOAM533LXTSHBTUOFyYvVwovZhvfZpmWwkX6XIqh7VUhA+ZA+i5YiA1C
-        4YRpboqo23ORDRmlZA08mLs=
-X-Google-Smtp-Source: ABdhPJy1e1vJJM+J98uJc4itRbEG5EBXp0uiQVb9aNso0GWU8UqdxCPUrbhjAJk/YUX7fswV7L2vvA==
-X-Received: by 2002:ac8:19cb:: with SMTP id s11mr27364417qtk.105.1593013895675;
-        Wed, 24 Jun 2020 08:51:35 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id q47sm4143309qta.16.2020.06.24.08.51.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 08:51:34 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200622085009.GP954398@dell>
- <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
- <20200622151054.GW954398@dell>
- <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
- <20200622191133.GY954398@dell>
- <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
- <20200623064723.GZ954398@dell>
- <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
- <20200623195905.GB954398@dell>
- <6684101d-1013-2964-c247-394f9b12a194@gmail.com>
- <20200624074631.GE954398@dell>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <d7774c42-fd41-9fab-2ea0-cd6bc7d35383@gmail.com>
-Date:   Wed, 24 Jun 2020 10:51:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 11:51:47 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D6CC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=PfIDtm2QE+K/DkBlMYuOcQsFGoqkqG/xnPE/RJe+5QA=; b=D2keQxyQXqwfOJquql3AFAp8f3
+        PlzmcY+TgiNn7toJ67z8TnAA5teUSKHX9DDAGhSFHvk+e9YnOjmZVWZiOaA6W6q8jxF0Pg1+cbZ/q
+        HSseoB7tHQGkEvXL2ExnHL0tsKnXSlMyE6BNgE12X0RuMhdnMMzfdN6kh5jWp+s+ZqGxMVwnSEquf
+        gb4gGOJJWDBFloD5/PvbVCmNeaK1zi5d177OyYuKsmM+KRS3qkhkOlAoLnvxhNGLO5Nh6NQAbaUZD
+        yKn85onifWHinO+m/5QaIXzDoZpxuY9XiHZQqHNfGqw5pNY/dP2Pp7EOLGQ+/Glx81zCd/njAgedW
+        TZY7NrvQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jo7gD-0004rc-5q; Wed, 24 Jun 2020 15:51:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BADFD3079D0;
+        Wed, 24 Jun 2020 17:51:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 02844236E7763; Wed, 24 Jun 2020 17:51:14 +0200 (CEST)
+Message-ID: <20200624154157.520998019@infradead.org>
+User-Agent: quilt/0.66
+Date:   Wed, 24 Jun 2020 17:30:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
+        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
+        jpoimboe@redhat.com, pbonzini@redhat.com,
+        mathieu.desnoyers@efficios.com, linux@rasmusvillemoes.dk
+Subject: [PATCH v5 13/17] static_call: Add static_call_cond()
+References: <20200624153024.794671356@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200624074631.GE954398@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 02:46, Lee Jones wrote:
-> On Tue, 23 Jun 2020, Frank Rowand wrote:
-> 
->> On 2020-06-23 14:59, Lee Jones wrote:
+Extend the static_call infrastructure to optimize the following common
+pattern:
 
+	if (func_ptr)
+		func_ptr(args...)
 
-< big snip >
+For the trampoline (which is in effect a tail-call), we patch the
+JMP.d32 into a RET, which then directly consumes the trampoline call.
 
-Thanks for the replies in the above portion.
+For the in-line sites we replace the CALL with a NOP5.
 
+NOTE: this is 'obviously' limited to functions with a 'void' return type.
 
->>>> But yes or no to my solution #2 (with some slight changes to
->>>> make it better (more gracious handling of the detected error) as
->>>> discussed elsewhere in the email thread)?
->>>
->>> Please see "[0]" above!
->>>
->>> AFAICT your solution #2 involves bombing out *all* devices if there is
->>> a duplicate compatible with no 'reg' property value.  This is a)
->>> over-kill and b) not an error, as I mentioned:
->>
->> As I mentioned above, I set you up to have this misunderstanding by
->> a mistake in one of my earlier emails.  So now that I have pointed
->> out what I meant here by "more gracious handling of the detected
->> error", what do you think of my amended solution #2?
-> 
-> Explained above, but the LT;DR is that it's not correct.
+NOTE: DEFINE_STATIC_COND_CALL() only requires a typename, as opposed
+      to a full function.
 
-I don't agree with you, I think my solution is better.  Even if I
-prefer my solution, I find your solution to be good enough.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/include/asm/static_call.h |   12 +++--
+ arch/x86/kernel/static_call.c      |   42 +++++++++++++-----
+ include/linux/static_call.h        |   86 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 127 insertions(+), 13 deletions(-)
 
-So I am dropping my specific objection to returning -EAGAIN from
-mfd_match_of_node_to_dev() when the node has previously been
-allocated to a device.
+--- a/arch/x86/include/asm/static_call.h
++++ b/arch/x86/include/asm/static_call.h
+@@ -20,15 +20,21 @@
+  * it does tail-call optimization on the call; since you cannot compute the
+  * relative displacement across sections.
+  */
+-#define ARCH_DEFINE_STATIC_CALL_TRAMP(name, func)			\
++
++#define __ARCH_DEFINE_STATIC_CALL_TRAMP(name, insns)			\
+ 	asm(".pushsection .static_call.text, \"ax\"		\n"	\
+ 	    ".align 4						\n"	\
+ 	    ".globl " STATIC_CALL_TRAMP_STR(name) "		\n"	\
+ 	    STATIC_CALL_TRAMP_STR(name) ":			\n"	\
+-	    "	.byte 0xe9 # jmp.d32				\n"	\
+-	    "	.long " #func " - (. + 4)			\n"	\
++	    insns "						\n"	\
+ 	    ".type " STATIC_CALL_TRAMP_STR(name) ", @function	\n"	\
+ 	    ".size " STATIC_CALL_TRAMP_STR(name) ", . - " STATIC_CALL_TRAMP_STR(name) " \n" \
+ 	    ".popsection					\n")
+ 
++#define ARCH_DEFINE_STATIC_CALL_TRAMP(name, func)			\
++	__ARCH_DEFINE_STATIC_CALL_TRAMP(name, ".byte 0xe9; .long " #func " - (. + 4)")
++
++#define ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)			\
++	__ARCH_DEFINE_STATIC_CALL_TRAMP(name, "ret; nop; nop; nop; nop")
++
+ #endif /* _ASM_STATIC_CALL_H */
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -4,19 +4,41 @@
+ #include <linux/bug.h>
+ #include <asm/text-patching.h>
+ 
+-static void __static_call_transform(void *insn, u8 opcode, void *func)
++enum insn_type {
++	CALL = 0, /* site call */
++	NOP = 1,  /* site cond-call */
++	JMP = 2,  /* tramp / site tail-call */
++	RET = 3,  /* tramp / site cond-tail-call */
++};
++
++static void __static_call_transform(void *insn, enum insn_type type, void *func)
+ {
+-	const void *code = text_gen_insn(opcode, insn, func);
++	int size = CALL_INSN_SIZE;
++	const void *code;
+ 
+-	if (WARN_ONCE(*(u8 *)insn != opcode,
+-		      "unexpected static call insn opcode 0x%x at %pS\n",
+-		      opcode, insn))
+-		return;
++	switch (type) {
++	case CALL:
++		code = text_gen_insn(CALL_INSN_OPCODE, insn, func);
++		break;
++
++	case NOP:
++		code = ideal_nops[NOP_ATOMIC5];
++		break;
++
++	case JMP:
++		code = text_gen_insn(JMP32_INSN_OPCODE, insn, func);
++		break;
++
++	case RET:
++		code = text_gen_insn(RET_INSN_OPCODE, insn, func);
++		size = RET_INSN_SIZE;
++		break;
++	}
+ 
+-	if (memcmp(insn, code, CALL_INSN_SIZE) == 0)
++	if (memcmp(insn, code, size) == 0)
+ 		return;
+ 
+-	text_poke_bp(insn, code, CALL_INSN_SIZE, NULL);
++	text_poke_bp(insn, code, size, NULL);
+ }
+ 
+ void arch_static_call_transform(void *site, void *tramp, void *func)
+@@ -24,10 +46,10 @@ void arch_static_call_transform(void *si
+ 	mutex_lock(&text_mutex);
+ 
+ 	if (tramp)
+-		__static_call_transform(tramp, JMP32_INSN_OPCODE, func);
++		__static_call_transform(tramp, func ? JMP : RET, func);
+ 
+ 	if (IS_ENABLED(CONFIG_HAVE_STATIC_CALL_INLINE) && site)
+-		__static_call_transform(site, CALL_INSN_OPCODE, func);
++		__static_call_transform(site, func ? CALL : NOP, func);
+ 
+ 	mutex_unlock(&text_mutex);
+ }
+--- a/include/linux/static_call.h
++++ b/include/linux/static_call.h
+@@ -16,7 +16,9 @@
+  *
+  *   DECLARE_STATIC_CALL(name, func);
+  *   DEFINE_STATIC_CALL(name, func);
++ *   DEFINE_STATIC_CALL_NULL(name, typename);
+  *   static_call(name)(args...);
++ *   static_call_cond(name)(args...);
+  *   static_call_update(name, func);
+  *
+  * Usage example:
+@@ -52,6 +54,43 @@
+  *   rather than calling through the trampoline.  This requires objtool or a
+  *   compiler plugin to detect all the static_call() sites and annotate them
+  *   in the .static_call_sites section.
++ *
++ *
++ * Notes on NULL function pointers:
++ *
++ *   Static_call()s support NULL functions, with many of the caveats that
++ *   regular function pointers have.
++ *
++ *   Clearly calling a NULL function pointer is 'BAD', so too for
++ *   static_call()s (although when HAVE_STATIC_CALL it might not be immediately
++ *   fatal). A NULL static_call can be the result of:
++ *
++ *     DECLARE_STATIC_CALL_NULL(my_static_call, void (*)(int));
++ *
++ *   which is equivalent to declaring a NULL function pointer with just a
++ *   typename:
++ *
++ *     void (*my_func_ptr)(int arg1) = NULL;
++ *
++ *   or using static_call_update() with a NULL function. In both cases the
++ *   HAVE_STATIC_CALL implementation will patch the trampoline with a RET
++ *   instruction, instead of an immediate tail-call JMP. HAVE_STATIC_CALL_INLINE
++ *   architectures can patch the trampoline call to a NOP.
++ *
++ *   In all cases, any argument evaluation is unconditional. Unlike a regular
++ *   conditional function pointer call:
++ *
++ *     if (my_func_ptr)
++ *         my_func_ptr(arg1)
++ *
++ *   where the argument evaludation also depends on the pointer value.
++ *
++ *   When calling a static_call that can be NULL, use:
++ *
++ *     static_call_cond(name)(arg1);
++ *
++ *   which will include the required value tests to avoid NULL-pointer
++ *   dereferences.
+  */
+ 
+ #include <linux/types.h>
+@@ -120,7 +159,16 @@ extern int static_call_text_reserved(voi
+ 	};								\
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
++#define DEFINE_STATIC_CALL_NULL(name, _func)				\
++	DECLARE_STATIC_CALL(name, _func);				\
++	struct static_call_key STATIC_CALL_KEY(name) = {		\
++		.func = NULL,						\
++		.type = 1,						\
++	};								\
++	ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)
++
+ #define static_call(name)	__static_call(name)
++#define static_call_cond(name)	(void)__static_call(name)
+ 
+ #define EXPORT_STATIC_CALL(name)					\
+ 	EXPORT_SYMBOL(STATIC_CALL_KEY(name));				\
+@@ -143,7 +191,15 @@ struct static_call_key {
+ 	};								\
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
++#define DEFINE_STATIC_CALL_NULL(name, _func)				\
++	DECLARE_STATIC_CALL(name, _func);				\
++	struct static_call_key STATIC_CALL_KEY(name) = {		\
++		.func = NULL,						\
++	};								\
++	ARCH_DEFINE_STATIC_CALL_NULL_TRAMP(name)
++
+ #define static_call(name)	__static_call(name)
++#define static_call_cond(name)	(void)__static_call(name)
+ 
+ static inline
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+@@ -179,9 +235,39 @@ struct static_call_key {
+ 		.func = _func,						\
+ 	}
+ 
++#define DEFINE_STATIC_CALL_NULL(name, _func)				\
++	DECLARE_STATIC_CALL(name, _func);				\
++	struct static_call_key STATIC_CALL_KEY(name) = {		\
++		.func = NULL,						\
++	}
++
+ #define static_call(name)						\
+ 	((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_KEY(name).func))
+ 
++static inline void __static_call_nop(void) { }
++
++/*
++ * This horrific hack takes care of two things:
++ *
++ *  - it ensures the compiler will only load the function pointer ONCE,
++ *    which avoids a reload race.
++ *
++ *  - it ensures the argument evaluation is unconditional, similar
++ *    to the HAVE_STATIC_CALL variant.
++ *
++ * Sadly current GCC/Clang (10 for both) do not optimize this properly
++ * and will emit an indirect call for the NULL case :-(
++ */
++#define __static_call_cond(name)					\
++({									\
++	void *func = READ_ONCE(STATIC_CALL_KEY(name).func);		\
++	if (!func)							\
++		func = &__static_call_nop;				\
++	(typeof(STATIC_CALL_TRAMP(name))*)func;				\
++})
++
++#define static_call_cond(name)	(void)__static_call_cond(name)
++
+ static inline
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ {
 
-
-> 
->>>>> It also suffers with false positives.
->>>
->>
->> Sorry for the very long response, but it seemed we were operating
->> under some different understandings and I hope I have clarified some
->> things.
-> 
-> Likewise. :)
-> 
 
