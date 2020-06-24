@@ -2,133 +2,155 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FBCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3344DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5D720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106CF2070E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 03:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="ZSVvINVf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h51OoMje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388817AbgFXDvq (ORCPT
+        id S2388770AbgFXDwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 23:51:46 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:19952 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388393AbgFXDvp (ORCPT
+        Tue, 23 Jun 2020 23:52:50 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31454 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388393AbgFXDwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 23:51:45 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05O3pT70016100;
-        Tue, 23 Jun 2020 23:51:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=lzYYmvJ8mehXNfscFFbTl65C+wIxaRGl4Dotn4Pd5x8=;
- b=ZSVvINVfhjV5lZ33fyDAivBiZK0HA5gYwKd9NEo1McNHTvTAoDEpncava85fTwLJE1Cz
- +1dOM88Kf85CWGTmDUu5PWBC9ryH6JDQsQrLpaygmw/GM4ia4bhnvSiGMftv07hcs+Bb
- 2/wQ4Ehh9WXfNJIm4tzpWG3C25qbKh+K0b5khFG8dKaGsEgmwsG0EgBiKSww0zp+Ba/j
- sPI/9BEuaxNVHQxZqGduPawYq8atkIPP80nW1v4utnERxu75MMe0cgbcgUDOcW/4tK2f
- 7b3md0vfqPigJIdyNB4naIiUMU2t28yEeIIVPi+UuUtI0jMJmqCXEM1vM0ySD/V+Yo9X zA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 31uuspgkbp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 23:51:44 -0400
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05O3lxKa076012;
-        Tue, 23 Jun 2020 23:51:44 -0400
-Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
-        by mx0a-00154901.pphosted.com with ESMTP id 31uxv5r8d0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 23:51:44 -0400
-X-LoopCount0: from 10.166.132.127
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="1455323127"
-From:   <Crag.Wang@dell.com>
-To:     <Mario.Limonciello@dell.com>, <crag0715@gmail.com>,
-        <sre@kernel.org>
-CC:     <mathewk@chromium.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
- charging mode
-Thread-Topic: [PATCH 1/1] power_supply: wilco_ec: Add permanent long life
- charging mode
-Thread-Index: AQHWSTdLlppOCCC6Bki6k0A/v494M6jlsVIAgACTARD//8PXAIABEw/w
-Date:   Wed, 24 Jun 2020 03:51:38 +0000
-Message-ID: <23e76b5eda0849fdb4e1ef8b81807558@KULX13MDC113.APAC.DELL.COM>
-References: <20200623082016.23188-1-crag_wang@dell.com>
- <6a804505400e4109906fadcf945edf76@AUSX13MPC105.AMER.DELL.COM>
- <ecda5d3852af4a1a8c08e0dc07983f35@KULX13MDC113.APAC.DELL.COM>
- <05bbf37785bd44ce8cc8777f107b16ff@AUSX13MPC105.AMER.DELL.COM>
-In-Reply-To: <05bbf37785bd44ce8cc8777f107b16ff@AUSX13MPC105.AMER.DELL.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-06-23T13:48:06.9996956Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=f22c6ecd-fc33-4d94-beba-f01c0a6f3fa5;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [125.252.73.115]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jun 2020 23:52:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592970768;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GepTlGXwej9PWMeaqwTbVbEVkJTWG3Rdtwgufbgc7OA=;
+        b=h51OoMjeB77aomRYGXhdxFzabDRe8jeoJgZvAL8ZBtVB7VaaxW6o1Zq/E7Ca+BG2rhbeIJ
+        eFhsdIE+HR1tsP8s/d5JEXmTUNtb3Wyg+iBXlqZdZBebh++F3IKwKUn8Tnt6pXqeIVFZoS
+        BNkP3Cul4y5HBO2WeYfBuJE7MVaGPC0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-z8Nk-r7pP8693rTYXcsLQQ-1; Tue, 23 Jun 2020 23:52:44 -0400
+X-MC-Unique: z8Nk-r7pP8693rTYXcsLQQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF19A107ACCA;
+        Wed, 24 Jun 2020 03:52:42 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07EFB1A835;
+        Wed, 24 Jun 2020 03:52:38 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 11:52:36 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200624035236.GI3346@MiWiFi-R3L-srv>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <CAPcyv4ipnZ2jXd-obBk4KMGPNz4DMu0jGXFEEPCnST+A2zR+Uw@mail.gmail.com>
+ <20200624014737.GG3346@MiWiFi-R3L-srv>
+ <20200624034638.GA10687@L-31X9LVDL-1304.local>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_17:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 impostorscore=0
- cotscore=-2147483648 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006240026
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- bulkscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006240027
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624034638.GA10687@L-31X9LVDL-1304.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > Since this is normally only done in the factory context, can you
-> > > please confirm does something need to be artificially done to block
-> > > userland from trying to set the battery charging to this mode?  Or
-> > > will the EC already
-> > handle
-> > > blocking it directly?
+On 06/24/20 at 11:46am, Wei Yang wrote:
+> On Wed, Jun 24, 2020 at 09:47:37AM +0800, Baoquan He wrote:
+> >On 06/23/20 at 05:21pm, Dan Williams wrote:
+> >> On Tue, Jun 23, 2020 at 2:43 AM Wei Yang
+> >> <richard.weiyang@linux.alibaba.com> wrote:
+> >> >
+> >> > For early sections, we assumes its memmap will never be partially
+> >> > removed. But current behavior breaks this.
+> >> 
+> >> Where do we assume that?
+> >> 
+> >> The primary use case for this was mapping pmem that collides with
+> >> System-RAM in the same 128MB section. That collision will certainly be
+> >> depopulated on-demand depending on the state of the pmem device. So,
+> >> I'm not understanding the problem or the benefit of this change.
 > >
-> > This is a feature of the battery, when the EC receives this setting it
-> > will be sent to the battery and stored there. Afterwards any attempt
-> > to change this mode will return a failure.
->=20
-> Sorry this still isn't clear to me.  You're saying that if EC receives lo=
-nglife
-> setting it will be able to do this in the field?  If so, then I think thi=
-s patch will
-> need to block that setting to not allow field conversions into longlife m=
-ode.
->=20
-EC does handle blocking the attempts from changing the mode.
-
-EC reads current mode ahead of a new setting. If it sees permanent long lif=
-e
-already in use then any attempt to put the battery charging in a different =
-mode
-will get failure 0x01 from EC.
-
+> >I was also confused when review this patch, the patch log is a little
+> >short and simple. From the current code, with SPARSE_VMEMMAP enabled, we
+> >do build memmap for the whole memory section during boot, even though
+> >some of them may be partially populated. We just mark the subsection map
+> >for present pages. 
 > >
-> > It's even better to block mode selection in the userland if long life
-> > mode already in use.
->=20
-> Yes, I agree.  This sounds like a good follow up to me too.
+> >Later, if pmem device is mapped into the partially boot memory section,
+> >we just fill the relevant subsection map, do return directly, w/o building
+> >the memmap for it, in section_activate(). Because the memmap for the
+> >unpresent RAM part have been there. I guess this is what Wei is trying to 
+> >do to keep the behaviour be consistent for pmem device adding, or
+> >pmem device removing and later adding again.
+> >
+> >Please correct me if I am wrong.
+> 
+> You are right here.
+> 
+> >
+> >To me, fixing it looks good. But a clear doc or code comment is
+> >necessary so that people can understand the code with less time.
+> >Leaving it as is doesn't cause harm. I personally tend to choose
+> >the former.
+> >
+> 
+> The former is to add a clear doc?
+
+Sorry for the confusion. The former means the fix in your patch. Maybe a
+improved log and some code comment adding can make it more perfect.
+
+> 
+> >	paging_init()
+> >	    ->sparse_init()
+> >	        ->sparse_init_nid()
+> >	          {
+> >                      ...
+> >                      for_each_present_section_nr(pnum_begin, pnum) {
+> >                          ...
+> >                          map = __populate_section_memmap(pfn, PAGES_PER_SECTION,
+> >                                     nid, NULL);
+> >                          ...
+> >                      }
+> >                  }
+> >             ...
+> >             ->zone_sizes_init()
+> >                 ->free_area_init()
+> >                   {
+> >                       for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+> >                           subsection_map_init(start_pfn, end_pfn - start_pfn);
+> >                       }
+> >                   {
+> >		
+> >         __add_pages()
+> >             ->sparse_add_section()
+> >                 ->section_activate()
+> >                   {
+> >                       ...
+> >                       fill_subsection_map();
+> >                       if (nr_pages < PAGES_PER_SECTION && early_section(ms))   <----------*********
+> >                           return pfn_to_page(pfn);
+> >                       ...
+> >                   }
+> >> 
+> 
+> -- 
+> Wei Yang
+> Help you, Help me
+> 
 
