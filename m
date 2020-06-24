@@ -2,108 +2,192 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01519C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43672C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF13520789
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdGnKZRS"
+	by mail.kernel.org (Postfix) with ESMTP id 28F3D207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403956AbgFXMf7 (ORCPT
+        id S2390657AbgFXMh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:35:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53576 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390574AbgFXMf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:35:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593002156;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KXOd3FWsgxfpuN6FCKX2ClEKNWirNYpN+5hpadr6Dd4=;
-        b=CdGnKZRSdyTYjv7f0Cd78D9P0h0GtR23W+E2QxOmYEsQXDmVLerUhweEXqVP3ITF3D+zcp
-        w6yBzUEZLT+hShXpLZWTbTnlY4H3U4l3W99RF28nHlcSjXY/CYRV5+g70gvneI2J0tJHbh
-        zHi+LV0Fiv4DU+FkV/Gw6QQLDt18h20=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-BsO6dWbZNxS9SGZIG3nQFQ-1; Wed, 24 Jun 2020 08:35:52 -0400
-X-MC-Unique: BsO6dWbZNxS9SGZIG3nQFQ-1
-Received: by mail-oi1-f197.google.com with SMTP id r186so1427737oih.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:35:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KXOd3FWsgxfpuN6FCKX2ClEKNWirNYpN+5hpadr6Dd4=;
-        b=YgioO3SvRvtUAdIsfbsuGr7757WEfSGbCrv3WlRv7bFt70ILzFN3CERYKEiqUFZg4+
-         PHv0Xf3MJzVo+i3KcIpX4E+htFlMdioYKH6Rhf6YD94VhrShhfh+NTJy/Cj80w8rFQgy
-         i2BY3JokFwtzr0A6RmRRK/oNZB7lvGaqHnfc44BNnvnb6FREbzAen/J2ideaQAR5vrCd
-         cazRD08Gi0p6d4Q8v9XaOlH+Xk+tFN7/XKPF6t0e/4t5q70kxxLTT0au7EYafzkDagsA
-         2turtFygt6vLCoZHaNuuXem7vpDU6C8LZX20euawLCTV0HuGyWDWzH3m6gcYvPrBtscR
-         a0/Q==
-X-Gm-Message-State: AOAM533xUjGlZVHuJ+D77ha+a0Ep7rqZ2f1uxqGPstq3ajJsyzPPep6V
-        RVzf79eSaWzbbCoya/uI+sghDq/0gnQefJTdT0FBqmLXmnGdpEN/vAr4q98p6fnAUM0i/zMgEoc
-        ravd0fl9AlY82uLyMi2RhgAjjSUSk/b+YCEA7jkL0
-X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr20797118oto.95.1593002151758;
-        Wed, 24 Jun 2020 05:35:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxX1TWYnFwEpwDI3Wr6NaU8l9Igwlb4//wePGQRtnuC7RPWRAmd3PhYKW23yN302Duu4KI+Bsz7H4/6MJejzh8=
-X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr20797107oto.95.1593002151523;
- Wed, 24 Jun 2020 05:35:51 -0700 (PDT)
+        Wed, 24 Jun 2020 08:37:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:44190 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388942AbgFXMh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:37:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D8941F1;
+        Wed, 24 Jun 2020 05:37:56 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A71433F6CF;
+        Wed, 24 Jun 2020 05:37:53 -0700 (PDT)
+Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
+ integer and pointer types
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-kernel@vger.kernel.org,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-kernel@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20200624114127.3016-1-a.hajda@samsung.com>
+ <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
+ <20200624114127.3016-4-a.hajda@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2203e0c2-016b-4dbe-452d-63c857f06dd1@arm.com>
+Date:   Wed, 24 Jun 2020 13:37:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200619155036.GZ8681@bombadil.infradead.org> <20200622003215.GC2040@dread.disaster.area>
- <CAHc6FU4b_z+vhjVPmaU46VhqoD+Y7jLN3=BRDZPrS2v=_pVpfw@mail.gmail.com> <20200622181338.GA21350@casper.infradead.org>
-In-Reply-To: <20200622181338.GA21350@casper.infradead.org>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Wed, 24 Jun 2020 14:35:40 +0200
-Message-ID: <CAHc6FU7R2vMZ9+aXLsQ+ubECbfrBTR+yh03b_T++PRxd479vsQ@mail.gmail.com>
-Subject: Re: [RFC] Bypass filesystems for reading cached pages
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200624114127.3016-4-a.hajda@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 8:13 PM Matthew Wilcox <willy@infradead.org> wrote:
-> On Mon, Jun 22, 2020 at 04:35:05PM +0200, Andreas Gruenbacher wrote:
-> > I'm fine with not moving that functionality into the VFS. The problem
-> > I have in gfs2 is that taking glocks is really expensive. Part of that
-> > overhead is accidental, but we definitely won't be able to fix it in
-> > the short term. So something like the IOCB_CACHED flag that prevents
-> > generic_file_read_iter from issuing readahead I/O would save the day
-> > for us. Does that idea stand a chance?
->
-> For the short-term fix, is switching to a trylock in gfs2_readahead()
-> acceptable?
+On 2020-06-24 12:41, Andrzej Hajda wrote:
+> Many resource acquisition functions return error value encapsulated in
+> pointer instead of integer value. To simplify coding we can use macro
+> which will accept both types of error.
+> With this patch user can use:
+> 	probe_err(dev, ptr, ...)
+> instead of:
+> 	probe_err(dev, PTR_ERR(ptr), ...)
+> Without loosing old functionality:
+> 	probe_err(dev, err, ...)
 
-Well, it's the only thing we can do for now, right?
+Personally I'm not convinced that simplification has much value, and I'd 
+say it *does* have a significant downside. This:
 
-> diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-> index 72c9560f4467..6ccd478c81ff 100644
-> --- a/fs/gfs2/aops.c
-> +++ b/fs/gfs2/aops.c
-> @@ -600,7 +600,7 @@ static void gfs2_readahead(struct readahead_control *rac)
->         struct gfs2_inode *ip = GFS2_I(inode);
->         struct gfs2_holder gh;
->
-> -       gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-> +       gfs2_holder_init(ip->i_gl, LM_ST_SHARED, LM_FLAG_TRY, &gh);
->         if (gfs2_glock_nq(&gh))
->                 goto out_uninit;
->         if (!gfs2_is_stuffed(ip))
+	if (IS_ERR(x))
+		do_something_with(PTR_ERR(x));
 
-Thanks,
-Andreas
+is a familiar and expected pattern when reading/reviewing code, and at a 
+glance is almost certainly doing the right thing. If I see this, on the 
+other hand:
 
+	if (IS_ERR(x))
+		do_something_with(x);
+
+my immediate instinct is to be suspicious, and now I've got to go off 
+and double-check that if do_something_with() really expects a pointer 
+it's also robust against PTR_ERR values. Off-hand I can't think of any 
+APIs that work that way in the areas with which I'm familiar, so it 
+would be a pretty unusual and non-obvious thing.
+
+Furthermore, an error helper that explicitly claims to accept "pointer 
+type" values seems like it could easily lead to misunderstandings like this:
+
+	int init_my_buffer(struct my_device *d)
+	{
+		d->buffer = kzalloc(d->buffer_size, GFP_KERNEL);
+		return probe_err(d->dev, d->buffer, "failed to init buffer\n");
+	}
+
+and allowing that to compile without any hint of an error seems a 
+little... unfair.
+
+Robin.
+
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+>   drivers/base/core.c    | 25 ++-----------------------
+>   include/linux/device.h | 25 ++++++++++++++++++++++++-
+>   2 files changed, 26 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 2a96954d5460..df283c62d9c0 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3953,28 +3953,7 @@ define_dev_printk_level(_dev_info, KERN_INFO);
+>   
+>   #endif
+>   
+> -/**
+> - * probe_err - probe error check and log helper
+> - * @dev: the pointer to the struct device
+> - * @err: error value to test
+> - * @fmt: printf-style format string
+> - * @...: arguments as specified in the format string
+> - *
+> - * This helper implements common pattern present in probe functions for error
+> - * checking: print message if the error is not -EPROBE_DEFER and propagate it.
+> - * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
+> - * later by reading devices_deferred debugfs attribute.
+> - * It replaces code sequence:
+> - * 	if (err != -EPROBE_DEFER)
+> - * 		dev_err(dev, ...);
+> - * 	return err;
+> - * with
+> - * 	return probe_err(dev, err, ...);
+> - *
+> - * Returns @err.
+> - *
+> - */
+> -int probe_err(const struct device *dev, int err, const char *fmt, ...)
+> +int __probe_err(const struct device *dev, int err, const char *fmt, ...)
+>   {
+>   	struct va_format vaf;
+>   	va_list args;
+> @@ -3992,7 +3971,7 @@ int probe_err(const struct device *dev, int err, const char *fmt, ...)
+>   
+>   	return err;
+>   }
+> -EXPORT_SYMBOL_GPL(probe_err);
+> +EXPORT_SYMBOL_GPL(__probe_err);
+>   
+>   static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
+>   {
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 40a90d9bf799..22d3c3d4f461 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -965,7 +965,30 @@ void device_links_supplier_sync_state_pause(void);
+>   void device_links_supplier_sync_state_resume(void);
+>   
+>   extern __printf(3, 4)
+> -int probe_err(const struct device *dev, int err, const char *fmt, ...);
+> +int __probe_err(const struct device *dev, int err, const char *fmt, ...);
+> +
+> +/**
+> + * probe_err - probe error check and log helper
+> + * @dev: the pointer to the struct device
+> + * @err: error value to test, can be integer or pointer type
+> + * @fmt: printf-style format string
+> + * @...: arguments as specified in the format string
+> + *
+> + * This helper implements common pattern present in probe functions for error
+> + * checking: print message if the error is not -EPROBE_DEFER and propagate it.
+> + * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
+> + * later by reading devices_deferred debugfs attribute.
+> + * It replaces code sequence:
+> + * 	if (err != -EPROBE_DEFER)
+> + * 		dev_err(dev, ...);
+> + * 	return err;
+> + * with
+> + * 	return probe_err(dev, err, ...);
+> + *
+> + * Returns @err.
+> + *
+> + */
+> +#define probe_err(dev, err, args...) __probe_err(dev, (long)(err), args)
+>   
+>   /* Create alias, so I can be autoloaded. */
+>   #define MODULE_ALIAS_CHARDEV(major,minor) \
+> 
