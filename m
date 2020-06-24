@@ -2,90 +2,116 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA80C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD62C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F9320823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593024843;
-	bh=9aeM0ykXHtgDA3GqA6iQnzG2q1WxV6iB9AZlbM12N6M=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=eZV5lHn7sWdMoFTaQ0+VhMp7dnSxbbBMuxqSxCCClD+MMYfrzyxMP3lCCRaxL00sJ
-	 5HlHilFmJVA0vCEgC3ixDdem8H1Hd3IIxl5DulsXeI8VmUn8Kwj3RfmHzP87Jp4BY3
-	 OV2kB89N0wjWfHeG+VTOek6TBBDwZtkruziHlNQA=
+	by mail.kernel.org (Postfix) with ESMTP id 4D59B20702
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406201AbgFXSyB (ORCPT
+        id S2406209AbgFXSzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 14:55:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45383 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406033AbgFXSyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:54:01 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6CB20702;
-        Wed, 24 Jun 2020 18:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593024841;
-        bh=9aeM0ykXHtgDA3GqA6iQnzG2q1WxV6iB9AZlbM12N6M=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=JgPpHaUeHThKOfHkHRFEq65iiz9rOqFlI99toCVLZkSWYlptPGeiueQhQtQ+H3Wa0
-         jekyxpju13HRaN6diayh7I9sMp3ZdiMbxC/GwFddNL+jVVmD0xAsm7v7+lYb7qqcE4
-         45MoABjJ4gHkbjZEWmMrzz0QkC3k9nFsn4itbUTQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id ED4B135228BC; Wed, 24 Jun 2020 11:54:00 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 11:54:00 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com
-Subject: LKMM patches for next merge window
-Message-ID: <20200624185400.GA13594@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        id S2406019AbgFXSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:55:04 -0400
+IronPort-SDR: 5vFrg2Gpi18PUvIhmJYwDyTr0Iju2BNTStiPq+VJ5UXvrH37HmJecX4B/O3+8pVZ36q+Vn/mne
+ kmChtDpUMeLg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="142080699"
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="142080699"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 11:55:04 -0700
+IronPort-SDR: aANov6vjSZGZtORqh4D03erAF1CDI6QmLcOFKgsk2+UG6alKTWdnmcBssRFT9bmvXPZYPwMFTs
+ UiQr4ybHUO5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
+   d="scan'208";a="385254827"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2020 11:55:04 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id D77E65804D6;
+        Wed, 24 Jun 2020 11:55:03 -0700 (PDT)
+Message-ID: <12d36fdcdbcf438dd3aac7769e8366afd9d5aa1a.camel@linux.intel.com>
+Subject: Re: [PATCH V2 0/2] nvme: Add support for ACPI StorageD3Enable
+ property
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     shyjumon.n@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
+        bhelgaas@google.com, dan.j.williams@intel.com, kbusch@kernel.org,
+        axboe@fb.com, hch@lst.de, sagi@grimberg.me
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
+Date:   Wed, 24 Jun 2020 11:55:03 -0700
+In-Reply-To: <20200612204820.20111-1-david.e.box@linux.intel.com>
+References: <20200428003214.3764-1-david.e.box@linux.intel.com>
+         <20200612204820.20111-1-david.e.box@linux.intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Friendly reminder. Thanks.
 
-Here is the list of LKMM patches I am considering for the next merge
-window and the status of each.  Any I am missing or any that need to
-wait or be modified?
+David
 
-						Thanx, Paul
+On Fri, 2020-06-12 at 13:48 -0700, David E. Box wrote:
+> This patch set implements a solution for a BIOS hack used on some
+> currently
+> shipping Intel systems to address issues with power management policy
+> decisions concerning PCIe NVMe drives. Some newer Intel platforms,
+> like
+> some Comet Lake systems, require that PCIe devices use D3 when doing
+> suspend-to-idle in order to allow the platform to realize maximum
+> power
+> savings. This is particularly needed to support ATX power supply
+> shutdown
+> on desktop systems. In order to ensure this happens for root ports
+> with
+> storage devices, Microsoft apparently created this ACPI _DSD property
+> as a
+> way to override their driver policy. To my knowledge this property
+> has not
+> been discussed with the NVME specification body.
+> 
+> Though the solution is not ideal, it addresses a problem that also
+> affects
+> Linux since the NVMe driver's default policy of using NVMe APST
+> during
+> suspend-to-idle would lead to higher power consumption for these
+> platforms.
+> 
+> Patch 1 provides a symbol in the PCI/ACPI layer to read the property.
+> Patch 2 uses the symbol in the NVMe driver to select D3 as a quirk if
+> set.
+> 
+> Changes from V2:
+> 	- Export the pci_acpi_storage_d3 function for use by drivers as
+> 	  needed instead of modifying the pci header.
+> 	- Add missing put on acpi device handle.
+> 	- Add 'noacpi' module parameter to allow undoing this change.
+> 	- Add info message that this is a platform quirk.
+> 
+> David E. Box (2):
+>   PCI: Add ACPI StorageD3Enable _DSD support
+>   drivers/nvme: Add support for ACPI StorageD3Enable property
+> 
+>  drivers/acpi/property.c |  3 +++
+>  drivers/nvme/host/pci.c | 14 ++++++++++
+>  drivers/pci/pci-acpi.c  | 59
+> +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h     |  2 ++
+>  4 files changed, 78 insertions(+)
+> 
 
-------------------------------------------------------------------------
-
-3ce5d69 docs: fix references for DMA*.txt files
-	Could someone please provide an ack?
-
-ac1a749 tools/memory-model: Add recent references
-be1ce3e tools/memory-model: Fix "conflict" definition
-24dca63 Documentation: LKMM: Add litmus test for RCU GP guarantee where updater frees object
-47ec95b Documentation: LKMM: Add litmus test for RCU GP guarantee where reader stores
-bb2c938 MAINTAINERS: Update maintainers for new Documentation/litmus-tests
-05bee9a tools/memory-model: Add an exception for limitations on _unless() family
-dc76257 Documentation/litmus-tests: Introduce atomic directory
-d059e50 Documentation/litmus-tests/atomic: Add a test for atomic_set()
-7eecf76 Documentation/litmus-tests/atomic: Add a test for smp_mb__after_atomic()
-116f054 tools/memory-model: Fix reference to litmus test in recipes.txt
-ffd32d4 Documentation/litmus-tests: Merge atomic's README into top-level one
-a08ae99 Documentation/litmus-tests: Cite an RCU litmus test
-843285eb tools/memory-model/README: Expand dependency of klitmus7
-0296c57 tools/memory-model/README: Mention herdtools7 7.56 in compatibility table
-47e4f0a Documentation/litmus-tests: Add note on herd7 7.56 in atomic litmus test
-	All ready to go.
