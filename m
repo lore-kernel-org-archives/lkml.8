@@ -2,125 +2,149 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98EF620768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ogyMpgi9"
+	by mail.kernel.org (Postfix) with ESMTP id BB19F20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390142AbgFXVOB (ORCPT
+        id S2390183AbgFXVOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:14:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389905AbgFXVN7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:13:59 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5438EC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:13:59 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q90so1231915pjh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=omCkUcZNHVXP0sWRywzjOwxTXZ4YyisMAxm749WU5GU=;
-        b=ogyMpgi9tPFXqD3+b4TskFtzlAE3qRSfSFlhxLkMzfZQl068z8vqJlL5I/k1hQA4j2
-         8+KaTuQNKpStTyBjn2ssQsUKa/GWq7f607kaEaeXU2o8/Ft2sUgUsqmcJHltC+KgIKVl
-         o3jZ4P3X6AywcFpecW/k8P5ZOrqPI9Z99iVivwkxvFoyUq4G2KcudRcYQ4mOacJiN+sQ
-         WfzuwRbr7it+GIQZRqsNndeZ4kbhXyBxzlSPEB5SEo0dkcZcdM6751ifbYi1L0YxNGzl
-         zLZYU7QD65uDvjwEcqlKMDaY6jKyUjhUxCFnXE3C+lzv6bRpSkWGLHXOkAgDh/7Se2CC
-         j7Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=omCkUcZNHVXP0sWRywzjOwxTXZ4YyisMAxm749WU5GU=;
-        b=LPvsNjDchmcHieCDJoCX4oGfiT93MR2bMoQ3P3SOxe38OsWCp7aavmdRQgIIvXjF4l
-         hGO0cm8H8DegKAzSexprDJRAhdbxRG/AfiWS0s1qThaQbz/yYVSrgYKnV9aojq9tQbGZ
-         PyksXY955fY6h4N+L7Qb4TSMmwfhnJPaiS+hgJ3UpSwpqiMOqZ/BJ8epilg5TsntkUbT
-         GCvFQwTW6t+MpwdEDcAds1tsMM5FiYqrjb+vtu0BWGzCogWKu9EV/qmRYR9ajYXKjMNd
-         KbH4poaaOuL/WVATcN93GoJO2VRUUr/bJVyDE8O7OAfkvg2lCTlHIup2NQi2UAHhGJ9N
-         soIQ==
-X-Gm-Message-State: AOAM532aZsglmeFOpWYLkU0w1ZZlH0NH71ZRb4LgfVIam8wRYt7AQ3Rc
-        TQT6qCvRub+1yx7uVW4AksDB1UuW18nCb2iixZtlyQ==
-X-Google-Smtp-Source: ABdhPJyvmG5uGb8Lyk5i53Q9bt53kqBtuDjO8DoRXX4pnhndW+Y4vnp4+GK0S4oFxok0KRSkaflUBQ+yOxnxS3G2Ct0=
-X-Received: by 2002:a17:902:b698:: with SMTP id c24mr29536869pls.223.1593033238474;
- Wed, 24 Jun 2020 14:13:58 -0700 (PDT)
+        Wed, 24 Jun 2020 17:14:22 -0400
+Received: from mail-bn7nam10olkn2049.outbound.protection.outlook.com ([40.92.40.49]:6055
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389905AbgFXVOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 17:14:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WIxRBAycnrwj82FPmojwpgcyYfUtikpJhJ7ReMu+4guQn6jGk68/wALJFkHwklg6ZyEPjPOhCPxstlR98jnvWI503XNv2XiOxIDvafFLeCLhKlTG6JjOQcKYZY/Sc0WJpfnbhtb1gWHGIkBr2WC/jvOs2j1nb7p7BX4zMSic0WwAJWCwM8V/CN/7WMIIUO/UCaxEkVEjTBj/voTLB1LcMzV4YcQd7s204o29R/4CLxhS1SC1sKOP6aNht3fO5x1RXpGzlNVGzR9rPxgyeGN4CQK5YLsMzoAlRkuCulRWfdA0y4le0ZX7EJmCKtfBAge5cZuo5UFKmS2sJr8a+GvVHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8CrmGzPXzKI3jNbwSiL6uV8Tmje9ePu/xLdQI4zVnhw=;
+ b=NSFsmqP011XsaH/QMsZIAsb6jPGsq/CQdFZFa7ch9pvEgHxTcBCsgr1zOXGxBdU2DxoAeoiq7oBnegWA1HknD/0f+ACV1fbAz/GmK8KtARmzgKmDgNp6P3c+JtEuBkHINaO+Glm0a9sJjxfK/NufsKZp78K+dYd3lWCYTHXJbcb4oNCWyYc0Q1BjVHyOL4iClkVfK/4KQkCjaiFNZ0ZHJpxhDX+MnGqzAkLRsFG5U+1rrDchSNpWqjKxmfe3JpLnTQLdhyxrU9OnUeA1vW4+vvTlALaro17Sr9EthuxurKTnDrz+BmVQeTfVQ93A/yVMCNIVWdrH5Lf+kFTXdpeEuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from BN7NAM10FT054.eop-nam10.prod.protection.outlook.com
+ (2a01:111:e400:7e8f::48) by
+ BN7NAM10HT119.eop-nam10.prod.protection.outlook.com (2a01:111:e400:7e8f::463)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Wed, 24 Jun
+ 2020 21:14:19 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:7e8f::41) by BN7NAM10FT054.mail.protection.outlook.com
+ (2a01:111:e400:7e8f::368) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20 via Frontend
+ Transport; Wed, 24 Jun 2020 21:14:19 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:8EAA0BA33DA596B0431D042A55E8E8F04DF3B3F9D273D3C0ADC17017CC8DE5B4;UpperCasedChecksum:1952420B62F245174FCDFD5DAAD7CC84C2AB14B2F50614CBD8980AFFFD81799B;SizeAsReceived:9609;Count:49
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
+ 21:14:19 +0000
+Subject: Re: [PATCH 00/11] media: exynos4-is: Improve support for s5pv210 and
+ parallel ports
+To:     Tomasz Figa <tfiga@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>, kgene@kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <BN6PR04MB06602E7221CC7455F3142540A3AE0@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <07fb9000-ae00-efcd-e91a-48765ff3d4bf@xs4all.nl> <20200624115419.GA20764@pi3>
+ <CAAFQd5CW0CL-s6=UOPsm37Mg+kswM_DTXEEnQMHC3kc2LxAY5w@mail.gmail.com>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660566622FAB87ABE67A3C8A3950@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Wed, 24 Jun 2020 14:14:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+In-Reply-To: <CAAFQd5CW0CL-s6=UOPsm37Mg+kswM_DTXEEnQMHC3kc2LxAY5w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR07CA0005.namprd07.prod.outlook.com
+ (2603:10b6:300:116::15) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <ee178243-b249-a047-a752-993dcf696b98@live.ca>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com> <20200624203200.78870-9-samitolvanen@google.com>
-In-Reply-To: <20200624203200.78870-9-samitolvanen@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Jun 2020 14:13:46 -0700
-Message-ID: <CAKwvOdmcDxa+h9i6_XQc8ZDQjD9cTrD7s9eNU0fSxZbXciKhDQ@mail.gmail.com>
-Subject: Re: [PATCH 08/22] kbuild: lto: remove duplicate dependencies from
- .mod files
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0005.namprd07.prod.outlook.com (2603:10b6:300:116::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20 via Frontend Transport; Wed, 24 Jun 2020 21:14:17 +0000
+X-Microsoft-Original-Message-ID: <ee178243-b249-a047-a752-993dcf696b98@live.ca>
+X-TMN:  [paftjWaebweO0jKyE2GK8Uv0cYFzShmKvoelg+gAQYGksWntRJ65SdnMpnLZQEx8]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 49
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: e0f0716d-a91a-4249-458e-08d818838eea
+X-MS-TrafficTypeDiagnostic: BN7NAM10HT119:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HwXtJghjvTuAM9uJyjCbfjKIFVaLDGnuAmfc2c148lxHdF1BEjNMuXKzstJfRU9Z7bfn8lQeyXraxadsqI36EbBNCtQfTjVzI6jNv+nOOhXVdR9PKmcLUSYnV3vRpEhe4wRgRFatRtakRcIwWj7vPnZEyFz4vRN/e7IL5qttzvsp0UOXQui4dzAROxdNVCsZRz3niYiLqLglIZEUgtu3Jg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: 0LJhqkaMT4495vkSwNW8yuKx9A3HyALkJd8G8p8uyiFPYSO29zZNu9v6vYZy36adYP8WaZP2KVFA1zMRzwSjO1uWzRvfUM4SWiZlVknhp1lnhtX3+8jJuBO+su+myVa9SzG6lFAoYTyzgj6WzVvnSqmevfrRZ+tOS8vfXPCYGIOsTfOxIt1P9KVENNMk60dLoEOwcvJ8E1wp1F93fUN8qg==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0f0716d-a91a-4249-458e-08d818838eea
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2020 21:14:19.3903
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-AuthSource: BN7NAM10FT054.eop-nam10.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7NAM10HT119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 1:33 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> With LTO, llvm-nm prints out symbols for each archive member
-> separately, which results in a lot of duplicate dependencies in the
-> .mod file when CONFIG_TRIM_UNUSED_SYMS is enabled. When a module
-> consists of several compilation units, the output can exceed the
-> default xargs command size limit and split the dependency list to
-> multiple lines, which results in used symbols getting trimmed.
->
-> This change removes duplicate dependencies, which will reduce the
-> probability of this happening and makes .mod files smaller and
-> easier to read.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Hi Tomasz,
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+On 2020-06-24 4:58 a.m., Tomasz Figa wrote:
+> On Wed, Jun 24, 2020 at 1:54 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On Wed, Jun 24, 2020 at 01:39:50PM +0200, Hans Verkuil wrote:
+>>> Can someone from Samsung or someone who knows this SoC take a look at this series?
+>>>
+>>> This series looks sane to me, so I'll probably merge this if nobody replies
+>>> in the next two weeks or so.
+>>
+>> Unfortunately I don't know the media part on S5Pv210 at all so I cannot
+>> provide any feedback. There are not many active users of these SoCs
+>> nowadays. One of hem is Jonathan, so if he wants to change something he will
+>> mostly break/affect his own setup. :) Therefore I think it is safe to merge.
+> 
+> I think this driver is also used on Exynos4210 and on some setups with
+> 4412 where the ISP is not used.
 
-> ---
->  scripts/Makefile.build | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 82977350f5a6..82b465ce3ca0 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -291,7 +291,7 @@ endef
->
->  # List module undefined symbols (or empty line if not enabled)
->  ifdef CONFIG_TRIM_UNUSED_KSYMS
-> -cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | xargs echo
-> +cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | sort -u | xargs echo
->  else
->  cmd_undef_syms = echo
->  endif
-> --
-> 2.27.0.212.ge8ba1cc988-goog
->
+Yes, this driver is also used by Exynos4210 and Exynos4412, notably by the Galaxy S3 series.
+They don't use the parallel ports, but rather the CSIS.  I don't believe I've broken support
+for that, but I don't have the hardware to test.
 
+My other remaining concern is whether to adjust the camera port A/camera port B to match the
+device tree documentation or to update the documentation to match the driver.  I decided to
+update the driver in these patches, but it is much simpler to simply update the binding doc.
+The only mainline user of the parallel ports is the Goni dev board which appears to be setup
+for the driver way of numbering as opposed to the binding doc.  I have no strong preference
+on which way to actually go.
 
--- 
-Thanks,
-~Nick Desaulniers
+> 
+> I can't promise anything, but I'll try to do a high level review.
+> Hopefully I still have some memory from the time I used to play with
+> this hardware.
+
+Thanks, that would be appreciated,
+Jonathan
+
+> 
+> Best regards,
+> Tomasz
+> 
