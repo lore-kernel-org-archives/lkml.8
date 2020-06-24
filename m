@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC95C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C089BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1012077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A9620768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RIagQGGt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A3Xr1SX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405088AbgFXQQZ (ORCPT
+        id S2404737AbgFXQQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:16:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35822 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405074AbgFXQQP (ORCPT
+        Wed, 24 Jun 2020 12:16:28 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53960 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405065AbgFXQQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:16:15 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFW5F021330;
-        Wed, 24 Jun 2020 11:15:32 -0500
+        Wed, 24 Jun 2020 12:16:10 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFRYo105342;
+        Wed, 24 Jun 2020 11:15:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593015332;
-        bh=k5QXD9rLVHVE83qsFkalFRHulnjUdzuUDG+p/Omjzzg=;
+        s=ti-com-17Q1; t=1593015327;
+        bh=M1MPBLSDMN936E020JiJBRBjKYmEXCOU5/4sosJb4SA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RIagQGGt7kB2dLcAIt0rL3HQ4uV8JCJ1aDhsTVvC4ZNmr48zQlA0UFfvnqew1ngHo
-         TZRSyiOjOMEjK0+1P794MgJAnBSxAQYYkl+jDHGrb42ulOI1ZrhWvWN/stu2eH3xv7
-         Lu0ZGsMJq9jzWoVOL+QM4ryZs9p1mWZMcy5MHTV0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OGFWtJ058925
+        b=A3Xr1SX4rwUJ2gTF/6coqLTfNKtIfhLKHQ45x6oD/KXPWtdOA7eQvXOwjYqGPpwdr
+         Y6KfXVJKjqqoFchP7q1KkOVulo6zV4kFJOxbXFSSCPfeSHGd0j1i+7o6KDRgYaKQML
+         7KRQZyfFpuXAsEWy5tNFAyc6axEamHbSY7zN8bjg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OGFRPb052875
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 11:15:32 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 24 Jun 2020 11:15:27 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 11:15:32 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 11:15:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 11:15:32 -0500
+ Frontend Transport; Wed, 24 Jun 2020 11:15:27 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFWjE114276;
-        Wed, 24 Jun 2020 11:15:32 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFROa079818;
+        Wed, 24 Jun 2020 11:15:27 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>
 CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
         <robh@kernel.org>, <devicetree@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v5 7/7] dt-bindings: tas2562: Convert the tas2562 binding to yaml
-Date:   Wed, 24 Jun 2020 11:14:59 -0500
-Message-ID: <20200624161459.19248-8-dmurphy@ti.com>
+Subject: [PATCH v5 6/7] ASoC: tas2562: Add voltage sense slot configuration
+Date:   Wed, 24 Jun 2020 11:14:58 -0500
+Message-ID: <20200624161459.19248-7-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200624161459.19248-1-dmurphy@ti.com>
 References: <20200624161459.19248-1-dmurphy@ti.com>
@@ -69,142 +69,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the TAS2562 text file to yaml format.
+Add Vsense slot configuration based on the device tree.  Adding this
+property enables the slot programming to be moved to the tdm_set_slot
+callback.  This in affect sets the slots for the Isense and Vsense and
+enabling this these modes are now based on whether these features were
+powered on or not.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../devicetree/bindings/sound/tas2562.txt     | 37 ---------
- .../devicetree/bindings/sound/tas2562.yaml    | 77 +++++++++++++++++++
- 2 files changed, 77 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
- create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
+ sound/soc/codecs/tas2562.c | 65 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 51 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
-deleted file mode 100644
-index dc6d7362ded7..000000000000
---- a/Documentation/devicetree/bindings/sound/tas2562.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--Texas Instruments TAS2562 Smart PA
--
--The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
--efficiently driving high peak power into small loudspeakers.
--Integrated speaker voltage and current sense provides for
--real time monitoring of loudspeaker behavior.
--
--Required properties:
-- - #address-cells  - Should be <1>.
-- - #size-cells     - Should be <0>.
-- - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
-- - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
-- - ti,imon-slot-no:- TDM TX current sense time slot.
-- - ti,vmon-slot-no:- TDM TX voltage sense time slot. This slot must always be
--		     greater then ti,imon-slot-no.
--
--Optional properties:
--- interrupt-parent: phandle to the interrupt controller which provides
--                    the interrupt.
--- interrupts: (GPIO) interrupt to which the chip is connected.
--- shut-down-gpio: GPIO used to control the state of the device.
--
--Examples:
--tas2562@4c {
--        #address-cells = <1>;
--        #size-cells = <0>;
--        compatible = "ti,tas2562";
--        reg = <0x4c>;
--
--        interrupt-parent = <&gpio1>;
--        interrupts = <14>;
--
--	shut-down-gpio = <&gpio1 15 0>;
--        ti,imon-slot-no = <0>;
--        ti,vmon-slot-no = <1>;
--};
--
-diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
-new file mode 100644
-index 000000000000..1fb467e14d4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+# Copyright (C) 2019 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+index 2f1d4b697f01..b0b7cef79433 100644
+--- a/sound/soc/codecs/tas2562.c
++++ b/sound/soc/codecs/tas2562.c
+@@ -224,12 +224,26 @@ static int tas2562_set_dai_tdm_slot(struct snd_soc_dai *dai,
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = snd_soc_component_update_bits(component, TAS2562_TDM_CFG5,
++					    TAS2562_TDM_CFG5_VSNS_SLOT_MASK,
++					    tas2562->v_sense_slot);
++	if (ret < 0)
++		return ret;
 +
-+title: Texas Instruments TAS2562 Smart PA
++	ret = snd_soc_component_update_bits(component, TAS2562_TDM_CFG6,
++					    TAS2562_TDM_CFG6_ISNS_SLOT_MASK,
++					    tas2562->i_sense_slot);
++	if (ret < 0)
++		return ret;
 +
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
+ 	return 0;
+ }
+ 
+ static int tas2562_set_bitwidth(struct tas2562_data *tas2562, int bitwidth)
+ {
+ 	int ret;
++	int val;
++	int sense_en;
+ 
+ 	switch (bitwidth) {
+ 	case SNDRV_PCM_FORMAT_S16_LE:
+@@ -237,21 +251,18 @@ static int tas2562_set_bitwidth(struct tas2562_data *tas2562, int bitwidth)
+ 					      TAS2562_TDM_CFG2,
+ 					      TAS2562_TDM_CFG2_RXWLEN_MASK,
+ 					      TAS2562_TDM_CFG2_RXWLEN_16B);
+-		tas2562->v_sense_slot = tas2562->i_sense_slot + 2;
+ 		break;
+ 	case SNDRV_PCM_FORMAT_S24_LE:
+ 		snd_soc_component_update_bits(tas2562->component,
+ 					      TAS2562_TDM_CFG2,
+ 					      TAS2562_TDM_CFG2_RXWLEN_MASK,
+ 					      TAS2562_TDM_CFG2_RXWLEN_24B);
+-		tas2562->v_sense_slot = tas2562->i_sense_slot + 4;
+ 		break;
+ 	case SNDRV_PCM_FORMAT_S32_LE:
+ 		snd_soc_component_update_bits(tas2562->component,
+ 					      TAS2562_TDM_CFG2,
+ 					      TAS2562_TDM_CFG2_RXWLEN_MASK,
+ 					      TAS2562_TDM_CFG2_RXWLEN_32B);
+-		tas2562->v_sense_slot = tas2562->i_sense_slot + 4;
+ 		break;
+ 
+ 	default:
+@@ -259,17 +270,27 @@ static int tas2562_set_bitwidth(struct tas2562_data *tas2562, int bitwidth)
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = snd_soc_component_update_bits(tas2562->component,
+-		TAS2562_TDM_CFG5,
+-		TAS2562_TDM_CFG5_VSNS_EN | TAS2562_TDM_CFG5_VSNS_SLOT_MASK,
+-		TAS2562_TDM_CFG5_VSNS_EN | tas2562->v_sense_slot);
++	val = snd_soc_component_read(tas2562->component, TAS2562_PWR_CTRL);
++	if (val < 0)
++		return val;
 +
-+description: |
-+  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
-+  efficiently driving high peak power into small loudspeakers.
-+  Integrated speaker voltage and current sense provides for
-+  real time monitoring of loudspeaker behavior.
++	if (val & (1 << TAS2562_VSENSE_POWER_EN))
++		sense_en = 0;
++	else
++		sense_en = TAS2562_TDM_CFG5_VSNS_EN;
 +
-+properties:
-+  compatible:
-+    enum:
-+      - ti,tas2562
-+      - ti,tas2563
++	ret = snd_soc_component_update_bits(tas2562->component, TAS2562_TDM_CFG5,
++		TAS2562_TDM_CFG5_VSNS_EN, sense_en);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = snd_soc_component_update_bits(tas2562->component,
+-		TAS2562_TDM_CFG6,
+-		TAS2562_TDM_CFG6_ISNS_EN | TAS2562_TDM_CFG6_ISNS_SLOT_MASK,
+-		TAS2562_TDM_CFG6_ISNS_EN | tas2562->i_sense_slot);
++	if (val & (1 << TAS2562_ISENSE_POWER_EN))
++		sense_en = 0;
++	else
++		sense_en = TAS2562_TDM_CFG6_ISNS_EN;
 +
-+  reg:
-+    maxItems: 1
-+    description: |
-+       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
++	ret = snd_soc_component_update_bits(tas2562->component, TAS2562_TDM_CFG6,
++		TAS2562_TDM_CFG6_ISNS_EN, sense_en);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -645,9 +666,25 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
+ 
+ 	ret = fwnode_property_read_u32(dev->fwnode, "ti,imon-slot-no",
+ 			&tas2562->i_sense_slot);
+-	if (ret)
+-		dev_err(dev, "Looking up %s property failed %d\n",
+-			"ti,imon-slot-no", ret);
++	if (ret) {
++		dev_err(dev, "Property %s is missing setting default slot\n",
++			"ti,imon-slot-no");
++		tas2562->i_sense_slot = 0;
++	}
 +
-+  shut-down-gpio:
-+    description: GPIO used to control the state of the device.
-+    deprecated: true
 +
-+  shutdown-gpio:
-+    description: GPIO used to control the state of the device.
++	ret = fwnode_property_read_u32(dev->fwnode, "ti,vmon-slot-no",
++			&tas2562->v_sense_slot);
++	if (ret) {
++		dev_info(dev, "Property %s is missing setting default slot\n",
++			"ti,vmon-slot-no");
++		tas2562->v_sense_slot = 2;
++	}
 +
-+  interrupts:
-+    maxItems: 1
-+
-+  ti,imon-slot-no:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: TDM TX current sense time slot.
-+
-+  ti,vmon-slot-no:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      TDM TX voltage sense time slot.  This slot must always be greater then
-+      ti,imon-slot-no.
-+
-+  '#sound-dai-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+   #include <dt-bindings/gpio/gpio.h>
-+   i2c0 {
-+     #address-cells = <1>;
-+     #size-cells = <0>;
-+     codec: codec@4c {
-+       compatible = "ti,tas2562";
-+       reg = <0x4c>;
-+       #sound-dai-cells = <1>;
-+       interrupt-parent = <&gpio1>;
-+       interrupts = <14>;
-+       shutdown-gpio = <&gpio1 15 0>;
-+       ti,imon-slot-no = <0>;
-+       ti,vmon-slot-no = <2>;
-+     };
-+   };
-+
-+...
++	if (tas2562->v_sense_slot < tas2562->i_sense_slot) {
++		dev_err(dev, "Vsense slot must be greater than Isense slot\n");
++		return -EINVAL;
++	}
+ 
+ 	return ret;
+ }
 -- 
 2.26.2
 
