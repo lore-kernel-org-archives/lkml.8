@@ -2,67 +2,165 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16539C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF3E20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C8120768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:24:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lY6u+Ik6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389088AbgFXGW3 (ORCPT
+        id S2389097AbgFXGY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:22:29 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:53592 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388090AbgFXGW2 (ORCPT
+        Wed, 24 Jun 2020 02:24:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388807AbgFXGYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:22:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DW;RN=7;SR=0;TI=W4_5899425_DEFAULT_0AB1016B_1592979481825_o7001c244;
-Received: from WS-web (baolin.wang@linux.alibaba.com[W4_5899425_DEFAULT_0AB1016B_1592979481825_o7001c244]) by e01f04396.eu6 at Wed, 24 Jun 2020 14:22:24 +0800
-Date:   Wed, 24 Jun 2020 14:22:24 +0800
-From:   "Baolin Wang" <baolin.wang@linux.alibaba.com>
-To:     "Christoph Hellwig" <hch@lst.de>
-Cc:     "kbusch" <kbusch@kernel.org>, "axboe" <axboe@fb.com>,
-        "sagi" <sagi@grimberg.me>, "baolin.wang7" <baolin.wang7@gmail.com>,
-        "linux-nvme" <linux-nvme@lists.infradead.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Reply-To: "Baolin Wang" <baolin.wang@linux.alibaba.com>
-Message-ID: <0cc93c56-57ba-42d7-8af9-348076e9d3ea.baolin.wang@linux.alibaba.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAyLzNdIG52bWUtcGNpOiBBZGQgY29udHJvbGxlciBtZW1vcnkgYnVmZmVy?=
-  =?UTF-8?B?IHN1cHBvcnRlZCBtYWNybw==?=
-X-Mailer: [Alimail-Mailagent][W4_5899425][DEFAULT][Chrome]
+        Wed, 24 Jun 2020 02:24:25 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98248C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 23:24:25 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id z63so877778qkb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 23:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rWc5T8JqrPliqQCYkEzpLsyAKpL+sMGlsDYKu4QHUEA=;
+        b=lY6u+Ik6BcZQKGseNLfZtXrUTunNufyPo12FHTdQdnNAEk82ApKa9CGBGo+9FG7NoJ
+         YIPXHcxzjd1En0SnpXzxKwi7jnLryKfnEWcbg2QHcNZc0ImcsBGcI4W/A5vcoIN2kuar
+         NPT0o9T52FOYj/jQJDd6AMWH3mEFI0AxopkEXicRnV/zWfGTzGukhXCt6M7wkYFrPUcH
+         jFeaqscC98wGxTQPN5Ibhk8VyFEgerDKd4d75zq40Q99Cpf9miIId50cDO7oBxdihaJm
+         PNaS0SgZkGGO/pp3tFkLJt/9mVFbJE5Y5/dikogKsT7jb9V1QHcJ0U987XPD+7ca5kyC
+         B7kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rWc5T8JqrPliqQCYkEzpLsyAKpL+sMGlsDYKu4QHUEA=;
+        b=MDM18fAxf9OvB7BrgAL7cpl/X82it1OtaeK26SXiX4p9hqGRR3HOLVhfh4Yg+g/pM2
+         KsLGIa8brTWNEysolbJKfHdhCKr2UXtsX/OVkQTdKW7V+sWm2ynGvDwbrGPiEEsaye+P
+         VyYIIkNhcEHbnIRlsCWH04B7P6Blh1UE4pVCKbd+2CN688rZTqnj+JxRlVmi9XIycE04
+         i1O1q9ijIFtM/Yyu7XXZoWqnhcDdgcQMKDCrNmOQBVxRNbtAeHzEr32v1dUpMX6qVMUj
+         AiJ7E2fX1YloZYCF6+Wc3A87DxITqyoZovQDGrzdMRFD7wFlhu3D0WG1RnZCJLcWRoEq
+         C9mQ==
+X-Gm-Message-State: AOAM530pHy3Zs1Xs2WPHivyXA1rgxvDUNXz9qS1m5HRdYgpszvyqIebx
+        LdeStieWzuBnCHsGgmfod+Y=
+X-Google-Smtp-Source: ABdhPJz/dCIrOav/5ppWpOwMO4T3RZyH6bHIvVKIbIf3zoSBMtvQ7oHieY0c4aVxTaSpZFms5jiK+w==
+X-Received: by 2002:a37:9a96:: with SMTP id c144mr21984767qke.207.1592979864678;
+        Tue, 23 Jun 2020 23:24:24 -0700 (PDT)
+Received: from LeoBras.ibmuc.com (179-125-148-1.dynamic.desktop.com.br. [179.125.148.1])
+        by smtp.gmail.com with ESMTPSA id n2sm2489727qtp.45.2020.06.23.23.24.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 23:24:23 -0700 (PDT)
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] Remove default DMA window before creating DDW
+Date:   Wed, 24 Jun 2020 03:24:05 -0300
+Message-Id: <20200624062411.367796-1-leobras.c@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <cover.1592916850.git.baolin.wang@linux.alibaba.com> <eab18c7696ea0e34a6ab0371d7d17ad45d1566ce.1592916850.git.baolin.wang@linux.alibaba.com> <20200623162751.GA4846@lst.de>,<20200624020716.GB40094@VM20190228-100.tbsite.net>
-x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzgzLjAuNDEwMy45NyBTYWZhcmkvNTM3LjM2TM
-In-Reply-To: <20200624020716.GB40094@VM20190228-100.tbsite.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBUdWUsIEp1biAyMywgMjAyMCBhdCAwNjoyNzo1MVBNICswMjAwLCBDaHJpc3RvcGggSGVs
-bHdpZyB3cm90ZToKPiA+IE9uIFR1ZSwgSnVuIDIzLCAyMDIwIGF0IDA5OjI0OjMzUE0gKzA4MDAs
-IEJhb2xpbiBXYW5nIHdyb3RlOgo+ID4gPiBJbnRyb2R1Y2UgYSBuZXcgY2FwYWJpbGl0eSBtYWNy
-byB0byBpbmRpY2F0ZSBpZiB0aGUgY29udHJvbGxlcgo+ID4gPiBzdXBwb3J0cyB0aGUgbWVtb3J5
-IGJ1ZmZlciBvciBub3QsIGluc3RlYWQgb2YgcmVhZGluZyB0aGUKPiA+ID4gTlZNRV9SRUdfQ01C
-U1ogcmVnaXN0ZXIuCj4gPiAKPiA+IFRoaXMgaXMgYSBjb21wbGV4IGlzc3VlLiAgVGhlIENNQlMg
-Yml0IHdhcyBvbmx5IGFkZGVkIGluIE5WTWUgMS40IGFzCj4gPiBhIGJhY2t3YXJkcyBpbmNvbXBh
-dGlibGUgY2hhbmdlLCBhcyB0aGUgQ01CIGFkZHJlc3Npbmcgc2NoZW1lIGNhbiBsZWFkCj4gCj4g
-QWgsIHJpZ2h0LCBJIHRoaW5rIEkgc2hvdWxkIGFkZCBhbm90aGVyIHZlcnNpb24gY29uZGl0aW9u
-Ogo+IGlmICgoY3RybC0+dnMgPj0gTlZNRV9WUygxLCA0LCAwKSAmJiAhTlZNRV9DQVBfQ01CUyhk
-ZXYtPmN0cmwuY2FwKSkgfHwKPiAgICAgZGV2LT5jbWJfc2l6ZSkKPiAgICByZXR1cm47CgpBZnRl
-ciBtb3JlIHRoaW5raW5nLCBub3cgd2Ugc2hvdWxkIHJlYWQgTlZNRV9SRUdfVlMgcmVnaXN0ZXIg
-dG8gZ2V0IHRoZSBjb250cm9sbGVyIHZlcnNpb24Kd2hlbiB1c2luZyB0aGUgQ01CUyBiaXQgaW4g
-Q2FwYWJpbGl0aWVzIHJlZ2lzdGVyLCB0aGVyZSBpcyBubyBiZW5lZml0LCBzbyBJJ2xsIGRyb3Ag
-dGhpcyBwYXRjaC4gVGhhbmtzLgoKPiA+IHRvIGRhdGEgY29ycnVwdGlvbi4gIFRoZSBDTUJTIHdh
-cyBhZGRlZCBhcyBwYXJ0IG9mIHRoZSBob3JyaWJlIGhhY2sKPiA+IHRoYXQgYWxzbyBpbnZvbHZl
-cyB0aGUgQ0JBIGZpZWxkLCB3aGljaCB3ZSdsbCBuZWVkIHRvIHNlZSBiZWZvcmUKPiA+IHVzaW5n
-IGl0IHRvIHdvcmsgYXJvdW5kIHRoZSBhZGRyZXNzaW5nIGlzc3VlLiAgQXQgdGhlIHNhbWUgdGlt
-ZSB3ZQo+ID4gc2hvdWxkIGFsc28gY29udGludWUgc3VwcG9ydGluZyB0aGUgbGVnYWN5IHByZS0x
-LjQgQ01CIHdpdGggYSB3YXJuaW5nCj4gPiAoYW5kIG1heSByZWplY3QgaXQgaWYgd2Uga25vdyB3
-ZSBydW4gaW4gYSBWTSku
+There are some devices that only allow 1 DMA window to exist at a time,
+and in those cases, a DDW is never created to them, since the default DMA
+window keeps using this resource.
+
+LoPAR recommends this procedure:
+1. Remove the default DMA window,
+2. Query for which configs the DDW can be created,
+3. Create a DDW.
+
+Patch #1:
+Create defines for outputs of ibm,ddw-applicable, so it's easier to
+identify them.
+
+Patch #2:
+- After LoPAR level 2.8, there is an extension that can make
+  ibm,query-pe-dma-windows to have 6 outputs instead of 5. This changes the
+  order of the outputs, and that can cause some trouble. 
+- query_ddw() was updated to check how many outputs the 
+  ibm,query-pe-dma-windows is supposed to have, update the rtas_call() and
+  deal correctly with the outputs in both cases.
+- This patch looks somehow unrelated to the series, but it can avoid future
+  problems on DDW creation.
+
+Patch #3 moves the window-removing code from remove_ddw() to
+remove_dma_window(), creating a way to delete any DMA window, so it can be
+used to delete the default DMA window.
+
+Patch #4 makes use of the remove_dma_window() from patch #3 to remove the
+default DMA window before query_ddw(). It also implements a new rtas call
+to recover the default DMA window, in case anything fails after it was
+removed, and a DDW couldn't be created.
+
+Patch #5:
+Instead of destroying the created DDW if it doesn't map the whole
+partition, make use of it instead of the default DMA window.
+
+Patch #6:
+Changes the way iommu_bypass_supported_pSeriesLP() check for 
+iommu_bypass: instead of checking the address returned by enable_ddw(),
+it checks a new output value that reflects if the DDW created maps
+the whole partition.
+
+
+All patches were tested into an LPAR with an Ethernet VF:
+4005:01:00.0 Ethernet controller: Mellanox Technologies MT27700 Family
+[ConnectX-4 Virtual Function]
+
+---
+Changes since v1:
+- Add defines for ibm,ddw-applicable and ibm,ddw-extensions outputs
+- Merge aux function query_ddw_out_sz() into query_ddw()
+- Merge reset_dma_window() patch (prev. #2) into remove default DMA
+  window patch (#4).
+- Keep device_node *np name instead of using pdn in remove_*()
+- Rename 'device_node *pdn' into 'parent' in new functions
+- Rename dfl_win to default_win
+- Only remove the default DMA window if there is no window available
+  in first query.
+- Check if default DMA window can be restored before removing it.
+- Fix 'unitialized use' (found by travis mpe:ci-test)
+- New patches #5 and #6
+
+Special thanks for Alexey Kardashevskiy and Oliver O'Halloran for
+the feedback provided!
+
+Leonardo Bras (6):
+  powerpc/pseries/iommu: Create defines for operations in
+    ibm,ddw-applicable
+  powerpc/pseries/iommu: Update call to ibm,query-pe-dma-windows
+  powerpc/pseries/iommu: Move window-removing part of remove_ddw into
+    remove_dma_window
+  powerpc/pseries/iommu: Remove default DMA window before creating DDW
+  powerpc/pseries/iommu: Make use of DDW even if it does not map the
+    partition
+  powerpc/pseries/iommu: Avoid errors when DDW starts at 0x00
+
+ arch/powerpc/platforms/pseries/iommu.c | 239 ++++++++++++++++++-------
+ 1 file changed, 176 insertions(+), 63 deletions(-)
+
+-- 
+2.25.4
+
+
+
+
