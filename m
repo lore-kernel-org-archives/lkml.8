@@ -2,151 +2,201 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D4AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E45D20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:24:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXgvbwzE"
+	by mail.kernel.org (Postfix) with ESMTP id 6E81420768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389170AbgFXGYt (ORCPT
+        id S2388445AbgFXGaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389161AbgFXGYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:24:46 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5954AC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 23:24:46 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v19so838060qtq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 23:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IeFAcmlPcFBcL391CclzBcYNZ0kQLKelbZVf7iyXvbQ=;
-        b=bXgvbwzErNnmUR/gkVDFaUZUc5XjS262NZ0VGDMNQ+SbagcfH8Ax4pUrOVqJrrk8qf
-         a36EPVt0pmNbcxo0TVbFBFj65HbbQOwA9towtA4H99YYcwAk/q2cO39sN4L/ZjB6Vo++
-         hpkA1AK+yaRjFmMCe6i7JqBLDsyygG1EDhYv37rS8vUP5cnE+PD7y6HRC3wy0vBmkozb
-         1iZYlHPtMBCni9V841A0MefnIEXWWhB+8bKO+T9yX4OEUspOpNdF3uGes1kIPF/etmvs
-         s85IQB04JVaN16wOeHsQ7jB7XYW90NAHGfhu/3q/PVVLLX3gvTgOHC/xoTCxB1G9MAG8
-         DSBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IeFAcmlPcFBcL391CclzBcYNZ0kQLKelbZVf7iyXvbQ=;
-        b=m9fc/BxNaTDhhLygoS3fvXuKsb6gMX53k/sUWS6XvhkMtR2cHMo6YBxnj9nDIQuFAq
-         dt0A3MBMvLTJjc8O2PmTUn4wWyz2z4N3Mt6IQ7eEsMIs8Grf+x0kGLxYLx79tcJLYY43
-         u/rBEQhgqrczjUb77aV788xQy22pMkMtA96YnSfEbWFDZWAjsL0qU1akmLwIOaeU0OFo
-         A9QFRQvhKYp1RWszFLUlqAakTgW0P854WJKIZi0Pf8rN4GG/YV3EFDd0h/ctvP5BdWvy
-         r8rQ5aQi23ifOb9MqIvK2UgFrvr8hcQJTLUvfKyd1hfVCVts4my05JN0uqYyY8VhK2Lt
-         +jDw==
-X-Gm-Message-State: AOAM533K6yRCI300jD67f1h1RL3VxFA03N5WvFqVzYv9gFdjrAhO93yw
-        FLR1g9IIoCWFknxO3OpqEa+yR0zA
-X-Google-Smtp-Source: ABdhPJzx2OQdVTNaGxL2nQJh7sRK2WoX08r1vEI6T415SLqFmTjUWi/FkyUAeMt1OIxexMFzviiSxA==
-X-Received: by 2002:ac8:33f8:: with SMTP id d53mr24168464qtb.80.1592979885652;
-        Tue, 23 Jun 2020 23:24:45 -0700 (PDT)
-Received: from LeoBras.ibmuc.com (179-125-148-1.dynamic.desktop.com.br. [179.125.148.1])
-        by smtp.gmail.com with ESMTPSA id n2sm2489727qtp.45.2020.06.23.23.24.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 23:24:45 -0700 (PDT)
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] powerpc/pseries/iommu: Avoid errors when DDW starts at 0x00
-Date:   Wed, 24 Jun 2020 03:24:11 -0300
-Message-Id: <20200624062411.367796-7-leobras.c@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200624062411.367796-1-leobras.c@gmail.com>
-References: <20200624062411.367796-1-leobras.c@gmail.com>
+        Wed, 24 Jun 2020 02:30:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6135 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388262AbgFXGaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:30:02 -0400
+IronPort-SDR: FucgLOVTk94fsZ1QmUtKkxLN8IYLI4O4BSwTMFuA5eMx4UQunjt/hcFzYRbxpkIbUTCTJeIm7g
+ WDaJU4FaYKZw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="132778391"
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="132778391"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 23:30:01 -0700
+IronPort-SDR: heLb5YqZ34s7Gf1o2pn7jMTrEA/w/dhHL5mZWjYGISN0S7EVZuUpysveKoBos56JldFv7oufvg
+ RcmiUtbsKi7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
+   d="scan'208";a="423268446"
+Received: from msaix-mobl2.ccr.corp.intel.com (HELO [10.255.28.245]) ([10.255.28.245])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jun 2020 23:29:58 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3 3/5] iommu/uapi: Use named union for user data
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1592931837-58223-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <96f6d717-e9b3-2a6b-5cff-c38dbe97aa7c@linux.intel.com>
+Date:   Wed, 24 Jun 2020 14:29:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1592931837-58223-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of today, enable_ddw() will return a non-null DMA address if the
-created DDW maps the whole partition. If the address is valid,
-iommu_bypass_supported_pSeriesLP() will consider iommu bypass enabled.
+Hi Jacob,
 
-This can cause some trouble if the DDW happens to start at 0x00.
+On 2020/6/24 1:03, Jacob Pan wrote:
+> IOMMU UAPI data size is filled by the user space which must be validated
+> by ther kernel. To ensure backward compatibility, user data can only be
+> extended by either re-purpose padding bytes or extend the variable sized
+> union at the end. No size change is allowed before the union. Therefore,
+> the minimum size is the offset of the union.
+> 
+> To use offsetof() on the union, we must make it named.
+> 
+> Link: https://lkml.org/lkml/2020/6/11/834
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/intel/iommu.c | 24 ++++++++++++------------
+>   drivers/iommu/intel/svm.c   |  2 +-
+>   include/uapi/linux/iommu.h  |  4 ++--
+>   3 files changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 50fc62413a35..59cba214ef13 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5409,8 +5409,8 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>   
+>   	/* Size is only valid in address selective invalidation */
+>   	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
+> -		size = to_vtd_size(inv_info->addr_info.granule_size,
+> -				   inv_info->addr_info.nb_granules);
+> +		size = to_vtd_size(inv_info->granu.addr_info.granule_size,
+> +				   inv_info->granu.addr_info.nb_granules);
+>   
+>   	for_each_set_bit(cache_type,
+>   			 (unsigned long *)&inv_info->cache,
+> @@ -5431,20 +5431,20 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>   		 * granularity.
+>   		 */
+>   		if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+> -		    (inv_info->pasid_info.flags & IOMMU_INV_PASID_FLAGS_PASID))
+> -			pasid = inv_info->pasid_info.pasid;
+> +		    (inv_info->granu.pasid_info.flags & IOMMU_INV_PASID_FLAGS_PASID))
+> +			pasid = inv_info->granu.pasid_info.pasid;
+>   		else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+> -			 (inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
+> -			pasid = inv_info->addr_info.pasid;
+> +			 (inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
+> +			pasid = inv_info->granu.addr_info.pasid;
+>   
+>   		switch (BIT(cache_type)) {
+>   		case IOMMU_CACHE_INV_TYPE_IOTLB:
+>   			/* HW will ignore LSB bits based on address mask */
+>   			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+>   			    size &&
+> -			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> +				(inv_info->granu.addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
 
-Instead if checking if the address is non-null, check directly if
-the DDW maps the whole partition, so it can bypass iommu.
+Nit: Keep it aligned. With this tweaked,
 
-Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
----
- arch/powerpc/platforms/pseries/iommu.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 2d217cda4075..967634a379b0 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -1078,7 +1078,8 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
-  *
-  * returns the dma offset for use by the direct mapped DMA code.
-  */
--static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
-+static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn,
-+		      bool *maps_partition)
- {
- 	int len, ret;
- 	struct ddw_query_response query;
-@@ -1237,9 +1238,9 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
- 	list_add(&window->list, &direct_window_list);
- 	spin_unlock(&direct_window_list_lock);
- 
--	/* Only returns the dma_addr if DDW maps the whole partition */
- 	if (len == order_base_2(max_addr))
--		dma_addr = be64_to_cpu(ddwprop->dma_base);
-+		*maps_partition = true;
-+	dma_addr = be64_to_cpu(ddwprop->dma_base);
- 	goto out_unlock;
- 
- out_free_window:
-@@ -1324,6 +1325,7 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
- {
- 	struct device_node *dn = pci_device_to_OF_node(pdev), *pdn;
- 	const __be32 *dma_window = NULL;
-+	bool ret = false;
- 
- 	/* only attempt to use a new window if 64-bit DMA is requested */
- 	if (dma_mask < DMA_BIT_MASK(64))
-@@ -1344,13 +1346,10 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
- 			break;
- 	}
- 
--	if (pdn && PCI_DN(pdn)) {
--		pdev->dev.archdata.dma_offset = enable_ddw(pdev, pdn);
--		if (pdev->dev.archdata.dma_offset)
--			return true;
--	}
-+	if (pdn && PCI_DN(pdn))
-+		pdev->dev.archdata.dma_offset = enable_ddw(pdev, pdn, &ret);
- 
--	return false;
-+	return ret;
- }
- 
- static int iommu_mem_notifier(struct notifier_block *nb, unsigned long action,
--- 
-2.25.4
+Best regards,
+baolu
 
+>   				WARN_ONCE(1, "Address out of range, 0x%llx, size order %llu\n",
+> -					  inv_info->addr_info.addr, size);
+> +					  inv_info->granu.addr_info.addr, size);
+>   			}
+>   
+>   			/*
+> @@ -5452,9 +5452,9 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>   			 * We use npages = -1 to indicate that.
+>   			 */
+>   			qi_flush_piotlb(iommu, did, pasid,
+> -					mm_to_dma_pfn(inv_info->addr_info.addr),
+> +					mm_to_dma_pfn(inv_info->granu.addr_info.addr),
+>   					(granu == QI_GRAN_NONG_PASID) ? -1 : 1 << size,
+> -					inv_info->addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
+> +					inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_LEAF);
+>   
+>   			if (!info->ats_enabled)
+>   				break;
+> @@ -5475,13 +5475,13 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>   				size = 64 - VTD_PAGE_SHIFT;
+>   				addr = 0;
+>   			} else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
+> -				addr = inv_info->addr_info.addr;
+> +				addr = inv_info->granu.addr_info.addr;
+>   
+>   			if (info->ats_enabled)
+>   				qi_flush_dev_iotlb_pasid(iommu, sid,
+>   						info->pfsid, pasid,
+>   						info->ats_qdep,
+> -						inv_info->addr_info.addr,
+> +						inv_info->granu.addr_info.addr,
+>   						size);
+>   			else
+>   				pr_warn_ratelimited("Passdown device IOTLB flush w/o ATS!\n");
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index d386853121a2..713b3a218483 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -338,7 +338,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>   	spin_lock(&iommu->lock);
+>   	ret = intel_pasid_setup_nested(iommu, dev,
+>   				       (pgd_t *)(uintptr_t)data->gpgd,
+> -				       data->hpasid, &data->vtd, dmar_domain,
+> +				       data->hpasid, &data->vendor.vtd, dmar_domain,
+>   				       data->addr_width);
+>   	spin_unlock(&iommu->lock);
+>   	if (ret) {
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> index 303f148a5cd7..1afc6610b0ad 100644
+> --- a/include/uapi/linux/iommu.h
+> +++ b/include/uapi/linux/iommu.h
+> @@ -263,7 +263,7 @@ struct iommu_cache_invalidate_info {
+>   	union {
+>   		struct iommu_inv_pasid_info pasid_info;
+>   		struct iommu_inv_addr_info addr_info;
+> -	};
+> +	} granu;
+>   };
+>   
+>   /**
+> @@ -329,7 +329,7 @@ struct iommu_gpasid_bind_data {
+>   	/* Vendor specific data */
+>   	union {
+>   		struct iommu_gpasid_bind_data_vtd vtd;
+> -	};
+> +	} vendor;
+>   };
+>   
+>   #endif /* _UAPI_IOMMU_H */
+> 
