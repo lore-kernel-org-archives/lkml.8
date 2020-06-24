@@ -2,121 +2,99 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D73DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1112082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BB2214DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593029526;
-	bh=Ud+RpLMV4dWOyKjdxATNiBtJWY31iUXVLUKQ0Pw1OEs=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=ZS40SiXgYh/WIpNoU3Tg0zeYMlmyqnkxZiJx/St0ps9h3Vve/J+V+EPFq5DjQ3S18
-	 XEf66TPu2ONgq41T4pAPoqCDtSeqvYzcQpd2sgzGcuADHTavxdtcds8N1n07KWHtoJ
-	 raj5I3jN3SGTiDzN/rjpRSNWtGTvbNoSTUUZDp6M=
+	s=default; t=1593029551;
+	bh=pGAVnC+z5QaZ+ECnRT43ezvORWhbwihBXRMZQ/7qaAw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=boiBlAPmTH6FHNv3i10vI3u80LcaHhA172bp9gtnst75OAKToHj80PceUlJNWtE74
+	 SzXP1PyeevUOtrzUV44hNEWaEB2OMDaPWOWD8PwkV286YLibkwa/PwjF6XblpWMm6t
+	 16kKUBPkLbU2f0wSIUdC+CHsJa8EXyZvzXd9Gq6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406340AbgFXUMC (ORCPT
+        id S2406379AbgFXUM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 16:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406231AbgFXUMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:12:01 -0400
+        id S2406251AbgFXUM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 16:12:28 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C479E2081A;
-        Wed, 24 Jun 2020 20:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13B3B20823;
+        Wed, 24 Jun 2020 20:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593029520;
-        bh=Ud+RpLMV4dWOyKjdxATNiBtJWY31iUXVLUKQ0Pw1OEs=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=Sn8K7bJI2A2bReHxyKOVrn40YgYXvT6VRe4UiqcQ8SuYRzjDU6jCotK4fb0cmghkE
-         iEpCpHtGTVnfLJNGkMM97h32Kll7pdcMi5nausdVV3hF1iT7HsxoHZSAF9OKHVbG28
-         bA+GJroXFubeCOb1DuR1OTdBkNFJ/FWcqh0PZetQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AF09435228BC; Wed, 24 Jun 2020 13:12:00 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:12:00 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        s=default; t=1593029548;
+        bh=pGAVnC+z5QaZ+ECnRT43ezvORWhbwihBXRMZQ/7qaAw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aHbmpvjVNPa/TDD+ZvaaC7Z9ZdX1Wh0NJ8OwOGBicPHM9GysD24HjMA+ye2yfaIkD
+         xub2z9xjCUBBMU6z171/vykZXHtGYEyzVXPuTVSAhbun4VBJPtgIm15D/wy1kEsact
+         cCy1PniSKEgWJUNakOibDaU0BWeI8UmQWupf+NQ0=
+From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         jiangshanlai@gmail.com, dipankar@in.ibm.com,
         akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/17] kfree_rcu updates for v5.9
-Message-ID: <20200624201200.GA28901@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 01/17] rcu: Fix a kernel-doc warnings for "count"
+Date:   Wed, 24 Jun 2020 13:12:10 -0700
+Message-Id: <20200624201226.21197-1-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200624201200.GA28901@paulmck-ThinkPad-P72>
+References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-This series contains kfree_rcu() updates.  Unless otherwise noted,
-these are all courtesy of Uladzislau Rezki.
+There are some kernel-doc warnings:
 
-1.	Fix a kernel-doc warnings for "count", courtesy of Mauro Carvalho
-	Chehab.
+	./kernel/rcu/tree.c:2915: warning: Function parameter or member 'count' not described in 'kfree_rcu_cpu'
 
-2.	rcu/tree: Keep kfree_rcu() awake during lock contention, courtesy
-	of Joel Fernandes.
+This commit therefore moves the comment for "count" to the kernel-doc
+markup.
 
-3.	rcu/tree: Skip entry into the page allocator for PREEMPT_RT,
-	courtesy of Joel Fernandes.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-4.	rcu/tree: Repeat the monitor if any free channel is busy.
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index c716ead..912d466 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2986,6 +2986,7 @@ struct kfree_rcu_cpu_work {
+  * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
+  * @monitor_todo: Tracks whether a @monitor_work delayed work is pending
+  * @initialized: The @lock and @rcu_work fields have been initialized
++ * @count: Number of objects for which GP not started
+  *
+  * This is a per-CPU structure.  The reason that it is not included in
+  * the rcu_data structure is to permit this code to be extracted from
+@@ -3001,7 +3002,6 @@ struct kfree_rcu_cpu {
+ 	struct delayed_work monitor_work;
+ 	bool monitor_todo;
+ 	bool initialized;
+-	// Number of objects for which GP not started
+ 	int count;
+ };
+ 
+-- 
+2.9.5
 
-5.	rcu/tree: Make debug_objects logic independent of rcu_head,
-	courtesy of Joel Fernandes.
-
-6.	rcu/tree: Simplify KFREE_BULK_MAX_ENTR macro.
-
-7.	rcu/tree: Move kfree_rcu_cpu locking/unlocking to separate
-	functions.
-
-8.	rcu/tree: Use static initializer for krc.lock, courtesy of
-	Sebastian Andrzej Siewior.
-
-9.	rcu/tree: cache specified number of objects.
-
-10.	rcu/tree: Maintain separate array for vmalloc ptrs.
-
-11.	rcu/tiny: support vmalloc in tiny-RCU.
-
-12.	Rename *_kfree_callback/*_kfree_rcu_offset/kfree_call_*.
-
-13.	mm/list_lru.c: Rename kvfree_rcu() to local variant.
-
-14.	Introduce 2 arg kvfree_rcu() interface.
-
-15.	Support reclaim for head-less object.
-
-16.	Introduce single argument kvfree_rcu() interface.
-
-17.	lib/test_vmalloc.c: Add test cases for kvfree_rcu().
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/admin-guide/kernel-parameters.txt |    8 
- include/linux/rcupdate.h                        |   61 ++-
- include/linux/rcutiny.h                         |   20 -
- include/linux/rcutree.h                         |    2 
- include/trace/events/rcu.h                      |    8 
- kernel/rcu/tiny.c                               |    7 
- kernel/rcu/tree.c                               |  443 ++++++++++++++++--------
- lib/test_vmalloc.c                              |  103 +++++
- mm/list_lru.c                                   |    6 
- 9 files changed, 481 insertions(+), 177 deletions(-)
