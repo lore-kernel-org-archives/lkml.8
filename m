@@ -2,127 +2,86 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E1020702
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:16:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gLi7cDDY"
+	by mail.kernel.org (Postfix) with ESMTP id 562C52077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593026265;
+	bh=vdx1BidY1dD3vPoX2CtkizwrX4XdX2UNUOVuHeSPf+c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y+XahPvqS2OPHZPNdlWfPIwEvOKEeiJ7bvusRJh+migDlfaz62INL98YPUfOAEvGx
+	 l2vlujqjLMAjnOCahEDpQy38YnVmvC65sYHltfa4yxtljvsgetcxH1gfDAd4Wuixy9
+	 uESuF5r3XsTIePXDxFuWlcrvr/1GHbK0lkxG22Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405904AbgFXTQl (ORCPT
+        id S2406009AbgFXTRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:16:41 -0400
-Received: from mail.efficios.com ([167.114.26.124]:52714 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404563AbgFXTQk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:16:40 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 32B2E2C41EA;
-        Wed, 24 Jun 2020 15:16:39 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Sy_hIEQaqNSw; Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D4A622C41E9;
-        Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D4A622C41E9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593026198;
-        bh=3iQZiVLyuzca+V6wzidMMRJWMtP3eZM0DyCNIq1qy5A=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=gLi7cDDYKoLA6fi9D2m9YjL4neyMZO3/xX+0sRd9xuPY3k0RAYiL9OKhPETdy2UrJ
-         z8tHPffjw7aJNS6TM58GTkea3FuJmkbJ/N9FJ2M0fQVImRVEP180V4OPxhzjxHUalS
-         07Ll1v+SfqY+Hb4T8BhRTC1Dx9iP6XrTBhlA1xoU1cn14782maIaB7LFY2rHp6rqdQ
-         dkeih0Scg2lV3eG8CIHF5Hg3DUv81hNLJ5IQw1+ESr/UxfA0vRupwMsvhuaVJs/9Tk
-         EZo+kBGQXt8rOYsiXVTPro3r2CsdtcB1ey32YpvI7/ma+gmd/5s7hXuJodUtdbpp9v
-         tQbeTDgR83aLQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id DBrbA6G8I6OI; Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id BF3DA2C448D;
-        Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
-Date:   Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1248023868.11643.1593026198678.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87r1u48eix.fsf@oldenburg2.str.redhat.com>
-References: <20200622180803.1449-1-mathieu.desnoyers@efficios.com> <20200622180803.1449-2-mathieu.desnoyers@efficios.com> <87d05obl4w.fsf@oldenburg2.str.redhat.com> <1158112159.11628.1593025203438.JavaMail.zimbra@efficios.com> <87r1u48eix.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/3] glibc: Perform rseq registration at C startup and
- thread creation (v21)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Wed, 24 Jun 2020 15:17:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404563AbgFXTRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:17:43 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1877B20702;
+        Wed, 24 Jun 2020 19:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593026263;
+        bh=vdx1BidY1dD3vPoX2CtkizwrX4XdX2UNUOVuHeSPf+c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uegryQSVLpTE+yWXqjp8I3Fw36AoHqwHvv6FtfmOMozFhePJY1tHBR1SaOQvRKhcL
+         0yRjO+iDhRBRBYBncBvxQpyZFZX6+Xwg1biL7IqobBygQYEg5iHTZ15VAMhGeTenrZ
+         F7Dog63Ek+kySLBULBo9SmHD3lJkfNqotql16CtI=
+Date:   Wed, 24 Jun 2020 12:17:42 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     nao.horiguchi@gmail.com
+Cc:     linux-mm@kvack.org, mhocko@kernel.org, mike.kravetz@oracle.com,
+        osalvador@suse.de, tony.luck@intel.com, david@redhat.com,
+        aneesh.kumar@linux.vnet.ibm.com, zeil@yandex-team.ru,
+        naoya.horiguchi@nec.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/15] HWPOISON: soft offline rework
+Message-Id: <20200624121742.711331a2a65633a0e16fd9e6@linux-foundation.org>
+In-Reply-To: <20200624150137.7052-1-nao.horiguchi@gmail.com>
+References: <20200624150137.7052-1-nao.horiguchi@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v21)
-Thread-Index: YkL95Fw6DEDAnKFpYDNCDQAteeHIAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 24, 2020, at 3:11 PM, Florian Weimer fweimer@redhat.com wrote:
+On Wed, 24 Jun 2020 15:01:22 +0000 nao.horiguchi@gmail.com wrote:
 
-> * Mathieu Desnoyers:
+> I rebased soft-offline rework patchset [1][2] onto the latest mmotm.  The
+> rebasing required some non-trivial changes to adjust, but mainly that was
+> straightforward.  I confirmed that the reported problem doesn't reproduce on
+> compaction after soft offline.  For more precise description of the problem
+> and the motivation of this patchset, please see [2].
 > 
->>> I'm still worried that __rseq_static_assert and __rseq_alignof will show
->>> up in the UAPI with textually different definitions.  (This does not
->>> apply to __rseq_tls_model_ie.)
->>
->> What makes this worry not apply to __rseq_tls_model_ie ?
+> I think that the following two patches in v2 are better to be done with
+> separate work of hard-offline rework, so it's not included in this series.
 > 
-> It's not needed by the kernel header because it doesn't contain a
-> __rseq_abi declaration.
+>   - mm,hwpoison: Take pages off the buddy when hard-offlining
+>   - mm/hwpoison-inject: Rip off duplicated checks
 > 
->>> 
->>> Is my worry unfounded?
->>
->> So AFAIU you worry that eventually sys/rseq.h and linux/rseq.h carry different
->> definitions of __rseq_static_assert and __rseq_alignof.
->>
->> Indeed, I did not surround those #define with #ifndef/#endif. Maybe we should ?
->>
->> Just in case the definitions end up being different (worse case scenario), we
->> should expect their behavior to be pretty much equivalent. So going for the
->> following should address your concern I think:
+> These two are not directly related to the reported problem, so they seems
+> not urgent.  And the first one breaks num_poisoned_pages counting in some
+> testcases, and The second patch needs more consideration about commented point.
 > 
-> I think we should keep things simple on the glibc side for now and do
-> this changes to the kernel headers first.
 
-Just to be sure I understand what you mean by "keep things simple", do you
-recommend removing the following lines completely for now from sys/rseq.h ?
+It would be nice to have some sort of overview of the patch series in
+this [0/n] email.
 
-/* Ensure the compiler supports rseq_align.  */
-__rseq_static_assert (__rseq_alignof (struct rseq_cs) >= 32, "alignment");
-__rseq_static_assert (__rseq_alignof (struct rseq) >= 32, "alignment");
+> [1] v1: https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
+> [2] v2: https://lore.kernel.org/linux-mm/20191017142123.24245-1-osalvador@suse.de/
 
-Thanks,
+The above have such, but are they up to date?
 
-Mathieu
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
