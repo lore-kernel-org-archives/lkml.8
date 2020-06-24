@@ -2,255 +2,166 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0383E20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30FB720836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STRseE+x"
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20150623.gappssmtp.com header.i=@mojatatu-com.20150623.gappssmtp.com header.b="ADAC9Nm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390840AbgFXMnu (ORCPT
+        id S2390877AbgFXMoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34124 "EHLO
+        Wed, 24 Jun 2020 08:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388942AbgFXMnt (ORCPT
+        with ESMTP id S2388942AbgFXMoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:43:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00459C061573;
-        Wed, 24 Jun 2020 05:43:48 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y18so1024199plr.4;
-        Wed, 24 Jun 2020 05:43:48 -0700 (PDT)
+        Wed, 24 Jun 2020 08:44:38 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BABC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:44:38 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id u12so1482280qth.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WK4lDdjOhSB2YX9Kt0ylng7mTc0a6hvSebEpH+B9JH0=;
-        b=STRseE+xHdwcXobbZpmqYobngiahjccbZfbSksh3i6kgQspWr1QjmZU3MxTPCAeMHn
-         oOkU4NLukxrf1IHEltjIz0o1vEjhJO9Cuezi1+UCiRfzuvwfYJxIzBb1l7ewrhEzNXW6
-         ZLCaYFFByoO9RIkqiZrKJnJHAhCZbnsXSWkYBsl7D9857jPV8X06LN7z9jovO+hz7jIy
-         QYx326J6kgvOBYEeWHlq3i+lbscxCeuPSm5GpBt4nQYYpes71j27IImOXSt3TE8iwMOu
-         FR79Bbk/YiFpCS/z/gBuuukoPxhT2r8udpoCRWtGacTvYZn/8yraPjf+gHkkT4B8ZNft
-         2IEg==
+        d=mojatatu-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K+GGZXKgpzdCsUctXsT0qtaMFmUhAglO46kKwDBE35k=;
+        b=ADAC9Nm+AjdV8L4TTS7PIGLMY15VNal3PX2tkETlMZKLDRFTA5Zq7fyeasnJFbp8aQ
+         u35RXtvdaqiOl2B34/rDKVfk/KU5yGbvLGjLj5uBbsgbgxlieYKMYe61G7Aa3nJSqNsJ
+         aSS1D/M+o9/ClQ8ZDo9o+Cm+Ywc+anYTuJfGUyz91nsTQAtPlOnm+eEintzNQG/V67me
+         duDxwZV4JBFW67bkT02/tyvtt63LcTnGQu03PsWedd0d7bGH4vD2mrADYMwcQpgn8Tw9
+         CBSjxkARtflMFT8a0pxLNB3Ihb+pE571AonOVTeiVD9S+18zwm1RX5bPUeYKjJEuo3Om
+         USUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WK4lDdjOhSB2YX9Kt0ylng7mTc0a6hvSebEpH+B9JH0=;
-        b=sm+EZ+WMoSfSGnwFaT9crVNDGcECHLlrpFW0u/eu88JT0Xn0//ImZPnX/rV40vPc3x
-         DyLaD27iOVtz0v0d3q2yfSKYcsdhwgdS/Ggd+d/XlRglKmR64dD59GDAtZYHx/DC7T5v
-         BXUsY+w+iAp6c0tADOQUIMAqyTSuss7aw4iWVgj4mIGT35Tp6Y4oswSU9ejGhMNC8SPF
-         GuoO08VUVLqlGpWAsntKAbr57Uadl3Poizxs8PfxvGQ3kLpzYgV/70tWMoJpYt1BuCXo
-         +z7st9mwfMo7J3NuHKDeU7SXafhMguGCpKAPlafVQcfcuxqHVVAlOqh46gXRD8mp9hQn
-         YBqg==
-X-Gm-Message-State: AOAM533w4ChJgsJwdXB25FVj2u9ShbtVGsEDoliCQBHlQ9O8eApOmZSD
-        V+j20iQHUqaFIqmg9uuDmwOi6HI42pf8s4XiOudqfWY4LT4=
-X-Google-Smtp-Source: ABdhPJxzeY5QRuWs1Cg2ZheJGjj6NlRcKFF6tLd0voNbYP6UXmHjP2W9iiQELZ2hMWAqKua0EUHZwUSRZ/Tf5qklUPU=
-X-Received: by 2002:a17:90a:220f:: with SMTP id c15mr29686923pje.129.1593002628391;
- Wed, 24 Jun 2020 05:43:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K+GGZXKgpzdCsUctXsT0qtaMFmUhAglO46kKwDBE35k=;
+        b=kxEqoRjTeYk3kklM0sKBxw+sTOTPHPAdpOsJlqXyKC/06azT+4KEHEx67Q0FZyQ88+
+         dI2/CGUGEGZvavxokWNg9WNlK+W3xHcGwMi1b9pnnLeaUwF++TIprJ0IBsNW9uQ63y92
+         9Xx0N7Zr0aKHFyFq+mD3kncgoXT0u/9HIUMiUoRY0MHMQNrJaU8iJ4IuU2fjytsP3NKM
+         4OmRU4i+2CEVNJQUP+3wtU1wj7i6G99Q4n5ba5mlz0jM+LuDL7rhfBo2ukxybu+1LjGF
+         l492LG7himWxEM0/3uJZje1vPKeqHm+otc34nD+rHtekpb38MLlyKF2mcuWdWLZIDZn6
+         F2hA==
+X-Gm-Message-State: AOAM530+k0lOiO11ZxXB0YL9fYui86Xzsn6X8zLTBaQUiSZtjXwkVEb7
+        z1VoYze35+cV6ElQq24YAkr8/w==
+X-Google-Smtp-Source: ABdhPJyQIqA1QaiDwKbaPsVfBf/aqoPaaAgynomS8v8sVwttSlNATi+gb0yJ2j0k/hkgTxeCYTLIeQ==
+X-Received: by 2002:ac8:794c:: with SMTP id r12mr26584071qtt.201.1593002677309;
+        Wed, 24 Jun 2020 05:44:37 -0700 (PDT)
+Received: from [192.168.1.117] (23-233-27-60.cpe.pppoe.ca. [23.233.27.60])
+        by smtp.googlemail.com with ESMTPSA id f65sm1914390qtd.61.2020.06.24.05.44.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 05:44:36 -0700 (PDT)
+Subject: Re: [v1,net-next 3/4] net: qos: police action add index for tc flower
+ offloading
+To:     Po Liu <po.liu@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "idosch@idosch.org" <idosch@idosch.org>
+Cc:     "jiri@resnulli.us" <jiri@resnulli.us>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        "vlad@buslov.dev" <vlad@buslov.dev>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
+        "vishal@chelsio.com" <vishal@chelsio.com>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "moshe@mellanox.com" <moshe@mellanox.com>,
+        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
+        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        Edward Cree <ecree@solarflare.com>
+References: <VE1PR04MB6496AD2BE9868D72A475935492940@VE1PR04MB6496.eurprd04.prod.outlook.com>
+From:   Jamal Hadi Salim <jhs@mojatatu.com>
+Message-ID: <18e0ceb0-7cc7-12cc-624d-286cfbd70b94@mojatatu.com>
+Date:   Wed, 24 Jun 2020 08:44:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
- <20200616200225.32mwzew3zw3nuiwh@mobilestation> <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
- <20200616225648.eqzugzapatblndcy@mobilestation> <20200618085654.GL2428291@smile.fi.intel.com>
- <20200619221240.tvyf5alek4wxhdby@mobilestation> <CAHp75Vf0quL_0j0wBDwma9BToBq87PhFa0Hp0bpQMLMAoTWJpA@mail.gmail.com>
- <20200623014945.56j3hnwnz4cj2u4t@mobilestation>
-In-Reply-To: <20200623014945.56j3hnwnz4cj2u4t@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 24 Jun 2020 15:43:35 +0300
-Message-ID: <CAHp75Vd0YM=mRkUweK0TRhg9wyb2bs6-AO3m21BRE_=ZMEv8hg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <VE1PR04MB6496AD2BE9868D72A475935492940@VE1PR04MB6496.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 4:49 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> On Sat, Jun 20, 2020 at 01:13:56PM +0300, Andy Shevchenko wrote:
-> > On Sat, Jun 20, 2020 at 1:12 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > > On Thu, Jun 18, 2020 at 11:56:54AM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Jun 17, 2020 at 01:56:48AM +0300, Serge Semin wrote:
-> > > > > On Wed, Jun 17, 2020 at 12:40:35AM +0300, Andy Shevchenko wrote:
-> > > > > > On Tue, Jun 16, 2020 at 11:03 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > > > > > > On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
+On 2020-06-23 7:52 p.m., Po Liu wrote:
+> Hi Jamal,
+> 
+> 
 
-...
+>>>> My question: Is this any different from how stats are structured?
+>>>
 
-> > Linus replied to three messages out of 7, seems you read only the first one.
+[..]
+>> My question: Why cant you apply the same semantics for the counters?
+>> Does your hardware have an indexed counter/stats table? If yes then you
+> 
+> Yes, 
 
-> Actually I've read all of them and from what I could see, he didn't like a code
-> setting gpio-base regardless whether it has been created before your patchset
-> or your explanation why it was necessary.
+That is the point i was trying to get to. Basically:
+You have a counter table which is referenced by "index"
+You also have a meter/policer table which is referenced by "index".
 
-Yes, and then he realized what happened in the past. TBH I also do not
-like this kind of thing, but we may not get rid of it because we will
-get a regression.
-The compromise (which is used in several cases of my knowledge, but I
-believe there are more) is to use internal property. This keeps layers
-separate and individual drivers nicer and neater.
+For policers, they maintain their own stats. So when i say:
+tc ... flower ... action police ... index 5
+The index referred to is in the policer table
 
-...
+But for other actions, example when i say:
+tc ... flower ... action drop index 10
+The index is in the counter/stats table.
+It is not exactly "10" in hardware, the driver magically hides
+it from the user - so it could be hw counter index 1234
 
-> > > My point is that no mater how you pass the gpio-base value it will always be a
-> > > quirk. The same thing is with the irq_shared flag. Both of them are specific to
-> > > the Quark-platform. They are used to tune the DW APB GPIO driver up so one would
-> > > create a GPIO device working well with the Quark-specific DW APB GPIO block.
-> >
-> > Precisely!
-> >
-> > > > > > We, by applying this series, make (keep) layers independent: board
-> > > > > > code vs. driver code. Mixing them more is the opposite to what I
-> > > > > > propose.
-> > > > > >
-> > > > > > WRT property.
-> > > > > > snps,gpio-base can be easily changed to *already in use* gpio-base or
-> > > > > > being both converted to linux,gpio-base to explicitly show people that
-> > > > > > this is internal stuff that must not be present in firmware nodes.
-> > > > >
-> > > > > As I see it the part with "gpio-base" and the irq_shared can be moved to the
-> > > > > gpio-dwapb.c driver to be defined as the quark-specific quirks. Adding a
-> > > > > property like "gpio-base" seems like a quirk anyway, so I'd leave it defined in
-> > > > > the driver.
-> > > >
-> > >
-> > > > Huh?! The whole idea is make GPIO driver agnostic from platforms and their quirks.
-> > >
-> > > As I said above having the gpio-base value set is the platform-specific thing in
-> > > any case. So no mater whether you pass it via the software_node/properties or
-> > > the private platform-data structure, the DW APB GPIO driver will have to handle
-> > > those parameters in some special way, which is quirk-prone since normal platforms
-> > > don't have such peculiar requirements.
-> >
->
-> > Seems you are proposing layering violation without seeing it.
-> > Let me explain the design of the drivers in Linux kernel.
-> >
-> > There are basically few possible concepts how drivers are handling
-> > quirks (because we know that most of the hardware support is a set of
-> > quirks here and there):
-> > 1) platform provides a board files and via platform data structures
-> > supplies quirks to the certain driver
-> > 2) platform provides a firmware node (ACPI, DT, ...) and unified
-> > driver handles it thru the fwnode interface
-> > 3) driver is split to be a library (or core part) + glue drivers full of quirks
-> > 4) driver has embedded quirks and supplies them based on IDs (PCI ID,
-> > ACPI ID, compatible string, ID table, etc)
-> > 5) ...missed something? ...
-> >
-> > What I'm proposing is turn 1 to 2 for Quark case, what you are
-> > proposing is absent on the picture, i.e.:
-> > x) platform provides a board file (intel_quark_i2c_gpio.c) and the
-> > driver has embedded quirks based on ID.
-> >
-> > This is not what we want, definitely.
->
-> From the list you provided it's still not obvious why what I suggested wasn't
-> good, because it's perfectly fine to have both ACPI/DT-based firmware node
-> (entry 2) and quirks based on IDs (entry 4), which plenty of the kernel
-> drivers do.
+The old approach is to assume the classifier (flower in this
+case) has a counter. The reason for this assumption is older
+hardware was designed to deal with a single action per match.
+So a counter to the filter is also the counter to the
+(single) action. I get the feeling your hardware fits in that
+space.
 
-And I'm not talking about combinations of 2+4, what I'm talking about
-is 1+4 which *is* layering violation and a bad idea to start with.
+Modern use cases have evolved from the ACL single match and action
+approach. Maintaining the old thought/architecture breaks in two
+use cases:
+1) when you have multiple actions per policy filter. You need
+counter-per-action for various reasons
+2) Sharing of counters across filters and action. This can
+be achieve
 
-> The difference between the most of those drivers and what I
-> suggested is that by bonding a device with a driver they provide
-> !device!-quirks, but not the !platform!-quirks. While the platform quirks
-> and platform properties are normally provided by means of the platform data,
-> firmware nodes, glue layers, etc. Moving some of the platform-quirks to a
-> driver you called "layering violation". Well, I've never met that definition
-> in the kernel before
+tc supports the above and is sufficient to cover the old use
+cases.
+I am just worried, architecturally, we are restricting ourselves
+to the old scheme.
 
-> (have you just come up with it?),
+Another reason this is important is for the sake of analytics.
+A user space app can poll just for the stats table in hardware
+(or the cached version in the kernel) and reduce the amount of
+data crossing to user space..
 
-Nope, I heard it many times during reviews.
+cheers,
+jamal
 
-> but at least I see
-> what you meant.
 
-> Anyway there are GPIO-drivers which still use the device IDs to get the
-> platform quirks
 
-Maybe you missed that we have more players here than simple dwapb-gpio?
-How many of them are part of MFD (being used as MFD cells)?
 
-> or get the GPIO-base from an of node alias (gpio-zynq.c,
-> gpio-vf610.c, gpio-zx.c, gpio-mxc.c, gpio-mxs.c). There are even some,
-> which either use a static variable to redistribute the GPIO-base between
-> all available GPIO-chips (gpio-brcmstb.c, gpio-sta2x11.c, gpio-omap.c)
-> or set a fixed GPIO-based value (like gpio-xlp.c, gpio-iop.c, gpio-ep93xx.c,
-> gpio-vx855.c, gpio-cs5535.c, gpio-sch311x.c, gpio-loongson.c, gpio-loongson1.c,
-> gpio-ath79.c, gpio-octeon.c),
 
-So,  the question is above.
-
-> or even get the GPIO-base value from some
-> hardware register (gpio-merrifield.c, gpio-intel-mid.c).
-
-These examples are not good, they are not part of MFD and the latter
-one actually should be a glue driver to gpio-pxa.c.
-
-> I am pretty sure
-> the examples of having the locally-defined platform quirks and the concepts
-> 1, 2, 3 and 4 at some extent utilized in a single driver can be found in another
-> subsystems too.
-
-I'm pretty sure layering violation can be found in many places in the
-kernel. It doesn't mean we have to take bad or different examples as
-suitable.
-
-> I am not saying, that the approaches utilized in those drivers are ideal.
-> Those are just examples, that the platform specifics can be reflected in
-> the corresponding drivers and the so called "layering violation" is allowed
-> at some circumstances. Linus, correct me if I am wrong.
-
-It depends how a certain driver is being used. In our case we don't
-need to spread board code over the kernel, we may be smarter than
-that!
-
-> Getting back to this patchset. As I see it, the main problem here is connected
-> with two parameters:
-> - GPIO-base. You suggest to update the gpio-dwapb.c driver so one would
->   support a firmware property like "gpio-base". It's not good, since the
->   property will be implicitly supported by OF API as well and nothing will
->   prevent a user from using it. Even though you said that we won't advertise
->   that property, some user may try to define it in dts anyway, which can be
->   easily missed on review.
-
-No, if we don't advertise that and if we add "linux," prefix (see DWC3
-for example) to be explicit what this is used for and why.
-
-> - IRQ-shared. As I said before it's not good to replace the irq_shared flag
->   with the to_of_node() macro. Because having to_of_node() returned an
->   of-node doesn't mean the IRQs can't be shared.
-
-This is a valid point, but I would ask you, as a more familiar guy
-with the OF/DT system,  what suggestion would be better?
-
-> As I see it the convenience provided by your patchset in relation to the
-> GPIO-base and IRQ-shared properties doesn't overcome the problems denoted
-> above. IMO it would be better either to move the GPIO-base and the IRQ-shared
-> parameters definition to the gpio-dwapb.c driver despite of the so called
-> "layering violation" or just leave them in the MFD driver. Linus, please join
-> the discussion. Do you have any better idea of what to do with these
-> properties?
-
-Moving them to gpio-dwapb is a silly move. Better to do nothing if you
-insist, but I consider that is non-constructive.
-
---
-With Best Regards,
-Andy Shevchenko
