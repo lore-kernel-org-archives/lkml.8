@@ -2,95 +2,67 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0979B20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVQuaamT"
+	by mail.kernel.org (Postfix) with ESMTP id BB0D620E65
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593003719;
+	bh=xIgR4etzuuD/XhDz5yuOShAfik5HvT9HtcNcSGjDtYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vZETq49xDS4j2m2fNJ3ISBXm0SouFjTXI7/8ozjA+52GZbTrmjr4d4gF+OzrqT5Pd
+	 TiHJ6aDR1d9Jm4B4EjI0vaqTgW2CudkHvhQhuxiwVj2KLHgz8leW8LyGCIsZkjsD27
+	 Ph0dGZOSDF4C6Ek6hqwdISkKJO4VBj7CgLEBqKw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390898AbgFXNBa (ORCPT
+        id S2403781AbgFXNB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:01:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390686AbgFXNB3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:01:29 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC90C061573;
-        Wed, 24 Jun 2020 06:01:29 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k6so1028594pll.9;
-        Wed, 24 Jun 2020 06:01:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FtkmdXx4B1M45guE2A+6Jpvosg2yvcthShAtRVDK1oY=;
-        b=rVQuaamTUWBcFQ9CabWEd+EnZ8MIyVY1vX7xhBVIjVJd0lMRmGaISN2lqsj5SbeS4s
-         J9Au8DfgkfZW6yfIH8s3tJm1vLXpqgEthdHtGUVBN789fEWZoRjmQPU5kXs8RmupyKHQ
-         1psCw/spVDoHCtqjEN+acSoC3JwOZ1hpIyZywbs4sBUnBoV1RlKg/5Myl44nvkpWU3C1
-         eHLPve4ShclXkDGX3C9j1zbIOG88VPxBgf5L3i9Mi0cCM6nzQKVU64snNKYLhJ3pf+uR
-         rTOlk1cHnsNomvzyLf2EIZnJVSLwBR/ktIhJboFB1Tni8GQP+MdoSI+J/G+CfqGsdfNm
-         ddHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FtkmdXx4B1M45guE2A+6Jpvosg2yvcthShAtRVDK1oY=;
-        b=sXpQDluYKEoDMvkQ8Tmum+5EHzdx2jgftB4UoVayBjKiuNHTdaUb7+lB31Z8/M8+go
-         y7hLwCl79wKJlKc6zXj0DPOI4SHj8L/mOpM5zTIgAeAVoOVbq7DOdpO6RpgU4XHmq1KM
-         VIpBZD8eWfCPNozfSa3Ye/RZ4OZs+RufnPtxvACrRGMdo+ue44FuKVF71dQW2Ft79aXX
-         3STxtE1Zv4dpnvZh4ATTlDaNGfHdL5cPE4/IMnbXsRHWqx2UsXlck7HT3nh9Ckp2hEQx
-         s+sBH8sl+MAGs8tlmZba5VwHFqzP/FXlElcT1k9KtgSPgkLeTTLSPAU90b4voAai6fa7
-         Fhcg==
-X-Gm-Message-State: AOAM533+If5aFFDrldirk7qFJ+DRzmz0qeT5sGeXrTryVg7uT2/3br77
-        I1zrVFSX+e1PtwkkIO8fshLoqk+rC46Q2I81aD4=
-X-Google-Smtp-Source: ABdhPJxUXoiDpqrzcG9jHa+PhMn/D2FoW3z0FBTkuN1UXlMkVdn0fvo3bmb3trunYGTSAI32+hU1loB8+TGTJH3l1pA=
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr28040118pjr.181.1593003688866;
- Wed, 24 Jun 2020 06:01:28 -0700 (PDT)
+        Wed, 24 Jun 2020 09:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390686AbgFXNB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:01:57 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 201C320786;
+        Wed, 24 Jun 2020 13:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593003717;
+        bh=xIgR4etzuuD/XhDz5yuOShAfik5HvT9HtcNcSGjDtYI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IGw7tGnRPSN/oz+Nfm5oXVPChhbogO7X6Ayqr7/I8r+6DHOcqvnFofqJ2S+HEszig
+         d8qiGt8fS/wZUl68abat2h7bRpTYsPNLDKMV6lG4hHcz+h91c1U5UWCVXiHXw5X9XN
+         ciXFfANesn54t4GLwVME1p079cUqPt1lxC/4K8n4=
+Date:   Wed, 24 Jun 2020 18:31:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v2 1/2] phy: rockchip: Fix return value of
+ inno_dsidphy_probe()
+Message-ID: <20200624130152.GE2324254@vkoul-mobl>
+References: <1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-References: <20200623060526.29922-1-mans0n@gorani.run>
-In-Reply-To: <20200623060526.29922-1-mans0n@gorani.run>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 24 Jun 2020 16:01:16 +0300
-Message-ID: <CAHp75VfMQh3KW276uAwBV-nOVTnLaAspGijPHyZjuHzm4XLPag@mail.gmail.com>
-Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590412138-13903-1-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 9:06 AM Sungbo Eo <mans0n@gorani.run> wrote:
->
-> This patch adds support for the PCA9570 I2C GPO expander.
+On 25-05-20, 21:08, Tiezhu Yang wrote:
+> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+> to check the return value and return PTR_ERR() if failed.
 
-> Tested in kernel 5.4 on an ipq40xx platform.
->
-> This is my first time submitting a whole driver patch, and I'm not really familiar with this PCA expander series.
-> Please let me know how I can improve this patch further. (Do I also need to document the DT compatible string?)
->
-> FYI there's an unmerged patch for this chip.
-> http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
-> I don't have PCA9571 either so I didn't add support for it.
-
-My very first questions to such (simple) driver submissions is: Have
-you conducted research of existing drivers and found that none is
-suitable for this chip?
-Do this and answer in a commit message, if it will be still valid.
-
+Applied both, thanks
 -- 
-With Best Regards,
-Andy Shevchenko
+~Vinod
