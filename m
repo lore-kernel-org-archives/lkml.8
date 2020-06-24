@@ -2,129 +2,255 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D184320836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0383E20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jTDqaZPg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STRseE+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390857AbgFXMmy (ORCPT
+        id S2390840AbgFXMnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:42:54 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55308 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389197AbgFXMmv (ORCPT
+        Wed, 24 Jun 2020 08:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388942AbgFXMnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593002570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nejhpHIa27+I+N81kD1fZe2FhZEQndvCHobN1z/g+Sk=;
-        b=jTDqaZPgtuZo9S7aKvQSljjSuQLUPBTFMTcmYsmlt8cVy2w7jFcF7xN4oNESZMK8ry9aHv
-        4Cqa8AYFf11G8hwIlNbITzp/qWKLcb2P90AWhLVeQOZ/5jLz6gh3dJ/Q0ZV50cpsygzbQp
-        8Zjzv7aNNed9r3w/f4ctcnkp+u0F4Zg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-la3_z9xpNomDC5SmP5Z2bQ-1; Wed, 24 Jun 2020 08:42:46 -0400
-X-MC-Unique: la3_z9xpNomDC5SmP5Z2bQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABD4780400A;
-        Wed, 24 Jun 2020 12:42:44 +0000 (UTC)
-Received: from krava (unknown [10.40.193.204])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 496A951C50;
-        Wed, 24 Jun 2020 12:42:42 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 14:42:41 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Ian Rogers <irogers@google.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] [perf] intel_pt_recording_options: Remove redundant
- intel_pt_evsel null check
-Message-ID: <20200624124241.GA2719003@krava>
-References: <20200623234905.18608-1-gaurav1086@gmail.com>
+        Wed, 24 Jun 2020 08:43:49 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00459C061573;
+        Wed, 24 Jun 2020 05:43:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y18so1024199plr.4;
+        Wed, 24 Jun 2020 05:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WK4lDdjOhSB2YX9Kt0ylng7mTc0a6hvSebEpH+B9JH0=;
+        b=STRseE+xHdwcXobbZpmqYobngiahjccbZfbSksh3i6kgQspWr1QjmZU3MxTPCAeMHn
+         oOkU4NLukxrf1IHEltjIz0o1vEjhJO9Cuezi1+UCiRfzuvwfYJxIzBb1l7ewrhEzNXW6
+         ZLCaYFFByoO9RIkqiZrKJnJHAhCZbnsXSWkYBsl7D9857jPV8X06LN7z9jovO+hz7jIy
+         QYx326J6kgvOBYEeWHlq3i+lbscxCeuPSm5GpBt4nQYYpes71j27IImOXSt3TE8iwMOu
+         FR79Bbk/YiFpCS/z/gBuuukoPxhT2r8udpoCRWtGacTvYZn/8yraPjf+gHkkT4B8ZNft
+         2IEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WK4lDdjOhSB2YX9Kt0ylng7mTc0a6hvSebEpH+B9JH0=;
+        b=sm+EZ+WMoSfSGnwFaT9crVNDGcECHLlrpFW0u/eu88JT0Xn0//ImZPnX/rV40vPc3x
+         DyLaD27iOVtz0v0d3q2yfSKYcsdhwgdS/Ggd+d/XlRglKmR64dD59GDAtZYHx/DC7T5v
+         BXUsY+w+iAp6c0tADOQUIMAqyTSuss7aw4iWVgj4mIGT35Tp6Y4oswSU9ejGhMNC8SPF
+         GuoO08VUVLqlGpWAsntKAbr57Uadl3Poizxs8PfxvGQ3kLpzYgV/70tWMoJpYt1BuCXo
+         +z7st9mwfMo7J3NuHKDeU7SXafhMguGCpKAPlafVQcfcuxqHVVAlOqh46gXRD8mp9hQn
+         YBqg==
+X-Gm-Message-State: AOAM533w4ChJgsJwdXB25FVj2u9ShbtVGsEDoliCQBHlQ9O8eApOmZSD
+        V+j20iQHUqaFIqmg9uuDmwOi6HI42pf8s4XiOudqfWY4LT4=
+X-Google-Smtp-Source: ABdhPJxzeY5QRuWs1Cg2ZheJGjj6NlRcKFF6tLd0voNbYP6UXmHjP2W9iiQELZ2hMWAqKua0EUHZwUSRZ/Tf5qklUPU=
+X-Received: by 2002:a17:90a:220f:: with SMTP id c15mr29686923pje.129.1593002628391;
+ Wed, 24 Jun 2020 05:43:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623234905.18608-1-gaurav1086@gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
+ <20200616200225.32mwzew3zw3nuiwh@mobilestation> <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
+ <20200616225648.eqzugzapatblndcy@mobilestation> <20200618085654.GL2428291@smile.fi.intel.com>
+ <20200619221240.tvyf5alek4wxhdby@mobilestation> <CAHp75Vf0quL_0j0wBDwma9BToBq87PhFa0Hp0bpQMLMAoTWJpA@mail.gmail.com>
+ <20200623014945.56j3hnwnz4cj2u4t@mobilestation>
+In-Reply-To: <20200623014945.56j3hnwnz4cj2u4t@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 24 Jun 2020 15:43:35 +0300
+Message-ID: <CAHp75Vd0YM=mRkUweK0TRhg9wyb2bs6-AO3m21BRE_=ZMEv8hg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:48:50PM -0400, Gaurav Singh wrote:
-> intel_pt_evsel cannot be NULL here since its already being
-> dereferenced above. Remove this redundant check.
-> 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->  tools/perf/arch/x86/util/intel-pt.c | 24 +++++++++++-------------
->  1 file changed, 11 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-> index 839ef52c1ac2..8cc87fd2dc6f 100644
-> --- a/tools/perf/arch/x86/util/intel-pt.c
-> +++ b/tools/perf/arch/x86/util/intel-pt.c
-> @@ -836,19 +836,17 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
->  		}
->  	}
->  
+On Tue, Jun 23, 2020 at 4:49 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> On Sat, Jun 20, 2020 at 01:13:56PM +0300, Andy Shevchenko wrote:
+> > On Sat, Jun 20, 2020 at 1:12 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > On Thu, Jun 18, 2020 at 11:56:54AM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Jun 17, 2020 at 01:56:48AM +0300, Serge Semin wrote:
+> > > > > On Wed, Jun 17, 2020 at 12:40:35AM +0300, Andy Shevchenko wrote:
+> > > > > > On Tue, Jun 16, 2020 at 11:03 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > > > > > On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
 
-I wonder we sould put check before that above usage of intel_pt_evsel,
-because there's no check for that.. but yes, if intel_pt_evsel is NULL
-it will fail earlier.. Adrian?
+...
 
-thanks,
-jirka
+> > Linus replied to three messages out of 7, seems you read only the first one.
 
-> -	if (intel_pt_evsel) {
-> -		/*
-> -		 * To obtain the auxtrace buffer file descriptor, the auxtrace
-> -		 * event must come first.
-> -		 */
-> -		perf_evlist__to_front(evlist, intel_pt_evsel);
-> -		/*
-> -		 * In the case of per-cpu mmaps, we need the CPU on the
-> -		 * AUX event.
-> -		 */
-> -		if (!perf_cpu_map__empty(cpus))
-> -			evsel__set_sample_bit(intel_pt_evsel, CPU);
-> -	}
-> +	/*
-> +	 * To obtain the auxtrace buffer file descriptor, the auxtrace
-> +	 * event must come first.
-> +	 */
-> +	perf_evlist__to_front(evlist, intel_pt_evsel);
-> +	/*
-> +	 * In the case of per-cpu mmaps, we need the CPU on the
-> +	 * AUX event.
-> +	 */
-> +	if (!perf_cpu_map__empty(cpus))
-> +		evsel__set_sample_bit(intel_pt_evsel, CPU);
->  
->  	/* Add dummy event to keep tracking */
->  	if (opts->full_auxtrace) {
-> -- 
-> 2.17.1
-> 
+> Actually I've read all of them and from what I could see, he didn't like a code
+> setting gpio-base regardless whether it has been created before your patchset
+> or your explanation why it was necessary.
 
+Yes, and then he realized what happened in the past. TBH I also do not
+like this kind of thing, but we may not get rid of it because we will
+get a regression.
+The compromise (which is used in several cases of my knowledge, but I
+believe there are more) is to use internal property. This keeps layers
+separate and individual drivers nicer and neater.
+
+...
+
+> > > My point is that no mater how you pass the gpio-base value it will always be a
+> > > quirk. The same thing is with the irq_shared flag. Both of them are specific to
+> > > the Quark-platform. They are used to tune the DW APB GPIO driver up so one would
+> > > create a GPIO device working well with the Quark-specific DW APB GPIO block.
+> >
+> > Precisely!
+> >
+> > > > > > We, by applying this series, make (keep) layers independent: board
+> > > > > > code vs. driver code. Mixing them more is the opposite to what I
+> > > > > > propose.
+> > > > > >
+> > > > > > WRT property.
+> > > > > > snps,gpio-base can be easily changed to *already in use* gpio-base or
+> > > > > > being both converted to linux,gpio-base to explicitly show people that
+> > > > > > this is internal stuff that must not be present in firmware nodes.
+> > > > >
+> > > > > As I see it the part with "gpio-base" and the irq_shared can be moved to the
+> > > > > gpio-dwapb.c driver to be defined as the quark-specific quirks. Adding a
+> > > > > property like "gpio-base" seems like a quirk anyway, so I'd leave it defined in
+> > > > > the driver.
+> > > >
+> > >
+> > > > Huh?! The whole idea is make GPIO driver agnostic from platforms and their quirks.
+> > >
+> > > As I said above having the gpio-base value set is the platform-specific thing in
+> > > any case. So no mater whether you pass it via the software_node/properties or
+> > > the private platform-data structure, the DW APB GPIO driver will have to handle
+> > > those parameters in some special way, which is quirk-prone since normal platforms
+> > > don't have such peculiar requirements.
+> >
+>
+> > Seems you are proposing layering violation without seeing it.
+> > Let me explain the design of the drivers in Linux kernel.
+> >
+> > There are basically few possible concepts how drivers are handling
+> > quirks (because we know that most of the hardware support is a set of
+> > quirks here and there):
+> > 1) platform provides a board files and via platform data structures
+> > supplies quirks to the certain driver
+> > 2) platform provides a firmware node (ACPI, DT, ...) and unified
+> > driver handles it thru the fwnode interface
+> > 3) driver is split to be a library (or core part) + glue drivers full of quirks
+> > 4) driver has embedded quirks and supplies them based on IDs (PCI ID,
+> > ACPI ID, compatible string, ID table, etc)
+> > 5) ...missed something? ...
+> >
+> > What I'm proposing is turn 1 to 2 for Quark case, what you are
+> > proposing is absent on the picture, i.e.:
+> > x) platform provides a board file (intel_quark_i2c_gpio.c) and the
+> > driver has embedded quirks based on ID.
+> >
+> > This is not what we want, definitely.
+>
+> From the list you provided it's still not obvious why what I suggested wasn't
+> good, because it's perfectly fine to have both ACPI/DT-based firmware node
+> (entry 2) and quirks based on IDs (entry 4), which plenty of the kernel
+> drivers do.
+
+And I'm not talking about combinations of 2+4, what I'm talking about
+is 1+4 which *is* layering violation and a bad idea to start with.
+
+> The difference between the most of those drivers and what I
+> suggested is that by bonding a device with a driver they provide
+> !device!-quirks, but not the !platform!-quirks. While the platform quirks
+> and platform properties are normally provided by means of the platform data,
+> firmware nodes, glue layers, etc. Moving some of the platform-quirks to a
+> driver you called "layering violation". Well, I've never met that definition
+> in the kernel before
+
+> (have you just come up with it?),
+
+Nope, I heard it many times during reviews.
+
+> but at least I see
+> what you meant.
+
+> Anyway there are GPIO-drivers which still use the device IDs to get the
+> platform quirks
+
+Maybe you missed that we have more players here than simple dwapb-gpio?
+How many of them are part of MFD (being used as MFD cells)?
+
+> or get the GPIO-base from an of node alias (gpio-zynq.c,
+> gpio-vf610.c, gpio-zx.c, gpio-mxc.c, gpio-mxs.c). There are even some,
+> which either use a static variable to redistribute the GPIO-base between
+> all available GPIO-chips (gpio-brcmstb.c, gpio-sta2x11.c, gpio-omap.c)
+> or set a fixed GPIO-based value (like gpio-xlp.c, gpio-iop.c, gpio-ep93xx.c,
+> gpio-vx855.c, gpio-cs5535.c, gpio-sch311x.c, gpio-loongson.c, gpio-loongson1.c,
+> gpio-ath79.c, gpio-octeon.c),
+
+So,  the question is above.
+
+> or even get the GPIO-base value from some
+> hardware register (gpio-merrifield.c, gpio-intel-mid.c).
+
+These examples are not good, they are not part of MFD and the latter
+one actually should be a glue driver to gpio-pxa.c.
+
+> I am pretty sure
+> the examples of having the locally-defined platform quirks and the concepts
+> 1, 2, 3 and 4 at some extent utilized in a single driver can be found in another
+> subsystems too.
+
+I'm pretty sure layering violation can be found in many places in the
+kernel. It doesn't mean we have to take bad or different examples as
+suitable.
+
+> I am not saying, that the approaches utilized in those drivers are ideal.
+> Those are just examples, that the platform specifics can be reflected in
+> the corresponding drivers and the so called "layering violation" is allowed
+> at some circumstances. Linus, correct me if I am wrong.
+
+It depends how a certain driver is being used. In our case we don't
+need to spread board code over the kernel, we may be smarter than
+that!
+
+> Getting back to this patchset. As I see it, the main problem here is connected
+> with two parameters:
+> - GPIO-base. You suggest to update the gpio-dwapb.c driver so one would
+>   support a firmware property like "gpio-base". It's not good, since the
+>   property will be implicitly supported by OF API as well and nothing will
+>   prevent a user from using it. Even though you said that we won't advertise
+>   that property, some user may try to define it in dts anyway, which can be
+>   easily missed on review.
+
+No, if we don't advertise that and if we add "linux," prefix (see DWC3
+for example) to be explicit what this is used for and why.
+
+> - IRQ-shared. As I said before it's not good to replace the irq_shared flag
+>   with the to_of_node() macro. Because having to_of_node() returned an
+>   of-node doesn't mean the IRQs can't be shared.
+
+This is a valid point, but I would ask you, as a more familiar guy
+with the OF/DT system,  what suggestion would be better?
+
+> As I see it the convenience provided by your patchset in relation to the
+> GPIO-base and IRQ-shared properties doesn't overcome the problems denoted
+> above. IMO it would be better either to move the GPIO-base and the IRQ-shared
+> parameters definition to the gpio-dwapb.c driver despite of the so called
+> "layering violation" or just leave them in the MFD driver. Linus, please join
+> the discussion. Do you have any better idea of what to do with these
+> properties?
+
+Moving them to gpio-dwapb is a silly move. Better to do nothing if you
+insist, but I consider that is non-constructive.
+
+--
+With Best Regards,
+Andy Shevchenko
