@@ -2,117 +2,231 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF46C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E528C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6130F207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F55B2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:28:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TpJYuTv/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eeh0OUFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403830AbgFXV2G (ORCPT
+        id S2403856AbgFXV2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:28:06 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:46477 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390437AbgFXV2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:28:05 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 5b8dc3a7;
-        Wed, 24 Jun 2020 21:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
-        :cc:subject:message-id:references:mime-version:content-type
-        :in-reply-to; s=mail; bh=lBGWaWSniCgW2rkSG/g/Me2LyUA=; b=TpJYuTv
-        /1y34hOuTp3rYLWpfMyZ6W/HtiRi8W4pwjFKS7i+PFCWV08NEbGtrNA57aZ6Z7c3
-        0qAax0qjvlsFC7xPn7QTTLLte5Av//wNT9hTkQ4yFYp8B42OaVErvSvDLFnn3jIn
-        e4yxTFLsvjkhgt+TmZNfrMOPlw7uxZ8tQ7IqBYxGFu0WLo586W46V4ySdp3mNwS7
-        A+1PhLEALi2HHsrb+N00xAyQ27NdJPOvC3DvvdtsfRpLgty6Ov7DXpX8JueSA1p/
-        g9cnwlDhD41RDe3NzWpslaGQ7IVOpiqsnOapEEZsGYuDkk/t0eBnh1jcYHCWMd9x
-        SSpd6S67oxtCALA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6cb6511a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 24 Jun 2020 21:09:00 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 15:28:02 -0600
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL
- in napi_gro_receive()
-Message-ID: <20200624212802.GA1386764@zx2c4.com>
-References: <20191014080033.12407-1-alobakin@dlink.ru>
- <20200624210606.GA1362687@zx2c4.com>
+        Wed, 24 Jun 2020 17:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403837AbgFXV2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 17:28:21 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C981CC061573;
+        Wed, 24 Jun 2020 14:28:20 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u5so1825868pfn.7;
+        Wed, 24 Jun 2020 14:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZQxYRtrdi9vMsm5/HU8dIzNpM/BIdYP813BZZqvCjg0=;
+        b=eeh0OUFGL1szB4i5Su7T59EnhhWG8V4dnvFfAmXwesd39jBEk1e5aJgu6jLpCvibqR
+         lrDvI83l3+BoneNtxiWzBbWW/w7nIJfZ91hBWtMKoVGK2SIMc7vzfDKERDp1O72Zqpb1
+         SAznuYITDSjcYHM9yVCk7+6GU+dqic8dbw/5h2/aSIPpN/yPyMuw3jlQHAURBHi9pe0U
+         A9blCDohZsgC95jEKcdmPGBn7Y+R7qN8cQts/CyrgGNWTTMLftGZhJywH9r5+md6xEk4
+         qLW5bsR1zhwq04slrMF72XhuDYcVUDd7ldUAUX7bdbO/hJZLe16c4tli0YrDTxxWAG68
+         xUXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZQxYRtrdi9vMsm5/HU8dIzNpM/BIdYP813BZZqvCjg0=;
+        b=Ws+Y+Ov+vaZuduSd6F8X9NM4DBat4rMcedp1/SU2UqPZ1ZxTtMBExHaNpEJuLLER9v
+         RDtVkdNDpakdJTMwoAstA7BSTeTC0JWbvahQCs7JqB7gr6974oPZCj9ivGEqq6tgDMuq
+         5RGU9cxD/NdvGd5eXqWK1q8FbTAfXVFqfXpa9Gnd2HQB4mE9BFcux5sKSihc2dMRgKQf
+         QVGJgONbYEqFhOYl4Ceacnuq1hsQXhmLy6pnEuxGMLSIb1cDEthlFOoOmnxQl0vWZ9oy
+         CseIiB5TnbZbHkFo4FRk95UAErw87wnUirMftaRpNcUUcdrTyoCI3CZkiqGue/miFdwZ
+         CdSg==
+X-Gm-Message-State: AOAM532xch8Mp++ES4nlmgMfSjSG+qvk2PsJb5SOl6Fq41/PFKlqayJZ
+        l4XaCpfbD1XrnskdbZsK7kA=
+X-Google-Smtp-Source: ABdhPJwOtNYzpuiQLvOOi783XQ5IsW5kFW5cCx0iaESxphTAfmmd9rqiD8gUnZXdENB+Ac1a24XG9Q==
+X-Received: by 2002:aa7:8d07:: with SMTP id j7mr978970pfe.125.1593034100358;
+        Wed, 24 Jun 2020 14:28:20 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j16sm217410pfr.100.2020.06.24.14.28.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jun 2020 14:28:19 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 14:28:18 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     alexandru.tachici@analog.com
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v4 2/7] hwmon: pmbus: adm1266: Add Block process call
+Message-ID: <20200624212818.GA74031@roeck-us.net>
+References: <20200623173659.41358-1-alexandru.tachici@analog.com>
+ <20200623173659.41358-3-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624210606.GA1362687@zx2c4.com>
+In-Reply-To: <20200623173659.41358-3-alexandru.tachici@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:06:10PM -0600, Jason A. Donenfeld wrote:
-> Hi Alexander,
+On Tue, Jun 23, 2020 at 08:36:54PM +0300, alexandru.tachici@analog.com wrote:
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
 > 
-> This patch introduced a behavior change around GRO_DROP:
+> PmBus devices support Block Write-Block Read Process
+> Call described in SMBus specification v 2.0 with the
+> exception that Block writes and reads are permitted to
+> have up 255 data bytes instead of max 32 bytes (SMBus).
 > 
-> napi_skb_finish used to sometimes return GRO_DROP:
+> This patch adds Block WR process call support for ADM1266.
 > 
-> > -static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
-> > +static gro_result_t napi_skb_finish(struct napi_struct *napi,
-> > +				    struct sk_buff *skb,
-> > +				    gro_result_t ret)
-> >  {
-> >  	switch (ret) {
-> >  	case GRO_NORMAL:
-> > -		if (netif_receive_skb_internal(skb))
-> > -			ret = GRO_DROP;
-> > +		gro_normal_one(napi, skb);
-> >
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+> ---
+>  drivers/hwmon/pmbus/Kconfig   |  1 +
+>  drivers/hwmon/pmbus/adm1266.c | 79 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 80 insertions(+)
 > 
-> But under your change, gro_normal_one and the various calls that makes
-> never propagates its return value, and so GRO_DROP is never returned to
-> the caller, even if something drops it.
-> 
-> Was this intentional? Or should I start looking into how to restore it?
-> 
-> Thanks,
-> Jason
+> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> index 6949483aa732..dc6971a7c49e 100644
+> --- a/drivers/hwmon/pmbus/Kconfig
+> +++ b/drivers/hwmon/pmbus/Kconfig
+> @@ -28,6 +28,7 @@ config SENSORS_PMBUS
+>  
+>  config SENSORS_ADM1266
+>  	tristate "Analog Devices ADM1266 Sequencer"
+> +	select CRC8
+>  	help
+>  	  If you say yes here you get hardware monitoring support for Analog
+>  	  Devices ADM1266 Cascadable Super Sequencer.
+> diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+> index a7ef048a9a5c..381d89a8569f 100644
+> --- a/drivers/hwmon/pmbus/adm1266.c
+> +++ b/drivers/hwmon/pmbus/adm1266.c
+> @@ -6,6 +6,7 @@
+>   * Copyright 2020 Analog Devices Inc.
+>   */
+>  
+> +#include <linux/crc8.h>
+>  #include <linux/i2c.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -14,6 +15,82 @@
+>  
+>  #include "pmbus.h"
+>  
+> +#define ADM1266_PMBUS_BLOCK_MAX		255
+> +
+> +DECLARE_CRC8_TABLE(pmbus_crc_table);
+> +
+> +/* Different from Block Read as it sends data and waits for the slave to
 
-For some context, I'm consequently mulling over this change in my code,
-since checking for GRO_DROP now constitutes dead code:
+   /*
+    * Proper multi-line comment
+    */
 
-diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
-index 91438144e4f7..9b2ab6fc91cd 100644
---- a/drivers/net/wireguard/receive.c
-+++ b/drivers/net/wireguard/receive.c
-@@ -414,14 +414,8 @@ static void wg_packet_consume_data_done(struct wg_peer *peer,
- 	if (unlikely(routed_peer != peer))
- 		goto dishonest_packet_peer;
+> + * return a value dependent on that data. The protocol is simply a Write Block
+> + * followed by a Read Block without the Read-Block command field and the
+> + * Write-Block STOP bit.
+> + */
 
--	if (unlikely(napi_gro_receive(&peer->napi, skb) == GRO_DROP)) {
--		++dev->stats.rx_dropped;
--		net_dbg_ratelimited("%s: Failed to give packet to userspace from peer %llu (%pISpfsc)\n",
--				    dev->name, peer->internal_id,
--				    &peer->endpoint.addr);
--	} else {
--		update_rx_stats(peer, message_data_len(len_before_trim));
--	}
-+	napi_gro_receive(&peer->napi, skb);
-+	update_rx_stats(peer, message_data_len(len_before_trim));
- 	return;
+static
 
- dishonest_packet_peer:
+> +int pmbus_block_xfer(struct i2c_client *client, u8 cmd, u8 w_len,
+> +		     u8 *data_w, u8 *data_r)
+> +{
+> +	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 2];
+> +	struct i2c_msg msgs[2] = {
+> +		{
+> +			.addr = client->addr,
+> +			.flags = 0,
+> +			.buf = write_buf,
+> +			.len = w_len + 2,
+> +		},
+> +		{
+> +			.addr = client->addr,
+> +			.flags = I2C_M_RD,
+> +			.len = ADM1266_PMBUS_BLOCK_MAX + 2,
+> +		}
+> +	};
+> +	u8 addr = 0;
+> +	u8 crc = 0;
 
+Unnecessary initialization for both variables
+
+> +	int ret;
+> +
+> +	msgs[0].buf[0] = cmd;
+> +	msgs[0].buf[1] = w_len;
+> +	memcpy(&msgs[0].buf[2], data_w, w_len);
+> +
+> +	msgs[0].buf = i2c_get_dma_safe_msg_buf(&msgs[0], 1);
+> +	if (!msgs[0].buf)
+> +		return -ENOMEM;
+> +
+> +	msgs[1].buf = i2c_get_dma_safe_msg_buf(&msgs[1], 1);
+> +	if (!msgs[1].buf) {
+> +		i2c_put_dma_safe_msg_buf(msgs[0].buf, &msgs[0], false);
+> +		return -ENOMEM;
+> +	}
+
+AFAICS i2c_get_dma_safe_msg_buf() is supposed to be used by i2c bus drivers,
+not by device drivers. If this is needed for the target architecture,
+it should be implemented in the bus driver, not here.
+
+> +
+> +	ret = i2c_transfer(client->adapter, msgs, 2);
+> +	if (ret != 2) {
+> +		ret = -EPROTO;
+
+Should retain error if ret < 0, and only return EPROTO if the return value
+is 0 or 1.
+
+> +		goto cleanup;
+> +	}
+> +
+> +	if (client->flags & I2C_CLIENT_PEC) {
+> +		addr = i2c_8bit_addr_from_msg(&msgs[0]);
+> +		crc = crc8(pmbus_crc_table, &addr, 1, crc);
+> +		crc = crc8(pmbus_crc_table, msgs[0].buf,  msgs[0].len, crc);
+> +
+> +		addr = i2c_8bit_addr_from_msg(&msgs[1]);
+> +		crc = crc8(pmbus_crc_table, &addr, 1, crc);
+> +		crc = crc8(pmbus_crc_table, msgs[1].buf,  msgs[1].buf[0] + 1,
+> +			   crc);
+> +
+> +		if (crc != msgs[1].buf[msgs[1].buf[0] + 1]) {
+> +			ret = -EBADMSG;
+> +			goto cleanup;
+> +		}
+> +	}
+> +
+> +	memcpy(data_r, &msgs[1].buf[1], msgs[1].buf[0]);
+> +	ret = msgs[1].buf[0];
+> +
+> +cleanup:
+> +	i2c_put_dma_safe_msg_buf(msgs[0].buf, &msgs[0], true);
+> +	i2c_put_dma_safe_msg_buf(msgs[1].buf, &msgs[1], true);
+> +
+> +	return ret;
+> +}
+    > +
+>  static int adm1266_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+> @@ -24,6 +101,8 @@ static int adm1266_probe(struct i2c_client *client,
+>  	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
+>  			    GFP_KERNEL);
+>  
+> +	crc8_populate_msb(pmbus_crc_table, 0x7);
+> +
+>  	info->pages = 17;
+>  	info->format[PSC_VOLTAGE_OUT] = linear;
+>  	funcs = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
