@@ -2,81 +2,79 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8256BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C818C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6269420781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593006948;
-	bh=msJljTZ30DHOALc4NDJXZALraFGHPtuYMSdFceXl97w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pG4jybY0vqZsMtdwx5mpY+8qhMSG8cPQjh21++Riyzv7ow1OV4QWBnIEf1XwB1eVL
-	 nWzqBc5YUzF1Of3coxnID2G7MrUUDNihCJ83Wn2lmcW2Kcaev/DH+5VKXpUIr9JQ1M
-	 48Y52f9slq+K/672Pg+Wh8Db5OgLt20deUBIfKg0=
+	by mail.kernel.org (Postfix) with ESMTP id 1E9BD20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403977AbgFXNzq (ORCPT
+        id S2391192AbgFXN4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42680 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 09:56:08 -0400
+Received: from smtp.asem.it ([151.1.184.197]:55480 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391147AbgFXNzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:55:43 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF7C420781;
-        Wed, 24 Jun 2020 13:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593006943;
-        bh=msJljTZ30DHOALc4NDJXZALraFGHPtuYMSdFceXl97w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tFC0RUC/hyrX5PVAPN8kUZnTOKOA2PJYthyMqUpMEyjsmrmoufWL032+MBMGsQRUM
-         bfBAxJoUaPSFDMUprsNGSYcwjgsqGUvTtHyhuZn5B8GMWe1m76+1fCp31pcGqSWNGn
-         1Lr0TFqKUpesC4p8ncY/wW2BsWH966A3RD8Yb1w4=
-From:   Will Deacon <will@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] arm64: kpti: Add KRYO{3, 4}XX silver CPU cores to kpti safelist
-Date:   Wed, 24 Jun 2020 14:54:52 +0100
-Message-Id: <159300510700.57173.9996277859967187926.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200624123406.3472-1-saiprakash.ranjan@codeaurora.org>
-References: <20200624123406.3472-1-saiprakash.ranjan@codeaurora.org>
+        id S2389484AbgFXN4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:56:07 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000339068.MSG 
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:56:03 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 15:56:01 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Wed, 24 Jun 2020 15:56:01 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+CC:     <linux-hyperv@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/1] scsi: storvsc: fix spelling mistake
+Date:   Wed, 24 Jun 2020 15:56:00 +0200
+Message-ID: <20200624135600.14274-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020D.5EF35B71.0086,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 18:04:06 +0530, Sai Prakash Ranjan wrote:
-> QCOM KRYO{3,4}XX silver/LITTLE CPU cores are based on Cortex-A55
-> and are meltdown safe, hence add them to kpti_safe_list[].
+Fix typo: "trigerred" --> "triggered"
 
-Applied to arm64 (for-next/fixes), thanks!
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ drivers/scsi/storvsc_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1/1] arm64: kpti: Add KRYO{3, 4}XX silver CPU cores to kpti safelist
-      https://git.kernel.org/arm64/c/f4617be35b4b
-
-Cheers,
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 624467e2590a..3040696c20dd 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1038,7 +1038,7 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
+ 			do_work = true;
+ 			process_err_fn = storvsc_device_scan;
+ 			/*
+-			 * Retry the I/O that trigerred this.
++			 * Retry the I/O that triggered this.
+ 			 */
+ 			set_host_byte(scmnd, DID_REQUEUE);
+ 		}
 -- 
-Will
+2.17.1
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
