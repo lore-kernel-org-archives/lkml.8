@@ -2,240 +2,264 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3977C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB11C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F85D2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DD620767
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:05:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="uEO57MSk";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="uPaFNtwo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSd/2NsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390191AbgFXKEo (ORCPT
+        id S2390223AbgFXKFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:04:44 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:62916 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387927AbgFXKEn (ORCPT
+        Wed, 24 Jun 2020 06:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387927AbgFXKFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:04:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592993082; x=1624529082;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=qwqEFXbrmHekFHguEieaYIuaOOosvVisGubBAYronjA=;
-  b=uEO57MSkNm56Sq8cYdPVNnj2+AQ/4oBftAWVY9Dlw9bcCKBOZU9BcNY9
-   R7dXplQYmFxp4MT8GrBxXOMGyaBmUw23JA0eIV7VfqsPV3lhxZhDIQYOF
-   e5tD0Ig9kBzcFvY962OWFW7dahdQYkUP7g1/Hoem5SFQLOSmY3qfl8eb0
-   oUwI1ETovOupRFqpFVe2BcCB3rUEsWgHkYf9qruuVFcTd45beDtLDBv9f
-   79BlBinKW/6qn71GKWUSaNA2pnM0JO6eNrI5NOORVfVb7Mwnje69lt99f
-   PCzIQWiR86n8Z1j8Pz/xz4Qex4uPrbHHCqwTmUpcQNpy4FQX1OmuyjmYZ
-   w==;
-IronPort-SDR: fHicvwKamsf4NwsLBRKq3kVwLZpLhBI0Ix4vUw1ogq+PiY4dc7dxxwM4zyEMOizSxcn+XhcKio
- AF4sjTYSTNC5OmqOlCUPMBce1CYJYzSEsEZ052Aby9gqYA68g3Iq6TkXIZCDaeUH/sro042+o4
- eo65zAu5wab8ZnC99Mhhudt+4asrwc6H//LqFNPYJIMFJdFX4/tNSyBu2PBXtFDggiymTVlHDT
- nlF+rotQY8f66gIVcSzDZLZmySKHnY8r4GEU9j/vOTy9DGxkPvCB2emoubl8INjXkcKTpvfIPD
- HgQ=
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="84886991"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2020 03:04:37 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 24 Jun 2020 03:04:24 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
- Transport; Wed, 24 Jun 2020 03:04:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FfPU0LfL79kRJtFMBlPeDqNuV9NSoKaEYaBowsPcMvgJTAKup3nbEYvpS+sjGJT9I/+JSeM8ccOW6TgZUrp7MGcQql55iszdqEuMsDAJdRdwfCSeoaD2I1v82OJ+AemO8US1tfv/a7XtRrtudajfrmTxxKZlTg0Ttjz1ziIwrxoNQ2HfziIUfq7rS5SMVAJM1KSjLUrtMkoVPD6rBCosiXPNLprQiFR7Cq1lMLm2eYCCxedUcR1xsaAMqDc09iu2zGeosTmN0ksohQLxtT+/vWgvdq1xX65sgfwGeIQH2UOjWZzzkkYWYFesNXSPPao4byI5CXcoH+6hHI2791hL6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qwqEFXbrmHekFHguEieaYIuaOOosvVisGubBAYronjA=;
- b=Fo3PzVwlEopTBBcrVeLwko26OciES+YtffeNPnCvZc/SchqTcP21IWpAkPWcU26qksRpeI2w8/c3gz97qCeehA8rx+jNMgJXrfvmok2SJrvhxB+WKHdNX/upaWW3qpUES9tNv+OdvfspcvZg+r1DH6qpmDDxtudl2o4S+wOoJs5USpIqrsqoF/drOwjUE2wG53Y5699tFsZvy6QF4H/up9RoY6Hfcp/LGFt9jwfUwiS2YJ76U6LYteNMICEUrpbNhyWaINGxA0bAjaJBpi5wv9WrSjr94X50JrmUStRPo3FmsKmDiPWouyB61dIS0NFy3OBAm6AFvZQ0vpnxo8JscA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Wed, 24 Jun 2020 06:05:08 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D7EBC061573;
+        Wed, 24 Jun 2020 03:05:08 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id v19so1187037qtq.10;
+        Wed, 24 Jun 2020 03:05:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qwqEFXbrmHekFHguEieaYIuaOOosvVisGubBAYronjA=;
- b=uPaFNtwopdMddW6m/WkU9VecuYBVf2RFynqUtxfNFv0xyEcjfnZAgsG0o7iCLYYsIs6pPRexJcZjJhcVm9XPE5QsJYqnCaUxUlNXhlhdFEjjmSvNpT+yi9YcoLnFnUE1d1GTofrKLy9rqyaqEPI94u8BDyxkyJBRIsGnfc/LQkQ=
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
- DM6PR11MB3194.namprd11.prod.outlook.com (2603:10b6:5:5c::25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3109.23; Wed, 24 Jun 2020 10:04:33 +0000
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8fd:29e5:1fa6:c01d]) by DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8fd:29e5:1fa6:c01d%5]) with mapi id 15.20.3131.021; Wed, 24 Jun 2020
- 10:04:33 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <Nicolas.Ferre@microchip.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-CC:     <antoine.tenart@bootlin.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: macb: free resources on failure path of
- at91ether_open()
-Thread-Topic: [PATCH] net: macb: free resources on failure path of
- at91ether_open()
-Thread-Index: AQHWSg7bzEWuDjV5TkW1zrOGFEBGlA==
-Date:   Wed, 24 Jun 2020 10:04:33 +0000
-Message-ID: <0a94cfe6-baf2-2bc1-0108-16b62e9ba70f@microchip.com>
-References: <1592983614-31485-1-git-send-email-claudiu.beznea@microchip.com>
-In-Reply-To: <1592983614-31485-1-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-authentication-results: microchip.com; dkim=none (message not signed)
- header.d=none;microchip.com; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [82.137.16.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a480657b-ac36-4b3e-ca68-08d81825fe4e
-x-ms-traffictypediagnostic: DM6PR11MB3194:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3194544359E98F644161835A87950@DM6PR11MB3194.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0444EB1997
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fjIwqZixXV5ZSLMetC1YXhEtu9TTvw/XinpqafijXNyin9nl2x2XTDX+btYPn/7x7EV2k91GFchCPdMTJM0wr2dFSH7Czph4suxWd9kucnwjnhc9m0IpL4a2DhuIulbMDPiHlSdKL6+KrhiJM154PP70DQIR09sb9LWypOKmpuS7DO1XkWNxwKJItGEEfyavYQQZm9o825+AQDfD3mVX66PMlGTw8g3acj6vxRri9TZzp0duGhHhUchnuQZg6QYZYR6MWTsyaM8n0tFzztDhoqs6iiQpRhYcI7Qq2SKfMuoxATI9xkj6v11EHJ6WjghN+1G19nS5onDB+TUx/8oSaMnpo6Qz9nTpEPO/155DSJPh8qUu0qxf+fevJyB75H0y
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(346002)(366004)(376002)(39860400002)(2616005)(86362001)(6486002)(8936002)(4326008)(76116006)(66556008)(83380400001)(31696002)(66446008)(66946007)(66476007)(64756008)(91956017)(186003)(31686004)(26005)(2906002)(6512007)(5660300002)(316002)(36756003)(478600001)(53546011)(6506007)(54906003)(71200400001)(8676002)(110136005)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Sj7WVcOvIyu3w+YI1B0gmzr+WX8mEghRZEete3OnWaqjDCKhjAs2w5Cf7FOMn3XjndZiJQQ2AvOLyn9YD/EbQgRYl+HvzwC5NzYPMLuAaSH7wQ/B7K2WuvnkiYgbIA+UP1N4PzEh88iRGy20T6hZOLrhgZHhW5w0vgcJzGl9NoW/8nsdWMm4Z6y/SkmmqMIOKnm+YeQmDC5xhWG0jmI7qMf7Aqx/U10rczThqXl+guzQSm/dGja1eKQaiE7d6MsMzPMd01Hl1Ey6RaCGdGdem2iBxcxoJXAe8sXGmTheoI+J9/rM/Y4B3aFk+u6HzSDkkiK59bS+f8Dz5XYIcIT41c78F77UvorZ4I+lUNGyRCEuGNk+LhUR3tTo8DwGwJhVUHOG0cxVkmdzNKyWWchfYJPcKoAd02alkXryaIfSp8nefUlVkNAMplSkcGB5/VP9CMFLQS8b6UbopZe8xiF4y/H0N3QPYqoecX7O9h6y/aQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C2017729336D114FA3DCE5944E47AD13@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z5maTgbwq1mBVwGkwVDUzGasDeReJzYQw9cSssN0qDc=;
+        b=CSd/2NsVZaadxg2J7hRL9VtzsuIkYfWnGji5R1eNqe8DlU6PEEBLYFUn4JZTQJt5eP
+         sSEiRsZDCD2H2dY5ZH7RDA2EysUuehQp5H3yAI3CUJBb1XD8rfD5Xrunctov4hmgLxKg
+         uq5HigZN5pcA27k7m5rm4rjuyZ9YUSj4tC5xLVFbGX0vZt94Ls1o4F83Bnvf/sZjgE9G
+         JI5rtbrWXpSN0moSsB9kZvOuNHPtF8HvJpa5Mx8aqpZLiIm5zyVKVEk8f547b5c6oGsE
+         GPTbMhbI+7Ez8tJfeVdrMvxTw8j+7L0Sm5Nb1tr0yinPH4zCV4BTzNuiLF/IdYbiB2NI
+         vljQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z5maTgbwq1mBVwGkwVDUzGasDeReJzYQw9cSssN0qDc=;
+        b=NmBj2lFEWxgKRF/W+2cYkm3gvmSKw78vFrTwtublAUEXtWelGqudjpRxN+pCIhIrnF
+         d01GOEbfzYPBBdwL0edxc7S2P1nlQQ0mtc3AHG+YSOijo3bYozCr7VF0LRHfsVh9iFf9
+         k8OJxrwQAvPjNFBp8hxajDzSCrpN88zzeV2Wnngv38LSlWlc1PdYYvzKscEYqof1qijY
+         qSZ8zdZhpWFm5l7pbye3plY7f7ZzquxH5lUEm4aTItX6K2kToEhB2LaELVcEssc6YDgJ
+         hWYVHn+zhY1SC8+rgPV8sth6BSONF7c8Jn8leDKlxvwdGbp7ssXF2jPzPR64WLLFBgPT
+         25Cg==
+X-Gm-Message-State: AOAM5320kiteWY37Fpt69+wuDVNmadgIirhfov58M8qhUxF0zvLtKCGZ
+        71se9raitjkTz25I9pNYeT9JaRGmMQXaPtzmoeRjUg==
+X-Google-Smtp-Source: ABdhPJzaue1H3muo3r9o+r2OeMQI4vyL6SMZvtfU5NWe2avMvZxkRwTSUwKxuRaX6jsD8sFvVC/rd2WnA3Gwx+m32NE=
+X-Received: by 2002:ac8:357b:: with SMTP id z56mr26595034qtb.107.1592993107331;
+ Wed, 24 Jun 2020 03:05:07 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a480657b-ac36-4b3e-ca68-08d81825fe4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 10:04:33.1278
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: exypkijp3BCC24B65Zf9WHOzifmXSYI6iacDRIHwHk50xbBmBpf5LsVtPRIUNCCJ22wuOymlHMSbbLBvE/zjNVcClOL4X9xKFQUtNZKyByQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3194
+References: <20200622225728.330-1-gerbilsoft@gerbilsoft.com>
+In-Reply-To: <20200622225728.330-1-gerbilsoft@gerbilsoft.com>
+From:   David Rheinsberg <david.rheinsberg@gmail.com>
+Date:   Wed, 24 Jun 2020 12:04:55 +0200
+Message-ID: <CANq1E4T_SNUrewDQ59bonr7tTKFa=wRYwXLWHMCiNA0KN0H9Aw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] HID: wiimote: Initialize the controller LEDs with a
+ device ID value
+To:     David Korth <gerbilsoft@gerbilsoft.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGxlYXNlIGlnbm9yZSB0aGlzIG9uZSENCkknbGwgc2VuZCBhIHYyLg0KDQpPbiAyNC4wNi4yMDIw
-IDEwOjI2LCBDbGF1ZGl1IEJlem5lYSB3cm90ZToNCj4gRE1BIGJ1ZmZlcnMgd2VyZSBub3QgZnJl
-ZWQgb24gZmFpbHVyZSBwYXRoIG9mIGF0OTFldGhlcl9vcGVuKCkuDQo+IEFsb25nIHdpdGggY2hh
-bmdlcyBmb3IgZnJlZWluZyB0aGUgRE1BIGJ1ZmZlcnMgdGhlIGVuYWJsZS9kaXNhYmxlDQo+IGlu
-dGVycnVwdCBpbnN0cnVjdGlvbnMgd2VyZSBtb3ZlZCB0byBhdDkxZXRoZXJfc3RhcnQoKS9hdDkx
-ZXRoZXJfc3RvcCgpDQo+IGZ1bmN0aW9ucyBhbmQgdGhlIG9wZXJhdGlvbnMgb24gYXQ5MWV0aGVy
-X3N0b3AoKSB3ZXJlIGRvbmUgaW4NCj4gdGhlaXIgcmV2ZXJzZSBvcmRlciAoY29tcGFyZWQgd2l0
-aCBob3cgaXMgZG9uZSBpbiBhdDkxZXRoZXJfc3RhcnQoKSk6DQo+IGJlZm9yZSB0aGlzIHBhdGNo
-IHRoZSBvcGVyYXRpb24gb3JkZXIgb24gaW50ZXJmYWNlIG9wZW4gcGF0aA0KPiB3YXMgYXMgZm9s
-bG93czoNCj4gMS8gYWxsb2MgRE1BIGJ1ZmZlcnMNCj4gMi8gZW5hYmxlIHR4LCByeA0KPiAzLyBl
-bmFibGUgaW50ZXJydXB0cw0KPiBhbmQgdGhlIG9yZGVyIG9uIGludGVyZmFjZSBjbG9zZSBwYXRo
-IHdhcyBhcyBmb2xsb3dzOg0KPiAxLyBkaXNhYmxlIHR4LCByeA0KPiAyLyBkaXNhYmxlIGludGVy
-cnVwdHMNCj4gMy8gZnJlZSBkbWEgYnVmZmVycy4NCj4gDQo+IEZpeGVzOiA3ODk3YjA3MWFjM2Ig
-KCJuZXQ6IG1hY2I6IGNvbnZlcnQgdG8gcGh5bGluayIpDQo+IFNpZ25lZC1vZmYtYnk6IENsYXVk
-aXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPiAtLS0NCj4gIGRyaXZl
-cnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMgfCAxMTYgKysrKysrKysrKysrKysr
-KysrKy0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDczIGluc2VydGlvbnMoKyksIDQz
-IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Nh
-ZGVuY2UvbWFjYl9tYWluLmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFp
-bi5jDQo+IGluZGV4IDU3MDUzNTlhMzYxMi4uNTI1ODJlOGVkOTBlIDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMv
-bmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMNCj4gQEAgLTM3NjIsMTUgKzM3NjIsOSBA
-QCBzdGF0aWMgaW50IG1hY2JfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAg
-DQo+ICBzdGF0aWMgc3RydWN0IHNpZml2ZV9mdTU0MF9tYWNiX21nbXQgKm1nbXQ7DQo+ICANCj4g
-LS8qIEluaXRpYWxpemUgYW5kIHN0YXJ0IHRoZSBSZWNlaXZlciBhbmQgVHJhbnNtaXQgc3Vic3lz
-dGVtcyAqLw0KPiAtc3RhdGljIGludCBhdDkxZXRoZXJfc3RhcnQoc3RydWN0IG5ldF9kZXZpY2Ug
-KmRldikNCj4gK3N0YXRpYyBpbnQgYXQ5MWV0aGVyX2FsbG9jX2NvaGVyZW50KHN0cnVjdCBtYWNi
-ICpscCkNCj4gIHsNCj4gLQlzdHJ1Y3QgbWFjYiAqbHAgPSBuZXRkZXZfcHJpdihkZXYpOw0KPiAg
-CXN0cnVjdCBtYWNiX3F1ZXVlICpxID0gJmxwLT5xdWV1ZXNbMF07DQo+IC0Jc3RydWN0IG1hY2Jf
-ZG1hX2Rlc2MgKmRlc2M7DQo+IC0JZG1hX2FkZHJfdCBhZGRyOw0KPiAtCXUzMiBjdGw7DQo+IC0J
-aW50IGk7DQo+ICANCj4gIAlxLT5yeF9yaW5nID0gZG1hX2FsbG9jX2NvaGVyZW50KCZscC0+cGRl
-di0+ZGV2LA0KPiAgCQkJCQkgKEFUOTFFVEhFUl9NQVhfUlhfREVTQ1IgKg0KPiBAQCAtMzc5Miw2
-ICszNzg2LDQzIEBAIHN0YXRpYyBpbnQgYXQ5MWV0aGVyX3N0YXJ0KHN0cnVjdCBuZXRfZGV2aWNl
-ICpkZXYpDQo+ICAJCXJldHVybiAtRU5PTUVNOw0KPiAgCX0NCj4gIA0KPiArCXJldHVybiAwOw0K
-PiArfQ0KPiArDQo+ICtzdGF0aWMgdm9pZCBhdDkxZXRoZXJfZnJlZV9jb2hlcmVudChzdHJ1Y3Qg
-bWFjYiAqbHApDQo+ICt7DQo+ICsJc3RydWN0IG1hY2JfcXVldWUgKnEgPSAmbHAtPnF1ZXVlc1sw
-XTsNCj4gKw0KPiArCWlmIChxLT5yeF9yaW5nKSB7DQo+ICsJCWRtYV9mcmVlX2NvaGVyZW50KCZs
-cC0+cGRldi0+ZGV2LA0KPiArCQkJCSAgQVQ5MUVUSEVSX01BWF9SWF9ERVNDUiAqDQo+ICsJCQkJ
-ICBtYWNiX2RtYV9kZXNjX2dldF9zaXplKGxwKSwNCj4gKwkJCQkgIHEtPnJ4X3JpbmcsIHEtPnJ4
-X3JpbmdfZG1hKTsNCj4gKwkJcS0+cnhfcmluZyA9IE5VTEw7DQo+ICsJfQ0KPiArDQo+ICsJaWYg
-KHEtPnJ4X2J1ZmZlcnMpIHsNCj4gKwkJZG1hX2ZyZWVfY29oZXJlbnQoJmxwLT5wZGV2LT5kZXYs
-DQo+ICsJCQkJICBBVDkxRVRIRVJfTUFYX1JYX0RFU0NSICoNCj4gKwkJCQkgIEFUOTFFVEhFUl9N
-QVhfUkJVRkZfU1osDQo+ICsJCQkJICBxLT5yeF9idWZmZXJzLCBxLT5yeF9idWZmZXJzX2RtYSk7
-DQo+ICsJCXEtPnJ4X2J1ZmZlcnMgPSBOVUxMOw0KPiArCX0NCj4gK30NCj4gKw0KPiArLyogSW5p
-dGlhbGl6ZSBhbmQgc3RhcnQgdGhlIFJlY2VpdmVyIGFuZCBUcmFuc21pdCBzdWJzeXN0ZW1zICov
-DQo+ICtzdGF0aWMgaW50IGF0OTFldGhlcl9zdGFydChzdHJ1Y3QgbWFjYiAqbHApDQo+ICt7DQo+
-ICsJc3RydWN0IG1hY2JfcXVldWUgKnEgPSAmbHAtPnF1ZXVlc1swXTsNCj4gKwlzdHJ1Y3QgbWFj
-Yl9kbWFfZGVzYyAqZGVzYzsNCj4gKwlkbWFfYWRkcl90IGFkZHI7DQo+ICsJdTMyIGN0bDsNCj4g
-KwlpbnQgaSwgcmV0Ow0KPiArDQo+ICsJcmV0ID0gYXQ5MWV0aGVyX2FsbG9jX2NvaGVyZW50KGxw
-KTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICAJYWRkciA9IHEtPnJ4
-X2J1ZmZlcnNfZG1hOw0KPiAgCWZvciAoaSA9IDA7IGkgPCBBVDkxRVRIRVJfTUFYX1JYX0RFU0NS
-OyBpKyspIHsNCj4gIAkJZGVzYyA9IG1hY2JfcnhfZGVzYyhxLCBpKTsNCj4gQEAgLTM4MTMsOSAr
-Mzg0NCwzOSBAQCBzdGF0aWMgaW50IGF0OTFldGhlcl9zdGFydChzdHJ1Y3QgbmV0X2RldmljZSAq
-ZGV2KQ0KPiAgCWN0bCA9IG1hY2JfcmVhZGwobHAsIE5DUik7DQo+ICAJbWFjYl93cml0ZWwobHAs
-IE5DUiwgY3RsIHwgTUFDQl9CSVQoUkUpIHwgTUFDQl9CSVQoVEUpKTsNCj4gIA0KPiArCS8qIEVu
-YWJsZSBNQUMgaW50ZXJydXB0cyAqLw0KPiArCW1hY2Jfd3JpdGVsKGxwLCBJRVIsIE1BQ0JfQklU
-KFJDT01QKQl8DQo+ICsJCQkgICAgIE1BQ0JfQklUKFJYVUJSKQl8DQo+ICsJCQkgICAgIE1BQ0Jf
-QklUKElTUl9UVU5EKQl8DQo+ICsJCQkgICAgIE1BQ0JfQklUKElTUl9STEUpCXwNCj4gKwkJCSAg
-ICAgTUFDQl9CSVQoVENPTVApCXwNCj4gKwkJCSAgICAgTUFDQl9CSVQoSVNSX1JPVlIpCXwNCj4g
-KwkJCSAgICAgTUFDQl9CSVQoSFJFU1ApKTsNCj4gKw0KPiAgCXJldHVybiAwOw0KPiAgfQ0KPiAg
-DQo+ICtzdGF0aWMgdm9pZCBhdDkxZXRoZXJfc3RvcChzdHJ1Y3QgbWFjYiAqbHApDQo+ICt7DQo+
-ICsJdTMyIGN0bDsNCj4gKw0KPiArCS8qIERpc2FibGUgTUFDIGludGVycnVwdHMgKi8NCj4gKwlt
-YWNiX3dyaXRlbChscCwgSURSLCBNQUNCX0JJVChSQ09NUCkJfA0KPiArCQkJICAgICBNQUNCX0JJ
-VChSWFVCUikJfA0KPiArCQkJICAgICBNQUNCX0JJVChJU1JfVFVORCkJfA0KPiArCQkJICAgICBN
-QUNCX0JJVChJU1JfUkxFKQl8DQo+ICsJCQkgICAgIE1BQ0JfQklUKFRDT01QKQl8DQo+ICsJCQkg
-ICAgIE1BQ0JfQklUKElTUl9ST1ZSKSB8DQo+ICsJCQkgICAgIE1BQ0JfQklUKEhSRVNQKSk7DQo+
-ICsNCj4gKwkvKiBEaXNhYmxlIFJlY2VpdmVyIGFuZCBUcmFuc21pdHRlciAqLw0KPiArCWN0bCA9
-IG1hY2JfcmVhZGwobHAsIE5DUik7DQo+ICsJbWFjYl93cml0ZWwobHAsIE5DUiwgY3RsICYgfihN
-QUNCX0JJVChURSkgfCBNQUNCX0JJVChSRSkpKTsNCj4gKw0KPiArCS8qIEZyZWUgcmVzb3VyY2Vz
-LiAqLw0KPiArCWF0OTFldGhlcl9mcmVlX2NvaGVyZW50KGxwKTsNCj4gK30NCj4gKw0KPiAgLyog
-T3BlbiB0aGUgZXRoZXJuZXQgaW50ZXJmYWNlICovDQo+ICBzdGF0aWMgaW50IGF0OTFldGhlcl9v
-cGVuKHN0cnVjdCBuZXRfZGV2aWNlICpkZXYpDQo+ICB7DQo+IEBAIC0zODM1LDI3ICszODk2LDIw
-IEBAIHN0YXRpYyBpbnQgYXQ5MWV0aGVyX29wZW4oc3RydWN0IG5ldF9kZXZpY2UgKmRldikNCj4g
-IA0KPiAgCW1hY2Jfc2V0X2h3YWRkcihscCk7DQo+ICANCj4gLQlyZXQgPSBhdDkxZXRoZXJfc3Rh
-cnQoZGV2KTsNCj4gKwlyZXQgPSBhdDkxZXRoZXJfc3RhcnQobHApOw0KPiAgCWlmIChyZXQpDQo+
-ICAJCWdvdG8gcG1fZXhpdDsNCj4gIA0KPiAtCS8qIEVuYWJsZSBNQUMgaW50ZXJydXB0cyAqLw0K
-PiAtCW1hY2Jfd3JpdGVsKGxwLCBJRVIsIE1BQ0JfQklUKFJDT01QKQl8DQo+IC0JCQkgICAgIE1B
-Q0JfQklUKFJYVUJSKQl8DQo+IC0JCQkgICAgIE1BQ0JfQklUKElTUl9UVU5EKQl8DQo+IC0JCQkg
-ICAgIE1BQ0JfQklUKElTUl9STEUpCXwNCj4gLQkJCSAgICAgTUFDQl9CSVQoVENPTVApCXwNCj4g
-LQkJCSAgICAgTUFDQl9CSVQoSVNSX1JPVlIpCXwNCj4gLQkJCSAgICAgTUFDQl9CSVQoSFJFU1Ap
-KTsNCj4gLQ0KPiAgCXJldCA9IG1hY2JfcGh5bGlua19jb25uZWN0KGxwKTsNCj4gIAlpZiAocmV0
-KQ0KPiAtCQlnb3RvIHBtX2V4aXQ7DQo+ICsJCWdvdG8gc3RvcDsNCj4gIA0KPiAgCW5ldGlmX3N0
-YXJ0X3F1ZXVlKGRldik7DQo+ICANCj4gIAlyZXR1cm4gMDsNCj4gIA0KPiArc3RvcDoNCj4gKwlh
-dDkxZXRoZXJfc3RvcChscCk7DQo+ICBwbV9leGl0Og0KPiAgCXBtX3J1bnRpbWVfcHV0X3N5bmMo
-JmxwLT5wZGV2LT5kZXYpOw0KPiAgCXJldHVybiByZXQ7DQo+IEBAIC0zODY1LDM3ICszOTE5LDEz
-IEBAIHN0YXRpYyBpbnQgYXQ5MWV0aGVyX29wZW4oc3RydWN0IG5ldF9kZXZpY2UgKmRldikNCj4g
-IHN0YXRpYyBpbnQgYXQ5MWV0aGVyX2Nsb3NlKHN0cnVjdCBuZXRfZGV2aWNlICpkZXYpDQo+ICB7
-DQo+ICAJc3RydWN0IG1hY2IgKmxwID0gbmV0ZGV2X3ByaXYoZGV2KTsNCj4gLQlzdHJ1Y3QgbWFj
-Yl9xdWV1ZSAqcSA9ICZscC0+cXVldWVzWzBdOw0KPiAtCXUzMiBjdGw7DQo+IC0NCj4gLQkvKiBE
-aXNhYmxlIFJlY2VpdmVyIGFuZCBUcmFuc21pdHRlciAqLw0KPiAtCWN0bCA9IG1hY2JfcmVhZGwo
-bHAsIE5DUik7DQo+IC0JbWFjYl93cml0ZWwobHAsIE5DUiwgY3RsICYgfihNQUNCX0JJVChURSkg
-fCBNQUNCX0JJVChSRSkpKTsNCj4gLQ0KPiAtCS8qIERpc2FibGUgTUFDIGludGVycnVwdHMgKi8N
-Cj4gLQltYWNiX3dyaXRlbChscCwgSURSLCBNQUNCX0JJVChSQ09NUCkJfA0KPiAtCQkJICAgICBN
-QUNCX0JJVChSWFVCUikJfA0KPiAtCQkJICAgICBNQUNCX0JJVChJU1JfVFVORCkJfA0KPiAtCQkJ
-ICAgICBNQUNCX0JJVChJU1JfUkxFKQl8DQo+IC0JCQkgICAgIE1BQ0JfQklUKFRDT01QKQl8DQo+
-IC0JCQkgICAgIE1BQ0JfQklUKElTUl9ST1ZSKSB8DQo+IC0JCQkgICAgIE1BQ0JfQklUKEhSRVNQ
-KSk7DQo+ICANCj4gIAluZXRpZl9zdG9wX3F1ZXVlKGRldik7DQo+ICANCj4gIAlwaHlsaW5rX3N0
-b3AobHAtPnBoeWxpbmspOw0KPiAgCXBoeWxpbmtfZGlzY29ubmVjdF9waHkobHAtPnBoeWxpbmsp
-Ow0KPiAgDQo+IC0JZG1hX2ZyZWVfY29oZXJlbnQoJmxwLT5wZGV2LT5kZXYsDQo+IC0JCQkgIEFU
-OTFFVEhFUl9NQVhfUlhfREVTQ1IgKg0KPiAtCQkJICBtYWNiX2RtYV9kZXNjX2dldF9zaXplKGxw
-KSwNCj4gLQkJCSAgcS0+cnhfcmluZywgcS0+cnhfcmluZ19kbWEpOw0KPiAtCXEtPnJ4X3Jpbmcg
-PSBOVUxMOw0KPiAtDQo+IC0JZG1hX2ZyZWVfY29oZXJlbnQoJmxwLT5wZGV2LT5kZXYsDQo+IC0J
-CQkgIEFUOTFFVEhFUl9NQVhfUlhfREVTQ1IgKiBBVDkxRVRIRVJfTUFYX1JCVUZGX1NaLA0KPiAt
-CQkJICBxLT5yeF9idWZmZXJzLCBxLT5yeF9idWZmZXJzX2RtYSk7DQo+IC0JcS0+cnhfYnVmZmVy
-cyA9IE5VTEw7DQo+ICsJYXQ5MWV0aGVyX3N0b3AobHApOw0KPiAgDQo+ICAJcmV0dXJuIHBtX3J1
-bnRpbWVfcHV0KCZscC0+cGRldi0+ZGV2KTsNCj4gIH0NCj4g
+Hi
+
+On Tue, Jun 23, 2020 at 12:57 AM David Korth <gerbilsoft@gerbilsoft.com> wrote:
+>
+> Based on a similar commit for Sony Sixaxis and DualShock 4 controllers:
+> HID: sony: Initialize the controller LEDs with a device ID value
+>
+> Wii remotes have the same player LED layout as Sixaxis controllers,
+> so the wiimote setup is based on the Sixaxis code.
+
+Please include a description of the patch in the commit-message. It
+took me quite a while to understand what the intention of this patch
+is.
+
+> Signed-off-by: David Korth <gerbilsoft@gerbilsoft.com>
+> ---
+>  drivers/hid/hid-wiimote-core.c    | 57 ++++++++++++++++++++++++++++++-
+>  drivers/hid/hid-wiimote-modules.c |  7 ----
+>  drivers/hid/hid-wiimote.h         |  1 +
+>  3 files changed, 57 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/hid/hid-wiimote-core.c b/drivers/hid/hid-wiimote-core.c
+> index 92874dbe4d4a..9662c2ce5e99 100644
+> --- a/drivers/hid/hid-wiimote-core.c
+> +++ b/drivers/hid/hid-wiimote-core.c
+> @@ -14,9 +14,12 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/idr.h>
+>  #include "hid-ids.h"
+>  #include "hid-wiimote.h"
+>
+> +static DEFINE_IDA(wiimote_device_id_allocator);
+> +
+>  /* output queue handling */
+>
+>  static int wiimote_hid_send(struct hid_device *hdev, __u8 *buffer,
+> @@ -694,6 +697,10 @@ static void wiimote_modules_unload(struct wiimote_data *wdata)
+>         wdata->state.devtype = WIIMOTE_DEV_UNKNOWN;
+>         spin_unlock_irqrestore(&wdata->state.lock, flags);
+>
+> +       if (wdata->device_id >= 0)
+> +               ida_simple_remove(&wiimote_device_id_allocator,
+> +                                       wdata->device_id);
+> +
+>         /* find end of list */
+>         for (iter = mods; *iter != WIIMOD_NULL; ++iter)
+>                 /* empty */ ;
+> @@ -802,6 +809,20 @@ static const char *wiimote_devtype_names[WIIMOTE_DEV_NUM] = {
+>         [WIIMOTE_DEV_PRO_CONTROLLER] = "Nintendo Wii U Pro Controller",
+>  };
+>
+> +static __u8 wiimote_set_leds_from_id(int id)
+> +{
+> +       static const __u8 wiimote_leds[10] = {
+> +               0x01, 0x02, 0x04, 0x08,
+> +               0x09, 0x0A, 0x0C, 0x0D,
+> +               0x0E, 0x0F
+> +       };
+> +
+> +       if (id < 0)
+> +               return wiimote_leds[0];
+> +
+> +       return wiimote_leds[id % 10];
+> +}
+> +
+>  /* Try to guess the device type based on all collected information. We
+>   * first try to detect by static extension types, then VID/PID and the
+>   * device name. If we cannot detect the device, we use
+> @@ -810,8 +831,10 @@ static void wiimote_init_set_type(struct wiimote_data *wdata,
+>                                   __u8 exttype)
+>  {
+>         __u8 devtype = WIIMOTE_DEV_GENERIC;
+> +       __u8 leds;
+>         __u16 vendor, product;
+>         const char *name;
+> +       int device_id;
+>
+>         vendor = wdata->hdev->vendor;
+>         product = wdata->hdev->product;
+> @@ -858,6 +881,24 @@ static void wiimote_init_set_type(struct wiimote_data *wdata,
+>                          wiimote_devtype_names[devtype]);
+>
+>         wiimote_modules_load(wdata, devtype);
+> +
+> +       /* set player number to stop initial LED-blinking */
+> +       device_id = ida_simple_get(&wiimote_device_id_allocator, 0, 0,
+> +                               GFP_KERNEL);
+> +       if (device_id < 0) {
+> +               /* Unable to get a device ID. */
+> +               /* Set LED1 anyway to stop the blinking. */
+> +               leds = WIIPROTO_FLAG_LED1;
+> +               wdata->device_id = -1;
+> +       } else {
+> +               /* Device ID obtained. */
+> +               leds = wiimote_set_leds_from_id(device_id);
+> +               wdata->device_id = device_id;
+> +       }
+> +
+> +       spin_lock_irq(&wdata->state.lock);
+> +       wiiproto_req_leds(wdata, leds);
+> +       spin_unlock_irq(&wdata->state.lock);
+
+So what you are trying is to allocate a unique ID to each connected
+wiimote, so they automatically display unique IDs, right?
+
+Can you explain why this has to be done in the kernel driver? Why
+isn't user-space assigning the right ID? User-space needs to attach
+controllers to their respective engine anyway, in which case the IDs
+the kernel assigns would be wrong, right? How does user-space display
+the matching ID in their UI (e.g., for configuration use-cases)? The
+way you set them does not allow user-space to query the ID, does it?
+Lastly, wouldn't a device-reconnect want the same ID to be assigned
+again? With the logic you apply, user-space would have to override
+every ID for that to work.
+
+Is there an actual use-case for this? Or is this just to align the
+driver with the other gamepads?
+
+Thanks
+David
+
+>  }
+>
+>  static void wiimote_init_detect(struct wiimote_data *wdata)
+> @@ -1750,6 +1791,8 @@ static struct wiimote_data *wiimote_create(struct hid_device *hdev)
+>         wdata->state.drm = WIIPROTO_REQ_DRM_K;
+>         wdata->state.cmd_battery = 0xff;
+>
+> +       wdata->device_id = -1;
+> +
+>         INIT_WORK(&wdata->init_worker, wiimote_init_worker);
+>         timer_setup(&wdata->timer, wiimote_init_timeout, 0);
+>
+> @@ -1879,7 +1922,19 @@ static struct hid_driver wiimote_hid_driver = {
+>         .remove = wiimote_hid_remove,
+>         .raw_event = wiimote_hid_event,
+>  };
+> -module_hid_driver(wiimote_hid_driver);
+> +
+> +static int __init wiimote_init(void)
+> +{
+> +       return hid_register_driver(&wiimote_hid_driver);
+> +}
+> +
+> +static void __exit wiimote_exit(void)
+> +{
+> +       ida_destroy(&wiimote_device_id_allocator);
+> +       hid_unregister_driver(&wiimote_hid_driver);
+> +}
+> +module_init(wiimote_init);
+> +module_exit(wiimote_exit);
+>
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("David Herrmann <dh.herrmann@gmail.com>");
+> diff --git a/drivers/hid/hid-wiimote-modules.c b/drivers/hid/hid-wiimote-modules.c
+> index 2c3925357857..0cdd6c219b5d 100644
+> --- a/drivers/hid/hid-wiimote-modules.c
+> +++ b/drivers/hid/hid-wiimote-modules.c
+> @@ -362,13 +362,6 @@ static int wiimod_led_probe(const struct wiimod_ops *ops,
+>         if (ret)
+>                 goto err_free;
+>
+> -       /* enable LED1 to stop initial LED-blinking */
+> -       if (ops->arg == 0) {
+> -               spin_lock_irqsave(&wdata->state.lock, flags);
+> -               wiiproto_req_leds(wdata, WIIPROTO_FLAG_LED1);
+> -               spin_unlock_irqrestore(&wdata->state.lock, flags);
+> -       }
+> -
+>         return 0;
+>
+>  err_free:
+> diff --git a/drivers/hid/hid-wiimote.h b/drivers/hid/hid-wiimote.h
+> index b2a26a0a8f12..800849427947 100644
+> --- a/drivers/hid/hid-wiimote.h
+> +++ b/drivers/hid/hid-wiimote.h
+> @@ -160,6 +160,7 @@ struct wiimote_data {
+>         struct wiimote_queue queue;
+>         struct wiimote_state state;
+>         struct work_struct init_worker;
+> +       int device_id;
+>  };
+>
+>  /* wiimote modules */
+> --
+> 2.27.0
+>
