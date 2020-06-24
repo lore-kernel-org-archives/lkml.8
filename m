@@ -3,103 +3,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8452EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF662C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6400D20C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E24E20857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIFyo4x4"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="fql7ZIJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391074AbgFXNpl (ORCPT
+        id S2391087AbgFXNqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43660 "EHLO
+        Wed, 24 Jun 2020 09:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390774AbgFXNpl (ORCPT
+        with ESMTP id S2390933AbgFXNqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:45:41 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FDAC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:45:41 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p3so1453350pgh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 06:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eKjWMjcOxALjROxn2da3zX/d0T2J4uaTbhVPfw/r1PQ=;
-        b=YIFyo4x4txxZ4nqaQk75rQY5jHXt9ta7pLR6PGdDvI67aadyE5+L92CGN3HuHa8b+g
-         /KTEzvOMJiyWfzC5nmOmK2F0CPWndgpgNbrk06imhGjhX/AlLealSi4h16f7ItYYqWQp
-         PyZvzUIf94K7W8x7/Vl2YmhadvQ3VEME3M2psh7wm0Fkrr9QD1YDVNRRvkyw6X2OMVSL
-         hXol1Mu8YovpfH7i6TRTMswRYxs1F8ULc3UF8BNVCr1iagu258KvU0qjmHvnlEvjDS1f
-         RksFsoVidEsI7eEByIHnnjSMYNZHnDX09NvrqCF6AHCGSk0FIp/At/kgaov9Jdg+Ewna
-         KzxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eKjWMjcOxALjROxn2da3zX/d0T2J4uaTbhVPfw/r1PQ=;
-        b=MoulDFm5tQFZo7jflLQlH5PAII+4gy4qNRKGbsNm037T5HEMRcO8jKCFjJbZLSOPta
-         q2MiegZbDNPUuBynOz3n19J4BRQbJELJTMN14xLk7IQ1jpA1SAhNvd3AWvaeLxFgORfB
-         tP9jFIedAU44taF7pUxMO5QRKHgmOFal7/kaDbhiaysuTuCTsyo7G7kLoBeDVmozbldH
-         Dk4i3f/I3uK0ZJDFIEtEFiEtfIHoyjDRVLpizXhnKt+MeKtmPMQdopfXMucioGVFlQwM
-         WMrKqrrwDciu4BAaxG5c45+L225Bw14a2q/QA8XNzl0uwWdE9kMJKQ+9wAb8/gj8aFm2
-         X/aQ==
-X-Gm-Message-State: AOAM532SSDYIRBpyn2Q+FlRoesmUZ/4Vbsl6Br5n1f+m5vVh7n7Kcf0P
-        5811XPy7RDSOC2J6ECctPAGXVlQIC+lUNpUnXGc=
-X-Google-Smtp-Source: ABdhPJzP96rHQVTbJaOF8adE4hygUklHj5+XAKX0WUXTgJf5HCnXbbYR24k5yfeYfOhMoH40Y1T+Uziyt/t5umR+CAw=
-X-Received: by 2002:a62:5284:: with SMTP id g126mr30364100pfb.36.1593006340755;
- Wed, 24 Jun 2020 06:45:40 -0700 (PDT)
+        Wed, 24 Jun 2020 09:46:51 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE99FC061573;
+        Wed, 24 Jun 2020 06:46:50 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 662FE23076;
+        Wed, 24 Jun 2020 15:46:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593006407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nsHzBggZvOZK2UQRWliQHDUQLUPL8ZE+00z/UsJFn1I=;
+        b=fql7ZIJvpyPIcpNqwoG5pY6sFGJK658EgHbzWK0YIAlaK9TEkqpuYPCdoauKRPR56giMlt
+        qVabBRtud/4ohSpTJAkrqnqn5GZGZ0TUz1e6louNC/lwdU9KLHbXAbj6gMYACIVScWi5NE
+        JYObZe1D+k5YUqy+6N3jAj48TJNTgog=
 MIME-Version: 1.0
-References: <20200624114127.3016-1-a.hajda@samsung.com> <CGME20200624114135eucas1p26e2e4683d60cebdce7acd55177013992@eucas1p2.samsung.com>
- <20200624114127.3016-2-a.hajda@samsung.com> <20200624132714.GD5472@sirena.org.uk>
-In-Reply-To: <20200624132714.GD5472@sirena.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 24 Jun 2020 16:45:28 +0300
-Message-ID: <CAHp75Ve9V1Vyxe3bEeHJ9H2J900wUXHMmXFJt-dn9sO5OMejHA@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 1/5] driver core: add probe_err log helper
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 24 Jun 2020 15:46:47 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sungbo Eo <mans0n@gorani.run>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
+In-Reply-To: <CAHp75Vfc2udv2mLLJCFO6P+n8_kcO7OZKhH_XkOy7Cf4fnxgtA@mail.gmail.com>
+References: <20200623060526.29922-1-mans0n@gorani.run>
+ <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
+ <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
+ <69f5d1a1970838b8c4bd8d6e8dba6cac@walle.cc>
+ <CAHp75Vfc2udv2mLLJCFO6P+n8_kcO7OZKhH_XkOy7Cf4fnxgtA@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <9956439a3c887dde7b2b8fa48de20db2@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 4:27 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, Jun 24, 2020 at 01:41:23PM +0200, Andrzej Hajda wrote:
-> > During probe every time driver gets resource it should usually check for error
-> > printk some message if it is not -EPROBE_DEFER and return the error. This
->
-> As I said down the thread that's not a great pattern since it means that
-> probe deferral errors never get displayed and users have a hard time
-> figuring out why their driver isn't instantiating.
+Hi Andy,
 
-Don't we have a file in the debugfs to list deferred drivers?
+Am 2020-06-24 15:33, schrieb Andy Shevchenko:
+> On Tue, Jun 23, 2020 at 3:48 PM Michael Walle <michael@walle.cc> wrote:
+>> Am 2020-06-23 14:22, schrieb Sungbo Eo:
+>> > On 2020-06-23 17:31, Michael Walle wrote:
+>> >> Am 2020-06-23 08:05, schrieb Sungbo Eo:
+> 
+> ...
+> 
+>> >> Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
+>> >> to be simple enough to be easily integrated with that. If you need a
+>> >> blueprint; because at the moment there is no driver in the kernel
+>> >> using that, you could have a look at:
+>> >> https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
+>> >
+>> > Thanks for your advice. I didn't really know what regmap is for...
+>> > It seems gpio-regmap is for gpio controllers having val/dir registers.
+>> > But pca9570 does not use port registers. The master only sends a data
+>> > byte without reg address.
+>> 
+>> Ahh I missed that :(
+>> 
+>> > I'm not sure how to apply gpio-regmap or
+>> > regmap-i2c here.
+>> > I'll try to investigate if setting reg_size or reg_bits to zero is
+>> > possible.
+>> >
+>> > Please correct me if I'm in the wrong direction.
+>> 
+>> That won't work because the underlying regmap expects the address bits
+>> to be either 8 or 16. In this case I'd guess gpio-regmap, doesn't make
+>> sense, because there is actually no real gain.
+> 
+> From the DS:
+> "The device acknowledges and the master sends the data byte for P7 to
+> P0 and is acknowledged by the device. Writes to P7 to P4 are ignored
+> in the PCA9570 as only P3 through P0 are available. The 4-bit data is
+> presented on the port lines after it has been acknowledged by the
+> device. The number of data bytes that can be sent successively is not
+> limited. The previous data is overwritten every time a data byte has
+> been sent."
+> 
+> So, basically writing to the register the value of register can
+> simulate register map, but the question is do we gain anything from
+> that abstraction because it means that all 256 (or 16 for 4-bit
+> variant) registers are possible?
 
-In the case of deferred probes the errors out of it makes users more
-miserable in order to look through tons of spam and lose really useful
-data in the logs.
+Mh? I can't follow you. Port means a physical I/O port, if I
+read the datasheet correctly. And because that is a 4 port IO
+expander only the lower four bits are used. I'd guess if it is
+a 8 port IO expander all bits would be used. (Actually, its
+output only.)
 
--- 
-With Best Regards,
-Andy Shevchenko
+So you just write one byte of data (or you might repeat it, but
+that is just as if you start a new i2c transaction, just that
+you save the i2c addressing).
+
+-michael
