@@ -2,173 +2,193 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4475BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22759C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DECB2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF5AD20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZgOTBUbP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V0cCQaCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405253AbgFXQ5Y (ORCPT
+        id S2405286AbgFXQ5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:57:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404124AbgFXQ5Y (ORCPT
+        Wed, 24 Jun 2020 12:57:36 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:44597 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405261AbgFXQ5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:57:24 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4C6C061573;
-        Wed, 24 Jun 2020 09:57:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L0BSl9Rz5P8GUkSvL7sI0fAZe5Hrhoqy7/0x3FiFW2Y=; b=ZgOTBUbPjta9cXrzFnnIAnab4
-        Dcm9pDc0Ejlq5vVTWRjyevo27fV7XGPaj06Z05BDeZRcenj/FWeWJut7lz1cg2jUDgZnf8MvLUdYM
-        P+biZdJlriNMVb3RtYtqgt1B8ql+d+lgDKGM3OOj3i9TDJ3SIgG6/R4Rg8amZWPYlQq6fIY/e5RIH
-        39Hwa7ZromkrO1urRg88NKb0eQZfm104fYt7Wvq+tEViZGuPwfd3FP5JIhp40PZgkNtwizse0M5zD
-        FpIcwGpyg+93AxBkRp7ezqMw7JKjDwcBW5nSjVKmWjVeWpHEex9JZNfJ7NiOhJ6zOdVKpd7uk/VBN
-        B1UNRAHEg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59222)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jo8i8-0003ML-Ug; Wed, 24 Jun 2020 17:57:20 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jo8i7-00027d-Ep; Wed, 24 Jun 2020 17:57:19 +0100
-Date:   Wed, 24 Jun 2020 17:57:19 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
-Message-ID: <20200624165719.GB1551@shell.armlinux.org.uk>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-15-brgl@bgdev.pl>
- <20200622132921.GI1551@shell.armlinux.org.uk>
- <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
- <20200623094252.GS1551@shell.armlinux.org.uk>
- <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
- <20200623095646.GT1551@shell.armlinux.org.uk>
- <CAMRc=MeKE12sXZycyGA7vmjNai0JfDhRX+XDTp3r3YtrmLQj3A@mail.gmail.com>
+        Wed, 24 Jun 2020 12:57:35 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200624165731epoutp02663f4a77f23113fe2fd10ce0c277b72e~biUu7sWL_3271432714epoutp02b
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 16:57:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200624165731epoutp02663f4a77f23113fe2fd10ce0c277b72e~biUu7sWL_3271432714epoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593017851;
+        bh=KMd0eqO8GtMWjgpfB+VCvK0D2tfYjlEPKEeNRLFEtnU=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=V0cCQaCxsrgMYT8h8x4Uri96K7ttSZdTEKZ2AdTe6hop/MYICRQefyCpYJRdMyl2p
+         hnGGdtM6+jvKDF+o7vhT9NJWJY9JAmxsXgTkew4MxNdxdFNdnoN0dCYOf/gCDoL25Y
+         OIXHUSaMG8GtjvK6uNVzyFajUeWBOL79exnjTRvo=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200624165730epcas5p308d7aa7476e68ec2f67d033269104742~biUt-TL3a1144711447epcas5p3j;
+        Wed, 24 Jun 2020 16:57:30 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8E.95.09467.AF583FE5; Thu, 25 Jun 2020 01:57:30 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200624165730epcas5p1e3eeb64857ac214b70f5437017cfc2ea~biUtoidCr3199531995epcas5p1n;
+        Wed, 24 Jun 2020 16:57:30 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200624165730epsmtrp1cc2c747d18b9c824162b4cf22946e699~biUtnqRXt0105301053epsmtrp1N;
+        Wed, 24 Jun 2020 16:57:30 +0000 (GMT)
+X-AuditID: b6c32a49-a29ff700000024fb-a4-5ef385fa56d2
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        04.4A.08303.AF583FE5; Thu, 25 Jun 2020 01:57:30 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200624165726epsmtip28bf5d75b985779d3d7ca28befebd281c~biUp9YYsN2887728877epsmtip2S;
+        Wed, 24 Jun 2020 16:57:25 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Vinod Koul'" <vkoul@kernel.org>
+Cc:     "'Kishon Vijay Abraham I'" <kishon@ti.com>, <robh@kernel.org>,
+        <krzk@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+        <avri.altman@wdc.com>, <stanley.chu@mediatek.com>,
+        <linux-scsi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <cang@codeaurora.org>,
+        <devicetree@vger.kernel.org>, <kwmad.kim@samsung.com>,
+        <linux-kernel@vger.kernel.org>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>
+In-Reply-To: <20200624102112.GX2324254@vkoul-mobl>
+Subject: RE: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
+Date:   Wed, 24 Jun 2020 22:27:23 +0530
+Message-ID: <004b01d64a48$8bb87270$a3295750$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeKE12sXZycyGA7vmjNai0JfDhRX+XDTp3r3YtrmLQj3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-in
+Thread-Index: AQNA14zZ9KpC6NxovY65uGX80LQ4kgIpylB3AdlmWUMBx1WEmQIl7FhyAiYYQSwBBY3htKW5/StQ
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAKsWRmVeSWpSXmKPExsWy7bCmhu6v1s9xBvMuyFi8/HmVzeLT+mWs
+        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
+        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
+        P9DNFMAZxWWTkpqTWZZapG+XwJXxd89y1oKLQhWHj/9laWD8w9fFyMEhIWAicbmrrouRi0NI
+        YDejxPyPq5i6GDmBnE+MEof2FUIkPjNKtE7bwAaSAGk48vMVG0TRLkaJy70+EPYbRonzkwxA
+        bDYBXYkdi9vAakQEVCW2PHkAZjMLLGSW2LJAH8TmFDCSWHh2OSuILSzgJPF6xR6wxSxA9Q3b
+        lrKA2LwClhL7dx9mgrAFJU7OfMICMUdeYvvbOcwQ9yhI/Hy6jBUiLi5x9GcPM8TeKIlLP54w
+        gTwgIfCCQ+LD9YWsEA0uEjPX7meBsIUlXh3fwg5hS0m87G9jh4RKtkTPLmOIcI3E0nnHoMrt
+        JQ5cmcMCUsIsoCmxfpc+xFo+id7fIKtAOnklOtqEIKpVJZrfXYXqlJaY2N3NClHiIdHXJDqB
+        UXEWkr9mIflrFpJfZiHsWsDIsopRMrWgODc9tdi0wDAvtVyvODG3uDQvXS85P3cTIzjRaXnu
+        YLz74IPeIUYmDsZDjBIczEoivCFun+KEeFMSK6tSi/Lji0pzUosPMUpzsCiJ8yr9OBMnJJCe
+        WJKanZpakFoEk2Xi4JRqYJq/b8WpX9YlbvHuhzr+iHkGZyrKlljavP3KHyu371Kx5gfhlW2C
+        Lr4L2bdoqO1WZEnqClh2cJ9HxdPMKPfquQbs39+fZW148S9XKUhx95P/M1zXJ8xdvUlEmeG5
+        i4szr6IXs/m6DxXO8490/+DPSmh4dFdJS1mlUmH+yixx83ZOidN9e6Z8ezb1WIxQqaycWr3k
+        I+eJW3KrlgoKeCi94msIvVM/T9TMXvz9wr/VJYd/mFgbOXqX/Vmdy7i6XEDs93ffmNnWnhPf
+        C0pw/7mmv2bp9Y2HZrN+/KVl458quTw+8YOlwvxt/2692af8rCWw0H/u1vVlZ9fZzS2KvXJt
+        V0Pw/p+Z5mvt287d0dSLUmIpzkg01GIuKk4EAIr9fdDjAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsWy7bCSvO6v1s9xBp9/sFi8/HmVzeLT+mWs
+        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
+        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
+        P9DNFMAZxWWTkpqTWZZapG+XwJXxd89y1oKLQhWHj/9laWD8w9fFyMkhIWAiceTnKzYQW0hg
+        B6PE+lklEHFpiesbJ7BD2MISK/89B7K5gGpeMUosWjCLGSTBJqArsWNxG1iziICqxJYnD9hA
+        ipgF1jJLzD+0mg2i4yeTxLdbX8FGcQoYSSw8u5wVxBYWcJJ4vWIPE4jNAtTdsG0pC4jNK2Ap
+        sX/3YSYIW1Di5MwnQHEOoKl6Em0bGUHCzALyEtvfzmGGuE5B4ufTZawQcXGJoz97mCEOipK4
+        9OMJ0wRG4VlIJs1CmDQLyaRZSLoXMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQI
+        jlwtrR2Me1Z90DvEyMTBeIhRgoNZSYQ3xO1TnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHer7MW
+        xgkJpCeWpGanphakFsFkmTg4pRqYOiYFn7zjp5G0jrdUsqtP4ICwQvTmHvnvHAorrmaVN77M
+        9Th+8/XC/KmzK+d0SVou0RIRuv3I1D/p0w4txr0lTt5RaVPtgpJ1+G13zXkSEL9m1vze0zI1
+        rnvW3IiK5nFgfCw+vY1RTHVix/alz/TajG9V8VrJfsiv3vf03eV7LV/8vebdEJnaLHPWMTzs
+        ct6ZnI0/vzWrLbDu/B0007VD1jnu2KF/Oj/1f535t+nurrCXnKorF6/gkGNhK+aUcDc7Xnw3
+        r/3SlYjs4NRrVRm6K+sOZ19beuWZe43vPPPVf3/Z7K+crZu/Nvvo2zeHVLZ+kOqTmL+Ona1J
+        YHGSeeePE6KBUf+STx1ISVRgiY1UYinOSDTUYi4qTgQARvMgWksDAAA=
+X-CMS-MailID: 20200624165730epcas5p1e3eeb64857ac214b70f5437017cfc2ea
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200528013223epcas5p2be85fa8803326b49a905fb7225992cad
+References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
+        <20200528011658.71590-1-alim.akhtar@samsung.com>
+        <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
+        <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
+        <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
+        <000001d646a6$6cb5fd70$4621f850$@samsung.com>
+        <20200624102112.GX2324254@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 06:27:06PM +0200, Bartosz Golaszewski wrote:
-> wt., 23 cze 2020 o 11:56 Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> napisał(a):
-> >
-> > On Tue, Jun 23, 2020 at 11:46:15AM +0200, Bartosz Golaszewski wrote:
-> > > wt., 23 cze 2020 o 11:43 Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> napisał(a):
-> > > >
-> > > > On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
-> > > > > pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
-> > > > > <linux@armlinux.org.uk> napisał(a):
-> > > > > >
-> > > > >
-> > > > > [snip!]
-> > > > >
-> > > > > >
-> > > > > > This is likely to cause issues for some PHY drivers.  Note that we have
-> > > > > > some PHY drivers which register a temperature sensor in the probe
-> > > > > > function, which means they can be accessed independently of the lifetime
-> > > > > > of the PHY bound to the network driver (which may only be while the
-> > > > > > network device is "up".)  We certainly do not want hwmon failing just
-> > > > > > because the network device is down.
-> > > > > >
-> > > > > > That's kind of worked around for the reset stuff, because there are two
-> > > > > > layers to that: the mdio device layer reset support which knows nothing
-> > > > > > of the PHY binding state to the network driver, and the phylib reset
-> > > > > > support, but it is not nice.
-> > > > > >
-> > > > >
-> > > > > Regulators are reference counted so if the hwmon driver enables it
-> > > > > using mdio_device_power_on() it will stay on even after the PHY driver
-> > > > > calls phy_device_power_off(), right? Am I missing something?
-> > > >
-> > > > If that is true, you will need to audit the PHY drivers to add that.
-> > > >
-> > >
-> > > This change doesn't have any effect on devices which don't have a
-> > > regulator assigned in DT though. The one I'm adding in the last patch
-> > > is the first to use this.
-> >
-> > It's quality of implementation.
-> >
-> > Should we wait for someone else to make use of the new regulator
-> > support that has been added with a PHY that uses hwmon, and they
-> > don't realise that it breaks hwmon on it, and several kernel versions
-> > go by without it being noticed.  It will only be a noticable issue
-> > when the associated network device is down, and that network device
-> > driver detaches from the PHY, so _is_ likely not to be noticed.
-> >
-> > Or should we do a small amount of work now to properly implement
-> > regulator support, which includes a trivial grep for "hwmon" amongst
-> > the PHY drivers, and add the necessary call to avoid the regulator
-> > being shut off.
-> >
+Hi Vinod
+
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: 24 June 2020 15:51
+> To: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>; robh@kernel.org;
+> krzk@kernel.org; linux-samsung-soc@vger.kernel.org; avri.altman@wdc.com;
+> stanley.chu@mediatek.com; linux-scsi@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; cang@codeaurora.org;
+devicetree@vger.kernel.org;
+> kwmad.kim@samsung.com; linux-kernel@vger.kernel.org; 'Martin K. Petersen'
+> <martin.petersen@oracle.com>
+> Subject: Re: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
 > 
-> I'm not sure what the correct approach is here. Provide some helper
-> that, when called, would increase the regulator's reference count even
-> more to keep it enabled from the moment hwmon is registered to when
-> the driver is detached?
+> On 20-06-20, 07:29, Alim Akhtar wrote:
+> > Hi Kishon,
+> >
+> > > -----Original Message-----
+> > > From: Alim Akhtar <alim.akhtar@samsung.com>
+> > > Sent: 11 June 2020 20:49
+> > > To: 'Kishon Vijay Abraham I' <kishon@ti.com>; 'Martin K. Petersen'
+> > > > >>
+> > > > >> Applied [1,2,3,4,5,9] to 5.9/scsi-queue. The series won't show
+> > > > >> up in my
+> > > > > public
+> > > > >> tree until shortly after -rc1 is released.
+> > > > >>
+> > > > > Thanks Martin,
+> > > > > Hi Rob and Kishon/Vinod
+> > > > > Can you please pickup dt-bindings and PHY driver respectively?
+> > > >
+> > > > You might have CC'ed me only for the PHY patch. I don't have the
+> > > > dt-bindings in my inbox. Care to re-send what's missing again?
+> > > > This will be merged after -rc1 is tagged.
+> > > >
+> >
+> > -rc1 is out, I do not see phy driver patch in your tree[1] yet, let me
+know if I am
+> looking into right tree.
+> > [1] -> git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
+> 
+> Right tree
+> >
+> > Thanks!
+> >
+> > > Sure, will re-send this series.
+> 
+> But patches have not been sent right, pls send and me/Kishon will review
+> 
+Thanks for your kind attention on this series. As per [0] comment from
+Kishon, patch 7/10 [1] and probably 6/10 [2] should have been Applied after
+5.8-rc1 was tagged.
+I have already send and re-send V10 of this series. Kishon has already
+reviewed and provided comments and I have addressed them as well. These
+patches already have and Reviewed-by, Tested-by tags.
+Let me know if something more needs to be done from my side.
+[0] https://lkml.org/lkml/2020/6/7/410
+[1] https://lkml.org/lkml/2020/5/27/1705
+[2] https://lkml.org/lkml/2020/5/27/1701
 
-I think a PHY driver needs the utility to control this.  We need to be
-careful here with naming, because phylib is not the only code in the
-kernel that uses the phy_ prefix.
+Thanks!
 
-If we had runtime PM support for PHYs, with regulator support hooked
-into runtime PM, then we already have standard interfaces that drivers
-can use to control whether the device gets powered down.
+> Thanks
+> --
+> ~Vinod
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
