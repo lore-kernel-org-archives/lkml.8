@@ -2,99 +2,97 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A641C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73EF1206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593012682;
-	bh=/XOHUfqgbkJQ/VFuvcNxNCzM8LEt5wElAfbZZ/I0QOw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qt08b6MlxNDKiVQodfU5dGwpaYPgwnRrt/YcO7hGp/BKAjnP+At63M5GlhkHUYQcX
-	 EqheUZ6ZYUmPDz4plP8zskj4yr84EsiOHIvnZSEny/nVcjf2iYa3q/mh9pnob7KPPL
-	 ICw2v1vAUrZPbOQ9h5AWDGD8P31rF/pRhAjknu/g=
+	by mail.kernel.org (Postfix) with ESMTP id A6646206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404350AbgFXPbU (ORCPT
+        id S2404415AbgFXPcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404017AbgFXPbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:31:19 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 24 Jun 2020 11:32:22 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:41472 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403982AbgFXPcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:32:22 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4421214DB;
-        Wed, 24 Jun 2020 15:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593012678;
-        bh=/XOHUfqgbkJQ/VFuvcNxNCzM8LEt5wElAfbZZ/I0QOw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1/gbox5RlRrTg4kiGntX+1BFq5EOO4rauIXcE4/g/S2HjduHZ27HO7Fjy+HijbTVB
-         sVuOiSgFcgbSQ3pmCbbNxTv8ndSCUbtspQ8cQSVbB0+WOhS45jjaDROjbJheaBvJPx
-         Jp7yfm6yZTnYcCEC/Dzy+L1wptwcf9GX1xIrcY+o=
-Received: by mail-oi1-f174.google.com with SMTP id p70so2137708oic.12;
-        Wed, 24 Jun 2020 08:31:18 -0700 (PDT)
-X-Gm-Message-State: AOAM531OUry3LxIaCJNJYm+bjOFgYMaCgh7oWr55Vjbeqqz0xQT2Qrpz
-        HHdslCzCbxKXyjDwTD9L/g+JnsF4c0E37Seyz/Q=
-X-Google-Smtp-Source: ABdhPJyrGY95Bb0CTBeTb4CjO3FI7dpKNkRH6VdRIt+LCKBsYjwk4gHaFIm8ccr4EwcCcNYIphYlt47P29XWTXpZnCA=
-X-Received: by 2002:aca:b241:: with SMTP id b62mr19630758oif.47.1593012677928;
- Wed, 24 Jun 2020 08:31:17 -0700 (PDT)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id CF78F20043;
+        Wed, 24 Jun 2020 17:32:17 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 17:32:16 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/8] Fix a bunch of W=1 warnings in Backlight
+Message-ID: <20200624153216.GA1814806@ravnborg.org>
+References: <20200624145721.2590327-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-4-keescook@chromium.org> <20200624033142.cinvg6rbg252j46d@google.com>
- <202006232143.66828CD3@keescook> <20200624104356.GA6134@willie-the-truck>
- <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com> <202006240820.A3468F4@keescook>
-In-Reply-To: <202006240820.A3468F4@keescook>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 24 Jun 2020 17:31:06 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
-Message-ID: <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Fangrui Song <maskray@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624145721.2590327-1-lee.jones@linaro.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
+        a=YMhH-mIloVz_U1S6btoA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 17:21, Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
-> > I'm not sure if there is a point to having PAC and/or BTI in the EFI
-> > stub, given that it runs under the control of the firmware, with its
-> > memory mappings and PAC configuration etc.
->
-> Is BTI being ignored when the firmware runs?
->
+Hi Lee.
 
-Given that it requires the 'guarded' attribute to be set in the page
-tables, and the fact that the UEFI spec does not require it for
-executables that it invokes, nor describes any means of annotating
-such executables as having been built with BTI annotations, I think we
-can safely assume that the EFI stub will execute with BTI disabled in
-the foreseeable future.
+On Wed, Jun 24, 2020 at 03:57:13PM +0100, Lee Jones wrote:
+> Attempting to clean-up W=1 kernel builds, which are currently
+> overwhelmingly riddled with niggly little warnings.
+> 
+> Lee Jones (8):
+>   backlight: lms501kf03: Remove unused const variables
+>   backlight: lcd: Add missing kerneldoc entry for 'struct device parent'
+
+
+>   backlight: ili922x: Add missing kerneldoc descriptions for
+>     CHECK_FREQ_REG() args
+>   backlight: ili922x: Remove invalid use of kerneldoc syntax
+>   backlight: ili922x: Add missing kerneldoc description for
+>     ili922x_reg_dump()'s arg
+I wonder why these warnings show up as nothing pulls in this .c file.
+Anyway I would suggest to drop using kerneldoc syntax for single drivers
+like this - and the benefit here is low.
+Now they are typed, otherwise this ahd been fine in a single patch.
+
+>   backlight: backlight: Supply description for function args in existing
+>     Kerneldocs
+>   backlight: lm3630a_bl: Remove invalid checks for unsigned int < 0
+>   backlight: qcom-wled: Remove unused configs for LED3 and LED4
+
+The other fixes looks good.
+They are all:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+	Sam
+
+>  drivers/video/backlight/backlight.c  | 2 ++
+>  drivers/video/backlight/ili922x.c    | 8 ++++++--
+>  drivers/video/backlight/lcd.c        | 1 +
+>  drivers/video/backlight/lm3630a_bl.c | 4 ++--
+>  drivers/video/backlight/lms501kf03.c | 8 --------
+>  drivers/video/backlight/qcom-wled.c  | 8 --------
+>  6 files changed, 11 insertions(+), 20 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
