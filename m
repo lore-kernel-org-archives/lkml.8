@@ -6,178 +6,171 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956E92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040122082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390588AbgFXLQk (ORCPT
+        id S2390614AbgFXLRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:16:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:35780 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388706AbgFXLQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:16:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4544A1F1;
-        Wed, 24 Jun 2020 04:16:37 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D43C3F6CF;
-        Wed, 24 Jun 2020 04:16:34 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Maydell <Peter.Maydell@linaro.org>
-References: <20200617123844.29960-1-steven.price@arm.com>
- <20200623174807.GD5180@gaia>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <e04696b6-63de-1e25-f6f3-1da63f791754@arm.com>
-Date:   Wed, 24 Jun 2020 12:16:28 +0100
+        Wed, 24 Jun 2020 07:17:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388706AbgFXLRa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:17:30 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OB1lOl169270;
+        Wed, 24 Jun 2020 07:12:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux06nd1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:12:01 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OB2abR172039;
+        Wed, 24 Jun 2020 07:12:00 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux06nd0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:12:00 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OB1RSU005458;
+        Wed, 24 Jun 2020 11:11:58 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 31uusjghbk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 11:11:58 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OBBtSE1311036
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 11:11:55 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD52A42041;
+        Wed, 24 Jun 2020 11:11:55 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75B3F42052;
+        Wed, 24 Jun 2020 11:11:54 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.12.78])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Jun 2020 11:11:54 +0000 (GMT)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     mcgrof@kernel.org
+Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <20200610154923.27510-5-mcgrof@kernel.org>
+ <20200623141157.5409-1-borntraeger@de.ibm.com>
+ <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+Date:   Wed, 24 Jun 2020 13:11:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200623174807.GD5180@gaia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_05:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 mlxscore=0
+ impostorscore=0 cotscore=-2147483648 mlxlogscore=840 bulkscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006240077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 18:48, Catalin Marinas wrote:
-> Hi Steven,
+
+
+On 23.06.20 16:23, Christian Borntraeger wrote:
 > 
-> On Wed, Jun 17, 2020 at 01:38:42PM +0100, Steven Price wrote:
->> These patches add support to KVM to enable MTE within a guest. It is
->> based on Catalin's v4 MTE user space series[1].
->>
->> [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
->>
->> Posting as an RFC as I'd like feedback on the approach taken. First a
->> little background on how MTE fits within the architecture:
->>
->> The stage 2 page tables have limited scope for controlling the
->> availability of MTE. If a page is mapped as Normal and cached in stage 2
->> then it's the stage 1 tables that get to choose whether the memory is
->> tagged or not. So the only way of forbidding tags on a page from the
->> hypervisor is to change the cacheability (or make it device memory)
->> which would cause other problems.  Note this restriction fits the
->> intention that a system should have all (general purpose) memory
->> supporting tags if it support MTE, so it's not too surprising.
->>
->> However, the upshot of this is that to enable MTE within a guest all
->> pages of memory mapped into the guest as normal cached pages in stage 2
->> *must* support MTE (i.e. we must ensure the tags are appropriately
->> sanitised and save/restore the tags during swap etc).
->>
->> My current approach is that KVM transparently upgrades any pages
->> provided by the VMM to be tag-enabled when they are faulted in (i.e.
->> sets the PG_mte_tagged flag on the page) which has the benefit of
->> requiring fewer changes in the VMM. However, save/restore of the VM
->> state still requires the VMM to have a PROT_MTE enabled mapping so that
->> it can access the tag values. A VMM which 'forgets' to enable PROT_MTE
->> would lose the tag values when saving/restoring (tags are RAZ/WI when
->> PROT_MTE isn't set).
->>
->> An alternative approach would be to enforce the VMM provides PROT_MTE
->> memory in the first place. This seems appealing to prevent the above
->> potentially unexpected gotchas with save/restore, however this would
->> also extend to memory that you might not expect to have PROT_MTE (e.g. a
->> shared frame buffer for an emulated graphics card).
 > 
-> As you mentioned above, if memory is mapped as Normal Cacheable at Stage
-> 2 (whether we use FWB or not), the guest is allowed to turn MTE on via
-> Stage 1. There is no way for KVM to prevent a guest from using MTE other
-> than the big HCR_EL2.ATA knob.
+> On 23.06.20 16:11, Christian Borntraeger wrote:
+>> Jens Markwardt reported a regression in the linux-next runs.  with "umh: fix
+>> processed error when UMH_WAIT_PROC is used" (from linux-next) a linux bridge
+>> with an KVM guests no longer activates :
+>>
+>> without patch
+>> # ip addr show dev virbr1
+>> 6: virbr1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+>>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+>>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+>>        valid_lft forever preferred_lft forever
+>>
+>> with this patch the bridge stays DOWN with NO-CARRIER
+>>
+>> # ip addr show dev virbr1
+>> 6: virbr1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+>>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+>>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+>>        valid_lft forever preferred_lft forever
+>>
+>> This was bisected in linux-next. Reverting from linux-next also fixes the issue.
+>>
+>> Any idea?
 > 
-> This causes potential issues since we can't guarantee that all the
-> Cacheable memory slots allocated by the VMM support MTE. If they do not,
-> the arch behaviour is "unpredictable". We also can't trust the guest to
-> not enable MTE on such Cacheable mappings.
+> FWIW, s390 is big endian. Maybe some of the shifts inn the __KW* macros are wrong.
 
-Architecturally it seems dodgy to export any address that isn't "normal 
-memory" (i.e. with tag storage) to the guest as Normal Cacheable. 
-Although I'm a bit worried this might cause a regression in some 
-existing case.
-
-> On the host kernel, mmap'ing with PROT_MTE is only allowed for anonymous
-> mappings and shmem. So requiring the VMM to always pass PROT_MTE mapped
-> ranges to KVM, irrespective of whether it's guest RAM, emulated device,
-> virtio etc. (as long as they are Cacheable), filters unsafe ranges that
-> may be mapped into guest.
-
-That would be an easy way of doing the filtering, but it's not clear 
-whether PROT_MTE is actually what the VMM wants (it most likely doesn't 
-want to have tag checking enabled on the memory in user space).
-
-> Note that in the next revision of the MTE patches I'll drop the DT
-> memory nodes checking and rely only on the CPUID information (arch
-> updated promised by the architects).
-> 
-> I see two possible ways to handle this (there may be more):
-> 
-> 1. As in your current patches, assume any Cacheable at Stage 2 can have
->     MTE enabled at Stage 1. In addition, we need to check whether the
->     physical memory supports MTE and it could be something simple like
->     pfn_valid(). Is there a way to reject a memory slot passed by the
->     VMM?
-
-Yes pfn_valid() should have been in there. At the moment pfn_to_page() 
-is called without any checks.
-
-The problem with attempting to reject a memory slot is that the memory 
-backing that slot can change. So checking at the time the slot is 
-created isn't enough (although it might be a useful error checking feature).
-
-It's not clear to me what we can do at fault time when we discover the 
-memory isn't tag-capable and would have been mapped cacheable other than 
-kill the VM.
-
-> 2. Similar to 1 but instead of checking whether the pfn supports MTE, we
->     require the VMM to only pass PROT_MTE ranges (filtering already done
->     by the host kernel). We need a way to reject the slot and return an
->     error to the VMM.
-> 
-> I think rejecting a slot at the Stage 2 fault time is very late. You
-> probably won't be able to do much other than killing the guest.
-
-As above, we will struggle to catch all cases during slot creation, so I 
-think we're going to have to deal with this late detection as well.
-
-> Both 1 and 2 above risk breaking existing VMMs just because they happen
-> to start on an MTE-capable machine. So, can we also require the VMM to
-> explicitly opt in to MTE support in guests via some ioctl()? This in
-> turn would enable the additional checks in KVM for the MTE capability of
-> the memory slots (1 or 2 above).
-
-Patch 2 introduces a VCPU feature which must be explicitly enabled for 
-the guest to have MTE. So it won't break existing VMMs. However clearly 
-simply setting that bit will likely break some configurations where not 
-all memory is MTE capable.
-
-> An alternative to an MTE enable ioctl(), if all the memory slots are set
-> up prior to the VM starting, KVM could check 1 or 2 above and decide
-> whether to expose MTE to guests (HCR_EL2.ATA).
-
-The VMM needs to be fully aware of MTE before it's enabled by KVM 
-otherwise it could lose the tags (e.g. during migration). So my 
-preference is to make it an explicit opt-in.
-
-> More questions than solutions above, mostly for the KVM and Qemu
-> maintainers.
-
-Indeed it would be useful to have input from those familiar with VMMs as 
-to what a good interface looks like.
-
-Thanks,
-
-Steve
+Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
+linux-bridge on s390?
