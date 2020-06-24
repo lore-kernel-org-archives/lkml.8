@@ -2,75 +2,145 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A541BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A59C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94C3620823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202D020702
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 18:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406081AbgFXSvp (ORCPT
+        id S2406051AbgFXSxM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 14:51:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49963 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405808AbgFXSvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 14:51:44 -0400
-IronPort-SDR: pKPA21B+uMgIqqoduevgqPeaIgsnL75fe9BWJ2pCj69tqyfwMP2VK6vml5Wl4rt1oS5Shvsb7b
- I0e9ipNPK2FA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="206123699"
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="206123699"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 11:51:43 -0700
-IronPort-SDR: T7beGo5cOt3/eJwZcWA5xpuDJnvUoEKe2u+XvSCa4OhUK096WiTcri2hs5uo4kj/xn98EzPIF2
- spHepU84gf1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,276,1589266800"; 
-   d="scan'208";a="385253982"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2020 11:51:43 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net
-Cc:     lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] ACPI: DPTF: Add battery participant for TigerLake
-Date:   Wed, 24 Jun 2020 11:51:40 -0700
-Message-Id: <20200624185140.3842391-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 24 Jun 2020 14:53:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46427 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405119AbgFXSxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 14:53:12 -0400
+Received: from c-67-160-6-8.hsd1.wa.comcast.net ([67.160.6.8] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1joAW5-0007Ib-6N; Wed, 24 Jun 2020 18:53:01 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id BA0645FEE7; Wed, 24 Jun 2020 11:52:58 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id AE2EB9FB38;
+        Wed, 24 Jun 2020 11:52:58 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Yicong Yang <yangyicong@hisilicon.com>
+Subject: Re: [PATCH v2 1/2] PCI/ERR: Fix fatal error recovery for non-hotplug capable devices
+In-reply-to: <25283.1591332444@famine>
+References: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com> <25283.1591332444@famine>
+Comments: In-reply-to Jay Vosburgh <jay.vosburgh@canonical.com>
+   message dated "Thu, 04 Jun 2020 21:47:24 -0700."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3399.1593024778.1@famine>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 24 Jun 2020 11:52:58 -0700
+Message-ID: <3400.1593024778@famine>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added ACPI ID for battery participant for TigerLake.
+Jay Vosburgh <jay.vosburgh@canonical.com> wrote:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>
+>From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>>Fatal (DPC) error recovery is currently broken for non-hotplug
+>>capable devices. With current implementation, after successful
+>>fatal error recovery, non-hotplug capable device state won't be
+>>restored properly. You can find related issues in following links.
+>>
+>>https://lkml.org/lkml/2020/5/27/290
+>>https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+>>https://lkml.org/lkml/2020/3/28/328
+>>
+>>Current fatal error recovery implementation relies on hotplug handler
+>>for detaching/re-enumerating the affected devices/drivers on DLLSC
+>>state changes. So when dealing with non-hotplug capable devices,
+>>recovery code does not restore the state of the affected devices
+>>correctly. Correct implementation should call report_slot_reset()
+>>function after resetting the link to restore the state of the
+>>device/driver.
+>>
+>>So use PCI_ERS_RESULT_NEED_RESET as error status for successful
+>>reset_link() operation and use PCI_ERS_RESULT_DISCONNECT for failure
+>>case. PCI_ERS_RESULT_NEED_RESET error state will ensure slot_reset()
+>>is called after reset link operation which will also fix the above
+>>mentioned issue.
+>>
+>>[original patch is from jay.vosburgh@canonical.com]
+>>[original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
+>>Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>>Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>>Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+>	I've tested this patch set on one of our test machines, and it
+>resolves the issue.  I plan to test with other systems tomorrow.
+
+	I've done testing on two different systems that exhibit the
+original issue and this patch set appears to behave as expected.
+
+	Has anyone else (Yicong?) had an opportunity to test this?
+
+	Can this be considered for acceptance, or is additional feedback
+or review needed?
+
+	-J
+
+>>---
+>> drivers/pci/pcie/err.c | 24 ++++++++++++++++++++++--
+>> 1 file changed, 22 insertions(+), 2 deletions(-)
+>>
+>>diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>index 14bb8f54723e..5fe8561c7185 100644
+>>--- a/drivers/pci/pcie/err.c
+>>+++ b/drivers/pci/pcie/err.c
+>>@@ -165,8 +165,28 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>> 	pci_dbg(dev, "broadcast error_detected message\n");
+>> 	if (state == pci_channel_io_frozen) {
+>> 		pci_walk_bus(bus, report_frozen_detected, &status);
+>>-		status = reset_link(dev);
+>>-		if (status != PCI_ERS_RESULT_RECOVERED) {
+>>+		/*
+>>+		 * After resetting the link using reset_link() call, the
+>>+		 * possible value of error status is either
+>>+		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
+>>+		 * PCI_ERS_RESULT_NEED_RESET (success case).
+>>+		 * So ignore the return value of report_error_detected()
+>>+		 * call for fatal errors. Instead use
+>>+		 * PCI_ERS_RESULT_NEED_RESET as initial status value.
+>>+		 *
+>>+		 * Ignoring the status return value of report_error_detected()
+>>+		 * call will also help in case of EDR mode based error
+>>+		 * recovery. In EDR mode AER and DPC Capabilities are owned by
+>>+		 * firmware and hence report_error_detected() call will possibly
+>>+		 * return PCI_ERS_RESULT_NO_AER_DRIVER. So if we don't ignore
+>>+		 * the return value of report_error_detected() then
+>>+		 * pcie_do_recovery() would report incorrect status after
+>>+		 * successful recovery. Ignoring PCI_ERS_RESULT_NO_AER_DRIVER
+>>+		 * in non EDR case should not have any functional impact.
+>>+		 */
+>>+		status = PCI_ERS_RESULT_NEED_RESET;
+>>+		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+>>+			status = PCI_ERS_RESULT_DISCONNECT;
+>> 			pci_warn(dev, "link reset failed\n");
+>> 			goto failed;
+>> 		}
+>>-- 
+>>2.17.1
+
 ---
- drivers/acpi/dptf/dptf_power.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
-index 5fab7e350db8..92b996a564d0 100644
---- a/drivers/acpi/dptf/dptf_power.c
-+++ b/drivers/acpi/dptf/dptf_power.c
-@@ -228,6 +228,7 @@ static const struct acpi_device_id int3407_device_ids[] = {
- 	{"INT3407", 0},
- 	{"INT3532", 0},
- 	{"INTC1047", 0},
-+	{"INTC1050", 0},
- 	{"", 0},
- };
- MODULE_DEVICE_TABLE(acpi, int3407_device_ids);
--- 
-2.25.4
-
+	-Jay Vosburgh, jay.vosburgh@canonical.com
