@@ -2,142 +2,259 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B633BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ADCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9026C2072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E152072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="QpJuc6+W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxCSwEsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391232AbgFXOcD (ORCPT
+        id S2391236AbgFXOdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:32:03 -0400
-Received: from mail-bn8nam11on2055.outbound.protection.outlook.com ([40.107.236.55]:63425
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390429AbgFXOcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:32:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I+iRUBFjBL7hH/h11+09npSUx+46aV82eDE4xDIQJ3oJ3HJF14T10r196gTeOFyxVL6DLCillh96CclMNOB0GznNWxxLwrX0WaIAJS4e6/ov1fvsTGBX8omrcie73Hn+LdsNuTH2tIceW2SpcwAAXczHt0VYfIL8ZzkrSfYfzD25u2bPZsq9z0MNxF0Gf/R07AitUW9bmcDLVtn36x1C1wNtSlDfbxvzJD9VCjv5Qf1iXXaJ0j4luWeW7jKk8oQmZIOHf2Uxvx6CvcNaiqmO+xtdJIImMJZJFi/sik2WqFj4R6qEKy7ohMj0Z68Y3Cd+n0G7bYPlC+PX9YNi4fKZxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oU+42DMBP85wxKbs2HxzDVKsC5TIRAu3CabOJW31pTg=;
- b=UEk7hrtw1PAG7PaOdnDtdkayu1d0jli0zVu3FpC1yDXrtdkYoQBpRkTixFy2mKB9getjevD6n9Kkv+0uA6ILNJjWSATgFcXQU5PWlyjYbDWPeQzazXU6s2CMXDyKHcml4lZMJMjW8fVdvVtsjTrprtoPdzwYQPNP5Z2tT/VCI4+FocXximtVYFHH6nCbDPFW2A6quJrbu82CnEnbY1MTq02mLSSOn9i+m1l+FZUPGZVHoohD0U/4ET55Z0uyIbz0zrDtHy5YhfmhSz7CECUQMObw+ZLpPLYC3ypdCd9S96C1opf37pE2T9rjS4XR+wNsRWP+Oa1KD0qNyEPnoAE+XA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 24 Jun 2020 10:33:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388652AbgFXOdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 10:33:39 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78D5C061573;
+        Wed, 24 Jun 2020 07:33:39 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id 35so1144441ple.0;
+        Wed, 24 Jun 2020 07:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oU+42DMBP85wxKbs2HxzDVKsC5TIRAu3CabOJW31pTg=;
- b=QpJuc6+WAhcqq+yzv7DXKsiPCmlcgwPs0GbTLyImxSpXpdRMlOLzr3K0wyWmP1dxaY3En3w1wX2m0/UJ+C9BCd13Gw8bhnqGA9XH7QgF10GmW/DKP29YsNqUcjRHoTm1Im+MStfzAB1HWVNML5QT5Skdx5rhs76pA6VrPazmFok=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3916.namprd12.prod.outlook.com (2603:10b6:5:1ca::21)
- by DM5PR12MB1594.namprd12.prod.outlook.com (2603:10b6:4:e::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3109.24; Wed, 24 Jun 2020 14:32:00 +0000
-Received: from DM6PR12MB3916.namprd12.prod.outlook.com
- ([fe80::e14d:37fb:a0ca:aa81]) by DM6PR12MB3916.namprd12.prod.outlook.com
- ([fe80::e14d:37fb:a0ca:aa81%7]) with mapi id 15.20.3131.020; Wed, 24 Jun 2020
- 14:31:59 +0000
-Subject: Re: [PATCH][next] drm: amdgpu: fix premature goto because of missing
- braces
-To:     Colin King <colin.king@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nirmoy Das <nirmoy.das@amd.com>,
-        Sonny Jiang <sonny.jiang@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200624141423.6307-1-colin.king@canonical.com>
-From:   Nirmoy <nirmodas@amd.com>
-Message-ID: <f9ceecb4-2679-c0e2-8f64-4dd2a4f5401f@amd.com>
-Date:   Wed, 24 Jun 2020 16:33:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200624141423.6307-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR10CA0095.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:15::48) To DM6PR12MB3916.namprd12.prod.outlook.com
- (2603:10b6:5:1ca::21)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VErVacHCP+qxbt+yCso2FO5hD9NPfSRNc29K4jab4d8=;
+        b=LxCSwEsJfmnWrxL0xaaa4pGaVx087nKdbCztUhnlcfs/7iJRT8mEDyeJUrIxOFq1HJ
+         Mfjup7cUO6VDDgyWTmEDBf/xJ3FUa4JdxnDyXrCB0gS2jllptxJ1mn0OwHaICl2x5jaJ
+         HlN6rPzYymS6QE1wBEP3uWOPUeYlPqyimNmSvYgVVRniYtwMha93TLgW3jkRHGPsagbO
+         13+XhMsftY8nBzNEKuRPQaNAHJIyYWYP9uG1P333/s9inUjJ3DW48XFwezcP+WHhNhfe
+         vDrXCzCfPiNo/EAkKSV9lDue1Ya/xPJbPXGchOLDBTgAcsE2zwn/TNtSj1Z7dfsQ2kN0
+         7BJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VErVacHCP+qxbt+yCso2FO5hD9NPfSRNc29K4jab4d8=;
+        b=MzDcgq5+LlcpV6d3f1pDSO6cn88Dy0T28R5FMIBYuA3nPmyYlrpZbV1jZSClMO7j1A
+         dTL/V2God3t8rjW+mOjAudEbN+yF36KRp09I3pfHPD4MPe0e0ZGLJyXMlmpUYaUEjPGE
+         ARCXO14DU+58Uy7B92xmAx5225WoiL1VZqWxUZK8OVhkLjz8Tt1LXhq6o0653Cemkt/x
+         9uvU90y3u5g9ayw45yaUzM+yPPaMKIm0xlrKrjDz69Eo9tFlzGclRjvWf5RBgWZC5qDZ
+         GapUHReXAsCIaQGraZkr/fzp2zTCzMClUgltelF2h1GkQDZR5TZxlZEQW0SnV1Ile8+s
+         3BIw==
+X-Gm-Message-State: AOAM532qIxaeyW64k7TG5L1zG97/CyOP45J8YzsVsAFsYnQf8Vvvg3ug
+        8ZkjMv4QjgGyX+KNX3AlHc5JUzqnu1NNR1JeXZfQxyTD7ps=
+X-Google-Smtp-Source: ABdhPJzx5pHobXlNGGXsN6/6qc81m/S8aPw8U2AnjgT9fUKocTQRx92S6SZLUrs7/peijGodLGpGuGnfIfduXQyb4EQ=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr29576682pjq.228.1593009219246;
+ Wed, 24 Jun 2020 07:33:39 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.178.87] (217.86.121.20) by AM0PR10CA0095.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Wed, 24 Jun 2020 14:31:57 +0000
-X-Originating-IP: [217.86.121.20]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d6d5c25d-2097-4653-c056-08d8184b5ab0
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1594:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB15946F9E95C367DB14FB791C8B950@DM5PR12MB1594.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1443;
-X-Forefront-PRVS: 0444EB1997
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KjMM4UXmVPcWQBeZgLXuYA5RbpevW+VhFCoKA+hOntPDyjc063sToHgAmHoeiipHkjCKG+IdDzDEh6usP+3cdRGGEHInLMsJ/c9jNS5ZIZzTow4XNPwA9SX38mXntYipxaLaVwanXkETgNA0aVxy4pHBZ8YXizvgYVrgwzWC28eKLHGwM7L1KeMW3amF0i+yO3vUqO0gPKgP51CbVKj7nGb2HiTU0HJBXfxw0l0z0mY0zXubRe1N8qnhxlMiLTkFRIpit3F2iImmO76Vo2mxer7/U3lkGgRV75L7e7vyIjyLeY8hzoirl7PMFQj3kgOl9gXvaPASp2qnRjtHeq3JbHWHMXgAp0fKM1csue5yx17ow93fpZhqXCbxK8EO8AGy
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3916.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(39860400002)(136003)(396003)(346002)(36756003)(5660300002)(956004)(6666004)(26005)(316002)(16576012)(2616005)(31696002)(2906002)(478600001)(66476007)(66556008)(66946007)(16526019)(53546011)(8936002)(186003)(6486002)(31686004)(110136005)(83380400001)(8676002)(52116002)(4326008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: K+ir4myYBcp5IK3LAwd7InDc72mCc9LFvg1qOptdr6zhGpyVIyq3vp94NhCU044WSoYO46W+iJXOPZTqhV0c8pdIjhLcMj/sDLLShxlSYYEQogyzXxA29DvtCI7f/0r3D3xYX4DSpyLWUPX5QnU77CKFc3q8aKaG+6l03RSAvzl/v2smvw60r22XaxCyWr+JnODg4OhpAbLLhiPrrEe6TW4u5t9xv5in2i0RSDu5gABNDc9SsAUjRkkVL7fMtihoPXm9Ec6MnEsS5dUjAJUSEagplpXNrikfluESOs32vHnDfDvqiPFdWCsNW4+P5yuHVqvX8n4HEZgv0DFjkecHOX2w8DCrkbBsubkH4FVQOBIrkWZ5OBVWmDhiKagw3/q5U235FqEyV1gJWBjnZPJr/yl57oQDUByt6ENiRRjnIKCYh6SFvHvdFcXdcPxOQ/nfzvtQ6pVq+fndKFjfscMAzmY1KYOS5JzjwA1scj/7AYE=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6d5c25d-2097-4653-c056-08d8184b5ab0
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2020 14:31:59.8820
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3M4ACoERRWMfJ0qdALRWCGHTjM07ESzrpUu5p3bAMHPO6/N3JPdBowv+mjpL36eb9ToUoCXsr/KxOghg0vpaXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1594
+References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-14-warthog618@gmail.com>
+In-Reply-To: <20200623040107.22270-14-warthog618@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 24 Jun 2020 17:33:26 +0300
+Message-ID: <CAHp75VcEDnrQk5FeWTZdV3fMnTsLpnmy+hAnL4V3a0Ge0NEe2A@mail.gmail.com>
+Subject: Re: [PATCH 13/22] gpio: uapi: define uAPI V2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Nirmoy Das <nirmoy.das@amd.com>
-
-
-Thanks,
-
-Nirmoy
-
-On 6/24/20 4:14 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Tue, Jun 23, 2020 at 7:04 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Currently the goto statement is skipping over a lot of setup code
-> because it is outside of an if-block and should be inside it. Fix
-> this by adding missing if statement braces.
+> Add a new version of the uAPI to address existing 32/64bit alignment
+
+I think using - would be nice, like 32/64-bit (or at least space like
+32/64 bit) as a common practice.
+
+> issues, add support for debounce and event sequence numbers, and provide
+> some future proofing by adding padding reserved for future use.
 >
-> Addresses-Coverity: ("Structurally dead code")
-> Fixes: fd151ca5396d ("drm amdgpu: SI UVD v3_1")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
+> The alignment issue relates to the gpioevent_data, which packs to different
+> sizes on 32bit and 64bit platforms. That creates problems for 32bit apps
+> running on 64bit kernels.
+
+Dashes, please.
+
+$ git grep -n -w '32 bit' | wc
+  1904
+$ git grep -n -w '64 bit' | wc
+  1155
+
+~3k
+
+$ git grep -n -w '32bit' | wc
+  1405
+$ git grep -n -w '64bit' | wc
+   870
+
+~2.2k
+
+$ git grep -n -w '64-bit' | wc
+  3196
+$ git grep -n -w '32-bit' | wc
+  4369
+
+~7.5k
+
+> The patch addresses that particular issue, and
+> the problem more generally, by adding pad fields that explicitly pad
+> structs out to 64bit boundaries, so they will pack to the same size now,
+> and even if some of the reserved padding is used for __u64 fields in the
+> future.
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c b/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c
-> index 599719e89c31..7cf4b11a65c5 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/uvd_v3_1.c
-> @@ -642,9 +642,10 @@ static int uvd_v3_1_hw_init(void *handle)
->   	uvd_v3_1_start(adev);
->   
->   	r = amdgpu_ring_test_helper(ring);
-> -	if (r)
-> +	if (r) {
->   		DRM_ERROR("amdgpu: UVD ring test fail (%d).\n", r);
-> -	goto done;
-> +		goto done;
-> +	}
->   
->   	r = amdgpu_ring_alloc(ring, 10);
->   	if (r) {
+> The lack of future proofing in V1 makes it impossible to, for example,
+> add the debounce feature that is included in v2.
+> The future proofing is addressed by providing reserved padding in all
+> structs for future features.  Specifically, the line request,
+> config, info, info_changed and event structs receive updated versions,
+> and the first three new ioctls.
+
+...
+
+> Firstly, I've reworked the flags field throughout.  V1 has three different
+> flags fields, each with their own separate bit definitions.  In V2 that is
+> collapsed to one.  Further, the bits of the V2 flags field are used
+> as feature enable flags, with any other necessary configuration fields encoded
+> separately.  This is simpler and clearer, while also providing a foundation
+> for adding features in the future.
+>
+> I've also merged the handle and event requests into a single request, the
+> line request, as the two requests where mostly the same, other than the
+
+where-> were ? (yes I noticed it's not a part of commit message)
+
+> edge detection provided by event requests.  As a byproduct, the V2 uAPI
+> allows for multiple lines producing edge events on the same line handle.
+> This is a new capability as V1 only supports a single line in an event
+> request.
+>
+> This means there are now only two types of file handle to be concerned with,
+> the chip and the line, and it is clearer which ioctls apply to which type
+> of handle.
+>
+> There is also some minor renaming of fields for consistency compared to their
+> V1 counterparts, e.g. offset rather than lineoffset or line_offset, and
+> consumer rather than consumer_label.
+>
+> Additionally, V1 GPIOHANDLES_MAX becomes GPIOLINES_MAX in V2 for clarity,
+> and the gpiohandle_data __u8 array becomes a bitmap gpioline_values.
+>
+> The V2 uAPI is mostly just a reorganisation of V1, so userspace code,
+> particularly libgpiod, should easily port to it.
+>
+> The padding sizes have been carried over from the RFC version, although the
+> seqnos added to the gpioline_event alone would've used the all of the padding
+> for that struct, had they not been added here.  So I'm moderatly concerned
+> that those values are too small due to a lack of imagination on may part and
+> should be increased to decrease the probability of running out of space in
+> the padding and requiring creative solutions or even a V3.
+
+...
+
+> +#include <linux/kernel.h>
+
+Perhaps keep it in order?
+
+...
+
+> + * Must be a multiple of 8 to ensure 32/64bit alignment of structs.
+
+Dash. And same for all cases like this.
+
+...
+
+> +/* the number of __u64 required for a bitmap for GPIOLINES_MAX lines */
+
+the -> The ?
+
+> +#define GPIOLINES_BITMAP_SIZE  __KERNEL_DIV_ROUND_UP(GPIOLINES_MAX, 64)
+
+Not sure we need this definition. The problem is that definitions in
+the uAPI header are also part of uAPI. Here is just a calculus which
+can be done manually since if anybody changes MAX, they will anyway
+have to check if everything else is consistent. And yes, I'm not in
+favour of including kernel.h here and there.
+
+...
+
+> +/*
+> + * Struct padding sizes.
+> + *
+> + * These are sized to pad structs to 64bit boundaries.
+> + * To maintain 32/64bit alignment, any arbitrary change must be even, as
+> + * the pad elements are __u32.
+> + */
+> +#define GPIOLINE_CONFIG_PAD_SIZE               7
+> +#define GPIOLINE_REQUEST_PAD_SIZE              5
+> +#define GPIOLINE_INFO_V2_PAD_SIZE              5
+> +#define GPIOLINE_INFO_CHANGED_V2_PAD_SIZE      5
+> +#define GPIOLINE_EVENT_PAD_SIZE                        2
+
+I'm not sure they (definitions) should be part of UAPI. Can't you
+simple hard code numbers per case?
+
+...
+
+> +/**
+> + * struct gpioline_config - Configuration for GPIO lines
+> + */
+> +struct gpioline_config {
+> +       struct gpioline_values values;
+> +       __u32 flags;
+> +       /* Note that the following four fields are equivalent to a single u32. */
+> +       __u8 direction;
+> +       __u8 drive;
+> +       __u8 bias;
+> +       __u8 edge_detection;
+> +       __u32 debounce_period;
+
+> +       __u32 padding[GPIOLINE_CONFIG_PAD_SIZE]; /* for future use */
+
+I would just put minimum here. If you need to extend you have to use
+sizeof(struct) as a version of ABI.
+
+> +};
+
+I'm wondering how many lines (in average) the user usually changes at
+once? One? Two?
+
+Perhaps we need to be better with this, something like single line /
+multiple lines?
+
+So, having a struct for single line change being embedded multiple
+times would allow to configure atomically several lines with different
+requirements.
+For example you can turn directions of the two lines for some kind of
+half-duplex bit banging protocol.
+
+I'm not sure about the rest, but to me it seems reasonable to have
+single vs. multiple separation in some of the structures.
+
+...
+
+> +/*
+> + *  ABI V1
+
+V1 -> v1
+
+And below V2 -> v2.
+
+> + */
+
+-- 
+With Best Regards,
+Andy Shevchenko
