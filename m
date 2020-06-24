@@ -2,89 +2,100 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A23820823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5F120823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:32:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTHZP8c7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405168AbgFXQcX (ORCPT
+        id S2405189AbgFXQcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:32:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:41130 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404692AbgFXQcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:32:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFEA81FB;
-        Wed, 24 Jun 2020 09:32:18 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5932F3F73C;
-        Wed, 24 Jun 2020 09:32:17 -0700 (PDT)
-References: <20200624154422.29166-1-vincent.guittot@linaro.org>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        rong.a.chen@intel.com, pauld@redhat.com, hdanton@sina.com
-Subject: Re: [PATCH] sched/cfs: change initial value of runnable_avg
-In-reply-to: <20200624154422.29166-1-vincent.guittot@linaro.org>
-Date:   Wed, 24 Jun 2020 17:32:12 +0100
-Message-ID: <jhj8sgcs9v7.mognet@arm.com>
+        Wed, 24 Jun 2020 12:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405088AbgFXQcl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:32:41 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BE2C061573;
+        Wed, 24 Jun 2020 09:32:41 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t8so2642069ilm.7;
+        Wed, 24 Jun 2020 09:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pUIZQhqDp4lzMh1CnS2pEovhw0eG8uBYHqVBDBe2+2A=;
+        b=BTHZP8c7EWgHrJF0/6w1zOJdvOS+S0FTXntU472Hy58QRKcqMUTCvjAtw1dT0WOWVn
+         vVd53nd8ZLAPUC2e7wWcprGNNlzzxswaEfNR5ZVYFjN4i73A8HWgpeUJ/kBOfyMF5azF
+         EvoO8Ig9sR2ugXlan5QPb11NFgivc/vgaNISZ5j8mrH6x5zEs4VEpisgER5cCv19WoJY
+         yrqVbVdW/0wZQrqjYQEIa/J6lhfvq0er9dIOHFnJms/RuNXO4eM6VB5A31IJuxLZ5BFc
+         gf1sQSBkkDaXm8myp9Tm9rrelCkHEvqoyevE8z04DHMYO3V1aZeBZFZ46lklqWJDHWXR
+         Ni5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pUIZQhqDp4lzMh1CnS2pEovhw0eG8uBYHqVBDBe2+2A=;
+        b=MwawYDdigu+85ThvNewfPCdRv+WQuqynSihUs/yV1dMQLGlzVu8IZG40ZtNcGGeOsh
+         oOuEdGb+gRIjBftv2Gw8vELeJgxa4nmuMmkyzq6jFKI5o9GEsTRbG1T4XquU9v5PLc8K
+         qUev/YnKTzWUnS3yuBQZxDdf1TYh7yn1hk64HcboFoJ+fR0jP6vHAQUZxUlPz1AVkiQu
+         S3jHUbGnXo1ufK4Gd5PGWyIlVQr+QPNzOHMFTcz7BAmH1jFqRTeRQjd40pGUckaSRKZ2
+         zeAhDhtvATrbbzTR9C3nBqxks5lxpj9EulPEnK4tP+j5u9LwuKirvrmd0m/Mkin2t/9U
+         d7Cg==
+X-Gm-Message-State: AOAM532nJyQuS40GsGDvcgW7LgAuyBV+1y+EKRn7n5IXiepw/hG9RcXD
+        C+vOYUIH2vH79ll2g7+FV8rDP1ipuMsWQLqzbyo=
+X-Google-Smtp-Source: ABdhPJwEwuCaeT0KQT8T6bGY+TLDIqijMwDykgVQEODBnMvMPlvN+4M2jDSUIKwguCt1ADHbR3aP4faN01hP5+mg4XE=
+X-Received: by 2002:a05:6e02:48e:: with SMTP id b14mr9395963ils.143.1593016360414;
+ Wed, 24 Jun 2020 09:32:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200518150214.100491-1-vaibhavgupta40@gmail.com> <20200519.153239.1577517664546707472.davem@davemloft.net>
+In-Reply-To: <20200519.153239.1577517664546707472.davem@davemloft.net>
+From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
+Date:   Wed, 24 Jun 2020 22:01:06 +0530
+Message-ID: <CAPBsFfBhWAYCuxWxP=DnD1Ja5cQ44i5guRC+49gAHsTxJV25qw@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 0/2] realtek ethernet : use generic power management.
+To:     David Miller <davem@davemloft.net>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 24/06/20 16:44, Vincent Guittot wrote:
-> Some performance regression on reaim benchmark have been raised with
->   commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
+On Wed, 20 May 2020 at 04:02, David Miller <davem@davemloft.net> wrote:
 >
-> The problem comes from the init value of runnable_avg which is initialized
-> with max value. This can be a problem if the newly forked task is finally
-> a short task because the group of CPUs is wrongly set to overloaded and
-> tasks are pulled less agressively.
+> From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> Date: Mon, 18 May 2020 20:32:12 +0530
 >
-> Set initial value of runnable_avg equals to util_avg to reflect that there
-> is no waiting time so far.
+> > The purpose of this patch series is to remove legacy power management callbacks
+> > from realtek ethernet drivers.
+> >
+> > The callbacks performing suspend() and resume() operations are still calling
+> > pci_save_state(), pci_set_power_state(), etc. and handling the powermanagement
+> > themselves, which is not recommended.
+> >
+> > The conversion requires the removal of the those function calls and change the
+> > callback definition accordingly.
+> >
+> > All Changes are compile-tested only.
 >
-> Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->  kernel/sched/fair.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 0424a0af5f87..45e467bf42fc 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -806,7 +806,7 @@ void post_init_entity_util_avg(struct task_struct *p)
->  		}
->  	}
->  
-> -	sa->runnable_avg = cpu_scale;
-> +	sa->runnable_avg = sa->util_avg;
-
-IIRC we didn't go for this initially because hackbench behaved slightly
-worse with it. Did we end up re-evaluating this? Also, how does this reaim
-benchmark behave with it? I *think* the table from that regression thread
-says it behaves better, but I had a hard time parsing it (seems like it got
-damaged by line wrapping)
-
-Conceptually I'm all for it, so as long as the tests back it up:
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-
->  
->  	if (p->sched_class != &fair_sched_class) {
->  		/*
-
+> Series applied
+Thanks !
+-- Vaibhav Gupta
+> , thanks.
