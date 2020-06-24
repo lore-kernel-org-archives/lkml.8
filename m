@@ -2,188 +2,81 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9480AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCC420B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:02:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WSHIdNQc"
+	by mail.kernel.org (Postfix) with ESMTP id 75F8920857
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbgFXJCW (ORCPT
+        id S2388776AbgFXJCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730725AbgFXJCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:02:21 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D4FC061573;
-        Wed, 24 Jun 2020 02:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Kqwlt0YK5ZzwRKurTo/3Fb5xM4McmM+yZ9C+08e1t40=; b=WSHIdNQc+BAGqmUZoQB+uueZnP
-        PLNSBCIqCpGPtuIxCSQmGh1jNAvfsc5iC4X6Ybu9hWXJ1p9pr9gsurxlCtWAAwdzg2MJ5xzJGlXQ0
-        7lP36Ehnh04q1D9Z39n1/AVShG43lbLoJMXz9Kq8ZiW5vBFjd8lOE+1KUt3P1cE6mZMRoHkSsNf0Q
-        L4NErIZVtVE9xDRBgG0sn4OaVrGUYzdlbogo9opu6RLIt/Zi7yqTHh5fYjsoPtPEJSGy9zGXnPQcu
-        QQDHsdh5ZC9u2p994hAJbx9fR0lkHeXMl/ZzeDHTihuFC9furK7038x7cAlOUGCSEC+9ufX0tPMyH
-        f4vbX2bA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jo1Gm-0001B6-LM; Wed, 24 Jun 2020 09:00:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EEA030377D;
-        Wed, 24 Jun 2020 11:00:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0B3712031510A; Wed, 24 Jun 2020 11:00:33 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 11:00:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
-        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        bigeasy@linutronix.de, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-Message-ID: <20200624090033.GD4800@hirez.programming.kicks-ass.net>
-References: <20200623083645.277342609@infradead.org>
- <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net>
- <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net>
- <20200623175957.GA106514@elver.google.com>
- <20200623181232.GB4800@hirez.programming.kicks-ass.net>
- <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+        Wed, 24 Jun 2020 05:02:40 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56940 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730725AbgFXJCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:02:39 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv2iXFvNeUy9JAA--.729S3;
+        Wed, 24 Jun 2020 17:02:17 +0800 (CST)
+Subject: Re: [PATCH v3 00/14 RESEND] irqchip: Fix potential resource leaks
+To:     Marc Zyngier <maz@kernel.org>
+References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
+ <e419a2acea6c1977eaef5d049d607749@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a10e0f68-7de8-8540-f27e-17fd52216977@loongson.cn>
+Date:   Wed, 24 Jun 2020 17:02:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+In-Reply-To: <e419a2acea6c1977eaef5d049d607749@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxv2iXFvNeUy9JAA--.729S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYz7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2js
+        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeV
+        CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2
+        V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
+        x4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW0oVCq3bIYCTnIWIevJa
+        73UjIFyTuYvjfU5sjjDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:24:04PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
-> > Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
-> > anything happens.
-> 
-> OK, so the below patch doesn't seem to have any nasty recursion issues
-> here. The only 'problem' is that lockdep now sees report_lock can cause
-> deadlocks.
-> 
-> It is completely right about it too, but I don't suspect there's much we
-> can do about it, it's pretty much the standard printk() with scheduler
-> locks held report.
+On 06/24/2020 04:30 PM, Marc Zyngier wrote:
+> On 2020-06-24 08:44, Tiezhu Yang wrote:
+>> [git send-email failed due to too many commands,
+>>  so only cc the major related email and resend it,
+>>  sorry for that]
+>
+> This is becoming majorly annoying. Please fix your git setup
+> *before* dumping 57 emails for just 14 patches. You have done
+> the same thing yesterday, and I would hope you learned from your
+> mistakes.
+>
+> Also, do not repost a series more than once per week. You have
+> already exceeded your quota by quite a margin.
 
-So I've been getting tons and tons of this:
+I am very sorry for that.
+I will wait for some days to resend this patch series.
 
-[   60.471348] ==================================================================
-[   60.479427] BUG: KCSAN: data-race in __rcu_read_lock / __rcu_read_unlock
-[   60.486909]
-[   60.488572] write (marked) to 0xffff88840fff1cf0 of 4 bytes by interrupt on cpu 1:
-[   60.497026]  __rcu_read_lock+0x37/0x60
-[   60.501214]  cpuacct_account_field+0x1b/0x170
-[   60.506081]  task_group_account_field+0x32/0x160
-[   60.511238]  account_system_time+0xe6/0x110
-[   60.515912]  update_process_times+0x1d/0xd0
-[   60.520585]  tick_sched_timer+0xfc/0x180
-[   60.524967]  __hrtimer_run_queues+0x271/0x440
-[   60.529832]  hrtimer_interrupt+0x222/0x670
-[   60.534409]  __sysvec_apic_timer_interrupt+0xb3/0x1a0
-[   60.540052]  asm_call_on_stack+0x12/0x20
-[   60.544434]  sysvec_apic_timer_interrupt+0xba/0x130
-[   60.549882]  asm_sysvec_apic_timer_interrupt+0x12/0x20
-[   60.555621]  delay_tsc+0x7d/0xe0
-[   60.559226]  kcsan_setup_watchpoint+0x292/0x4e0
-[   60.564284]  __rcu_read_unlock+0x73/0x2c0
-[   60.568763]  __unlock_page_memcg+0xda/0xf0
-[   60.573338]  unlock_page_memcg+0x32/0x40
-[   60.577721]  page_remove_rmap+0x5c/0x200
-[   60.582104]  unmap_page_range+0x83c/0xc10
-[   60.586582]  unmap_single_vma+0xb0/0x150
-[   60.590963]  unmap_vmas+0x81/0xe0
-[   60.594663]  exit_mmap+0x135/0x2b0
-[   60.598464]  __mmput+0x21/0x150
-[   60.601970]  mmput+0x2a/0x30
-[   60.605176]  exit_mm+0x2fc/0x350
-[   60.608780]  do_exit+0x372/0xff0
-[   60.612385]  do_group_exit+0x139/0x140
-[   60.616571]  __do_sys_exit_group+0xb/0x10
-[   60.621048]  __se_sys_exit_group+0xa/0x10
-[   60.625524]  __x64_sys_exit_group+0x1b/0x20
-[   60.630189]  do_syscall_64+0x6c/0xe0
-[   60.634182]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   60.639820]
-[   60.641485] read to 0xffff88840fff1cf0 of 4 bytes by task 2430 on cpu 1:
-[   60.648969]  __rcu_read_unlock+0x73/0x2c0
-[   60.653446]  __unlock_page_memcg+0xda/0xf0
-[   60.658019]  unlock_page_memcg+0x32/0x40
-[   60.662400]  page_remove_rmap+0x5c/0x200
-[   60.666782]  unmap_page_range+0x83c/0xc10
-[   60.671259]  unmap_single_vma+0xb0/0x150
-[   60.675641]  unmap_vmas+0x81/0xe0
-[   60.679341]  exit_mmap+0x135/0x2b0
-[   60.683141]  __mmput+0x21/0x150
-[   60.686647]  mmput+0x2a/0x30
-[   60.689853]  exit_mm+0x2fc/0x350
-[   60.693458]  do_exit+0x372/0xff0
-[   60.697062]  do_group_exit+0x139/0x140
-[   60.701248]  __do_sys_exit_group+0xb/0x10
-[   60.705724]  __se_sys_exit_group+0xa/0x10
-[   60.710201]  __x64_sys_exit_group+0x1b/0x20
-[   60.714872]  do_syscall_64+0x6c/0xe0
-[   60.718864]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   60.724503]
-[   60.726156] Reported by Kernel Concurrency Sanitizer on:
-[   60.732089] CPU: 1 PID: 2430 Comm: sshd Not tainted 5.8.0-rc2-00186-gb4ee11fe08b3-dirty #303
-[   60.741510] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
-[   60.752957] ==================================================================
-
-And I figured a quick way to get rid of that would be something like the
-below, seeing how volatile gets auto annotated... but that doesn't seem
-to actually work.
-
-What am I missing?
-
-
-
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 352223664ebd..b08861118e1a 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -351,17 +351,17 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
- 
- static void rcu_preempt_read_enter(void)
- {
--	current->rcu_read_lock_nesting++;
-+	(*(volatile int *)&current->rcu_read_lock_nesting)++;
- }
- 
- static int rcu_preempt_read_exit(void)
- {
--	return --current->rcu_read_lock_nesting;
-+	return --(*(volatile int *)&current->rcu_read_lock_nesting);
- }
- 
- static void rcu_preempt_depth_set(int val)
- {
--	current->rcu_read_lock_nesting = val;
-+	WRITE_ONCE(current->rcu_read_lock_nesting, val);
- }
- 
- /*
+>
+>         M.
 
