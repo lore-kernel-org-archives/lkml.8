@@ -2,212 +2,188 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E29BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F98220768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCC420B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M/VMdU+/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WSHIdNQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388847AbgFXJAU (ORCPT
+        id S2388132AbgFXJCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:00:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56270 "EHLO
+        Wed, 24 Jun 2020 05:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387491AbgFXJAT (ORCPT
+        with ESMTP id S1730725AbgFXJCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:00:19 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64266C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 02:00:19 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q19so1737434lji.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 02:00:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bEq8aoWf7DDgO6yWt+tqmsLUbeY8nM58bRX+rO+CdzU=;
-        b=M/VMdU+/Rwv6tpDepjVbdIbBpTq9QQDMbSHjVa1lOlkkglEW6NWrYNDEeOt9UWfop7
-         /OvWaOLZjvJvTEuEOdIOMQBJcCGNq6BOs8AVCpjl84aeBTiSrNP350e9UTCPa43+C0Z8
-         Lu7KS0nWmQTb9yawScRbIQl/0yb25FjWGhA+jg4MOkC1JRsq1ksQO69DM9cTnai9yp0U
-         jN8URtdNssz562PIg4VG3ADMqJ59HXXanPFeqbXFd84/QSmzJXDq7BSel15Th0AIHXXz
-         88y8Z19BbVWw4gG6r454wTH5gyVVy5Svfj+xFO7oZn+LM8IE/DWspWc7b3CrTdvbMKid
-         kFkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bEq8aoWf7DDgO6yWt+tqmsLUbeY8nM58bRX+rO+CdzU=;
-        b=mYMF6lYMo0285xzaaRXAB+Vyyvvq/WNAW69W9oA1MAncRhYU44RWhAbaHYeI+WM9a+
-         shtzdLc+CwIo9CAE7nt0GUVMHoF2+zLohXKqC3Gxdxfkd5JvJ0QXOV8kVbh934u6W67D
-         QwpyQW0n4H/+8G9hp8NXeE68pPPL2QBfavv9A0gfkKThrxWQ0jA3W3LuuUboNbm2bgse
-         unBPZstYd7HZLAecE3Lw1VJHDbFCF+65KJa5i5ELj7nUkVqwxKP43t/BqQt5IdeuuEXi
-         yh43oCRE32VrZmEd8MesM7huDw/zO/8w2y9cA+J9kLFBCUqaj/DF1QyFjiKv17ixkZGO
-         GeWw==
-X-Gm-Message-State: AOAM530q794IST8/pzRH4cFCyWM2Hoe/mudliP6iRDll/fgyrztN9krt
-        qcyxk2eZIZ2vWhqN87zNCqz9attQ/NODy53J4TOCog==
-X-Google-Smtp-Source: ABdhPJwEjSQsdLSGPIUG69d3EmaZG4MOJKHJMEGYJK8XrgLZPA22eRuqQCd9nkS0WncngUQkIvm1CM5G/g+bmdyvXsM=
-X-Received: by 2002:a05:651c:512:: with SMTP id o18mr14254641ljp.226.1592989217706;
- Wed, 24 Jun 2020 02:00:17 -0700 (PDT)
+        Wed, 24 Jun 2020 05:02:21 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D4FC061573;
+        Wed, 24 Jun 2020 02:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Kqwlt0YK5ZzwRKurTo/3Fb5xM4McmM+yZ9C+08e1t40=; b=WSHIdNQc+BAGqmUZoQB+uueZnP
+        PLNSBCIqCpGPtuIxCSQmGh1jNAvfsc5iC4X6Ybu9hWXJ1p9pr9gsurxlCtWAAwdzg2MJ5xzJGlXQ0
+        7lP36Ehnh04q1D9Z39n1/AVShG43lbLoJMXz9Kq8ZiW5vBFjd8lOE+1KUt3P1cE6mZMRoHkSsNf0Q
+        L4NErIZVtVE9xDRBgG0sn4OaVrGUYzdlbogo9opu6RLIt/Zi7yqTHh5fYjsoPtPEJSGy9zGXnPQcu
+        QQDHsdh5ZC9u2p994hAJbx9fR0lkHeXMl/ZzeDHTihuFC9furK7038x7cAlOUGCSEC+9ufX0tPMyH
+        f4vbX2bA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jo1Gm-0001B6-LM; Wed, 24 Jun 2020 09:00:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EEA030377D;
+        Wed, 24 Jun 2020 11:00:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0B3712031510A; Wed, 24 Jun 2020 11:00:33 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 11:00:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
+        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200624090033.GD4800@hirez.programming.kicks-ass.net>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net>
+ <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net>
+ <20200623175957.GA106514@elver.google.com>
+ <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+ <20200623202404.GE2483@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200619172011.5810-1-qais.yousef@arm.com> <6c1a6003-8f51-dadc-53e4-a2fa034dbe36@arm.com>
-In-Reply-To: <6c1a6003-8f51-dadc-53e4-a2fa034dbe36@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 24 Jun 2020 11:00:06 +0200
-Message-ID: <CAKfTPtDh+D9AdzcsjYuv8LmtWag2MaHx7Ysrxb7JQittKa_K0A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] sched: Optionally skip uclamp logic in fast path
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623202404.GE2483@worktop.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 at 19:40, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 19/06/2020 19:20, Qais Yousef wrote> This series attempts to address the report that uclamp logic could be expensive
-> > sometimes and shows a regression in netperf UDP_STREAM under certain
-> > conditions.
-> >
-> > The first patch is a fix for how struct uclamp_rq is initialized which is
-> > required by the 2nd patch which contains the real 'fix'.
-> >
-> > Worth noting that the root cause of the overhead is believed to be system
-> > specific or related to potential certain code/data layout issues, leading to
-> > worse I/D $ performance.
-> >
-> > Different systems exhibited different behaviors and the regression did
-> > disappear in certain kernel version while attempting to reporoduce.
-> >
-> > More info can be found here:
-> >
-> > https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
-> >
-> > Having the static key seemed the best thing to do to ensure the effect of
-> > uclamp is minimized for kernels that compile it in but don't have a userspace
-> > that uses it, which will allow distros to distribute uclamp capable kernels by
-> > default without having to compromise on performance for some systems that could
-> > be affected.
->
-> My test data indicates that the static key w/o any uclamp users (3)
-> brings the performance number for the 'perf bench sched pipe'
-> workload back (i.e. from w/ !CONFIG_UCLAMP_TASK) (1).
->
-> platform:
->
->     Arm64 Hikey960 (only little CPUs [0-3]), no CPUidle,
->     performance CPUfreq governor
->
-> workload:
->
->     perf stat -n -r 20 -- perf bench sched pipe -T -l 100000
->
->
-> (A) *** Performance results ***
->
-> (1) tip/sched/core
->     # CONFIG_UCLAMP_TASK is not set
->
->     *1.39285* +- 0.00191 seconds time elapsed  ( +-  0.14% )
->
-> (2) tip/sched/core
->     CONFIG_UCLAMP_TASK=y
->
->     *1.42877* +- 0.00181 seconds time elapsed  ( +-  0.13% )
->
-> (3) tip/sched/core + opt_skip_uclamp_v2
->     CONFIG_UCLAMP_TASK=y
->
->     *1.38833* +- 0.00291 seconds time elapsed  ( +-  0.21% )
->
-> (4) tip/sched/core + opt_skip_uclamp_v2
->     CONFIG_UCLAMP_TASK=y
->     echo 512 > /proc/sys/kernel/sched_util_clamp_min (enable uclamp)
->
->     *1.42062* +- 0.00238 seconds time elapsed  ( +-  0.17% )
->
->
-> (B) *** Profiling on CPU0 and CPU1  ***
->
->     (further hp'ing out CPU2 and CPU3 to get consistent hit numbers)
->
-> (1)
->
-> CPU0:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1997346    2207642 us      *1.105* us      0.033 us
->        activate_task    1997391    1840057 us      *0.921* us      0.054 us
->
-> CPU1:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1997455    2225960 us      1.114 us        0.034 us
->        activate_task    1997410    1842603 us      0.922 us        0.052 us
->
-> (2)
->
-> CPU0:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1998538    2419719 us      *1.210* us      0.061 us
->        activate_task    1997119    1960401 us      *0.981* us      0.034 us
->
-> CPU1:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1996597    2400760 us      1.202 us        0.059 us
->        activate_task    1998016    1985013 us      0.993 us        0.028 us
->
-> (3)
->
-> CPU0:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1997525    2155416 us      *1.079* us      0.020 us
->        activate_task    1997874    1899002 us      *0.950* us      0.044 us
->
-> CPU1:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1997935    2118648 us      1.060 us        0.017 us
->        activate_task    1997586    1895162 us      0.948 us        0.044 us
->
-> (4)
->
-> CPU0:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1998246    2428121 us      *1.215* us      0.062 us
->        activate_task    1998252    2132141 us      *1.067* us      0.020 us
->
-> CPU1:  Function             Hit    Time            Avg             s^2
->        --------             ---    ----            ---             ---
->        deactivate_task  1996154    2414194 us      1.209 us        0.060 us
->        activate_task    1996148    2140667 us      1.072 us        0.021 us
+On Tue, Jun 23, 2020 at 10:24:04PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
+> > Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
+> > anything happens.
+> 
+> OK, so the below patch doesn't seem to have any nasty recursion issues
+> here. The only 'problem' is that lockdep now sees report_lock can cause
+> deadlocks.
+> 
+> It is completely right about it too, but I don't suspect there's much we
+> can do about it, it's pretty much the standard printk() with scheduler
+> locks held report.
 
-I have rerun the tests that I ran previously on my octo core arm64 (hikey):
-20 iteration of perf bench sched pipe -T -l 50000
-tip stands for tip/sched/core
-uclamp enabled means both uclamp task and uclamp cgroup
-the stdev is around 0.25% for all tests
+So I've been getting tons and tons of this:
 
-                           root           level 1       level 2       level 3
+[   60.471348] ==================================================================
+[   60.479427] BUG: KCSAN: data-race in __rcu_read_lock / __rcu_read_unlock
+[   60.486909]
+[   60.488572] write (marked) to 0xffff88840fff1cf0 of 4 bytes by interrupt on cpu 1:
+[   60.497026]  __rcu_read_lock+0x37/0x60
+[   60.501214]  cpuacct_account_field+0x1b/0x170
+[   60.506081]  task_group_account_field+0x32/0x160
+[   60.511238]  account_system_time+0xe6/0x110
+[   60.515912]  update_process_times+0x1d/0xd0
+[   60.520585]  tick_sched_timer+0xfc/0x180
+[   60.524967]  __hrtimer_run_queues+0x271/0x440
+[   60.529832]  hrtimer_interrupt+0x222/0x670
+[   60.534409]  __sysvec_apic_timer_interrupt+0xb3/0x1a0
+[   60.540052]  asm_call_on_stack+0x12/0x20
+[   60.544434]  sysvec_apic_timer_interrupt+0xba/0x130
+[   60.549882]  asm_sysvec_apic_timer_interrupt+0x12/0x20
+[   60.555621]  delay_tsc+0x7d/0xe0
+[   60.559226]  kcsan_setup_watchpoint+0x292/0x4e0
+[   60.564284]  __rcu_read_unlock+0x73/0x2c0
+[   60.568763]  __unlock_page_memcg+0xda/0xf0
+[   60.573338]  unlock_page_memcg+0x32/0x40
+[   60.577721]  page_remove_rmap+0x5c/0x200
+[   60.582104]  unmap_page_range+0x83c/0xc10
+[   60.586582]  unmap_single_vma+0xb0/0x150
+[   60.590963]  unmap_vmas+0x81/0xe0
+[   60.594663]  exit_mmap+0x135/0x2b0
+[   60.598464]  __mmput+0x21/0x150
+[   60.601970]  mmput+0x2a/0x30
+[   60.605176]  exit_mm+0x2fc/0x350
+[   60.608780]  do_exit+0x372/0xff0
+[   60.612385]  do_group_exit+0x139/0x140
+[   60.616571]  __do_sys_exit_group+0xb/0x10
+[   60.621048]  __se_sys_exit_group+0xa/0x10
+[   60.625524]  __x64_sys_exit_group+0x1b/0x20
+[   60.630189]  do_syscall_64+0x6c/0xe0
+[   60.634182]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   60.639820]
+[   60.641485] read to 0xffff88840fff1cf0 of 4 bytes by task 2430 on cpu 1:
+[   60.648969]  __rcu_read_unlock+0x73/0x2c0
+[   60.653446]  __unlock_page_memcg+0xda/0xf0
+[   60.658019]  unlock_page_memcg+0x32/0x40
+[   60.662400]  page_remove_rmap+0x5c/0x200
+[   60.666782]  unmap_page_range+0x83c/0xc10
+[   60.671259]  unmap_single_vma+0xb0/0x150
+[   60.675641]  unmap_vmas+0x81/0xe0
+[   60.679341]  exit_mmap+0x135/0x2b0
+[   60.683141]  __mmput+0x21/0x150
+[   60.686647]  mmput+0x2a/0x30
+[   60.689853]  exit_mm+0x2fc/0x350
+[   60.693458]  do_exit+0x372/0xff0
+[   60.697062]  do_group_exit+0x139/0x140
+[   60.701248]  __do_sys_exit_group+0xb/0x10
+[   60.705724]  __se_sys_exit_group+0xa/0x10
+[   60.710201]  __x64_sys_exit_group+0x1b/0x20
+[   60.714872]  do_syscall_64+0x6c/0xe0
+[   60.718864]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   60.724503]
+[   60.726156] Reported by Kernel Concurrency Sanitizer on:
+[   60.732089] CPU: 1 PID: 2430 Comm: sshd Not tainted 5.8.0-rc2-00186-gb4ee11fe08b3-dirty #303
+[   60.741510] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
+[   60.752957] ==================================================================
 
-tip uclamp disabled        50653          47188         44568         41925
-tip uclamp enabled         48800(-3.66%)  45600(-3.37%) 42822(-3.92%)
-40257(-3.98%)
-/w patch uclamp disabled   50615(-0.08%)  47198(+0.02%) 44609(+0.09%)
-41735(-0.45%)
-/w patch uclamp enabled    49661(-1.96%)  46611(-1.22%) 43803(-1.72%)
-41243(-1.63%)
+And I figured a quick way to get rid of that would be something like the
+below, seeing how volatile gets auto annotated... but that doesn't seem
+to actually work.
 
-Results are better with your patch
+What am I missing?
+
+
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 352223664ebd..b08861118e1a 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -351,17 +351,17 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
+ 
+ static void rcu_preempt_read_enter(void)
+ {
+-	current->rcu_read_lock_nesting++;
++	(*(volatile int *)&current->rcu_read_lock_nesting)++;
+ }
+ 
+ static int rcu_preempt_read_exit(void)
+ {
+-	return --current->rcu_read_lock_nesting;
++	return --(*(volatile int *)&current->rcu_read_lock_nesting);
+ }
+ 
+ static void rcu_preempt_depth_set(int val)
+ {
+-	current->rcu_read_lock_nesting = val;
++	WRITE_ONCE(current->rcu_read_lock_nesting, val);
+ }
+ 
+ /*
+
