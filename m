@@ -2,121 +2,108 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05215C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1D9A20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9242F2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593000516;
+	bh=Aa/8MkArd4EWGij1kzI8suLnmqrtXk0z2p3kFoUhb1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YLpc4mdVFWj7a8nbtrvVOMUGHs1iSXT/F2KApUe5jOU3jpvejtsqnF2D8Dy4FNHR7
+	 xjBheVjjSrYalb4nwkc5CFV7DYf3B0HCi7cmDcKSKnOWn4WqSdC+iEpjy1MaIYFw4m
+	 xmDpuTc6JT1sSyiXSzJo9GPIwy4uWHL9lQA6WyJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390086AbgFXMIH (ORCPT
+        id S2390111AbgFXMIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:08:07 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60866 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388522AbgFXMIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:08:06 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_2obQvNeQ0FJAA--.12766S3;
-        Wed, 24 Jun 2020 20:07:57 +0800 (CST)
-Subject: Re: [PATCH v3 03/14] irqchip/csky-mpintc: Fix potential resource
- leaks
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-mips@vger.kernel.org
-References: <a0ace7a8-5c26-ee20-fe76-7dff57a18ca3@web.de>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <be3acb13-2963-ddf1-a867-7e30fd23a0b4@loongson.cn>
-Date:   Wed, 24 Jun 2020 20:07:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 24 Jun 2020 08:08:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35020 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbgFXMIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:08:34 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h185so1093975pfg.2;
+        Wed, 24 Jun 2020 05:08:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hKoC80Wq7vgR/nEQP76EsMeVeQcGFmckg9WTm/ySZtU=;
+        b=pzscmqkD2CfyMgtwS4bH5JMlgZRqTU24ntszPmhj9AXENcFPcwrPHImvzz2w+DYnlU
+         z3OHoBg8qkCI0N4cjGuaALBQKFjjJlWbIJdXrh/VOtOzIVMAwdspdPVRFKskNiu9LBTE
+         ogsY28r8WwWzWN6iuOt+vz/krf+GSbs4xZnVXrQwz45HiL8YKXTaF3uIuP0afygygbDL
+         6tONFB959g2oN4aYEdr9IQdVkax8TtERCjVpotBVshfb15PSJkj8geq/nTL2SSF/8sVF
+         THfTF2k9ogY+cAJQnGvChhxARHSeLWYE4XMTtElE1IvynJNAC6kIhuWm0hZUb+tlAR9O
+         6yKA==
+X-Gm-Message-State: AOAM532SXAPf2mUrjkAKxbiGHFxGxiD9Mq/WfItJ1QA6ehy/sdbRo9NI
+        wq8HqIIZL3HcZUjWwpDjnkk=
+X-Google-Smtp-Source: ABdhPJy7+qAAHibTBd59vj1TFF3NDV4/7CT9zsa35G/gvOUinbvpiYYa0boVxe+S9Xo6K6bzCLHpGg==
+X-Received: by 2002:a63:395:: with SMTP id 143mr17860516pgd.57.1593000512400;
+        Wed, 24 Jun 2020 05:08:32 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id cu9sm5249668pjb.28.2020.06.24.05.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 05:08:30 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id ADB9940430; Wed, 24 Jun 2020 12:08:29 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 12:08:29 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "nstange@suse.de" <nstange@suse.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "yukuai3@huawei.com" <yukuai3@huawei.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v7 5/8] loop: be paranoid on exit and prevent new
+ additions / removals
+Message-ID: <20200624120829.GE4332@42.do-not-panic.com>
+References: <20200619204730.26124-1-mcgrof@kernel.org>
+ <20200619204730.26124-6-mcgrof@kernel.org>
+ <7e76d892-b5fd-18ec-c96e-cf4537379eba@acm.org>
+ <20200622122742.GU11244@42.do-not-panic.com>
+ <SN4PR0401MB35982B3522B95FADDD06DC4C9B940@SN4PR0401MB3598.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <a0ace7a8-5c26-ee20-fe76-7dff57a18ca3@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dx_2obQvNeQ0FJAA--.12766S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFykXw13tr13Wr45XryxXwb_yoW8Ar18pF
-        4UurWrGrWkGr1UWrs7uw18ZFyfKayfJrW2g3s3Krn5urn0vr9YyFWF9rs8uasFkw15Aayx
-        Zrs2yry5uw1DAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr1j
-        6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DYxBIdaVFxhVjvjDU0xZFpf9x0JUu5l
-        8UUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN4PR0401MB35982B3522B95FADDD06DC4C9B940@SN4PR0401MB3598.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/2020 07:43 PM, Markus Elfring wrote:
->> There exists potential resource leaks in the error path, fix them.
-> I suggest to improve this change description.
-> How do you think about another wording variant?
->
->     Specific system resources were not released in a few error cases.
->     Thus add jump targets for the completion of the desired exception handling.
+On Tue, Jun 23, 2020 at 05:05:01PM +0000, Johannes Thumshirn wrote:
+> On 22/06/2020 14:27, Luis Chamberlain wrote:
+> [...]> If you run run_0004.sh from break-blktrace [0]. Even with all my patches
+> > merged we still run into this. And so the bug lies within the block
+> > layer or on the driver. I haven't been able to find the issue yet.
+> > 
+> > [0] https://github.com/mcgrof/break-blktrace
+> 
+> Would it be a good idea to merge this into blktests? Maybe start a blktrace 
+> section for it, which could host other regression test for blktrace.
+> 
+> Thoughts?
 
-OK, thank you, it looks good to me.
-Maybe I can use this description for other patches of this series.
+Absolutely! That is the goal as well.
 
->
->
-> …
-> +++ b/drivers/irqchip/irq-csky-mpintc.c
-> @@ -247,8 +247,10 @@ csky_mpintc_init(struct device_node *node, struct device_node *parent)
-> …
->   		INTCG_base = ioremap(mfcr("cr<31, 14>"),
->   				     INTCL_SIZE*nr_cpu_ids + INTCG_SIZE);
->
-> See also:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=3e08a95294a4fb3702bb3d35ed08028433c37fe6#n257
->
->
-> …
-> +		if (INTCG_base == NULL) {
->
->
-> Would you like to use the following code variant?
->
-> See also:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl?id=3e08a95294a4fb3702bb3d35ed08028433c37fe6#n5756
->
-> +		if (!INTCG_base) {
->
->
-> …
->> @@ -270,12 +274,22 @@ csky_mpintc_init(struct device_node *node, struct device_node *parent)
->>
->>   #ifdef CONFIG_SMP
->>   	ipi_irq = irq_create_mapping(root_domain, IPI_IRQ);
-> …
->> +	if (!ipi_irq) {
->> +		ret = -EIO;
->> +		goto err_domain_remove;
->> +	}
-> …
->
-> Can the function call “irq_domain_remove(root_domain)” become relevant
-> only if the preprocessor symbol “CONFIG_SMP” was defined?
-
-OK, I will do it in the next version.
-
->
-> Regards,
-> Markus
-
+  Luis
