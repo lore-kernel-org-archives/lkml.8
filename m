@@ -2,95 +2,103 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE14C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB1620B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FA92088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 12:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wDgnINvc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CWrjYWYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390222AbgFXMQP (ORCPT
+        id S2390440AbgFXMQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 08:16:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388296AbgFXMQO (ORCPT
+        Wed, 24 Jun 2020 08:16:21 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38782 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388296AbgFXMQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 08:16:14 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C3FC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:16:14 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id j10so1422001qtq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 05:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=b2OqfNiPleZIbmb7TmwrT/wLfhv0B6VNDBgxLf+fGcw=;
-        b=wDgnINvcsTBFswtUyZD+fNQOqoBt3GJeRE73tzdf2M8n16m1WwfoJKAC+WdGOu9k0C
-         UTkvqhR/NFUp/luzs3XG0B809/B1PzozvO39+egk5K6Ig9iBdsGZHqQqMrOpRv8XMzhP
-         OTMCWBkWWH8OpoSsfBlEcRixDpwG1SIPWkUW+Tk3sFk5WwUkOq4/uqg/JLdCbCMUnMTa
-         mUo+om5kwRdP7bOpquXz3bWIY+dgGVsmFwCjy2ZXDnMeuW2kPG7WLQcigbsL21q0BQSe
-         EWFbU3nX6pGIVaPXoJV70AbExK9ZahDVr4p75gdmgVujT8oy06iXsBVhY7oVLsGX/JHc
-         sXcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b2OqfNiPleZIbmb7TmwrT/wLfhv0B6VNDBgxLf+fGcw=;
-        b=smGwR5z+Z9ZDKN62ZZXdLpzHR/gicu/A5xraz9tJJDGgDu8ObaLtssd3FrI6OAmynL
-         19z0CCpnQLRBJcRTNVjC2uCjecydHnuRY7QpTwqkvhR+KpDyH2PFs9pKaAtNAb2DoC2I
-         7CfA1mTWwtN3bWzhi2vrPmzdD5j826BViZ89P1WXIb8FHYqoR2wUn4ANx00WwsMnCRZa
-         g4pee7OCzwAb78VLiTQG8nivhw0UQc8cex/J9aQiV0/wIDa5qPzwBbfSGB7a7mPSlLVz
-         QpY+aKtM6RL5R+hE0qNp0gyuelEn46gw7eZx81NkUbNbnrLhG5Kc1mu/ipPP89sGMY4s
-         qDVA==
-X-Gm-Message-State: AOAM5330XIJY3MFVxNSkxWcJ10HWX65MvsSKkXxl+o5CMkBjIGFR6MGl
-        eLHRu/YtHuRlrxW9wJpIqt5q5vlgPhS2UaevhhPmCQ==
-X-Google-Smtp-Source: ABdhPJyVXQxb2WStduflc8ziDJ/iq9alEg0Ys2bSXmPItpbNP4s9a4/DeQdKJ02m2rZfc+IhApMgmFH3wEFyoiRlizk=
-X-Received: by 2002:ac8:134a:: with SMTP id f10mr18680640qtj.131.1593000973743;
- Wed, 24 Jun 2020 05:16:13 -0700 (PDT)
+        Wed, 24 Jun 2020 08:16:19 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OCGCSd066061;
+        Wed, 24 Jun 2020 07:16:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593000972;
+        bh=4i/GtgXzaE4o8MhETtpPJ0dJbtJx23GHh6y7ROguMRQ=;
+        h=From:To:CC:Subject:Date;
+        b=CWrjYWYX/N1SyHgIiR1pmw62HelnV9IN414lBxYHxfT3qeDsjnJm7Y01UHAZ8yX//
+         LmGPU1Z2ur0xMqTHicN2noYcmP1BQpNvg0IY6TGw4wPZf/xHNl6pCh+IzT/PhP/teW
+         BzPWj9MJ2gR5sWDmYcNhVk1+qZaueOLV39gqurdQ=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OCGCov068786
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 07:16:12 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 07:16:12 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 24 Jun 2020 07:16:12 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OCGC3o070089;
+        Wed, 24 Jun 2020 07:16:12 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v11 0/5] RGMII Internal delay common property
+Date:   Wed, 24 Jun 2020 07:16:00 -0500
+Message-ID: <20200624121605.18259-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200623145748.28877-1-geert+renesas@glider.be> <20200623145748.28877-3-geert+renesas@glider.be>
-In-Reply-To: <20200623145748.28877-3-geert+renesas@glider.be>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 24 Jun 2020 14:16:03 +0200
-Message-ID: <CAMpxmJWGckzicz6FddXybcJh-hb+-hoGbV29Z3BA61RVQ1nQDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: aggregator: Use bitmap_parselist() for parsing
- GPIO offsets
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 cze 2020 o 16:57 Geert Uytterhoeven <geert+renesas@glider.be>
-napisa=C5=82(a):
->
-> Replace the custom code to parse GPIO offsets and/or GPIO offset ranges
-> by a call to bitmap_parselist(), and an iteration over the returned bit
-> mask.
->
-> This should have no impact on the format of the configuration parameters
-> written to the "new_device" virtual file in sysfs.
->
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> I'm not super happy with the mask[] array, which is on the stack.
-> But there is no real limit on the number of GPIO lines provided by a
-> single gpiochip, except for the global ARCH_NR_GPIOS.
+Hello
 
-Why not allocate it with bitmap_zalloc() then?
+The RGMII internal delay is a common setting found in most RGMII capable PHY
+devices.  It was found that many vendor specific device tree properties exist
+to do the same function. This creates a common property to be used for PHY's
+that have internal delays for the Rx and Tx paths.
 
-Bart
+If the internal delay is tunable then the caller needs to pass the internal
+delay array and the return will be the index in the array that was found in
+the firmware node.
+
+If the internal delay is fixed then the caller only needs to indicate which
+delay to return.  There is no need for a fixed delay to add device properties
+since the value is not configurable. Per the ethernet-controller.yaml the
+interface type indicates that the PHY should provide the delay.
+
+This series contains examples of both a configurable delay and a fixed delay.
+
+Dan Murphy (5):
+  dt-bindings: net: Add tx and rx internal delays
+  net: phy: Add a helper to return the index for of the internal delay
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
+  net: phy: DP83822: Add setting the fixed internal delay
+
+ .../devicetree/bindings/net/ethernet-phy.yaml | 12 +++
+ .../devicetree/bindings/net/ti,dp83869.yaml   | 16 ++-
+ drivers/net/phy/dp83822.c                     | 79 +++++++++++++--
+ drivers/net/phy/dp83869.c                     | 53 +++++++++-
+ drivers/net/phy/phy_device.c                  | 99 +++++++++++++++++++
+ include/linux/phy.h                           |  4 +
+ 6 files changed, 249 insertions(+), 14 deletions(-)
+
+-- 
+2.26.2
+
