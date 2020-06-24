@@ -2,172 +2,144 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6430C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE9220836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D062084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fr2l7dlU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404962AbgFXQY4 (ORCPT
+        id S2404968AbgFXQZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:24:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404675AbgFXQYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:24:55 -0400
-Received: from gaia (unknown [2.26.170.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E43220857;
-        Wed, 24 Jun 2020 16:24:52 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 17:24:50 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Maydell <Peter.Maydell@linaro.org>
-Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
-Message-ID: <20200624161954.GC27945@gaia>
-References: <20200617123844.29960-1-steven.price@arm.com>
- <20200623174807.GD5180@gaia>
- <e04696b6-63de-1e25-f6f3-1da63f791754@arm.com>
- <20200624142131.GA27945@gaia>
- <66ed0732-17ee-8f5a-44af-31ab768d845f@arm.com>
+        Wed, 24 Jun 2020 12:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404468AbgFXQZc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:25:32 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F69C061573;
+        Wed, 24 Jun 2020 09:25:32 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id j80so2405473qke.0;
+        Wed, 24 Jun 2020 09:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EX+waRZgWkttNQFyEQaMEGS91DwT52qIcg8cn7tx7x0=;
+        b=Fr2l7dlUKiPmEZHXthnoPVJaBTDZ8tQeygaptwCtWakFBu/hKZPdpO/cvCjH+6z1Ww
+         Fxd9euxfiC7WJvmRvoI2XwPwPTz8FnhdXODfS/QXWcgg2M7IsoyxD+LiRoMRxBlEUou7
+         A1gpl7Qfjjs8rBxSL+vGRHtgUV2Xnh5vWVS/5jYGK3GICSd30q7HORJT2XqKzjtNQR2t
+         RGwcwH7R+sLpmW3sJB+aXG456xgsJ7J6PMjKch90MS8eVFynfnkVfRNccG2uJGGIggbW
+         icl3XbyIpR2rDt4zBps0WklWsRilZT1peDuYmDsqSNstJGm/C6KSyZeg6yil9cFZrzL2
+         B6Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EX+waRZgWkttNQFyEQaMEGS91DwT52qIcg8cn7tx7x0=;
+        b=eyp502mTOQae0nRTIrs43a8AFUBKM4iRaDu0GXTbjheux+EpLyNFhWsgFLyNCr2GJQ
+         1C8kD+iXeQZ89CRYVONqH7EZQvBSlCo/MNt4akJ3YMA0aUy0La045hmE8gxO7UXZbujW
+         A7KxmojFuh4BuW8tL5xPuxbmod78yyQn7TMCXtg8I+HejPAAub8xNzT34odzs61doHHo
+         dtqu/HRcPvj5KUREGMzib4Vw+vCiGRWRVp5G64FUrJuzX70xlIumAjj4MwijRIXkYa9U
+         VuAs+Z69nP8fC0pN8iQaOOyj/GUmqFZBQOT52e5CeUBv/rYG6SrJ3lW4tX679T0WoSjP
+         VnvQ==
+X-Gm-Message-State: AOAM5326ZoWswa53eiUFu8qQHWcTmMQcINqn9X4TSevJXaqU9VrDnUTk
+        iTIWmtz6fFwtelLhTUwrDkU=
+X-Google-Smtp-Source: ABdhPJwxFli0DGylImdLbucIC/YTFByOJI9o7sIdwE4PZG41+89LDyF+oJewq4AgmLSxYa1Rjow2zg==
+X-Received: by 2002:ae9:e8cf:: with SMTP id a198mr18441339qkg.460.1593015931469;
+        Wed, 24 Jun 2020 09:25:31 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id f22sm4508170qko.89.2020.06.24.09.25.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 09:25:31 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200622151054.GW954398@dell>
+ <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+ <20200622191133.GY954398@dell>
+ <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
+ <20200623064723.GZ954398@dell>
+ <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
+ <20200623195905.GB954398@dell>
+ <6684101d-1013-2964-c247-394f9b12a194@gmail.com>
+ <20200624074631.GE954398@dell>
+ <d7774c42-fd41-9fab-2ea0-cd6bc7d35383@gmail.com>
+ <20200624161435.GI954398@dell>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <53200e52-bc53-1351-dc90-b775c29f8456@gmail.com>
+Date:   Wed, 24 Jun 2020 11:25:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66ed0732-17ee-8f5a-44af-31ab768d845f@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200624161435.GI954398@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:59:35PM +0100, Steven Price wrote:
-> On 24/06/2020 15:21, Catalin Marinas wrote:
-> > On Wed, Jun 24, 2020 at 12:16:28PM +0100, Steven Price wrote:
-> > > On 23/06/2020 18:48, Catalin Marinas wrote:
-> > > > On Wed, Jun 17, 2020 at 01:38:42PM +0100, Steven Price wrote:
-> > > > > These patches add support to KVM to enable MTE within a guest. It is
-> > > > > based on Catalin's v4 MTE user space series[1].
-> > > > > 
-> > > > > [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
-> > > > > 
-> > > > > Posting as an RFC as I'd like feedback on the approach taken. First a
-> > > > > little background on how MTE fits within the architecture:
-> > > > > 
-> > > > > The stage 2 page tables have limited scope for controlling the
-> > > > > availability of MTE. If a page is mapped as Normal and cached in stage 2
-> > > > > then it's the stage 1 tables that get to choose whether the memory is
-> > > > > tagged or not. So the only way of forbidding tags on a page from the
-> > > > > hypervisor is to change the cacheability (or make it device memory)
-> > > > > which would cause other problems.  Note this restriction fits the
-> > > > > intention that a system should have all (general purpose) memory
-> > > > > supporting tags if it support MTE, so it's not too surprising.
-> > > > > 
-> > > > > However, the upshot of this is that to enable MTE within a guest all
-> > > > > pages of memory mapped into the guest as normal cached pages in stage 2
-> > > > > *must* support MTE (i.e. we must ensure the tags are appropriately
-> > > > > sanitised and save/restore the tags during swap etc).
-> > > > > 
-> > > > > My current approach is that KVM transparently upgrades any pages
-> > > > > provided by the VMM to be tag-enabled when they are faulted in (i.e.
-> > > > > sets the PG_mte_tagged flag on the page) which has the benefit of
-> > > > > requiring fewer changes in the VMM. However, save/restore of the VM
-> > > > > state still requires the VMM to have a PROT_MTE enabled mapping so that
-> > > > > it can access the tag values. A VMM which 'forgets' to enable PROT_MTE
-> > > > > would lose the tag values when saving/restoring (tags are RAZ/WI when
-> > > > > PROT_MTE isn't set).
-> > > > > 
-> > > > > An alternative approach would be to enforce the VMM provides PROT_MTE
-> > > > > memory in the first place. This seems appealing to prevent the above
-> > > > > potentially unexpected gotchas with save/restore, however this would
-> > > > > also extend to memory that you might not expect to have PROT_MTE (e.g. a
-> > > > > shared frame buffer for an emulated graphics card).
-> > > > 
-> > > > As you mentioned above, if memory is mapped as Normal Cacheable at Stage
-> > > > 2 (whether we use FWB or not), the guest is allowed to turn MTE on via
-> > > > Stage 1. There is no way for KVM to prevent a guest from using MTE other
-> > > > than the big HCR_EL2.ATA knob.
-> > > > 
-> > > > This causes potential issues since we can't guarantee that all the
-> > > > Cacheable memory slots allocated by the VMM support MTE. If they do not,
-> > > > the arch behaviour is "unpredictable". We also can't trust the guest to
-> > > > not enable MTE on such Cacheable mappings.
-> > > 
-> > > Architecturally it seems dodgy to export any address that isn't "normal
-> > > memory" (i.e. with tag storage) to the guest as Normal Cacheable. Although
-> > > I'm a bit worried this might cause a regression in some existing case.
-> > 
-> > What I had in mind is some persistent memory that may be given to the
-> > guest for direct access. This is allowed to be cacheable (write-back)
-> > but may not have tag storage.
+On 2020-06-24 11:14, Lee Jones wrote:
+> On Wed, 24 Jun 2020, Frank Rowand wrote:
 > 
-> At the moment we don't have a good idea what would happen if/when the guest
-> (or host) attempts to use that memory as tagged. If we have a relatively
-> safe hardware behaviour (e.g. the tags are silently dropped/read-as-zero)
-> then that's not a big issue. But if the accesses cause some form of abort
-> then we need to understand how that would be handled.
-
-The architecture is not prescriptive here, the behaviour is
-"unpredictable". It could mean tags read-as-zero/write-ignored or an
-SError.
-
-> > > > 1. As in your current patches, assume any Cacheable at Stage 2 can have
-> > > >      MTE enabled at Stage 1. In addition, we need to check whether the
-> > > >      physical memory supports MTE and it could be something simple like
-> > > >      pfn_valid(). Is there a way to reject a memory slot passed by the
-> > > >      VMM?
-> > > 
-> > > Yes pfn_valid() should have been in there. At the moment pfn_to_page() is
-> > > called without any checks.
-> > > 
-> > > The problem with attempting to reject a memory slot is that the memory
-> > > backing that slot can change. So checking at the time the slot is created
-> > > isn't enough (although it might be a useful error checking feature).
-> > 
-> > But isn't the slot changed as a result of another VMM call? So we could
-> > always have such check in place.
+>> On 2020-06-24 02:46, Lee Jones wrote:
+>>> On Tue, 23 Jun 2020, Frank Rowand wrote:
+>>>
+>>>> On 2020-06-23 14:59, Lee Jones wrote:
+>>
+>> < big snip >
+>>
+>> Thanks for the replies in the above portion.
 > 
-> Once you have created a memslot the guest's view of memory follows the user
-> space's address space. This is the KVM_CAP_SYNC_MMU capability. So there's
-> nothing stopping a VMM adding a memslot backed with perfectly reasonable
-> memory then mmap()ing over the top of it some memory which isn't MTE
-> compatible. KVM gets told the memory is being removed (via mmu notifiers)
-> but I think it waits for the next fault before (re)creating the stage 2
-> entries.
-
-OK, so that's where we could kill the guest if the VMM doesn't play
-nicely. It means that we need the check when setting up the stage 2
-entry. I guess it's fine if we only have the check at that point and
-ignore it on KVM_SET_USER_MEMORY_REGION. It would be nice if we returned
-on error on slot setup but we may not know (yet) whether the VMM intends
-to enable MTE for the guest.
-
-> > > It's not clear to me what we can do at fault time when we discover the
-> > > memory isn't tag-capable and would have been mapped cacheable other than
-> > > kill the VM.
-> > 
-> > Indeed, I don't have a better idea other than trying not to get in this
-> > situation.
+> NP.
 > 
-> Sadly to me it looks like it's not really possible to avoid a (malicious)
-> VMM getting us there. But we can certainly try to avoid a VMM accidentally
-> ending up in the situation.
+>>>>>> But yes or no to my solution #2 (with some slight changes to
+>>>>>> make it better (more gracious handling of the detected error) as
+>>>>>> discussed elsewhere in the email thread)?
+>>>>>
+>>>>> Please see "[0]" above!
+>>>>>
+>>>>> AFAICT your solution #2 involves bombing out *all* devices if there is
+>>>>> a duplicate compatible with no 'reg' property value.  This is a)
+>>>>> over-kill and b) not an error, as I mentioned:
+>>>>
+>>>> As I mentioned above, I set you up to have this misunderstanding by
+>>>> a mistake in one of my earlier emails.  So now that I have pointed
+>>>> out what I meant here by "more gracious handling of the detected
+>>>> error", what do you think of my amended solution #2?
+>>>
+>>> Explained above, but the LT;DR is that it's not correct.
+>>
+>> I don't agree with you, I think my solution is better.  Even if I
+>> prefer my solution, I find your solution to be good enough.
+> 
+> I still don't see how it could work, but please feel free to submit a
+> subsequent patch and we can discuss it on its own merits.
+> 
+>> So I am dropping my specific objection to returning -EAGAIN from
+>> mfd_match_of_node_to_dev() when the node has previously been
+>> allocated to a device.
+> 
+> Great.  Thanks for taking an interest.
+> 
+> Does this mean I can apply your Reviewed-by?
+> 
 
-What we need to avoid is a malicious VMM affecting the host kernel. If
-the VMM wants to corrupt the guest, I think it has other ways already
-even without MTE.
-
--- 
-Catalin
+No, please do not.  I don't want to give the patch that strong
+of an endorsement.
