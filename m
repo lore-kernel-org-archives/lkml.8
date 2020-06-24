@@ -2,129 +2,121 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3050CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D661EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06101206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC01C206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2ZoUKab"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hV4dK5XM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404476AbgFXPJQ (ORCPT
+        id S2404366AbgFXPJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
+        Wed, 24 Jun 2020 11:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404067AbgFXPI7 (ORCPT
+        with ESMTP id S2404067AbgFXPJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:08:59 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EBEC061573;
-        Wed, 24 Jun 2020 08:08:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id s1so2976350ljo.0;
-        Wed, 24 Jun 2020 08:08:59 -0700 (PDT)
+        Wed, 24 Jun 2020 11:09:46 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553B6C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:09:46 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d12so1180534ply.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EO0vr0FBuxVa7FqS3Iq4jMbQpH1iOzHD8PnLZeBEDCg=;
-        b=J2ZoUKabV8uBWW8kT14GVdq844k5EGl9LZL64gEzgnhcADd8Ey9EGbuClRMNnMseCg
-         U1KHZistw+DkX9cqdP1WCbkcM+QtHu0ScwWhr6ar6Xkv6RfSKeHf3fIviD3k89avexI7
-         OQxhBScnUY+89SxyZMVTNGKj88NOEztFu22WFCr59dYFDp6hqNOo1xA//QFL0aqqxyEM
-         wv7QLohFndzJkxFUckGdRPNhWh/ZrCJ9P774Gu4JDSIAKvWRf+HFavFp0ScgXTn60JQk
-         aQ+YheYahlXjBbYR/t2lin+Y1fFWbPjFQlypbnImOOBvEGEkTcUb5bruoHs9vc+kvRme
-         3VwQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Hm3ympvKduUNh5129dxmMgwX0W3YAimhGqajkDVt8Jw=;
+        b=hV4dK5XM2LY4lKz5JyFuMP7rwg4k+z0fv4ioWmeLSYRoWipXBV5oPcLKy7YendLDCZ
+         oDFosVNt6DL0z1pDwv0sNbBwAsilFivXTaLG67vShvTaoEGSgipBx0Sl+J0wYd1A+71C
+         BGKYEAmSNKmVYbv4bOThY6xNVDMFBRWBC8+KzWGHQ85PX7y987rUcmLQH/BeFd3Ieh+b
+         nZfarXGDG4Kb6ApvBoP/t++mTsciC8K7rhuQH5z7og8lfM7+bjVWcYdzX9pqXEdpunZI
+         qmk+WQgIPnSo4VS+yhzG1ohGUvAD8k2yEI9IgtDlWbvDslBrrpMUm6TANHAszsmBLpX2
+         taTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EO0vr0FBuxVa7FqS3Iq4jMbQpH1iOzHD8PnLZeBEDCg=;
-        b=EdtgKraVE9+Id3x2TX8aKR6wopdGF3CunmK/hRu7cadcuT8LF5WuhHhbKzfjXdhoP+
-         1rEcdD0BsvmARO6A88kRqgRa1XdkbIEjai4heOGxTG5V+6KIaSMZ9P55WsaRMzqMoWK5
-         sdtf5Sw4RwI8ZAR6RCa3O/Gq5T5828DgPsuLd3nXjKtx2ZdV6DFRaXwsUZ5vRshndWHA
-         H6NsVXad8OxKF5PRpVKPRnH6K2ed82GZgvSdRGRcxkBRpiXV3Ijr7KC296Vn4wpVCpx3
-         JBPX0H9qgj12T8j/Td8RXKG7/yLKJfcBPD7/m3uDgNME02wd0fsd0+69JqRAhiMIgSKX
-         WzSQ==
-X-Gm-Message-State: AOAM532kCMc2CeaVYbbR7f6JgPumzW0dlDCOw8TXGqXWopqSumDflxUj
-        bmkdI7IUzhZVCCUy3fpYSzw=
-X-Google-Smtp-Source: ABdhPJyKT14B5+qLcVOpYptH1Lq0z9yrEMkRgXqV0VmarTChqLi//LDwXiSj80dipUCtV5kkV88X8A==
-X-Received: by 2002:a2e:9c8e:: with SMTP id x14mr11827756lji.200.1593011338198;
-        Wed, 24 Jun 2020 08:08:58 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id z1sm4182049lja.47.2020.06.24.08.08.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:08:57 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] media: staging: tegra-vde: Runtime PM is always available on Tegra
-Date:   Wed, 24 Jun 2020 18:08:45 +0300
-Message-Id: <20200624150847.22672-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200624150847.22672-1-digetx@gmail.com>
-References: <20200624150847.22672-1-digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Hm3ympvKduUNh5129dxmMgwX0W3YAimhGqajkDVt8Jw=;
+        b=VJG0r1QJLrsYesE0Mu8wvF4dcqE4f2GVS8ETWsIUzUDJqRVn/0Xk5NBismXbBbu41X
+         3dgWkQdafllL/EGAKcxvdr30DpRIovJv2Mklt+fNcpHDoeMwvi7GJ6M6wccWhZnEWPSB
+         ju1CiZ7Be4UzllxYuCn9Qph+bMqo0XrenGmMRUUtxmvYBgMHb9CMPiEtlXXW+0BjU79D
+         3p5itO7c12+4EjslwerXyvdc9UG+afWVqZUQSY5LswrS+DI1nTQgbpdFdRBY8pVIp4Fq
+         MAAvEVF9YIWtZ0JIxrv4pgcvIJuNY4jMrgPfe7v0B3HvQSoMS7zSKUhfBS2uNLP0lZXz
+         s/NA==
+X-Gm-Message-State: AOAM530ZdDFaTZpOJ0L8T2eXYfwXP6N932fEH6tJalFlpQ6ogiTkN8/o
+        xfkQ/nMc+lYaSAaBqhQACh48lB+nzpw=
+X-Google-Smtp-Source: ABdhPJxHnvpBKJvuZJNpgdxE6VuzhPTYXWKz1m98mZL6We6g1vXw31kuyX7e9kclNRUs4CdeE/1Hbw==
+X-Received: by 2002:a17:90a:3aed:: with SMTP id b100mr26487773pjc.80.1593011384970;
+        Wed, 24 Jun 2020 08:09:44 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id v62sm9071851pfb.119.2020.06.24.08.09.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 08:09:44 -0700 (PDT)
+Subject: Re: move block bits out of fs.h
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200620071644.463185-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c2fba635-b2ce-a2b5-772b-4bfcb9b43453@kernel.dk>
+Date:   Wed, 24 Jun 2020 09:09:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200620071644.463185-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Runtime PM is always available on Tegra nowadays since commit 40b2bb1b132a
-("ARM: tegra: enforce PM requirement"), hence the case of unavailable RPM
-doesn't need to be handled.
+On 6/20/20 1:16 AM, Christoph Hellwig wrote:
+> Hi Jens,
+> 
+> this series removes various remaining block bits out of fs.h and cleans
+> up a few loose ends around that.
+> 
+> Diffstat:
+>  drivers/tty/sysrq.c         |    2 
+>  fs/adfs/super.c             |    1 
+>  fs/affs/file.c              |    1 
+>  fs/befs/linuxvfs.c          |    1 
+>  fs/block_dev.c              |    5 -
+>  fs/efs/super.c              |    1 
+>  fs/hfs/inode.c              |    1 
+>  fs/internal.h               |   17 +++-
+>  fs/jfs/jfs_mount.c          |    1 
+>  fs/jfs/resize.c             |    1 
+>  fs/ntfs/dir.c               |    1 
+>  fs/proc/devices.c           |    1 
+>  fs/quota/dquot.c            |    1 
+>  fs/reiserfs/procfs.c        |    1 
+>  include/linux/bio.h         |    3 
+>  include/linux/blk_types.h   |   39 +++++++++-
+>  include/linux/blkdev.h      |  140 ++++++++++++++++++++++--------------
+>  include/linux/buffer_head.h |    1 
+>  include/linux/dasd_mod.h    |    2 
+>  include/linux/fs.h          |  169 --------------------------------------------
+>  include/linux/genhd.h       |   39 ++++++++--
+>  include/linux/jbd2.h        |    1 
+>  security/loadpin/loadpin.c  |    1 
+>  23 files changed, 192 insertions(+), 238 deletions(-)
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/staging/media/tegra-vde/vde.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+Applied for 5.9 - I kept this in a separate topic branch, fwiw. There's the
+potential for some annoying issues with this, so would rather have it in
+a branch we can modify easily, if we need to.
 
-diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-index 803e5dda4bb5..85cbbc8f70d3 100644
---- a/drivers/staging/media/tegra-vde/vde.c
-+++ b/drivers/staging/media/tegra-vde/vde.c
-@@ -1068,17 +1068,8 @@ static int tegra_vde_probe(struct platform_device *pdev)
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_set_autosuspend_delay(dev, 300);
- 
--	if (!pm_runtime_enabled(dev)) {
--		err = tegra_vde_runtime_resume(dev);
--		if (err)
--			goto err_misc_unreg;
--	}
--
- 	return 0;
- 
--err_misc_unreg:
--	misc_deregister(&vde->miscdev);
--
- err_deinit_iommu:
- 	tegra_vde_iommu_deinit(vde);
- 
-@@ -1093,13 +1084,6 @@ static int tegra_vde_remove(struct platform_device *pdev)
- {
- 	struct tegra_vde *vde = platform_get_drvdata(pdev);
- 	struct device *dev = &pdev->dev;
--	int err;
--
--	if (!pm_runtime_enabled(dev)) {
--		err = tegra_vde_runtime_suspend(dev);
--		if (err)
--			return err;
--	}
- 
- 	pm_runtime_dont_use_autosuspend(dev);
- 	pm_runtime_disable(dev);
 -- 
-2.26.0
+Jens Axboe
 
