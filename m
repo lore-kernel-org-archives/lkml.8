@@ -2,102 +2,94 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3265C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0241C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FAC2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973412088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:52:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SOQtldw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388542AbgFXEvl (ORCPT
+        id S2388754AbgFXEwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 00:51:41 -0400
-Received: from mga12.intel.com ([192.55.52.136]:15214 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728766AbgFXEvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 00:51:40 -0400
-IronPort-SDR: 7qeXWbjgoE6V/dJ+wtzc4f9TiCHOlLKBSzwg0daeNygn6ZSRRC+CEB+2663DUL+dcXfwkm91Gp
- Q97hoj4zDy6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="123999147"
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="123999147"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 21:51:40 -0700
-IronPort-SDR: 0qtYB5tBDcBf9X83UB3uzm0y53IR4KJAL9y5mgpxS914y30pU61YwBxp0cnNZkeJe4Pqejdwbl
- 1PDbDYSjngTg==
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="275576140"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 21:51:40 -0700
-Subject: [PATCH] libnvdimm/security: Fix key lookup permissions
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 23 Jun 2020 21:35:26 -0700
-Message-ID: <159297332630.1304143.237026690015653759.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Wed, 24 Jun 2020 00:52:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728766AbgFXEwL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 00:52:11 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E1AC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 21:52:11 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x207so574173pfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 21:52:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6f53wfu9QNcdQT3ZJDSOeI3w2U50C/xG0fFlCdqBwh8=;
+        b=SOQtldw9KnegRbDuujQK6mSW72Ar+eCo9OL6sqQyLe4507FK6z15J0tVonL3ROJGKX
+         jmUWzV1kGTM8ch5wLol9h8AUoGlp2vmbh9AfB5HB82Nf6nd9MDgTkfuVbQTqVcoi6m9O
+         rflkv7LK/GEf+O4d4akCkHJ7Zge7ftnPwuhiE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6f53wfu9QNcdQT3ZJDSOeI3w2U50C/xG0fFlCdqBwh8=;
+        b=ECCoTIV8zJanspNYM83RyRBTDPLwxTsgBMjJ+XICEMsNQUTcu96FXulnmv7j4zVJ4I
+         XRnYp7txlPDU+VGcWnC+7hw6EZp4N9nmcuFHosX+9D8fQMgNOZef3AnlD0Gt8ztK6huI
+         9lW456KSHILJJRoLfdVAcHvYM6g4ohl44CyRG5pHrwL4D1qa8iAhMorj99BMHF1twlK2
+         tiMiCr1pCPCQKizsvs5YYByDlzDbkdvTvR1xN0LdjA1N0bxNiS+8M2SaE53il3Dzsg16
+         jcbdKSbMBdLuHfjR9nheQbFL1wZhL70OH3uktR/riW3zUzTHcNwhQbQ+0sVxCsYLhppM
+         rd4g==
+X-Gm-Message-State: AOAM5336DGwtZfD0J5cTaGwnBWCsa7D4hwXY4Je9s25WSSaP8ZNKK1ib
+        Ymo+7CCeboc6OXB5gwnncDuevw==
+X-Google-Smtp-Source: ABdhPJwX4es65nYyfcxHOhK/hXQNs9Mgx96rrroztpO1dJ1CT4SWu7NO7yDI/cU1cNN8RdLutBMqkA==
+X-Received: by 2002:a65:6710:: with SMTP id u16mr14011070pgf.45.1592974330709;
+        Tue, 23 Jun 2020 21:52:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q92sm3895838pjh.12.2020.06.23.21.52.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 21:52:09 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 21:52:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        arjan@linux.intel.com, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
+        Tony Luck <tony.luck@intel.com>, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3 05/10] x86: Make sure _etext includes function sections
+Message-ID: <202006232152.733212868D@keescook>
+References: <20200623172327.5701-1-kristen@linux.intel.com>
+ <20200623172327.5701-6-kristen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623172327.5701-6-kristen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of commit 8c0637e950d6 ("keys: Make the KEY_NEED_* perms an enum rather
-than a mask") lookup_user_key() needs an explicit declaration of what it
-wants to do with the key. Add KEY_NEED_SEARCH to fix a warning with the
-below signature, and fixes the inability to retrieve a key.
+On Tue, Jun 23, 2020 at 10:23:22AM -0700, Kristen Carlson Accardi wrote:
+> When using -ffunction-sections to place each function in
+> it's own text section so it can be randomized at load time, the
+> linker considers these .text.* sections "orphaned sections", and
+> will place them after the first similar section (.text). In order
+> to accurately represent the end of the text section and the
+> orphaned sections, _etext must be moved so that it is after both
+> .text and .text.* The text size must also be calculated to
+> include .text AND .text.*
+> 
+> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-    WARNING: CPU: 15 PID: 6276 at security/keys/permission.c:35 key_task_permission+0xd3/0x140
-    [..]
-    RIP: 0010:key_task_permission+0xd3/0x140
-    [..]
-    Call Trace:
-     lookup_user_key+0xeb/0x6b0
-     ? vsscanf+0x3df/0x840
-     ? key_validate+0x50/0x50
-     ? key_default_cmp+0x20/0x20
-     nvdimm_get_user_key_payload.part.0+0x21/0x110 [libnvdimm]
-     nvdimm_security_store+0x67d/0xb20 [libnvdimm]
-     security_store+0x67/0x1a0 [libnvdimm]
-     kernfs_fop_write+0xcf/0x1c0
-     vfs_write+0xde/0x1d0
-     ksys_write+0x68/0xe0
-     do_syscall_64+0x5c/0xa0
-     entry_SYSCALL_64_after_hwframe+0x49/0xb3
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Suggested-by: David Howells <dhowells@redhat.com>
-Fixes: 8c0637e950d6 ("keys: Make the KEY_NEED_* perms an enum rather than a mask")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/nvdimm/security.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index 89b85970912d..4cef69bd3c1b 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -95,7 +95,7 @@ static struct key *nvdimm_lookup_user_key(struct nvdimm *nvdimm,
- 	struct encrypted_key_payload *epayload;
- 	struct device *dev = &nvdimm->dev;
- 
--	keyref = lookup_user_key(id, 0, 0);
-+	keyref = lookup_user_key(id, 0, KEY_NEED_SEARCH);
- 	if (IS_ERR(keyref))
- 		return NULL;
- 
-
+-- 
+Kees Cook
