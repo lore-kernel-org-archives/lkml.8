@@ -2,74 +2,127 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F57C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E006CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE0920885
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24AE20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:39:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vuaVAcTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389825AbgFXJiw (ORCPT
+        id S2389805AbgFXJjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:38:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:53582 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388031AbgFXJiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:38:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD8111FB;
-        Wed, 24 Jun 2020 02:38:51 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68A463F73C;
-        Wed, 24 Jun 2020 02:38:50 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:38:48 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Peter Maydell <peter.maydell@linaro.org>
-Cc:     Steven Price <steven.price@arm.com>, Marc Zyngier <maz@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kvmarm@lists.cs.columbia.edu,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC PATCH 0/2] MTE support for KVM guest
-Message-ID: <20200624093846.GA11863@gaia>
-References: <20200617123844.29960-1-steven.price@arm.com>
- <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
+        Wed, 24 Jun 2020 05:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388031AbgFXJjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:39:31 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3281C061573;
+        Wed, 24 Jun 2020 02:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mu39W01/t9ACc+drZK56GEmPLcRgj8Ms7poz8whzmow=; b=vuaVAcTH7W1+HEM32sXXCH+PV
+        qLbCEfLDNkxMy9Qm63+cJQwVrVVLMfhkLUGfHBw8Nf2BjF/Iy2HQ4cggnd5joJPhh7L2767co4iv5
+        C71N+Po+YjfaSzbWe4iBRJrc7TeZwf2QYiB9BsekdSrGjWLh+TJCussKTG2UJ//73av1mdmZkYEf3
+        2fZCrxaxztth359yTjF1jk5CL092a6U1LZlDDB3RAYC4n6V/GCMZLYNUZKOHUKkeXPOvbItDdyWfj
+        2ud2QmXexeJAdFVw7RnB1m3NPmEElOwPszX+S84WJeh9ncCXhwmiE6jKYGePwhwbup7vk7zL7UfXJ
+        0XmMe6HHA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59050)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jo1sL-0002oX-Rr; Wed, 24 Jun 2020 10:39:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jo1sJ-0001qH-RN; Wed, 24 Jun 2020 10:39:23 +0100
+Date:   Wed, 24 Jun 2020 10:39:23 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] net: phy: call phy_disable_interrupts() in
+ phy_init_hw()
+Message-ID: <20200624093923.GX1551@shell.armlinux.org.uk>
+References: <20200624112516.7fcd6677@xhacker.debian>
+ <20200624112624.200306ac@xhacker.debian>
+ <996affa7-9f78-73c4-8f86-9bcd337191c4@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAFEAcA8Myn_QEjfk4Ka604PDAUAWXs6dLUY5bEQ98C__oMsmhA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <996affa7-9f78-73c4-8f86-9bcd337191c4@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:05:07PM +0100, Peter Maydell wrote:
-> On Wed, 17 Jun 2020 at 13:39, Steven Price <steven.price@arm.com> wrote:
-> > These patches add support to KVM to enable MTE within a guest. It is
-> > based on Catalin's v4 MTE user space series[1].
-> >
-> > [1] http://lkml.kernel.org/r/20200515171612.1020-1-catalin.marinas%40arm.com
-> >
-> > Posting as an RFC as I'd like feedback on the approach taken.
+On Tue, Jun 23, 2020 at 08:36:46PM -0700, Florian Fainelli wrote:
+> Le 2020-06-23 à 20:26, Jisheng Zhang a écrit :
+> > Call phy_disable_interrupts() in phy_init_hw() to "have a defined init
+> > state as we don't know in which state the PHY is if the PHY driver is
+> > loaded. We shouldn't assume that it's the chip power-on defaults, BIOS
+> > or boot loader could have changed this. Or in case of dual-boot
+> > systems the other OS could leave the PHY in whatever state." as pointed
+> > out by Heiner.
+> > 
+> > Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
+> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> > ---
+> >  drivers/net/phy/phy_device.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> > index 04946de74fa0..f17d397ba689 100644
+> > --- a/drivers/net/phy/phy_device.c
+> > +++ b/drivers/net/phy/phy_device.c
+> > @@ -1090,10 +1090,13 @@ int phy_init_hw(struct phy_device *phydev)
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > -	if (phydev->drv->config_init)
+> > +	if (phydev->drv->config_init) {
+> >  		ret = phydev->drv->config_init(phydev);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +	}
+> >  
+> > -	return ret;
+> > +	return phy_disable_interrupts(phydev);
 > 
-> What's your plan for handling tags across VM migration?
-> Will the kernel expose the tag ram to userspace so we
-> can copy it from the source machine to the destination
-> at the same time as we copy the actual ram contents ?
+> Not sure if the order makes sense here, it may seem more natural for a
+> driver writer to have interrupts disabled first and then config_init
+> called (which could enable interrupts not related to link management
+> like thermal events etc.)
 
-Qemu can map the guest memory with PROT_MTE and access the tags directly
-with LDG/STG instructions. Steven was actually asking in the cover
-letter whether we should require that the VMM maps the guest memory with
-PROT_MTE as a guarantee that it can access the guest tags.
+If this is a shared interrupt, and the PHY interrupt has been left
+enabled, wouldn't we want to ensure that the PHY interrupt is disabled
+as early as possible - in other words, when the device is probed,
+rather than when the PHY is eventually bound to the network device.
 
-There is no architecturally visible tag ram (tag storage), that's a
-microarchitecture detail.
+However, I must point out that even disabling the PHY interrupt at
+probe time is only reducing the window for problems - if that shared
+interrupt has already been claimed by other users, and if the PHY
+interrupt is unmasked in the PHY, then the PHY can do whatever it
+likes with the shared interrupt before we even get to probe the PHY.
+So the only real solution to this is to fix the environment that is
+passing control to the kernel.
 
 -- 
-Catalin
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
