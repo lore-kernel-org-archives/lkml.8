@@ -2,96 +2,137 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ED4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E097C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A9820E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593019808;
-	bh=h33gmGGByy2GPZrJ7tjNqx/Etm0E51dsYTshtyz2YhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2owyZn3I5Hqd0Uttndaju0ANUnpaqkPG+Opbz8Mro89SBsVcsIvJ950QzFd46pp8c
-	 6wGDzJ+5jKA1QC3cZtBYvTCWPKA94jj60tYaahNwAbuo0VUNkVa9Mdd0N4oqrP1Gej
-	 GlpYgCdhrJmV6XIyL98gsabhrR3kpBJ3p2rHTYrE=
+	by mail.kernel.org (Postfix) with ESMTP id 5616120773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJ/G2+Zt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405498AbgFXRaG (ORCPT
+        id S2405530AbgFXRaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405429AbgFXRaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:30:05 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 156A52078D;
-        Wed, 24 Jun 2020 17:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593019805;
-        bh=h33gmGGByy2GPZrJ7tjNqx/Etm0E51dsYTshtyz2YhE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yuRiI+ina71wDNranb8AwW9LaPmZDEbmUmZmhXR8uZXZAbrCJrZUhNi9Pyx1X52N0
-         ghUVH4l5ovbj/9oXbBaYRo7phEtcC8FTCj04Fzn7IfiHYfB6T5tYG+/e12h0P/+G6B
-         MbKo17ZfsjVqPDeyfD+FqWt6ycK4fecC5fGAzXcw=
-Date:   Wed, 24 Jun 2020 23:00:00 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     'Kishon Vijay Abraham I' <kishon@ti.com>, robh@kernel.org,
-        krzk@kernel.org, linux-samsung-soc@vger.kernel.org,
-        avri.altman@wdc.com, stanley.chu@mediatek.com,
-        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        cang@codeaurora.org, devicetree@vger.kernel.org,
-        kwmad.kim@samsung.com, linux-kernel@vger.kernel.org,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-Message-ID: <20200624173000.GJ2324254@vkoul-mobl>
-References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
- <20200528011658.71590-1-alim.akhtar@samsung.com>
- <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
- <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
- <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
- <000001d646a6$6cb5fd70$4621f850$@samsung.com>
- <20200624102112.GX2324254@vkoul-mobl>
- <004b01d64a48$8bb87270$a3295750$@samsung.com>
+        Wed, 24 Jun 2020 13:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405427AbgFXRaR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 13:30:17 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA17C061573;
+        Wed, 24 Jun 2020 10:30:17 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e9so1723207pgo.9;
+        Wed, 24 Jun 2020 10:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q15/TzuCJicAE8EEZy+jtFuuq+UiSpYK9IL1usdFcPE=;
+        b=tJ/G2+ZtCC01Paj/JN3QoUPDLqFBcKO79I6h3o8CyYHSnd9q1OEH5PLyE6x9Cm/JWu
+         SAhBPOwaLdcbgKSRCSSUI/nfL7Hz83CWPP1GP7dOBUlj/hTPcM7vTvHXE+bFml2SFgJ3
+         mAYj7idtIZ3c7oWjrai/yX6P5+dr0+NzeoSqkHl6xpk4EIvd+alSV2NQLgRuwomJ7qjJ
+         OXWqJ/4T3A58dCuAU6RYhADwClA5QxRJJ04WzB2F6zQEcPIMoAZvPslAnptjrMPsUBY7
+         4gilpfPeFkzLKfLG1DBZl34eykw1orox/alt09ttTli8mgB5rl7wBr1/LppjpwxI25dn
+         SycA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q15/TzuCJicAE8EEZy+jtFuuq+UiSpYK9IL1usdFcPE=;
+        b=QociScsDX41sARUPYXAConAJUwHyiiSYy3whS6TwRj+ktOs60qzXU7wKn/XvhVFt/Z
+         wcKmVAOe0fOoB5vdOA4/Xnz+eij/ji2FtUwi/LBW/kAlInMoqdO88qwiO3rlSRTk/wR/
+         jFBUWG9dQ3aXQT1VMFCPvtnvoSI1zdEcREMSoSc3abxd9VYz+mpKAqi1D3C1z6EZ4k+J
+         62ClDYwIHK4Ky69zCzTo/TGz0ywE6vZUQZl2sEuEF75iEJQ1/DdwUMSLLHUUW7AFP2uZ
+         YAszGYH5uWDD9t5hmNfoNDDxku5u0BAwZ1TBo48Ce9gmUVOKuP0CX1hPIZ4E2Yb5Kwh7
+         BuLA==
+X-Gm-Message-State: AOAM530Klcji0GMupdqxjHZEJhg+0ETIJjmKwbzz8liMM2JcQPAfHv2f
+        9brfyh5jHutTNjW+KCbmSXQ=
+X-Google-Smtp-Source: ABdhPJyqvWmyEtSNhauUsBE5HJ97LsiACvw4Ii9Hd2so69stSp1QeaQb5AVx7KKSl3+Uqic19cio4Q==
+X-Received: by 2002:a63:1312:: with SMTP id i18mr23039279pgl.142.1593019816511;
+        Wed, 24 Jun 2020 10:30:16 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id z11sm21187215pfk.141.2020.06.24.10.30.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 10:30:15 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-ide@vger.kernel.org
+Subject: [PATCH v1 0/4] drivers: ide: use generic power management
+Date:   Wed, 24 Jun 2020 22:58:53 +0530
+Message-Id: <20200624172857.60915-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <004b01d64a48$8bb87270$a3295750$@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alim,
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-On 24-06-20, 22:27, Alim Akhtar wrote:
-> > > > Sure, will re-send this series.
-> > 
-> > But patches have not been sent right, pls send and me/Kishon will review
-> > 
-> Thanks for your kind attention on this series. As per [0] comment from
-> Kishon, patch 7/10 [1] and probably 6/10 [2] should have been Applied after
-> 5.8-rc1 was tagged.
+The purpose of this patch series is to remove legacy power management callbacks
+from ide drivers.
 
-And that is something I am trying atm, but I dont have patches in my
-mailbox, so would you be kind enough to resend me these patches after
-rebasing to phy-next, also do add acks/reviews collected in previous
-posts.
+The suspend() and resume() callbacks operations are still invoking
+pci_save/restore_state(), pci_set_power_state(), pci_enable/disable_state(),
+etc. and handling the power management themselves, which is not recommended.
 
-I dont think I have seen resend, or maybe I wasnt cced
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly and make use of dev_pm_ops structure.
 
-> I have already send and re-send V10 of this series. Kishon has already
-> reviewed and provided comments and I have addressed them as well. These
-> patches already have and Reviewed-by, Tested-by tags.
-> Let me know if something more needs to be done from my side.
-> [0] https://lkml.org/lkml/2020/6/7/410
-> [1] https://lkml.org/lkml/2020/5/27/1705
-> [2] https://lkml.org/lkml/2020/5/27/1701
+All patches are compile-tested only.
+
+Vaibhav Gupta (4):
+  ide: use generic power management
+  ide: triflex: use generic power management
+  ide: sc1200: use generic power management
+  ide: delkin_cb: use generic power management
+
+ drivers/ide/aec62xx.c         |  3 +--
+ drivers/ide/alim15x3.c        |  3 +--
+ drivers/ide/amd74xx.c         |  3 +--
+ drivers/ide/atiixp.c          |  3 +--
+ drivers/ide/cmd64x.c          |  3 +--
+ drivers/ide/cs5520.c          |  3 +--
+ drivers/ide/cs5530.c          |  3 +--
+ drivers/ide/cs5535.c          |  3 +--
+ drivers/ide/cs5536.c          |  3 +--
+ drivers/ide/cy82c693.c        |  3 +--
+ drivers/ide/delkin_cb.c       | 35 ++++++----------------------
+ drivers/ide/hpt366.c          |  3 +--
+ drivers/ide/ide-pci-generic.c |  3 +--
+ drivers/ide/it8172.c          |  3 +--
+ drivers/ide/it8213.c          |  3 +--
+ drivers/ide/it821x.c          |  3 +--
+ drivers/ide/jmicron.c         |  3 +--
+ drivers/ide/ns87415.c         |  3 +--
+ drivers/ide/opti621.c         |  3 +--
+ drivers/ide/pdc202xx_new.c    |  3 +--
+ drivers/ide/pdc202xx_old.c    |  3 +--
+ drivers/ide/piix.c            |  3 +--
+ drivers/ide/sc1200.c          | 43 ++++++++++++-----------------------
+ drivers/ide/serverworks.c     |  3 +--
+ drivers/ide/setup-pci.c       | 28 ++++-------------------
+ drivers/ide/siimage.c         |  3 +--
+ drivers/ide/sis5513.c         |  3 +--
+ drivers/ide/sl82c105.c        |  3 +--
+ drivers/ide/slc90e66.c        |  3 +--
+ drivers/ide/triflex.c         | 24 +++++++++----------
+ drivers/ide/via82cxxx.c       |  3 +--
+ include/linux/ide.h           |  8 +------
+ 32 files changed, 65 insertions(+), 154 deletions(-)
 
 -- 
-~Vinod
+2.27.0
+
