@@ -2,93 +2,216 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0D920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F29520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389211AbgFXJRF (ORCPT
+        id S2389164AbgFXJSQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:17:05 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60472 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387886AbgFXJRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:17:04 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2gCGvNexTBJAA--.646S3;
-        Wed, 24 Jun 2020 17:16:51 +0800 (CST)
-Subject: Re: [1/7] irqchip: Fix potential resource leaks
-To:     Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-References: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
- <d2111f53-ca52-fedf-0257-71f0aa89b093@loongson.cn>
- <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <bd28aef9-ba70-0539-bdc3-6ce7162cefca@loongson.cn>
-Date:   Wed, 24 Jun 2020 17:16:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxT2gCGvNexTBJAA--.646S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gry8Jw4xZr1DWrWUGw18Grg_yoWfuwbEk3
-        WxK34DW397AF4UCr17tr4jqr98G3sxGa45tw4DtFW2gryavwsxCFZ7WrWrJw18WrZ7Crnx
-        Arsrt34fXw1xujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr4
-        1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-        67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-        8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-        wI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7
-        CjxVAFwI0_GcCE3sUvcSsGvfC2KfnxnUUI43ZEXa7VUbdOz3UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 24 Jun 2020 05:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388655AbgFXJSP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:18:15 -0400
+Received: from drew.franken.de (drew.ipv6.franken.de [IPv6:2001:638:a02:a001:20e:cff:fe4a:feaa])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DB3C061573;
+        Wed, 24 Jun 2020 02:18:15 -0700 (PDT)
+Received: from mb.fritz.box (ip4d15f5fc.dynamic.kabel-deutschland.de [77.21.245.252])
+        (Authenticated sender: lurchi)
+        by mail-n.franken.de (Postfix) with ESMTPSA id 1C1F37220B819;
+        Wed, 24 Jun 2020 11:18:10 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Strange problem with SCTP+IPv6
+From:   Michael Tuexen <Michael.Tuexen@lurchi.franken.de>
+In-Reply-To: <CADvbK_cXsS7_kYifCqMRcedtNgG0hNmgrf33+hkkjmK7xjAP=A@mail.gmail.com>
+Date:   Wed, 24 Jun 2020 11:18:09 +0200
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        David Laight <David.Laight@aculab.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <6EA67F12-F19A-4C60-A652-B08C78A36CBA@lurchi.franken.de>
+References: <20200621155604.GA23135@minyard.net>
+ <CADvbK_d9mV9rBg7oLC+9u4fg3d_5a_g8ukPe83vOAE8ZM3FhHA@mail.gmail.com>
+ <20200622165759.GA3235@minyard.net>
+ <4B68D06C-00F4-42C3-804A-B5531AABCE21@lurchi.franken.de>
+ <20200622183253.GQ2491@localhost.localdomain>
+ <c1121947c9a94703b4ab6dc434a7c3f8@AcuMS.aculab.com>
+ <20200623161756.GE3235@minyard.net>
+ <20200623212143.GR2491@localhost.localdomain>
+ <C4F6EDBE-CCAE-4635-AD96-9C2E2582F1B3@lurchi.franken.de>
+ <20200623213102.GS2491@localhost.localdomain>
+ <42823598-7B01-4C62-B896-ACC4449F3AFF@lurchi.franken.de>
+ <CADvbK_cXsS7_kYifCqMRcedtNgG0hNmgrf33+hkkjmK7xjAP=A@mail.gmail.com>
+To:     Xin Long <lucien.xin@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/2020 04:42 PM, Markus Elfring wrote:
->>> Can it helpful to add jump targets so that a bit of exception handling
->>> can be better reused at the end of this function?
->> OK, no problem, I will do it in the v2.
-> It seems that the software evolution will be continued with another
-> update suggestion like the following.
->
-> [PATCH v3 10/14 RESEND] irqchip/nvic: Fix potential resource leaks
-> https://lore.kernel.org/linux-mips/1592984711-3130-11-git-send-email-yangtiezhu@loongson.cn/
-> https://lore.kernel.org/patchwork/patch/1263191/
->
->
-> Can it matter to omit the word “potential” from change descriptions
-> after you detected that specific function calls were missing
-> in if branches?
+> On 24. Jun 2020, at 09:25, Xin Long <lucien.xin@gmail.com> wrote:
+> 
+> On Wed, Jun 24, 2020 at 5:48 AM Michael Tuexen
+> <michael.tuexen@lurchi.franken.de> wrote:
+>> 
+>>> On 23. Jun 2020, at 23:31, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
+>>> 
+>>> On Tue, Jun 23, 2020 at 11:24:59PM +0200, Michael Tuexen wrote:
+>>>>> On 23. Jun 2020, at 23:21, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com> wrote:
+>>>>> 
+>>>>> On Tue, Jun 23, 2020 at 11:17:56AM -0500, Corey Minyard wrote:
+>>>>>> On Tue, Jun 23, 2020 at 01:17:28PM +0000, David Laight wrote:
+>>>>>>> From: Marcelo Ricardo Leitner
+>>>>>>>> Sent: 22 June 2020 19:33
+>>>>>>>> On Mon, Jun 22, 2020 at 08:01:24PM +0200, Michael Tuexen wrote:
+>>>>>>>>>> On 22. Jun 2020, at 18:57, Corey Minyard <minyard@acm.org> wrote:
+>>>>>>>>>> 
+>>>>>>>>>> On Mon, Jun 22, 2020 at 08:01:23PM +0800, Xin Long wrote:
+>>>>>>>>>>> On Sun, Jun 21, 2020 at 11:56 PM Corey Minyard <minyard@acm.org> wrote:
+>>>>>>>>>>>> 
+>>>>>>>>>>>> I've stumbled upon a strange problem with SCTP and IPv6.  If I create an
+>>>>>>>>>>>> sctp listening socket on :: and set the IPV6_V6ONLY socket option on it,
+>>>>>>>>>>>> then I make a connection to it using ::1, the connection will drop after
+>>>>>>>>>>>> 2.5 seconds with an ECONNRESET error.
+>>>>>>>>>>>> 
+>>>>>>>>>>>> It only happens on SCTP, it doesn't have the issue if you connect to a
+>>>>>>>>>>>> full IPv6 address instead of ::1, and it doesn't happen if you don't
+>>>>>>>>>>>> set IPV6_V6ONLY.  I have verified current end of tree kernel.org.
+>>>>>>>>>>>> I tried on an ARM system and x86_64.
+>>>>>>>>>>>> 
+>>>>>>>>>>>> I haven't dug into the kernel to see if I could find anything yet, but I
+>>>>>>>>>>>> thought I would go ahead and report it.  I am attaching a reproducer.
+>>>>>>>>>>>> Basically, compile the following code:
+>>>>>>>>>>> The code only set IPV6_V6ONLY on server side, so the client side will
+>>>>>>>>>>> still bind all the local ipv4 addresses (as you didn't call bind() to
+>>>>>>>>>>> bind any specific addresses ). Then after the connection is created,
+>>>>>>>>>>> the client will send HB on the v4 paths to the server. The server
+>>>>>>>>>>> will abort the connection, as it can't support v4.
+>>>>>>>>>>> 
+>>>>>>>>>>> So you can work around it by either:
+>>>>>>>>>>> 
+>>>>>>>>>>> - set IPV6_V6ONLY on client side.
+>>>>>>>>>>> 
+>>>>>>>>>>> or
+>>>>>>>>>>> 
+>>>>>>>>>>> - bind to the specific v6 addresses on the client side.
+>>>>>>>>>>> 
+>>>>>>>>>>> I don't see RFC said something about this.
+>>>>>>>>>>> So it may not be a good idea to change the current behaviour
+>>>>>>>>>>> to not establish the connection in this case, which may cause regression.
+>>>>>>>>>> 
+>>>>>>>>>> Ok, I understand this.  It's a little strange, but I see why it works
+>>>>>>>>>> this way.
+>>>>>>>>> I don't. I would expect it to work as I described in my email.
+>>>>>>>>> Could someone explain me how and why it is behaving different from
+>>>>>>>>> my expectation?
+>>>>>>>> 
+>>>>>>>> It looks like a bug to me. Testing with this test app here, I can see
+>>>>>>>> the INIT_ACK being sent with a bunch of ipv4 addresses in it and
+>>>>>>>> that's unexpected for a v6only socket. As is, it's the server saying
+>>>>>>>> "I'm available at these other addresses too, but not."
+>>>>>>> 
+>>>>>>> Does it even make sense to mix IPv4 and IPv6 addresses on the same
+>>>>>>> connection?
+>>>>>>> I don't remember ever seeing both types of address in a message,
+>>>>>>> but may not have looked.
+>>>>>> 
+>>>>>> That's an interesting question.  Do the RFCs say anything?  I would
+>>>>>> assume it was ok unless ipv6only was set.
+>>>>>> 
+>>>>>>> 
+>>>>>>> I also wonder whether the connection should be dropped for an error
+>>>>>>> response on a path that has never been validated.
+>>>>>> 
+>>>>>> That actually bothered me a bit more.  Shouldn't it stay up if any path
+>>>>>> is up?  That's kind of the whole point of multihoming.
+>>>>> 
+>>>>> Michael explained it on the other email. What he described is what I
+>>>>> observed in my tests.
+>>>>> 
+>>>>>> 
+>>>>>>> 
+>>>>>>> OTOH the whole 'multi-homing' part of SCTP sucks.
+>>>>>> 
+>>>>>> I don't think so.
+>>>>>> 
+>>>>>>> The IP addresses a server needs to bind to depend on where the
+>>>>>>> incoming connection will come from.
+>>>>>>> A local connection may be able to use a 192.168.x.x address
+>>>>>>> but a remote connection must not - as it may be defined locally
+>>>>>>> at the remote system.
+>>>>>>> But both connections can come into the public (routable) address.
+>>>>>>> We have to tell customers to explicitly configure the local IP
+>>>>>>> addresses - which means the application has to know what they are.
+>>>>>>> Fortunately these apps are pretty static - usually M3UA.
+>>>>>> 
+>>>>>> Umm, no,  If you have a private address, it better be behind a firewall,
+>>>>>> and the firewall should handle rewriting the packet to fix the addresses.
+>>>>>> 
+>>>>>> It doesn't appear that Linux netfilter does this.  There is a TODO in
+>>>>>> the code for this.  But that's how it *should* work.
+>>>>> 
+>>>>> Right, we don't support SCTP aware NAT [1].
+>>>>> 
+>>>>> 1.https://tools.ietf.org/html/draft-stewart-behave-sctpnat-04
+>>>> The current version is: https://tools.ietf.org/html/draft-ietf-tsvwg-natsupp-16
+>>> 
+>>> Thanks!
+>>> 
+>>>> 
+>>>> Another possibility for NAT traversal is UDP encapsulation...
+>>> 
+>>> Also not supported.. :-]
+>> But maybe someone wants to implement it. It is supported by FreeBSD, if you
+>> need a peer for testing. Or the userland stack usrsctp supports it. Then you
+>> do not need root privileges to run it.
+> You mean SCTP_REMOTE_UDP_ENCAPS_PORT sockopt, right?
+> We have this in our to-do list. I mixed rfc6951 with the userland one.
+> Will prioritize this feature. Thanks.
+Great to hear. When implementing RFC 6951 support, please take
+https://tools.ietf.org/html/draft-tuexen-tsvwg-sctp-udp-encaps-cons-02
+into account. It is still valid and will be pushed further after RFC 4960bis
+is done.
 
-Oh, I find this issue through code review, I have no test environment
-to trigger the error path, but I think it is better to release the resource
-in the error path, so I use "potential" description.
-
->
-> Regards,
-> Markus
+Best regards
+Michael
+> 
+>> 
+>> Best regards
+>> Michael
+>>> 
+>>> Best regards,
+>>> Marcelo
+>>> 
+>>>> 
+>>>> Best regards
+>>>> Michael
+>>>>> 
+>>>>> Marcelo
+>>>>> 
+>>>>>> 
+>>>>>> -corey
+>>>>>> 
+>>>>>>> 
+>>>>>>>  David
+>>>>>>> 
+>>>>>>> -
+>>>>>>> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+>>>>>>> Registration No: 1397386 (Wales)
+>>>>>>> 
+>>>> 
+>> 
 
