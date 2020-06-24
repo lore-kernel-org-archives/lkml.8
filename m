@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55943C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C092084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393A4212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593029609;
-	bh=7PRSmwXRt+CrreGfiCD0MNS6UfD6diKqGp83Myw2DTY=;
+	s=default; t=1593029611;
+	bh=R9LbkAo9jKwjkjclV3oodsP6eF1VffMzNtlLMYCzz44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QgOE4+xY5h1tCfiBwURBKt4c9xUyjKsfap86XNkq/9dEI6NIViEjhZ3Jc7YyRQz77
-	 g9o+TakhhmhHvgTgDMF/v9LKVqxWnJ2GIztspipT5O7YILN9wvYDa3f62MwW7ldnOx
-	 vidS9aMxTLlEIfNn4hNmL37TjeqLf4KV3Y8KoZQg=
+	b=eRX7yGBjzQGK2yChNSL4iwOFfR1fq/9tcUrluuqWxd8q0EKgpcTkTKja4pjnqkdj8
+	 vJR6FdlpNIGw5UqZbaSy1OeToB+/pZNuQd2uXzvbvz2da6wDwSGaKp7XQBQJuDx/tj
+	 UR3Da4Kw5DoBuZZ6y7ufyPjTJ/fWXFamJJHkfqCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406527AbgFXUN2 (ORCPT
+        id S2406535AbgFXUN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:13:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52540 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 16:13:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406251AbgFXUMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2406380AbgFXUMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 16:12:30 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B75920E65;
+        by mail.kernel.org (Postfix) with ESMTPSA id 054D720B80;
         Wed, 24 Jun 2020 20:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1593029549;
-        bh=7PRSmwXRt+CrreGfiCD0MNS6UfD6diKqGp83Myw2DTY=;
+        bh=R9LbkAo9jKwjkjclV3oodsP6eF1VffMzNtlLMYCzz44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=soWj4b8Jd8MKtBdEOjiLFpFG9PU01G4pCAne4kTj4wVfL5THRO/9aknm8EBFudoOQ
-         tg8ylG8P67zmP8mRkEtpuwzk04dh6KTHqgcLgCcS0IhacPRQa4J6OpU6fs3SFyx2zN
-         zLIFJlwytGRQ4GiwLzb5gdeZriRa8uAqILLgGqTc=
+        b=anWb0gy5nSKcvywWwZc1+oR8+w6JhPwt8Um1eMNDIfx7BymseDl7zLdh5E7a7rAFI
+         Ct0PDG4YgcnMgNhbO8OU8tRVYXz41YSCBdBjBiuhqAZpz+llOqA70eC1cKnCOPoScF
+         vVNqOcyylPbvCjPO21+SsrorTn7c71J5h6dhPclc=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 06/17] rcu/tree: Simplify KFREE_BULK_MAX_ENTR macro
-Date:   Wed, 24 Jun 2020 13:12:15 -0700
-Message-Id: <20200624201226.21197-6-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/17] rcu/tree: Make debug_objects logic independent of rcu_head
+Date:   Wed, 24 Jun 2020 13:12:14 -0700
+Message-Id: <20200624201226.21197-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200624201200.GA28901@paulmck-ThinkPad-P72>
 References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
@@ -60,59 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-We can simplify KFREE_BULK_MAX_ENTR macro and get rid of
-magic numbers which were used to make the structure to be
-exactly one page.
+kfree_rcu()'s debug_objects logic uses the address of the object's
+embedded rcu_head to queue/unqueue. Instead of this, make use of the
+object's address itself as preparation for future headless kfree_rcu()
+support.
 
-Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ kernel/rcu/tree.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index dc5369a..519a3f5 100644
+index 31d3b2c..dc5369a 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2940,13 +2940,6 @@ EXPORT_SYMBOL_GPL(call_rcu);
- #define KFREE_DRAIN_JIFFIES (HZ / 50)
- #define KFREE_N_BATCHES 2
- 
--/*
-- * This macro defines how many entries the "records" array
-- * will contain. It is based on the fact that the size of
-- * kfree_rcu_bulk_data structure becomes exactly one page.
-- */
--#define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 3)
--
- /**
-  * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
+@@ -2952,13 +2952,11 @@ EXPORT_SYMBOL_GPL(call_rcu);
   * @nr_records: Number of active pointers in the array
-@@ -2955,10 +2948,18 @@ EXPORT_SYMBOL_GPL(call_rcu);
+  * @records: Array of the kfree_rcu() pointers
+  * @next: Next bulk object in the block chain
+- * @head_free_debug: For debug, when CONFIG_DEBUG_OBJECTS_RCU_HEAD is set
   */
  struct kfree_rcu_bulk_data {
  	unsigned long nr_records;
--	void *records[KFREE_BULK_MAX_ENTR];
+ 	void *records[KFREE_BULK_MAX_ENTR];
  	struct kfree_rcu_bulk_data *next;
-+	void *records[];
+-	struct rcu_head *head_free_debug;
  };
  
-+/*
-+ * This macro defines how many entries the "records" array
-+ * will contain. It is based on the fact that the size of
-+ * kfree_rcu_bulk_data structure becomes exactly one page.
-+ */
-+#define KFREE_BULK_MAX_ENTR \
-+	((PAGE_SIZE - sizeof(struct kfree_rcu_bulk_data)) / sizeof(void *))
-+
  /**
-  * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
-  * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
+@@ -3008,11 +3006,13 @@ struct kfree_rcu_cpu {
+ static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
+ 
+ static __always_inline void
+-debug_rcu_head_unqueue_bulk(struct rcu_head *head)
++debug_rcu_bhead_unqueue(struct kfree_rcu_bulk_data *bhead)
+ {
+ #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
+-	for (; head; head = head->next)
+-		debug_rcu_head_unqueue(head);
++	int i;
++
++	for (i = 0; i < bhead->nr_records; i++)
++		debug_rcu_head_unqueue((struct rcu_head *)(bhead->records[i]));
+ #endif
+ }
+ 
+@@ -3042,7 +3042,7 @@ static void kfree_rcu_work(struct work_struct *work)
+ 	for (; bhead; bhead = bnext) {
+ 		bnext = bhead->next;
+ 
+-		debug_rcu_head_unqueue_bulk(bhead->head_free_debug);
++		debug_rcu_bhead_unqueue(bhead);
+ 
+ 		rcu_lock_acquire(&rcu_callback_map);
+ 		trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
+@@ -3064,14 +3064,15 @@ static void kfree_rcu_work(struct work_struct *work)
+ 	 */
+ 	for (; head; head = next) {
+ 		unsigned long offset = (unsigned long)head->func;
++		void *ptr = (void *)head - offset;
+ 
+ 		next = head->next;
+-		debug_rcu_head_unqueue(head);
++		debug_rcu_head_unqueue((struct rcu_head *)ptr);
+ 		rcu_lock_acquire(&rcu_callback_map);
+ 		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+ 
+ 		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
+-			kfree((void *)head - offset);
++			kfree(ptr);
+ 
+ 		rcu_lock_release(&rcu_callback_map);
+ 		cond_resched_tasks_rcu_qs();
+@@ -3210,18 +3211,11 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+ 		/* Initialize the new block. */
+ 		bnode->nr_records = 0;
+ 		bnode->next = krcp->bhead;
+-		bnode->head_free_debug = NULL;
+ 
+ 		/* Attach it to the head. */
+ 		krcp->bhead = bnode;
+ 	}
+ 
+-#ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
+-	head->func = func;
+-	head->next = krcp->bhead->head_free_debug;
+-	krcp->bhead->head_free_debug = head;
+-#endif
+-
+ 	/* Finally insert. */
+ 	krcp->bhead->records[krcp->bhead->nr_records++] =
+ 		(void *) head - (unsigned long) func;
+@@ -3245,14 +3239,17 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ {
+ 	unsigned long flags;
+ 	struct kfree_rcu_cpu *krcp;
++	void *ptr;
+ 
+ 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
+ 	krcp = this_cpu_ptr(&krc);
+ 	if (krcp->initialized)
+ 		raw_spin_lock(&krcp->lock);
+ 
++	ptr = (void *)head - (unsigned long)func;
++
+ 	// Queue the object but don't yet schedule the batch.
+-	if (debug_rcu_head_queue(head)) {
++	if (debug_rcu_head_queue(ptr)) {
+ 		// Probable double kfree_rcu(), just leak.
+ 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+ 			  __func__, head);
 -- 
 2.9.5
 
