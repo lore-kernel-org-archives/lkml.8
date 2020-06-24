@@ -2,118 +2,127 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A05C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982B82077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E1020702
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:16:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="gLi7cDDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404915AbgFXTOw (ORCPT
+        id S2405904AbgFXTQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:14:52 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:51590 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404563AbgFXTOv (ORCPT
+        Wed, 24 Jun 2020 15:16:41 -0400
+Received: from mail.efficios.com ([167.114.26.124]:52714 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404563AbgFXTQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:14:51 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from build.alporthouse.com (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 21606589-1500050 
-        for multiple; Wed, 24 Jun 2020 20:14:22 +0100
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: [PATCH] mm: Skip opportunistic reclaim for dma pinned pages
-Date:   Wed, 24 Jun 2020 20:14:17 +0100
-Message-Id: <20200624191417.16735-1-chris@chris-wilson.co.uk>
-X-Mailer: git-send-email 2.20.1
+        Wed, 24 Jun 2020 15:16:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 32B2E2C41EA;
+        Wed, 24 Jun 2020 15:16:39 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Sy_hIEQaqNSw; Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D4A622C41E9;
+        Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D4A622C41E9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593026198;
+        bh=3iQZiVLyuzca+V6wzidMMRJWMtP3eZM0DyCNIq1qy5A=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=gLi7cDDYKoLA6fi9D2m9YjL4neyMZO3/xX+0sRd9xuPY3k0RAYiL9OKhPETdy2UrJ
+         z8tHPffjw7aJNS6TM58GTkea3FuJmkbJ/N9FJ2M0fQVImRVEP180V4OPxhzjxHUalS
+         07Ll1v+SfqY+Hb4T8BhRTC1Dx9iP6XrTBhlA1xoU1cn14782maIaB7LFY2rHp6rqdQ
+         dkeih0Scg2lV3eG8CIHF5Hg3DUv81hNLJ5IQw1+ESr/UxfA0vRupwMsvhuaVJs/9Tk
+         EZo+kBGQXt8rOYsiXVTPro3r2CsdtcB1ey32YpvI7/ma+gmd/5s7hXuJodUtdbpp9v
+         tQbeTDgR83aLQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id DBrbA6G8I6OI; Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id BF3DA2C448D;
+        Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
+Date:   Wed, 24 Jun 2020 15:16:38 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1248023868.11643.1593026198678.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87r1u48eix.fsf@oldenburg2.str.redhat.com>
+References: <20200622180803.1449-1-mathieu.desnoyers@efficios.com> <20200622180803.1449-2-mathieu.desnoyers@efficios.com> <87d05obl4w.fsf@oldenburg2.str.redhat.com> <1158112159.11628.1593025203438.JavaMail.zimbra@efficios.com> <87r1u48eix.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH 1/3] glibc: Perform rseq registration at C startup and
+ thread creation (v21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v21)
+Thread-Index: YkL95Fw6DEDAnKFpYDNCDQAteeHIAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A general rule of thumb is that shrinkers should be fast and effective.
-They are called from direct reclaim at the most incovenient of times when
-the caller is waiting for a page. If we attempt to reclaim a page being
-pinned for active dma [pin_user_pages()], we will incur far greater
-latency than a normal anonymous page mapped multiple times. Worse the
-page may be in use indefinitely by the HW and unable to be reclaimed
-in a timely manner.
+----- On Jun 24, 2020, at 3:11 PM, Florian Weimer fweimer@redhat.com wrote:
 
-A side effect of the LRU shrinker not being dma aware is that we will
-often attempt to perform direct reclaim on the persistent group of dma
-pages while continuing to use the dma HW (an issue as the HW may already
-be actively waiting for the next user request), and even attempt to
-reclaim a partially allocated dma object in order to satisfy pinning
-the next user page for that object.
+> * Mathieu Desnoyers:
+> 
+>>> I'm still worried that __rseq_static_assert and __rseq_alignof will show
+>>> up in the UAPI with textually different definitions.  (This does not
+>>> apply to __rseq_tls_model_ie.)
+>>
+>> What makes this worry not apply to __rseq_tls_model_ie ?
+> 
+> It's not needed by the kernel header because it doesn't contain a
+> __rseq_abi declaration.
+> 
+>>> 
+>>> Is my worry unfounded?
+>>
+>> So AFAIU you worry that eventually sys/rseq.h and linux/rseq.h carry different
+>> definitions of __rseq_static_assert and __rseq_alignof.
+>>
+>> Indeed, I did not surround those #define with #ifndef/#endif. Maybe we should ?
+>>
+>> Just in case the definitions end up being different (worse case scenario), we
+>> should expect their behavior to be pretty much equivalent. So going for the
+>> following should address your concern I think:
+> 
+> I think we should keep things simple on the glibc side for now and do
+> this changes to the kernel headers first.
 
-It is to be expected that such pages are made available for reclaim at
-the end of the dma operation [unpin_user_pages()], and for truly
-longterm pins to be proactively recovered via device specific shrinkers
-[i.e. stop the HW, allow the pages to be returned to the system, and
-then compete again for the memory].
+Just to be sure I understand what you mean by "keep things simple", do you
+recommend removing the following lines completely for now from sys/rseq.h ?
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
----
-This seems perhaps a little devious and overzealous. Is there a more
-appropriate TTU flag? Would there be a way to limit its effect to say
-FOLL_LONGTERM? Doing the migration first would seem to be sensible if
-we disable opportunistic migration for the duration of the pin.
----
- mm/rmap.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+/* Ensure the compiler supports rseq_align.  */
+__rseq_static_assert (__rseq_alignof (struct rseq_cs) >= 32, "alignment");
+__rseq_static_assert (__rseq_alignof (struct rseq) >= 32, "alignment");
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 5fe2dedce1fc..374c6e65551b 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1393,6 +1393,22 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 	    is_zone_device_page(page) && !is_device_private_page(page))
- 		return true;
- 
-+	/*
-+	 * Try and fail early to revoke a costly DMA pinned page.
-+	 *
-+	 * Reclaiming an active DMA page requires stopping the hardware
-+	 * and flushing access. [Hardware that does support pagefaulting,
-+	 * and so can quickly revoke DMA pages at any time, does not need
-+	 * to pin the DMA page.] At worst, the page may be indefinitely in
-+	 * use by the hardware. Even at best it will take far longer to
-+	 * revoke the access via the mmu notifier, forcing that latency
-+	 * onto our callers rather than the consumer of the HW. As we are
-+	 * called during opportunistic direct reclaim, declare the
-+	 * opportunity cost too high and ignore the page.
-+	 */
-+	if (page_maybe_dma_pinned(page))
-+		return true;
-+
- 	if (flags & TTU_SPLIT_HUGE_PMD) {
- 		split_huge_pmd_address(vma, address,
- 				flags & TTU_SPLIT_FREEZE, page);
+Thanks,
+
+Mathieu
+
+
 -- 
-2.20.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
