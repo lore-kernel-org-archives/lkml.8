@@ -3,98 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65E4D2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E36920768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592984587;
-	bh=aKUc7mLkB/DtscoCcedtjGBeQLGlJjcJimYQgEW7w8o=;
+	s=default; t=1592984653;
+	bh=1nYDddP44y5PFslcfyEtsRL/mtIUGOtw9RDYWyquThA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NcRkkKaIHH5ZqNzCiT70jQuEI/q6SUcWn6yn3pE45QY6JygJ6lc7onuktWbD31uVl
-	 eJKj9Yy0bpBNBtKxdIDEKKMv2sMA2ks0O99/tsxh9/Reprq269Frt+fBfYOJForxE0
-	 DRIhRle+7bxFP/reCdr2ynTDc/GfqpIjixrc/1yI=
+	b=rJl5/Ezu7zCg6bFADQPqQgOoIog4DBdZ0+zvQh51cYj3Z9eXBBS5KoHRU1y3DXT6/
+	 5TUSaBwIlQP/d/FqDRNFX8KRtWG2JVNe1amFAL6yuX1DjdgQM64vN1T/3u1QpRXN40
+	 8j1KS/0CJIPC3GrtqsRvV4/vXOZH0vvQ9Y1QVy4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389964AbgFXHnF (ORCPT
+        id S2389973AbgFXHoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:43:05 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44817 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389583AbgFXHnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:43:04 -0400
-Received: by mail-lj1-f196.google.com with SMTP id s9so1456719ljm.11;
-        Wed, 24 Jun 2020 00:43:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jhPbD8Aqt3VIAAC9sQbp6H6U14unZ71zHne68ocC/q8=;
-        b=X8meVbsgno95669OX3jLgN67LcAsyQkIf+vPBmMNiGqZ+uUdrr8l98DJo5DO3PqniI
-         yqKWYnxyRmN/P/YrDhenWa/G5jbrykaS5hMkNwPwbQAMV/S7OGaKO6nEfsZCoCQH2o5Q
-         xtGysK03/EPbxCbFwclQOsIKJzvCJA4r/kT9I0Vh+LmXW2P9c0iX3Fw62zWvOIs79K8n
-         J+MBHB1EFKPHmuetw+pYxvr3ulmgn+4H760q3fOTSYcXkb7MJfSLRhulrreRiBXrJI+o
-         YsA4USvW3f0qiX7BecSMZm/31JExVI6rJtNIyfY7YvJkQ71he9ndb3sDcfxxy7cKXmaj
-         ongg==
-X-Gm-Message-State: AOAM5316WSSj+o3poUeZbjbVaUegtU4WPtYwnzbRv6Ju54CRXVC1Gogh
-        dsAAETrwp6wONXA/pA/r1W4=
-X-Google-Smtp-Source: ABdhPJzB8lqg/UhFq6nJm/tBaxRhPTP8eEwYfojgTJmfjg6hV+eiXCF6eCfrgqxE5qiR3xNi3+afUw==
-X-Received: by 2002:a2e:8041:: with SMTP id p1mr12780604ljg.99.1592984581669;
-        Wed, 24 Jun 2020 00:43:01 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id i8sm4516783lja.18.2020.06.24.00.43.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 00:43:00 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jo03i-0002Xx-SK; Wed, 24 Jun 2020 09:43:02 +0200
-Date:   Wed, 24 Jun 2020 09:43:02 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Phu Luu <Phu.Luu@silabs.com>
-Cc:     "johan@kernel.org" <johan@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Brant Merryman <Brant.Merryman@silabs.com>,
-        Richard Hendricks <Richard.Hendricks@silabs.com>
-Subject: Re: [PATCH v3 1/2] USB: serial: cp210x: Enable usb generic
- throttle/unthrottle
-Message-ID: <20200624074302.GK3334@localhost>
-References: <DM6PR11MB28578CA6D09D13A07D7959D99C950@DM6PR11MB2857.namprd11.prod.outlook.com>
+        Wed, 24 Jun 2020 03:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389583AbgFXHoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:44:11 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9EB320768;
+        Wed, 24 Jun 2020 07:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592984650;
+        bh=1nYDddP44y5PFslcfyEtsRL/mtIUGOtw9RDYWyquThA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k/Yl39q0+YR74/Rc62+9Gw14cIUQAJaPubtTITJoLEYiBRvSLKpXCarJfCHvL8U5d
+         5d9fw0tSXtVLLmf4o/wGlI/G3sAEYOtH+gkUjtdN43fu0VUiPrNU7PNuK6pKI6eBDR
+         iJrnJVPsa4qcmOd3GH+eNUFi2aIzFYNxg3MGud58=
+Date:   Wed, 24 Jun 2020 13:14:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     gaurav singh <gaurav1086@gmail.com>
+Cc:     green.wan@sifive.com, dan.j.williams@intel.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma_async_tx_descriptor: Fix null pointer dereference
+Message-ID: <20200624074406.GR2324254@vkoul-mobl>
+References: <CAFAFadDGQusosHzwqY18bYWF8a3a1OK1+Sr_NtWMOvpFnpmgqA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM6PR11MB28578CA6D09D13A07D7959D99C950@DM6PR11MB2857.namprd11.prod.outlook.com>
+In-Reply-To: <CAFAFadDGQusosHzwqY18bYWF8a3a1OK1+Sr_NtWMOvpFnpmgqA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 07:01:33AM +0000, Phu Luu wrote:
-> Assign the .throttle and .unthrottle functions to be generic function
-> in the driver structure to prevent data loss that can otherwise occur
-> if the host does not enable USB throttling.
+On 03-06-20, 22:59, gaurav singh wrote:
+> The check: if (chan && (!len || !dest || !src)) indicates that chan can be
+> NULL, however chan is dereferenced in multiple locations later without
+> check. In the function: sf_pdma_alloc_desc() and later: chan->desc = desc;
+> This can cause segmentation fault if chan is NULL and it doesn't return in
+> the first check. To fix, this: add the check for chan right in the
+> beginning.
 > 
-> Signed-off-by: Phu Luu <phu.luu@silabs.com>
-> Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
+> Please find the patch below. Let me know if there's any issue.
 
-One last form issue (besides the whitespace corrupted patch 2/2 that
-Greg pointed out): The SOB tags records how a patch got into the
-kernel (e.g. who forwarded it) and the first SOB should generally be the
-author's.
+1. please send using git-send-email
+2. pls run checkpatch, below formatting is crap
 
-In this case, I guess Brant is the primary author as he submitted these
-patches last time around. If so, you need to manually add From line at
-the beginning of the mail (i.e. before the commit message). If you use
-git-format-patch, git would handle that for you.
+> 
+> Thank you.
+> Gaurav.
+> 
+> >From a2f18613751b4ce5b0dba3a273a75957d872ccd3 Mon Sep 17 00:00:00 2001
+> From: Gaurav Singh <gaurav1086@gmail.com>
+> Date: Wed, 3 Jun 2020 22:52:31 -0400
+> Subject: [PATCH] dma_async_tx_descriptor: Fix null pointer dereference
 
-You can also use the newish "Co-developed-by" tag to indicate joint
-authorship. More details can be found in 
+Care to explain which null pointer dereference?
+Also reread Documentation/process/submitting-patches.rst esp word about
+subject lines
 
-	Documentation/process/submitting-patches.rst
+> 
+> ---
+>  drivers/dma/sf-pdma/sf-pdma.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+> index 6d0bec947636..0cbc7b379d11 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -94,7 +94,11 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
+> dma_addr_t dest, dma_addr_t src,
+>   struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+>   struct sf_pdma_desc *desc;
+> 
+> - if (chan && (!len || !dest || !src)) {
+> + if (!chan) {
+> + return NULL;
+> + }
+> +
+> + if (!len || !dest || !src) {
+>   dev_err(chan->pdma->dma_dev.dev,
+>   "Please check dma len, dest, src!\n");
+>   return NULL;
+> -- 
+> 2.17.1
 
-Johan
+-- 
+~Vinod
