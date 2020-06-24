@@ -2,64 +2,121 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A30D2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB1112082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593029526;
+	bh=Ud+RpLMV4dWOyKjdxATNiBtJWY31iUXVLUKQ0Pw1OEs=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=ZS40SiXgYh/WIpNoU3Tg0zeYMlmyqnkxZiJx/St0ps9h3Vve/J+V+EPFq5DjQ3S18
+	 XEf66TPu2ONgq41T4pAPoqCDtSeqvYzcQpd2sgzGcuADHTavxdtcds8N1n07KWHtoJ
+	 raj5I3jN3SGTiDzN/rjpRSNWtGTvbNoSTUUZDp6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406367AbgFXUMD (ORCPT
+        id S2406340AbgFXUMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406251AbgFXUMB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 16:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406231AbgFXUMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 16:12:01 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F124C061573;
-        Wed, 24 Jun 2020 13:12:01 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1joBkS-0001R4-IG; Wed, 24 Jun 2020 22:11:56 +0200
-Date:   Wed, 24 Jun 2020 22:11:56 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Stephen Berman <stephen.berman@gmx.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-Message-ID: <20200624201156.xu6hel3drnhno6c3@linutronix.de>
-References: <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
- <874krcsquv.fsf@gmx.net>
- <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
- <87tuzbh482.fsf@gmx.net>
- <20200616073827.vysntufld3ves666@linutronix.de>
- <87o8pjh1i0.fsf@gmx.net>
- <20200616155501.psduxnisltitodme@linutronix.de>
- <871rmesqkk.fsf@gmx.net>
- <20200617142734.mxwfoblufmo6li5e@linutronix.de>
- <87ftatqu07.fsf@gmx.net>
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C479E2081A;
+        Wed, 24 Jun 2020 20:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593029520;
+        bh=Ud+RpLMV4dWOyKjdxATNiBtJWY31iUXVLUKQ0Pw1OEs=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=Sn8K7bJI2A2bReHxyKOVrn40YgYXvT6VRe4UiqcQ8SuYRzjDU6jCotK4fb0cmghkE
+         iEpCpHtGTVnfLJNGkMM97h32Kll7pdcMi5nausdVV3hF1iT7HsxoHZSAF9OKHVbG28
+         bA+GJroXFubeCOb1DuR1OTdBkNFJ/FWcqh0PZetQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AF09435228BC; Wed, 24 Jun 2020 13:12:00 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:12:00 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/17] kfree_rcu updates for v5.9
+Message-ID: <20200624201200.GA28901@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ftatqu07.fsf@gmx.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-17 23:09:44 [+0200], Stephen Berman wrote:
-> 
-> Attached.
+Hello!
 
-I did not forget about this but had recently little time to look into
-this.
+This series contains kfree_rcu() updates.  Unless otherwise noted,
+these are all courtesy of Uladzislau Rezki.
 
-> Steve Berman
+1.	Fix a kernel-doc warnings for "count", courtesy of Mauro Carvalho
+	Chehab.
 
-Sebastian
+2.	rcu/tree: Keep kfree_rcu() awake during lock contention, courtesy
+	of Joel Fernandes.
+
+3.	rcu/tree: Skip entry into the page allocator for PREEMPT_RT,
+	courtesy of Joel Fernandes.
+
+4.	rcu/tree: Repeat the monitor if any free channel is busy.
+
+5.	rcu/tree: Make debug_objects logic independent of rcu_head,
+	courtesy of Joel Fernandes.
+
+6.	rcu/tree: Simplify KFREE_BULK_MAX_ENTR macro.
+
+7.	rcu/tree: Move kfree_rcu_cpu locking/unlocking to separate
+	functions.
+
+8.	rcu/tree: Use static initializer for krc.lock, courtesy of
+	Sebastian Andrzej Siewior.
+
+9.	rcu/tree: cache specified number of objects.
+
+10.	rcu/tree: Maintain separate array for vmalloc ptrs.
+
+11.	rcu/tiny: support vmalloc in tiny-RCU.
+
+12.	Rename *_kfree_callback/*_kfree_rcu_offset/kfree_call_*.
+
+13.	mm/list_lru.c: Rename kvfree_rcu() to local variant.
+
+14.	Introduce 2 arg kvfree_rcu() interface.
+
+15.	Support reclaim for head-less object.
+
+16.	Introduce single argument kvfree_rcu() interface.
+
+17.	lib/test_vmalloc.c: Add test cases for kvfree_rcu().
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Documentation/admin-guide/kernel-parameters.txt |    8 
+ include/linux/rcupdate.h                        |   61 ++-
+ include/linux/rcutiny.h                         |   20 -
+ include/linux/rcutree.h                         |    2 
+ include/trace/events/rcu.h                      |    8 
+ kernel/rcu/tiny.c                               |    7 
+ kernel/rcu/tree.c                               |  443 ++++++++++++++++--------
+ lib/test_vmalloc.c                              |  103 +++++
+ mm/list_lru.c                                   |    6 
+ 9 files changed, 481 insertions(+), 177 deletions(-)
