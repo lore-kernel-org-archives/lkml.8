@@ -2,63 +2,91 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2472AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22DB12088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA83820768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 05:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592976904;
+	bh=Uvdb15+FwGUGLj2jhaGU6/DgaIrNmpWsV+ez1RtkBmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uBHVxzLyMuXWFZIN35c/8ot0pTE3zopFFXoaiylukvx1VE89bXIROU++XepJSVm0s
+	 3e9sNlWl1yiRZ6qHRFsMYm6GKYhq6oY8AZJQFrmiOB01Ho/lAaBCUOaKSnWVA0KSKh
+	 h61GvCNPolMG6lBW733EYwmuj+OZKUTHouJsoAdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388954AbgFXFe7 (ORCPT
+        id S2388996AbgFXFfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 01:34:59 -0400
-Received: from trent.utfs.org ([94.185.90.103]:42712 "EHLO trent.utfs.org"
+        Wed, 24 Jun 2020 01:35:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388470AbgFXFe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 01:34:59 -0400
-Received: from localhost (localhost [IPv6:::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2388470AbgFXFfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 01:35:01 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by trent.utfs.org (Postfix) with ESMTPS id 55F3E5F838;
-        Wed, 24 Jun 2020 07:34:57 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 22:34:57 -0700 (PDT)
-From:   Christian Kujau <lists@nerdbynature.de>
-To:     Kees Cook <keescook@chromium.org>
-cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: process '/usr/bin/rsync' started with executable stack
-In-Reply-To: <202006231619.38108DE0@keescook>
-Message-ID: <alpine.DEB.2.22.1.446.2006232231410.3892@trent.utfs.org>
-References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org> <20200623211218.GA40110@localhost.localdomain> <20200623212214.GA41702@localhost.localdomain> <202006231619.38108DE0@keescook>
-User-Agent: Alpine 2.22.1 (DEB 446 2020-06-13)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E7FA2072E;
+        Wed, 24 Jun 2020 05:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592976900;
+        bh=Uvdb15+FwGUGLj2jhaGU6/DgaIrNmpWsV+ez1RtkBmM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aH7ky+hF/Jg1QGfBvwiqKCHIP0MpTE4LW78vI6dhtosOeYKEh+oTVtkYpAvkWt0iL
+         ShgtMzLXPriGly+wa1+m9TELZOjEkpmRhniqkY7PbvwGbJ75CBOxbWj/lDddErBOg3
+         6QVCfLlt6ajSXNSYRvGVdcGxxdHPpG/B6o059JkA=
+Date:   Tue, 23 Jun 2020 22:34:58 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v9 0/4] Prepare for upcoming Casefolding/Encryption
+ patches
+Message-ID: <20200624053458.GD844@sol.localdomain>
+References: <20200624043341.33364-1-drosen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624043341.33364-1-drosen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020, Kees Cook wrote:
-> > If you run something with exec stack after the message
-> > you shouldn't get it second time.
-> 
-> If you want to reset this flag, you can do:
->  # echo 1 > /sys/kernel/debug/clear_warn_once
+On Tue, Jun 23, 2020 at 09:33:37PM -0700, Daniel Rosenberg wrote:
+> This lays the ground work for enabling casefolding and encryption at the
+> same time for ext4 and f2fs. A future set of patches will enable that
+> functionality. These unify the highly similar dentry_operations that ext4
+> and f2fs both use for casefolding.
 
-Thanks. Although, I tend to not mount /sys/kernel/{config,debug,tracing} 
-and other things, I always thought they are not needed and could maybe 
-lower the attack surface if not mounted. Or maybe my tinfoil hat needs 
-some adjustment...
+I think this undersells this patchset a bit.  This patchset makes ext4 and f2fs
+share the casefolded ->d_compare() and ->d_hash() implementations, which
+eliminates duplicated code.  That's a good thing regardless of whether we're
+going to add encrypt+casefold support or not.
 
-Christian.
--- 
-BOFH excuse #279:
+It also changes the casefolded ->d_hash() implementation to not have to allocate
+memory (with GFP_ATOMIC, no less), which was a big problem with the old
+implementation as it's unreliable and inefficient.
 
-The static electricity routing is acting up...
+So yes, this prepares for supporting encrypt+casefold.  But these changes make
+sense on their own too as an improvement of the casefold feature.  Except for
+the one line of code in needs_casefold() that is specific to encrypt+casefold;
+maybe that should be left out for now.
+
+(Side note: I think you could drop linux-doc and linux-mtd from Cc, as this
+patchset isn't really relevant to those mailing lists.)
+
+- Eric
