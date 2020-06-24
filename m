@@ -2,186 +2,110 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A01DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E11C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B6D20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593016235;
-	bh=Pfvomw1TLLTzfltrArXaoZtSgfvtwJFjZsI9bAfnSVc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fZep3otN7HtoaHU0rEnKICg1dRDlESzSCoGFcVBEsjlymjsMqNe9VbJ/Lh11nM3fE
-	 VC3abSnHptJZzafnnW0ONOpva1A2lQuitxh/u+/ynZVR3uHmRIiG5DmFQ+I51SVFCE
-	 MzzbZHuZ/cMioJpSmUhHy1E75BpcFNpbJ+5082rY=
+	by mail.kernel.org (Postfix) with ESMTP id CC67820823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405083AbgFXQab (ORCPT
+        id S2405160AbgFXQan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:30:31 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:19226 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405125AbgFXQaT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:30:19 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 05OGTfaR005680;
-        Thu, 25 Jun 2020 01:29:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05OGTfaR005680
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593016182;
-        bh=c7+M29aF8yRW1Nkcx3gmqJt9IcqAJwKGtRkbRqyOzlI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=g/XKpchLT4+QDgFpZ5vxzPNPPd1pneaOQG/HaUF++M/but0/NyVM0OW43RYYL7NXH
-         gXc7Rqg3o6pimKVZcv13hX59xry2PZrlcEwIjBithJ5U4jVaMEFoMX3LIqcxWBbVST
-         LhdeM91mQng6q7E5JeWgDtUGGde0EzoCA2S5LCP8NEXThj4nqiVGdkr4qfEVJVEcfb
-         JKnLAaHhNbd/CUldhH0Qy/30la1zmclXZMrE8XwcGHl9m60W2SnvNBjx0QFtT9xmLx
-         1lot417jPjKESVGxFzk1/tZyjvE6SyjtyHAkc0jyWPxA17kh4VcMzdzExLe4S4EEW5
-         77FO8SlYaDeIA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id o15so1723697vsp.12;
-        Wed, 24 Jun 2020 09:29:42 -0700 (PDT)
-X-Gm-Message-State: AOAM532CgQDUnnymHO1BdB/N7m4SHDAmQFM1glxkcvZWUe0Fgek8L6Eo
-        tjY+0mlXSD5XHpNWmYMBNaFcP5OGJS9gIDHBQOg=
-X-Google-Smtp-Source: ABdhPJxYmf0AwU89oXZeD9Fz7mOb8pgZwxbLdIcFX447lpPev/jeGL1RUIg6DRLVZaYYRC5jxEGgZi7AC9NNVrmmWQM=
-X-Received: by 2002:a67:2d42:: with SMTP id t63mr23107336vst.181.1593016180953;
- Wed, 24 Jun 2020 09:29:40 -0700 (PDT)
+        Wed, 24 Jun 2020 12:30:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:40744 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404976AbgFXQ30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:29:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5209A1FB;
+        Wed, 24 Jun 2020 09:29:24 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FA1B3F73C;
+        Wed, 24 Jun 2020 09:29:21 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 17:29:19 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fangrui Song <maskray@google.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>, Will Deacon <will@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/9] efi/libstub: Remove .note.gnu.property
+Message-ID: <20200624162919.GH25945@arm.com>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-4-keescook@chromium.org>
+ <20200624033142.cinvg6rbg252j46d@google.com>
+ <202006232143.66828CD3@keescook>
+ <20200624104356.GA6134@willie-the-truck>
+ <CAMj1kXHBT4ei0xhyL4jD7=CNRsn1rh7w6jeYDLjVOv4na0Z38Q@mail.gmail.com>
+ <202006240820.A3468F4@keescook>
+ <CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com>
+ <202006240844.7BE48D2B5@keescook>
+ <CAMj1kXHqBs44uukRSdFwA_hcmX_yKVfjqdv9RoPbbu-6Wz+RaA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
- <20200623114614.792648-4-yamada.masahiro@socionext.com> <20200623122413.GA954398@dell>
-In-Reply-To: <20200623122413.GA954398@dell>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 25 Jun 2020 01:29:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
-Message-ID: <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd
- from simple-bus
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHqBs44uukRSdFwA_hcmX_yKVfjqdv9RoPbbu-6Wz+RaA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 23 Jun 2020, Masahiro Yamada wrote:
->
-> > 'make ARCH=3Darm dtbs_check' emits the following warning:
+On Wed, Jun 24, 2020 at 05:48:41PM +0200, Ard Biesheuvel wrote:
+> On Wed, 24 Jun 2020 at 17:45, Kees Cook <keescook@chromium.org> wrote:
 > >
-> >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does no=
-t match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> > On Wed, Jun 24, 2020 at 05:31:06PM +0200, Ard Biesheuvel wrote:
+> > > On Wed, 24 Jun 2020 at 17:21, Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > On Wed, Jun 24, 2020 at 12:46:32PM +0200, Ard Biesheuvel wrote:
+> > > > > I'm not sure if there is a point to having PAC and/or BTI in the EFI
+> > > > > stub, given that it runs under the control of the firmware, with its
+> > > > > memory mappings and PAC configuration etc.
+> > > >
+> > > > Is BTI being ignored when the firmware runs?
+> > >
+> > > Given that it requires the 'guarded' attribute to be set in the page
+> > > tables, and the fact that the UEFI spec does not require it for
+> > > executables that it invokes, nor describes any means of annotating
+> > > such executables as having been built with BTI annotations, I think we
+> > > can safely assume that the EFI stub will execute with BTI disabled in
+> > > the foreseeable future.
 > >
-> > Maybe, simple-mfd could be a better fit for this device.
->
-> The two should be equivalent.
-
-Yes, I know.
-That's why I can change "simple-bus" to "simple-mfd"
-with no risk.
-
-The difference is schema-check.
-
-The node name for "simple-bus" is checked by 'make dtbs_check'.
-
-See this code:
-https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.ya=
-ml#L17
-
-Even if I rename the node, it does not accept the
-unit name '1,1f00000'
-
-
-
->
-> What do you mean by "maybe"?  Does this squash the warning?
-
-"maybe" means I am not quite sure
-which compatible is a better fit
-to describe this device.
-
-
-As mentioned above, simple-bus and simple-mfd
-are interchangeable from a driver point of view.
-
-This add-on board is integrated with various peripherals
-such as 16550a serial, smsc9115 ether etc.
-The address-decode is implemented in a CPLD device.
-It has chip selects and local addresses, which are mapped to
-the parent.
-
-It can be either simple-bus or simple-mfd, I think.
-
-
-dt-schema checks the node name of simple-bus.
-Currently, there is no check for simple-mfd.
-
-So, I think this patch is an easy solution
-to fix the warning.
-
-Rob is in Cc. Please add comments if any.
-
-
->
-> Isn't the issue caused by the ','?
-
-Right.
-
-The node name of simple-bus
-must meet the regular expression:
-"^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
-
-
-Even if I rename the node
-"support-card@1,1f00000"
-to "bus@1,1f00000", the warning is still
-displayed due to ','
-
-"1,1f00000" means
-the address 0x01f00000 of chip select 1.
-
-
-Thanks
-
->
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
+> > yaaaaaay. *sigh* How long until EFI catches up?
 > >
-> >  arch/arm/boot/dts/uniphier-support-card.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > That said, BTI shouldn't _hurt_, right? If EFI ever decides to enable
+> > it, we'll be ready?
 > >
-> > diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/bo=
-ot/dts/uniphier-support-card.dtsi
-> > index 11e46e7de7c5..eedc10cbc6e6 100644
-> > --- a/arch/arm/boot/dts/uniphier-support-card.dtsi
-> > +++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
-> > @@ -10,7 +10,7 @@ &system_bus {
-> >       ranges =3D <1 0x00000000 0x42000000 0x02000000>;
-> >
-> >       support_card: support-card@1,1f00000 {
-> > -             compatible =3D "simple-bus";
-> > +             compatible =3D "simple-mfd";
-> >               #address-cells =3D <1>;
-> >               #size-cells =3D <1>;
-> >               ranges =3D <0x00000000 1 0x01f00000 0x00100000>;
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> 
+> Sure. Although I anticipate that we'll need to set some flag in the
+> PE/COFF header to enable it, and so any BTI opcodes we emit without
+> that will never take effect in practice.
 
+In the meantime, it is possible to build all the in-tree parts of EFI
+for BTI, and just turn it off for out-of-tree EFI binaries?
 
+If there's no easy way to do this though, I guess we should wait for /
+push for a PE/COFF flag to describe this properly.
 
---
-Best Regards
-Masahiro Yamada
+Cheers
+---Dave
