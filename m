@@ -2,120 +2,205 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F151C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1A92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C472082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390548AbgFXLGs (ORCPT
+        id S2390554AbgFXLIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:06:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64280 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728734AbgFXLGq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:06:46 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OB2xsi037997;
-        Wed, 24 Jun 2020 07:05:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysn1kn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 07:05:50 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OB3ocl041599;
-        Wed, 24 Jun 2020 07:05:49 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysn1gp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 07:05:49 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OB1RS2005458;
-        Wed, 24 Jun 2020 11:05:46 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 31uusjgh6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 11:05:45 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OB5hJk55050438
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 11:05:43 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED895AE04D;
-        Wed, 24 Jun 2020 11:05:42 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 380B0AE063;
-        Wed, 24 Jun 2020 11:05:41 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.59.63])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 24 Jun 2020 11:05:41 +0000 (GMT)
-Date:   Wed, 24 Jun 2020 13:05:39 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr, ziy@nvidia.com,
-        gerald.schaefer@de.ibm.com, Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
-Message-ID: <20200624110539.GC24934@oc3871087118.ibm.com>
-References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
- <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
+        Wed, 24 Jun 2020 07:08:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:34894 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728734AbgFXLIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:08:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EABF1F1;
+        Wed, 24 Jun 2020 04:08:03 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D6E53F6CF;
+        Wed, 24 Jun 2020 04:08:01 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 12:07:59 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200624110758.oewxkpdk5fzxwxod@e107158-lin.cambridge.arm.com>
+References: <20200619172011.5810-1-qais.yousef@arm.com>
+ <20200619172011.5810-3-qais.yousef@arm.com>
+ <87pn9oor2t.derkling@matbug.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-24_06:2020-06-24,2020-06-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 impostorscore=0 phishscore=0
- cotscore=-2147483648 mlxlogscore=812 spamscore=0 adultscore=0
- clxscore=1011 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006240081
+In-Reply-To: <87pn9oor2t.derkling@matbug.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:43:10AM +0530, Anshuman Khandual wrote:
-
-[...]
-
-> Hello Gerald/Christophe/Vineet,
+On 06/24/20 09:34, Patrick Bellasi wrote:
 > 
-> It would be really great if you could give this series a quick test
-> on s390/ppc/arc platforms respectively. Thank you.
+> On Fri, Jun 19, 2020 at 19:20:11 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+> 
+> [...]
+> 
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 4265861e13e9..9ab22f699613 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -793,6 +793,25 @@ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
+> >  /* All clamps are required to be less or equal than these values */
+> >  static struct uclamp_se uclamp_default[UCLAMP_CNT];
+> >  
+> > +/*
+> > + * This static key is used to reduce the uclamp overhead in the fast path. It
+> > + * only disables the call to uclamp_rq_{inc, dec}() in enqueue/dequeue_task().
+> > + *
+> > + * This allows users to continue to enable uclamp in their kernel config with
+> > + * minimum uclamp overhead in the fast path.
+> > + *
+> > + * As soon as userspace modifies any of the uclamp knobs, the static key is
+> > + * disabled, since we have an actual users that make use of uclamp
+> > + * functionality.
+> > + *
+> > + * The knobs that would disable this static key are:
+> > + *
+> > + *   * A task modifying its uclamp value with sched_setattr().
+> > + *   * An admin modifying the sysctl_sched_uclamp_{min, max} via procfs.
+> > + *   * An admin modifying the cgroup cpu.uclamp.{min, max}
+> > + */
+> > +static DEFINE_STATIC_KEY_TRUE(sched_uclamp_unused);
+> 
+> I would personally prefer a non negated semantic.
+> 
+> Why not using 'sched_uclamp_enabled'?
 
-That worked for me with the default and debug s390 configurations.
-Would you like to try with some particular options or combinations
-of the options?
+This was already discussed and already changed to sched_uclamp_used which
+I will post in v3, which is already ready.
 
-> - Anshuman
+> 
+> > +
+> >  /* Integer rounded range for each bucket */
+> >  #define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
+> >  
+> > @@ -993,9 +1012,16 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+> >  	lockdep_assert_held(&rq->lock);
+> >  
+> >  	bucket = &uc_rq->bucket[uc_se->bucket_id];
+> > -	SCHED_WARN_ON(!bucket->tasks);
+> > -	if (likely(bucket->tasks))
+> > -		bucket->tasks--;
+> > +
+> > +	/*
+> > +	 * This could happen if sched_uclamp_unused was disabled while the
+> > +	 * current task was running, hence we could end up with unbalanced call
+> > +	 * to uclamp_rq_dec_id().
+> > +	 */
+> > +	if (unlikely(!bucket->tasks))
+> > +		return;
+> > +
+> > +	bucket->tasks--;
+> 
+> Since above you are not really changing the logic, why changing the
+> code?
+
+The logic has changed. We return immediately now.
+
+> 
+> The SCHED_WARN_ON/if(likely) is a defensive programming thing.
+> I understand that SCHED_WARN_ON() can now be misleading because of the
+> unbalanced calls but... why not just removing it?
+
+Do you think we need to execute the rest of the code if bucket->tasks is 0? It
+would be good to know if there's a corner case you're worried about. AFAIU if
+it is 0, this means there's nothing to do.
+
+> 
+> Maybe also adding in the comment, but I don't see valid reasons to
+> change the code if the functionality is not changing.
+
+If it means a lot to you, I could put it back as it was. I just don't see why
+we can't return immediately instead.
+
+> 
+> 
+> >  	uc_se->active = false;
+> >  
+> >  	/*
+> > @@ -1031,6 +1057,13 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+> >  {
+> >  	enum uclamp_id clamp_id;
+> >  
+> > +	/*
+> > +	 * Avoid any overhead until uclamp is actually used by the userspace.
+> > +	 * Including the potential JMP if we use static_branch_unlikely()
+> 
+> The comment above (about unlikely) seems not to match the code?
+
+It does. The comment says if we use unlikely() when uclamp is not used we'll
+incur an extra jump/branch. Hence we use likely to avoid this potential
+overhead.
+
+> 
+> > +	 */
+> > +	if (static_branch_likely(&sched_uclamp_unused))
+> > +		return;
+> 
+> Moreover, something like:
+> 
+>        if (static_key_false(&sched_uclamp_enabled))
+>                 return;
+> 
+> is not just good enough?
+
+Aren't they both good enough?
+
+Use of static_key_false() is deprecated AFAICS.
+
+> 
+> > +
+> >  	if (unlikely(!p->sched_class->uclamp_enabled))
+> >  		return;
+> 
+> Since we already have these per sched_class gates, I'm wondering if it
+> could make sense to just re-purpose them.
+> 
+> Problem with the static key is that if just one RT task opts in, CFS
+> will still pay the overheads, and vice versa too.
+> 
+> So, an alternative approach could be to opt in sched classes on-demand.
+
+I'll defer to Peter here.
+
+Re-purposing the sched_class->uclamp_enable means we can't use a static key and
+we'll potentially still incur a cache penalty in there even if uclamp is not
+used. Based on RT sysctl discussion, this won't be okay if we can do better.
+
+> 
+> The above if(unlikely) is not exactly has a static key true, but I
+> assume we agree the overheads we are tacking are nothing compared to
+> that check, aren't they?
+
+I'm not sure we can agree on that. The overhead seems to be system specific. On
+juno-r2 it seemed I$, but on 2 sockets systems it seems the D$. So I can't say
+for sure no one will care. The current approach gives stronger guarantees.
+
+Thanks
+
+--
+Qais Yousef
