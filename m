@@ -2,460 +2,190 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C10AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C6520823
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:35:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KeTk+hTA"
+	by mail.kernel.org (Postfix) with ESMTP id 5D46820823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389772AbgFXJfk (ORCPT
+        id S2389802AbgFXJgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:35:40 -0400
-Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:39267
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389647AbgFXJfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:35:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q70kAxXuzqjTfHpDwDLOyWW6eidIE/YlDYIME0PhxyTq2OObq7qZeDM/KgNi957il4wlK9nCg+Bcci+PgZ8bJBDRNwad2S9NkFyx9C72xsCHcocqmGCp0g43T5suc7Yk7RaxF0jCmy6VEkJQCXkCcrS76YlJMjwx3a3JxoQ23ZJbhFHCg9RY5xc6MxjzhzSMWi+/Ub3MYCzj/QsExTvo7YImeIL+03aTKN6LsqH35+IQfaL/3j61eXfAXz0Ji75MLP8zYbCgersCzxeacC3k7OhFCzF4xwEMG3pgY2xD5gcL49l4jgOfd6UMn5HwpJIRjX/6JBDXu8WxOZQWYCDV7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Mu7FwqTMSJIr9bCrHSg8KPW1O8pvr6Ugs2KLxg06Es=;
- b=cYkHUT0xm1VTCT6XjdvnuopuULcZzU7KfocRs/CCvQ7P79JvIfsQAsIOlGRtUZ9K5HqLpsmRkgUK1FKE0lR/py2nUZr9w3NTJPtofca7mRToRgT3sHiXvQSmPV3SKhscESL0fqrcn2iBDId+qo9lAPOaiU8WDFWv9miKJEi+BKkY//BUNrsJ5UwwIRJU1Ptj2wFJWtZ+kSI4my6Vr3oYeY55SkXaf2YDip8wceHmJ2HMAivBvjvRHX9ZWq/aq0XYgwKBU1VdPx2ka6S8JsmpZnuwzRw1wityZXLjHMDLaWSycDcKwaNN/XXvvYMsgamNdNkmsjeLsNtLr1mHJaqoaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Mu7FwqTMSJIr9bCrHSg8KPW1O8pvr6Ugs2KLxg06Es=;
- b=KeTk+hTAn53BMTmyKpo88tiTQi93u/8vNNBprNrU9nZTNz6iuhIPLJWQQcLIO0/N+3Yn3YAyyT2osSq2pJswy6r/5IgsQaGu8vChWhr65UKQMwJyi1I6p9Vr/etck3sVA7LRsZWbHwhCMFH18JoLbeYCPey4zksMws17vL/xDE4=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
- by VE1PR04MB6431.eurprd04.prod.outlook.com (2603:10a6:803:12a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
- 2020 09:35:33 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
- 09:35:33 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, idosch@idosch.org
-Cc:     jiri@resnulli.us, vinicius.gomes@intel.com, vlad@buslov.dev,
-        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
-        alexandru.marginean@nxp.com, michael.chan@broadcom.com,
-        vishal@chelsio.com, saeedm@mellanox.com, leon@kernel.org,
-        jiri@mellanox.com, idosch@mellanox.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        kuba@kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
-        simon.horman@netronome.com, pablo@netfilter.org,
-        moshe@mellanox.com, m-karicheri2@ti.com,
-        andre.guedes@linux.intel.com, stephen@networkplumber.org,
-        Po Liu <Po.Liu@nxp.com>
-Subject: [v2,net-next 4/4] net: enetc add tc flower offload flow metering policing action
-Date:   Wed, 24 Jun 2020 17:36:31 +0800
-Message-Id: <20200624093631.13719-4-po.liu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200624093631.13719-1-po.liu@nxp.com>
-References: <20200623063412.19180-4-po.liu@nxp.com>
- <20200624093631.13719-1-po.liu@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0119.apcprd06.prod.outlook.com
- (2603:1096:1:1d::21) To VE1PR04MB6496.eurprd04.prod.outlook.com
- (2603:10a6:803:11c::29)
+        Wed, 24 Jun 2020 05:36:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:53316 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389647AbgFXJgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:36:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6B961FB;
+        Wed, 24 Jun 2020 02:36:20 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 719873F73C;
+        Wed, 24 Jun 2020 02:36:19 -0700 (PDT)
+Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
+ engine
+To:     Vinod Koul <vkoul@kernel.org>,
+        Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
+ <20200624061529.GF2324254@vkoul-mobl>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <75d154d0-2962-99e6-a7c7-bf0928ec8b2a@arm.com>
+Date:   Wed, 24 Jun 2020 10:35:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from tsn.ap.freescale.net (119.31.174.73) by SG2PR06CA0119.apcprd06.prod.outlook.com (2603:1096:1:1d::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20 via Frontend Transport; Wed, 24 Jun 2020 09:35:25 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d0c644a2-30ab-474c-18ad-08d81821f10c
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6431:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB64316F2E238775EA3B7AE43992950@VE1PR04MB6431.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
-X-Forefront-PRVS: 0444EB1997
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: m6aQHYs7R3G+6kdejZQY/1vi44z4GX55Y3XlLpwvyj91m3I5OxY0Fp6crpkGYZD6tQ0huldjtWvcRORqoxsrOe0xwnQpoXeS7BeDmEbLn60/arWLn7AecT/49VolIXmXYIYb+v2ez3rVPOPot5URjNszyEpYr1ynWR+9irYkbEN6P73uOvASjaLlOrFU7TDCtfkMuPC4Xgl1IHnvF0+qq0sq8/aRwF2sgAGwArJTslkwNvfplsz1//wsa1JxBnc9272l8YgA+lDbxkdPDjhJZLPzv0HNUjAY9pxXWXYN/oIwSH6Nmcuc2jpI2ADWwldA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(366004)(39860400002)(376002)(396003)(6486002)(956004)(44832011)(2616005)(316002)(86362001)(83380400001)(1076003)(478600001)(66556008)(6666004)(36756003)(66476007)(66946007)(8676002)(4326008)(8936002)(186003)(16526019)(6512007)(7416002)(6506007)(52116002)(5660300002)(2906002)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Q47KgI4nO6RW/1YqcZrEmFyrQHUmx6gSSYQay4x0VHLcdDSNSiztIBA4LjcZcpJJAt18FGx12zkQpuR9vHF/kk4H+N8UHPz2vZzrIXMhtUo06TjKKkOLN65kqrODuYWVHvP5xEJxfcgxFD4MqYgpwePcEgeEdbANxs0B1Cb3rSGldm0X00kltA3JL1ge6XWdkavLr29rj/gNfaFfIqkxgRi4618hu//tSp/RyF8HEqxnmoK6VpCzWjr5CLOVTF2nRjP9J+W1dnJRI3SAbvRRQXXP8pc497BOi2U7Jl4k/FSV9fVC7yn5O2Zu2jNhfr6L7OPhlsD4TQeQ41D44uO7AQLvDvnxdls3qFgTa4unpvpWSdD38U/a5h6MsXr9PwXc5FJECB25MPqLl8ov64sMSQzkmlDr0Gz1eTlhpvxs4CFTNfolMre9bY4WFtnMk+F2UBEo+fg9/6rI+8MliII8jkaC+lunSBItPNpd7rwmlyc=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0c644a2-30ab-474c-18ad-08d81821f10c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2020 09:35:33.4191
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mtz2TtR6k10CB1NnOYx4mo19y7wrBHW6RiCdDz0GzKpbo08SRmjXsz3y7CKXzDj+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6431
+In-Reply-To: <20200624061529.GF2324254@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Po Liu <Po.Liu@nxp.com>
+On 24/06/2020 07:15, Vinod Koul wrote:
 
-Flow metering entries in IEEE 802.1Qci is an optional function for a
-flow filtering module. Flow metering is two rates two buckets and three
-color marker to policing the frames. This patch only enable one rate one
-bucket and in color blind mode. Flow metering instance are as
-specified in the algorithm in MEF 10.3 and in Bandwidth Profile
-Parameters. They are:
+Hi,
 
-a) Flow meter instance identifier. An integer value identifying the flow
-meter instance. The patch use the police 'index' as thin value.
-b) Committed Information Rate (CIR), in bits per second. This patch use
-the 'rate_bytes_ps' represent this value.
-c) Committed Burst Size (CBS), in octets. This patch use the 'burst'
-represent this value.
-d) Excess Information Rate (EIR), in bits per second.
-e) Excess Burst Size per Bandwidth Profile Flow (EBS), in octets.
-And plus some other parameters. This patch set EIR/EBS default disable
-and color blind mode.
+> On 09-06-20, 15:47, Amit Singh Tomar wrote:
+> 
+>> @@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>>  				  struct dma_slave_config *sconfig,
+>>  				  bool is_cyclic)
+>>  {
+>> +	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
+>>  	u32 mode, ctrlb;
+>>  
+>>  	mode = OWL_DMA_MODE_PW(0);
+>> @@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>>  	lli->hw[OWL_DMADESC_DADDR] = dst;
+>>  	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
+>>  	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
+>> -	/*
+>> -	 * Word starts from offset 0xC is shared between frame length
+>> -	 * (max frame length is 1MB) and frame count, where first 20
+>> -	 * bits are for frame length and rest of 12 bits are for frame
+>> -	 * count.
+>> -	 */
+>> -	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+>> -	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+>> +
+>> +	if (od->devid == S700_DMA) {
+>> +		/* Max frame length is 1MB */
+>> +		lli->hw[OWL_DMADESC_FLEN] = len;
+>> +		/*
+>> +		 * On S700, word starts from offset 0x1C is shared between
+>> +		 * frame count and ctrlb, where first 12 bits are for frame
+>> +		 * count and rest of 20 bits are for ctrlb.
+>> +		 */
+>> +		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
+>> +	} else {
+>> +		/*
+>> +		 * On S900, word starts from offset 0xC is shared between
+>> +		 * frame length (max frame length is 1MB) and frame count,
+>> +		 * where first 20 bits are for frame length and rest of
+>> +		 * 12 bits are for frame count.
+>> +		 */
+>> +		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+>> +		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+> 
+> Unfortunately this wont scale, we will keep adding new conditions for
+> newer SoC's! So rather than this why not encode max frame length in
+> driver_data rather than S900_DMA/S700_DMA.. In future one can add values
+> for newer SoC and not code above logic again.
 
-v1->v2 changes:
-- Use div_u64() as division replace the '/' report:
+What newer SoCs? I don't think we should try to guess the future here.
+We can always introduce further abstractions later, once we actually
+*know* what we are looking at.
 
-Reported-by: kernel test robot <lkp@intel.com>
-All errors (new ones prefixed by >>):
+Besides, I don't understand what you are after. The max frame length is
+1MB in both cases, it's just a matter of where to put FCNT_VAL, either
+in FLEN or in CTRLB. And having an extra flag for that in driver data
+sounds a bit over the top at the moment.
 
-   ld: drivers/net/ethernet/freescale/enetc/enetc_qos.o: in function `enetc_flowmeter_hw_set':
->> enetc_qos.c:(.text+0x66): undefined reference to `__udivdi3'
+Cheers,
+Andre.
 
-
-Signed-off-by: Po Liu <Po.Liu@nxp.com>
----
- .../net/ethernet/freescale/enetc/enetc_hw.h   |  24 +++
- .../net/ethernet/freescale/enetc/enetc_qos.c  | 160 ++++++++++++++++--
- 2 files changed, 172 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-index 6314051bc6c1..f00c4382423e 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-@@ -570,6 +570,7 @@ enum bdcr_cmd_class {
- 	BDCR_CMD_STREAM_IDENTIFY,
- 	BDCR_CMD_STREAM_FILTER,
- 	BDCR_CMD_STREAM_GCL,
-+	BDCR_CMD_FLOW_METER,
- 	__BDCR_CMD_MAX_LEN,
- 	BDCR_CMD_MAX_LEN = __BDCR_CMD_MAX_LEN - 1,
- };
-@@ -736,10 +737,33 @@ struct sgcl_data {
- 	struct sgce	sgcl[0];
- };
- 
-+#define ENETC_CBDR_FMI_MR	BIT(0)
-+#define ENETC_CBDR_FMI_MREN	BIT(1)
-+#define ENETC_CBDR_FMI_DOY	BIT(2)
-+#define	ENETC_CBDR_FMI_CM	BIT(3)
-+#define ENETC_CBDR_FMI_CF	BIT(4)
-+#define ENETC_CBDR_FMI_NDOR	BIT(5)
-+#define ENETC_CBDR_FMI_OALEN	BIT(6)
-+#define ENETC_CBDR_FMI_IRFPP_MASK GENMASK(4, 0)
-+
-+/* class 10: command 0/1, Flow Meter Instance Set, short Format */
-+struct fmi_conf {
-+	__le32	cir;
-+	__le32	cbs;
-+	__le32	eir;
-+	__le32	ebs;
-+		u8	conf;
-+		u8	res1;
-+		u8	ir_fpp;
-+		u8	res2[4];
-+		u8	en;
-+};
-+
- struct enetc_cbd {
- 	union{
- 		struct sfi_conf sfi_conf;
- 		struct sgi_table sgi_table;
-+		struct fmi_conf fmi_conf;
- 		struct {
- 			__le32	addr[2];
- 			union {
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-index 07f98bf7a06b..4f670cbdf186 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-@@ -408,10 +408,26 @@ struct enetc_psfp_gate {
- 	struct action_gate_entry entries[0];
- };
- 
-+/* Only enable the green color frame now
-+ * Will add eir and ebs color blind, couple flag etc when
-+ * policing action add more offloading parameters
-+ */
-+struct enetc_psfp_meter {
-+	u32 index;
-+	u32 cir;
-+	u32 cbs;
-+	refcount_t refcount;
-+	struct hlist_node node;
-+};
-+
-+#define ENETC_PSFP_FLAGS_FMI BIT(0)
-+
- struct enetc_stream_filter {
- 	struct enetc_streamid sid;
- 	u32 sfi_index;
- 	u32 sgi_index;
-+	u32 flags;
-+	u32 fmi_index;
- 	struct flow_stats stats;
- 	struct hlist_node node;
- };
-@@ -422,6 +438,7 @@ struct enetc_psfp {
- 	struct hlist_head stream_list;
- 	struct hlist_head psfp_filter_list;
- 	struct hlist_head psfp_gate_list;
-+	struct hlist_head psfp_meter_list;
- 	spinlock_t psfp_lock; /* spinlock for the struct enetc_psfp r/w */
- };
- 
-@@ -842,6 +859,47 @@ static int enetc_streamgate_hw_set(struct enetc_ndev_priv *priv,
- 	return err;
- }
- 
-+static int enetc_flowmeter_hw_set(struct enetc_ndev_priv *priv,
-+				  struct enetc_psfp_meter *fmi,
-+				  u8 enable)
-+{
-+	struct enetc_cbd cbd = { .cmd = 0 };
-+	struct fmi_conf *fmi_config;
-+	u64 temp = 0;
-+
-+	cbd.index = cpu_to_le16((u16)fmi->index);
-+	cbd.cls = BDCR_CMD_FLOW_METER;
-+	cbd.status_flags = 0x80;
-+
-+	if (!enable)
-+		return enetc_send_cmd(priv->si, &cbd);
-+
-+	fmi_config = &cbd.fmi_conf;
-+	fmi_config->en = 0x80;
-+
-+	if (fmi->cir) {
-+		temp = (u64)8000 * fmi->cir;
-+		temp = div_u64(temp, 3725);
-+	}
-+
-+	fmi_config->cir = cpu_to_le32((u32)temp);
-+	fmi_config->cbs = cpu_to_le32(fmi->cbs);
-+
-+	/* Default for eir ebs disable */
-+	fmi_config->eir = 0;
-+	fmi_config->ebs = 0;
-+
-+	/* Default:
-+	 * mark red disable
-+	 * drop on yellow disable
-+	 * color mode disable
-+	 * couple flag disable
-+	 */
-+	fmi_config->conf = 0;
-+
-+	return enetc_send_cmd(priv->si, &cbd);
-+}
-+
- static struct enetc_stream_filter *enetc_get_stream_by_index(u32 index)
- {
- 	struct enetc_stream_filter *f;
-@@ -875,6 +933,17 @@ static struct enetc_psfp_filter *enetc_get_filter_by_index(u32 index)
- 	return NULL;
- }
- 
-+static struct enetc_psfp_meter *enetc_get_meter_by_index(u32 index)
-+{
-+	struct enetc_psfp_meter *m;
-+
-+	hlist_for_each_entry(m, &epsfp.psfp_meter_list, node)
-+		if (m->index == index)
-+			return m;
-+
-+	return NULL;
-+}
-+
- static struct enetc_psfp_filter
- 	*enetc_psfp_check_sfi(struct enetc_psfp_filter *sfi)
- {
-@@ -934,9 +1003,27 @@ static void stream_gate_unref(struct enetc_ndev_priv *priv, u32 index)
- 	}
- }
- 
-+static void flow_meter_unref(struct enetc_ndev_priv *priv, u32 index)
-+{
-+	struct enetc_psfp_meter *fmi;
-+	u8 z;
-+
-+	fmi = enetc_get_meter_by_index(index);
-+	WARN_ON(!fmi);
-+	z = refcount_dec_and_test(&fmi->refcount);
-+	if (z) {
-+		enetc_flowmeter_hw_set(priv, fmi, false);
-+		hlist_del(&fmi->node);
-+		kfree(fmi);
-+	}
-+}
-+
- static void remove_one_chain(struct enetc_ndev_priv *priv,
- 			     struct enetc_stream_filter *filter)
- {
-+	if (filter->flags & ENETC_PSFP_FLAGS_FMI)
-+		flow_meter_unref(priv, filter->fmi_index);
-+
- 	stream_gate_unref(priv, filter->sgi_index);
- 	stream_filter_unref(priv, filter->sfi_index);
- 
-@@ -947,7 +1034,8 @@ static void remove_one_chain(struct enetc_ndev_priv *priv,
- static int enetc_psfp_hw_set(struct enetc_ndev_priv *priv,
- 			     struct enetc_streamid *sid,
- 			     struct enetc_psfp_filter *sfi,
--			     struct enetc_psfp_gate *sgi)
-+			     struct enetc_psfp_gate *sgi,
-+			     struct enetc_psfp_meter *fmi)
- {
- 	int err;
- 
-@@ -965,8 +1053,16 @@ static int enetc_psfp_hw_set(struct enetc_ndev_priv *priv,
- 	if (err)
- 		goto revert_sfi;
- 
-+	if (fmi) {
-+		err = enetc_flowmeter_hw_set(priv, fmi, true);
-+		if (err)
-+			goto revert_sgi;
-+	}
-+
- 	return 0;
- 
-+revert_sgi:
-+	enetc_streamgate_hw_set(priv, sgi, false);
- revert_sfi:
- 	if (sfi)
- 		enetc_streamfilter_hw_set(priv, sfi, false);
-@@ -995,6 +1091,7 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
- 	struct flow_rule *rule = flow_cls_offload_flow_rule(f);
- 	struct netlink_ext_ack *extack = f->common.extack;
- 	struct enetc_stream_filter *filter, *old_filter;
-+	struct enetc_psfp_meter *fmi = NULL, *old_fmi;
- 	struct enetc_psfp_filter *sfi, *old_sfi;
- 	struct enetc_psfp_gate *sgi, *old_sgi;
- 	struct flow_action_entry *entry;
-@@ -1139,13 +1236,34 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
- 
- 	refcount_set(&sfi->refcount, 1);
- 	sfi->gate_id = sgi->index;
--
--	/* flow meter not support yet */
- 	sfi->meter_id = ENETC_PSFP_WILDCARD;
- 
--	/* Max frame size */
--	if (entryp)
--		sfi->maxsdu = entryp->police.mtu;
-+	/* Flow meter and max frame size */
-+	if (entryp) {
-+		if (entryp->police.burst) {
-+			u64 temp;
-+
-+			fmi = kzalloc(sizeof(*fmi), GFP_KERNEL);
-+			if (!fmi) {
-+				err = -ENOMEM;
-+				goto free_sfi;
-+			}
-+			refcount_set(&fmi->refcount, 1);
-+			fmi->cir = entryp->police.rate_bytes_ps;
-+			/* Convert to original burst value */
-+			temp = entryp->police.burst * fmi->cir;
-+			temp = div_u64(temp, 1000000000ULL);
-+
-+			fmi->cbs = temp;
-+			fmi->index = entryp->police.index;
-+			filter->flags |= ENETC_PSFP_FLAGS_FMI;
-+			filter->fmi_index = fmi->index;
-+			sfi->meter_id = fmi->index;
-+		}
-+
-+		if (entryp->police.mtu)
-+			sfi->maxsdu = entryp->police.mtu;
-+	}
- 
- 	/* prio ref the filter prio */
- 	if (f->common.prio && f->common.prio <= BIT(3))
-@@ -1161,7 +1279,7 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
- 		if (sfi->handle < 0) {
- 			NL_SET_ERR_MSG_MOD(extack, "No Stream Filter resource!");
- 			err = -ENOSPC;
--			goto free_sfi;
-+			goto free_fmi;
- 		}
- 
- 		sfi->index = index;
-@@ -1177,11 +1295,23 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
- 	}
- 
- 	err = enetc_psfp_hw_set(priv, &filter->sid,
--				sfi_overwrite ? NULL : sfi, sgi);
-+				sfi_overwrite ? NULL : sfi, sgi, fmi);
- 	if (err)
--		goto free_sfi;
-+		goto free_fmi;
- 
- 	spin_lock(&epsfp.psfp_lock);
-+	if (filter->flags & ENETC_PSFP_FLAGS_FMI) {
-+		old_fmi = enetc_get_meter_by_index(filter->fmi_index);
-+		if (old_fmi) {
-+			fmi->refcount = old_fmi->refcount;
-+			refcount_set(&fmi->refcount,
-+				     refcount_read(&old_fmi->refcount) + 1);
-+			hlist_del(&old_fmi->node);
-+			kfree(old_fmi);
-+		}
-+		hlist_add_head(&fmi->node, &epsfp.psfp_meter_list);
-+	}
-+
- 	/* Remove the old node if exist and update with a new node */
- 	old_sgi = enetc_get_gate_by_index(filter->sgi_index);
- 	if (old_sgi) {
-@@ -1212,6 +1342,8 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
- 
- 	return 0;
- 
-+free_fmi:
-+	kfree(fmi);
- free_sfi:
- 	kfree(sfi);
- free_gate:
-@@ -1310,9 +1442,13 @@ static int enetc_psfp_get_stats(struct enetc_ndev_priv *priv,
- 		return -EINVAL;
- 
- 	spin_lock(&epsfp.psfp_lock);
--	stats.pkts = counters.matching_frames_count - filter->stats.pkts;
--	stats.drops = counters.not_passing_frames_count -
--					filter->stats.drops;
-+	stats.pkts = counters.matching_frames_count +
-+		     counters.not_passing_sdu_count -
-+		     filter->stats.pkts;
-+	stats.drops = counters.not_passing_frames_count +
-+		      counters.not_passing_sdu_count +
-+		      counters.red_frames_count -
-+		      filter->stats.drops;
- 	stats.lastused = filter->stats.lastused;
- 	filter->stats.pkts += stats.pkts;
- 	filter->stats.drops += stats.drops;
--- 
-2.17.1
+> 
+>> +static const struct of_device_id owl_dma_match[] = {
+>> +	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
+>> +	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
+> 
+> Is the .compatible documented, Documentation patch should come before
+> the driver use patch in a series
+> 
+>>  static int owl_dma_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device_node *np = pdev->dev.of_node;
+>>  	struct owl_dma *od;
+>>  	int ret, i, nr_channels, nr_requests;
+>> +	const struct of_device_id *of_id =
+>> +				of_match_device(owl_dma_match, &pdev->dev);
+> 
+> You care about driver_data rather than of_id, so using
+> of_device_get_match_data() would be better..
+> 
+>>  	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+>>  	if (!od)
+>> @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
+>>  	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
+>>  		 nr_channels, nr_requests);
+>>  
+>> +	od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
+> 
+> Funny casts, I dont think you need uintptr_t!
+> 
 
