@@ -2,91 +2,117 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FE0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF46C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2BD020836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6130F207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kW0Gs+LL"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TpJYuTv/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403803AbgFXV16 (ORCPT
+        id S2403830AbgFXV2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390437AbgFXV16 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:27:58 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAC1C061573;
-        Wed, 24 Jun 2020 14:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dcJg1Pmd9f78D6vA5vvd8lv5yiCcj7aT/KXUxx3p85w=; b=kW0Gs+LLCGSOFq3lO7r9YinA6h
-        7xtahaSI1ma1wfxrkYodfw/iXU/zbFsJzgSO5Db8M5Kas3qE60Cck9uyn4jrjlZvm4WgRzqG9Ooo+
-        jtCEqqSNm9W5tIGaN1elclBZcSfEZNv5jg8vAcfn+g1UJT8QHR4RwlPAuZfIuPNkOQap4e1qGfV0A
-        cwt7PlLLvNImzMirpJd7/CDVC+M0Z9FaI9SC337TdLUSsHDB1EA/Z6q2MQrf71QVeEPDP0jb3OvhT
-        EYDKEdVRjSgNUEKkA9mDDp6z8eth0zsksmz5WswtilA7uOUEs9S8I39JpTCT+viS29bezWW7uDl75
-        mvKP2izA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joCvi-0004ro-5P; Wed, 24 Jun 2020 21:27:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B90E3300261;
-        Wed, 24 Jun 2020 23:27:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A61A722B8EBE8; Wed, 24 Jun 2020 23:27:37 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 23:27:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 04/22] kbuild: lto: fix recordmcount
-Message-ID: <20200624212737.GV4817@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com>
+        Wed, 24 Jun 2020 17:28:06 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:46477 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390437AbgFXV2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 17:28:05 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 5b8dc3a7;
+        Wed, 24 Jun 2020 21:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
+        :cc:subject:message-id:references:mime-version:content-type
+        :in-reply-to; s=mail; bh=lBGWaWSniCgW2rkSG/g/Me2LyUA=; b=TpJYuTv
+        /1y34hOuTp3rYLWpfMyZ6W/HtiRi8W4pwjFKS7i+PFCWV08NEbGtrNA57aZ6Z7c3
+        0qAax0qjvlsFC7xPn7QTTLLte5Av//wNT9hTkQ4yFYp8B42OaVErvSvDLFnn3jIn
+        e4yxTFLsvjkhgt+TmZNfrMOPlw7uxZ8tQ7IqBYxGFu0WLo586W46V4ySdp3mNwS7
+        A+1PhLEALi2HHsrb+N00xAyQ27NdJPOvC3DvvdtsfRpLgty6Ov7DXpX8JueSA1p/
+        g9cnwlDhD41RDe3NzWpslaGQ7IVOpiqsnOapEEZsGYuDkk/t0eBnh1jcYHCWMd9x
+        SSpd6S67oxtCALA==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6cb6511a (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Wed, 24 Jun 2020 21:09:00 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 15:28:02 -0600
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL
+ in napi_gro_receive()
+Message-ID: <20200624212802.GA1386764@zx2c4.com>
+References: <20191014080033.12407-1-alobakin@dlink.ru>
+ <20200624210606.GA1362687@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200624203200.78870-5-samitolvanen@google.com>
+In-Reply-To: <20200624210606.GA1362687@zx2c4.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:31:42PM -0700, Sami Tolvanen wrote:
-> With LTO, LLVM bitcode won't be compiled into native code until
-> modpost_link. This change postpones calls to recordmcount until after
-> this step.
+On Wed, Jun 24, 2020 at 03:06:10PM -0600, Jason A. Donenfeld wrote:
+> Hi Alexander,
 > 
-> In order to exclude specific functions from inspection, we add a new
-> code section .text..nomcount, which we tell recordmcount to ignore, and
-> a __nomcount attribute for moving functions to this section.
+> This patch introduced a behavior change around GRO_DROP:
+> 
+> napi_skb_finish used to sometimes return GRO_DROP:
+> 
+> > -static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
+> > +static gro_result_t napi_skb_finish(struct napi_struct *napi,
+> > +				    struct sk_buff *skb,
+> > +				    gro_result_t ret)
+> >  {
+> >  	switch (ret) {
+> >  	case GRO_NORMAL:
+> > -		if (netif_receive_skb_internal(skb))
+> > -			ret = GRO_DROP;
+> > +		gro_normal_one(napi, skb);
+> >
+> 
+> But under your change, gro_normal_one and the various calls that makes
+> never propagates its return value, and so GRO_DROP is never returned to
+> the caller, even if something drops it.
+> 
+> Was this intentional? Or should I start looking into how to restore it?
+> 
+> Thanks,
+> Jason
 
-I'm confused, you only add this to functions in ftrace itself, which is
-compiled with:
+For some context, I'm consequently mulling over this change in my code,
+since checking for GRO_DROP now constitutes dead code:
 
- KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
+index 91438144e4f7..9b2ab6fc91cd 100644
+--- a/drivers/net/wireguard/receive.c
++++ b/drivers/net/wireguard/receive.c
+@@ -414,14 +414,8 @@ static void wg_packet_consume_data_done(struct wg_peer *peer,
+ 	if (unlikely(routed_peer != peer))
+ 		goto dishonest_packet_peer;
 
-and so should not have mcount/fentry sites anyway. So what's the point
-of ignoring them further?
+-	if (unlikely(napi_gro_receive(&peer->napi, skb) == GRO_DROP)) {
+-		++dev->stats.rx_dropped;
+-		net_dbg_ratelimited("%s: Failed to give packet to userspace from peer %llu (%pISpfsc)\n",
+-				    dev->name, peer->internal_id,
+-				    &peer->endpoint.addr);
+-	} else {
+-		update_rx_stats(peer, message_data_len(len_before_trim));
+-	}
++	napi_gro_receive(&peer->napi, skb);
++	update_rx_stats(peer, message_data_len(len_before_trim));
+ 	return;
 
-This Changelog does not explain.
+ dishonest_packet_peer:
+
