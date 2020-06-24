@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9069C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3925F2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947BC2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:33:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDi1kJQp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A1OVxmoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406628AbgFXUdp (ORCPT
+        id S2406635AbgFXUdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50690 "EHLO
+        Wed, 24 Jun 2020 16:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406611AbgFXUdj (ORCPT
+        with ESMTP id S2406608AbgFXUdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:33:39 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65DCC061799
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:38 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id r19so2352661qvz.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:38 -0700 (PDT)
+        Wed, 24 Jun 2020 16:33:38 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 130E5C061798
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:37 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id j3so3539847yba.14
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tvg1Fbryi0kMABLSJZV+2LlG9cMfXZohRvKr2b10/ew=;
-        b=qDi1kJQp6Ay8PowzBhvgcAgfJKyEY22DJ3SehuRqjn/jA9tuCP3XgBFwyavVII/8H8
-         +qDUOb2y6OKXwsbI5cxksI3QZk1MHXAA03OHDhdjTbrRcF9EMaP1PLIUJPhY0/usboE5
-         WysdzKDHLGBWRBK078rHZqlAErXt2qVt2sq358db2q+vTaEhfb2Ztz8s+Npc56SUR/GU
-         zam+aC0Fi9TXcLLkm/vCwtmB9CZFKkHlUgIzUuWu5eMrmtKdAXKTOQSgFxHw8mPgwD7i
-         VrVAm6xkIce/iluM0BjvQMvc/W7Io0XF/CLOQ/Xz7mhbTAKzZSonAVtghl5cbcwT3k0W
-         qRXw==
+        bh=vVvCAj3rXahkiTyB3fdf4JdbPFhKMTMNyBg/koJzOHM=;
+        b=A1OVxmohREiIQE9uWobns3DZjU2BjnF5/uRv4vfcaF2sodOxkh4sxle+6JGl3ADtOZ
+         3fmTbkzX8W7ahG1bTGpXMMU9CdKC8UZUye2VucpEx7325i3QESTUcI83ndSOc6E8Kmzu
+         N5PlhLkCWO4j4sIvQEk9eacQtD+bX2UY3Y5a4I1dsdat2Jm3e0YTj4ppvoCyl2YlPdbY
+         ZyEZAXO2uSqBN9R05BjPoqjam4RsnD1PfD+i8NAuT2L+OMarD3RxLispCXwkir37c5B5
+         L+Lu+ZWTjo7NmJwPgVCLx0NgAf7Qq1Qws+DG9FZOXnsn8vOlmmibTipSbU4GNNmhC8bb
+         0u7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tvg1Fbryi0kMABLSJZV+2LlG9cMfXZohRvKr2b10/ew=;
-        b=KGDYj7rnL8tiRx4vx1NwY21mBN3FM6BGyKJA1yMvLbNm4lIUlLw9YzsfcervjZoM+h
-         kaggur5NcSo5TP5tx0YzuFzM4T9WabW/x/pkPeXoK6Het9HwkTZ2hx9BgUkPGk3C2toY
-         s2LbX2tu0uNOsR33tACPACsu3xrEXkSsM37+4QD4/QGJTWvSomqpD3diIN4RDh9dLGu3
-         fUN7WVsdjPqiSrNYyh9tHpt3GNL7i5kin7gQrTPzweD47PHi+WN8o79snoxUgHEWXNf5
-         B+NiI7VEqyIDtIbqvgiON5qenqz0PKyGwWQLAnL5a/GAhTrKdH/KwxhbULP3Wxv7sexO
-         dokg==
-X-Gm-Message-State: AOAM533V5IoW4mAUrEUMjpwTslWS+1oh1BuoE9PkoFGNpPx8u1P9yRjV
-        gWxB4abEjMcOmCDc/VQFVE3pU/VFaO3eD7X/dBE=
-X-Google-Smtp-Source: ABdhPJyl5JOyQAzphL8fSerF19PzJDrN7smlmqxmskm8wB3636prwAzfuisg2Ek7D9XrgzzDEO8QBVxE0nwET9TpJnI=
-X-Received: by 2002:a05:6214:846:: with SMTP id dg6mr31350632qvb.210.1593030818021;
- Wed, 24 Jun 2020 13:33:38 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:32:00 -0700
+        bh=vVvCAj3rXahkiTyB3fdf4JdbPFhKMTMNyBg/koJzOHM=;
+        b=mV5NhelQlSDKLBaF/Ncy0o3g0+MGdfrEG8AX/tW/1TEUXDK3B3KWl6rVrjQSQSlLcn
+         YNi0cW0o1vGi4ATCd2srbCf3ah1iEXjPKbojXzw0tQ2TYW+DkyaGWuE9FRb8W+E79Miu
+         2EJjA1djWBsAzaimmiJ41b8WDoxPHRWLoBAzoVmxwnpOuRZgkij3ioktNa3TG607yENv
+         Zi5B2edJyUXwWa5m+LkId3JveqPW/5taIK3lDxdV1kIhxjNzjSNK2yvJwbOeWyVGb4Sg
+         iFRAEWm7Mw7MWJJMbYRuQI6ON4D59pSnBuqFkfm0AWg+PjI8kWWISwivlKP0smkqUcRv
+         2ZAg==
+X-Gm-Message-State: AOAM531iuZmbbT/9XvfGH3p14EiIx18tOSP7rSksBK+Tf9Xxxs1ZpNhu
+        HsyoKM7VfCrW/N/6qmUf9dEx95rR63uyiwatbDc=
+X-Google-Smtp-Source: ABdhPJxFwd5sYHcpKP7HH5wq1l18/N0yS86uUmxUS0eTeAHpLUaXB5pBxjwc02CZmZmfKSgokc5xwqXiDOu/w8PP8nk=
+X-Received: by 2002:a25:7450:: with SMTP id p77mr23380392ybc.155.1593030816256;
+ Wed, 24 Jun 2020 13:33:36 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 13:31:59 -0700
 In-Reply-To: <20200624203200.78870-1-samitolvanen@google.com>
-Message-Id: <20200624203200.78870-23-samitolvanen@google.com>
+Message-Id: <20200624203200.78870-22-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20200624203200.78870-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 22/22] x86, build: allow LTO_CLANG and THINLTO to be selected
+Subject: [PATCH 21/22] x86, relocs: Ignore L4_PAGE_OFFSET relocations
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>
@@ -80,43 +80,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow CONFIG_LTO_CLANG and CONFIG_THINLTO to be enabled.
+L4_PAGE_OFFSET is a constant value, so don't warn about absolute
+relocations.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/Kconfig  | 2 ++
- arch/x86/Makefile | 5 +++++
- 2 files changed, 7 insertions(+)
+ arch/x86/tools/relocs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 6a0cc524882d..df335b1f9c31 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -92,6 +92,8 @@ config X86
- 	select ARCH_SUPPORTS_ACPI
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
-+	select ARCH_SUPPORTS_LTO_CLANG		if X86_64
-+	select ARCH_SUPPORTS_THINLTO		if X86_64
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 00e378de8bc0..a1abc1e081ad 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -188,6 +188,11 @@ ifdef CONFIG_X86_64
- KBUILD_LDFLAGS += $(call ld-option, -z max-page-size=0x200000)
- endif
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index ce7188cbdae5..8f3bf34840ce 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -47,6 +47,7 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
+ 	[S_ABS] =
+ 	"^(xen_irq_disable_direct_reloc$|"
+ 	"xen_save_fl_direct_reloc$|"
++	"L4_PAGE_OFFSET|"
+ 	"VDSO|"
+ 	"__crc_)",
  
-+ifdef CONFIG_LTO_CLANG
-+KBUILD_LDFLAGS	+= -plugin-opt=-code-model=kernel \
-+		   -plugin-opt=-stack-alignment=$(if $(CONFIG_X86_32),4,8)
-+endif
-+
- # Workaround for a gcc prelease that unfortunately was shipped in a suse release
- KBUILD_CFLAGS += -Wno-sign-compare
- #
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
