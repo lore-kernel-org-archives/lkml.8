@@ -2,93 +2,87 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD38C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629E520874
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502C020874
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aSJxMgcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbgFXHpx (ORCPT
+        id S2390122AbgFXHqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:45:53 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:35770 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387849AbgFXHpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:45:21 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2qIBPNevCZJAA--.660S10;
-        Wed, 24 Jun 2020 15:45:16 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 08/14 RESEND] irqchip/ls1x: Fix potential resource leaks
-Date:   Wed, 24 Jun 2020 15:45:05 +0800
-Message-Id: <1592984711-3130-9-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9DxD2qIBPNevCZJAA--.660S10
-X-Coremail-Antispam: 1UD129KBjvdXoWrurWUWFykJF48Zr47Zr4xJFb_yoWDZFgE9r
-        1Sg3s3WayIyr1fJ3yIgw13ZFW7trZYgFs2vFW0kF13ta4xWw1rur4xZr1fJF4xuFWjkF97
-        C3yjvr10y34xAjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbB8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-        F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-        1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-        3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
-        8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCF
-        s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7
-        CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCa
-        FVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-        Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26F1j
-        6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r
-        1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW0oVCq
-        3bIYCTnIWIevJa73UjIFyTuYvjTRX2-nDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 24 Jun 2020 03:46:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:11222 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387849AbgFXHp6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:45:58 -0400
+X-UUID: e46efcd3d1fc4c74a44b55eddf7cc0b1-20200624
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SPetk4kZUoYNJi6rJL6mv4fVDX9vdX+a9jDyyxj20yw=;
+        b=aSJxMgcMtN8F8I+4arR4F7BvEYd4C2BgczA9tYtDqBdfozggctRSh30qH8JshLIBSf6m/iX6Cn/y27CrkHl1Z18YUJsuRlvlJnjV9ZQawwwTkyQVOGzFiZt87zGQkXb0ffizOyP25f7i4Uz5nMWl3N5jGO54YisPrCvqbz4wkuw=;
+X-UUID: e46efcd3d1fc4c74a44b55eddf7cc0b1-20200624
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 889084295; Wed, 24 Jun 2020 15:45:55 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 24 Jun 2020 15:45:45 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 24 Jun 2020 15:45:45 +0800
+Message-ID: <1592984747.3278.3.camel@mtkswgap22>
+Subject: RE: [PATCH v1] scsi: ufs: Disable WriteBooster capability in
+ non-supported UFS device
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>
+Date:   Wed, 24 Jun 2020 15:45:47 +0800
+In-Reply-To: <SN6PR04MB4640974695F782566A83F2EFFC950@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200624025119.6509-1-stanley.chu@mediatek.com>
+         <SN6PR04MB4640974695F782566A83F2EFFC950@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 890E395327D2A2AB1231F6866800CD93D5D3E8BD799D6CB9814E4EB784F355C92000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists potential resource leaks in the error path, fix them.
-
-Fixes: 9e543e22e204 ("irqchip: Add driver for Loongson-1 interrupt controller")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-ls1x.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
-index 353111a..409001b 100644
---- a/drivers/irqchip/irq-ls1x.c
-+++ b/drivers/irqchip/irq-ls1x.c
-@@ -131,7 +131,7 @@ static int __init ls1x_intc_of_init(struct device_node *node,
- 	if (!priv->domain) {
- 		pr_err("ls1x-irq: cannot add IRQ domain\n");
- 		err = -ENOMEM;
--		goto out_iounmap;
-+		goto out_dispose_irq;
- 	}
- 
- 	err = irq_alloc_domain_generic_chips(priv->domain, 32, 2,
-@@ -182,6 +182,8 @@ static int __init ls1x_intc_of_init(struct device_node *node,
- 
- out_free_domain:
- 	irq_domain_remove(priv->domain);
-+out_dispose_irq:
-+	irq_dispose_mapping(parent_irq);
- out_iounmap:
- 	iounmap(priv->intc_base);
- out_free_priv:
--- 
-2.1.0
+SGkgQXZyaSwNCg0KT24gV2VkLCAyMDIwLTA2LTI0IGF0IDA3OjI2ICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gPiANCj4gPiANCj4gPiBJZiBVRlMgZGV2aWNlIGlzIG5vdCBxdWFsaWZpZWQg
+dG8gZW50ZXIgdGhlIGRldGVjdGlvbiBvZiBXcml0ZUJvb3N0ZXINCj4gPiBwcm9iaW5nIGJ5IGRp
+c2FsbG93ZWQgVUZTIHZlcnNpb24gb3IgZGV2aWNlIHF1aXJrcywgdGhlbiBXcml0ZUJvb3N0ZXIN
+Cj4gPiBjYXBhYmlsaXR5IGluIGhvc3Qgc2hhbGwgYmUgZGlzYWJsZWQgdG8gcHJldmVudCBhbnkg
+V3JpdGVCb29zdGVyDQo+ID4gb3BlcmF0aW9ucyBpbiB0aGUgZnV0dXJlLg0KPiANCj4gRml4ZXM6
+ID8NCg0KSSdsbCBhZGQgaXQgaW4gdjIsIHRoYW5rcyENCg0KU3RhbmxleSBDaHUNCg0KDQo=
 
