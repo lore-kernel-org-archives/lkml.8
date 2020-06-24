@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48364C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCCE207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F5B207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDQat+FI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyHySDZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405745AbgFXRs0 (ORCPT
+        id S2405752AbgFXRsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53314 "EHLO
+        Wed, 24 Jun 2020 13:48:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405713AbgFXRsK (ORCPT
+        with ESMTP id S2405546AbgFXRsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:48:10 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A19C0613ED;
-        Wed, 24 Jun 2020 10:48:09 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id l12so3288761ejn.10;
-        Wed, 24 Jun 2020 10:48:09 -0700 (PDT)
+        Wed, 24 Jun 2020 13:48:08 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D25C061573;
+        Wed, 24 Jun 2020 10:48:07 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id w16so3327023ejj.5;
+        Wed, 24 Jun 2020 10:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aFckNX9NLOxkT9VVmqntFDU4vDqtUDB+vNvhonzHfkg=;
-        b=CDQat+FIQQkKqjt5EUTXOuYkZBmovwx8odIdBVkG09sJjX4aMQbEvW+klelcp1hFcT
-         KRRVimnTHIbGlfJWVBOJVuSAFnb/HgUsXEqrzUvlwYafGUq3egMpMP4TmSKUGYcHCE6o
-         Wm4buySsvUHutlK3p8GYHXeR0kfn41lfX4xN2GOsPRLauqAbIfcdAlj0z0Y31aul6Qjk
-         Tp7SDRwJAYuMJF1xIK9cuueeU0ZL0Bk3sxPij1TxsJzIYWT5fm0/rtF2pIkNIOL88Gl2
-         aGPvYooj4SkRT1o+qchvi6lfaDgSa5QfJltxlooST0RZ2N7RPBPYfh39D0dUWNwJ0ZNv
-         lN0Q==
+        bh=FVwacTejwB8bnJMaBC+CSJR1GseZilP5h+0PzN0VoP0=;
+        b=CyHySDZbZFOKyw+YCaiZSvoQBE0Zbehzyy2X9XsydYfqpYn+MsOBZkqQZODXnskNCc
+         BPO+bLCoLhcPF6Hu1H7WXiYkCaKskuhnuuPmTu5vcT0dPx6N0+pqi9g+c0UxG5xIfPg3
+         kL1A5s0iDbA8SEiMstBS4+mteDAfP1ZbYO8lkSa2eEjxtERB7tuQil/zLY07qP8QfnfT
+         Ks9NfNhPr4tyWRrr4pOsevB/O1ISI4XOEjnZSkSQZ88trOHOCLDYkbvLoVubfoRvipg5
+         ZdpQlbDkIHNLFrEyndITO55aCVZ9fGhxw8IzVNqgQzWTCY+6smWLOBeGfzSo8JyFABif
+         AH/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aFckNX9NLOxkT9VVmqntFDU4vDqtUDB+vNvhonzHfkg=;
-        b=X7Ta9jVnR/sytvKgQTQoLMSi37ebeHgmlF9ROTylzksLZis6kkRsFPQnHJMdZBaKMB
-         iCan+nw75sEtN43+VtHwmIYTYNyxQeBmAfhA65YoeIDvJjRY1SWVXGv8NE5F8VQnbxrS
-         41sFb/fTfytzqHZ2fk8xhd6wLtO2AkMN6P69mG87ax7k8XWCCzjgHS0dJcAbvex1bTQH
-         TsDYDwDU+5tfUkdSplxUxd3MRbaFLQbVCnR0m7UPddfJ+AbXk7UxwqVIfM6XTptHJpCt
-         FpmBVmO/IXgVNU4Hr0ytEykY55pXWbzrj3igXl5ftBNDefhZVLMmTF42qde6Rhmgxh4A
-         HqYQ==
-X-Gm-Message-State: AOAM533ygN90gMEOrx+sl/sNXbL/8TQdTbLspPXJEsPkxQtKY+nVytzk
-        PxbBaaa90AxLmkzRpu88Qc+uwJPE40s=
-X-Google-Smtp-Source: ABdhPJwATqcPo6q9bRMf+TLJtKkRF1/FTj/bQyatO2j85T/dipXkYm9bDA1SzjVywVfAzt10qh0V2g==
-X-Received: by 2002:a17:906:4056:: with SMTP id y22mr25343775ejj.304.1593020887757;
-        Wed, 24 Jun 2020 10:48:07 -0700 (PDT)
+        bh=FVwacTejwB8bnJMaBC+CSJR1GseZilP5h+0PzN0VoP0=;
+        b=nEiFZ5+kTmlwiuljS+Pi6D8OTg6FVHcX8sISzyQYVugagge6J5nwgBuuqZwXQuad9m
+         S3E5Ov8RpZqfB5Rhxe0NqoGsZC8uZ32xIWR7qZo0/srCXWXcswj3he53wkXHtwWp3HH3
+         d6/w9vXs9bcQLt3rcI87JVpQMSjtTwuWe4sD6y7YtPkUhJ4Vp6aluMkdO3EkE1nBHLnr
+         TibNLnzpbOrEOh9uZG/jKGUVVapE2VEMEgh0TMfddW3wsCZj46picZU/NS7FNIM/keic
+         WIRMSrTOR/9yMvad6tddvrU6X2y2BLHWeidKHqDbU44qO03N8mMKnC+uQegE0up2SHSe
+         p60g==
+X-Gm-Message-State: AOAM532X8aNi1Zl8srlPa9j8EidbgF35nao+7XEf6Np7iYJW7pZDSgtL
+        6BLgDWoRy+t6wwgrW4MMfIE=
+X-Google-Smtp-Source: ABdhPJwBXzoXISAEf56ynRyfx1fplZO4Y02ClrMYltwtr17tIqd5+AyvQoiO3MFh+Vxn1y8srcnxRQ==
+X-Received: by 2002:a17:907:9486:: with SMTP id dm6mr26776617ejc.248.1593020886591;
+        Wed, 24 Jun 2020 10:48:06 -0700 (PDT)
 Received: from localhost.localdomain ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id s14sm8044146edq.36.2020.06.24.10.48.06
+        by smtp.gmail.com with ESMTPSA id s14sm8044146edq.36.2020.06.24.10.48.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 10:48:07 -0700 (PDT)
+        Wed, 24 Jun 2020 10:48:06 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
@@ -70,9 +70,9 @@ To:     Stephen Boyd <sboyd@kernel.org>,
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-actions@lists.infradead.org
-Subject: [PATCH v2 6/6] MAINTAINERS: Add reset binding entry for Actions Semi Owl SoCs
-Date:   Wed, 24 Jun 2020 20:47:57 +0300
-Message-Id: <c7db5abf78656af8d5a4ff8d677a08e03713c1f3.1592941257.git.cristian.ciocaltea@gmail.com>
+Subject: [PATCH v2 5/6] clk: actions: Add Actions S500 SoC Reset Management Unit support
+Date:   Wed, 24 Jun 2020 20:47:56 +0300
+Message-Id: <de224148c4ddee2de8354d7bcffdb49e2ab1edc2.1592941257.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
 References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
@@ -83,24 +83,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a reset binding entry to match all members of Actions Semi Owl SoCs.
+Add Reset Management Unit (RMU) support for Actions Semi S500 SoC.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v2:
+ - Remove copyright as indicated by Stephen
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7b5ffd646c6b..e6285c13bab0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1533,6 +1533,7 @@ F:	drivers/mmc/host/owl-mmc.c
- F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
-+F:	include/dt-bindings/reset/actions,*-reset.h
- F:	include/linux/soc/actions/
- N:	owl
+ drivers/clk/actions/owl-s500.c | 78 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+
+diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
+index 025a8f6d6482..61bb224f6330 100644
+--- a/drivers/clk/actions/owl-s500.c
++++ b/drivers/clk/actions/owl-s500.c
+@@ -23,8 +23,10 @@
+ #include "owl-gate.h"
+ #include "owl-mux.h"
+ #include "owl-pll.h"
++#include "owl-reset.h"
+ 
+ #include <dt-bindings/clock/actions,s500-cmu.h>
++#include <dt-bindings/reset/actions,s500-reset.h>
+ 
+ #define CMU_COREPLL			(0x0000)
+ #define CMU_DEVPLL			(0x0004)
+@@ -497,20 +499,96 @@ static struct clk_hw_onecell_data s500_hw_clks = {
+ 	.num = CLK_NR_CLKS,
+ };
+ 
++static const struct owl_reset_map s500_resets[] = {
++	[RESET_DMAC]	= { CMU_DEVRST0, BIT(0) },
++	[RESET_NORIF]	= { CMU_DEVRST0, BIT(1) },
++	[RESET_DDR]	= { CMU_DEVRST0, BIT(2) },
++	[RESET_NANDC]	= { CMU_DEVRST0, BIT(3) },
++	[RESET_SD0]	= { CMU_DEVRST0, BIT(4) },
++	[RESET_SD1]	= { CMU_DEVRST0, BIT(5) },
++	[RESET_PCM1]	= { CMU_DEVRST0, BIT(6) },
++	[RESET_DE]	= { CMU_DEVRST0, BIT(7) },
++	[RESET_LCD]	= { CMU_DEVRST0, BIT(8) },
++	[RESET_SD2]	= { CMU_DEVRST0, BIT(9) },
++	[RESET_DSI]	= { CMU_DEVRST0, BIT(10) },
++	[RESET_CSI]	= { CMU_DEVRST0, BIT(11) },
++	[RESET_BISP]	= { CMU_DEVRST0, BIT(12) },
++	[RESET_KEY]	= { CMU_DEVRST0, BIT(14) },
++	[RESET_GPIO]	= { CMU_DEVRST0, BIT(15) },
++	[RESET_AUDIO]	= { CMU_DEVRST0, BIT(17) },
++	[RESET_PCM0]	= { CMU_DEVRST0, BIT(18) },
++	[RESET_VDE]	= { CMU_DEVRST0, BIT(19) },
++	[RESET_VCE]	= { CMU_DEVRST0, BIT(20) },
++	[RESET_GPU3D]	= { CMU_DEVRST0, BIT(22) },
++	[RESET_NIC301]	= { CMU_DEVRST0, BIT(23) },
++	[RESET_LENS]	= { CMU_DEVRST0, BIT(26) },
++	[RESET_PERIPHRESET] = { CMU_DEVRST0, BIT(27) },
++	[RESET_USB2_0]	= { CMU_DEVRST1, BIT(0) },
++	[RESET_TVOUT]	= { CMU_DEVRST1, BIT(1) },
++	[RESET_HDMI]	= { CMU_DEVRST1, BIT(2) },
++	[RESET_HDCP2TX]	= { CMU_DEVRST1, BIT(3) },
++	[RESET_UART6]	= { CMU_DEVRST1, BIT(4) },
++	[RESET_UART0]	= { CMU_DEVRST1, BIT(5) },
++	[RESET_UART1]	= { CMU_DEVRST1, BIT(6) },
++	[RESET_UART2]	= { CMU_DEVRST1, BIT(7) },
++	[RESET_SPI0]	= { CMU_DEVRST1, BIT(8) },
++	[RESET_SPI1]	= { CMU_DEVRST1, BIT(9) },
++	[RESET_SPI2]	= { CMU_DEVRST1, BIT(10) },
++	[RESET_SPI3]	= { CMU_DEVRST1, BIT(11) },
++	[RESET_I2C0]	= { CMU_DEVRST1, BIT(12) },
++	[RESET_I2C1]	= { CMU_DEVRST1, BIT(13) },
++	[RESET_USB3]	= { CMU_DEVRST1, BIT(14) },
++	[RESET_UART3]	= { CMU_DEVRST1, BIT(15) },
++	[RESET_UART4]	= { CMU_DEVRST1, BIT(16) },
++	[RESET_UART5]	= { CMU_DEVRST1, BIT(17) },
++	[RESET_I2C2]	= { CMU_DEVRST1, BIT(18) },
++	[RESET_I2C3]	= { CMU_DEVRST1, BIT(19) },
++	[RESET_ETHERNET] = { CMU_DEVRST1, BIT(20) },
++	[RESET_CHIPID]	= { CMU_DEVRST1, BIT(21) },
++	[RESET_USB2_1]	= { CMU_DEVRST1, BIT(22) },
++	[RESET_WD0RESET] = { CMU_DEVRST1, BIT(24) },
++	[RESET_WD1RESET] = { CMU_DEVRST1, BIT(25) },
++	[RESET_WD2RESET] = { CMU_DEVRST1, BIT(26) },
++	[RESET_WD3RESET] = { CMU_DEVRST1, BIT(27) },
++	[RESET_DBG0RESET] = { CMU_DEVRST1, BIT(28) },
++	[RESET_DBG1RESET] = { CMU_DEVRST1, BIT(29) },
++	[RESET_DBG2RESET] = { CMU_DEVRST1, BIT(30) },
++	[RESET_DBG3RESET] = { CMU_DEVRST1, BIT(31) },
++};
++
+ static struct owl_clk_desc s500_clk_desc = {
+ 	.clks	    = s500_clks,
+ 	.num_clks   = ARRAY_SIZE(s500_clks),
+ 
+ 	.hw_clks    = &s500_hw_clks,
++
++	.resets     = s500_resets,
++	.num_resets = ARRAY_SIZE(s500_resets),
+ };
+ 
+ static int s500_clk_probe(struct platform_device *pdev)
+ {
+ 	struct owl_clk_desc *desc;
++	struct owl_reset *reset;
++	int ret;
+ 
+ 	desc = &s500_clk_desc;
+ 	owl_clk_regmap_init(pdev, desc);
+ 
++	reset = devm_kzalloc(&pdev->dev, sizeof(*reset), GFP_KERNEL);
++	if (!reset)
++		return -ENOMEM;
++
++	reset->rcdev.of_node = pdev->dev.of_node;
++	reset->rcdev.ops = &owl_reset_ops;
++	reset->rcdev.nr_resets = desc->num_resets;
++	reset->reset_map = desc->resets;
++	reset->regmap = desc->regmap;
++
++	ret = devm_reset_controller_register(&pdev->dev, &reset->rcdev);
++	if (ret)
++		dev_err(&pdev->dev, "Failed to register reset controller\n");
++
+ 	return owl_clk_probe(&pdev->dev, desc->hw_clks);
+ }
  
 -- 
 2.27.0
