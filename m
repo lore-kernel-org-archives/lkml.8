@@ -2,98 +2,130 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E900EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7678C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C62F320899
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593014742;
-	bh=AWZteoRvB+bV0L1jEfUdGppba27IOiPJkLjir5C2LwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I3shL6IsD23vTbCLQkdKLrfTuU0ZcO5UxGdW91wl5vHXfzhOvZXG+4adgPEdl74EZ
-	 J8ShlvdU6zB4PvaKtxACulgZigeFQaslunGWwosIsvLl7wjB+TAsVle9SjTN0MIAOD
-	 UtoSmg5xgYaN/dPKWN5t2v9YEtGvEm+LPPRsZkmY=
+	by mail.kernel.org (Postfix) with ESMTP id 8756E20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:05:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404862AbgFXQFl (ORCPT
+        id S2404871AbgFXQFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 12:05:45 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52909 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404503AbgFXQFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2404551AbgFXQFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 12:05:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B66206F7;
-        Wed, 24 Jun 2020 16:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593014740;
-        bh=AWZteoRvB+bV0L1jEfUdGppba27IOiPJkLjir5C2LwQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nDubSH1hcmIHhxBkrJCbAtFInAjaZVP0xAhFeA6PxLTBeQf/86p7360IzPRZquAFb
-         bDJnaPpjo3UVWKv+AP0p3VGoXimYzY6IXnw8ZEGQW06MICo9UUR6LK93eL4Wy3qH1Y
-         d/cWydLMBC4LVwmGMWP5I/3FkG0dwSRSlBNFMM6k=
-Date:   Wed, 24 Jun 2020 18:05:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.7 000/474] 5.7.6-rc2 review
-Message-ID: <20200624160536.GA2097866@kroah.com>
-References: <20200624055938.609070954@linuxfoundation.org>
- <f21cfef6-78a6-af8b-86a0-f278f5e5eda8@nvidia.com>
+IronPort-SDR: 4zAy2CGEMIHZB1EweszIjL0AE3swoMAgX2aMI2EHCBAfVz4E6XtwGQyO47Trpp3K2VIyagYhZJ
+ YUdEHAobOClQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="124782192"
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="124782192"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 09:05:40 -0700
+IronPort-SDR: RXeouA/apnHQ7YZett2vnnFyYNDVHOp1tzEFxw3NOrqoKcZLmcup13oGomgk+u/CrxQqo/B7LO
+ IaaL/f74/7eA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
+   d="scan'208";a="385208483"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2020 09:05:37 -0700
+Subject: Re: [PATCH] [perf] intel_pt_recording_options: Remove redundant
+ intel_pt_evsel null check
+To:     Jiri Olsa <jolsa@redhat.com>, Gaurav Singh <gaurav1086@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Ian Rogers <irogers@google.com>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>
+References: <20200623234905.18608-1-gaurav1086@gmail.com>
+ <20200624124241.GA2719003@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <d99f3f5c-6abd-5ba5-90cd-7982571d5006@intel.com>
+Date:   Wed, 24 Jun 2020 19:05:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f21cfef6-78a6-af8b-86a0-f278f5e5eda8@nvidia.com>
+In-Reply-To: <20200624124241.GA2719003@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:32:40AM +0100, Jon Hunter wrote:
+On 24/06/20 3:42 pm, Jiri Olsa wrote:
+> On Tue, Jun 23, 2020 at 07:48:50PM -0400, Gaurav Singh wrote:
+>> intel_pt_evsel cannot be NULL here since its already being
+>> dereferenced above. Remove this redundant check.
+>>
+>> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+>> ---
+>>  tools/perf/arch/x86/util/intel-pt.c | 24 +++++++++++-------------
+>>  1 file changed, 11 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+>> index 839ef52c1ac2..8cc87fd2dc6f 100644
+>> --- a/tools/perf/arch/x86/util/intel-pt.c
+>> +++ b/tools/perf/arch/x86/util/intel-pt.c
+>> @@ -836,19 +836,17 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+>>  		}
+>>  	}
+>>  
 > 
-> On 24/06/2020 07:10, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.7.6 release.
-> > There are 474 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri, 26 Jun 2020 05:58:09 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc2.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.7:
->     11 builds:	11 pass, 0 fail
->     26 boots:	26 pass, 0 fail
->     56 tests:	56 pass, 0 fail
-> 
-> Linux version:	5.7.6-rc2-ga5e7ca280376
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
+> I wonder we sould put check before that above usage of intel_pt_evsel,
+> because there's no check for that.. but yes, if intel_pt_evsel is NULL
+> it will fail earlier.. Adrian?
 
-Thanks for testing all of these and letting me know.
+The code was written when sampling-mode did not require an intel_pt_evsel.
+Now it does, so intel_pt_evsel will not be NULL.  I think it is OK as is.
 
-greg k-h
+> 
+> thanks,
+> jirka
+> 
+>> -	if (intel_pt_evsel) {
+>> -		/*
+>> -		 * To obtain the auxtrace buffer file descriptor, the auxtrace
+>> -		 * event must come first.
+>> -		 */
+>> -		perf_evlist__to_front(evlist, intel_pt_evsel);
+>> -		/*
+>> -		 * In the case of per-cpu mmaps, we need the CPU on the
+>> -		 * AUX event.
+>> -		 */
+>> -		if (!perf_cpu_map__empty(cpus))
+>> -			evsel__set_sample_bit(intel_pt_evsel, CPU);
+>> -	}
+>> +	/*
+>> +	 * To obtain the auxtrace buffer file descriptor, the auxtrace
+>> +	 * event must come first.
+>> +	 */
+>> +	perf_evlist__to_front(evlist, intel_pt_evsel);
+>> +	/*
+>> +	 * In the case of per-cpu mmaps, we need the CPU on the
+>> +	 * AUX event.
+>> +	 */
+>> +	if (!perf_cpu_map__empty(cpus))
+>> +		evsel__set_sample_bit(intel_pt_evsel, CPU);
+>>  
+>>  	/* Add dummy event to keep tracking */
+>>  	if (opts->full_auxtrace) {
+>> -- 
+>> 2.17.1
+>>
+> 
+
