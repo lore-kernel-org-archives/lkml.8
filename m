@@ -2,66 +2,132 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA04FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F03E20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F3B20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mmijw7T/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405249AbgFXQwG (ORCPT
+        id S2405259AbgFXQwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:52:06 -0400
-Received: from out28-148.mail.aliyun.com ([115.124.28.148]:41923 "EHLO
-        out28-148.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404815AbgFXQwA (ORCPT
+        Wed, 24 Jun 2020 12:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405226AbgFXQvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:52:00 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2918739|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0155759-0.000286233-0.984138;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07381;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.Hrw5KdE_1593017496;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Hrw5KdE_1593017496)
-          by smtp.aliyun-inc.com(10.147.42.198);
-          Thu, 25 Jun 2020 00:51:43 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, robh+dt@kernel.org, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 0/2] Add support for the OST in Ingenic X1000.
-Date:   Thu, 25 Jun 2020 00:51:11 +0800
-Message-Id: <20200624165113.30873-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 24 Jun 2020 12:51:54 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB50C061573;
+        Wed, 24 Jun 2020 09:51:54 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g75so2956545wme.5;
+        Wed, 24 Jun 2020 09:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=G/jzq3QOfbBtu5O5mfX8exac2PYcVHQBcbTwCgdBYnI=;
+        b=Mmijw7T/sfO9YzXeLhtxpLhgyY1Y5QHzNU2BKk0KUE1J+l6D63nEqm50LRzqNsd7Bv
+         h1kIJwoGrQhUiO3/b+2u7dg4JnMWcQCWld4+bH85+TfHk//UtNK9gox93OWKPPv0xU9Q
+         2JUM2pYRypoAxVVLU6Qpjg0QQmdOFbHMeDMxaL+6uQ0CNEBHjubTJQBa4zEs63jkWP0P
+         ZqsUKiEvReZJ6c3TEDK4UXiJoyoAKxo/lj8pHsXLg5NI8zg2WPSAri+q6eE+bdyivN20
+         uNbrbJ14K0tHXjHjT+Ls1VWbQEmKz4FF279j15J2ygG3Ixs8znBww6ciDbSJJz1OyYLe
+         dyVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=G/jzq3QOfbBtu5O5mfX8exac2PYcVHQBcbTwCgdBYnI=;
+        b=LicaMjB+lrGoUIAg29T8FzXEBoj0mQlItUEJcYr2nuM/FVseF5PmTEPsMaS1b6vsmm
+         KCBKWbh5aHSBRdEkgYyeEIZcJxGDJEOgxuLOgrubELYyuPgd3YZgLXYv1PTzV8sRaXVJ
+         F2fKwAZqa3OgV4h/roiShTFUIbMv7KoeYc1wfycPvCht6SUk3RVuXMzHSa1fF3koRfdN
+         m9u8/gZC64KG0i3Sv6+Q4LAlpV2UX3MhxH1a5UsT9DSbdHW0xQu+rXZ2wRbr1gFckpil
+         p7YrXDwq3LIk4Pt2FF7mv7A/qHbfAu919X0e5PqJXTeRH+uIuWmecA7x1/ibU/ldfrLF
+         wsZQ==
+X-Gm-Message-State: AOAM531fKJ/ERXJUQBshey2qYXPIhU1YW5TZAQw+/qrfM8WzDyvfjdNk
+        FLVYcFdHlvSuwIeWxjtn/l0=
+X-Google-Smtp-Source: ABdhPJzUrraqoW09AK7kPgaShgjjwO5zGbKt5JGdmjLqgEeqA+/P98qVWu7xPA19iBiJ31jB9j6j7g==
+X-Received: by 2002:a1c:96ce:: with SMTP id y197mr32383758wmd.55.1593017512999;
+        Wed, 24 Jun 2020 09:51:52 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.85])
+        by smtp.gmail.com with ESMTPSA id z16sm18138182wrr.35.2020.06.24.09.51.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 09:51:52 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] io_uring: fix NULL-mm for linked reqs
+Date:   Wed, 24 Jun 2020 19:50:09 +0300
+Message-Id: <5e29e933792c363ae4da4d96dd9a041430260f83.1593016907.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1593016907.git.asml.silence@gmail.com>
+References: <cover.1593016907.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.Add Ingenic X1000 OST bindings.
-2.Add support for the Ingenic X1000 OST.
+__io_queue_sqe() tries to handle all request of a link,
+so it's not enough to grab mm in io_sq_thread_acquire_mm()
+based just on the head.
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: timer: Add Ingenic X1000 OST bindings.
-  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+Don't check req->needs_mm and do it always.
 
- .../devicetree/bindings/timer/ingenic,ost.yaml     |  62 +++
- drivers/clocksource/Kconfig                        |  19 +-
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/ingenic-sysost.c               | 507 +++++++++++++++++++++
- include/dt-bindings/clock/ingenic,ost.h            |  12 +
- 5 files changed, 597 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,ost.yaml
- create mode 100755 drivers/clocksource/ingenic-sysost.c
- create mode 100644 include/dt-bindings/clock/ingenic,ost.h
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 578ec2e39712..df0dba607966 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2000,10 +2000,9 @@ static void io_sq_thread_drop_mm(struct io_ring_ctx *ctx)
+ 	}
+ }
+ 
+-static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
+-				   struct io_kiocb *req)
++static int __io_sq_thread_acquire_mm(struct io_ring_ctx *ctx)
+ {
+-	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
++	if (!current->mm) {
+ 		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
+ 			return -EFAULT;
+ 		kthread_use_mm(ctx->sqo_mm);
+@@ -2012,6 +2011,14 @@ static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
+ 	return 0;
+ }
+ 
++static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
++				   struct io_kiocb *req)
++{
++	if (!io_op_defs[req->opcode].needs_mm)
++		return 0;
++	return __io_sq_thread_acquire_mm(ctx);
++}
++
+ #ifdef CONFIG_BLOCK
+ static bool io_resubmit_prep(struct io_kiocb *req, int error)
+ {
+@@ -2788,7 +2795,7 @@ static void io_async_buf_retry(struct callback_head *cb)
+ 	ctx = req->ctx;
+ 
+ 	__set_current_state(TASK_RUNNING);
+-	if (!io_sq_thread_acquire_mm(ctx, req)) {
++	if (!__io_sq_thread_acquire_mm(ctx)) {
+ 		mutex_lock(&ctx->uring_lock);
+ 		__io_queue_sqe(req, NULL);
+ 		mutex_unlock(&ctx->uring_lock);
 -- 
-2.11.0
-
+2.24.0
 
