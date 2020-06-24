@@ -2,142 +2,189 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C48C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3137FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110F1206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16DB2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvOvolok"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="DoeXFyVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404475AbgFXPjf (ORCPT
+        id S2404489AbgFXPj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404146AbgFXPje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:39:34 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2170CC061573;
-        Wed, 24 Jun 2020 08:39:34 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id u12so1999849qth.12;
-        Wed, 24 Jun 2020 08:39:34 -0700 (PDT)
+        Wed, 24 Jun 2020 11:39:57 -0400
+Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:12610
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404146AbgFXPj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:39:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X02CWtY53lPxxiJXAwxqEzxGECQMaqmn3w9fsav/adm1vWTtSRSXYyqQGFUiq3x7EZpb7b8495SFPN9RGsoBEe2YyXCskrKtt9zyamfa06V7uPUNL+p0dTLEgVBahYvxhAnqHbsvCWZ0mL2ZB/mv9Fi3mHpnttxCpIRqDyMKGPV6OMlyOJdoJc/ClgWWnsafN4ssfki7oWrDOP8jEtomL3mS3W36wgE2MBlbjrU3yEMeS0jgg5fz3Yr0+nB+Mz59gtfRZaIDszaGIbDbz6e8bpI9jQyio82uvdwFEyNm8O0PpRyX2gTURfUC2ynN9T0+epf4Y4cYSbu9xhDc11DB8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RwOZvlVsRWMJMgZT8h9H96L8M1l7MNIHx+OQX33OiBU=;
+ b=mGAkdb5E2cbELW8goVcEZut+UFfOK4/+SLwf/UoytIj0aEKhk17qbawYGY3SjHu5tXR2zifoo7nUUXuRRgze0xgV3QhP3svqyG7DsdEblYfgCrCcbLoTg6suu/SQ2H6815WqM1BKsR6M3GymEvU08GTy2QlOTJPD6zVvKaKlpOT6Y0xmGbPnaXVE/3MrTunXZFQAl0ObLnVAtPdix95sApyEJ9WtzJzuX/60E2eKv6Tdu5AHK3VUljKJeMqE1aj8sAc5koD4OVWahBPShpqg/7QQvC3Vzcw+Q2NTcoGNWs28ciJW9FslyB9R22JgVf2WqgjfXiLeOjImN1EyUSTPqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w86BiXeWW0qXr0CkddcsMzd0Qk3FGLVo77ySYOXx/9Y=;
-        b=XvOvolokMbI6BM9fwAWbp0DSocFt1o+A8uoY/Reo4LDwzU4hQMNEqsXUMCfFLmPpRt
-         oCGEUO7LJxfBoH6B4ugepuzR+W4BODGMKcD7n1kE8A3WQ3SLB+IBcIoTnjNohCiQzyKt
-         CBCdrmzky74TFEFrPd2Kfsr2+14tR9HsbJRf+0G5kDdkEtuuh73IrvlaLZwDuMTWfMdb
-         b+KS8pKoeDZyEW9HiZwMnTpp9wrt1CTAjBBJL+PFTzvo0sggPInyyKPq+J2T92oK6+DA
-         9pwLFWMXKwWdX1Nk7yDVPqpI15TQlqEik3eyKHAU8SGeuJh/Z3+7WK6+QdceBuBfHG31
-         HCRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=w86BiXeWW0qXr0CkddcsMzd0Qk3FGLVo77ySYOXx/9Y=;
-        b=tNVSVtv3Ns8wezMgihfE9gLI3DLgN9b50jsoNNcUX+rb32cifYeUXdWNCFGWPIkLsD
-         2eRN7cT54ozqDLbHIsl6/4PvBYPOPMkyFr0mTQw2R02C3hJJBfH4bzdJE2O9EYfkR0fM
-         KWBEdQGBkEZoN/RZF52Y1/w+VD15bjBf7vEmRRetzKG6j/+6htJWTLvCDcnUiaxmbX9A
-         9Up1ei0p0/ptnnKKDDkoZoOlGvai2IADi93k/HfurCSqJVPtzVzBK2KNe3GJjWnQhXee
-         euJoMxcZ6epJJFOMCT/MI9aONMxFHt5/pIW48oYWvHA1KYLhJipNAFmEEoENjQOJ0NIt
-         7SmQ==
-X-Gm-Message-State: AOAM531G+ZQ68rJEV0uq4JwDSncRtRod5pbq/y2g8jY5BrFhSu+Nunk+
-        YGB1yBEIqoflkTgH8Mf2nBY=
-X-Google-Smtp-Source: ABdhPJzqJsdRmlzGOwYnHtzAydQW9Iu1ltabpuAtDnDhT9pt2nyjZR92f7BI3Glrce11dxNr8bQdzQ==
-X-Received: by 2002:ac8:51d5:: with SMTP id d21mr26957465qtn.154.1593013173114;
-        Wed, 24 Jun 2020 08:39:33 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l56sm4306072qtl.33.2020.06.24.08.39.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:39:32 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 24 Jun 2020 11:39:30 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Fangrui Song <maskray@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RwOZvlVsRWMJMgZT8h9H96L8M1l7MNIHx+OQX33OiBU=;
+ b=DoeXFyVcMpmTPoRHsZW3Mo1qCxTwf4FHm8YbMv5YqlZTm+boqgpSROQUEZDSZTws4MgOiiZgAvRlDQH4/9dg2RnzYvB7Xgif8CrFnOq2LQ9W6XZPSctf/aulmh6zeb10ZwJ4E1PchqwAK205G1ECZR/pgD+FK8fHQeU2hyrlzi8=
+Received: from DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:11c::13)
+ by DB8PR10MB3626.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:13d::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
+ 2020 15:39:52 +0000
+Received: from DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::843a:1bdd:adc4:3a56]) by DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::843a:1bdd:adc4:3a56%8]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
+ 15:39:52 +0000
+From:   Roy Im <roy.im.opensource@diasemi.com>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Roy Im <roy.im.opensource@diasemi.com>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/9] vmlinux.lds.h: Add .symtab, .strtab, and
- .shstrtab to STABS_DEBUG
-Message-ID: <20200624153930.GA1337895@rani.riverdale.lan>
-References: <20200624014940.1204448-1-keescook@chromium.org>
- <20200624014940.1204448-3-keescook@chromium.org>
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: RE: [RESEND PATCH V13 3/3] Input: new da7280 haptic driver
+Thread-Topic: [RESEND PATCH V13 3/3] Input: new da7280 haptic driver
+Thread-Index: AQHWQwzBfFR7uhdm1kyQ3q9kXzA/B6jmUoyAgAFmjgCAABn+AIAAEtIA
+Date:   Wed, 24 Jun 2020 15:39:52 +0000
+Message-ID: <DB8PR10MB3356AFC38358881B471E76A285950@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
+References: <cover.1592221223.git.Roy.Im@diasemi.com>
+ <135761fd309eb9424faeb631b6e6c66147b57666.1592221223.git.Roy.Im@diasemi.com>
+ <20200623144105.mxhcrtezbghjb2vb@taurus.defre.kleine-koenig.org>
+ <DB8PR10MB3356697B41C0FB97F5FD330185950@DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM>
+ <20200624133726.en7q52rpdtzvhajz@taurus.defre.kleine-koenig.org>
+In-Reply-To: <20200624133726.en7q52rpdtzvhajz@taurus.defre.kleine-koenig.org>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=diasemi.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [1.234.57.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e726fa5f-5a11-44ba-4e60-08d81854d654
+x-ms-traffictypediagnostic: DB8PR10MB3626:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR10MB36265FCABFBB530A8B509AEEA2950@DB8PR10MB3626.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0444EB1997
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /mQc4HiAK0xXsTp9qrVaB1514kVnjD8WezgkNQfUG3OGqpMEP8Wq1o6msyrMw5tGvom6nx/60jh23Pxl2vbWvbzw2qn9LesEdx9Pt53BHx3hw3KIHzRUYthMdzAENMI2M4oXdsl5PR8wUWvY520q0ZwpYsFZjHn2hvyXsCpwt4rN6BJ5TcP3u/gZCIEoLLhFUcwRN4BWdXxy4slFanBKtSaeDc8T2nQKb0urlCf9d31rzFf+zx4R/PV4sFsTN8Laj02pr0zeqmqCrhMcdfUpAkMTGVWwcNtcEURwHwMaBD3AAMDCIyBCUWIHo+MyZQbl5w2s6vuj7gUqDHkP/pIgFUiRtrc/WXIoAr9BJiZhKdVBLvPciA+5yp6v4ezeNUh2Fz2cuJK8+HviuZM45goy9g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB3356.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(83380400001)(316002)(966005)(54906003)(26005)(186003)(4326008)(110136005)(2906002)(478600001)(9686003)(64756008)(66946007)(66556008)(66446008)(66476007)(52536014)(76116006)(53546011)(6506007)(33656002)(8936002)(71200400001)(55016002)(86362001)(5660300002)(7696005)(66574015)(83080400001)(8676002)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JKXhtqKgV0FB9vcm6fwLFh5J9D6Re18R/vSyHUrQPou695Ipi3ccZPUKvumzXzRD9tNpXTC/PoG10vkG2ItJeAWioxqTNPW3+iJ4V50hM5+hlsrJeNVGi3QBOi2AP/w3xigUhH7oVhi9JWY2F/Xp6X0HofvFQiEBRalHnv3uq4A4DwDn7yf2sSdZ/9WJ5hAEDcOIJLOzps1GhY5zElnOdQp1Q3UztiLa6cmrF1oc8T26+5FOkI2Y7PQG9vZLjEhfzHz39H4LKc6+sliVSgHeL/8HGg4mAe1ibvaMem9MXpftilfesLX/ctgw7qtmTB3yFzwTVfdSv49ZAHwBngn2QFEbnAR+IHfc5Zw7dRG51J5/qUtI1KvgywvfjIKhL1xHTbsxNXizBGLKtXdO9N6rxfQH0KIaa1CzeqFuh1nv4DM+WBgkTS+PXolIaoDLMaXwn+eTNa7sZcqMF+oqtmWb6DBkBHUkfjhFEvzhhrtBCok=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200624014940.1204448-3-keescook@chromium.org>
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e726fa5f-5a11-44ba-4e60-08d81854d654
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 15:39:52.3730
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bVRTZYjq0CpYk3oAvRKIJbXqkyUwTuOrjVjzsDii6MNhZHJ8OECM/p7VaSQFat1rGmDALVt+CJU6M5IPaPhMeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3626
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 06:49:33PM -0700, Kees Cook wrote:
-> When linking vmlinux with LLD, the synthetic sections .symtab, .strtab,
-> and .shstrtab are listed as orphaned. Add them to the STABS_DEBUG section
-> so there will be no warnings when --orphan-handling=warn is used more
-> widely. (They are added above comment as it is the more common
+On Wed, Jun 24, 2020 at 10:37 PM, Uwe Kleine-K=F6nig wrote:
+> On Wed, Jun 24, 2020 at 12:04:24PM +0900, Roy Im wrote:
+> > Hello Uwe,
+> >
+> > On Tue, June 23, 2020 11:41 PM, Uwe Kleine-K=F6nig wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Mon, Jun 15, 2020 at 08:40:23PM +0900, Roy Im wrote:
+> > > > Adds support for the Dialog DA7280 LRA/ERM Haptic Driver with
+> > > > multiple mode and integrated waveform memory and wideband support.
+> > > > It communicates via an I2C bus to the device.
+> > > >
+> > > > Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+> > > >
+> > > > +		period2freq =3D 1000000 / state.period;
+> > > > +		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
+> > > > +		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
+> > > > +			dev_err(dev, "Not supported PWM frequency(%d)\n",
+> > > > +				period2freq);
+> > >
+> > > Doesn't the compiler warn here about period2freq being unsigned and %=
+d being for signed int values?
+> > >
+> > > For my (non-native) English ear s/Not supported/Unsupported/ sounds
+> > > better. Also my eyes would be pleases by a space before the opening b=
+race.
+> >
+> > I didn't see any warning message, but I will change/improve them to pro=
+per one and the log as below.
+> >
+> > 		period2freq =3D 1000000 / state.period;
+> > 		if (period2freq < DA7280_MIN_PWM_FREQ_KHZ ||
+> > 		    period2freq > DA7280_MAX_PWM_FREQ_KHZ) {
+> > 			dev_err(dev, "Unsupported PWM frequency (%u)\n",
+> > 				period2freq);
+> > 			return -EINVAL;
+> > 		}
+> > If you look ok, let me update this so.
+>=20
+> looks fine.
+>=20
+> Note that you don't need the division if you check for:
+>=20
+> 	if (state.period > 100000 || state.period < 4000) {
+> 		...
+>=20
+> (maybe the compiler is already clever enough to get rid of the division f=
+or you, but then the check is:
+>=20
+> 	if (state.period > 100000 || state.period < 3985) {
+>=20
+> because of rounding errors.)
 
-Nit 1: is "after .comment" better than "above comment"? It's above in the
-sense of higher file offset, but it's below in readelf output.
-Nit 2: These aren't actually debugging sections, no? Is it better to add
-a new macro for it, and is there any plan to stop LLD from warning about
-them?
-
-> order[1].)
-> 
-> ld.lld: warning: <internal>:(.symtab) is being placed in '.symtab'
-> ld.lld: warning: <internal>:(.shstrtab) is being placed in '.shstrtab'
-> ld.lld: warning: <internal>:(.strtab) is being placed in '.strtab'
-> 
-> [1] https://lore.kernel.org/lkml/20200622224928.o2a7jkq33guxfci4@google.com/
-> 
-> Reported-by: Fangrui Song <maskray@google.com>
-> Reviewed-by: Fangrui Song <maskray@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/asm-generic/vmlinux.lds.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index 1248a206be8d..8e71757f485b 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -792,7 +792,10 @@
->  		.stab.exclstr 0 : { *(.stab.exclstr) }			\
->  		.stab.index 0 : { *(.stab.index) }			\
->  		.stab.indexstr 0 : { *(.stab.indexstr) }		\
-> -		.comment 0 : { *(.comment) }
-> +		.comment 0 : { *(.comment) }				\
-> +		.symtab 0 : { *(.symtab) }				\
-> +		.strtab 0 : { *(.strtab) }				\
-> +		.shstrtab 0 : { *(.shstrtab) }
->  
->  #ifdef CONFIG_GENERIC_BUG
->  #define BUG_TABLE							\
-> -- 
-> 2.25.1
-> 
+OK, you are right, that will be better. So let me change that as below if y=
+ou look fine.
+	/* Check PWM period, PWM freq =3D 1000000 / state.period.
+	 * The valid PWM freq range: 10k ~ 250kHz.
+	 */
+	if (state.period > 100000 || state.period < 3985) {
+		dev_err(dev, "Unsupported PWM period (%u)\n",
+			state.period);
+		return -EINVAL;
+	}
+>=20
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
+  |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
