@@ -2,176 +2,163 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5908FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4066C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3110C20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A/MsUxfE"
+	by mail.kernel.org (Postfix) with ESMTP id CBE7E20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390924AbgFXNNA (ORCPT
+        id S2390941AbgFXNND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:13:00 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:37375 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbgFXNM7 (ORCPT
+        Wed, 24 Jun 2020 09:13:03 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:39664 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388140AbgFXNNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:12:59 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200624131258euoutp02333677375303e36d7fa2d1eb2df3fb34~bfQqtwsvp1201712017euoutp027
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 13:12:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200624131258euoutp02333677375303e36d7fa2d1eb2df3fb34~bfQqtwsvp1201712017euoutp027
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593004378;
-        bh=y3U3Roh4wtM015Hhvwh1SxdfYjN0DfIAfBQvm4ZhhAs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=A/MsUxfEr4VeT/BQMpGsGrhDK1xOSTZuIogWzuKIShaJwAkjDdekbtnS7KNBNwRjo
-         4Ls4bLqXrRZtvL0lThN1Ud7nT1oH1NpgNyqq4hlUBRLnEVJf1HDwnRCqlmPiSExnen
-         CJAGDIPxn757X00m3ht3dEYP0nQ2I2xzLrFoxvPc=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200624131257eucas1p1906930dbe495bb181294a73d7c1240ec~bfQqXnmF_0191901919eucas1p1F;
-        Wed, 24 Jun 2020 13:12:57 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0B.09.06318.95153FE5; Wed, 24
-        Jun 2020 14:12:57 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200624131257eucas1p2475b00b53ea2cd0c5320ead2235d7a57~bfQp9TFjt2736227362eucas1p2Y;
-        Wed, 24 Jun 2020 13:12:57 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200624131257eusmtrp2ced7c8555a4c4e095ad495582b33025f~bfQp8hPnJ2228022280eusmtrp2T;
-        Wed, 24 Jun 2020 13:12:57 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-4e-5ef35159d8ca
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 83.41.06017.95153FE5; Wed, 24
-        Jun 2020 14:12:57 +0100 (BST)
-Received: from [106.210.85.205] (unknown [106.210.85.205]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200624131256eusmtip22bb7c84c92bec2b591b43fc10bf7425b~bfQpDKhvo2118321183eusmtip2s;
-        Wed, 24 Jun 2020 13:12:56 +0000 (GMT)
-Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
- integer and pointer types
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <bbc5ad3e-0e0a-83e1-ed64-e5275b605174@samsung.com>
-Date:   Wed, 24 Jun 2020 15:12:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <CAHp75Vf5ANVRb8ghzdWa1F5U3JaRv9J2mVF8AQ+WwBahQM9Y5A@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGvZ3pzNC0OBa0J2g0NtEEDeD2MHEhbtGJUWPjg1FjseAEiS1g
-        Cwhq0Agqi2DRVKWIiIIsEdmXYhRbFUSsglBEhFSjJoBio5TgBsowGHn7zvaf/9xcCpP3iX2o
-        sPAoTh+u0SoJCV7T+OOF327VkHpJS4KS6Tc+REz5lVIxY3r3gWA6hl0Ek3CzlGAcI/0Y0/zZ
-        gTPJGXkkU/G+U8y0118lGJvpHmJKHvWSjC19L5PtNmFrPdn2zjaMdXWdJlmLuZdks5IyxWxF
-        cTLBPjG+FLEN2bdJ1pnaJGIr806w6VXFiH2QdhFnhyrm7pDukaw+wGnDYjh9QOB+yUHnW7/I
-        b5LY7Nxu8iTKoVIQRQG9AtxFO1OQByWnCxG8qfNPQZJxdiPoyS0SC8EQguTHJQTfxQ80nMmY
-        LBQgGBkewYXAheDaHyfiZb3oELCkLUtBJOVNB0BDDN+B0Qli+J3fIeZ1CNoXRitfE3y3jA4E
-        YyrFp3F6AdzKf0HyPJPeB+ecAxjPMnoGNGd+wHn2oFXQ8/H8BGP0PKgdvIoJrIBTbsEz0CYK
-        Pg08m/S8Ea6l5ooE9oKBpipS4Dnwx5IzmT8BzsJETBhOQlBdZsGEwiroef5zwig2brq0PkB4
-        uHVgsW4R0BO6BmcIFjzhQs1lTEjLIOmMXNCYD0579aSeAvJbhwkjUpqnHGaecox5yjHm/2uv
-        I7wYKbhogy6UMywP5474GzQ6Q3R4qH9IhK4Cjf+/lrGm4Tp0/3ewDdEUUkplZW+/quViTYwh
-        TmdDQGFKb9l6e4taLjugiTvK6SOC9NFazmBDsylcqZAtv9G/T06HaqK4QxwXyen/VUWUh89J
-        tHP7WatUdT/Q5L2rvnmlzn3snSmuIWdJ1sDdr/bpO1LnOAv6+6yBqujO2g05EduC8+j0KMWa
-        7wtw6xt12yyj77R4nTTDHuRCrbFhHZscdkedVFQw5jh86VXivKJbXPnTzMat57ziYy/+GtSW
-        JHX3qpI9qr9pFh7v2rz4+p3RrC8mJW44qFm6CNMbNH8BiT5GYHsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsVy+t/xe7qRgZ/jDHbcZ7N4OeEwo8XGGetZ
-        LaY+fMJmceXrezaL5sXr2Syufn/JbHHyzVUWi86JS9gtNj2+xmpxedccNotDU/cyWqw9cpfd
-        4lBftMXcL1OZHfg8Ll+7yOzx/kYru8fOWXfZPWZ3zGT12LSqk83jxIRLTB77565h97jffZzJ
-        Y/OSeo++LasYPQ70Tmbx+LxJLoAnSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbK
-        yFRJ384mJTUnsyy1SN8uQS/j/gPdgk9cFXMX3mJvYJzP0cXIySEhYCKxv20iaxcjF4eQwFJG
-        icPLTrFDJMQlds9/ywxhC0v8udbFBlH0llHiZ/t0IIeDQ1ggWWJnr1EXIzuHiIC+xP4ykApm
-        gXZWiTcH1jNDlDcwSZzb3cgEModNQFPi7+abYK28AnYSE7rBbmARUJVYtvQ82FpRgViJ7sU/
-        wGxeAUGJkzOfsIDYnAKBEnee9oPZzAJmEvM2P2SGsOUltr+dA2WLSzR9Wck6gVFoFpL2WUha
-        ZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAuN927OeWHYxd74IPMQpwMCrx
-        8G548DFOiDWxrLgy9xCjBAezkgiv09nTcUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0xJ
-        eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGP2+1n13+vCyof87
-        +0rBVSz1dbxLTkzmDp5umzLptaRzVXqr3vtNzPyf3iVLLZmhoMhruzHRzepi6c75ThMY7k58
-        M4XFieGu+TT/iq3nm93mxF8131ly/u4lT40XubMkM9yOFIV+m7/8894LJfXXopUYhII3WGdN
-        yFydp8Pa77muod1kn8FnGSWW4oxEQy3mouJEABSPGSARAwAA
-X-CMS-MailID: 20200624131257eucas1p2475b00b53ea2cd0c5320ead2235d7a57
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f
-References: <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
-        <20200624114127.3016-1-a.hajda@samsung.com>
-        <20200624114127.3016-4-a.hajda@samsung.com>
-        <CAHp75Vf5ANVRb8ghzdWa1F5U3JaRv9J2mVF8AQ+WwBahQM9Y5A@mail.gmail.com>
+        Wed, 24 Jun 2020 09:13:00 -0400
+X-IronPort-AV: E=Sophos;i="5.75,275,1589209200"; 
+   d="scan'208";a="50489619"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 24 Jun 2020 22:12:59 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 930CC40062CE;
+        Wed, 24 Jun 2020 22:12:57 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 01/11] arm64: dts: renesas: r8a774a1-hihope-rzg2m[-ex/-ex-idk-1110wr]: Rename HiHope RZ/G2M boards
+Date:   Wed, 24 Jun 2020 14:12:00 +0100
+Message-Id: <1593004330-5039-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593004330-5039-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1593004330-5039-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The existing DTS files for HiHope RZ/G2M boards are for Rev.2.0 version
+so reflect the same for the DTS file names so that the existing naming
+convention can be used for Rev.3.0/4.0 boards.
 
-On 24.06.2020 14:53, Andy Shevchenko wrote:
-> On Wed, Jun 24, 2020 at 2:41 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->> Many resource acquisition functions return error value encapsulated in
->> pointer instead of integer value. To simplify coding we can use macro
->> which will accept both types of error.
->> With this patch user can use:
->>          probe_err(dev, ptr, ...)
->> instead of:
->>          probe_err(dev, PTR_ERR(ptr), ...)
->> Without loosing old functionality:
->>          probe_err(dev, err, ...)
-> ...
->
->> + * This helper implements common pattern present in probe functions for error
->> + * checking: print message if the error is not -EPROBE_DEFER and propagate it.
->> + * In case of -EPROBE_DEFER it sets defer probe reason, which can be checked
->> + * later by reading devices_deferred debugfs attribute.
->> + * It replaces code sequence:
->> + *     if (err != -EPROBE_DEFER)
->> + *             dev_err(dev, ...);
-> Btw, we have now %pe. Can you consider to use it?
+While at it also added a comment about switch SW43 to be OFF for pciec1
+to be activated.
 
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/boot/dts/renesas/Makefile                       | 6 +++---
+ ...wr.dts => r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts} | 4 ++--
+ ...hope-rzg2m-ex.dts => r8a774a1-hihope-rzg2m-rev2-ex.dts} | 7 ++++---
+ ...4a1-hihope-rzg2m.dts => r8a774a1-hihope-rzg2m-rev2.dts} | 4 ++--
+ 4 files changed, 11 insertions(+), 10 deletions(-)
+ rename arch/arm64/boot/dts/renesas/{r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts => r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts} (86%)
+ rename arch/arm64/boot/dts/renesas/{r8a774a1-hihope-rzg2m-ex.dts => r8a774a1-hihope-rzg2m-rev2-ex.dts} (51%)
+ rename arch/arm64/boot/dts/renesas/{r8a774a1-hihope-rzg2m.dts => r8a774a1-hihope-rzg2m-rev2.dts} (83%)
 
-OK, I haven't noticed it finally appeared.
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index d17351cdbce0..e8461918f441 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+-dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
+-dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
+-dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex-idk-1110wr.dtb
++dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2.dtb
++dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex.dtb
++dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
+similarity index 86%
+rename from arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
+rename to arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
+index 2ab5edd84e9b..3a1dcc914985 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
+@@ -1,12 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Device Tree Source for the HiHope RZ/G2M sub board connected to an
++ * Device Tree Source for the HiHope RZ/G2M Rev.2.0 sub board connected to an
+  * Advantech IDK-1110WR 10.1" LVDS panel
+  *
+  * Copyright (C) 2020 Renesas Electronics Corp.
+  */
+ 
+-#include "r8a774a1-hihope-rzg2m-ex.dts"
++#include "r8a774a1-hihope-rzg2m-rev2-ex.dts"
+ #include "rzg2-advantech-idk-1110wr-panel.dtsi"
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts
+similarity index 51%
+rename from arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts
+rename to arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts
+index c754fca239d9..2221cf6aed21 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts
+@@ -1,19 +1,20 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Device Tree Source for the HiHope RZ/G2M sub board
++ * Device Tree Source for the HiHope RZ/G2M Rev.2.0 connected to sub board
+  *
+  * Copyright (C) 2019 Renesas Electronics Corp.
+  */
+ 
+-#include "r8a774a1-hihope-rzg2m.dts"
++#include "r8a774a1-hihope-rzg2m-rev2.dts"
+ #include "hihope-rzg2-ex.dtsi"
+ 
+ / {
+-	model = "HopeRun HiHope RZ/G2M with sub board";
++	model = "HopeRun HiHope RZ/G2M (Rev.2.0) with sub board";
+ 	compatible = "hoperun,hihope-rzg2-ex", "hoperun,hihope-rzg2m",
+ 		     "renesas,r8a774a1";
+ };
+ 
++/* SW43 should be OFF, if in ON state SATA port will be activated */
+ &pciec1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2.dts
+similarity index 83%
+rename from arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts
+rename to arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2.dts
+index 96f2fb080a1a..276f449ad14e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Device Tree Source for the HiHope RZ/G2M main board
++ * Device Tree Source for the HiHope RZ/G2M Rev.2.0 main board
+  *
+  * Copyright (C) 2019 Renesas Electronics Corp.
+  */
+@@ -10,7 +10,7 @@
+ #include "hihope-common.dtsi"
+ 
+ / {
+-	model = "HopeRun HiHope RZ/G2M main board based on r8a774a1";
++	model = "HopeRun HiHope RZ/G2M main board (Rev.2.0) based on r8a774a1";
+ 	compatible = "hoperun,hihope-rzg2m", "renesas,r8a774a1";
+ 
+ 	memory@48000000 {
+-- 
+2.17.1
 
-
->
->> + *     return err;
->> + * with
->> + *     return probe_err(dev, err, ...);
->> + *
->> + * Returns @err.
->> + *
->> + */
->> +#define probe_err(dev, err, args...) __probe_err(dev, (long)(err), args)
-> Can't we use PTR_ERR() here?
-
-
-Nope, I want to accept both types: int and pointer.
-
-
-Regards
-
-Andrzej
-
-
->
