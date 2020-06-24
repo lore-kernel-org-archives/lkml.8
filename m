@@ -2,141 +2,107 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCD4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7171F2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF5B20702
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="in62/pK4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GoWIx0SN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405057AbgFXTLG (ORCPT
+        id S2405584AbgFXTMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404744AbgFXTLF (ORCPT
+        Wed, 24 Jun 2020 15:12:07 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20947 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404744AbgFXTMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:11:05 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F945C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:11:04 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b15so2314506edy.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:11:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HUy3SYLieHUYRrbu7ksz+DDx5NoSGhvtwAWM7BS+NcQ=;
-        b=in62/pK4305qlruXOrme3JoGaFZsG+ngmdYPd6qQJVPMZU8zi45J/cdtrR/1S2nDpG
-         osC789ZrUhTlXbnv7LgWIfcNPZ+ugiqfFG98EnA6GebisxGlzNr6DE/YYjikoTyjpTr6
-         dzESw5Tk70JPsArLMfUSCMZmv4fCVRQauL8U50UEeeTPu7ml5UcziaUxfOow1iLRtOE9
-         g3KIkUWDlvL4VHx0ultb5v4HHmoFF5GBabUMOWbywjy9cYRAsAWsYMhAumd5XKngyrLj
-         x1ScTaJ71iWX60kuFWHkQlJK56tNx/8L3F9ZHkDXvkYZVgaBDVCDP3QzFahIOfXx7tbl
-         dc1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HUy3SYLieHUYRrbu7ksz+DDx5NoSGhvtwAWM7BS+NcQ=;
-        b=oNMY9mmfK/mnTqlm5R7PQYtfgu9KX1PTk+kXWZvhquI9A73SvHvr6qPb9f+Qf1qffi
-         G/eGQHYmv5XIby5tyBUfuVi7IUOmIALwUpza+tHA6goWChRgXByaP9hEFYo7YhueTnIe
-         W9SNa4yUgZUrApmZclaXpxtKAQOtKMgNGSLQS0itnSyYUjiFHu1oZzE3AdCO/7psOgCn
-         VynRPHv6KXttG1V3lP6E1lRyb4TQ/wcVGAIvavWHaG0CONV2gMam4uaICtFKE6jCND4t
-         e98SMQCZg5e+dwvR0eaZbij4PSY3t3bIdXsT00mJa1v7jORP1CbyNryNnlN19crBNfWR
-         LE9A==
-X-Gm-Message-State: AOAM532VFP1swdpUIyZLJMjqc5tg8D86q7fBLYlflPqwfyXch3RUmKsa
-        pwno6so+QQoefv5guOpgflsE3eDtEYzIvAD6w7fGOg==
-X-Google-Smtp-Source: ABdhPJwTc+VdGxK7PxA2A2Hb2Q/oOwneukaqMN+TiIWLM8FMg1nGLcl6/OQXIozSlGxncNmyGtKZ6GK3+EL+fh+R4Sw=
-X-Received: by 2002:aa7:d6c1:: with SMTP id x1mr27574990edr.154.1593025862677;
- Wed, 24 Jun 2020 12:11:02 -0700 (PDT)
+        Wed, 24 Jun 2020 15:12:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593025925;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RmSMwzny06NsdSKMt6qmuqIVCIN71KDJe+6Vq4O89KQ=;
+        b=GoWIx0SNqmnn/PVjvmza18+wWGDw4soZA/Cs4EQmss8CRlhvU1z8VQ31iyXz1U94K3yk8C
+        lNfLLExab1ptyMW0ysweaP9Z95/af7hyRJqixStF/jEix0ns/SC92iywpWv+p/dZjAktu9
+        LmeLEklPcTD9BAEOIAXYIMfq0StakD8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-458-5OaKHX9gPHGWHiBQm6g_uA-1; Wed, 24 Jun 2020 15:12:02 -0400
+X-MC-Unique: 5OaKHX9gPHGWHiBQm6g_uA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4540804001;
+        Wed, 24 Jun 2020 19:11:59 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-18.ams2.redhat.com [10.36.113.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 44F1B1008034;
+        Wed, 24 Jun 2020 19:11:52 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/3] glibc: Perform rseq registration at C startup and thread creation (v21)
+References: <20200622180803.1449-1-mathieu.desnoyers@efficios.com>
+        <20200622180803.1449-2-mathieu.desnoyers@efficios.com>
+        <87d05obl4w.fsf@oldenburg2.str.redhat.com>
+        <1158112159.11628.1593025203438.JavaMail.zimbra@efficios.com>
+Date:   Wed, 24 Jun 2020 21:11:50 +0200
+In-Reply-To: <1158112159.11628.1593025203438.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Wed, 24 Jun 2020 15:00:03 -0400
+        (EDT)")
+Message-ID: <87r1u48eix.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <20200428003214.3764-1-david.e.box@linux.intel.com>
- <20200612204820.20111-1-david.e.box@linux.intel.com> <12d36fdcdbcf438dd3aac7769e8366afd9d5aa1a.camel@linux.intel.com>
-In-Reply-To: <12d36fdcdbcf438dd3aac7769e8366afd9d5aa1a.camel@linux.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Jun 2020 12:10:50 -0700
-Message-ID: <CAPcyv4iYGgjmAUiKUgFBF+nm=axamYFueCkN5Jyu7yQ6w1HxLg@mail.gmail.com>
-Subject: Re: [PATCH V2 0/2] nvme: Add support for ACPI StorageD3Enable property
-To:     David Box <david.e.box@linux.intel.com>
-Cc:     "N, Shyjumon" <shyjumon.n@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:55 AM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> Friendly reminder. Thanks.
+* Mathieu Desnoyers:
 
-Are you looking for this to be merged by ACPI with an NVMe ack, or
-merged by NVMe with an ACPI ack? It sometimes helps to be explicit to
-break the log jam.
+>> I'm still worried that __rseq_static_assert and __rseq_alignof will show
+>> up in the UAPI with textually different definitions.  (This does not
+>> apply to __rseq_tls_model_ie.)
+>
+> What makes this worry not apply to __rseq_tls_model_ie ?
 
+It's not needed by the kernel header because it doesn't contain a
+__rseq_abi declaration.
+
+>> 
+>> Is my worry unfounded?
 >
-> David
+> So AFAIU you worry that eventually sys/rseq.h and linux/rseq.h carry different
+> definitions of __rseq_static_assert and __rseq_alignof.
 >
-> On Fri, 2020-06-12 at 13:48 -0700, David E. Box wrote:
-> > This patch set implements a solution for a BIOS hack used on some
-> > currently
-> > shipping Intel systems to address issues with power management policy
-> > decisions concerning PCIe NVMe drives. Some newer Intel platforms,
-> > like
-> > some Comet Lake systems, require that PCIe devices use D3 when doing
-> > suspend-to-idle in order to allow the platform to realize maximum
-> > power
-> > savings. This is particularly needed to support ATX power supply
-> > shutdown
-> > on desktop systems. In order to ensure this happens for root ports
-> > with
-> > storage devices, Microsoft apparently created this ACPI _DSD property
-> > as a
-> > way to override their driver policy. To my knowledge this property
-> > has not
-> > been discussed with the NVME specification body.
-> >
-> > Though the solution is not ideal, it addresses a problem that also
-> > affects
-> > Linux since the NVMe driver's default policy of using NVMe APST
-> > during
-> > suspend-to-idle would lead to higher power consumption for these
-> > platforms.
-> >
-> > Patch 1 provides a symbol in the PCI/ACPI layer to read the property.
-> > Patch 2 uses the symbol in the NVMe driver to select D3 as a quirk if
-> > set.
-> >
-> > Changes from V2:
-> >       - Export the pci_acpi_storage_d3 function for use by drivers as
-> >         needed instead of modifying the pci header.
-> >       - Add missing put on acpi device handle.
-> >       - Add 'noacpi' module parameter to allow undoing this change.
-> >       - Add info message that this is a platform quirk.
-> >
-> > David E. Box (2):
-> >   PCI: Add ACPI StorageD3Enable _DSD support
-> >   drivers/nvme: Add support for ACPI StorageD3Enable property
-> >
-> >  drivers/acpi/property.c |  3 +++
-> >  drivers/nvme/host/pci.c | 14 ++++++++++
-> >  drivers/pci/pci-acpi.c  | 59
-> > +++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci.h     |  2 ++
-> >  4 files changed, 78 insertions(+)
-> >
+> Indeed, I did not surround those #define with #ifndef/#endif. Maybe we should ?
 >
+> Just in case the definitions end up being different (worse case scenario), we
+> should expect their behavior to be pretty much equivalent. So going for the
+> following should address your concern I think:
+
+I think we should keep things simple on the glibc side for now and do
+this changes to the kernel headers first.
+
+Thanks,
+Florian
+
