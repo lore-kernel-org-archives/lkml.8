@@ -2,70 +2,127 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FDEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D07A2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528F920C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592991760;
-	bh=POC8Wy5W8HTGPEipKgRNZ1OHxxsOy/XY4a0SBFZb7sA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PPxpbhRVtFhh1iGgS6IRQTSkHZhwOLtkfekbW2SnEBPh0KPc8bQNmRoLHGrr6ZVhi
-	 GVqAwcy5XivO8t3DpJpWW3MbkG7JQ/A+FfkSUeombpQ3qA6BnC0XXoXwAyzYMVgtsr
-	 ET7ZLlS7Y1Z+HEqZ6NKDzLWUhZMvvAHQEEnF6jhM=
+	s=default; t=1592991785;
+	bh=KASGkkb2+9TZ5D3MTFps6xxCzzfzZnMWkY3aYuoNZBY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=1TkbfsXgK6Khxb7F85SnEH9kUCLpVXgrM/AiMuq67rPUl+rZvkMNfElo6pjvM5sr5
+	 H1ZUBVIp2ASfPHGS6RgQBxXsooHOQOo0Ymzc80gjdXqV7phVwSGBiM5ahR+iao73ko
+	 HibOedbHoXw91le2J4l8PK7Ljebx036NTBrfH/l8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389868AbgFXJmj (ORCPT
+        id S2389906AbgFXJnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388005AbgFXJmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:42:38 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4849B20885;
-        Wed, 24 Jun 2020 09:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592991758;
-        bh=POC8Wy5W8HTGPEipKgRNZ1OHxxsOy/XY4a0SBFZb7sA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ybftKYnLOHEYJTD5rDbKXmc8Lz2zb2r+pORrKDYLA/6TKMDELxG8MDiMrvnWT+AkZ
-         nCzzLRrchZQUbJfL/YExokHyzRoY7dA42D1qVl4UGc0rI2iy0YZIWWMVVx4j0NJYB2
-         IybzbssoS1gJ3VOOd5YLZFEenZD5S455zG/QoW+0=
-Date:   Wed, 24 Jun 2020 15:12:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v5] dmaengine: tegra210-adma: Fix runtime PM imbalance
- on error
-Message-ID: <20200624094234.GW2324254@vkoul-mobl>
-References: <20200624064626.19855-1-dinghao.liu@zju.edu.cn>
+        Wed, 24 Jun 2020 05:43:03 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:33683 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388005AbgFXJnD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:43:03 -0400
+Received: by mail-ej1-f65.google.com with SMTP id n24so1830997ejd.0;
+        Wed, 24 Jun 2020 02:43:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tuRg7gxTgMVv/uknaC+ELM+anUqsXoZl+UXIEfmUtI8=;
+        b=nCVNzS09I7YYKan0SKKC5cycBPYap9XyBDmHfAKVAoI0hgAgYJ3o6v8mYJGN90Pseq
+         YRTYTxhQ4Vdl3SbeVO/ukqqLzWsiigvjbpKdxGBhiQuj0q10o+s6SHn4DyvCGhVtAG4+
+         JgcLvfJpfmq4xmIt8Pt3oNZDImC3FXxnXNQOfEKG6teRhVfPdZN20wId+5/Fi9UWfUoV
+         n4e07rDhiUdt+zH8o6wYfHtSs/+N1dasoJkxCFM46PuXj5TAFot1nt+T4qK2OMAKYtSO
+         fXBP+PQKS3vewYNtO1sZY/GQN6IbeTQLC2SgyiGzhMgFMDo4RYgTbmQxtPIqd7PbYqKj
+         YtJw==
+X-Gm-Message-State: AOAM533KsAdgEWoOjEcEKcf/tdg7nRDbkueWdTzFjCYfTYFOq6rQPkLG
+        IvrK2b0onkLwvKoBIgRhf1s=
+X-Google-Smtp-Source: ABdhPJyXuw1w74SJp+f5TnTPPdp4LJtBdwIvxmYExbMYBQxxIMYMugMnVTgU9jBcDGAcIDuY7XsGyw==
+X-Received: by 2002:a17:906:7ad7:: with SMTP id k23mr25079698ejo.439.1592991780914;
+        Wed, 24 Jun 2020 02:43:00 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id f17sm3036261ejr.71.2020.06.24.02.43.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 02:43:00 -0700 (PDT)
+Subject: Re: [PATCH] tty: serial_core: Fix uart_state refcnt leak when the
+ port startup
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+References: <1592052738-95202-1-git-send-email-xiyuyang19@fudan.edu.cn>
+ <20200624093407.GB1751086@kroah.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <954840f0-2078-fe0f-1e52-d985a4997564@kernel.org>
+Date:   Wed, 24 Jun 2020 11:42:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624064626.19855-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200624093407.GB1751086@kroah.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-06-20, 14:46, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
+On 24. 06. 20, 11:34, Greg Kroah-Hartman wrote:
+> On Sat, Jun 13, 2020 at 08:52:18PM +0800, Xiyu Yang wrote:
+>> uart_port_startup() invokes uart_port_lock(), which returns a reference
+>> of the uart_port object if increases the refcount of the uart_state
+>> object successfully or returns NULL if fails.
+>>
+>> However, uart_port_startup() don't take the return value of
+>> uart_port_lock() as the new uart_port object to "uport" and use the old
+>> "uport" instead to balance refcount in uart_port_unlock(), which may
+>> cause a redundant decrement of refcount occurred when the new "uport"
+>> equals to NULL and then cause a potential memory leak.
+>>
+>> Fix this issue by update the "uport" object to the return value of
+>> uart_port_lock() when invoking uart_port_lock().
+>>
+>> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+>> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+>> ---
+>>  drivers/tty/serial/serial_core.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+>> index 57840cf90388..968fd619aec0 100644
+>> --- a/drivers/tty/serial/serial_core.c
+>> +++ b/drivers/tty/serial/serial_core.c
+>> @@ -205,7 +205,7 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
+>>  	if (!page)
+>>  		return -ENOMEM;
+>>  
+>> -	uart_port_lock(state, flags);
+>> +	uport = uart_port_lock(state, flags);
+> 
+> How is this a different pointer than you originally had?
 
-Applied, thanks
+Was this patch sent twice? As I had very same questions on the other
+one, but never received a feedback:
+https://lore.kernel.org/linux-serial/bf6c1e7b-3dc6-aba6-955a-fee351a6d800@suse.com/
 
+
+Oh, wait: this is uart_port_startup, I commented on the uart_shutdown
+one. But whatever, I would scratch both of them.
+
+> And if it is a different pointer, shouldn't you be calling this function
+> and using the pointer much earlier in the function instead of just here?
+> 
+> Can you trigger a problem that this patch solves?  If so, how?
+
+thanks,
 -- 
-~Vinod
+js
+suse labs
