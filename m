@@ -2,89 +2,144 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C470BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD62BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD42520CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA39B20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:24:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="t0QNK4Y0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390144AbgFXNVP (ORCPT
+        id S2389561AbgFXNYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:21:15 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51673 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387687AbgFXNVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:21:14 -0400
-IronPort-SDR: phv/UE7Gkz9MSem8h4881+yn5Di4aBsV/zAJUnwnzMyQ1ft0QRdB/YCS+wTQ7viIqLEh8OiRiz
- CFWL+6zfowzg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="131894868"
-X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
-   d="scan'208";a="131894868"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 06:21:14 -0700
-IronPort-SDR: G+IkHUKjLawvwudJtxi4G5cY9mI00b4glz6WVDZOyT0uSzNTRKVQacF6LSNEVS6oopoUedUnDe
- vL7qUu298cQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,275,1589266800"; 
-   d="scan'208";a="275686949"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 06:21:12 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jo5I6-00FaSz-R9; Wed, 24 Jun 2020 16:18:14 +0300
-Date:   Wed, 24 Jun 2020 16:18:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: designware: platdrv: Set class based on dmi
-Message-ID: <20200624131814.GE3703480@smile.fi.intel.com>
-References: <20200624091239.802218-1-ribalda@kernel.org>
- <20200624104655.GD3703480@smile.fi.intel.com>
- <CAPybu_1g=RAHca3=UyG2Tk6mo1E56NgCXoo0j=zc9MAa7A7r2Q@mail.gmail.com>
+        Wed, 24 Jun 2020 09:24:13 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58380 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387687AbgFXNYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:24:12 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D9F6A2A8;
+        Wed, 24 Jun 2020 15:24:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593005050;
+        bh=9FvYZAeIEFhM+JzFaVDBCgpx8ST/p2ndCMOZJSUhqVc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t0QNK4Y0HvQGnv/OPruCmqjPCrEapbS9oYQvfpmeNJKLmUnRSr7nbq+HKuDFtb4rc
+         vGnPLdD994z4HiGZAlXcmpMPpRdy1p8MlrhPL3H8tptS8AbK2v/6nR8otECzwezL50
+         4kp1MaPvbgyIso516Pa7RAssnvKI6w1y5+Mjs9z0=
+Date:   Wed, 24 Jun 2020 16:23:44 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Subject: Re: [RESEND PATCH v5 1/5] driver core: add probe_err log helper
+Message-ID: <20200624132344.GA5980@pendragon.ideasonboard.com>
+References: <20200624114127.3016-1-a.hajda@samsung.com>
+ <CGME20200624114135eucas1p26e2e4683d60cebdce7acd55177013992@eucas1p2.samsung.com>
+ <20200624114127.3016-2-a.hajda@samsung.com>
+ <20200624123140.GB1773782@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAPybu_1g=RAHca3=UyG2Tk6mo1E56NgCXoo0j=zc9MAa7A7r2Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200624123140.GB1773782@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:31:06PM +0200, Ricardo Ribalda Delgado wrote:
-> On Wed, Jun 24, 2020 at 12:46 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Wed, Jun 24, 2020 at 11:12:39AM +0200, Ricardo Ribalda wrote:
-> > > Current AMD's zen-based APUs use this core for some of its i2c-buses.
-> > >
-> > > With this patch we re-enable autodetection of hwmon-alike devices, so
-> > > lm-sensors will be able to work automatically.
-> > >
-> > > It does not affect the boot-time of embedded devices, as the class is
-> > > set based on the dmi information.
-> >
-> > Hmm... Do we really need to have DMI? I mean wouldn't be safe just always
-> > provide this to be compatible with HWMON class?
-> >
+On Wed, Jun 24, 2020 at 02:31:40PM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jun 24, 2020 at 01:41:23PM +0200, Andrzej Hajda wrote:
+> > During probe every time driver gets resource it should usually check for error
+> > printk some message if it is not -EPROBE_DEFER and return the error. This
+> > pattern is simple but requires adding few lines after any resource acquisition
+> > code, as a result it is often omited or implemented only partially.
+> > probe_err helps to replace such code sequences with simple call, so code:
+> > 	if (err != -EPROBE_DEFER)
+> > 		dev_err(dev, ...);
+> > 	return err;
+> > becomes:
+> > 	return probe_err(dev, err, ...);
+> > 
+> > Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> > Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> > Reviewed-by: Mark Brown <broonie@kernel.org>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > ---
+> >  drivers/base/core.c    | 39 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/device.h |  3 +++
+> >  2 files changed, 42 insertions(+)
+> > 
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 67d39a90b45c..ee9da66bff1b 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -3953,6 +3953,45 @@ define_dev_printk_level(_dev_info, KERN_INFO);
+> >  
+> >  #endif
+> >  
+> > +/**
+> > + * probe_err - probe error check and log helper
+> > + * @dev: the pointer to the struct device
+> > + * @err: error value to test
+> > + * @fmt: printf-style format string
+> > + * @...: arguments as specified in the format string
+> > + *
+> > + * This helper implements common pattern present in probe functions for error
+> > + * checking: print message if the error is not -EPROBE_DEFER and propagate it.
+> > + * It replaces code sequence:
+> > + * 	if (err != -EPROBE_DEFER)
+> > + * 		dev_err(dev, ...);
+> > + * 	return err;
+> > + * with
+> > + * 	return probe_err(dev, err, ...);
+> > + *
+> > + * Returns @err.
+> > + *
+> > + */
+> > +int probe_err(const struct device *dev, int err, const char *fmt, ...)
+> > +{
+> > +	struct va_format vaf;
+> > +	va_list args;
+> > +
+> > +	if (err == -EPROBE_DEFER)
+> > +		return err;
+> > +
+> > +	va_start(args, fmt);
+> > +	vaf.fmt = fmt;
+> > +	vaf.va = &args;
+> > +
+> > +	dev_err(dev, "error %d: %pV", err, &vaf);
+> > +
+> > +	va_end(args);
+> > +
+> > +	return err;
+> > +}
+> > +EXPORT_SYMBOL_GPL(probe_err);
 > 
-> I do not care :), I was just trying to follow the logic of
-> 70fba8302adecfa08a087c6f1dd39537a55f5bd3
-> 
-> If it is decided otherwise I can change it, no problem ;)
+> Please be specific in global symbols, how about "driver_probe_error()"?
 
-I guess you need to send a kinda revert with a fixes tag.
+Or dev_err_probe() to match the existing dev_* functions ?
+
+> And merge the other patch into this one, as Raphael said, otherwise this
+> just looks odd to add something and then fix it up later.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Laurent Pinchart
