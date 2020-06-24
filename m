@@ -2,193 +2,117 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6688AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC9B20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nCp7a5Hc"
+	by mail.kernel.org (Postfix) with ESMTP id 516C220781
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593007332;
+	bh=s+1HAUIY2ezRPN9ikTWdmNZ/f74VfGJEUMykCgxzPp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KpohSHFmiqfNfMQh2Hml2rBCxVS0kC2Co9UOlGTnCR2be1lBmtRcLOJnflKD+oZf2
+	 ay4xHJKKIuXVFeM5W5xL+Vp93ptWvbtJ6Yc1RfI0GjYipG2M0DYLsxBRDUodDeVFia
+	 KOygUpofJ7NjcKSWaq0wnzkdfBOfhq63hnjtMF58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404044AbgFXOBL (ORCPT
+        id S2404056AbgFXOCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:01:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389668AbgFXOBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:01:06 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E482C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:01:06 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id d7so1315145lfi.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=txAQaxbTCMLo8x/+VG8IbEhFhSU5w166AKvUL10WpzU=;
-        b=nCp7a5HcgIUlFf75HKyQfQgq+wlGBvm48Kvsh1VneHiH4d59er8QEZEJP+PtudAXz3
-         NUf3R3/ME+60d93sJr/U0J9keJLAH1XSeFNRf/uJqb+aeq8yIXDAH082LWuh1kXFcSuc
-         45/EEs4aHxpzVfu0m7I4yiJ+6FuivyPiVK1g0L6R5CTbKKFoVwi5i2EQZpyn+sk/3mko
-         15aMpgNpCVUG9ZTXeY4NUk3ZQU2fdLnnqgVLoiiIJ67tcr4kP5+a1e9nMQOeHpwi+X2v
-         NWTqHRktpBwCt5hSW7HhWwJPs8w1fLeeCjJdTZTEJ1UTFpzTIZQI0Sl1pygFcJnIyAlZ
-         8ygA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=txAQaxbTCMLo8x/+VG8IbEhFhSU5w166AKvUL10WpzU=;
-        b=ZOdR6H9IGM77wLi0mZtCMb7zFymtdmRpg+SypeQP0PYlyweJjKSFDYM/5gMUSrAob/
-         OQOhhlB/go2GDdNHGpwx3QTBBB8bKe56l9JGxOD+0c02CV1sEcuD9Uz0RuIf+eoyImF+
-         8PMVVar5mkjHNHWHS1lld8QyPdyyJBkou8B9sQtQI3RkyI3rP7QAe1cSn7os4voZXYBN
-         0RuGG7EEVc4T7o/fg1ImqRxP/1a0eczR8MEzYUZtREN5p+31TmWDN0A57z977Z8ZyqPk
-         9V6God2FyZWuPlXdYYE5NIlEbGXhvbFGBr2ZswQCwiIEMcGtWobxSKuMOcGW2rvE6WvB
-         03Dg==
-X-Gm-Message-State: AOAM532HwplKvglrldmyqsw2vBDgCjdf7WxIsRQ26w5MtQySFS//sMzg
-        xETMx8ZvEdHF7YIk+/Du6hUkllWgvsznldI/79q9xQ==
-X-Google-Smtp-Source: ABdhPJxRHCgryN28ag9fEQT7zXllZ1PRtu0A1X9BXy038Szqr4/3TXTkrTEHaWX33k5G5pbdjY8OmnBz/IM506eC79k=
-X-Received: by 2002:ac2:5325:: with SMTP id f5mr15440767lfh.6.1593007264743;
- Wed, 24 Jun 2020 07:01:04 -0700 (PDT)
+        Wed, 24 Jun 2020 10:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403987AbgFXOCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 10:02:09 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E0D20724;
+        Wed, 24 Jun 2020 14:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593007329;
+        bh=s+1HAUIY2ezRPN9ikTWdmNZ/f74VfGJEUMykCgxzPp8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LvMqMbMXnzntY2cbHHv2NFh1lurxHqBVMlX/8+FwpGRUFpWvaKkUbEXVtSuxRIWqj
+         X1BBeGLwPjStyj1wpXUaK8X0g5WEx5EGLpryhfdCCj+x6QMdLSqX2kNkvHr1N5rEP6
+         WizhFksWnAeJfSPjiqQ5CqrQI74m++Ml7fv0wO8s=
+Date:   Wed, 24 Jun 2020 15:02:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Subject: Re: [RESEND PATCH v5 1/5] driver core: add probe_err log helper
+Message-ID: <20200624140207.GE5472@sirena.org.uk>
+References: <20200624114127.3016-1-a.hajda@samsung.com>
+ <CGME20200624114135eucas1p26e2e4683d60cebdce7acd55177013992@eucas1p2.samsung.com>
+ <20200624114127.3016-2-a.hajda@samsung.com>
+ <20200624132714.GD5472@sirena.org.uk>
+ <CAHp75Ve9V1Vyxe3bEeHJ9H2J900wUXHMmXFJt-dn9sO5OMejHA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200624055901.258687997@linuxfoundation.org>
-In-Reply-To: <20200624055901.258687997@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 24 Jun 2020 19:30:52 +0530
-Message-ID: <CA+G9fYvz0P+M2j-xuAATQScmXgz=gJOXJdHGdPdsC0KveNO6zQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/203] 4.19.130-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zjcmjzIkjQU2rmur"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Ve9V1Vyxe3bEeHJ9H2J900wUXHMmXFJt-dn9sO5OMejHA@mail.gmail.com>
+X-Cookie: So this is it.  We're going to die.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 11:40, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.130 release.
-> There are 203 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 26 Jun 2020 05:58:19 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.130-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+--zjcmjzIkjQU2rmur
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Summary
-------------------------------------------------------------------------
+On Wed, Jun 24, 2020 at 04:45:28PM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 24, 2020 at 4:27 PM Mark Brown <broonie@kernel.org> wrote:
 
-kernel: 4.19.130-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: f12dcdbf9d549ca30275420a0c7f1c27ba80bf23
-git describe: v4.19.129-204-gf12dcdbf9d54
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.129-204-gf12dcdbf9d54
+> > As I said down the thread that's not a great pattern since it means that
+> > probe deferral errors never get displayed and users have a hard time
+> > figuring out why their driver isn't instantiating.
 
-No regressions (compared to build v4.19.128-266-g7e6addf7237f)
+> Don't we have a file in the debugfs to list deferred drivers?
 
-No fixes (compared to build v4.19.128-266-g7e6addf7237f)
+Part of what this patch series aims to solve is that that list is not
+very useful since it doesn't provide any information on how things got
+deferred which means it's of no use in trying to figure out any
+problems.
 
-Ran 31466 total tests in the following environments and test suites.
+> In the case of deferred probes the errors out of it makes users more
+> miserable in order to look through tons of spam and lose really useful
+> data in the logs.
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
+I seem to never manage to end up using any of the systems which generate
+excessive deferrals.
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* kvm-unit-tests
-* ltp-controllers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
+--zjcmjzIkjQU2rmur
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Linaro LKFT
-https://lkft.linaro.org
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zXN4ACgkQJNaLcl1U
+h9CyQwf9GPTQ3AWT49MYS86gakGp3fOn+3DWHi2eBTCNBr7+ZbT6K2LjaeEZdWbq
+LZqNijKZemXRSHuHANCslwlM29eVG8h/SpYsVVQxdK5k5OlqTDhTkuyfEsEnoF26
+AaLhYtMt2MJjbZjxgu2TbKlC+jIwYA9nluB7r2HCm2hOydqWvtd3OR+l74EUwRWn
+4CQdokPv6h315Sym12/8bwVOeYExOZcc4HvB0D1XqwzniNUqHI9Bp9q4d1vidjmS
+AE2vI8rQoD+nKnKUD1BvHzHlJLdyeBuxMbnHypqIFEDeCc4Zvfm60U68qq5umxSe
+0CPvHqLPG05cUToWTXrruMFr2Otvjg==
+=96Vi
+-----END PGP SIGNATURE-----
+
+--zjcmjzIkjQU2rmur--
