@@ -2,153 +2,125 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8621C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C1EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29AD20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98EF620768
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:14:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tq1ZXb5A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ogyMpgi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389773AbgFXVNK (ORCPT
+        id S2390142AbgFXVOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:13:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33938 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388749AbgFXVNJ (ORCPT
+        Wed, 24 Jun 2020 17:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389905AbgFXVN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:13:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05OL7ti3079031;
-        Wed, 24 Jun 2020 21:11:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=p12IwfDSTjlrVJZkgtc6h6hG3Scqk3K8QQYaIgeoBpE=;
- b=tq1ZXb5AApncz3SUYU0h5vc4uHokBZlluGIOeY4PYDPYLsTgISVzIcAqfCSnASacooKF
- BI+cJd/ySmSK/zjO79odmO/txOS5zZiVURSpP8JcyZ6bNwyyRV/qRc421QkXiFvakGnr
- EcQNFnoQImaJLmt06I50VVUdznAZ78LGMXejOWCRuf7+jQ0WLvrkSJdwb7Uh1HEYVTAq
- GZgmWHjAXqtlofkLE+vdb5qHARzxQVOEpRA2VHhVDP5446vIJI9JBQq3VJKkkzxHfCR1
- bcUcPFetaFoVXNyxGlkCU/2/LwM0nTNQKFcVre5NwAkh/6YGFDkjKuOyk3S5+dRzFy1P OQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31uustw7a7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 21:11:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05OL8EVd117495;
-        Wed, 24 Jun 2020 21:11:03 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31uur7xdc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 21:11:03 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05OLAjAP004688;
-        Wed, 24 Jun 2020 21:10:45 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jun 2020 21:10:45 +0000
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 00D9A6A00F1; Wed, 24 Jun 2020 17:11:32 -0400 (EDT)
-Date:   Wed, 24 Jun 2020 17:11:32 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Ashish Kalra <ashish.kalra@amd.com>
-Cc:     Konrad Rzeszutek Wilk <konrad@darnok.org>, hch@lst.de,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, luto@kernel.org, peterz@infradead.org,
-        dave.hansen@linux-intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
-        Thomas.Lendacky@amd.com
-Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
- guests.
-Message-ID: <20200624211132.GB14137@char.us.oracle.com>
-References: <20200121200947.GA24884@ashkalra_ubuntu_server>
- <20200121205403.GC75374@Konrads-MacBook-Pro.local>
- <20200124230008.GA1565@ashkalra_ubuntu_server>
- <20200204193500.GA15564@ashkalra_ubuntu_server>
- <20200303170353.GC31627@char.us.oracle.com>
- <20200330222551.GA22743@ashkalra_ubuntu_server>
- <20200427185318.GA8253@ashkalra_ubuntu_server>
- <20200623133843.GA5499@localhost.localdomain>
- <20200624002357.GA9955@ashkalra_ubuntu_server>
- <20200624070509.GA13381@ashkalra_ubuntu_server>
+        Wed, 24 Jun 2020 17:13:59 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5438EC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:13:59 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q90so1231915pjh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=omCkUcZNHVXP0sWRywzjOwxTXZ4YyisMAxm749WU5GU=;
+        b=ogyMpgi9tPFXqD3+b4TskFtzlAE3qRSfSFlhxLkMzfZQl068z8vqJlL5I/k1hQA4j2
+         8+KaTuQNKpStTyBjn2ssQsUKa/GWq7f607kaEaeXU2o8/Ft2sUgUsqmcJHltC+KgIKVl
+         o3jZ4P3X6AywcFpecW/k8P5ZOrqPI9Z99iVivwkxvFoyUq4G2KcudRcYQ4mOacJiN+sQ
+         WfzuwRbr7it+GIQZRqsNndeZ4kbhXyBxzlSPEB5SEo0dkcZcdM6751ifbYi1L0YxNGzl
+         zLZYU7QD65uDvjwEcqlKMDaY6jKyUjhUxCFnXE3C+lzv6bRpSkWGLHXOkAgDh/7Se2CC
+         j7Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=omCkUcZNHVXP0sWRywzjOwxTXZ4YyisMAxm749WU5GU=;
+        b=LPvsNjDchmcHieCDJoCX4oGfiT93MR2bMoQ3P3SOxe38OsWCp7aavmdRQgIIvXjF4l
+         hGO0cm8H8DegKAzSexprDJRAhdbxRG/AfiWS0s1qThaQbz/yYVSrgYKnV9aojq9tQbGZ
+         PyksXY955fY6h4N+L7Qb4TSMmwfhnJPaiS+hgJ3UpSwpqiMOqZ/BJ8epilg5TsntkUbT
+         GCvFQwTW6t+MpwdEDcAds1tsMM5FiYqrjb+vtu0BWGzCogWKu9EV/qmRYR9ajYXKjMNd
+         KbH4poaaOuL/WVATcN93GoJO2VRUUr/bJVyDE8O7OAfkvg2lCTlHIup2NQi2UAHhGJ9N
+         soIQ==
+X-Gm-Message-State: AOAM532aZsglmeFOpWYLkU0w1ZZlH0NH71ZRb4LgfVIam8wRYt7AQ3Rc
+        TQT6qCvRub+1yx7uVW4AksDB1UuW18nCb2iixZtlyQ==
+X-Google-Smtp-Source: ABdhPJyvmG5uGb8Lyk5i53Q9bt53kqBtuDjO8DoRXX4pnhndW+Y4vnp4+GK0S4oFxok0KRSkaflUBQ+yOxnxS3G2Ct0=
+X-Received: by 2002:a17:902:b698:: with SMTP id c24mr29536869pls.223.1593033238474;
+ Wed, 24 Jun 2020 14:13:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624070509.GA13381@ashkalra_ubuntu_server>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006240137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006240137
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200624203200.78870-9-samitolvanen@google.com>
+In-Reply-To: <20200624203200.78870-9-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 24 Jun 2020 14:13:46 -0700
+Message-ID: <CAKwvOdmcDxa+h9i6_XQc8ZDQjD9cTrD7s9eNU0fSxZbXciKhDQ@mail.gmail.com>
+Subject: Re: [PATCH 08/22] kbuild: lto: remove duplicate dependencies from
+ .mod files
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.snip..
-> > Actually as per the boot flow :
-> > 
-> > setup_arch() calls reserve_crashkernel() and pci_iommu_alloc() is
-> > invoked through mm_init()/mem_init() and not via initmem_init().
-> > 
-> > start_kernel:
-> > ...
-> > setup_arch()
-> > 	reserve_crashkernel
-> > 		reserve_crashkernel_low
-> > 			-> swiotlb_size_or_default
-> > 
-> > ...
-> > ...
-> > mm_init()
-> > 	mem_init()
-> > 		pci_iommu_alloc
-> > 			-> pci_swiotlb_detect_4gb
-> > 			-> swiotlb_init
-> > 
-> > So as per the above boot flow, reserve_crashkernel() can get called
-> > before swiotlb_detect/init, and hence, if we don't fixup or adjust
-> > the SWIOTLB buffer size in swiotlb_size_or_default() then crash kernel
-> > will reserve memory which will conflict/overlap with any SWIOTLB bounce
-> > buffer allocated memory (adjusted or fixed up later).
-> > 
-> > Therefore, we need to adjust/fixup SWIOTLB bounce buffer memory in
-> > swiotlb_size_or_default() function itself, before swiotlb detect/init
-> > funtions get invoked.
-> > 
-> 
-> Also to add here, it looks like swiotlb_size_or_default() is an
-> interface function to get the SWIOTLB bounce buffer size for components
-> which are initialized before swiotlb_detect/init, so that these 
-> components can reserve or allocate their memory requirements with the
-> knowledge of how much SWIOTLB bounce buffers are going to use, so
-> therefore, any fixups or adjustments to SWIOTLB buffer size will need
-> to be made as part of swiotlb_size_or_default(). 
+On Wed, Jun 24, 2020 at 1:33 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> With LTO, llvm-nm prints out symbols for each archive member
+> separately, which results in a lot of duplicate dependencies in the
+> .mod file when CONFIG_TRIM_UNUSED_SYMS is enabled. When a module
+> consists of several compilation units, the output can exceed the
+> default xargs command size limit and split the dependency list to
+> multiple lines, which results in used symbols getting trimmed.
+>
+> This change removes duplicate dependencies, which will reduce the
+> probability of this happening and makes .mod files smaller and
+> easier to read.
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-That was never its purpose. It was meant as way to figure out the segment
-size for DMA requests and to be used for runtime components. In fact to
-be idempotent.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-This is why I am disliking this usage and leaning towards something else.
+> ---
+>  scripts/Makefile.build | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 82977350f5a6..82b465ce3ca0 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -291,7 +291,7 @@ endef
+>
+>  # List module undefined symbols (or empty line if not enabled)
+>  ifdef CONFIG_TRIM_UNUSED_KSYMS
+> -cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | xargs echo
+> +cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | sort -u | xargs echo
+>  else
+>  cmd_undef_syms = echo
+>  endif
+> --
+> 2.27.0.212.ge8ba1cc988-goog
+>
 
-But you pointed out something interesting - you are in fact needing to
-adjust the size of the swiotlb based on your needs at bootup. Not any different
-from say 'swiotlb' paramter.
 
-Why not have an 'swiotlb_adjust' that is an __init that modifies the
-internal swiotlb buffer sizes? Obviously we have to account for 'swiotlb'
-parsing as well. The swiotlb_adjust would pick the max from those.
-
+-- 
+Thanks,
+~Nick Desaulniers
