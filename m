@@ -2,70 +2,93 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D475C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88769C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A25520857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593017948;
-	bh=+QLzWa9R9qN9FxhHozL3Pq3dhOGQ4gOItfeEArrS5+s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IYFz7oTRe1N9cijbPZoLICBDBhQPe0JNbAFnfDMyCWe35Ehv7+WixID1SH73P0U0d
-	 zwJF7vIndaVh0UMdfLB7/O/9XhA9a4HrYa/q3HOrDJBvIJjCsG1ZxUWhQwSvkcD9OV
-	 Oj1bZPVhBd3xQ+SpQHehqUN+Ke90uhckZ0fUupRk=
+	by mail.kernel.org (Postfix) with ESMTP id 691852073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:59:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fchGKA38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405323AbgFXQ7G (ORCPT
+        id S2405332AbgFXQ7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Jun 2020 12:59:09 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58962 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405261AbgFXQ7G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 12:59:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404796AbgFXQ7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:59:06 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E35520738;
-        Wed, 24 Jun 2020 16:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593017945;
-        bh=+QLzWa9R9qN9FxhHozL3Pq3dhOGQ4gOItfeEArrS5+s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=M7EO0Oa2tAuWUQQ4HrLCHt1tVRMpWu9sENgmQJkgSRpaR1MNvt8hmBJyXdLGu/v/q
-         Q+TzpCdAF29Jxrl23coDDJ5vKHRN4tq3DgTaU39b/WLtbYXq7U73e1eRAVoy9kMTpr
-         vI14CzqT1kRyQw7M9DJXAdVGSSUMxZmFVONa93fQ=
-Date:   Wed, 24 Jun 2020 09:59:03 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     "Christian Benvenuti (benve)" <benve@cisco.com>
-Cc:     Kaige Li <likaige@loongson.cn>, David Miller <davem@davemloft.net>,
-        "_govind@gmx.com" <_govind@gmx.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lixuefeng@loongson.cn" <lixuefeng@loongson.cn>,
-        "yangtiezhu@loongson.cn" <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH RESEND] net/cisco: Fix a sleep-in-atomic-context bug in
- enic_init_affinity_hint()
-Message-ID: <20200624095903.71a01271@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <BYAPR11MB37994715A3DD8259DF16A34DBA950@BYAPR11MB3799.namprd11.prod.outlook.com>
-References: <20200623.143311.995885759487352025.davem@davemloft.net>
-        <20200623.152626.2206118203643133195.davem@davemloft.net>
-        <7533075e-0e8e-2fde-c8fa-72e2ea222176@loongson.cn>
-        <20200623.202324.442008830004872069.davem@davemloft.net>
-        <70519029-1cfa-5fce-52f3-cfb13bf00f7d@loongson.cn>
-        <BYAPR11MB37994715A3DD8259DF16A34DBA950@BYAPR11MB3799.namprd11.prod.outlook.com>
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGwK22116650;
+        Wed, 24 Jun 2020 11:58:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593017900;
+        bh=1bCCG3caD2sEg6qKGWI/2Xon9AP/3Rs9Tep0MMhKNyI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fchGKA38CXQUP7iDyyGdGNLVtQi1y++syqLRo4u0NBdkO8Aq1PwcPfq/2hfFdSdBz
+         ICbpWJGi7uNSCEXVt6XOhq+nxLuI9pE8WYZyhPCVFoE2ufsoIgaGGuLPj0wKdy8ng2
+         Jt+4ukQeedooST/j+nZakDToc/gpsQOBWlZfBSms=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OGwKoL125387
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 11:58:20 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 11:58:20 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 24 Jun 2020 11:58:20 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGwJ5b062239;
+        Wed, 24 Jun 2020 11:58:19 -0500
+Subject: Re: [PATCH v5 3/7] ASoC: tas2562: Fix format issue for extra space
+ before a comma
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <devicetree@vger.kernel.org>
+References: <20200624161459.19248-1-dmurphy@ti.com>
+ <20200624161459.19248-4-dmurphy@ti.com> <20200624162917.GK5472@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c4a26be8-88cc-1dfa-61e0-844b9c19eb52@ti.com>
+Date:   Wed, 24 Jun 2020 11:58:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200624162917.GK5472@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 06:32:36 +0000 Christian Benvenuti (benve) wrote:
-> We/Cisco will also look into it, hopefully a small code reorg will be sufficient.
+Mark
 
-Make sure you enable CONFIG_DEBUG_ATOMIC_SLEEP when you test.
+On 6/24/20 11:29 AM, Mark Brown wrote:
+> On Wed, Jun 24, 2020 at 11:14:55AM -0500, Dan Murphy wrote:
+>> Fix the issue found that there is an extra space before a comma in the
+>> volume control.
+>>
+>> Fixes: bf726b1c86f2c ("ASoC: tas2562: Add support for digital volume control")
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   arch/arm/boot/compressed/fdt.h             |   66 +
+>>   arch/arm/boot/compressed/libfdt.h          | 2072 ++++++++++++++++++++
+>>   arch/arm/boot/compressed/libfdt_internal.h |  173 ++
+>>   sound/soc/codecs/tas2562.c                 |    2 +-
+> I'm guessing those libfdt changes weren't supposed to be here?
+
+No they were not those must have been added when I verified the build.
+
+Dan
+
