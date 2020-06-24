@@ -2,199 +2,225 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD87C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D00CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28FAC207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA529207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWxfbOrH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Y8FEFl+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388922AbgFXIwV (ORCPT
+        id S2388942AbgFXIxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:52:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728732AbgFXIwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:52:20 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B906FC061573;
-        Wed, 24 Jun 2020 01:52:20 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 22so1561016wmg.1;
-        Wed, 24 Jun 2020 01:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lVApUt3i/7AFtwyD3Ki0a35tHO53vnjzikpdpWE5FJs=;
-        b=nWxfbOrH2lbT0UWHSbjppQTiIjOfKj5zMlQq5Aj3dFFYMGWrUFtYGxKEQpua8lGeG7
-         BYPJLI9nLyJZnF+VMvul1Ya9nnO2OoP/E2XxIEpbuVltTlU/2HNK+fTd8aSCIhm1WUUp
-         pqLlGJCyzTWO+8AzohbesMgB0/NepympE2oK7EtXXQvbbvqDN2lxSmmpB+WJ0OX1a2sX
-         YUBayu9Russ/U2lCKcSAWD9YsC0s4KbOSXDT56uWf+Ib0qDAM84FkEAYLjIXlp7gP42d
-         16MIFwwdCOMOFRxGnFaXRs9/rtrTlpi8FlkSdnCz77QGPLLq4RbraWBQPmXu7SA7nKTR
-         TRgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lVApUt3i/7AFtwyD3Ki0a35tHO53vnjzikpdpWE5FJs=;
-        b=s3jfA0OLnaVSJNBSvoOpGEYfJzkmMn4mXCOvizsv9kk34o8h2+75hBXJbFZwyBEs4E
-         UH//Umi9osmM3ZNaKvuU5NkuxG9SnE4fRpK+GN50zMQ00Y+HL7+rc0CYGiX0opfdeewN
-         x7w0BlVhY0V70dqkB9R6m7cy4z4rwOzJSpG3VVbZOE7nRt/73V9oBTOYWbrpgqKsJ1ay
-         5/HO4GPFZBc0BDkEm6Uy5UQAgSf9aLK4AzG1jAbq2LPFqHCMU3ezBNp3x5hXOX9xth+7
-         ieUlWiV4PFW96d9/nDL0hCyN6gtX0f1diACTfAVOF9aVncjiFDwb9+DMxjKv3LM3hM97
-         9+NA==
-X-Gm-Message-State: AOAM531vAbhSRIjnB2dzk5phxWcA+0URhCJsjReqaIATRcpxsipl6WAy
-        NvfJsA3Wyb5XxUjOBx9h7bo=
-X-Google-Smtp-Source: ABdhPJxEoDCK2NSYlVqZ8jHDnIBfhX/cA9jnzCKLxs1yjbdQAquYvO37dsRjlB2gsrPuj1Ijj4bjoQ==
-X-Received: by 2002:a1c:6308:: with SMTP id x8mr1289926wmb.92.1592988739418;
-        Wed, 24 Jun 2020 01:52:19 -0700 (PDT)
-Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
-        by smtp.gmail.com with ESMTPSA id c20sm22140185wrb.65.2020.06.24.01.52.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 01:52:18 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:52:17 +0200
-From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200624085217.5km2iexitfgclsev@macmini.local>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
- <20200623191129.GA4171@kozik-lap>
- <20200624080117.fzgowkpgyhs6tbzx@macmini.local>
- <20200624081438.GA20603@pi3>
+        Wed, 24 Jun 2020 04:53:35 -0400
+Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:38158
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728732AbgFXIxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:53:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mhBCJlFL0qCYPofSqUZjCuASsIY8SNhmxd0XoBAGdPXScd8pybfZAZgWBdjNbb6kBnDCIoOnB4fgP/JXNJIraRuVQdEDZbO6BlxQeKwpo/ztlNIXNpB4xnT2gwSYy35be+np8/Ky9UzapjMPHY6/4tI850YiKkdUI45pSYaQqM9YV74z+7aWGZYlHobIlxmZnsQvQfKksNZ05rRiHocRmI5h0WbhBmGarXCyb+UKh0dJpQ5sVJC8gkXoOjJlfpClPFkzUyvQwETLO/qZGCkBsFFcyWstFBkC4nWxiKhdQVRVI9A2SaEDgjlQEiW3qc9NZs5tJD/mq865VWlnXGpmLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3P0H34ZpXj3sa+FcMN/vj5YDCEarbvC4lpBt0odIAMc=;
+ b=aBHplI/p8ECd7vw/0CR2lGXkSXPd/K2Pi/OfYdbK+b60WCIgYBQmbZN8NQ/UKyMmhYHOpwpMKDLViUsQ7Q0iLq/gcr3UiXGqPFKafO6ypjLSVv09NUD6VzUC+F2dEw/AT1b0X9mfuWmbhyuSS0snN3JIbYQ3QucUSQuUPeasysQWAEpd+3E27QH/Vc1i7o3G6BQP4TFaGuXcMp87tKJPzj5CnCUuW8T7YUmdt646F10EWryTnEK/JVw5b/F6/HcRV89FWhoGgIr99afKeKiXJiy9+S2juXflzDfNKWLXVoL/gbzitJQJe2TWIFqQKDdVGYnyuWw0i0/Bc7ClCCdqaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3P0H34ZpXj3sa+FcMN/vj5YDCEarbvC4lpBt0odIAMc=;
+ b=Y8FEFl+xC3Vd+34xiqj3CGCsjpoqTWfFYnpZX34Sjy+fJa2jaEguECPvWREM6rWNn0XyfaxeE0D2cofLpWHP0mcmbllQG84DLZ2BaumeYa9g0kZLjQtmsw7TuOayD3OE+Jfz2zrPopJXq/KCTt1UG0qdQ6/uA/psHixhIIBNd5U=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2712.eurprd04.prod.outlook.com (2603:10a6:4:99::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
+ 2020 08:53:29 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
+ 08:53:29 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     sstabellini@kernel.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, konrad.wilk@oracle.com, mst@redhat.com,
+        jasowang@redhat.com
+Cc:     x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org, linux-imx@nxp.com,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] xen: introduce xen_vring_use_dma
+Date:   Wed, 24 Jun 2020 17:17:32 +0800
+Message-Id: <20200624091732.23944-1-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.16.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0246.apcprd06.prod.outlook.com
+ (2603:1096:4:ac::30) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624081438.GA20603@pi3>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linux-1xn6.ap.freescale.net (119.31.174.71) by SG2PR06CA0246.apcprd06.prod.outlook.com (2603:1096:4:ac::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Wed, 24 Jun 2020 08:53:25 +0000
+X-Mailer: git-send-email 2.16.4
+X-Originating-IP: [119.31.174.71]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b1363182-65a2-4f59-943f-08d8181c10b1
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2712:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB271252F24E2615C533F09A9388950@DB6PR0402MB2712.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0444EB1997
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9mpAvUN3MAvpE2dBNOq1hIK19nSFJtezhFUd0V3Z/4upNlCblRi6Wl0e+TsYY+0bcpel05AhPBC40biYbeksMfGUZ7ylBlnVj/+dwpz+mw1yIsyVE+JV5Q6e/wcqqMBaSHtpXuEAxSuy87MNi/vUXcoL6B69Xeo08zkDX/vPaUTEKDZxxpnYueXjkPI5scjccjkMgso8/h34PDNQdE+voqiSduplvtLrrt03kI8pepZn9ZXUGBK1YDzjv038Z2SI95EYzxWguf14NoJbXQ0g6HlLQhl/AkHtmkbiXWOec9GUDUkArn5wSmWik8cMsoJu5Q5fIM6NpnFZp8ynJ5YVHMPCHnrbBasCbfsI5CwmXpB2a5dkGw67yD6QB1fpC4IMw7CCZYeaNmpzyl1MHm7ZcmUWqia3ltq1nFXhLt5XNpJfAEQV8SB/UMmToq2JMaF9jdhpL7vlkebimVzk22Z85w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(6506007)(8936002)(26005)(6486002)(956004)(1076003)(6666004)(478600001)(5660300002)(4326008)(186003)(316002)(16526019)(52116002)(66946007)(6512007)(7416002)(2616005)(2906002)(83380400001)(66476007)(66556008)(86362001)(44832011)(36756003)(8676002)(966005)(309714004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: OG8lcvpOfKsePRZSpoqPiKfOjSlfZR+WMFE/egKtYI2yfBBl+8ol0HEjayqHDHtp+KkCYMoGVThhpiOL3IfBJIY6oA2IH6mFpajCzEFm2q5Lhr3MyEw4EL3V5qGE0y2tBMh6eXqc/20VXATJ8R6HoRM9yubs4tsuDB17UfcFKNBE5pSAhXR7+rYw79VOkUFVs+FeeWRnheHkvvDYffaWxm3/ROFVmM2G802KEITO2U8dK27em+C6QX8o1W4te8lKcZ3nfFB+L0si/9u6oQRHHx0eSgUE/8zRumRyNlc9dIXjeDDxqceDTTZb1QuhbDEx5/fSBKjgZJdtYuveMNif3uIZxwD4kp3uxquQUYxhPqfQuwrU3rGIo7iiwR9ADrJRZ1xV42hf5seolGQPXIyEGMYLn5j9ZbW203l6Q0My3YSLJS5lcYZzrjdWxtIl2+HgbHMPP/nfqQN57SoV+uY2U5DcEk290bT9B2kpif/8je8Xj/hpsS2jEe4oF8BC9Hpr
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1363182-65a2-4f59-943f-08d8181c10b1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2020 08:53:29.3458
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: brJo6ak5M+QkoxRVepy34lWLh9fsrJGapTz3/dUz1YVi14IcgHD4cB3AmBsLTLXbtydlTOyte1wX94/BlqOoFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2712
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24-10-14-38, Krzysztof Kozlowski wrote:
-> On Wed, Jun 24, 2020 at 10:01:17AM +0200, Willy Wolff wrote:
-> > Hi Krzysztof,
-> > Thanks to look at it.
-> > 
-> > mem_gov is /sys/class/devfreq/10c20000.memory-controller/governor
-> > 
-> > Here some numbers after increasing the running time:
-> > 
-> > Running using simple_ondemand:
-> > Before:
-> >      From  :   To                                                                                     
-> >            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> > * 165000000:         0         0         0         0         0         0         0         4   4528600
-> >   206000000:         5         0         0         0         0         0         0         0     57780
-> >   275000000:         0         5         0         0         0         0         0         0     50060
-> >   413000000:         0         0         5         0         0         0         0         0     46240
-> >   543000000:         0         0         0         5         0         0         0         0     48970
-> >   633000000:         0         0         0         0         5         0         0         0     47330
-> >   728000000:         0         0         0         0         0         0         0         0         0
-> >   825000000:         0         0         0         0         0         5         0         0    331300
-> > Total transition : 34
-> > 
-> > 
-> > After:
-> >      From  :   To
-> >            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> > * 165000000:         0         0         0         0         0         0         0         4   5098890
-> >   206000000:         5         0         0         0         0         0         0         0     57780
-> >   275000000:         0         5         0         0         0         0         0         0     50060
-> >   413000000:         0         0         5         0         0         0         0         0     46240
-> >   543000000:         0         0         0         5         0         0         0         0     48970
-> >   633000000:         0         0         0         0         5         0         0         0     47330
-> >   728000000:         0         0         0         0         0         0         0         0         0
-> >   825000000:         0         0         0         0         0         5         0         0    331300
-> > Total transition : 34
-> > 
-> > With a running time of:
-> > LITTLE => 283.699 s (680.877 c per mem access)
-> > big => 284.47 s (975.327 c per mem access)
-> 
-> I see there were no transitions during your memory test.
-> 
-> > 
-> > And when I set to the performance governor:
-> > Before:
-> >      From  :   To
-> >            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> >   165000000:         0         0         0         0         0         0         0         5   5099040
-> >   206000000:         5         0         0         0         0         0         0         0     57780
-> >   275000000:         0         5         0         0         0         0         0         0     50060
-> >   413000000:         0         0         5         0         0         0         0         0     46240
-> >   543000000:         0         0         0         5         0         0         0         0     48970
-> >   633000000:         0         0         0         0         5         0         0         0     47330
-> >   728000000:         0         0         0         0         0         0         0         0         0
-> > * 825000000:         0         0         0         0         0         5         0         0    331350
-> > Total transition : 35
-> > 
-> > After:
-> >      From  :   To
-> >            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> >   165000000:         0         0         0         0         0         0         0         5   5099040
-> >   206000000:         5         0         0         0         0         0         0         0     57780
-> >   275000000:         0         5         0         0         0         0         0         0     50060
-> >   413000000:         0         0         5         0         0         0         0         0     46240
-> >   543000000:         0         0         0         5         0         0         0         0     48970
-> >   633000000:         0         0         0         0         5         0         0         0     47330
-> >   728000000:         0         0         0         0         0         0         0         0         0
-> > * 825000000:         0         0         0         0         0         5         0         0    472980
-> > Total transition : 35
-> > 
-> > With a running time of:
-> > LITTLE: 68.8428 s (165.223 c per mem access)
-> > big: 71.3268 s (244.549 c per mem access)
-> > 
-> > 
-> > I see some transition, but not occuring during the benchmark.
-> > I haven't dive into the code, but maybe it is the heuristic behind that is not
-> > well defined? If you know how it's working that would be helpfull before I dive
-> > in it.
-> 
-> Sorry, don't know that much. It seems it counts time between overflow of
-> DMC perf events and based on this bumps up the frequency.
-> 
-> Maybe your test does not fit well in current formula? Maybe the formula
-> has some drawbacks...
+Export xen_swiotlb for all platforms using xen swiotlb
 
-OK, I will read the code then.
+Use xen_swiotlb to determine when vring should use dma APIs to map the
+ring: when xen_swiotlb is enabled the dma API is required. When it is
+disabled, it is not required.
 
-> 
-> > 
-> > I run your test as well, and indeed, it seems to work for large bunch of memory,
-> > and there is some delay before making a transition (seems to be around 10s).
-> > When you kill memtester, it reduces the freq stepwisely every ~10s.
-> > 
-> > Note that the timing shown above account for the critical path, and the code is
-> > looping on reading only, there is no write in the critical path.
-> > Maybe memtester is doing writes and devfreq heuristic uses only write info?
-> >
-> You mentioned that you want to cut the prefetcher to have direct access
-> to RAM. But prefetcher also accesses the RAM. He does not get the
-> contents from the air.  Although this is unrelated to the problem
-> because your pattern should kick ondemand as well.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-Yes obvisouly. I was just describing a bit the microbenchmark and the memory pattern
-access. I was suggesting that a random pattern will break the effectiveness of the
-prefetcher, and as such we have a worst case situation on the memory bus.
+V2:
+ This is a modified version from Stefano's patch
+ https://lore.kernel.org/patchwork/patch/1033801/#1222404
+ Note: This is not to address rpmsg virtio issue, this is
+ to let DomU virtio not using xen swiotlb could use non dma vring
+ on ARM64 platforms.
 
-> 
-> Best regards,
-> Krzysztof
+ arch/arm/xen/mm.c                      | 1 +
+ arch/x86/include/asm/xen/swiotlb-xen.h | 2 --
+ arch/x86/xen/pci-swiotlb-xen.c         | 2 --
+ drivers/virtio/virtio_ring.c           | 2 +-
+ drivers/xen/swiotlb-xen.c              | 3 +++
+ include/xen/swiotlb-xen.h              | 6 ++++++
+ include/xen/xen.h                      | 6 ++++++
+ 7 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
+index d40e9e5fc52b..6a493ea087f0 100644
+--- a/arch/arm/xen/mm.c
++++ b/arch/arm/xen/mm.c
+@@ -139,6 +139,7 @@ static int __init xen_mm_init(void)
+ 	struct gnttab_cache_flush cflush;
+ 	if (!xen_initial_domain())
+ 		return 0;
++	xen_swiotlb = 1;
+ 	xen_swiotlb_init(1, false);
+ 
+ 	cflush.op = 0;
+diff --git a/arch/x86/include/asm/xen/swiotlb-xen.h b/arch/x86/include/asm/xen/swiotlb-xen.h
+index 6b56d0d45d15..bb5ce02b4e20 100644
+--- a/arch/x86/include/asm/xen/swiotlb-xen.h
++++ b/arch/x86/include/asm/xen/swiotlb-xen.h
+@@ -3,12 +3,10 @@
+ #define _ASM_X86_SWIOTLB_XEN_H
+ 
+ #ifdef CONFIG_SWIOTLB_XEN
+-extern int xen_swiotlb;
+ extern int __init pci_xen_swiotlb_detect(void);
+ extern void __init pci_xen_swiotlb_init(void);
+ extern int pci_xen_swiotlb_init_late(void);
+ #else
+-#define xen_swiotlb (0)
+ static inline int __init pci_xen_swiotlb_detect(void) { return 0; }
+ static inline void __init pci_xen_swiotlb_init(void) { }
+ static inline int pci_xen_swiotlb_init_late(void) { return -ENXIO; }
+diff --git a/arch/x86/xen/pci-swiotlb-xen.c b/arch/x86/xen/pci-swiotlb-xen.c
+index 33293ce01d8d..071fbe0e1a91 100644
+--- a/arch/x86/xen/pci-swiotlb-xen.c
++++ b/arch/x86/xen/pci-swiotlb-xen.c
+@@ -18,8 +18,6 @@
+ #endif
+ #include <linux/export.h>
+ 
+-int xen_swiotlb __read_mostly;
+-
+ /*
+  * pci_xen_swiotlb_detect - set xen_swiotlb to 1 if necessary
+  *
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index a2de775801af..768afd79f67a 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -252,7 +252,7 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+ 	 * the DMA API if we're a Xen guest, which at least allows
+ 	 * all of the sensible Xen configurations to work correctly.
+ 	 */
+-	if (xen_domain())
++	if (xen_vring_use_dma())
+ 		return true;
+ 
+ 	return false;
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index b6d27762c6f8..25747e72e6fe 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -40,6 +40,9 @@
+ 
+ #include <trace/events/swiotlb.h>
+ #define MAX_DMA_BITS 32
++
++int xen_swiotlb __read_mostly;
++
+ /*
+  * Used to do a quick range check in swiotlb_tbl_unmap_single and
+  * swiotlb_tbl_sync_single_*, to see if the memory was in fact allocated by this
+diff --git a/include/xen/swiotlb-xen.h b/include/xen/swiotlb-xen.h
+index ffc0d3902b71..235babcde848 100644
+--- a/include/xen/swiotlb-xen.h
++++ b/include/xen/swiotlb-xen.h
+@@ -12,4 +12,10 @@ void xen_dma_sync_for_device(dma_addr_t handle, phys_addr_t paddr, size_t size,
+ extern int xen_swiotlb_init(int verbose, bool early);
+ extern const struct dma_map_ops xen_swiotlb_dma_ops;
+ 
++#ifdef CONFIG_SWIOTLB_XEN
++extern int xen_swiotlb;
++#else
++#define xen_swiotlb (0)
++#endif
++
+ #endif /* __LINUX_SWIOTLB_XEN_H */
+diff --git a/include/xen/xen.h b/include/xen/xen.h
+index 19a72f591e2b..c51c46f5d739 100644
+--- a/include/xen/xen.h
++++ b/include/xen/xen.h
+@@ -52,4 +52,10 @@ bool xen_biovec_phys_mergeable(const struct bio_vec *vec1,
+ extern u64 xen_saved_max_mem_size;
+ #endif
+ 
++#include <xen/swiotlb-xen.h>
++static inline int xen_vring_use_dma(void)
++{
++	return !!xen_swiotlb;
++}
++
+ #endif	/* _XEN_XEN_H */
+-- 
+2.16.4
+
