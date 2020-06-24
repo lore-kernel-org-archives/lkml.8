@@ -2,139 +2,131 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B909C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B113207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592979336;
-	bh=+2ifJ5qyTzzo8WHwSQDmoxhEJggCz1bEjLqjCJez3qY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SCGS2cWBZwfBcW0IEZrTpgGLFOn7XqA9tX1N0mIFEDmGa6iQQF/ZgLh3rlI5ZnCRQ
-	 +mbUK7zSfwAuvB+LbUTrelDChCPIcHiNcmvFTvygHsK89w1aRbPOgZybmyk7lrHmEs
-	 e0aoNBO8Taa/zNYj/bQMV9idQDLbdTJALZF4rkPg=
+	by mail.kernel.org (Postfix) with ESMTP id 34D19207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389091AbgFXGPf (ORCPT
+        id S2388810AbgFXGRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387817AbgFXGPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:15:35 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 225022078A;
-        Wed, 24 Jun 2020 06:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592979334;
-        bh=+2ifJ5qyTzzo8WHwSQDmoxhEJggCz1bEjLqjCJez3qY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k8BvXRazexy8f25Y8p2nmzQZmuOsD1OjLnJBHPxcjmfE7/O/5MKS5PNKZGZ7yMwsA
-         AWxbO/39muxLIQGZCjTOnM+4OD/lCYDGEJGyTAuk/ypdloPBdZAj1SJYTSb5tOm5t3
-         Gn1lrqsTL6R4nCXa9PxgNPU6/qd0L14eOk8ZYvbc=
-Date:   Wed, 24 Jun 2020 11:45:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     andre.przywara@arm.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org, dan.j.williams@intel.com,
-        cristian.ciocaltea@gmail.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
- engine
-Message-ID: <20200624061529.GF2324254@vkoul-mobl>
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
- <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
+        Wed, 24 Jun 2020 02:17:19 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:48324 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388815AbgFXGRS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:17:18 -0400
+Received: by mail-io1-f69.google.com with SMTP id l16so688959ioc.15
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 23:17:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=5CAUOdrn145t33RyDsvFuRNtproPZrRG5wbaIt1noKk=;
+        b=Oa3sYJCU69LNOiNNyVfJtUOhQW1A0jHndbZv6YK0Ngu8f97PxRL/7+scNr+3jiy4Nj
+         M98RSn8rJgBuiPeL2dBTR8esjXNaBZe3XEivbLb5SjigzaCQZE5naMsMKT6EoOytid6P
+         CwO6oqWmQfSWDjo4s0S1dvRcULeA3Pe/UGgWD+6YEb5QeDuu99tFZUEmzWn3nGcBAhib
+         ZZlBOpSSQEGMqYgbFAaFNGA8rqxFL4/57h0whPXy8ruB/TKnU2Nbom78VVrQ8oYjJkrV
+         bJEdLyzO2Ak7Iwy1M2SL2L+ZqDs2MIDIObiA1QNpGG+Is05ssGoIjPLrroxP/lsH1Q/H
+         pNzw==
+X-Gm-Message-State: AOAM533IbZJcqnSq+LD+qOFoG3ve4bLfdpRIsnZihvyOCVTOSC25LwgL
+        TDOYx19+lPAGntilTZoLeErrx1J1UORBISEph/euS9Nwa8xz
+X-Google-Smtp-Source: ABdhPJyELxw2qLKuuPok9m57oshaB2ZfSKHTA8VbOzvPFtYhWR3PH5aIWU1WALFsdrHxgeH3qH9ye4Gc1bt+Us2ddP1+eZIjKJN4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
+X-Received: by 2002:a02:cf3b:: with SMTP id s27mr16670340jar.72.1592979436970;
+ Tue, 23 Jun 2020 23:17:16 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 23:17:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000079a77705a8ce6da7@google.com>
+Subject: general protection fault in qrtr_endpoint_post
+From:   syzbot <syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com>
+To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
+Hello,
 
-On 09-06-20, 15:47, Amit Singh Tomar wrote:
+syzbot found the following crash on:
 
-> @@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
->  				  struct dma_slave_config *sconfig,
->  				  bool is_cyclic)
->  {
-> +	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
->  	u32 mode, ctrlb;
->  
->  	mode = OWL_DMA_MODE_PW(0);
-> @@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
->  	lli->hw[OWL_DMADESC_DADDR] = dst;
->  	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
->  	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
-> -	/*
-> -	 * Word starts from offset 0xC is shared between frame length
-> -	 * (max frame length is 1MB) and frame count, where first 20
-> -	 * bits are for frame length and rest of 12 bits are for frame
-> -	 * count.
-> -	 */
-> -	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
-> -	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
-> +
-> +	if (od->devid == S700_DMA) {
-> +		/* Max frame length is 1MB */
-> +		lli->hw[OWL_DMADESC_FLEN] = len;
-> +		/*
-> +		 * On S700, word starts from offset 0x1C is shared between
-> +		 * frame count and ctrlb, where first 12 bits are for frame
-> +		 * count and rest of 20 bits are for ctrlb.
-> +		 */
-> +		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
-> +	} else {
-> +		/*
-> +		 * On S900, word starts from offset 0xC is shared between
-> +		 * frame length (max frame length is 1MB) and frame count,
-> +		 * where first 20 bits are for frame length and rest of
-> +		 * 12 bits are for frame count.
-> +		 */
-> +		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
-> +		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12c27f79100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=03e343dbccf82a5242a2
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1715f03d100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17dc0db6100000
 
-Unfortunately this wont scale, we will keep adding new conditions for
-newer SoC's! So rather than this why not encode max frame length in
-driver_data rather than S900_DMA/S700_DMA.. In future one can add values
-for newer SoC and not code above logic again.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+03e343dbccf82a5242a2@syzkaller.appspotmail.com
 
-> +static const struct of_device_id owl_dma_match[] = {
-> +	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
-> +	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
+general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 PID: 6780 Comm: syz-executor827 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:qrtr_endpoint_post+0x92/0xfa0 net/qrtr/qrtr.c:440
+Code: 44 89 e6 e8 80 27 4e fe 48 85 c0 48 89 c5 0f 84 57 0e 00 00 e8 4f 7a 9e f9 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 48 89 da 83 e2 07 38 d0 7f 08 84 c0 0f 85 f7 0c 00 00
+RSP: 0018:ffffc900016a7c48 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000010 RCX: ffffffff86237e4b
+RDX: 0000000000000002 RSI: ffffffff87d55471 RDI: ffff888090444150
+RBP: ffff888090444140 R08: ffff8880954ca340 R09: ffffed1011e43c5d
+R10: ffff88808f21e2e3 R11: ffffed1011e43c5c R12: 0000000000000000
+R13: ffff88809a089100 R14: ffffc900016a7eb0 R15: 0000000000000000
+FS:  0000000000a65880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000000 CR3: 0000000099699000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ qrtr_tun_write_iter+0xf5/0x180 net/qrtr/tun.c:92
+ call_write_iter include/linux/fs.h:1917 [inline]
+ new_sync_write+0x426/0x650 fs/read_write.c:484
+ __vfs_write+0xc9/0x100 fs/read_write.c:497
+ vfs_write+0x268/0x5d0 fs/read_write.c:559
+ ksys_write+0x12d/0x250 fs/read_write.c:612
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x4401b9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff99653dd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401b9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a40
+R13: 0000000000401ad0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 5199d7949b247ba3 ]---
+RIP: 0010:qrtr_endpoint_post+0x92/0xfa0 net/qrtr/qrtr.c:440
+Code: 44 89 e6 e8 80 27 4e fe 48 85 c0 48 89 c5 0f 84 57 0e 00 00 e8 4f 7a 9e f9 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 48 89 da 83 e2 07 38 d0 7f 08 84 c0 0f 85 f7 0c 00 00
+RSP: 0018:ffffc900016a7c48 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000010 RCX: ffffffff86237e4b
+RDX: 0000000000000002 RSI: ffffffff87d55471 RDI: ffff888090444150
+RBP: ffff888090444140 R08: ffff8880954ca340 R09: ffffed1011e43c5d
+R10: ffff88808f21e2e3 R11: ffffed1011e43c5c R12: 0000000000000000
+R13: ffff88809a089100 R14: ffffc900016a7eb0 R15: 0000000000000000
+FS:  0000000000a65880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000000 CR3: 0000000099699000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Is the .compatible documented, Documentation patch should come before
-the driver use patch in a series
 
->  static int owl_dma_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node;
->  	struct owl_dma *od;
->  	int ret, i, nr_channels, nr_requests;
-> +	const struct of_device_id *of_id =
-> +				of_match_device(owl_dma_match, &pdev->dev);
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-You care about driver_data rather than of_id, so using
-of_device_get_match_data() would be better..
-
->  	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
->  	if (!od)
-> @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
->  	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
->  		 nr_channels, nr_requests);
->  
-> +	od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
-
-Funny casts, I dont think you need uintptr_t!
--- 
-~Vinod
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
