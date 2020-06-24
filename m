@@ -2,179 +2,130 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DB6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F01920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592986488;
-	bh=wCyFawTYIupwoV8sK17GffzQtpLZ4YNmIg9jy3ma+T8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b451LdzK8eINwhAcM7sV/1bPWQRd2ZF+/3NV3IsceQW8obx6svVf51xbuWBuGp+q8
-	 fjqFpCK5LLasPshTcMfjcqoVpYfJdiSH3Zdbe0g72WVe7fOfG7b4F5Nc9R3wVDxIN0
-	 rAqeWsghgDhXf7QAGqmQ8GUfs2IOXDesVui/81jw=
+	by mail.kernel.org (Postfix) with ESMTP id 6F5BF2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390346AbgFXIOq (ORCPT
+        id S2390289AbgFXIQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:14:46 -0400
-Received: from mail-ej1-f52.google.com ([209.85.218.52]:38533 "EHLO
-        mail-ej1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390249AbgFXIOp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:14:45 -0400
-Received: by mail-ej1-f52.google.com with SMTP id w16so1559139ejj.5;
-        Wed, 24 Jun 2020 01:14:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ibh7qwsVmOM0eKJK6oTaNo8+HhtSr5AxAKMdLvNoMHg=;
-        b=Tx9eORMt9WfmS5rqNr50S4SZJw+JylxOQiJp64Vm2I7zAzVRXpFo6fEoHqZaqSxWJK
-         i7rnVSp6SAcXQW37ggGYt7ts8t0f+Fo0MgzyQCzJdZh03kQAr4X0/3XW0i7LhNiio0R4
-         6GOmng2ODDxncjpaYpu8ZHn9cXDcaD8hPY68F2+08nJeAInKKafte/FAa2wI0UvqnQJi
-         0aTU0l+nsweoc0igRz8EbV3FfsBXNUIcYkt6cp0cbE54SJZG0ufm6MWBus+DzfxgxCiy
-         suzQIg2/3N2QkIRq6ouQkFdssZrXx2IOzxA6H0Xhf7RaQISPdIT8Til+jAukAbuHjoX1
-         gzDQ==
-X-Gm-Message-State: AOAM532BNMExjDSwHKWNvmfaVG8LlLNp7/Jlgh0CAxfBUJ0zDfk7USMS
-        OewfcYZcl+FLbZzjGRE7Le0=
-X-Google-Smtp-Source: ABdhPJwTeuyZfApU34NyzWK0HGsXM4sXOeoUnfsKIw0gNosZtxMfWcYqWxrIgZNdijsZjlpl7dJwjQ==
-X-Received: by 2002:a17:907:11db:: with SMTP id va27mr11152068ejb.175.1592986481334;
-        Wed, 24 Jun 2020 01:14:41 -0700 (PDT)
-Received: from pi3 ([194.230.155.235])
-        by smtp.googlemail.com with ESMTPSA id f16sm3512754ejr.0.2020.06.24.01.14.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 01:14:40 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:14:38 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
+        Wed, 24 Jun 2020 04:16:49 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2359 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388531AbgFXIQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:16:48 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 047559904F45C9DF72BF;
+        Wed, 24 Jun 2020 09:16:46 +0100 (IST)
+Received: from [127.0.0.1] (10.210.166.251) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 24 Jun
+ 2020 09:16:44 +0100
+Subject: Re: [PATCH 4/4] iommu/arm-smmu-v3: Remove cmpxchg() in
+ arm_smmu_cmdq_issue_cmdlist()
+To:     Robin Murphy <robin.murphy@arm.com>,
+        kernel test robot <lkp@intel.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "rikard.falkeborn@gmail.com" <rikard.falkeborn@gmail.com>
+CC:     "trivial@kernel.org" <trivial@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-Message-ID: <20200624081438.GA20603@pi3>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
- <20200623191129.GA4171@kozik-lap>
- <20200624080117.fzgowkpgyhs6tbzx@macmini.local>
+        Linuxarm <linuxarm@huawei.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1592846920-45338-5-git-send-email-john.garry@huawei.com>
+ <202006230905.3HpPgtSC%lkp@intel.com>
+ <5ba2e240-b324-d316-c00c-38c03ee49baa@huawei.com>
+ <693bfa60-82cf-bcbb-5745-0d001f7d9f9e@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <87f00fa4-c3f0-e057-08ba-56488d9aa34d@huawei.com>
+Date:   Wed, 24 Jun 2020 09:15:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200624080117.fzgowkpgyhs6tbzx@macmini.local>
+In-Reply-To: <693bfa60-82cf-bcbb-5745-0d001f7d9f9e@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.166.251]
+X-ClientProxiedBy: lhreml716-chm.china.huawei.com (10.201.108.67) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 10:01:17AM +0200, Willy Wolff wrote:
-> Hi Krzysztof,
-> Thanks to look at it.
+>>
+>> I'd say that GENMASK_INPUT_CHECK() should be able to handle a l=0 and
+>> h=unsigned value, so I doubt this warn.
+>>
+>> Using GENMASK((int)cmdq->q.llq.max_n_shift, 0) resolves it, but it looks
+>> like GENMASK_INPUT_CHECK() could be improved.
 > 
-> mem_gov is /sys/class/devfreq/10c20000.memory-controller/governor
+> That said, I think this particular case might be even better off dodging
+> GENMASK() entirely, by doing something like this first. Untested...
 > 
-> Here some numbers after increasing the running time:
+> Robin.
 > 
-> Running using simple_ondemand:
-> Before:
->      From  :   To                                                                                     
->            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> * 165000000:         0         0         0         0         0         0         0         4   4528600
->   206000000:         5         0         0         0         0         0         0         0     57780
->   275000000:         0         5         0         0         0         0         0         0     50060
->   413000000:         0         0         5         0         0         0         0         0     46240
->   543000000:         0         0         0         5         0         0         0         0     48970
->   633000000:         0         0         0         0         5         0         0         0     47330
->   728000000:         0         0         0         0         0         0         0         0         0
->   825000000:         0         0         0         0         0         5         0         0    331300
-> Total transition : 34
+> ----->8-----
+> Subject: [PATCH] iommu/arm-smmu-v3: Streamline queue calculations
 > 
+> Beyond the initial queue setup based on the log2 values from ID
+> registers, the log2 queue size is only ever used in the form of
+> (1 << max_n_shift) to repeatedly recalculate the number of queue
+> elements. Simply storing it in that form leads to slightly more
+> efficient code, particularly in the low-level queue accessors
+> where it counts most:
 > 
-> After:
->      From  :   To
->            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
-> * 165000000:         0         0         0         0         0         0         0         4   5098890
->   206000000:         5         0         0         0         0         0         0         0     57780
->   275000000:         0         5         0         0         0         0         0         0     50060
->   413000000:         0         0         5         0         0         0         0         0     46240
->   543000000:         0         0         0         5         0         0         0         0     48970
->   633000000:         0         0         0         0         5         0         0         0     47330
->   728000000:         0         0         0         0         0         0         0         0         0
->   825000000:         0         0         0         0         0         5         0         0    331300
-> Total transition : 34
+> add/remove: 0/0 grow/shrink: 1/7 up/down: 4/-120 (-116)
+> Function                                     old     new   delta
+> arm_smmu_init_one_queue                      360     364      +4
+> arm_smmu_priq_thread                         512     508      -4
+> arm_smmu_evtq_thread                         300     292      -8
+> __arm_smmu_cmdq_poll_set_valid_map.isra      296     288      -8
+> queue_remove_raw                             180     164     -16
+> arm_smmu_gerror_handler                      732     716     -16
+> arm_smmu_device_probe                       4312    4284     -28
+> arm_smmu_cmdq_issue_cmdlist                 1892    1852     -40
+> Total: Before=20135, After=20019, chg -0.58%
 > 
-> With a running time of:
-> LITTLE => 283.699 s (680.877 c per mem access)
-> big => 284.47 s (975.327 c per mem access)
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
 
-I see there were no transitions during your memory test.
+[...]
 
-> 
-> And when I set to the performance governor:
-> Before:
->      From  :   To
->            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
->   165000000:         0         0         0         0         0         0         0         5   5099040
->   206000000:         5         0         0         0         0         0         0         0     57780
->   275000000:         0         5         0         0         0         0         0         0     50060
->   413000000:         0         0         5         0         0         0         0         0     46240
->   543000000:         0         0         0         5         0         0         0         0     48970
->   633000000:         0         0         0         0         5         0         0         0     47330
->   728000000:         0         0         0         0         0         0         0         0         0
-> * 825000000:         0         0         0         0         0         5         0         0    331350
-> Total transition : 35
-> 
-> After:
->      From  :   To
->            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
->   165000000:         0         0         0         0         0         0         0         5   5099040
->   206000000:         5         0         0         0         0         0         0         0     57780
->   275000000:         0         5         0         0         0         0         0         0     50060
->   413000000:         0         0         5         0         0         0         0         0     46240
->   543000000:         0         0         0         5         0         0         0         0     48970
->   633000000:         0         0         0         0         5         0         0         0     47330
->   728000000:         0         0         0         0         0         0         0         0         0
-> * 825000000:         0         0         0         0         0         5         0         0    472980
-> Total transition : 35
-> 
-> With a running time of:
-> LITTLE: 68.8428 s (165.223 c per mem access)
-> big: 71.3268 s (244.549 c per mem access)
-> 
-> 
-> I see some transition, but not occuring during the benchmark.
-> I haven't dive into the code, but maybe it is the heuristic behind that is not
-> well defined? If you know how it's working that would be helpfull before I dive
-> in it.
 
-Sorry, don't know that much. It seems it counts time between overflow of
-DMC perf events and based on this bumps up the frequency.
+>   	}
+>   
+> -	smmu->evtq.q.llq.max_n_shift = min_t(u32, EVTQ_MAX_SZ_SHIFT,
+> -					     FIELD_GET(IDR1_EVTQS, reg));
+> -	smmu->priq.q.llq.max_n_shift = min_t(u32, PRIQ_MAX_SZ_SHIFT,
+> -					     FIELD_GET(IDR1_PRIQS, reg));
+> +	max_n_shift = min_t(u32, EVTQ_MAX_SZ_SHIFT, FIELD_GET(IDR1_EVTQS, reg));
+> +	smmu->evtq.q.llq.max_n = 1 << max_n_shift;
 
-Maybe your test does not fit well in current formula? Maybe the formula
-has some drawbacks...
+So I require the bitmask of this for the prod, which would be (max_n << 
+1) - 1.
 
+I don't feel too strongly either way, and the other big changes in this 
+series need to be considered first...
+
+Thanks,
+John
+
+> +
+> +	max_n_shift = min_t(u32, PRIQ_MAX_SZ_SHIFT, FIELD_GET(IDR1_PRIQS, reg));
+> +	smmu->priq.q.llq.max_n = 1 << max_n_shift;
+>   
+>   	/* SID/SSID sizes */
+>   	smmu->ssid_bits = FIELD_GET(IDR1_SSIDSIZE, reg);
 > 
-> I run your test as well, and indeed, it seems to work for large bunch of memory,
-> and there is some delay before making a transition (seems to be around 10s).
-> When you kill memtester, it reduces the freq stepwisely every ~10s.
-> 
-> Note that the timing shown above account for the critical path, and the code is
-> looping on reading only, there is no write in the critical path.
-> Maybe memtester is doing writes and devfreq heuristic uses only write info?
->
-You mentioned that you want to cut the prefetcher to have direct access
-to RAM. But prefetcher also accesses the RAM. He does not get the
-contents from the air.  Although this is unrelated to the problem
-because your pattern should kick ondemand as well.
 
-Best regards,
-Krzysztof
