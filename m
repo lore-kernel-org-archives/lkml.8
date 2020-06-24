@@ -2,104 +2,323 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E361C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D46C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB9620885
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592990832;
-	bh=sz9dFsvgElJPSubu1rXAM7K6qMOH0Op/lpJbVq77JSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vJS4+Rk0g1zs9nrAoI3BSOUElDlmzg99MHknq4CZ4ynKPDYc6PP6Os6sy8BFX5m/F
-	 CN1dayxH1Hcj4hQ3t1/NSKV4hJptRXOEDMwTe0wXylBgZsvuJT5L7doIR8JuncWr4a
-	 JHKWc8HiaNP/QeR5Zk5+CvZqx4CZexPdv1RfK+kU=
+	by mail.kernel.org (Postfix) with ESMTP id BF02820885
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 09:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389524AbgFXJ1K (ORCPT
+        id S2389556AbgFXJ3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387495AbgFXJ1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:27:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5C9D20874;
-        Wed, 24 Jun 2020 09:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592990829;
-        bh=sz9dFsvgElJPSubu1rXAM7K6qMOH0Op/lpJbVq77JSY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iSZxGLXrqkpIi+HrdkKJOWxRMXfCXaz/q9N/4epJGnp9QBX0eNuRQTw9EWBMTtGr7
-         37xiwGQb7ER9IhHHmMACOqJ9hDzajgcbJOXRhCh5iGSC0DUl+bXiRw66t/iEf1n/H7
-         S1sT0a5gURcQYYYWSWcbcbDVIbgm+jF2idYiwRqE=
-Date:   Wed, 24 Jun 2020 11:27:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Cc:     Tejun Heo <tj@kernel.org>, Ian Kent <raven@themaw.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-Message-ID: <20200624092708.GA1749737@kroah.com>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
- <20200622175343.GC13061@mtj.duckdns.org>
- <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
- <20200623231348.GD13061@mtj.duckdns.org>
- <a3e9414e-4740-3013-947d-e1839a20227c@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3e9414e-4740-3013-947d-e1839a20227c@linux.vnet.ibm.com>
+        Wed, 24 Jun 2020 05:29:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39270 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388336AbgFXJ3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:29:30 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05O934mM190109;
+        Wed, 24 Jun 2020 05:29:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysj68t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 05:29:13 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05O94VCs195280;
+        Wed, 24 Jun 2020 05:29:13 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysj668-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 05:29:12 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05O9Q0lP028374;
+        Wed, 24 Jun 2020 09:29:09 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 31uuspr742-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 09:29:08 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05O9T6Xj57933914
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 09:29:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62F6652059;
+        Wed, 24 Jun 2020 09:29:06 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.102.29.235])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A66C852057;
+        Wed, 24 Jun 2020 09:29:01 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v5 0/3] Offline memoryless cpuless node 0
+Date:   Wed, 24 Jun 2020 14:58:43 +0530
+Message-Id: <20200624092846.9194-1-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_04:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 impostorscore=0 phishscore=0
+ cotscore=-2147483648 mlxlogscore=999 spamscore=0 adultscore=0
+ clxscore=1011 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006240067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 02:04:15AM -0700, Rick Lindsley wrote:
-> In contrast, the provided patch fixes the observed problem with no ripple
-> effect to other subsystems or utilities.
+Changelog v4:->v5:
+- rebased to v5.8-rc2
+link v4: http://lore.kernel.org/lkml/20200512132937.19295-1-srikar@linux.vnet.ibm.com/t/#u
 
-Your patch, as-is, is fine, but to somehow think that this is going to
-solve your real problem here is the issue we keep raising.
+Changelog v3:->v4:
+- Resolved comments from Christopher.
+Link v3: http://lore.kernel.org/lkml/20200501031128.19584-1-srikar@linux.vnet.ibm.com/t/#u
 
-The real problem is you have way too many devices that somehow need to
-all get probed at boot time before you can do anything else.
+Changelog v2:->v3:
+- Resolved comments from Gautham.
+Link v2: https://lore.kernel.org/linuxppc-dev/20200428093836.27190-1-srikar@linux.vnet.ibm.com/t/#u
 
-> Greg had suggested
->     Treat the system as a whole please, don't go for a short-term
->     fix that we all know is not solving the real problem here.
-> 
-> Your solution affects multiple subsystems; this one affects one.  Which is
-> the whole system approach in terms of risk?  You mentioned you support 30k
-> scsi disks but only because they are slow so the inefficiencies of kernfs
-> don't show.  That doesn't bother you?
+Changelog v1:->v2:
+- Rebased to v5.7-rc3
+- Updated the changelog.
+Link v1: https://lore.kernel.org/linuxppc-dev/20200311110237.5731-1-srikar@linux.vnet.ibm.com/t/#u
 
-Systems with 30k of devices do not have any problems that I know of
-because they do not do foolish things like stall booting before they are
-all discovered :)
+Linux kernel configured with CONFIG_NUMA on a system with multiple
+possible nodes, marks node 0 as online at boot. However in practice,
+there are systems which have node 0 as memoryless and cpuless.
 
-What's the odds that if we take this patch, you all have to come back in
-a few years with some other change to the api due to even larger memory
-sizes happening?  What happens if you boot on a system with this change
-and with 10x the memory you currently have?  Try simulating that by
-creating 10x the number of devices and see what happens.  Does the
-bottleneck still remain in kernfs or is it somewhere else?
+This can cause
+1. numa_balancing to be enabled on systems with only one online node.
+2. Existence of dummy (cpuless and memoryless) node which can confuse
+users/scripts looking at output of lscpu / numactl.
 
-thanks,
+This patchset wants to correct this anomaly.
 
-greg k-h
+This should only affect systems that have CONFIG_MEMORYLESS_NODES.
+Currently there are only 2 architectures ia64 and powerpc that have this
+config.
+
+Note: Patch 3 in this patch series depends on patches 1 and 2.
+Without patches 1 and 2, patch 3 might crash powerpc.
+
+v5.8-rc2
+ available: 2 nodes (0,2)
+ node 0 cpus:
+ node 0 size: 0 MB
+ node 0 free: 0 MB
+ node 2 cpus: 0 1 2 3 4 5 6 7
+ node 2 size: 32625 MB
+ node 2 free: 31490 MB
+ node distances:
+ node   0   2
+   0:  10  20
+   2:  20  10
+
+proc and sys files
+------------------
+ /sys/devices/system/node/online:            0,2
+ /proc/sys/kernel/numa_balancing:            1
+ /sys/devices/system/node/has_cpu:           2
+ /sys/devices/system/node/has_memory:        2
+ /sys/devices/system/node/has_normal_memory: 2
+ /sys/devices/system/node/possible:          0-31
+
+v5.8-rc2 + patches
+------------------
+ available: 1 nodes (2)
+ node 2 cpus: 0 1 2 3 4 5 6 7
+ node 2 size: 32625 MB
+ node 2 free: 31487 MB
+ node distances:
+ node   2
+   2:  10
+
+proc and sys files
+------------------
+/sys/devices/system/node/online:            2
+/proc/sys/kernel/numa_balancing:            0
+/sys/devices/system/node/has_cpu:           2
+/sys/devices/system/node/has_memory:        2
+/sys/devices/system/node/has_normal_memory: 2
+/sys/devices/system/node/possible:          0-31
+
+1. User space applications like Numactl, lscpu, that parse the sysfs tend to
+believe there is an extra online node. This tends to confuse users and
+applications. Other user space applications start believing that system was
+not able to use all the resources (i.e missing resources) or the system was
+not setup correctly.
+
+2. Also existence of dummy node also leads to inconsistent information. The
+number of online nodes is inconsistent with the information in the
+device-tree and resource-dump
+
+3. When the dummy node is present, single node non-Numa systems end up showing
+up as NUMA systems and numa_balancing gets enabled. This will mean we take
+the hit from the unnecessary numa hinting faults.
+
+On a machine with just one node with node number not being 0,
+the current setup will end up showing 2 online nodes. And when there are
+more than one online nodes, numa_balancing gets enabled.
+
+Without patch
+$ grep numa /proc/vmstat
+numa_hit 95179
+numa_miss 0
+numa_foreign 0
+numa_interleave 3764
+numa_local 95179
+numa_other 0
+numa_pte_updates 1206973                 <----------
+numa_huge_pte_updates 4654                 <----------
+numa_hint_faults 19560                 <----------
+numa_hint_faults_local 19560                 <----------
+numa_pages_migrated 0
+
+With patch
+$ grep numa /proc/vmstat
+numa_hit 322338756
+numa_miss 0
+numa_foreign 0
+numa_interleave 3790
+numa_local 322338756
+numa_other 0
+numa_pte_updates 0                 <----------
+numa_huge_pte_updates 0                 <----------
+numa_hint_faults 0                 <----------
+numa_hint_faults_local 0                 <----------
+numa_pages_migrated 0
+
+Here are 2 sample numa programs.
+
+numa01.sh is a set of 2 process each running threads as many as number of
+cpus;
+each thread doing 50 loops on 3GB process shared memory operations.
+
+numa02.sh is a single process with threads as many as number of cpus;
+each thread doing 800 loops on 32MB thread local memory operations.
+
+Testcase         Time:  Min      Max      Avg      StdDev
+./numa01.sh      Real:  149.62   149.66   149.64   0.02
+./numa01.sh      Sys:   3.21     3.71     3.46     0.25
+./numa01.sh      User:  4755.13  4758.15  4756.64  1.51
+./numa02.sh      Real:  24.98    25.02    25.00    0.02
+./numa02.sh      Sys:   0.51     0.59     0.55     0.04
+./numa02.sh      User:  790.28   790.88   790.58   0.30
+
+Testcase         Time:  Min      Max      Avg      StdDev  %Change
+./numa01.sh      Real:  149.44   149.46   149.45   0.01    0.127133%
+./numa01.sh      Sys:   0.71     0.89     0.80     0.09    332.5%
+./numa01.sh      User:  4754.19  4754.48  4754.33  0.15    0.0485873%
+./numa02.sh      Real:  24.97    24.98    24.98    0.00    0.0800641%
+./numa02.sh      Sys:   0.26     0.41     0.33     0.08    66.6667%
+./numa02.sh      User:  789.75   790.28   790.01   0.27    0.072151%
+
+numa01.sh
+param                   no_patch    with_patch  %Change
+-----                   ----------  ----------  -------
+numa_hint_faults        1131164     0           -100%
+numa_hint_faults_local  1131164     0           -100%
+numa_hit                213696      214244      0.256439%
+numa_local              213696      214244      0.256439%
+numa_pte_updates        1131294     0           -100%
+pgfault                 1380845     241424      -82.5162%
+pgmajfault              75          60          -20%
+
+Here are 2 sample numa programs.
+
+numa01.sh is a set of 2 process each running threads as many as number of
+cpus;
+each thread doing 50 loops on 3GB process shared memory operations.
+
+numa02.sh is a single process with threads as many as number of cpus;
+each thread doing 800 loops on 32MB thread local memory operations.
+
+Without patch
+-------------
+Testcase         Time:  Min      Max      Avg      StdDev
+./numa01.sh      Real:  149.62   149.66   149.64   0.02
+./numa01.sh      Sys:   3.21     3.71     3.46     0.25
+./numa01.sh      User:  4755.13  4758.15  4756.64  1.51
+./numa02.sh      Real:  24.98    25.02    25.00    0.02
+./numa02.sh      Sys:   0.51     0.59     0.55     0.04
+./numa02.sh      User:  790.28   790.88   790.58   0.30
+
+With patch
+-----------
+Testcase         Time:  Min      Max      Avg      StdDev  %Change
+./numa01.sh      Real:  149.44   149.46   149.45   0.01    0.127133%
+./numa01.sh      Sys:   0.71     0.89     0.80     0.09    332.5%
+./numa01.sh      User:  4754.19  4754.48  4754.33  0.15    0.0485873%
+./numa02.sh      Real:  24.97    24.98    24.98    0.00    0.0800641%
+./numa02.sh      Sys:   0.26     0.41     0.33     0.08    66.6667%
+./numa02.sh      User:  789.75   790.28   790.01   0.27    0.072151%
+
+numa01.sh
+param                   no_patch    with_patch  %Change
+-----                   ----------  ----------  -------
+numa_hint_faults        1131164     0           -100%
+numa_hint_faults_local  1131164     0           -100%
+numa_hit                213696      214244      0.256439%
+numa_local              213696      214244      0.256439%
+numa_pte_updates        1131294     0           -100%
+pgfault                 1380845     241424      -82.5162%
+pgmajfault              75          60          -20%
+
+numa02.sh
+param                   no_patch    with_patch  %Change
+-----                   ----------  ----------  -------
+numa_hint_faults        111878      0           -100%
+numa_hint_faults_local  111878      0           -100%
+numa_hit                41854       43220       3.26373%
+numa_local              41854       43220       3.26373%
+numa_pte_updates        113926      0           -100%
+pgfault                 163662      51210       -68.7099%
+pgmajfault              56          52          -7.14286%
+
+Observations:
+The real time and user time actually doesn't change much. However the system
+time changes to some extent. The reason being the number of numa hinting
+faults. With the patch we are not seeing the numa hinting faults.
+
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Christopher Lameter <cl@linux.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>
+
+Srikar Dronamraju (3):
+  powerpc/numa: Set numa_node for all possible cpus
+  powerpc/numa: Prefer node id queried from vphn
+  mm/page_alloc: Keep memoryless cpuless node 0 offline
+
+ arch/powerpc/mm/numa.c | 35 +++++++++++++++++++++++++----------
+ mm/page_alloc.c        |  4 +++-
+ 2 files changed, 28 insertions(+), 11 deletions(-)
+
+-- 
+2.18.1
+
