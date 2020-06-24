@@ -2,100 +2,143 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2888820707
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D1D20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:11:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4re3FJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405368AbgFXRKQ (ORCPT
+        id S2405375AbgFXRL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:10:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43993 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405229AbgFXRKP (ORCPT
+        Wed, 24 Jun 2020 13:11:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405156AbgFXRL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:10:15 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <seth.forshee@canonical.com>)
-        id 1jo8ub-0000XK-8I
-        for linux-kernel@vger.kernel.org; Wed, 24 Jun 2020 17:10:13 +0000
-Received: by mail-il1-f200.google.com with SMTP id l20so2009098ilk.22
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:10:13 -0700 (PDT)
+        Wed, 24 Jun 2020 13:11:26 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8900C061573;
+        Wed, 24 Jun 2020 10:11:24 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id h18so1395515qvl.3;
+        Wed, 24 Jun 2020 10:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9YWMqwXjT5S6VAJIIaXravD3PBhiNi6VxmnHUwPk58o=;
+        b=T4re3FJYILiDhz9PkEeru3WH+A8mIoGMSUfmqoPylClN1ucQbubgZwRaYB//PJ1fJa
+         euX9ascn/HJ4kkLOgNypOY0irZn+1ylEhqG7wpZQDUmMqD++X0xBN8IvMGiotsKaJUYA
+         vtraez/F8i7l/59H6Hv4bxYueuGKEO5/sbMgRy4TG5SyWgthFeJLkMSX06lS7H43qTEB
+         jNBYNPvnx3B0yKQliUd7xQI9Gm/1cYM9hE/Q6SpRUDqZDF+IEs7llywzUVDfkbw6XclN
+         VWaeMysZoB4WNQXs5/R8rYxiII0emUxuktYCxwj7DnB6YfSvuYwteQvU2/6dfvkCxWV+
+         7M4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kgKpiNpGwHDOQMosQGkPXdFtHsQOqDrWGR8l3ZM7PP0=;
-        b=oHKhK12h3T67Ak3CC58GZ7FYI1mPu+G8pt7ihscCaluaGSIk9NoUNpoSDKVjGYTY/1
-         1FOnyegT/lkdteQT1tuhzLUWnC+RbxTz9JPdV9q1I3AvBjkLzj+SRKRuVcMSM8XtmKvv
-         JMviUvp15hEh+2hI4xrxIN0pbco5UoJK3wkWHernhNvi8IRcSUHITgGFnrC5g6jdDRwE
-         zuBr6KoSplUu1RC698cnT+Nh3iriFpyKcaEJMnHTCOJ080IU1TQfG89khlq/ZJXbPF9l
-         2Z7mUjAy7EO94SU4Nqk/g+PMZAFVElFjaDeV8ZNZgbeYOVUGdei6Mu7cWyJzfY5LWwHt
-         /a+g==
-X-Gm-Message-State: AOAM5317zPzB0a2WIQrLAG9sHEBEmLkuqtqfJqhkIuyi6RnJT9wkddvE
-        53765WtKZ2l7lIfi8TcQvIPj/oeGxQIVQgyCiCt7EpKQ/w+En5lgEewLsfGtVjQhz/qioiewM8f
-        hgnqRNPZkhwpa5ZpD1u5WtQslNVfs+7WS5Cpfj9K7Ew==
-X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr32079842iow.75.1593018612199;
-        Wed, 24 Jun 2020 10:10:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxxqMBP8roE762qfwjNqRPrTKS40lTKfWlkCH86fkBnaZJ2nVaRDqTa0p+NTUGIlZS6OXM2GQ==
-X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr32079809iow.75.1593018611787;
-        Wed, 24 Jun 2020 10:10:11 -0700 (PDT)
-Received: from localhost ([2605:a601:ac0f:820:f090:1573:c2fc:6389])
-        by smtp.gmail.com with ESMTPSA id w15sm11370028ilq.4.2020.06.24.10.10.10
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=9YWMqwXjT5S6VAJIIaXravD3PBhiNi6VxmnHUwPk58o=;
+        b=feRHL4gUdvlRWDtg9jadNMtsYmGeto68fPkOf8/sl8J5uaRGzJlBeRvyBHtxUttuG+
+         3xbQGjWl2zQaBDD/3uNbwmyhdD/i7EvlTNMmdPmkcOxg4VC2oqBZatWhaCaOc1Z2eBhU
+         16VvZrcNX/W4UyxveBzcSmNGX2vXSg4e2rf083PKuIrtc1TYgOrz15v7cX8IEBYKhlqM
+         Mr82R/echkMhXtiotyFBdkZKw2QMoPb/+Ox36+fBCoJAx/XE2/4LzI1GARKR+1XV/QLt
+         lpAE97x1scJ4CsdNNHXdwMBzFqR6lIPA10VgBmY5IDLQHEB+7du90+ta+DgtFIAbxwew
+         6iTw==
+X-Gm-Message-State: AOAM5312y1pv1qZL4YmXSbuqB07AuUtooXfvGrAgRkzz8fhGovn/3K7/
+        mxdcRaJOnvdg6HSexlrW/6E=
+X-Google-Smtp-Source: ABdhPJzzcFnkfc+tA2tOjjPS8V3pkJ6470qOFNUn3CmU7YZPddDvdZojC2NjkoNgT0+kvlBrLxUj/A==
+X-Received: by 2002:a0c:ed31:: with SMTP id u17mr30837447qvq.117.1593018683766;
+        Wed, 24 Jun 2020 10:11:23 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id c2sm3746366qkl.58.2020.06.24.10.11.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 10:10:11 -0700 (PDT)
-From:   Seth Forshee <seth.forshee@canonical.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: rename da903x to da903x-regulator
-Date:   Wed, 24 Jun 2020 12:10:10 -0500
-Message-Id: <20200624171010.845271-1-seth.forshee@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 24 Jun 2020 10:11:23 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 24 Jun 2020 13:11:21 -0400
+To:     Fangrui Song <maskray@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/9] vmlinux.lds.h: Add .symtab, .strtab, and
+ .shstrtab to STABS_DEBUG
+Message-ID: <20200624171121.GA1377921@rani.riverdale.lan>
+References: <20200624014940.1204448-1-keescook@chromium.org>
+ <20200624014940.1204448-3-keescook@chromium.org>
+ <20200624153930.GA1337895@rani.riverdale.lan>
+ <20200624161643.73x6navnwryckuit@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200624161643.73x6navnwryckuit@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This module shares the same name as its parent PMIC driver, which
-confuses tools like kmod. Rename the regulator driver to avoid
-such problems.
+On Wed, Jun 24, 2020 at 09:16:43AM -0700, Fangrui Song wrote:
+> 
+> On 2020-06-24, Arvind Sankar wrote:
+> >On Tue, Jun 23, 2020 at 06:49:33PM -0700, Kees Cook wrote:
+> >> When linking vmlinux with LLD, the synthetic sections .symtab, .strtab,
+> >> and .shstrtab are listed as orphaned. Add them to the STABS_DEBUG section
+> >> so there will be no warnings when --orphan-handling=warn is used more
+> >> widely. (They are added above comment as it is the more common
+> >
+> >Nit 1: is "after .comment" better than "above comment"? It's above in the
+> >sense of higher file offset, but it's below in readelf output.
+> 
+> I mean this order:)
+> 
+>    .comment
+>    .symtab
+>    .shstrtab
+>    .strtab
+> 
+> This is the case in the absence of a linker script if at least one object file has .comment (mostly for GCC/clang version information) or the linker is LLD which adds a .comment
+> 
+> >Nit 2: These aren't actually debugging sections, no? Is it better to add
+> >a new macro for it, and is there any plan to stop LLD from warning about
+> >them?
+> 
+> https://reviews.llvm.org/D75149 "[ELF] --orphan-handling=: don't warn/error for unused synthesized sections"
+> described that .symtab .shstrtab .strtab are different in GNU ld.
+> Since many other GNU ld synthesized sections (.rela.dyn .plt ...) can be renamed or dropped
+> via output section descriptions, I don't understand why the 3 sections
+> can't be customized.
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
----
- drivers/regulator/Makefile                         | 2 +-
- drivers/regulator/{da903x.c => da903x-regulator.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/regulator/{da903x.c => da903x-regulator.c} (100%)
+So IIUC, lld will now warn about .rela.dyn etc only if they're non-empty?
 
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index e8f163371071..0796e4a47afa 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -31,7 +31,7 @@ obj-$(CONFIG_REGULATOR_BD70528) += bd70528-regulator.o
- obj-$(CONFIG_REGULATOR_BD71828) += bd71828-regulator.o
- obj-$(CONFIG_REGULATOR_BD718XX) += bd718x7-regulator.o
- obj-$(CONFIG_REGULATOR_BD9571MWV) += bd9571mwv-regulator.o
--obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
-+obj-$(CONFIG_REGULATOR_DA903X)	+= da903x-regulator.o
- obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
- obj-$(CONFIG_REGULATOR_DA9055)	+= da9055-regulator.o
- obj-$(CONFIG_REGULATOR_DA9062)	+= da9062-regulator.o
-diff --git a/drivers/regulator/da903x.c b/drivers/regulator/da903x-regulator.c
-similarity index 100%
-rename from drivers/regulator/da903x.c
-rename to drivers/regulator/da903x-regulator.c
--- 
-2.27.0
+> 
+> I created a feature request: https://sourceware.org/bugzilla/show_bug.cgi?id=26168
+> (If this is supported, it is a consistent behavior to warn for orphan
+> .symtab/.strtab/.shstrtab
+> 
+> There may be 50% chance that the maintainer decides that "LLD diverges"
+> I would disagree: there is no fundamental problems with .symtab/.strtab/.shstrtab which make them special in output section descriptions or orphan handling.)
+> 
 
+.shstrtab is a little special in that it can't be discarded if the ELF
+file contains any sections at all. But yeah, there's no reason they
+can't be renamed or placed in a custom location in the file.
