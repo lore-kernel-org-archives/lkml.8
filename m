@@ -2,107 +2,114 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D90920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrsLrd80"
+	by mail.kernel.org (Postfix) with ESMTP id 1627620738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593015208;
+	bh=EzopEqnJeMgeCHm0zQysgkQTMd5n8/Hwr0qUh2+OHbY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lYQRwuN49YFEgfUhDlqUBanpJE/b1UNcnnVazaUalW8HyYV0SnX5qD6b/yRjbSecM
+	 QYMXTZNea/Z7csPITQoyD4RFNowT6DEP5ApYNSqpEqT9PJQw0t9R4sKDrlMR0s3Rig
+	 Y53URYud51ucefKBA9EbZd2zcVOLP1gF357WrHa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404725AbgFXQNV (ORCPT
+        id S2404764AbgFXQNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404235AbgFXQNV (ORCPT
+        Wed, 24 Jun 2020 12:13:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36854 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404235AbgFXQNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:13:21 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB7BDC061573;
-        Wed, 24 Jun 2020 09:13:20 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id m9so1292169qvx.5;
-        Wed, 24 Jun 2020 09:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=dWD301dE5xQ6+5qgKu4psPrGwvipRdbm7OlZT1KZ6JU=;
-        b=UrsLrd806h3hataecdsJiLj0FA7do7edAuriwQKNiiqQhTzHBJzG5VqMxVVlkJfsC5
-         +BOWGxJ9EniePz9BhGMoN+tttSvw7uY+ASSBzT0n5Z1VoTm0YxnEujukndFUewVp0bs/
-         VHePBWItUvXcXHuOHJ/5S1CJMsv/vifbIylgNPNYG1m6dtcS4BI0m0PoYzMP1gR0PysD
-         GtVhjPzMij73QtagK3/fC4iVOX2YCEfrl+Ohh6qX6doRJoBj2vhRLQPM/2otMKGmRl74
-         SJUCWuf9eVh051povoT/xK05AYFzPcw/rlRGj6PXfec7ze5TCbjuJ8JhmBKJy8PiNtoN
-         9BnQ==
+        Wed, 24 Jun 2020 12:13:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p3so1644502pgh.3;
+        Wed, 24 Jun 2020 09:13:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=dWD301dE5xQ6+5qgKu4psPrGwvipRdbm7OlZT1KZ6JU=;
-        b=uYoWxBnK7IPIn4MwKeOyUnTyPaqrbSyPQd6cafPWFX6U6w5hclK6pwdy486jCUfz3k
-         JW6RcZzcjbCtLmphkYWYAAL91Fwu5jThf9HOpECpTGXhUO0x4m2URp4y/gepXmqMAoMW
-         dAazgJLJfSDO43WcIVp+13YutVapuMM4M7sVXapK/Gy9IfZ9WzHJgoYDqzRpUh18vDNh
-         mej8tSKVOZ7UwkSZJHK0MJKE/A+aniRoEdjzql8RqhqrExkXwqJTnqKQAxpahgF7x8ni
-         6nS8/ZUkoyIlmmC7uQ4KF5RaFXaAu9fa8kzprguEaQbAAHy89FdS8YMlu64PoscCWBvD
-         boPg==
-X-Gm-Message-State: AOAM532dMCSosnMF2BVoE1NnKlQRBZHNDzqhH9fyYV9qtyo1tLPpEy6x
-        W4LLvY2bPrIp32tzwzgk74E=
-X-Google-Smtp-Source: ABdhPJzLFBmGgK50QIh/uVBW/oVG6bNxmeVs17oC332RehywW4jQJrqiZc//90PdxD1Ay+zDnPhBcQ==
-X-Received: by 2002:a0c:b542:: with SMTP id w2mr32498419qvd.181.1593015200102;
-        Wed, 24 Jun 2020 09:13:20 -0700 (PDT)
-Received: from archlaptop.localdomain ([165.166.214.225])
-        by smtp.gmail.com with ESMTPSA id a6sm3562709qko.27.2020.06.24.09.13.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K5HA5pFN0d7RWrFcMOeZ4eZsZOCwgkaKOKIyoGUunJA=;
+        b=bdoNe4HE152P67bqB4iz1TVFpSLKd5OLRNA8ZPD4Nx764LgDhIOQkoCOwpgshVPUlC
+         xmAg1IjdbKAPc58tpiZ8kPqndDxtcQp+nCYHryf0E8MEDiKgH67xMVcz0VOB2dfV7Sm6
+         SSZylCQCalt5a0mIATsr/DE7qglta/VKXnlUTkoqBpLAaMN00mnqQvEluSEBNwbz+CJ3
+         1fOqyTjFmJ7xWRUx0ARAvF9C/YqItCR2X3K96qaqvoIBmg7cw8LJauxlCcvMMIC+vcXl
+         GueZuSNQT2PqCZ+Vnlfd+9GaY6WO0xQeVlIrUK+jiz34ZIOzPCztqXShzjbigNDuaHva
+         EhKg==
+X-Gm-Message-State: AOAM531BWTz6jecWjjEW9ugvC/+O+rhqZas0ZaHsC7I6Ld8MngXestOd
+        7YAHw2WExEfmE7ca6pnvb0M=
+X-Google-Smtp-Source: ABdhPJxE1ygpkPiPc7c+3/yQpwGQm5PBcnPHrRJMZIslGuNTvYjGLTfGT0VAXd0ojktX0RNgdf5uBw==
+X-Received: by 2002:a63:7f5a:: with SMTP id p26mr15162576pgn.117.1593015201848;
+        Wed, 24 Jun 2020 09:13:21 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 23sm20626008pfy.199.2020.06.24.09.13.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 09:13:19 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 12:12:58 -0400
-From:   Ethan Edwards <ethancarteredwards@gmail.com>
-To:     paul@paul-moore.com
-Cc:     stephen.smalley.work@gmail.com, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] security: selinux: ss: conditional.c fixed a checkpatch
- warning
-Message-ID: <20200624161258.nbit7xlca5hkxtub@archlaptop.localdomain>
+        Wed, 24 Jun 2020 09:13:20 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id B918940430; Wed, 24 Jun 2020 16:13:19 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 16:13:19 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Doucha <mdoucha@suse.cz>, hch@infradead.org
+Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200624161319.GM13911@42.do-not-panic.com>
+References: <20200610154923.27510-5-mcgrof@kernel.org>
+ <20200623141157.5409-1-borntraeger@de.ibm.com>
+ <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+ <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+ <20200624120546.GC4332@42.do-not-panic.com>
+ <20200624131725.GL13911@42.do-not-panic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200624131725.GL13911@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`sizeof buf` changed to `sizeof(buf)`
+On Wed, Jun 24, 2020 at 01:17:25PM +0000, Luis Chamberlain wrote:
+> I found however an LTP bug indicating the need to test for
+> s390 wait macros [0] in light of a recent bug in glibc for s390.
+> I am asking for references to that issue given I cannot find
+> any mention of this on glibc yet.
+> 
+> [0] https://github.com/linux-test-project/ltp/issues/605
 
-Signed-off-by: Ethan Edwards <ethancarteredwards@gmail.com>
----
- security/selinux/ss/conditional.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I looked into this and the bug associated was:
 
-diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/conditional.c
-index 0cc7cdd58465..90a2f5927e55 100644
---- a/security/selinux/ss/conditional.c
-+++ b/security/selinux/ss/conditional.c
-@@ -215,7 +215,7 @@ int cond_read_bool(struct policydb *p, struct hashtab *h, void *fp)
- 	if (!booldatum)
- 		return -ENOMEM;
- 
--	rc = next_entry(buf, fp, sizeof buf);
-+	rc = next_entry(buf, fp, sizeof(buf));
- 	if (rc)
- 		goto err;
- 
-@@ -416,7 +416,7 @@ int cond_read_list(struct policydb *p, void *fp)
- 	u32 i, len;
- 	int rc;
- 
--	rc = next_entry(buf, fp, sizeof buf);
-+	rc = next_entry(buf, fp, sizeof(buf));
- 	if (rc)
- 		return rc;
- 
--- 
-2.27.0
+https://sourceware.org/bugzilla/show_bug.cgi?id=19613
 
+The commit in question was upstream glibc commit
+b49ab5f4503f36dcbf43f821f817da66b2931fe6 ("Remove union wait [BZ
+#19613]"), and while I don't see anything s390 mentioned there,
+the issue there was due to the caller of the wait using a long
+instead of an int for the return value.
+
+In other words, that'd not the droid we are looking for.
+
+So the issue is something else.
+
+  Luis
