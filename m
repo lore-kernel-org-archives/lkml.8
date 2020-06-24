@@ -2,127 +2,152 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF662C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C155DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E24E20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999112082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="fql7ZIJv"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="vZbPyq5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391087AbgFXNqv (ORCPT
+        id S2391097AbgFXNrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:46:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390933AbgFXNqv (ORCPT
+        Wed, 24 Jun 2020 09:47:33 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:46019 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389590AbgFXNrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:46:51 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE99FC061573;
-        Wed, 24 Jun 2020 06:46:50 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 662FE23076;
-        Wed, 24 Jun 2020 15:46:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593006407;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nsHzBggZvOZK2UQRWliQHDUQLUPL8ZE+00z/UsJFn1I=;
-        b=fql7ZIJvpyPIcpNqwoG5pY6sFGJK658EgHbzWK0YIAlaK9TEkqpuYPCdoauKRPR56giMlt
-        qVabBRtud/4ohSpTJAkrqnqn5GZGZ0TUz1e6louNC/lwdU9KLHbXAbj6gMYACIVScWi5NE
-        JYObZe1D+k5YUqy+6N3jAj48TJNTgog=
+        Wed, 24 Jun 2020 09:47:32 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id o5kKjhYOHNb6lo5kOjtb27; Wed, 24 Jun 2020 15:47:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593006450; bh=JAfq/32k3tkEWMaQptV/OjgB7hA+rl6xijjyAZW6YWU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=vZbPyq5ZTeBsbO+i+HXYzvUtE47hJxYsNnNI28Ffi1SYRacsqRjhDR+N4Cs1pvMuN
+         TxcJbQwqHOoL5bre/mFIorJdzL3d80K+aiFPK/Mf/JdK0db9oluMOg3Ju3Cwu37FZz
+         evg6ebpXEmXEWxhpFSL3igpMOK5GABOCHmI+D/EtZUInhb1x3TQk0Udszu3Ml3ZEbf
+         Oi4ta93ENQwL4hDkUUErFA8X0F0JelYBTtYChDx/5BcmBp4xDdKQ4dMHVKi4nnVq5Z
+         DpA0VDyaFWgXtWKxwSaKpSAQjOZNC02lR2LOsdFoHzUSRkcKKS8zP0NKiS0r+wSb8T
+         F1dXrqulhIprQ==
+Subject: Re: [PATCH v5 2/3] media: tpg: Add function to return colors' order
+ of test image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20200624134354.7023-1-kgupta@es.iitr.ac.in>
+ <20200624134354.7023-3-kgupta@es.iitr.ac.in>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c3e047f2-84eb-e697-3a69-fd930f67339d@xs4all.nl>
+Date:   Wed, 24 Jun 2020 15:47:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200624134354.7023-3-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 24 Jun 2020 15:46:47 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Sungbo Eo <mans0n@gorani.run>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
-In-Reply-To: <CAHp75Vfc2udv2mLLJCFO6P+n8_kcO7OZKhH_XkOy7Cf4fnxgtA@mail.gmail.com>
-References: <20200623060526.29922-1-mans0n@gorani.run>
- <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
- <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
- <69f5d1a1970838b8c4bd8d6e8dba6cac@walle.cc>
- <CAHp75Vfc2udv2mLLJCFO6P+n8_kcO7OZKhH_XkOy7Cf4fnxgtA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <9956439a3c887dde7b2b8fa48de20db2@walle.cc>
-X-Sender: michael@walle.cc
+X-CMAE-Envelope: MS4wfEwKybCLDMwepSzmhWYyrrC8+AiV1Vwf8zoe5kRfofIWt2BcktSgQGYFE4uhiTgt7LuYlF2GLoCYhmzi9J4jSHdlgYelrbpLdfAtCsrZHvYIDxXPniRu
+ cUgQ2aKGNbULvLrhGDaIB0OM5693jzz8XQB4qyu12kqRzTOcIHKKouc5RkJvZ4zNt5l4EVG9ZqsxOTa5LpntE0uY7ImRuNpgcAgQ2eRGmQ6hwuCVvU5cxfeS
+ aP/FNCSByHBrRk3/OQXyMVUQIVwAuV/Ld09Ss5FSZJtBNNsRv0ViWlcJZ5ngP4l24vp386EAKotbcZ6L+OLkTODBxfrpIKAxILzV+mqEYtPFMJYamAnRxHNe
+ zWz5uQoSftA0rA78QUM5eq4jLvGSyDqmKw/sKLHhi/xZVTHzBCQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
-Am 2020-06-24 15:33, schrieb Andy Shevchenko:
-> On Tue, Jun 23, 2020 at 3:48 PM Michael Walle <michael@walle.cc> wrote:
->> Am 2020-06-23 14:22, schrieb Sungbo Eo:
->> > On 2020-06-23 17:31, Michael Walle wrote:
->> >> Am 2020-06-23 08:05, schrieb Sungbo Eo:
+On 24/06/2020 15:43, Kaaira Gupta wrote:
+> Currently there is no method to know the correct order of the colors for
+> a test image generated by tpg. Write a function that returns a string of
+> colors' order given a tpg. It returns a NULL pointer in case of test
+> patterns which do not have a well defined colors' order. Hence add a
+> NULL check for text in tpg_gen_text().
 > 
-> ...
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> ---
+>  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 29 +++++++++++++++++--
+>  include/media/tpg/v4l2-tpg.h                  |  1 +
+>  2 files changed, 28 insertions(+), 2 deletions(-)
 > 
->> >> Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
->> >> to be simple enough to be easily integrated with that. If you need a
->> >> blueprint; because at the moment there is no driver in the kernel
->> >> using that, you could have a look at:
->> >> https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
->> >
->> > Thanks for your advice. I didn't really know what regmap is for...
->> > It seems gpio-regmap is for gpio controllers having val/dir registers.
->> > But pca9570 does not use port registers. The master only sends a data
->> > byte without reg address.
->> 
->> Ahh I missed that :(
->> 
->> > I'm not sure how to apply gpio-regmap or
->> > regmap-i2c here.
->> > I'll try to investigate if setting reg_size or reg_bits to zero is
->> > possible.
->> >
->> > Please correct me if I'm in the wrong direction.
->> 
->> That won't work because the underlying regmap expects the address bits
->> to be either 8 or 16. In this case I'd guess gpio-regmap, doesn't make
->> sense, because there is actually no real gain.
+> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> index dde22a4cbd6c..a052b656fa6a 100644
+> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> @@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+>  	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
+>  	unsigned div = step;
+>  	unsigned first = 0;
+> -	unsigned len = strlen(text);
+> +	unsigned len;
+>  	unsigned p;
+>  
+> -	if (font8x16 == NULL || basep == NULL)
+> +	if (font8x16 == NULL || basep == NULL || text == NULL)
+>  		return;
+>  
+> +	len = strlen(text);
+> +
+>  	/* Checks if it is possible to show string */
+>  	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
+>  		return;
+> @@ -2006,6 +2008,29 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+>  }
+>  EXPORT_SYMBOL_GPL(tpg_gen_text);
+>  
+> +const char *tpg_g_color_order(const struct tpg_data *tpg)
+> +{
+> +	switch (tpg->pattern) {
+> +	case TPG_PAT_75_COLORBAR:
+> +	case TPG_PAT_100_COLORBAR:
+> +	case TPG_PAT_CSC_COLORBAR:
+> +	case TPG_PAT_100_HCOLORBAR:
+> +		return "white, yellow, cyan, green, magenta, red, blue, black";
+> +	case TPG_PAT_BLACK:
+> +		return "Black";
+> +	case TPG_PAT_WHITE:
+> +		return "White";
+> +	case TPG_PAT_RED:
+> +		return "Red";
+> +	case TPG_PAT_GREEN:
+> +		return "Green";
+> +	case TPG_PAT_BLUE:
+> +		return "Blue";
+> +	default:
+> +		return NULL;
+> +	}
+> +}
+
+Missing EXPORT_SYMBOL_GPL().
+
+Regards,
+
+	Hans
+
+> +
+>  void tpg_update_mv_step(struct tpg_data *tpg)
+>  {
+>  	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
+> diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
+> index 9749ed409856..0b0ddb87380e 100644
+> --- a/include/media/tpg/v4l2-tpg.h
+> +++ b/include/media/tpg/v4l2-tpg.h
+> @@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
+>  bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
+>  void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
+>  		const struct v4l2_rect *compose);
+> +const char *tpg_g_color_order(const struct tpg_data *tpg);
+>  
+>  static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
+>  {
 > 
-> From the DS:
-> "The device acknowledges and the master sends the data byte for P7 to
-> P0 and is acknowledged by the device. Writes to P7 to P4 are ignored
-> in the PCA9570 as only P3 through P0 are available. The 4-bit data is
-> presented on the port lines after it has been acknowledged by the
-> device. The number of data bytes that can be sent successively is not
-> limited. The previous data is overwritten every time a data byte has
-> been sent."
-> 
-> So, basically writing to the register the value of register can
-> simulate register map, but the question is do we gain anything from
-> that abstraction because it means that all 256 (or 16 for 4-bit
-> variant) registers are possible?
 
-Mh? I can't follow you. Port means a physical I/O port, if I
-read the datasheet correctly. And because that is a 4 port IO
-expander only the lower four bits are used. I'd guess if it is
-a 8 port IO expander all bits would be used. (Actually, its
-output only.)
-
-So you just write one byte of data (or you might repeat it, but
-that is just as if you start a new i2c transaction, just that
-you save the i2c addressing).
-
--michael
