@@ -2,119 +2,234 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAA4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF365C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2018620786
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F85721582
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390916AbgFXNDJ (ORCPT
+        id S2403868AbgFXNDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:03:09 -0400
-Received: from correo.us.es ([193.147.175.20]:42552 "EHLO mail.us.es"
+        Wed, 24 Jun 2020 09:03:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:46970 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390317AbgFXNDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:03:08 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 9CC7E1C442D
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:03:07 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 8EA14DA73D
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:03:07 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 76E94DA722; Wed, 24 Jun 2020 15:03:07 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 483A8DA73D;
-        Wed, 24 Jun 2020 15:03:05 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Wed, 24 Jun 2020 15:03:05 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 10BDD42EF42B;
-        Wed, 24 Jun 2020 15:03:05 +0200 (CEST)
-Date:   Wed, 24 Jun 2020 15:03:04 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
-        twoerner@redhat.com, eparis@parisplace.org, tgraf@infradead.org
-Subject: Re: [PATCH ghak124 v3] audit: log nftables configuration change
- events
-Message-ID: <20200624130304.GA549@salvia>
-References: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
- <20200624100346.GA11986@salvia>
- <20200624123423.r2gypsdii6xgiywy@madcap2.tricolour.ca>
+        id S2390686AbgFXNDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 09:03:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0D901F1;
+        Wed, 24 Jun 2020 06:03:08 -0700 (PDT)
+Received: from [10.37.12.79] (unknown [10.37.12.79])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40D193F6CF;
+        Wed, 24 Jun 2020 06:03:05 -0700 (PDT)
+Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+ <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+ <20200623191129.GA4171@kozik-lap>
+ <CGME20200624103308eucas1p29c8572979809b129ff8ac729c6c728e2@eucas1p2.samsung.com>
+ <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
+ <828b0d63-4d01-48d6-5971-64855adebed2@samsung.com>
+ <20200624120651.GA20813@pi3>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <55772862-ff8f-1e1d-91ae-7b4d7c3be1b6@arm.com>
+Date:   Wed, 24 Jun 2020 14:03:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624123423.r2gypsdii6xgiywy@madcap2.tricolour.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20200624120651.GA20813@pi3>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:34:23AM -0400, Richard Guy Briggs wrote:
-> On 2020-06-24 12:03, Pablo Neira Ayuso wrote:
-> > On Thu, Jun 04, 2020 at 09:20:49AM -0400, Richard Guy Briggs wrote:
-[...]
-> > > diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-> > > index 3558e76e2733..b9e7440cc87d 100644
-> > > --- a/net/netfilter/nf_tables_api.c
-> > > +++ b/net/netfilter/nf_tables_api.c
-> > > @@ -12,6 +12,7 @@
-> > >  #include <linux/netlink.h>
-> > >  #include <linux/vmalloc.h>
-> > >  #include <linux/rhashtable.h>
-> > > +#include <linux/audit.h>
-> > >  #include <linux/netfilter.h>
-> > >  #include <linux/netfilter/nfnetlink.h>
-> > >  #include <linux/netfilter/nf_tables.h>
-> > > @@ -693,6 +694,16 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
-> > >  {
-> > >  	struct sk_buff *skb;
-> > >  	int err;
-> > > +	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-> > > +			      ctx->table->name, ctx->table->handle);
-> > > +
-> > > +	audit_log_nfcfg(buf,
-> > > +			ctx->family,
-> > > +			ctx->table->use,
-> > > +			event == NFT_MSG_NEWTABLE ?
-> > > +				AUDIT_NFT_OP_TABLE_REGISTER :
-> > > +				AUDIT_NFT_OP_TABLE_UNREGISTER);
-> > > +	kfree(buf);
-> > 
-> > As a follow up: Would you wrap this code into a function?
-> > 
-> >         nft_table_audit()
-> > 
-> > Same thing for other pieces of code below.
+
+
+On 6/24/20 1:06 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jun 24, 2020 at 01:18:42PM +0200, Kamil Konieczny wrote:
+>> Hi,
+>>
+>> On 24.06.2020 12:32, Lukasz Luba wrote:
+>>> Hi Krzysztof and Willy
+>>>
+>>> On 6/23/20 8:11 PM, Krzysztof Kozlowski wrote:
+>>>> On Tue, Jun 23, 2020 at 09:02:38PM +0200, Krzysztof Kozlowski wrote:
+>>>>> On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
+>>>>>>
+>>>>>> Hi everybody,
+>>>>>>
+>>>>>> Is DVFS for memory bus really working on Odroid XU3/4 board?
+>>>>>> Using a simple microbenchmark that is doing only memory accesses, memory DVFS
+>>>>>> seems to not working properly:
+>>>>>>
+>>>>>> The microbenchmark is doing pointer chasing by following index in an array.
+>>>>>> Indices in the array are set to follow a random pattern (cutting prefetcher),
+>>>>>> and forcing RAM access.
+>>>>>>
+>>>>>> git clone https://protect2.fireeye.com/url?k=c364e88a-9eb6fe2f-c36563c5-0cc47a31bee8-631885f0a63a11a0&q=1&u=https%3A%2F%2Fgithub.com%2Fwwilly%2Fbenchmark.git \
+>>>>>>     && cd benchmark \
+>>>>>>     && source env.sh \
+>>>>>>     && ./bench_build.sh \
+>>>>>>     && bash source/scripts/test_dvfs_mem.sh
+>>>>>>
+>>>>>> Python 3, cmake and sudo rights are required.
+>>>>>>
+>>>>>> Results:
+>>>>>> DVFS CPU with performance governor
+>>>>>> mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
+>>>>>> benchmark is running.
+>>>>>> - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
+>>>>>> - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
+>>>>>>
+>>>>>> While forcing DVFS memory bus to use performance governor,
+>>>>>> mem_gov = performance at 825000000 Hz in idle,
+>>>>>> - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
+>>>>>> - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
+>>>>>>
+>>>>>> The kernel used is the last 5.7.5 stable with default exynos_defconfig.
+>>>>>
+>>>>> Thanks for the report. Few thoughts:
+>>>>> 1. What trans_stat are saying? Except DMC driver you can also check
+>>>>> all other devfreq devices (e.g. wcore) - maybe the devfreq events
+>>>>> (nocp) are not properly assigned?
+>>>>> 2. Try running the measurement for ~1 minutes or longer. The counters
+>>>>> might have some delay (which would require probably fixing but the
+>>>>> point is to narrow the problem).
+>>>>> 3. What do you understand by "mem_gov"? Which device is it?
+>>>>
+>>>> +Cc Lukasz who was working on this.
+>>>
+>>> Thanks Krzysztof for adding me here.
+>>>
+>>>>
+>>>> I just run memtester and more-or-less ondemand works (at least ramps
+>>>> up):
+>>>>
+>>>> Before:
+>>>> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
+>>>>        From  :   To
+>>>>              : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+>>>> * 165000000:         0         0         0         0         0         0         0         0   1795950
+>>>>     206000000:         1         0         0         0         0         0         0         0      4770
+>>>>     275000000:         0         1         0         0         0         0         0         0     15540
+>>>>     413000000:         0         0         1         0         0         0         0         0     20780
+>>>>     543000000:         0         0         0         1         0         0         0         1     10760
+>>>>     633000000:         0         0         0         0         2         0         0         0     10310
+>>>>     728000000:         0         0         0         0         0         0         0         0         0
+>>>>     825000000:         0         0         0         0         0         2         0         0     25920
+>>>> Total transition : 9
+>>>>
+>>>>
+>>>> $ sudo memtester 1G
+>>>>
+>>>> During memtester:
+>>>> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
+>>>>        From  :   To
+>>>>              : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+>>>>     165000000:         0         0         0         0         0         0         0         1   1801490
+>>>>     206000000:         1         0         0         0         0         0         0         0      4770
+>>>>     275000000:         0         1         0         0         0         0         0         0     15540
+>>>>     413000000:         0         0         1         0         0         0         0         0     20780
+>>>>     543000000:         0         0         0         1         0         0         0         2     11090
+>>>>     633000000:         0         0         0         0         3         0         0         0     17210
+>>>>     728000000:         0         0         0         0         0         0         0         0         0
+>>>> * 825000000:         0         0         0         0         0         3         0         0    169020
+>>>> Total transition : 13
+>>>>
+>>>> However after killing memtester it stays at 633 MHz for very long time
+>>>> and does not slow down. This is indeed weird...
+>>>
+>>> I had issues with devfreq governor which wasn't called by devfreq
+>>> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
+>>> for it [1]. If the CPU which scheduled the next work went idle, the
+>>> devfreq workqueue will not be kicked and devfreq governor won't check
+>>> DMC status and will not decide to decrease the frequency based on low
+>>> busy_time.
+>>> The same applies for going up with the frequency. They both are
+>>> done by the governor but the workqueue must be scheduled periodically.
+>>>
+>>> I couldn't do much with this back then. I have given the example that
+>>> this is causing issues with the DMC [2]. There is also a description
+>>> of your situation staying at 633MHz for long time:
+>>> ' When it is missing opportunity
+>>> to change the frequency, it can either harm the performance or power
+>>> consumption, depending of the frequency the device stuck on.'
+>>>
+>>> The patches were not accepted because it will cause CPU wake-up from
+>>> idle, which increases the energy consumption. I know that there were
+>>> some other attempts, but I don't know the status.
+>>>
+>>> I had also this devfreq workqueue issue when I have been working on
+>>> thermal cooling for devfreq. The device status was not updated, because
+>>> the devfreq workqueue didn't check the device [3].
+>>>
+>>> Let me investigate if that is the case.
+>>>
+>>> Regards,
+>>> Lukasz
+>>>
+>>> [1] https%3A%2F%2Flkml.org%2Flkml%2F2019%2F2%2F11%2F1146
+>>> [2] https%3A%2F%2Flkml.org%2Flkml%2F2019%2F2%2F12%2F383
+>>> [3] https%3A%2F%2Flwn.net%2Fml%2Flinux-kernel%2F20200511111912.3001-11-lukasz.luba%40arm.com%2F
+>>
+>> and here was another try to fix wq: "PM / devfreq: add possibility for delayed work"
+>>
+>> https://lkml.org/lkml/2019/12/9/486
 > 
-> If I'm guessing right, you are asking for a supplementary follow-up
-> cleanup patch to this one (or are you nacking this patch)?
+> My case was clearly showing wrong behavior. System was idle but not
+> sleeping - network working, SSH connection ongoing.  Therefore at least
+> one CPU was not idle and could adjust the devfreq/DMC... but this did not
+> happen. The system stayed for like a minute in 633 MHz OPP.
+> 
+> Not-waking up idle processors - ok... so why not using power efficient
+> workqueue? It is exactly for this purpose - wake up from time to time on
+> whatever CPU to do the necessary job.
 
-No nack, it's just that I'd prefer to see this wrapped in a function.
-I think your patch is already in the audit tree.
+IIRC I've done this experiment, still keeping in devfreq:
+INIT_DEFERRABLE_WORK()
+just applying patch [1]. It uses a system_wq which should
+be the same as system_power_efficient_wq when
+CONFIG_WQ_POWER_EFFICIENT_DEFAULT is not set (our case).
+This wasn't solving the issue for the deferred work. That's
+why the patch 2/2 following patch 1/2 [1] was needed.
 
-> Also, I gather you would like to see the kasprintf and kfree hidden in
-> nft_table_audit(), handing this function at least 8 parameters?  This
-> sounds pretty messy given the format of the table field.
+The deferred work uses TIMER_DEFERRABLE in it's initialization
+and this is the problem. When the deferred work was queued on a CPU,
+next that CPU went idle, the work was not migrated to some other CPU.
+The former cpu is also not woken up according to the documentation [2].
 
-I think you can pass ctx and the specific object, e.g. table, in most
-cases? There is also event and the gfp_flags. That counts 4 here, but
-maybe I'm overlooking something.
+That's why Kamil's approach should be continue IMHO. It gives more
+control over important devices like: bus, dmc, gpu, which utilization
+does not strictly correspond to cpu utilization (which might be low or
+even 0 and cpu put into idle).
 
-Thanks.
+I think Kamil was pointing out also some other issues not only dmc
+(buses probably), but I realized too late to help him.
+
+Regards,
+Lukasz
+
+[1] 
+https://lore.kernel.org/lkml/1549899005-7760-2-git-send-email-l.luba@partner.samsung.com/
+[2] https://elixir.bootlin.com/linux/latest/source/include/linux/timer.h#L40
+
+> 
+> Best regards,
+> Krzysztof
+> 
