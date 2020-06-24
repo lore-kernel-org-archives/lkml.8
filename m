@@ -2,121 +2,106 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A23C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4124B20720
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593004755;
-	bh=70R5q6Q1p2NaBuBVRtYU1LVGGDAzyP8lP9z31WOzMN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MgZSmmVE0850xqWuaDdtyXX8fHGuitCgH4r1NqocrWWBxrjcJlmsQR4YABDq+TCSX
-	 EwKB00+wM8VZlGifYuvrwsrGha7towe2sGYkPilwaixv1TvW5QIQtwoTGrD5lVs9BS
-	 PkJHrNin3q+8qUqqCF6+fKWqFlD2oZHwr727o0/s=
+	by mail.kernel.org (Postfix) with ESMTP id BE2D120720
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 13:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RIPooS+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389108AbgFXNTO (ORCPT
+        id S2390496AbgFXNTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:19:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbgFXNTM (ORCPT
+        Wed, 24 Jun 2020 09:19:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60940 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389445AbgFXNTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:19:12 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378B0C061573;
-        Wed, 24 Jun 2020 06:19:11 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id l17so1707360qki.9;
-        Wed, 24 Jun 2020 06:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=x9PH2bXbKT4/vlzv/t3aa9HSoEpEteRDNZADkykIJbk=;
-        b=J+rDM/27ebpHPpHj7FAYq7/0qxGqNAbak5b5IF/bxyZLq7iNX2lhgeqXdBt2b/AmBU
-         Xn96KI5GI6lLirjXlQKZ61zDEXxXRgGX7xw6utBMFxaNYcfRgN6qy+YTiAF24QBLn1Oy
-         2KonAUUiFT3Temc1ZAykdeGlx+cscnEEbiCoA/POjRoINkkP5f5ZzxVLSjv2EzuhOtH4
-         qZgK62n5YSMNnmfBTG1GkejeSpd7v88TAYiSQULdg3F3NMijoLcRiFPikv0Gj9Rx9rqr
-         W7KWcCyiJhphbawLZo3m8ZceCHYDQqgjaXKE21KAQROnIDi5g/RCHFke+yAl9CaSrU2y
-         j3Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=x9PH2bXbKT4/vlzv/t3aa9HSoEpEteRDNZADkykIJbk=;
-        b=l2qG0PicTU6kxIvvM/c528YL/vkVWFwqW7B88YU3GAZFOygwsFuiMVeJ+j1UbtCttt
-         PYt+i+5Jvx4J/VySc/Roy7LEpRXuRcIV9J2L+xGLBsGZS1KHtFvfLddb649S0OTV9f7t
-         x6fb/8E0fXcMDaQFE/2gYXqmNalhM61yPyj6CBD/d7mRqWWuoJYXMYu7wpc1TuMYkmQ1
-         LKBxKq2ImYu5kI0abFqhkGpadW0N/0yTbPu8haH4FxezkvOVDgq437OlKdbthOyQ24/s
-         yRjZ2b4OVdF9hy5rUykmBw5uKW1a2yHKFRXinA9q5/RhhkAEVPoxX5BDFVDieKR7QWdn
-         m2/A==
-X-Gm-Message-State: AOAM530O0DD5RB+2/Wo/nf7yastyFsHT0wojRJpOYlybE6O8eYKET3zB
-        69Ijt5EUgl15GRZzgVJIM1s=
-X-Google-Smtp-Source: ABdhPJwgfDfzL4KN09swypIuIKZfgsqYZMxaPOwShr4D1CtwLzc6yPm7uRLlj8lP8jvmUBf2E8jJkg==
-X-Received: by 2002:a37:649:: with SMTP id 70mr11096963qkg.306.1593004750118;
-        Wed, 24 Jun 2020 06:19:10 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:95ca])
-        by smtp.gmail.com with ESMTPSA id u7sm3207827qku.119.2020.06.24.06.19.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 06:19:09 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 09:19:08 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Cc:     Ian Kent <raven@themaw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-Message-ID: <20200624131908.GE13061@mtj.duckdns.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
- <20200619153833.GA5749@mtj.thefacebook.com>
- <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
- <20200619222356.GA13061@mtj.duckdns.org>
- <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
- <20200622175343.GC13061@mtj.duckdns.org>
- <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
- <20200623231348.GD13061@mtj.duckdns.org>
- <a3e9414e-4740-3013-947d-e1839a20227c@linux.vnet.ibm.com>
+        Wed, 24 Jun 2020 09:19:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05ODIWE1064154;
+        Wed, 24 Jun 2020 13:19:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=/CHyyqyPX91FA7D+EZofQoOQ+oKgF27GewZ7ADCObvI=;
+ b=RIPooS+K44BtWf7/FbFv5ISdxykDc2HG28LCHlWqNMntLN2gMNY0ybH8crRudp+YhHj4
+ oIo7KmD1Q+j8rW5N8n4y9Y4GIwO3qqyeNu+ZmwMdGesQ22eCKcUyvwkzkCsz3XeuIk8y
+ 91rZTre8GL1oVeUaHqtR6/GSIgdCqCspXizzOtY6PGZqvlDtlH/NnjIw1+ap4Z3uQA4m
+ dqdFDFT+ntFgGqiP15JcmOg/BRez0ZlwNz9o2ns65cpzIQZWG149Ys2YWR0G82js3t8r
+ CRXgbc5ALccH99P2yHaAAQ7Tzw3K2L8wK7DrDagJtxsHFw5e7Qn0YH1MI1BPan3XDXEO AA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 31uustjtd5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 13:19:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05ODJJd5160990;
+        Wed, 24 Jun 2020 13:19:34 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 31uurqtbcx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 13:19:34 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05ODJW7t005612;
+        Wed, 24 Jun 2020 13:19:32 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jun 2020 13:19:28 +0000
+Date:   Wed, 24 Jun 2020 16:19:21 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] intel_idle: Fix uninitialized variable bug
+Message-ID: <20200624131921.GB9972@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a3e9414e-4740-3013-947d-e1839a20227c@linux.vnet.ibm.com>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006240096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ cotscore=-2147483648 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
+ suspectscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1011
+ impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006240096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Rick.
+The "tick" variable isn't initialized if "lapic_timer_always_reliable"
+is true.
 
-On Wed, Jun 24, 2020 at 02:04:15AM -0700, Rick Lindsley wrote:
-> In contrast, the provided patch fixes the observed problem with no ripple
-> effect to other subsystems or utilities.
-> 
-> Greg had suggested
->     Treat the system as a whole please, don't go for a short-term
->     fix that we all know is not solving the real problem here.
-> 
-> Your solution affects multiple subsystems; this one affects one.  Which is
-> the whole system approach in terms of risk?  You mentioned you support 30k
-> scsi disks but only because they are slow so the inefficiencies of kernfs
-> don't show.  That doesn't bother you?
+Fixes: 40ab82e08d78 ("intel_idle: Simplify LAPIC timer reliability checks")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/idle/intel_idle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I suggest putting honest thoughts into finding a long term solution instead
-of these rhetorical retorts. If you really can't see how ill-suited the
-current use of interface and proposed solution is, I'm not sure how better
-to communicate them to you.
-
-Thanks.
-
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index aae53e650638..6c9152f303a6 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -132,7 +132,7 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
+ 	struct cpuidle_state *state = &drv->states[index];
+ 	unsigned long eax = flg2MWAIT(state->flags);
+ 	unsigned long ecx = 1; /* break on interrupt flag */
+-	bool tick;
++	bool tick = false;
+ 	int cpu = smp_processor_id();
+ 
+ 	/*
 -- 
-tejun
+2.27.0
+
