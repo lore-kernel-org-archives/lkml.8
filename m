@@ -2,65 +2,138 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C23FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E50520899
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A821020899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="NtYAzUCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390159AbgFXH65 (ORCPT
+        id S2390194AbgFXH7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:58:57 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54326 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388836AbgFXH65 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:58:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U0aLOJ8_1592985534;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U0aLOJ8_1592985534)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 24 Jun 2020 15:58:54 +0800
-Date:   Wed, 24 Jun 2020 15:58:54 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me,
-        baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] nvme: Add Arbitration Burst support
-Message-ID: <20200624075854.GA37292@VM20190228-100.tbsite.net>
-Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-References: <cover.1592980985.git.baolin.wang@linux.alibaba.com>
- <32d99c016d23d660f5be4a9754b5b9aafe81ab6c.1592980985.git.baolin.wang@linux.alibaba.com>
- <20200624065258.GA18130@lst.de>
+        Wed, 24 Jun 2020 03:59:45 -0400
+Received: from mail-co1nam11on2041.outbound.protection.outlook.com ([40.107.220.41]:15424
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730725AbgFXH7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:59:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DcXtviuu0p4kWagMUKQdbhNo57hzXAaP2Qu9FsFcZnbvH3EFYDFIlpIiNfromoKFb7R4w3VwxTpdJhhjR5o3IKuyBqqF/ZGBzoWDChnJVH4ozZkH+Fz0CGwDd28YFPXQHVRxxIfoB5+xJxZ806GnoIEgNiZqXoQozXTPbrLXzl7g86ft43tD6gNxRhhwnVs806S45YueCkBtHNP3xbSkdM1OtgDsoqdQ4o+QxT95Ph1ywUlVUYgkTdCVKX856inTcrGQef1PKzgMpWXkLw/6uM81oIt0KjTKmhfaeOSk6qWF5J8KS8jEUWduoj2DRjWW9bfqoMy16Sicm+CD3y4Nqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tGlJtn7z7N+QqE6Jj/osPqWiDFjODbFTV7v4VUQsmBE=;
+ b=Pno9nZctmc7MxMARSGin8eODdW07xUe4If4IwO2JUs7ADnKnkG3OaDyyJdIeCSka16Q1XrHr5X8mHBoLV/5H/z1EFCgiDuhPtttEXHgS+B0msawwi98pywfL4E0bCmUDvlce4VEQsXCq/K9ScP123HSKpI7GglppBxUzkWFuveWV7FTr9x5dDh/EhAnlzyM1diTKkS9o1jPJ/P1XyBtBqVwOoIIsOglq9FzfbFdII5G5LDk3ojWkYE/fd2PNfmY5cpXPACXPbfUJvEaqvdFFZhNjqfZ6ynr+n1PMsw18VVffSlLvUq6ZtsHLY2HmfWDdPDlevqk0Ocbt74Gih3Mf7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tGlJtn7z7N+QqE6Jj/osPqWiDFjODbFTV7v4VUQsmBE=;
+ b=NtYAzUCQb5o4hNepPUQyFl7YgPv4ICrL/5FDWHwjQLmzbiD3TmlGcNkFeiClwIHRvY29JeYiTyy8lvFYMf6ULnOKT/uViM0AI+Qdk5MBLc7sd6M4MWdDEYBRJ3a9PHMlsxRxbq0biFr7Z/VKKnk1CazaXmiE++HS0tGOn6O/q9g=
+Authentication-Results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BY5PR03MB5361.namprd03.prod.outlook.com (2603:10b6:a03:21a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Wed, 24 Jun
+ 2020 07:59:42 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
+ 07:59:42 +0000
+Date:   Wed, 24 Jun 2020 15:57:57 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] net: phy: call phy_disable_interrupts() in
+ phy_init_hw()
+Message-ID: <20200624155757.6b2e82cb@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY1PR01CA0190.jpnprd01.prod.outlook.com (2603:1096:403::20)
+ To BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624065258.GA18130@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TY1PR01CA0190.jpnprd01.prod.outlook.com (2603:1096:403::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Wed, 24 Jun 2020 07:59:39 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d37ca31b-3eba-49c4-c237-08d818148d2d
+X-MS-TrafficTypeDiagnostic: BY5PR03MB5361:
+X-Microsoft-Antispam-PRVS: <BY5PR03MB5361EBBEB730E06A116E35D8ED950@BY5PR03MB5361.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0444EB1997
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: I0Bozvb+YhH4dpuINDqv71m3EA+gbYQ+A7hP1CKLjOzS9hgfzUNwdeVTwL0oIqdo5ARN/iayG8Lmx4U3P5Z1N7CDh1545gb2wzXzsugxJXmwYkR4ccWrV2h9KnOdgOjhhWM7aSzX2a221+HP4jbxID95+QwrtktRCw2gdfXAsV5TCwEj/NVNmtBVxzYHHi+y6Kbl2qSFVkQ2zTzZby5cbX97k17Gr5hHgKFGeP6triGJvuG4MidJUbPeZ2PMZ1FES+BFsiVvewhWMez5izLQPFMejFudd7UGY8dV+oy/QUulhpdtAXgttTUsUHcXutnEaSwws44rEU1kVa8k976dXA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(396003)(39860400002)(346002)(136003)(6506007)(52116002)(26005)(186003)(16526019)(7696005)(8676002)(66556008)(66476007)(110136005)(6666004)(8936002)(66946007)(9686003)(55016002)(1076003)(316002)(4326008)(478600001)(956004)(2906002)(83380400001)(5660300002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: U7DdQ1bornl+IjZ5Do+zaOKMpTeNwOZFNmPn/kHWQFMxUt+/+qKwZw2bC1Wsv8KzxQkoWnLnHabu5TO9QTlNS5sxbsExcMQC7jRJBUi6JPWvtQ3FSVZ9sUOU6P5sYy9r5+3zlgbWthS0WxZx/1xqxyCWB5Z9IgQvVE6hqP1mFA7hk/3Kmi5FtNtObshnsnb7sDEfpMYr+6GawISJ3dZJZXhTEGb4/WfO/jqfR0/FXVc3H2CiwO3mOuMxXOd3p+GW9gJS/px4thUSYUQwZiT5+Okh8atqHs9sfE4wgjlrqJqb3ZK2zX2Vo5bxQZFLEkQEoc+7dBurEVrGubE0UpJfbyB5SuQSEYQUuFwR0oLUIaTLHlaV8TDrXvbVh6zlmzKTRyDIrCaEV3u1T6YNRygVcBUqePn18X89Djkbyl3pcFyZN68wFjW/vwvkzQWycjZJNUbFUY5YyqIFBsyN3+peoj5ToJ7y6FRj4xEMZ9E+QxVp9A4oW8LlG52pZlMVXB2T
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d37ca31b-3eba-49c4-c237-08d818148d2d
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2020 07:59:42.3452
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VTkv4ZoGQ2Q0vdlf8cSMnZopyUgmlMS7H7byhTdmII21XzkviMpGqfMKM65iHkrMYxkYTgN3lovZiW+T/ipfsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5361
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:52:58AM +0200, Christoph Hellwig wrote:
-> On Wed, Jun 24, 2020 at 02:49:57PM +0800, Baolin Wang wrote:
-> > >From the NVMe spec, "In order to make efficient use of the non-volatile
-> > memory, it is often advantageous to execute multiple commands from a
-> > Submission Queue in parallel. For Submission Queues that are using
-> > weighted round robin with urgent priority class or round robin
-> > arbitration, host software may configure an Arbitration Burst setting".
-> > Thus add Arbitration Burst setting support.
-> 
-> What is the value add of doing this in the kernel?  Wouldn't a nvme-cli
-> subcommand to just set the arbitration burst to the recommended value,
-> either as a saved or current value be both more useful and also cause
-> less kernel bloat?
+We face an issue with rtl8211f, a pin is shared between INTB and PMEB,
+and the PHY Register Accessible Interrupt is enabled by default, so
+the INTB/PMEB pin is always active in polling mode case.
 
-Yes, that's another way to configure the RAB, but for some simple and
-frequently-used usage cases, we just want to use the recommanded arbitration
-burst as default without bothering the nvme-cli tool every reset time.
+As Heiner pointed out "I was thinking about calling
+phy_disable_interrupts() in phy_init_hw(), to have a defined init
+state as we don't know in which state the PHY is if the PHY driver is
+loaded. We shouldn't assume that it's the chip power-on defaults, BIOS
+or boot loader could have changed this. Or in case of dual-boot
+systems the other OS could leave the PHY in whatever state."
+
+patch1 makes phy_disable_interrupts() non-static so that it could be used
+in phy_init_hw() to have a defined init state.
+
+patch2 calls phy_disable_interrupts() in phy_init_hw() to have a
+defined init state.
+
+Since v3:
+  - call phy_disable_interrupts() have interrupts disabled first then
+    config_init, thank Florian
+
+Since v2:
+  - Don't export phy_disable_interrupts() but just make it non-static
+
+Since v1:
+  - EXPORT the correct symbol
+
+Jisheng Zhang (2):
+  net: phy: make phy_disable_interrupts() non-static
+  net: phy: call phy_disable_interrupts() in phy_init_hw()
+
+ drivers/net/phy/phy.c        | 2 +-
+ drivers/net/phy/phy_device.c | 4 ++++
+ include/linux/phy.h          | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+-- 
+2.27.0
 
