@@ -2,276 +2,89 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A734FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7770F20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD5320767
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 10:09:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="RZrgxUqm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q6kqbVLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390348AbgFXKIa (ORCPT
+        id S2390356AbgFXKJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:08:30 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:63354 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388197AbgFXKI2 (ORCPT
+        Wed, 24 Jun 2020 06:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388197AbgFXKJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 06:08:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592993308; x=1624529308;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=bEF722QvBA0YGrg/uisrmJLySySjIUMD1UA2JX7w7JA=;
-  b=RZrgxUqm6CG4r/K1Ya666phCyLr2OlKAQl5wp1reBp6yyCLYXaw6TP/V
-   vaB1+12xk5Afb1D7ceKpj/XVqCweiBM2STfidkjqogdF7I4gXIv9zmLTq
-   mwcEJ9xuFxTv9A4IlB1Cgf8omGM3KIG9DTCXJLlM8OGbOoVEIMtp5x2BH
-   aFKAX552QFvZZeGCV51MM+ElHb9RSN6DBYKw1wxKu59Q5kOCxw1xpLDQs
-   9zDe2+U7NgDFzvA7uoo1Cy4+AeUHIQ5YpmW1+Yo8Zh0rCLj+QYiFu+cP2
-   1kJcRiVX+YHfmDl4YCADIAuenuHnhsQqBGuTmlSx7gtHnSmeEy02kBd1E
-   g==;
-IronPort-SDR: Jk8o/OzofneRg7OxZT2VIgKreYO2TMfkbQLQovgCAOiBEAZwVn4LTZdXfzl7Mjrv8+DFleTLQm
- fXRqHELEIPLbtTZdEcGrlmhfav4TUmu9drbJF/6iz3pUw4WjSfw0HFO6JES2I9edwlKMb3Z/Fy
- gOp4+3ak8saYIsvHYlB34M1yiE+NOp+eDd5RrWJCKItkaBgMZgojm+ibrB1/TJGS5fqvyfd2fx
- Wyf1Vfz5mnwSgieD1aCmFiJi0KhclI0VL1MpqzNwsAF2gQJ2tIk6R5fs6cE/20L75nqbsln00y
- 9PU=
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="84887852"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jun 2020 03:08:27 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 24 Jun 2020 03:08:15 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 24 Jun 2020 03:08:12 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <nicolas.ferre@microchip.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-CC:     <alexandre.belloni@bootlin.com>, <antoine.tenart@bootlin.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 2/2] net: macb: free resources on failure path of at91ether_open()
-Date:   Wed, 24 Jun 2020 13:08:18 +0300
-Message-ID: <1592993298-26533-2-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592993298-26533-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1592993298-26533-1-git-send-email-claudiu.beznea@microchip.com>
+        Wed, 24 Jun 2020 06:09:03 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73957C061573;
+        Wed, 24 Jun 2020 03:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fbvRV6I4MBKKb4K8TrGIAwzpXd/13MRtwyrauhi7npU=; b=Q6kqbVLJjFSnrHUaLUDHBxAx2J
+        DP6uYFxBRY0BI9u/Mz+o8baPWJMqA2bYcFOIYiMN118gIMH2twE8hwHR+0crdqL51FEV+V/QqZBkU
+        Hdv70Aeymlqi94y7LpZ5VelzI7DcQXJMOr95LJQaYuq9Zqoo2YTtMR/MU5eV/pL5CiWWzCctczM/o
+        DBd9gzUMQ0QbAfAjKbQnJtmqVn42N4tEnLz7UvalJSZ2z3kJRDM7TTqIlrX0CryIGb9Hn987ZQhOg
+        sE6aZBlqkpFRJk3dnFNMsC2I9KOVuppRzHwfn8z9a2qa+0O1dc0VYkuVxLN5tYYLAZojlKNwUO/cw
+        1AzLNyiQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jo2KC-0004Cq-9D; Wed, 24 Jun 2020 10:08:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3AD79300261;
+        Wed, 24 Jun 2020 12:08:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AB40D20D94FEC; Wed, 24 Jun 2020 12:08:06 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 12:08:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        tglx@linutronix.de, davem@davemloft.net, akpm@linux-foundation.org,
+        sfr@canb.auug.org.au, stephen@networkplumber.org,
+        rppt@linux.vnet.ibm.com
+Subject: Re: [PATCH v3 0/3] Preventing job distribution to isolated CPUs
+Message-ID: <20200624100806.GE4800@hirez.programming.kicks-ass.net>
+References: <20200623192331.215557-1-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623192331.215557-1-nitesh@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DMA buffers were not freed on failure path of at91ether_open().
-Along with changes for freeing the DMA buffers the enable/disable
-interrupt instructions were moved to at91ether_start()/at91ether_stop()
-functions and the operations on at91ether_stop() were done in
-their reverse order (compared with how is done in at91ether_start()):
-before this patch the operation order on interface open path
-was as follows:
-1/ alloc DMA buffers
-2/ enable tx, rx
-3/ enable interrupts
-and the order on interface close path was as follows:
-1/ disable tx, rx
-2/ disable interrupts
-3/ free dma buffers.
+On Tue, Jun 23, 2020 at 03:23:28PM -0400, Nitesh Narayan Lal wrote:
+> This patch-set is originated from one of the patches that have been
+> posted earlier as a part of "Task_isolation" mode [1] patch series
+> by Alex Belits <abelits@marvell.com>. There are only a couple of
+> changes that I am proposing in this patch-set compared to what Alex
+> has posted earlier.
 
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
+> 
+> Alex Belits (3):
+>   lib: Restrict cpumask_local_spread to houskeeping CPUs
+>   PCI: Restrict probe functions to housekeeping CPUs
+>   net: Restrict receive packets queuing to housekeeping CPUs
+> 
+>  drivers/pci/pci-driver.c |  5 ++++-
+>  lib/cpumask.c            | 16 +++++++++++-----
+>  net/core/net-sysfs.c     | 10 +++++++++-
+>  3 files changed, 24 insertions(+), 7 deletions(-)
 
-Changes in v2:
-- none
-
- drivers/net/ethernet/cadence/macb_main.c | 116 +++++++++++++++++++------------
- 1 file changed, 73 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 96d62d73b933..87854dfb44e4 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3760,15 +3760,9 @@ static int macb_init(struct platform_device *pdev)
- 
- static struct sifive_fu540_macb_mgmt *mgmt;
- 
--/* Initialize and start the Receiver and Transmit subsystems */
--static int at91ether_start(struct net_device *dev)
-+static int at91ether_alloc_coherent(struct macb *lp)
- {
--	struct macb *lp = netdev_priv(dev);
- 	struct macb_queue *q = &lp->queues[0];
--	struct macb_dma_desc *desc;
--	dma_addr_t addr;
--	u32 ctl;
--	int i;
- 
- 	q->rx_ring = dma_alloc_coherent(&lp->pdev->dev,
- 					 (AT91ETHER_MAX_RX_DESCR *
-@@ -3790,6 +3784,43 @@ static int at91ether_start(struct net_device *dev)
- 		return -ENOMEM;
- 	}
- 
-+	return 0;
-+}
-+
-+static void at91ether_free_coherent(struct macb *lp)
-+{
-+	struct macb_queue *q = &lp->queues[0];
-+
-+	if (q->rx_ring) {
-+		dma_free_coherent(&lp->pdev->dev,
-+				  AT91ETHER_MAX_RX_DESCR *
-+				  macb_dma_desc_get_size(lp),
-+				  q->rx_ring, q->rx_ring_dma);
-+		q->rx_ring = NULL;
-+	}
-+
-+	if (q->rx_buffers) {
-+		dma_free_coherent(&lp->pdev->dev,
-+				  AT91ETHER_MAX_RX_DESCR *
-+				  AT91ETHER_MAX_RBUFF_SZ,
-+				  q->rx_buffers, q->rx_buffers_dma);
-+		q->rx_buffers = NULL;
-+	}
-+}
-+
-+/* Initialize and start the Receiver and Transmit subsystems */
-+static int at91ether_start(struct macb *lp)
-+{
-+	struct macb_queue *q = &lp->queues[0];
-+	struct macb_dma_desc *desc;
-+	dma_addr_t addr;
-+	u32 ctl;
-+	int i, ret;
-+
-+	ret = at91ether_alloc_coherent(lp);
-+	if (ret)
-+		return ret;
-+
- 	addr = q->rx_buffers_dma;
- 	for (i = 0; i < AT91ETHER_MAX_RX_DESCR; i++) {
- 		desc = macb_rx_desc(q, i);
-@@ -3811,9 +3842,39 @@ static int at91ether_start(struct net_device *dev)
- 	ctl = macb_readl(lp, NCR);
- 	macb_writel(lp, NCR, ctl | MACB_BIT(RE) | MACB_BIT(TE));
- 
-+	/* Enable MAC interrupts */
-+	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
-+			     MACB_BIT(RXUBR)	|
-+			     MACB_BIT(ISR_TUND)	|
-+			     MACB_BIT(ISR_RLE)	|
-+			     MACB_BIT(TCOMP)	|
-+			     MACB_BIT(ISR_ROVR)	|
-+			     MACB_BIT(HRESP));
-+
- 	return 0;
- }
- 
-+static void at91ether_stop(struct macb *lp)
-+{
-+	u32 ctl;
-+
-+	/* Disable MAC interrupts */
-+	macb_writel(lp, IDR, MACB_BIT(RCOMP)	|
-+			     MACB_BIT(RXUBR)	|
-+			     MACB_BIT(ISR_TUND)	|
-+			     MACB_BIT(ISR_RLE)	|
-+			     MACB_BIT(TCOMP)	|
-+			     MACB_BIT(ISR_ROVR) |
-+			     MACB_BIT(HRESP));
-+
-+	/* Disable Receiver and Transmitter */
-+	ctl = macb_readl(lp, NCR);
-+	macb_writel(lp, NCR, ctl & ~(MACB_BIT(TE) | MACB_BIT(RE)));
-+
-+	/* Free resources. */
-+	at91ether_free_coherent(lp);
-+}
-+
- /* Open the ethernet interface */
- static int at91ether_open(struct net_device *dev)
- {
-@@ -3833,27 +3894,20 @@ static int at91ether_open(struct net_device *dev)
- 
- 	macb_set_hwaddr(lp);
- 
--	ret = at91ether_start(dev);
-+	ret = at91ether_start(lp);
- 	if (ret)
- 		goto pm_exit;
- 
--	/* Enable MAC interrupts */
--	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
--			     MACB_BIT(RXUBR)	|
--			     MACB_BIT(ISR_TUND)	|
--			     MACB_BIT(ISR_RLE)	|
--			     MACB_BIT(TCOMP)	|
--			     MACB_BIT(ISR_ROVR)	|
--			     MACB_BIT(HRESP));
--
- 	ret = macb_phylink_connect(lp);
- 	if (ret)
--		goto pm_exit;
-+		goto stop;
- 
- 	netif_start_queue(dev);
- 
- 	return 0;
- 
-+stop:
-+	at91ether_stop(lp);
- pm_exit:
- 	pm_runtime_put_sync(&lp->pdev->dev);
- 	return ret;
-@@ -3863,37 +3917,13 @@ static int at91ether_open(struct net_device *dev)
- static int at91ether_close(struct net_device *dev)
- {
- 	struct macb *lp = netdev_priv(dev);
--	struct macb_queue *q = &lp->queues[0];
--	u32 ctl;
--
--	/* Disable Receiver and Transmitter */
--	ctl = macb_readl(lp, NCR);
--	macb_writel(lp, NCR, ctl & ~(MACB_BIT(TE) | MACB_BIT(RE)));
--
--	/* Disable MAC interrupts */
--	macb_writel(lp, IDR, MACB_BIT(RCOMP)	|
--			     MACB_BIT(RXUBR)	|
--			     MACB_BIT(ISR_TUND)	|
--			     MACB_BIT(ISR_RLE)	|
--			     MACB_BIT(TCOMP)	|
--			     MACB_BIT(ISR_ROVR) |
--			     MACB_BIT(HRESP));
- 
- 	netif_stop_queue(dev);
- 
- 	phylink_stop(lp->phylink);
- 	phylink_disconnect_phy(lp->phylink);
- 
--	dma_free_coherent(&lp->pdev->dev,
--			  AT91ETHER_MAX_RX_DESCR *
--			  macb_dma_desc_get_size(lp),
--			  q->rx_ring, q->rx_ring_dma);
--	q->rx_ring = NULL;
--
--	dma_free_coherent(&lp->pdev->dev,
--			  AT91ETHER_MAX_RX_DESCR * AT91ETHER_MAX_RBUFF_SZ,
--			  q->rx_buffers, q->rx_buffers_dma);
--	q->rx_buffers = NULL;
-+	at91ether_stop(lp);
- 
- 	return pm_runtime_put(&lp->pdev->dev);
- }
--- 
-2.7.4
-
+This looks reasonable to me; who is expected to merge this? Should I
+take it through the scheduler tree like most of the nohz_full, or what
+do we do?
