@@ -7,85 +7,90 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED765C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9A4620B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6B020B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389377AbgFXGgL (ORCPT
+        id S2389318AbgFXGfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:36:11 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:45764 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389152AbgFXGfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:35:42 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx39809PJeSB9JAA--.620S3;
-        Wed, 24 Jun 2020 14:35:34 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 1/7] irqchip/loongson-htpic: Remove redundant kfree operation
-Date:   Wed, 24 Jun 2020 14:35:25 +0800
-Message-Id: <1592980531-2121-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592980531-2121-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592980531-2121-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dx39809PJeSB9JAA--.620S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr15XrW5ZrW3AF15Kr4xtFb_yoW3twb_Cr
-        WIqr9rJFW0gr1rC3y7ur47ZrySkw4kWF1kuF4aya4ft347tw1rAry7Ar4fJF47Wa1SkFn8
-        WFW7ZrykAw1xGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbPkFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-        0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-        xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I
-        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-        WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-        wI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2
-        IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v2
-        6F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjfU1q2MUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 24 Jun 2020 02:35:41 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47366 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388262AbgFXGfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:35:37 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4392C200F31;
+        Wed, 24 Jun 2020 08:35:35 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B3F0A200179;
+        Wed, 24 Jun 2020 08:35:30 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CAB7E402CA;
+        Wed, 24 Jun 2020 14:35:24 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V6 2/9] pinctrl: imx: scu: Support i.MX8 SCU SoCs pinctrl driver built as module
+Date:   Wed, 24 Jun 2020 14:23:57 +0800
+Message-Id: <1592979844-18833-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
+References: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function htpic_of_init(), when kzalloc htpic fails, it should
-return -ENOMEM directly, no need to execute "goto" to kfree.
+Export necessary APIs to support i.MX8 SCU SoCs pinctrl driver to be
+built as module.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/irqchip/irq-loongson-htpic.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Changes since V5:
+	- keep it still built in, ONLY export APIs for SoCs pinctrl driver;
+---
+ drivers/pinctrl/freescale/pinctrl-scu.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
-index dd018c2..63f7280 100644
---- a/drivers/irqchip/irq-loongson-htpic.c
-+++ b/drivers/irqchip/irq-loongson-htpic.c
-@@ -93,10 +93,8 @@ int __init htpic_of_init(struct device_node *node, struct device_node *parent)
- 	}
+diff --git a/drivers/pinctrl/freescale/pinctrl-scu.c b/drivers/pinctrl/freescale/pinctrl-scu.c
+index 23cf04b..9df45d3 100644
+--- a/drivers/pinctrl/freescale/pinctrl-scu.c
++++ b/drivers/pinctrl/freescale/pinctrl-scu.c
+@@ -41,6 +41,7 @@ int imx_pinctrl_sc_ipc_init(struct platform_device *pdev)
+ {
+ 	return imx_scu_get_handle(&pinctrl_ipc_handle);
+ }
++EXPORT_SYMBOL_GPL(imx_pinctrl_sc_ipc_init);
  
- 	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
--	if (!htpic) {
--		err = -ENOMEM;
--		goto out_free;
--	}
-+	if (!htpic)
-+		return -ENOMEM;
+ int imx_pinconf_get_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
+ 			unsigned long *config)
+@@ -66,6 +67,7 @@ int imx_pinconf_get_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
  
- 	htpic->base = of_iomap(node, 0);
- 	if (!htpic->base) {
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(imx_pinconf_get_scu);
+ 
+ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
+ 			unsigned long *configs, unsigned num_configs)
+@@ -101,6 +103,7 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(imx_pinconf_set_scu);
+ 
+ void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+ 			       unsigned int *pin_id, struct imx_pin *pin,
+@@ -119,3 +122,4 @@ void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+ 	dev_dbg(ipctl->dev, "%s: 0x%x 0x%08lx", info->pins[pin->pin].name,
+ 		pin_scu->mux_mode, pin_scu->config);
+ }
++EXPORT_SYMBOL_GPL(imx_pinctrl_parse_pin_scu);
 -- 
-2.1.0
+2.7.4
 
