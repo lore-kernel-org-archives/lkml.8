@@ -2,111 +2,470 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D01C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA0320768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593035974;
-	bh=melluhzqNmWHAYbNmzvj1J35Gv4F1lsN1EsHAvOqrpM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=IOWOBba832cZ9TyPIh5xMdMlnyAtcqK515dXoDUlKGFPRE8Ltcib7gIff1UyX/jpj
-	 gB1AJXBhiJprVyA/qMQISX7auV9ZZAZXcxg1don+yEzlknyO8KcGo070CjWyk0NS3P
-	 rT+/c0ZUUPnRHhxrDL4N+2IYH7kWMRDTrTnB4J3U=
+	by mail.kernel.org (Postfix) with ESMTP id 52D112081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 22:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtzroWOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390770AbgFXV7d (ORCPT
+        id S2389600AbgFXWBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
+        Wed, 24 Jun 2020 18:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388452AbgFXV7c (ORCPT
+        with ESMTP id S2388217AbgFXWBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:59:32 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32DD4C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:59:32 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id k15so3405309otp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:59:32 -0700 (PDT)
+        Wed, 24 Jun 2020 18:01:05 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 334DEC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:01:05 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id c3so3768411ybp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 15:01:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yEXhJgBgPrqHMMJogxhjG1bdCWukEFMnbzG4N1vRV7c=;
-        b=JvVENXq1wzSp2eMxk6pEMLtvr0SU3Kd17HTaulkVgPEby4Sxex36KUd1Vcx/28tOf9
-         9JMhb62xU6xGhdewqIjyWRnGYc2+zFMWBchj7DKMuct2Hzw+WWo2/tW8aXs5KhmOk3MR
-         iQk87wZgxlQ5POjg4urLzVLbLz8xzgqMJt+uE=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Xpqt1NtbDbpAVLHQUxG3xmewuRdgKQp8b4JCwdr34hI=;
+        b=QtzroWOF5E9gMdr4AyvUTkSmkZUjyUSwk+JoJAAr0FMGbSI1iO2slJlENx4YSdMRTc
+         uuVVUArh39zt3x7CMcm844c3dhHxvuf2OAi953OVvPTeRHpmmLdBnfRNAH/TbzZpuFYx
+         xkAhnXeBd454U1ohiDUGaEsL/wdzCqKwzo3tRwT2iuBAygGx9liCxCGTuP+isPJ2zYZX
+         fjR9rRepFoSLswcv1EB3liVoZcexALlPKE+f5uhkvZ3a2BzKbk1VJnVKCR0Cm11HBSUr
+         UJS6NUNIhE7xjKXeE/0NCkLN21wwicmQL39eH/az1x47C8+PDe1mDhflJBXDLI0E5R5M
+         MrPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yEXhJgBgPrqHMMJogxhjG1bdCWukEFMnbzG4N1vRV7c=;
-        b=tB58GvSUCkiuDwB/M4G7YpDhZI1/Etjp4uochoLg4BYv7anzfe0Y/t4FGCRDgjIaU+
-         Ln922jZ2+wSMf+krzn3SoVS8Y+1PlBUCcwDjIAVxv9qV1stWi3rskuZ/t0Dhx54fw9WE
-         qBdjZV7XpaG6ec+CvtnYSC2GSKk1C8F65tGPcM+Dfh6frvHtm7H5fgCEdBbpTyXQ4J9K
-         qQtOcT7CGhWiBPu2+V9fYtThOSUOOxwO+x5mTVfDxb1dFvMLGnyljgSWjUtwkOy/5ru8
-         YJOMXWB9eSE2OwvV2/ElcFUcFDdqsGVEOYnf4a5SQld3eK2l4IZODGv1T3J4gNvtFnrN
-         ez4g==
-X-Gm-Message-State: AOAM530jFrU95TEVsSqZ6ZZrdkZa7FlUZixi8E7+eEKtcZszIZFJ9DJe
-        sCQiQ6rPNycG285GIJD4iAblRw==
-X-Google-Smtp-Source: ABdhPJzsN/3QWLW2SpTQqN8LiebWhT0I3GqHv5grQ6oZDR90JY0rEk1dqlJNH7smQw4QUh5ZfP9cVA==
-X-Received: by 2002:a05:6830:1dbb:: with SMTP id z27mr24465512oti.340.1593035971629;
-        Wed, 24 Jun 2020 14:59:31 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id f30sm1957785ook.4.2020.06.24.14.59.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 14:59:31 -0700 (PDT)
-Subject: Re: [PATCH 4.19 000/206] 4.19.130-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200623195316.864547658@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <1b7194d1-b8f1-6b38-32ea-d8370c98bc59@linuxfoundation.org>
-Date:   Wed, 24 Jun 2020 15:59:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200623195316.864547658@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Xpqt1NtbDbpAVLHQUxG3xmewuRdgKQp8b4JCwdr34hI=;
+        b=hJS5jAWGYILRpYpnkeKbbuHg5r0hq3i3Hs52OEQrwsNuxM2zQi/CUZx6Zzjo6bY7Ib
+         LfkCp7rWy5AQ7AMkHI3hn/PyBdYuSGKKWZdZYIf9j4WkcOWho2LMUuQ+LjFciAG34/Dm
+         bDA0/MZ80SPPAszqG2kFvGpXgC+utJFiEUTjFY+jPj4VHZXgmJvomUb9CIx6OJUc8Cs5
+         FZ33yxWT75P6BQjpZWMV85U8gePJm6D7dC/VbKXYaUNduHOttGT1Btb2Fu/rg8AD1GDu
+         pUX7C2RwoGfjGekaBNaV//3+R8mxKd5LrLkb7eItLPP4ZktuDelo+ODEV8N4mUVP8NEj
+         wMJA==
+X-Gm-Message-State: AOAM530UzicdOOrl2tdzJSlPrNhWtN9HywR3F0/7BdaNbP4dmFMpnRjV
+        G5CJs3027Otw4nsxsxGYp1NicBp7i8w4qECa9Nrieg==
+X-Google-Smtp-Source: ABdhPJxBeGPMvVuG1sIymr9wVMvcytGhqiKQiINHDEotf65oS6N4XgRocxSJJfRl6vIMgvqKukGI1NKjGeTFff+/Xhai4g==
+X-Received: by 2002:a05:6902:514:: with SMTP id x20mr31555487ybs.160.1593036064391;
+ Wed, 24 Jun 2020 15:01:04 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 15:00:35 -0700
+Message-Id: <20200624220035.237028-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [RFC v1] kunit: tool: add support for QEMU
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     shuah@kernel.org, davidgow@google.com
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/23/20 1:55 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.130 release.
-> There are 206 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 25 Jun 2020 19:52:30 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.130-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Add basic support to run QEMU via kunit_tool. Add support for i386,
+x86_64, arm, arm64, and a couple others.
 
-Compiled and booted on my test system. No dmesg regressions.
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+---
 
-thanks,
--- Shuah
+This patch is very RFC; nevertheless, I wanted to get it out onto the
+list before I fix some of the more obvious problems.
+
+In particular, the most obvious issue is what to do about dependencies
+namely QEMU and toolchains. Part of me thinks that we should do the
+normal toolchain prefix thing, but it is really handy to specify to
+switch between complier versions and QEMU versions with a single flag.
+
+Another idea is to install needed dependencies like what 0day does with
+its build scripts.
+
+Another note: I only included the most straightforwardly working
+architectures for this initial patch; namely all the architectures which
+work with a toolchain and a QEMU architecture available on the Debian
+apt repos and otherwise don't require changes to kunit_tool which are
+too radical.
+
+Ideas are welcomed!
+
+---
+ tools/testing/kunit/kunit.py        |  14 +-
+ tools/testing/kunit/kunit_config.py |   2 +-
+ tools/testing/kunit/kunit_kernel.py | 201 +++++++++++++++++++++++++---
+ 3 files changed, 195 insertions(+), 22 deletions(-)
+
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index f9b769f3437dd..b326cfd3982e5 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -76,10 +76,10 @@ def build_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
+ 
+ 	build_start = time.time()
+-	success = linux.build_um_kernel(request.alltests,
+-					request.jobs,
+-					request.build_dir,
+-					request.make_options)
++	success = linux.build_kernel(request.alltests,
++				     request.jobs,
++				     request.build_dir,
++				     request.make_options)
+ 	build_end = time.time()
+ 	if not success:
+ 		return KunitResult(KunitStatus.BUILD_FAILURE,
+@@ -235,6 +235,10 @@ def main(argv, linux=None):
+ 				  help='Specifies the file to read results from.',
+ 				  type=str, nargs='?', metavar='input_file')
+ 
++	run_parser.add_argument('--arch',
++				help='Specifies the architecture to run tests under.',
++				type=str, default='um', metavar='arch')
++
+ 	cli_args = parser.parse_args(argv)
+ 
+ 	if cli_args.subcommand == 'run':
+@@ -248,7 +252,7 @@ def main(argv, linux=None):
+ 			create_default_kunitconfig()
+ 
+ 		if not linux:
+-			linux = kunit_kernel.LinuxSourceTree()
++			linux = kunit_kernel.LinuxSourceTree(arch=cli_args.arch)
+ 
+ 		request = KunitRequest(cli_args.raw_output,
+ 				       cli_args.timeout,
+diff --git a/tools/testing/kunit/kunit_config.py b/tools/testing/kunit/kunit_config.py
+index 02ffc3a3e5dc7..6aea9d213762a 100644
+--- a/tools/testing/kunit/kunit_config.py
++++ b/tools/testing/kunit/kunit_config.py
+@@ -53,7 +53,7 @@ class Kconfig(object):
+ 		return True
+ 
+ 	def write_to_file(self, path: str) -> None:
+-		with open(path, 'w') as f:
++		with open(path, 'a+') as f:
+ 			for entry in self.entries():
+ 				f.write(str(entry) + '\n')
+ 
+diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+index d6a575f92317c..c1b2cbc9f5705 100644
+--- a/tools/testing/kunit/kunit_kernel.py
++++ b/tools/testing/kunit/kunit_kernel.py
+@@ -14,6 +14,8 @@ import signal
+ 
+ from contextlib import ExitStack
+ 
++from collections import namedtuple
++
+ import kunit_config
+ import kunit_parser
+ 
+@@ -32,6 +34,10 @@ class BuildError(Exception):
+ class LinuxSourceTreeOperations(object):
+ 	"""An abstraction over command line operations performed on a source tree."""
+ 
++	def __init__(self, linux_arch, cross_compile):
++		self._linux_arch = linux_arch
++		self._cross_compile = cross_compile
++
+ 	def make_mrproper(self):
+ 		try:
+ 			subprocess.check_output(['make', 'mrproper'])
+@@ -40,12 +46,18 @@ class LinuxSourceTreeOperations(object):
+ 		except subprocess.CalledProcessError as e:
+ 			raise ConfigError(e.output)
+ 
++	def make_arch_qemuconfig(self, build_dir):
++		pass
++
+ 	def make_olddefconfig(self, build_dir, make_options):
+-		command = ['make', 'ARCH=um', 'olddefconfig']
++		command = ['make', 'ARCH=' + self._linux_arch, 'olddefconfig']
++		if self._cross_compile:
++			command += ['CROSS_COMPILE=' + self._cross_compile]
+ 		if make_options:
+ 			command.extend(make_options)
+ 		if build_dir:
+ 			command += ['O=' + build_dir]
++		print(' '.join(command))
+ 		try:
+ 			subprocess.check_output(command, stderr=subprocess.PIPE)
+ 		except OSError as e:
+@@ -55,27 +67,24 @@ class LinuxSourceTreeOperations(object):
+ 
+ 	def make_allyesconfig(self):
+ 		kunit_parser.print_with_timestamp(
+-			'Enabling all CONFIGs for UML...')
++			'Enabling all CONFIGs...')
+ 		process = subprocess.Popen(
+-			['make', 'ARCH=um', 'allyesconfig'],
++			['make', 'ARCH=' + self._linux_arch, 'allyesconfig'],
+ 			stdout=subprocess.DEVNULL,
+ 			stderr=subprocess.STDOUT)
+ 		process.wait()
+-		kunit_parser.print_with_timestamp(
+-			'Disabling broken configs to run KUnit tests...')
+-		with ExitStack() as es:
+-			config = open(KCONFIG_PATH, 'a')
+-			disable = open(BROKEN_ALLCONFIG_PATH, 'r').read()
+-			config.write(disable)
+ 		kunit_parser.print_with_timestamp(
+ 			'Starting Kernel with all configs takes a few minutes...')
+ 
+ 	def make(self, jobs, build_dir, make_options):
+-		command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
++		command = ['make', 'ARCH=' + self._linux_arch, '--jobs=' + str(jobs)]
+ 		if make_options:
+ 			command.extend(make_options)
++		if self._cross_compile:
++			command += ['CROSS_COMPILE=' + self._cross_compile]
+ 		if build_dir:
+ 			command += ['O=' + build_dir]
++		print(' '.join(command))
+ 		try:
+ 			subprocess.check_output(command)
+ 		except OSError as e:
+@@ -83,15 +92,167 @@ class LinuxSourceTreeOperations(object):
+ 		except subprocess.CalledProcessError as e:
+ 			raise BuildError(e.output)
+ 
+-	def linux_bin(self, params, timeout, build_dir, outfile):
++	def run(self, params, timeout, build_dir, outfile):
++		pass
++
++QemuArchParams = namedtuple('QemuArchParams', ['linux_arch',
++					       'cross_compile',
++					       'qemuconfig',
++					       'qemu_arch',
++					       'kernel_path',
++					       'kernel_command_line',
++					       'extra_qemu_params'])
++
++QEMU_ARCHS = {
++	'i386'		: QemuArchParams(linux_arch='i386',
++				cross_compile=None,
++				qemuconfig='CONFIG_SERIAL_8250=y\nCONFIG_SERIAL_8250_CONSOLE=y',
++				qemu_arch='x86_64',
++				kernel_path='arch/x86/boot/bzImage',
++				kernel_command_line='console=ttyS0',
++				extra_qemu_params=['']),
++	'x86_64'	: QemuArchParams(linux_arch='x86_64',
++				cross_compile=None,
++				qemuconfig='CONFIG_SERIAL_8250=y\nCONFIG_SERIAL_8250_CONSOLE=y',
++				qemu_arch='x86_64',
++				kernel_path='arch/x86/boot/bzImage',
++				kernel_command_line='console=ttyS0',
++				extra_qemu_params=['']),
++	'arm'		: QemuArchParams(linux_arch='arm',
++				cross_compile='arm-linux-gnueabihf-',
++				qemuconfig='''CONFIG_ARCH_VIRT=y
++CONFIG_SERIAL_AMBA_PL010=y
++CONFIG_SERIAL_AMBA_PL010_CONSOLE=y
++CONFIG_SERIAL_AMBA_PL011=y
++CONFIG_SERIAL_AMBA_PL011_CONSOLE=y''',
++				qemu_arch='arm',
++				kernel_path='arch/arm/boot/zImage',
++				kernel_command_line='console=ttyAMA0',
++				extra_qemu_params=['-machine virt']),
++	'arm64'		: QemuArchParams(linux_arch='arm64',
++				cross_compile='aarch64-linux-gnu-',
++				qemuconfig='''CONFIG_SERIAL_AMBA_PL010=y
++CONFIG_SERIAL_AMBA_PL010_CONSOLE=y
++CONFIG_SERIAL_AMBA_PL011=y
++CONFIG_SERIAL_AMBA_PL011_CONSOLE=y''',
++				qemu_arch='aarch64',
++				kernel_path='arch/arm64/boot/Image.gz',
++				kernel_command_line='console=ttyAMA0',
++				extra_qemu_params=['-machine virt', '-cpu cortex-a57']),
++	'alpha'		: QemuArchParams(linux_arch='alpha',
++				cross_compile='alpha-linux-gnu-',
++				qemuconfig='CONFIG_SERIAL_8250=y\nCONFIG_SERIAL_8250_CONSOLE=y',
++				qemu_arch='alpha',
++				kernel_path='arch/alpha/boot/vmlinux',
++				kernel_command_line='console=ttyS0',
++				extra_qemu_params=['']),
++	'powerpc'	: QemuArchParams(linux_arch='powerpc',
++				cross_compile='powerpc64-linux-gnu-',
++				qemuconfig='CONFIG_PPC64=y\nCONFIG_SERIAL_8250=y\nCONFIG_SERIAL_8250_CONSOLE=y\nCONFIG_HVC_CONSOLE=y',
++				qemu_arch='ppc64',
++				kernel_path='vmlinux',
++				kernel_command_line='console=ttyS0',
++				extra_qemu_params=['-M pseries', '-cpu power8']),
++	'riscv'		: QemuArchParams(linux_arch='riscv',
++				cross_compile='riscv64-linux-gnu-',
++				qemuconfig='CONFIG_SOC_VIRT=y\nCONFIG_SERIAL_8250=y\nCONFIG_SERIAL_8250_CONSOLE=y\nCONFIG_SERIAL_OF_PLATFORM=y\nCONFIG_SERIAL_EARLYCON_RISCV_SBI=y',
++				qemu_arch='riscv64',
++				kernel_path='arch/riscv/boot/Image',
++				kernel_command_line='console=ttyS0',
++				extra_qemu_params=['-machine virt', '-cpu rv64', '-bios opensbi-riscv64-virt-fw_jump.bin']),
++	's390'		: QemuArchParams(linux_arch='s390',
++				cross_compile='s390x-linux-gnu-',
++				qemuconfig='CONFIG_EXPERT=y\nCONFIG_TUNE_ZEC12=y\nCONFIG_NUMA=y\nCONFIG_MODULES=y',
++				qemu_arch='s390x',
++				kernel_path='arch/s390/boot/bzImage',
++				kernel_command_line='console=ttyS0',
++				extra_qemu_params=[
++						'-machine s390-ccw-virtio',
++						'-cpu qemu',]),
++	'sparc'		: QemuArchParams(linux_arch='sparc',
++				cross_compile='sparc64-linux-gnu-',
++				qemuconfig='CONFIG_SERIAL_8250=y\nCONFIG_SERIAL_8250_CONSOLE=y',
++				qemu_arch='sparc',
++				kernel_path='arch/sparc/boot/zImage',
++				kernel_command_line='console=ttyS0 mem=256M',
++				extra_qemu_params=['-m 256']),
++}
++
++class LinuxSourceTreeOperationsQemu(LinuxSourceTreeOperations):
++
++	def __init__(self, qemu_arch_params):
++		super().__init__(linux_arch=qemu_arch_params.linux_arch,
++				 cross_compile=qemu_arch_params.cross_compile)
++		self._qemuconfig = qemu_arch_params.qemuconfig
++		self._qemu_arch = qemu_arch_params.qemu_arch
++		self._kernel_path = os.path.join(os.getcwd(), qemu_arch_params.kernel_path)
++		print(self._kernel_path)
++		self._kernel_command_line = qemu_arch_params.kernel_command_line + ' kunit_shutdown=reboot'
++		self._extra_qemu_params = qemu_arch_params.extra_qemu_params
++
++	def make_arch_qemuconfig(self, build_dir):
++		qemuconfig = kunit_config.Kconfig()
++		qemuconfig.parse_from_string(self._qemuconfig)
++		qemuconfig.write_to_file(get_kconfig_path(build_dir))
++
++	def run(self, params, timeout, build_dir, outfile):
++		kernel_path = os.path.join(build_dir, self._kernel_path)
++		qemu_command = ['qemu-system-' + self._qemu_arch,
++				'-nodefaults',
++				'-m', '1024',
++				'-kernel', kernel_path,
++				'-append', '\'' + ' '.join(params + [self._kernel_command_line]) + '\'',
++				'-no-reboot',
++				'-nographic',
++				'-serial stdio'] + self._extra_qemu_params
++		print(' '.join(qemu_command))
++		with open(outfile, 'w') as output:
++			process = subprocess.Popen(' '.join(qemu_command),
++						   stdin=subprocess.PIPE,
++						   stdout=output,
++						   stderr=subprocess.STDOUT,
++						   text=True, shell=True)
++		try:
++			process.wait(timeout=timeout)
++		except Exception as e:
++			print(e)
++			process.terminate()
++		return process
++
++class LinuxSourceTreeOperationsUml(LinuxSourceTreeOperations):
++	"""An abstraction over command line operations performed on a source tree."""
++
++	def __init__(self):
++		super().__init__(linux_arch='um', cross_compile=None)
++
++	def make_allyesconfig(self):
++		kunit_parser.print_with_timestamp(
++			'Enabling all CONFIGs for UML...')
++		process = subprocess.Popen(
++			['make', 'ARCH=um', 'allyesconfig'],
++			stdout=subprocess.DEVNULL,
++			stderr=subprocess.STDOUT)
++		process.wait()
++		kunit_parser.print_with_timestamp(
++			'Disabling broken configs to run KUnit tests...')
++		with ExitStack() as es:
++			config = open(KCONFIG_PATH, 'a')
++			disable = open(BROKEN_ALLCONFIG_PATH, 'r').read()
++			config.write(disable)
++		kunit_parser.print_with_timestamp(
++			'Starting Kernel with all configs takes a few minutes...')
++
++	def run(self, params, timeout, build_dir, outfile):
+ 		"""Runs the Linux UML binary. Must be named 'linux'."""
+ 		linux_bin = './linux'
+ 		if build_dir:
+ 			linux_bin = os.path.join(build_dir, 'linux')
+ 		with open(outfile, 'w') as output:
+ 			process = subprocess.Popen([linux_bin] + params,
++						   stdin=subprocess.PIPE,
+ 						   stdout=output,
+-						   stderr=subprocess.STDOUT)
++						   stderr=subprocess.STDOUT,
++						   text=True)
+ 			process.wait(timeout)
+ 
+ 
+@@ -104,11 +265,17 @@ def get_kconfig_path(build_dir):
+ class LinuxSourceTree(object):
+ 	"""Represents a Linux kernel source tree with KUnit tests."""
+ 
+-	def __init__(self):
++	def __init__(self, arch=None):
+ 		self._kconfig = kunit_config.Kconfig()
+ 		self._kconfig.read_from_file(kunitconfig_path)
+-		self._ops = LinuxSourceTreeOperations()
+ 		signal.signal(signal.SIGINT, self.signal_handler)
++		self._ops = None
++		if arch is None or arch == 'um':
++			self._ops = LinuxSourceTreeOperationsUml()
++		elif arch in QEMU_ARCHS:
++			self._ops = LinuxSourceTreeOperationsQemu(QEMU_ARCHS[arch])
++		else:
++			raise ConfigError(arch + ' is not a valid arch')
+ 
+ 	def clean(self):
+ 		try:
+@@ -138,6 +305,7 @@ class LinuxSourceTree(object):
+ 			os.mkdir(build_dir)
+ 		self._kconfig.write_to_file(kconfig_path)
+ 		try:
++			self._ops.make_arch_qemuconfig(build_dir)
+ 			self._ops.make_olddefconfig(build_dir, make_options)
+ 		except ConfigError as e:
+ 			logging.error(e)
+@@ -160,10 +328,11 @@ class LinuxSourceTree(object):
+ 			print('Generating .config ...')
+ 			return self.build_config(build_dir, make_options)
+ 
+-	def build_um_kernel(self, alltests, jobs, build_dir, make_options):
++	def build_kernel(self, alltests, jobs, build_dir, make_options):
+ 		if alltests:
+ 			self._ops.make_allyesconfig()
+ 		try:
++			self._ops.make_arch_qemuconfig(build_dir)
+ 			self._ops.make_olddefconfig(build_dir, make_options)
+ 			self._ops.make(jobs, build_dir, make_options)
+ 		except (ConfigError, BuildError) as e:
+@@ -174,7 +343,7 @@ class LinuxSourceTree(object):
+ 	def run_kernel(self, args=[], build_dir='', timeout=None):
+ 		args.extend(['mem=1G', 'kunit_shutdown=halt'])
+ 		outfile = 'test.log'
+-		self._ops.linux_bin(args, timeout, build_dir, outfile)
++		self._ops.run(args, timeout, build_dir, outfile)
+ 		subprocess.call(['stty', 'sane'])
+ 		with open(outfile, 'r') as file:
+ 			for line in file:
+
+base-commit: 4333a9b0b67bb4e8bcd91bdd80da80b0ec151162
+prerequisite-patch-id: 2d4b5aa9fa8ada9ae04c8584b47c299a822b9455
+prerequisite-patch-id: 582b6d9d28ce4b71628890ec832df6522ca68de0
+prerequisite-patch-id: 97b0f3dca8a284c6f5b14fac7f10a97def18610d
+prerequisite-patch-id: 4b806b7fc93ca6464395d8e193378bff4b2f5c5e
+prerequisite-patch-id: 25411ef134020a4711e72f464cfeee486e1cca67
+prerequisite-patch-id: 91f01e8965eedc34327e871f4a6a33187c94aeaf
+prerequisite-patch-id: 2a32d1d634e155a4a933d8f902ab717bf03ca487
+prerequisite-patch-id: 00b3e340d3463d2ed7872400dd408b9188652553
+prerequisite-patch-id: ee2aef0c799110f798f99f3a713f7e905595ec7b
+prerequisite-patch-id: a99bf1505ed65027369f3cf71e45bca2b7e07d9b
+prerequisite-patch-id: 8c9d94f6e7ffefa30597e9b68fba32d3c3407205
+prerequisite-patch-id: 31d4fd7c057aca679253e6af504efc215ec50716
+prerequisite-patch-id: 239e1866d9237e84fb626d91330c13ea0b8bae86
+-- 
+2.27.0.212.ge8ba1cc988-goog
 
