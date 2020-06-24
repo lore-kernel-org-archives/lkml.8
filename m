@@ -2,139 +2,93 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC43C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC14420C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CAFD2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:50:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592988624;
+	bh=PiVWBuP4c6htn4O6UyWhwT4IpNXo7bHxMloEmKHbJ34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zf5Sj32gjXHLdrtHDKvcp5lJEIBOwe3fesX6HmCW7kUhpDhYcZLT3W8QGhW7Q55Ze
+	 nLKhJCR2PyNA0RSBkxB029m0TDJ3pyanGMaMt+4AnAliUNeTc1hcLCyz7sHGfoISr+
+	 gOtismHsGP6/czcMneQQjRZsBpaKRssleFbROr/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389492AbgFXIuQ (ORCPT
+        id S2389554AbgFXIuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:50:16 -0400
-Received: from mga01.intel.com ([192.55.52.88]:1312 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388488AbgFXIs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 04:48:59 -0400
-IronPort-SDR: P4sOO4Us0GBiX+/+1FiPGtQiAygTPUeqjqy+1djJrAAMP7cfGsRtNU7d5oK8qjE4qYXwd17BAK
- 1Yyul5k2dt5Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="162484876"
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="162484876"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 01:48:57 -0700
-IronPort-SDR: piGJ++LaamA9YfyuMqCwvU5vZ7l/wzJwV4Bw4Dq47ONOCUSOEPD/GlUNxfV5Vrfp/NSTbReAMh
- 1qWzMEW5nQGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,274,1589266800"; 
-   d="scan'208";a="275624514"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 01:48:56 -0700
-From:   Liu Yi L <yi.l.liu@intel.com>
-To:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org
-Cc:     kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, jun.j.tian@intel.com,
-        yi.y.sun@intel.com, jean-philippe@linaro.org, peterx@redhat.com,
-        hao.wu@intel.com, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/14] iommu/vt-d: Check ownership for PASIDs from user-space
-Date:   Wed, 24 Jun 2020 01:55:21 -0700
-Message-Id: <1592988927-48009-9-git-send-email-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+        Wed, 24 Jun 2020 04:50:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37846 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389505AbgFXIuS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:50:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o2so1718268wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 01:50:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rd9IzVM8tD3UftxMYmgDMxiwBT/HI+3YrHy3wROEERY=;
+        b=l0GKK7EBk6SGTJlFftfARsUBxN9FWqbxF0kqGS+BCryaRywk8yKsGKxNV6twUBLt3g
+         UphWpbh3CgTU9O1Q+64l5oqaqQxedUIeogoRuV8+hSkruiYMnt+Mesqfv/U2Pwyc8PcW
+         IE1cbVKAO9VCSUxy0Bq9yntQm0PY6HpT2rXaodqJRiH613+3iTcfa8AS7B3iHj3MV5zA
+         fQ83g3FJKCYY3uvMQtX7qKn9CS7IYfpkd1NWL9vdvJwAZWRto5XKDfJojJKVPmjzz9s3
+         vHlUyJwzj0AsP5sa2DfN89aHdkfNyLKeWzliRSbXmn1zYjq5p5hVU3CvtU4/R81rGK/G
+         azbg==
+X-Gm-Message-State: AOAM532IFwvyTaFd5e5nmKAVIZTbpdBx1AF4Wr4aF38PiihzwEQnBKzY
+        z1Zh6CVHzddkdkp5VYvGyMY=
+X-Google-Smtp-Source: ABdhPJx5rN+DJcDsPUmCblVkVpduAwnEGOG7wPIeqoXZAqFAOdV/46mS5MBBC9+J5GZQHCzKzQzcIQ==
+X-Received: by 2002:a1c:e18a:: with SMTP id y132mr22706313wmg.27.1592988616864;
+        Wed, 24 Jun 2020 01:50:16 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id 185sm7124135wmz.22.2020.06.24.01.50.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 01:50:16 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:50:15 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200624085015.GG1320@dhcp22.suse.cz>
+References: <20200623094258.6705-1-richard.weiyang@linux.alibaba.com>
+ <20200623151828.GA31426@dhcp22.suse.cz>
+ <57d8a558-dcb3-b318-8e38-6c016b050414@redhat.com>
+ <20200624081324.GA12461@L-31X9LVDL-1304.local>
+ <2b2b722a-58de-4c6e-a04e-dc3516b1b8ab@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b2b722a-58de-4c6e-a04e-dc3516b1b8ab@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an IOMMU domain with nesting attribute is used for guest SVA, a
-system-wide PASID is allocated for binding with the device and the domain.
-For security reason, we need to check the PASID passsed from user-space.
-e.g. page table bind/unbind and PASID related cache invalidation.
+On Wed 24-06-20 10:41:18, David Hildenbrand wrote:
+[...]
+> But nothing actually breaks .... because *drummroll* we use huge pages in the vmemmap,
+> so the partial depopulate will not actually depopulate anything here. Huge page is 2M,
+> the memmap of 128MB sections is exactly 2MB == one hugepages. Trying to depopulate a
+> fraction (e.g., 16MB) of that won't do anything.
+> 
+> 
+> Now, forcing a CPU without hugepages - PSE (QEMU: "-cpu host,pse=off)", I can trigger
+> via  ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax --size=16M
 
-Cc: Kevin Tian <kevin.tian@intel.com>
-CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/intel/iommu.c | 10 ++++++++++
- drivers/iommu/intel/svm.c   |  7 +++++--
- 2 files changed, 15 insertions(+), 2 deletions(-)
+OK, now I am following! Thanks a lot. That is something to be mentioned
+in the changelog. Small pages might be used if the hotplug happens on a
+system with fragmented memory so this is something we do care about.
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index b139ab4..b50395e 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -5429,6 +5429,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 		int granu = 0;
- 		u64 pasid = 0;
- 		u64 addr = 0;
-+		void *pdata;
- 
- 		granu = to_vtd_granularity(cache_type, inv_info->granularity);
- 		if (granu == -EINVAL) {
-@@ -5448,6 +5449,15 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
- 			 (inv_info->granu.addr_info.flags & IOMMU_INV_ADDR_FLAGS_PASID))
- 			pasid = inv_info->granu.addr_info.pasid;
- 
-+		pdata = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
-+		if (!pdata) {
-+			ret = -EINVAL;
-+			goto out_unlock;
-+		} else if (IS_ERR(pdata)) {
-+			ret = PTR_ERR(pdata);
-+			goto out_unlock;
-+		}
-+
- 		switch (BIT(cache_type)) {
- 		case IOMMU_CACHE_INV_TYPE_IOTLB:
- 			/* HW will ignore LSB bits based on address mask */
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 1e567a1..aa2e1aa 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -323,7 +323,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- 	dmar_domain = to_dmar_domain(domain);
- 
- 	mutex_lock(&pasid_mutex);
--	svm = ioasid_find(INVALID_IOASID_SET, data->hpasid, NULL);
-+	svm = ioasid_find(dmar_domain->ioasid_sid, data->hpasid, NULL);
- 	if (IS_ERR(svm)) {
- 		ret = PTR_ERR(svm);
- 		goto out;
-@@ -440,6 +440,7 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
- 			    struct device *dev, ioasid_t pasid)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-+	struct dmar_domain *dmar_domain;
- 	struct intel_svm_dev *sdev;
- 	struct intel_svm *svm;
- 	int ret = -EINVAL;
-@@ -447,8 +448,10 @@ int intel_svm_unbind_gpasid(struct iommu_domain *domain,
- 	if (WARN_ON(!iommu))
- 		return -EINVAL;
- 
-+	dmar_domain = to_dmar_domain(domain);
-+
- 	mutex_lock(&pasid_mutex);
--	svm = ioasid_find(INVALID_IOASID_SET, pasid, NULL);
-+	svm = ioasid_find(dmar_domain->ioasid_sid, pasid, NULL);
- 	if (!svm) {
- 		ret = -EINVAL;
- 		goto out;
+Thanks a lot David!
+
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
