@@ -2,163 +2,302 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D38C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D988C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A7A206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A602081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UicxR0JI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaZwWkWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405208AbgFXVu0 (ORCPT
+        id S2405263AbgFXVvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:50:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36840 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2405141AbgFXVuW (ORCPT
+        Wed, 24 Jun 2020 17:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405108AbgFXVvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:50:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593035420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EADfs1ylZAHsiM8IjKqv95Uwk2ZbTva/38FSCFX0Y4Y=;
-        b=UicxR0JIdlQTkMWG8YdMSEybAZHXne/nidKzFa7xww0UTUJa7n4AmCwA8YJlIw2fJUzvnU
-        oztdeahukkL4ozob+fIvI0IfLonqPUwKcfHldSSdtAVUdkkZmOLoV3QiVU4TGc+YEovf9e
-        /1A/78IU6YJ2uNqT515Emkgg5+FH3/k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-JDiVSOwfPXK8klyO4PRXhg-1; Wed, 24 Jun 2020 17:50:15 -0400
-X-MC-Unique: JDiVSOwfPXK8klyO4PRXhg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B651880400D;
-        Wed, 24 Jun 2020 21:50:13 +0000 (UTC)
-Received: from localhost (ovpn-116-62.gru2.redhat.com [10.97.116.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E954160F8A;
-        Wed, 24 Jun 2020 21:50:12 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 18:50:11 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Maurizio Drocco <maurizio.drocco@ibm.com>
-Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
-        jejb@linux.ibm.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, mdrocco@linux.vnet.ibm.com,
-        roberto.sassu@huawei.com, serge@hallyn.com, stefanb@linux.ibm.com,
-        zohar@linux.ibm.com
-Subject: Re: [PATCH v3] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
-Message-ID: <20200624215011.GC2639@glitch>
-References: <20200624213345.GB2639@glitch>
- <20200624213558.4265-1-maurizio.drocco@ibm.com>
+        Wed, 24 Jun 2020 17:51:14 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5379EC061573;
+        Wed, 24 Jun 2020 14:51:14 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id s14so1686333plq.6;
+        Wed, 24 Jun 2020 14:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=L0MzlFLwm6T2ZxR+P/092PF/9NwClVuMD9gddMae/SQ=;
+        b=EaZwWkWVfQYzJ8DhhQqvOX60x3+zTLOLDFVWN0oa1HjqF91L+WFmdSQ5vVWpFBFKd/
+         U7Pp/WsgMf3kNYd62hCgTevHC9T2dYnAg/fW6OmFobKh0qxqkbpTaN63AeTjzwW6qHjM
+         l0p6ypxbwNHJqTNhQyk4JlA7AMQMpnge9KScWaH2sH1dI+OclrV4eVRLD8uFsPZLvSJ9
+         VfGNguFiqMEIGIYahLkXyq+yyy+sC4TvGrqJOn95lyCWBsbecNz1vJ+dGEvBzbSoxCbt
+         tVCIpqYXc28hhR3OYnvOBQeu9PC62ga7DuKGwiGWCU/EKXBrSHsxYe8Zhhqb2uVmY36m
+         BlUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L0MzlFLwm6T2ZxR+P/092PF/9NwClVuMD9gddMae/SQ=;
+        b=BsIOPs1K7ASLUdMddGCE06nIwLkTEwQlII45Z7H9KxddipfasBRN5GPTLwXpQiM5Gu
+         PrqnYDkZ4nEPeW2akvuz+hfAXfWGeli3sRlTfNFA72MfMjozjNnpcc9luysCGiOFLUgQ
+         VKa/NwDnFfIqaKMRZ+x6C2opzMXgKeXGd0I9gqKkSl2RUc6WixJd/QIOaRiQ4qUR85Fq
+         61nbk8vjexuYdl7KvGpyUw8yJvJq/H6WyWPOo7Lfa2Jvv1XpPGfrihnHtg9Rs/PrKpOJ
+         iS0KLyVi7s4/zHzDZ+9dAvKBf9bpccFl7XnNXjvn0VFyaWP0ZLUC+6peJ1xPoLqsj8n/
+         cuUw==
+X-Gm-Message-State: AOAM531bv3IZtLTUszzH4sjGdk6vqin27NEe1OLhbW9ktFdTJRuy0f3y
+        FZnnUHXP2JR11TGEHW1zQ9o=
+X-Google-Smtp-Source: ABdhPJw4GbQBZUNNPrxn7l9wL0I0uE+rrTzzLrxhnlUfRAtZykbjASDS6qI98okoEuSSidiRwkeLRg==
+X-Received: by 2002:a17:902:8b86:: with SMTP id ay6mr29427251plb.329.1593035473819;
+        Wed, 24 Jun 2020 14:51:13 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l2sm6371191pjl.34.2020.06.24.14.51.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jun 2020 14:51:13 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 14:51:12 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     alexandru.tachici@analog.com
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v4 5/7] hwmon: pmbus: adm1266: read blackbox
+Message-ID: <20200624215112.GA75386@roeck-us.net>
+References: <20200623173659.41358-1-alexandru.tachici@analog.com>
+ <20200623173659.41358-6-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624213558.4265-1-maurizio.drocco@ibm.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200623173659.41358-6-alexandru.tachici@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---hOcCNbCCxyk/YU74
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 24, 2020 at 05:35:58PM -0400, Maurizio Drocco wrote:
-> From: Maurizio <maurizio.drocco@ibm.com>
->=20
-> cal_bootaggr should include PCRs 8-9 in non-SHA1 digests.
->=20
-> Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+On Tue, Jun 23, 2020 at 08:36:57PM +0300, alexandru.tachici@analog.com wrote:
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
+> 
+> Use the nvmem kernel api to expose the black box
+> chip functionality to userspace.
+> 
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 > ---
-> Changelog:
-> v3:
-> - Fixed patch description
-> v2:
-> - Always include PCRs 8 & 9 to non-sha1 hashes
-> v1:
-> - Include non-zero PCRs 8 & 9 to boot aggregates
->=20
->  src/evmctl.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->=20
-> diff --git a/src/evmctl.c b/src/evmctl.c
-> index 1d065ce..46b7092 100644
-> --- a/src/evmctl.c
-> +++ b/src/evmctl.c
-> @@ -1930,6 +1930,16 @@ static void calc_bootaggr(struct tpm_bank_info *ba=
-nk)
->  =09=09}
->  =09}
-> =20
-> +=09if (strcmp(bank->algo_name, "sha1") !=3D 0) {
-> +=09=09for (i =3D 8; i < 10; i++) {
-> +=09=09=09err =3D EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size)=
-;
-> +=09=09=09if (!err) {
-> +=09=09=09=09log_err("EVP_DigestUpdate() failed\n");
-> +=09=09=09=09return;
-> +=09=09=09}
-> +=09=09}
-> +=09}
+>  drivers/hwmon/pmbus/adm1266.c | 134 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 134 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+> index 0960ead8d96a..b9e92ab1e39a 100644
+> --- a/drivers/hwmon/pmbus/adm1266.c
+> +++ b/drivers/hwmon/pmbus/adm1266.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/nvmem-provider.h>
+>  #include <linux/proc_fs.h>
+>  #include <linux/slab.h>
+>  #include <linux/uaccess.h>
+> @@ -22,10 +24,13 @@
+>  #include <linux/adm1266.h>
+>  #include "pmbus.h"
+>  
+> +#define ADM1266_BLACKBOX_CONFIG	0xD3
+>  #define ADM1266_PDIO_CONFIG	0xD4
+>  #define ADM1266_GO_COMMAND	0xD8
+>  #define ADM1266_READ_STATE	0xD9
+> +#define ADM1266_READ_BLACKBOX	0xDE
+>  #define ADM1266_GPIO_CONFIG	0xE1
+> +#define ADM1266_BLACKBOX_INFO	0xE6
+>  #define ADM1266_PDIO_STATUS	0xE9
+>  #define ADM1266_GPIO_STATUS	0xEA
+>  
+> @@ -42,6 +47,9 @@
+>  #define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
+>  #define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
+>  
+> +#define ADM1266_BLACKBOX_OFFSET		0x7F700
+> +#define ADM1266_BLACKBOX_SIZE		64
 > +
->  =09err =3D EVP_DigestFinal(pctx, bank->digest, &mdlen);
->  =09if (!err) {
->  =09=09log_err("EVP_DigestFinal() failed\n");
-> @@ -1972,8 +1982,9 @@ static int append_bootaggr(char *bootaggr, struct t=
-pm_bank_info *tpm_banks)
->  /*
->   * The IMA measurement list boot_aggregate is the link between the prebo=
-ot
->   * event log and the IMA measurement list.  Read and calculate all the
-> - * possible per TPM bank boot_aggregate digests based on the existing
-> - * PCRs 0 - 7 to validate against the IMA boot_aggregate record.
-> + * possible per TPM bank boot_aggregate digests based on the existing PC=
-Rs
-> + * 0 - 9 to validate against the IMA boot_aggregate record. If the diges=
-t
-> + * algorithm is SHA1, only PCRs 0 - 7 are considered to avoid ambiguity.
->   */
->  static int cmd_ima_bootaggr(struct command *cmd)
+>  #define ADM1266_PMBUS_BLOCK_MAX		255
+>  
+>  DECLARE_CRC8_TABLE(pmbus_crc_table);
+> @@ -52,6 +60,17 @@ struct adm1266_data {
+>  	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
+>  	struct i2c_client *client;
+>  	struct mutex ioctl_mutex; /* lock ioctl access */
+> +	struct nvmem_config nvmem_config;
+> +	struct nvmem_device *nvmem;
+> +	u8 *dev_mem;
+> +};
+> +
+> +static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
+> +	{
+> +		.name           = "blackbox",
+> +		.offset         = ADM1266_BLACKBOX_OFFSET,
+> +		.bytes          = 2048,
+> +	},
+>  };
+>  
+>  /* Different from Block Read as it sends data and waits for the slave to
+> @@ -404,6 +423,117 @@ static int adm1266_init_procfs(struct adm1266_data *data)
+>  	return 0;
+>  }
+>  
+> +static int adm1266_nvmem_read_blackbox(struct adm1266_data *data, u8 *buf)
+> +{
+> +	u8 read_buf[5];
+> +	char index;
+> +	int record_count;
+> +	int ret;
+> +
+> +	ret = i2c_smbus_read_block_data(data->client, ADM1266_BLACKBOX_INFO,
+> +					read_buf);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	record_count = read_buf[3];
+> +
+> +	for (index = 0; index < record_count; index++) {
+> +		ret = pmbus_block_xfer(data->client, ADM1266_READ_BLACKBOX, 1,
+> +				       &index, buf);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		buf += ADM1266_BLACKBOX_SIZE;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static bool adm1266_cell_is_accessed(const struct nvmem_cell_info *mem_cell,
+> +				     unsigned int offset, size_t bytes)
+> +{
+> +	unsigned int start_addr = offset;
+> +	unsigned int end_addr = offset + bytes;
+> +	unsigned int cell_start = mem_cell->offset;
+> +	unsigned int cell_end = mem_cell->offset + mem_cell->bytes;
+> +
+> +	if (start_addr <= cell_end && cell_start <= end_addr)
+> +		return true;
+> +
+> +	return false;
+
+	return start_addr <= cell_end && cell_start <= end_add;
+
+does the same.
+
+> +}
+> +
+> +static int adm1266_read_mem_cell(struct adm1266_data *data,
+> +				 const struct nvmem_cell_info *mem_cell)
+> +{
+> +	u8 *mem_offset;
+> +	int ret;
+> +
+> +	switch (mem_cell->offset) {
+> +	case ADM1266_BLACKBOX_OFFSET:
+
+How would this ever have a different value ?
+
+> +		mem_offset = data->dev_mem + mem_cell->offset;
+> +		ret = adm1266_nvmem_read_blackbox(data, mem_offset);
+> +		if (ret)
+> +			dev_err(&data->client->dev, "Could not read blackbox!");
+> +		return ret;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int adm1266_nvmem_read(void *priv, unsigned int offset, void *val,
+> +			      size_t bytes)
+> +{
+> +	const struct nvmem_cell_info *mem_cell;
+> +	struct adm1266_data *data = priv;
+> +	int ret;
+> +	int i;
+> +
+> +	for (i = 0; i < data->nvmem_config.ncells; i++) {
+> +		mem_cell = &adm1266_nvmem_cells[i];
+> +		if (!adm1266_cell_is_accessed(mem_cell, offset, bytes))
+> +			continue;
+> +
+> +		ret = adm1266_read_mem_cell(data, mem_cell);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+
+I am a bit puzzled about the complexity of this code.
+Is there reason to believe that there will ever be more than one cell ?
+If that is not the case, I don't see the value in the complexity.
+If there is a plan to add more nvram cells later, it should be
+mentioned somewhere. As it is, the code is difficult to understand,
+and I really only want to spend time analyzing it if it is really
+necessary.
+
+> +
+> +	memcpy(val, data->dev_mem + offset, bytes);
+> +
+> +	return 0;
+> +}
+> +
+> +static int adm1266_config_nvmem(struct adm1266_data *data)
+> +{
+> +	data->nvmem_config.name = dev_name(&data->client->dev);
+> +	data->nvmem_config.dev = &data->client->dev;
+> +	data->nvmem_config.root_only = true;
+> +	data->nvmem_config.read_only = true;
+> +	data->nvmem_config.owner = THIS_MODULE;
+> +	data->nvmem_config.reg_read = adm1266_nvmem_read;
+> +	data->nvmem_config.cells = adm1266_nvmem_cells;
+> +	data->nvmem_config.ncells = ARRAY_SIZE(adm1266_nvmem_cells);
+> +	data->nvmem_config.priv = data;
+> +	data->nvmem_config.stride = 1;
+> +	data->nvmem_config.word_size = 1;
+> +	data->nvmem_config.size = 0x80000;
+> +
+> +	data->nvmem = nvmem_register(&data->nvmem_config);
+
+If CONFIG_NVMEM is not enabled, this function will return -EOPNOTSUPP,
+and the driver will fail to load. I don't think that is acceptable.
+
+Also, this should really use devm_nvmem_register().
+
+> +	if (IS_ERR(data->nvmem)) {
+> +		dev_err(&data->client->dev, "Could not register nvmem!");
+> +		return PTR_ERR(data->nvmem);
+> +	}
+> +
+> +	data->dev_mem = devm_kzalloc(&data->client->dev,
+> +				     data->nvmem_config.size,
+> +				     GFP_KERNEL);
+
+This is at least potentially racy. Presumably nvram can be accessed right
+after the call to nvmem_register(). If that happens, dev_mem is not yet
+set, and the system will crash.
+
+> +	if (!data->dev_mem)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+>  static int adm1266_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
 >  {
-> --=20
-> 2.17.1
->=20
-
-Reviewed-by: Bruno Meneguele <bmeneg@redhat.com>
-
-Thanks.
-
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---hOcCNbCCxyk/YU74
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7zypMACgkQYdRkFR+R
-okOR8QgAqksSST2NxdrLiv6YuDGV9UrvTKoio+IEmlosYWxa/qXi2/oUvH3+zNG3
-lnCxXjTkC1MDsyx2OInElaiJpdMdtUp/9J+1UBv3+tuBA3a0GmGKZd1+6rQNxDMG
-1m8Saa0JjSD6H+iGuGydVSNkDr5g6IxIP3p6+ZiCEEh2qp4iwhiNS4OkUscdWcNF
-YEOyE+XEkuaV5oywwo0Oz2Zv3Pb/etl2AoS80mGfAQDQhBXHVVQb5f6tHde11vFw
-tnDpG8bDkzo2C7w6xiEmYcAuChJZp+/nxn4jSuitHz9XMZBYP79Rdage1mpSwxEA
-4/u11ZssxGWuQjrUZ2wRsw4li8ykrg==
-=ioxk
------END PGP SIGNATURE-----
-
---hOcCNbCCxyk/YU74--
-
+> @@ -430,6 +560,10 @@ static int adm1266_probe(struct i2c_client *client,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	ret = adm1266_config_nvmem(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	info = &data->info;
+>  	info->pages = 17;
+>  	info->format[PSC_VOLTAGE_OUT] = linear;
