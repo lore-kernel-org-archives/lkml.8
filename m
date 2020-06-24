@@ -4,58 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA646C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22949C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9579B21532
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28CA2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UsDqcQFR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bOyxP72K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388718AbgFXXEE (ORCPT
+        id S2389170AbgFXXEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:04:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24164 "EHLO
+        Wed, 24 Jun 2020 19:04:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49853 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729587AbgFXXDx (ORCPT
+        with ESMTP id S2389157AbgFXXEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 19:03:53 -0400
+        Wed, 24 Jun 2020 19:04:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593039832;
+        s=mimecast20190719; t=1593039840;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Dmkn5ElK0S49yC+YYieD973IcE+n74T+jY14yBT/f54=;
-        b=UsDqcQFRwl9iRe50IkeuqEwKjthq5NxKAmQK2+RL44u7t0qu0+g5SnErQeBvnuAnk2Yyka
-        o1Pb19n+vlcb8u/9J1LqJHTXZ0Qqm9JdF81tBxfyxy55cGMJmzp+jgwZWykwAz4wQfN3Av
-        z6mw/9RFOsZeGJYpOFWVi5IG2Ig2xco=
+        bh=QV52nXHjLgHC1/7OIn2WKhkaShhr6wbwwFMyzWNiYr8=;
+        b=bOyxP72Ktb5wBoCaA2/6bS60ryvQDR3z9XnUHSrUxg6RGOBzWfNOwlxolbBOE63NPoiZ5y
+        Yqr5t4b0yZN/8kbf9wiCSec7oWbBYlXN4tf2bQaEdPUUiBJSnhlMmNUrPCXSp/tTEKfl/r
+        askeF8X2wt3NHMpb/8hs5hMfRg8awng=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-sqbsBC6bOkm3BP6HNuSNlw-1; Wed, 24 Jun 2020 19:03:48 -0400
-X-MC-Unique: sqbsBC6bOkm3BP6HNuSNlw-1
+ us-mta-44-14kK1KbUOtSlJdjYabXH1A-1; Wed, 24 Jun 2020 19:03:58 -0400
+X-MC-Unique: 14kK1KbUOtSlJdjYabXH1A-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73CBD184D162;
-        Wed, 24 Jun 2020 23:03:46 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DA4B184D162;
+        Wed, 24 Jun 2020 23:03:56 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-115-214.rdu2.redhat.com [10.10.115.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C23A1001B07;
-        Wed, 24 Jun 2020 23:03:45 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 116E71001B07;
+        Wed, 24 Jun 2020 23:03:54 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
 Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Ilia Mirkin <imirkin@alum.mit.edu>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
         Alex Deucher <alexander.deucher@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Takashi Iwai <tiwai@suse.de>, James Jones <jajones@nvidia.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v7 06/11] drm/nouveau/kms/nv50-: Fix disabling dithering
-Date:   Wed, 24 Jun 2020 19:03:13 -0400
-Message-Id: <20200624230318.126256-7-lyude@redhat.com>
+Subject: [RFC v7 08/11] drm/nouveau/kms/nv140-: Track wndw mappings in nv50_head_atom
+Date:   Wed, 24 Jun 2020 19:03:15 -0400
+Message-Id: <20200624230318.126256-9-lyude@redhat.com>
 In-Reply-To: <20200624230318.126256-1-lyude@redhat.com>
 References: <20200624230318.126256-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -66,54 +68,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While we expose the ability to turn off hardware dithering for nouveau,
-we actually make the mistake of turning it on anyway, due to
-dithering_depth containing a non-zero value if our dithering depth isn't
-also set to 6 bpc.
+While we're not quite ready yet to add support for flexible wndw
+mappings, we are going to need to at least keep track of the static wndw
+mappings we're currently using in each head's atomic state. We'll likely
+use this in the future to implement real flexible window mapping, but
+the primary reason we'll need this is for CRC support.
 
-So, fix it by never enabling dithering when it's disabled.
+See: on nvidia hardware, each CRC entry in the CRC notifier dma context
+has a "tag". This tag corresponds to the nth update on a specific
+EVO/NvDisplay channel, which itself is referred to as the "controlling
+channel". For gf119+ this can be the core channel, ovly channel, or base
+channel. Since we don't expose CRC entry tags to userspace, we simply
+ignore this feature and always use the core channel as the controlling
+channel. Simple.
+
+Things get a little bit more complicated on gv100+ though. GV100+ only
+lets us set the controlling channel to a specific wndw channel, and that
+wndw must be owned by the head that we're grabbing CRCs when we enable
+CRC generation. Thus, we always need to make sure that each atomic head
+state has at least one wndw that is mapped to the head, which will be
+used as the controlling channel.
+
+Note that since we don't have flexible wndw mappings yet, we don't
+expect to run into any scenarios yet where we'd have a head with no
+mapped wndws. When we do add support for flexible wndw mappings however,
+we'll need to make sure that we handle reprogramming CRC capture if our
+controlling wndw is moved to another head (and potentially reject the
+new head state entirely if we can't find another available wndw to
+replace it).
+
+With that being said, nouveau currently tracks wndw visibility on heads.
+It does not keep track of the actual ownership mappings, which are
+(currently) statically programmed. To fix this, we introduce another
+bitmask into nv50_head_atom.wndw to keep track of ownership separately
+from visibility. We then introduce a nv50_head callback to handle
+populating the wndw ownership map, and call it during the atomic check
+phase when core->assign_windows is set to true.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/nouveau/dispnv50/head.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/atom.h     |  1 +
+ drivers/gpu/drm/nouveau/dispnv50/disp.c     | 16 ++++++++++++++++
+ drivers/gpu/drm/nouveau/dispnv50/head.h     |  2 ++
+ drivers/gpu/drm/nouveau/dispnv50/headc37d.c | 10 ++++++++++
+ drivers/gpu/drm/nouveau/dispnv50/headc57d.c |  2 ++
+ 5 files changed, 31 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
-index e29ea40e7c334..72bc3bce396a7 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/head.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
-@@ -84,18 +84,20 @@ nv50_head_atomic_check_dither(struct nv50_head_atom *armh,
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/atom.h b/drivers/gpu/drm/nouveau/dispnv50/atom.h
+index 24f7700768dab..62faaf60f47a5 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/atom.h
++++ b/drivers/gpu/drm/nouveau/dispnv50/atom.h
+@@ -18,6 +18,7 @@ struct nv50_head_atom {
+ 
+ 	struct {
+ 		u32 mask;
++		u32 owned;
+ 		u32 olut;
+ 	} wndw;
+ 
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index d472942102f50..368069a5b181a 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -2287,12 +2287,28 @@ static int
+ nv50_disp_atomic_check(struct drm_device *dev, struct drm_atomic_state *state)
  {
- 	u32 mode = 0x00;
+ 	struct nv50_atom *atom = nv50_atom(state);
++	struct nv50_core *core = nv50_disp(dev)->core;
+ 	struct drm_connector_state *old_connector_state, *new_connector_state;
+ 	struct drm_connector *connector;
+ 	struct drm_crtc_state *new_crtc_state;
+ 	struct drm_crtc *crtc;
++	struct nv50_head *head;
++	struct nv50_head_atom *asyh;
+ 	int ret, i;
  
--	if (asyc->dither.mode == DITHERING_MODE_AUTO) {
--		if (asyh->base.depth > asyh->or.bpc * 3)
--			mode = DITHERING_MODE_DYNAMIC2X2;
--	} else {
--		mode = asyc->dither.mode;
--	}
-+	if (asyc->dither.mode) {
-+		if (asyc->dither.mode == DITHERING_MODE_AUTO) {
-+			if (asyh->base.depth > asyh->or.bpc * 3)
-+				mode = DITHERING_MODE_DYNAMIC2X2;
-+		} else {
-+			mode = asyc->dither.mode;
++	if (core->assign_windows && core->func->head->static_wndw_map) {
++		drm_for_each_crtc(crtc, dev) {
++			new_crtc_state = drm_atomic_get_crtc_state(state,
++								   crtc);
++			if (IS_ERR(new_crtc_state))
++				return PTR_ERR(new_crtc_state);
++
++			head = nv50_head(crtc);
++			asyh = nv50_head_atom(new_crtc_state);
++			core->func->head->static_wndw_map(head, asyh);
 +		}
++	}
++
+ 	/* We need to handle colour management on a per-plane basis. */
+ 	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
+ 		if (new_crtc_state->color_mgmt_changed) {
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.h b/drivers/gpu/drm/nouveau/dispnv50/head.h
+index c32b27cdaefc9..c05bbba9e247c 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.h
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.h
+@@ -40,6 +40,7 @@ struct nv50_head_func {
+ 	void (*dither)(struct nv50_head *, struct nv50_head_atom *);
+ 	void (*procamp)(struct nv50_head *, struct nv50_head_atom *);
+ 	void (*or)(struct nv50_head *, struct nv50_head_atom *);
++	void (*static_wndw_map)(struct nv50_head *, struct nv50_head_atom *);
+ };
  
--	if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
--		if (asyh->or.bpc >= 8)
--			mode |= DITHERING_DEPTH_8BPC;
--	} else {
--		mode |= asyc->dither.depth;
-+		if (asyc->dither.depth == DITHERING_DEPTH_AUTO) {
-+			if (asyh->or.bpc >= 8)
-+				mode |= DITHERING_DEPTH_8BPC;
-+		} else {
-+			mode |= asyc->dither.depth;
-+		}
+ extern const struct nv50_head_func head507d;
+@@ -86,6 +87,7 @@ int headc37d_curs_format(struct nv50_head *, struct nv50_wndw_atom *,
+ void headc37d_curs_set(struct nv50_head *, struct nv50_head_atom *);
+ void headc37d_curs_clr(struct nv50_head *);
+ void headc37d_dither(struct nv50_head *, struct nv50_head_atom *);
++void headc37d_static_wndw_map(struct nv50_head *, struct nv50_head_atom *);
+ 
+ extern const struct nv50_head_func headc57d;
+ #endif
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/headc37d.c b/drivers/gpu/drm/nouveau/dispnv50/headc37d.c
+index 9ef3c603fc43e..c2619652ff2ee 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/headc37d.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/headc37d.c
+@@ -204,6 +204,15 @@ headc37d_view(struct nv50_head *head, struct nv50_head_atom *asyh)
  	}
+ }
  
- 	asyh->dither.enable = mode;
++void
++headc37d_static_wndw_map(struct nv50_head *head, struct nv50_head_atom *asyh)
++{
++	int i, end;
++
++	for (i = head->base.index * 2, end = i + 2; i < end; i++)
++		asyh->wndw.owned |= BIT(i);
++}
++
+ const struct nv50_head_func
+ headc37d = {
+ 	.view = headc37d_view,
+@@ -219,4 +228,5 @@ headc37d = {
+ 	.dither = headc37d_dither,
+ 	.procamp = headc37d_procamp,
+ 	.or = headc37d_or,
++	.static_wndw_map = headc37d_static_wndw_map,
+ };
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/headc57d.c b/drivers/gpu/drm/nouveau/dispnv50/headc57d.c
+index 97141eb8e75ab..1c1887749f4c5 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/headc57d.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/headc57d.c
+@@ -211,4 +211,6 @@ headc57d = {
+ 	.dither = headc37d_dither,
+ 	.procamp = headc57d_procamp,
+ 	.or = headc57d_or,
++	/* TODO: flexible window mappings */
++	.static_wndw_map = headc37d_static_wndw_map,
+ };
 -- 
 2.26.2
 
