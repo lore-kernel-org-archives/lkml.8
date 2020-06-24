@@ -2,132 +2,261 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F159FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFE620899
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C4620DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 08:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="nDG8ybH5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZx5N0RS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390247AbgFXH74 (ORCPT
+        id S2389781AbgFXIBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:59:56 -0400
-Received: from mail-co1nam11on2049.outbound.protection.outlook.com ([40.107.220.49]:6071
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390208AbgFXH7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:59:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PatnyKNVYedSetr6S1w+DFSFh745SpK2l13K+xeOc7oGaWbyrYGKTEooTtAYGDnLVFNq8IqUmcGBcS/XnlaHN0v9z0HWCte4D9RY9s790FlPsnz2V+M34hyogfu0hvFAGMmG919jsfoSR5FQyUKvd0G33+JRNDB0U/9QGrQxaW+mjMh/cwLf3c3pojGTywnMVr3YtV8kOInq7cJhMQ/+eoKG+2uDpHbDs5NegUVczO+wZddR9WFxopawVMQOSkmhl8rq/Hm0gP5dQAmN6L51eJaNSlayXktypZtgv8UZsiFN7fme36NHdvld4jlqMhnozS/MW/0h42czvdNwDH2b0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LKx4A6oFrzoLb4x3AKuCDtzleTWR5GqPb2xzVNxr2lU=;
- b=hSt94VaEqIRCTtMtECqSMFOtuBu3vDQt7HlAM6OyELDt+FcojKd8kSIaCR3218q5NjC4UBWwuyYHAsPettQywLJfE94CePgw/BESg7oIKGOO7n35es3LhSqg+pidwj3Iink6cYbGmVBZxoyeCMaPmyZmurnHm9FYcnQOGkycClrG4JE9B5DHwK/K4/xl8carxhLoAX8sRsG8+SOymn3VdWJpWuKJRd6D6k9/olNjtd1ByZZD88tZI8Lhh5IKid9xXAlQe2V600xAOBXM1hlv8Yb7xZS7sGhO0+y63bH9Rmxy6zOkTiK3sWiIoI3WWhx4VWGUG1bRcISU9FznKknyBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Wed, 24 Jun 2020 04:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387650AbgFXIBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 04:01:21 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD97C061573;
+        Wed, 24 Jun 2020 01:01:21 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id g18so1307602wrm.2;
+        Wed, 24 Jun 2020 01:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LKx4A6oFrzoLb4x3AKuCDtzleTWR5GqPb2xzVNxr2lU=;
- b=nDG8ybH5Vh1v5KaKzaE4lkEFWUgSG3nQHWoHpjjc1AwAg8yVVdUNPJYvygf5r8LYgfYOZcTbxGy6RPJgFFzCgZ8nCpfBuI9vQA2E3EZCjyxOK5bYzAQN7m/B1cg1V+3AGvC0tRenqzgtU9erc4tuGnarHL0E5DonM6EKGLyska0=
-Authentication-Results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BY5PR03MB5361.namprd03.prod.outlook.com (2603:10b6:a03:21a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Wed, 24 Jun
- 2020 07:59:52 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
- 07:59:52 +0000
-Date:   Wed, 24 Jun 2020 15:59:23 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] net: phy: call phy_disable_interrupts() in
- phy_init_hw()
-Message-ID: <20200624155923.39ff9af0@xhacker.debian>
-In-Reply-To: <20200624155757.6b2e82cb@xhacker.debian>
-References: <20200624155757.6b2e82cb@xhacker.debian>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TY1PR01CA0190.jpnprd01.prod.outlook.com (2603:1096:403::20)
- To BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ff095JW8oYzVPcA6w3J52BpgeRH7KWoM7ayC0lmndtU=;
+        b=tZx5N0RSb6jkzNmNahEEiKJwPzEuT/scDoWx8lSV93588W1idC3T/cFC8g0oUwR+dJ
+         SqUv97R3K6VZqs32bMmDkMsqtvLpbxQFvTnHOn1jmHzkoM8tFQI2dMdribE8bDMsqtxe
+         zVSWen0pguU8L0jyZ3sb8Vfd0ApMEYEII0noWPOecy8tBdxCLtBKjY3utTraZiAQ/oRb
+         FICEPmpsp4a5cJtfO57nA8HeyihnePvJENwzAsJDII0XjQ4IZzsQCNekTatH2Mpb0SKK
+         p8zZm9+2ICDJE9L+c77ST3xFMu5/6wI+gmCxzoFjRJTOV5atRuIjxkTB3Y+nk0wtk8lt
+         f7ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ff095JW8oYzVPcA6w3J52BpgeRH7KWoM7ayC0lmndtU=;
+        b=dsEN19bn7J6XHGS476CsTjz/y/6/ZNy7bKNlL8QVHJlB4V2GT+6L19lxo9bTYRPXDP
+         vy7y/u0YW/4ksEKdRjkH4/G1AuzP5h1oNW4vIDasWpqwt6kBPHYi4huNxVe0+mBkmPAk
+         hHEGhFeqvuqs4FV1yj6hiRL7YYiqrcznSu+4eqtvdIzKMtA6tIJtEnto7aAq8aP4emuZ
+         mQ/H38zQNB5WgygV5RJCBEJB2yLkoVCDuAugh34fyKQxa7Xrb/nozKiywXJnsxn4zhUF
+         R4RsytPRfRdUWikkVmIpXBCXeSiMVZmvG3s65g8OhM45hEeU1SvRz511yjGRD7fecMdz
+         kITQ==
+X-Gm-Message-State: AOAM530+KumsGFCrbiRSc3ekkVuLAwrgjoosm4D2KAOvKXOtNohjlkif
+        d1Y1iYf0nOfTiJaoEnoKzjLv6SO4
+X-Google-Smtp-Source: ABdhPJyXAEGE/s3H+cIQzr4JLHjCH60NZodTnxqdileYvj08Qui4Sanh+mSVawVIq9fLlkUa9yJP3Q==
+X-Received: by 2002:a05:6000:1cf:: with SMTP id t15mr14115855wrx.180.1592985679537;
+        Wed, 24 Jun 2020 01:01:19 -0700 (PDT)
+Received: from macmini.local (181.4.199.77.rev.sfr.net. [77.199.4.181])
+        by smtp.gmail.com with ESMTPSA id a10sm26396204wrm.21.2020.06.24.01.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 01:01:18 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 10:01:17 +0200
+From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
+Message-ID: <20200624080117.fzgowkpgyhs6tbzx@macmini.local>
+References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+ <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+ <20200623191129.GA4171@kozik-lap>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TY1PR01CA0190.jpnprd01.prod.outlook.com (2603:1096:403::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Wed, 24 Jun 2020 07:59:49 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 45d4f92a-cad0-46ad-2215-08d818149301
-X-MS-TrafficTypeDiagnostic: BY5PR03MB5361:
-X-Microsoft-Antispam-PRVS: <BY5PR03MB53616EDD98757BE28DAE2230ED950@BY5PR03MB5361.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0444EB1997
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uNDcMyN9I2bbbwGqb3uZ6RjXPNO1rze5XISHbZ0n2QJHUUuYDllWcp62+kZ338Ez5yu5xvOb8JqWW3MU6Vnw8s6mlqP6B4XarpTVagclc+AdBw3LFXEOjg80q3LYKuCaHqNvWzoblVVnk9Lz6pumCBsxGtN/z1RFDZtYzrD4KRZjMV3uas5fyxElgTwc9kf7UtzOb3bx2+qAQNWclC0ovK49wB17MWeG/1GvhO69T+Ec4jRCuJNvrxbRMR5XCNQav3t9eWEO+uXbQRrkqJLERzI3dnfw4xM8EjjO2P5eeRsCj+7DiMq7qvKqommcoIta
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(396003)(39860400002)(346002)(136003)(6506007)(52116002)(26005)(186003)(16526019)(7696005)(8676002)(4744005)(66556008)(66476007)(110136005)(6666004)(8936002)(66946007)(9686003)(55016002)(1076003)(316002)(4326008)(478600001)(956004)(2906002)(5660300002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: afJueQUOrg1hEq2socYYgHLh1OqRuYGlEAYCMf9IVP+j5xYaqy+oGJxVIGKfQnH/Ldaon+vbQS1PODi1Yxtq1oU3uoBUNfQ6drvunNnEDVAi5fR+JIqpQZkO96XNNjodX2HizqgjtKJ7A/gquNL0el8waE5kBfJwR9rbLjNgcT+sJFrOdIzUksLLxSBXQwnrmUW9dHAXq6Xhyyf6kwhjKqVHtzLcFHnb8EOIDfmOw9qJEVqJ/MFMPmd/VL6eqwa/vkbQBrTVA7pegDPAB0rrKLn38aOkVivXjiq0ZBa4AYBLeX0PzMAm3xb4lJu8NGHM3OoF4BGE/ukWx2uJwyg1Z++IKfyzWppQfwiuo6pHoBNstsVbf5ZtoejWGpIPk0SbX6DvQQqL1NHi2lWhEZV+0giur3AJhgyMeriLU/ttmHJtvYdr2XM1wrmlMs22Cy9rJbas/yHaLap1DFlxAB1I8LcbUghqag/ZoGwh4oQ3d6sgQWQfIRo38yEFuoEdVbpg
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45d4f92a-cad0-46ad-2215-08d818149301
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2020 07:59:52.2290
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GoYle6WmTNr/mmOElQJj41chryJ7g4rQqAZ/kgys8n6ZGIEfWL824wYKxMyogAwShCUcdP/X5Ie+DD2G3BPk0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5361
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623191129.GA4171@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call phy_disable_interrupts() in phy_init_hw() to "have a defined init
-state as we don't know in which state the PHY is if the PHY driver is
-loaded. We shouldn't assume that it's the chip power-on defaults, BIOS
-or boot loader could have changed this. Or in case of dual-boot
-systems the other OS could leave the PHY in whatever state." as pointed
-out by Heiner.
+Hi Krzysztof,
+Thanks to look at it.
 
-Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/net/phy/phy_device.c | 4 ++++
- 1 file changed, 4 insertions(+)
+mem_gov is /sys/class/devfreq/10c20000.memory-controller/governor
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 04946de74fa0..6a5886202619 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1090,6 +1090,10 @@ int phy_init_hw(struct phy_device *phydev)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = phy_disable_interrupts(phydev);
-+	if (ret)
-+		return ret;
-+
- 	if (phydev->drv->config_init)
- 		ret = phydev->drv->config_init(phydev);
- 
--- 
-2.27.0
+Here some numbers after increasing the running time:
 
+Running using simple_ondemand:
+Before:
+     From  :   To                                                                                     
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+* 165000000:         0         0         0         0         0         0         0         4   4528600
+  206000000:         5         0         0         0         0         0         0         0     57780
+  275000000:         0         5         0         0         0         0         0         0     50060
+  413000000:         0         0         5         0         0         0         0         0     46240
+  543000000:         0         0         0         5         0         0         0         0     48970
+  633000000:         0         0         0         0         5         0         0         0     47330
+  728000000:         0         0         0         0         0         0         0         0         0
+  825000000:         0         0         0         0         0         5         0         0    331300
+Total transition : 34
+
+
+After:
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+* 165000000:         0         0         0         0         0         0         0         4   5098890
+  206000000:         5         0         0         0         0         0         0         0     57780
+  275000000:         0         5         0         0         0         0         0         0     50060
+  413000000:         0         0         5         0         0         0         0         0     46240
+  543000000:         0         0         0         5         0         0         0         0     48970
+  633000000:         0         0         0         0         5         0         0         0     47330
+  728000000:         0         0         0         0         0         0         0         0         0
+  825000000:         0         0         0         0         0         5         0         0    331300
+Total transition : 34
+
+With a running time of:
+LITTLE => 283.699 s (680.877 c per mem access)
+big => 284.47 s (975.327 c per mem access)
+
+
+And when I set to the performance governor:
+Before:
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+  165000000:         0         0         0         0         0         0         0         5   5099040
+  206000000:         5         0         0         0         0         0         0         0     57780
+  275000000:         0         5         0         0         0         0         0         0     50060
+  413000000:         0         0         5         0         0         0         0         0     46240
+  543000000:         0         0         0         5         0         0         0         0     48970
+  633000000:         0         0         0         0         5         0         0         0     47330
+  728000000:         0         0         0         0         0         0         0         0         0
+* 825000000:         0         0         0         0         0         5         0         0    331350
+Total transition : 35
+
+After:
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+  165000000:         0         0         0         0         0         0         0         5   5099040
+  206000000:         5         0         0         0         0         0         0         0     57780
+  275000000:         0         5         0         0         0         0         0         0     50060
+  413000000:         0         0         5         0         0         0         0         0     46240
+  543000000:         0         0         0         5         0         0         0         0     48970
+  633000000:         0         0         0         0         5         0         0         0     47330
+  728000000:         0         0         0         0         0         0         0         0         0
+* 825000000:         0         0         0         0         0         5         0         0    472980
+Total transition : 35
+
+With a running time of:
+LITTLE: 68.8428 s (165.223 c per mem access)
+big: 71.3268 s (244.549 c per mem access)
+
+
+I see some transition, but not occuring during the benchmark.
+I haven't dive into the code, but maybe it is the heuristic behind that is not
+well defined? If you know how it's working that would be helpfull before I dive
+in it.
+
+I run your test as well, and indeed, it seems to work for large bunch of memory,
+and there is some delay before making a transition (seems to be around 10s).
+When you kill memtester, it reduces the freq stepwisely every ~10s.
+
+Note that the timing shown above account for the critical path, and the code is
+looping on reading only, there is no write in the critical path.
+Maybe memtester is doing writes and devfreq heuristic uses only write info?
+
+Cheers,
+Willy
+
+On 2020-06-23-21-11-29, Krzysztof Kozlowski wrote:
+> On Tue, Jun 23, 2020 at 09:02:38PM +0200, Krzysztof Kozlowski wrote:
+> > On Tue, 23 Jun 2020 at 18:47, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
+> > >
+> > > Hi everybody,
+> > >
+> > > Is DVFS for memory bus really working on Odroid XU3/4 board?
+> > > Using a simple microbenchmark that is doing only memory accesses, memory DVFS
+> > > seems to not working properly:
+> > >
+> > > The microbenchmark is doing pointer chasing by following index in an array.
+> > > Indices in the array are set to follow a random pattern (cutting prefetcher),
+> > > and forcing RAM access.
+> > >
+> > > git clone https://github.com/wwilly/benchmark.git \
+> > >   && cd benchmark \
+> > >   && source env.sh \
+> > >   && ./bench_build.sh \
+> > >   && bash source/scripts/test_dvfs_mem.sh
+> > >
+> > > Python 3, cmake and sudo rights are required.
+> > >
+> > > Results:
+> > > DVFS CPU with performance governor
+> > > mem_gov = simple_ondemand at 165000000 Hz in idle, should be bumped when the
+> > > benchmark is running.
+> > > - on the LITTLE cluster it takes 4.74308 s to run (683.004 c per memory access),
+> > > - on the big cluster it takes 4.76556 s to run (980.343 c per moemory access).
+> > >
+> > > While forcing DVFS memory bus to use performance governor,
+> > > mem_gov = performance at 825000000 Hz in idle,
+> > > - on the LITTLE cluster it takes 1.1451 s to run (164.894 c per memory access),
+> > > - on the big cluster it takes 1.18448 s to run (243.664 c per memory access).
+> > >
+> > > The kernel used is the last 5.7.5 stable with default exynos_defconfig.
+> > 
+> > Thanks for the report. Few thoughts:
+> > 1. What trans_stat are saying? Except DMC driver you can also check
+> > all other devfreq devices (e.g. wcore) - maybe the devfreq events
+> > (nocp) are not properly assigned?
+> > 2. Try running the measurement for ~1 minutes or longer. The counters
+> > might have some delay (which would require probably fixing but the
+> > point is to narrow the problem).
+> > 3. What do you understand by "mem_gov"? Which device is it?
+> 
+> +Cc Lukasz who was working on this.
+> 
+> I just run memtester and more-or-less ondemand works (at least ramps
+> up):
+> 
+> Before:
+> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
+>      From  :   To
+>            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+> * 165000000:         0         0         0         0         0         0         0         0   1795950
+>   206000000:         1         0         0         0         0         0         0         0      4770
+>   275000000:         0         1         0         0         0         0         0         0     15540
+>   413000000:         0         0         1         0         0         0         0         0     20780
+>   543000000:         0         0         0         1         0         0         0         1     10760
+>   633000000:         0         0         0         0         2         0         0         0     10310
+>   728000000:         0         0         0         0         0         0         0         0         0
+>   825000000:         0         0         0         0         0         2         0         0     25920
+> Total transition : 9
+> 
+> 
+> $ sudo memtester 1G
+> 
+> During memtester:
+> /sys/class/devfreq/10c20000.memory-controller$ cat trans_stat
+>      From  :   To
+>            : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+>   165000000:         0         0         0         0         0         0         0         1   1801490
+>   206000000:         1         0         0         0         0         0         0         0      4770
+>   275000000:         0         1         0         0         0         0         0         0     15540
+>   413000000:         0         0         1         0         0         0         0         0     20780
+>   543000000:         0         0         0         1         0         0         0         2     11090
+>   633000000:         0         0         0         0         3         0         0         0     17210
+>   728000000:         0         0         0         0         0         0         0         0         0
+> * 825000000:         0         0         0         0         0         3         0         0    169020
+> Total transition : 13
+> 
+> However after killing memtester it stays at 633 MHz for very long time
+> and does not slow down. This is indeed weird...
+> 
+> Best regards,
+> Krzysztof
