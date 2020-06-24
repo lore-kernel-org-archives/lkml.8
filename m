@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE06BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D72C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3CD206EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52511206EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlUun5E3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQ5vFoRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404186AbgFXPCC (ORCPT
+        id S2404177AbgFXPCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55508 "EHLO
+        Wed, 24 Jun 2020 11:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404165AbgFXPBz (ORCPT
+        with ESMTP id S2404156AbgFXPBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:01:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305F4C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:55 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e8so1547734pgc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:55 -0700 (PDT)
+        Wed, 24 Jun 2020 11:01:49 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB18C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:49 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id m2so1268279pjv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8PwurQU1NxfpMHJph1B1p7tgGvKbCO2GLa0tif4yXmY=;
-        b=OlUun5E3PI4k9fogy7yVJiNq+TrLqHRnF/eCqpsxsTKrWCCHAkjh99qm8Kji4aD2gz
-         KHzGjJmD5OaGQ/wF2rZ0iHiPc4z3oOuPThTrnL54c1Pn16OfcWOlGTv6GgToadt6HEW3
-         IPPESdDzY/Y8HrXQ55n4wc1scWF08vao/QkxZ8cUtcJNSZ3OGyq01R2sVgtKEGeUZat3
-         3269OGDWCJOyXGceEmtJd/CQqeu5PhtHTmYMqoke9YDN6yAb/WTsK6KTPkqq2klAY3ci
-         ejtgjnMSjft5/g5uE2QYiHq3Nxd/rsLxKVMBS/tsX4chYx8Ol5YEISRvXV2kKdA4bBzZ
-         S30g==
+        bh=44MI/Xaebogle3byf0K/hbjxI15crYL5kj8QhCCzmQA=;
+        b=EQ5vFoRhF+Dxmx9u/l3YuFN2NQ/we8WRaTM7Lbb+HasxiRQIshvNWwzDn2TRo6H5h8
+         NJFxR9veJODp4lBLCyrYVN+Cya1oe+8ppdH1N2LYrhOVXuXbQgNH/UIampBwrC1S9jrw
+         kbjWyxO0XJ7ocBMiWBt5cFImGcAQYU/yrdeqzbGPidbceWfEdNLUzOPJh9wXOiTTzi/I
+         OQ89WCvmCYd9I7AxgSoVLgcBrLyFXjBV0LSD2/M7uyCz3zZa/mrnn7tZPekS5UT2JXU0
+         3diAQnd8ZB5E0ZhFmPYz8tDI8Utwg3ZPtvYhtZkcq8Kfu8viHjXwsgai4ic7ZyG4y9xe
+         P6/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=8PwurQU1NxfpMHJph1B1p7tgGvKbCO2GLa0tif4yXmY=;
-        b=RhpSGrY/GrsnxtI71Lgj0h33Y/YeaMa8ZLDn5G15Ba7iIP/K1b73WUMkCHRjRQQ8Bk
-         3kNeAKwrAiV3T9iSNm6CM+34jocSvkM/32W0Bp6LhPLL375hA+QrMyBkKJI8Qe8Hbl9w
-         hzWTXInUOah0ixlRaCXrs0jUdln0ULpIc9iqbhOWt9/VF4+NTT14DIFeNTAv1bEF7UFm
-         +P5sJwtaKxk9x4nEficGo9jBK8VjvhdbsZiTANbKFW9iTGhcrzT+vjP/e+YpsBR98Z4L
-         XZg+pfoXZjIAQUBXG58kSa6H6AiZ+bWFcmsKEDgrPPL9yaOse9d+OhjFBNe4KgOj6038
-         HcrQ==
-X-Gm-Message-State: AOAM5305d/Ny44ZRxtmT1+qxst8GDpRwmVX/4MdlG8rPslK+Vu7rSH8l
-        mN/g4BMa7DYdOGy1JuH42w==
-X-Google-Smtp-Source: ABdhPJy3MaesTnbKm6iBd8AhiEdgYeuKwEA3AyCjJp2Ekr7kLhIMvv7gmu1/KH+Vc+k2Wa4yMwId2A==
-X-Received: by 2002:a65:6710:: with SMTP id u16mr16022611pgf.45.1593010914695;
-        Wed, 24 Jun 2020 08:01:54 -0700 (PDT)
+        bh=44MI/Xaebogle3byf0K/hbjxI15crYL5kj8QhCCzmQA=;
+        b=TUSIquZtJesi2W3jdC96CQC9Vwq33sCjf1PXF9tBfiyghUb4ACJ0/2MjqSxV7q1vnF
+         pzByqCc4NCcaWzSzJV5JdK9qb+aqXBT2Ty/XTDKuqavBewo+CIlYjrkf0JVaaSRyzNOd
+         jhQufkSr8okq5XUyh4fpsv8J4P59ifkDE7enDt6/SaSAM7ELGkM+8M+wZBmf2WAS7lrl
+         jF6mQ8Ujau4foCSrX8BoORfVG42LSmHhm9+urVRkgRUqrOIbm3QXXd8Jz8CE04jta4Uc
+         xHCR8RgPLkAeia3ag1tnogY1nuDulP+rQdKwYtlluAFKOqO9eQZtBg+0lRGbjtF1Z6iM
+         57OQ==
+X-Gm-Message-State: AOAM530gZJSwoC4FhQCicTtncLOpkHZxsqGaMx4/Uqyhuxyccd6B4m/j
+        FIIxoqHPdITe5eq48bNTFQ==
+X-Google-Smtp-Source: ABdhPJyHPrGdh1QNyO3qvNQ7njQOvx6xQmbxOT6KvZfUmzZ8Kl5sDHMCYDfiH2fKVFHMhvkmzWiBQA==
+X-Received: by 2002:a17:90a:fd90:: with SMTP id cx16mr2508625pjb.42.1593010908500;
+        Wed, 24 Jun 2020 08:01:48 -0700 (PDT)
 Received: from ip-172-31-41-194.ap-northeast-1.compute.internal (ec2-52-199-21-241.ap-northeast-1.compute.amazonaws.com. [52.199.21.241])
-        by smtp.gmail.com with ESMTPSA id i125sm17013705pgd.21.2020.06.24.08.01.52
+        by smtp.gmail.com with ESMTPSA id i125sm17013705pgd.21.2020.06.24.08.01.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:01:54 -0700 (PDT)
+        Wed, 24 Jun 2020 08:01:48 -0700 (PDT)
 From:   nao.horiguchi@gmail.com
 To:     linux-mm@kvack.org
 Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
@@ -66,9 +66,9 @@ Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
         david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
         zeil@yandex-team.ru, naoya.horiguchi@nec.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/15] mm,madvise: Refactor madvise_inject_error
-Date:   Wed, 24 Jun 2020 15:01:26 +0000
-Message-Id: <20200624150137.7052-5-nao.horiguchi@gmail.com>
+Subject: [PATCH v3 02/15] mm, hwpoison: remove recalculating hpage
+Date:   Wed, 24 Jun 2020 15:01:24 +0000
+Message-Id: <20200624150137.7052-3-nao.horiguchi@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200624150137.7052-1-nao.horiguchi@gmail.com>
 References: <20200624150137.7052-1-nao.horiguchi@gmail.com>
@@ -77,61 +77,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Salvador <osalvador@suse.de>
+From: Naoya Horiguchi <naoya.horiguchi@nec.com>
 
-Make a proper if-else condition for {hard,soft}-offline.
+hpage is never used after try_to_split_thp_page() in memory_failure(),
+so we don't have to update hpage.  So let's not recalculate/use hpage.
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Suggested-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
 ---
- mm/madvise.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ mm/memory-failure.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git v5.8-rc1-mmots-2020-06-20-21-44/mm/madvise.c v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/madvise.c
-index 275b08edd428..bee1f4ac70d6 100644
---- v5.8-rc1-mmots-2020-06-20-21-44/mm/madvise.c
-+++ v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/madvise.c
-@@ -869,16 +869,15 @@ static long madvise_remove(struct vm_area_struct *vma,
- static int madvise_inject_error(int behavior,
- 		unsigned long start, unsigned long end)
- {
--	struct page *page;
- 	struct zone *zone;
- 	unsigned long size;
- 
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--
- 	for (; start < end; start += size) {
- 		unsigned long pfn;
-+		struct page *page;
- 		int ret;
- 
- 		ret = get_user_pages_fast(start, 1, 0, &page);
-@@ -908,17 +907,14 @@ static int madvise_inject_error(int behavior,
- 
- 		if (behavior == MADV_SOFT_OFFLINE) {
- 			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
--					pfn, start);
--
-+				pfn, start);
- 			ret = soft_offline_page(pfn, 0);
--			if (ret)
--				return ret;
--			continue;
-+		} else {
-+			pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
-+				pfn, start);
-+			ret = memory_failure(pfn, 0);
+diff --git v5.8-rc1-mmots-2020-06-20-21-44/mm/memory-failure.c v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/memory-failure.c
+index e5d0c14c2332..d2d6010764e7 100644
+--- v5.8-rc1-mmots-2020-06-20-21-44/mm/memory-failure.c
++++ v5.8-rc1-mmots-2020-06-20-21-44_patched/mm/memory-failure.c
+@@ -1342,7 +1342,6 @@ int memory_failure(unsigned long pfn, int flags)
  		}
- 
--		pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
--				pfn, start);
--		ret = memory_failure(pfn, 0);
- 		if (ret)
- 			return ret;
+ 		unlock_page(p);
+ 		VM_BUG_ON_PAGE(!page_count(p), p);
+-		hpage = compound_head(p);
  	}
+ 
+ 	/*
+@@ -1414,11 +1413,8 @@ int memory_failure(unsigned long pfn, int flags)
+ 	/*
+ 	 * Now take care of user space mappings.
+ 	 * Abort on fail: __delete_from_page_cache() assumes unmapped page.
+-	 *
+-	 * When the raw error page is thp tail page, hpage points to the raw
+-	 * page after thp split.
+ 	 */
+-	if (!hwpoison_user_mappings(p, pfn, flags, &hpage)) {
++	if (!hwpoison_user_mappings(p, pfn, flags, &p)) {
+ 		action_result(pfn, MF_MSG_UNMAP_FAILED, MF_IGNORED);
+ 		res = -EBUSY;
+ 		goto out;
 -- 
 2.17.1
 
