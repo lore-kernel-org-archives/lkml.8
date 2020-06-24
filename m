@@ -2,112 +2,117 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA9AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4588320702
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C3220702
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:46:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UcuWUiaL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4eXjg+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391283AbgFXOqW (ORCPT
+        id S2404012AbgFXOqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
+        Wed, 24 Jun 2020 10:46:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389253AbgFXOqT (ORCPT
+        with ESMTP id S2391165AbgFXOqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:46:19 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A60EC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:46:19 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id s14so1141258plq.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 07:46:19 -0700 (PDT)
+        Wed, 24 Jun 2020 10:46:47 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0229C0613ED;
+        Wed, 24 Jun 2020 07:46:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s10so1540055pgm.0;
+        Wed, 24 Jun 2020 07:46:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YGEb31AttHeA5YUH1Hedg3SW+2stgVlj3nYXGGbAchU=;
-        b=UcuWUiaLtS6hQwB9KxUy3Z9bv7Nks62Tpl6fbvA8uqD2/B7av9kURZB/L+B445OT1t
-         NvQdGODIDeocCPW6jfNCyl35CogPsG3G8IknHXCfJJW3FYZfWX6G7dhUvusVDuWMLuDl
-         qZYw9sQff/knmaH1usdfgE0F1lzEuWXKIIt4c=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SmSu2RwKBiJXw3XuQ+XcCaI65hnx9UTfsWeRC0rnzjY=;
+        b=Y4eXjg+PwBt6Cx+bbuy55sU+iwwLMxmLrpFBDshiP7I1E1uQGFS925+hq5IHNFBDan
+         fhIO8fc4iKEaPS2FqWlrKF+H2xq2efv5ozFzyBGK4XJIVdL8czqppdw8H/+rudjpPaQa
+         2Hv0ZJOuS3MFcrT/EfIGY7Yvx3yUVY8Fl4oms6qJE0bxZaqT3m9mf4ByVzVFUUm3z14R
+         +gDxwZr/YZAjcOLe6inBHwX0RV2Vp+xwZqPbgj04npAgyNdd2GUiiAH/sW1zwZL9V/Lh
+         BQp/xKuwaAkWWruZJi8fG6aEu3p72G3aC2fF1IFSOxnD4pTaf95SPDtJybZoqD1qLYFj
+         W58A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YGEb31AttHeA5YUH1Hedg3SW+2stgVlj3nYXGGbAchU=;
-        b=gBIWsG+uxsmeMVhTRAc0ri7OTbtQ8it81OvRX/A7d++uGBdlBWq8Cl/mLj1GHHQHVl
-         oXr1EM0mQrTdlGeCsSdUsUZg1JiEpDO/Yf9e/o+Ywio2U9KIEGZHiQIievcPT0tl3lwD
-         Fw69QIoY5oltmcJn+YoPtj4tfHAlzEzm3JENazHt5Rt+QpMR00gD0mC8rBycFOx36duk
-         FvM0ATroRtVwe4sHTpf56KCoHM3VHvvKWfpROvW1iRJHmtpFUHzfenHqqu8Gs9mlOIPr
-         Zfbs8ea9N/J05pi2VGHbGqCJAdn4cDdGoFAKXCB6nWe7s3h0lKsSg8YSAZjmiSkaRMks
-         +rng==
-X-Gm-Message-State: AOAM530y6Bkqm6ECeZIeykRtSOS3KTWG5GJS47MrMsqkXE5SkgdAvFZg
-        52pZhQxV+/N5HBnhq4nP0/4hrA==
-X-Google-Smtp-Source: ABdhPJyaJyusdqr7gDuMQQVuvplY9KQKo74Br6IzoxaZjoYjPgwJk8Z+WqrtZcFpgt19+bLbcQX0cg==
-X-Received: by 2002:a17:902:8681:: with SMTP id g1mr27995114plo.161.1593009978891;
-        Wed, 24 Jun 2020 07:46:18 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c9sm20548752pfp.100.2020.06.24.07.46.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 07:46:18 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 07:46:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Jann Horn <jannh@google.com>, Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org, notify@kernel.org
-Subject: Re: [PATCH v2 3/5] arm64: vdso: Don't use gcc plugins for building
- vgettimeofday.c
-Message-ID: <202006240745.19E4F8BDEA@keescook>
-References: <20200624123330.83226-1-alex.popov@linux.com>
- <20200624123330.83226-4-alex.popov@linux.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SmSu2RwKBiJXw3XuQ+XcCaI65hnx9UTfsWeRC0rnzjY=;
+        b=UwfN1kzFtKcA+34b7DhdLtkXs7yDRPrDmBa08/KZd5VafjMS3vVORuB7cIkT6VvsrN
+         y03vUtG74qdjZsQntUGg+WQW9cDLLAiZpcTNztQIgzDwGw7v+xfOoTie2N1caAe+WW4E
+         MKopoezMS5R5cT+/xBSXlmO46Xz6ez9/ON0mkpLP4sV1Q+ec+VVbP3k/LMf16Td4Opur
+         +AtJcOLwQgdcaQfTZXUhrmuwgZx42UKgbtDu76tsw9xXDgT4ryLBeHIZZzpxawjCuHqJ
+         qV5sn8SLX4p74X1r/ctd6m9mQafEDBsI4QW3Vz3g2eNRPL9vnObjX5mTu1VwcvvkMORL
+         lKNQ==
+X-Gm-Message-State: AOAM533Qu9nKhE0cNZpcf6jxzIpDM4fsv+j+TnewvxgF0tm93BGfAx4D
+        VVacqmzvGop8kmsya5gl44MJdoYS4GX7XFBMWKs=
+X-Google-Smtp-Source: ABdhPJwNudlha78cWScKnDvfgr3MORpokdMvjyfbgFTiK5Ybwq96BbMUEwaVdTBD8zHNNpTPypSzEqD9Yv6hmUtxGCY=
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr22646964pgk.203.1593010006407;
+ Wed, 24 Jun 2020 07:46:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624123330.83226-4-alex.popov@linux.com>
+References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-11-warthog618@gmail.com>
+In-Reply-To: <20200623040107.22270-11-warthog618@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 24 Jun 2020 17:46:33 +0300
+Message-ID: <CAHp75VdG4r95ZU8G9TfL+jkT63+Gppb8w5TRvAtCR_pAk0o=NA@mail.gmail.com>
+Subject: Re: [PATCH 10/22] gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:33:28PM +0300, Alexander Popov wrote:
-> Don't use gcc plugins for building arch/arm64/kernel/vdso/vgettimeofday.c
-> to avoid unneeded instrumentation.
-> 
-> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+On Tue, Jun 23, 2020 at 7:03 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Merge separate usage of test_bit/set_bit into test_and_set_bit to remove
+> the possibility of a race between the test and set.
+>
+> Similarly test_bit and clear_bit.
+>
+> In the existing code it is possible for two threads to race past the
+> test_bit and then set or clear the watch bit, and neither return EBUSY.
 
-It looks like Will has taken this already, but:
+I stumbled over this myself, but...
 
-Acked-by: Kees Cook <keescook@chromium.org>
+> -               if (test_bit(hwgpio, gcdev->watched_lines))
+> +               if (test_and_set_bit(hwgpio, gcdev->watched_lines))
+>                         return -EBUSY;
+>
+>                 gpio_desc_to_lineinfo(desc, &lineinfo);
+> @@ -897,7 +897,6 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>                 if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
+>                         return -EFAULT;
+>
+> -               set_bit(hwgpio, gcdev->watched_lines);
+>                 return 0;
+
+...I think it's not an equivalent despite races involved. If you set
+bit and return error code, you will have the wrong state.
+
+...
+
+> -               if (!test_bit(hwgpio, gcdev->watched_lines))
+> +               if (!test_and_clear_bit(hwgpio, gcdev->watched_lines))
+>                         return -EBUSY;
+>
+> -               clear_bit(hwgpio, gcdev->watched_lines);
+>                 return 0;
+
+OTOH, this is okay as long as we have no code in between. So, I really
+prefer something better to do such checks.
+(Alas, I can't come up with a proposal right now)
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
