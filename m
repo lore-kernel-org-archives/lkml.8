@@ -2,129 +2,176 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A138C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD9C22070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6D5206EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNH0aJZT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqfRdppQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404320AbgFXPDK (ORCPT
+        id S2404323AbgFXPDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:03:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55470 "EHLO
+        Wed, 24 Jun 2020 11:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404131AbgFXPBn (ORCPT
+        with ESMTP id S2404074AbgFXPBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:01:43 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 105E7C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:43 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id j4so1164376plk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 08:01:43 -0700 (PDT)
+        Wed, 24 Jun 2020 11:01:38 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55605C061797;
+        Wed, 24 Jun 2020 08:01:37 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so2608300wru.6;
+        Wed, 24 Jun 2020 08:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6s3VpyoFsgSZ3B6oAIdOh3RdCzhKLfaICUHf9hDLF48=;
-        b=LNH0aJZTIpw3O3toEvTwUb5sMIlFp6cAUGwKSbwkjKkQ/jzXvNQWLmAnScro//yCPY
-         O1WdRzwSYzOgItXdBWAqxJg9VeNSOSvyey1jqUY0fQtWjs4EM2mFeom7U5+5jjlmNcYH
-         JystW330pb4PhzoD8EpVBvVgLkYu8/3OtYawwVE3flpaPEWDmIBnVTaP1EULUbV/FfJD
-         iPW2EBMWOQvH8ZoqbreMFGKnl3CI+Fmp0XhNlRMv1QORa41VG3HkF1ocPo+SRvjK4guS
-         oeNbXdD/kMtG70lRpL7QQ/WWoiBof0jT3tBpjPlyjgcmhy/qu2SHCPt5CzkDIpw6VM0Q
-         sfaQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xGorQfVoMZ+iUqaW92DxUbanNK0hY2uxj/Pn+f4/4FY=;
+        b=nqfRdppQ7wb2SmZSudqseQh0laa6ufOSNlKBSb9OMzpdGXRmD0WZjWlfsi7TGU4QvI
+         efw51ziM1lG8+eer2dOg46sExqXuB/+U8xb6bBJLYYpFvVvLScB7o0OCzJMTISt6iPxR
+         4/TptLjNbDYVifYDFMwnPaKyflHHw5T6znEBcgTyhucemB+hnZOzgRuGEcibK5jAX1Dd
+         Rk7JwxEmyVemkFI9C5mSEnddAK6gBKHh3IVm5Xo/8nZIs+cL/Iza1JU8ztf4Xue9xh/9
+         KMlgZPRnk4vVO9/QbXfZK624a83Y/PLEaAGZlHIL2vVlEHravG2Lv9pFliPmeXnHKVww
+         xeIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6s3VpyoFsgSZ3B6oAIdOh3RdCzhKLfaICUHf9hDLF48=;
-        b=BCFPvZnrTDweCmwE2F37vqM69PecrprcHYOVpUcKYqT7emN8wIv2B5PLy/V0hDk2DW
-         5uqDt473AtLqXBba0VCR45rEXevMWtD7a/U6jzRI/mzCPtN3qeudri/Kb4DJ9Nu3Xdkd
-         ZfCNRhyazjN/IZaQKDF2nzT6dgCdKKnByPiBCNuYczFztihS2DlfbKQkvbQV/ReMRHdj
-         DKPSP1gcAbZmdb3CaC5uW+xwed/0BAQFgE9hdc3hpkQN+Z/kFE32YUEX/yFf7+Oleomn
-         V1pJf7GNT26TCHy4j5AetL4IuF2lmggmUV7xcJSg1UrRquEd/fFM90kJ7h7j4losZZeS
-         sAFA==
-X-Gm-Message-State: AOAM532kzrXNoG3pc0xcjoDcAXdQfRVEKC/pCdDzebQz6DECnF5NWV2u
-        QqEaaTJVa2mYBNrJH92L8w==
-X-Google-Smtp-Source: ABdhPJy0MIbYK35VfmoGi9P4OYaen8i194NRhzg25e9pkT997Hdx1akqVNawblxcg8nBy/kJHn6hkg==
-X-Received: by 2002:a17:90a:ad87:: with SMTP id s7mr30269606pjq.225.1593010902533;
-        Wed, 24 Jun 2020 08:01:42 -0700 (PDT)
-Received: from ip-172-31-41-194.ap-northeast-1.compute.internal (ec2-52-199-21-241.ap-northeast-1.compute.amazonaws.com. [52.199.21.241])
-        by smtp.gmail.com with ESMTPSA id i125sm17013705pgd.21.2020.06.24.08.01.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xGorQfVoMZ+iUqaW92DxUbanNK0hY2uxj/Pn+f4/4FY=;
+        b=fMEP5bsVvUpj6f3HAskuuCYjaXgwadWVImJv/CZr2ja/FWRnL8BSYFWsVZCIWuOuPZ
+         8Ff6NQLxPwAF2REB8dznVJjOhb6hiuvWHYdFuJVYLljxhR9cU7sG8pXZe+r25SA5Wdgn
+         DVqhtvUuPE3d49kIjWKIcET6ZpmKY7R15Sm5zRQtCB/s1O41usTEZsiSONcJng4LJ10h
+         Sk01/5bcJMtQcKL/VlC3VYNH50LMJfJI/itYI8rputRAQFsP/FoQKRMk0tatPAE5PcoF
+         D5dtVFDiIhDKAdeTNRhkUj2F+ELXgazD5YO0V6Xo6uerG/pgZ+oWGUQWCHgUwaGmG9X9
+         C4mw==
+X-Gm-Message-State: AOAM531jL8+DGtVRikHAN+WIX1wAfp5DlLT3AhNBwUBnBOJwLqUk/lL/
+        dydm+Se4F612dtTrk3semdM=
+X-Google-Smtp-Source: ABdhPJxNVNapZG5qULGdKNo0tydvp+YoV+TiiJlp1hlDDGxJ52qcRJsAPdNPjn0DTojsRd/qhAIagw==
+X-Received: by 2002:a5d:60d0:: with SMTP id x16mr1745972wrt.5.1593010896085;
+        Wed, 24 Jun 2020 08:01:36 -0700 (PDT)
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id s8sm21339390wru.38.2020.06.24.08.01.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 08:01:42 -0700 (PDT)
-From:   nao.horiguchi@gmail.com
-To:     linux-mm@kvack.org
-Cc:     mhocko@kernel.org, akpm@linux-foundation.org,
-        mike.kravetz@oracle.com, osalvador@suse.de, tony.luck@intel.com,
-        david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
-        zeil@yandex-team.ru, naoya.horiguchi@nec.com,
+        Wed, 24 Jun 2020 08:01:35 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 00/15] HWPOISON: soft offline rework
-Date:   Wed, 24 Jun 2020 15:01:22 +0000
-Message-Id: <20200624150137.7052-1-nao.horiguchi@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH v3 6/8] arm64: dts: qcom: msm8994: Add support for SMD RPM
+Date:   Wed, 24 Jun 2020 17:01:04 +0200
+Message-Id: <20200624150107.76234-7-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200624150107.76234-1-konradybcio@gmail.com>
+References: <20200624150107.76234-1-konradybcio@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I rebased soft-offline rework patchset [1][2] onto the latest mmotm.  The
-rebasing required some non-trivial changes to adjust, but mainly that was
-straightforward.  I confirmed that the reported problem doesn't reproduce on
-compaction after soft offline.  For more precise description of the problem
-and the motivation of this patchset, please see [2].
+Add support for SMD RPM, including pm8994 and pmi8994
+regulators.
 
-I think that the following two patches in v2 are better to be done with
-separate work of hard-offline rework, so it's not included in this series.
-
-  - mm,hwpoison: Take pages off the buddy when hard-offlining
-  - mm/hwpoison-inject: Rip off duplicated checks
-
-These two are not directly related to the reported problem, so they seems
-not urgent.  And the first one breaks num_poisoned_pages counting in some
-testcases, and The second patch needs more consideration about commented point.
-
-Any comment/suggestion/help would be appreciated.
-
-[1] v1: https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
-[2] v2: https://lore.kernel.org/linux-mm/20191017142123.24245-1-osalvador@suse.de/
-
-Thanks,
-Naoya Horiguchi
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
-Summary:
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 43 +++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-Naoya Horiguchi (7):
-      mm,hwpoison: cleanup unused PageHuge() check
-      mm, hwpoison: remove recalculating hpage
-      mm,madvise: call soft_offline_page() without MF_COUNT_INCREASED
-      mm,hwpoison-inject: don't pin for hwpoison_filter
-      mm,hwpoison: remove MF_COUNT_INCREASED
-      mm,hwpoison: remove flag argument from soft offline functions
-      mm,hwpoison: introduce MF_MSG_UNSPLIT_THP
+diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+index bf5aa7308b63..cd1476dfeca4 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+@@ -175,9 +175,31 @@ smem_mem: smem_region@6a00000 {
+ 		};
+ 	};
+ 
++	smd {
++		compatible = "qcom,smd";
++		rpm {
++			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
++			qcom,ipc = <&apcs 8 0>;
++			qcom,smd-edge = <15>;
++			qcom,local-pid = <0>;
++			qcom,remote-pid = <6>;
++
++			rpm_requests: rpm-requests {
++				compatible = "qcom,rpm-msm8994";
++				qcom,smd-channels = "rpm_requests";
++
++				rpmcc: rpmcc {
++					compatible = "qcom,rpmcc-msm8994";
++					#clock-cells = <1>;
++				};
++			};
++		};
++	};
++
+ 	smem {
+ 		compatible = "qcom,smem";
+ 		memory-region = <&smem_mem>;
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+ 		hwlocks = <&tcsr_mutex 3>;
+ 	};
+ 
+@@ -196,6 +218,12 @@ intc: interrupt-controller@f9000000 {
+ 				  <0xf9002000 0x1000>;
+ 		};
+ 
++		apcs: mailbox@f900d000 {
++			compatible = "qcom,msm8994-apcs-kpss-global", "syscon";
++			reg = <0xf900d000 0x2000>;
++			#mbox-cells = <1>;
++		};
++
+ 		timer@f9020000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -451,6 +479,11 @@ gcc: clock-controller@fc400000 {
+ 			reg = <0xfc400000 0x2000>;
+ 		};
+ 
++		rpm_msg_ram: memory@fc428000 {
++			compatible = "qcom,rpm-msg-ram";
++			reg = <0xfc428000 0x4000>;
++		};
++
+ 		restart@fc4ab000 {
+ 			compatible = "qcom,pshold";
+ 			reg = <0xfc4ab000 0x4>;
+@@ -668,5 +701,15 @@ timer {
+ 					<1 4 0xff08>,
+ 					<1 1 0xff08>;
+ 	};
++
++	vreg_vph_pwr: vreg-vph-pwr {
++		compatible = "regulator-fixed";
++		regulator-name = "vph-pwr";
++
++		regulator-min-microvolt = <3600000>;
++		regulator-max-microvolt = <3600000>;
++
++		regulator-always-on;
++	};
+ };
+ 
+-- 
+2.27.0
 
-Oscar Salvador (8):
-      mm,madvise: Refactor madvise_inject_error
-      mm,hwpoison: Un-export get_hwpoison_page and make it static
-      mm,hwpoison: Kill put_hwpoison_page
-      mm,hwpoison: Unify THP handling for hard and soft offline
-      mm,hwpoison: Rework soft offline for free pages
-      mm,hwpoison: Rework soft offline for in-use pages
-      mm,hwpoison: Refactor soft_offline_huge_page and __soft_offline_page
-      mm,hwpoison: Return 0 if the page is already poisoned in soft-offline
-
- drivers/base/memory.c      |   2 +-
- include/linux/mm.h         |  12 +-
- include/linux/page-flags.h |   6 +-
- include/ras/ras_event.h    |   3 +
- mm/hwpoison-inject.c       |  18 +--
- mm/madvise.c               |  39 +++---
- mm/memory-failure.c        | 331 ++++++++++++++++++++-------------------------
- mm/migrate.c               |  11 +-
- mm/page_alloc.c            |  63 +++++++--
- 9 files changed, 233 insertions(+), 252 deletions(-)
