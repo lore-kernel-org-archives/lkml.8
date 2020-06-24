@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E95C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36D312088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5141920B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 06:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389405AbgFXGpu (ORCPT
+        id S2389427AbgFXGpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:45:50 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48428 "EHLO loongson.cn"
+        Wed, 24 Jun 2020 02:45:53 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48430 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389352AbgFXGps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2389375AbgFXGps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 02:45:48 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxXeuQ9vJebSBJAA--.397S5;
-        Wed, 24 Jun 2020 14:45:38 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxXeuQ9vJebSBJAA--.397S3;
+        Wed, 24 Jun 2020 14:45:37 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -31,19 +31,19 @@ Cc:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 3/7 RESEND] irqchip/loongson-htvec: Fix potential resource leak
-Date:   Wed, 24 Jun 2020 14:45:32 +0800
-Message-Id: <1592981136-3572-4-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 1/7 RESEND] irqchip/loongson-htpic: Remove redundant kfree operation
+Date:   Wed, 24 Jun 2020 14:45:30 +0800
+Message-Id: <1592981136-3572-2-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1592981136-3572-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1592981136-3572-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9DxXeuQ9vJebSBJAA--.397S5
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF47XFy5AFWxZr48KFWUCFg_yoWDXrg_CF
-        yIgr97WFW8Ar1fJ34xCr43XFWavrWvgF409FW0yFW5Xa4xtw1xAr17Aw13CF47CFySvr95
-        Gr4S9ry0kw1xujkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbJxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+X-CM-TRANSID: AQAAf9DxXeuQ9vJebSBJAA--.397S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr15XrW5ZrW3AF15Kr4xtFb_yoW3twb_Cr
+        WIqr9rJFW0gr1rC3y7ur47ZrySkw4kWF1kuF4aya4ft347tw1rAry7Ar4fJF47Wa1SkFn8
+        WFW7ZrykAw1xGjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbJxYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I
         6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CE
+        IE14v26r18M28IrcIa0xkI8VCY1x0267AKxVWUCVW8JwA2ocxC64kIII0Yj41l84x0c7CE
         w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6x
         kF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv
         6xkF7I0E14v26rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc
@@ -55,44 +55,38 @@ X-Coremail-Antispam: 1UD129KBjvdXoW7GF47XFy5AFWxZr48KFWUCFg_yoWDXrg_CF
         6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6x
         kF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
         14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43
-        ZEXa7xRXvtCDUUUUU==
+        ZEXa7xRATmhJUUUUU==
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists potential resource leak in the error path, fix it.
+In the function htpic_of_init(), when kzalloc htpic fails, it should
+return -ENOMEM directly, no need to execute "goto" to kfree.
 
-Fixes: 818e915fbac5 ("irqchip: Add Loongson HyperTransport Vector support")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-htvec.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-loongson-htpic.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
-index 1ece933..b36d403 100644
---- a/drivers/irqchip/irq-loongson-htvec.c
-+++ b/drivers/irqchip/irq-loongson-htvec.c
-@@ -192,7 +192,7 @@ static int htvec_of_init(struct device_node *node,
- 	if (!priv->htvec_domain) {
- 		pr_err("Failed to create IRQ domain\n");
- 		err = -ENOMEM;
--		goto iounmap_base;
-+		goto irq_dispose;
+diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
+index dd018c2..63f7280 100644
+--- a/drivers/irqchip/irq-loongson-htpic.c
++++ b/drivers/irqchip/irq-loongson-htpic.c
+@@ -93,10 +93,8 @@ int __init htpic_of_init(struct device_node *node, struct device_node *parent)
  	}
  
- 	htvec_reset(priv);
-@@ -203,6 +203,9 @@ static int htvec_of_init(struct device_node *node,
+ 	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
+-	if (!htpic) {
+-		err = -ENOMEM;
+-		goto out_free;
+-	}
++	if (!htpic)
++		return -ENOMEM;
  
- 	return 0;
- 
-+irq_dispose:
-+	for (; i > 0; i--)
-+		irq_dispose_mapping(parent_irq[i - 1]);
- iounmap_base:
- 	iounmap(priv->base);
- free_priv:
+ 	htpic->base = of_iomap(node, 0);
+ 	if (!htpic->base) {
 -- 
 2.1.0
 
