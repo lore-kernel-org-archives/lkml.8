@@ -2,146 +2,132 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC48EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88109C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB0A20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h+qiZfi0"
+	by mail.kernel.org (Postfix) with ESMTP id 68964207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 11:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592997939;
+	bh=2G6/L3/azm1EoZAnF/Xp527SGtl5pdg2SM9IZMLxwR8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vaaIOrS1Ct7kzdw4po06Yrh6jIwvKS/uOzVaylixYILlxW3Jqfuzyf8MDlWUtS1jk
+	 jgLLWVg8VdsJxYY2h7WZmfhch2Fmlc1B6b450RIj7Wri2utLAxRLkdkso1pT42Ixvw
+	 aoLtNDQDM71fpF8+CvKtiCksDE9kUecJMDPrBFVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388829AbgFXLYY (ORCPT
+        id S2389183AbgFXLZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390564AbgFXLYU (ORCPT
+        Wed, 24 Jun 2020 07:25:36 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:45003 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388811AbgFXLZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:24:20 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFF2C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:24:19 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o2so2145438wmh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 04:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NrvSiaDLXTBfKnuOt7hk8LUvf/vD6JGQ7WAbFA5i7Uc=;
-        b=h+qiZfi0OhOnDkgTLpZizeUC5IOa97wx3ik8VofmQ5pfxMjOrV/QZdQ1bzH0PCVdiU
-         UgreOMhRLysmM+bBtebPY7anIyh5Ho7OoqBtQmM4nX9hm9SZdRD6PwLqtvezCvD5x2bP
-         yKLL3oYAOG9YVSUhAPv2B0YkFFu+XrIW2mOMZL0AxwspP7uIhMzfAKKRW5Sjn3PfuI7I
-         8tUEK+4WbXF6HcnEghMiSEhm2Z6Z58auYOW96L/YLupOfUvseYw9YDjMWDUdRzEAqj/T
-         mPxbp9qt//mWBrqgyYQmdqSzcji9eNyItiQcmo1Ts9oa2hmbhVVJiBaLSzhtiyZR1Cab
-         UiuQ==
+        Wed, 24 Jun 2020 07:25:35 -0400
+Received: by mail-ej1-f68.google.com with SMTP id ga4so2046783ejb.11;
+        Wed, 24 Jun 2020 04:25:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NrvSiaDLXTBfKnuOt7hk8LUvf/vD6JGQ7WAbFA5i7Uc=;
-        b=bJJgtUTEfoLtG/vJFRSSzxdEAi5osV4mqAfAWiB1NQ72LiJHay+ReDB3pl/e6rgFqe
-         Mp4MeFPEKeUnDuI7O4RLDCRb1o8GGGj1yL9tVkRZ+/9yQOQXz60maFUHqrNKJoI+jMe/
-         BehsZQJJ1ozNXo4bRByqistlVvvoVWYZixMEu2n9o4Nr3oMFuObOTyI72jCMlKiR2C7Z
-         jmmakYdEYHYx6/NzCsYqah1eyxPrcZSdXgsrBGFjwAvERr3hndoPA3QbFS5CxoP/34uA
-         +yZoEh4DACfID1DQdVWQ4+OVrl1e6fxsE8RSMmj4RZuv6VEkxV7OTtqLIseF8xl6L/p5
-         zI9A==
-X-Gm-Message-State: AOAM5309Xl/efi5eaeEa2rT7/mDSi1I/hEpK3FvnvMJSShzQcbhJPpfc
-        AkReiOXl8e0WBSPA6OfXHEUwNQ==
-X-Google-Smtp-Source: ABdhPJxnvJ/bAKboWQS8u3ig+E2OSp3FrtA0y0gJWgzooZABsBXHuo/PhR/sGO75JnZcwGDW//Wkaw==
-X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr8696211wmk.126.1592997857631;
-        Wed, 24 Jun 2020 04:24:17 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x5sm7962485wmg.2.2020.06.24.04.24.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LA2XapGq4IaVD7/Jz16sK+vZWcKUBPvVZlD7kxpKK+4=;
+        b=UqSQWr7HR57YOBTpk+tpYtlRdcQ24t9ztAs+LGnu7k4mvP1Fxexu1MYm0z6E2G7t7l
+         soOdfCVFTiUZn3e1M7+cWPBUOLdr6uPXIg6C2DVyV2e+lSdSwRe58tBxxXPw3GzUYrnb
+         W7jlI+CeGr8CUX4vLIGcLOPD5lbDKJ+IQ40B6UF0w/gjo3N9jnsbaEC4ryp+Ja+HVDjI
+         u0zKtypXiTCPAWSiMucZ6trnBLTCbr4zLu/d5AzLYkmb3N27IKW0+9zwbLaqSw/i2IU6
+         6F/XJiy1VF3e6CVEA/8EpNCjMe97w2PWitIoRMdjwf4q7M3ggnZc3NYV3Xcw5TnDbRAy
+         zDxw==
+X-Gm-Message-State: AOAM532pmpKynj9jNi8VkEsTlbv9EsbYtIJiyc+fdalGtbQ0CpVYoBQW
+        NC7QY49Un4DPinH3lSM2xBQ=
+X-Google-Smtp-Source: ABdhPJxhx0cXd0uflR7vtTwXvD4YGbtCrkhU2pMwvJFNbTADtFUIR9Zj3aH8PJurs/hAcjFNhB0QjA==
+X-Received: by 2002:a17:906:3042:: with SMTP id d2mr3703894ejd.420.1592997933359;
+        Wed, 24 Jun 2020 04:25:33 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id a24sm15147934ejc.109.2020.06.24.04.25.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 04:24:16 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 12:24:14 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Frank Rowand <frowand.list@gmail.com>, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-Message-ID: <20200624112414.GG954398@dell>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <30f03734-61fd-1b6b-bf11-21b6423a7c50@gmail.com>
- <20200624064145.GC954398@dell>
- <7a31b34940984b3f0921ed2d4fb29a58@walle.cc>
- <20200624082352.GF954398@dell>
- <c0a8ebd32ae07ae98fa56728c77f8e79@walle.cc>
+        Wed, 24 Jun 2020 04:25:32 -0700 (PDT)
+From:   Ricardo Ribalda <ribalda@kernel.org>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     Ricardo Ribalda <ribalda@kernel.org>
+Subject: [PATCH v2] i2c: designware: platdrv: Set class based on dmi
+Date:   Wed, 24 Jun 2020 13:25:30 +0200
+Message-Id: <20200624112530.852254-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c0a8ebd32ae07ae98fa56728c77f8e79@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020, Michael Walle wrote:
+Current AMD's zen-based APUs use this core for some of its i2c-buses.
 
-> Am 2020-06-24 10:23, schrieb Lee Jones:
-> > On Wed, 24 Jun 2020, Michael Walle wrote:
-> 
-> [..]
-> 
-> > > Although Rob mentioned to maybe relax that, but I sill fail to see
-> > > the advantage to have an arbitrary reg property instead of a unique
-> > > node name.
-> > 
-> > I don't have a strong opinion either way.
-> > 
-> > We can *also* add node name matching if Rob deems it fit.
-> 
-> Where do you see a use of the reg property?
+With this patch we re-enable autodetection of hwmon-alike devices, so
+lm-sensors will be able to work automatically.
 
-The vast proportion of devices do and will have 'reg' properties.
+It does not affect the boot-time of embedded devices, as the class is
+set based on the dmi information.
 
-> You already expressed
-> that you see exposing the internal offset as a hack:
-> 
->  "Placing "internal offsets" into the 'reg' property is a hack." [1]
-> 
-> So what are you putting into reg instead? Rob suggested "anything"
-> documented in the hardware manual. But isn't this just also something
-> we make up and especially for the MFD driver. Thus IMHO it doesn't
-> qualify as a unit-address, which - as far as I understand it - is
-> unique on the parent bus. To repeat my argument, its not a defined
-> thing like an I2C address.
+Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+---
+v2:
+Changes by Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+ - CodeStyle
+Changes by kernel test robot <lkp@intel.com>
+ - Include dmi header to fix build error on arc
+ - check if dmi_get_system_info returned NULL
+ drivers/i2c/busses/i2c-designware-platdrv.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-So our argument in the past (although this is going back the best part
-of 10 years) has always been that; if devices are different, there is
-almost always a documented (in the H/W manual/datasheet) way to
-differentiate/address them.  Whether that's a physical address, an
-offset, a bank ID, an I2C/SPI address or whatever.
-
-As to not being able to use that address/ID due to the DT rules
-surrounding address space as per the example in your previous email,
-well that's a rule specific to DT and makes little sense in some real
-world cases (such as, dare I say it, the AB8500).
-
-You'll have to take the aforementioned point and the point about using
-node names instead of 'reg' properties up with Rob and the other
-interested DT folk.
-
-Again, I'm happy to extend that functionality if it becomes acceptable
-practice.
-
-> [1] https://lore.kernel.org/linux-devicetree/20200609185231.GO4106@dell/
-> 
-> -michael
-
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index c2efaaaac252..5892fdba9c25 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -12,6 +12,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/dmi.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/i2c.h>
+@@ -173,6 +174,19 @@ static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
+ 		pm_runtime_put_noidle(dev->dev);
+ }
+ 
++static bool dw_i2c_hwmon_bus(void)
++{
++	const char *product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
++
++	if (!product_name)
++		return false;
++
++	if (strstr(product_name, "QT5222"))
++		return true;
++
++	return false;
++}
++
+ static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev->dev);
+@@ -267,7 +281,7 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 
+ 	adap = &dev->adapter;
+ 	adap->owner = THIS_MODULE;
+-	adap->class = I2C_CLASS_DEPRECATED;
++	adap->class = dw_i2c_hwmon_bus() ? I2C_CLASS_HWMON : I2C_CLASS_DEPRECATED;
+ 	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+ 	adap->dev.of_node = pdev->dev.of_node;
+ 	adap->nr = -1;
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.27.0
+
