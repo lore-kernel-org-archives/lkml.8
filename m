@@ -2,248 +2,109 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE287C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E049C2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cyDE02eH"
+	by mail.kernel.org (Postfix) with ESMTP id 9927820836
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593025359;
+	bh=c0DVHKpqNywsBivnUUrd6P+QBrfaSnwkyVEyEHCow4s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=C2R0o05I+GIaJyMZl6hQvBi1jyHs0BtvvC27RLirlVPmeYwLWUnwarfa7HvqNKECX
+	 /NmJtX9YMJHrHwqc84DSgvN6lKkQugOQD0lmAxsLqQtAVEBlSjUXPX9z7YlqS2ieZA
+	 G4J3oPNTqsCMvNiyxqler7AN6qyC0Qyz8+2jYXOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406224AbgFXTAI (ORCPT
+        id S2404744AbgFXTCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:00:08 -0400
-Received: from mail.efficios.com ([167.114.26.124]:47884 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404079AbgFXTAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:00:06 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 5B7182C3FC9;
-        Wed, 24 Jun 2020 15:00:04 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ckXT-CuOZLLN; Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C82C72C3C73;
-        Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C82C72C3C73
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593025203;
-        bh=DGH1GYSZBoon4ZWwCZH/B+1D5oPNjfnq5dqQoCBvZzU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=cyDE02eHz1qW1JNlNRD6qHzjFRJhkh/+QUTsNRqwzbsuxoWykluJo+dpCU07r840c
-         zeQZxTyoqYqa04/piJ/2qWPQVKV1VJ/pavhHP4hlNV7CEEDzG4ezlplNMwSfceFStq
-         tZxc0/c8TeB5DQAjgjkeqxxZskmN9oWT8qHGOfL5hO6xmMCrj3EZ4qWnFsUDwBH+or
-         kAtgC4luBOgsmti2kArltg6TxqF2YjEVMWxk5qPPxQOAqvDQvaEYVcNRuprC3gKADB
-         8kWT7pqYa8zzLMRG9WQCTkyt3FgJFHsgBPS/mj4OuyRzORBrqobnOrVv83yFuZS8EK
-         iF/zZTt+2PlfA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 66nNyDA9j72v; Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 93DA42C4048;
-        Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
-Date:   Wed, 24 Jun 2020 15:00:03 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1158112159.11628.1593025203438.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87d05obl4w.fsf@oldenburg2.str.redhat.com>
-References: <20200622180803.1449-1-mathieu.desnoyers@efficios.com> <20200622180803.1449-2-mathieu.desnoyers@efficios.com> <87d05obl4w.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/3] glibc: Perform rseq registration at C startup and
- thread creation (v21)
+        Wed, 24 Jun 2020 15:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404055AbgFXTCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 15:02:37 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4F52082F;
+        Wed, 24 Jun 2020 19:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593025357;
+        bh=c0DVHKpqNywsBivnUUrd6P+QBrfaSnwkyVEyEHCow4s=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=KczMdtn4UKd+mwp/0aySL/T3AfyrNAkwL0BQqd0BQKMnytBRjujy/RzXG6I5AogVB
+         +P2GmMXEVqdDysIt/Jm7mgZCiaG7nAUuCpmjyiuJaKk+EnGiSbWDvfTmNMutHRFCd0
+         sIiaIKl1c8iWKbE8idwEFNZ7+TlJ5adxuD2Osp9I=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C04CF35228BC; Wed, 24 Jun 2020 12:02:36 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 12:02:36 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kernel-team@fb.com, mingo@kernel.org
+Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com
+Subject: Re: [PATCH kcsan 0/10] KCSAN updates for v5.9
+Message-ID: <20200624190236.GA6603@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200623004310.GA26995@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v21)
-Thread-Index: mL9vamfSXFjzYkqlBsqyTfQOebVEtA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623004310.GA26995@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 24, 2020, at 10:20 AM, Florian Weimer fweimer@redhat.com wrote=
-:
+On Mon, Jun 22, 2020 at 05:43:10PM -0700, Paul E. McKenney wrote:
+> Hello!
+> 
+> This series provides KCSAN updates:
 
-> * Mathieu Desnoyers:
->=20
->> diff --git a/manual/threads.texi b/manual/threads.texi
->> index bb7a42c655..d5069d5581 100644
->> --- a/manual/threads.texi
->> +++ b/manual/threads.texi
->=20
->> +@deftypevar {struct rseq} __rseq_abi
->> +@standards{Linux, sys/rseq.h}
->> +@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with
->> +the Restartable Sequences system call.  The layout of this structure is
->> +defined by the @file{sys/rseq.h} header.  Registration of each thread's
->> +@code{__rseq_abi} is performed by @theglibc{} at library initialization
->> +and thread creation. The manual for the rseq system call can be found
->> +at
->> @uref{https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/m=
-an/rseq.2}.
->=20
-> Should be =E2=80=9Ccreation.  The=E2=80=9D (two spaces after a sentence-e=
-nding period).
+And three more, so that GCC can join Clang in the KCSAN fun.
 
-OK
+> 1.	Annotate a data race in vm_area_dup(), courtesy of Qian Cai.
+> 
+> 2.	x86/mm/pat: Mark an intentional data race, courtesy of Qian Cai.
+> 
+> 3.	Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init_rcu().
+> 
+> 4.	Add test suite, courtesy of Marco Elver.
+> 
+> 5.	locking/osq_lock: Annotate a data race in osq_lock.
+> 
+> 6.	Prefer '__no_kcsan inline' in test, courtesy of Marco Elver.
+> 
+> 7.	Silence -Wmissing-prototypes warning with W=1, courtesy of Qian Cai.
+> 
+> 8.	Rename test.c to selftest.c, courtesy of Marco Elver.
+> 
+> 9.	Remove existing special atomic rules, courtesy of Marco Elver.
+> 
+> 10.	Add jiffies test to test suite, courtesy of Marco Elver.
 
->=20
->> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h
->> b/sysdeps/unix/sysv/linux/sys/rseq.h
->> new file mode 100644
->> index 0000000000..5e118c1781
->> --- /dev/null
->> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
->=20
->> +#ifdef __cplusplus
->> +# if  __cplusplus >=3D 201103L
->> +#  define __rseq_static_assert(expr, diagnostic) static_assert (expr,
->> diagnostic)
->> +#  define __rseq_alignof(type)                   alignof (type)
->> +#  define __rseq_tls_storage_class               thread_local
->> +# endif
->> +#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
->> +# define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr,
->> diagnostic)
->> +# define __rseq_alignof(type)                    _Alignof (type)
->> +# define __rseq_tls_storage_class                _Thread_local
->> +#endif
->> +
->> +#ifndef __rseq_static_assert
->> +/* Try to use _Static_assert macro from sys/cdefs.h.  */
->> +# ifdef _Static_assert
->> +#  define __rseq_static_assert(expr, diagnostic) _Static_assert (expr,
->> diagnostic)
->> +# else
->> +#  define __rseq_static_assert(expr, diagnostic) /* Nothing.  */
->> +# endif
->> +#endif
->> +
->> +/* Rely on GNU extensions for older standards and tls model.  */
->> +#ifdef __GNUC__
->> +# ifndef __rseq_alignof
->> +#  define __rseq_alignof(x) __alignof__ (x)
->> +# endif
->> +# define __rseq_tls_model_ie __attribute__ ((__tls_model__ ("initial-ex=
-ec")))
->> +#else
->> +/* Specifying the TLS model on the declaration is optional.  */
->> +# define __rseq_tls_model_ie /* Nothing.  */
->> +#endif
->=20
-> I'm still worried that __rseq_static_assert and __rseq_alignof will show
-> up in the UAPI with textually different definitions.  (This does not
-> apply to __rseq_tls_model_ie.)
+11.	Re-add GCC as a supported compiler.
 
-What makes this worry not apply to __rseq_tls_model_ie ?
+12.	Simplify compiler flags.
 
->=20
-> Is my worry unfounded?
+13.	Disable branch tracing in core runtime.
 
-So AFAIU you worry that eventually sys/rseq.h and linux/rseq.h carry differ=
-ent
-definitions of __rseq_static_assert and __rseq_alignof.
+Please note that using GCC for KCSAN requires building your own compiler
+from recent mainline.
 
-Indeed, I did not surround those #define with #ifndef/#endif. Maybe we shou=
-ld ?
+							Thanx, Paul
 
-Just in case the definitions end up being different (worse case scenario), =
-we
-should expect their behavior to be pretty much equivalent. So going for the
-following should address your concern I think:
+------------------------------------------------------------------------
+The added three (#11-#13) only:
+------------------------------------------------------------------------
 
-#ifdef __cplusplus
-# if  __cplusplus >=3D 201103L
-#  ifndef __rseq_static_assert
-#   define __rseq_static_assert(expr, diagnostic) static_assert (expr, diag=
-nostic)
-#  endif
-#  ifndef __rseq_alignof
-#   define __rseq_alignof(type)                   alignof (type)
-#  endif
-#  ifndef __rseq_tls_storage_class
-#   define __rseq_tls_storage_class               thread_local
-#  endif
-# endif
-#elif (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) >=3D 201112L
-# ifndef __rseq_static_assert
-#  define __rseq_static_assert(expr, diagnostic)  _Static_assert (expr, dia=
-gnostic)
-# endif
-# ifndef __rseq_alignof
-#  define __rseq_alignof(type)                    _Alignof (type)
-# endif
-# ifndef __rseq_tls_storage_class
-#  define __rseq_tls_storage_class                _Thread_local
-# endif
-#endif
-
-#ifndef __rseq_static_assert
-/* Try to use _Static_assert macro from sys/cdefs.h.  */
-# ifdef _Static_assert
-#  define __rseq_static_assert(expr, diagnostic) _Static_assert (expr, diag=
-nostic)
-# else
-#  define __rseq_static_assert(expr, diagnostic) /* Nothing.  */
-# endif
-#endif
-
-/* Rely on GNU extensions for older standards and tls model.  */
-#ifdef __GNUC__
-# ifndef __rseq_alignof
-#  define __rseq_alignof(x) __alignof__ (x)
-# endif
-# ifndef __rseq_tls_model_ie
-#  define __rseq_tls_model_ie __attribute__ ((__tls_model__ ("initial-exec"=
-)))
-# endif
-#else
-/* Specifying the TLS model on the declaration is optional.  */
-# ifndef __rseq_tls_model_ie
-#  define __rseq_tls_model_ie /* Nothing.  */
-# endif
-#endif
-
-/* Fall back to __thread for TLS storage class.  */
-#ifndef __rseq_tls_storage_class
-# define __rseq_tls_storage_class __thread
-#endif
-
-Thoughts ?
-
-Thanks,
-
-Mathieu
-
-
-
->=20
-> Thanks,
-> Florian
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+ Documentation/dev-tools/kcsan.rst |    3 ++-
+ kernel/kcsan/Makefile             |    6 +++---
+ lib/Kconfig.kcsan                 |    3 ++-
+ scripts/Makefile.kcsan            |    2 +-
+ 4 files changed, 8 insertions(+), 6 deletions(-)
