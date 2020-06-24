@@ -4,127 +4,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F32BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1088D20C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF54E20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 00:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbgFXA1I (ORCPT
+        id S2388058AbgFXAbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 20:27:08 -0400
-Received: from trent.utfs.org ([94.185.90.103]:37122 "EHLO trent.utfs.org"
+        Tue, 23 Jun 2020 20:31:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:23661 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387514AbgFXA1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 20:27:08 -0400
-Received: from localhost (localhost [IPv6:::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by trent.utfs.org (Postfix) with ESMTPS id 2984E601B2;
-        Wed, 24 Jun 2020 02:26:49 +0200 (CEST)
-Date:   Tue, 23 Jun 2020 17:26:49 -0700 (PDT)
-From:   Christian Kujau <lists@nerdbynature.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
+        id S2387693AbgFXAbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 20:31:43 -0400
+IronPort-SDR: XCxDo3OpbkRxL9sQFYSxMfHHAVo7OA0C0bHBbPa+A42UzA5z7nmOoli5T0kEZsi7CBzQ8IEMwR
+ OGq/2prcDH6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9661"; a="205780739"
+X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
+   d="scan'208";a="205780739"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 17:31:42 -0700
+IronPort-SDR: JuRKAVOTj0bzM5gYHe59Qpoho2OXHhXh0++ajff75JbolNyznLJ4KWTbW+rIlS5pQwJ5oGfU8t
+ Lb3ul8PRwrsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,273,1589266800"; 
+   d="scan'208";a="452444240"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 23 Jun 2020 17:31:42 -0700
+Date:   Tue, 23 Jun 2020 17:38:13 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@google.com>
-Subject: Re: [PATCH] Re: filesystem being remounted supports timestamps until
- 2038
-In-Reply-To: <alpine.DEB.2.21.99999.375.2001041545350.21037@trent.utfs.org>
-Message-ID: <alpine.DEB.2.22.1.446.2006231719390.3892@trent.utfs.org>
-References: <alpine.DEB.2.21.99999.375.1912201332260.21037@trent.utfs.org> <alpine.DEB.2.21.99999.375.1912261445200.21037@trent.utfs.org> <CAHk-=wim6VGnxQmjfK_tDg6fbHYKL4EFkmnTjVr9QnRqjDBAeA@mail.gmail.com>
- <alpine.DEB.2.21.99999.375.2001041545350.21037@trent.utfs.org>
-User-Agent: Alpine 2.22.1 (DEB 446 2020-06-13)
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 5/7] iommu/vt-d: Fix devTLB flush for vSVA
+Message-ID: <20200623173813.6a02353c@jacob-builder>
+In-Reply-To: <1592926996-47914-6-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1592926996-47914-6-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 Jan 2020, Christian Kujau wrote:
-> On Sun, 29 Dec 2019, Linus Torvalds wrote:
-> > >     When file systems are remounted a couple of times per day (e.g. rw/ro for backup
-> > >     purposes), dmesg gets flooded with these messages. Change pr_warn into pr_debug
-> > >     to make it stop.
-> > 
-> > How about just doing it once per mount?
+On Tue, 23 Jun 2020 08:43:14 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+
+> From: Liu Yi L <yi.l.liu@intel.com>
 > 
-> Yes, once per mount would work, and maybe not print a warning on remounts 
-> at all.
-
-Is there any chance that this can be revisited perhaps? This is still 
-flooding my dmesg just because I have that (curde?) mechanism in place to 
-remount the backup device after the hourly backup-run to read-only. Sure, 
-I could omit that ("Doc, it hurts when I do that", as Al would comment), 
-but that's really the only repeating message that gets triggered because 
-of this. 1067 messages in ~60 days of uptime :-|
-
-Does the patch below make any sense, would that work?
-
-Please reconsider,
-Christian.
-
-> Commit f8b92ba67c5d ("mount: Add mount warning for impending timestamp 
-> expiry") introduced:
+> For guest SVA usage, in order to optimize for less VMEXIT, guest
+> request of IOTLB flush also includes device TLB.
 > 
->    Mounted %s file system at %s supports timestamps until [...]
+> On the host side, IOMMU driver performs IOTLB and implicit devTLB
+> invalidation. When PASID-selective granularity is requested by the
+> guest we need to derive the equivalent address range for devTLB
+> instead of using the address information in the UAPI data. The reason
+> for that is, unlike IOTLB flush, devTLB flush does not support
+> PASID-selective granularity. This is to say, we need to set the
+> following in the PASID based devTLB invalidation descriptor:
+> - entire 64 bit range in address ~(0x1 << 63)
+> - S bit = 1 (VT-d CH 6.5.2.6).
 > 
-> in mnt_warn_timestamp_expiry(), but then 0ecee6699064 ("fs/namespace.c: 
-> fix use-after-free of mount in mnt_warn_timestamp_expiry") changed this to
+> Without this fix, device TLB flush range is not set properly for PASID
+> selective granularity. This patch also merged devTLB flush code for
+> both implicit and explicit cases.
 > 
->   %s filesystem being %s at %s supports timestamps until [...]
+> Fixes: 6ee1b77ba3ac ("iommu/vt-d: Add svm/sva invalidate function")
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 25 +++++++++++++++++--------
+>  1 file changed, 17 insertions(+), 8 deletions(-)
 > 
-> in order to fix a use-after-free.
-> 
-> > Of course, if you actually unmount and completely re-mount a
-> > filesystem, then that would still warn multiple times, but at that
-> > point I think it's reasonable to do.
-> 
-> Yes, of course. Umount/remount cycles should still issue a warning, but 
-> "-o remount" should not, IMHO.
-> 
-> Thanks,
-> Christian.
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 96340da57075..5ea5732d5ec4 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5408,7 +5408,7 @@ intel_iommu_sva_invalidate(struct iommu_domain
+> *domain, struct device *dev, sid = PCI_DEVID(bus, devfn);
+>  
+>  	/* Size is only valid in address selective invalidation */
+> -	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+> +	if (inv_info->granularity == IOMMU_INV_GRANU_ADDR)
+>  		size = to_vtd_size(inv_info->addr_info.granule_size,
+>  				   inv_info->addr_info.nb_granules);
+>  
+> @@ -5417,6 +5417,7 @@ intel_iommu_sva_invalidate(struct iommu_domain
+> *domain, struct device *dev, IOMMU_CACHE_INV_TYPE_NR) {
+>  		int granu = 0;
+>  		u64 pasid = 0;
+> +		u64 addr = 0;
+>  
+>  		granu = to_vtd_granularity(cache_type,
+> inv_info->granularity); if (granu == -EINVAL) {
+> @@ -5456,19 +5457,27 @@ intel_iommu_sva_invalidate(struct
+> iommu_domain *domain, struct device *dev, (granu ==
+> QI_GRAN_NONG_PASID) ? -1 : 1 << size, inv_info->addr_info.flags &
+> IOMMU_INV_ADDR_FLAGS_LEAF); 
+> +			if (!info->ats_enabled)
+> +				break;
+>  			/*
+>  			 * Always flush device IOTLB if ATS is
+> enabled. vIOMMU
+>  			 * in the guest may assume IOTLB flush is
+> inclusive,
+>  			 * which is more efficient.
+>  			 */
+> -			if (info->ats_enabled)
+> -				qi_flush_dev_iotlb_pasid(iommu, sid,
+> -						info->pfsid, pasid,
+> -						info->ats_qdep,
+> -
+> inv_info->addr_info.addr,
+> -						size);
+> -			break;
+> +			fallthrough;
+>  		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+> +			/*
+> +			 * There is no PASID selective flush for
+> device TLB, so
+> +			 * the equivalent of that is we set the size
+> to be the
+> +			 * entire range of 64 bit. User only
+> provides PASID info
+> +			 * without address info. So we set addr to 0.
+> +			 */
+> +			if (inv_info->granularity ==
+> IOMMU_INV_GRANU_PASID) {
+> +				size = 64 - VTD_PAGE_SHIFT;
+> +				addr = 0;
+> +			} else if (inv_info->granularity ==
+> IOMMU_INV_GRANU_ADDR)
+> +				addr = inv_info->addr_info.addr;
+> +
+>  			if (info->ats_enabled)
+>  				qi_flush_dev_iotlb_pasid(iommu, sid,
+>  						info->pfsid, pasid,
+addr should be used here. will fix in the next version. Baolu has
+pointed out this before but missed it here.
 
-commit c9a5338b4930cdf99073042de0717db43d7b75be
-Author: Christian Kujau <lists@nerdbynature.de>
-Date:   Thu Dec 26 17:39:57 2019 -0800
-
-    Commit f8b92ba67c5d ("mount: Add mount warning for impending timestamp expiry") resp.
-    0ecee6699064 ("fix use-after-free of mount in mnt_warn_timestamp_expiry()") introduced
-    a pr_warn message and the following gets sent to dmesg on every remount:
-    
-     [...] filesystem being remounted at /mnt supports timestamps until 2038 (0x7fffffff)
-    
-    When file systems are remounted a couple of times per day (e.g. rw/ro for backup
-    purposes), dmesg gets flooded with these messages. Change pr_warn into pr_debug
-    to make it stop.
-    
-    Signed-off-by: Christian Kujau <lists@nerdbynature.de>
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index be601d3a8008..afc6a13e7316 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2478,7 +2478,7 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
- 
- 		time64_to_tm(sb->s_time_max, 0, &tm);
- 
--		pr_warn("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
-+		pr_debug("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
- 			sb->s_type->name,
- 			is_mounted(mnt) ? "remounted" : "mounted",
- 			mntpath,
-
-
-
-
--- 
-BOFH excuse #66:
-
-bit bucket overflow
+Jacob
