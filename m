@@ -2,42 +2,43 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0B42077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D0820738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gY7cW0jy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F6M/qB6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404782AbgFXQOD (ORCPT
+        id S2403931AbgFXQOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38646 "EHLO
+        Wed, 24 Jun 2020 12:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404235AbgFXQOC (ORCPT
+        with ESMTP id S2404678AbgFXQOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jun 2020 12:14:02 -0400
 Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55344C061573;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C08C0613ED;
         Wed, 24 Jun 2020 09:14:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=90OlxAKKJk4MpfGF1wAK+VcXxFJhMFQm3EERw9Z5SnM=; b=gY7cW0jyIntr1TMC49eyr8618s
-        pp7PTXnQGIfLOzJhZrUt7AKPtN7e5veG32FkbWOnsBdcKISt7caT3QrJqO3tXiLzLW8JrImMsZcpo
-        4Pv1tVxQ5hc0Dmk763ZRBduhuQC4nmmuM1MCjYAIisGws+cWSdZO4S4c8SpwJ2Aup5MKRG2xovdEf
-        lU+I6pL16Qw44QQ/sy10leiibrFdZRFXCwMyvqVymtLmW1WXuZC/dD8mz3KgIy+vowJ4+6qHsKEv1
-        tMLqzPy0Y8NscRvPZqg7+4Ng62bVC1ovT3Evc/wvkJoJexju596z3TJ2tEzxsFjGBrHi6MGracAqG
-        eS1my67g==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=PIZcUHBXRzg4FA/EeFx1uXo9md1v0NkQLsX0zI2zg6M=; b=F6M/qB6g9/5tPao1/ANmNaFFIu
+        7eBKcM5NjloKBPTgvN+++s4++INLJU5YYEuo1b9XkD7NAu7Jt+K9JZx5EmiVKj8o5h3MictoI/P3z
+        8GQWVWmVhwk9SfZaVTg0Ly95IkfJHD1swQ1WuZq7DO5oYUlk7DbB9TKJGRyZ87zXAwnpeBVa3HPZq
+        t7UoReJHe1r3CGQiu1f8wvuy/eZTYu0bkjKPicdqz36qxLSUAt9whbJpBxnGe+fIt7m7HWxVTdtGh
+        m5NnfbVMRzS0EO96IoudEVBKkpb0+F5hRbBrYq52I1KgSOimKlzW6qGJ/gaCNnoAxJsMGEgoL+8yT
+        BQ5oaoog==;
 Received: from [2001:4bb8:180:a3:5c7c:8955:539d:955b] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jo81p-0005xR-56; Wed, 24 Jun 2020 16:13:37 +0000
+        id 1jo81t-0005xm-5R; Wed, 24 Jun 2020 16:13:41 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -46,10 +47,12 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-security-module@vger.kernel.org,
         netfilter-devel@vger.kernel.org
-Subject: clean up kernel_{read,write} & friends v5
-Date:   Wed, 24 Jun 2020 18:13:21 +0200
-Message-Id: <20200624161335.1810359-1-hch@lst.de>
+Subject: [PATCH 03/14] bpfilter: switch to kernel_write
+Date:   Wed, 24 Jun 2020 18:13:24 +0200
+Message-Id: <20200624161335.1810359-4-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200624161335.1810359-1-hch@lst.de>
+References: <20200624161335.1810359-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -58,43 +61,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
+While pipes don't really need sb_writers projection, __kernel_write is an
+interface better kept private, and the additional rw_verify_area does not
+hurt here.
 
-this series fixes a few issues and cleans up the helpers that read from
-or write to kernel space buffers, and ensures that we don't change the
-address limit if we are using the ->read_iter and ->write_iter methods
-that don't need the changed address limit.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ net/bpfilter/bpfilter_kern.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I did not add your suggested comments on the instances using
-uaccess_kernel as all of them already have comments.  If you have
-anything better in mind feel free to throw in additional comments.
+diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
+index c0f0990f30b604..1905e01c3aa9a7 100644
+--- a/net/bpfilter/bpfilter_kern.c
++++ b/net/bpfilter/bpfilter_kern.c
+@@ -50,7 +50,7 @@ static int __bpfilter_process_sockopt(struct sock *sk, int optname,
+ 	req.len = optlen;
+ 	if (!bpfilter_ops.info.pid)
+ 		goto out;
+-	n = __kernel_write(bpfilter_ops.info.pipe_to_umh, &req, sizeof(req),
++	n = kernel_write(bpfilter_ops.info.pipe_to_umh, &req, sizeof(req),
+ 			   &pos);
+ 	if (n != sizeof(req)) {
+ 		pr_err("write fail %zd\n", n);
+-- 
+2.26.2
 
-
-Changes since v4:
- - warn on calling __kernel_write on files not open for write
- - add a FMODE_READ check and warning in __kernel_read
- - add a new patch to remove kernel_readv
- - stop preferring the iter variants if normal read/write is
-   present
-
-Changes since v3:
- - keep call_read_iter/call_write_iter for now
- - don't modify an existing long line
- - update a change log
-
-Changes since v2:
- - picked up a few ACKs
-
-Changes since v1:
- - __kernel_write must not take sb_writers
- - unexport __kernel_write
-
-Diffstat:
- fs/autofs/waitq.c            |    2 
- fs/cachefiles/rdwr.c         |    2 
- fs/read_write.c              |  171 ++++++++++++++++++++++++++-----------------
- fs/splice.c                  |   53 +++----------
- include/linux/fs.h           |    4 -
- net/bpfilter/bpfilter_kern.c |    2 
- security/integrity/iint.c    |   14 ---
- 7 files changed, 125 insertions(+), 123 deletions(-)
