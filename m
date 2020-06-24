@@ -2,108 +2,107 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A379C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA10C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A2320781
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6E320823
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 14:07:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="LOIhf43f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QICUtErs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404110AbgFXOF2 (ORCPT
+        id S2391116AbgFXOHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:05:28 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:47155 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403979AbgFXOF0 (ORCPT
+        Wed, 24 Jun 2020 10:07:38 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37633 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388395AbgFXOHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 10:05:26 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id o61YjhdaJNb6lo61bjteBB; Wed, 24 Jun 2020 16:05:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593007524; bh=dw3Eb9DNrn57rtG9YdOCtS050/pWz57l02vO/UovmfM=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=LOIhf43fUMhLbbRFlljdl6k2ddPrRuEx8zOI6fC07B0RkDPz3q2sZpy9CeZae0nDP
-         lJY2lJMpiqgKwGLhaH9teNe2J/6eorrbDl5FG266QptduYUAFOJMeufHV65U0+v9Am
-         9XHnJqtJl+oin6i0IvXf7qaAKHZdmZq4ja7alnFS7LLne/iuOIsl+3ulz2bGWSHa8F
-         H4HVCSkkS2QjewDyaRZ/AGwPSby/vlKFlYjf3uObB0nesdeHwsTg/Wgr2T3cK89SrZ
-         vH4YGR+sH3EreslOvdBdhRCgPJlTnMdlQCxTz6DTuAm/kYu87L5h5DdT44HlpqSCCr
-         k4HaYg0bJtYHA==
-Subject: Re: [PATCH v2 0/2] Refactor MDP driver and add dummy component driver
-To:     Eizan Miyamoto <eizan@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-References: <20200506084039.249977-1-eizan@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <25cbac25-035f-9c2b-24ec-f59403b56424@xs4all.nl>
-Date:   Wed, 24 Jun 2020 16:05:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 10:07:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593007657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fb1hGmmynErPFt50plAm995F3DUgaKJEUj59Ai0NXUQ=;
+        b=QICUtErsSX9efb0eLEoA5Xfb1QKABt+ZbTZ2R6RcHFM9Px9L4Uf1Jk9mBjxKmLxDcuH4o6
+        ibqrO3uIQTkjFkAOtL/l74GOJ6Ta8eWugMi6Eq+fG6ttr3TZhuNNen7aHh6mffGffpOrr4
+        6HwZ00AZyKvk7tcS8OmNqVkYhI9VcS4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-42--oXbM6TfPw2uTZkuhV0dJA-1; Wed, 24 Jun 2020 10:07:33 -0400
+X-MC-Unique: -oXbM6TfPw2uTZkuhV0dJA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69ADC107ACCD;
+        Wed, 24 Jun 2020 14:07:32 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C16A619B1;
+        Wed, 24 Jun 2020 14:07:30 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 10:07:27 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Subject: Re: [PATCH] mm/page_alloc: fix documentation error and remove magic
+ numbers
+Message-ID: <20200624140727.GA1987277@optiplex-lnx>
+References: <20200624032712.23263-1-jsavitz@redhat.com>
+ <20200624111255.GL21350@casper.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200506084039.249977-1-eizan@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfI225FoZyJey/ygju+xVYRSghI0nrxerTOVe6pw6CA6Aj2ZwDjSKkpi553ekjV882HSZNRgfLZ01pfpNqq/GzcSW1xcR1hxASBW6Rqb4jE5ZN46TcJp+
- nEvWRCOOFwRv2AlgO9D+Tvlmmu2bFwCI+lzTxBnWzyTCs2ct8Zg+iTGbu6XNyTgLsDBOITING/HQzv2nk8CQN1yoG2hjeRMzSEPhNha4OeIcbkFNV6Hp1yv1
- o5Nd8iz1OEfV2NsmegRcuFA0c/QWM9t/E4Y+j1JRvwYRU1oQdChFKwn1TTp29JVQcwLoEhwlstAJyyMr1zE1IecGx4WdD7oW0zRpExcP60fpJvQBTkR3P4Bq
- mz9hGk32U25EguUQ7Oz5X/2iM29lafXL3nc0vcXE6njTHtobOl+Re1kC/74M5pwr+CMRuRIBMOsRcW+pvSPMWCxalKG1QFWZrE5OXsdskH8ap2eD+aQXYj7T
- nrH4s37tPQnk8T5WjHkL52/d5y0Y4u/dCf6aWlTRxpH6IzjYxAFm3/6Xi21uHKzHIe58eigD9KJbkVLAukXcjJiC6IF/rlDg7wjOlvQNaZHOmhsyNyyz1nOK
- nkY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624111255.GL21350@casper.infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/2020 10:40, Eizan Miyamoto wrote:
+On Wed, Jun 24, 2020 at 12:12:55PM +0100, Matthew Wilcox wrote:
+> On Tue, Jun 23, 2020 at 11:27:12PM -0400, Joel Savitz wrote:
+> > In addition, this patch replaces the magic number bounds with symbolic
+> > constants to clarify the logic.
 > 
-> This series depends on all changes in the series:
-> https://patchwork.kernel.org/patch/11530275/
-
-I plan on merging the v3 of this series.
-
+> Why do people think this kind of thing makes the code easier to read?
+> It actually makes it harder.  Unless the constants are used in more
+> than one place, just leave the numbers where they are.
 > 
-> We are adding a dummy MDP component driver so that all the components
-> are properly configured with IOMMUs and LARBs. This is required for
-> us to get hardware video decode working in 4.19, and possibly newer
-> kernels.
+> > @@ -7852,6 +7852,9 @@ void setup_per_zone_wmarks(void)
+> >   * 8192MB:	11584k
+> >   * 16384MB:	16384k
+> >   */
+> > +static const int MIN_FREE_KBYTES_LOWER_BOUND = 1 << 7;
+> > +static const int MIN_FREE_KBYTES_UPPER_BOUND = 1 << 18;
+> > +
 
-What is the status of this series?
+I think these constants would look better if declared as an enum.
 
-There was some discussion with Enric, but that didn't come to a conclusion,
-I think.
-
-Regards,
-
-	Hans
-
+> >  int __meminit init_per_zone_wmark_min(void)
+> >  {
+> >  	unsigned long lowmem_kbytes;
+> > @@ -7862,10 +7865,10 @@ int __meminit init_per_zone_wmark_min(void)
+> >  
+> >  	if (new_min_free_kbytes > user_min_free_kbytes) {
+> >  		min_free_kbytes = new_min_free_kbytes;
+> > -		if (min_free_kbytes < 128)
+> > -			min_free_kbytes = 128;
+> > -		if (min_free_kbytes > 262144)
+> > -			min_free_kbytes = 262144;
+> > +		if (min_free_kbytes < MIN_FREE_KBYTES_LOWER_BOUND)
+> > +			min_free_kbytes = MIN_FREE_KBYTES_LOWER_BOUND;
+> > +		if (min_free_kbytes > MIN_FREE_KBYTES_UPPER_BOUND)
+> > +			min_free_kbytes = MIN_FREE_KBYTES_UPPER_BOUND;
 > 
-> Changes in v2:
-> - remove empty mtk_mdp_comp_init
-> - update documentation for enum mtk_mdp_comp_type
-> - remove comma after last element of mtk_mdp_comp_driver_dt_match
-> 
-> Eizan Miyamoto (2):
->   [media] mtk-mdp: add driver to probe mdp components
->   [media] mtk-mdp: use pm_runtime in MDP component driver
-> 
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 172 ++++++++++++++---
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |  32 +--
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 182 ++++++++++++------
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.h |   1 +
->  4 files changed, 286 insertions(+), 101 deletions(-)
+> The only thing I'd consider changing there is replacing 262144 with 256
+> * 1024.  1 << 18 is not clearer!
+
+
 > 
 
