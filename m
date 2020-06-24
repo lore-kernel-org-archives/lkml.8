@@ -2,115 +2,79 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFED9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E94C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB072084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42AC2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592983831;
+	bh=GuZe+zK7j+ouZgBdJXHXau5NYviadWE9eNN2okyuJoM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NBvPu2V12q6ACv/eYuxNO+e2LS3FifSe7re1TOGX+rE61LSLS14haoDLoGjMgQMHg
+	 K6Ur3LS7vUU02LEVQ9VILjthcSMDUJq/VFZlG2NDo+K5F4n5qQjuo7nb/UgwiJAXSL
+	 wiNDqDxWhP0qJA7vwm3tXwCEto3DRw8fGETNvS6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389891AbgFXHa2 (ORCPT
+        id S2389740AbgFXHaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:30:28 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:59676 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389334AbgFXH3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:29:55 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_93mAPNezSRJAA--.399S3;
-        Wed, 24 Jun 2020 15:29:43 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 01/14] irqchip/ath79-misc: Fix potential resource leaks
-Date:   Wed, 24 Jun 2020 15:29:29 +0800
-Message-Id: <1592983782-8842-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dx_93mAPNezSRJAA--.399S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw47trWfCFW5ZF4kXw17Awb_yoW8GF1DpF
-        WUW39avrWfJr47XrsxCFWDXryavFyFkay293y3C3WxZrn8G3909F1rAa4jvF12krW3X3WU
-        CF4fJa45uF4jkFUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUQ014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-        A2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
-        e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
-        8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-        jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
-        kIwI1lc7CjxVAaw2AFwI0_JF0_Jw1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC2
-        0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-        0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-        14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20x
-        vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I0E14v2
-        6F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjfU0D73DUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 24 Jun 2020 03:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389885AbgFXHa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:30:27 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0E932073E;
+        Wed, 24 Jun 2020 07:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592983826;
+        bh=GuZe+zK7j+ouZgBdJXHXau5NYviadWE9eNN2okyuJoM=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=Qml1ZXj0bJ1yIEBaqejbzqfrcHKQXBLXP6ECXmCUM3nuKE/xkBgPzpPDwDidXNUc3
+         Naf2MEVChCBQHGVo3Rud4jPJDnHa0utTBNRNQEXV1EjvpzVWlaXRMxe4R+7jHLu8LD
+         0IcvjF11NGmG9gxz1CmV7d6ylDeaw/xLK19tIUto=
+Date:   Wed, 24 Jun 2020 09:30:23 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cristian Klein <cristian.klein@elastisys.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: linux-next: build failures after merge of the hid tree
+In-Reply-To: <nycvar.YFH.7.76.2006240012170.13242@cbobk.fhfr.pm>
+Message-ID: <nycvar.YFH.7.76.2006240930110.13242@cbobk.fhfr.pm>
+References: <20200621140421.7f4552df@canb.auug.org.au> <20200623103736.25f67de5@canb.auug.org.au> <nycvar.YFH.7.76.2006240012170.13242@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists potential resource leaks in the error path, fix them.
+On Wed, 24 Jun 2020, Jiri Kosina wrote:
 
-Fixes: 07ba4b061a79 ("irqchip/ath79-misc: Move the MISC driver from arch/mips/ath79/")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-ath79-misc.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+> > > I don't know what caused it, but commit
+> > > 
+> > >   470376737e88 ("HID: allow building hid.ko as an external module")
+> > > 
+> > > did not fix it.  BTW, I build with "make O=...".
+> 
+> That's actually the patch that almost certainly broke it.
+> 
+> CCing Cristian (author of that patch) and Nathan, who apparently sent a 
+> fixup patch for this, but I haven't seen it, as our corporate mailserver 
+> had severe issues yesterday.
 
-diff --git a/drivers/irqchip/irq-ath79-misc.c b/drivers/irqchip/irq-ath79-misc.c
-index 3d641bb..53e0c50 100644
---- a/drivers/irqchip/irq-ath79-misc.c
-+++ b/drivers/irqchip/irq-ath79-misc.c
-@@ -133,7 +133,7 @@ static int __init ath79_misc_intc_of_init(
- {
- 	struct irq_domain *domain;
- 	void __iomem *base;
--	int irq;
-+	int irq, ret;
- 
- 	irq = irq_of_parse_and_map(node, 0);
- 	if (!irq) {
-@@ -144,18 +144,26 @@ static int __init ath79_misc_intc_of_init(
- 	base = of_iomap(node, 0);
- 	if (!base) {
- 		pr_err("Failed to get MISC IRQ registers\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_irq_dispose;
- 	}
- 
- 	domain = irq_domain_add_linear(node, ATH79_MISC_IRQ_COUNT,
- 				&misc_irq_domain_ops, base);
- 	if (!domain) {
- 		pr_err("Failed to add MISC irqdomain\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_iounmap;
- 	}
- 
- 	ath79_misc_intc_domain_init(domain, irq);
- 	return 0;
-+
-+err_iounmap:
-+	iounmap(base);
-+err_irq_dispose:
-+	irq_dispose_mapping(irq);
-+	return ret;
- }
- 
- static int __init ar7100_misc_intc_of_init(
+I've now dropped the patch from hid.git
+
 -- 
-2.1.0
+Jiri Kosina
+SUSE Labs
 
