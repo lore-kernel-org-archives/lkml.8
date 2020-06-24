@@ -2,139 +2,125 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA97FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDE9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14EC20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6048120899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390076AbgFXHtt (ORCPT
+        id S2390106AbgFXHvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:49:49 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:34891 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390013AbgFXHtq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:49:46 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 3E14E1BF210;
-        Wed, 24 Jun 2020 07:49:39 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 09:53:07 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-Message-ID: <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
+        Wed, 24 Jun 2020 03:51:17 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:37474 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387849AbgFXHvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:51:16 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2qIBPNevCZJAA--.660S6;
+        Wed, 24 Jun 2020 15:45:14 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v3 04/14 RESEND] irqchip/davinci-aintc: Fix potential resource leaks
+Date:   Wed, 24 Jun 2020 15:45:01 +0800
+Message-Id: <1592984711-3130-5-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1592984711-3130-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9DxD2qIBPNevCZJAA--.660S6
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar4DuryfXr1ftF45GF47twb_yoW8tFy3pF
+        W5Aw4a9r48tF15XwsxCFyYgF13Cw1vkFW7C34UGas7ZrsYy34v9r15GFZxZFyUGw48X3Wj
+        yFs3Ja48WF1UZaUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUQK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+        z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+        4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE
+        3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c
+        02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE
+        4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mx
+        kF7I0En4kS14v26r4a6rW5MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMI
+        IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvE
+        x4A2jsIEc7CjxVAFwI0_GcCE3sUvcSsGvfC2KfnxnUUI43ZEXa7sR_ksqPUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+There exists potential resource leaks in the error path, fix them.
 
-On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
-> From: Steve Longerbeam <steve_longerbeam@mentor.com>
->
+Fixes: 0145beed9d26 ("irqchip: davinci-aintc: move the driver to drivers/irqchip")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/irqchip/irq-davinci-aintc.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
- +Niklas, +Laurent
+diff --git a/drivers/irqchip/irq-davinci-aintc.c b/drivers/irqchip/irq-davinci-aintc.c
+index 810ccc4..12db502 100644
+--- a/drivers/irqchip/irq-davinci-aintc.c
++++ b/drivers/irqchip/irq-davinci-aintc.c
+@@ -96,7 +96,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
+ 				     resource_size(&config->reg));
+ 	if (!davinci_aintc_base) {
+ 		pr_err("%s: unable to ioremap register range\n", __func__);
+-		return;
++		goto err_release;
+ 	}
+ 
+ 	/* Clear all interrupt requests */
+@@ -133,7 +133,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
+ 	if (irq_base < 0) {
+ 		pr_err("%s: unable to allocate interrupt descriptors: %d\n",
+ 		       __func__, irq_base);
+-		return;
++		goto err_iounmap;
+ 	}
+ 
+ 	davinci_aintc_irq_domain = irq_domain_add_legacy(NULL,
+@@ -141,7 +141,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
+ 						&irq_domain_simple_ops, NULL);
+ 	if (!davinci_aintc_irq_domain) {
+ 		pr_err("%s: unable to create interrupt domain\n", __func__);
+-		return;
++		goto err_free_descs;
+ 	}
+ 
+ 	ret = irq_alloc_domain_generic_chips(davinci_aintc_irq_domain, 32, 1,
+@@ -150,7 +150,7 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
+ 	if (ret) {
+ 		pr_err("%s: unable to allocate generic irq chips for domain\n",
+ 		       __func__);
+-		return;
++		goto err_domain_remove;
+ 	}
+ 
+ 	for (irq_off = 0, reg_off = 0;
+@@ -160,4 +160,13 @@ void __init davinci_aintc_init(const struct davinci_aintc_config *config)
+ 				       irq_base + irq_off, 32);
+ 
+ 	set_handle_irq(davinci_aintc_handle_irq);
++
++err_domain_remove:
++	irq_domain_remove(davinci_aintc_irq_domain);
++err_free_descs:
++	irq_free_descs(irq_base, config->num_irqs);
++err_iounmap:
++	iounmap(davinci_aintc_base);
++err_release:
++	release_mem_region(config->reg.start, resource_size(&config->reg));
+ }
+-- 
+2.1.0
 
-Niklas, Laurent, how does this play with CAP_IO_MC ?
-
-Thanks
-  j
-
-> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> ioctls for use via v4l2 subdevice node.
->
-> This commit should probably not be pushed upstream, because the (old)
-> idea of video inputs conflicts with the newer concept of establishing
-> media links between src->sink pads.
->
-> However it might make sense for some subdevices to support enum/get/set
-> inputs. One example would be the analog front end subdevice for the
-> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> can be done without requiring the implementation of media entities that
-> would define the analog source for which to establish a media link.
->
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> ---
->  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
->  include/media/v4l2-subdev.h           | 11 +++++++++++
->  2 files changed, 20 insertions(+)
->
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index 6b989fe..73fbfe9 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  			return -ENOTTY;
->  		return v4l2_querymenu(vfh->ctrl_handler, arg);
->
-> +	case VIDIOC_ENUMINPUT:
-> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> +
-> +	case VIDIOC_G_INPUT:
-> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> +
-> +	case VIDIOC_S_INPUT:
-> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> +
->  	case VIDIOC_G_CTRL:
->  		if (!vfh->ctrl_handler)
->  			return -ENOTTY;
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index f7fe78a..6e1a9cd 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
->   * @g_input_status: get input status. Same as the status field in the
->   *	&struct &v4l2_input
->   *
-> + * @enuminput: enumerate inputs. Should return the same input status as
-> + *      @g_input_status if the passed input index is the currently active
-> + *      input.
-> + *
-> + * @g_input: returns the currently active input index.
-> + *
-> + * @s_input: set the active input.
-> + *
->   * @s_stream: used to notify the driver that a video stream will start or has
->   *	stopped.
->   *
-> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
->  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
->  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
->  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
->  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
->  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
->  	int (*g_frame_interval)(struct v4l2_subdev *sd,
-> --
-> 2.7.4
->
