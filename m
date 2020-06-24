@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FCDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6763A214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5AA42084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 20:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593029554;
-	bh=+Ml9K6OhgREHxq/Lrb5RMnmhVEQ5vipDFbL6KJkj7LI=;
+	s=default; t=1593029559;
+	bh=A/PWzn/Vgn/G2nP7MVtJX0MzzVuuQ12qSrEPDu13suE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bERdLHAHW9loUHMnzQhFLxFB/NLBTrja+D7Q2puKtHgJ9Kj9txUPL/dkK09Polddd
-	 LUrsQ2Q08eRMVJAfi4o0V4ZiPeJ0iv42joxUIepzhlbWsXeNY+yIh6Z4+wVhOwCb+A
-	 TZT26StdKNGBaV63axZjfUED6HWPtjzfqCaaD01w=
+	b=BCFenTCzk8zsO0ob1nF3Lzbl73VNe+xX5p/Ye18nBjxM4vWywQxh1inK675gBq0CT
+	 u2X9Me4QKmVXOQkX5QBdEGltoToxYapCoLUpnajpmnu9ceBk5VrdMiYtIz6ANWMbFf
+	 VcDwMG8vQ5WlOopqvuy1ZWysBY+V6VPaUyEJHK6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406392AbgFXUMd (ORCPT
+        id S2406422AbgFXUMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 16:12:33 -0400
+        Wed, 24 Jun 2020 16:12:38 -0400
 Received: from mail.kernel.org ([198.145.29.99]:52436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406370AbgFXUM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:12:29 -0400
+        id S2406382AbgFXUMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 16:12:30 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8474120CC7;
-        Wed, 24 Jun 2020 20:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 704BF214D8;
+        Wed, 24 Jun 2020 20:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593029548;
-        bh=+Ml9K6OhgREHxq/Lrb5RMnmhVEQ5vipDFbL6KJkj7LI=;
+        s=default; t=1593029549;
+        bh=A/PWzn/Vgn/G2nP7MVtJX0MzzVuuQ12qSrEPDu13suE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J9HkoC7/4m/5Ft1DtFJyQAd73lsyyBDWOnfij9dL2kAcc9hJnZ/z8MI7H5K/yMlkN
-         YXGVAUPtfLFTXDeynOwalw9ybOhiPp1MgL9LT3uHXKot7mPoELzxAFW3LrQGq9d4FU
-         BUxiRsR4MzT+PBZ/ZpGp7JEMYzpiIFNJEU7VYgDA=
+        b=yMu3jdXVtsGu3nvHhWaUww+aMfcmHsqc71ASFlP4Pm/sjjnKm5633fVR4G0bjMGg0
+         IMY8ZxAqMQI1BX1fpMq3yRkHhx7y/wmAGgOaI3dByMhauWbu0ra9kVpGvGjT4TZFch
+         Jr20O73U4hEtHcV6m2iuUDbBI+oGUmkO+cdxmyso=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,12 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page allocator for PREEMPT_RT
-Date:   Wed, 24 Jun 2020 13:12:12 -0700
-Message-Id: <20200624201226.21197-3-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 07/17] rcu/tree: Move kfree_rcu_cpu locking/unlocking to separate functions
+Date:   Wed, 24 Jun 2020 13:12:16 -0700
+Message-Id: <20200624201226.21197-7-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200624201200.GA28901@paulmck-ThinkPad-P72>
 References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
@@ -61,54 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-To keep the kfree_rcu() code working in purely atomic sections on RT,
-such as non-threaded IRQ handlers and raw spinlock sections, avoid
-calling into the page allocator which uses sleeping locks on RT.
+Introduce helpers to lock and unlock per-cpu "kfree_rcu_cpu"
+structures. That will make kfree_call_rcu() more readable
+and prevent programming errors.
 
-In fact, even if the  caller is preemptible, the kfree_rcu() code is
-not, as the krcp->lock is a raw spinlock.
-
-Calling into the page allocator is optional and avoiding it should be
-Ok, especially with the page pre-allocation support in future patches.
-Such pre-allocation would further avoid the a need for a dynamically
-allocated page in the first place.
-
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
-Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
-Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/rcu/tree.c | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 64592b4..dbdd509 100644
+index 519a3f5..edc512e 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -3184,6 +3184,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
- 		if (!bnode) {
- 			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
+@@ -3017,6 +3017,27 @@ debug_rcu_bhead_unqueue(struct kfree_rcu_bulk_data *bhead)
+ #endif
+ }
  
-+			/*
-+			 * To keep this path working on raw non-preemptible
-+			 * sections, prevent the optional entry into the
-+			 * allocator as it uses sleeping locks. In fact, even
-+			 * if the caller of kfree_rcu() is preemptible, this
-+			 * path still is not, as krcp->lock is a raw spinlock.
-+			 * With additional page pre-allocation in the works,
-+			 * hitting this return is going to be much less likely.
-+			 */
-+			if (IS_ENABLED(CONFIG_PREEMPT_RT))
-+				return false;
++static inline struct kfree_rcu_cpu *
++krc_this_cpu_lock(unsigned long *flags)
++{
++	struct kfree_rcu_cpu *krcp;
 +
- 			bnode = (struct kfree_rcu_bulk_data *)
- 				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
- 		}
++	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
++	krcp = this_cpu_ptr(&krc);
++	if (likely(krcp->initialized))
++		raw_spin_lock(&krcp->lock);
++
++	return krcp;
++}
++
++static inline void
++krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
++{
++	if (likely(krcp->initialized))
++		raw_spin_unlock(&krcp->lock);
++	local_irq_restore(flags);
++}
++
+ /*
+  * This function is invoked in workqueue context after a grace period.
+  * It frees all the objects queued on ->bhead_free or ->head_free.
+@@ -3242,11 +3263,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	struct kfree_rcu_cpu *krcp;
+ 	void *ptr;
+ 
+-	local_irq_save(flags);	// For safely calling this_cpu_ptr().
+-	krcp = this_cpu_ptr(&krc);
+-	if (krcp->initialized)
+-		raw_spin_lock(&krcp->lock);
+-
++	krcp = krc_this_cpu_lock(&flags);
+ 	ptr = (void *)head - (unsigned long)func;
+ 
+ 	// Queue the object but don't yet schedule the batch.
+@@ -3277,9 +3294,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	}
+ 
+ unlock_return:
+-	if (krcp->initialized)
+-		raw_spin_unlock(&krcp->lock);
+-	local_irq_restore(flags);
++	krc_this_cpu_unlock(krcp, flags);
+ }
+ EXPORT_SYMBOL_GPL(kfree_call_rcu);
+ 
 -- 
 2.9.5
 
