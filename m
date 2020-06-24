@@ -2,102 +2,65 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83644C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C23FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6780C2137B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E50520899
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 07:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390206AbgFXH5j (ORCPT
+        id S2390159AbgFXH65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:57:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35694 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389965AbgFXH5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:57:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BAC60AFD5;
-        Wed, 24 Jun 2020 07:57:37 +0000 (UTC)
-Subject: Re: [PATCH 9/9] mm, slab/slub: move and improve cache_from_obj()
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
-        Roman Gushchin <guro@fb.com>, Jann Horn <jannh@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-References: <20200610163135.17364-1-vbabka@suse.cz>
- <20200610163135.17364-10-vbabka@suse.cz> <202006171039.FBDF2D7F4A@keescook>
- <afeda7ac-748b-33d8-a905-56b708148ad5@suse.cz>
-Message-ID: <b33e0fa7-cd28-4788-9e54-5927846329ef@suse.cz>
-Date:   Wed, 24 Jun 2020 09:57:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 03:58:57 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54326 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388836AbgFXH65 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:58:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U0aLOJ8_1592985534;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U0aLOJ8_1592985534)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 24 Jun 2020 15:58:54 +0800
+Date:   Wed, 24 Jun 2020 15:58:54 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me,
+        baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] nvme: Add Arbitration Burst support
+Message-ID: <20200624075854.GA37292@VM20190228-100.tbsite.net>
+Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
+References: <cover.1592980985.git.baolin.wang@linux.alibaba.com>
+ <32d99c016d23d660f5be4a9754b5b9aafe81ab6c.1592980985.git.baolin.wang@linux.alibaba.com>
+ <20200624065258.GA18130@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <afeda7ac-748b-33d8-a905-56b708148ad5@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624065258.GA18130@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/20 12:10 PM, Vlastimil Babka wrote:
-> ----8<----
-> From b8df607d92b37e5329ce7bda62b2b364cc249893 Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Thu, 18 Jun 2020 11:52:03 +0200
-> Subject: [PATCH] mm, slab/slub: improve error reporting and overhead of
->  cache_from_obj()
+On Wed, Jun 24, 2020 at 08:52:58AM +0200, Christoph Hellwig wrote:
+> On Wed, Jun 24, 2020 at 02:49:57PM +0800, Baolin Wang wrote:
+> > >From the NVMe spec, "In order to make efficient use of the non-volatile
+> > memory, it is often advantageous to execute multiple commands from a
+> > Submission Queue in parallel. For Submission Queues that are using
+> > weighted round robin with urgent priority class or round robin
+> > arbitration, host software may configure an Arbitration Burst setting".
+> > Thus add Arbitration Burst setting support.
 > 
+> What is the value add of doing this in the kernel?  Wouldn't a nvme-cli
+> subcommand to just set the arbitration burst to the recommended value,
+> either as a saved or current value be both more useful and also cause
+> less kernel bloat?
 
-Another small fixup, please.
-
-----8<----
-From 2cd24408828a22a3cd4301afbaf98767b1a14eb1 Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Wed, 24 Jun 2020 09:49:15 +0200
-Subject: [PATCH] mm, slab/slub: improve error reporting and overhead of
- cache_from_obj()-fix
-
-The added VM_WARN_ON_ONCE triggers [1] with CONFIG_SLAB, as SLAB_DEBUG_FLAGS
-doesn't include SLAB_CONSISTENCY_CHECKS. Move the check under #ifdef
-SLUB_DEBUG.
-
-[1] https://lore.kernel.org/r/20200623090213.GW5535@shao2-debian
-
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/slab.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/slab.h b/mm/slab.h
-index 525260217013..e829d9f5e6ef 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -229,8 +229,8 @@ static inline void print_tracking(struct kmem_cache *s, void *object)
-  */
- static inline bool kmem_cache_debug_flags(struct kmem_cache *s, slab_flags_t flags)
- {
--	VM_WARN_ON_ONCE(!(flags & SLAB_DEBUG_FLAGS));
- #ifdef CONFIG_SLUB_DEBUG
-+	VM_WARN_ON_ONCE(!(flags & SLAB_DEBUG_FLAGS));
- 	if (static_branch_unlikely(&slub_debug_enabled))
- 		return s->flags & flags;
- #endif
--- 
-2.27.0
-
+Yes, that's another way to configure the RAB, but for some simple and
+frequently-used usage cases, we just want to use the recommanded arbitration
+burst as default without bothering the nvme-cli tool every reset time.
 
