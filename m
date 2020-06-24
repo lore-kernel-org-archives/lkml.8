@@ -2,133 +2,120 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92546C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758D4206EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:58:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A3AqzG26"
+	by mail.kernel.org (Postfix) with ESMTP id 2F02D206EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 17:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405862AbgFXR6V (ORCPT
+        id S2405899AbgFXR67 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405377AbgFXR6T (ORCPT
+        Wed, 24 Jun 2020 13:58:59 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:49507 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405377AbgFXR66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:58:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A606C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:58:18 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so1766174pgc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 10:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bg+1P63VLxUYsu4ENntJNQHEjiQ6uihm5Nk7mXeioVo=;
-        b=A3AqzG26sCA4f+KdGaF7CKySAhqu82wsSL/pEiTqkD1fIRlRR6OmLuU+QKP3lA3oQE
-         cqLdnKzTw/C/vRvSge7D8Q1ju5lSbrqVgU99U2YlNsdFodq/iULU0ONGuwHZagMUm5q4
-         IFUK+OfCrUmNNFofOr4SHNti9rr67bs1xxUbs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bg+1P63VLxUYsu4ENntJNQHEjiQ6uihm5Nk7mXeioVo=;
-        b=a5nv8UsNPFVAzFLCuouUMpCVU3D9o9BD78Qf67dYIGiJiLoD46qCZZnzk+ogyRqx7I
-         HhewG3vhrp0AxL3bt82GC9s8LrigGf7c5PcKJZQND4Taa9WcXSmty1vpWfkRiikcLnDu
-         VjoVvwsY12KjtH2Vvol6lTOCmFv2U/KUkqpjgf6psyjkx22DTZeftJxpkAE0augpdqWk
-         td2aESXsomDGHRwI9jXkzLCUIshrEFK9A5oGyFdZaoB2TLm5c9yN5c22kl/Vq05n3JrS
-         /ZPoR4Hdj7eeNJbqNWkIlEhl6t569mi7GEAjhVLgKYwpvW87H8h6OojpXVjSd2cS3neZ
-         2oZA==
-X-Gm-Message-State: AOAM5300mYO0uNfjekswdVj+4lDZ88UUiT+zQgifrFfScV5DnIYuXlUm
-        x/xDo24aUV2WVNtmuVUDDZP85g==
-X-Google-Smtp-Source: ABdhPJxMjymh7nD+4h+MHOeIHifL3w9DH3b6q0GpFMzkPSla1mcQvMmiGmbtJm6MO3cAvuqQMjJtlQ==
-X-Received: by 2002:a63:a843:: with SMTP id i3mr23295731pgp.190.1593021497767;
-        Wed, 24 Jun 2020 10:58:17 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id r8sm20958635pfq.16.2020.06.24.10.58.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 10:58:17 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     rjliao@codeaurora.org, marcel@holtmann.org,
-        linux-bluetooth@vger.kernel.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Bluetooth: btusb: Reset port on cmd timeout
-Date:   Wed, 24 Jun 2020 10:58:09 -0700
-Message-Id: <20200624105737.1.Ibae403db54245c458d14297f1892c77c5055da41@changeid>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+        Wed, 24 Jun 2020 13:58:58 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21606053-1500050 
+        for multiple; Wed, 24 Jun 2020 18:58:53 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200624165057.GJ6578@ziepe.ca>
+References: <20200624080248.3701-1-chris@chris-wilson.co.uk> <20200624121053.GD6578@ziepe.ca> <159300126338.4527.3968787379471939056@build.alporthouse.com> <20200624123910.GA3178169@ziepe.ca> <159300796224.4527.2014771396582759689@build.alporthouse.com> <20200624141604.GH6578@ziepe.ca> <159300850942.4527.8335506003268197914@build.alporthouse.com> <20200624142544.GI6578@ziepe.ca> <159300945202.4527.4366416413140642633@build.alporthouse.com> <20200624165057.GJ6578@ziepe.ca>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [PATCH 1/2] mm/mmu_notifier: Mark up direct reclaim paths with MAYFAIL
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Message-ID: <159302152915.4527.9099070806700792078@build.alporthouse.com>
+User-Agent: alot/0.8.1
+Date:   Wed, 24 Jun 2020 18:58:49 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QCA_ROME doesn't have support for the reset gpio but sometimes gets into
-a state where it is unresponsive to commands. When this happens, reset
-the port to attempt to revive the chip.
+Quoting Jason Gunthorpe (2020-06-24 17:50:57)
+> On Wed, Jun 24, 2020 at 03:37:32PM +0100, Chris Wilson wrote:
+> > Quoting Jason Gunthorpe (2020-06-24 15:25:44)
+> > > On Wed, Jun 24, 2020 at 03:21:49PM +0100, Chris Wilson wrote:
+> > > > Quoting Jason Gunthorpe (2020-06-24 15:16:04)
+> > > > > On Wed, Jun 24, 2020 at 03:12:42PM +0100, Chris Wilson wrote:
+> > > > > > Quoting Jason Gunthorpe (2020-06-24 13:39:10)
+> > > > > > > On Wed, Jun 24, 2020 at 01:21:03PM +0100, Chris Wilson wrote:
+> > > > > > > > Quoting Jason Gunthorpe (2020-06-24 13:10:53)
+> > > > > > > > > On Wed, Jun 24, 2020 at 09:02:47AM +0100, Chris Wilson wrote:
+> > > > > > > > > > When direct reclaim enters the shrinker and tries to reclaim pages, it
+> > > > > > > > > > has to opportunitically unmap them [try_to_unmap_one]. For direct
+> > > > > > > > > > reclaim, the calling context is unknown and may include attempts to
+> > > > > > > > > > unmap one page of a dma object while attempting to allocate more pages
+> > > > > > > > > > for that object. Pass the information along that we are inside an
+> > > > > > > > > > opportunistic unmap that can allow that page to remain referenced and
+> > > > > > > > > > mapped, and let the callback opt in to avoiding a recursive wait.
+> > > > > > > > > 
+> > > > > > > > > i915 should already not be holding locks shared with the notifiers
+> > > > > > > > > across allocations that can trigger reclaim. This is already required
+> > > > > > > > > to use notifiers correctly anyhow - why do we need something in the
+> > > > > > > > > notifiers?
+> > > > > > > > 
+> > > > > > > > for (n = 0; n < num_pages; n++)
+> > > > > > > >       pin_user_page()
+> > > > > > > > 
+> > > > > > > > may call try_to_unmap_page from the lru shrinker for [0, n-1].
+> > > > > > > 
+> > > > > > > Yes, of course you can't hold any locks that intersect with notifiers
+> > > > > > > across pin_user_page()/get_user_page()
+> > > > > > 
+> > > > > > What lock though? It's just the page refcount, shrinker asks us to drop
+> > > > > > it [via mmu], we reply we would like to keep using that page as freeing
+> > > > > > it for the current allocation is "robbing Peter to pay Paul".
+> > > > > 
+> > > > > Maybe I'm unclear what this series is actually trying to fix? 
+> > > > > 
+> > > > > You said "avoiding a recursive wait" which sounds like some locking
+> > > > > deadlock to me.
+> > > > 
+> > > > It's the shrinker being called while we are allocating for/on behalf of
+> > > > the object. As we are actively using the object, we don't want to free
+> > > > it -- the partial object allocation being the clearest, if the object
+> > > > consists of 2 pages, trying to free page 0 in order to allocate page 1
+> > > > has to fail (and the shrinker should find another candidate to reclaim,
+> > > > or fail the allocation).
+> > > 
+> > > mmu notifiers are not for influencing policy of the mm.
+> > 
+> > It's policy is "this may fail" regardless of the mmu notifier at this
+> > point. That is not changed.
+> 
+> MMU notifiers are for tracking updates, they are not allowed to fail.
+> The one slightly weird case of non-blocking is the only exception.
+> 
+> > Your suggestion is that we move the pages to the unevictable mapping so
+> > that the shrinker LRU is never invoked on pages we have grabbed with
+> > pin_user_page. Does that work with the rest of the mmu notifiers?
+> 
+> That is beyond what I'm familiar with - but generally - if you want to
+> influence decisions the MM is making then it needs to be at the
+> front of the process and not inside notifiers. 
+> 
+> So what you describe seems broadly appropriate to me.
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-On Chromebooks with this chipset, we encountered cmd_timeout after
-running suspend stress test for hundreds of iterations. Without
-a recovery mechanism, continued cmd_timeout failures eventually caused
-the suspend stress test to fail.
-
-This change will just reset the port that the Bluetooth chip is on when
-cmd_timeout is encountered. At the very least, the driver will unload
-and stop affecting suspend. It doesn't seem to restore the BT controller
-to a good state however (this still requires a power cycle).
-
- drivers/bluetooth/btusb.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index e42fdd625eb023..b806a88702328b 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -573,6 +573,22 @@ static void btusb_rtl_cmd_timeout(struct hci_dev *hdev)
- 	gpiod_set_value_cansleep(reset_gpio, 0);
- }
+Sadly, it's a mlock_vma_page problem all over again.
  
-+static void btusb_generic_usb_cmd_timeout(struct hci_dev *hdev)
-+{
-+	struct btusb_data *data = hci_get_drvdata(hdev);
-+	int err;
-+
-+	if (++data->cmd_timeout_cnt < 5)
-+		return;
-+
-+	bt_dev_err(hdev, "Multiple cmd timeouts seen. Resetting usb device.");
-+	err = usb_autopm_get_interface(data->intf);
-+	if (!err)
-+		usb_queue_reset_device(data->intf);
-+	else
-+		bt_dev_err(hdev, "Failed usb_autopm_get_interface with %d", err);
-+}
-+
- static inline void btusb_free_frags(struct btusb_data *data)
- {
- 	unsigned long flags;
-@@ -3964,6 +3980,7 @@ static int btusb_probe(struct usb_interface *intf,
- 	if (id->driver_info & BTUSB_QCA_ROME) {
- 		data->setup_on_usb = btusb_setup_qca;
- 		hdev->set_bdaddr = btusb_set_bdaddr_ath3012;
-+		hdev->cmd_timeout = btusb_generic_usb_cmd_timeout;
- 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
- 		btusb_check_needs_reset_resume(intf);
- 	}
--- 
-2.27.0.111.gc72c7da667-goog
+> I'm still a little unclear on what you are trying to fix - pinned
+> pages are definitely not freed, do you have some case where pages
+> which are pinned are being cleaned out from the MM despite being
+> pinned? Sounds a bit strange, maybe that is worth adressing directly?
 
+It suffices to say that pin_user_pages does not prevent try_to_unmap_one
+from trying to revoke the page. But we could perhaps slip a
+page_maybe_dma_pinned() in around there and see what happens.
+-Chris
