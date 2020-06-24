@@ -2,75 +2,91 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C03D20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D86520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 02:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387962AbgFXCHU (ORCPT
+        id S2388087AbgFXCH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jun 2020 22:07:20 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:58738 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730898AbgFXCHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jun 2020 22:07:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U0YisOY_1592964436;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U0YisOY_1592964436)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 24 Jun 2020 10:07:16 +0800
+        Tue, 23 Jun 2020 22:07:26 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:53852 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730898AbgFXCHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jun 2020 22:07:25 -0400
+Received: from [10.130.0.66] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2tUtfJeAAlJAA--.285S3;
+        Wed, 24 Jun 2020 10:07:18 +0800 (CST)
+Subject: Re: [PATCH RESEND] net/cisco: Fix a sleep-in-atomic-context bug in
+ enic_init_affinity_hint()
+To:     Jakub Kicinski <kuba@kernel.org>
+References: <1592899989-22049-1-git-send-email-likaige@loongson.cn>
+ <20200623135007.3105d067@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Christian Benvenuti <benve@cisco.com>,
+        Govindarajulu Varadarajan <_govind@gmx.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+From:   Kaige Li <likaige@loongson.cn>
+Message-ID: <f12f40fe-7c9a-6ba8-f2ff-daf315030258@loongson.cn>
 Date:   Wed, 24 Jun 2020 10:07:16 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me,
-        baolin.wang7@gmail.com, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] nvme-pci: Add controller memory buffer supported
- macro
-Message-ID: <20200624020716.GB40094@VM20190228-100.tbsite.net>
-Reply-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-References: <cover.1592916850.git.baolin.wang@linux.alibaba.com>
- <eab18c7696ea0e34a6ab0371d7d17ad45d1566ce.1592916850.git.baolin.wang@linux.alibaba.com>
- <20200623162751.GA4846@lst.de>
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623162751.GA4846@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200623135007.3105d067@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxr2tUtfJeAAlJAA--.285S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrKr4DJw43uF1fWw1DCFWfXwb_yoWDuFXE9r
+        4j9F93Cw4UJw43Kw4vyw40qr9a9Fy3X34kC3W29398J34fX34ru3Z8CFy3Jw1rWr47Ar1Y
+        yF12ga4rA342gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+        bIxvr21lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7VU1sYFtUUUUU==
+X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 06:27:51PM +0200, Christoph Hellwig wrote:
-> On Tue, Jun 23, 2020 at 09:24:33PM +0800, Baolin Wang wrote:
-> > Introduce a new capability macro to indicate if the controller
-> > supports the memory buffer or not, instead of reading the
-> > NVME_REG_CMBSZ register.
-> 
-> This is a complex issue.  The CMBS bit was only added in NVMe 1.4 as
-> a backwards incompatible change, as the CMB addressing scheme can lead
 
-Ah, right, I think I should add another version condition:
-if ((ctrl->vs >= NVME_VS(1, 4, 0) && !NVME_CAP_CMBS(dev->ctrl.cap)) ||
-    dev->cmb_size)
-    return;
+On 06/24/2020 04:50 AM, Jakub Kicinski wrote:
+> On Tue, 23 Jun 2020 16:13:09 +0800 Kaige Li wrote:
+>> The kernel module may sleep with holding a spinlock.
+>>
+>> The function call paths (from bottom to top) are:
+>>
+>> [FUNC] zalloc_cpumask_var(GFP_KERNEL)
+>> drivers/net/ethernet/cisco/enic/enic_main.c, 125: zalloc_cpumask_var in enic_init_affinity_hint
+>> drivers/net/ethernet/cisco/enic/enic_main.c, 1918: enic_init_affinity_hint in enic_open
+>> drivers/net/ethernet/cisco/enic/enic_main.c, 2348: enic_open in enic_reset
+>> drivers/net/ethernet/cisco/enic/enic_main.c, 2341: spin_lock in enic_reset
+>>
+>> To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC.
+>>
+>> Signed-off-by: Kaige Li <likaige@loongson.cn>
+> I don't think this is sufficient. Calling open with a spin lock held
+> seems like a very bad idea. At a quick look the driver also calls
+> request_irq() from open - request_irq() can sleep.
 
-> to data corruption.  The CMBS was added as part of the horribe hack
-> that also involves the CBA field, which we'll need to see before
-> using it to work around the addressing issue.  At the same time we
-> should also continue supporting the legacy pre-1.4 CMB with a warning
-> (and may reject it if we know we run in a VM).
+You are right. Should I do spin_unlock before the enic_open, or remove
+spin_lock in enic_reset?
 
-Thanks for your explanation. I saw we've added an CMB sysfs attribute
-to get the CMB location and size if we enabled CMB, so should we still
-add some information in nvme_map_cmb() let user know explicitly?
-
-dev_info(dev->ctrl.device, "Registered the CMB, bar=0x%x, size=%lld\n", bar,
-size);
+Thank you.
 
