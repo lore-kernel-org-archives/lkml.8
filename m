@@ -2,127 +2,139 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92099C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3864EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 705622070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nu9kRpny"
+	by mail.kernel.org (Postfix) with ESMTP id 0541D2085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 04:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592971515;
+	bh=UN9AXOXZVMh4VcN/L7a9gqChekTy955irMIWoZV9chI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=XtXa2iFx9tDQkEfKwW9MlsznI2NHIFE5Yp/FA2+XJKA5iBb4kWj8eOixv+W9AKYo2
+	 E1e/NGqK5oYLdz0tYgpcfGhvUcXMDJD+uOnPuJzIF/vMV049CJCE3JKtT3c+v9Sp09
+	 iekD5Wo0splz8BUDHIdus3Feo52633dk6yovlMeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgFXEBC (ORCPT
+        id S1728352AbgFXEFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 00:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgFXEBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 00:01:00 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E38C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 21:00:59 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t21so426134edr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jun 2020 21:00:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dF8dKxnPHS2Nn5CyPf9mD/eDU6sU82EnnsCXFYTCNns=;
-        b=nu9kRpnyHBfkgT5jPPqbE2CWH+IOFurfeMDCJ4Xh0XO27lhkCehDRewcYvJIFXhblU
-         vggpF9KXpKhPNAVOt2EkirnGGKT0Kw0PA9t8D2196Pmj4/zuwzB/FyNej43N9NdPAziQ
-         Z1/aE8nkQD624Kn+k0Y+NWFw7ycvvCx+DSGK1uTaK5vQbKFlDgKIga8BWqi7VxcPj/Ai
-         kQlyLzPOAiopDJXV6HhGFLlGZOcbGa5jcfOt+T5hgWQbk/UUx3U9Bxhu6+06Pr59PhBL
-         pOJA8d47F4ZDYkYEIoC2uHrRsp+kjSRbaDiwt3EtYF23/gkqLXArRig+F0OhVaFN7U8D
-         KGWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dF8dKxnPHS2Nn5CyPf9mD/eDU6sU82EnnsCXFYTCNns=;
-        b=S6o93ChO3wwyBMIu5H0CsZsYBhPeuWUTLpQ5HxtrQIZ1e681dlw0+1cxIYDo6OgFRy
-         LWcwW/A13p9NcSuG1ATVGSAG4bSO0mCCMtSZYdFQRXxMF6kuOVuJyT+1iALCnSzzt6HA
-         GUalW+Cpi+GTd8B3q6Zz9PPB83r7ZGXLDp1ovDokckNPS4nYLgpZfoXVZ4snC59CRLYZ
-         gvJbJRSOaYI6B3Vrc5gB25Zm2C0+iVCOVds4reur5lGw+4zNTQL/xDKvh/09ANBMg4tZ
-         7KouUGH/57Np6EMIrqOgyJXaEtxQoqvXpL4zxy5MBxOZkYCWEluleJDu+kvTWCEJN30o
-         vbqw==
-X-Gm-Message-State: AOAM530BXidAWZHEUftnbWB9uvJuzyw+T5S1qgoC5pCJ6yNMvXLjv3PE
-        uFYRYM5Z92QrMRhHd5XV701Skh2G
-X-Google-Smtp-Source: ABdhPJx/BKefyBmRSup9YzE3H8G/XhgzGkEgd/Q/lDRLB4MgNTGuREvKtkOx1OK66k/7Ba442lHxkQ==
-X-Received: by 2002:a50:f0c4:: with SMTP id a4mr25610656edm.125.1592971258190;
-        Tue, 23 Jun 2020 21:00:58 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id dt22sm15421965ejc.104.2020.06.23.21.00.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 21:00:57 -0700 (PDT)
-Subject: Re: reset-brcmstb-rescal.c:undefined reference to
- `devm_ioremap_resource'
-To:     kernel test robot <lkp@intel.com>,
-        Jim Quinlan <jim2101024@gmail.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>
-References: <202006240911.ujUUG94l%lkp@intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <8bf7aba0-55c0-d505-6907-333b1b5eb807@gmail.com>
-Date:   Tue, 23 Jun 2020 21:00:55 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Wed, 24 Jun 2020 00:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgFXEFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 00:05:05 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1BA2070E;
+        Wed, 24 Jun 2020 04:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592971504;
+        bh=UN9AXOXZVMh4VcN/L7a9gqChekTy955irMIWoZV9chI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=G2fm4SY0SO1gCyEyonbU08pLiG2aQZp/buBlZx/PMtFrFFx9xpfopeTtOA/9Gg/7r
+         F17pnTMhzT8/CEIloxuTVFVbb4FlqmWCjd8x/2GBInM77wA76+0FaROqOCtYzaHP6J
+         yjNoGLVYA2g0KGVBw5mvR7AvqBxmZ1DWvgncv6/8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B3329352265B; Tue, 23 Jun 2020 21:05:04 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 21:05:04 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Akira Yokosawa <akiyks@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        stern@rowland.harvard.edu, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
+Subject: Re: [PATCH 2/2] Documentation/litmus-tests: Add note on herd7 7.56
+ in atomic litmus test
+Message-ID: <20200624040504.GB9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200623005152.GA27459@paulmck-ThinkPad-P72>
+ <20200623005231.27712-13-paulmck@kernel.org>
+ <e3693dec-213a-3f65-eb1c-284bf8ca6e13@gmail.com>
+ <20200623155419.GI9247@paulmck-ThinkPad-P72>
+ <b3433b44-29af-4ef4-d047-b0b0d51a9fbd@gmail.com>
+ <9e1d448a-cf3c-523d-e0a6-f46ac4706c48@gmail.com>
+ <20200623232425.GB418699@andrea>
 MIME-Version: 1.0
-In-Reply-To: <202006240911.ujUUG94l%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623232425.GB418699@andrea>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/23/2020 6:26 PM, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   3e08a95294a4fb3702bb3d35ed08028433c37fe6
-> commit: 4cf176e52397853e4a4dd37e917c5eafb47ba8d1 reset: Add Broadcom STB RESCAL reset controller
-> date:   6 months ago
-> config: um-allmodconfig (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-> reproduce (this is a W=1 build):
->         git checkout 4cf176e52397853e4a4dd37e917c5eafb47ba8d1
->         # save the attached .config to linux build tree
->         make W=1 ARCH=um 
+On Wed, Jun 24, 2020 at 01:24:25AM +0200, Andrea Parri wrote:
+> On Wed, Jun 24, 2020 at 07:09:01AM +0900, Akira Yokosawa wrote:
+> > From f808c371075d2f92b955da1a83ecb3828db1972e Mon Sep 17 00:00:00 2001
+> > From: Akira Yokosawa <akiyks@gmail.com>
+> > Date: Wed, 24 Jun 2020 06:59:26 +0900
+> > Subject: [PATCH 2/2] Documentation/litmus-tests: Add note on herd7 7.56 in atomic litmus test
+> > 
+> > herdtools 7.56 has enhanced herd7's C parser so that the "(void)expr"
+> > construct in Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus is
+> > accepted.
+> > 
+> > This is independent of LKMM's cat model, so mention the required
+> > version in the header of the litmus test and its entry in README.
+> > 
+> > CC: Boqun Feng <boqun.feng@gmail.com>
+> > Reported-by: Andrea Parri <parri.andrea@gmail.com>
+> > Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    /usr/bin/ld: arch/um/drivers/vde.o: in function `vde_open_real':
->    (.text+0x9cb): warning: Using 'getgrnam' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
->    /usr/bin/ld: (.text+0x61d): warning: Using 'getpwuid' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
->    /usr/bin/ld: arch/um/drivers/vector_user.o: in function `user_init_socket_fds':
->    vector_user.c:(.text+0x53a): warning: Using 'getaddrinfo' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
->    /usr/bin/ld: arch/um/drivers/pcap.o: in function `pcap_nametoaddr':
->    (.text+0x10095): warning: Using 'gethostbyname' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
->    /usr/bin/ld: arch/um/drivers/pcap.o: in function `pcap_nametonetaddr':
->    (.text+0x10155): warning: Using 'getnetbyname' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
->    /usr/bin/ld: arch/um/drivers/pcap.o: in function `pcap_nametoproto':
->    (.text+0x10395): warning: Using 'getprotobyname' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
->    /usr/bin/ld: arch/um/drivers/pcap.o: in function `pcap_nametoport':
->    (.text+0x1018b): warning: Using 'getservbyname' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
->    /usr/bin/ld: drivers/reset/reset-brcmstb-rescal.o: in function `brcm_rescal_reset_probe':
->>> reset-brcmstb-rescal.c:(.text+0x21b): undefined reference to `devm_ioremap_resource'
->    /usr/bin/ld: drivers/reset/reset-intel-gw.o: in function `intel_reset_probe':
->    reset-intel-gw.c:(.text+0x5be): undefined reference to `devm_platform_ioremap_resource'
->    collect2: error: ld returned 1 exit status
+> Frankly, I was hoping that we could simply bump the herd7 version in
+> tools/memory-model/README; I understand your point, but I admit that
+> I haven't being playing with 7.52 for a while now...
 
-This is a late report, it was fixed upstream with:
+Maybe in a few years it will no longer be relevant, and could then
+be removed?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7fbcc53514c5e410dd598685c5fbbe1e6a5a87e1
--- 
-Florian
+> Acked-by: Andrea Parri <parri.andrea@gmail.com>
+
+I queued both, thank you both!
+
+						Thanx, Paul
+
+>   Andrea
+> 
+> 
+> > ---
+> >  Documentation/litmus-tests/README                                | 1 +
+> >  .../atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus       | 1 +
+> >  2 files changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+> > index b79e640214b9..7f5c6c3ed6c3 100644
+> > --- a/Documentation/litmus-tests/README
+> > +++ b/Documentation/litmus-tests/README
+> > @@ -19,6 +19,7 @@ Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+> >  
+> >  Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> >      Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> > +    NOTE: Require herd7 7.56 or later which supports "(void)expr".
+> >  
+> >  
+> >  RCU (/rcu directory)
+> > diff --git a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> > index 49385314d911..ffd4d3e79c4a 100644
+> > --- a/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> > +++ b/Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> > @@ -4,6 +4,7 @@ C Atomic-RMW-ops-are-atomic-WRT-atomic_set
+> >   * Result: Never
+> >   *
+> >   * Test that atomic_set() cannot break the atomicity of atomic RMWs.
+> > + * NOTE: This requires herd7 7.56 or later which supports "(void)expr".
+> >   *)
+> >  
+> >  {
+> > -- 
+> > 2.17.1
+> > 
+> > 
