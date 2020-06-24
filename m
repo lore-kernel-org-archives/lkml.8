@@ -2,154 +2,98 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7B62081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43672082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 19:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S21OQMOj"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1ttHOWHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391346AbgFXTp4 (ORCPT
+        id S2391364AbgFXTqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:45:56 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19542 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391324AbgFXTpz (ORCPT
+        Wed, 24 Jun 2020 15:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391324AbgFXTqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:45:55 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef3ad160000>; Wed, 24 Jun 2020 12:44:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 24 Jun 2020 12:45:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 24 Jun 2020 12:45:55 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jun
- 2020 19:45:45 +0000
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
- HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 24 Jun 2020 19:45:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dTepn0XT70CWJWxF4kaianoXMA2WuqSdc7K1PVW57u/p00GZZu8josAYj+mB06GX5Asgmeh1X02pUEj9945K92vAkkvV4alVKJxdmbOHuUeo89a8l/o1F5X/nWx1IJ59V2X7ocMHqXiN+9S+zcV2N7J/SFyg2Y4Xte7EKme9RPuBcd3LA1y6ObYKVuitE97LfsWyxARsVtNO7wCiGHHfl1RE+FeO/Q0aBspNWMF11TlYRhq55Dn5Z4nRpzL1AuqXly4VDispPpGwNbUGZ5kMeehQUY+AJi2UDOc3mfYVpknWpsNt8/464Dqruu6A/kSJjP//mx09hiW7hiTNuLelIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kuPI2Di+DIDffUlKG6VcYk+ZjS4AkgZqfOBzWRPFDMc=;
- b=BaKx3md7UBiV3O2ucZcr4jkhDk0P0WBuS9l5eVCj6A/bMEZ84l/W7wnjf5hnkhdETWnfYncl3+ZyPDwrzbHugBUPgC47nvJ5lTPE7NAQ8FIi+H1x0EP7nVsiAEi/dVWHzmA+Bv6yrBijRMo0/eDEXM1rYBcwhyEjejepO1qOhvb7Zz2LPvmQPpzv2DmMd0yXSVffwqeyjT6/gx5yFD/058JkgddAq/L6Lu9rt3yFhDPwKJXhnhxfg6TVP3YVGoS0q9nkH3QJIvSU1BEpT0aknjMXsaJVJv3L9kYHK4mAS9AtgJSBmPn4ObxQOkNpkCpT6F3qSRsSWgvr8L9TKKPgAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3516.namprd12.prod.outlook.com (2603:10b6:5:18b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
- 2020 19:45:45 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
- 19:45:45 +0000
-Date:   Wed, 24 Jun 2020 16:45:43 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Shay Drory <shayd@mellanox.com>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH rdma-next 0/4] Bag of fixes and refactoring in MAD layer
-Message-ID: <20200624194543.GA3280695@mellanox.com>
-References: <20200621104738.54850-1-leon@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200621104738.54850-1-leon@kernel.org>
-X-NVConfidentiality: public
-X-ClientProxiedBy: YTOPR0101CA0065.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::42) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Wed, 24 Jun 2020 15:46:18 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A1EC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:46:17 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ft14so568371pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 12:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=etcC5SCWJE9q5GKdy+4hZU308fzw/ff8X68zPO6H23o=;
+        b=1ttHOWHtWCaWFJVfcE2SivyYk2ulxNbtSjixxOQfHds2kZGP6Gc9XkIqkFyUu81A3l
+         zVxwmONzVkY/1212l1Ohi1ILWSpgMjCfcSvQhbHxD4nZskRCMuc72cy4JeucvNJCgDX6
+         CenroNIIg0Q5c6VjeWCsiLarTiCDSXL4er3ejHU6M2DFrrFTrfJHNzO6GTZgZFtESrtB
+         hD6VDL+P7kH7+lBwdCnvXqSCgpXQ1kmTRiBCReupOsYSyrJW8NY//clp62BhHDyH9/t3
+         hflvA9iK6GxL77waLEyDKc5iv8fXY4gEAKJOwOjHGT0bOfb8O1JXj/ls4Rp0xE4nv0rP
+         Yz5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=etcC5SCWJE9q5GKdy+4hZU308fzw/ff8X68zPO6H23o=;
+        b=RzVIrZoNffykDBIRdX+Lbbr8G4Yqn2XYx+9gRImqh5dXivLtpchef9V23ukP3Nw5ni
+         A7q6sBTPpbXfdeyNxz89+d7hYSJQYAzUXqmqFZyrbyYITvzYK+ZZJs2uEmXV69pgXNvX
+         qxasdgjBHsbUf91Qxh8UU4zZ7uzk6K+ZEqB7SsoMPTAGCFUjwKf2+C/NV5ndlhjxFAiF
+         2C4z+RPGfzXDF+wxIikj0XNKSIren0sVM/Ex2G23feten5E7qS2mSuZ1r0LQO3HBHcBw
+         bEqPFDupYZd3XMqo6KP3V8eMWrmmqFO2Bk/+UOsojmf9L/M8biT2ZYJZlfWGKrqYlmGv
+         q81w==
+X-Gm-Message-State: AOAM531X+NqmvkQtTqMBSnjTI46KBkagOgsZsjIar6Lq8JCqxkndl6Xi
+        gt7YvZcvCCmylCOj0L2zIo5x6ghBx3M=
+X-Google-Smtp-Source: ABdhPJyEiH6lN1BP8U0UF2zar+GhMc8QVt8uZMBCSOvg0OFQqtKiGklvgIkVtpT4o5C259KRtBu70w==
+X-Received: by 2002:a17:90a:de1:: with SMTP id 88mr31019016pjv.124.1593027974219;
+        Wed, 24 Jun 2020 12:46:14 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id 27sm6036508pjg.19.2020.06.24.12.46.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 12:46:13 -0700 (PDT)
+Subject: Re: [PATCH 0/3] iopoll fixes
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1593016907.git.asml.silence@gmail.com>
+ <32dc23ae-bc73-b4e2-f9aa-cab59280cae4@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6d253bcb-8953-d975-1a39-78310ff2e723@kernel.dk>
+Date:   Wed, 24 Jun 2020 13:46:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (206.223.160.26) by YTOPR0101CA0065.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:14::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Wed, 24 Jun 2020 19:45:44 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1joBL5-00DlT8-8c; Wed, 24 Jun 2020 16:45:43 -0300
-X-NVConfidentiality: public
-X-Originating-IP: [206.223.160.26]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8eebcd84-9c9c-46c7-95b1-08d818772f68
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3516:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB35166BF10E3C77CA7DACFD1FC2950@DM6PR12MB3516.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0444EB1997
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E93bixFcY37KqdF0N/6RE2TyWbb7eNA+olQXVIcQ9MMajwALHZYOirwQzBIN3FOB2m+OSceFQaR6nJoaGh9i5uWBMroFZ5mmnddBZ1mVOlNg7/vtU5ATfqd7Qn+2DLtB5fK6zzSZlcENsqGVQpEH5Fb73YYiwphoekwqSgD78dJO8yJEyVCt4qrYMAptvQTYDtuLvD1PVPePhMLhfEfRXxmag068S+OxiPaRkeG6nR7pqxEEzs+v5iSkUstFZFSB5AeI6aKNAHI7UpXYHXWAJe651c8d0tItRn+zvZVeiykmT1fkVudkGwsfNGG/xn3CgK/4C3z0SMOj9x33YMN1uw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(366004)(396003)(136003)(376002)(6916009)(66556008)(54906003)(66476007)(9746002)(66946007)(9786002)(9686003)(316002)(8676002)(2906002)(4326008)(478600001)(26005)(426003)(4744005)(1076003)(33656002)(5660300002)(186003)(8936002)(36756003)(86362001)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: r9ymiJU5KuqF0ht9X3QNgJwFpfIfV6cAIQnFMP6BWpjux24pYc1oxHXXgcP2bO2YmTUZDomdM2lqmlh7gGsiMuaXqYBYO8ERYmuDCyBKngvHKvY/NYsXRKt/fPGzajPLOVJ3qH6rIOJpM1NAlxz7JxUBV96B0KQ9sTHdKhxTzoNr+lAjB8oSkeh9VeFtD9BUid8TekryQ/TgF0w+MS/cN4olERJb45GTvb630OGNOV+wtB+b6PbzPNurtmcLkpIkY7norszjiUIdnnbJSDSxlhCcU+dS4ws7cswraWtlFozpHm4rpyEUbl1U5Sl+fMW5DjUjJVbhLBs7rusykX7tFMegpBiRNPlFBze7wonWI0ylxzz02mJgPnxTNJjWAPQz3sa3cnn7omeVxMmXBsGYumTVo/aV1jiYFqojQnKEmg59qivK9Oxffn/YhLwsc1w45rAd41BXB8rcIr83GQBrwsESQyBEXA+usQ5DlcI2LHng6nhXnaEy5syT3EeB5Qg/
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8eebcd84-9c9c-46c7-95b1-08d818772f68
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2020 19:45:45.0702
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RZBHNhEAItubY/vZl7uXgCl+uopfnJhXbNUTKWxDxRbq+bTZ1Wx0yL1f6qLfKDPX
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3516
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593027862; bh=kuPI2Di+DIDffUlKG6VcYk+ZjS4AkgZqfOBzWRPFDMc=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-NVConfidentiality:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-NVConfidentiality:
-         X-Originating-IP:X-MS-PublicTrafficType:
-         X-MS-Office365-Filtering-Correlation-Id:X-MS-TrafficTypeDiagnostic:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-Forefront-PRVS:X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=S21OQMOj+NVBdljvEtfbdqCJC1mb4GvHw0Z8s6mWQAns6MuXqbNxI1Rt9vxvTqnLl
-         HNxQP5kNwKGrPCwYQeyGZE07t59Y3TQguGxiQXqSNTukNp/P1+Am/z3VlfYWWE3L4/
-         Qf2b3CDlWpRPlZhmXP8S+uq/bQwjCcxjswbCfd56RNROhjLd6/qC7XwNH1m5Zk8c1R
-         Ixmg5Lx3NmGVXSJCgUwPVTFBy4o2PMVmDwSDM/BVkfZbHlHvIIJ3TZoBVgXk2Ersjt
-         Af1qo7lS0N8R8PiCbydAf4PqMjTIJJMb96VSVOQ+QH3b8yPR8ZXlOACP8FjzS8ojZ2
-         aE3fauEJbU1DA==
+In-Reply-To: <32dc23ae-bc73-b4e2-f9aa-cab59280cae4@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 01:47:34PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
+On 6/24/20 11:03 AM, Pavel Begunkov wrote:
+> On 24/06/2020 19:50, Pavel Begunkov wrote:
+>> Did more comprehensive iopoll testing and found some more problems.
+>>
+>> [1] is from the previous series. Actually, v2 for this one, addressing
+>> the double-reissue bug found by Jens. It maybe not as efficient, but
+>> simple and easy to backport.
+>>
+>> [2,3] current->mm NULL deref
 > 
-> Hi,
-> 
-> This is combination of fixes and refactoring in MAD layer. Because
-> everything here is "old", I'm sending it to rdma-next and not "wasting"
-> our time in attempt to separate fix patches from refactoring ones.
-> 
-> Thanks
-> 
-> Shay Drory (4):
->   IB/mad: Issue complete whenever decrements agent refcount
->   IB/mad: Refactor atomics API to refcount API
->   IB/mad: Delete RMPP_STATE_CANCELING state
+> And yet there are issues left... I'll resend
 
-Applied to for-next
+Can you also please have them separated in terms of what's for 5.8 and
+what's for 5.9?
 
-Thanks,
-Jason
+-- 
+Jens Axboe
+
