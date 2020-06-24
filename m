@@ -2,128 +2,157 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55237C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC492081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4445F207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 21:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wi0oUU+P"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ERVcY1k3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388694AbgFXVBr (ORCPT
+        id S2388950AbgFXVCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 17:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55048 "EHLO
+        Wed, 24 Jun 2020 17:02:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728352AbgFXVBq (ORCPT
+        with ESMTP id S2388770AbgFXVCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 17:01:46 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD5BC061573;
-        Wed, 24 Jun 2020 14:01:45 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q198so3308996qka.2;
-        Wed, 24 Jun 2020 14:01:45 -0700 (PDT)
+        Wed, 24 Jun 2020 17:02:12 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB312C061796
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:11 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d66so1784275pfd.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 14:02:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n0fUs+whXgml4Oa4jYkaqimzsvOOOchJfB6d9dlWGNE=;
-        b=Wi0oUU+PzfqMxbyBYMNnpEVWwbG1p7vOkC7dz5h9BxDjDtR3yPACUoxFjQvIzRAFBM
-         cA0VEYehZnHft94KN9UvKKmbesgtwr2FZ5Si63kc7flju1fd/Ld+QSgrl1DRTmNeUikp
-         I1KO4q1iU3XFYHpP12lAOTT21zZLa4RoTGw9ZbbAWG4wnwgCcB7vaZKGoYp+aU799adN
-         VGCRSrcS6AdZg81+yxw5JJ3K1hj+wQDJvz3fdMagzOT8ZR0HPoYUlcQZOsAZqFXGJOSs
-         sgZ7J4TWrda0C/givZRqr6HKx4MRyOuKlb/pIGipWLbBomFazTbPoKAorlygNgdeRj0m
-         +ovQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F0CH5zhnz6ayOh3mQsnUEqy/k37rjt1CS3Xrl+QPqsk=;
+        b=ERVcY1k3sSjCpLOAr8awDULH6hHwCvyEkuApK5Qd/yy5SDCViDdkIB8JSQ5L/xRD+d
+         8Y592Pat2k/ChLh9OYujlbJnjlGNVLx/ZpfbEt1sE8kMlvWJzHlDhj0x+JLWI/sCQ71m
+         Qc98XVDBN4Tj5eQLSTeQur2SwoHWInWoHJEhUCCE5GXRfarr8qGepXCtm5phPzsnQ/fx
+         r0chNzaABXZLlufMpQ+880lEY1eRlM2cvfZqGUG3SBnyMqYm4bUW8z+wyLj5pHtSzavu
+         pLpwIlYwlO/U6gNgApMNdpJIBGZ6tRJTmGgBOtagYfhNoPIS0UxFZGw9u/o29RNxq2va
+         8lJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n0fUs+whXgml4Oa4jYkaqimzsvOOOchJfB6d9dlWGNE=;
-        b=Ur1nv/uvld/iIyxLIsf0LJq/tDg6D6jbSxLNVCHMjT8K7XXWsi+LRYxqePlZ8ZlvZw
-         xzc3fwjyGTtYIB6Q3IQOMj1RTvnvE9tN6CZdpbOTWo7v7msjicSqY4VujqKFs1F6vTG3
-         2LKXDFeTDfdJ9UizUJ9k7jQaApGQEIUnwMJ3V/0L0uzlAUPB9iYyToAq9HT8rFcVfoAM
-         JQPsokgZP+1CtJKRs+v7MTu9noH7WGzhxmNRWVDJnOVRKI6ZtfJ0lQEq7V4y6qOJBHCg
-         vTVtm2y1bROznO3uXBqNiCG1xmQXjqToHM26gce8b3+hJfWKHUxprdQCbJE0Vp9Vj2UZ
-         vPUA==
-X-Gm-Message-State: AOAM533H1OpM0cyMzZ+kS8LS1cWZ8jSuTFnA3RIgmbF9H4e/RrK1miw0
-        7AOpS2LAovjsqliBCRJx5Wk=
-X-Google-Smtp-Source: ABdhPJyWQXlRS0vi88ECx5uld8ijPMkmBPpmyu3PCcToPqeeac3vSf/64hrkPmn3S84XzLt9ew7tdg==
-X-Received: by 2002:a37:a8ca:: with SMTP id r193mr6391145qke.118.1593032505008;
-        Wed, 24 Jun 2020 14:01:45 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id z77sm4254479qka.59.2020.06.24.14.01.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 14:01:44 -0700 (PDT)
-Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
-To:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20200609110136.GJ4106@dell>
- <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
- <0709f20bc61afb6656bc57312eb69f56@walle.cc>
- <970bf15b1106df3355b13e06e8dc6f01@walle.cc>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <0e9e25cc-b3f2-926a-31dd-c6fafa7d581b@gmail.com>
-Date:   Wed, 24 Jun 2020 16:01:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F0CH5zhnz6ayOh3mQsnUEqy/k37rjt1CS3Xrl+QPqsk=;
+        b=BjzclJM5TEdLR9fD+WWv6eXwFX3Q7ZzuMwPFUxw01arCpJsVgMtXcLLaNow5VdUrPw
+         N+eGaCErzX7Li/ksQxiUbulabVa/ItY1+h72onohVwmcJoHs4Y42XNtjMfm4vgI0NU2M
+         atb/4sw7U6ZnoYaFBSPOwlP6Zbrgchwijmiwillj/zGjT/c9wQihotvVqZfFzMzwVNy0
+         NZNoVGbPl8i4Iew7xYwBERh7GLlWmQOoTZZkGN0m9g70FmbHiRT1XgrTRMhPHlroJnf9
+         xMJj0FBQjAW90LpXdxnjiH05PT7cOQnZNws0/uhPZj+7MnIks7kQ/9DmdL3c8V148Ysr
+         vYnA==
+X-Gm-Message-State: AOAM530jNCUYgsbYDdCx22ajHyIx9fNBlFK9Kc1YD9pxk8rCQV9If68v
+        E1pM3Bu8lb5/m9iX+mPqAhxmqw+hP8f9u8qI5TzRQw==
+X-Google-Smtp-Source: ABdhPJy3pMPiQAGPmTVujSMRX6922OqjtLRlYCZUOTerucVNVRzOs/5XjS34LxJ/ndw7kmB1zYWqmSiQ8V38zGtrKuE=
+X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr31723451pfu.169.1593032530992;
+ Wed, 24 Jun 2020 14:02:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <970bf15b1106df3355b13e06e8dc6f01@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200624203200.78870-8-samitolvanen@google.com>
+In-Reply-To: <20200624203200.78870-8-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 24 Jun 2020 14:01:59 -0700
+Message-ID: <CAKwvOdkY2M9+BgA5FELK+7bjv1sZYMuTmVOztCYijas_OHfVDQ@mail.gmail.com>
+Subject: Re: [PATCH 07/22] kbuild: lto: merge module sections
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Frank (me)
+On Wed, Jun 24, 2020 at 1:33 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> LLD always splits sections with LTO, which increases module sizes. This
+> change adds a linker script that merges the split sections in the final
+> module and discards the .eh_frame section that LLD may generate.
 
-On 2020-06-22 16:03, Michael Walle wrote:
-> Am 2020-06-14 12:26, schrieb Michael Walle:
->> Hi Rob,
->>
->> Am 2020-06-10 00:03, schrieb Rob Herring:
->> [..]
->>> Yes, we should use 'reg' whenever possible. If we don't have 'reg',
->>> then you shouldn't have a unit-address either and you can simply match
->>> on the node name (standard DT driver matching is with compatible,
->>> device_type, and node name (w/o unit-address)). We've generally been
->>> doing 'classname-N' when there's no 'reg' to do 'classname@N'.
->>> Matching on 'classname-N' would work with node name matching as only
->>> unit-addresses are stripped.
->>
->> This still keeps me thinking. Shouldn't we allow the (MFD!) device
->> driver creator to choose between "classname@N" and "classname-N".
->> In most cases N might not be made up, but it is arbitrarily chosen;
->> for example you've chosen the bank for the ab8500 reg. It is not
->> a defined entity, like an I2C address if your parent is an I2C bus,
->> or a SPI chip select, or the memory address in case of MMIO. Instead
->> the device driver creator just chooses some "random" property from
->> the datasheet; another device creator might have chosen another
->> property. Wouldn't it make more sense, to just say this MFD provides
->> N pwm devices and the subnodes are matching based on pwm-{0,1..N-1}?
->> That would also be the logical consequence of the current MFD sub
->> device to OF node matching code, which just supports N=1.
->>
-> 
-> Rob? Lee?
-> 
-> -michael
+For discarding .eh_frame, Kees is currently fighting with a series
+that I would really like to see land that enables warnings on orphan
+section placement.  I don't see any new flags to inhibit .eh_frame
+generation, or discard it in the linker script, so I'd expect it to be
+treated as an orphan section and kept.  Was that missed, or should
+that be removed from the commit message?
 
+>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  Makefile               |  2 ++
+>  scripts/module-lto.lds | 26 ++++++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+>  create mode 100644 scripts/module-lto.lds
+>
+> diff --git a/Makefile b/Makefile
+> index ee66513a5b66..9ffec5fe1737 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -898,6 +898,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
+>  # Limit inlining across translation units to reduce binary size
+>  LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
+>  KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
+> +
+> +KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
+>  endif
+>
+>  ifdef CONFIG_LTO
+> diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
+> new file mode 100644
+> index 000000000000..65884c652bf2
+> --- /dev/null
+> +++ b/scripts/module-lto.lds
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
+> + * -ffunction-sections, which increases the size of the final module.
+> + * Merge the split sections in the final binary.
+> + */
+> +SECTIONS {
+> +       __patchable_function_entries : { *(__patchable_function_entries) }
+> +
+> +       .bss : {
+> +               *(.bss .bss.[0-9a-zA-Z_]*)
+> +               *(.bss..L* .bss..compoundliteral*)
+> +       }
+> +
+> +       .data : {
+> +               *(.data .data.[0-9a-zA-Z_]*)
+> +               *(.data..L* .data..compoundliteral*)
+> +       }
+> +
+> +       .rodata : {
+> +               *(.rodata .rodata.[0-9a-zA-Z_]*)
+> +               *(.rodata..L* .rodata..compoundliteral*)
+> +       }
+> +
+> +       .text : { *(.text .text.[0-9a-zA-Z_]*) }
+> +}
+> --
+> 2.27.0.212.ge8ba1cc988-goog
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
