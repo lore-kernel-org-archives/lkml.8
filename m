@@ -2,95 +2,58 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A74C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD4320656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxjYXwQg"
+	by mail.kernel.org (Postfix) with ESMTP id 11DC92076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 15:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404461AbgFXPOn (ORCPT
+        id S2404487AbgFXPO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390817AbgFXPOm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 11:14:42 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F98C061573;
-        Wed, 24 Jun 2020 08:14:42 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ev7so779784pjb.2;
-        Wed, 24 Jun 2020 08:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Yb598zp6uk8AoCmXw2EiWvFbjizpcqsCge2mk6ednSA=;
-        b=SxjYXwQgoeJzfloFPTMTo9l0eyasTXa6juGEzWttQcOSyocYKzxinhJWd0+3wTHQu6
-         p9dkMGWV4/Gntjmr/6znrDMPHVfx3YQbsF8jyaHkcBkLi7OnuRYxg0pjnHQl1anVXHUy
-         s+CKhR2/8/CMhRh/WurLyR1Xdyl/zO1XRMCENCizpqp8iEdwp+o8A5OkkwS43awuG6T9
-         2RTvjBvw0VPyoUBV/UiHZJkVDT3GMXgAlxQ6ItBpg1x++exCK0NeFnS0LEIOtHPQCMco
-         8dgSMFk0tn6n/DWs27Qj3Xd3fADwC6vjRgtiBVH2STtHLRZqua7nOyi4OAHClgZjGLxF
-         EQgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yb598zp6uk8AoCmXw2EiWvFbjizpcqsCge2mk6ednSA=;
-        b=JLFqPJbGK5yZGT1gUSZ/Ea5SiBhHwk6OReMPuTAzUv0no/UDUmKpi5K0IkIfL1vM6G
-         trfN0juyyALBTZziIfGEXN7mU6aBqPN3nyspFIAcIAzkdkGRsPwoMT6mz3AMKxJQBvp9
-         Hxm53dkw8BL+yBW8LmDUQF8skKNhLu67A4w8X29uN5UI93UQBV3HrU9AKLrB/+h9F+PJ
-         dB4I/TuVgTV4TI67Vtmh46rfSbmlf5FzWOcVaIskNOkbQYuoJg48opYe4lmnflWWrtp5
-         48qncYK+8nOf5vvYlyHrE6XAASmhma6rdVDYU0u3/FvcemT3qhMQxzBBB9Yd+leOAUdD
-         Mh2Q==
-X-Gm-Message-State: AOAM533GKOuQzqS/JjQ3xyfsecrASllgSqyWxD6x+5/NP/zrvMhJVre/
-        5VgNa3PpM22PrQWICDndiZY=
-X-Google-Smtp-Source: ABdhPJwaHPNGk7dWEaymOCvFnNSoQQiUsYsmaRogq1VPkAPgfSmGPxlRnu2NqjaiIIDDP3/nFAxq1A==
-X-Received: by 2002:a17:90a:c905:: with SMTP id v5mr29041050pjt.39.1593011682423;
-        Wed, 24 Jun 2020 08:14:42 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d7sm20417925pfh.78.2020.06.24.08.14.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 08:14:41 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 08:14:41 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/474] 5.7.6-rc2 review
-Message-ID: <20200624151440.GD54105@roeck-us.net>
-References: <20200624055938.609070954@linuxfoundation.org>
+        Wed, 24 Jun 2020 11:14:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:44721 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404271AbgFXPO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 11:14:58 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1839968B02; Wed, 24 Jun 2020 17:14:55 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 17:14:54 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: move block bits out of fs.h
+Message-ID: <20200624151454.GB17344@lst.de>
+References: <20200620071644.463185-1-hch@lst.de> <c2fba635-b2ce-a2b5-772b-4bfcb9b43453@kernel.dk> <20200624151211.GA17344@lst.de> <216bcea4-a38d-8a64-bc0f-be61b2f26e79@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624055938.609070954@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <216bcea4-a38d-8a64-bc0f-be61b2f26e79@kernel.dk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:10:33AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.6 release.
-> There are 474 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Jun 24, 2020 at 09:14:11AM -0600, Jens Axboe wrote:
+> On 6/24/20 9:12 AM, Christoph Hellwig wrote:
+> > On Wed, Jun 24, 2020 at 09:09:42AM -0600, Jens Axboe wrote:
+> >> Applied for 5.9 - I kept this in a separate topic branch, fwiw. There's the
+> >> potential for some annoying issues with this, so would rather have it in
+> >> a branch we can modify easily, if we need to.
+> > 
+> > Hmm, I have a bunch of things building on top of this pending, so that
+> > branch split will be interesting to handle.
 > 
-> Responses should be made by Fri, 26 Jun 2020 05:58:09 +0000.
-> Anything received after that time might be too late.
-> 
+> We can stuff it in for-5.9/block, but then I'd rather just rebase that
+> on 5.8-rc2 now since it's still early days. If we don't, we already
+> have conflicts...
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
-
-Guenter
+I'll happily rebase.  rc1 also has funny ext4 warnings which are
+pretty annoying.
