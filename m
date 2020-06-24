@@ -2,187 +2,157 @@ Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E615EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B90222084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43852073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 16:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mG6WvpR9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzQGKKjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405306AbgFXQ56 (ORCPT
+        id S2405309AbgFXQ6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45532 "EHLO
+        Wed, 24 Jun 2020 12:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405297AbgFXQ54 (ORCPT
+        with ESMTP id S2404796AbgFXQ6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:57:56 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA45C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:57:55 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id jz3so1399592pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 09:57:55 -0700 (PDT)
+        Wed, 24 Jun 2020 12:58:34 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075B4C061573;
+        Wed, 24 Jun 2020 09:58:34 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so3210967wml.3;
+        Wed, 24 Jun 2020 09:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CmjIW8R8o5r2lBV1s31ea71JUTHcO/wI+cUm5Z7J13I=;
-        b=mG6WvpR98paCQbz/iHfb07cJGGOD2+q40Ra14ZRfvRUEETTcl4Ka/lUveyjjpHB6G5
-         Ju/6TESVKwG44SgDilOCn+26m3E8OlV7lRBczDoZ7u4nDMlJiEYjHFph6ib2Fy3dvn6Z
-         FuV7JfBukoUvAnHscRTBFaTwnfBjk96ZjZ2z0=
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2UyvtHsqWot1NDK5U0I1dkujPWgBcNc0l066O4UC3WU=;
+        b=QzQGKKjB2zrV1FB2V51Yt3V22mpPXhweNha+MvQDlcRbOsJNRG2Wk5JGhuUSwoFMPf
+         DMmfAgxK2J0WXI7xlIxNxBY4S3yc44P2r9rWd/qJfYQn8LUqKC2UhetZzphiN+wSTq/z
+         6ren5y5oTJDNaeFLuuHF8KofYYRiGpYMbhH4YHU9dce90/+rJpiBd1AGApLJ8ooRS79O
+         SPTZpgWUZrOWoQcdo/arhUnhNh4z0yJyLzcOD7XQVdzyBITgkefeIs9X/h/Om0MgCwbS
+         yvG4FAgEZ5qX1y30outPkQRsI5foQm1NeRsPgD73ku64d6GmGzzMFO+a63/btb/U/C2Q
+         9wDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CmjIW8R8o5r2lBV1s31ea71JUTHcO/wI+cUm5Z7J13I=;
-        b=umBAXe5yW+ooQLyTks3MWiRdLXzSrjPmqOgc6DtVXObZMFXRRhAtlbKaH6gpH0a5eX
-         gW94glnZf3ctaaa6tv3yvbgEG6RsIi7S1IsebNmu5iJXREAI6Oqxs5zem0+R63JU2zbm
-         PLe1Mnl7MPVPJ8IpCs8ooH/DClb5X0cR0x/6KFYeMGJw/cs25MSAohZKrfru7aLGjtM+
-         pd4qTKVJ/aoof2XVbOYIciTCVDan9K1ruqZq06HxyD9ngJ49e19mVd0dU82FXL7W+Jm7
-         KV8BxwB7KHMRU1IcA3JUqx/SAkXF40kucpMSsYkzHAbIbLgYWu3RE4C7LHtD4exNlvBz
-         3eAw==
-X-Gm-Message-State: AOAM530veJOENlcG1rK845IV62vL98o9wgIOSXfYuVxClMEMbmIxH6J7
-        lO+zHyiHiXrO40DPDO/seMAdKA==
-X-Google-Smtp-Source: ABdhPJwcLj6W7e3dXuyoYT2CvePVH4Ccxc3lYrIKl6UXZvF7YtKEJWq8hq+uSRU1E/2jR+KVFLoDQA==
-X-Received: by 2002:a17:902:704a:: with SMTP id h10mr28656684plt.85.1593017875159;
-        Wed, 24 Jun 2020 09:57:55 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id mp15sm5731457pjb.45.2020.06.24.09.57.53
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2UyvtHsqWot1NDK5U0I1dkujPWgBcNc0l066O4UC3WU=;
+        b=eHnO7lEASsN2tjjZ3gpCi/A81tMn25EjCKeS6uSFvDioKAGhQGwvftHGcoQxe99A3R
+         4NKoW5y1zpSoMUj7XOjiuKCjCAWFm7lA/QqQGTEvORS1jd8sK4L9pFgQZd9PAiXP67Z8
+         usaDC3pfJcH0BKytx5izFzPeu7TfF0bezzJmEH4ECP/1dl30eWcKMoBDSyHFKdd6mRAm
+         mdb78C35OgvwsVtc4w1AgAyX5ySK2pCisK0/gGxyRQJIvBZpg3k5CUTe39Y5g4qE3KNC
+         0l3xXWDcPCvdha41EbV7BmnVglDXGIORRrEQFKGYLLGYUHnCBEZyqJtDQki1SAl/RzX1
+         dEkg==
+X-Gm-Message-State: AOAM532QGoP3RLvDXnS8VRKdRqaNVMITLwq8JBVGyyCcW+J0JrrICRAk
+        wSfCUHy8OA1AaO1K4WUxQWPjT8y8
+X-Google-Smtp-Source: ABdhPJzSwdqI/juqSfmw/8tO7p/3CHHnLcGUqCMfYg6R08O0A5vsCG9H3wPtUmsNQncTgAzC1zhEHQ==
+X-Received: by 2002:a05:600c:204d:: with SMTP id p13mr30334237wmg.88.1593017912508;
+        Wed, 24 Jun 2020 09:58:32 -0700 (PDT)
+Received: from [192.168.43.31] ([5.100.193.85])
+        by smtp.gmail.com with ESMTPSA id f186sm8569839wmf.29.2020.06.24.09.58.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 09:57:54 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 09:57:52 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>, saravanak@google.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jonathan <jonathan@marek.ca>
-Subject: Re: [PATCH v3 2/6] drm: msm: a6xx: send opp instead of a frequency
-Message-ID: <20200624165752.GA39073@google.com>
-References: <1591417551-38051-1-git-send-email-smasetty@codeaurora.org>
- <1591417551-38051-3-git-send-email-smasetty@codeaurora.org>
- <CAF6AEGva1DyFc1P_5+U=P+Sh-ngN9PyN6Hh2ZXBnxB952UQ54w@mail.gmail.com>
+        Wed, 24 Jun 2020 09:58:32 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1592863245.git.asml.silence@gmail.com>
+ <0301f35644823a01cbae87e440df7d58ebcf2279.1592863245.git.asml.silence@gmail.com>
+ <95b720a6-926c-a208-e929-1d0203fa8701@kernel.dk>
+ <e05fc48b-684d-2980-3986-47a77af403e0@kernel.dk>
+ <6714cb8f-894c-9ff1-7b3a-4f86d7dbe52a@gmail.com>
+ <d33e9006-b7ef-4925-ff3f-332ab655f2ae@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH 1/4] io_uring: fix hanging iopoll in case of -EAGAIN
+Message-ID: <9488620d-3dec-700d-b211-cd192b4060b0@gmail.com>
+Date:   Wed, 24 Jun 2020 19:56:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <d33e9006-b7ef-4925-ff3f-332ab655f2ae@kernel.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGva1DyFc1P_5+U=P+Sh-ngN9PyN6Hh2ZXBnxB952UQ54w@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Jun 18, 2020 at 10:52:09AM -0700, Rob Clark wrote:
-> On Fri, Jun 5, 2020 at 9:26 PM Sharat Masetty <smasetty@codeaurora.org> wrote:
-> >
-> > This patch changes the plumbing to send the devfreq recommended opp rather
-> > than the frequency. Also consolidate and rearrange the code in a6xx to set
-> > the GPU frequency and the icc vote in preparation for the upcoming
-> > changes for GPU->DDR scaling votes.
-> >
-> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 62 +++++++++++++++++++----------------
-> >  drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  2 +-
-> >  drivers/gpu/drm/msm/msm_gpu.c         |  3 +-
-> >  drivers/gpu/drm/msm/msm_gpu.h         |  3 +-
-> >  4 files changed, 38 insertions(+), 32 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > index 748cd37..2d8124b 100644
-> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > @@ -100,17 +100,30 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
-> >                 A6XX_GMU_SPTPRAC_PWR_CLK_STATUS_GX_HM_CLK_OFF));
-> >  }
-> >
-> > -static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
-> > +void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
-> >  {
-> > -       struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
-> > -       struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
-> > -       struct msm_gpu *gpu = &adreno_gpu->base;
-> > -       int ret;
-> > +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> > +       struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
-> > +       struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
-> > +       u32 perf_index;
-> > +       unsigned long gpu_freq;
-> > +       int ret = 0;
-> > +
-> > +       gpu_freq = dev_pm_opp_get_freq(opp);
-> > +
-> > +       if (gpu_freq == gmu->freq)
-> > +               return;
-> > +
-> > +       for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
-> > +               if (gpu_freq == gmu->gpu_freqs[perf_index])
-> > +                       break;
-> > +
-> > +       gmu->current_perf_index = perf_index;
-> >
-> >         gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
-> >
-> >         gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
-> > -               ((3 & 0xf) << 28) | index);
-> > +                       ((3 & 0xf) << 28) | perf_index);
-> >
-> >         /*
-> >          * Send an invalid index as a vote for the bus bandwidth and let the
-> > @@ -126,7 +139,7 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
-> >         if (ret)
-> >                 dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
-> >
-> > -       gmu->freq = gmu->gpu_freqs[index];
-> > +       gmu->freq = gmu->gpu_freqs[perf_index];
-> >
-> >         /*
-> >          * Eventually we will want to scale the path vote with the frequency but
-> > @@ -135,25 +148,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
-> >         icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> >  }
-> >
-> > -void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
-> > -{
-> > -       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> > -       struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
-> > -       struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
-> > -       u32 perf_index = 0;
-> > -
-> > -       if (freq == gmu->freq)
-> > -               return;
-> > -
-> > -       for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
-> > -               if (freq == gmu->gpu_freqs[perf_index])
-> > -                       break;
-> > -
-> > -       gmu->current_perf_index = perf_index;
-> > -
-> > -       __a6xx_gmu_set_freq(gmu, perf_index);
-> > -}
+On 23/06/2020 22:01, Jens Axboe wrote:
+> On 6/23/20 5:57 AM, Pavel Begunkov wrote:
+>> On 23/06/2020 05:18, Jens Axboe wrote:
+>>> On 6/22/20 8:07 PM, Jens Axboe wrote:
+>>>> On 6/22/20 4:16 PM, Pavel Begunkov wrote:
+>>>>> io_do_iopoll() won't do anything with a request unless
+>>>>> req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
+>>>>> it, otherwise io_do_iopoll() will poll a file again and again even
+>>>>> though the request of interest was completed long ago.
+>>>>
+>>>> I need to look at this again, because with this change, I previously
+>>>> got various use-after-free. I haven't seen any issues with it, but
+>>>> I agree, from a quick look that I'm not quite sure how it's currently
+>>>> not causing hangs. Yet I haven't seen any, with targeted -EAGAIN
+>>>> testing.
+>>
+>> Can io_complete_rw_iopoll() get -EAGAIN after being successfully enqueued
+>> (i.e. EIOCBQUEUED)? It's reliably fails for me, because my hacked nullblk
+>> _can_ (i.e. probabilistically returns BLK_STS_AGAIN from ->iopoll()).
 > 
-> this does end up conflicting a bit with some of the newer stuff that
-> landed this cycle, in particular "drm/msm/a6xx: HFI v2 for A640 and
-> A650"
-> 
-> Adding Jonathan on CC since I think he will want to test this on
-> a650/a640 as well..
+> Yes it can. The primary example would be a polled bio that gets split, into
+> let's say 4 bio's. First one queues fine, but one of the subsequent ones
+> run into request allocation failures and it gets marked as -EAGAIN.
 
-Sharat, please send an updated version that is rebased on the latest drm-msm.
+Right, thanks for the explanation. And that's the case where io_uring fails.
+Now I tested all kinds of -EAGAIN to be sure.
 
-Thanks
-
-Matthias
+-- 
+Pavel Begunkov
