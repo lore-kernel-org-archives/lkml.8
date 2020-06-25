@@ -2,122 +2,68 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A577C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15350C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0755320768
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9DC20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405581AbgFYOwj (ORCPT
+        id S2405499AbgFYOwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:52:39 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:51475 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2405525AbgFYOwh (ORCPT
+        Thu, 25 Jun 2020 10:52:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405385AbgFYOwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:52:37 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 05PElmIh015285;
-        Thu, 25 Jun 2020 17:47:49 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id F26EC639BE; Thu, 25 Jun 2020 17:47:48 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org,
-        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: [PATCH v12 4/9] tpm: tpm_tis: Add verify_data_integrity handle to tpm_tis_phy_ops
-Date:   Thu, 25 Jun 2020 17:46:44 +0300
-Message-Id: <20200625144650.269719-5-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200625144650.269719-1-amirmizi6@gmail.com>
-References: <20200625144650.269719-1-amirmizi6@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Jun 2020 10:52:31 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CFFC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:52:31 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 5C7CE4D6; Thu, 25 Jun 2020 16:52:28 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 0/2] iommu/amd: Don't use atomic64_t for domain->pt_root
+Date:   Thu, 25 Jun 2020 16:52:25 +0200
+Message-Id: <20200625145227.4159-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-When using I2C bus protocol, the TPM has the ability to report data
-integrity on incoming or outgoing command parameter bytes.
-According to the TCG specs, if this data validation functionality is
-enabled via the TPM_DATA_CSUM_ENABLE register, the TPM will update the
-TPM_DATA_CSUM register after reception of the last command byte and after
-the last response byte has been read.
+Hi,
 
-Data integrity is checked if a "verify_data_integrity" handle is defined in
-"tpm_tis_phy_ops".
+a previous discussion pointed out that using atomic64_t for that
+purpose is a bit of overkill. This patch-set replaces it with unsigned
+long and introduces some helpers first to make the change more easy.
 
-Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm_tis_core.c | 14 ++++++++++++++
- drivers/char/tpm/tpm_tis_core.h |  2 ++
- 2 files changed, 16 insertions(+)
+Qian, can you please test these patches in your environment? You can
+trigger any race-condition there pretty reliably :)
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index e136467..347c020 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -347,6 +347,13 @@ static int __tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- 		return size;
- 	}
- 
-+	if (priv->phy_ops->verify_data_integrity)
-+		if (!priv->phy_ops->verify_data_integrity(priv, buf,
-+							  size)) {
-+			size = -EIO;
-+			return size;
-+		}
-+
- 	return size;
- }
- 
-@@ -419,6 +426,13 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
- 		return rc;
- 	}
- 
-+	if (priv->phy_ops->verify_data_integrity) {
-+		if (!priv->phy_ops->verify_data_integrity(priv, buf, len)) {
-+			rc = -EIO;
-+			return rc;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-index 6cc6b76..cd97c01 100644
---- a/drivers/char/tpm/tpm_tis_core.h
-+++ b/drivers/char/tpm/tpm_tis_core.h
-@@ -107,6 +107,8 @@ struct tpm_tis_phy_ops {
- 	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
- 	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
- 	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
-+	bool (*verify_data_integrity)(struct tpm_tis_data *data, const u8 *buf,
-+				      size_t len);
- };
- 
- static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
+Other than that, please review and test.
+
+Regards,
+
+	Joerg
+
+Joerg Roedel (2):
+  iommu/amd: Add helper functions to update domain->pt_root
+  iommu/amd: Use 'unsigned long' for domain->pt_root
+
+ drivers/iommu/amd/amd_iommu_types.h |  2 +-
+ drivers/iommu/amd/iommu.c           | 39 ++++++++++++++++++++---------
+ 2 files changed, 28 insertions(+), 13 deletions(-)
+
 -- 
-2.7.4
+2.27.0
 
