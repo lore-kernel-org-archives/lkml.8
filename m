@@ -2,176 +2,149 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF3BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C608207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CC8207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1WlZPcM"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lGOS3DQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405869AbgFYPgd (ORCPT
+        id S2405877AbgFYPha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
+        Thu, 25 Jun 2020 11:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405394AbgFYPgb (ORCPT
+        with ESMTP id S2405159AbgFYPh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:36:31 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC28C08C5C1;
-        Thu, 25 Jun 2020 08:36:31 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y18so2952164plr.4;
-        Thu, 25 Jun 2020 08:36:31 -0700 (PDT)
+        Thu, 25 Jun 2020 11:37:29 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16F4C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:37:29 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id g11so2976263qvs.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:37:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bfgtGWX8ohA5pb3Ut9fGEq9lHt//ieN4999zfH1Y6xI=;
-        b=J1WlZPcM5orSXpO4GBcx0CmYGNuymyvCL/1z3f83e4BW4ram7LvutZyEXm+Iy1cQM1
-         VvCjCd878vAnRR3fGTOXkgsu1PbsX7YqSgOjv74pnRMUQ9fTcvpOSAaC174fFu0n0nHL
-         dyY4CrWHgIiZ1qQwt9fAODCBGxWR5YgbWJHFqpZW5iEyDxPNwouEcrRCNBg/5yF4Gbff
-         8YO+mCDxVboUKrMXb9L7+rugUqo9oAJ20qyYnxHHOuqdx+n1iK8qgtqDYxIC9TV/Z03E
-         D8WlgtuNoBuDkbYhlcte4yWKajrtF8+kkwreQ/beXjuJ2W7tzKd3wKa51SgvIhPeITNu
-         6azw==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M1cqSae7hNdYiqu+8k8gfItdpEDoX+sntlR/dwIK8h4=;
+        b=lGOS3DQQ3dYsGxX5k6MlJyG0pAimjSFQZB1QmrFink0pbh6Xswfk9L8lV8cOs0RHKk
+         +UF3pQffKHrTqtKWnZnlAllzISwdXv2nka21K3BDPku0gDkmfXEDYX+s6eDosHZUWSJt
+         ME00OvnosHt+mNuFPMs0cFvYUbNreW0H1egdo4IIZBdBik0BIFGifcrlL2xj/zqh1wFU
+         1SSPCZSd6jvIskLmbvQYlALJNRtQYU5K+w0rYR58iXyUJFB7+7cuQMiPpkmTo45IldMm
+         btoVaoJSJXGAu5zOMmtUJoYm0uoDBHjqbOlLnHdhkDV2VPa2grdqOG/IbLeg+7ZVetHB
+         XMEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bfgtGWX8ohA5pb3Ut9fGEq9lHt//ieN4999zfH1Y6xI=;
-        b=HkzJ8fFcrp4HH8GIJv8357o0gK1DVY0TlAM/YqWDIBpTkGqFbFfChWVLG1T/v6yWgg
-         ByDImrAL//r4EWPQhM06i4R6FIBqt4nmfPW7X/x4ZJh9ZI3jNGcv0SJFk0GUojTPQZWA
-         BaTRqWma4OVmM2r5sIUgaXmtQdTHThVzjxplgcNRc1fHejSE2gHk3gYc3dMC4/Yy2kC1
-         Ft3CUlUHPTnT4wdegbADMNEr/v1HdUECm8Apr0mBUvxQ5b5slLKwkYBFxXDmn0CYa/UK
-         sUEHvZRxPqvXKKptL49H3cEN/8cQHZWccpAZ2rU46T+QttSPAQHDznuhZGwVENlnUARp
-         tchQ==
-X-Gm-Message-State: AOAM533s8F3zlCDtAuTgt8YUKd1eUH2InmyZYSk8yS3cAO17iNwepGkR
-        vbUQ7uFpgV+UAxsvAiI/wj0=
-X-Google-Smtp-Source: ABdhPJwFDKRrMmvG2CAiFZdg1UXxnMVF4PE0N9I3xhhWBAXIJrAy/vYCGSeciWyS/jr6QqegIx1LDg==
-X-Received: by 2002:a17:90a:a47:: with SMTP id o65mr4129035pjo.70.1593099390950;
-        Thu, 25 Jun 2020 08:36:30 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id i20sm24174151pfd.81.2020.06.25.08.36.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M1cqSae7hNdYiqu+8k8gfItdpEDoX+sntlR/dwIK8h4=;
+        b=EUzCeW+kIcFntZzipz6Qh7JNicVXh79rWJEPZB9J1Cu5kc5iRtKnSY4Nxgj+R3JFUL
+         Cu3L4Ofts3KVI258cbpAirHoiUBIFwz/5vVY/pWK/jdOChOgjhCIqWBWiDLWicPqWLGU
+         R6+GNNyysCWfTAV1CrETZ8J3KuwrC2LcKEQ+BNDvCreQvRDU6mGtFOfYobR0tfxjswAN
+         wNZl025VpUxBzkRWfS5w1AWLVGJxa5ijXN/LF4l3Vdu86G/2JST6WXycYdKmu6v69GzM
+         20zBQwuJxjBv4R1rAo7gtUOU5GSQtb39BlVDI3+v20Nw/xldRt9w2o5o4FV98jG6zQzD
+         x2Qw==
+X-Gm-Message-State: AOAM533YP5tARvAsqAXviMumDwf4Kqq/3upSg65gtiPdYDHUr3Ww2h/+
+        JrbMYnF+q2Z5E0aNR33KQRRZbtxl40MUDw==
+X-Google-Smtp-Source: ABdhPJwO/z3GqRdyLg4iaSC+qFfkcj7Jq1dkbV+B31fWZ2JKLNRWKszSnyC3Ab7uyP1yeR9AoP4b3A==
+X-Received: by 2002:a0c:b5d8:: with SMTP id o24mr1205025qvf.214.1593099449041;
+        Thu, 25 Jun 2020 08:37:29 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l127sm5920459qkc.117.2020.06.25.08.37.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 08:36:30 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-To:     devel@driverdev.osuosl.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com (supporter:QLOGIC QLGE 10Gb ETHERNET
-        DRIVER), Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org (open list:QLOGIC QLGE 10Gb ETHERNET DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] fix else after return or break
-Date:   Thu, 25 Jun 2020 23:36:14 +0800
-Message-Id: <20200625153614.63912-3-coiby.xu@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625153614.63912-1-coiby.xu@gmail.com>
-References: <20200625153614.63912-1-coiby.xu@gmail.com>
+        Thu, 25 Jun 2020 08:37:28 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 11:37:20 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 2/2] iommu/amd: Use 'unsigned long' for domain->pt_root
+Message-ID: <20200625153720.GA1127@lca.pw>
+References: <20200625145227.4159-1-joro@8bytes.org>
+ <20200625145227.4159-3-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625145227.4159-3-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
----
- drivers/staging/qlge/qlge_dbg.c  | 23 ++++++++++-------------
- drivers/staging/qlge/qlge_main.c |  8 ++++----
- drivers/staging/qlge/qlge_mpi.c  |  4 ++--
- 3 files changed, 16 insertions(+), 19 deletions(-)
+On Thu, Jun 25, 2020 at 04:52:27PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Using atomic64_t can be quite expensive, so use unsigned long instead.
+> This is safe because the write becomes visible atomically.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  drivers/iommu/amd/amd_iommu_types.h |  2 +-
+>  drivers/iommu/amd/iommu.c           | 10 ++++++++--
+>  2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/amd/amd_iommu_types.h b/drivers/iommu/amd/amd_iommu_types.h
+> index 30a5d412255a..f6f102282dda 100644
+> --- a/drivers/iommu/amd/amd_iommu_types.h
+> +++ b/drivers/iommu/amd/amd_iommu_types.h
+> @@ -468,7 +468,7 @@ struct protection_domain {
+>  				       iommu core code */
+>  	spinlock_t lock;	/* mostly used to lock the page table*/
+>  	u16 id;			/* the domain id written to the device table */
+> -	atomic64_t pt_root;	/* pgtable root and pgtable mode */
+> +	unsigned long pt_root;	/* pgtable root and pgtable mode */
+>  	int glx;		/* Number of levels for GCR3 table */
+>  	u64 *gcr3_tbl;		/* Guest CR3 table */
+>  	unsigned long flags;	/* flags to find out type of domain */
+> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+> index 5286ddcfc2f9..b0e1dc58244e 100644
+> --- a/drivers/iommu/amd/iommu.c
+> +++ b/drivers/iommu/amd/iommu.c
+> @@ -156,7 +156,7 @@ static struct protection_domain *to_pdomain(struct iommu_domain *dom)
+>  static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
+>  					 struct domain_pgtable *pgtable)
+>  {
+> -	u64 pt_root = atomic64_read(&domain->pt_root);
+> +	unsigned long pt_root = domain->pt_root;
 
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 058889687907..87433510a224 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -1391,12 +1391,11 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
- 			pr_err("%s: Failed read of mac index register\n",
- 			       __func__);
- 			return;
--		} else {
--			if (value[0])
--				pr_err("%s: CAM index %d CAM Lookup Lower = 0x%.08x:%.08x, Output = 0x%.08x\n",
--				       qdev->ndev->name, i, value[1], value[0],
--				       value[2]);
- 		}
-+		if (value[0])
-+			pr_err("%s: CAM index %d CAM Lookup Lower = 0x%.08x:%.08x, Output = 0x%.08x\n",
-+			       qdev->ndev->name, i, value[1], value[0],
-+			       value[2]);
- 	}
- 	for (i = 0; i < 32; i++) {
- 		if (ql_get_mac_addr_reg
-@@ -1404,11 +1403,10 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
- 			pr_err("%s: Failed read of mac index register\n",
- 			       __func__);
- 			return;
--		} else {
--			if (value[0])
--				pr_err("%s: MCAST index %d CAM Lookup Lower = 0x%.08x:%.08x\n",
--				       qdev->ndev->name, i, value[1], value[0]);
- 		}
-+		if (value[0])
-+			pr_err("%s: MCAST index %d CAM Lookup Lower = 0x%.08x:%.08x\n",
-+			       qdev->ndev->name, i, value[1], value[0]);
- 	}
- 	ql_sem_unlock(qdev, SEM_MAC_ADDR_MASK);
- }
-@@ -1427,11 +1425,10 @@ void ql_dump_routing_entries(struct ql_adapter *qdev)
- 			pr_err("%s: Failed read of routing index register\n",
- 			       __func__);
- 			return;
--		} else {
--			if (value)
--				pr_err("%s: Routing Mask %d = 0x%.08x\n",
--				       qdev->ndev->name, i, value);
- 		}
-+		if (value)
-+			pr_err("%s: Routing Mask %d = 0x%.08x\n",
-+			       qdev->ndev->name, i, value);
- 	}
- 	ql_sem_unlock(qdev, SEM_RT_IDX_MASK);
- }
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index aaecf2b0f9a1..0054c454506b 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -3778,10 +3778,10 @@ static int ql_wol(struct ql_adapter *qdev)
- 				  "Failed to set magic packet on %s.\n",
- 				  qdev->ndev->name);
- 			return status;
--		} else
--			netif_info(qdev, drv, qdev->ndev,
--				   "Enabled magic packet successfully on %s.\n",
--				   qdev->ndev->name);
-+		}
-+		netif_info(qdev, drv, qdev->ndev,
-+			   "Enabled magic packet successfully on %s.\n",
-+			   qdev->ndev->name);
- 
- 		wol |= MB_WOL_MAGIC_PKT;
- 	}
-diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-index 3bb08d290525..fa178fc642a6 100644
---- a/drivers/staging/qlge/qlge_mpi.c
-+++ b/drivers/staging/qlge/qlge_mpi.c
-@@ -276,8 +276,8 @@ static void ql_link_up(struct ql_adapter *qdev, struct mbox_params *mbcp)
- 			netif_err(qdev, ifup, qdev->ndev,
- 				  "Failed to init CAM/Routing tables.\n");
- 			return;
--		} else
--			clear_bit(QL_CAM_RT_SET, &qdev->flags);
-+		}
-+		clear_bit(QL_CAM_RT_SET, &qdev->flags);
- 	}
- 
- 	/* Queue up a worker to check the frame
--- 
-2.27.0
+The pt_root might be reload later in case of register pressure where the
+compiler decides to not store it as a stack variable, so it needs
+smp_rmb() here to match to the smp_wmb() in
+amd_iommu_domain_set_pt_root() to make the load visiable to all CPUs.
 
+Then, smp_rmb/wmb() wouldn't be able to deal with data races, so it
+needs,
+
+unsigned long pt_root = READ_ONCE(domain->pt_root);
+
+>  
+>  	pgtable->root = (u64 *)(pt_root & PAGE_MASK);
+>  	pgtable->mode = pt_root & 7; /* lowest 3 bits encode pgtable mode */
+> @@ -164,7 +164,13 @@ static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
+>  
+>  static void amd_iommu_domain_set_pt_root(struct protection_domain *domain, u64 root)
+>  {
+> -	atomic64_set(&domain->pt_root, root);
+> +	domain->pt_root = root;
+
+WRITE_ONCE(domain->pt_root, root);
+
+> +
+> +	/*
+> +	 * The new value needs to be gobally visible in case pt_root gets
+> +	 * cleared, so that the page-table can be safely freed.
+> +	 */
+> +	smp_wmb();
+>  }
+>  
+>  static void amd_iommu_domain_clr_pt_root(struct protection_domain *domain)
+> -- 
+> 2.27.0
+> 
