@@ -2,157 +2,325 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F91B20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CNxATrhb";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="P6BzWujS"
+	by mail.kernel.org (Postfix) with ESMTP id DDE5C206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404135AbgFYLK3 (ORCPT
+        id S2404180AbgFYLKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:10:29 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:4464 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404042AbgFYLK2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:10:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593083428; x=1624619428;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=IJRF9zEkcBNWDVyG/jsP4nVTQuEOO4M3oRETxnchKfE=;
-  b=CNxATrhbuRZTIjNLOUf2Wk50ozloIdRrSl98lZ/UdPih8UQXolpcy6Rq
-   1sFkQC4h+/fUvkWkIPtxLgCRvn0wcnTlI5pUrL4/abiIkI4NIJTu2G/sJ
-   S8mvgfaHn4CL/F1l6kXpbSABg72tDV1lnXAr1aQZitpiJY+F+pPmZ9O4h
-   bba5CCUSJUlzBHJj2u7kOPQJAC2L/QBDFY6l4YdFdQ9PzTIKqx4p1Oc7F
-   +T9Rf0St3Zzx8pd2DrjcPAYySLnn2ToQy0oOMLKQI+9jg1bf2vYdMSwMj
-   zz1w8tgveIFYHsYb1tj6bOwVexKqQOspTnVNkh6s+8bnmpwcSB3OxqXfF
-   g==;
-IronPort-SDR: sL0nCXh94Xxcq4Msp+WHmtnQ7nZ6pcp1ZAN48I0y4MNZxyT4WOZn2YuC06rQwV2ShGqIYVey54
- l28052WjK4mSfqYTXrT354qBTvOkK4XYPoznewkYMQjMA9eSzn8iYmmTyHEeTIfQ8cHNNP3kYZ
- b5g1Al5zkAvIVT83QE54lD+LCK6AatZKFRlDAooE+44Ye0agsoB6I/k2470zJnyDP4Q67FWbvU
- jyJ9oIRSAZp6K8KWLnyfk4uKzWcmGZBvDlmW0RtG2bCp7ZEyNqo2LD12h3sTJv6hrOkhwV08Oc
- 1zU=
-X-IronPort-AV: E=Sophos;i="5.75,279,1589212800"; 
-   d="scan'208";a="250115393"
-Received: from mail-dm6nam10lp2109.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.109])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Jun 2020 19:10:16 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SYCXAhInE4zM4VOoLNL11KWpnCNFsXiDjYvoZfRU5keXvo+lWTMPdvzQvmh/iHhkWaQ+zQP4bDahhLr7P2UHI/SjyhsV/Uf8ivX4u0Df3Vq8Gf64Xcidu1d5EgA5v8kMkcLBKU5QAmaArkav78pLzR4eoZtpjCPmKB3ZgtQrhl/72mQSqHksGSApelnvaeGaBFwTN0uPLHpDcRhRgGdk7K3oXj5GNwkhuoVTn0Tw51B9EbzO+VXIt1FvKXgvF7PyizlXKBun6OoNon76phQs+W0Mj/QfKnJglNA1JnrGP/HPD3rBbOWbFI6ALs3WMR0OgHtGQhQ+ab0hebyC2iDAwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2f4IsGmMJDVq3YPs/Emu7kDfaLSNYRF0Cr3Dxp5q2fg=;
- b=lI1X3nOq4Rx7kv7z35dZFLsRZSwDmtOgqejhmn7QcvjauCrglBj3QREy/utBVy86Vr1/rITydJzABnhHBkQHXZV2yrv/hnQD7iZPyFuJUACuzEA3cpst/I8qCRk65UlYFYEi6a927ZjFHGEKZ9Q850pkviZjZQN2ylhJ2hAPdHWPRvdWNs45RFfWb1WjBEpO411cNmVAmpTpPFf/amyrEaZCwzDIZaAfTqpOZcmhC8e++uzLdTMhtZnQGRhVuaB5zm3MgPAveeOmPmiY1+ZwEl9K8oFBCoAm0VGrqeh+a9f+fWQM57FN27QfLX4QYxzavVGSmRhoHOgUv6WmgfR/6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2f4IsGmMJDVq3YPs/Emu7kDfaLSNYRF0Cr3Dxp5q2fg=;
- b=P6BzWujSg27HWQvpgqbJPfVmY/c/CXJxOX4pp1iBfR+DCrTDmkYrH1nFInHnDwdvBPQA35HpV81iziAwAy8ElmLO6Sa4SW2b0gStFM0ZEhdz3YjGGI5Dv2KMZIrV1Unbt0cV6PW6Jk5io0b3oYhlnHDILtqpp5/hoDIpBK2UNIg=
-Received: from BYAPR04MB5112.namprd04.prod.outlook.com (2603:10b6:a03:45::10)
- by BY5PR04MB6294.namprd04.prod.outlook.com (2603:10b6:a03:1e5::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Thu, 25 Jun
- 2020 11:10:16 +0000
-Received: from BYAPR04MB5112.namprd04.prod.outlook.com
- ([fe80::a442:4836:baba:c84b]) by BYAPR04MB5112.namprd04.prod.outlook.com
- ([fe80::a442:4836:baba:c84b%6]) with mapi id 15.20.3131.020; Thu, 25 Jun 2020
- 11:10:16 +0000
-From:   Niklas Cassel <Niklas.Cassel@wdc.com>
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-CC:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] remove workarounds for gcc bug wrt unnamed fields
- in initializers
-Thread-Topic: [PATCH v2 0/2] remove workarounds for gcc bug wrt unnamed fields
- in initializers
-Thread-Index: AQHWRatsK9pqpN/HlEmT0NtnEgioaqjpNw0A
-Date:   Thu, 25 Jun 2020 11:10:15 +0000
-Message-ID: <20200625111012.GA418830@localhost.localdomain>
-References: <20200618200235.1104587-1-niklas.cassel@wdc.com>
- <20200624164441.GA24816@lst.de>
- <BYAPR04MB49655BD99E428B66EBB831E486950@BYAPR04MB4965.namprd04.prod.outlook.com>
-In-Reply-To: <BYAPR04MB49655BD99E428B66EBB831E486950@BYAPR04MB4965.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: wdc.com; dkim=none (message not signed)
- header.d=none;wdc.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.44.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ad2e133a-34c1-45d1-7d31-08d818f856cb
-x-ms-traffictypediagnostic: BY5PR04MB6294:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR04MB62949BD4A3A25EAEA7C08C4BF2920@BY5PR04MB6294.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0445A82F82
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1gBtn0fFHU+Ga+WYbuMGG8SECPdvIICVcw1B4ymtl/vJK29G1slRtEaQ8CWFCsW0oRM+I9qDXnzBzH55DpTWW+108AFB+zeZ8nWC679ELtXHk000yabYhqnXh+eKApdlvF+F25FpZUXUeIeoDVZVQgbY32DujZaGtSe3cca0UCT3EOsaPYs8ZozF35ydU1DCkMt24NO6tYMB8FDTyAK3k+UyhgMH9pInzJhzlNzi3svXkgd9i/4djq5jLrU48Qh7GogJXdLk+Z7/uoE4NoXlzsaDAtJFTOeoQ9MHlBZPm0+ZIrDgsPP/zkeL4w+Dzoz8DZVo/zD8YS6qbi6IK8cG3IHEV2l9uqI4MdvlHij8wqCsMD5MKWyUJK/FZSyGlXYwOUX/jXhip/0HZA/WiYCnCQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB5112.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(6636002)(66556008)(5660300002)(54906003)(316002)(33656002)(6486002)(4326008)(478600001)(966005)(64756008)(66446008)(6512007)(66946007)(4744005)(86362001)(66476007)(2906002)(76116006)(71200400001)(9686003)(6862004)(26005)(6506007)(186003)(53546011)(8676002)(8936002)(1076003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 3D+Sz1EZWejzcrMRXSr0wG8p9XCzgI17nfCOsgo2yCJfz6bxgMAIa7ms5O0+jMetg6GZTUKToChyFN5UeOj5uyBMup4PX/H2P6oXJpUYtonpHINqgaz1ui7+U0eZi2EqTLiUgBpqaHR1e65h8Q6IUdgAuTUf7ez7dSKBS1uyqNU+rFnnhtoFIHRQBSDyGfYt+S0SJD1rjknZprqiA0303M8IE6BKa+Riez/+T/6JbDx06B+ZtGd0otK3tGmzaZ3d1HnVb5+aW5pkK9n4VnF8Rv2LrlAj3KmZnFU+Z1s3mg1Lpsg4f9JMJ2LAyPShB6u3SWbTsObI/9sKeDlq3Q+Jkm3uCIjySKVfsqRgCymjX7F6MvYdAXMGqeNLlcRbSU+3Z8vYc7meblgb5lYo/cUCg/aSDUJOwfHfAPVDjBvFdnJOdHc5Bs0zwoqebO1J7IPpiURd8at43KwS4QfXMrPOK7r8vlNui9ISX2IWVIeSFeUqoAnln1HXrbX0IKuz1h/o
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BE0752A3B563674095CC7361BDAE4655@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 25 Jun 2020 07:10:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:33668 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404042AbgFYLKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 07:10:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFF861FB;
+        Thu, 25 Jun 2020 04:10:43 -0700 (PDT)
+Received: from [10.57.13.97] (unknown [10.57.13.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF0DF3F73C;
+        Thu, 25 Jun 2020 04:10:40 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] dma-direct: provide the ability to reserve
+ per-numa CMA
+To:     Barry Song <song.bao.hua@hisilicon.com>, hch@lst.de,
+        m.szyprowski@samsung.com, will@kernel.org,
+        ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com
+Cc:     iommu@lists.linux-foundation.org, linuxarm@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <20200625074330.13668-1-song.bao.hua@hisilicon.com>
+ <20200625074330.13668-2-song.bao.hua@hisilicon.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <11672f20-6011-1a70-8def-fc662f52d50f@arm.com>
+Date:   Thu, 25 Jun 2020 12:10:35 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB5112.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad2e133a-34c1-45d1-7d31-08d818f856cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2020 11:10:15.8288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GhwvoCJxv5Gv3Ib2DX8LvuFqwQ/SWXAY768x2IseIxRiXUdWzYqS24+kYkImSwXfAzF81lM2zMpPINCJ61U3GQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6294
+In-Reply-To: <20200625074330.13668-2-song.bao.hua@hisilicon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 10:40:21PM +0000, Chaitanya Kulkarni wrote:
-> Christoph, Sagi and Keith,
->=20
-> On 6/24/20 9:44 AM, Christoph Hellwig wrote:
-> > This looks good to me, but I'd rather wait a few releases to
-> > avoid too mush backporting pain.
-> >=20
->=20
-> Here is a summary, for longer explanation please have a look at the
-> end [1] :-
->=20
-> Pros:
-> 1. Code looks uniform and follows strict policy.
->=20
-> Cons:
-> 1. Adds a tab + more char [1] which can lead to line breaks and that can
->     be avoided without following declare-init pattern, less bugs and
->     no pressure to fit the initializer in ~72 char given that we do have
->     some long names and who knows what is in the future.
+On 2020-06-25 08:43, Barry Song wrote:
+> This is useful for at least two scenarios:
+> 1. ARM64 smmu will get memory from local numa node, it can save its
+> command queues and page tables locally. Tests show it can decrease
+> dma_unmap latency at lot. For example, without this patch, smmu on
+> node2 will get memory from node0 by calling dma_alloc_coherent(),
+> typically, it has to wait for more than 560ns for the completion of
+> CMD_SYNC in an empty command queue; with this patch, it needs 240ns
+> only.
+> 2. when we set iommu passthrough, drivers will get memory from CMA,
+> local memory means much less latency.
+> 
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> ---
+>   include/linux/dma-contiguous.h |  4 ++
+>   kernel/dma/Kconfig             | 10 ++++
+>   kernel/dma/contiguous.c        | 99 ++++++++++++++++++++++++++++++----
+>   3 files changed, 104 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+> index 03f8e98e3bcc..278a80a40456 100644
+> --- a/include/linux/dma-contiguous.h
+> +++ b/include/linux/dma-contiguous.h
+> @@ -79,6 +79,8 @@ static inline void dma_contiguous_set_default(struct cma *cma)
+>   
+>   void dma_contiguous_reserve(phys_addr_t addr_limit);
+>   
+> +void dma_pernuma_cma_reserve(void);
+> +
+>   int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
+>   				       phys_addr_t limit, struct cma **res_cma,
+>   				       bool fixed);
+> @@ -128,6 +130,8 @@ static inline void dma_contiguous_set_default(struct cma *cma) { }
+>   
+>   static inline void dma_contiguous_reserve(phys_addr_t limit) { }
+>   
+> +static inline void dma_pernuma_cma_reserve(void) { }
+> +
+>   static inline int dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
+>   				       phys_addr_t limit, struct cma **res_cma,
+>   				       bool fixed)
+> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+> index d006668c0027..aeb976b1d21c 100644
+> --- a/kernel/dma/Kconfig
+> +++ b/kernel/dma/Kconfig
+> @@ -104,6 +104,16 @@ config DMA_CMA
+>   if  DMA_CMA
+>   comment "Default contiguous memory area size:"
+>   
+> +config CMA_PERNUMA_SIZE_MBYTES
+> +	int "Size in Mega Bytes for per-numa CMA areas"
+> +	depends on NUMA
+> +	default 16 if ARM64
+> +	default 0
+> +	help
+> +	  Defines the size (in MiB) of the per-numa memory area for Contiguous
+> +	  Memory Allocator. Every numa node will get a separate CMA with this
+> +	  size. If the size of 0 is selected, per-numa CMA is disabled.
+> +
 
-[BEGIN being silly.. sorry guys, I couldn't resist.. :)]
+I think this needs to be cleverer than just a static config option. 
+Pretty much everything else CMA-related is runtime-configurable to some 
+degree, and doing any per-node setup when booting on a single-node 
+system would be wasted effort.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/s=
-cripts/checkpatch.pl?id=3Dbdc48fa11e46f867ea4d75fa59ee87a7f48be144
+Since this is conceptually very similar to the existing hugetlb_cma 
+implementation I'm also wondering about inconsistency with respect to 
+specifying per-node vs. total sizes.
 
-Isn't 100 the new 80? ;)
+Another thought, though, is that systems large enough to have multiple 
+NUMA nodes tend not to be short on memory, so it might not be 
+unreasonable to base this all on whatever size the default area is 
+given, and simply have a binary on/off switch to control the per-node 
+aspect.
 
-[END being silly]=
+>   config CMA_SIZE_MBYTES
+>   	int "Size in Mega Bytes"
+>   	depends on !CMA_SIZE_SEL_PERCENTAGE
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index 15bc5026c485..bcbd53aead93 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -30,7 +30,14 @@
+>   #define CMA_SIZE_MBYTES 0
+>   #endif
+>   
+> +#ifdef CONFIG_CMA_PERNUMA_SIZE_MBYTES
+> +#define CMA_SIZE_PERNUMA_MBYTES CONFIG_CMA_PERNUMA_SIZE_MBYTES
+> +#else
+> +#define CMA_SIZE_PERNUMA_MBYTES 0
+> +#endif
+> +
+>   struct cma *dma_contiguous_default_area;
+> +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
+>   
+>   /*
+>    * Default global CMA area size can be defined in kernel's .config.
+> @@ -44,6 +51,8 @@ struct cma *dma_contiguous_default_area;
+>    */
+>   static const phys_addr_t size_bytes __initconst =
+>   	(phys_addr_t)CMA_SIZE_MBYTES * SZ_1M;
+> +static const phys_addr_t pernuma_size_bytes __initconst =
+> +	(phys_addr_t)CMA_SIZE_PERNUMA_MBYTES * SZ_1M;
+>   static phys_addr_t  size_cmdline __initdata = -1;
+>   static phys_addr_t base_cmdline __initdata;
+>   static phys_addr_t limit_cmdline __initdata;
+> @@ -96,6 +105,33 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
+>   
+>   #endif
+>   
+> +void __init dma_pernuma_cma_reserve(void)
+> +{
+> +	int nid;
+> +
+> +	if (!pernuma_size_bytes || nr_online_nodes <= 1)
+> +		return;
+> +
+> +	for_each_node_state(nid, N_ONLINE) {
+
+Do we need/want notifiers to handle currently-offline nodes coming 
+online later (I'm not sure off-hand how NUMA interacts with stuff like 
+"maxcpus=n")?
+
+> +		int ret;
+> +		char name[20];
+> +
+> +		snprintf(name, sizeof(name), "pernuma%d", nid);
+> +		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
+> +						 0, false, name,
+> +						 &dma_contiguous_pernuma_area[nid],
+> +						 nid);
+> +		if (ret) {
+> +			pr_warn("%s: reservation failed: err %d, node %d", __func__,
+> +				ret, nid);
+> +			continue;
+> +		}
+> +
+> +		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
+> +			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
+> +	}
+> +}
+> +
+>   /**
+>    * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
+>    * @limit: End address of the reserved memory (optional, 0 for any).
+> @@ -222,22 +258,31 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+>    * @gfp:   Allocation flags.
+>    *
+>    * This function allocates contiguous memory buffer for specified device. It
+> - * tries to use device specific contiguous memory area if available, or the
+> - * default global one.
+> + * tries to use device specific contiguous memory area if available, or it
+> + * tries to use per-numa cma, if the allocation fails, it will fallback to
+> + * try default global one.
+>    *
+> - * Note that it byapss one-page size of allocations from the global area as
+> - * the addresses within one page are always contiguous, so there is no need
+> - * to waste CMA pages for that kind; it also helps reduce fragmentations.
+> + * Note that it bypass one-page size of allocations from the per-numa and
+> + * global area as the addresses within one page are always contiguous, so
+> + * there is no need to waste CMA pages for that kind; it also helps reduce
+> + * fragmentations.
+>    */
+>   struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+>   {
+>   	size_t count = size >> PAGE_SHIFT;
+>   	struct page *page = NULL;
+>   	struct cma *cma = NULL;
+> +	int nid = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+
+dev should never be NULL here (the existing check below could be cleaned 
+up if we're refactoring anyway).
+
+> +	bool alloc_from_pernuma = false;
+>   
+>   	if (dev && dev->cma_area)
+>   		cma = dev->cma_area;
+> -	else if (count > 1)
+> +	else if ((nid != NUMA_NO_NODE) && dma_contiguous_pernuma_area[nid]
+> +		&& !(gfp & (GFP_DMA | GFP_DMA32))
+> +		&& (count > 1)) {
+> +		cma = dma_contiguous_pernuma_area[nid];
+> +		alloc_from_pernuma = true;
+> +	} else if (count > 1)
+
+Well this is a big ugly mess... I'd suggest restructuring the whole 
+function to bail out immediately if (count == 1 && !dev->cma_area), then 
+try the per-device, per-node and default areas in turn until something 
+works.
+
+>   		cma = dma_contiguous_default_area;
+>   
+>   	/* CMA can be used only in the context which permits sleeping */
+> @@ -246,6 +291,11 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+>   		size_t cma_align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
+>   
+>   		page = cma_alloc(cma, count, cma_align, gfp & __GFP_NOWARN);
+> +
+> +		/* fall back to default cma if failed in per-numa cma */
+> +		if (!page && alloc_from_pernuma)
+> +			page = cma_alloc(dma_contiguous_default_area, count,
+> +				cma_align, gfp & __GFP_NOWARN);
+>   	}
+>   
+>   	return page;
+> @@ -264,9 +314,40 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+>    */
+>   void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
+>   {
+> -	if (!cma_release(dev_get_cma_area(dev), page,
+> -			 PAGE_ALIGN(size) >> PAGE_SHIFT))
+> -		__free_pages(page, get_order(size));
+> +	/* if dev has its own cma, free page from there */
+> +	if (dev && dev->cma_area) {
+
+Again, no new redundant NULL checks please.
+
+> +		if (cma_release(dev->cma_area, page, PAGE_ALIGN(size) >> PAGE_SHIFT))
+> +			return;
+> +	} else {
+> +		/*
+> +		 * otherwise, page is from either per-numa cma or default cma
+> +		 */
+> +		int nid = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+> +
+> +		if (nid != NUMA_NO_NODE) {
+> +			int i;
+> +
+> +			/*
+> +			 * Literally we only need to call cma_release() on pernuma cma of
+> +			 * node nid, howerver, a corner case is that users might write
+> +			 * /sys/devices/pci-x/numa_node to change node to workaround firmware
+> +			 * bug, so it might allocate memory from nodeA CMA, but free from nodeB
+> +			 * CMA.
+> +			 */
+
+Why bother with this dance at all? You have the page, so you can't not 
+know where it is. Just use page_to_nid() like hugetlb_cma does.
+
+Robin.
+
+> +			for (i = 0; i < MAX_NUMNODES; i++) {
+> +				if (cma_release(dma_contiguous_pernuma_area[i], page,
+> +							PAGE_ALIGN(size) >> PAGE_SHIFT))
+> +					return;
+> +			}
+> +		}
+> +
+> +		if (cma_release(dma_contiguous_default_area, page,
+> +					PAGE_ALIGN(size) >> PAGE_SHIFT))
+> +			return;
+> +	}
+> +
+> +	/* not in any cma, free from buddy */
+> +	__free_pages(page, get_order(size));
+>   }
+>   
+>   /*
+> 
