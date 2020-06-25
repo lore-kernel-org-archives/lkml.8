@@ -2,130 +2,117 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B529AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BBA2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F32620789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:58:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Az91tkeP"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ag48Ej54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389647AbgFYCy6 (ORCPT
+        id S2389568AbgFYC57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 22:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52966 "EHLO
+        Wed, 24 Jun 2020 22:57:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389357AbgFYCy5 (ORCPT
+        with ESMTP id S2388930AbgFYC56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 22:54:57 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607EFC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 19:54:56 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id f3so2613693pgr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 19:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zp4npQcgeZMS0pGjybddj8LwS3fxPZyTX8wZXmAxxq8=;
-        b=Az91tkePwm/xh44txinQdcyBs/2AMx7g4pZmjPtGWK2i06v/4LoR+m3rR1QuJD/JYK
-         Y07aw6vQOY6UupyMDXeuqqdgCerrwRSuFxZtNWPAPsSK2Y15Evu3u62oyDGJ1KInb3el
-         y5pMfE7BF0nslx1d99ZO6inoSdV3sUcwB6LgDAXB1/vu8DHwlQRoJ97hfxqp2p6jflU5
-         /jWTggLrwFX55TkRA9aPLeK2NvVdv2e/C/QwsxlOdQfBx43RxEDhMzgLpySzJZSu9EBS
-         SbwThB3OXl8kBaxZVNhPp/UoUv1pyGsWBPayAXzR89WKZBIvUPbBq8KY7bFm22h8giPj
-         NNYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=zp4npQcgeZMS0pGjybddj8LwS3fxPZyTX8wZXmAxxq8=;
-        b=ae3kyCCQLbN/OL96wv9L49TGPM6I+csNadMWd9mS8iM/juhWJHBBl07MH0B9kvBHn7
-         Hj7Eo6e999KPRm69PVAzIZGtDnwLZbS4X4omiTWaJSFNhufIC5VoiggY+vxPstjn7icW
-         kuXWnIizSwZt0X0SSJhD5VMYPRW5rL+Y05Y4W1HdQO95UIq3Ck+14MDRRpRGeaUO2kgs
-         MST/4ZQEN0sJwgivoJt3zUtVvTnJXWmDVypBnsx7auZ0dLhlMEHF6wU0/FV3pgaqWTBA
-         fgPWHPAOUgzuIpgX1nMsbDIsgTAr+KUYev1exZhQLwDjNrsdskA8VJ5EOPmvBOHVOVKu
-         HlMg==
-X-Gm-Message-State: AOAM530iNYV8a9iw8hz1LVILSOJuwQrrZfafHqO3NYrBCEfgFUCFNDQP
-        n95eVGFo7GjRz5A1yyw33LPnE6N2EAo=
-X-Google-Smtp-Source: ABdhPJxabE67+Alwujp7u9O15q0niQ7itBEEzErE0Ls5oHuYwsqVsBmpiuxlji26MFkmaJ/GNds1hA==
-X-Received: by 2002:a62:60c7:: with SMTP id u190mr30255128pfb.240.1593053695830;
-        Wed, 24 Jun 2020 19:54:55 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([122.182.254.114])
-        by smtp.gmail.com with ESMTPSA id y10sm18593000pgi.54.2020.06.24.19.54.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jun 2020 19:54:55 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     boris.ostrovsky@oracle.com, jgross@suse.com, sstabellini@kernel.org
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Paul Durrant <xadimgnik@gmail.com>
-Subject: [PATCH 2/2] xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
-Date:   Thu, 25 Jun 2020 08:32:40 +0530
-Message-Id: <1593054160-12628-2-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1593054160-12628-1-git-send-email-jrdr.linux@gmail.com>
-References: <1593054160-12628-1-git-send-email-jrdr.linux@gmail.com>
+        Wed, 24 Jun 2020 22:57:58 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C991C061573;
+        Wed, 24 Jun 2020 19:57:58 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49sl7Q29dtz9sRf;
+        Thu, 25 Jun 2020 12:57:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593053876;
+        bh=psPe9FzujwmVzuE9PFq9+5QBvHHW8QOUloymleHrmB0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ag48Ej54AJGxJsdBdpiEhqFZENi3qz0QyS2Oz5N/MKZcYhCrKjwBFQhLq4fvRCXZ/
+         gJyRNiAC1QSaHQTazLRNHjKM9c4oTZY9pb6h9Xdr3bPNHg673GvvRl16m0UYBPMXTV
+         EqoEbQCBfmL8tmUL865HR7jn/MyQCcs4OmnxQnUZPFOsUch5PcfUKVoJLXf+1OjteM
+         3hJoiaBPR311aFtxdk/9oyYueTvEHL25wcPYSJ/bFBIhfAJpX5Z7ZpD0R/HSr/vnel
+         nLcWrWcHQN/94vOibwgiEdlty4MOiQ+x79GURsSFmmRQGuhbJcNO2jQ5m1KEjMMm3x
+         ZJOrV+Fts3ETA==
+Date:   Thu, 25 Jun 2020 12:57:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: linux-next: build failure after merge of the rcu tree
+Message-ID: <20200625125753.6ec44d50@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/bJTHBuQJEM8peeNQsjWP.RA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In 2019, we introduced pin_user_pages*() and now we are converting
-get_user_pages*() to the new API as appropriate. [1] & [2] could
-be referred for more information. This is case 5 as per document [1].
+--Sig_/bJTHBuQJEM8peeNQsjWP.RA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[1] Documentation/core-api/pin_user_pages.rst
+Hi all,
 
-[2] "Explicit pinning of user-space pages":
-        https://lwn.net/Articles/807108/
+After merging the rcu tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Paul Durrant <xadimgnik@gmail.com>
----
-Hi,
+kernel/rcu/tree.c: In function 'rcu_dynticks_eqs_enter':
+kernel/rcu/tree.c:251:8: error: implicit declaration of function 'arch_atom=
+ic_add_return'; did you mean 'atomic_add_return'? [-Werror=3Dimplicit-funct=
+ion-declaration]
+  251 |  seq =3D arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dyntick=
+s);
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+      |        atomic_add_return
+kernel/rcu/tree.c: In function 'rcu_dynticks_eqs_exit':
+kernel/rcu/tree.c:281:3: error: implicit declaration of function 'arch_atom=
+ic_andnot'; did you mean 'atomic_andnot'? [-Werror=3Dimplicit-function-decl=
+aration]
+  281 |   arch_atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
+      |   ^~~~~~~~~~~~~~~~~~
+      |   atomic_andnot
+kernel/rcu/tree.c: In function 'rcu_dynticks_curr_cpu_in_eqs':
+kernel/rcu/tree.c:314:11: error: implicit declaration of function 'arch_ato=
+mic_read'; did you mean 'atomic_read'? [-Werror=3Dimplicit-function-declara=
+tion]
+  314 |  return !(arch_atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
+      |           ^~~~~~~~~~~~~~~~
+      |           atomic_read
 
-I'm compile tested this, but unable to run-time test, so any testing
-help is much appriciated.
+Caused by commit
 
- drivers/xen/privcmd.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+  d2f8491368e5 ("rcu: Fixup noinstr warnings")
 
-diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-index 0da417c..eb05254 100644
---- a/drivers/xen/privcmd.c
-+++ b/drivers/xen/privcmd.c
-@@ -595,7 +595,7 @@ static int lock_pages(
- 		if (requested > nr_pages)
- 			return -ENOSPC;
- 
--		page_count = get_user_pages_fast(
-+		page_count = pin_user_pages_fast(
- 			(unsigned long) kbufs[i].uptr,
- 			requested, FOLL_WRITE, pages);
- 		if (page_count < 0) {
-@@ -612,13 +612,7 @@ static int lock_pages(
- 
- static void unlock_pages(struct page *pages[], unsigned int nr_pages)
- {
--	unsigned int i;
--
--	for (i = 0; i < nr_pages; i++) {
--		if (!PageDirty(page))
--			set_page_dirty_lock(page);
--		put_page(pages[i]);
--	}
-+	unpin_user_pages_dirty_lock(pages, nr_pages, 1);
- }
- 
- static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
--- 
-1.9.1
+I reverted that commit for today.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bJTHBuQJEM8peeNQsjWP.RA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl70ErEACgkQAVBC80lX
+0GzaYgf9EeSnACAXZv6/pEn2jlqn/dAiRC6IBF+fsXdlu++mqbGuc05PRXyH1zK2
+1z7zAHlbU9cEM9R4723WGeyTwRBN+LV1jjO1YAe0OXisJI5HWoXcLNToEnMd4+8b
+rB9a6g3YaK9FF1SAJGgQupzgKY5jReo7dT5ueRUPGpdLILBH4BqJ+LvXXeIa+ZQW
+m/SLbON0cgHgYR1v5FEgqQqS+a/fNGe+bNGHQGenTaaUXluzdrOi1q+yYV8BNn8D
+Ux5yUhZyAAa9edwiTnhUd+FpejIKv/ojBHkudhuSRNDTpwbirf/XzXH3zTysRfQZ
+NctqjW1sM8LmQAo1WZtmJC9K3TqGoA==
+=Y+S6
+-----END PGP SIGNATURE-----
+
+--Sig_/bJTHBuQJEM8peeNQsjWP.RA--
