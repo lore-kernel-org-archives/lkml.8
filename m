@@ -2,95 +2,131 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5795DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B48C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8D2206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F506206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:51:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="iJZijdp0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405203AbgFYNu5 (ORCPT
+        id S2405228AbgFYNvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:50:57 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:27460 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404803AbgFYNu4 (ORCPT
+        Thu, 25 Jun 2020 09:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404803AbgFYNvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:50:56 -0400
-IronPort-SDR: 6iKE5uuaWB8s3Hutxs+7krh///GWOC1lHF3rmlQim5bbGtvrep5jaoP7dhUSCxh76EdzzgHysz
- 3d+IHjwLvSuRck7hlivhFnkY72SuYI1HByzVk4CceNvE99vvL32McWcg28UO3MOFKHwSQvM8oc
- XyVFLg28IREzuVyJ9NQHYHpSswa8jD9sAL4YGwE4RljVtS4HAe55HHux53RADyB8E6Oyp+wB1o
- PTwLnJAJhsTnWRgQyH2FlSj6xXEiPjE7wBuFdrd18jay0dTZqJ6/9FuTArVAIxWMgkP41BwcmA
- /k4=
-X-IronPort-AV: E=Sophos;i="5.75,279,1589270400"; 
-   d="scan'208";a="50311698"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 25 Jun 2020 05:50:55 -0800
-IronPort-SDR: YNW2iLDxJT7b7gRTlTexBmc0jFGCY8AO5eUVe7CIGZhds5fBJ80JMie2uvZudrTfOcxKQ98toH
- HGifkF6yZDKna8M4EaVOkwM4W+n10y6X1hFhRyG2HzFdOl9ZZnC94DBg+VAxTqZVk//j+AtqvU
- D+qiKxRCU3R4cw+OfK3DjjRsTavlm7s1khZv58+zkEpFhk6C4gm9xCOgxx1FYbOesUkw5HrF6P
- yMS4ELlABnUBawqHtNTXCgckacEBvECFen95ufGPd6M7QSx4pn64z3oB6k8e6AEpuHkfZ404/p
- FGQ=
-Subject: Re: [PATCH v11 00/56] atmel_mxt_ts misc
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     <nick@shmanahar.org>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
- <20200527064307.GK89269@dtor-ws>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <2f7964da-0dca-2d13-3559-28b4582a3278@mentor.com>
-Date:   Thu, 25 Jun 2020 22:50:49 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 09:51:00 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1165DC08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:51:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d12so2829686ply.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=O6XWpAIm/07NSaAOsW+eHsOPwj9NO+y2KozfprF3MfU=;
+        b=iJZijdp0c4rgMpbSmneJ/7Y0r69e5W6O14v+/Yh6yx60yuOg/LuDbpgJ85E5VhHBCM
+         wH6LaEtu4HnNDLKdhiocMlPnbPqqxaxTfmClWYA8+qKBDGfLk6TFfgVIU2Fah09zaEGt
+         eijSbz4wnvdVuFwO4W/uK57q/cvGAFmcP/OqbhpIyvxgP43VOFJKCB22RpN6mI5C7Mbm
+         eXCtbDH4PCucy+ENIN8FuwYe9ogGJSREXLeX7TewvJ8Y2jR5yeKv7f8F2qHcoAQ8X02D
+         SLluvWTcTqrIwlNUrxHB7nIzGDlkSQx507VEDn9Wh4FWV6uJQXGuv8sjGGMIG2+FUgCP
+         JXWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=O6XWpAIm/07NSaAOsW+eHsOPwj9NO+y2KozfprF3MfU=;
+        b=n1kiQDsqndptGprns1Wf1tGHh3WYRCcn9u/0STTl4uMu4J+lZAJDpNcto70emrMbju
+         39F6rT8CWaX/QIF5iq5qLqIbukzaiRcuqQCdXkBzVjR8EJxXHB31OuPDcZ79hS9RiIV6
+         Bm1v4M3lJ3xnvW4/8KNFQRHNCFC9b8dVXV2e/mkqQLlQQAID76NbVXtd8bVzlqsj+FNx
+         Zo/VnAjAUIR5Ky6BeUG/++YrxGOSWLzYf1zfpSqXdD9YN3YW1FsJZCvBTX0cXcaIE5I2
+         IVWDisIxJN4JRZOyDzjADqzPPnAUGmGmUNfEAykHNVxtQaqXl8L0c4n2CMuwlGXNRY/c
+         KP1Q==
+X-Gm-Message-State: AOAM532+Z3Ut/nTw9KslKboFtzb5KkB/yQkU1cAu6X9S4euNBGrRswGM
+        aO6wWsHm/GVz8OG08M/YlcNPqQ==
+X-Google-Smtp-Source: ABdhPJw0XHLBftq9f1yqYhGK7B1rnEDK++/JqGPEqJB/M/z+kCDZMRNU1E6tlnSLrwoI1PKGBTx8lQ==
+X-Received: by 2002:a17:90b:4d08:: with SMTP id mw8mr3395070pjb.119.1593093060504;
+        Thu, 25 Jun 2020 06:51:00 -0700 (PDT)
+Received: from localhost ([2406:7400:73:51e4:908:f18a:1156:5c38])
+        by smtp.gmail.com with ESMTPSA id oc6sm9666571pjb.43.2020.06.25.06.50.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 06:50:58 -0700 (PDT)
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
+Date:   Thu, 25 Jun 2020 09:50:51 -0400
+To:     Marc Dietrich <marvin24@gmx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        ac100@lists.launchpad.net, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: nvec: changed coding style, line should not end
+ with a (
+Message-ID: <20200625135051.msl37vuz5fbgiuz4@pesu-pes-edu>
 MIME-Version: 1.0
-In-Reply-To: <20200527064307.GK89269@dtor-ws>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rewokx577v3vntjb"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dmitry
 
-sorry for the delay,
+--rewokx577v3vntjb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/05/27 15:43, Dmitry Torokhov wrote:
-> Hi Jiada,
-> 
-> On Thu, May 07, 2020 at 10:56:00PM -0700, Jiada Wang wrote:
->> This patch-set forward ports Nick Dyer's work in ndyer/linux github
->> repository as long as some other features and fixes
-> 
-> Sorry for ignoring the series for quite a while. I guess my biggest
-> issue with the series is that quite a bit of patches are trying to
-> handle the fallout from a very unfortunate design decision in the
-> driver: the fact that it attempts to automatically upload firmware and
-> config on every boot/probe. This design was done at my urging because I
-> did not have access to the technical documentation and did not realize
-> that the controller has non-volatile memory for both firmware and
-> configuration. We should only attempt to automatically load firmware
-> where device does not have non-volatile memory and is unable function
-> otherwise, in all other cases we better leave it to userspace to decide
-> whether to execute firmware update and when. The kernel should only
-> provide facilities so that userspace can initiate firmware update. This
-> design has worked well for Chrome OS for many years (it used Atmel
-> controllers in several products), and I would like to bring it to the
-> mainline.
+Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+---
+ drivers/staging/nvec/nvec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I agree with you, I will review the patch-set,
-and only pick these not related to firmware/cfg upload
+diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
+index 360ec0407740..16afbe1dfdeb 100644
+--- a/drivers/staging/nvec/nvec.c
++++ b/drivers/staging/nvec/nvec.c
+@@ -382,8 +382,8 @@ static void nvec_request_master(struct work_struct *wor=
+k)
+ 		msg =3D list_first_entry(&nvec->tx_data, struct nvec_msg, node);
+ 		spin_unlock_irqrestore(&nvec->tx_lock, flags);
+ 		nvec_gpio_set_value(nvec, 0);
+-		err =3D wait_for_completion_interruptible_timeout(
+-				&nvec->ec_transfer, msecs_to_jiffies(5000));
++		err =3D wait_for_completion_interruptible_timeout(&nvec->ec_transfer,
++						msecs_to_jiffies(5000));
+=20
+ 		if (err =3D=3D 0) {
+ 			dev_warn(nvec->dev, "timeout waiting for ec transfer\n");
+--=20
+2.20.1
 
-Thanks,
-jiada
-> 
-> Thanks.
-> 
+
+--rewokx577v3vntjb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl70q7oACgkQ471Q5AHe
+Z2oxxQv+OOy01Ou3vqU5dN75Df6fs0uJzKJ4lacNDjmMVI7YZvO95FHX6uw2W2ZE
+1QIRzE43pNJ9IGkAOr88VNZPddYk9YIf+pQ/0N5P8Ey1l6HpjfzXLsYmkJ7sh/kR
+lYUZFLnlzHDSeQWN/GWyYm6is9AKCV7wz566vDg/8ttx7+XRgoyMurqYZeHLT+0B
+EHaMLNbnW1HAS++UYxKyZ2+G2VwgTbM5Mb/k08C15t0Op19XwxAHTyEhPFPBYedR
+i5oSli2HjK/zFOf8GfnztOtd0E65JNnsPkzlUxADw6OgAvpQlwVkhOb99qwTMQ7c
+CZgoM0zhwGmnypFC5nFyMFjAyD8LjBfxU6JoJaWrEsILl+ZLNrG6ruCiZBfAaIwV
+BVXKkTfSU7YKZeBVZM2rIvZOnUjWJSKXPd2mnrfvdv/1y0iFx3Dz/EP4l/NDr8sl
+81r1GaaE/qwPF2GGPj7bHgTkL3vRZrrxsvYbucY+NQofp/qkbt7olHd4ic8eSE28
+uZZcI5eN
+=6J1G
+-----END PGP SIGNATURE-----
+
+--rewokx577v3vntjb--
