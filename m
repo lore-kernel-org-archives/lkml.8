@@ -2,110 +2,294 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C450C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10AAD20B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8147920720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390681AbgFYIEN (ORCPT
+        id S2390726AbgFYIEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:04:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6317 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390531AbgFYIDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:03:36 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F3283E3998D28F9F9FAD;
-        Thu, 25 Jun 2020 16:03:31 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 25 Jun 2020 16:03:24 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <catalin.marinas@arm.com>, <peterz@infradead.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>,
-        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
-        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-Subject: [RESEND PATCH v5 0/6] arm64: tlb: add support for TTL feature
-Date:   Thu, 25 Jun 2020 16:03:08 +0800
-Message-ID: <20200625080314.230-1-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+        Thu, 25 Jun 2020 04:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390506AbgFYIDd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:03:33 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632E7C061573;
+        Thu, 25 Jun 2020 01:03:33 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 1483D3FA; Thu, 25 Jun 2020 10:03:30 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 3/4] KVM: SVM: Add svm_ prefix to set/clr/is_intercept()
+Date:   Thu, 25 Jun 2020 10:03:24 +0200
+Message-Id: <20200625080325.28439-4-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200625080325.28439-1-joro@8bytes.org>
+References: <20200625080325.28439-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to reduce the cost of TLB invalidation, ARMv8.4 provides
-the TTL field in TLBI instruction.  The TTL field indicates the
-level of page table walk holding the leaf entry for the address
-being invalidated.  This series provide support for this feature.
+From: Joerg Roedel <jroedel@suse.de>
 
-When ARMv8.4-TTL is implemented, the operand for TLBIs looks like
-below:
+Make clear the symbols belong to the SVM code when they are built-in.
 
-* +----------+-------+----------------------+
-* |   ASID   |  TTL  |        BADDR         |
-* +----------+-------+----------------------+
-* |63      48|47   44|43                   0|
+No functional changes.
 
-See patches for details, Thanks.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kvm/svm/nested.c |  2 +-
+ arch/x86/kvm/svm/svm.c    | 88 +++++++++++++++++++--------------------
+ arch/x86/kvm/svm/svm.h    |  6 +--
+ 3 files changed, 48 insertions(+), 48 deletions(-)
 
---
-ChangeList:
-v5:
-rebase the series on Linux 5.8-rc2.
-
-v4:
-implement flush_*_tlb_range only on arm64.
-
-v3:
-minor changes: reduce the indentation levels of __tlbi_level().
-
-v2:
-rebase series on Linux 5.7-rc1 and simplify the code implementation.
-
-v1:
-add support for TTL feature in arm64.
-
-Marc Zyngier (2):
-  arm64: Detect the ARMv8.4 TTL feature
-  arm64: Add level-hinted TLB invalidation helper
-
-Peter Zijlstra (Intel) (1):
-  tlb: mmu_gather: add tlb_flush_*_range APIs
-
-Zhenyu Ye (3):
-  arm64: Add tlbi_user_level TLB invalidation helper
-  arm64: tlb: Set the TTL field in flush_tlb_range
-  arm64: tlb: Set the TTL field in flush_*_tlb_range
-
- arch/arm64/include/asm/cpucaps.h  |  3 +-
- arch/arm64/include/asm/pgtable.h  | 10 ++++++
- arch/arm64/include/asm/sysreg.h   |  1 +
- arch/arm64/include/asm/tlb.h      | 29 +++++++++++++++-
- arch/arm64/include/asm/tlbflush.h | 54 +++++++++++++++++++++++++-----
- arch/arm64/kernel/cpufeature.c    | 11 +++++++
- include/asm-generic/tlb.h         | 55 ++++++++++++++++++++++---------
- 7 files changed, 138 insertions(+), 25 deletions(-)
-
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 9845fab381bc..8fc59ce75182 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -258,7 +258,7 @@ void sync_nested_vmcb_control(struct vcpu_svm *svm)
+ 	/* Only a few fields of int_ctl are written by the processor.  */
+ 	mask = V_IRQ_MASK | V_TPR_MASK;
+ 	if (!(svm->nested.ctl.int_ctl & V_INTR_MASKING_MASK) &&
+-	    is_intercept(svm, INTERCEPT_VINTR)) {
++	    svm_is_intercept(svm, INTERCEPT_VINTR)) {
+ 		/*
+ 		 * In order to request an interrupt window, L0 is usurping
+ 		 * svm->vmcb->control.int_ctl and possibly setting V_IRQ
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 4d9e19bb888f..e0b0321d95d4 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1002,38 +1002,38 @@ static void init_vmcb(struct vcpu_svm *svm)
+ 	if (enable_vmware_backdoor)
+ 		set_exception_intercept(svm, GP_VECTOR);
+ 
+-	set_intercept(svm, INTERCEPT_INTR);
+-	set_intercept(svm, INTERCEPT_NMI);
+-	set_intercept(svm, INTERCEPT_SMI);
+-	set_intercept(svm, INTERCEPT_SELECTIVE_CR0);
+-	set_intercept(svm, INTERCEPT_RDPMC);
+-	set_intercept(svm, INTERCEPT_CPUID);
+-	set_intercept(svm, INTERCEPT_INVD);
+-	set_intercept(svm, INTERCEPT_INVLPG);
+-	set_intercept(svm, INTERCEPT_INVLPGA);
+-	set_intercept(svm, INTERCEPT_IOIO_PROT);
+-	set_intercept(svm, INTERCEPT_MSR_PROT);
+-	set_intercept(svm, INTERCEPT_TASK_SWITCH);
+-	set_intercept(svm, INTERCEPT_SHUTDOWN);
+-	set_intercept(svm, INTERCEPT_VMRUN);
+-	set_intercept(svm, INTERCEPT_VMMCALL);
+-	set_intercept(svm, INTERCEPT_VMLOAD);
+-	set_intercept(svm, INTERCEPT_VMSAVE);
+-	set_intercept(svm, INTERCEPT_STGI);
+-	set_intercept(svm, INTERCEPT_CLGI);
+-	set_intercept(svm, INTERCEPT_SKINIT);
+-	set_intercept(svm, INTERCEPT_WBINVD);
+-	set_intercept(svm, INTERCEPT_XSETBV);
+-	set_intercept(svm, INTERCEPT_RDPRU);
+-	set_intercept(svm, INTERCEPT_RSM);
++	svm_set_intercept(svm, INTERCEPT_INTR);
++	svm_set_intercept(svm, INTERCEPT_NMI);
++	svm_set_intercept(svm, INTERCEPT_SMI);
++	svm_set_intercept(svm, INTERCEPT_SELECTIVE_CR0);
++	svm_set_intercept(svm, INTERCEPT_RDPMC);
++	svm_set_intercept(svm, INTERCEPT_CPUID);
++	svm_set_intercept(svm, INTERCEPT_INVD);
++	svm_set_intercept(svm, INTERCEPT_INVLPG);
++	svm_set_intercept(svm, INTERCEPT_INVLPGA);
++	svm_set_intercept(svm, INTERCEPT_IOIO_PROT);
++	svm_set_intercept(svm, INTERCEPT_MSR_PROT);
++	svm_set_intercept(svm, INTERCEPT_TASK_SWITCH);
++	svm_set_intercept(svm, INTERCEPT_SHUTDOWN);
++	svm_set_intercept(svm, INTERCEPT_VMRUN);
++	svm_set_intercept(svm, INTERCEPT_VMMCALL);
++	svm_set_intercept(svm, INTERCEPT_VMLOAD);
++	svm_set_intercept(svm, INTERCEPT_VMSAVE);
++	svm_set_intercept(svm, INTERCEPT_STGI);
++	svm_set_intercept(svm, INTERCEPT_CLGI);
++	svm_set_intercept(svm, INTERCEPT_SKINIT);
++	svm_set_intercept(svm, INTERCEPT_WBINVD);
++	svm_set_intercept(svm, INTERCEPT_XSETBV);
++	svm_set_intercept(svm, INTERCEPT_RDPRU);
++	svm_set_intercept(svm, INTERCEPT_RSM);
+ 
+ 	if (!kvm_mwait_in_guest(svm->vcpu.kvm)) {
+-		set_intercept(svm, INTERCEPT_MONITOR);
+-		set_intercept(svm, INTERCEPT_MWAIT);
++		svm_set_intercept(svm, INTERCEPT_MONITOR);
++		svm_set_intercept(svm, INTERCEPT_MWAIT);
+ 	}
+ 
+ 	if (!kvm_hlt_in_guest(svm->vcpu.kvm))
+-		set_intercept(svm, INTERCEPT_HLT);
++		svm_set_intercept(svm, INTERCEPT_HLT);
+ 
+ 	control->iopm_base_pa = __sme_set(iopm_base);
+ 	control->msrpm_base_pa = __sme_set(__pa(svm->msrpm));
+@@ -1077,7 +1077,7 @@ static void init_vmcb(struct vcpu_svm *svm)
+ 	if (npt_enabled) {
+ 		/* Setup VMCB for Nested Paging */
+ 		control->nested_ctl |= SVM_NESTED_CTL_NP_ENABLE;
+-		clr_intercept(svm, INTERCEPT_INVLPG);
++		svm_clr_intercept(svm, INTERCEPT_INVLPG);
+ 		clr_exception_intercept(svm, PF_VECTOR);
+ 		clr_cr_intercept(svm, INTERCEPT_CR3_READ);
+ 		clr_cr_intercept(svm, INTERCEPT_CR3_WRITE);
+@@ -1094,9 +1094,9 @@ static void init_vmcb(struct vcpu_svm *svm)
+ 		control->pause_filter_count = pause_filter_count;
+ 		if (pause_filter_thresh)
+ 			control->pause_filter_thresh = pause_filter_thresh;
+-		set_intercept(svm, INTERCEPT_PAUSE);
++		svm_set_intercept(svm, INTERCEPT_PAUSE);
+ 	} else {
+-		clr_intercept(svm, INTERCEPT_PAUSE);
++		svm_clr_intercept(svm, INTERCEPT_PAUSE);
+ 	}
+ 
+ 	if (kvm_vcpu_apicv_active(&svm->vcpu))
+@@ -1107,14 +1107,14 @@ static void init_vmcb(struct vcpu_svm *svm)
+ 	 * in VMCB and clear intercepts to avoid #VMEXIT.
+ 	 */
+ 	if (vls) {
+-		clr_intercept(svm, INTERCEPT_VMLOAD);
+-		clr_intercept(svm, INTERCEPT_VMSAVE);
++		svm_clr_intercept(svm, INTERCEPT_VMLOAD);
++		svm_clr_intercept(svm, INTERCEPT_VMSAVE);
+ 		svm->vmcb->control.virt_ext |= VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK;
+ 	}
+ 
+ 	if (vgif) {
+-		clr_intercept(svm, INTERCEPT_STGI);
+-		clr_intercept(svm, INTERCEPT_CLGI);
++		svm_clr_intercept(svm, INTERCEPT_STGI);
++		svm_clr_intercept(svm, INTERCEPT_CLGI);
+ 		svm->vmcb->control.int_ctl |= V_GIF_ENABLE_MASK;
+ 	}
+ 
+@@ -1356,7 +1356,7 @@ static void svm_set_vintr(struct vcpu_svm *svm)
+ 
+ 	/* The following fields are ignored when AVIC is enabled */
+ 	WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));
+-	set_intercept(svm, INTERCEPT_VINTR);
++	svm_set_intercept(svm, INTERCEPT_VINTR);
+ 
+ 	/*
+ 	 * This is just a dummy VINTR to actually cause a vmexit to happen.
+@@ -1373,7 +1373,7 @@ static void svm_set_vintr(struct vcpu_svm *svm)
+ static void svm_clear_vintr(struct vcpu_svm *svm)
+ {
+ 	const u32 mask = V_TPR_MASK | V_GIF_ENABLE_MASK | V_GIF_MASK | V_INTR_MASKING_MASK;
+-	clr_intercept(svm, INTERCEPT_VINTR);
++	svm_clr_intercept(svm, INTERCEPT_VINTR);
+ 
+ 	/* Drop int_ctl fields related to VINTR injection.  */
+ 	svm->vmcb->control.int_ctl &= mask;
+@@ -2000,8 +2000,8 @@ void svm_set_gif(struct vcpu_svm *svm, bool value)
+ 		 * again while processing KVM_REQ_EVENT if needed.
+ 		 */
+ 		if (vgif_enabled(svm))
+-			clr_intercept(svm, INTERCEPT_STGI);
+-		if (is_intercept(svm, INTERCEPT_VINTR))
++			svm_clr_intercept(svm, INTERCEPT_STGI);
++		if (svm_is_intercept(svm, INTERCEPT_VINTR))
+ 			svm_clear_vintr(svm);
+ 
+ 		enable_gif(svm);
+@@ -2162,7 +2162,7 @@ static int cpuid_interception(struct vcpu_svm *svm)
+ static int iret_interception(struct vcpu_svm *svm)
+ {
+ 	++svm->vcpu.stat.nmi_window_exits;
+-	clr_intercept(svm, INTERCEPT_IRET);
++	svm_clr_intercept(svm, INTERCEPT_IRET);
+ 	svm->vcpu.arch.hflags |= HF_IRET_MASK;
+ 	svm->nmi_iret_rip = kvm_rip_read(&svm->vcpu);
+ 	kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
+@@ -3019,7 +3019,7 @@ static void svm_inject_nmi(struct kvm_vcpu *vcpu)
+ 
+ 	svm->vmcb->control.event_inj = SVM_EVTINJ_VALID | SVM_EVTINJ_TYPE_NMI;
+ 	vcpu->arch.hflags |= HF_NMI_MASK;
+-	set_intercept(svm, INTERCEPT_IRET);
++	svm_set_intercept(svm, INTERCEPT_IRET);
+ 	++vcpu->stat.nmi_injections;
+ }
+ 
+@@ -3096,10 +3096,10 @@ static void svm_set_nmi_mask(struct kvm_vcpu *vcpu, bool masked)
+ 
+ 	if (masked) {
+ 		svm->vcpu.arch.hflags |= HF_NMI_MASK;
+-		set_intercept(svm, INTERCEPT_IRET);
++		svm_set_intercept(svm, INTERCEPT_IRET);
+ 	} else {
+ 		svm->vcpu.arch.hflags &= ~HF_NMI_MASK;
+-		clr_intercept(svm, INTERCEPT_IRET);
++		svm_clr_intercept(svm, INTERCEPT_IRET);
+ 	}
+ }
+ 
+@@ -3179,7 +3179,7 @@ static void enable_nmi_window(struct kvm_vcpu *vcpu)
+ 
+ 	if (!gif_set(svm)) {
+ 		if (vgif_enabled(svm))
+-			set_intercept(svm, INTERCEPT_STGI);
++			svm_set_intercept(svm, INTERCEPT_STGI);
+ 		return; /* STGI will cause a vm exit */
+ 	}
+ 
+@@ -3863,7 +3863,7 @@ static void enable_smi_window(struct kvm_vcpu *vcpu)
+ 
+ 	if (!gif_set(svm)) {
+ 		if (vgif_enabled(svm))
+-			set_intercept(svm, INTERCEPT_STGI);
++			svm_set_intercept(svm, INTERCEPT_STGI);
+ 		/* STGI will cause a vm exit */
+ 	} else {
+ 		/* We must be in SMM; RSM will cause a vmexit anyway.  */
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 76116f5b0d01..003e89008331 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -293,7 +293,7 @@ static inline void clr_exception_intercept(struct vcpu_svm *svm, int bit)
+ 	recalc_intercepts(svm);
+ }
+ 
+-static inline void set_intercept(struct vcpu_svm *svm, int bit)
++static inline void svm_set_intercept(struct vcpu_svm *svm, int bit)
+ {
+ 	struct vmcb *vmcb = get_host_vmcb(svm);
+ 
+@@ -302,7 +302,7 @@ static inline void set_intercept(struct vcpu_svm *svm, int bit)
+ 	recalc_intercepts(svm);
+ }
+ 
+-static inline void clr_intercept(struct vcpu_svm *svm, int bit)
++static inline void svm_clr_intercept(struct vcpu_svm *svm, int bit)
+ {
+ 	struct vmcb *vmcb = get_host_vmcb(svm);
+ 
+@@ -311,7 +311,7 @@ static inline void clr_intercept(struct vcpu_svm *svm, int bit)
+ 	recalc_intercepts(svm);
+ }
+ 
+-static inline bool is_intercept(struct vcpu_svm *svm, int bit)
++static inline bool svm_is_intercept(struct vcpu_svm *svm, int bit)
+ {
+ 	return (svm->vmcb->control.intercept & (1ULL << bit)) != 0;
+ }
 -- 
-2.26.2
-
+2.27.0
 
