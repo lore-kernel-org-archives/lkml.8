@@ -2,133 +2,111 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4688EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14495C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEED20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24A820823
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gB6CIWx2"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="ZO2aUhxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390943AbgFYQqe (ORCPT
+        id S2390975AbgFYQqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:46:34 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49502 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390396AbgFYQqe (ORCPT
+        Thu, 25 Jun 2020 12:46:38 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:48870 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390448AbgFYQqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 12:46:34 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PGfvZx169156;
-        Thu, 25 Jun 2020 16:46:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PGexTv007953;
+        Thu, 25 Jun 2020 09:46:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=UEPtC+P7KIzY6w6/Ov/JEOtd2nMhGKGYQuzAtbcQOsw=;
- b=gB6CIWx2h6622MTQgbZSZ+oBWezbrX1y8ddqt+bWtjk+pikrfz189Vv/IPEDjIImvgPq
- Mwgbt5zMSxahSpqvU4Q0SiPmYl2WQzlVW1juXmu7esfbZ1MaDR3HSPjVsqOBGKkMooUg
- aUPCWDjvPDmvIhbwOMfgZaKcb8aTQyRcuQejd1oSL+wu0Z3MOn+QsmT5yw1uiQfXV4i5
- 4gTUSLA9fxaH5FPNd+mK91P3G2iBDk1lQ+/NJhXl/h2gZT0MwHTcQ9dkocFysuNYkBV5
- cDX4l3gNydhWutT5s1bwng88tGryqrk04NpBxNrxpBc4/U2nFyJ90KPdZf7HBIBE38aV yQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31uusu1ms3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jun 2020 16:46:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PGcGPW056764;
-        Thu, 25 Jun 2020 16:46:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 31uur9sres-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 16:46:14 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05PGk7fA012777;
-        Thu, 25 Jun 2020 16:46:08 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 25 Jun 2020 16:46:07 +0000
-Subject: Re: [PATCH 2/3] mm/huge_memory.c: update tlb entry if pmd is changed
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Silsby <dansilsby@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
- <1592990792-1923-2-git-send-email-maobibo@loongson.cn>
- <07f78e99-6e59-0bce-8ac0-50d7c7600461@oracle.com>
- <87lfkbl5gz.fsf@linux.ibm.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <6071df89-1438-1a25-136d-228b8863364e@oracle.com>
-Date:   Thu, 25 Jun 2020 09:46:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ content-type : content-transfer-encoding; s=pfpt0818;
+ bh=PMskP27+of0ifwdKo+hHxFTCm0HJN0Am7pIewJiyYx8=;
+ b=ZO2aUhxBDtLA4Z15aYe/UZJVtWr4ZFe8kF2J/QqbpPVxxpzg1k5oXPJQLdlDdSlCQFmS
+ hr4s8lQW4BDLGUtf3MHix3ByqZfOvLIey/y76Z6tNuBI23L1HcbXmJEm+qsXvAV7nTO5
+ ao01B4uxNE8fP5mqj8ASPY+ADgNdJiZ3AFAqWE/1V3t3RPNtm+g/EnxEzp0niY+kPKz+
+ yts2fknu+0k4VG0T/K6IaTouyUnz9NbL2GzIL/u9UzxlRGZYQ5MZ9StmHxH829KKZxp6
+ 1V2ruqoDTqzw98NWSiIOLqD1690JjBz7kRthm34Cv5SKYAcu55uhonRj+187AJJLpGa0 TQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 31uuqh0mqk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 09:46:29 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Jun
+ 2020 09:46:27 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 25 Jun 2020 09:46:27 -0700
+Received: from [10.193.39.5] (unknown [10.193.39.5])
+        by maili.marvell.com (Postfix) with ESMTP id 969AB3F7040;
+        Thu, 25 Jun 2020 09:46:22 -0700 (PDT)
+Subject: Re: [EXT] [PATCH v1] bnx2x: use generic power management
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Ariel Elior <aelior@marvell.com>,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        <skhan@linuxfoundation.org>
+References: <20200624175116.67911-1-vaibhavgupta40@gmail.com>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <f685dfe2-9a50-15f5-f94f-c72433f84eb1@marvell.com>
+Date:   Thu, 25 Jun 2020 19:46:21 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-In-Reply-To: <87lfkbl5gz.fsf@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200624175116.67911-1-vaibhavgupta40@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 spamscore=0
- adultscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006250104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250104
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_11:2020-06-25,2020-06-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 5:01 AM, Aneesh Kumar K.V wrote:
-> Mike Kravetz <mike.kravetz@oracle.com> writes:
-> 
->> On 6/24/20 2:26 AM, Bibo Mao wrote:
->>> When set_pmd_at is called in function do_huge_pmd_anonymous_page,
->>> new tlb entry can be added by software on MIPS platform.
->>>
->>> Here add update_mmu_cache_pmd when pmd entry is set, and
->>> update_mmu_cache_pmd is defined as empty excepts arc/mips platform.
->>> This patch has no negative effect on other platforms except arc/mips
->>> system.
->>
->> I am confused by this comment.  It appears that update_mmu_cache_pmd
->> is defined as non-empty on arc, mips, powerpc and sparc architectures.
->> Am I missing something?
->>
->> If those architectures do provide update_mmu_cache_pmd, then the previous
->> patch and this one now call update_mmu_cache_pmd with the actual faulting
->> address instead of the huge page aligned address.  This was intentional
->> for mips.  However, are there any potential issues on the other architectures?
->> I am no expert in any of those architectures.  arc looks like it could be
->> problematic as update_mmu_cache_pmd calls update_mmu_cache and then
->> operates on (address & PAGE_MASK).  That could now be different.
->>
-> 
-> Also we added update_mmu_cache_pmd to update a THP entry. That could be
-> different from a hugetlb entry on some architectures. If we need to do
-> hugetlb equivalent for update_mmu_cache, we should add a different
-> function.
 
-I do not know the mips architecture well enough or if the motivation for
-this patch was based on THP or hugetlb pages.  However, it will change
-the address passed to update_mmu_cache_pmd from huge page aligned to the
-actual faulting address.  Will such a change in the passed address impact
-the powerpc update_mmu_cache_pmd routine?
 
--- 
-Mike Kravetz
+On 24/06/2020 8:51 pm, Vaibhav Gupta wrote:
+> External Email
+> 
+> ----------------------------------------------------------------------
+> With legacy PM, drivers themselves were responsible for managing the
+> device's power states and takes care of register states.
+> 
+> After upgrading to the generic structure, PCI core will take care of
+> required tasks and drivers should do only device-specific operations.
+> 
+> The driver was also calling bnx2x_set_power_state() to set the power state
+> of the device by changing the device's registers' value. It is no more
+> needed.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c  | 15 ++++++---------
+>  drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h  |  4 +---
+>  drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c |  3 +--
+>  3 files changed, 8 insertions(+), 14 deletions(-)
+
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
+
+Sudarsana, could you please give it a short sanity test and report back?
+
+Thanks,
+  Igor
