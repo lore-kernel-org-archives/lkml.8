@@ -2,72 +2,75 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFF22081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117F6207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TXs317Ch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404912AbgFYNYL (ORCPT
+        id S2405037AbgFYNY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:24:11 -0400
-Received: from mga01.intel.com ([192.55.52.88]:31089 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404740AbgFYNYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:24:09 -0400
-IronPort-SDR: +tDidLvzPYJbquK0D1mP2uVYc490LpVLEVxXwKbRnDZB+Kiz587/k/bit4fX42ZkYqrR0/CoF1
- RLUTIirjY/5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="162967841"
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="162967841"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 06:24:09 -0700
-IronPort-SDR: 2ezmgb/2u+6MiN49NBDP4+M+S621ypojUrDTBgV5HkQXZoiMnzdBYl7br8dvfIWQ31G+v5RuoY
- 22igJXxP/XdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="263919837"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.28.52]) ([10.255.28.52])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 06:24:01 -0700
-Cc:     baolu.lu@linux.intel.com, Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 02/13] iommu/vt-d: Use dev_iommu_priv_get/set()
-To:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org
-References: <20200625130836.1916-1-joro@8bytes.org>
- <20200625130836.1916-3-joro@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <1f6c3feb-d8b0-3ade-db2e-133f40874c30@linux.intel.com>
-Date:   Thu, 25 Jun 2020 21:24:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 09:24:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404935AbgFYNY1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:24:27 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7623BC08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:24:26 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id b92so3209729pjc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:24:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=eWSfWI4wpEme8MrwfvQ7LPuMKGxIgLayOyX6JwETS9k=;
+        b=TXs317Chw7NlZME2mN7859gja5QL9DFyQzGIbvLyC0Z35kZPOYP34joAI5KMOaN5PK
+         Y77JHyvhP0f0iy4PPvYyb3iqfJhnEeW3XAc/Yq4Mo6Plmgmrc3xGo58DDXeQ85sneA47
+         PJPwd2z3+2sBXiPkmSRiEmNcu7THXZR/EyE43riF8IF51yLxi9ckeQh1tzSL36Zp2OZd
+         Y2WdMe051I5Rir1G6lfaQ5QnuC0igLb9IuHs4cFtpBkSN02avQR1M/U9A7IsJQ3qWikQ
+         QO54UdFpQW+EBxCNjZ11lXroQgTPm+3/aPJPO+A6aI0CijcjTfwCCGbumI9waZ7JDcp4
+         gMog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eWSfWI4wpEme8MrwfvQ7LPuMKGxIgLayOyX6JwETS9k=;
+        b=fQ3z/v7uOjuzFAXIQA4jjEy56LQmNuXWM0v/aLE17gJDZkQz7Zcq1md1xIvjCNx9j4
+         nguLkYoaf1ed80AUEAgxyb4psb+7+7I+ajZS56HYktTPZtXb0L8ro6udRe1SlIGaDC6w
+         ELatFY75wokTYLNNfn2P4zpsbOoDHtc9tkOd84OiavsmBg64ymWeu85zbzuPbkg2wj8A
+         Pv54Fi315GCSOmpcf0kComRmfIerhuOG1+WgOHhraSmVNy411/NO0GIc/hhH/txJYfvC
+         GBFkEVUk4hSnfVZC7ExS0XkPVx5ol6WViNqEGHvMJYdhgl79WoMgyhQh/Z8mo+g8UKXu
+         BXFA==
+X-Gm-Message-State: AOAM531k9hbkn0CMlHUPJKtnHNKFyCCmQOt2tfezMOAW92h1PeIWOYO4
+        H/3gyiGkfBdjWdsrgQjs21DgGq5LS1bAjA==
+X-Google-Smtp-Source: ABdhPJxz6W6AkCZ4Vb3R22w+iIOiwz8jbFDCPrudgODkVLqlhWeN9HIjLKRDHz7pD59URGE0+fPI5g==
+X-Received: by 2002:a17:902:8690:: with SMTP id g16mr33052502plo.257.1593091465728;
+        Thu, 25 Jun 2020 06:24:25 -0700 (PDT)
+Received: from ?IPv6:2600:380:6c49:6812:d113:f43c:df53:19ee? ([2600:380:6c49:6812:d113:f43c:df53:19ee])
+        by smtp.gmail.com with ESMTPSA id h5sm24249689pfb.120.2020.06.25.06.24.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 06:24:24 -0700 (PDT)
+Subject: Re: [PATCH 5.9] io_uring: fix NULL-mm for linked reqs
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <f7d8272bcf142fe2c11c85ecd86f7f75f6e48316.1593077850.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <41f3f2db-bc1c-22cc-d93c-4ed31cfb225f@kernel.dk>
+Date:   Thu, 25 Jun 2020 07:24:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200625130836.1916-3-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <f7d8272bcf142fe2c11c85ecd86f7f75f6e48316.1593077850.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,143 +78,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
-
-On 2020/6/25 21:08, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+On 6/25/20 3:38 AM, Pavel Begunkov wrote:
+> __io_queue_sqe() tries to handle all request of a link,
+> so it's not enough to grab mm in io_sq_thread_acquire_mm()
+> based just on the head.
 > 
-> Remove the use of dev->archdata.iommu and use the private per-device
-> pointer provided by IOMMU core code instead.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->   .../gpu/drm/i915/selftests/mock_gem_device.c   | 10 ++++++++--
->   drivers/iommu/intel/iommu.c                    | 18 +++++++++---------
+> Don't check req->needs_mm and do it always.
 
-For changes in VT-d driver,
+Applied, thanks.
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+-- 
+Jens Axboe
 
-Best regards,
-baolu
-
->   2 files changed, 17 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/selftests/mock_gem_device.c b/drivers/gpu/drm/i915/selftests/mock_gem_device.c
-> index 9b105b811f1f..e08601905a64 100644
-> --- a/drivers/gpu/drm/i915/selftests/mock_gem_device.c
-> +++ b/drivers/gpu/drm/i915/selftests/mock_gem_device.c
-> @@ -24,6 +24,7 @@
->   
->   #include <linux/pm_domain.h>
->   #include <linux/pm_runtime.h>
-> +#include <linux/iommu.h>
->   
->   #include <drm/drm_managed.h>
->   
-> @@ -118,6 +119,9 @@ struct drm_i915_private *mock_gem_device(void)
->   {
->   	struct drm_i915_private *i915;
->   	struct pci_dev *pdev;
-> +#if IS_ENABLED(CONFIG_IOMMU_API) && defined(CONFIG_INTEL_IOMMU)
-> +	struct dev_iommu iommu;
-> +#endif
->   	int err;
->   
->   	pdev = kzalloc(sizeof(*pdev), GFP_KERNEL);
-> @@ -136,8 +140,10 @@ struct drm_i915_private *mock_gem_device(void)
->   	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
->   
->   #if IS_ENABLED(CONFIG_IOMMU_API) && defined(CONFIG_INTEL_IOMMU)
-> -	/* hack to disable iommu for the fake device; force identity mapping */
-> -	pdev->dev.archdata.iommu = (void *)-1;
-> +	/* HACK HACK HACK to disable iommu for the fake device; force identity mapping */
-> +	memset(&iommu, 0, sizeof(iommu));
-> +	iommu.priv = (void *)-1;
-> +	pdev->dev.iommu = &iommu;
->   #endif
->   
->   	pci_set_drvdata(pdev, i915);
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index d759e7234e98..2ce490c2eab8 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -372,7 +372,7 @@ struct device_domain_info *get_domain_info(struct device *dev)
->   	if (!dev)
->   		return NULL;
->   
-> -	info = dev->archdata.iommu;
-> +	info = dev_iommu_priv_get(dev);
->   	if (unlikely(info == DUMMY_DEVICE_DOMAIN_INFO ||
->   		     info == DEFER_DEVICE_DOMAIN_INFO))
->   		return NULL;
-> @@ -743,12 +743,12 @@ struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8 bus,
->   
->   static int iommu_dummy(struct device *dev)
->   {
-> -	return dev->archdata.iommu == DUMMY_DEVICE_DOMAIN_INFO;
-> +	return dev_iommu_priv_get(dev) == DUMMY_DEVICE_DOMAIN_INFO;
->   }
->   
->   static bool attach_deferred(struct device *dev)
->   {
-> -	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
-> +	return dev_iommu_priv_get(dev) == DEFER_DEVICE_DOMAIN_INFO;
->   }
->   
->   /**
-> @@ -2420,7 +2420,7 @@ static inline void unlink_domain_info(struct device_domain_info *info)
->   	list_del(&info->link);
->   	list_del(&info->global);
->   	if (info->dev)
-> -		info->dev->archdata.iommu = NULL;
-> +		dev_iommu_priv_set(info->dev, NULL);
->   }
->   
->   static void domain_remove_dev_info(struct dmar_domain *domain)
-> @@ -2453,7 +2453,7 @@ static void do_deferred_attach(struct device *dev)
->   {
->   	struct iommu_domain *domain;
->   
-> -	dev->archdata.iommu = NULL;
-> +	dev_iommu_priv_set(dev, NULL);
->   	domain = iommu_get_domain_for_dev(dev);
->   	if (domain)
->   		intel_iommu_attach_device(domain, dev);
-> @@ -2599,7 +2599,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
->   	list_add(&info->link, &domain->devices);
->   	list_add(&info->global, &device_domain_list);
->   	if (dev)
-> -		dev->archdata.iommu = info;
-> +		dev_iommu_priv_set(dev, info);
->   	spin_unlock_irqrestore(&device_domain_lock, flags);
->   
->   	/* PASID table is mandatory for a PCI device in scalable mode. */
-> @@ -4004,7 +4004,7 @@ static void quirk_ioat_snb_local_iommu(struct pci_dev *pdev)
->   	if (!drhd || drhd->reg_base_addr - vtbar != 0xa000) {
->   		pr_warn_once(FW_BUG "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n");
->   		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-> -		pdev->dev.archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
-> +		dev_iommu_priv_set(&pdev->dev, DUMMY_DEVICE_DOMAIN_INFO);
->   	}
->   }
->   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IOAT_SNB, quirk_ioat_snb_local_iommu);
-> @@ -4043,7 +4043,7 @@ static void __init init_no_remapping_devices(void)
->   			drhd->ignored = 1;
->   			for_each_active_dev_scope(drhd->devices,
->   						  drhd->devices_cnt, i, dev)
-> -				dev->archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
-> +				dev_iommu_priv_set(dev, DUMMY_DEVICE_DOMAIN_INFO);
->   		}
->   	}
->   }
-> @@ -5665,7 +5665,7 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
->   		return ERR_PTR(-ENODEV);
->   
->   	if (translation_pre_enabled(iommu))
-> -		dev->archdata.iommu = DEFER_DEVICE_DOMAIN_INFO;
-> +		dev_iommu_priv_set(dev, DEFER_DEVICE_DOMAIN_INFO);
->   
->   	return &iommu->iommu;
->   }
-> 
