@@ -2,74 +2,199 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E055C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06DAD20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AF420720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:52:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="DXXH1gFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390435AbgFYHtN (ORCPT
+        id S2390439AbgFYHwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 03:49:13 -0400
-Received: from smtprelay0248.hostedemail.com ([216.40.44.248]:33488 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390237AbgFYHtM (ORCPT
+        Thu, 25 Jun 2020 03:52:40 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:39871 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390224AbgFYHwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 03:49:12 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2E10A837F24D;
-        Thu, 25 Jun 2020 07:49:12 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: stove73_501568826e4b
-X-Filterd-Recvd-Size: 1548
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 25 Jun 2020 07:49:11 +0000 (UTC)
-Message-ID: <027076b1335f3b48307c78a3d6d1573fa8975822.camel@perches.com>
-Subject: Re: cocci script from 2016 - assignment in if ?
-From:   Joe Perches <joe@perches.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Kris Borer <kborer@gmail.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Date:   Thu, 25 Jun 2020 00:49:10 -0700
-In-Reply-To: <alpine.DEB.2.22.394.2006250848260.3692@hadrien>
-References: <3af82c36a9e7477566bf3c2e6ce013cd@perches.com>
-         <alpine.DEB.2.22.394.2006250848260.3692@hadrien>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Thu, 25 Jun 2020 03:52:39 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id oMgKjfuFybJPcoMgPjELIa; Thu, 25 Jun 2020 09:52:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1593071557; bh=Uovi5ivsPdbMDRWtHZmMQPDhROFf0NLd64SF+HCxKWY=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=DXXH1gFU7lomA6wYpYESZKHj2f8FPp8x7XblvxFeDGq6JGTDsDLf4jRgDp0F9udE8
+         1bU7juPJoUHcoWOJVgxc/g2fVhnJWWsNdaPwj46lbew2AXru4c277oEI3Dri9+Gy56
+         XOtBC83aTLU+bKeHvrGMrKAZzPnd9exMD9Zbow/NGtyyvzywQZto6ppqP0NGLr/rIJ
+         Ek1oi+jSh0xCwl2LcFtHec/wGE0gsDN/T7EyxQ4GJG9gnQwvNqeoU2TuVpNrDLnwQa
+         s2U6T90An/SsRSD8deSXLZu7rFPmuwVcwMEZo+kq/1raaIwUl/GbsC5fI86DmxuZO1
+         JQ11BQ5FwrVDg==
+Subject: Re: [RFC 7/7] media: uapi: make H264 stateless codec interface public
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+References: <20200623182809.1375-1-ezequiel@collabora.com>
+ <20200623182809.1375-8-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <478a33a8-89e2-7ed8-4efe-76d62ddc223a@xs4all.nl>
+Date:   Thu, 25 Jun 2020 09:52:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200623182809.1375-8-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBvg2zcRvZ/zAJ9eu0/F7hAPLKjUxJS33oB3Xi26sP0tNQcQaf853AwFhx8iZTJJWyty4Eiy4y/9GMs/8Avrr23gT8xlgU5NzzovKYi65CEJP3sDvaap
+ RBlZPC9Z+gQYqWXPOhjP+I0y5LsNdiqwuH3JMH+vB+XKcjbKLnshsrK0A4gwrOx0y0HBF2sz37UnjrO9vrJNYOnJlihuXhFqSopUYb/3lNikes3LoJfZ0L2p
+ 94RYGGUYC6Zv4GRLN9/kcLnpoINHQbyB3qjajuDN/nhW1qoD0XgWsf2dkFUXXg81Ukz9kY80z7z5lRoJEo2kyHkAuTjrnU73RrszAZW2j+goCf+XscKJPUxv
+ dfLwnjaV1sSOHu93UuZdNP0uMOU1z1LRilfgIx7fMLT9kA/P0tqZ3E/uEZ924Ij2P6MSIFXQSNd72R+kOsQQfToiWEOokxZXLRy9ZWFXFOgv6e0l1TadNhtK
+ 8XdoZ+fpA8HIfiayH805bwLiKy7A5QYyG0T4MqG3u6ZF9OClgaB6KOQqOGmgaXc9gij4Hn+CdSfKqrCoVpAdtLmKOGmFrmfbVt7lSg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-25 at 08:49 +0200, Julia Lawall wrote:
+On 23/06/2020 20:28, Ezequiel Garcia wrote:
+> The H264 interface is now ready to be part of the official
+> public API.
 > 
-> On Wed, 24 Jun 2020, joe@perches.com wrote:
+> In addition, sanitize header includes.
 > 
-> > https://lore.kernel.org/patchwork/patch/649705/
-> > 
-> > Any particular reason this wasn't applied?
-> > 
-> > I ask because I added something similar recently to checkpatch.
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  drivers/staging/media/hantro/hantro_hw.h                  | 5 ++---
+>  include/media/v4l2-ctrls.h                                | 3 ++-
+>  include/media/v4l2-h264.h                                 | 2 +-
+>  .../{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h}  | 8 ++------
+>  4 files changed, 7 insertions(+), 11 deletions(-)
+>  rename include/{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h} (96%)
+
+This isn't quite how this should be done.
+
+The V4L2_PIX_FMT_H264_SLICE define and the V4L2_CTRL_TYPE_H264_* defines should
+move to videodev2.h.
+
+The remaining CID defines and the data structures should be moved to v4l2-controls.h.
+
+Yes, I know, v4l2-controls.h is getting large. At some point (could actually be
+done in a follow-up patch) the codec controls in v4l2-controls.h should be split off
+into their own header (v4l2-codec-controls.h).
+
+One more thing that I was wondering about:
+
+#define V4L2_CID_MPEG_VIDEO_H264_SPS            (V4L2_CID_MPEG_BASE+1000)
+
+These controls are at V4L2_CID_MPEG_BASE+1000. But I was wondering if:
+
+1) wouldn't it be a good thing to use new CID values since this is the actual
+   uAPI version? This series changes the layout of several structs, so creating
+   new CID values to prevent confusion in applications might be a good idea.
+
+2) related to 1): should we make a new control class for stateless codecs?
+   Currently it is mixed in with the stateful codec controls, but I am not so
+   sure that that is such a good idea. Creating a separate stateless codec
+   control class would be a clean separation of stateful and stateless, and it
+   would probably improve the documentation as well.
+
+   The only 'standard' codec control that is used by stateless codecs is
+   V4L2_CID_MPEG_VIDEO_H264_PROFILE in hantro, although it is not clear to me
+   how it is used. It looks like it is just to report the supported profiles?
+   But it isn't present in the cedrus driver, so it's a bit odd.
+
+Thank you for working on finalizing the H264 API.
+
+Regards,
+
+	Hans
+
 > 
-> It probably slipped through the cracks at the time the Coccinelle
-> scripts maintainer disappeared.  I can check and see if it does anything
-> more than your script.
-
-The checkpatch thing only works on single lines,
-so this cocci script looks more whitespace robust
-but this script doesn't appear to handle code like
-
-	if (!(foo = bar(...)))
-		baz;
-
-where the checkpatch thing converts it OK.
-		
+> diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+> index 4053d8710e04..48d5be144319 100644
+> --- a/drivers/staging/media/hantro/hantro_hw.h
+> +++ b/drivers/staging/media/hantro/hantro_hw.h
+> @@ -11,9 +11,8 @@
+>  
+>  #include <linux/interrupt.h>
+>  #include <linux/v4l2-controls.h>
+> -#include <media/h264-ctrls.h>
+> -#include <media/mpeg2-ctrls.h>
+> -#include <media/vp8-ctrls.h>
+> +
+> +#include <media/v4l2-ctrls.h>
+>  #include <media/videobuf2-core.h>
+>  
+>  #define DEC_8190_ALIGN_MASK	0x07U
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index f40e2cbb21d3..fc725ba2ebd8 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -13,13 +13,14 @@
+>  #include <linux/videodev2.h>
+>  #include <media/media-request.h>
+>  
+> +#include <linux/v4l2-h264-ctrls.h>
+> +
+>  /*
+>   * Include the stateless codec compound control definitions.
+>   * This will move to the public headers once this API is fully stable.
+>   */
+>  #include <media/mpeg2-ctrls.h>
+>  #include <media/fwht-ctrls.h>
+> -#include <media/h264-ctrls.h>
+>  #include <media/vp8-ctrls.h>
+>  #include <media/hevc-ctrls.h>
+>  
+> diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
+> index f08ba181263d..d2314f4d4490 100644
+> --- a/include/media/v4l2-h264.h
+> +++ b/include/media/v4l2-h264.h
+> @@ -10,7 +10,7 @@
+>  #ifndef _MEDIA_V4L2_H264_H
+>  #define _MEDIA_V4L2_H264_H
+>  
+> -#include <media/h264-ctrls.h>
+> +#include <media/v4l2-ctrls.h>
+>  
+>  /**
+>   * struct v4l2_h264_reflist_builder - Reference list builder object
+> diff --git a/include/media/h264-ctrls.h b/include/uapi/linux/v4l2-h264-ctrls.h
+> similarity index 96%
+> rename from include/media/h264-ctrls.h
+> rename to include/uapi/linux/v4l2-h264-ctrls.h
+> index 6446ec9f283d..a06f60670d68 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/uapi/linux/v4l2-h264-ctrls.h
+> @@ -2,14 +2,10 @@
+>  /*
+>   * These are the H.264 state controls for use with stateless H.264
+>   * codec drivers.
+> - *
+> - * It turns out that these structs are not stable yet and will undergo
+> - * more changes. So keep them private until they are stable and ready to
+> - * become part of the official public API.
+>   */
+>  
+> -#ifndef _H264_CTRLS_H_
+> -#define _H264_CTRLS_H_
+> +#ifndef __LINUX_V4L2_H264_CONTROLS_H
+> +#define __LINUX_V4L2_H264_CONTROLS_H
+>  
+>  #include <linux/videodev2.h>
+>  
+> 
 
