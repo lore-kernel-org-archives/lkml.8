@@ -7,66 +7,65 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F851C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC46C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAE52065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEB72065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmCpEbSO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dCAo2lhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390996AbgFYTRY (ORCPT
+        id S2406560AbgFYTR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35140 "EHLO
+        Thu, 25 Jun 2020 15:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390701AbgFYTRV (ORCPT
+        with ESMTP id S2390775AbgFYTRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:17:21 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3814AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:21 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j4so4566808wrp.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:21 -0700 (PDT)
+        Thu, 25 Jun 2020 15:17:22 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346D6C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:22 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so7010901wrs.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j4djQhcgSgTg/9mtm4BHCd5MDCRCq+1jmLB+caUyB0M=;
-        b=tmCpEbSO5A63g/ncvKbOwmY8ndQGqysFj9YM7YJH9vcFA1KQbqIHeegdH4VZq2Sfzg
-         1nO++r+wXM140SabSVtpFxRLswNTuUsjqQtyAN006BO9tYL+i2dFGpOaF+8aGSmddfwN
-         oDVjX1ZE6aX+Alb9sEJo5Br2x47SYFxxIqHxUVWywWMbDeVeEZbU8szbVjRRUqW+Piyo
-         TbvuDf+7UoMFVYcfhqOpPVKDCg2cVqsPjxvEBI+zrgTresjCjMBgoXwiH8pv0s6yok1v
-         qflrl21jKsf3H2N+5P7wTPXGDnUxTh/TDx75VTRMwjzJsmrxr3Hh3+XnITkjaGmBg4v1
-         RoBA==
+        bh=dtxyN/1kKIF9/7TTE8iRG6sUFtmO+Fu1upUgVSih01U=;
+        b=dCAo2lhMHJ6NdZfByQXxyz/SilOR/HaQ4pU6fAkuElnZt1kyUUuWW2txb7RP5Sx71d
+         vPyJ+232KysYhAHj/oXvRQFfipE38M//axfZd6N7wNBzZdRFiaw9PpV3gjYTBOGqQdp6
+         SSsdT9motcSOSYnmISrrkVk0qXEmHXBKgrfMwAVaqtoY9k8PFSuHp8pto4xyc/j7leAY
+         g9vwZCZYX59BKX4NPsZnzEx59VQoikmfepvWXsMfBFzu23yrwxoKS1CtX2yupeJ5l2Ve
+         ejZGLPZr2e0cQAavi37yJcRawSGCUMqTMugvD+tmKqh99xDzcLd7njI7mCs1IcuzRREO
+         TgFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j4djQhcgSgTg/9mtm4BHCd5MDCRCq+1jmLB+caUyB0M=;
-        b=ndqxaPnCVXvGab/n9Eg0y1FhkGAUEeOtduyQkRMmbJF4LoBoZ56U7AIeYnd/q4STAe
-         9ed+rZBrLyrf/9MU4bdoDR1CKE1SKmUOy9irkMTfwTpPGkYD2QUnb3rjVSw5oKyuC9HK
-         bsf0oyUof/ReBENqAhWZ10pkX0TZ3aqWggwEMw0RQyt2TzwhcZVK+8r2d/O+584jd/eD
-         ANnZht0zm0lerDM1hFyz6FPRjVDpHZp2hgRi7RNuiGx9CfzYJAwiadqsU99GG0pRpQuQ
-         /iuL4+lxiWGoqw+5GGuqbWfyFYa1xbWppmGftUAKrzDuQHlzwD2xRayHcn3EhwLaefn9
-         43Ug==
-X-Gm-Message-State: AOAM533NCWjBdlfcIp5Lc1nmfznRYqehRnMl8GP6muSsBv8Vap1/WHYy
-        gtp8qWydiG7IicveHSVbaNovFA==
-X-Google-Smtp-Source: ABdhPJxfrQVQDk1A0hJljlXTR/40r15qonzvIABkQ+QNdsonSUnyTjpbtsbUomDnBDW4ZUxRsTCUBg==
-X-Received: by 2002:a05:6000:ca:: with SMTP id q10mr19640747wrx.135.1593112639977;
-        Thu, 25 Jun 2020 12:17:19 -0700 (PDT)
+        bh=dtxyN/1kKIF9/7TTE8iRG6sUFtmO+Fu1upUgVSih01U=;
+        b=BCZq9kdnCNvC60GAQued61HEJeVxPSIOCltiTYYf+r1ipsZj7C63slmHd/XP5hiBlt
+         LFzA1JAdzXZ1dTWTKlCRy7HGuNqH5PYVAg3cgb9nAVUpnZZDh6YHaJo2sCktmoCAAEU5
+         acGtPUIufKxUsehP6HSN8OTMIx8eWxWV5854dLFqmKjMBRKst/VkNCgpp63+Odr7O+j1
+         eYo8IE9R5LX7l8gpHB5DoI0PUMPSpx6xADFvMNLFSdyeqIoXMmTj8Gla23NeczbVRttD
+         MrJldU+7qmX13YfJmCloMduR+uIXw38yYBWXnGpOkouRfOYDoxAc0hY+E7zjAYoe7xVw
+         /UZQ==
+X-Gm-Message-State: AOAM531erHg0CeutE4WgTFfw5DfRIlRi5spz+Hkw+6CIQMm/jl8rNJGp
+        QbbBdCnZyHkgf25N4bBz49Z1Kw==
+X-Google-Smtp-Source: ABdhPJzCK3QqVbhCKU/8mHFqhgDbsJuNWAuV/wA5EVreGSMHRhwhU/xzif2uG9N7vr5wfQE6elguEw==
+X-Received: by 2002:a5d:630c:: with SMTP id i12mr17386670wru.158.1593112640968;
+        Thu, 25 Jun 2020 12:17:20 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.18
+        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 12:17:19 -0700 (PDT)
+        Thu, 25 Jun 2020 12:17:20 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lgirdwood@gmail.com, broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [RESEND 05/10] regulator: ab8500: Remove unused embedded struct expand_register
-Date:   Thu, 25 Jun 2020 20:17:03 +0100
-Message-Id: <20200625191708.4014533-6-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>, patches@opensource.cirrus.com
+Subject: [RESEND 06/10] regulator: wm8350-regulator: Repair odd formatting in documentation
+Date:   Thu, 25 Jun 2020 20:17:04 +0100
+Message-Id: <20200625191708.4014533-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625191708.4014533-1-lee.jones@linaro.org>
 References: <20200625191708.4014533-1-lee.jones@linaro.org>
@@ -77,44 +76,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Used primarily for the AB8540 which lost support in early 2018.
-It is now deemed safe to remove this legacy data structure.
+Kerneldoc expects function arguments to be in the format '@.*:'.  If
+this format is not followed the kerneldoc tooling/parsers/validators
+get confused.
 
-Also fixes W=1 issue:
+Fixes the following W=1 warning(s):
 
-  drivers/regulator/ab8500.c:88: warning: Function parameter or member 'expand_register' not described in 'ab8500_regulator_info'
+ drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'wm8350' not described in 'wm8350_register_led'
+ drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'lednum' not described in 'wm8350_register_led'
+ drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'dcdc' not described in 'wm8350_register_led'
+ drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'isink' not described in 'wm8350_register_led'
+ drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'pdata' not described in 'wm8350_register_led'
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: patches@opensource.cirrus.com
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/regulator/ab8500.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/regulator/wm8350-regulator.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/ab8500.c b/drivers/regulator/ab8500.c
-index 716ca5bb178e7..47b8b6f7b5715 100644
---- a/drivers/regulator/ab8500.c
-+++ b/drivers/regulator/ab8500.c
-@@ -59,6 +59,7 @@ struct ab8500_shared_mode {
-  * @voltage_bank: bank to control regulator voltage
-  * @voltage_reg: register to control regulator voltage
-  * @voltage_mask: mask to control regulator voltage
-+ * @expand_register: 
-  */
- struct ab8500_regulator_info {
- 	struct device		*dev;
-@@ -79,12 +80,6 @@ struct ab8500_regulator_info {
- 	u8 voltage_bank;
- 	u8 voltage_reg;
- 	u8 voltage_mask;
--	struct {
--		u8 voltage_limit;
--		u8 voltage_bank;
--		u8 voltage_reg;
--		u8 voltage_mask;
--	} expand_register;
- };
- 
- /* voltage tables for the vauxn/vintcore supplies */
+diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
+index ae5f0e7fce8bb..2e7bfdf7c87bb 100644
+--- a/drivers/regulator/wm8350-regulator.c
++++ b/drivers/regulator/wm8350-regulator.c
+@@ -1216,11 +1216,11 @@ EXPORT_SYMBOL_GPL(wm8350_register_regulator);
+ /**
+  * wm8350_register_led - Register a WM8350 LED output
+  *
+- * @param wm8350 The WM8350 device to configure.
+- * @param lednum LED device index to create.
+- * @param dcdc The DCDC to use for the LED.
+- * @param isink The ISINK to use for the LED.
+- * @param pdata Configuration for the LED.
++ * @wm8350: The WM8350 device to configure.
++ * @lednum: LED device index to create.
++ * @dcdc: The DCDC to use for the LED.
++ * @isink: The ISINK to use for the LED.
++ * @pdata: Configuration for the LED.
+  *
+  * The WM8350 supports the use of an ISINK together with a DCDC to
+  * provide a power-efficient LED driver.  This function registers the
 -- 
 2.25.1
 
