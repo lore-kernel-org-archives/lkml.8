@@ -2,195 +2,200 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C45C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22068C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF6D2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqYH5g3m"
+	by mail.kernel.org (Postfix) with ESMTP id F3D872072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391093AbgFYU0f (ORCPT
+        id S2407137AbgFYUcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389406AbgFYU0f (ORCPT
+        Thu, 25 Jun 2020 16:32:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29146 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389406AbgFYUcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:26:35 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8634C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:26:34 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id k15so3932428lfc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B2e+9BhdyoZKBQhVVowF1SUb9GpWFGzrObUCYCRlOxI=;
-        b=fqYH5g3mAVkK+2WZwIzFmrKkwPU74dZDdILGRzvB+EKLBaABufN13Q52U1KEYFzKlj
-         sRQmu46b+/4Z7IIYH95+8ndxycal3l2WZaWAzv1qYuNYXsZrdU/Tyky1DvYzVBEKe0wm
-         MvX7Y1VUeWO3u52ih53lEOPHSNh8KLDRr4V1o/Nn+bBdXlFu1J752jg2nNn2zKOknPJx
-         d+4MSZBJabUhn6BgU7g+lIdJutoL8At5Oe/Tyjel9X7rUFLODAnFREzm/rsKPrqsAfel
-         6DGSdkPRuo9UrS+Z6n8cXsu4m+GeRHSZLmdm+Exh6nSIOIhsGNsRikf1UFXXmum7wZ6v
-         p4XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B2e+9BhdyoZKBQhVVowF1SUb9GpWFGzrObUCYCRlOxI=;
-        b=PXrLcNNHWZHvu/n5cNqjn6kk+R+6lOWonQflUICK7qUEUz+FIfjqcGHeqws2U5ueaw
-         Xp3GmflDDdhDM7nQfa0XvzMoIVRG9tSu9Sm8/tweUSp4Z5l0wT5UDqde3z1V81jugcMQ
-         bI4fyoWB1O37qwnxkhVru8i96YrozDN7ruZIlhAWElMjEMcAPEwgwodN3lSAuUvb6Ga2
-         rErpRHOC8DCzsd/iHUsfSIYxvelNJu6eExyZLkacQHGnBY68AJdl8cfz4KXgAMivSoBw
-         nk94GWcS0Qkv2RTCG1fShoQx7JSBipMjHrGEymdcaG7QU5yRg7zbpyZZAA+uGMSxtdqU
-         +rMw==
-X-Gm-Message-State: AOAM531SFPCC1K+yDHoCAwF8exZ8pJoAbd7Vxj0IuSorxsjCsl3TtpRM
-        LdGk+yQxW3m+kCyk1ckY8bcjtFoRz0GR7mGugox3KA==
-X-Google-Smtp-Source: ABdhPJxqgKr3mQm8vcKHYSo6pKy0kpTyzuBP2A9M9qBVMIfGzh5iKZneV+1lijdcvCUqsar9qmFYOGds1GQdCVHg5wM=
-X-Received: by 2002:ac2:41d9:: with SMTP id d25mr19290098lfi.76.1593116793108;
- Thu, 25 Jun 2020 13:26:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200618222225.102337-1-axelrasmussen@google.com>
- <20200618222225.102337-2-axelrasmussen@google.com> <20200619083023.GS576905@hirez.programming.kicks-ass.net>
- <CAJHvVciGnK9Ve7NeZ=LUbWT3PGhG7hRWh+J80ncR6Mgwk316fw@mail.gmail.com>
-In-Reply-To: <CAJHvVciGnK9Ve7NeZ=LUbWT3PGhG7hRWh+J80ncR6Mgwk316fw@mail.gmail.com>
-From:   Axel Rasmussen <axelrasmussen@google.com>
-Date:   Thu, 25 Jun 2020 13:25:56 -0700
-Message-ID: <CAJHvVch0py68FBc4sDfc+7xN7=oyfHXvM1gwun4hZrBdzrHr5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 1/1] mmap_lock: add tracepoints around mmap_lock acquisition
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Michel Lespinasse <walken@google.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Jonathan Adams <jwadams@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Ying Han <yinghan@google.com>
+        Thu, 25 Jun 2020 16:32:21 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PK2sGH007785;
+        Thu, 25 Jun 2020 16:32:10 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vx91947e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 16:32:10 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PK4IjH011736;
+        Thu, 25 Jun 2020 16:32:10 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vx91946b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 16:32:09 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PKPiEe002905;
+        Thu, 25 Jun 2020 20:32:07 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 31uusjj4hb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 20:32:07 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PKW51j52691146
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 20:32:05 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 316F311C04C;
+        Thu, 25 Jun 2020 20:32:05 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B9AB411C050;
+        Thu, 25 Jun 2020 20:32:03 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 20:32:03 +0000 (GMT)
+Message-ID: <1593117123.27152.385.camel@linux.ibm.com>
+Subject: Re: [PATCH 02/12] ima: Create a function to free a rule entry
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Thu, 25 Jun 2020 16:32:03 -0400
+In-Reply-To: <20200625195647.GB4694@sequoia>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-3-tyhicks@linux.microsoft.com>
+         <1593113613.27152.345.camel@linux.ibm.com> <20200625195647.GB4694@sequoia>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_16:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=2
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0
+ phishscore=0 spamscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ bulkscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter, one additional question for you.
+On Thu, 2020-06-25 at 14:56 -0500, Tyler Hicks wrote:
+> On 2020-06-25 15:33:33, Mimi Zohar wrote:
+> > On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
+> > > There are several possible pieces of allocated memory in a rule entry.
+> > > Create a function that can free all allocated memory for a given rule
+> > > entry.
+> > > 
+> > > This patch introduces no functional changes but sets the groundwork for
+> > > some memory leak fixes.
+> > > 
+> > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > 
+> > Having a function to release all memory associated with a policy rule
+> > in general is a good idea.  However, in the case of the shallow copy,
+> > we're not removing any IMA rules, just updating the LSM info.
+> > 
+> > There is an opportunity to transition from the builtin policy rules to
+> > a custom IMA policy.  Afterwards IMA policy rules may only be
+> > appended.
+> > 
+> > An IMA custom policy based on LSM info may be loaded prior to the LSM
+> > policy.  These LSM based rules are inactive until the corresponding
+> > LSM rule is loaded.  In some environments, LSM policies are loaded and
+> > removed frequently.  The IMA rules themselves are not removed, just
+> > the LSM info is updated to reflect the current LSM info.
+> > 
+> > > ---
+> > >  security/integrity/ima/ima_policy.c | 33 +++++++++++++++++++++++++++--
+> > >  1 file changed, 31 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > > index 236a731492d1..1320333201c6 100644
+> > > --- a/security/integrity/ima/ima_policy.c
+> > > +++ b/security/integrity/ima/ima_policy.c
+> > > @@ -261,6 +261,27 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
+> > >  		security_filter_rule_free(entry->lsm[i].rule);
+> > >  		kfree(entry->lsm[i].args_p);
+> > >  	}
+> > > +}
+> > > +
+> > > +static void ima_free_rule(struct ima_rule_entry *entry)
+> > > +{
+> > > +	if (!entry)
+> > > +		return;
+> > > +
+> > > +	/*
+> > > +	 * entry->template->fields may be allocated in ima_parse_rule() but that
+> > > +	 * reference is owned by the corresponding ima_template_desc element in
+> > > +	 * the defined_templates list and cannot be freed here
+> > > +	 */
+> > > +
+> > > +	/*
+> > > +	 * When freeing newly added ima_rule_entry members, consider if you
+> > > +	 * need to disown any references after the shallow copy in
+> > > +	 * ima_lsm_copy_rule()
+> > > +	 */
+> > > +	kfree(entry->fsname);
+> > > +	kfree(entry->keyrings);
+> > > +	ima_lsm_free_rule(entry);
+> > >  	kfree(entry);
+> > >  }
+> > >  
+> > > @@ -298,10 +319,18 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+> > >  			pr_warn("rule for LSM \'%s\' is undefined\n",
+> > >  				(char *)entry->lsm[i].args_p);
+> > >  	}
+> > > +
+> > > +	/* Disown all references that were shallow copied */
+> > > +	entry->fsname = NULL;
+> > > +	entry->keyrings = NULL;
+> > > +	entry->template = NULL;
+> > >  	return nentry;
+> > >  
+> > >  out_err:
+> > > -	ima_lsm_free_rule(nentry);
+> > > +	nentry->fsname = NULL;
+> > > +	nentry->keyrings = NULL;
+> > > +	nentry->template = NULL;
+> > > +	ima_free_rule(nentry);
+> > 
+> > >  	return NULL;
+> > >  }
+> > >  
+> > > @@ -315,7 +344,7 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
+> > >  
+> > >  	list_replace_rcu(&entry->list, &nentry->list);
+> > >  	synchronize_rcu();
+> > > -	ima_lsm_free_rule(entry);
+> > > +	ima_free_rule(entry);
+> > 
+> > This should only update the LSM info, nothing else.
+> 
+> That's effectively what's happening since the fsname, keyrings, and
+> template pointers are being set to NULL, before exiting
+> ima_lsm_copy_rule(), in the ima_rule_entry that's going to be freed.
 
-Would you accept this patch if:
-- The rwsem.{h,c} and lockdep.h changes were reverted
-- It was split up into 2-3 commits
-?
+Ah, that clarified the reason for setting fsname, keyrings, ... to
+null before calling ima_free_rule.
 
-Thanks!
+> 
+> This patch is only introducing the function which can free all memory
+> associated with a rule and is starting to use it in place that a rule
+> entry is freed.
+> 
+> Would you rather me introduce ima_free_rule() for the upcoming memory
+> leak fixes in the series but not make use of it in
+> ima_lsm_update_rule()?
 
-On Fri, Jun 19, 2020 at 9:28 AM Axel Rasmussen <axelrasmussen@google.com> wrote:
->
-> On Fri, Jun 19, 2020 at 1:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Jun 18, 2020 at 03:22:25PM -0700, Axel Rasmussen wrote:
-> > > diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> > > index f11b9bd3431d..6aabea1cbc5d 100644
-> > > --- a/kernel/locking/rwsem.c
-> > > +++ b/kernel/locking/rwsem.c
-> > > @@ -1495,6 +1495,20 @@ void __sched down_read(struct rw_semaphore *sem)
-> > >  }
-> > >  EXPORT_SYMBOL(down_read);
-> > >
-> > > +/*
-> > > + * lock for reading
-> > > + */
-> > > +void __sched down_read_contended_hook(struct rw_semaphore *sem,
-> > > +                                   void (*pre)(void *),
-> > > +                                   void (*post)(void *), void *arg)
-> > > +{
-> > > +     might_sleep();
-> > > +     rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
-> > > +     LOCK_CONTENDED_HOOK(sem, __down_read_trylock, __down_read, pre, post,
-> > > +                         arg);
-> > > +}
-> > > +EXPORT_SYMBOL(down_read_contended_hook);
-> > > +
-> > >  int __sched down_read_killable(struct rw_semaphore *sem)
-> > >  {
-> > >       might_sleep();
-> > > @@ -1509,6 +1523,24 @@ int __sched down_read_killable(struct rw_semaphore *sem)
-> > >  }
-> > >  EXPORT_SYMBOL(down_read_killable);
-> > >
-> > > +int __sched down_read_killable_contended_hook(struct rw_semaphore *sem,
-> > > +                                           void (*pre)(void *),
-> > > +                                           void (*post)(void *, int),
-> > > +                                           void *arg)
-> > > +{
-> > > +     might_sleep();
-> > > +     rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
-> > > +
-> > > +     if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_read_trylock,
-> > > +                                    __down_read_killable, pre, post, arg)) {
-> > > +             rwsem_release(&sem->dep_map, _RET_IP_);
-> > > +             return -EINTR;
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +EXPORT_SYMBOL(down_read_killable_contended_hook);
-> > > +
-> > >  /*
-> > >   * trylock for reading -- returns 1 if successful, 0 if contention
-> > >   */
-> > > @@ -1533,6 +1565,20 @@ void __sched down_write(struct rw_semaphore *sem)
-> > >  }
-> > >  EXPORT_SYMBOL(down_write);
-> > >
-> > > +/*
-> > > + * lock for writing
-> > > + */
-> > > +void __sched down_write_contended_hook(struct rw_semaphore *sem,
-> > > +                                    void (*pre)(void *),
-> > > +                                    void (*post)(void *), void *arg)
-> > > +{
-> > > +     might_sleep();
-> > > +     rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
-> > > +     LOCK_CONTENDED_HOOK(sem, __down_write_trylock, __down_write, pre, post,
-> > > +                         arg);
-> > > +}
-> > > +EXPORT_SYMBOL(down_write_contended_hook);
-> > > +
-> > >  /*
-> > >   * lock for writing
-> > >   */
-> > > @@ -1551,6 +1597,24 @@ int __sched down_write_killable(struct rw_semaphore *sem)
-> > >  }
-> > >  EXPORT_SYMBOL(down_write_killable);
-> > >
-> > > +int __sched down_write_killable_contended_hook(struct rw_semaphore *sem,
-> > > +                                            void (*pre)(void *),
-> > > +                                            void (*post)(void *, int),
-> > > +                                            void *arg)
-> > > +{
-> > > +     might_sleep();
-> > > +     rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
-> > > +
-> > > +     if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_write_trylock,
-> > > +                                    __down_write_killable, pre, post, arg)) {
-> > > +             rwsem_release(&sem->dep_map, _RET_IP_);
-> > > +             return -EINTR;
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +EXPORT_SYMBOL(down_write_killable_contended_hook);
-> > > +
-> > >  /*
-> > >   * trylock for writing -- returns 1 if successful, 0 if contention
-> > >   */
-> >
-> > NAK, absolutely not going to happen. This is an atrocious API to expose,
-> > worse you're exporting.
->
-> Ack about splitting this up.
->
-> Thanks for taking a look. :)
+You could add a comment explaining the NULLs, but it might be clearer
+to keep the direct call to ima_lsm_free_rule().
+
+Mimi
