@@ -2,99 +2,143 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35130C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2E5620706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FF620706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:31:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EgIjsy4i"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vyfAIpZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbgFYA2F (ORCPT
+        id S2388778AbgFYAbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:28:05 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:44907 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388297AbgFYA2E (ORCPT
+        Wed, 24 Jun 2020 20:31:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59172 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388380AbgFYAbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 20:28:04 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200625002802epoutp03a4fcf2b1d6862fd0bbd44992887fa004~boeFRSHVV0847708477epoutp03P
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 00:28:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200625002802epoutp03a4fcf2b1d6862fd0bbd44992887fa004~boeFRSHVV0847708477epoutp03P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593044882;
-        bh=7IZmdj+FZkoGAji8ipF6nQxQP/nCDW3lsFFYgG8+3YY=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=EgIjsy4ir/VQN0gqG9PVJ7jHp7pfQlh8lx1lKxEymkUjUGMlogrUbK6+85kHE4U1x
-         9FQdpBHvGwTMD1J+G9ghpqbtxg8cJoDGN8FyiTIVJZoQ16KTyxg0tAYVACmXy5JZzS
-         OPtfHT5MPEll7o4gLfqiBBtuJqebFKrZjkAFQ62A=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200625002801epcas1p33be6bcbdf0266b8d56c2122fc7f4ae50~boeEvPpcs1986819868epcas1p3R;
-        Thu, 25 Jun 2020 00:28:01 +0000 (GMT)
-Mime-Version: 1.0
-Subject: RE: [RFC PATCH v3 4/5] scsi: ufs: L2P map management for HPB read
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "huobean@gmail.com" <huobean@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <SN6PR04MB46409F94E8C0690B2E227B34FC950@SN6PR04MB4640.namprd04.prod.outlook.com>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01593044881689.JavaMail.epsvc@epcpadp2>
-Date:   Thu, 25 Jun 2020 09:18:25 +0900
-X-CMS-MailID: 20200625001825epcms2p34281d13498b9265155382e20192bde24
+        Wed, 24 Jun 2020 20:31:05 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P0IZZe035797;
+        Thu, 25 Jun 2020 00:30:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=v5UZ8E2BaaKVJw0SUqbMQAWJdec91gruES39hMbMVCU=;
+ b=vyfAIpZqjw9o9dcPYLfc/MxH6nNL6/pCrCoztRMLPfSXuDFzTHOuSmmA5I8H9t/FhDcU
+ +Wrd4UmERiu5/cSb7AMvfn0HRzTuqKq+w8G0BGVQTDDwgf8vt0x3e0W8enbkQvbgkyrS
+ LZQ/Ub9qxCo1gM5TDuisOXJiPMIkkrEn6fnAPC+okiY+mPMtCSp9vTr+llb5nHlsTQ1/
+ R2rYhSPN/eJOJHOoFxs1T3O/2Jqak/dNcRnxP6Cubh480t/O/vMtFiAzmKlTSoZmMDZx
+ /iHF9SivYpppHceukNi7vDUoo3K9AQf2jwoB2wnQBHlWSv8oHOzRfs3yK6DGRBHAgb6v mQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31uustwsbc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jun 2020 00:30:47 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P0IDQv195085;
+        Thu, 25 Jun 2020 00:30:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31uur83whu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 00:30:46 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05P0UdVM024958;
+        Thu, 25 Jun 2020 00:30:39 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 25 Jun 2020 00:30:39 +0000
+Subject: Re: [PATCH 2/3] mm/huge_memory.c: update tlb entry if pmd is changed
+To:     Bibo Mao <maobibo@loongson.cn>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Daniel Silsby <dansilsby@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
+ <1592990792-1923-2-git-send-email-maobibo@loongson.cn>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <07f78e99-6e59-0bce-8ac0-50d7c7600461@oracle.com>
+Date:   Wed, 24 Jun 2020 17:30:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <1592990792-1923-2-git-send-email-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200623010201epcms2p11aebdf1fbc719b409968cba997507114
-References: <SN6PR04MB46409F94E8C0690B2E227B34FC950@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01592884981694.JavaMail.epsvc@epcpadp2>
-        <963815509.21592884502243.JavaMail.epsvc@epcpadp1>
-        <231786897.01592884381695.JavaMail.epsvc@epcpadp2>
-        <963815509.21592879582091.JavaMail.epsvc@epcpadp2>
-        <231786897.01592886181765.JavaMail.epsvc@epcpadp2>
-        <CGME20200623010201epcms2p11aebdf1fbc719b409968cba997507114@epcms2p3>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
+ suspectscore=18 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 bulkscore=0
+ cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  static struct ufshpb_driver ufshpb_drv;
-> > +unsigned int ufshpb_host_map_kbytes = 1 * 1024;
-> I think you've already declared this as a module parameter in 3/5.
+On 6/24/20 2:26 AM, Bibo Mao wrote:
+> When set_pmd_at is called in function do_huge_pmd_anonymous_page,
+> new tlb entry can be added by software on MIPS platform.
 > 
-> No need to fix this now, unless there will be some more comments,
-> And you'll issue a v4.
+> Here add update_mmu_cache_pmd when pmd entry is set, and
+> update_mmu_cache_pmd is defined as empty excepts arc/mips platform.
+> This patch has no negative effect on other platforms except arc/mips
+> system.
 
-OK, thanks!
+I am confused by this comment.  It appears that update_mmu_cache_pmd
+is defined as non-empty on arc, mips, powerpc and sparc architectures.
+Am I missing something?
+
+If those architectures do provide update_mmu_cache_pmd, then the previous
+patch and this one now call update_mmu_cache_pmd with the actual faulting
+address instead of the huge page aligned address.  This was intentional
+for mips.  However, are there any potential issues on the other architectures?
+I am no expert in any of those architectures.  arc looks like it could be
+problematic as update_mmu_cache_pmd calls update_mmu_cache and then
+operates on (address & PAGE_MASK).  That could now be different.
+
+-- 
+Mike Kravetz
+
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  mm/huge_memory.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 0f9187b..8b4ccf7 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -643,6 +643,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
+>  		lru_cache_add_active_or_unevictable(page, vma);
+>  		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
+>  		set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
+> +		update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
+>  		add_mm_counter(vma->vm_mm, MM_ANONPAGES, HPAGE_PMD_NR);
+>  		mm_inc_nr_ptes(vma->vm_mm);
+>  		spin_unlock(vmf->ptl);
+> @@ -756,6 +757,7 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+>  			} else {
+>  				set_huge_zero_page(pgtable, vma->vm_mm, vma,
+>  						   haddr, vmf->pmd, zero_page);
+> +				update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
+>  				spin_unlock(vmf->ptl);
+>  				set = true;
+>  			}
+> 
