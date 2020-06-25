@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E557C20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5287620706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tQ4ZmYln"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L6GN/yTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405108AbgFYNPl (ORCPT
+        id S2405118AbgFYNPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
+        Thu, 25 Jun 2020 09:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404906AbgFYNOh (ORCPT
+        with ESMTP id S2404834AbgFYNOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:14:37 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8FD1C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:36 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u26so6720566wmn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:36 -0700 (PDT)
+        Thu, 25 Jun 2020 09:14:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0464FC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:35 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f139so5878250wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GQxENEuAescQgQ8YuHkNsxMwzrXVSxiQxJcx1FvZ0wM=;
-        b=tQ4ZmYlnqW7fi6o8bfqxO70zKw3I/nJyKtMaVlg9YYB3X0BOc7Q/7CVjKbJz8MjbVf
-         a4ZXJ/+2xDfQTDs7Ky1ylHAWtWxK324RvBqfIkrQlYSpuOrNQN5v2su1FTddE53LeDPm
-         FuL3IQ9TtyKkCNa3WZBlgh4MdZOwNM7p4dTpzagBUn04tmTHGlBEbN1f6sCMH7z00F6V
-         GnTeK4eMgjUXBeY4oIkaGr1MKrqueJQSrQKtmB2oU3vskinIaa1kVmCKbs/h7XFqeh5X
-         igbho2CpXrJvdORofq0uLMDZlMNyrL8gBpgOaDuBHKm3uktiaCdFUZdUq3oZutQa3vd/
-         M8QA==
+        bh=kuR4zqn460ZfDvOPRZLBdbatU3Tl1+GK/DM2MsbbDYE=;
+        b=L6GN/yTULlibROyq7dwxJEpfOR9idYf2tNFIPd390S+//8i/sDzyXWY8L8ngX0BmtE
+         hsHNfixR1RZPoTZ7O9ndXAOPxn8W1w3/3yqWVLMiA5/YairtLVWSHu8z5MYKAcehYrs+
+         Ny5pOzpitZGzdjf638XktPBLh0AY0ZGsAy9BPdt/Z9qH4GLDuRjLci4fhTMBsvjyKplw
+         bGwJKNeKMZ8zPUozt8P/Mbalws29i6cej9OyrXJq27LEgMdSuKwLHsfgPwe2xUquGlDU
+         mp9ZBtC0j+EdYEede1FCz/AqN4V5MzQILFML0M5BASdZ6/qaRxRs2QZc+9HH8xG7EGSV
+         KMgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GQxENEuAescQgQ8YuHkNsxMwzrXVSxiQxJcx1FvZ0wM=;
-        b=TYz1HQah7Oygdf1Go4OUVU/EWwWcasDAs9W8TkhRRw8GUOjYa2P+/gACPZBHWF+/ah
-         EnOwdek2ZBhNLGSaHpP10iZ1y0HUfTi6la55TYpZA8ZSSRWX6pkuyWG5YLC0W+UG+DlQ
-         wz8Xv29nqSfRll2La4dU7wqBj1S3C4PiXAd+x2uE5kN/y6XGEAp2808tCbeCvznc5czx
-         tykwThUr9w016XtKTJH6tzkvAh6eOcY0yFpevCbFJSAAV/W7Uo5ul1d1Eoq/mBMfX3QH
-         jeMCqNawlsBtMlk9uDyTwfXh20p8iqXI3dpUm94SEL2glCE2Qj4HG8v08D6jjgaEwVPJ
-         fzvA==
-X-Gm-Message-State: AOAM530qvWfZQOlSpeLmKtuci7njFZCR6QTzKmFXGqjEEH9Ov8/y7Lrw
-        h+f8b7ITMeobMjLnz42kPtvpVw==
-X-Google-Smtp-Source: ABdhPJwDVXwLp+zGH+Az2IG7TV+GAawyV9fczge8t20gtdchvcYZjE+3zXDlTgAFnjoJwKMED2vcDQ==
-X-Received: by 2002:a1c:449:: with SMTP id 70mr3165637wme.149.1593090875315;
-        Thu, 25 Jun 2020 06:14:35 -0700 (PDT)
+        bh=kuR4zqn460ZfDvOPRZLBdbatU3Tl1+GK/DM2MsbbDYE=;
+        b=Ru6aeaSmix7fTLiWWLMzWA3seztvj+098f/HlIgMjnMllhsLN8ygqRpQpNfuHZNSWh
+         +6QSSznnjEjeudhje5v58rPYF+bvGjfSoqWEMP4ijuQw1+T92MxFphodsT71AYS0qFsG
+         lieIeMKzeupuieigd9kIyoBImIX/Ufd8s9hxKYgeBa01xeeo8kO7MjFGUG/mle4EDDr7
+         UdS6FgKBdc8vTrV8IGXxxGlB/OweRnIHoqA1nXKmm/uY3jHK/1JQsa0O2XkV2mt/PYoM
+         DKZUBFv13c6KAGOTe34HdsMkYkMkrrGwsRyzwIGwNBownBqLGcbOJfskdjv13tfW9ffL
+         cwRw==
+X-Gm-Message-State: AOAM531LOWXtz3G7zxqRkAvSVOpIJOngQHnR3qqd1jutgm1dqZc/oAPd
+        1enLGKXLBzdR7l781CvziZTTEg==
+X-Google-Smtp-Source: ABdhPJzjfkKDfkUwAkvXXlxbiBPTEw+5nTG7FyH0H8W76y+Lt4gtAq38QOX0jPlZdLDTDKE6B2VYeA==
+X-Received: by 2002:a7b:c441:: with SMTP id l1mr3158785wmi.7.1593090873533;
+        Thu, 25 Jun 2020 06:14:33 -0700 (PDT)
 Received: from localhost ([2a01:4b00:8523:2d03:c126:6748:7a9d:2d])
-        by smtp.gmail.com with ESMTPSA id e4sm5332598wrt.97.2020.06.25.06.14.34
+        by smtp.gmail.com with ESMTPSA id t16sm9874525wru.9.2020.06.25.06.14.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 06:14:34 -0700 (PDT)
+        Thu, 25 Jun 2020 06:14:32 -0700 (PDT)
 From:   David Brazdil <dbrazdil@google.com>
 To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -68,10 +67,11 @@ To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, android-kvm@google.com,
-        kernel-team@android.com, David Brazdil <dbrazdil@google.com>
-Subject: [PATCH v4 06/15] arm64: kvm: Build hyp-entry.S separately for VHE/nVHE
-Date:   Thu, 25 Jun 2020 14:14:11 +0100
-Message-Id: <20200625131420.71444-7-dbrazdil@google.com>
+        kernel-team@android.com, Andrew Scull <ascull@google.com>,
+        David Brazdil <dbrazdil@google.com>
+Subject: [PATCH v4 05/15] arm64: kvm: Handle calls to prefixed hyp functions
+Date:   Thu, 25 Jun 2020 14:14:10 +0100
+Message-Id: <20200625131420.71444-6-dbrazdil@google.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625131420.71444-1-dbrazdil@google.com>
 References: <20200625131420.71444-1-dbrazdil@google.com>
@@ -82,206 +82,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hyp-entry.S contains implementation of KVM hyp vectors. This code is mostly
-shared between VHE/nVHE, therefore compile it under both VHE and nVHE build
-rules. nVHE-specific host HVC handler is hidden behind __KVM_NVHE_HYPERVISOR__.
+From: Andrew Scull <ascull@google.com>
 
-Adjust code which selects which KVM hyp vecs to install to choose the correct
-VHE/nVHE symbol.
+Once hyp functions are moved to a hyp object, they will have prefixed symbols.
+This change declares and gets the address of the prefixed version for calls to
+the hyp functions.
 
+To aid migration, the hyp functions that have not yet moved have their prefixed
+versions aliased to their non-prefixed version. This begins with all the hyp
+functions being listed and will reduce to none of them once the migration is
+complete.
+
+Signed-off-by: Andrew Scull <ascull@google.com>
+
+[David: Extracted kvm_call_hyp nVHE branches into own helper macros, added
+        comments around symbol aliases.]
 Signed-off-by: David Brazdil <dbrazdil@google.com>
 ---
- arch/arm64/include/asm/kvm_asm.h | 22 +++++++++++++++++-----
- arch/arm64/include/asm/mmu.h     |  7 -------
- arch/arm64/kernel/image-vars.h   | 24 ++++++++++++++++++++++++
- arch/arm64/kvm/arm.c             |  2 +-
- arch/arm64/kvm/hyp/Makefile      |  4 ++--
- arch/arm64/kvm/hyp/hyp-entry.S   |  2 ++
- arch/arm64/kvm/hyp/nvhe/Makefile |  2 +-
- arch/arm64/kvm/hyp/vhe/Makefile  |  2 +-
- 8 files changed, 48 insertions(+), 17 deletions(-)
+ arch/arm64/include/asm/kvm_asm.h  | 19 +++++++++++++++++++
+ arch/arm64/include/asm/kvm_host.h | 17 ++++++++++++++---
+ arch/arm64/kernel/image-vars.h    | 26 ++++++++++++++++++++++++++
+ 3 files changed, 59 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-index 6a682d66a640..6026cbd204ae 100644
+index 352aaebf4198..6a682d66a640 100644
 --- a/arch/arm64/include/asm/kvm_asm.h
 +++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -60,12 +60,17 @@
- 	DECLARE_KVM_VHE_SYM(sym);		\
- 	DECLARE_KVM_NVHE_SYM(sym)
+@@ -42,6 +42,24 @@
  
--/* Translate a kernel address of @sym into its equivalent linear mapping */
--#define kvm_ksym_ref(sym)						\
-+#define CHOOSE_VHE_SYM(sym)	sym
-+#define CHOOSE_NVHE_SYM(sym)	kvm_nvhe_sym(sym)
-+#define CHOOSE_HYP_SYM(sym)	(has_vhe() ? CHOOSE_VHE_SYM(sym) \
-+					   : CHOOSE_NVHE_SYM(sym))
+ #include <linux/mm.h>
+ 
++/*
++ * Translate name of a symbol defined in nVHE hyp to the name seen
++ * by kernel proper. All nVHE symbols are prefixed by the build system
++ * to avoid clashes with the VHE variants.
++ */
++#define kvm_nvhe_sym(sym)	__kvm_nvhe_##sym
 +
-+/* Translate a kernel address @ptr into its equivalent linear mapping */
-+#define kvm_ksym_ref(ptr)						\
++#define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
++#define DECLARE_KVM_NVHE_SYM(sym)	extern char kvm_nvhe_sym(sym)[]
++
++/*
++ * Define a pair of symbols sharing the same name but one defined in
++ * VHE and the other in nVHE hyp implementations.
++ */
++#define DECLARE_KVM_HYP_SYM(sym)		\
++	DECLARE_KVM_VHE_SYM(sym);		\
++	DECLARE_KVM_NVHE_SYM(sym)
++
+ /* Translate a kernel address of @sym into its equivalent linear mapping */
+ #define kvm_ksym_ref(sym)						\
  	({								\
--		void *val = &sym;					\
-+		void *val = (ptr);					\
- 		if (!is_kernel_in_hyp_mode())				\
--			val = lm_alias(&sym);				\
-+			val = lm_alias((ptr));				\
+@@ -50,6 +68,7 @@
+ 			val = lm_alias(&sym);				\
  		val;							\
  	 })
- #define kvm_ksym_ref_nvhe(sym)	kvm_ksym_ref(kvm_nvhe_sym(sym))
-@@ -76,7 +81,14 @@ struct kvm_vcpu;
- extern char __kvm_hyp_init[];
- extern char __kvm_hyp_init_end[];
++#define kvm_ksym_ref_nvhe(sym)	kvm_ksym_ref(kvm_nvhe_sym(sym))
  
--extern char __kvm_hyp_vector[];
-+DECLARE_KVM_HYP_SYM(__kvm_hyp_vector);
-+#define __kvm_hyp_vector	CHOOSE_HYP_SYM(__kvm_hyp_vector)
+ struct kvm;
+ struct kvm_vcpu;
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index c3e6fcc664b1..49d1a5cd8f8f 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -448,6 +448,18 @@ void kvm_arm_resume_guest(struct kvm *kvm);
+ 
+ u64 __kvm_call_hyp(void *hypfn, ...);
+ 
++#define kvm_call_hyp_nvhe(f, ...)					\
++	do {								\
++		DECLARE_KVM_NVHE_SYM(f);				\
++		__kvm_call_hyp(kvm_ksym_ref_nvhe(f), ##__VA_ARGS__);	\
++	} while(0)
 +
-+#ifdef CONFIG_KVM_INDIRECT_VECTORS
-+extern atomic_t arm64_el2_vector_last_slot;
-+DECLARE_KVM_HYP_SYM(__bp_harden_hyp_vecs);
-+#define __bp_harden_hyp_vecs	CHOOSE_HYP_SYM(__bp_harden_hyp_vecs)
-+#endif
++#define kvm_call_hyp_nvhe_ret(f, ...)					\
++	({								\
++		DECLARE_KVM_NVHE_SYM(f);				\
++		__kvm_call_hyp(kvm_ksym_ref_nvhe(f), ##__VA_ARGS__);	\
++	})
++
+ /*
+  * The couple of isb() below are there to guarantee the same behaviour
+  * on VHE as on !VHE, where the eret to EL1 acts as a context
+@@ -459,7 +471,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
+ 			f(__VA_ARGS__);					\
+ 			isb();						\
+ 		} else {						\
+-			__kvm_call_hyp(kvm_ksym_ref(f), ##__VA_ARGS__); \
++			kvm_call_hyp_nvhe(f, ##__VA_ARGS__);		\
+ 		}							\
+ 	} while(0)
  
- extern void __kvm_flush_vm_context(void);
- extern void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa);
-diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-index 68140fdd89d6..4d913f6dd366 100644
---- a/arch/arm64/include/asm/mmu.h
-+++ b/arch/arm64/include/asm/mmu.h
-@@ -42,13 +42,6 @@ struct bp_hardening_data {
- 	bp_hardening_cb_t	fn;
- };
- 
--#if (defined(CONFIG_HARDEN_BRANCH_PREDICTOR) ||	\
--     defined(CONFIG_HARDEN_EL2_VECTORS))
--
--extern char __bp_harden_hyp_vecs[];
--extern atomic_t arm64_el2_vector_last_slot;
--#endif  /* CONFIG_HARDEN_BRANCH_PREDICTOR || CONFIG_HARDEN_EL2_VECTORS */
--
- #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
- DECLARE_PER_CPU_READ_MOSTLY(struct bp_hardening_data, bp_hardening_data);
- 
+@@ -471,8 +483,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
+ 			ret = f(__VA_ARGS__);				\
+ 			isb();						\
+ 		} else {						\
+-			ret = __kvm_call_hyp(kvm_ksym_ref(f),		\
+-					     ##__VA_ARGS__);		\
++			ret = kvm_call_hyp_nvhe_ret(f, ##__VA_ARGS__);	\
+ 		}							\
+ 									\
+ 		ret;							\
 diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index 36444bac6a05..f28da486b75a 100644
+index 3dc27da47712..36444bac6a05 100644
 --- a/arch/arm64/kernel/image-vars.h
 +++ b/arch/arm64/kernel/image-vars.h
-@@ -66,8 +66,17 @@ __efistub__ctype		= _ctype;
- /* Symbols defined in debug-sr.c (not yet compiled with nVHE build rules). */
- KVM_NVHE_ALIAS(__kvm_get_mdcr_el2);
+@@ -63,6 +63,32 @@ __efistub__ctype		= _ctype;
  
-+/* Symbols defined in entry.S (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__guest_exit);
-+KVM_NVHE_ALIAS(abort_guest_exit_end);
-+KVM_NVHE_ALIAS(abort_guest_exit_start);
-+
-+/* Symbols defined in hyp-init.S (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__kvm_handle_stub_hvc);
-+
- /* Symbols defined in switch.c (not yet compiled with nVHE build rules). */
- KVM_NVHE_ALIAS(__kvm_vcpu_run_nvhe);
-+KVM_NVHE_ALIAS(hyp_panic);
+ #define KVM_NVHE_ALIAS(sym) __kvm_nvhe_##sym = sym;
  
- /* Symbols defined in sysreg-sr.c (not yet compiled with nVHE build rules). */
- KVM_NVHE_ALIAS(__kvm_enable_ssbs);
-@@ -89,6 +98,21 @@ KVM_NVHE_ALIAS(__vgic_v3_restore_aprs);
- KVM_NVHE_ALIAS(__vgic_v3_save_aprs);
- KVM_NVHE_ALIAS(__vgic_v3_write_vmcr);
- 
-+/* Alternative callbacks for init-time patching of nVHE hyp code. */
-+KVM_NVHE_ALIAS(arm64_enable_wa2_handling);
-+KVM_NVHE_ALIAS(kvm_patch_vector_branch);
-+KVM_NVHE_ALIAS(kvm_update_va_mask);
++/* Symbols defined in debug-sr.c (not yet compiled with nVHE build rules). */
++KVM_NVHE_ALIAS(__kvm_get_mdcr_el2);
 +
-+/* Global kernel state accessed by nVHE hyp code. */
-+KVM_NVHE_ALIAS(arm64_ssbd_callback_required);
-+KVM_NVHE_ALIAS(kvm_host_data);
++/* Symbols defined in switch.c (not yet compiled with nVHE build rules). */
++KVM_NVHE_ALIAS(__kvm_vcpu_run_nvhe);
 +
-+/* Kernel constant needed to compute idmap addresses. */
-+KVM_NVHE_ALIAS(kimage_voffset);
++/* Symbols defined in sysreg-sr.c (not yet compiled with nVHE build rules). */
++KVM_NVHE_ALIAS(__kvm_enable_ssbs);
 +
-+/* Kernel symbols used to call panic() from nVHE hyp code (via ERET). */
-+KVM_NVHE_ALIAS(panic);
++/* Symbols defined in timer-sr.c (not yet compiled with nVHE build rules). */
++KVM_NVHE_ALIAS(__kvm_timer_set_cntvoff);
++
++/* Symbols defined in tlb.c (not yet compiled with nVHE build rules). */
++KVM_NVHE_ALIAS(__kvm_flush_vm_context);
++KVM_NVHE_ALIAS(__kvm_tlb_flush_local_vmid);
++KVM_NVHE_ALIAS(__kvm_tlb_flush_vmid);
++KVM_NVHE_ALIAS(__kvm_tlb_flush_vmid_ipa);
++
++/* Symbols defined in vgic-v3-sr.c (not yet compiled with nVHE build rules). */
++KVM_NVHE_ALIAS(__vgic_v3_get_ich_vtr_el2);
++KVM_NVHE_ALIAS(__vgic_v3_init_lrs);
++KVM_NVHE_ALIAS(__vgic_v3_read_vmcr);
++KVM_NVHE_ALIAS(__vgic_v3_restore_aprs);
++KVM_NVHE_ALIAS(__vgic_v3_save_aprs);
++KVM_NVHE_ALIAS(__vgic_v3_write_vmcr);
 +
  #endif /* CONFIG_KVM */
  
  #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 90cb90561446..34b551385153 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -1285,7 +1285,7 @@ static void cpu_init_hyp_mode(void)
- 	 * so that we can use adr_l to access per-cpu variables in EL2.
- 	 */
- 	tpidr_el2 = ((unsigned long)this_cpu_ptr(&kvm_host_data) -
--		     (unsigned long)kvm_ksym_ref(kvm_host_data));
-+		     (unsigned long)kvm_ksym_ref(&kvm_host_data));
- 
- 	pgd_ptr = kvm_mmu_get_httbr();
- 	hyp_stack_ptr = __this_cpu_read(kvm_arm_hyp_stack_page) + PAGE_SIZE;
-diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-index 9c5dfe6ff80b..8b0cf85080b5 100644
---- a/arch/arm64/kvm/hyp/Makefile
-+++ b/arch/arm64/kvm/hyp/Makefile
-@@ -10,11 +10,11 @@ subdir-ccflags-y := -I$(incdir)				\
- 		    -DDISABLE_BRANCH_PROFILING		\
- 		    $(DISABLE_STACKLEAK_PLUGIN)
- 
--obj-$(CONFIG_KVM) += hyp.o nvhe/
-+obj-$(CONFIG_KVM) += hyp.o vhe/ nvhe/
- obj-$(CONFIG_KVM_INDIRECT_VECTORS) += smccc_wa.o
- 
- hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o sysreg-sr.o \
--	 debug-sr.o entry.o switch.o fpsimd.o tlb.o hyp-entry.o
-+	 debug-sr.o entry.o switch.o fpsimd.o tlb.o
- 
- # KVM code is run at a different exception code with a different map, so
- # compiler instrumentation that inserts callbacks or checks into the code may
-diff --git a/arch/arm64/kvm/hyp/hyp-entry.S b/arch/arm64/kvm/hyp/hyp-entry.S
-index d362fad97cc8..7e3c72fa634f 100644
---- a/arch/arm64/kvm/hyp/hyp-entry.S
-+++ b/arch/arm64/kvm/hyp/hyp-entry.S
-@@ -40,6 +40,7 @@ el1_sync:				// Guest trapped into EL2
- 	ccmp	x0, #ESR_ELx_EC_HVC32, #4, ne
- 	b.ne	el1_trap
- 
-+#ifdef __KVM_NVHE_HYPERVISOR__
- 	mrs	x1, vttbr_el2		// If vttbr is valid, the guest
- 	cbnz	x1, el1_hvc_guest	// called HVC
- 
-@@ -74,6 +75,7 @@ el1_sync:				// Guest trapped into EL2
- 
- 	eret
- 	sb
-+#endif /* __KVM_NVHE_HYPERVISOR__ */
- 
- el1_hvc_guest:
- 	/*
-diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-index 955f4188e00f..79eb8eed96a1 100644
---- a/arch/arm64/kvm/hyp/nvhe/Makefile
-+++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-@@ -6,7 +6,7 @@
- asflags-y := -D__KVM_NVHE_HYPERVISOR__
- ccflags-y := -D__KVM_NVHE_HYPERVISOR__
- 
--obj-y :=
-+obj-y := ../hyp-entry.o
- 
- obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
- extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
-diff --git a/arch/arm64/kvm/hyp/vhe/Makefile b/arch/arm64/kvm/hyp/vhe/Makefile
-index e04375546081..323029e02b4e 100644
---- a/arch/arm64/kvm/hyp/vhe/Makefile
-+++ b/arch/arm64/kvm/hyp/vhe/Makefile
-@@ -6,7 +6,7 @@
- asflags-y := -D__KVM_VHE_HYPERVISOR__
- ccflags-y := -D__KVM_VHE_HYPERVISOR__
- 
--obj-y :=
-+obj-y := ../hyp-entry.o
- 
- # KVM code is run at a different exception code with a different map, so
- # compiler instrumentation that inserts callbacks or checks into the code may
 -- 
 2.27.0
 
