@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF48C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D4D207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6A6207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y8Xeawii"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jAVR5eoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390183AbgFYGqi (ORCPT
+        id S2390210AbgFYGqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 02:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60120 "EHLO
+        Thu, 25 Jun 2020 02:46:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390141AbgFYGqa (ORCPT
+        with ESMTP id S2390153AbgFYGqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 02:46:30 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B99C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:28 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h15so4597657wrq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:28 -0700 (PDT)
+        Thu, 25 Jun 2020 02:46:33 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12442C061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:33 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 22so4424127wmg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1zDIqOBuX/K9nmAOrSn0q1L2wjLhGu0LGpqC1FRybjM=;
-        b=Y8Xeawii/FenN4QcJc/IU0tymI/82VPhOUVQnNDaPq1E1ZUSPPJGiqS/MwnjdXwHqF
-         DvzQqbo+ZusoZvWe7XMRMfOASefHh3I5kfGUIJesheA46gvTr9m5Bqd+xZteU8fuyZhP
-         JSMH36/+uTAtUSckplXY/J74fUfskmrkT+h4Rhi+lPqKjkcu4Wns0XCu97A4qjsByUoy
-         jz6zZaDVI542NxSheQJrNCq2C4ZWaDr3ZAnsBJYX3DPUVqApykF4HUHAiUYbaN/9wj+i
-         v6qGmM7UjH2mb2rrDfpY33gZQo57z3084ZjyupmsBOU9C1cwoWJFWcQi9s8RezQqnSAO
-         XnhA==
+        bh=zFD+XYh0LbdyDPIgjJ6ML5H3hXoar7p4uFfuKLbk0ZA=;
+        b=jAVR5eoyrmVKjLEHNqfjCNWanaCYTE8ppNlexuZG9che0RL0uhWQj0j1YU5wDQgiB2
+         XxrXcc5uE085/9qsTkTpk2XicffwrBGGolaOz3pSHPcANX/VXJO3NcsEvj/CjpkIDpYq
+         Q3uXB5Y94Cd9PoRDMEZTfc2n3h2txHH6s5g64wtshhSl8eZGhOHM5VvLNYbdwtut8zjf
+         SHmv0HSTQc3SOI81N9Hl/EIU4+S2YDJJin++zw4JooKAF6IG7Tz/GhIVJ2tlE5mHG9XM
+         kU1qAEaskZkY0Jz/u9LZHE9tEDf4/lcq6JOS+Bt0SaLzhLaG1eGh1Rb50sae3rOuvipu
+         FWZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1zDIqOBuX/K9nmAOrSn0q1L2wjLhGu0LGpqC1FRybjM=;
-        b=YXN36vcwX8t/lZWVtuSGvBVDr2cRKJwMjOhwXHLLNJtf7sKxbS+j984ZAt4uHiQo1B
-         r1/8Gf1qVQq7UnUo02gDfHt1jbLuPCqE6D1i2QF9IlFz32GKwoWynQRZiyhT25I3NvSc
-         IJVkOK91CEoKWAY90wYjhPg9ta79PxxanmK7ZnVK2+7wtfTHOBUY7aiVOwF3sYOcuCyr
-         8zzg8ZgwZkPgNv0ZMwB7rTlwMwC4dIobTE0VV+l/t92RHcaJFF5N2ITXkNsZNhiYc738
-         rUtSkC6wXFrJqW/poxWCDTKKP516huHO5X+Wmf9sqFrEjCukHNXUdAQeNjMPOVQHbl0U
-         +Pzg==
-X-Gm-Message-State: AOAM530IXurmpwNaOme2RAMARZ9XDMuEK6d2z0Sjw3oDNvZ8K4HCtiMK
-        9MvQFOxRiPLGmGPIyUk31DHI+A==
-X-Google-Smtp-Source: ABdhPJxEEnd+kP3e/yI6hTgHbHGpzO3CUk9z4hOSjDsZ9PiZZ75O0/GISD/HaIfyxC2QMquELbwWWA==
-X-Received: by 2002:adf:828b:: with SMTP id 11mr37504223wrc.58.1593067586920;
-        Wed, 24 Jun 2020 23:46:26 -0700 (PDT)
+        bh=zFD+XYh0LbdyDPIgjJ6ML5H3hXoar7p4uFfuKLbk0ZA=;
+        b=X6Daw41n4wskQtBz5lz6w2Zd5NpFbRPJL4n5oSKpHx5vBKS73dfsQwiezhKq5KL85V
+         WmTm4iVm0uu/f1GKVGqgdA8f50hq+wl9jy9w3ULzgLwNujnpmkBjfFXi06ggk0g6WRTA
+         CwxXwR8/ikliqzcUgCJEQpi3JfANDQlQ+Mnv/k4vK/jzfvLcZ58AlA1pqrUgtNDSdV9G
+         vxTLlxKqRghZTqdnUL8YpmnbOjgl9Xmr6486RdS7V5EGbLaVcfqqAu7jDA4Yg+V0zhsi
+         n/UbIl1xBr52MxwGje9SeHGPVNnc8g0SiSwVLmyiggiTM5WkYdrIQ5/zJi7RzpiZMIqE
+         mBiQ==
+X-Gm-Message-State: AOAM533spWaGCDGvdC32vkG3y41y93XjlDgNKkPJwYON7ygYilkVJ5PT
+        Ns2oIXW8UuEYALIy9hJn8tFoLw==
+X-Google-Smtp-Source: ABdhPJwMgZfQzBCeFoiLZTJnp/x4vgmn7WMj1vkUKS/+Lm7IeVtJH2PwgM57kLDLfxA35mh6mWhlMA==
+X-Received: by 2002:a1c:dfd6:: with SMTP id w205mr1785713wmg.118.1593067591825;
+        Wed, 24 Jun 2020 23:46:31 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id c20sm27235363wrb.65.2020.06.24.23.46.25
+        by smtp.gmail.com with ESMTPSA id c20sm27235363wrb.65.2020.06.24.23.46.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 23:46:26 -0700 (PDT)
+        Wed, 24 Jun 2020 23:46:31 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 03/10] mfd: db8500-prcmu: Add description for 'reset_reason' in kerneldoc
-Date:   Thu, 25 Jun 2020 07:46:12 +0100
-Message-Id: <20200625064619.2775707-4-lee.jones@linaro.org>
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Keshava Munegowda <keshava_mgowda@ti.com>,
+        Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org
+Subject: [PATCH 05/10] mfd: omap-usb-host: Remove invalid use of kerneldoc syntax
+Date:   Thu, 25 Jun 2020 07:46:14 +0100
+Message-Id: <20200625064619.2775707-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625064619.2775707-1-lee.jones@linaro.org>
 References: <20200625064619.2775707-1-lee.jones@linaro.org>
@@ -76,33 +78,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each function parameter should be documented in kerneldoc format.
+Kerneldoc is for documenting function arguments and return values.
 
-Squashes the following W=1 warnings:
+Prevents warnings like:
 
- drivers/mfd/db8500-prcmu.c:2281: warning: Function parameter or member 'reset_code' not described in 'db8500_prcmu_system_reset'
- drivers/mfd/db8500-prcmu.c:3012: warning: Function parameter or member 'pdev' not described in 'db8500_prcmu_probe'
+ drivers/mfd/omap-usb-host.c:128: warning: cannot understand function prototype: 'const char * const port_modes[] = '
 
 Cc: <stable@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Keshava Munegowda <keshava_mgowda@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mfd/db8500-prcmu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mfd/omap-usb-host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
-index 0452b43b04232..9b58b02967638 100644
---- a/drivers/mfd/db8500-prcmu.c
-+++ b/drivers/mfd/db8500-prcmu.c
-@@ -2276,6 +2276,8 @@ bool db8500_prcmu_is_ac_wake_requested(void)
-  *
-  * Saves the reset reason code and then sets the APE_SOFTRST register which
-  * fires interrupt to fw
-+ *
-+ * @reset_code: The reason for system reset
-  */
- void db8500_prcmu_system_reset(u16 reset_code)
- {
+diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+index 1f4f01b02d98c..f56cdf3149dc0 100644
+--- a/drivers/mfd/omap-usb-host.c
++++ b/drivers/mfd/omap-usb-host.c
+@@ -120,7 +120,7 @@ static inline u32 usbhs_read(void __iomem *base, u32 reg)
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+-/**
++/*
+  * Map 'enum usbhs_omap_port_mode' found in <linux/platform_data/usb-omap.h>
+  * to the device tree binding portN-mode found in
+  * 'Documentation/devicetree/bindings/mfd/omap-usb-host.txt'
 -- 
 2.25.1
 
