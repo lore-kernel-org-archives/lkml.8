@@ -2,75 +2,55 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB2720781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:21:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="licMAqKn"
+	by mail.kernel.org (Postfix) with ESMTP id 5F41D207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404962AbgFYNVR (ORCPT
+        id S2404994AbgFYNVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:21:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404916AbgFYNVM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:21:12 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CC4C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:21:12 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id j1so3015874pfe.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=wJfFA7Bq0B+KC15Q8f+/jSKFh8zbNtSTmbiv4SH+pao=;
-        b=licMAqKnCRhl06F26ksnjRZ9QOafA8QE/XeKKNmgnBx9ti8Of3GhZqRCtCvoF883c7
-         LtDmj4H8J1OHGOaQjn2f0Gap1eaSckAhjGrmsvdRjGUw5afbQTjJfg3Uq+Ep4AwJuWon
-         QDSxptWrPLm3dq9kmjLXy3vZC67/NUyx4iUP3OI4MzsV7V7goaWtd3Hqe52k0VJQ0l1S
-         a9RIlvoW4lr3hcQncrmwVIWnr1EAFdn+/D8Ctrv5cAV3TcyWdNlxHgAbAxJf9Frdnjj0
-         Q1OMP6kbVZ78XI/b1KQqnnVjNnodm8a+ZfJDUxWQag+hkj3EVmq0DhcX/L4o+3eLcF7A
-         N6pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wJfFA7Bq0B+KC15Q8f+/jSKFh8zbNtSTmbiv4SH+pao=;
-        b=PjpKUDBTlYo/SqXT+NPIfc00zcGyhKBmN27UccLiHSNqTjCMO0tcTeycjUlvkMjw99
-         zNNDxP9bWk7yQZ36J0YeITHpNhJOAkAfLH83UfPXlApBfCH3fFmHNdiqp+wVmt+O41vn
-         ol3/8lfna5phKkqufd5RwPTzBj6XzIymngU2VOW2M7g+og7E5DJDhavR+AXcgrKlpOiP
-         jmIaSysb0f84Dy53rNqJ6gcvjW0tehCBCBKoRSm2Feq1U7TPMQCZE/W2foJQH+hGhfjf
-         +zqv5Cm29880lZk1Y1ksro5y/UHQBljKI3gyPQid3nwCQV+yJjZs1Fuf/yD5Kqe46Co5
-         VhlQ==
-X-Gm-Message-State: AOAM533UJvrUnzNq6dRm4swDzSxDo9XAAULOxqpDHsFhmx+/hfEnWP82
-        VsxQpiRtW5SMul+SSa5MTtRX/wqZQIiPjg==
-X-Google-Smtp-Source: ABdhPJzstZq3G8LqEQvYNcgpNZRXSattYuw9jbSO5BFRHf0Q9aBHqdEpFid396WPzfpVNmgK52mhzw==
-X-Received: by 2002:a62:ee17:: with SMTP id e23mr5540283pfi.291.1593091271995;
-        Thu, 25 Jun 2020 06:21:11 -0700 (PDT)
-Received: from ?IPv6:2600:380:6c49:6812:d113:f43c:df53:19ee? ([2600:380:6c49:6812:d113:f43c:df53:19ee])
-        by smtp.gmail.com with ESMTPSA id w22sm23444783pfq.193.2020.06.25.06.21.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 06:21:11 -0700 (PDT)
-Subject: Re: [PATCH for-5.8 0/2] iopoll fixes pt.1
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1593077359.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f5bcef74-95d1-aa24-a5b2-76c6cc7a4e1b@kernel.dk>
-Date:   Thu, 25 Jun 2020 07:21:08 -0600
+        Thu, 25 Jun 2020 09:21:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37557 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404854AbgFYNVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:21:41 -0400
+IronPort-SDR: RG/6hCFqooTtnLO87QSJMnBxBP7zx0WTI/aKIvUGnmD7iGgg8afgEWTzhyNDiNG2tpr//7tkvs
+ JP+E/zaXIpSg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="125124533"
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="125124533"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 06:21:41 -0700
+IronPort-SDR: UZ13Dsz3B/RxDtHFZ4YHTb0dQGzn8YZVHR1vzTUQJwNnbjM6uhRMqY+XmQTPRmGOn90RdDZvCa
+ eXIcvaFqjZ3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="311985461"
+Received: from mylly.fi.intel.com (HELO [10.237.72.69]) ([10.237.72.69])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Jun 2020 06:21:40 -0700
+Subject: Re: [PATCH v2] i2c: designware: platdrv: Set class based on dmi
+To:     Ricardo Ribalda <ribalda@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>
+References: <20200624112530.852254-1-ribalda@kernel.org>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <e309d8c9-4721-ac78-87a2-272b4f1a8d3c@linux.intel.com>
+Date:   Thu, 25 Jun 2020 16:21:39 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1593077359.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200624112530.852254-1-ribalda@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,21 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 3:37 AM, Pavel Begunkov wrote:
-> Split as requested, this is for 5.8.
+On 6/24/20 2:25 PM, Ricardo Ribalda wrote:
+> Current AMD's zen-based APUs use this core for some of its i2c-buses.
 > 
-> The only thing changed is 1 line moved for easier rebasing.
-> Yesterday problems were unrelated.
+> With this patch we re-enable autodetection of hwmon-alike devices, so
+> lm-sensors will be able to work automatically.
 > 
-> Pavel Begunkov (2):
->   io_uring: fix hanging iopoll in case of -EAGAIN
->   io_uring: fix current->mm NULL dereference on exit
+> It does not affect the boot-time of embedded devices, as the class is
+> set based on the dmi information.
 > 
->  fs/io_uring.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
+> Signed-off-by: Ricardo Ribalda <ribalda@kernel.org>
+> ---
+> v2:
+> Changes by Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+>   - CodeStyle
+> Changes by kernel test robot <lkp@intel.com>
+>   - Include dmi header to fix build error on arc
+>   - check if dmi_get_system_info returned NULL
+>   drivers/i2c/busses/i2c-designware-platdrv.c | 16 +++++++++++++++-
+>   1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index c2efaaaac252..5892fdba9c25 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -12,6 +12,7 @@
+>   #include <linux/clk-provider.h>
+>   #include <linux/clk.h>
+>   #include <linux/delay.h>
+> +#include <linux/dmi.h>
+>   #include <linux/err.h>
+>   #include <linux/errno.h>
+>   #include <linux/i2c.h>
+> @@ -173,6 +174,19 @@ static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
+>   		pm_runtime_put_noidle(dev->dev);
+>   }
+>   
+> +static bool dw_i2c_hwmon_bus(void)
+> +{
+> +	const char *product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
+> +
+> +	if (!product_name)
+> +		return false;
+> +
+> +	if (strstr(product_name, "QT5222"))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
 
-Applied, thanks Pavel.
+I'm not too familiar with the DMI stuff but is the more usual way to 
+have struct dmi_system_id table and match it with dmi_check_system()? 
+Perhaps scales better than individual dmi_get_system_info() and string 
+comparison calls.
+
+Andy and I were pondering offline is there any info in ACPI table that 
+tells which bus have these sensors or can it be hardcoded with the DMI 
+match so that there is no need probe all buses for these sensors on that 
+product. But that can be another optimization patch I guess.
 
 -- 
-Jens Axboe
-
+Jarkko
