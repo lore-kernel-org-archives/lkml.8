@@ -2,100 +2,89 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C9120702
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5B72076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQJmNzfd"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DozaLm20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405006AbgFYNZq (ORCPT
+        id S2405025AbgFYN0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36818 "EHLO
+        Thu, 25 Jun 2020 09:26:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404904AbgFYNZp (ORCPT
+        with ESMTP id S2404888AbgFYN0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:25:45 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB4BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:25:46 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id g7so2730398qvx.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eJ3/Mq7vJPR+x6UGF9hjTyfpV3MClmGOAkmC+A8dGsw=;
-        b=pQJmNzfdvlcRM9JVSyrhj/oMZG+i5rKFtQq0Qk9xomMbXD4rG2HGCs3tTvWJcyL+RN
-         ZhGROVilEALNcyrN9LSGS5UdAfOqt6qLQDa+hwg1ZjTpHmo32ZeyiluZYd8456eFq9/Q
-         tHQ3iuAIBpWP/6vRX46jGq8rB88Y31toNEHItwoPsnzBvp8KkrBBj8vqpm6KVdxTixEh
-         bFCGJAbi7DbaOyORsDIx7TrVgkkQ7pkGj5UuXCmF989fgpDKrZSRqSE0fdZrHA1P8Gep
-         UcLJVLh0WiULO1XE9yriSgaF9HadZjvra1NcPPECoadhGzSVi4pNzkMCdad8QKZQ0qsT
-         kbnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eJ3/Mq7vJPR+x6UGF9hjTyfpV3MClmGOAkmC+A8dGsw=;
-        b=Vsd5Kwfg8cxiOpxJ7bZXblUCYNP9iGq7vGAzroxh94B8MAc1Qryoj2eCreeP9hGYOF
-         fU4eTfcDWhNJsRCD3rrzII81WSfAenOvp+13kvAChndYk7iymQi2+yLsA1glgdQy5rIw
-         yCa5VtDBvMFqHz+MvaLyh84t/ZWmzpJj9ULTVS8pOGuznu976L9AaKDMENArPyfwdUZN
-         CcQI+mP543cAlu8NSqxrNsssBxXENITF3GGoavR//5dAlRxESVKbL6OArQAFH3iZxuBx
-         fM0MGvflnDbJXQiwuSeK3UVtJfMjw1NdfHNmb052AFjV8OCdIEx6Rr5PWv5cWbu5JwTC
-         bETg==
-X-Gm-Message-State: AOAM530HZn9uRlNq/Nw24hhwgjNqMasTrL/8lxxV2gUuTLGXjhuV6oCW
-        jp1mCQEJW46OMsoDByA+IET7KFwJYM+l2Q==
-X-Google-Smtp-Source: ABdhPJyCApRXjFEu8aKC07g6xSI7imbJE7s5oeq7Fsp/i/5IUsQLbIKz8y4K+ZaiWjwtdwlCv+YA7g==
-X-Received: by 2002:a0c:eccd:: with SMTP id o13mr37073576qvq.49.1593091545506;
-        Thu, 25 Jun 2020 06:25:45 -0700 (PDT)
-Received: from mooncell.myfiosgateway.com (pool-173-75-208-99.phlapa.fios.verizon.net. [173.75.208.99])
-        by smtp.gmail.com with ESMTPSA id t35sm412107qth.79.2020.06.25.06.25.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:25:44 -0700 (PDT)
-From:   Brooke Basile <brookebasile@gmail.com>
-To:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
-        rcy@google.com, gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org, Brooke Basile <brookebasile@gmail.com>
-Subject: [PATCH] staging: gasket: Convert symbolic permission to octal
-Date:   Thu, 25 Jun 2020 09:25:13 -0400
-Message-Id: <20200625132513.10805-1-brookebasile@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 25 Jun 2020 09:26:18 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADF6C08C5C1;
+        Thu, 25 Jun 2020 06:26:18 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0ed10074d8a868b8f3cf92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:74d8:a868:b8f3:cf92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CFE0C1EC03F0;
+        Thu, 25 Jun 2020 15:26:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1593091577;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=8nllPNkefZLtge6T1+fl0TvxIAEHeAqYDppxTpvHcOQ=;
+        b=DozaLm20n98Ezq6eqr0ypoKyVBmALyjCP2oB1ZgFm5fcMbETYgS52lX85HRJP1duth2cPu
+        AqgVvBoe2jPWmP1ghlFhSERaxbWyBmrErnQW8YQW0a93S9XjJz8vS/VzaXj81y2uHjnRve
+        AKekWCCk1d/Jr2ASG885uF15Ku2Z+0I=
+Date:   Thu, 25 Jun 2020 15:26:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Brad Campbell <lists2009@fnarfbargle.com>,
+        Liam Merwick <liam.merwick@oracle.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        kvm-devel <kvm@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during
+ wakeup
+Message-ID: <20200625132610.GD20319@zn.tnic>
+References: <20200608174134.11157-1-sean.j.christopherson@intel.com>
+ <CAJZ5v0inhpW1vbYJYPqWgkekK7hKhgO_fE5JmemT+p2qh7RFaw@mail.gmail.com>
+ <2a3976ac-242b-260a-ce7b-2080d8e9d0f8@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2a3976ac-242b-260a-ce7b-2080d8e9d0f8@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing checkpatch WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+On Thu, Jun 25, 2020 at 02:27:46PM +0200, Paolo Bonzini wrote:
+> > Given the regression fix nature of this patch, is it being taken care
+> > of by anyone (tip in particular) already?
+> 
+> I was waiting for tip to pick it up, but I can as well with an Acked-by
+> (KVM is broken by the patch but there's nothing KVM specific in it).
 
-Signed-off-by: Brooke Basile <brookebasile@gmail.com>
----
- drivers/staging/gasket/gasket_sysfs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://git.kernel.org/tip/5d5103595e9e53048bb7e70ee2673c897ab38300
 
-diff --git a/drivers/staging/gasket/gasket_sysfs.h b/drivers/staging/gasket/gasket_sysfs.h
-index ab5aa351d555..eb0fd3b0490f 100644
---- a/drivers/staging/gasket/gasket_sysfs.h
-+++ b/drivers/staging/gasket/gasket_sysfs.h
-@@ -71,7 +71,7 @@ struct gasket_sysfs_attribute {
- 
- #define GASKET_SYSFS_RO(_name, _show_function, _attr_type)                     \
- 	{                                                                      \
--		.attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
-+		.attr = __ATTR(_name, 0444, _show_function, NULL),	       \
- 		.data.attr_type = _attr_type                                   \
- 	}
- 
+will be in -rc3, most likely.
+
 -- 
-2.27.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
