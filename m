@@ -2,92 +2,162 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC4C20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593104733;
-	bh=4zsOT8dFCda+/kC/Af0lQAAJytwJ/ToTgr8jJJp9nEk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ylWXnim5ivwrhRsdSWFpfUNWgfyu14Cw32ZU+92nZGSk5YyzBV76N8A4noH8vgbZU
-	 AmRISC2yUimoAa/oZReUoBfRAeTjmCI9qPd3fH9HgkmhhOpsgcbWzu982UZUxuV93A
-	 M61GbwSq/Zns5EyVp9e+l8rgpchzxF09VdCbvEZU=
+	by mail.kernel.org (Postfix) with ESMTP id 6601420706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VeX/+nmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406628AbgFYRFb (ORCPT
+        id S2406641AbgFYRGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:05:31 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:51071 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404376AbgFYRFN (ORCPT
+        Thu, 25 Jun 2020 13:06:31 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41856 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404376AbgFYRGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:05:13 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05PH4apH005239;
-        Fri, 26 Jun 2020 02:04:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05PH4apH005239
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593104678;
-        bh=kyXyOZ5U8Hs6howxGxcv+iEKeZZiTyjbIeEnk633oyA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEFVeaYJ9UAliTtB3rq8v27VAdbMFXTWV4iLqtXO/rfl8r7U93GlYMB+IQ/4YmYjQ
-         BAE3FwqLpoXEmJkak0nb/XxHQgUQJphlI66x+6Gkgpq66utHEyuuFGl3p6fymnstwL
-         kxxJcXJsoBDgov5xAFFxmf3NM0fHIHDxUHVhVmQQLZYnMJoxahSagKu6Z/i61mh8TU
-         Yd4CJNJmpDLQW2BrejLB+xpZxMbZFmZ1ZmImiQlQbsFFN5GJeWF6TTFjnlVxcYxIEK
-         j9yhH2oh1Gx8ZFlve1isqtFblmJL5xBXYGMJo9YMccOndcqJac/NPzwhIwMDcSEeEY
-         C/sP3xTvwaSlA==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] dt-bindings: do not build processed-schema.yaml for 'make dt_binding_check'
-Date:   Fri, 26 Jun 2020 02:04:32 +0900
-Message-Id: <20200625170434.635114-3-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200625170434.635114-1-masahiroy@kernel.org>
-References: <20200625170434.635114-1-masahiroy@kernel.org>
+        Thu, 25 Jun 2020 13:06:30 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05PH4s1j015335;
+        Thu, 25 Jun 2020 12:04:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593104694;
+        bh=ONVcVn3bey9yl+Y9AA3TJVO17GyEvycrQ6oGUr5xABk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VeX/+nmR89jbqhMaGIjQZcXyTRkVf8XN2TGdHgOPTjeN+6tIIcJUj2UJZ2qNOwjzN
+         k2wDLNwWtVI5hmoI0mW8Rn/Z9fB47/08j5fiB+xrAUcD2YZgUZLH4gU2dGvq9IA3Zv
+         rSoDjm1EjYdkCj77mB9ShAKbSWmADriglQu3FODw=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05PH4sqM075398
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jun 2020 12:04:54 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 25
+ Jun 2020 12:04:53 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 25 Jun 2020 12:04:53 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05PH4pWG025571;
+        Thu, 25 Jun 2020 12:04:52 -0500
+Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
+ initial allowed window
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Jan Kiszka <jan.kiszka@siemens.com>, <wim@linux-watchdog.org>,
+        <linux-watchdog@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20200624114534.1362-1-t-kristo@ti.com>
+ <20200624114534.1362-3-t-kristo@ti.com>
+ <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
+ <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
+ <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
+Date:   Thu, 25 Jun 2020 20:04:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, processed-schema.yaml is always built, but it is actually
-used only for 'make dtbs_check'.
+On 25/06/2020 16:35, Guenter Roeck wrote:
+> On 6/25/20 1:32 AM, Tero Kristo wrote:
+>> On 24/06/2020 18:24, Jan Kiszka wrote:
+>>> On 24.06.20 13:45, Tero Kristo wrote:
+>>>> If the RTI watchdog has been started by someone (like bootloader) when
+>>>> the driver probes, we must adjust the initial ping timeout to match the
+>>>> currently running watchdog window to avoid generating watchdog reset.
+>>>>
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>> ---
+>>>>    drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
+>>>>    1 file changed, 25 insertions(+)
+>>>>
+>>>> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
+>>>> index d456dd72d99a..02ea2b2435f5 100644
+>>>> --- a/drivers/watchdog/rti_wdt.c
+>>>> +++ b/drivers/watchdog/rti_wdt.c
+>>>> @@ -55,11 +55,13 @@ static int heartbeat;
+>>>>     * @base - base io address of WD device
+>>>>     * @freq - source clock frequency of WDT
+>>>>     * @wdd  - hold watchdog device as is in WDT core
+>>>> + * @min_hw_heartbeat_save - save of the min hw heartbeat value
+>>>>     */
+>>>>    struct rti_wdt_device {
+>>>>        void __iomem        *base;
+>>>>        unsigned long        freq;
+>>>>        struct watchdog_device    wdd;
+>>>> +    unsigned int        min_hw_heartbeat_save;
+>>>>    };
+>>>>    static int rti_wdt_start(struct watchdog_device *wdd)
+>>>> @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
+>>>>        /* put watchdog in active state */
+>>>>        writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
+>>>> +    if (wdt->min_hw_heartbeat_save) {
+>>>> +        wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
+>>>> +        wdt->min_hw_heartbeat_save = 0;
+>>>> +    }
+>>>> +
+>>>>        return 0;
+>>>>    }
+>>>> @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device *pdev)
+>>>>            goto err_iomap;
+>>>>        }
+>>>> +    if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
+>>>> +        u32 time_left;
+>>>> +        u32 heartbeat;
+>>>> +
+>>>> +        set_bit(WDOG_HW_RUNNING, &wdd->status);
+>>>> +        time_left = rti_wdt_get_timeleft(wdd);
+>>>> +        heartbeat = readl(wdt->base + RTIDWDPRLD);
+>>>> +        heartbeat <<= WDT_PRELOAD_SHIFT;
+>>>> +        heartbeat /= wdt->freq;
+>>>> +        if (time_left < heartbeat / 2)
+>>>> +            wdd->min_hw_heartbeat_ms = 0;
+>>>> +        else
+>>>> +            wdd->min_hw_heartbeat_ms =
+>>>> +                (time_left - heartbeat / 2 + 1) * 1000;
+>>>> +
+>>>> +        wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
+>>>> +    }
+>>>> +
+>>>>        ret = watchdog_register_device(wdd);
+>>>>        if (ret) {
+>>>>            dev_err(dev, "cannot register watchdog device\n");
+>>>>
+>>>
+>>> This assumes that the bootloader also programmed a 50% window, right? The pending U-Boot patch will do that, but what if that may chance or someone uses a different setup?
+>>
+>> Yes, we assume 50%. I think based on the hw design, 50% is the only sane value to be used, otherwise you just shrink the open window too much and for no apparent reason.
+>>
+> 
+> Not sure if that is a valid assumption. Someone who designs a watchdog
+> with such a narrow ping window might as well also use it. The question
+> is if you want to rely on that assumption, or check and change it if needed.
 
-'make dt_binding_check' uses processed-schema-example.yaml instead.
+Right, if that is a blocker, I can modify the code. Should be maybe 
+couple of lines addition.
 
-Build processed-schema.yaml only for 'make dtbs_check'.
+> Also, I wonder if we should add an API function such as
+> "set_last_hw_keepalive()" to avoid all that complexity.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+I can try adding that also if it is desirable.
 
- Documentation/devicetree/bindings/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index f20d234aec46..aa243328ed43 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -52,7 +52,7 @@ $(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := $(DT_MK_SCHEMA_USERONLY_FLAG
- $(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) check_dtschema_version FORCE
- 	$(call if_changed,mk_schema)
- 
--extra-y += processed-schema.yaml
-+extra-$(CHECK_DTBS) += processed-schema.yaml
- 
- # Hack: avoid 'Argument list too long' error for 'make clean'. Remove most of
- # build artifacts here before they are processed by scripts/Makefile.clean
--- 
-2.25.1
-
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
