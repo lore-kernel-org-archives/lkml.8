@@ -7,33 +7,34 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A22E920781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976162080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406041AbgFYPpN (ORCPT
+        id S2406047AbgFYPpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:45:13 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:39449 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405972AbgFYPpB (ORCPT
+        Thu, 25 Jun 2020 11:45:17 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35605 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405979AbgFYPpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:45:01 -0400
+        Thu, 25 Jun 2020 11:45:02 -0400
+X-Originating-IP: 90.76.143.236
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 2DC8B100003;
-        Thu, 25 Jun 2020 15:44:58 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 625DF1C000D;
+        Thu, 25 Jun 2020 15:45:00 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com
 Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com
-Subject: [PATCH net-next 8/8] net: phy: mscc: improve vsc8514/8584_config_init consistency
-Date:   Thu, 25 Jun 2020 17:42:11 +0200
-Message-Id: <20200625154211.606591-9-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next 4/8] net: phy: mscc: ptp: fix a typo in a comment
+Date:   Thu, 25 Jun 2020 17:42:07 +0200
+Message-Id: <20200625154211.606591-5-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200625154211.606591-1-antoine.tenart@bootlin.com>
 References: <20200625154211.606591-1-antoine.tenart@bootlin.com>
@@ -44,44 +45,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All PHY read and write return values are checked for errors in
-vsc8514_config_init and vsc8584_config_init, except for one. Fix this.
+This patch fixes a typo in a comment, s/Ths/This/. The patch is cosmetic
+only.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/phy/mscc/mscc_main.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/phy/mscc/mscc_ptp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 04e1ef791cec..a4fbf3a4fa97 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -1375,8 +1375,10 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 			goto err;
- 	}
+diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
+index 030a56c9a06d..d4266911efc5 100644
+--- a/drivers/net/phy/mscc/mscc_ptp.c
++++ b/drivers/net/phy/mscc/mscc_ptp.c
+@@ -1564,7 +1564,7 @@ int vsc8584_ptp_probe(struct phy_device *phydev)
  
--	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
--		       MSCC_PHY_PAGE_EXTENDED_GPIO);
-+	ret = phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
-+			     MSCC_PHY_PAGE_EXTENDED_GPIO);
-+	if (ret)
-+		goto err;
- 
- 	val = phy_base_read(phydev, MSCC_PHY_MAC_CFG_FASTLINK);
- 	val &= ~MAC_CFG_MASK;
-@@ -1774,8 +1776,10 @@ static int vsc8514_config_init(struct phy_device *phydev)
- 	if (phy_package_init_once(phydev))
- 		vsc8514_config_pre_init(phydev);
- 
--	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
--		       MSCC_PHY_PAGE_EXTENDED_GPIO);
-+	ret = phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
-+			     MSCC_PHY_PAGE_EXTENDED_GPIO);
-+	if (ret)
-+		goto err;
- 
- 	val = phy_base_read(phydev, MSCC_PHY_MAC_CFG_FASTLINK);
- 
+ 	/* Retrieve the shared load/save GPIO. Request it as non exclusive as
+ 	 * the same GPIO can be requested by all the PHYs of the same package.
+-	 * Ths GPIO must be used with the gpio_lock taken (the lock is shared
++	 * This GPIO must be used with the gpio_lock taken (the lock is shared
+ 	 * between all PHYs).
+ 	 */
+ 	vsc8531->load_save = devm_gpiod_get_optional(&phydev->mdio.dev, "load-save",
 -- 
 2.26.2
 
