@@ -2,93 +2,140 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55915C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5296EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC662080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593107068;
-	bh=7naWqeQw6q7LYgBdxVyp89BuWmzeBELZAgXO4fbDFBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Iz0fuJAzIvI60vSbREuQ7ElZ75ByVsvc1w4kAFxNGacaPX/bRNzUme94CihO9IVAh
-	 DTV7S+LfZDiE0n18l24QcAXqBR17UH9GP4lCZySjh6WnAG8CALB2LQHaFofSKrAYGk
-	 Jxw/9s5x4js4rDqSnlWS9t1G4/hCqtsOO5HDBVVI=
+	by mail.kernel.org (Postfix) with ESMTP id 35CF420781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406901AbgFYRo0 (ORCPT
+        id S2406904AbgFYRpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:44:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58048 "EHLO mail.kernel.org"
+        Thu, 25 Jun 2020 13:45:40 -0400
+Received: from mga03.intel.com ([134.134.136.65]:3760 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406879AbgFYRo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:44:26 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5560F20781;
-        Thu, 25 Jun 2020 17:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593107065;
-        bh=7naWqeQw6q7LYgBdxVyp89BuWmzeBELZAgXO4fbDFBI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=swCmIaWnAL/EyJdCD0hfMqiMNSdKoj+38Uwh+mDHC/LM5CG4UmENQnV4h87XENMyd
-         Qxmf4Lv0VgxGJvHRO5qOsJGMaGBGWZdZQVBOZgADk8tnR8nAnSbcIMWGbDcXO+xXPr
-         peE0uitQeenEZNW1NvViurVo2o43j1BqSM3YrvTw=
-Date:   Thu, 25 Jun 2020 18:44:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/10] regulator: da9063-regulator: Fix .suspend
- 'initialized field overwritten' warnings
-Message-ID: <20200625174423.GF5686@sirena.org.uk>
-References: <20200625163614.4001403-1-lee.jones@linaro.org>
- <20200625163614.4001403-10-lee.jones@linaro.org>
+        id S2405267AbgFYRpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 13:45:39 -0400
+IronPort-SDR: KrwDKL/v4h43iAik/gCe/WEfFJVyjGlIN5qaR38XSyWN6pDf8rw7MDexk6C6B33My41laEOmIQ
+ wbC9bhd+SqSg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="145047064"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="145047064"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 10:45:37 -0700
+IronPort-SDR: bisn9uHgNczvefwLPkn56R4MNC63uy3nFlUvwY4ywU1CiWTK8TIWkVhKHaUHDxGRu4zILG2si1
+ akggcaHzIq1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="279885429"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga006.jf.intel.com with ESMTP; 25 Jun 2020 10:45:37 -0700
+Date:   Thu, 25 Jun 2020 10:45:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+Message-ID: <20200625174537.GE3437@linux.intel.com>
+References: <20200622220442.21998-1-peterx@redhat.com>
+ <20200622220442.21998-2-peterx@redhat.com>
+ <20200625061544.GC2141@linux.intel.com>
+ <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
+ <20200625162540.GC3437@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="K/NRh952CO+2tg14"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625163614.4001403-10-lee.jones@linaro.org>
-X-Cookie: One organism, one vote.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200625162540.GC3437@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 09:25:40AM -0700, Sean Christopherson wrote:
+> On Thu, Jun 25, 2020 at 10:09:13AM +0200, Paolo Bonzini wrote:
+> > On 25/06/20 08:15, Sean Christopherson wrote:
+> > > IMO, kvm_cpuid() is simply buggy.  If KVM attempts to access a non-existent
+> > > MSR then it darn well should warn.
+> > > 
+> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > > index 8a294f9747aa..7ef7283011d6 100644
+> > > --- a/arch/x86/kvm/cpuid.c
+> > > +++ b/arch/x86/kvm/cpuid.c
+> > > @@ -1013,7 +1013,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> > >                 *ebx = entry->ebx;
+> > >                 *ecx = entry->ecx;
+> > >                 *edx = entry->edx;
+> > > -               if (function == 7 && index == 0) {
+> > > +               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) &&
+> > > +                   (vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR)) {
+> > >                         u64 data;
+> > >                         if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+> > >                             (data & TSX_CTRL_CPUID_CLEAR))
+> > > 
+> > 
+> > That works too, but I disagree that warning is the correct behavior
+> > here.  It certainly should warn as long as kvm_get_msr blindly returns
+> > zero.  However, for a guest it's fine to access a potentially
+> > non-existent MSR if you're ready to trap the #GP, and the point of this
+> > series is to let cpuid.c or any other KVM code do the same.
+> 
+> I get the "what" of the change, and even the "why" to some extent, but I
+> dislike the idea of supporting/encouraging blind reads/writes to MSRs.
+> Blind writes are just asking for problems, and suppressing warnings on reads
+> is almost guaranteed to be suppressing a KVM bug.
+> 
+> Case in point, looking at the TSX thing again, I actually think the fix
+> should be:
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 5eb618dbf211..64322446e590 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -1013,9 +1013,9 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>                 *ebx = entry->ebx;
+>                 *ecx = entry->ecx;
+>                 *edx = entry->edx;
+> -               if (function == 7 && index == 0) {
+> +               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) {
+>                         u64 data;
+> -                       if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+> +                       if (!kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data) &&
+>                             (data & TSX_CTRL_CPUID_CLEAR))
+>                                 *ebx &= ~(F(RTM) | F(HLE));
+>                 }
+> 
+> 
+> On VMX, MSR_IA32_TSX_CTRL will be added to the so called shared MSR array
+> regardless of whether or not it is being advertised to userspace (this is
+> a bug in its own right).  Using the host_initiated variant means KVM will
+> incorrectly bypass VMX's ARCH_CAP_TSX_CTRL_MSR check, i.e. incorrectly
+> clear the bits if userspace is being weird and stuffed MSR_IA32_TSX_CTRL
+> without advertising it to the guest.
 
---K/NRh952CO+2tg14
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Argh, belatedly realized that MSR_IA32_TSX_CTRL needs to be swapped even
+when ARCH_CAP_TSX_CTRL_MSR isn't exposed to the guest, but if and only if
+if TSX is disabled in the host _and_ enabled in the guest.  So triggering
+setup_msrs() on ARCH_CAP_TSX_CTRL_MSR is insufficient, but I believe we can
+and should redo setup_msrs() during vmx_cpuid_update().  I'm pretty sure
+that's needed for MSR_TSC_AUX+RDTSCP as well.  I suspect RDTSCP is broken
+on 32-bit guests, but no has noticed because Linux only employs RDTSCP on
+64-bit kernels, and 32-bit guests are exactly common in the first place.
 
-On Thu, Jun 25, 2020 at 05:36:13PM +0100, Lee Jones wrote:
-> Looks as though 9f75ce666199 ("regulator: da9063: fix suspend") failed
+I'll check the above to confirm and prep some patches if RDTSCP is indeed
+busted.
 
-$ git show 9f75ce666199
-fatal: ambiguous argument '9f75ce666199': unknown revision or path not in the working tree.
-
-You should probably CC this to the authors of that commit - a similar
-thing applies to several of the other patches here.  You probably don't
-want to CC everyone on everything but OTOH there isn't really any need
-for things to be bundled up in a series anyway.
-
---K/NRh952CO+2tg14
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl704nYACgkQJNaLcl1U
-h9B8Vgf/W3i4vBx4UEY3dyhXea3ctidu/6B/GCWTMnDyU0eo+/g9NGmfmkX3jCg5
-rbG5q9R1S41RFthhhSK9CAc4PfHk9pZVij5SlCTZkIP36FlLO+IWetdtCJsmm4Jy
-UQEXFPDrPlZ6d0J3hMGd/PR2fP4E7ZAZB3eboJchoWCJNfca1H/ZRLLGR3CEDtab
-2zHgFub3vRFfF+NA7+X5GlLTUUpyJ2Rut33QkyEFVnyqVv/sfTnmDDWs3SMJYL3U
-Xvgrrp+rUI7IQHUjB7Xg4lNGREziiY1fzfKem3NqmiH6uBP8jSczMPII6ZAabrxr
-+atxq/G02ZbYY6Sa7NNbpfDgmlemmA==
-=e1P/
------END PGP SIGNATURE-----
-
---K/NRh952CO+2tg14--
+> In short, the whole MSR_IA32_TSX_CTRL implementation seems messy and this
+> is just papering over that mess.  The correct fix is to invoke setup_msrs()
+> on writes to MSR_IA32_ARCH_CAPABILITIES, filtering MSR_IA32_TSX_CTRL out of
+> shared MSRs when it's not advertised, and change kvm_cpuid() to use the
+> unpriveleged variant.
+> 
+> TSC_CTRL aside, if we insist on pointing a gun at our foot at some point,
+> this should be a dedicated flavor of MSR access, e.g. msr_data.kvm_initiated,
+> so that it at least requires intentionally loading the gun.
