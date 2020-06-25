@@ -2,290 +2,163 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC67C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E272A2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9A020707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:13:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnOrs5yo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404567AbgFYMNT (ORCPT
+        id S2404529AbgFYMN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:13:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32456 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404397AbgFYMNS (ORCPT
+        Thu, 25 Jun 2020 08:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404343AbgFYMNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:13:18 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PC2mwq097887;
-        Thu, 25 Jun 2020 08:13:12 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyt608h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 08:13:12 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PC2ukP098698;
-        Thu, 25 Jun 2020 08:13:12 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyt607t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 08:13:12 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PC6BFa014586;
-        Thu, 25 Jun 2020 12:13:10 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma05wdc.us.ibm.com with ESMTP id 31uus1btg6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 12:13:10 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PCDAKr46465370
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 12:13:10 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36B8B112063;
-        Thu, 25 Jun 2020 12:13:10 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25B75112061;
-        Thu, 25 Jun 2020 12:13:10 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jun 2020 12:13:10 +0000 (GMT)
-Subject: Re: [PATCH] tpm: tpm2-space: Resize session and context buffers
- dynamically
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Alexey Klimov <aklimov@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200625042424.370072-1-jarkko.sakkinen@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <2f8a0127-d2ba-21aa-75b3-2dfccfb52eab@linux.ibm.com>
-Date:   Thu, 25 Jun 2020 08:13:09 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 25 Jun 2020 08:13:55 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E573EC061573;
+        Thu, 25 Jun 2020 05:13:53 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k6so2708384pll.9;
+        Thu, 25 Jun 2020 05:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ubc4Gg+BEfiNxapUGxVhJAuDv/Rff5i5QsFdcnV45cs=;
+        b=TnOrs5yokCv1Mc4KvBgTT6zgaNBKX3gdB4s2nX0/yNuhDZRpmJWdHRPVUoUwLcTbfO
+         waqfAg1cU9PXSRoBZlzN84wZXGxi3znXMcwhT/a8mqfIcWp/4VMgF7Vpb+Pv8oFMMf+n
+         qiqux1Tz+01goQOUmLbApkagGzBYnjOE3EdmbIXguCUUKaci4EG58HkBmwI0r134xcPk
+         OeVNMeytPDRSWlXCMA/ex8k6/iEMt79lfHo81z5pk9M2xkvKmvqfG57F9uD817Qp84EJ
+         Hvv22EAPPc/6nH5+dKELkdJgdfnwYhp5dWcQjANH8Emoi3TlV7IdnlTntxyaRvxG+qo4
+         61Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ubc4Gg+BEfiNxapUGxVhJAuDv/Rff5i5QsFdcnV45cs=;
+        b=HY2GTrTJEhPf/InfJH5fQRje270RV16TH4eD+bZb4IPEWKBvftSeGkOzwrOXUTt5ZW
+         Tul1sJXlTkSrLz9OXTJtdN3exvLkUc8nPLDGsgNzj5UvP1yheH0c6lPdk7cE1gSIuNIh
+         DZafycOz2zOCsKu2bxb1j91/+qdYKrXrqUYRP9tfslvT1SnIzH9JSkS54/CfOvkw+25E
+         WaF2HNCv8BFFgcaSAJOyngK2rY42N4/se57uiljWIo6W52jhWx1DBGUMbOOVJvEFkjH1
+         Lu2yhHFOo/PipdOGLxhcsNYjo6MEFfxAXeYB5gYf0d/w0vWBiqhUvkazEnHhnJBIAVhj
+         oWzQ==
+X-Gm-Message-State: AOAM532dNAOpFmtxmxIIyuaL7iLz0LzvYRzU97DROtM3MSTFLE6tcBTD
+        FlXSqcSOPFSjyGukdmRvDeo=
+X-Google-Smtp-Source: ABdhPJxj1q2eRTDQxKkLSf9KIinlmLNMYuJUY3hAQ+CRhpY8fDA0gfOleRlpFuaXyoSKRsmUDYTmtg==
+X-Received: by 2002:a17:902:8681:: with SMTP id g1mr31738394plo.161.1593087231896;
+        Thu, 25 Jun 2020 05:13:51 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id i125sm19507361pgd.21.2020.06.25.05.13.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 05:13:51 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, netdev@vger.kernel.org
+Subject: [PATCH v1] ptp_pch: use generic power management
+Date:   Thu, 25 Jun 2020 17:40:43 +0530
+Message-Id: <20200625121042.99369-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200625042424.370072-1-jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_05:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- cotscore=-2147483648 mlxscore=0 phishscore=0 clxscore=1011
- lowpriorityscore=0 adultscore=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250078
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 12:24 AM, Jarkko Sakkinen wrote:
-> Re-allocate context and session buffers when needed. Scale them in page
-> increments so that the reallocation is only seldomly required, and thus
-> causes minimal stress to the system. Add a static maximum limit of four
-> pages for buffer sizes.
->
-> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
-> Tested only for compilation.
->   drivers/char/tpm/tpm2-space.c | 80 ++++++++++++++++++++++++-----------
->   include/linux/tpm.h           |  6 ++-
->   2 files changed, 59 insertions(+), 27 deletions(-)
->
-> diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
-> index 982d341d8837..acb9e82bf9e8 100644
-> --- a/drivers/char/tpm/tpm2-space.c
-> +++ b/drivers/char/tpm/tpm2-space.c
-> @@ -15,6 +15,8 @@
->   #include <asm/unaligned.h>
->   #include "tpm.h"
->   
-> +#define TPM2_SPACE_MAX_BUFFER_SIZE	(4 * PAGE_SIZE)
+With legacy PM, drivers themselves were responsible for managing the
+device's power states and takes care of register states.
 
-PAGE_SIZE is 64k on ppc64. Rather use 4 * 4096?
+After upgrading to the generic structure, PCI core will take care of
+required tasks and drivers should do only device-specific operations.
 
+In the case of ptp_pch, after removing PCI helper functions, .suspend()
+and .resume() became empty-body functions. Hence, define them NULL and
+use dev_pm_ops.
 
-Rest looks good.
+Compile-tested only.
 
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/ptp/ptp_pch.c | 37 +++----------------------------------
+ 1 file changed, 3 insertions(+), 34 deletions(-)
 
-> +
->   enum tpm2_handle_types {
->   	TPM2_HT_HMAC_SESSION	= 0x02000000,
->   	TPM2_HT_POLICY_SESSION	= 0x03000000,
-> @@ -47,9 +49,12 @@ int tpm2_init_space(struct tpm_space *space)
->   	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
->   	if (space->session_buf == NULL) {
->   		kfree(space->context_buf);
-> +		space->context_buf = NULL;
->   		return -ENOMEM;
->   	}
->   
-> +	space->context_size = PAGE_SIZE;
-> +	space->session_size = PAGE_SIZE;
->   	return 0;
->   }
->   
-> @@ -116,11 +121,13 @@ static int tpm2_load_context(struct tpm_chip *chip, u8 *buf,
->   	return 0;
->   }
->   
-> -static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
-> -			     unsigned int buf_size, unsigned int *offset)
-> +static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 **buf,
-> +			     unsigned int *buf_size, unsigned int *offset)
->   {
-> -	struct tpm_buf tbuf;
-> +	unsigned int new_buf_size;
->   	unsigned int body_size;
-> +	struct tpm_buf tbuf;
-> +	void *new_buf;
->   	int rc;
->   
->   	rc = tpm_buf_init(&tbuf, TPM2_ST_NO_SESSIONS, TPM2_CC_CONTEXT_SAVE);
-> @@ -131,31 +138,48 @@ static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
->   
->   	rc = tpm_transmit_cmd(chip, &tbuf, 0, NULL);
->   	if (rc < 0) {
-> -		dev_warn(&chip->dev, "%s: failed with a system error %d\n",
-> -			 __func__, rc);
-> -		tpm_buf_destroy(&tbuf);
-> -		return -EFAULT;
-> +		rc = -EFAULT;
-> +		goto err;
->   	} else if (tpm2_rc_value(rc) == TPM2_RC_REFERENCE_H0) {
-> -		tpm_buf_destroy(&tbuf);
-> -		return -ENOENT;
-> +		rc = -ENOENT;
-> +		goto out;
->   	} else if (rc) {
-> -		dev_warn(&chip->dev, "%s: failed with a TPM error 0x%04X\n",
-> -			 __func__, rc);
-> -		tpm_buf_destroy(&tbuf);
-> -		return -EFAULT;
-> +		rc = -EFAULT;
-> +		goto err;
->   	}
->   
->   	body_size = tpm_buf_length(&tbuf) - TPM_HEADER_SIZE;
-> -	if ((*offset + body_size) > buf_size) {
-> -		dev_warn(&chip->dev, "%s: out of backing storage\n", __func__);
-> -		tpm_buf_destroy(&tbuf);
-> -		return -ENOMEM;
-> +	/* We grow the buffer in page increments. */
-> +	new_buf_size = PFN_UP(*offset + body_size);
-> +
-> +	if (new_buf_size > TPM2_SPACE_MAX_BUFFER_SIZE) {
-> +		rc = -ENOMEM;
-> +		goto err;
->   	}
->   
-> -	memcpy(&buf[*offset], &tbuf.data[TPM_HEADER_SIZE], body_size);
-> +	if (new_buf_size > *buf_size) {
-> +		new_buf = krealloc(*buf, new_buf_size, GFP_KERNEL);
-> +		if (!new_buf) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +
-> +		*buf = new_buf;
-> +		*buf_size = new_buf_size;
-> +	}
-> +
-> +	memcpy(*buf + *offset, &tbuf.data[TPM_HEADER_SIZE], body_size);
->   	*offset += body_size;
-> +
-> +out:
->   	tpm_buf_destroy(&tbuf);
-> -	return 0;
-> +	return rc;
-> +
-> +err:
-> +	dev_warn(&chip->dev, "%s: ret=%d\n", __func__, rc);
-> +
-> +	tpm_buf_destroy(&tbuf);
-> +	return rc;
->   }
->   
->   void tpm2_flush_space(struct tpm_chip *chip)
-> @@ -311,8 +335,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
->   	       sizeof(space->context_tbl));
->   	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
->   	       sizeof(space->session_tbl));
-> -	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
-> -	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
-> +	memcpy(chip->work_space.context_buf, space->context_buf,
-> +	       space->context_size);
-> +	memcpy(chip->work_space.session_buf, space->session_buf,
-> +	       space->session_size);
->   
->   	rc = tpm2_load_space(chip);
->   	if (rc) {
-> @@ -492,7 +518,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
->   			continue;
->   
->   		rc = tpm2_save_context(chip, space->context_tbl[i],
-> -				       space->context_buf, PAGE_SIZE,
-> +				       &space->context_buf,
-> +				       &space->context_size,
->   				       &offset);
->   		if (rc == -ENOENT) {
->   			space->context_tbl[i] = 0;
-> @@ -509,7 +536,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
->   			continue;
->   
->   		rc = tpm2_save_context(chip, space->session_tbl[i],
-> -				       space->session_buf, PAGE_SIZE,
-> +				       &space->session_buf,
-> +				       &space->session_size,
->   				       &offset);
->   
->   		if (rc == -ENOENT) {
-> @@ -557,8 +585,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
->   	       sizeof(space->context_tbl));
->   	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
->   	       sizeof(space->session_tbl));
-> -	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
-> -	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
-> +	memcpy(space->context_buf, chip->work_space.context_buf,
-> +	       space->context_size);
-> +	memcpy(space->session_buf, chip->work_space.session_buf,
-> +	       space->session_size);
->   
->   	return 0;
->   out:
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 03e9b184411b..9ea39e8f7162 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -92,10 +92,12 @@ enum tpm_duration {
->   #define TPM_PPI_VERSION_LEN		3
->   
->   struct tpm_space {
-> +	u8  *context_buf;
-> +	u8  *session_buf;
-> +	u32 context_size;
-> +	u32 session_size;
->   	u32 context_tbl[3];
-> -	u8 *context_buf;
->   	u32 session_tbl[3];
-> -	u8 *session_buf;
->   };
->   
->   struct tpm_bios_log {
-
+diff --git a/drivers/ptp/ptp_pch.c b/drivers/ptp/ptp_pch.c
+index dcd6e00c8046..ce10ecd41ba0 100644
+--- a/drivers/ptp/ptp_pch.c
++++ b/drivers/ptp/ptp_pch.c
+@@ -508,40 +508,8 @@ static const struct ptp_clock_info ptp_pch_caps = {
+ 	.enable		= ptp_pch_enable,
+ };
+ 
+-
+-#ifdef CONFIG_PM
+-static s32 pch_suspend(struct pci_dev *pdev, pm_message_t state)
+-{
+-	pci_disable_device(pdev);
+-	pci_enable_wake(pdev, PCI_D3hot, 0);
+-
+-	if (pci_save_state(pdev) != 0) {
+-		dev_err(&pdev->dev, "could not save PCI config state\n");
+-		return -ENOMEM;
+-	}
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+-
+-	return 0;
+-}
+-
+-static s32 pch_resume(struct pci_dev *pdev)
+-{
+-	s32 ret;
+-
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	ret = pci_enable_device(pdev);
+-	if (ret) {
+-		dev_err(&pdev->dev, "pci_enable_device failed\n");
+-		return ret;
+-	}
+-	pci_enable_wake(pdev, PCI_D3hot, 0);
+-	return 0;
+-}
+-#else
+ #define pch_suspend NULL
+ #define pch_resume NULL
+-#endif
+ 
+ static void pch_remove(struct pci_dev *pdev)
+ {
+@@ -684,13 +652,14 @@ static const struct pci_device_id pch_ieee1588_pcidev_id[] = {
+ 	{0}
+ };
+ 
++static SIMPLE_DEV_PM_OPS(pch_pm_ops, pch_suspend, pch_resume);
++
+ static struct pci_driver pch_driver = {
+ 	.name = KBUILD_MODNAME,
+ 	.id_table = pch_ieee1588_pcidev_id,
+ 	.probe = pch_probe,
+ 	.remove = pch_remove,
+-	.suspend = pch_suspend,
+-	.resume = pch_resume,
++	.driver.pm = &pch_pm_ops,
+ };
+ 
+ static void __exit ptp_pch_exit(void)
+-- 
+2.27.0
 
