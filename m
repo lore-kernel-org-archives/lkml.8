@@ -2,78 +2,94 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20985C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC202C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E974C20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593106051;
-	bh=swKIgBHCHhqeVNFve0RHkoMOIOIki7r6j8InBIrYiIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qPtu00/uPzbnLWh1+YzBRA51ckfJlXE74B1yVPGGVBRxnvQBR3k7b2r8kMpYi9iXR
-	 7ihj4XHIfYwHbFs0uKArJ/Yq1WmW1i+aKwTa186+LWf0VP0sVc8RGGuA8Dt574B/LJ
-	 FohmA+VG/XU9SXyOZHU4vm/IBm1sebGLBxD6+jfU=
+	by mail.kernel.org (Postfix) with ESMTP id 9E63320775
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rFqrCb5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406752AbgFYR13 (ORCPT
+        id S2406765AbgFYR1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 25 Jun 2020 13:27:32 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42998 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404701AbgFYR13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 13:27:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404711AbgFYR12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:27:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4369320773;
-        Thu, 25 Jun 2020 17:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593106047;
-        bh=swKIgBHCHhqeVNFve0RHkoMOIOIki7r6j8InBIrYiIk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PkZ2KGxXnnSNrDOALBMdUs9Khc6qtg2PkAjUpT2tXqRHCCA2KuUCuhrGSPZl5AtUX
-         Gqle8C6sYcLTqAZEPb+W1dYX2exRhKrbdHJBZ5GUnZlWlUH+6+SZUS5McdECUUseDI
-         BFxbsHXdUxifixqPRl0Y+xFmMygH/Dldkjh77oX4=
-Date:   Thu, 25 Jun 2020 19:27:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/207] 4.19.130-rc3 review
-Message-ID: <20200625172723.GA3966298@kroah.com>
-References: <20200624172351.011387771@linuxfoundation.org>
- <20200625155441.GB149301@roeck-us.net>
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PHCDZh099646;
+        Thu, 25 Jun 2020 17:27:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=+pvB/A8LWwdNByzI7FsKbhm1/eHEC5HuhI3A2agb8qs=;
+ b=rFqrCb5gOv7q5OJvCCXmCzWMafM4bXqiFGBMS0Xz+DHnlOFOxj4fwipdBrcnBl5A3zCd
+ yexlparAYDXT4ROTAma7KWCCTTMYWbOzmz1pa2z+HSL33j3jM51wkdNf3KWonAIybGfX
+ ZJvvA9JoELLphNhMDuvaH7Y5QorDK47CsEL3WVilmXxv+Jzsqa/WCS+78CH35jH7Nvrb
+ 0P60KYV9U9Q9qOfpMTRYcxUBdsxt6Rb9ZIwGNFRr3SKocyO+EdsKUa9cIpnNC0TkVg52
+ BatkBb+QhNs5oj667P8tzPS6cg20Xidhf76+CIG4YOIhW3YDrksgsae5VeTznOyxWG7x 0Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 31uuststvr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jun 2020 17:27:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PHDRuc033781;
+        Thu, 25 Jun 2020 17:25:18 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 31uursv9bt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 17:25:18 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05PHPHAu004095;
+        Thu, 25 Jun 2020 17:25:17 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 25 Jun 2020 17:25:17 +0000
+Date:   Thu, 25 Jun 2020 20:25:10 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Manish Chopra <manishc@marvell.com>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/2] fix trailing */ in block comment
+Message-ID: <20200625172510.GF2549@kadam>
+References: <20200625153614.63912-1-coiby.xu@gmail.com>
+ <20200625153614.63912-2-coiby.xu@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625155441.GB149301@roeck-us.net>
+In-Reply-To: <20200625153614.63912-2-coiby.xu@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250108
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ cotscore=-2147483648 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
+ suspectscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1011
+ impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:54:41AM -0700, Guenter Roeck wrote:
-> On Wed, Jun 24, 2020 at 07:27:18PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.19.130 release.
-> > There are 207 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri, 26 Jun 2020 17:23:16 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 155 pass: 155 fail: 0
-> Qemu test results:
-> 	total: 421 pass: 421 fail: 0
+The subject isn't right (no subsystem prefix) and we need a commit
+message.
 
-Thanks for testing all of these and letting me know.
+regards,
+dan carpenter
 
-greg k-h
