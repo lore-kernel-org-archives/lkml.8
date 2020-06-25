@@ -2,214 +2,241 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0846FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7952C2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04002072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zwcL9Y65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403800AbgFYIpp (ORCPT
+        id S2403804AbgFYIu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
+        Thu, 25 Jun 2020 04:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390025AbgFYIpo (ORCPT
+        with ESMTP id S2390453AbgFYIu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:45:44 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73913C061573;
-        Thu, 25 Jun 2020 01:45:44 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1joNVr-0002of-OW; Thu, 25 Jun 2020 10:45:39 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 360551C0092;
-        Thu, 25 Jun 2020 10:45:39 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 08:45:38 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/misc] x86/msr: Filter MSR writes
-Cc:     kernel test robot <lkp@intel.com>, Borislav Petkov <bp@suse.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200612105026.GA22660@zn.tnic>
-References: <20200612105026.GA22660@zn.tnic>
+        Thu, 25 Jun 2020 04:50:56 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA44C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 01:50:55 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cv18so356378pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 01:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JEMoZdpFmrFhFcFBcdt9FFDGd+0A8OhsnWsQtV3mDFY=;
+        b=zwcL9Y65FiPLi2vjuyj40QyTUjgv3aeO4hIU2vSpY+ujIZWGaNlfkCfdnIbFsNxo0H
+         s2bxZH7BVoYdiRgMEO/Vg6ESWbMhb3nv/KAEMF1vtI/9xGSuo+SXo03llv+PmHWmUC8n
+         2Fuh04JomaNSCobeuTTpqT4sCG7KY1xn0mKHLmWhjxI/XPEc/dehP6bUzCl0o7UY9Xxk
+         gP27jOnkzXmkF6VH+uuxfwPM1NkKvSVA28LRw3MgNoRtiU2Pfr7WPki43eagX+zgnSVT
+         PqOmYzAJqDo2V2tahpUFRzZbvkj5DnYF48KOvH3PCv7nYdSDRdi4B74G+fWo74pp9cMm
+         mZQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JEMoZdpFmrFhFcFBcdt9FFDGd+0A8OhsnWsQtV3mDFY=;
+        b=OPCoXfpilX4/zobiy7esPHvocSLzoez5b6d0KqloySdkROBHql/qG/3umSVG+KCxdU
+         vfLOnTiKJq4eIH5flf4+g14axMMITkyFmeLVDxRP3ltDKztfXz8p8Y8676MurpDnAGpf
+         etETUMPVqLFMoJ6eexJ4kBYeSXPO4RgZmZs0l2KPwDN0V7BaHu4e6ANFHBldyNQHWLhH
+         08+rIN5Tz/dK//59/exQw2o16uJEpZG/sb+hwqbgw+ESm1xkymQgko2byJ5RFb9Wrpvx
+         5gJr2EhtTgQibzWOspnfgIgQkMwHekcxNvqFlvMji+lx34NYdZJDu7hT9QrjfSQZAuuT
+         3RYQ==
+X-Gm-Message-State: AOAM531S7zA7vDT+4ofXlt9aVYdKX6/ZwPqaRQAKWCKySqwkLD8qciBm
+        IGGC0rZHMfe8BCIoVQhz1vmDMA==
+X-Google-Smtp-Source: ABdhPJzHllegdQIG8KbY6WzYzQnZ64LxOSyUGGS4GTbuRzkA6CihktIRU3UyCCXiZkNESNztdGrrfg==
+X-Received: by 2002:a17:90a:74cb:: with SMTP id p11mr2162481pjl.89.1593075055236;
+        Thu, 25 Jun 2020 01:50:55 -0700 (PDT)
+Received: from localhost ([122.172.111.76])
+        by smtp.gmail.com with ESMTPSA id s9sm19347192pgo.22.2020.06.25.01.50.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jun 2020 01:50:54 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 14:20:52 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org
+Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
+Message-ID: <20200625085052.4ah4wbog3guj74v4@vireshk-i7>
+References: <20200623142138.209513-1-qperret@google.com>
+ <20200623142138.209513-3-qperret@google.com>
+ <20200624055023.xofefhohf7wifme5@vireshk-i7>
+ <CAJZ5v0ja_rM7i=psW1HRyzEpW=8QwP2u9p+ihN3FS8_53bbxTQ@mail.gmail.com>
+ <20200624153259.GA2844@google.com>
 MIME-Version: 1.0
-Message-ID: <159307473887.16989.17345471306220440079.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624153259.GA2844@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/misc branch of tip:
+On 24-06-20, 16:32, Quentin Perret wrote:
+> Right, but I must admit that, looking at this more, I'm getting a bit
+> confused with the overall locking for governors :/
+> 
+> When in cpufreq_init_policy() we find a governor using
+> find_governor(policy->last_governor), what guarantees this governor is
+> not concurrently unregistered? That is, what guarantees this governor
+> doesn't go away between that find_governor() call, and the subsequent
+> call to try_module_get() in cpufreq_set_policy() down the line?
+> 
+> Can we somewhat assume that whatever governor is referred to by
+> policy->last_governor will have a non-null refcount? Or are the
+> cpufreq_online() and cpufreq_unregister_governor() path mutually
+> exclusive? Or is there something else?
 
-Commit-ID:     a7e1f67ed29f0c339e2aa7483d13b085127566ab
-Gitweb:        https://git.kernel.org/tip/a7e1f67ed29f0c339e2aa7483d13b085127566ab
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Wed, 10 Jun 2020 21:37:49 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 25 Jun 2020 10:39:02 +02:00
+This should be sufficient to fix pending issues I believe. Based over your
+patches.
 
-x86/msr: Filter MSR writes
+-- 
+viresh
 
-Add functionality to disable writing to MSRs from userspace. Writes can
-still be allowed by supplying the allow_writes=on module parameter. The
-kernel will be tainted so that it shows in oopses.
+-------------------------8<-------------------------
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Date: Thu, 25 Jun 2020 13:15:23 +0530
+Subject: [PATCH] cpufreq: Fix locking issues with governors
 
-Having unfettered access to all MSRs on a system is and has always been
-a disaster waiting to happen. Think performance counter MSRs, MSRs with
-sticky or locked bits, MSRs making major system changes like loading
-microcode, MTRRs, PAT configuration, TSC counter, security mitigations
-MSRs, you name it.
+The locking around governors handling isn't adequate currently. The list
+of governors should never be traversed without locking in place. Also we
+must make sure the governor isn't removed while it is still referenced
+by code.
 
-This also destroys all the kernel's caching of MSR values for
-performance, as the recent case with MSR_AMD64_LS_CFG showed.
-
-Another example is writing MSRs by mistake by simply typing the wrong
-MSR address. System freezes have been experienced that way.
-
-In general, poking at MSRs under the kernel's feet is a bad bad idea.
-
-So log writing to MSRs by default. Longer term, such writes will be
-disabled by default.
-
-If userspace still wants to do that, then proper interfaces should be
-defined which are under the kernel's control and accesses to those MSRs
-can be synchronized and sanitized properly.
-
-[ Fix sparse warnings. ]
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Link: https://lkml.kernel.org/r/20200612105026.GA22660@zn.tnic
+Reported-by: Quentin Perret <qperret@google.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/x86/kernel/msr.c | 69 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 69 insertions(+)
+ drivers/cpufreq/cpufreq.c | 59 ++++++++++++++++++++++++---------------
+ 1 file changed, 36 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
-index 1547be3..49dcfb8 100644
---- a/arch/x86/kernel/msr.c
-+++ b/arch/x86/kernel/msr.c
-@@ -42,6 +42,14 @@
- static struct class *msr_class;
- static enum cpuhp_state cpuhp_msr_state;
- 
-+enum allow_write_msrs {
-+	MSR_WRITES_ON,
-+	MSR_WRITES_OFF,
-+	MSR_WRITES_DEFAULT,
-+};
-+
-+static enum allow_write_msrs allow_writes = MSR_WRITES_DEFAULT;
-+
- static ssize_t msr_read(struct file *file, char __user *buf,
- 			size_t count, loff_t *ppos)
- {
-@@ -70,6 +78,24 @@ static ssize_t msr_read(struct file *file, char __user *buf,
- 	return bytes ? bytes : err;
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 4b1a5c0173cf..dad6b85f4c89 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -624,6 +624,24 @@ static struct cpufreq_governor *find_governor(const char *str_governor)
+ 	return NULL;
  }
  
-+static int filter_write(u32 reg)
++static struct cpufreq_governor *get_governor(const char *str_governor)
 +{
-+	switch (allow_writes) {
-+	case MSR_WRITES_ON:  return 0;
-+	case MSR_WRITES_OFF: return -EPERM;
-+	default: break;
-+	}
++	struct cpufreq_governor *t;
 +
-+	if (reg == MSR_IA32_ENERGY_PERF_BIAS)
-+		return 0;
++	mutex_lock(&cpufreq_governor_mutex);
++	t = find_governor(str_governor);
++	if (!t)
++		goto unlock;
 +
-+	pr_err_ratelimited("Write to unrecognized MSR 0x%x by %s\n"
-+			   "Please report to x86@kernel.org\n",
-+			   reg, current->comm);
++	if (!try_module_get(t->owner))
++		t = NULL;
 +
-+	return 0;
++unlock:
++	mutex_unlock(&cpufreq_governor_mutex);
++
++	return t;
 +}
 +
- static ssize_t msr_write(struct file *file, const char __user *buf,
- 			 size_t count, loff_t *ppos)
+ static unsigned int cpufreq_parse_policy(char *str_governor)
  {
-@@ -84,6 +110,10 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
- 	if (err)
- 		return err;
+ 	if (!strncasecmp(str_governor, "performance", CPUFREQ_NAME_LEN))
+@@ -643,28 +661,14 @@ static struct cpufreq_governor *cpufreq_parse_governor(char *str_governor)
+ {
+ 	struct cpufreq_governor *t;
  
-+	err = filter_write(reg);
-+	if (err)
-+		return err;
-+
- 	if (count % 8)
- 		return -EINVAL;	/* Invalid chunk size */
+-	mutex_lock(&cpufreq_governor_mutex);
+-
+-	t = find_governor(str_governor);
+-	if (!t) {
+-		int ret;
+-
+-		mutex_unlock(&cpufreq_governor_mutex);
+-
+-		ret = request_module("cpufreq_%s", str_governor);
+-		if (ret)
+-			return NULL;
+-
+-		mutex_lock(&cpufreq_governor_mutex);
++	t = get_governor(str_governor);
++	if (t)
++		return t;
  
-@@ -92,9 +122,13 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
- 			err = -EFAULT;
- 			break;
- 		}
-+
-+		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
-+
- 		err = wrmsr_safe_on_cpu(cpu, reg, data[0], data[1]);
- 		if (err)
- 			break;
-+
- 		tmp += 2;
- 		bytes += 8;
+-		t = find_governor(str_governor);
+-	}
+-	if (t && !try_module_get(t->owner))
+-		t = NULL;
+-
+-	mutex_unlock(&cpufreq_governor_mutex);
++	if (request_module("cpufreq_%s", str_governor))
++		return NULL;
+ 
+-	return t;
++	return get_governor(str_governor);
+ }
+ 
+ /**
+@@ -818,12 +822,14 @@ static ssize_t show_scaling_available_governors(struct cpufreq_policy *policy,
+ 		goto out;
  	}
-@@ -242,6 +276,41 @@ static void __exit msr_exit(void)
- }
- module_exit(msr_exit)
  
-+static int set_allow_writes(const char *val, const struct kernel_param *cp)
-+{
-+	/* val is NUL-terminated, see kernfs_fop_write() */
-+	char *s = strstrip((char *)val);
++	mutex_lock(&cpufreq_governor_mutex);
+ 	for_each_governor(t) {
+ 		if (i >= (ssize_t) ((PAGE_SIZE / sizeof(char))
+ 		    - (CPUFREQ_NAME_LEN + 2)))
+-			goto out;
++			break;
+ 		i += scnprintf(&buf[i], CPUFREQ_NAME_PLEN, "%s ", t->name);
+ 	}
++	mutex_unlock(&cpufreq_governor_mutex);
+ out:
+ 	i += sprintf(&buf[i], "\n");
+ 	return i;
+@@ -1060,11 +1066,14 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+ {
+ 	struct cpufreq_governor *gov = NULL;
+ 	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
++	bool put_governor = false;
++	int ret;
+ 
+ 	if (has_target()) {
+ 		/* Update policy governor to the one used before hotplug. */
+-		gov = find_governor(policy->last_governor);
++		gov = get_governor(policy->last_governor);
+ 		if (gov) {
++			put_governor = true;
+ 			pr_debug("Restoring governor %s for cpu %d\n",
+ 				 policy->governor->name, policy->cpu);
+ 		} else if (default_governor) {
+@@ -1091,7 +1100,11 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+ 			return -ENODATA;
+ 	}
+ 
+-	return cpufreq_set_policy(policy, gov, pol);
++	ret = cpufreq_set_policy(policy, gov, pol);
++	if (put_governor)
++		module_put(gov->owner);
 +
-+	if (!strcmp(s, "on"))
-+		allow_writes = MSR_WRITES_ON;
-+	else if (!strcmp(s, "off"))
-+		allow_writes = MSR_WRITES_OFF;
-+	else
-+		allow_writes = MSR_WRITES_DEFAULT;
-+
-+	return 0;
-+}
-+
-+static int get_allow_writes(char *buf, const struct kernel_param *kp)
-+{
-+	const char *res;
-+
-+	switch (allow_writes) {
-+	case MSR_WRITES_ON:  res = "on"; break;
-+	case MSR_WRITES_OFF: res = "off"; break;
-+	default: res = "default"; break;
-+	}
-+
-+	return sprintf(buf, "%s\n", res);
-+}
-+
-+static const struct kernel_param_ops allow_writes_ops = {
-+	.set = set_allow_writes,
-+	.get = get_allow_writes
-+};
-+
-+module_param_cb(allow_writes, &allow_writes_ops, NULL, 0600);
-+
- MODULE_AUTHOR("H. Peter Anvin <hpa@zytor.com>");
- MODULE_DESCRIPTION("x86 generic MSR driver");
- MODULE_LICENSE("GPL");
++	return ret;
+ }
+ 
+ static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cpu)
