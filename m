@@ -2,137 +2,143 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A473C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E23206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DPhYaS7I"
+	by mail.kernel.org (Postfix) with ESMTP id 4E3C5204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406366AbgFYSxi (ORCPT
+        id S2406379AbgFYS5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:53:38 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36834 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405853AbgFYSxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:53:37 -0400
-Received: from zn.tnic (p200300ec2f0ed100359123de3d1ebdc6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:3591:23de:3d1e:bdc6])
+        Thu, 25 Jun 2020 14:57:52 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:44052 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403853AbgFYS5w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:57:52 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 821C21EC03E4;
-        Thu, 25 Jun 2020 20:53:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593111215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=cq3LKrRKJepHltbyBKhbhBaUgzsdqiaXd/tjkJyN1n0=;
-        b=DPhYaS7IuP6FQrvef2Yeoymx/XJnTO2nXLvxzCWexN3YYNoNlu/FKFUW8eH2BHK4WGjTNS
-        6PRYRcQ3dZdfQuH/Xnw5oLl4jo+eFabEJg39tyzGuKM6857nX2zp/pF4W47Ug19ifoFXk3
-        7OUJTwAE66U9gqY4Kzv3U/3Mb6LtYr0=
-Date:   Thu, 25 Jun 2020 20:53:34 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200625185334.GN20319@zn.tnic>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 88DBD200DF;
+        Thu, 25 Jun 2020 20:57:47 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 20:57:46 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/8] Fix a bunch of W=1 warnings in Backlight
+Message-ID: <20200625185746.GA1875182@ravnborg.org>
+References: <20200624145721.2590327-1-lee.jones@linaro.org>
+ <20200624153216.GA1814806@ravnborg.org>
+ <20200624154321.GH954398@dell>
+ <20200624162446.GA1815586@ravnborg.org>
+ <20200625080337.GN954398@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200625080337.GN954398@dell>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=IkcTkHD0fZMA:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8
+        a=dC_rIlIaLDHj5HQ0j38A:9 a=QEXdDO2ut3YA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:08:33AM +0300, Jarkko Sakkinen wrote:
+Hi Lee.
 
-> Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-					 ^
-					 Add
-
-> Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
-> can be used by applications to set aside private regions of code and
-> data. The code outside the SGX hosted software entity is disallowed to
-> access the memory inside the enclave enforced by the CPU. We call these
-> entities as enclaves.
-
-s/as //
-
-> This commit implements a driver that provides an ioctl API to construct
-
-s/This commit implements/Implement/
-
-> and run enclaves. Enclaves are constructed from pages residing in
-> reserved physical memory areas. The contents of these pages can only be
-> accessed when they are mapped as part of an enclave, by a hardware
-> thread running inside the enclave.
+On Thu, Jun 25, 2020 at 09:03:37AM +0100, Lee Jones wrote:
+> On Wed, 24 Jun 2020, Sam Ravnborg wrote:
 > 
-> The starting state of an enclave consists of a fixed measured set of
-> pages that are copied to the EPC during the construction process by
-> using ENCLS leaf functions and Software Enclave Control Structure (SECS)
-> that defines the enclave properties.
+> > Hi Lee.
+> > 
+> > On Wed, Jun 24, 2020 at 04:43:21PM +0100, Lee Jones wrote:
+> > > On Wed, 24 Jun 2020, Sam Ravnborg wrote:
+> > > 
+> > > > Hi Lee.
+> > > > 
+> > > > On Wed, Jun 24, 2020 at 03:57:13PM +0100, Lee Jones wrote:
+> > > > > Attempting to clean-up W=1 kernel builds, which are currently
+> > > > > overwhelmingly riddled with niggly little warnings.
+> > > > > 
+> > > > > Lee Jones (8):
+> > > > >   backlight: lms501kf03: Remove unused const variables
+> > > > >   backlight: lcd: Add missing kerneldoc entry for 'struct device parent'
+> > > > 
+> > > > 
+> > > > >   backlight: ili922x: Add missing kerneldoc descriptions for
+> > > > >     CHECK_FREQ_REG() args
+> > > > >   backlight: ili922x: Remove invalid use of kerneldoc syntax
+> > > > >   backlight: ili922x: Add missing kerneldoc description for
+> > > > >     ili922x_reg_dump()'s arg
+> > > > I wonder why these warnings show up as nothing pulls in this .c file.
+> > > > Anyway I would suggest to drop using kerneldoc syntax for single drivers
+> > > > like this - and the benefit here is low.
+> > > > Now they are typed, otherwise this ahd been fine in a single patch.
+> > > 
+> > > What do you mean by 'nothing pulls it in'?
+> > There are no .rst files that includes any:
+> > .. kernel-doc:: drivers/video/backlight/ili922x.c
+> > 
+> > so I do not see how the kernel-doc comments will be used by any
+> > of the generated kernel-docs.
 > 
-> Enclave are constructed by using ENCLS leaf functions ECREATE, EADD and
-
-Enclaves
-
-> EINIT. ECREATE initializes SECS, EADD copies pages from system memory to
-> the EPC and EINIT check a given signed measurement and moves the enclave
-
-		   checks
-
-> into a state ready for execution.
+> Looks like a common problem (if it is actually a problem):
 > 
-> An initialized enclave can only be accessed through special Thread Control
-> Structure (TCS) pages by using ENCLU (ring-3 only) leaf EENTER.  This leaf
-> function converts a thread into enclave mode and continues the execution in
-> the offset defined by the TCS provided to EENTER. An enclave is exited
-> through syscall, exception, interrupts or by explicitly calling another
-> ENCLU leaf EEXIT.
+>  $ ./scripts/find-unused-docs.sh . | wc -l
+>  1476
 > 
-> The permissions, which enclave page is added will set the limit for maximum
-> permissions that can be set for mmap() and mprotect().
+> The role of this patch-set is not to eradicate unused kerneldoc
+> headers, but to ensure they are formatted correctly.  W=1 builds
+> currently complain of ill formatted kerneldocs, which is currently
+> littering the build-log and masking some more important issues (which
+> I'm also trying to fix en route).
 
-I can't parse that sentence.
+My point is that I do not see why we should maintain correct kernel-doc
+style comments for files that are not used to to generate kernel-doc.
+It would serve us better to drop the kernel-doc style comments.
+But thats just my opinion, feel free to ignore.
 
-> This will
-> effectively allow to build different security schemes between producers and
-> consumers of enclaves. Later on we can increase granularity with LSM hooks
-> for page addition (i.e. for producers) and mapping of the enclave (i.e. for
-> consumers)
+I digged a little and can see we run kernel-doc on all .c files
+when we specify W=1 - which was a suprise to me.
+That explains why I had not seen said warnings in my regular make
+htmldocs runs.
 
-Other than that, nice explanation. I like that in a commit message.
+	Sam
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> 
+> > > > >   backlight: backlight: Supply description for function args in existing
+> > > > >     Kerneldocs
+> > > > >   backlight: lm3630a_bl: Remove invalid checks for unsigned int < 0
+> > > > >   backlight: qcom-wled: Remove unused configs for LED3 and LED4
+> > > > 
+> > > > The other fixes looks good.
+> > > > They are all:
+> > > > Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> > > 
+> > > Thanks (although this should be Reviewed-by).
+> > > 
+> > > > >  drivers/video/backlight/backlight.c  | 2 ++
+> > > > >  drivers/video/backlight/ili922x.c    | 8 ++++++--
+> > > > >  drivers/video/backlight/lcd.c        | 1 +
+> > > > >  drivers/video/backlight/lm3630a_bl.c | 4 ++--
+> > > > >  drivers/video/backlight/lms501kf03.c | 8 --------
+> > > > >  drivers/video/backlight/qcom-wled.c  | 8 --------
+> > > > >  6 files changed, 11 insertions(+), 20 deletions(-)
+> > > > > 
+> > > 
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Senior Technical Lead - Developer Services
+> Linaro.org │ Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
