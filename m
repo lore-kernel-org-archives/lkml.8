@@ -2,272 +2,134 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134082078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jjcJaC9t"
+	by mail.kernel.org (Postfix) with ESMTP id 4EBDD2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389019AbgFYBZL (ORCPT
+        id S2389146AbgFYBZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:25:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388928AbgFYBZK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:25:10 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6EF3C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:25:10 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a127so2196753pfa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:25:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=m3/wAfDopqLqGYnRmo8UqA/J5isUr1IvnmUUrUey3ng=;
-        b=jjcJaC9t2Zw//ZqFTxDolCBwP6t5Cul/FDBHEPhMcbtunRr788BYn41C5eb2wRAel1
-         CQPzpHLtZy/sWu7oLEVobefErbEKWbxZ7QCUnKz205KdbbCTKBFWk9Pffk3/mMzycwcu
-         ybP/e+kLOd6OQMHQEN/4dlBqR9yeQiGDSNK+g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=m3/wAfDopqLqGYnRmo8UqA/J5isUr1IvnmUUrUey3ng=;
-        b=NrofTh6peSDjxDiMNEhpFC27irncqzFnWMOHoEm6TDcibGKRXeHuz4impn3ewBVM+C
-         jk01DyrCmxJYipgh6B7MtpiL4s/lvd/+9Vf2B1AWEF5rlPkkRXN028864uRIrgLosgJz
-         YLdYjUBpp7HeKX/426zb2CBLk5tgokPBggAuEDV4ptlTIFagdPzYVeIDG7fxe4qcqlRG
-         tycZTdJat+VER0J4fcOjLDtuHxrI1IabWb6xpYMznX7LMpVCnjmWtJbhHwE7Q6655Mmx
-         DdfCvLoGfqiVMdB483VSPW0lCiO3dsJClonYdsv3KGh8KjrUvMp9K9gjQ82jEZEkMgND
-         meFw==
-X-Gm-Message-State: AOAM5300Ldux4IZ8GZsKAuKaBi4Ga6dApTRnzR9o0EGj6+T7ol00LCOT
-        7OrXWLV6k0Piqg5yfmGiXJ6X1A==
-X-Google-Smtp-Source: ABdhPJx1fCeBRUXodkZylAdXFohaDuXXT1rMom+9iZ4wqDv2csLv6+U6Xd4DxR+EHj+M2X14D4gfTA==
-X-Received: by 2002:a63:b30f:: with SMTP id i15mr24640936pgf.42.1593048309953;
-        Wed, 24 Jun 2020 18:25:09 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w30sm4481777pjj.3.2020.06.24.18.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 18:25:09 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 24 Jun 2020 21:25:18 -0400
+Received: from mga18.intel.com ([134.134.136.126]:52359 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388928AbgFYBZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 21:25:17 -0400
+IronPort-SDR: BVnQ631daeQ3xZ7uZU0MOw6VuaoKCfxKBXblbGodSYpvH7gy4hBuHaEBwndBBqNfntTg1W47n+
+ yCYA92RsY4vw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="132143138"
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="132143138"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 18:25:16 -0700
+IronPort-SDR: lHG9pRk5VM34/0o+zgZoBgZgr+FGKS/ovMZTi3xdPANRvKhwRkhGBYsanWNzUR682mClBXbuhL
+ h7UqOmyreLVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="479314625"
+Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Jun 2020 18:25:05 -0700
+Date:   Thu, 25 Jun 2020 04:25:03 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 01/21] x86/cpufeatures: x86/msr: Add Intel SGX
+ hardware bits
+Message-ID: <20200625012503.GD21758@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-2-jarkko.sakkinen@linux.intel.com>
+ <20200622173711.GJ32200@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
-References: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Switch SPI to use GPIO for CS
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Date:   Wed, 24 Jun 2020 18:25:08 -0700
-Message-ID: <159304830840.62212.6716845486281369794@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200622173711.GJ32200@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-06-24 17:08:04)
-> The geni SPI protocol appears to have been designed without taking
-> Linux needs into account.  In all the normal flows it takes care of
-> setting chip select itself.  However, Linux likes to manage the chip
-> select so it can do fancy things.
->=20
-> Back when we first landed the geni SPI driver we worked around this
-> by:
-> - Always setting the FRAGMENTATION bit in transfers, which (I believe)
->   tells the SPI controller not to mess with the chip select during
->   transfers.
-> - Controlling the chip select manually by sending the SPI controller
->   commands to assert or deassert the chip select.
->=20
-> Our workaround was fine and it's been working OK, but it's really
-> quite inefficient.  A normal SPI transaction now needs to do:
-> 1. Start a command to set the chip select.
-> 2. Wait for an interrupt from controller saying chip select done.
-> 3. Do a transfer.
-> 4. Start a command to unset the chip select.
-> 5. Wait for an interrupt from controller saying chip select done.
+On Mon, Jun 22, 2020 at 07:37:11PM +0200, Borislav Petkov wrote:
+> On Thu, Jun 18, 2020 at 01:08:23AM +0300, Jarkko Sakkinen wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > Add X86_FEATURE_SGX from CPUID.(EAX=7, ECX=1), which informs whether the
+> > CPU has SGX.
+> > 
+> > Add X86_FEATURE_SGX1 and X86_FEATURE_SGX2 from CPUID.(EAX=12H, ECX=0),
+> > which describe the level of SGX support available [1].
+> > 
+> > Add IA32_FEATURE_CONTROL_SGX_ENABLE. BIOS can use this bit to opt-in SGX
+> 
+> I'm guessing that wants to be
+> 
+> IA32_FEATURE_CONTROL.SGX_ENABLE
+> 
+> judging by the diff and the SDM chapter.
 
-I thought the GENI hardware was supposed to be able to queue commands up
-and then plow through them to interrupt the CPU when it finished. If
-that was supported would there be any problems? I assume we could remove
-the wait for CS disable and interrupt on step 5 and also the wait for
-CS/interrupt on step 2 because it is bundled with the transfer in step
-3.
+Underscore must be just a typo.
 
-Where is the delay? On step 2 where we wait to transfer or at step 5
-when we wait for CS to be dropped, or both?
+> 
+> > before locking the feature control MSR [2].
+> > 
+> > [1] Intel SDM: 36.7.2 Intel® SGX Resource Enumeration Leaves
+> > [2] Intel SDM: 36.7.1 Intel® SGX Opt-In Configuration
+> > 
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Acked-by: Jethro Beekman <jethro@fortanix.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/cpufeature.h        |  5 +++--
+> >  arch/x86/include/asm/cpufeatures.h       |  7 ++++++-
+> >  arch/x86/include/asm/disabled-features.h | 18 +++++++++++++++---
+> >  arch/x86/include/asm/msr-index.h         |  1 +
+> >  arch/x86/include/asm/required-features.h |  2 +-
+> >  arch/x86/kernel/cpu/common.c             |  4 ++++
+> >  tools/arch/x86/include/asm/cpufeatures.h |  7 ++++++-
+> 
+> Also, please drop this change to tools/, see
+> 
+> https://lkml.kernel.org/r/20200622141737.GA30611@kernel.org
+> 
+> from today.
 
->=20
-> Things are made a bit worse because the Linux GPIO framework assumes
-> that setting a chip select is quick.  Thus the SPI core can be seen to
-> tell us to set our chip select even when it's already in the right
-> state and we were dutifully kicking off commands and waiting for
-> interrupts.  While we could optimize that particular case, we'd still
-> be left with the slowness when we actually needed to toggle the chip
-> select.
+OK I reverted it [*].
 
-One thing to note is that the GPIO driver doesn't tell us that it has
-actually asserted/deasserted the GPIO. It writes to the controller and
-moves on so we don't know when it has actually gone into effect.
-Hopefully moving to GPIO mode doesn't mean we get weird problems where
-CS isn't asserted yet and a transfer starts wiggling the lines.
+> With those addressed:
+> 
+> Reviewed-by: Borislav Petkov <bp@suse.de>
 
->=20
-> All the chip select lines can actually be muxed to be GPIOs and
-> there's really no downside in doing so.  Now Linux can assert and
-> deassert the chip select at will with a simple MMIO write.
->=20
-> The SPI driver will still have the ability to set the chip select, but
-> not we just won't use it.
+Thank you, I'll update this to the commit.
 
-s/not/now/?
+> 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
 
->=20
-> With this change I tested reading the firmware off the EC connected to
-> a ChromeOS device (flashrom -p ec -r ...).  I saw about a 25% speedup
-> in total runtime of the command and a 30% reduction in interrupts
-> generated (measured by /proc/interrupts).
+[*] By "git diff -R HEAD~1 -- tools/arch/x86/include/asm/cpufeatures.h | patch -p1".
 
-I see nothing wrong with specifying the CS gpios in DT. Seems like that
-should always be there and then the driver should decide to use GPIO
-mode or not. So
-
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-
-for that part.
-
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->=20
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 ++++++++++++++++++++++++----
->  1 file changed, 49 insertions(+), 8 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
-com/sc7180.dtsi
-> index 3a8076c8bdbf..74c8503b560e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1204,65 +1213,97 @@ pinmux {
->                         qup_spi0_default: qup-spi0-default {
->                                 pinmux {
->                                         pins =3D "gpio34", "gpio35",
-> -                                              "gpio36", "gpio37";
-> +                                              "gpio36";
->                                         function =3D "qup00";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio37";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-> =20
->                         qup_spi1_default: qup-spi1-default {
->                                 pinmux {
->                                         pins =3D "gpio0", "gpio1",
-> -                                              "gpio2", "gpio3";
-> +                                              "gpio2";
->                                         function =3D "qup01";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio3";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-> =20
->                         qup_spi3_default: qup-spi3-default {
->                                 pinmux {
->                                         pins =3D "gpio38", "gpio39",
-> -                                              "gpio40", "gpio41";
-> +                                              "gpio40";
->                                         function =3D "qup03";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio41";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-> =20
->                         qup_spi5_default: qup-spi5-default {
->                                 pinmux {
->                                         pins =3D "gpio25", "gpio26",
-> -                                              "gpio27", "gpio28";
-> +                                              "gpio27";
->                                         function =3D "qup05";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio28";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-> =20
->                         qup_spi6_default: qup-spi6-default {
->                                 pinmux {
->                                         pins =3D "gpio59", "gpio60",
-> -                                              "gpio61", "gpio62";
-> +                                              "gpio61";
->                                         function =3D "qup10";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio62";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-> =20
->                         qup_spi8_default: qup-spi8-default {
->                                 pinmux {
->                                         pins =3D "gpio42", "gpio43",
-> -                                              "gpio44", "gpio45";
-> +                                              "gpio44";
->                                         function =3D "qup12";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio45";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-> =20
->                         qup_spi10_default: qup-spi10-default {
->                                 pinmux {
->                                         pins =3D "gpio86", "gpio87",
-> -                                              "gpio88", "gpio89";
-> +                                              "gpio88";
->                                         function =3D "qup14";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio89";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-> =20
->                         qup_spi11_default: qup-spi11-default {
->                                 pinmux {
->                                         pins =3D "gpio53", "gpio54",
-> -                                              "gpio55", "gpio56";
-> +                                              "gpio55";
->                                         function =3D "qup15";
->                                 };
-> +                               pinmux-cs {
-> +                                       pins =3D "gpio56";
-> +                                       function =3D "gpio";
-> +                               };
->                         };
-
-Perhaps we should have qup-spiN-default and qup-spiN-cs-gpio though?
-That way the driver can properly mux the pin to be gpio mode if it wants
-to. I don't see a way to mux the pin to be "qup" until the driver
-decides it doesn't want that.
+/Jarkko
