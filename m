@@ -2,134 +2,167 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F42C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D14C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 077A720706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593082160;
-	bh=YTkaB3rxzey5+GGtzZcBqKlNuiRs4wmKs33NnUnuTSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jPcSteSHfLv0afVVXwTsYz4pFKTQqNwQ5BofSNNoidc5HGOtTuC+rtjZzcgH7O7BN
-	 F4D3q9mBl85tvzIF3p0Ga7XST66zE8g2DZWOijPlRjrCyIHjtb9sRJyCGnXiXiNWzL
-	 HzN+Rww58Siyvp4im5aOifAbLrZOhsvz1xMUYiR4=
+	by mail.kernel.org (Postfix) with ESMTP id F25462076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:52:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Vqg2LD9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404082AbgFYKtQ (ORCPT
+        id S2404081AbgFYKwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:49:16 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34894 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403997AbgFYKtP (ORCPT
+        Thu, 25 Jun 2020 06:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403952AbgFYKwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:49:15 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d4so4831329otk.2;
-        Thu, 25 Jun 2020 03:49:13 -0700 (PDT)
+        Thu, 25 Jun 2020 06:52:50 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A88CC061573;
+        Thu, 25 Jun 2020 03:52:49 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e4so5994160ljn.4;
+        Thu, 25 Jun 2020 03:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0qf+WwjLjZe3vMqS+VrsoQuseqViWgd3zGOf1M8nB9U=;
+        b=Vqg2LD9D0O/2OhntPwkfFH4OpzES5l2IUdWp4EE9OixK9Mfdu1AoSCVbFN6Nbd5Hen
+         5INRLzs9cJR28sG3/hAIdsw2i5VahwO5ToPyhJvIWZxuhBrI/5j232shF+cG9W23QU1t
+         +vQWkwODYHe7hFq4RlZ8V59ZksoWYxyjXROiy9rEpwVzfFZXosVSMrXHfFgG0nSbVdpl
+         9OZysZdpWcNOszUzh/ZNcyDDgYoZe6i6JkLXn2Kl48x9DB7vF9n+Tr3arOswUKnLZLMB
+         ZIlfyCBvXrL2H88rEOjo+OchD4emmXkN3A+PxuGxKTEwdyju2HW2WG+5ej+fDDK8XLeL
+         9HFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MZu/M5tJwBdIo0B6sXLRIqOmUPTGDQ/TGIkvQTgc7h0=;
-        b=mL0fGY8GHhNlapXLWoFPgwzalGmF8tadYFl7vrkUkud5UIYVk/g1IO1EIf2OCYadC8
-         1ikMSWoqiP7Mpp4HwGc5kAgZA1BI1+k+7vXGU5/Lvr6k5nPUwfPwGxvnoZdhxiIJPSG6
-         Q+nAQqo6v4cGfDM86nk9VV9HqYVkHR4TaAYqvQhZ5+R7DTCMe07di9aWxgqGx8Lt3W7e
-         EgsrlGoEdBcOVTiwQpeE9aiQ3h8upzeZ3AFZXxFph7tmzw1P77b6cOmTZB+6Yp0RG9RG
-         H+zY9LVC51JXzWf2CicbHkA20tHC+f2t2NKHdU6rFZZPDhFnBQ4HK6cVZWxmlx/kuhhw
-         +WDg==
-X-Gm-Message-State: AOAM532oNI/JAqogGlvJ2ApBjSkeBpLwdwmCpmap348DGFDSFe8gWkvu
-        IrqE/PDJBLTWb3NvKrRCqDeojR5Pw2t+c6vtnsn/mgIF
-X-Google-Smtp-Source: ABdhPJwrQr5//gVc0ELyf88cZQxAHM9XCWiHAO0o0Kh+Q10IjdC6lMByq2eY2qoubCvnyit0RIK68azXSCAZbKDsrno=
-X-Received: by 2002:a4a:3402:: with SMTP id b2mr1985335ooa.75.1593082153413;
- Thu, 25 Jun 2020 03:49:13 -0700 (PDT)
+        bh=0qf+WwjLjZe3vMqS+VrsoQuseqViWgd3zGOf1M8nB9U=;
+        b=LnMIDEccNW5S9sWvG92X0rjaiKvwd1G+UOFe6I5WLGMVnE4HwPJDnTkmwf46GC0IBw
+         NnEfqKf8d/UVZMQPWIokpltAZwYeh0hxMmBWCcP0Y3mD94bE0r6GxsNoD7Im0AN/Yk+Q
+         Z0m5IU7Q4YGTeEs8CPPCDrm7TxqtCOsWIkBzFv/2Ot7N+yf5bQ+YN7XG+euYUwAUbY3h
+         go8tLV1/cGWTVdqTyjmGx6AB1DyB5AVs51h2aedbYP4gAXtTkIHEiF8X6SIfy01sx5Wj
+         TYvmhoVNF8qyP6o88ouxRifXQBcFU1OS0vSoANlPLr7ptYp5xHkMXXzgvDeZdYl3XUq6
+         7+lA==
+X-Gm-Message-State: AOAM531Rf9eLyzFMt4SkK62rJcBQ69j1snJIyF9744AoymLwABK3scLV
+        SKrUHNIoUphPxYnanPGOwNR/7a4aGVyBM47hiA==
+X-Google-Smtp-Source: ABdhPJwacAJi0USWhyA6c8/w0XjhDAOSmOvEEAf/E2Qkfh26ELP75vacUc++JsD0X1OE2GVKZAfVe6w7qbq1292+z+4=
+X-Received: by 2002:a05:651c:119a:: with SMTP id w26mr1664799ljo.126.1593082367574;
+ Thu, 25 Jun 2020 03:52:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1592892767.git.yu.c.chen@intel.com> <a00278cc5db9f4845006cff130fd91a58c0d92d1.1592892767.git.yu.c.chen@intel.com>
- <15473183.xuek0xzqYe@kreacher> <20200625051534.GA22907@chenyu-office.sh.intel.com>
-In-Reply-To: <20200625051534.GA22907@chenyu-office.sh.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jun 2020 12:49:02 +0200
-Message-ID: <CAJZ5v0jD__jK_tkNHk_ZqKEfdGiDa_afL5f65k3=z-8ZSq_UFQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2][v3] PM / s2idle: Code cleanup to make s2idle
- consistent with normal idle path
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>
+References: <1592410366125160@kroah.com> <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+ <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org> <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
+In-Reply-To: <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
+From:   Gabriel C <nix.or.die@googlemail.com>
+Date:   Thu, 25 Jun 2020 12:52:21 +0200
+Message-ID: <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
+Subject: Re: ath9k broken [was: Linux 5.7.3]
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, lwn@lwn.net,
+        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 7:14 AM Chen Yu <yu.c.chen@intel.com> wrote:
+Am Do., 25. Juni 2020 um 12:48 Uhr schrieb Gabriel C
+<nix.or.die@googlemail.com>:
 >
-> Hi Rafael,
-> On Tue, Jun 23, 2020 at 07:57:59PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Subject: [PATCH] cpuidle: Rearrange s2idle-specific idle state entry code
+> Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@kernel.org>:
 > >
-> > Implement call_cpuidle_s2idle() in analogy with call_cpuidle()
-> > for the s2idle-specific idle state entry and invoke it from
-> > cpuidle_idle_call() to make the s2idle-specific idle entry code
-> > path look more similar to the "regular" idle entry one.
+> > On 25. 06. 20, 0:05, Gabriel C wrote:
+> > > Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org>:
+> > >>
+> > >> I'm announcing the release of the 5.7.3 kernel.
+> > >>
+> > >
+> > > Hello Greg,
+> > >
+> > >> Qiujun Huang (5):
+> > >>       ath9k: Fix use-after-free Read in htc_connect_service
+> > >>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+> > >>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+> > >>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+> > >>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+> > >>
+> > >
+> > > We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
+> > > while working fine on <5.7.3.
+> > >
+> > > I don't have myself such HW, and the reported doesn't have any experience
+> > > in bisecting the kernel, so we build kernels, each with one of the
+> > > above commits reverted,
+> > > to find the bad commit.
+> > >
+> > > The winner is:
+> > >
+> > > commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
+> > > Author: Qiujun Huang <hqjagain@gmail.com>
+> > > Date:   Sat Apr 4 12:18:38 2020 +0800
+> > >
+> > >     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+> > >
+> > >     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+> > > ...
+> > >
+> > > Reverting this one fixed his problem.
 > >
-> > No intentional functional impact.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/cpuidle/cpuidle.c |    6 +++---
-> >  kernel/sched/idle.c       |   15 +++++++++++----
-> >  2 files changed, 14 insertions(+), 7 deletions(-)
-> >
-> > Index: linux-pm/kernel/sched/idle.c
-> > ===================================================================
-> > --- linux-pm.orig/kernel/sched/idle.c
-> > +++ linux-pm/kernel/sched/idle.c
-> > @@ -96,6 +96,15 @@ void __cpuidle default_idle_call(void)
-> >       }
-> >  }
-> >
-> > +static int call_cpuidle_s2idle(struct cpuidle_driver *drv,
-> > +                            struct cpuidle_device *dev)
-> > +{
-> > +     if (current_clr_polling_and_test())
-> > +             return -EBUSY;
-> > +
-> > +     return cpuidle_enter_s2idle(drv, dev);
-> > +}
-> > +
-> >  static int call_cpuidle(struct cpuidle_driver *drv, struct cpuidle_device *dev,
-> >                     int next_state)
-> >  {
-> > @@ -171,11 +180,9 @@ static void cpuidle_idle_call(void)
-> >               if (idle_should_enter_s2idle()) {
-> >                       rcu_idle_enter();
-> >
-> > -                     entered_state = cpuidle_enter_s2idle(drv, dev);
-> > -                     if (entered_state > 0) {
-> > -                             local_irq_enable();
-> > +                     entered_state = call_cpuidle_s2idle(drv, dev);
-> I guess this changes the context a little bit that(comparing to [1/2 patch],
-> after this modification, when we found that TIF_NEED_RESCHED is set we can have
-> a second chance in the following call_cpuidle to do a second s2idle try. However
-> in [1/2 patch], it might exit the s2idle phase directly once when we see
-> TIF_NEED_RESCHED is set(because entered_state is postive we treat it as a successful
-> s2idle). In summary I think the change (patch [2/2]) is more robust.
+> > Obvious question: is 5.8-rc1 (containing the commit) broken too?
+>
+> Yes, it does, just checked.
+>
+> git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
+> v5.8-rc1
+> v5.8-rc2
+>
 
-Yeah, good point.
+Sorry, I read the wrong, I just woke up.
 
-> Acked-by: Chen Yu <yu.c.chen@intel.com>
+We didn't test 5.8-rc{1,2} yet but we will today and let you know.
 
-OK, thanks!
-
-I'll queue up this one too along with the [1/2] for -rc4 then.
-
-Thanks!
+> >
+> > I fail to see how the commit could cause an issue like this. Is this
+> > really reproducibly broken with the commit and irreproducible without
+> > it?
+>
+> I can't see something obvious wrong either, but yes it's reproducible on his HW.
+> Kernel with this commit breaks the dongle, with the commit reverted it works.
+>
+> >As it looks like a USB/wiring problem:
+> > usb 1-2: USB disconnect, device number 2
+> > ath: phy0: Reading Magic # failed
+> > ath: phy0: Unable to initialize hardware; initialization status: -5
+> > ...
+> > usb 1-2: device descriptor read/64, error -110
+> > usb 1-2: device descriptor read/64, error -71
+> >
+> > Ccing ath9k maintainers too.
+> >
+> > > I don't have so much info about the HW, besides a dmesg showing the
+> > > phy breaking.
+> > > I also added the reporter to CC too.
+> > >
+> > > https://gist.github.com/AngryPenguinPL/1e545f0da3c2339e443b9e5044fcccea
+> > >
+> > > If you need more info, please let me know and I'll try my best to get
+> > > it as fast as possible for you.
+> >
+>
+> Best Regards,
+>
+> Gabriel C
