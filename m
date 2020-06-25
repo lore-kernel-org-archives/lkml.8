@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AACC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 957942078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5536D20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593045742;
-	bh=x2m/Ep1fMvoupjuf3NdrtoqfW84hsrK7rwpUV6U0Ldc=;
+	s=default; t=1593045749;
+	bh=7H8rdOs4Gi82auT8J5a9dYX1b6KF67Yi7qDXrxeXEZM=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=QIQy/4faG2IV6KksAkZy7omLJGDkVLRKCBg5+VU0qablJ9zfzFN4H8o4CoDAiWG4j
-	 szANGSlPxrjOMeoE6sVt98CpVTEXlB7cy67jRll1dbVfByE0Se97rk3wrJR9Ijnz23
-	 bCLlOxCTy0k4v4A/G/i82ajS/LpwliRZeDa1ph4g=
+	b=PQ8ngdXJJZT9ZxyzaakVe4MsRxX6/JHKO5ec2Q+csBleAC64pEX8oYLcm4x+c2pw0
+	 UE0GK4ncjV0sRv381hhAPJdlp6RgycZwWOlxf5p6IXGmUm/nmNMcopdxnIqnJslVNB
+	 7nHfiy4QHpRRxhUUnLA1AB4fJC3KnyQ7lcs3n0Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbgFYAmV (ORCPT
+        id S2388930AbgFYAm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:42:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 20:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388467AbgFYAmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 20:42:20 -0400
+        id S2388467AbgFYAmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 20:42:25 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52DA020781;
-        Thu, 25 Jun 2020 00:42:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F0D920781;
+        Thu, 25 Jun 2020 00:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593045740;
-        bh=x2m/Ep1fMvoupjuf3NdrtoqfW84hsrK7rwpUV6U0Ldc=;
+        s=default; t=1593045745;
+        bh=7H8rdOs4Gi82auT8J5a9dYX1b6KF67Yi7qDXrxeXEZM=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Si1kpCSwDvJFqurX+mCFOJaf9utQdUenkHY4T2s3VXNFOLCdPHPdWjymH+AYRPxb4
-         byeRfNTzpU14lPPP6CyJaNPnXCXIt8DAC5Y/c29TkTAr1OFwxk2WKcp2rKuqHUUvWy
-         KJ3D8itfV/ZS1dS9578nDKp38Rd7MCSjzXzlJi7s=
+        b=hH1QJDyTMsTvkMb6gi09Ru+RXDevvIqelUHN0jSxfb1igjyee1k95vC8X46zgawhc
+         yntWHmqQbywoxLssx7gvDa8kdHh4k7PSP33bGaknyZnh3xFQvn1LpgApXsDuzzaHMc
+         kDl3DLVETgcsh07zg0Z33aqf9WUHVo7ILAgSs8W8=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5bc0b9be8544b07300fccab4d4f26e5e5d8e62b2.1592210452.git-series.maxime@cerno.tech>
-References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech> <5bc0b9be8544b07300fccab4d4f26e5e5d8e62b2.1592210452.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH v5 01/27] dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML
+In-Reply-To: <f6105207e7ef5a5ea8d7a1774faf989d341a25f5.1592210452.git-series.maxime@cerno.tech>
+References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech> <f6105207e7ef5a5ea8d7a1774faf989d341a25f5.1592210452.git-series.maxime@cerno.tech>
+Subject: Re: [PATCH v5 02/27] dt-bindings: clock: Add a binding for the RPi Firmware clocks
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-rpi-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com,
@@ -53,25 +53,28 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Phil Elwell <phil@raspberrypi.com>,
         Mike Turquette <mturquette@baylibre.com>,
         linux-clk@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Florian Fainelli <f.fainelli@gmail.com>
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
 To:     Maxime Ripard <maxime@cerno.tech>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Wed, 24 Jun 2020 17:42:19 -0700
-Message-ID: <159304573968.62212.13190239550223603077@swboyd.mtv.corp.google.com>
+Date:   Wed, 24 Jun 2020 17:42:24 -0700
+Message-ID: <159304574441.62212.5242673927924093268@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maxime Ripard (2020-06-15 01:40:41)
-> From: Florian Fainelli <f.fainelli@gmail.com>
+Quoting Maxime Ripard (2020-06-15 01:40:42)
+> The firmware running on the RPi VideoCore can be used to discover and
+> change the various clocks running in the BCM2711. Since devices will
+> need to use them through the DT, let's add a pretty simple binding.
 >=20
-> Convert the Raspberry Pi BCM2835 firmware binding document to YAML.
-> Verified with dt_binding_check and dtbs_check.
->=20
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> Reviewed-by: Rob Herring <robh+dt@kernel.org>
 > Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
