@@ -2,118 +2,106 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30502C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 086EB207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203712078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTUzwFz4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qX/ZX608"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389557AbgFYCq6 (ORCPT
+        id S2389551AbgFYCt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 22:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51752 "EHLO
+        Wed, 24 Jun 2020 22:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388930AbgFYCq5 (ORCPT
+        with ESMTP id S2389357AbgFYCt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 22:46:57 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083B3C061573;
-        Wed, 24 Jun 2020 19:46:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x18so4823672lji.1;
-        Wed, 24 Jun 2020 19:46:56 -0700 (PDT)
+        Wed, 24 Jun 2020 22:49:57 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35ABC061573;
+        Wed, 24 Jun 2020 19:49:55 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c30so153740qka.10;
+        Wed, 24 Jun 2020 19:49:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pvycOAanKOGThnweOmUgasjLKw1f5vsz8MNnX8op5Qc=;
-        b=FTUzwFz4w2QZtcYVnOQfG0K5S67ZiJnshkOGFjTtAu9JdOUZ5OOH3R/JKU9H7ST2Cr
-         QVoVHN1/O2D+0o4asP4htRrQpTeudbSc/ky6kY+rdpXv93/D8x97aE8P1XUQrM0MrxDJ
-         /yOjkUgkvEcBOLItY9hEeTOYVkMOG+bu1lBSfpP/XhQPHr0YIscqufbiy2G7sH2z96Np
-         it53iq9BnDn3qqV+uAIs+6sJ/Ish6N2NMfEO4RM3UXOiYrJ3jVfbgtdQROC9dY94uSr8
-         CZHKm6GEQG2W1MOM8wWzcA/4o8SHwdp/xjV/1IaG8TDSyS8GchsKdOnABCPEjzAqNW/t
-         pwNQ==
+        h=from:to:subject:date:message-id;
+        bh=5lXjeiOsBG8uhpS7ADjeldJYydP2WlIiNtg79CXwmCw=;
+        b=qX/ZX608fv7NpAvxxHzMOLRstQFILAXA3k/9MGX52siF/ZeawE2D1ZvM8e4I7qYTl9
+         skx6mJ2pWPpRAXAucnpTWkcTEav0gMaXYK/h1ro1UXLv1F7GHw7diX/LPMlEno6y5NOM
+         W1BKa8cW43b1HXkxWC01Pcdt2d1icUI5qCOpWUOD3yj51PFX2tTjy7Sz7iIGCIH9/PhH
+         FTsfF14KjjPWrp2xm5zd+w21ax3vzIpelIQghr71b3Lwmf23xZ8hTyehaP4z4/xw7Ezl
+         4S4nk+z7w/Egea/zL94vnRM5dJfcGk+iwoxQhUVmucOta1jBcyWcLblc+QOo1/+ra5WJ
+         Oh7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pvycOAanKOGThnweOmUgasjLKw1f5vsz8MNnX8op5Qc=;
-        b=Z1fivEdiUY0Dwi7CLMVwqUAggmGtueiKKMoxFazajqBKlnXbMphEdyOS2lCimCOQvw
-         CSdM9/0RG2dxk0pqJYC6/bX7Mz2i1ZdovQe37cam6Wrl2Es1w9bvliiAilL6WYQ/qC9i
-         6gd4/3pEivXL7affeojer0pgv7tBKAqgKDE8uHpVhPNgQAeGtFp6wycBx2gagwXBA+cW
-         cp4e8yIJdw0aX7M/71DIeOnvx7JDOPDLfKNIWPSnnGoB/JxzbUwKGl83h2p+rRS6TbpZ
-         ij9hmIsHpO+lxQnFeA4JvqjFLWYJd5JoeRZqzqpLrljTYtOmlFHz0W9kgpoQdHIOCs0R
-         mQhw==
-X-Gm-Message-State: AOAM530Y0gCg/DVT7Uijy1XsHJl7eBzoe2sJzQODROt23d05Q7CvUOqI
-        Ia4L4lkh6Z9sQCm8MnPFGT6WNNBY+ON/vYPNVLc=
-X-Google-Smtp-Source: ABdhPJzd3WDIitpGtJmw4BW9WQdwclBgOqu1H6qHgZ4TZfpJ6I3zCsUpErL7D9gIjdZUd+eKwHrtxXgT0cjqPe6NNfo=
-X-Received: by 2002:a2e:82c8:: with SMTP id n8mr4510152ljh.123.1593053215553;
- Wed, 24 Jun 2020 19:46:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200624150704.2729736-1-lee.jones@linaro.org> <20200624150704.2729736-6-lee.jones@linaro.org>
-In-Reply-To: <20200624150704.2729736-6-lee.jones@linaro.org>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Thu, 25 Jun 2020 10:46:37 +0800
-Message-ID: <CADBw62pJZbHXwbKc36qJ=dATHyZDU=yw6Z+krWi47AJmotqEvA@mail.gmail.com>
-Subject: Re: [PATCH 05/10] mfd: sprd-sc27xx-spi: Fix symbol
- 'sprd_pmic_detect_charger_type' was not declared warning
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=5lXjeiOsBG8uhpS7ADjeldJYydP2WlIiNtg79CXwmCw=;
+        b=CsQ2YRTbjuTnDAmDTaLbITM4slu4DA7eRvrPeODrwKoP5qNNJZdBFMYN+vWcQsbV4E
+         t09sZW1Z9yDZgTQK4hCZd+4bnxY0EXSXpKhm+y/px3Xk8G1Odx+fvJl0kJYXrUP/KwH5
+         r4RnfDiPxEP8NDyXe0Ho+tT7rEutFxmF/OhjXA3pY/Po8T+vR2xw0xHbSzAnqjwyVK4y
+         mlN7mgxfL2/xLj1SLEsLcSq9HZgmmQWqdPSrBH25Mre/M/MMRu2V0wY8eamBwdlwFdC0
+         Or43GtF9aplgmAuPOtOvRyUmNmv6BGYHNUoi1FLmbIfzdGqiaT+QArDous/gJ+4RKXB7
+         +eaA==
+X-Gm-Message-State: AOAM532OSshGZKwWxUG1xCvxE0i1nsjNKQ/2Z6bbQmWXYi5aWyCAUJB/
+        wy/Gh2hhG3RNBPZr4seVClc=
+X-Google-Smtp-Source: ABdhPJz9Kir3cc0loPW9ZyiKJcJAxyg/+Y2eCStO0p4ztcdGUzkkew0qG4pZb4iIqxqtlqUQBJQWNg==
+X-Received: by 2002:ae9:f40b:: with SMTP id y11mr28509038qkl.107.1593053394833;
+        Wed, 24 Jun 2020 19:49:54 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:b4f5:b2c7:27bb:8a39])
+        by smtp.googlemail.com with ESMTPSA id v69sm4744823qkb.96.2020.06.24.19.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 19:49:54 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netfilter-devel@vger.kernel.org (open list:NETFILTER),
+        coreteam@netfilter.org (open list:NETFILTER),
+        netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6]),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [net/ipv6] Remove redundant null check in rt_mt6
+Date:   Wed, 24 Jun 2020 22:49:48 -0400
+Message-Id: <20200625024949.3963-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+rh cannot be NULL here since its already checked above
+assignment and is being dereferenced before. Remove the
+redundant null check.
 
-On Wed, Jun 24, 2020 at 11:07 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Sparse reports:
->
->  drivers/mfd/sprd-sc27xx-spi.c:59:23: warning: symbol 'sprd_pmic_detect_charger_type' was not declared. Should it be static?
->
-> ... due to a missing header file.
->
-> Cc: <stable@vger.kernel.org>
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ net/ipv6/netfilter/ip6t_rt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks.
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-
-> ---
->  drivers/mfd/sprd-sc27xx-spi.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-> index 33336cde47243..c305e941e435c 100644
-> --- a/drivers/mfd/sprd-sc27xx-spi.c
-> +++ b/drivers/mfd/sprd-sc27xx-spi.c
-> @@ -7,6 +7,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/mfd/core.h>
-> +#include <linux/mfd/sc27xx-pmic.h>
->  #include <linux/of_device.h>
->  #include <linux/regmap.h>
->  #include <linux/spi/spi.h>
-> --
-> 2.25.1
->
-
-
+diff --git a/net/ipv6/netfilter/ip6t_rt.c b/net/ipv6/netfilter/ip6t_rt.c
+index f633dc84ca3f..733c83d38b30 100644
+--- a/net/ipv6/netfilter/ip6t_rt.c
++++ b/net/ipv6/netfilter/ip6t_rt.c
+@@ -89,8 +89,7 @@ static bool rt_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		 !((rtinfo->flags & IP6T_RT_RES) &&
+ 		   (((const struct rt0_hdr *)rh)->reserved)));
+ 
+-	ret = (rh != NULL) &&
+-	      (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
++	ret = (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
+ 			      rh->segments_left,
+ 			      !!(rtinfo->invflags & IP6T_RT_INV_SGS))) &&
+ 	      (!(rtinfo->flags & IP6T_RT_LEN) ||
 -- 
-Baolin Wang
+2.17.1
+
