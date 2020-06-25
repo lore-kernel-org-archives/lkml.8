@@ -2,165 +2,179 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF002C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D48220836
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36934207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:35:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="1YlTo2+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405821AbgFYPed (ORCPT
+        id S2405834AbgFYPf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:34:33 -0400
-Received: from mga07.intel.com ([134.134.136.100]:6648 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405394AbgFYPec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:34:32 -0400
-IronPort-SDR: GGRcZ/wCAo9cc4fdncE0oxucWWfeuyoeEyi2wFF0TEwqr0nljCIE5KheVl/A++0ZL/G+DonI55
- q4pRnvcE+UQw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="210031095"
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="210031095"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 08:34:31 -0700
-IronPort-SDR: 3GIJns1tWCRZA+fbNw0iIve4yKZPs3ze4nNULoybsh4ybp5i16GWZIEyTN1PDTsIztA71kglHh
- AQ9beHulwVaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="276056189"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 25 Jun 2020 08:34:31 -0700
-Date:   Thu, 25 Jun 2020 08:34:31 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 03/21] x86/mm: x86/sgx: Signal SIGSEGV with PF_SGX
-Message-ID: <20200625153431.GA3437@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-4-jarkko.sakkinen@linux.intel.com>
- <20200625085931.GB20319@zn.tnic>
+        Thu, 25 Jun 2020 11:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405394AbgFYPf0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 11:35:26 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28FBC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:35:26 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p3so3463747pgh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=x5rltbZgoac+dXb+DOgX5rzO4ebpNO9QKIAaqizWabE=;
+        b=1YlTo2+HW3hy9QDNoY9ia6mxIaKs0Lmc62+aANLbGds86ssI1gK73TAkjnObtlBJ59
+         s8tgqw+IHZmO4qHNdku31gfctjoCG5Gay5R6e6iJBbVX2prZ4X3MkQ6ikPMCmFN7XUoy
+         x9qVWk2zDe3W1xy3riTJGueSp06DeMbd1gO9BSdpWMz4bVFwpOIZDqnWqK4JL0q+GzdZ
+         KRhVDKUnjRhRr1ylDZkZa4Z4gWB91Hs1nJHHBLX0yseO1KI6Y6lqRo8NV+d8D263DsMT
+         EfJF8tjhRDmqoTP6ruWR0N2/Skk18+JZ2M/0HoqI3Hxf4eS8k40ZrADS7BacuDQg2uiz
+         rc8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=x5rltbZgoac+dXb+DOgX5rzO4ebpNO9QKIAaqizWabE=;
+        b=D4tf90fqyg36CrhV5VqoigAWahU72I7vDtwmkD/dp6mVSah2zfDEuwMbxJ+gILBsDw
+         yHnkRvouVEiVRsWoQsBbD9gaMRKSRKbg7rbYaA2GlGUCBr8AZT7a5a78zkNbeZ92lsf0
+         G8q+Nj/wdy89hYgSazWe7+ZK3YEEhyFZRD22A4+1BiyU9dlsb7zlNTwTyYIFQx2xZSuG
+         X7p1ATm9tGtHxCMXLTNX0pkSutiuyh1FKK6gyUWZvgj/XgacCngw0MsN4RCkcWhZiKjX
+         eQwddx4pZlYNBj7SUWPWmhKN84Z8AxiaBeO7AvTH3+HdUh2tJLDDlH2HHDEB4bd4KVvL
+         pFtA==
+X-Gm-Message-State: AOAM532JIv/LcKp6rA+7jUKU8wEEihBlpKAkKcC6MEiwdggTiDRWylMd
+        I/WR0IrD1gxLMWe8oH38rSVUgw==
+X-Google-Smtp-Source: ABdhPJz92oCQkSLzT6L0cPk15+CVAR5bLEmDnDtyxkVfGo3rWkJazMXpdCnSRpNO27I/0plMLIwTew==
+X-Received: by 2002:aa7:84cc:: with SMTP id x12mr33886230pfn.235.1593099325951;
+        Thu, 25 Jun 2020 08:35:25 -0700 (PDT)
+Received: from localhost ([2406:7400:73:51e4:908:f18a:1156:5c38])
+        by smtp.gmail.com with ESMTPSA id o1sm8649025pjp.37.2020.06.25.08.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 08:35:24 -0700 (PDT)
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+X-Google-Original-From: B K Karthik <karthik.bk2000@live.com>
+Date:   Thu, 25 Jun 2020 11:35:17 -0400
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] staging: media: soc_camera: Adding parentheses to macro
+ defination at line 241, Clearing alignment issues at lines 410 and 1270,
+ fixing return values at EPOLLERR
+Message-ID: <20200625153516.fibpfsodnogrimlh@pesu-pes-edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fhzbuehlmb54oq5j"
 Content-Disposition: inline
-In-Reply-To: <20200625085931.GB20319@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:59:31AM +0200, Borislav Petkov wrote:
-> On Thu, Jun 18, 2020 at 01:08:25AM +0300, Jarkko Sakkinen wrote:
-> > diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> > index 66be9bd60307..25d48aae36c1 100644
-> > --- a/arch/x86/mm/fault.c
-> > +++ b/arch/x86/mm/fault.c
-> > @@ -1055,6 +1055,19 @@ access_error(unsigned long error_code, struct vm_area_struct *vma)
-> >  	if (error_code & X86_PF_PK)
-> >  		return 1;
-> >  
-> > +	/*
-> > +	 * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
-> > +	 * access is allowed by the PTE but not the EPCM. This usually happens
-> > +	 * when the EPCM is yanked out from under us, e.g. by hardware after a
-> > +	 * suspend/resume cycle. In any case, software, i.e. the kernel, can't
-> > +	 * fix the source of the fault as the EPCM can't be directly modified by
-> > +	 * software. Handle the fault as an access error in order to signal
-> > +	 * userspace so that userspace can rebuild their enclave(s), even though
-> > +	 * userspace may not have actually violated access permissions.
-> > +	 */
-> 
-> Lemme check whether I understand this correctly: userspace must check
-> whether the SIGSEGV is generated on an access to an enclave page?
 
-Sort of.  Technically it's that's an accurate statement, but practically
-speaking userspace can only access enclave pages when it is executing in
-the enclave, and exceptions in enclaves have unique behavior.  Exceptions
-in enclaves essentially bounce through a userspace-software-defined
-location prior to being delivered to the kernel.  The trampoline is done
-by the CPU so that the CPU can scrub the GPRs, XSAVE state, etc... and
-hide the true RIP of the exception.  The pre-exception enclave state is
-saved into protected memory and restored when userspace resumes the enclave.
+--fhzbuehlmb54oq5j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Enterring or resuming an enclave can only be done through dedicted ENCLU
-instructions, so really it ends up being that the SIGSEGV handler needs to
-check the IP that "caused" the fault, which is actually the IP of the
-trampoline.
+staging: media: soc_camera: soc_camera.c: Clearing coding-style problem
+"Macros with complex values should be enclosed in parentheses" in line 241 =
+by adding parentheses.
+staging: media: soc_camera: soc_camera.c: Clearing coding-style problem
+"Alignment should match open parenthesis" by adding tab spaces in line 410.
+staging: media: soc_camera: soc_camera.c: Clearing coding-style problem
+"return of an errno should typically be negative" by adding a "-" in front =
+of EPOLLER in line 812.
+staging: media: soc_camera: soc_camera.c: Clearing coding-style problem
+"Alignment should match open parenthesis" by adding tab spaces in line 1270.
 
-But, that's only the first half of the story...
- 
-> Also, do I see it correctly that when this happens, dmesg will have
-> 
->         printk("%s%s[%d]: segfault at %lx ip %px sp %px error %lx",
-> 
-> due to:
-> 
->        if (likely(show_unhandled_signals))
->                show_signal_msg(regs, error_code, address, tsk);
-> 
-> which does:
-> 
->         if (!unhandled_signal(tsk, SIGSEGV))
->                 return;
-> 
-> or is the task expected to register a SIGSEGV handler so that the
-> segfault doesn't land in dmesg?
+Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+---
+ drivers/staging/media/soc_camera/soc_camera.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Yes, without extra help, any task running an enclave is expected to register
-a SIGSEGV handler so that the task can restart the enclave if the EPC is
-"lost".
+diff --git a/drivers/staging/media/soc_camera/soc_camera.c b/drivers/stagin=
+g/media/soc_camera/soc_camera.c
+index 39f513f69b89..66a14ebd8093 100644
+--- a/drivers/staging/media/soc_camera/soc_camera.c
++++ b/drivers/staging/media/soc_camera/soc_camera.c
+@@ -238,8 +238,8 @@ unsigned long soc_camera_apply_board_flags(struct soc_c=
+amera_subdev_desc *ssdd,
+ }
+ EXPORT_SYMBOL(soc_camera_apply_board_flags);
+=20
+-#define pixfmtstr(x) (x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, \
+-	((x) >> 24) & 0xff
++#define pixfmtstr(x) ((x) & 0xff, ((x) >> 8) & 0xff, ((x) >> 16) & 0xff, \
++	((x) >> 24) & 0xff)
+=20
+ static int soc_camera_try_fmt(struct soc_camera_device *icd,
+ 			      struct v4l2_format *f)
+@@ -407,7 +407,7 @@ static int soc_camera_dqbuf(struct file *file, void *pr=
+iv,
+ }
+=20
+ static int soc_camera_create_bufs(struct file *file, void *priv,
+-			    struct v4l2_create_buffers *create)
++			    		struct v4l2_create_buffers *create)
+ {
+ 	struct soc_camera_device *icd =3D file->private_data;
+ 	int ret;
+@@ -806,10 +806,10 @@ static __poll_t soc_camera_poll(struct file *file, po=
+ll_table *pt)
+ {
+ 	struct soc_camera_device *icd =3D file->private_data;
+ 	struct soc_camera_host *ici =3D to_soc_camera_host(icd->parent);
+-	__poll_t res =3D EPOLLERR;
++	__poll_t res =3D -EPOLLERR;
+=20
+ 	if (icd->streamer !=3D file)
+-		return EPOLLERR;
++		return -EPOLLERR;
+=20
+ 	mutex_lock(&ici->host_lock);
+ 	res =3D ici->ops->poll(file, pt);
+@@ -1267,7 +1267,7 @@ static int soc_camera_i2c_init(struct soc_camera_devi=
+ce *icd,
+ 	}
+=20
+ 	subdev =3D v4l2_i2c_new_subdev_board(&ici->v4l2_dev, adap,
+-				shd->board_info, NULL);
++						shd->board_info, NULL);
+ 	if (!subdev) {
+ 		ret =3D -ENODEV;
+ 		goto ei2cnd;
+--=20
+2.20.1
 
-However, building and running enclaves is complex, and the vast majority of
-SGX enabled applications are expected to leverage a library of one kind or
-another to hand the bulk of the gory details.  But, signal handling in
-libraries is a mess, e.g. requires filtering/forwarding, resignaling, etc...
 
-To that end, in v14 of this patch[1], Andy Lutomirski came up with the idea
-of adding a vDSO function to provide the low level enclave EENTER/ERESUME and
-trampoline, and then teaching the kernel to do exception fixup on the
-relevant instructions in the vDSO.  The vDSO's exception fixup then returns
-to normal userspace, with a (technically optional) struct holding the details
-of the exception.  That allows for synchronous delivery of exceptions in
-enclaves, obviates the need for userspace to regsiter a SIGSEGV handler, and
-also means the SIGSEGV will never show up in dmesg so long as userspace is
-using the vDSO.  The kernel still supports direct EENTER/ERESUME, but AFAIK
-everyone is moving (or has moved) to the vDSO interface.
+--fhzbuehlmb54oq5j
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The vDSO stuff is in patches 15-18 of this series.
+-----BEGIN PGP SIGNATURE-----
 
-There's a gigantic thread on all the alternatives that were considered[2].
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl70xDQACgkQ471Q5AHe
+Z2oZlAv/bmnvULtnv3yC5oXsH9CF4NejDM305ZbwMYLCm0k5INVKHk2hgumFNw/v
+mHDKoKT+D7vujqhWAlVh/l996TVlIbTAntl2W76FoJ0xBsZ4C4Qczn0GOKpDE08N
+kQKuqtUCRv1Cb9Uz+e8yJJJ68O3Lhhb82NKEc9oI5YzwfC1sge97L05xcAmHqGRn
+lkl2aNouT4hAm03kIl0aSM8mT3Ik3lkECcT9tncwaSa9iHwxXI/XW8B9yZaXDvDA
+HEIJjpHHqtii5srCdxkQn8MR5cvYOWvocxx6leyqZrq3lo6bPJpIT4+zwqanKFPM
+jl2VHSqHO7h/3nS04NVnUrS0ONon8REFoIU5iKLlN0lnwL1XY+XHNqNlbqpknb8s
+/6+ah50oOevSmjjMGXE19JSr46GRgaDcSYcbV9ODQFziFtr3U40j7BssOqveWVDw
+bXojJE1ObgFwcq7OjXJhKIy+OsjJf0Rp195iIVpWmrudGb670/sIQdaAXo/H4ocn
+DyfxNma/
+=OdLO
+-----END PGP SIGNATURE-----
 
-[1] https://lkml.kernel.org/r/CALCETrXByb2UVuZ6AXUeOd8y90NAikbZuvdN3wf_TjHZ+CxNhA@mail.gmail.com
-[2] https://lkml.kernel.org/r/CALCETrWdpoDkbZjkucKL91GWpDPG9p=VqYrULade2pFDR7S=GQ@mail.gmail.com
-
-> 
-> If so, are we documenting this?
-> 
-> If not, then we should not issue any "segfault" messages to dmesg
-> because that would be wrong.
-> 
-> Or maybe I'm not seeing it right but I don't have the hardware to test
-> this out...
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+--fhzbuehlmb54oq5j--
