@@ -2,170 +2,139 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB10FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E584B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8493206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MoquPqgm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UgGBQ040"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403939AbgFYJpJ (ORCPT
+        id S2403953AbgFYJpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59328 "EHLO
+        Thu, 25 Jun 2020 05:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389894AbgFYJpI (ORCPT
+        with ESMTP id S2390657AbgFYJpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:45:08 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E41C061573;
-        Thu, 25 Jun 2020 02:45:07 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id ga4so5259100ejb.11;
-        Thu, 25 Jun 2020 02:45:07 -0700 (PDT)
+        Thu, 25 Jun 2020 05:45:11 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3174FC061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:45:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t194so5230875wmt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:45:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eA4poZMceWsvM3rmLRHsnsl9hHeBKdemY+Td0g9vsCY=;
-        b=MoquPqgmXaMx4FO+yYuSA5R4x2a6ByAy0NDuobOBA4N4K0vH1Ksh6mOGG1Fg3yZ2UH
-         HeKiDEIe7YFElXGm7k6DvGKi0C+Q1TxktA/5l0K5Lac1tfo/FDG+dM6GNq061GAfBQDx
-         ywpdXloR9U0lZQlACIc8wBZLrVmQFYX11JzE7II/60DgWgQ0qu8bkX9hv/jVDt7aY+xy
-         k7LgQHsVM3DUtWa7IzTl3ZX/UfEOAxCHCI5bjAKeSrJ1g3KMcrBP/6epo4bPlYAjGBWp
-         qExZAbRZA0TNWHhgEM0AtPQKbvEWGAe94QF5mhpZUVCAjGfpKxKUEerWOUYyAEW+U2FF
-         EHgQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=T96Cw/B2VdIT350ot7UQTHC8Op+bJn2wrxV9Mj1Tufs=;
+        b=UgGBQ0407zaBUunWxSaTxaAU9RpsMyNFk0zmjnxT4oUPgOMS0mUttZchCHkE/Duc81
+         3Euu/xzSY0D/RHY6H3f+8L7EBv9pJX6LJ1rgu8XHtFP5DLdQy2U6XBszjzYjLcoASf4o
+         13aHCVwSn20u5Y3Rjp5ofbVSJfgcaQlozvioeTOq9qtTjkWRatE7Nw+DInt6u9IlcT8D
+         WKiewW7DiiF1VAoAWFrcuQ7Gn9Z7Bx8CXeSjsrM0QoK+BF8FVXERG33Pivml1z/BFL3x
+         Pu8dqCmf4p41S4/ENV7loy9Ht76Jl+v26ayWmEU+FNaUyCIDZiOvcHBccY3I3p5geuLQ
+         ///Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eA4poZMceWsvM3rmLRHsnsl9hHeBKdemY+Td0g9vsCY=;
-        b=qJT+XkxqyuFcaRtl1ZbHSLcGb8M+3VLK3pUuXgSmOdb3c6ApVxilA0lpIaasCX/dqU
-         JyIX8IkPr+2FSjS5NgCSMGDap+wr2GzmCBA0zNHYBr9k2iHdWxz8wIaiinuNN8Nn9znR
-         aSpySGaVJL7ys+1urjeifvnIrQYjZOn2bT22aOSMVssqWpzMmXznd6hBs5D+ppdkthB6
-         4pQJve8maNHUkxryomFwrLGqlegvuUngYvNTRpj+ZJwPPdukj7ybX82rbeqL1hx1eWY6
-         OJ8AbJs4jg+9bLTkRJ2dU9adgQIw6Ojqd5FL1Z/hPx/U4tJ8EnUsK6mUxkTsSK6a3fme
-         QxuA==
-X-Gm-Message-State: AOAM532JW49VuGZcPBvMSFqLKErBk0bWkgqWuyy7Ilm9IyZ9t6cBo1xC
-        Z1oCbs4dcryStzq48UqOnOetPoCl
-X-Google-Smtp-Source: ABdhPJysHjz5q+amJzSiiMjvVXbq84/gQkRWKZE8gpY6jEIxxwHmNxb5AG57BN23oiRylEQFw0pWyA==
-X-Received: by 2002:a17:906:830b:: with SMTP id j11mr30510617ejx.42.1593078305827;
-        Thu, 25 Jun 2020 02:45:05 -0700 (PDT)
-Received: from ?IPv6:2001:a61:253c:8201:b2fb:3ef8:ca:1604? ([2001:a61:253c:8201:b2fb:3ef8:ca:1604])
-        by smtp.gmail.com with ESMTPSA id c26sm4508654edr.88.2020.06.25.02.45.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 02:45:05 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][man-pages] sync.2: syncfs() now returns errors if
- writeback fails
-To:     Jeff Layton <jlayton@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>
-References: <20200610103347.14395-1-jlayton@kernel.org>
- <20200610155013.GA1339@sol.localdomain>
- <fe141babe698296f96fde39a8da85005506fd0f0.camel@kernel.org>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <54c5ef29-0f12-5f55-8f54-73b20f56925e@gmail.com>
-Date:   Thu, 25 Jun 2020 11:45:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=T96Cw/B2VdIT350ot7UQTHC8Op+bJn2wrxV9Mj1Tufs=;
+        b=RinUYjpv6DY5pK/3oOo5sVMefBWGHFcbwXJd9Jqqb1HT2+V2xDFfYK39+TbolqedUU
+         zqBb8aEJsFK7gSCx7Apcxa2+nVDh6teKOTwedarAAC3asSx8sIu1vm0Eg+T7+Yiw4gI1
+         a0wAU4eOQiU1P9B5zMKIW6We7EXO3Qym0YSq3GYY+SDZPEeDB1zsJqlYPu9zDUskbssa
+         PrSPWo9TdIGmvoOaCzpRUV7uVrK/FeiWdRMzTHoVu5ZRXt/ghvI6ni1jQDThiNDAOuPU
+         41JPbORLy8I4juNSdbddZHsBCmyJGCqfHjh4AvjVVGBRtuh6RHe6hZklc5i4aGEckfZW
+         HxKA==
+X-Gm-Message-State: AOAM530mUIZSSWd9VJV7ntdgu5GIISia/FYLPZN0eq8cp2FM+44uPHpG
+        NUQqsAMQpJjs21hM+6T7e5XLQw==
+X-Google-Smtp-Source: ABdhPJyegdI/9Kh//OZ9HHxhDnrbzMU1SVoSIeuFXdBPkQsQeAD5/SR9bTVDu2ieaapjhThMuucNDQ==
+X-Received: by 2002:a7b:c186:: with SMTP id y6mr2558934wmi.82.1593078309869;
+        Thu, 25 Jun 2020 02:45:09 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id t15sm11708554wmj.14.2020.06.25.02.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 02:45:09 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 10:45:07 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     jingoohan1@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Jeong <gshark.jeong@gmail.com>,
+        LDD MLP <ldd-mlp@list.ti.com>
+Subject: Re: [PATCH 7/8] backlight: lm3630a_bl: Remove invalid checks for
+ unsigned int < 0
+Message-ID: <20200625094507.5ozmizkynmlwvyoj@holly.lan>
+References: <20200624145721.2590327-1-lee.jones@linaro.org>
+ <20200624145721.2590327-8-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <fe141babe698296f96fde39a8da85005506fd0f0.camel@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624145721.2590327-8-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeff,
-
-Any progress with v2 of this patch?
-
-Thanks,
-
-Michael
-
-
-On 6/10/20 11:19 PM, Jeff Layton wrote:
-> On Wed, 2020-06-10 at 08:50 -0700, Eric Biggers wrote:
->> On Wed, Jun 10, 2020 at 06:33:47AM -0400, Jeff Layton wrote:
->>> A patch has been merged for v5.8 that changes how syncfs() reports
->>> errors. Change the sync() manpage accordingly.
->>>
->>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>> ---
->>>  man2/sync.2 | 24 +++++++++++++++++++++++-
->>>  1 file changed, 23 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/man2/sync.2 b/man2/sync.2
->>> index 7198f3311b05..27e04cff5845 100644
->>> --- a/man2/sync.2
->>> +++ b/man2/sync.2
->>> @@ -86,11 +86,26 @@ to indicate the error.
->>>  is always successful.
->>>  .PP
->>>  .BR syncfs ()
->>> -can fail for at least the following reason:
->>> +can fail for at least the following reasons:
->>>  .TP
->>>  .B EBADF
->>>  .I fd
->>>  is not a valid file descriptor.
->>> +.TP
->>> +.B EIO
->>> +An error occurred during synchronization.
->>> +This error may relate to data written to any file on the filesystem, or on
->>> +metadata related to the filesytem itself.
->>> +.TP
->>> +.B ENOSPC
->>> +Disk space was exhausted while synchronizing.
->>> +.TP
->>> +.BR ENOSPC ", " EDQUOT
->>> +Data was written to a files on NFS or another filesystem which does not
->>> +allocate space at the time of a
->>> +.BR write (2)
->>> +system call, and some previous write failed due to insufficient
->>> +storage space.
->>>  .SH VERSIONS
->>>  .BR syncfs ()
->>>  first appeared in Linux 2.6.39;
->>> @@ -121,6 +136,13 @@ or
->>>  .BR syncfs ()
->>>  provide the same guarantees as fsync called on every file in
->>>  the system or filesystem respectively.
->>> +.PP
->>> +In mainline kernel versions prior to 5.8,
->>> +.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
->>> +.BR syncfs ()
->>> +will only fail with EBADF when passed a bad file descriptor. In 5.8
->>> +and later kernels, it will also report an error if one or more inodes failed
->>> +to be written back since the last syncfs call.
->>
->> The sentence "In mainline kernel versions prior to 5.8, syncfs() will only fail
->> with EBADF when passed a bad file descriptor" is ambiguous.  It could mean that
->> EBADF can now mean other things too.
->>
->> Maybe write: "In mainline kernel versions prior to 5.8, syncfs() will only fail
->> when passed a bad file descriptor (EBADF)."
->>
->> - Eric
+On Wed, Jun 24, 2020 at 03:57:20PM +0100, Lee Jones wrote:
+> unsigned ints 'sources' and 'bank' cannot be less than LM3630A_SINK_0 (0)
+> and LM3630A_BANK_0 (0) respecitively, so change the logic to only check
+> for thier two possible valid values.
 > 
-> Good point. Fixed in my tree using your verbiage. I'll send out a v2
-> patch once I give others a chance to comment.
+> Fixes W=1 warnings:
 > 
-> Thanks!
+>  drivers/video/backlight/lm3630a_bl.c: In function ‘lm3630a_parse_led_sources’:
+>  drivers/video/backlight/lm3630a_bl.c:394:18: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+>  394 | if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
+>  | ^
+>  drivers/video/backlight/lm3630a_bl.c: In function ‘lm3630a_parse_bank’:
+>  drivers/video/backlight/lm3630a_bl.c:415:11: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+>  415 | if (bank < LM3630A_BANK_0 || bank > LM3630A_BANK_1)
+>  | ^
 > 
+> Cc: <stable@vger.kernel.org>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Daniel Jeong <gshark.jeong@gmail.com>
+> Cc: LDD MLP <ldd-mlp@list.ti.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+> ---
+>  drivers/video/backlight/lm3630a_bl.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> index ee320883b7108..e88a2b0e59046 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -391,7 +391,7 @@ static int lm3630a_parse_led_sources(struct fwnode_handle *node,
+>  		return ret;
+>  
+>  	for (i = 0; i < num_sources; i++) {
+> -		if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
+> +		if (sources[i] != LM3630A_SINK_0 && sources[i] != LM3630A_SINK_1)
+>  			return -EINVAL;
+>  
+>  		ret |= BIT(sources[i]);
+> @@ -412,7 +412,7 @@ static int lm3630a_parse_bank(struct lm3630a_platform_data *pdata,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (bank < LM3630A_BANK_0 || bank > LM3630A_BANK_1)
+> +	if (bank != LM3630A_BANK_0 && bank != LM3630A_BANK_1)
+>  		return -EINVAL;
+>  
+>  	led_sources = lm3630a_parse_led_sources(node, BIT(bank));
+> -- 
+> 2.25.1
+> 
