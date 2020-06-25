@@ -2,134 +2,170 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA810C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3292072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659B82072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dhVJmH7i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G99d9dBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403810AbgFYI6U (ORCPT
+        id S2403821AbgFYI7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52072 "EHLO
+        Thu, 25 Jun 2020 04:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390330AbgFYI6T (ORCPT
+        with ESMTP id S2403809AbgFYI7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:58:19 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76FAC061573;
-        Thu, 25 Jun 2020 01:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oaHjYuJa/3zuClzIH+/g+fhPoe4mw4jvJXlUfLpBRwo=; b=dhVJmH7iCebSecH6ztLVh/a9AX
-        q/FRl+8k3rSxsroM7W9JVbb4ruGWGY7b3ylToiN3VKMgxN8q00TRkiBpCp8haU8MShPGRK/s8jkgg
-        w3YBszL7uKIGNLBTLhESs/x80y6d0palNb62gZGEGSMiegKRbb9GXJ9f1wHqqmzeO1jX7JiN9/HsX
-        aTa1JqeZNh93t14b58sd/SSqgpOlSZ8pEHH5Qo6ELxJU7Vf2AGwoPRrjAW1izwzD6GTzOsKkAJ0LL
-        Ve/bAcUlLidRSKJGMMkj+0+VwBHrbE7cgi6LsUKtOByycYPJrSQmUl57IXr4MTgW/JLH3ka/h2HLc
-        xcYWPkgA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joNhc-0003bQ-FK; Thu, 25 Jun 2020 08:57:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE9DA3003E5;
-        Thu, 25 Jun 2020 10:57:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AA33E2010773D; Thu, 25 Jun 2020 10:57:45 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 10:57:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200625085745.GD117543@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624211540.GS4817@hirez.programming.kicks-ass.net>
- <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
- <20200625080313.GY4817@hirez.programming.kicks-ass.net>
- <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+        Thu, 25 Jun 2020 04:59:24 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DBFC061573;
+        Thu, 25 Jun 2020 01:59:24 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id w2so2206213pgg.10;
+        Thu, 25 Jun 2020 01:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UbkWKILV8DbeaX+ajZbJrzumA5rN03uAMmnvew5Vefw=;
+        b=G99d9dBQY3u9qOyOOtpu6EJVdCv3J6zsXCyTCpWnDRnwv9CrruXbivhinNSP6EbubQ
+         13dVaF31bzYAHhaduXgGsrSJG4e7SiJMC0s9F0RwH45gUfjP46nQTHuEB6jS4Sjh7UOG
+         L5v7X8oo9MhRs+dWGEraSsMWgW1mlyPJ6OYNZ8uWWmN8CVW8lIjND6L5LzA6ldfhnqj5
+         kQt3EzGt6LHo+fKd5laWwtybEDiItx5szOmOhTAIfXicNIGWrmdv9dnFKf8k5IXYu6w5
+         PNkOU+bJxO4fMUPz2dbfQnjghp1T4d+hwCw7vDdQFlGIlnzKKBRkphiIkNQLJoP/iAgJ
+         gofQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UbkWKILV8DbeaX+ajZbJrzumA5rN03uAMmnvew5Vefw=;
+        b=V9ODufQPorFRBfjKLYzEDxhZgSuFGedhkBIxVW/4hHyJJ1GvGxvjby9s/httE7wS+P
+         jdFCMABn2QGp892vSW8e96W/TDAAFK79InGaBg7VbNa0NqhDSFb8EQvrU1LuyxWjo0u8
+         Ed6/Kiift2FIN4Y0P/BsYK2R8EPgBIGBJzhbjc6yycUlR0fCWNsa5KLIwYBN/XnRw/rU
+         jRBBkHiHlQZxt82LZl0N1TEK0+hW6DoVRApHoFNXUGnCTqjHJKpzYXkU9SOouQDty4Fi
+         493kRHKOTC3aeMVj+1gI+EXWs27uiys4lsDDNCxPhAYS8w8dZPWl8CaGdXPz2hg+wySB
+         c3BQ==
+X-Gm-Message-State: AOAM531L6UvzwwV+FdEUyXQW/EU5C+lPfru3qxll1TH7RvWQX+xHxwKl
+        GG57xqkVQ8JXinduTFnv2+o9FnlTSBjSUdF2Klw=
+X-Google-Smtp-Source: ABdhPJzzyGaA8R8B7RZRko8g2lrtdG3+8e2ZATvPqLOxZ6CDTunPL4flb9RrlqdkzeoVRFcy2d6p4cNTeEWNvIWEKoc=
+X-Received: by 2002:a63:924b:: with SMTP id s11mr24600380pgn.74.1593075563878;
+ Thu, 25 Jun 2020 01:59:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+References: <20200625075805.363918-1-mans0n@gorani.run>
+In-Reply-To: <20200625075805.363918-1-mans0n@gorani.run>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 25 Jun 2020 11:59:11 +0300
+Message-ID: <CAHp75VeeqvR=0caAmYW5fhMP0p25Xn2hmhhDLU9dZopwQ69HXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:24:33AM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 25, 2020 at 10:03:13AM +0200, Peter Zijlstra wrote:
+On Thu, Jun 25, 2020 at 10:59 AM Sungbo Eo <mans0n@gorani.run> wrote:
+>
+> NXP PCA9570 is 4-bit I2C GPO expander without interrupt functionality.
+> Its ports are controlled only by a data byte without register address.
+>
+> As there is no other driver similar enough to be adapted for it, a new
+> driver is introduced here.
 
-> > I'm sure Will will respond, but the basic issue is the trainwreck C11
-> > made of dependent loads.
-> > 
-> > Anyway, here's a link to the last time this came up:
-> > 
-> >   https://lore.kernel.org/linux-arm-kernel/20171116174830.GX3624@linux.vnet.ibm.com/
-> 
-> Another good read:
-> 
->   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
-> 
-> and having (partially) re-read that, I now worry intensily about things
-> like latch_tree_find(), cyc2ns_read_begin, __ktime_get_fast_ns().
-> 
-> It looks like kernel/time/sched_clock.c uses raw_read_seqcount() which
-> deviates from the above patterns by, for some reason, using a primitive
-> that includes an extra smp_rmb().
-> 
-> And this is just the few things I could remember off the top of my head,
-> who knows what else is out there.
+Thanks for an update. I'll look at them later, so please defer the
+next version a bit (perhaps for one week).
+My comments below.
 
-As an example, let us consider __ktime_get_fast_ns(), the critical bit
-is:
+...
 
-		seq = raw_read_seqcount_latch(&tkf->seq);
-		tkr = tkf->base + (seq & 0x01);
-		now = tkr->base;
+> +static void pca9570_set_mask_bits(struct gpio_chip *chip, u8 mask, u8 bits)
+> +{
+> +       struct pca9570 *gpio = gpiochip_get_data(chip);
+> +       u8 buffer;
+> +       int err;
+> +
+> +       mutex_lock(&gpio->lock);
 
-And we hard rely on that being a dependent load, so:
+> +       buffer = gpio->buffer & ~mask;
+> +       buffer |= (mask & bits);
 
-  LOAD	seq, (tkf->seq)
-  LOAD  tkr, tkf->base
-  AND   seq, 1
-  MUL   seq, sizeof(tk_read_base)
-  ADD	tkr, seq
-  LOAD  now, (tkr->base)
+Usual pattern is to put this on one line
 
-Such that we obtain 'now' as a direct dependency on 'seq'. This ensures
-the loads are ordered.
+       buffer = (gpio->buffer & ~mask) | (bits & mask);
 
-A compiler can wreck this by translating it into something like:
+> +       err = i2c_smbus_write_byte(gpio->client, buffer);
 
-  LOAD	seq, (tkf->seq)
-  LOAD  tkr, tkf->base
-  AND   seq, 1
-  CMP	seq, 0
-  JE	1f
-  ADD	tkr, sizeof(tk_read_base)
-1:
-  LOAD  now, (tkr->base)
+> +       if (!err)
+> +               gpio->buffer = buffer;
 
-Because now the machine can speculate and load now before seq, breaking
-the ordering.
+I'm not sure I understand why this is under lock.
+
+> +
+> +       mutex_unlock(&gpio->lock);
+
+Can't you simple do it here like
+
+if (err)
+  return;
+
+... = buffer;
+
+?
+
+> +}
+
+...
+
+> +static int pca9570_probe(struct i2c_client *client,
+> +                        const struct i2c_device_id *id)
+
+Can't you use ->probe_new() instead?
+
+> +{
+> +       struct pca9570 *gpio;
+> +       int ret;
+> +
+> +       gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
+> +       if (!gpio)
+> +               return -ENOMEM;
+> +
+
+> +       i2c_set_clientdata(client, gpio);
+
+Either move this before return 0; or...
+
+> +       gpio->chip = template_chip;
+> +       gpio->chip.parent = &client->dev;
+> +
+> +       gpio->client = client;
+> +
+> +       mutex_init(&gpio->lock);
+> +
+> +       ret = devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
+
+> +       if (ret < 0) {
+
+(What is the meaning of ' < 0' ?
+
+> +               dev_err(&client->dev, "Unable to register gpiochip\n");
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+
+...simple return devm_...(...);
+
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
