@@ -2,180 +2,125 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C654C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24A820706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6255320706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0UbnxIw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jFpeUDDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388961AbgFYBHV (ORCPT
+        id S2388962AbgFYBNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36494 "EHLO
+        Wed, 24 Jun 2020 21:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388810AbgFYBHV (ORCPT
+        with ESMTP id S2388789AbgFYBNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:07:21 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4506C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:07:20 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d12so2011627ply.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:07:20 -0700 (PDT)
+        Wed, 24 Jun 2020 21:13:30 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAE35C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:13:29 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id x126so1025206vkb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:13:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=DQNqb/XiJnv5S5KAYc7VnMgjA/JQZWT3OBZtTbZloYs=;
-        b=H0UbnxIw9yihnQXV7n5Vs/S+wHPE+4oI5wiVf1L0FkydepByp7tukHVSsmBjKzLtYX
-         yAcpeRrcRzj/Azf+tWW5QrIcwBLUlca1JeCMlp5VQ7O8QXhFKfAz6YcmO5rVSxdRxFr1
-         wb59f68RnJCNYPRZVH9RkF3A//MIGZ1RhhQZo=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yd/PU2VuXCyC+PGBfj/tOPhw/fq362LdKGFogKdH6dQ=;
+        b=jFpeUDDb3Q12nPIetx9tHwWUXCdCPqmYgqO3AocKZnBHoE2f6aY6srfCjwIS/PyOkI
+         EIogltEO+iQ/5vcXFOysuZ0HXTs6lDIWHjk7r4tWk82usu7zIbk87aDe7skzef9GZLSu
+         1aliXE9GSq50dJecN6mhX9M9QpFyZhE0bvWPA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=DQNqb/XiJnv5S5KAYc7VnMgjA/JQZWT3OBZtTbZloYs=;
-        b=UIx9Zn2AdAUB9HE2AjQfWvK63iTSb1PRbH+iCNJeyaV2XZSOvGqkr6AiJC+FksNlXI
-         ZBYJsfeP3H4qNO83YkarGlIBRbuotchhEHsIFfrn9d/84JBZizWEJYdQghHuT/VLzTjC
-         2II3IJ4pTWr12/Cb74Xzp6jWVE18aNOpD30xG2F4F6Amy0+Qgm/ti5WV8HH4+ng2H82q
-         5TZzI4fmNJUcoyYHCLpONiLPO9DHFURRZi8/ZpSw2WQGJgukZ5ErEBCb2O7Ujx+HeFxz
-         erz5Cs8MbdQj+bvnpULTTaxk0TOPhrEHH1ZN3boRWL0B8Lns59UqQ4oA9Co2dksGlxNP
-         b5Tw==
-X-Gm-Message-State: AOAM533CMB+Tq8s/gkUzooyv0GD7R5f+dC/ZjSSwykZjAxkIi69gLj5v
-        ej8GhwBIRtKeXzAWPfuNphgDcw==
-X-Google-Smtp-Source: ABdhPJwwcQxMpk75imsoh0sM8lNh+D5onW70er8+RgLQLUV8Zlj+nifCh0lPXsEWgtHbcZypSU21dQ==
-X-Received: by 2002:a17:90a:22ab:: with SMTP id s40mr501452pjc.27.1593047240035;
-        Wed, 24 Jun 2020 18:07:20 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u8sm20760732pfh.215.2020.06.24.18.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 18:07:19 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yd/PU2VuXCyC+PGBfj/tOPhw/fq362LdKGFogKdH6dQ=;
+        b=hFBjzWO0B6EhygteM1bNIkR+a50h0gnku6RxUm+40Q4nHw4++DzfAdnSyN+jX8AkTX
+         bh7QI1HXE4n6vkIbBcLDex8bqQP2IrPnNItvTRT5/j8k4JicyDHfmmPoPElL3O6VY2mW
+         Ktv9QlyH+Wgna19TMiYWTh9uBysowsf4r+MFoj4uL1WzIxxk/dwT7RYliR5i7C2Z1ieS
+         /f79d30ATzXZ+rlzZ0EJ7wOoJbvHFpdDM4ae34bMqYAHGVTsIy3HlOpt+CRVM7EM3vhP
+         ueBVjKx33dPfc0XZIins4Fp1vqJRr6UegZ2+33XtkNfsZLg+haMV9zNGaNTyJJtgGYgH
+         +Bkw==
+X-Gm-Message-State: AOAM5337ygzyfLJzl1rCHRDXfGGcRyCBARULPrPRFRWklE7JrwQjZKAo
+        jCc7rPnz/pFjFZayrVggHERIZOFk3qPgrCCwbN2hfQ==
+X-Google-Smtp-Source: ABdhPJwKiOSWX9SKERkrM02ddjELrE9HWRfnaQ3thn15r5/L7B+jrDl1gYWZS8uFlfu2joMZ4O4rnre+yeq8SvAjf18=
+X-Received: by 2002:a1f:3d47:: with SMTP id k68mr13296326vka.68.1593047608816;
+ Wed, 24 Jun 2020 18:13:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200217085842.28333-1-harigovi@codeaurora.org>
-References: <20200217085842.28333-1-harigovi@codeaurora.org>
-Subject: Re: [v3] arm64: dts: sc7180: add nodes for idp display
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-To:     Harigovindan P <harigovi@codeaurora.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-Date:   Wed, 24 Jun 2020 18:07:18 -0700
-Message-ID: <159304723830.62212.5069780400830519255@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200624084524.259560-1-drinkcat@chromium.org> <20200624135722.GF6578@ziepe.ca>
+In-Reply-To: <20200624135722.GF6578@ziepe.ca>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 25 Jun 2020 09:13:17 +0800
+Message-ID: <CANMq1KB1W77JATT0NmGpKeCCpWrXraoDAH5SgGMgBESRynTBJQ@mail.gmail.com>
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Harigovindan P (2020-02-17 00:58:42)
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dt=
-s/qcom/sc7180-idp.dts
-> index 388f50ad4fde..349db8fe78a5 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -232,6 +233,57 @@ vreg_bob: bob {
->         };
->  };
-> =20
-> +&dsi0 {
-> +       status =3D "okay";
-> +
-> +       vdda-supply =3D <&vreg_l3c_1p2>;
-> +
-> +       panel@0 {
-> +               compatible =3D "visionox,rm69299-1080p-display";
-> +               reg =3D <0>;
-> +
-> +               vdda-supply =3D <&vreg_l8c_1p8>;
-> +               vdd3p3-supply =3D <&vreg_l18a_2p8>;
-> +
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&disp_pins>;
-> +
-> +               reset-gpios =3D <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
-> +
-> +               ports {
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <0>;
-> +                       port@0 {
-> +                               reg =3D <0>;
-> +                               panel0_in: endpoint {
-> +                                       remote-endpoint =3D <&dsi0_out>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       ports {
-> +               port@1 {
-> +                       endpoint {
-> +                               remote-endpoint =3D <&panel0_in>;
-> +                               data-lanes =3D <0 1 2 3>;
+On Wed, Jun 24, 2020 at 9:57 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Wed, Jun 24, 2020 at 04:45:24PM +0800, Nicolas Boichat wrote:
+> > trace_printk is only meant as a debugging tool, and should never be
+> > compiled into production code without source code changes, as
+> > indicated by the warning that shows up on boot if any trace_printk
+> > is called:
+> >  **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+> >  **                                                      **
+> >  ** trace_printk() being used. Allocating extra memory.  **
+> >  **                                                      **
+> >  ** This means that this is a DEBUG kernel and it is     **
+> >  ** unsafe for production use.                           **
+> >
+> > If this option is set to n, the kernel will generate a build-time
+> > error if trace_printk is used.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> >  include/linux/kernel.h | 17 ++++++++++++++++-
+> >  kernel/trace/Kconfig   |  9 +++++++++
+> >  2 files changed, 25 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> > index 196607aaf653082..b6addc6ba669e85 100644
+> > +++ b/include/linux/kernel.h
+> > @@ -721,10 +721,15 @@ do {                                                                    \
+> >  #define trace_printk(fmt, ...)                               \
+> >  do {                                                 \
+> >       char _______STR[] = __stringify((__VA_ARGS__)); \
+> > +                                                     \
+> > +     __static_assert(                                \
+> > +             IS_ENABLED(CONFIG_TRACING_ALLOW_PRINTK),\
+> > +             "trace_printk called, please enable CONFIG_TRACING_ALLOW_PRINTK."); \
+> > +                                                     \
+>
+> Why __static_assert not normal static_assert?
 
-Is this property needed? If it's the default assumption it would be nice
-to omit it so that we don't have to think about it.
+Oh, I misread the macro code (and didn't read the comment above in
+include/linux/build_bug.h). static_assert would be just fine.
 
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&dsi_phy {
-> +       status =3D "okay";
-> +};
-> +
-> +&mdp {
-> +       status =3D "okay";
-> +};
-> +
-> +&mdss {
-> +       status =3D "okay";
-> +};
-> +
->  &qspi {
->         status =3D "okay";
->         pinctrl-names =3D "default";
-> @@ -289,6 +341,17 @@ &usb_1_qmpphy {
-> =20
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
-> =20
-> +&pm6150l_gpio {
-> +       disp_pins: disp-pins {
-
-Curious how this works. It looks like PMIC GPIOS are expecting the node
-to look like:
-
-	disp_pins: disp-pins {
-		pinconf {
-			pins =3D "gpio3";
-			function =3D PMIC_GPIO_FUNC_FUNC1;
-			qcom,drive-strength =3D <PMIC_GPIO_STRENGTH_MED>;
-			power-source =3D <PM6150_GPIO_VPH>;
-			bias-disable;
-			output-low;
-		};
-
-but this doesn't use the macros or the subnode for pinconf. Why? Also,
-the PM6150_GPIO_VPH macro doesn't exist.
-
-> +               pins =3D "gpio3";
-> +               function =3D "func1";
-> +               qcom,drive-strength =3D <2>;
-> +               power-source =3D <0>;
-> +               bias-disable;
-> +               output-low;
-> +       };
-> +};
-> +
+>
+> Jason
