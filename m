@@ -2,336 +2,117 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC270C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEC920775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8041620789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DyyM5Sav"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="EVsPRgGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407058AbgFYUDZ (ORCPT
+        id S2407075AbgFYUDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406569AbgFYUDY (ORCPT
+        Thu, 25 Jun 2020 16:03:34 -0400
+Received: from mail.efficios.com ([167.114.26.124]:55990 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406569AbgFYUDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:03:24 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DECC08C5C1;
-        Thu, 25 Jun 2020 13:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FsDT+UwWj8NjanG08/h+QS1cpoNn0JdTXUHH0/+8kpM=; b=DyyM5Sav88XHl/TmWuCfgQ1Vh+
-        SdivkS07u1y74bQS+jecF+JTmw/LKf2EuJa8tPQaJyQFAjVRvyfVMRi5LNy1T96kic0n0iCNjdIC+
-        k0bqeJB2ZhvOAHzPXbW+0SPwMuwdEpA/sGG3zDU2TCqYnkDXYP1VEMxNe+0hp/sA6Uu5sDSZWoFoe
-        CFJL+fD7MsR6RUh+BlD6O7SEPdqWXyis2H1uPUXRQnIw7XrQk3m5z8Sp6TWiWYsyqdOr05FjAwILf
-        siJpQN/KKgSpTv+sZne5M3hvxcPanw9qNN9pitpRmbq5G8MjetRvJOAO6m6eCldOUT1S3MJv511Wg
-        OF33jN1A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joY52-0001sT-PM; Thu, 25 Jun 2020 20:02:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CF1763003E5;
-        Thu, 25 Jun 2020 22:02:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C031B2856A6F6; Thu, 25 Jun 2020 22:02:35 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 22:02:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        mhelsley@vmware.com
-Subject: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-Message-ID: <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com>
- <20200624212737.GV4817@hirez.programming.kicks-ass.net>
- <20200624214530.GA120457@google.com>
- <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com>
+        Thu, 25 Jun 2020 16:03:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 42FAC2CD658;
+        Thu, 25 Jun 2020 16:03:31 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id a5j9EpxsXUmd; Thu, 25 Jun 2020 16:03:31 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id EF3152CD657;
+        Thu, 25 Jun 2020 16:03:30 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EF3152CD657
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593115411;
+        bh=9qvWCyGskE3rDO/cGQ6PqB+tK53PgbIkItbp+K8bsLw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=EVsPRgGHs5lDGx8sSCo+Tef2tg/j4GjgnFoJGaG1wk4m7MjY+gcFND5gx1eWb6JEY
+         8v4iQ3Huyp0ZfSUfI8sf/OrswTqtBTZw9/s/gZwXI9ynl+rHJceWOBTnIoP8chpYOl
+         PdrjOD0RvrskpiocDcUeIxU8wdVFF4hgmGTdXO3Qk0itwcVLAagF8uIxXf3zLohGEM
+         9frDRN3ohytmmrtUVIoCvBMLREpeidPKyteNsomCcgViQn+9XGLul/nCYcDgXxukSW
+         KXjDGhj7m+t1T4Q+4u400aDR+nj4Qjin1LywkQS+k4+jYjW/5HRxfOSRNItQdjrKX9
+         5jFhYOhLlSRWg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id cM7iAJ366Eq8; Thu, 25 Jun 2020 16:03:30 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id D87662CD6E4;
+        Thu, 25 Jun 2020 16:03:30 -0400 (EDT)
+Date:   Thu, 25 Jun 2020 16:03:30 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jason Behmer <jbehmer@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Clark Williams <williams@redhat.com>,
+        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Darren Hart <dvhart@vmware.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
+Message-ID: <581134894.13457.1593115410860.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200625150922.08abe7e6@oasis.local.home>
+References: <20200625094454.732790f7@oasis.local.home> <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com> <20200625150922.08abe7e6@oasis.local.home>
+Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
+ running time stamp
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625161503.GB173089@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: ring-buffer: Have nested events still record running time stamp
+Thread-Index: +7sgo34aw0ps44PfSv+1wlFGe49CgQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 09:15:03AM -0700, Sami Tolvanen wrote:
-> On Thu, Jun 25, 2020 at 09:45:30AM +0200, Peter Zijlstra wrote:
+----- On Jun 25, 2020, at 3:09 PM, rostedt rostedt@goodmis.org wrote:
 
-> > At least for x86_64 I can do a really quick take for a recordmcount pass
-> > in objtool, but I suppose you also need this for ARM64 ?
+> On Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> Sure, sounds good. arm64 uses -fpatchable-function-entry with clang, so we
-> don't need recordmcount there.
+>> What are the types used for before_stamp and write_stamp ? If those
+>> are 64-bit integers, how does sharing them between nested contexts
+>> work on 32-bit architectures ?
+> 
+> BTW, I forgot to state in either of my two emails, THANK YOU!
+> 
+> I really appreciate the thorough review of this patch, and I welcome
+> the challenges you give me to make sure I can verify all that I claim
+> can happen.
 
-This is on top of my local pile:
+You're welcome! I believe these discussions we've been having for the past
+10+ years on ring buffer design have helped improve our respective projects.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git master
+I'm glad to be of service!
 
-which notably includes the static_call series.
+Thanks,
 
-Not boot tested, but it generates the required sections and they look
-more or less as expected, ymmv.
+Mathieu
 
----
- arch/x86/Kconfig              |  1 -
- scripts/Makefile.build        |  3 ++
- scripts/link-vmlinux.sh       |  2 +-
- tools/objtool/builtin-check.c |  9 ++---
- tools/objtool/builtin.h       |  2 +-
- tools/objtool/check.c         | 81 +++++++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.h         |  1 +
- tools/objtool/objtool.h       |  1 +
- 8 files changed, 91 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a291823f3f26..189575c12434 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -174,7 +174,6 @@ config X86
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FAST_GUP
- 	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
--	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GCC_PLUGINS
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 2e8810b7e5ed..c774befc57da 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -227,6 +227,9 @@ endif
- ifdef CONFIG_X86_SMAP
-   objtool_args += --uaccess
- endif
-+ifdef CONFIG_DYNAMIC_FTRACE
-+  objtool_args += --mcount
-+endif
- 
- # 'OBJECT_FILES_NON_STANDARD := y': skip objtool checking for a directory
- # 'OBJECT_FILES_NON_STANDARD_foo.o := 'y': skip objtool checking for a file
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 92dd745906f4..00c6e4f28a1a 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -60,7 +60,7 @@ objtool_link()
- 	local objtoolopt;
- 
- 	if [ -n "${CONFIG_VMLINUX_VALIDATION}" ]; then
--		objtoolopt="check"
-+		objtoolopt="check --vmlinux"
- 		if [ -z "${CONFIG_FRAME_POINTER}" ]; then
- 			objtoolopt="${objtoolopt} --no-fp"
- 		fi
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 4896c5a89702..a6c3a3fba67d 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -18,7 +18,7 @@
- #include "builtin.h"
- #include "objtool.h"
- 
--bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu;
-+bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu, mcount;
- 
- static const char * const check_usage[] = {
- 	"objtool check [<options>] file.o",
-@@ -36,12 +36,13 @@ const struct option check_options[] = {
- 	OPT_BOOLEAN('d', "duplicate", &validate_dup, "duplicate validation for vmlinux.o"),
- 	OPT_BOOLEAN('l', "vmlinux", &vmlinux, "vmlinux.o validation"),
- 	OPT_BOOLEAN('F', "fpu", &fpu, "validate FPU context"),
-+	OPT_BOOLEAN('M', "mcount", &mcount, "generate __mcount_loc"),
- 	OPT_END(),
- };
- 
- int cmd_check(int argc, const char **argv)
- {
--	const char *objname, *s;
-+	const char *objname;
- 
- 	argc = parse_options(argc, argv, check_options, check_usage, 0);
- 
-@@ -50,9 +51,5 @@ int cmd_check(int argc, const char **argv)
- 
- 	objname = argv[0];
- 
--	s = strstr(objname, "vmlinux.o");
--	if (s && !s[9])
--		vmlinux = true;
--
- 	return check(objname, false);
- }
-diff --git a/tools/objtool/builtin.h b/tools/objtool/builtin.h
-index 7158e09d4cc9..b51d883ec245 100644
---- a/tools/objtool/builtin.h
-+++ b/tools/objtool/builtin.h
-@@ -8,7 +8,7 @@
- #include <subcmd/parse-options.h>
- 
- extern const struct option check_options[];
--extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu;
-+extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats, validate_dup, vmlinux, fpu, mcount;
- 
- extern int cmd_check(int argc, const char **argv);
- extern int cmd_orc(int argc, const char **argv);
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 6647a8d1545b..ee99566bdae9 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -533,6 +533,65 @@ static int create_static_call_sections(struct objtool_file *file)
- 	return 0;
- }
- 
-+static int create_mcount_loc_sections(struct objtool_file *file)
-+{
-+	struct section *sec, *reloc_sec;
-+	struct reloc *reloc;
-+	unsigned long *loc;
-+	struct instruction *insn;
-+	int idx;
-+
-+	sec = find_section_by_name(file->elf, "__mcount_loc");
-+	if (sec) {
-+		INIT_LIST_HEAD(&file->mcount_loc_list);
-+		WARN("file already has __mcount_loc section, skipping");
-+		return 0;
-+	}
-+
-+	if (list_empty(&file->mcount_loc_list))
-+		return 0;
-+
-+	idx = 0;
-+	list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node)
-+		idx++;
-+
-+	sec = elf_create_section(file->elf, "__mcount_loc", 0, sizeof(unsigned long), idx);
-+	if (!sec)
-+		return -1;
-+
-+	reloc_sec = elf_create_reloc_section(file->elf, sec, SHT_RELA);
-+	if (!reloc_sec)
-+		return -1;
-+
-+	idx = 0;
-+	list_for_each_entry(insn, &file->mcount_loc_list, mcount_loc_node) {
-+
-+		loc = (unsigned long *)sec->data->d_buf + idx;
-+		memset(loc, 0, sizeof(unsigned long));
-+
-+		reloc = malloc(sizeof(*reloc));
-+		if (!reloc) {
-+			perror("malloc");
-+			return -1;
-+		}
-+		memset(reloc, 0, sizeof(*reloc));
-+
-+		reloc->sym = insn->sec->sym;
-+		reloc->addend = insn->offset;
-+		reloc->type = R_X86_64_64;
-+		reloc->offset = idx * sizeof(unsigned long);
-+		reloc->sec = reloc_sec;
-+		elf_add_reloc(file->elf, reloc);
-+
-+		idx++;
-+	}
-+
-+	if (elf_rebuild_reloc_section(file->elf, reloc_sec))
-+		return -1;
-+
-+	return 0;
-+}
-+
- /*
-  * Warnings shouldn't be reported for ignored functions.
-  */
-@@ -892,6 +951,22 @@ static int add_call_destinations(struct objtool_file *file)
- 			insn->type = INSN_NOP;
- 		}
- 
-+		if (mcount && !strcmp(insn->call_dest->name, "__fentry__")) {
-+			if (reloc) {
-+				reloc->type = R_NONE;
-+				elf_write_reloc(file->elf, reloc);
-+			}
-+
-+			elf_write_insn(file->elf, insn->sec,
-+				       insn->offset, insn->len,
-+				       arch_nop_insn(insn->len));
-+
-+			insn->type = INSN_NOP;
-+
-+			list_add_tail(&insn->mcount_loc_node,
-+				      &file->mcount_loc_list);
-+		}
-+
- 		/*
- 		 * Whatever stack impact regular CALLs have, should be undone
- 		 * by the RETURN of the called function.
-@@ -3004,6 +3079,7 @@ int check(const char *_objname, bool orc)
- 	INIT_LIST_HEAD(&file.insn_list);
- 	hash_init(file.insn_hash);
- 	INIT_LIST_HEAD(&file.static_call_list);
-+	INIT_LIST_HEAD(&file.mcount_loc_list);
- 	file.c_file = !vmlinux && find_section_by_name(file.elf, ".comment");
- 	file.ignore_unreachables = no_unreachable;
- 	file.hints = false;
-@@ -3056,6 +3132,11 @@ int check(const char *_objname, bool orc)
- 		goto out;
- 	warnings += ret;
- 
-+	ret = create_mcount_loc_sections(&file);
-+	if (ret < 0)
-+		goto out;
-+	warnings += ret;
-+
- 	if (orc) {
- 		ret = create_orc(&file);
- 		if (ret < 0)
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index cd95fca0d237..01f11b5da5dd 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -24,6 +24,7 @@ struct instruction {
- 	struct list_head list;
- 	struct hlist_node hash;
- 	struct list_head static_call_node;
-+	struct list_head mcount_loc_node;
- 	struct section *sec;
- 	unsigned long offset;
- 	unsigned int len;
-diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
-index 9a7cd0b88bd8..f604b22d22cc 100644
---- a/tools/objtool/objtool.h
-+++ b/tools/objtool/objtool.h
-@@ -17,6 +17,7 @@ struct objtool_file {
- 	struct list_head insn_list;
- 	DECLARE_HASHTABLE(insn_hash, 20);
- 	struct list_head static_call_list;
-+	struct list_head mcount_loc_list;
- 	bool ignore_unreachables, c_file, hints, rodata;
- };
- 
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
