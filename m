@@ -2,106 +2,154 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 203712078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qX/ZX608"
+	by mail.kernel.org (Postfix) with ESMTP id 3222820789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389551AbgFYCt6 (ORCPT
+        id S2389567AbgFYCw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 22:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389357AbgFYCt5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 22:49:57 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35ABC061573;
-        Wed, 24 Jun 2020 19:49:55 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id c30so153740qka.10;
-        Wed, 24 Jun 2020 19:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=5lXjeiOsBG8uhpS7ADjeldJYydP2WlIiNtg79CXwmCw=;
-        b=qX/ZX608fv7NpAvxxHzMOLRstQFILAXA3k/9MGX52siF/ZeawE2D1ZvM8e4I7qYTl9
-         skx6mJ2pWPpRAXAucnpTWkcTEav0gMaXYK/h1ro1UXLv1F7GHw7diX/LPMlEno6y5NOM
-         W1BKa8cW43b1HXkxWC01Pcdt2d1icUI5qCOpWUOD3yj51PFX2tTjy7Sz7iIGCIH9/PhH
-         FTsfF14KjjPWrp2xm5zd+w21ax3vzIpelIQghr71b3Lwmf23xZ8hTyehaP4z4/xw7Ezl
-         4S4nk+z7w/Egea/zL94vnRM5dJfcGk+iwoxQhUVmucOta1jBcyWcLblc+QOo1/+ra5WJ
-         Oh7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=5lXjeiOsBG8uhpS7ADjeldJYydP2WlIiNtg79CXwmCw=;
-        b=CsQ2YRTbjuTnDAmDTaLbITM4slu4DA7eRvrPeODrwKoP5qNNJZdBFMYN+vWcQsbV4E
-         t09sZW1Z9yDZgTQK4hCZd+4bnxY0EXSXpKhm+y/px3Xk8G1Odx+fvJl0kJYXrUP/KwH5
-         r4RnfDiPxEP8NDyXe0Ho+tT7rEutFxmF/OhjXA3pY/Po8T+vR2xw0xHbSzAnqjwyVK4y
-         mlN7mgxfL2/xLj1SLEsLcSq9HZgmmQWqdPSrBH25Mre/M/MMRu2V0wY8eamBwdlwFdC0
-         Or43GtF9aplgmAuPOtOvRyUmNmv6BGYHNUoi1FLmbIfzdGqiaT+QArDous/gJ+4RKXB7
-         +eaA==
-X-Gm-Message-State: AOAM532OSshGZKwWxUG1xCvxE0i1nsjNKQ/2Z6bbQmWXYi5aWyCAUJB/
-        wy/Gh2hhG3RNBPZr4seVClc=
-X-Google-Smtp-Source: ABdhPJz9Kir3cc0loPW9ZyiKJcJAxyg/+Y2eCStO0p4ztcdGUzkkew0qG4pZb4iIqxqtlqUQBJQWNg==
-X-Received: by 2002:ae9:f40b:: with SMTP id y11mr28509038qkl.107.1593053394833;
-        Wed, 24 Jun 2020 19:49:54 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:b4f5:b2c7:27bb:8a39])
-        by smtp.googlemail.com with ESMTPSA id v69sm4744823qkb.96.2020.06.24.19.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 19:49:54 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org (open list:NETFILTER),
-        coreteam@netfilter.org (open list:NETFILTER),
-        netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6]),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] [net/ipv6] Remove redundant null check in rt_mt6
-Date:   Wed, 24 Jun 2020 22:49:48 -0400
-Message-Id: <20200625024949.3963-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 24 Jun 2020 22:52:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60976 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389357AbgFYCw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 22:52:57 -0400
+IronPort-SDR: nfk4QQn3GecU8I3NcGRzMglSs60aO1EqDnBxuphr7eCuxEMTB2pr6LBmHP07EvqTZu3/n8a7rt
+ 9gmuWnwlE76A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="143813874"
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="143813874"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 19:52:56 -0700
+IronPort-SDR: 3NzIdllr45u+iyc9nWKWBmbNtHRCZngD2ePQu2iRdujhYn9r1WgsgeyxBpkQEsRQVOzLktUO14
+ igE6Xtj0CsyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="301845959"
+Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Jun 2020 19:52:52 -0700
+Date:   Thu, 25 Jun 2020 05:52:51 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Jiandi An <anjiandi@codeaurora.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v5 1/2] acpi: Extend TPM2 ACPI table with missing log
+ fields
+Message-ID: <20200625025251.GC270125@linux.intel.com>
+References: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
+ <20200623120636.1453470-2-stefanb@linux.vnet.ibm.com>
+ <20200625000021.GC21758@linux.intel.com>
+ <9d94c704-5774-ceeb-e4f3-010f74ffe37b@linux.ibm.com>
+ <20200625023431.GB270125@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625023431.GB270125@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rh cannot be NULL here since its already checked above
-assignment and is being dereferenced before. Remove the
-redundant null check.
+On Thu, Jun 25, 2020 at 05:34:38AM +0300, Jarkko Sakkinen wrote:
+> On Wed, Jun 24, 2020 at 08:38:25PM -0400, Stefan Berger wrote:
+> > On 6/24/20 8:00 PM, Jarkko Sakkinen wrote:
+> > > On Tue, Jun 23, 2020 at 08:06:35AM -0400, Stefan Berger wrote:
+> > > > From: Stefan Berger <stefanb@linux.ibm.com>
+> > > > 
+> > > > Recent extensions of the TPM2 ACPI table added 3 more fields
+> > > > including 12 bytes of start method specific parameters and Log Area
+> > > > Minimum Length (u32) and Log Area Start Address (u64). So, we extend
+> > > > the existing structure with these fields to allow non-UEFI systems
+> > > > to access the TPM2's log.
+> > > > 
+> > > > The specification that has the new fields is the following:
+> > > >    TCG ACPI Specification
+> > > >    Family "1.2" and "2.0"
+> > > >    Version 1.2, Revision 8
+> > > > 
+> > > > Adapt all existing table size calculations to use
+> > > > offsetof(struct acpi_table_tpm2, start_method_specific)
+> > > > [where start_method_specific is a newly added field]
+> > > > rather than sizeof(struct acpi_table_tpm2) so that the addition
+> > > > of the new fields does not affect current systems that may not
+> > > > have them.
+> > > > 
+> > > I found at least one regression from this patch. Please remove my
+> > > reviewed-by comment form the next version.
+> > > 
+> > > Should have:
+> > > 
+> > >    Link: https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
+> > > 
+> > > Please, add this.
+> > > 
+> > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > > > Cc: linux-acpi@vger.kernel.org
+> > > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > ---
+> > > >   drivers/char/tpm/tpm_crb.c | 13 ++++++++++---
+> > > >   drivers/char/tpm/tpm_tis.c |  4 +++-
+> > > >   include/acpi/actbl3.h      |  5 +++--
+> > > >   3 files changed, 16 insertions(+), 6 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+> > > > index a9dcf31eadd2..0565aa5482f9 100644
+> > > > --- a/drivers/char/tpm/tpm_crb.c
+> > > > +++ b/drivers/char/tpm/tpm_crb.c
+> > > > @@ -669,7 +669,9 @@ static int crb_acpi_add(struct acpi_device *device)
+> > > >   	status = acpi_get_table(ACPI_SIG_TPM2, 1,
+> > > >   				(struct acpi_table_header **) &buf);
+> > > > -	if (ACPI_FAILURE(status) || buf->header.length < sizeof(*buf)) {
+> > > > +	if (ACPI_FAILURE(status) || buf->header.length <
+> > > > +			offsetof(struct acpi_table_tpm2,
+> > > > +				 start_method_specific)) {
+> > > >   		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
+> > > >   		return -EINVAL;
+> > > >   	}
+> > > > @@ -684,14 +686,19 @@ static int crb_acpi_add(struct acpi_device *device)
+> > > >   		return -ENOMEM;
+> > > >   	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
+> > > > -		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_smc))) {
+> > > > +		if (buf->header.length <
+> > > > +			(offsetof(struct acpi_table_tpm2,
+> > > > +				  start_method_specific) +
+> > > Should be
+> > > 
+> > >    offsetof(struct acpti_table_tpm2, log_area_minimum_length)
+> > 
+> > 
+> > The old code had sizeof(*buf) with buf being 'struct acpi_table_tpm2' and
+> > that was equivalent to offsetof(struct acpi_table_tpm2,
+> > start_method_specific) since 'start_method_specific' is the first new field
+> > that we are adding right here. Also see 3rd paragraph in the patch
+> > description. The replacement rule described there should apply to all
+> > sizeof() calculations on 'struct acpi_table_tpm2.'
+> 
+> Aren't you ignoring sizeof(*crb_smc) then?
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- net/ipv6/netfilter/ip6t_rt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Duh, it's there I see. Sorry, my mistake.
 
-diff --git a/net/ipv6/netfilter/ip6t_rt.c b/net/ipv6/netfilter/ip6t_rt.c
-index f633dc84ca3f..733c83d38b30 100644
---- a/net/ipv6/netfilter/ip6t_rt.c
-+++ b/net/ipv6/netfilter/ip6t_rt.c
-@@ -89,8 +89,7 @@ static bool rt_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		 !((rtinfo->flags & IP6T_RT_RES) &&
- 		   (((const struct rt0_hdr *)rh)->reserved)));
- 
--	ret = (rh != NULL) &&
--	      (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
-+	ret = (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
- 			      rh->segments_left,
- 			      !!(rtinfo->invflags & IP6T_RT_INV_SGS))) &&
- 	      (!(rtinfo->flags & IP6T_RT_LEN) ||
--- 
-2.17.1
+Please put the new fields in a separate struct:
 
+struct acpi_tpm2_phy {
+	u8  start_method_specific[12];
+	u32 log_area_minimum_length;
+	u64 log_area_start_address;
+};
+
+This way we don't have to obfuscate all the calculations and zero out
+the need for 1/2 in this patch set.
+
+/Jarkko
