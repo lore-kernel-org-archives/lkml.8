@@ -2,138 +2,175 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F1C20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BE920789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Bb4C8ESy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJIIJMox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389788AbgFYFWN (ORCPT
+        id S2389824AbgFYFXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:22:13 -0400
-Received: from sonic309-22.consmr.mail.gq1.yahoo.com ([98.137.65.148]:37699
-        "EHLO sonic309-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389559AbgFYFWM (ORCPT
+        Thu, 25 Jun 2020 01:23:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389559AbgFYFXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 01:22:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1593062531; bh=eWxg5wDTW3X7hg6BDoLBlNfZPh+/wNMxRAVo+gKvGyo=; h=From:To:Cc:Subject:Date:References:From:Subject; b=Bb4C8ESyArnddsERuFBM9T8/uJncGv+C8biW+DjuBO9M1Knocei1uzf+E3G70lKsAwh4T98iIEk9jK1kwUr4JJhqGO82f1tsTX6ZTevmanDdxaFf24dcWNuPoMvRO8LcZ6qsPPaQ/rLcCvxrD1Rdhp8TjEJoztush/YA3ndcdSl1J1JG66ydOatjASt34HlpsofF3CbPsVR9hZVV2U7O43io6hCIguC3wrEtsuJTfhHZonY0qb+xzHfjgBL/bdYBSGp/CPuhrzB7nC20vkmOBhPqA1iuVQJvKYbWgJXs6Eaow9B5oCH7wLJT8y6qPka5NKfftAPMC2pGV/cFsyc1Vg==
-X-YMail-OSG: Sh.jItEVM1mIwdlDSVPWTqZOrD55TsNpghxm_hDOi2rn6Fb9ZRAFvpxsSxyR5pz
- cWn95piVIUneRb5iLTnH2OBLt9i8xgKqIS5vgzJzfKI8okLIZl.lyjpv9CqBhrUY_YqroDqvEhpo
- k27TDolHRqoyGI3hWFa2LtqmlSluu15mI.Kt.0OIgXEjkLUEBHWjsbk4AMb2KDVGDLTixd2enoFa
- SUgoAzo4AvyzMZweQNejdGqECS1HbgUQOuBQZwS9arJErorkow31JuN7drL_FtVNhVSh8QxXYSOY
- XCTvGh62OMHqwDyJQif7lXbGHjUsJBhYZOA8hP4R57qODUbAphcIvrLpzNBDysaL5IeBuDNJA.P6
- l9Ur22284sZWV3qe4HwgQUT6Cq64uRYCtyctUCxgUSAnPWgVE7QWLQlbGHkmScmnP.lQOPlYxEWt
- R0GSAMIf3xq.KerL5jAJCCqx528s3xQrATFAoXnNeOi6nxuRDXlKCYamksi4.lFWKLdOBWRu5V1H
- UjfMdzZ5q3G1L0Gg2S6LBtvA4YHa1NF8_QCb_yWLMWrw8IekFkJjAmOmigD3jSGMeFSiobXeTRcB
- YbMxkCNsugtFf7bMtY.wRN9T2mQWtfgFSq6yvGx2knVTLq84xWipLXpQsZXCLICVe8Ra6nO4QKmw
- kFZRialJWi8RdxroQGZtsi739muV_MxGRnmZI.XyST9ZR_Ih8C5HldR.B8NyqCUU3ydNwRzUqBn3
- f4lY8_g1PQXzoflWBLifgB1J4x4I.oAz3Qwc7ZbcXtcUpORA0lY1V38638._WDG3gPC8Dr1T7T1P
- wWAM11.CQmB0kvx9548r2QJnFPNbSAI1_SrIkM0Egr_JkSnFDLLwdxlCnvNG8xlogEwIRgxXWKsC
- oYINRq6hnPE4RqApHEYoUoPEURN4NvHMJs.0svy_xkzEiL0834gf9_H_jfpzJRIqpVl1yQdIzXlr
- jxXrLQM1MmM3uHU.gYEh_dWo2.hKV7_7wMcVo0OZaxcVJJ.5rA181PoHEWzkKGQVS0pA2PZk7Z68
- jQUTQ9OJF9GYFl2ChTeVmorsdkrFaTjStwA9P14Bsdjve.MpvmTKBj0BAtGV5QA4YHtrlnaE0t8L
- u2HdC7MwYnhb66VIcyWkPBMuuQNAmd1F2d2sjvr5KuUXVsWXgcwGawDo.vX4oanfTSoM4xLv3q_K
- QIjGdrBHauf5_5stOn3LW9Ck2qZk9.2Od3ryHq4rvGp_0yKQNTuW6JpEzAgbZymHGzGYHLkFNkP3
- dfRhLORnYFnGtg9qaxBfGtO0_widFvhzSWHK7HXkqtRj2Nb.QpuNKA.2WX7W105EyzWApNwQUo_I
- D9gxwsuAGKk.os3gblDhA6R1v4_ZaoeBdo864uJi0.XqvMIPvs7U_LOAyBW0CsOhMYO8qfD1ULA-
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Thu, 25 Jun 2020 05:22:11 +0000
-Received: by smtp431.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID c5f9560e0b507acc2701276e664e6e1e;
-          Thu, 25 Jun 2020 05:22:10 +0000 (UTC)
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Gao Xiang <hsiangkao@redhat.com>,
-        Hongyu Jin <hongyu.jin@unisoc.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 5.4.y] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
-Date:   Thu, 25 Jun 2020 13:21:57 +0800
-Message-Id: <20200625052157.1197-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 25 Jun 2020 01:23:22 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95487C061573;
+        Wed, 24 Jun 2020 22:23:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id u128so2763715pgu.13;
+        Wed, 24 Jun 2020 22:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G7EYtpN+7APVu3hftiJBUcaii12rvBtQLcLyvFMd3fw=;
+        b=jJIIJMoxL6YsQVrG7We7n48E+SeW7jk0D25Di+/5IowuwUSecYdFowrs3zU3Ar+clB
+         D7O/AgEWBWfMEOmUWDep0xWKKl8zbs3ABy/eLh8Y/rqrV47ShC/omyeBMohoN+RrEVGv
+         zMvNYy9Si2WXLoSyXeQBtE7pOxnk/4Z7HeqYSbK1usdxxvj/KfrRfwmgezF21rhBaQxL
+         3dJ6sXHFV3I5r1Oc+FaC8rLXBwY9Jos35avaKEVvJB2z+WsyWE2Q+utTq9C5fOgPuUom
+         YtjrsnSlphGxBQ7IyrYgDi/KklkyWAiY6PraldKhi3/UqKrYGyFCbNJyeSWtvQ/inbve
+         nzFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G7EYtpN+7APVu3hftiJBUcaii12rvBtQLcLyvFMd3fw=;
+        b=K28tgkfoCC8MvqtkB+9VehH8oOJV/d4JTmfExcYPuzjIExcbmCSILzj0p8JXOqhaWV
+         cVwSEOubffJF345A5/ihg4RsJK989UOrfqR7DnBFZ3wVUJvuAFRjJo5qNg/Trr5KqF76
+         da2l1ywh0A8G3jrSgKL1I2KUOAkkY7gLF+4Rrxj8O9KUryB64oAxFD4ty4OGA5lTvhDt
+         L+XITm9mYrvAfxtru8AYfSJ/X39KdrIo+XLIwPpjZnWNjzvcrUHd+1rZjiEAP/ay63uE
+         IpTYmQlXwk+WenhJgxxb8uocXdKZjz0zkiZgFTXJ3kRBe+ETuyRjnEFrZDNRzFep8j5j
+         Wu2w==
+X-Gm-Message-State: AOAM531M4mn/6sThDL6JdPyB1HLr54hoXZxTES0J5rufbajX/NPLjsk1
+        HEu0TvAG64wmkDhpsMhQxn4=
+X-Google-Smtp-Source: ABdhPJw9IVvFgD9u6cKkJI+eEsVm8cCM5YDQSmq1Y1wrIMZkohaI0YZ2wNwSQKKZGzZRenNdJo7hRA==
+X-Received: by 2002:a65:46c9:: with SMTP id n9mr23942588pgr.89.1593062601705;
+        Wed, 24 Jun 2020 22:23:21 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id i12sm21668804pfk.180.2020.06.24.22.23.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 22:23:20 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 22:23:18 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>,
+        linux-input@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Collabora Kernel ML <kernel@collabora.com>
+Subject: Re: [PATCH v4 3/7] ACPI: button: Access input device's users under
+ appropriate mutex
+Message-ID: <20200625052318.GE248110@dtor-ws>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <20200608112211.12125-4-andrzej.p@collabora.com>
+ <CAJZ5v0j7e9TzDtEiDXmj3fLAQ7CvFHoe7Q3aYKKas3PEXrsUuw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20200625052157.1197-1-hsiangkao.ref@aol.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0j7e9TzDtEiDXmj3fLAQ7CvFHoe7Q3aYKKas3PEXrsUuw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <hsiangkao@redhat.com>
+On Wed, Jun 24, 2020 at 05:00:09PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Jun 8, 2020 at 1:22 PM Andrzej Pietrasiewicz
+> <andrzej.p@collabora.com> wrote:
+> >
+> > Inspecting input device's 'users' member should be done under device's
+> > mutex, so add appropriate invocations.
+> >
+> > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> 
+> This looks like a fix that might be applied independently of the other
+> patches in the series.
+> 
+> Do you want me to pick it up?
 
-commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
+If you pick it we'll have to have a dance with this series. Can I apply
+instead?
 
-Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
-specific aarch64 environment easily, which wasn't shown before.
+I do not think this change has any practical effect as nobody
+attaches/detached input handlers or opening/closing input devices when
+system goes through device resume phase.
 
-After digging into that, I found that high 32 bits of page->private
-was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
-behavior with specific compiler options). Actually we only use low
-32 bits to keep the page information since page->private is only 4
-bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
-uses the upper 32 bits by mistake.
+> 
+> > ---
+> >  drivers/acpi/button.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+> > index 78cfc70cb320..ff7ab291f678 100644
+> > --- a/drivers/acpi/button.c
+> > +++ b/drivers/acpi/button.c
+> > @@ -456,13 +456,16 @@ static int acpi_button_resume(struct device *dev)
+> >  {
+> >         struct acpi_device *device = to_acpi_device(dev);
+> >         struct acpi_button *button = acpi_driver_data(device);
+> > +       struct input_dev *input = button->input;
+> >
+> >         button->suspended = false;
+> > -       if (button->type == ACPI_BUTTON_TYPE_LID && button->input->users) {
+> > +       mutex_lock(&input->mutex);
+> > +       if (button->type == ACPI_BUTTON_TYPE_LID && input->users) {
+> >                 button->last_state = !!acpi_lid_evaluate_state(device);
+> >                 button->last_time = ktime_get();
+> >                 acpi_lid_initialize_state(device);
+> >         }
+> > +       mutex_unlock(&input->mutex);
+> >         return 0;
+> >  }
+> >  #endif
+> > --
+> > 2.17.1
+> >
 
-Let's fix it now.
+Thanks.
 
-Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
-This fix has been merged into Linus's tree just now.
-The 5.4 backport can be trivially applied, though I sent out
-together with 4.19...
-
- fs/erofs/zdata.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index faf950189bd7..568d5a493876 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -148,22 +148,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
- static inline void z_erofs_onlinepage_fixup(struct page *page,
- 	uintptr_t index, bool down)
- {
--	unsigned long *p, o, v, id;
--repeat:
--	p = &page_private(page);
--	o = READ_ONCE(*p);
-+	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
-+	int orig, orig_index, val;
- 
--	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
--	if (id) {
-+repeat:
-+	orig = atomic_read(u.o);
-+	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
-+	if (orig_index) {
- 		if (!index)
- 			return;
- 
--		DBG_BUGON(id != index);
-+		DBG_BUGON(orig_index != index);
- 	}
- 
--	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
--		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
--	if (cmpxchg(p, o, v) != o)
-+	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
-+		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
-+	if (atomic_cmpxchg(u.o, orig, val) != orig)
- 		goto repeat;
- }
- 
 -- 
-2.24.0
-
+Dmitry
