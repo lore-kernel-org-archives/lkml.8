@@ -3,178 +3,185 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E04C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED31204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Q0h4au9p"
+	by mail.kernel.org (Postfix) with ESMTP id A250020738
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593111649;
+	bh=YkfmNwRTqOcDyN/i3vS+1r+tulnHjjdBmDirQ+SLQ6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gl3UoThYmLXPYKP1/ohlyZ6mzmRJIhZ6s0QLf5ziN58cC0it1ajvL8QXiBb94QhyV
+	 V+nC6FHEuGD14WbfDvrGcnoZNGheNBDqk4UrjqL+G1jbSuQVtvThsvU5yKqZ41fqwq
+	 KaRPy4imiFKMJVnhu/SVdirDIvEe8tizbJqPWra4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406419AbgFYS55 (ORCPT
+        id S2406427AbgFYTAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:57:57 -0400
-Received: from mail-mw2nam10on2113.outbound.protection.outlook.com ([40.107.94.113]:42929
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406110AbgFYS5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:57:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gJove7v5tmmGMn4RFJGJ4EPXw/GhEBSgABlZ6Z7G1UKrjnZboSaQ8UiBOOjmwgzt26qgMuIdxlDh4fBZeopMZR3OK6PfYfLTai7FHY51ghu1izLpLlKNJHBtvqDK+zBxc9yj2eiwZ1LoHMQe84lT5E1oWH3jv3+VuPLqTlXnbruGDvHZD6eJxENYJWkC05ZfY9L1jabdpbJJGiJwtcVk336Fe0wT6yYk8CYJEOp5WJeDVtPeg9+zGUR0h7AoS81WPXsv5S4sy4vqanvZHVePUfmqD6IhqIIrwE2yY+q+c+7k6iqtCNzGXqEUL17vTLOq3hOHPF02rLQh1fa8yS+g6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9PX8gpwdqa6XLfdsDog8IV9acID7i4CFhz3jOK+jl94=;
- b=iLfAPfBNKV0EURIuvkYvGXEF/PyyvDE8I76l1n8IU/C/3bRBjbl5vAdBmiP7WKdZhD9LB8yYOXy2Q7jCacAR/yiBZ3SsfrQoRrdgAoUQS3v2dlYh62A3AUlZTf1XU1rv/DNnVEpLxH9YkPiGG1I6JQ5NgcslZ41Sw5JVBE5jo360AmXnkS1Da7VlkfpKTetM7RTZzvu1l9I6XYSkgwf+E0iKf/S+cTcZcOQapiANWGJnRukeMcTYVxc/fx0jNeVZWeckd3w+fOECTf6lYmyq0ltd3YRoqUNF9XzB7meiHcsuIS+0o4A186UNrQm/3pIlAbAqfYiwgEf0iJOSCZ1KMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9PX8gpwdqa6XLfdsDog8IV9acID7i4CFhz3jOK+jl94=;
- b=Q0h4au9prFVmCzhC2tRR+dOAKMdCIHTCjUKOsnLU3NaoL+rhhh3zayLwNK6ngJXNPL5muNEXMOZ4I6BY0mQPvUC+XNNiTPZVDdea5oyWv6dV4hBqJb8D+kck9+6PrTNSL/BIdEMyuWJVg8ts0331hHCOF27R/QEwp94vXzBUgJw=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by BL0PR2101MB0980.namprd21.prod.outlook.com
- (2603:10b6:207:36::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.2; Thu, 25 Jun
- 2020 18:57:51 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::421:be5d:ef2e:26d2]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::421:be5d:ef2e:26d2%4]) with mapi id 15.20.3153.005; Thu, 25 Jun 2020
- 18:57:51 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Andres Beltran <lkmlabelt@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Topic: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate
- transaction IDs for VMBus hardening
-Thread-Index: AQHWSwaaylt6KwhZwEW4/H3wlYNgFqjprKTQ
-Date:   Thu, 25 Jun 2020 18:57:51 +0000
-Message-ID: <BL0PR2101MB09309FC4BB95D48026DEE99BCA920@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200625153723.8428-1-lkmlabelt@gmail.com>
- <20200625153723.8428-4-lkmlabelt@gmail.com>
-In-Reply-To: <20200625153723.8428-4-lkmlabelt@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-25T18:57:49Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c0a1711f-605f-48fd-b5c0-1721e5d1d095;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [96.61.83.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 72eb1272-18c6-4b25-64d3-08d81939a8fc
-x-ms-traffictypediagnostic: BL0PR2101MB0980:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB098060C47C6BFD776D2833A5CA920@BL0PR2101MB0980.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 0445A82F82
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3nWHGcgSiPzSXGFxLpV8opm2WBTX1ZY9e7qbw9bTuLYhJRj1nVqCyu0MzwORr+l7HQnja6xSo6ovCs0q2ni/+LI/yWx2XD/PZ1+BxwHD6Y+vILMFRFaygm23P7LzGl42/N86H51OVpF791WLpCDj8HKLfqLKwMj4kCSLQrscD9IC8Uad6NOkK3i8rpjF+4fkuFzLKVsbZM0zkE+8JfOH3gPYmPBk/QcvAA4fs4gvptqpTfFAkk8X8TAWBfdxQqqV6mm7p3KDZJQLjOBpMC+6knbg+TMw6rUBdpn4TH/iQr+qQe5XMCSOaAsehDOpQrwTwg7NlPpOfl32zJZOKyo4QA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(10290500003)(82950400001)(82960400001)(71200400001)(33656002)(66476007)(316002)(66946007)(76116006)(8936002)(83380400001)(6506007)(8990500004)(186003)(53546011)(26005)(52536014)(110136005)(8676002)(2906002)(54906003)(86362001)(64756008)(66446008)(66556008)(478600001)(5660300002)(9686003)(4326008)(55016002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: GgV6NCQO3UkSisoATN4cxzmlsNijHE0KpymkWgX6K3j0WDYlIBRXKvTsDGBUfL3g2Cpgx0tiVsy+DqoFmw0EPkAJISqwVkLv/cxaoHZJ/jJ86UeKVrpcBgheljQhcid/xOwauEpbtkZozNElN2KFvQz82snPNEpI7a/SUrFaWgOheMBK37YFIAQehu8drwzGs0hq9f37e1ON39eUEc9tS8bYnhOfNVn+GjT+rlYW4rv03+jAzeWPOijEvnyDcUYi19sKoahOGVwgU8P3P7gI/1KZCOdnO68eIT3ThZdhHpf9loTL/pCEiOS6F4VGQdW95EgTPWVJcSidPCqab1tJJyIIf4JvDt8a3laqH/lxwc54GdaLPemY0I21FLKKgbGzv85Ws9ZKZsv87iN+rE1fNPWCQ0knGOa2Bvt00VHBC7i1eYFccBPct8H/jiZkM8N5GtkNd6UO5O9Wck2+oZzDzCKPGEfV0I8cEqeydf6aTx8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 25 Jun 2020 15:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390431AbgFYTAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 15:00:48 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F90620679;
+        Thu, 25 Jun 2020 19:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593111647;
+        bh=YkfmNwRTqOcDyN/i3vS+1r+tulnHjjdBmDirQ+SLQ6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K1lbL3iVZT7SpBv0OEozOH0fVRO8/BuAfb9RFc8HtvswzuDfoaC6xqbpPi+WXBqrU
+         cAv8xiWw27C2V9eZ6RlnrKZgkDs7dEkpa8txpq+TVjXtVI4O94xD8sQAKj6z3w+dX+
+         nCS+6WlJ0QgvlsO0WP45hjJ63EaQEgcFJ56TfJHg=
+Date:   Thu, 25 Jun 2020 22:00:43 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Re: [PATCH v4] IB/sa: Resolving use-after-free in ib_nl_send_msg
+Message-ID: <20200625190043.GF1446285@unreal>
+References: <1592964789-14533-1-git-send-email-divya.indi@oracle.com>
+ <20200625100904.GE1446285@unreal>
+ <372b8c22-bac9-e737-bd54-0d9e2901de65@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72eb1272-18c6-4b25-64d3-08d81939a8fc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2020 18:57:51.0769
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NU6++Bet83dBqMy+Ppwd+m0rA2P7bgmkpxoWf7YwqMAxUSplenxo0P4DitVZBbVyiXUXasy5Sb9TT+czumeGFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0980
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <372b8c22-bac9-e737-bd54-0d9e2901de65@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 10:11:07AM -0700, Divya Indi wrote:
+> Hi Leon,
+>
+> Please find my comments inline -
+>
+> On 6/25/20 3:09 AM, Leon Romanovsky wrote:
+> > On Tue, Jun 23, 2020 at 07:13:09PM -0700, Divya Indi wrote:
+> >> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
+> >> -
+> >> 1. Adds the query to the request list before ib_nl_snd_msg.
+> >> 2. Moves ib_nl_send_msg out of spinlock, hence safe to use gfp_mask as is.
+> >>
+> >> However, if there is a delay in sending out the request (For
+> >> eg: Delay due to low memory situation) the timer to handle request timeout
+> >> might kick in before the request is sent out to ibacm via netlink.
+> >> ib_nl_request_timeout may release the query causing a use after free situation
+> >> while accessing the query in ib_nl_send_msg.
+> >>
+> >> Call Trace for the above race:
+> >>
+> >> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+> >> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+> >> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+> >> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+> >> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+> >> [rds_rdma]
+> >> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+> >> [rds_rdma]
+> >> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+> >> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+> >> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+> >> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+> >> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+> >> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+> >> [<ffffffff810a68fb>] kthread+0xcb/0xf0
+> >> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> >> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> >> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> >> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+> >> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> >> ....
+> >> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+> >>
+> >> To resolve the above issue -
+> >> 1. Add the req to the request list only after the request has been sent out.
+> >> 2. To handle the race where response comes in before adding request to
+> >> the request list, send(rdma_nl_multicast) and add to list while holding the
+> >> spinlock - request_lock.
+> >> 3. Use non blocking memory allocation flags for rdma_nl_multicast since it is
+> >> called while holding a spinlock.
+> >>
+> >> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+> >> before sending")
+> >>
+> >> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> >> ---
+> >> v1:
+> >> - Use flag IB_SA_NL_QUERY_SENT to prevent the use-after-free.
+> >>
+> >> v2:
+> >> - Use atomic bit ops for setting and testing IB_SA_NL_QUERY_SENT.
+> >> - Rewording and adding comments.
+> >>
+> >> v3:
+> >> - Change approach and remove usage of IB_SA_NL_QUERY_SENT.
+> >> - Add req to request list only after the request has been sent out.
+> >> - Send and add to list while holding the spinlock (request_lock).
+> >> - Overide gfp_mask and use GFP_NOWAIT for rdma_nl_multicast since we
+> >>   need non blocking memory allocation while holding spinlock.
+> >>
+> >> v4:
+> >> - Formatting changes.
+> >> - Use GFP_NOWAIT conditionally - Only when GFP_ATOMIC is not provided by caller.
+> >> ---
+> >>  drivers/infiniband/core/sa_query.c | 41 ++++++++++++++++++++++----------------
+> >>  1 file changed, 24 insertions(+), 17 deletions(-)
+> >>
+> >> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+> >> index 74e0058..9066d48 100644
+> >> --- a/drivers/infiniband/core/sa_query.c
+> >> +++ b/drivers/infiniband/core/sa_query.c
+> >> @@ -836,6 +836,10 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+> >>  	void *data;
+> >>  	struct ib_sa_mad *mad;
+> >>  	int len;
+> >> +	unsigned long flags;
+> >> +	unsigned long delay;
+> >> +	gfp_t gfp_flag;
+> >> +	int ret;
+> >>
+> >>  	mad = query->mad_buf->mad;
+> >>  	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
+> >> @@ -860,36 +864,39 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+> >>  	/* Repair the nlmsg header length */
+> >>  	nlmsg_end(skb, nlh);
+> >>
+> >> -	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
+> >> -}
+> >> +	gfp_flag = ((gfp_mask & GFP_ATOMIC) == GFP_ATOMIC) ? GFP_ATOMIC :
+> >> +		GFP_NOWAIT;
+> > I would say that the better way will be to write something like this:
+> > gfp_flag |= GFP_NOWAIT;
+>
+> You mean gfp_flag = gfp_mask|GFP_NOWAIT? [We dont want to modify the gfp_mask sent by caller]
+>
+> #define GFP_ATOMIC      (__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
+> #define GFP_KERNEL      (__GFP_RECLAIM | __GFP_IO | __GFP_FS)
+> #define GFP_NOWAIT      (__GFP_KSWAPD_RECLAIM)
+>
+> If a caller passes GFP_KERNEL, "gfp_mask|GFP_NOWAIT" will still have __GFP_RECLAIM,
+> __GFP_IO and __GFP_FS set which is not suitable for using under spinlock.
 
+Ahh, sorry I completely forgot about spinlock part.
 
-> -----Original Message-----
-> From: Andres Beltran <lkmlabelt@gmail.com>
-> Sent: Thursday, June 25, 2020 11:37 AM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> wei.liu@kernel.org
-> Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; Michael
-> Kelley <mikelley@microsoft.com>; parri.andrea@gmail.com; Andres Beltran
-> <lkmlabelt@gmail.com>; David S. Miller <davem@davemloft.net>; Jakub
-> Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
-> Subject: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate transacti=
-on
-> IDs for VMBus hardening
->=20
-> Currently, pointers to guest memory are passed to Hyper-V as
-> transaction IDs in netvsc. In the face of errors or malicious
-> behavior in Hyper-V, netvsc should not expose or trust the transaction
-> IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-> use small integers generated by vmbus_requestor as requests
-> (transaction) IDs.
->=20
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> ---
->  drivers/net/hyperv/hyperv_net.h   | 10 +++++
->  drivers/net/hyperv/netvsc.c       | 75 +++++++++++++++++++++++++------
->  drivers/net/hyperv/rndis_filter.c |  1 +
->  include/linux/hyperv.h            |  1 +
->  4 files changed, 73 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_=
-net.h
-> index abda736e7c7d..14735c98e798 100644
-> --- a/drivers/net/hyperv/hyperv_net.h
-> +++ b/drivers/net/hyperv/hyperv_net.h
-> @@ -847,6 +847,16 @@ struct nvsp_message {
->=20
->  #define NETVSC_XDP_HDRM 256
->=20
-> +#define NETVSC_MIN_OUT_MSG_SIZE (sizeof(struct vmpacket_descriptor) + \
-> +				 sizeof(struct nvsp_message))
-> +#define NETVSC_MIN_IN_MSG_SIZE sizeof(struct vmpacket_descriptor)
-> +
-> +/* Estimated requestor size:
-> + * out_ring_size/min_out_msg_size + in_ring_size/min_in_msg_size
-> + */
-> +#define NETVSC_RQSTOR_SIZE (netvsc_ring_bytes /
-> NETVSC_MIN_OUT_MSG_SIZE + \
-> +			    netvsc_ring_bytes / NETVSC_MIN_IN_MSG_SIZE)
+Thanks
 
-Please make the variable as the macro parameter for readability:
-#define NETVSC_RQSTOR_SIZE(ringbytes) (ringbytes / NETVSC_MIN_OUT_MSG_SIZE =
-...
-
-Then put the actual variable name when you use the macro.
-
-Thanks,
-- Haiyang
-
+>
+> Thanks,
+> Divya
+>
+> >
+> > Thanks
