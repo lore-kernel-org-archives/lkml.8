@@ -2,115 +2,106 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BABC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6E4F20A8B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:09:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xb62JDvc"
+	by mail.kernel.org (Postfix) with ESMTP id 19CF32067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390485AbgFYIJV (ORCPT
+        id S2390503AbgFYILj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:09:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24844 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390396AbgFYIJU (ORCPT
+        Thu, 25 Jun 2020 04:11:39 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:52457 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbgFYILi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:09:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593072558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kSGQ/c5ShJ+Wy+Y09jXsrJyUMElWj+v+/BP4E6A1ROc=;
-        b=Xb62JDvcO6JH75Tf8GdtNFShvqCYACDkEHN0zP7Cb085w+SD8bocuAS4Ok8z/IOx/f7B4p
-        Is6jBS/DaBUYUwHZhZiwdqoFU2d3cTt3bPtNPNJBMaLXd9q/bwSSKsgLIIgfTti16V6vds
-        FeJyR05jKNyt52i2RxnJ6aN7l+1x5Og=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-hoaWqXptNyCO_x6Ycx9cFg-1; Thu, 25 Jun 2020 04:09:16 -0400
-X-MC-Unique: hoaWqXptNyCO_x6Ycx9cFg-1
-Received: by mail-wr1-f72.google.com with SMTP id i5so5041661wra.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 01:09:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kSGQ/c5ShJ+Wy+Y09jXsrJyUMElWj+v+/BP4E6A1ROc=;
-        b=h11375cHkD7NvgTKDJelVP1yIrXZWKH6JFD9GtSVod7GiupDq0T+qyHqDC7YzOC8Rq
-         gzLT8+AiDyXhRXctSrRNGyiUgtqTuXxD0R2jrhmSiBm+tTbnMxqFg6i8B5n3nGyl+COz
-         4q968QrM76vBNhruYcZbVp+f6GeW+QjYSdR0iW9PTH0nfuDwRG9jA378YV6tlvMvN3nY
-         rrX3sZHDqdXEMPwm1rP4B8x8JtLfIdX4M1zMd/afcnGvecqjeeZ9J21ZiusTxZK2ePoN
-         Y1A9tKjDvzTp1f4+SihwbhiXk5N5SF1ev1WEq8+D6nITqmPZVtKz0zlK01H3rc5NN52h
-         06Hw==
-X-Gm-Message-State: AOAM530ZOwhTtiP/xCGc24xglBqOuFnoWTZtSqdNqppGDdpw2CTZdnii
-        O6MQF9VYrosFsDVZK/ja6wCWU0K5Cehqr7UYnakureI0GI30jiJrIWjQB9NR1uq/YXFoeuDYKde
-        g/1zMj0GxDEWhiYcTMxXFw/kz
-X-Received: by 2002:a5d:5270:: with SMTP id l16mr27931641wrc.122.1593072555469;
-        Thu, 25 Jun 2020 01:09:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyu3WRKqxf9t0ItCr5MiLTW4CShMAwLhiKgnLtu7bDrz9rzBO8clwwCNiY44t+zaDTL7zOcpQ==
-X-Received: by 2002:a5d:5270:: with SMTP id l16mr27931621wrc.122.1593072555252;
-        Thu, 25 Jun 2020 01:09:15 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:91d0:a5f0:9f34:4d80? ([2001:b07:6468:f312:91d0:a5f0:9f34:4d80])
-        by smtp.gmail.com with ESMTPSA id u23sm16912259wru.94.2020.06.25.01.09.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 01:09:14 -0700 (PDT)
-Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20200622220442.21998-1-peterx@redhat.com>
- <20200622220442.21998-2-peterx@redhat.com>
- <20200625061544.GC2141@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
-Date:   Thu, 25 Jun 2020 10:09:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 25 Jun 2020 04:11:38 -0400
+Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1Mq33i-1j2gDL1V58-00n5Wr; Thu, 25 Jun 2020 10:11:29 +0200
+Date:   Thu, 25 Jun 2020 10:11:28 +0200 (CEST)
+From:   Thomas Ruf <freelancer@rufusul.de>
+Reply-To: Thomas Ruf <freelancer@rufusul.de>
+To:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     Federico Vaga <federico.vaga@cern.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Message-ID: <84270660.632865.1593072688966@mailbusiness.ionos.de>
+In-Reply-To: <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
+Subject: Re: DMA Engine: Transfer From Userspace
 MIME-Version: 1.0
-In-Reply-To: <20200625061544.GC2141@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:HRzZ5peGV0s505yrNUmy14wLZnN+vfwR82ESXZO9Xn8IosI2Nhb
+ tS27+7lVHfyqGmG1X4PlBHEF7VEIRakVZt++yNkg3elhFmdOok/ghZSucGsZ7cEc/CXZi68
+ yrGkoR1jdBuNeaYRi52VBN3HGODudojDMPoitdQSngxITKvUATEWz0FTY1iNbmfQfj+sNhx
+ Ph+4shDH6JvSWaA/2Ixdw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Wc8ojQSYAcE=:agm+E9A9YdkiLYUwIfZEsU
+ P5e+UVwhMxR2FkAyYvkjGEVfNUIxDvaAqnhIM/rd8I3pYLWL/WrQdsgFTh4nrKnx8L5p5M8Ma
+ tTp+qSxmmRaFACz134/c0gcsXWDpOOw/ejBiqQAdAWcYkn08CwSN/UPeGNkOYeZ8F7sR+Ut5J
+ hGKBX6n9xT9T0JJfptJQpc5gsMlImiW1ixgNsu90X/M90uW/qVgiKn/yJl9NgNk6kqGzcDnVX
+ pobN2gS9pL/pDgbjYrDoQIO6ZCBtu466N2PUvYKL/sfgqNevpEX71LNJ+t8C7EyAamCB/4d+p
+ o+KCthWANWuASXEOTzG17H3YNwPG+O4de+iCepWXFF2vWMYnZk0HKhFecMC6qhE4AyE9vrsHN
+ Wi6isW8yJqmBYLFPaoi4tjhhwY1r7DfBbQ7fklCJl7g5jgk2wwwwVY5SLhIuW7MhdGgKO4RyX
+ LCZZpRms2z9S3tPY6w0D5/hXxZ4nERr8091PUGhjLc1RcKUJtypMI+4hq5QGWUagHPBVJfI1f
+ eadrp2Y+YQNTXWLz3yQYSR+5EgfU/AHffU8XkJTif4YtANAToU/8douLYqgbnxk1adSySKadb
+ k43cJykTNmWJ5Dnd9S8219J8NsuK2fX4ciTeRNY24bm2kZMnAaBVq/YYRQwz/2UQxr9enluZ2
+ e8wXzVRi/luspXO2u+1xdBUa1J2B+7Kz12nVhccnXGa92q7Ou7YMq/+2HS/fO6OuTac5xvKtM
+ yrEYVgeDU6BvYaYONSBb8mxPkIEfoQcDfWxD0IVipnhtaOju+zCtrJXPFNNPKlEWjARLv7BC1
+ hKjo1LZjZv4LrnnXSMEbztwgrQyR4Rjxbb0eUr7iVDjyAtOnFE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/20 08:15, Sean Christopherson wrote:
-> IMO, kvm_cpuid() is simply buggy.  If KVM attempts to access a non-existent
-> MSR then it darn well should warn.
+
+> On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 8a294f9747aa..7ef7283011d6 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -1013,7 +1013,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->                 *ebx = entry->ebx;
->                 *ecx = entry->ecx;
->                 *edx = entry->edx;
-> -               if (function == 7 && index == 0) {
-> +               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) &&
-> +                   (vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR)) {
->                         u64 data;
->                         if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
->                             (data & TSX_CTRL_CPUID_CLEAR))
 > 
+> 
+> 
+> On 6/21/2020 12:24 AM, Vinod Koul wrote:
+> > On 19-06-20, 16:31, Dave Jiang wrote:
+> >>
+> >>
+> >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> >>> Hello,
+> >>>
+> >>> is there the possibility of using a DMA engine channel from userspace?
+> >>>
+> >>> Something like:
+> >>> - configure DMA using ioctl() (or whatever configuration mechanism)
+> >>> - read() or write() to trigger the transfer
+> >>>
+> >>
+> >> I may have supposedly promised Vinod to look into possibly providing
+> >> something like this in the future. But I have not gotten around to do that
+> >> yet. Currently, no such support.
+> > 
+> > And I do still have serious reservations about this topic :) Opening up
+> > userspace access to DMA does not sound very great from security point of
+> > view.
+> 
+> What about doing it with DMA engine that supports PASID? That way the user can 
+> really only trash its own address space and kernel is protected.
 
-That works too, but I disagree that warning is the correct behavior
-here.  It certainly should warn as long as kvm_get_msr blindly returns
-zero.  However, for a guest it's fine to access a potentially
-non-existent MSR if you're ready to trap the #GP, and the point of this
-series is to let cpuid.c or any other KVM code do the same.
+Sounds interesting! Not sure if this is really needed in that case...
+I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
+But i will do some checks if my code is really suitable to avoid misusage.
 
-Paolo
-
+Best regards,
+Thomas
