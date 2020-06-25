@@ -2,226 +2,118 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE91C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5967DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1117A207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A0D2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593082381;
-	bh=soNUNt6SN0NBZi4lpB0mUfayqf6qO/jv1+DvyYAoyEE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hHsiqtuezafEmvjLzFMr1GTAR1E3RqchhFQOsAzapdFJ5WlM+/hjzf13VTScbCT3z
-	 caedOiv18BM/kWpBhsCG8svbUgO+DuitjKhK5zdhzdX95nkRxnxmzvIq4zaYZw65ON
-	 i6JeEGqL3qCbx6ns74t7IdH2htdvMwuRm+CXdALc=
+	s=default; t=1593082386;
+	bh=xQYMEBX8Mbh29sjJ9o2nePFuoAeEimDK6OFXSbmCjTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v7wQNzYDHa1JvvnIvvBiSoohQyzXLP9ZnZzZPYreccoi+PNL2qg8NY9aq8S60unFa
+	 0YhJrHZ1EsNzynpzKVDlQQa56JTfOFgXysk7BjH57pKtxUc5ZWSq1+7Fxps7qoIoM1
+	 L3NGR2t9d1yAW2hCI7sAdTYJmR64gI/lQDUhbUB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404106AbgFYKw7 (ORCPT
+        id S2404069AbgFYKxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:52:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41993 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403952AbgFYKw6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:52:58 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s21so4541261oic.9;
-        Thu, 25 Jun 2020 03:52:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cwIdSXPUuU1uRqpvtJKtzstYQAUArlOMALUNp7co5jM=;
-        b=tMNWIAwmLKevjNxSYczq7350FAkRplHgyVO2Ib5MBFXOQpk6NGLI53pG68xjXSIT9i
-         5ZM0SiUJN8V2V71kjxWJwQPdAuSeLhLogvhhaTLAY1D36O7MY1TGLsUWD8KYs/nkh0BL
-         7UxmMXjgd14veCtKITiI4q5VnMcKiBwNmsELzeuZX/L5bGXVPb4QzyH0gpmcnVioKFdd
-         VOoceNKTqMAfSQAgNffVQaNntBwD55Fu0yvVSY7w5cJfdw6dFegkXDfv98GDqD0ZQfHw
-         pTJfQW9C5XUve3ClM+BYxAjP1vse+k/rQAjCnJ2N0EU74fDiu6ReGIi3bW2vy+Q14/3V
-         encA==
-X-Gm-Message-State: AOAM533sTjVlw5kxuos1rf5CRILy2HmzXRGQ8xqL9V0s57y5M0Z6Mwa5
-        XWajOJz6pBXLC3oV7qcQQRtutaWk5MxsP8nAE/0=
-X-Google-Smtp-Source: ABdhPJwRCQMnCB/bfuvmkARjDAhUHGU6ki0GfoTWamxo9Rq1xfFvWJi8TwqcHRaFJuXBeT1DMVCjbHvWJZL0Eu9jkFE=
-X-Received: by 2002:a54:4585:: with SMTP id z5mr1704626oib.110.1593082376670;
- Thu, 25 Jun 2020 03:52:56 -0700 (PDT)
+        Thu, 25 Jun 2020 06:53:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403952AbgFYKxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:53:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EFB52076E;
+        Thu, 25 Jun 2020 10:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593082381;
+        bh=xQYMEBX8Mbh29sjJ9o2nePFuoAeEimDK6OFXSbmCjTA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X9P4QH0+uB4dIHxeqlov7R3GtEi1KhQo9JtH6jWsxDDjYzI+uTldWZERude6/N8bM
+         0d5cGKl72i48gvEtSAmV5fLTQkwnLmhJnzw6wM8Q6yu2+dWy9SaFW743JfUk5Nl0k3
+         a1Gx3nvqYS/SWhZHTS722OmBwzHy+QcA3KlBaxuY=
+Date:   Thu, 25 Jun 2020 12:52:56 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
+Cc:     "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Varun Sethi <V.Sethi@nxp.com>
+Subject: Re: [PATCH] tty: serial: fsl_lpuart: minimum baud rate support
+Message-ID: <20200625105256.GA3335222@kroah.com>
+References: <1593078545-11272-1-git-send-email-vabhav.sharma@oss.nxp.com>
+ <20200625100410.GA3327034@kroah.com>
+ <VI1PR04MB4800F6C28186CE70F3E1D197F3920@VI1PR04MB4800.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200623142138.209513-1-qperret@google.com> <20200623142138.209513-3-qperret@google.com>
- <20200624055023.xofefhohf7wifme5@vireshk-i7> <CAJZ5v0ja_rM7i=psW1HRyzEpW=8QwP2u9p+ihN3FS8_53bbxTQ@mail.gmail.com>
- <20200624153259.GA2844@google.com> <20200625085052.4ah4wbog3guj74v4@vireshk-i7>
-In-Reply-To: <20200625085052.4ah4wbog3guj74v4@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jun 2020 12:52:45 +0200
-Message-ID: <CAJZ5v0huMCZcqEkDw2KKp9RMBAU=rpex0zSAw_kK3CqjMyaibw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Quentin Perret <qperret@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB4800F6C28186CE70F3E1D197F3920@VI1PR04MB4800.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:50 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 24-06-20, 16:32, Quentin Perret wrote:
-> > Right, but I must admit that, looking at this more, I'm getting a bit
-> > confused with the overall locking for governors :/
-> >
-> > When in cpufreq_init_policy() we find a governor using
-> > find_governor(policy->last_governor), what guarantees this governor is
-> > not concurrently unregistered? That is, what guarantees this governor
-> > doesn't go away between that find_governor() call, and the subsequent
-> > call to try_module_get() in cpufreq_set_policy() down the line?
-> >
-> > Can we somewhat assume that whatever governor is referred to by
-> > policy->last_governor will have a non-null refcount? Or are the
-> > cpufreq_online() and cpufreq_unregister_governor() path mutually
-> > exclusive? Or is there something else?
->
-> This should be sufficient to fix pending issues I believe. Based over your
-> patches.
+On Thu, Jun 25, 2020 at 10:12:54AM +0000, Vabhav Sharma (OSS) wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Thursday, June 25, 2020 3:34 PM
+> > To: Vabhav Sharma (OSS) <vabhav.sharma@oss.nxp.com>
+> > Cc: jslaby@suse.com; linux-serial@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Varun Sethi <V.Sethi@nxp.com>; Vabhav Sharma
+> > <vabhav.sharma@nxp.com>
+> > Subject: Re: [PATCH] tty: serial: fsl_lpuart: minimum baud rate support
+> > 
+> > On Thu, Jun 25, 2020 at 03:19:05PM +0530, Vabhav Sharma wrote:
+> > > From: Vabhav Sharma <vabhav.sharma@nxp.com>
+> > >
+> > > The formula for the baud rate is
+> > > baud rate = "baud clock / ((OSR+1) × SBR)
+> > >
+> > > Algorithm used in function lpuart32_serial_setbrg() only changes the
+> > > SBR. Even with maxmum value put in, OSR stays at 0x7 and the lowest
+> > > baud rate would be ~ 2600 bps
+> > >
+> > > Update the algorithm to allow driver operation at 1200,2400 or
+> > > 600 bps
+> > >
+> > > Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> > > ---
+> > >  drivers/tty/serial/fsl_lpuart.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/drivers/tty/serial/fsl_lpuart.c
+> > > b/drivers/tty/serial/fsl_lpuart.c index 90298c4..0fd0fa5f 100644
+> > > --- a/drivers/tty/serial/fsl_lpuart.c
+> > > +++ b/drivers/tty/serial/fsl_lpuart.c
+> > > @@ -1925,6 +1925,10 @@ static void __lpuart32_serial_setbrg(struct
+> > uart_port *port,
+> > >  			tmp_sbr++;
+> > >  		}
+> > >
+> > > +		if (tmp_sbr > UARTBAUD_SBR_MASK) {
+> > > +			continue;
+> > > +		}
+> > 
+> > Always use scripts/checkpatch.pl on your patches so you do not get grumpy
+> > emails from maintainers telling you to use scripts/checkpatch.pl on your
+> > patches...
+> Indeed, I run the script before sending patch
+> ./scripts/checkpatch.pl 0001-tty-serial-fsl_lpuart-minimum-baud-rate-support.patch
+> total: 0 errors, 0 warnings, 10 lines checked
+> 
+> 0001-tty-serial-fsl_lpuart-minimum-baud-rate-support.patch has no obvious style problems and is ready for submission.
 
-LGTM, but can you post it in a new thread to let Patchwork pick it up?
+Ok, then something is wrong as there is obviously a coding style issue
+with your submission, as you can see with a manual review of it, right?
 
-> -------------------------8<-------------------------
-> From: Viresh Kumar <viresh.kumar@linaro.org>
-> Date: Thu, 25 Jun 2020 13:15:23 +0530
-> Subject: [PATCH] cpufreq: Fix locking issues with governors
->
-> The locking around governors handling isn't adequate currently. The list
-> of governors should never be traversed without locking in place. Also we
-> must make sure the governor isn't removed while it is still referenced
-> by code.
->
-> Reported-by: Quentin Perret <qperret@google.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq.c | 59 ++++++++++++++++++++++++---------------
->  1 file changed, 36 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 4b1a5c0173cf..dad6b85f4c89 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -624,6 +624,24 @@ static struct cpufreq_governor *find_governor(const char *str_governor)
->         return NULL;
->  }
->
-> +static struct cpufreq_governor *get_governor(const char *str_governor)
-> +{
-> +       struct cpufreq_governor *t;
-> +
-> +       mutex_lock(&cpufreq_governor_mutex);
-> +       t = find_governor(str_governor);
-> +       if (!t)
-> +               goto unlock;
-> +
-> +       if (!try_module_get(t->owner))
-> +               t = NULL;
-> +
-> +unlock:
-> +       mutex_unlock(&cpufreq_governor_mutex);
-> +
-> +       return t;
-> +}
-> +
->  static unsigned int cpufreq_parse_policy(char *str_governor)
->  {
->         if (!strncasecmp(str_governor, "performance", CPUFREQ_NAME_LEN))
-> @@ -643,28 +661,14 @@ static struct cpufreq_governor *cpufreq_parse_governor(char *str_governor)
->  {
->         struct cpufreq_governor *t;
->
-> -       mutex_lock(&cpufreq_governor_mutex);
-> -
-> -       t = find_governor(str_governor);
-> -       if (!t) {
-> -               int ret;
-> -
-> -               mutex_unlock(&cpufreq_governor_mutex);
-> -
-> -               ret = request_module("cpufreq_%s", str_governor);
-> -               if (ret)
-> -                       return NULL;
-> -
-> -               mutex_lock(&cpufreq_governor_mutex);
-> +       t = get_governor(str_governor);
-> +       if (t)
-> +               return t;
->
-> -               t = find_governor(str_governor);
-> -       }
-> -       if (t && !try_module_get(t->owner))
-> -               t = NULL;
-> -
-> -       mutex_unlock(&cpufreq_governor_mutex);
-> +       if (request_module("cpufreq_%s", str_governor))
-> +               return NULL;
->
-> -       return t;
-> +       return get_governor(str_governor);
->  }
->
->  /**
-> @@ -818,12 +822,14 @@ static ssize_t show_scaling_available_governors(struct cpufreq_policy *policy,
->                 goto out;
->         }
->
-> +       mutex_lock(&cpufreq_governor_mutex);
->         for_each_governor(t) {
->                 if (i >= (ssize_t) ((PAGE_SIZE / sizeof(char))
->                     - (CPUFREQ_NAME_LEN + 2)))
-> -                       goto out;
-> +                       break;
->                 i += scnprintf(&buf[i], CPUFREQ_NAME_PLEN, "%s ", t->name);
->         }
-> +       mutex_unlock(&cpufreq_governor_mutex);
->  out:
->         i += sprintf(&buf[i], "\n");
->         return i;
-> @@ -1060,11 +1066,14 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
->  {
->         struct cpufreq_governor *gov = NULL;
->         unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
-> +       bool put_governor = false;
-> +       int ret;
->
->         if (has_target()) {
->                 /* Update policy governor to the one used before hotplug. */
-> -               gov = find_governor(policy->last_governor);
-> +               gov = get_governor(policy->last_governor);
->                 if (gov) {
-> +                       put_governor = true;
->                         pr_debug("Restoring governor %s for cpu %d\n",
->                                  policy->governor->name, policy->cpu);
->                 } else if (default_governor) {
-> @@ -1091,7 +1100,11 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
->                         return -ENODATA;
->         }
->
-> -       return cpufreq_set_policy(policy, gov, pol);
-> +       ret = cpufreq_set_policy(policy, gov, pol);
-> +       if (put_governor)
-> +               module_put(gov->owner);
-> +
-> +       return ret;
->  }
->
->  static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cpu)
+greg k-h
