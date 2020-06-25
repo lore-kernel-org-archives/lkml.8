@@ -5,133 +5,274 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83043C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32485C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60C2720789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0517620789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="q+FLrgcN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpQG+gFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389823AbgFYF0f (ORCPT
+        id S2389549AbgFYFeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:26:35 -0400
-Received: from sonic308-8.consmr.mail.gq1.yahoo.com ([98.137.68.32]:38763 "EHLO
-        sonic308-8.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389600AbgFYF0f (ORCPT
+        Thu, 25 Jun 2020 01:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389269AbgFYFeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 01:26:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1593062794; bh=UI3MnVRcoC7IXe6/MF3z2voS16XTSftvJq41/v0i0mQ=; h=From:To:Cc:Subject:Date:References:From:Subject; b=q+FLrgcNq9vG8GAxW9nvdywce0SSUTQus1YoFMCEPcxjO6ebYukowjfltl7oQomoc5Q7LiaIOiDNd2MbVxtmY6r2Vftgmt1bvLeTlw2aguYVrBdDFUHF8fQ9kig6+MNcu82R9zTlLeEZz+COaVqx+9NO+8NclLcOR+wVu8cPDeS8KNhsZTkpnzxkujL2P/yz+CaWHvC9wj9lpE0XM/rWY8vw6b+csDmYBg34U8pxPnIgWwJYtyMSsQO45LBj5DVayy8OAJmJEDxOZvVWjGkWiRXK9Ye6xDN5n018oJfbxnnTXn0mw64rBVDLbtqVGkxWc+g1/bY4kC7bkxtl6VDSMg==
-X-YMail-OSG: bsdlrlgVM1mkmtWAtBgP9cd7AhcmSERQIEcd2YkdBf.6gO4emVzjvB2dLmUFp8r
- cjny56dghxTfkipUFC6.qaE301sz9IPqjVuRndFGBZ8mBVdcD2Iqf3SWeqdGxbpwl.I77lAhGc_B
- LQ9naH_UKJYbWqZLqrDXMK3tYqfwT43G4iqxmVkOGkEGPUfL4I2JSj3hpZgNo07Ec2QrgPLRpM2A
- NRcxZ5811BcyCae3uFFyxKjyt3SvNkbY0pH6KiFo_RbwfchbeABwU0mIZ46SToRQnduLM5ZcXD3I
- GFEi0uAMe5KZ52pCUi7E0zOTexz4nP6WLcie1bGmJqb1YmmnOw8uUiy4xihO6M3lpF3_.K8_vnhw
- 1UFrUBXJ0Bwv_b8CQG_RMhWC99KIkNr6NZ2z2vjf5qKl6noXFuf54c2afLbxQHzO4V_QS9jKobKr
- MV2qd4fbaMeoEkMYFhCTc1p7wHPgXVFiKUYLtziXnelQb1itno0u6Ii0Z7xrAFEw.expXc5ZNi1j
- TdMksTyzUP9rfh9i_MzUUN8aLbhHZc2Je.qHbkffDuEapCJ0BiwT.JFr.PU7bNkxCoeFOoU0d9k3
- M7L4OPaxK4FwcOygWJdMLcKyv5j1l7Od.Et9Q9R6B1iv9CclUE5pbh._nh4rVzy.Y_ANVNFVK6Wh
- 1L9DjEgUJ_rAOmcH2VAa44xD_Vci73YuFCJcHjOwGxgJweYQbG0wg.7IPfScGCz3IF6OYWBa0YIL
- LMRItIqaov8NPZEAIkSSZBqwvLdYEi4xSsT5VilBlsZ6yNjfZPC5nIaLcBntjvfRlB3fFFi2i8Cx
- HJ4geP6EqOrqjX3GMHxGZnK2q9TOu28fRU9TH8GGE.ReLgDSI_wHSEyHRxGHXnlqpzpy.9OZ1Uet
- 6UuSECRy2lYpxLL3Cepusfs0cz4SRvX_GcDAKiVdMFlGJX01UAVXyRnI5oN.P.INUfY6EKN34mFA
- fJeg6t6hhwLJp3N5zoiKAFm5Vv2_BBnTAwXIRfhIaqXztduINazwS_D9R4sT5QRmq1NVmQMjLh1L
- LzM4DoSqWXtpw4kbwO1XsCY9E15J5AhLhbdri3lnEZ2BOJ57ofyx6O4NUd2vwRpYfje91YX9U8xq
- 1MgcmW3WMb1kDSx10794rWiETZLyPf7xBTuoGqp35K8HVcnZ.SUqUfrk4sqZWnTQXyVtxYvCxbXW
- d7jfkloEzhFR3cOggEviexMQjQYnE2O.OgIPVPX2CmWwo0.ZSdlCNnO8OPXZ7uRuByHRmuQGAT9l
- cooqJzFXJ0BR9WX1PDHS.5u1fq1ICoOKLoNrqdKSudbsJOhdSvvaDCHm0FfhD_6AgraWuh4TuLK2
- SS8wuamo5utNLN448QDdvff7CpYuPykX5dQXpL7EDDdMr0_OEjvsCUbR1F2TwF6xlLimOkxwOnNt
- _pQbABiWGWC1j245qO6II2T1BWsUKsltFFaA-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Thu, 25 Jun 2020 05:26:34 +0000
-Received: by smtp413.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 834819637f2457c34ebb73ab79a37a10;
-          Thu, 25 Jun 2020 05:26:31 +0000 (UTC)
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Gao Xiang <hsiangkao@redhat.com>,
-        Hongyu Jin <hongyu.jin@unisoc.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 5.7.y] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
-Date:   Thu, 25 Jun 2020 13:26:18 +0800
-Message-Id: <20200625052618.2316-1-hsiangkao@aol.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 25 Jun 2020 01:34:17 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F12C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:34:17 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 22so4291197wmg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HS9gdqMc+SPZZ7m3mwfkUTxekM/Q1K/XkwerNb18rq0=;
+        b=WpQG+gFzcVPSFXw5JlvVu1GrcCwqi9Ga3xnsxiLK8j8RGt3nFQ9mL6ojFvOfFreiYm
+         3k5zxXiPkbypGaKJcVWryZS7lJweYzmvIb75+/zGitlVf/DJXxsjkcLexgcy9AFnbZdS
+         dP9WqdOptJUyF4QhofW4sb+XKHBQehgQhs9gfqjz36Jo8FJEPqKDajXI5uVnkJmQUk4W
+         ZzlQpcMAF9E0IdjGjqbJqlH0yX5qOa5nYJJ0t0mZAROFkP01u6IF5WPjnzWt3LaISKda
+         9PisUWthADKfRra9RAUmeiGKvPD+N6Yms+nuylI2uplOf41hfcDMe2SE+NjukwnupSfw
+         hWsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HS9gdqMc+SPZZ7m3mwfkUTxekM/Q1K/XkwerNb18rq0=;
+        b=N28vGWvsO5OHJ9ElAyn2ThrLZZgkyfnLyt4uuWsHQznMigUD3vfSISeNG7bYBAK4II
+         egi14YA009v3Mpioo9k7ubUalLYN/DFVvLOuaBgSRwJ+UCvdcSZAOUPPsQyS9J0sSdE0
+         ELb5cvMA/lr9/zcoYsZhcKc4LjzRZsxqjdU7ApB1cCdcXHkKtz6F+0wgUy30iftZBQsG
+         IZCpDCdWiF8KHcbEr0wS8sxu773kulzPUwTyPOOZC6A2YKMBShvrQNzmgGDACtv11pUL
+         Gros9KolRA/qQRCv/0H9+oHfpZ9Cq/pk1+6MNAbgK+FjFCV89PI5YShTxzK3fB4LBWU9
+         h4Wg==
+X-Gm-Message-State: AOAM532GIUOkRdmkk6L8Q/I1pSHr0ZvDlkHquOX1Sj0Jf80VSD1L1y7e
+        xgpJFyGgy16AZNQsXd91Vu/cLRbO
+X-Google-Smtp-Source: ABdhPJw87jXeKChNW4foOmwtrZOpmbZsGQErTFmT8VakEIJKkNfJsApiEcP318hWeAbcutKOzrIixw==
+X-Received: by 2002:a1c:7fd7:: with SMTP id a206mr1436000wmd.104.1593063256240;
+        Wed, 24 Jun 2020 22:34:16 -0700 (PDT)
+Received: from bobo.ibm.com (61-68-186-125.tpgi.com.au. [61.68.186.125])
+        by smtp.gmail.com with ESMTPSA id r1sm21546790wrt.73.2020.06.24.22.34.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 22:34:15 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Paul McKenney <paulmck@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ring-buffer: speed up buffer resets by avoiding synchronize_rcu for each CPU
+Date:   Thu, 25 Jun 2020 15:34:03 +1000
+Message-Id: <20200625053403.2386972-1-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20200625052618.2316-1-hsiangkao.ref@aol.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gao Xiang <hsiangkao@redhat.com>
+On a 144 thread system, `perf ftrace` takes about 20 seconds to start
+up, due to calling synchronize_rcu() for each CPU.
 
-commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
+  cat /proc/108560/stack
+    0xc0003e7eb336f470
+    __switch_to+0x2e0/0x480
+    __wait_rcu_gp+0x20c/0x220
+    synchronize_rcu+0x9c/0xc0
+    ring_buffer_reset_cpu+0x88/0x2e0
+    tracing_reset_online_cpus+0x84/0xe0
+    tracing_open+0x1d4/0x1f0
 
-Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
-specific aarch64 environment easily, which wasn't shown before.
+On a system with 10x more threads, it starts to become an annoyance.
 
-After digging into that, I found that high 32 bits of page->private
-was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
-behavior with specific compiler options). Actually we only use low
-32 bits to keep the page information since page->private is only 4
-bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
-uses the upper 32 bits by mistake.
+Batch these up so we disable all the per-cpu buffers first, then
+synchronize_rcu() once, then reset each of the buffers. This brings
+the time down to about 0.5s.
 
-Let's fix it now.
-
-Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+Cc: Paul McKenney <paulmck@kernel.org>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
-The same as 5.4.y.
+ include/linux/ring_buffer.h |  1 +
+ kernel/trace/ring_buffer.c  | 85 +++++++++++++++++++++++++++++++------
+ kernel/trace/trace.c        |  4 +-
+ 3 files changed, 73 insertions(+), 17 deletions(-)
 
- fs/erofs/zdata.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
-index 7824f5563a55..9b66c28b3ae9 100644
---- a/fs/erofs/zdata.h
-+++ b/fs/erofs/zdata.h
-@@ -144,22 +144,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
- static inline void z_erofs_onlinepage_fixup(struct page *page,
- 	uintptr_t index, bool down)
- {
--	unsigned long *p, o, v, id;
--repeat:
--	p = &page_private(page);
--	o = READ_ONCE(*p);
-+	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
-+	int orig, orig_index, val;
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index c76b2f3b3ac4..136ea0997e6d 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -143,6 +143,7 @@ bool ring_buffer_iter_dropped(struct ring_buffer_iter *iter);
+ unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu);
  
--	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
--	if (id) {
-+repeat:
-+	orig = atomic_read(u.o);
-+	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
-+	if (orig_index) {
- 		if (!index)
- 			return;
+ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu);
++void ring_buffer_reset_online_cpus(struct trace_buffer *buffer);
+ void ring_buffer_reset(struct trace_buffer *buffer);
  
--		DBG_BUGON(id != index);
-+		DBG_BUGON(orig_index != index);
- 	}
+ #ifdef CONFIG_RING_BUFFER_ALLOW_SWAP
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index b8e1ca48be50..3f1fd02bd14a 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -270,6 +270,9 @@ EXPORT_SYMBOL_GPL(ring_buffer_event_data);
+ #define for_each_buffer_cpu(buffer, cpu)		\
+ 	for_each_cpu(cpu, buffer->cpumask)
  
--	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
--		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
--	if (cmpxchg(p, o, v) != o)
-+	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
-+		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
-+	if (atomic_cmpxchg(u.o, orig, val) != orig)
- 		goto repeat;
++#define for_each_online_buffer_cpu(buffer, cpu)		\
++	for_each_cpu_and(cpu, buffer->cpumask, cpu_online_mask)
++
+ #define TS_SHIFT	27
+ #define TS_MASK		((1ULL << TS_SHIFT) - 1)
+ #define TS_DELTA_TEST	(~TS_MASK)
+@@ -4484,6 +4487,26 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+ 	rb_head_page_activate(cpu_buffer);
  }
  
++/* Must have disabled the cpu buffer then done a synchronize_rcu */
++static void reset_disabled_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++
++	if (RB_WARN_ON(cpu_buffer, local_read(&cpu_buffer->committing)))
++		goto out;
++
++	arch_spin_lock(&cpu_buffer->lock);
++
++	rb_reset_cpu(cpu_buffer);
++
++	arch_spin_unlock(&cpu_buffer->lock);
++
++ out:
++	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++}
++
+ /**
+  * ring_buffer_reset_cpu - reset a ring buffer per CPU buffer
+  * @buffer: The ring buffer to reset a per cpu buffer of
+@@ -4492,7 +4515,6 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
+-	unsigned long flags;
+ 
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return;
+@@ -4503,24 +4525,42 @@ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
+ 	/* Make sure all commits have finished */
+ 	synchronize_rcu();
+ 
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	reset_disabled_cpu_buffer(cpu_buffer);
+ 
+-	if (RB_WARN_ON(cpu_buffer, local_read(&cpu_buffer->committing)))
+-		goto out;
++	atomic_dec(&cpu_buffer->record_disabled);
++	atomic_dec(&cpu_buffer->resize_disabled);
++}
++EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
+ 
+-	arch_spin_lock(&cpu_buffer->lock);
++/**
++ * ring_buffer_reset_cpu - reset a ring buffer per CPU buffer
++ * @buffer: The ring buffer to reset a per cpu buffer of
++ * @cpu: The CPU buffer to be reset
++ */
++void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++	int cpu;
+ 
+-	rb_reset_cpu(cpu_buffer);
++	for_each_online_buffer_cpu(buffer, cpu) {
++		cpu_buffer = buffer->buffers[cpu];
+ 
+-	arch_spin_unlock(&cpu_buffer->lock);
++		atomic_inc(&cpu_buffer->resize_disabled);
++		atomic_inc(&cpu_buffer->record_disabled);
++	}
+ 
+- out:
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++	/* Make sure all commits have finished */
++	synchronize_rcu();
+ 
+-	atomic_dec(&cpu_buffer->record_disabled);
+-	atomic_dec(&cpu_buffer->resize_disabled);
++	for_each_online_buffer_cpu(buffer, cpu) {
++		cpu_buffer = buffer->buffers[cpu];
++
++		reset_disabled_cpu_buffer(cpu_buffer);
++
++		atomic_dec(&cpu_buffer->record_disabled);
++		atomic_dec(&cpu_buffer->resize_disabled);
++	}
+ }
+-EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
+ 
+ /**
+  * ring_buffer_reset - reset a ring buffer
+@@ -4528,10 +4568,27 @@ EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
+  */
+ void ring_buffer_reset(struct trace_buffer *buffer)
+ {
++	struct ring_buffer_per_cpu *cpu_buffer;
+ 	int cpu;
+ 
+-	for_each_buffer_cpu(buffer, cpu)
+-		ring_buffer_reset_cpu(buffer, cpu);
++	for_each_buffer_cpu(buffer, cpu) {
++		cpu_buffer = buffer->buffers[cpu];
++
++		atomic_inc(&cpu_buffer->resize_disabled);
++		atomic_inc(&cpu_buffer->record_disabled);
++	}
++
++	/* Make sure all commits have finished */
++	synchronize_rcu();
++
++	for_each_buffer_cpu(buffer, cpu) {
++		cpu_buffer = buffer->buffers[cpu];
++
++		reset_disabled_cpu_buffer(cpu_buffer);
++
++		atomic_dec(&cpu_buffer->record_disabled);
++		atomic_dec(&cpu_buffer->resize_disabled);
++	}
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_reset);
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ec44b0e2a19c..9a26a1c875ae 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2003,7 +2003,6 @@ static void tracing_reset_cpu(struct array_buffer *buf, int cpu)
+ void tracing_reset_online_cpus(struct array_buffer *buf)
+ {
+ 	struct trace_buffer *buffer = buf->buffer;
+-	int cpu;
+ 
+ 	if (!buffer)
+ 		return;
+@@ -2015,8 +2014,7 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
+ 
+ 	buf->time_start = buffer_ftrace_now(buf, buf->cpu);
+ 
+-	for_each_online_cpu(cpu)
+-		ring_buffer_reset_cpu(buffer, cpu);
++	ring_buffer_reset_online_cpus(buffer);
+ 
+ 	ring_buffer_record_enable(buffer);
+ }
 -- 
-2.24.0
+2.23.0
 
