@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85654C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C7520768
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD1420768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405518AbgFYOwd (ORCPT
+        id S2405540AbgFYOwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:52:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50476 "EHLO
+        Thu, 25 Jun 2020 10:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405451AbgFYOwb (ORCPT
+        with ESMTP id S2405463AbgFYOwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 10:52:31 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBB4C08C5DB
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43315C08C5DC
         for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:52:31 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 8FFB550C; Thu, 25 Jun 2020 16:52:28 +0200 (CEST)
+        id 68DE8366; Thu, 25 Jun 2020 16:52:28 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
         Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 2/2] iommu/amd: Use 'unsigned long' for domain->pt_root
-Date:   Thu, 25 Jun 2020 16:52:27 +0200
-Message-Id: <20200625145227.4159-3-joro@8bytes.org>
+Subject: [PATCH 1/2] iommu/amd: Add helper functions to update domain->pt_root
+Date:   Thu, 25 Jun 2020 16:52:26 +0200
+Message-Id: <20200625145227.4159-2-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200625145227.4159-1-joro@8bytes.org>
 References: <20200625145227.4159-1-joro@8bytes.org>
@@ -44,56 +44,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Using atomic64_t can be quite expensive, so use unsigned long instead.
-This is safe because the write becomes visible atomically.
+Do not call atomic64_set() directly to update the domain page-table
+root and use two new helper functions.
+
+This makes it easier to implement additional work necessary when
+the page-table is updated.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/amd/amd_iommu_types.h |  2 +-
- drivers/iommu/amd/iommu.c           | 10 ++++++++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/iommu/amd/iommu.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/iommu/amd/amd_iommu_types.h b/drivers/iommu/amd/amd_iommu_types.h
-index 30a5d412255a..f6f102282dda 100644
---- a/drivers/iommu/amd/amd_iommu_types.h
-+++ b/drivers/iommu/amd/amd_iommu_types.h
-@@ -468,7 +468,7 @@ struct protection_domain {
- 				       iommu core code */
- 	spinlock_t lock;	/* mostly used to lock the page table*/
- 	u16 id;			/* the domain id written to the device table */
--	atomic64_t pt_root;	/* pgtable root and pgtable mode */
-+	unsigned long pt_root;	/* pgtable root and pgtable mode */
- 	int glx;		/* Number of levels for GCR3 table */
- 	u64 *gcr3_tbl;		/* Guest CR3 table */
- 	unsigned long flags;	/* flags to find out type of domain */
 diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index 5286ddcfc2f9..b0e1dc58244e 100644
+index 74cca1757172..5286ddcfc2f9 100644
 --- a/drivers/iommu/amd/iommu.c
 +++ b/drivers/iommu/amd/iommu.c
-@@ -156,7 +156,7 @@ static struct protection_domain *to_pdomain(struct iommu_domain *dom)
- static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
- 					 struct domain_pgtable *pgtable)
- {
--	u64 pt_root = atomic64_read(&domain->pt_root);
-+	unsigned long pt_root = domain->pt_root;
- 
- 	pgtable->root = (u64 *)(pt_root & PAGE_MASK);
+@@ -162,7 +162,18 @@ static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
  	pgtable->mode = pt_root & 7; /* lowest 3 bits encode pgtable mode */
-@@ -164,7 +164,13 @@ static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
- 
- static void amd_iommu_domain_set_pt_root(struct protection_domain *domain, u64 root)
- {
--	atomic64_set(&domain->pt_root, root);
-+	domain->pt_root = root;
-+
-+	/*
-+	 * The new value needs to be gobally visible in case pt_root gets
-+	 * cleared, so that the page-table can be safely freed.
-+	 */
-+	smp_wmb();
  }
  
- static void amd_iommu_domain_clr_pt_root(struct protection_domain *domain)
+-static u64 amd_iommu_domain_encode_pgtable(u64 *root, int mode)
++static void amd_iommu_domain_set_pt_root(struct protection_domain *domain, u64 root)
++{
++	atomic64_set(&domain->pt_root, root);
++}
++
++static void amd_iommu_domain_clr_pt_root(struct protection_domain *domain)
++{
++	amd_iommu_domain_set_pt_root(domain, 0);
++}
++
++static void amd_iommu_domain_set_pgtable(struct protection_domain *domain,
++					 u64 *root, int mode)
+ {
+ 	u64 pt_root;
+ 
+@@ -170,7 +181,7 @@ static u64 amd_iommu_domain_encode_pgtable(u64 *root, int mode)
+ 	pt_root = mode & 7;
+ 	pt_root |= (u64)root;
+ 
+-	return pt_root;
++	amd_iommu_domain_set_pt_root(domain, pt_root);
+ }
+ 
+ static struct iommu_dev_data *alloc_dev_data(u16 devid)
+@@ -1410,7 +1421,7 @@ static bool increase_address_space(struct protection_domain *domain,
+ 	struct domain_pgtable pgtable;
+ 	unsigned long flags;
+ 	bool ret = true;
+-	u64 *pte, root;
++	u64 *pte;
+ 
+ 	spin_lock_irqsave(&domain->lock, flags);
+ 
+@@ -1438,8 +1449,7 @@ static bool increase_address_space(struct protection_domain *domain,
+ 	 * Device Table needs to be updated and flushed before the new root can
+ 	 * be published.
+ 	 */
+-	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode);
+-	atomic64_set(&domain->pt_root, root);
++	amd_iommu_domain_set_pgtable(domain, pte, pgtable.mode);
+ 
+ 	ret = true;
+ 
+@@ -2319,7 +2329,7 @@ static void protection_domain_free(struct protection_domain *domain)
+ 		domain_id_free(domain->id);
+ 
+ 	amd_iommu_domain_get_pgtable(domain, &pgtable);
+-	atomic64_set(&domain->pt_root, 0);
++	amd_iommu_domain_clr_pt_root(domain);
+ 	free_pagetable(&pgtable);
+ 
+ 	kfree(domain);
+@@ -2327,7 +2337,7 @@ static void protection_domain_free(struct protection_domain *domain)
+ 
+ static int protection_domain_init(struct protection_domain *domain, int mode)
+ {
+-	u64 *pt_root = NULL, root;
++	u64 *pt_root = NULL;
+ 
+ 	BUG_ON(mode < PAGE_MODE_NONE || mode > PAGE_MODE_6_LEVEL);
+ 
+@@ -2343,8 +2353,7 @@ static int protection_domain_init(struct protection_domain *domain, int mode)
+ 			return -ENOMEM;
+ 	}
+ 
+-	root = amd_iommu_domain_encode_pgtable(pt_root, mode);
+-	atomic64_set(&domain->pt_root, root);
++	amd_iommu_domain_set_pgtable(domain, pt_root, mode);
+ 
+ 	return 0;
+ }
+@@ -2713,8 +2722,8 @@ void amd_iommu_domain_direct_map(struct iommu_domain *dom)
+ 	/* First save pgtable configuration*/
+ 	amd_iommu_domain_get_pgtable(domain, &pgtable);
+ 
+-	/* Update data structure */
+-	atomic64_set(&domain->pt_root, 0);
++	/* Remove page-table from domain */
++	amd_iommu_domain_clr_pt_root(domain);
+ 
+ 	/* Make changes visible to IOMMUs */
+ 	update_domain(domain);
 -- 
 2.27.0
 
