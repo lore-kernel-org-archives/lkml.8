@@ -2,143 +2,156 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF6A9206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A96D20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:48:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dk7LaBzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407585AbgFYWsP (ORCPT
+        id S2407595AbgFYWsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:48:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55040 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407544AbgFYWsN (ORCPT
+        Thu, 25 Jun 2020 18:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407587AbgFYWsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:48:13 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PMYF1t155889;
-        Thu, 25 Jun 2020 18:48:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts14m6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 18:48:11 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PMkg8U185576;
-        Thu, 25 Jun 2020 18:48:11 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts14m66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 18:48:11 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PMeX2d027952;
-        Thu, 25 Jun 2020 22:48:10 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 31uus3ygx1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 22:48:10 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PMm92914287718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 22:48:09 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2081112061;
-        Thu, 25 Jun 2020 22:48:09 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4959A112062;
-        Thu, 25 Jun 2020 22:48:09 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jun 2020 22:48:09 +0000 (GMT)
-Subject: Re: Enabling interrupts in QEMU TPM TIS
-From:   Stefan Berger <stefanb@linux.ibm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1ca3a53d-2b83-7522-5ce1-83d9cc2f207d@linux.ibm.com>
- <20200625172802.GS6578@ziepe.ca>
- <0a524093-e744-e266-6087-ddc17b5c598c@linux.ibm.com>
-Message-ID: <5b3267b7-57d5-badf-6664-9d47bc9909e7@linux.ibm.com>
-Date:   Thu, 25 Jun 2020 18:48:09 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <0a524093-e744-e266-6087-ddc17b5c598c@linux.ibm.com>
+        Thu, 25 Jun 2020 18:48:20 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C49E7C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 15:48:20 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id l6so1016557pjq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 15:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RUInkwppGEY2OD1Zn1NZcICY8BU7HziGnuCYCO6xNi0=;
+        b=Dk7LaBzkZouRRNfHAOBhsxXZqT/quWHc+saz9T8BMocYoA4hfvFN+SB+9Xy+JzS+h8
+         hz9ef4aVKlxpaXUNngDXfGEAiGBAc896SmB+7T+Uj66MXzK+x1nQnhImxmfSWkvccrKt
+         SLE0SknkV8zpDteERUsmk4xI738WCtjEltMVkIvnGY0I8Yg3QXJSD9k9LiGNWfkKjChF
+         iWwE50F/dCuD8pHFusibRuyWuvi4N2iYU/knBwJMFjJfZle2KNQIsn+BWoJRGFPepDX3
+         WhNKx1SK3O5mfJpnw9I0zDww8F1Md3xYZLoKqy63Af1U0mwUdZ3hmHt7kitvLij5icwP
+         mbZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=RUInkwppGEY2OD1Zn1NZcICY8BU7HziGnuCYCO6xNi0=;
+        b=qtHKEEqECnEsecCPDOSHMp7QUAd2e5m9h3y8u+2/V34L74kcEpB73SKK2Bggjb4cp+
+         fJeqJwoTKzvXSZwouxeY7ZYypXDRDMDJEFA5/LitmWy38oF0aLAi3Ti2mZAT3oW2Yq09
+         iz1BDawyW6IxgeELeBAXsXQh65UnJT3h0u13XzZCHQM+ctbHhCQBq22KjgJU9+oEw46s
+         VtDnw1V+I7WziOuPraezmMmWH5cTzYLVFaZnpD7f3nyccvo2B1/3rDZNliIrvNuCIINv
+         RkTRYtKWy8K15wzh3N3n3ZbCeGe2MA4j1wzfTk9jWqVu5RdHYwV3lWkeQCojD7lsNDXc
+         1g8w==
+X-Gm-Message-State: AOAM53388umrnMkjNfud9lOS+9jKZaoNyOJDwU1AhQaT/W1SNbRwfpJw
+        ox8xj1BVm2vxth5CPoa/WkWZoQ==
+X-Google-Smtp-Source: ABdhPJxxAaJZG05Y+ZHLJYNtwRZoWhDrbFDYa5i5HzUiieCkN7a6GU6Sczv8+78ybu3YEuJgnbOllg==
+X-Received: by 2002:a17:90a:1996:: with SMTP id 22mr228055pji.171.1593125300117;
+        Thu, 25 Jun 2020 15:48:20 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id y26sm23563581pff.26.2020.06.25.15.48.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 15:48:16 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 15:48:16 -0700 (PDT)
+X-Google-Original-Date: Thu, 25 Jun 2020 15:39:37 PDT (-0700)
+Subject:     Re: [PATCH] riscv: Fixup __vdso_gettimeofday broke dynamic ftrace
+In-Reply-To: <1592905854-60833-1-git-send-email-guoren@kernel.org>
+CC:     vincent.chen@sifive.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, guoren@linux.alibaba.com,
+        Atish Patra <Atish.Patra@wdc.com>, alankao@andestech.com,
+        green.hu@gmail.com
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+To:     guoren@kernel.org
+Message-ID: <mhng-14238943-d2f5-4dd2-9f23-90203fc1786b@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_19:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- adultscore=0 mlxscore=0 malwarescore=0 clxscore=1015 phishscore=0
- suspectscore=0 spamscore=0 impostorscore=0 priorityscore=1501
- mlxlogscore=883 lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 5:26 PM, Stefan Berger wrote:
-> On 6/25/20 1:28 PM, Jason Gunthorpe wrote:
->> On Thu, Jun 25, 2020 at 10:56:43AM -0400, Stefan Berger wrote:
->>> Hello!
->>>
->>>   I want to enable IRQs now in QEMU's TPM TIS device model and I 
->>> need to work
->>> with the following patch to Linux TIS. I am wondering whether the 
->>> changes
->>> there look reasonable to you? Windows works with the QEMU modifications
->>> as-is, so maybe it's a bug in the TIS code (which I had not run into
->>> before).
->>>
->>>
->>> The point of the loop I need to introduce in the interrupt handler 
->>> is that
->>> while the interrupt handler is running another interrupt may 
->>> occur/be posted
->>> that then does NOT cause the interrupt handler to be invoked again but
->>> causes a stall, unless the loop is there.
->> That seems like a qemu bug, TPM interrupts are supposed to be level
->> interrupts, not edge.
+On Tue, 23 Jun 2020 02:50:54 PDT (-0700), guoren@kernel.org wrote:
+> From: Guo Ren <guoren@linux.alibaba.com>
 >
+> For linux-5.8-rc1, enable ftrace of riscv will cause boot panic:
 >
-> Following this document here the hardware may choose to support 
-> different types of interrutps:
+> [    2.388980] Run /sbin/init as init process
+> [    2.529938] init[39]: unhandled signal 4 code 0x1 at 0x0000003ff449e000
+> [    2.531078] CPU: 0 PID: 39 Comm: init Not tainted 5.8.0-rc1-dirty #13
+> [    2.532719] epc: 0000003ff449e000 ra : 0000003ff449e954 sp : 0000003fffedb900
+> [    2.534005]  gp : 00000000000e8528 tp : 0000003ff449d800 t0 : 000000000000001e
+> [    2.534965]  t1 : 000000000000000a t2 : 0000003fffedb89e s0 : 0000003fffedb920
+> [    2.536279]  s1 : 0000003fffedb940 a0 : 0000003ff43d4b2c a1 : 0000000000000000
+> [    2.537334]  a2 : 0000000000000001 a3 : 0000000000000000 a4 : fffffffffbad8000
+> [    2.538466]  a5 : 0000003ff449e93a a6 : 0000000000000000 a7 : 0000000000000000
+> [    2.539511]  s2 : 0000000000000000 s3 : 0000003ff448412c s4 : 0000000000000010
+> [    2.541260]  s5 : 0000000000000016 s6 : 00000000000d0a30 s7 : 0000003fffedba70
+> [    2.542152]  s8 : 0000000000000000 s9 : 0000000000000000 s10: 0000003fffedb960
+> [    2.543335]  s11: 0000000000000000 t3 : 0000000000000000 t4 : 0000003fffedb8a0
+> [    2.544471]  t5 : 0000000000000000 t6 : 0000000000000000
+> [    2.545730] status: 0000000000004020 badaddr: 00000000464c457f cause: 0000000000000002
+> [    2.549867] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
+> [    2.551267] CPU: 0 PID: 1 Comm: init Not tainted 5.8.0-rc1-dirty #13
+> [    2.552061] Call Trace:
+> [    2.552626] [<ffffffe00020374a>] walk_stackframe+0x0/0xc4
+> [    2.553486] [<ffffffe0002039f4>] show_stack+0x40/0x4c
+> [    2.553995] [<ffffffe00054a6ae>] dump_stack+0x7a/0x98
+> [    2.554615] [<ffffffe00020b9b8>] panic+0x114/0x2f4
+> [    2.555395] [<ffffffe00020ebd6>] do_exit+0x89c/0x8c2
+> [    2.555949] [<ffffffe00020f930>] do_group_exit+0x3a/0x90
+> [    2.556715] [<ffffffe000219e08>] get_signal+0xe2/0x6e6
+> [    2.557388] [<ffffffe000202d72>] do_notify_resume+0x6a/0x37a
+> [    2.558089] [<ffffffe000201c16>] ret_from_exception+0x0/0xc
 >
-> https://trustedcomputinggroup.org/wp-content/uploads/PC-Client-Specific-Platform-TPM-Profile-for-TPM-2p0-v1p04_r0p37_pub-1.pdf 
+> "ra:0x3ff449e954" is the return address of "call _mcount" in the
+> prologue of __vdso_gettimeofday(). Without proper relocate, pc jmp
+> to 0x0000003ff449e000 (vdso map base) with a illegal instruction
+> trap.
 >
+> The solution comes from arch/arm64/kernel/vdso/Makefile:
 >
-> Table 23. Edge falling or rising, level low or level high.
+> CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS)
 >
-> So with different steps in the driver causing different types of 
-> interrupts, we may get into such situations where we process some 
-> interrupt 'reasons' but then another one gets posted, I guess due to 
-> parallel processing.
+>  - CC_FLAGS_SCS is ShadowCallStack feature in Clang and only
+>    implemented for arm64, no use for riscv.
+>
+> The bug comes from the following commit:
+>
+> ad5d1122b82f ("riscv: use vDSO common flow to reduce the latency of the time-related functions")
+>
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> Cc: Vincent Chen <vincent.chen@sifive.com>
+> Cc: Atish Patra <atish.patra@wdc.com>
+> Cc: Palmer Dabbelt <palmerdabbelt@google.com>
+> Cc: Alan Kao <alankao@andestech.com>
+> Cc: Greentime Hu <green.hu@gmail.com>
+> ---
+>  arch/riscv/kernel/vdso/Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+> index 38ba55b..3079935 100644
+> --- a/arch/riscv/kernel/vdso/Makefile
+> +++ b/arch/riscv/kernel/vdso/Makefile
+> @@ -27,6 +27,9 @@ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+>  obj-y += vdso.o vdso-syms.o
+>  CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+>
+> +# Disable -pg to prevent insert call site
+> +CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os
+> +
+>  # Disable gcov profiling for VDSO code
+>  GCOV_PROFILE := n
 
-
-Another data point: I had the TIS driver working on IRQ 5 (festeoi) 
-without the introduction of this loop. There are additional bits being 
-set while the interrupt handler is running, but the handler deals with 
-them in the next invocation. On IRQ 13 (edge), it does need the loop 
-since the next interrupt handler invocation is not happening. That IRQ 
-13 is an edge interrupt, is this a hard-configured PC 'thing'? Windows 
-drove this to IRQ 13, which seemed to be the only one accepted by it and 
-iirc it wouldn't even touch the TIS (found via tracing) if another IRQ 
-than 13 was declared in the ACPI table.
-
-
->
->   Stefan
->
->
-
+Thanks, this is on fixes (with a slightly modified commit message to fix some
+checkpatch issues).
