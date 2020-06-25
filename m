@@ -2,122 +2,109 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E135820720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2EF320789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:04:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l8HijPFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390671AbgFYIEC (ORCPT
+        id S2390584AbgFYIDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:04:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53562 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390571AbgFYIDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 04:03:40 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 18368F27340BFF8FC205;
-        Thu, 25 Jun 2020 16:03:37 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 25 Jun 2020 16:03:27 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <catalin.marinas@arm.com>, <peterz@infradead.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>,
-        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
-        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-Subject: [RESEND PATCH v5 3/6] arm64: Add tlbi_user_level TLB invalidation helper
-Date:   Thu, 25 Jun 2020 16:03:11 +0800
-Message-ID: <20200625080314.230-4-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200625080314.230-1-yezhenyu2@huawei.com>
-References: <20200625080314.230-1-yezhenyu2@huawei.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390541AbgFYIDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:03:35 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8919CC061573;
+        Thu, 25 Jun 2020 01:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=my2nyr72K0k6RU4vPxhUnXlcUiYtUEccfUZzce3A2lM=; b=l8HijPFnSmJUFCeni2RH/BQsZe
+        SnS630V1vrOlnRI9CR2NaPH7G8xEf4ItWfpBvRelAM1d7JadZJCP3hR0LlFKEMoKIvGB1Pg7HYubD
+        UjWa22xRXDLOnavbddcY1g6vFeOysV2xmfgTY8uyd62WHfVvdtFlWJ4WMfGK3Tug9H2OtE2WBu37N
+        95uOyyKiEtOw7bja05pbOa8xZr65GH8Co4P28TvPd4iUEao0XgpglQW/eHF3oV/3Gziu9L1fNssv9
+        Mz7XkfB3L/F6/nE6O4FC22lkjZerK3ekIcrdAeVoAK3FljwuYUDMfy57zByz2uok1SMMYfX69hxsi
+        SbH5pV8g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joMqo-0002O9-K3; Thu, 25 Jun 2020 08:03:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 672C43003E5;
+        Thu, 25 Jun 2020 10:03:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5304C22B8EBE8; Thu, 25 Jun 2020 10:03:13 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 10:03:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a level-hinted parameter to __tlbi_user, which only gets used
-if ARMv8.4-TTL gets detected.
+On Wed, Jun 24, 2020 at 02:31:36PM -0700, Nick Desaulniers wrote:
+> On Wed, Jun 24, 2020 at 2:15 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Wed, Jun 24, 2020 at 01:31:38PM -0700, Sami Tolvanen wrote:
+> > > This patch series adds support for building x86_64 and arm64 kernels
+> > > with Clang's Link Time Optimization (LTO).
+> > >
+> > > In addition to performance, the primary motivation for LTO is to allow
+> > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+> > > Pixel devices have shipped with LTO+CFI kernels since 2018.
+> > >
+> > > Most of the patches are build system changes for handling LLVM bitcode,
+> > > which Clang produces with LTO instead of ELF object files, postponing
+> > > ELF processing until a later stage, and ensuring initcall ordering.
+> > >
+> > > Note that first objtool patch in the series is already in linux-next,
+> > > but as it's needed with LTO, I'm including it also here to make testing
+> > > easier.
+> >
+> > I'm very sad that yet again, memory ordering isn't addressed. LTO vastly
+> > increases the range of the optimizer to wreck things.
+> 
+> Hi Peter, could you expand on the issue for the folks on the thread?
+> I'm happy to try to hack something up in LLVM if we check that X does
+> or does not happen; maybe we can even come up with some concrete test
+> cases that can be added to LLVM's codebase?
 
-ARMv8.4-TTL provides the TTL field in tlbi instruction to indicate
-the level of translation table walk holding the leaf entry for the
-address that is being invalidated.
+I'm sure Will will respond, but the basic issue is the trainwreck C11
+made of dependent loads.
 
-This patch set the default level value of flush_tlb_range() to 0,
-which will be updated in future patches.  And set the ttl value of
-flush_tlb_page_nosync() to 3 because it is only called to flush a
-single pte page.
+Anyway, here's a link to the last time this came up:
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- arch/arm64/include/asm/tlbflush.h | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 8adbd6fd8489..bfb58e62c127 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -88,6 +88,12 @@
- 	__tlbi(op,  arg);					\
- } while (0)
- 
-+#define __tlbi_user_level(op, arg, level) do {				\
-+	if (arm64_kernel_unmapped_at_el0())				\
-+		__tlbi_level(op, (arg | USER_ASID_FLAG), level);	\
-+} while (0)
-+
-+
- /*
-  *	TLB Invalidation
-  *	================
-@@ -189,8 +195,9 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
- 	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
- 
- 	dsb(ishst);
--	__tlbi(vale1is, addr);
--	__tlbi_user(vale1is, addr);
-+	/* This function is only called on a small page */
-+	__tlbi_level(vale1is, addr, 3);
-+	__tlbi_user_level(vale1is, addr, 3);
- }
- 
- static inline void flush_tlb_page(struct vm_area_struct *vma,
-@@ -230,11 +237,11 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 	dsb(ishst);
- 	for (addr = start; addr < end; addr += stride) {
- 		if (last_level) {
--			__tlbi(vale1is, addr);
--			__tlbi_user(vale1is, addr);
-+			__tlbi_level(vale1is, addr, 0);
-+			__tlbi_user_level(vale1is, addr, 0);
- 		} else {
--			__tlbi(vae1is, addr);
--			__tlbi_user(vae1is, addr);
-+			__tlbi_level(vae1is, addr, 0);
-+			__tlbi_user_level(vae1is, addr, 0);
- 		}
- 	}
- 	dsb(ish);
--- 
-2.26.2
-
-
+  https://lore.kernel.org/linux-arm-kernel/20171116174830.GX3624@linux.vnet.ibm.com/
