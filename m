@@ -2,108 +2,112 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7780F20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:52:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="md6JeSeb"
+	by mail.kernel.org (Postfix) with ESMTP id 1FA4B20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391273AbgFYVwz (ORCPT
+        id S2406124AbgFYVyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391257AbgFYVwy (ORCPT
+        Thu, 25 Jun 2020 17:54:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63262 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728381AbgFYVyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:52:54 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 191F7C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:52:54 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id i4so7710775iov.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4efuZftxKK9o65+Vk5rpjA4LyQPX0eWU9Rf6LChVf/Y=;
-        b=md6JeSeb07oZ9fTzIeWhZZy9dr3WU5gVL/D7ojnrBrDiKN0M3XFjNfmACdRiaighYd
-         Cj+ILx7vcu0NpsJeWCFagvMgJtpxnxP093KNjXFhtMuaj/SYznb4pPgYoGeZGfBndrDH
-         ELICbQsqhCQOwuW9w8mLw1O+7cHOM53vXnWCs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4efuZftxKK9o65+Vk5rpjA4LyQPX0eWU9Rf6LChVf/Y=;
-        b=VpCJCS7K18ORSmThLqhqgJcHdaEFQJhJi+3yFwEhPpV5ejK5OOUu0Yxo17Hb/pjZgW
-         HOt+nepO5Cm20ak3r3pwCL6aUxt8hklQINQxH9QDHYo+EIs7Y3AnsgAtk+PcW6dTxK9q
-         mDSiYVi7AiwjBCl58XMSKXEm6z/BbC/5Gbz8UuxLd9Ztwor/p4wx7aNiK9QMNdEiQ35K
-         ZmVnEzKDOdziK5z46Qj4ACaa8+gcXH/CaoTQArk9pcCesXOo6UqahzF5dNu2vaLkj0R7
-         4f/TMT3B2pI8Xjff5knsAFPCNXEduRKO2JjmkNkp/43qYYfiUAVwlMERs5k2QEacTNG0
-         IKrQ==
-X-Gm-Message-State: AOAM531cMCkIEO3p3DqLq3nlWPShMoWIjk9+QLr1ZXlC4K/ko+5NNPQm
-        Unr/1vodi+G2CYtBDnuakrGwnVYXmxe2WAy7KnGIuw==
-X-Google-Smtp-Source: ABdhPJzDnqY+KrnyZxEUF6ZAsrr4PJZRiL+HNtKEt/yk9IpvplAdeMwy/BIXgr75KXcB7dvMFujEchzrzsxrIqzhX78=
-X-Received: by 2002:a02:cc49:: with SMTP id i9mr239068jaq.52.1593121973487;
- Thu, 25 Jun 2020 14:52:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625170300.224906-1-enric.balletbo@collabora.com>
-In-Reply-To: <20200625170300.224906-1-enric.balletbo@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Thu, 25 Jun 2020 14:52:42 -0700
-Message-ID: <CAPUE2utidaoe+pw5o3w0yL3mZYMm0GKCEijWHTVH3if2PvXhcQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: cros_ec_rpmsg: Document missing struct parameters
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>
+        Thu, 25 Jun 2020 17:54:10 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PLVbDG150977;
+        Thu, 25 Jun 2020 17:54:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3kwmj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:54:05 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PLjgrA194423;
+        Thu, 25 Jun 2020 17:54:05 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3kwm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:54:05 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PLjbBt029478;
+        Thu, 25 Jun 2020 21:54:03 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 31uusg13c1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 21:54:03 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PLs13n3342610
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 21:54:01 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17ECEA405D;
+        Thu, 25 Jun 2020 21:54:01 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C50EA4051;
+        Thu, 25 Jun 2020 21:53:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 21:53:59 +0000 (GMT)
+Message-ID: <1593122039.27152.412.camel@linux.ibm.com>
+Subject: Re: [PATCH 06/12] ima: Fail rule parsing when the KEXEC_CMDLINE
+ hook is combined with an invalid cond
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Thu, 25 Jun 2020 17:53:59 -0400
+In-Reply-To: <20200623003236.830149-7-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-7-tyhicks@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_16:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 spamscore=0 cotscore=-2147483648
+ clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
+> The KEXEC_CMDLINE hook function only supports the pcr conditional. Make
+> this clear at policy load so that IMA policy authors don't assume that
+> other conditionals are supported.
+> 
+> Since KEXEC_CMDLINE's inception, ima_match_rules() has always returned
+> true on any loaded KEXEC_CMDLINE rule without any consideration for
+> other conditionals present in the rule. Make it clear that pcr is the
+> only supported KEXEC_CMDLINE conditional by returning an error during
+> policy load.
+> 
+> An example of why this is a problem can be explained with the following
+> rule:
+> 
+>  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+> 
+> An IMA policy author would have assumed that rule is valid because the
+> parser accepted it but the result was that measurements for all
+> KEXEC_CMDLINE operations would be disabled.
+> 
+> Fixes: b0935123a183 ("IMA: Define a new hook to measure the kexec boot command line arguments")
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-On Thu, Jun 25, 2020 at 10:03 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Kerneldoc expects all kernel structure member to be documented.
->
-> Fixes the following W=1 level warnings:
->
->   cros_ec_rpmsg.c:49: warning: Function parameter or member 'ept' not described in 'cros_ec_rpmsg'
->   cros_ec_rpmsg.c:49: warning: Function parameter or member 'has_pending_host_event' not described in 'cros_ec_rpmsg'
->   cros_ec_rpmsg.c:49: warning: Function parameter or member 'probe_done' not described in 'cros_ec_rpmsg'
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
->
->  drivers/platform/chrome/cros_ec_rpmsg.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-> index ff08c3d12873a..ad0a30afd7423 100644
-> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -38,6 +38,9 @@ struct cros_ec_rpmsg_response {
->   * @rpdev:     rpmsg device we are connected to
->   * @xfer_ack:  completion for host command transfer.
->   * @host_event_work:   Work struct for pending host event.
-> + * @ept: The rpmsg endpoint of this channel.
-> + * @has_pending_host_event: Boolean used to check if there is a pending event.
-> + * @probe_done: Flag to indicate that probe is done.
->   */
->  struct cros_ec_rpmsg {
->         struct rpmsg_device *rpdev;
-> --
-> 2.27.0
->
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
