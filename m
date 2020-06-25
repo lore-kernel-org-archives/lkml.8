@@ -1,216 +1,188 @@
-Return-Path: <SRS0=sD2I=AF=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C542078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jun 2020 23:59:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5xEoB84"
+	by mail.kernel.org (Postfix) with ESMTP id 16364207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388204AbgFXX7G (ORCPT
+        id S2388453AbgFYAA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387959AbgFXX7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 19:59:05 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC31DC061573;
-        Wed, 24 Jun 2020 16:59:05 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y18so1895784plr.4;
-        Wed, 24 Jun 2020 16:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=by+7EPJlnqYx44tYINgzJBoZS06YWSNmrp17oSSjLy0=;
-        b=F5xEoB84Hg6/8ekdHbNtJATPpHAUT9Pm9YhGAVkZ6vVwCzPyHtJO/RpC1LhGVMGuqq
-         2W0HVf5G9lbnQJVu2sCsrS/yvz0vXHO4nRIr4ZVQRs2rW5xtAxtUrxY+Pt7kd9VX6mYV
-         78WH6aqgLSzEtEbbNLuvzPjjs86Rl1OmlLXZIwjBKqoqnSOz/4NFQcrYkqRrXPBzda/Y
-         WEOGykZFeSxrQItIEcvpU+KCKQO9XpnIpiQV6/iH1a939Sehgddi0tv8wk4+4AhJ73Y4
-         185E0ZPNJxj3942llxxZXxIX0u/tpy6miI5c1W/usXlT4XcsuFEwe9fR/fJLLH+emFkR
-         d3pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=by+7EPJlnqYx44tYINgzJBoZS06YWSNmrp17oSSjLy0=;
-        b=IVvd1YGjy83nou6xbxik737lgQNZY1U27VWr1SiWDjVh7U1CrQXQG7Q4JyHcoQ/HTq
-         qghCbV/4Tl/Gbf8nf+1oEFDaaAfv/P8kSTw1wpSFtgHp3WI8oeoKzH9zj80WL0CCIpog
-         6PYXmZrjiWmPjiLTpGoFYPMUZmE/vBHXJZs8n5v9tQuZyoqOQlCOfHoHH8MJ9k+vJr3u
-         gD4H8R8dWoOViN51aWpdlBkbmKBl4eo4UX5bI/aAb2wWvo1BMozkNtjfd/blEF0/vkaO
-         Y38NIdZwiVoypJ+GxsdYZ3Z2uPfFAKpepDk9o74fehqCPvF5t2I5GbY3MMTIlwlzKiVj
-         rkKg==
-X-Gm-Message-State: AOAM53384U0Wv1hYDJ/QdLrV7MefThqrrY0OtZYf9AepHaW5XQiKUkZi
-        SWyKA8vJRTw3RD5ZGC55NAA=
-X-Google-Smtp-Source: ABdhPJzPdjSkcD3nGW9/u/oee4GH1uUkvgf56hK5O+fMdlKC+V8LTFK1Sp4bpuHfHgJdl9ed4iQ9DA==
-X-Received: by 2002:a17:90a:9f81:: with SMTP id o1mr280805pjp.139.1593043144892;
-        Wed, 24 Jun 2020 16:59:04 -0700 (PDT)
-Received: from sol (220-235-99-174.dyn.iinet.net.au. [220.235.99.174])
-        by smtp.gmail.com with ESMTPSA id z140sm21940578pfc.135.2020.06.24.16.59.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 16:59:03 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 07:58:58 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 13/22] gpio: uapi: define uAPI V2
-Message-ID: <20200624235858.GB6751@sol>
-References: <20200623040107.22270-1-warthog618@gmail.com>
- <20200623040107.22270-14-warthog618@gmail.com>
- <CAMpxmJVf2NpRJN8cNuVxVpuy45xzH037JsT-wxRREM8YJ1mJpA@mail.gmail.com>
+        Wed, 24 Jun 2020 20:00:28 -0400
+Received: from mga09.intel.com ([134.134.136.24]:6763 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387823AbgFYAA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 20:00:27 -0400
+IronPort-SDR: FxSabzpGPEY9+GE9Tinq0VaX6p9OZPJcp+g/82LnhL3wwRPIqFqINq+P4qqONmzzCWetkMDnsB
+ XMnBMIY9sXXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146179287"
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="146179287"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 17:00:27 -0700
+IronPort-SDR: pjG5eaLCFNWTd03vuiWSsY/pk4STlnXy2S0/Q2aCFJxPu7F+avONDD3C/RVlvyntbe44QmOLni
+ 6/ocnzeLccMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="385319591"
+Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2020 17:00:22 -0700
+Date:   Thu, 25 Jun 2020 03:00:21 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Jiandi An <anjiandi@codeaurora.org>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v5 1/2] acpi: Extend TPM2 ACPI table with missing log
+ fields
+Message-ID: <20200625000021.GC21758@linux.intel.com>
+References: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
+ <20200623120636.1453470-2-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJVf2NpRJN8cNuVxVpuy45xzH037JsT-wxRREM8YJ1mJpA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200623120636.1453470-2-stefanb@linux.vnet.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 04:36:22PM +0200, Bartosz Golaszewski wrote:
-> wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-[ snip ]
-> > +
-> > +/*
-> > + * Struct padding sizes.
-> > + *
-> > + * These are sized to pad structs to 64bit boundaries.
-> > + * To maintain 32/64bit alignment, any arbitrary change must be even, as
-> > + * the pad elements are __u32.
-> > + */
-> > +#define GPIOLINE_CONFIG_PAD_SIZE               7
-> > +#define GPIOLINE_REQUEST_PAD_SIZE              5
-> > +#define GPIOLINE_INFO_V2_PAD_SIZE              5
-> > +#define GPIOLINE_INFO_CHANGED_V2_PAD_SIZE      5
-> > +#define GPIOLINE_EVENT_PAD_SIZE                        2
-> > +
+On Tue, Jun 23, 2020 at 08:06:35AM -0400, Stefan Berger wrote:
+> From: Stefan Berger <stefanb@linux.ibm.com>
 > 
-> Did someone request such definitions? IMO it's one of those rare
-> instances where I'd prefer to see magic numbers used in the structs.
-> I'm not sure if we need this indirection.
+> Recent extensions of the TPM2 ACPI table added 3 more fields
+> including 12 bytes of start method specific parameters and Log Area
+> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
+> the existing structure with these fields to allow non-UEFI systems
+> to access the TPM2's log.
+> 
+> The specification that has the new fields is the following:
+>   TCG ACPI Specification
+>   Family "1.2" and "2.0"
+>   Version 1.2, Revision 8
+> 
+> Adapt all existing table size calculations to use
+> offsetof(struct acpi_table_tpm2, start_method_specific)
+> [where start_method_specific is a newly added field]
+> rather than sizeof(struct acpi_table_tpm2) so that the addition
+> of the new fields does not affect current systems that may not
+> have them.
 > 
 
-Not explicitly.  Andy requested documentation on the pad sizes, which
-seemed reasonable, and it also seemed reasonable to me to group them in
-the one place rather than repeat the doco for each struct.
+I found at least one regression from this patch. Please remove my
+reviewed-by comment form the next version.
 
-But having the size of the pad visible in the struct definition is
-preferable, as it is only really relevant to that struct.
-And everyone wants to keep the uAPI definitions as short possible, so
-will drop these in v2.
+Should have:
 
-> > +/**
-> > + * struct gpioline_values - Values of GPIO lines
-> > + * @bitmap: a bitmap containing the value of the lines, set to 1 for active
-> > + * and 0 for inactive.  Note that this is the logical value, which will be
-> > + * the opposite of the physical value if GPIOLINE_FLAG_V2_ACTIVE_LOW is
-> > + * set in flags.
-> > + */
-> > +struct gpioline_values {
-> > +       __u64 bitmap[GPIOLINES_BITMAP_SIZE];
-> > +};
+  Link: https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
+
+Please, add this.
+
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Cc: linux-acpi@vger.kernel.org
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  drivers/char/tpm/tpm_crb.c | 13 ++++++++++---
+>  drivers/char/tpm/tpm_tis.c |  4 +++-
+>  include/acpi/actbl3.h      |  5 +++--
+>  3 files changed, 16 insertions(+), 6 deletions(-)
 > 
-> Ok so now when embedding this structure we get something like
-> "config.values.bitmap". This looks fine with the exception that "bits"
-> would be even shorter and the information about this field being a
-> bitmap is not necessary. I hope this isn't too much bikeshedding. :)
+> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+> index a9dcf31eadd2..0565aa5482f9 100644
+> --- a/drivers/char/tpm/tpm_crb.c
+> +++ b/drivers/char/tpm/tpm_crb.c
+> @@ -669,7 +669,9 @@ static int crb_acpi_add(struct acpi_device *device)
+>  
+>  	status = acpi_get_table(ACPI_SIG_TPM2, 1,
+>  				(struct acpi_table_header **) &buf);
+> -	if (ACPI_FAILURE(status) || buf->header.length < sizeof(*buf)) {
+> +	if (ACPI_FAILURE(status) || buf->header.length <
+> +			offsetof(struct acpi_table_tpm2,
+> +				 start_method_specific)) {
+>  		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
+>  		return -EINVAL;
+>  	}
+> @@ -684,14 +686,19 @@ static int crb_acpi_add(struct acpi_device *device)
+>  		return -ENOMEM;
+>  
+>  	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
+> -		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_smc))) {
+> +		if (buf->header.length <
+> +			(offsetof(struct acpi_table_tpm2,
+> +				  start_method_specific) +
+
+Should be
+
+  offsetof(struct acpti_table_tpm2, log_area_minimum_length)
+
+> +			 sizeof(*crb_smc))) {
+>  			dev_err(dev,
+>  				FW_BUG "TPM2 ACPI table has wrong size %u for start method type %d\n",
+>  				buf->header.length,
+>  				ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC);
+>  			return -EINVAL;
+>  		}
+> -		crb_smc = ACPI_ADD_PTR(struct tpm2_crb_smc, buf, sizeof(*buf));
+> +		crb_smc = ACPI_ADD_PTR(struct tpm2_crb_smc, buf,
+> +			   offsetof(struct acpi_table_tpm2,
+> +				    start_method_specific));
+>  		priv->smc_func_id = crb_smc->smc_func_id;
+>  	}
+>  
+> diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+> index e7df342a317d..a80f36860bac 100644
+> --- a/drivers/char/tpm/tpm_tis.c
+> +++ b/drivers/char/tpm/tpm_tis.c
+> @@ -111,7 +111,9 @@ static int check_acpi_tpm2(struct device *dev)
+>  	 */
+>  	st =
+>  	    acpi_get_table(ACPI_SIG_TPM2, 1, (struct acpi_table_header **)&tbl);
+> -	if (ACPI_FAILURE(st) || tbl->header.length < sizeof(*tbl)) {
+> +	if (ACPI_FAILURE(st) || tbl->header.length <
+> +			offsetof(struct acpi_table_tpm2,
+> +				 start_method_specific)) {
+>  		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
+>  		return -EINVAL;
+>  	}
+> diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
+> index b0b163b9efc6..8b55426bbcf6 100644
+> --- a/include/acpi/actbl3.h
+> +++ b/include/acpi/actbl3.h
+> @@ -411,8 +411,9 @@ struct acpi_table_tpm2 {
+>  	u16 reserved;
+>  	u64 control_address;
+>  	u32 start_method;
+> -
+> -	/* Platform-specific data follows */
+> +	u8  start_method_specific[12];
+> +	u32 log_area_minimum_length;		/* optional */
+> +	u64 log_area_start_address;		/* optional */
+
+'start_method_specific' is also optional. Please remove the optional
+comments altogether as platform-specific data is by definition optional.
+
+>  };
+>  
+>  /* Values for start_method above */
+> -- 
+> 2.26.2
 > 
 
-Fair enough - bits it is.
+Please add this to the next version since we do not want to break ARM
+side:
 
-> > +
-> > +/**
-> > + * struct gpioline_config - Configuration for GPIO lines
-> > + * @values: if the direction is GPIOLINE_DIRECTION_OUTPUT, the values that
-> > + * the lines will be set to.  This field is write-only and is zeroed when
-> > + * returned within struct gpioline_info.
-> > + * @flags: flags for the GPIO lines, such as GPIOLINE_FLAG_V2_ACTIVE_LOW,
-> > + * GPIOLINE_FLAG_V2_DIRECTION etc, OR:ed together
-> > + * @direction: if GPIOLINE_FLAG_V2_DIRECTION is set in flags, the desired
-> > + * direction for the requested lines, with a value from enum
-> > + * gpioline_direction
-> > + * @drive: if GPIOLINE_FLAG_V2_DRIVE is set in flags, the desired drive for
-> > + * the requested lines, with a value from enum gpioline_drive
-> > + * @bias: if GPIOLINE_FLAG_V2_BIAS is set in flags, the desired bias for
-> > + * the requested lines, with a value from enum gpioline_bias
-> > + * @edge_detection: if GPIOLINE_FLAG_V2_EDGE_DETECTION is set in flags, the
-> > + * desired edge_detection for the requested lines, with a value from enum
-> > + * gpioline_edge
-> > + * @debounce_period: if GPIOLINE_FLAG_V2_DEBOUNCE is set in flags, the
-> > + * desired debounce period for the requested lines, in microseconds
-> > + * @padding: reserved for future use and must be zero filled
-> > + */
-> > +struct gpioline_config {
-> > +       struct gpioline_values values;
-> > +       __u32 flags;
-> > +       /* Note that the following four fields are equivalent to a single u32. */
-> > +       __u8 direction;
-> > +       __u8 drive;
-> > +       __u8 bias;
-> > +       __u8 edge_detection;
-> 
-> Limiting the size of these enum fields doesn't improve performance in
-> any measurable way. We already have 4 possible values for events. I'm
-> afraid that at some point in the future we'll add support for level
-> events or something else etc. and we'll run into a problem because we
-> only have 8 bits available. If there are no objections, I'd make it 32
-> bits wide.
-> 
+  Cc: Jiandi An <anjiandi@codeaurora.org>
 
-Agreed - the reduction in size isn't worth the effort.
-
-> For the same reason I was thinking that making flags 64 bits wouldn't
-> hurt either.
-> 
-
-OK
-
-[ snip ]
-> > + * struct gpioline_event - The actual event being pushed to userspace
-> > + * @timestamp: best estimate of time of event occurrence, in nanoseconds.
-> > + * The timestamp is read from CLOCK_MONOTONIC and is intended to allow the
-> > + * accurate measurement of the time between events.  It does not provide
-> > + * the wall-clock time.
-> > + * @id: event identifier with value from enum gpioline_event_id
-> > + * @offset: the offset of the line that triggered the event
-> > + * @seqno: the sequence number for this event in the sequence of events for
-> > + * all the lines in this line request
-> > + * @line_seqno: the sequence number for this event in the sequence of
-> > + * events on this particular line
-> > + * @padding: reserved for future use
-> > + */
-> > +struct gpioline_event {
-> > +       __u64 timestamp;
-> > +       __u32 id;
-> > +       __u32 offset;
-> > +       __u32 seqno;
-> > +       __u32 line_seqno;
-> > +       __u32 padding[GPIOLINE_EVENT_PAD_SIZE]; /* for future use */
-> 
-> Any reason for only having 64 bits of padding? 128 wouldn't change much, right?
-> 
-
-No, as I mentioned in the commentary, I'm concerned that I've gone
-too small with the padding, so happy to bump that.
-And I'm open to suggestions on the other pads as well.
-
-Cheers,
-Kent.
-
+/Jarkko
