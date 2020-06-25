@@ -2,124 +2,113 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EBE206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593102789;
-	bh=3b6HJKzOFQGON9qntdJqHeKqhJ4WFeZddwTNZpl41Vs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=NxkRQq7LYQxS4vK2ws9AMZOnpNu0cxRSFrezMZXzX2IV0yC2YqYeW1Dk4m6nbEjYx
-	 /2I/y/bXeOyF5BqkhIqHqbLdQEKeZf+xCF+5Gv4W9j8QnC/AsxwshGkoYbb13gBn1a
-	 5cIdC5npqkfFLbNZOttEPNnrZsNMZkx4DxJwFSRU=
+	by mail.kernel.org (Postfix) with ESMTP id 0AED3206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:34:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="muyvBO34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390896AbgFYQdI (ORCPT
+        id S2404004AbgFYQex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390052AbgFYQdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:33:07 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECC242076E;
-        Thu, 25 Jun 2020 16:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593102787;
-        bh=3b6HJKzOFQGON9qntdJqHeKqhJ4WFeZddwTNZpl41Vs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=qRStPjX9dSkSvmQ5PpHgZqr4D7gl5JYrJwhNy397jiAVPu8LAqZw5MF3cLJGh4Gxw
-         vbo+qIRuKY6pAx/j66TU0KMSrkv8gGz35phvgzxZinrdMtjkgrWVwb6fKl8rhVahT/
-         Ahar2wFsuUNkNTLMrPrTSBC2u6orJWCkR9fDGxIg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D4C61352129E; Thu, 25 Jun 2020 09:33:06 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 09:33:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
-        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: LKMM patches for next merge window
-Message-ID: <20200625163306.GR9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200624185400.GA13594@paulmck-ThinkPad-P72>
- <20200624232402.GA465543@andrea>
+        Thu, 25 Jun 2020 12:34:53 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47344 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390857AbgFYQew (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 12:34:52 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 8AC272CBD9F;
+        Thu, 25 Jun 2020 12:34:51 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id V_vXVbAC0BhS; Thu, 25 Jun 2020 12:34:51 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 3230D2CB9EC;
+        Thu, 25 Jun 2020 12:34:51 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3230D2CB9EC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593102891;
+        bh=Zk5C15FGGk/Xy4rNgd1DGYYrFf9yMY11wDzm9RdN0hs=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=muyvBO344EQCVFhdH7n7gQQ/WtDnpnNEPuBqCPPifWHoYbKn9eA1BE1YlsqlzESSR
+         PGxk4DOdy3HqWRe2q52mS4oZl/86M1IW45rjSncy1N/SoeQs1EPMPyngXfKlUq/5uW
+         i/nrc6N/lPP0rQm7NORrLamjOo2QsXyncKVDksoL6h1qep5zOtecqYOqH7Np5/hbb0
+         YXDECgffOPsFUPq32w4XvW5fPpNsmbc5u2I2n7qVjnMhqQ8zRyn9k+HxdaUtJpbNF4
+         fkGd/qvNzEn7kAUWMNX/W6NwyC9dnJleRRdMexSyb4UjmbpR/Rs0VYIgN2evNo+jhJ
+         b/NhWQroOmaRA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id dNaHWcnlp5Ng; Thu, 25 Jun 2020 12:34:51 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 227D82CB9EB;
+        Thu, 25 Jun 2020 12:34:51 -0400 (EDT)
+Date:   Thu, 25 Jun 2020 12:34:51 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Fernandes <joelaf@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        paulmck <paulmck@kernel.org>, Julien Desfossez <ju@klipix.org>
+Message-ID: <489418873.12472.1593102891027.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1115572712.12427.1593096995446.JavaMail.zimbra@efficios.com>
+References: <20200619202516.7109-1-mathieu.desnoyers@efficios.com> <20200624121136.GF4800@hirez.programming.kicks-ass.net> <269292405.11607.1593023493676.JavaMail.zimbra@efficios.com> <20200624195030.GG4800@hirez.programming.kicks-ass.net> <1115572712.12427.1593096995446.JavaMail.zimbra@efficios.com>
+Subject: Re: [RFC PATCH v2] sched_pair_cpu: Introduce scheduler task pairing
+ system call
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624232402.GA465543@andrea>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: sched_pair_cpu: Introduce scheduler task pairing system call
+Thread-Index: KKF2EJ/UOyY4CnhVA6NZtcIQEi8jPD1z4gT9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 01:24:02AM +0200, Andrea Parri wrote:
-> On Wed, Jun 24, 2020 at 11:54:00AM -0700, Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > Here is the list of LKMM patches I am considering for the next merge
-> > window and the status of each.  Any I am missing or any that need to
-> > wait or be modified?
-> > 
-> > 						Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > 3ce5d69 docs: fix references for DMA*.txt files
-> > 	Could someone please provide an ack?
-> 
-> Fixing the N-th commit "move docs without updating in-tree references".
-> ;-/
-> 
-> Most importantly there appears to be some on-going discussion about it,
-> cf.
-> 
->   https://lkml.kernel.org/r/20200623072240.GA974@lst.de
-> 
-> (could you please sort this out?)
+----- On Jun 25, 2020, at 10:56 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-I doubt that anything I can say or do will have much effect on those
-who love to hate and who hate to love .rst, and vice versa.  It could
-be worse -- I could jump into the fray advocating *TYPO, which was the
-first text-formatting package that I ever used.  And good luck finding
-any information on *TYPO at this point.  ;-)
-
-But good point, I will adjust my branches to keep Mauro's commit off
-the list for v5.9 for the moment.
-
-							Thanx, Paul
-
->   Andrea
+> ----- On Jun 24, 2020, at 3:50 PM, Peter Zijlstra peterz@infradead.org wrote:
 > 
+>> On Wed, Jun 24, 2020 at 02:31:33PM -0400, Mathieu Desnoyers wrote:
+>> 
+> [...]
+>> The other alternative is using a preempt_notifier for the worker I
+>> suppose.
 > 
-> > 
-> > ac1a749 tools/memory-model: Add recent references
-> > be1ce3e tools/memory-model: Fix "conflict" definition
-> > 24dca63 Documentation: LKMM: Add litmus test for RCU GP guarantee where updater frees object
-> > 47ec95b Documentation: LKMM: Add litmus test for RCU GP guarantee where reader stores
-> > bb2c938 MAINTAINERS: Update maintainers for new Documentation/litmus-tests
-> > 05bee9a tools/memory-model: Add an exception for limitations on _unless() family
-> > dc76257 Documentation/litmus-tests: Introduce atomic directory
-> > d059e50 Documentation/litmus-tests/atomic: Add a test for atomic_set()
-> > 7eecf76 Documentation/litmus-tests/atomic: Add a test for smp_mb__after_atomic()
-> > 116f054 tools/memory-model: Fix reference to litmus test in recipes.txt
-> > ffd32d4 Documentation/litmus-tests: Merge atomic's README into top-level one
-> > a08ae99 Documentation/litmus-tests: Cite an RCU litmus test
-> > 843285eb tools/memory-model/README: Expand dependency of klitmus7
-> > 0296c57 tools/memory-model/README: Mention herdtools7 7.56 in compatibility table
-> > 47e4f0a Documentation/litmus-tests: Add note on herd7 7.56 in atomic litmus test
-> > 	All ready to go.
+[...]
+>> 
+>> preempt_notifier could work here too I suppose, install it on yourself
+>> when you do the pear syscall and take it away again when you're finished
+>> with it.
+
+The issue I currently have with preempt notifiers is that I need to
+send an IPI from a sched_out notifier, which has interrupts off and
+hold the rq lock. smp_call_function_single() warns due to irq off, and
+indeed it triggers deadlocks.
+
+Before using preempt notifiers, I was touching the "prev" task after
+irqs were reenabled and rq lock was released, which allowed me to
+send an IPI from that context.
+
+Any thoughts on how to best solve this ?
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
