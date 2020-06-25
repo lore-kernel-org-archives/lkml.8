@@ -2,227 +2,101 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 991BA206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8733B207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGGX204q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eSELIPPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405793AbgFYPXQ (ORCPT
+        id S2405840AbgFYPZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:23:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55218 "EHLO
+        Thu, 25 Jun 2020 11:25:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405760AbgFYPXM (ORCPT
+        with ESMTP id S2404580AbgFYPZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:23:12 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B026AC08C5C1;
-        Thu, 25 Jun 2020 08:23:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a6so6275617wrm.4;
-        Thu, 25 Jun 2020 08:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=X8M6Z9iS/wBC6CKH2GRHd5qZp57FkKWtOwBt90Zk34A=;
-        b=eGGX204qFkOgyfuDXmuEIHM3gp2j6rzf6EVhLDf2lT4vUGzyo4LoVxjk5IDG5T/HgV
-         SHimEsv/KFvCv2upk6p5TQ390K8YusD35xhmdERCP8hevDc/3N7fiKYsyqlCpwxcJNTL
-         fV2AObbJaTbEN8bxHJZRxk58LgI0PlNboQZh1Tn68esJ3FSkZGyoCkncLRRlkyrXbuld
-         afGWQ1KWnI8r9P8z1Is4xIf+DBfjVP67ziRjXCxl5sKm+69jmK3PRHBmkvNbvB1T8Gd4
-         M0eOcCgRCGXK9eQlZTvrfe9RlBulIJpxQjT6+5BxJ1PXQ9b17QFXLVLbtVQPYN/Gu4Vw
-         6xxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X8M6Z9iS/wBC6CKH2GRHd5qZp57FkKWtOwBt90Zk34A=;
-        b=brhjRVW/pdNcptaT0fbiOOh7hWyQ/bQ7ZfhpAM/dli7px/+GpTwukYovrIQcuVjY24
-         LzeRpvi8eUxJ8vn28CYKUqx0ZpojmZUNComHb2vUzLcPkHVNo6/qyEbBEvmQPXv4fYf/
-         2j8J8iUMA1DNBZwYlK5bkfd0i59CPp6FldR9mGT4WtFolbhIinSA6lZHeUncOtYg884a
-         lgfR3PS3jpyXfDWzBbPh9AzAHOG8nub9mIhfQE6hSFi87+2yjvey0Gb4lZ9sWO8W7vUR
-         YD10pM7++YW37h1P7gnFtjJDAK4eNZgSiV/boMAc3MUX4n/Tski5kuLCgLPZ3PMTwGwB
-         vyMw==
-X-Gm-Message-State: AOAM533GObuj7mYDEFYrrthBf4/Tvk09nSeZQC3896xS/izaxPUEfNVW
-        lp2yeDCSN/AV8xhKEWj0/uEpQIz1
-X-Google-Smtp-Source: ABdhPJzM93nI+H9Ck3LePOxdqtbGMfMU0BS4r+j7X5nPzR4AuPATmo/3bvl9L036VUGx/3t/0qsCeg==
-X-Received: by 2002:adf:e8ce:: with SMTP id k14mr35021864wrn.93.1593098590375;
-        Thu, 25 Jun 2020 08:23:10 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.85])
-        by smtp.gmail.com with ESMTPSA id r1sm31560403wrn.29.2020.06.25.08.23.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 08:23:09 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] io-wq: return next work from ->do_work() directly
-Date:   Thu, 25 Jun 2020 18:20:54 +0300
-Message-Id: <e55e676995251f1269de6e69ac7ab42d3b04aff5.1593095572.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1593095572.git.asml.silence@gmail.com>
-References: <cover.1593095572.git.asml.silence@gmail.com>
+        Thu, 25 Jun 2020 11:25:03 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FC6C08C5C1;
+        Thu, 25 Jun 2020 08:25:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=a41XB4ki3PuYJQxiFFnzrHyY1AyEU1gPv8dZhWlqlVY=; b=eSELIPPNsSumTimsYPTmKeR7ZN
+        jV/xic9+V1i/7NJXxJTLl3lYOzhJYxf3yeQj++FQ4xJnHkhQgR7MG6fqygrSTNVuSPExtlyBmeSE8
+        +m5+QTxCO5Olmc/l8CDg4oUcbiVLeInVPtPEvfIES2m+c34WXa8EMvUYnVsLTPxbIPlfbBOLb6+4A
+        pBN72PGJTRbsiyUx6MWqHL2ipW5pQ4HABbrXOkDNLgtIxWy+ncD8r4JO/sMsnrwy8Mo3JRK3oeFVG
+        LhqqJ62B3FH5js+0WwsQGgbuP4oWfg8ncRREqJqV6ztb4kE7X1TQ4iX3Cu5+TSVLpCiFbfRHHzvFj
+        9XlrEINg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joTk4-0003Hw-5Y; Thu, 25 Jun 2020 15:24:44 +0000
+Subject: Re: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
+To:     Richard Weinberger <richard@nod.at>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200529200347.2464284-1-keescook@chromium.org>
+ <202006241335.2C0FB5DF90@keescook>
+ <b97853f0-c4be-7039-1d4c-96b3ab802472@infradead.org>
+ <CAFLxGvxiyyX9s=y4phGxvWh-vonS1WPOUbRZr9mgq-B+wY+2nQ@mail.gmail.com>
+ <10f7c20a-0a32-f5cf-7fdf-761db22afcd9@infradead.org>
+ <03486f13-b138-2fc6-4d90-2737d86add2f@infradead.org>
+ <80f501f4-d4fb-1f22-5603-57b5490a695d@infradead.org>
+ <202006242300.145D555@keescook>
+ <1916262186.58280.1593066248850.JavaMail.zimbra@nod.at>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <65cfbfa8-bbfe-e0d3-0255-cd3550ff09c8@infradead.org>
+Date:   Thu, 25 Jun 2020 08:24:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <1916262186.58280.1593066248850.JavaMail.zimbra@nod.at>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's easier to return next work from ->do_work() than
-having an in-out argument. Looks nicer and easier to compile.
-Also, merge io_wq_assign_next() into its only user.
+On 6/24/20 11:24 PM, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+>> Von: "Kees Cook" <keescook@chromium.org>
+>> An: "Randy Dunlap" <rdunlap@infradead.org>
+>> CC: "Richard Weinberger" <richard.weinberger@gmail.com>, "richard" <richard@nod.at>, "Greg Kroah-Hartman"
+>> <gregkh@linuxfoundation.org>, "Prasad Sodagudi" <psodagud@codeaurora.org>, "Sami Tolvanen" <samitolvanen@google.com>,
+>> "Amit Daniel Kachhap" <amit.kachhap@arm.com>, "linux-kselftest" <linux-kselftest@vger.kernel.org>, "clang-built-linux"
+>> <clang-built-linux@googlegroups.com>, "linux-kernel" <linux-kernel@vger.kernel.org>
+>> Gesendet: Donnerstag, 25. Juni 2020 08:06:18
+>> Betreff: Re: [PATCH drivers/misc 0/4] lkdtm: Various clean ups
+> 
+>> On Wed, Jun 24, 2020 at 06:45:47PM -0700, Randy Dunlap wrote:
+>>> Looks like lkdtm/bugs.c needs to get/use arch/x86/include/asm/processor.h
+>>> but it actually uses arch/x86/um/asm/processor*.h, which does not have the
+>>> needed structs etc.
+>>
+>> Should I just test for !UML in bugs.c? (This is all for the
+>> lkdtm_DOUBLE_FAULT() test.) I already do those kinds of checks for the
+>> lkdtm_UNSET_SMEP() test. e.g.:
+> 
+> Just had a look. Yes, this sounds good to me. UML has CONFIG_X86_32=y but no GDT. :-)
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io-wq.c    |  8 +++-----
- fs/io-wq.h    |  2 +-
- fs/io_uring.c | 53 ++++++++++++++++++++-------------------------------
- 3 files changed, 25 insertions(+), 38 deletions(-)
+Sounds good to me also. Thanks.
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 47c5f3aeb460..72f759e1d6eb 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -523,9 +523,8 @@ static void io_worker_handle_work(struct io_worker *worker)
- 				work->flags |= IO_WQ_WORK_CANCEL;
- 
- 			hash = io_get_work_hash(work);
--			linked = old_work = work;
--			wq->do_work(&linked);
--			linked = (old_work == linked) ? NULL : linked;
-+			old_work = work;
-+			linked = wq->do_work(work);
- 
- 			work = next_hashed;
- 			if (!work && linked && !io_wq_is_hashed(linked)) {
-@@ -781,8 +780,7 @@ static void io_run_cancel(struct io_wq_work *work, struct io_wqe *wqe)
- 		struct io_wq_work *old_work = work;
- 
- 		work->flags |= IO_WQ_WORK_CANCEL;
--		wq->do_work(&work);
--		work = (work == old_work) ? NULL : work;
-+		work = wq->do_work(work);
- 		wq->free_work(old_work);
- 	} while (work);
- }
-diff --git a/fs/io-wq.h b/fs/io-wq.h
-index 04239dfb12b0..114f12ec2d65 100644
---- a/fs/io-wq.h
-+++ b/fs/io-wq.h
-@@ -101,7 +101,7 @@ static inline struct io_wq_work *wq_next_work(struct io_wq_work *work)
- }
- 
- typedef void (free_work_fn)(struct io_wq_work *);
--typedef void (io_wq_work_fn)(struct io_wq_work **);
-+typedef struct io_wq_work *(io_wq_work_fn)(struct io_wq_work *);
- 
- struct io_wq_data {
- 	struct user_struct *user;
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index e7b1e696fecd..62130dfbc0e7 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -884,7 +884,6 @@ enum io_mem_account {
- 	ACCT_PINNED,
- };
- 
--static void io_wq_submit_work(struct io_wq_work **workptr);
- static void io_cqring_fill_event(struct io_kiocb *req, long res);
- static void io_put_req(struct io_kiocb *req);
- static void __io_double_put_req(struct io_kiocb *req);
-@@ -1623,20 +1622,6 @@ static void io_free_req(struct io_kiocb *req)
- 		io_queue_async_work(nxt);
- }
- 
--static void io_wq_assign_next(struct io_wq_work **workptr, struct io_kiocb *nxt)
--{
--	struct io_kiocb *link;
--	const struct io_op_def *def = &io_op_defs[nxt->opcode];
--
--	if ((nxt->flags & REQ_F_ISREG) && def->hash_reg_file)
--		io_wq_hash_work(&nxt->work, file_inode(nxt->file));
--
--	*workptr = &nxt->work;
--	link = io_prep_linked_timeout(nxt);
--	if (link)
--		nxt->flags |= REQ_F_QUEUE_TIMEOUT;
--}
--
- /*
-  * Drop reference to request, return next in chain (if there is one) if this
-  * was the last reference to this request.
-@@ -1656,24 +1641,29 @@ static void io_put_req(struct io_kiocb *req)
- 		io_free_req(req);
- }
- 
--static void io_steal_work(struct io_kiocb *req,
--			  struct io_wq_work **workptr)
-+static struct io_wq_work *io_steal_work(struct io_kiocb *req)
- {
-+	struct io_kiocb *link, *nxt = NULL;
-+
- 	/*
--	 * It's in an io-wq worker, so there always should be at least
--	 * one reference, which will be dropped in io_put_work() just
--	 * after the current handler returns.
--	 *
--	 * It also means, that if the counter dropped to 1, then there is
--	 * no asynchronous users left, so it's safe to steal the next work.
-+	 * A ref is owned by io-wq in which context we're. So, if that's the
-+	 * last one, it's safe to steal next work. False negatives are Ok,
-+	 * it just will be re-punted async in io_put_work()
- 	 */
--	if (refcount_read(&req->refs) == 1) {
--		struct io_kiocb *nxt = NULL;
-+	if (refcount_read(&req->refs) != 1)
-+		return NULL;
- 
--		io_req_find_next(req, &nxt);
--		if (nxt)
--			io_wq_assign_next(workptr, nxt);
--	}
-+	io_req_find_next(req, &nxt);
-+	if (!nxt)
-+		return NULL;
-+
-+	if ((nxt->flags & REQ_F_ISREG) && io_op_defs[nxt->opcode].hash_reg_file)
-+		io_wq_hash_work(&nxt->work, file_inode(nxt->file));
-+
-+	link = io_prep_linked_timeout(nxt);
-+	if (link)
-+		nxt->flags |= REQ_F_QUEUE_TIMEOUT;
-+	return &nxt->work;
- }
- 
- /*
-@@ -5631,9 +5621,8 @@ static void io_arm_async_linked_timeout(struct io_kiocb *req)
- 	io_queue_linked_timeout(link);
- }
- 
--static void io_wq_submit_work(struct io_wq_work **workptr)
-+static struct io_wq_work *io_wq_submit_work(struct io_wq_work *work)
- {
--	struct io_wq_work *work = *workptr;
- 	struct io_kiocb *req = container_of(work, struct io_kiocb, work);
- 	int ret = 0;
- 
-@@ -5665,7 +5654,7 @@ static void io_wq_submit_work(struct io_wq_work **workptr)
- 		io_put_req(req);
- 	}
- 
--	io_steal_work(req, workptr);
-+	return io_steal_work(req);
- }
- 
- static inline struct file *io_file_from_index(struct io_ring_ctx *ctx,
 -- 
-2.24.0
+~Randy
 
