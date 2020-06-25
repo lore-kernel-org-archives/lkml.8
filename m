@@ -7,25 +7,21 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB00C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF73FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA93206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C5E206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404982AbgFYNJX (ORCPT
+        id S2404993AbgFYNJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404892AbgFYNIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:08:48 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ECB1C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:08:48 -0700 (PDT)
+        Thu, 25 Jun 2020 09:09:25 -0400
+Received: from 8bytes.org ([81.169.241.247]:49386 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404883AbgFYNIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:08:47 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2BC4960C; Thu, 25 Jun 2020 15:08:40 +0200 (CEST)
+        id 93AF64DE; Thu, 25 Jun 2020 15:08:39 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     Russell King <linux@armlinux.org.uk>,
@@ -50,9 +46,9 @@ Cc:     Russell King <linux@armlinux.org.uk>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 12/13] arm64: Remove dev->archdata.iommu pointer
-Date:   Thu, 25 Jun 2020 15:08:35 +0200
-Message-Id: <20200625130836.1916-13-joro@8bytes.org>
+Subject: [PATCH 09/13] x86: Remove dev->archdata.iommu pointer
+Date:   Thu, 25 Jun 2020 15:08:32 +0200
+Message-Id: <20200625130836.1916-10-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200625130836.1916-1-joro@8bytes.org>
 References: <20200625130836.1916-1-joro@8bytes.org>
@@ -68,19 +64,19 @@ per-device private pointer offered by IOMMU core.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/arm64/include/asm/device.h | 3 ---
+ arch/x86/include/asm/device.h | 3 ---
  1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/device.h b/arch/arm64/include/asm/device.h
-index 12b778d55342..996498751318 100644
---- a/arch/arm64/include/asm/device.h
-+++ b/arch/arm64/include/asm/device.h
-@@ -6,9 +6,6 @@
- #define __ASM_DEVICE_H
+diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
+index 49bd6cf3eec9..7c0a52ca2f4d 100644
+--- a/arch/x86/include/asm/device.h
++++ b/arch/x86/include/asm/device.h
+@@ -3,9 +3,6 @@
+ #define _ASM_X86_DEVICE_H
  
  struct dev_archdata {
 -#ifdef CONFIG_IOMMU_API
--	void *iommu;			/* private IOMMU data */
+-	void *iommu; /* hook for IOMMU specific extension */
 -#endif
  };
  
