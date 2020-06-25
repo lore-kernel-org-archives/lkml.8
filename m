@@ -2,71 +2,116 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB30C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0012076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1948206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:50:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pDGn5375"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406922AbgFYTsi (ORCPT
+        id S2406940AbgFYTuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:48:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406844AbgFYTsf (ORCPT
+        Thu, 25 Jun 2020 15:50:39 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:60496 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406679AbgFYTui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:48:35 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7BDC08C5C1;
-        Thu, 25 Jun 2020 12:48:35 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 87DB913D602DE;
-        Thu, 25 Jun 2020 12:48:34 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 12:48:33 -0700 (PDT)
-Message-Id: <20200625.124833.893666125631041346.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     aelior@marvell.com, GR-everest-linux-l2@marvell.com,
-        kuba@kernel.org, michal.kalderon@marvell.com,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, irusskikh@marvell.com
-Subject: Re: [PATCH][V2] qed: add missing error test for
- DBG_STATUS_NO_MATCHING_FRAMING_MODE
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200625164505.115425-1-colin.king@canonical.com>
-References: <20200625164505.115425-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 25 Jun 2020 12:48:34 -0700 (PDT)
+        Thu, 25 Jun 2020 15:50:38 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9E8BB20B7186;
+        Thu, 25 Jun 2020 12:50:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E8BB20B7186
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593114638;
+        bh=6KdwqIpe+kaP7s5nyTEGYePlbPH1qdRK7aqpZGcTNg4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pDGn5375Fx9daXQyMdPSCn/5L5ekY9T+uvCZlcDIz87wHgvQil7yhFmuztTjzL3Pr
+         0Tdt30/25LtWAC8Cuw0wW/weaAtxC8YgQzvrA3pCd6BR7jqc1iDYyyyWhpWCOLN7Nz
+         SVF9SVqocIUDD1LAAHO0bHyfWUg5PDMjvqCXjSlA=
+Date:   Thu, 25 Jun 2020 14:50:17 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 10/12] ima: Move validation of the keyrings conditional
+ into ima_validate_rule()
+Message-ID: <20200625195017.GA4694@sequoia>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+ <20200623003236.830149-11-tyhicks@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623003236.830149-11-tyhicks@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Thu, 25 Jun 2020 17:45:05 +0100
-
-> From: Colin Ian King <colin.king@canonical.com>
+On 2020-06-22 19:32:34, Tyler Hicks wrote:
+> Use ima_validate_rule() to ensure that the combination of a hook
+> function and the keyrings conditional is valid and that the keyrings
+> conditional is not specified without an explicit KEY_CHECK func
+> conditional. This is a code cleanup and has no user-facing change.
 > 
-> The error DBG_STATUS_NO_MATCHING_FRAMING_MODE was added to the enum
-> enum dbg_status however there is a missing corresponding entry for
-> this in the array s_status_str. This causes an out-of-bounds read when
-> indexing into the last entry of s_status_str.  Fix this by adding in
-> the missing entry.
-> 
-> Addresses-Coverity: ("Out-of-bounds read").
-> Fixes: 2d22bc8354b1 ("qed: FW 8.42.2.0 debug features")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 > ---
+>  security/integrity/ima/ima_policy.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> V2: use the error message as suggested by Igor Russkikh
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 514baf24d6a5..ae2ec2a9cdb9 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -999,6 +999,12 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>  		case KEXEC_KERNEL_CHECK:
+>  		case KEXEC_INITRAMFS_CHECK:
+>  		case POLICY_CHECK:
+> +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
+> +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
+> +					     IMA_INMASK | IMA_EUID | IMA_PCR |
+> +					     IMA_FSNAME))
 
-I already applied your V1 so this patch no longer applies.
+I accidentally left these out:
+
+ (IMA_DIGSIG_REQUIRED | IMA_PERMIT_DIRECTIO | IMA_MODSIG_ALLOWED | IMA_CHECK_BLACKLIST)
+
+I'll add them in v2.
+
+Tyler
+
+> +				return false;
+> +
+>  			break;
+>  		case KEXEC_CMDLINE:
+>  			if (entry->action & ~(MEASURE | DONT_MEASURE))
+> @@ -1026,7 +1032,8 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>  		default:
+>  			return false;
+>  		}
+> -	}
+> +	} else if (entry->flags & IMA_KEYRINGS)
+> +		return false;
+>  
+>  	return true;
+>  }
+> @@ -1208,7 +1215,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  			keyrings_len = strlen(args[0].from) + 1;
+>  
+>  			if ((entry->keyrings) ||
+> -			    (entry->func != KEY_CHECK) ||
+>  			    (keyrings_len < 2)) {
+>  				result = -EINVAL;
+>  				break;
+> -- 
+> 2.25.1
