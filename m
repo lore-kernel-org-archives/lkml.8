@@ -2,126 +2,184 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B921C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C97207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:27:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.unc.edu header.i=@cs.unc.edu header.b="A0kLDZtz"
+	by mail.kernel.org (Postfix) with ESMTP id EC8E220679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405790AbgFYP1d (ORCPT
+        id S2405778AbgFYPa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:27:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405766AbgFYP1c (ORCPT
+        Thu, 25 Jun 2020 11:30:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37864 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404580AbgFYPa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:27:32 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8BAFC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:27:31 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id d12so2957529qvn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.unc.edu; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=cylvILSn15rb2wKQGtwoa9WDT8sAaEmN5gAld/QWM1o=;
-        b=A0kLDZtz+ww2LKNJ3eYbFTrVCOqWDN42mdH4D2IoZyKVnCOJsxf5uz2LxgAuVhOCtf
-         LvQAH3Cxj75bevZVL5/he/74Gm8iNpgXUy0NTKiP4iGtPzjv4ohk2o9ilByo10GWty08
-         LZ9tw4wYfJOhssTVzY4oItgiRVQE5i/8ZvGio=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cylvILSn15rb2wKQGtwoa9WDT8sAaEmN5gAld/QWM1o=;
-        b=VfznOK++2DMRr1q2QqIS8dT8G8H/2k15Kkw1/s8K+dJlWqwd5Oic99xHh7SMWML+sz
-         GthK2fhENSKQGxtPf5YQibXKeURqW77F8jf9xPnV8atQAqkaKqvFZWwc0yr32iCghZrp
-         rRObTt3R89NZxtmkXCBLeXoKQeb9v9oxcWbEtokxfE51EKl1VOJU1zw1q7idLcmqD9Kn
-         HYaUdm2xVnw8G0ba5JXMk32AQQEJXN0lnqBhZ5wDbxV4bHRt1cYyQ7ccvp412NF+2vp8
-         BHaGsZGa5Nskc9yLFf7lc5HV2yZj3rQiOzlJJ3beVuY/ito/eEBJc0rFbccjBSqQsXTP
-         +khA==
-X-Gm-Message-State: AOAM531ZfM5QZ5NuJyrb6kt4CrMzj0OSV49YSg5Dn2M2l7yPQrNTFP5B
-        VOepinQYHZVXGv2kpFT2FomckvoVw34=
-X-Google-Smtp-Source: ABdhPJzDRkNHphlcLh0YCdDxSUh1iC1IKf2KMQMmzokveaco066nkTyccCQ6E5nVHdjE74MYQ9ESPA==
-X-Received: by 2002:a0c:f388:: with SMTP id i8mr36556390qvk.224.1593098850992;
-        Thu, 25 Jun 2020 08:27:30 -0700 (PDT)
-Received: from pepe.local (71-142-124-255.lightspeed.rlghnc.sbcglobal.net. [71.142.124.255])
-        by smtp.gmail.com with ESMTPSA id b22sm5445299qka.43.2020.06.25.08.27.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 08:27:29 -0700 (PDT)
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
-        dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
-References: <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
- <7A3EBAB0-B3B3-4CB7-AA6A-FDF29D03E30D@amacapital.net>
- <20200529152756.GA7452@invisiblethingslab.com>
-From:   Don Porter <porter@cs.unc.edu>
-Message-ID: <ef8bbdff-e891-bee3-677d-3606474ecc10@cs.unc.edu>
-Date:   Thu, 25 Jun 2020 11:27:28 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Thu, 25 Jun 2020 11:30:28 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 28CDA2A563E
+Message-ID: <b6b06fb27cb97d5c26523ef109512e041d227c5f.camel@collabora.com>
+Subject: Re: [RFC 4/7] media: uapi: h264: increase size of fields
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Thu, 25 Jun 2020 12:29:50 -0300
+In-Reply-To: <079f79676335c32941e0021b84849164858c09df.camel@collabora.com>
+References: <20200623182809.1375-1-ezequiel@collabora.com>
+         <20200623182809.1375-5-ezequiel@collabora.com>
+         <079f79676335c32941e0021b84849164858c09df.camel@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-In-Reply-To: <20200529152756.GA7452@invisiblethingslab.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/20 11:27 AM, Wojtek Porczyk wrote:
-> On Thu, May 28, 2020 at 11:38:01AM -0700, Andy Lutomirski wrote:
->> One useful test for the actual kernel patches would be to run your SGX
->> workload on a loaded core.  That is, do something like taskset -c
->> 0 graphene_thing and, simultaneously, write a trivial infinite loop program
->> and run that under taskset -c 0 as well. For good measure, you could have
->> perf top or perf record running at the same time.  Look for kernel errors,
->> but also look for any evidence of your workload malfunctioning.
+On Thu, 2020-06-25 at 11:01 -0400, Nicolas Dufresne wrote:
+> Le mardi 23 juin 2020 à 15:28 -0300, Ezequiel Garcia a écrit :
+> > Slice header syntax element 'first_mb_in_slice' can point
+> > to the last macroblock, currently the field can only reference
+> > 65536 macroblocks which is insufficient for 8K videos.
+> > 
+> > DPB entry PicNum maximum value is 2*MaxFrameNum for interlaced
+> > content (field_pic_flag=1).
+> > 
+> > Therefore, increase 'first_mb_in_slice' and 'pic_num'.
+> > 
+> > The v4l2_h264_dpb_entry struct needs to be padded to avoid a hole,
+> > which will be useful to allow future uAPI extensions.
+> > 
+> > Note that v4l2_ctrl_h264_slice_params struct will be modified
+> > in a follow-up commit, and so we defer its 64-bit padding.
 > 
-> We currently run as part of CI several workloads[1], among them LTP tests[2],
-> and sometimes it's not pretty, because we encounter stability problems in
-> Graphene+SGX even without the patchset. We'll pick some stable subset and
-> will let know. Right now we'll have to retool CI for custom kernels, which
-> will take some back and forth with uni's admins.
+> This patch includes two changes, with two distinct rationale. Please
+> split in two, I would also add reference to the spec in the commit
+> messages.
+
+OK.
+
+> The explanation is also insufficient. Need to mention that
+> macro-blocks are 16x16, and the bounds for synthetic value
+> MaxFrameNum (derived from bitstream value) has not be mention either.
 > 
-> [1] https://github.com/oscarlab/graphene/tree/master/Examples
-> [2] https://github.com/oscarlab/graphene/tree/master/LibOS/shim/test/ltp
-> 
 
-Following up: we have been running a patched 5.7 kernel with v12 of this 
-series on one of our CI workers.  As Wojtek mentions, infrastructure and 
-other orthogonal issues took some time.
+OK, will do.
 
-We have run our complete SGX testing pipelines successfully several 
-times with no issues: no errors in Graphene or suspicious kernel messages.
+Thanks!
+Ezequiel
 
-I also did Andy's suggested test:
-* Graphene running nginx pinned to core 0
-* infinite loop on core 0
-* perf top running
-* Exercised with non-SGX apache bench several times (~10 minutes of 
-testing time) also from core 0
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 7 +++++--
+> >  drivers/media/v4l2-core/v4l2-ctrls.c                     | 9 +++++++++
+> >  include/media/h264-ctrls.h                               | 6 ++++--
+> >  include/media/v4l2-h264.h                                | 2 +-
+> >  4 files changed, 19 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > index 0808a36777b6..e3b5a28fb965 100644
+> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > @@ -1772,7 +1772,7 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >      * - __u32
+> >        - ``header_bit_size``
+> >        -
+> > -    * - __u16
+> > +    * - __u32
+> >        - ``first_mb_in_slice``
+> >        -
+> >      * - __u8
+> > @@ -2046,7 +2046,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >      * - __u16
+> >        - ``frame_num``
+> >        -
+> > -    * - __u16
+> > +    * - __u8
+> > +      - ``reserved[6]``
+> > +      - Applications and drivers must set this to zero.
+> > +    * - __u32
+> >        - ``pic_num``
+> >        -
+> >      * - __s32
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index 6abd023f10c7..a751c14f9c22 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -1734,6 +1734,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+> >  	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
+> >  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+> >  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+> > +	struct v4l2_ctrl_h264_decode_params *p_h264_dec_params;
+> >  	struct v4l2_ctrl_hevc_sps *p_hevc_sps;
+> >  	struct v4l2_ctrl_hevc_pps *p_hevc_pps;
+> >  	struct v4l2_ctrl_hevc_slice_params *p_hevc_slice_params;
+> > @@ -1808,6 +1809,14 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+> >  		}
+> >  		break;
+> >  	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> > +		p_h264_dec_params = p;
+> > +
+> > +		for (i = 0; i < V4L2_H264_NUM_DPB_ENTRIES; i++) {
+> > +			struct v4l2_h264_dpb_entry *dpb_entry =
+> > +				&p_h264_dec_params->dpb[i];
+> > +
+> > +			zero_reserved(*dpb_entry);
+> > +		}
+> >  		break;
+> >  
+> >  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+> > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > index c6cbf178c1c9..a938d16b901c 100644
+> > --- a/include/media/h264-ctrls.h
+> > +++ b/include/media/h264-ctrls.h
+> > @@ -161,7 +161,8 @@ struct v4l2_ctrl_h264_slice_params {
+> >  	/* Offset in bits to slice_data() from the beginning of this slice. */
+> >  	__u32 header_bit_size;
+> >  
+> > -	__u16 first_mb_in_slice;
+> > +	__u32 first_mb_in_slice;
+> > +
+> >  	__u8 slice_type;
+> >  	__u8 pic_parameter_set_id;
+> >  	__u8 colour_plane_id;
+> > @@ -208,7 +209,8 @@ struct v4l2_ctrl_h264_slice_params {
+> >  struct v4l2_h264_dpb_entry {
+> >  	__u64 reference_ts;
+> >  	__u16 frame_num;
+> > -	__u16 pic_num;
+> > +	__u8 reserved[6];
+> > +	__u32 pic_num;
+> >  	/* Note that field is indicated by v4l2_buffer.field */
+> >  	__s32 top_field_order_cnt;
+> >  	__s32 bottom_field_order_cnt;
+> > diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
+> > index bc9ebb560ccf..1a5f26fc2a9a 100644
+> > --- a/include/media/v4l2-h264.h
+> > +++ b/include/media/v4l2-h264.h
+> > @@ -33,7 +33,7 @@ struct v4l2_h264_reflist_builder {
+> >  	struct {
+> >  		s32 pic_order_count;
+> >  		int frame_num;
+> > -		u16 pic_num;
+> > +		u32 pic_num;
+> >  		u16 longterm : 1;
+> >  	} refs[V4L2_H264_NUM_DPB_ENTRIES];
+> >  	s32 cur_pic_order_count;
 
-Again, no apparent issues, nothing in dmesg.  I ran a similar setup with 
-our SGX-specific Graphene (PAL) unit tests.  Same story: everything 
-looks good.
 
-Let us know if we can be of any more help here.
-
-Thanks,
-Don
