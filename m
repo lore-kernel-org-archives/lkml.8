@@ -2,101 +2,234 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B83C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF32BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4AC32089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593101479;
-	bh=m6gUtE+LsGChKQcqMZfAQZ4md2ODPWeg5HpwIcqdIVI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ggEM1V5oSteZpW224VVcelzosL6GAdGTpK7LZ9pEAUQKBNmxo2H8V5z/QQmIHfMa3
-	 8tF+ZLY2u6kpdVQovvmrvR+s9+W61NSw9XbQxV1UdKjKDoIWI1kaZmzFrY5xjQ1gYB
-	 M7G/D5FJZ06aB0UNKZL4p/cdZtb9xeoLWfR9iKdo=
+	by mail.kernel.org (Postfix) with ESMTP id 9EEF92089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:13:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNy/7DFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406003AbgFYQLR (ORCPT
+        id S2406059AbgFYQNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405929AbgFYQLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:11:15 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2392720CC7;
-        Thu, 25 Jun 2020 16:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593101475;
-        bh=m6gUtE+LsGChKQcqMZfAQZ4md2ODPWeg5HpwIcqdIVI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UHaVh79KG5y+i60f9823JmYoI2dUKjr7iYEo9d0OaJLhaDS3Lw1Xb0ilbPsy/kCH2
-         AjFAJHDwsZ6SJUSmADpBoaQ4ayFZGbRTTzUP7hhLgLUwcJuO48AxJUe3PIzEfUzs6O
-         3JHRa7DGeZYleUIGu8jJ5EKooHdrypa+Y0iydGcQ=
-Received: by mail-ot1-f48.google.com with SMTP id u23so5746577otq.10;
-        Thu, 25 Jun 2020 09:11:15 -0700 (PDT)
-X-Gm-Message-State: AOAM530Jz9O1QPqzn1az5EywGQ8THwGQMzO123+VV//sGsfUvWxLjh7R
-        fuTkd8A7BhQMool2NYBukWqHX+R2KnRNAedD2bA=
-X-Google-Smtp-Source: ABdhPJzt+8GQLLE/RndnWOkKvFtWHzvNvUZ7LyQnx5yRgGBHgFAQHJtFg+C/0cwjMy41nytLHld+xvfrB+4m+9FOwnM=
-X-Received: by 2002:a9d:5a12:: with SMTP id v18mr26495089oth.90.1593101474463;
- Thu, 25 Jun 2020 09:11:14 -0700 (PDT)
+        Thu, 25 Jun 2020 12:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390703AbgFYQNr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 12:13:47 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B15BC08C5DD
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:13:47 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cv18so660039pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tN3RRFkW8H40rA8SGu1JDOigZLSzT5qVO0+D16XtuLc=;
+        b=FNy/7DFbxnBgI72+dWF1OpzoyRqVVhI3k7b313hoPAknwI2gtcpnrbI/QxduZaLChO
+         XsS20NJXJUX+BgZZni3WHhBJhCOxGeey5qw4s+h96KkQc1DbqtdERktvlQbbWfMI5Qtj
+         CMFRos0WWK71LdR3xO8mzueiOZZD/HrvnbZcL7TWPhuTj08pp29CzK2iwQtWYxS/KzPS
+         DbZRhxXQXIM+BXTF2MYRYYBA9EL7Z4t+n9j3emOXcA8xRPQhjqftNQZaWno22ZXuxY9B
+         OJCpp0YifwADaKWWU1uXVBh+ae7gxCNBEpNdOASG/NzMPjRUdcy8BrCxoR+02HHMW5zQ
+         TEBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tN3RRFkW8H40rA8SGu1JDOigZLSzT5qVO0+D16XtuLc=;
+        b=EL+39h0v49lFxcAiNKWjv9NhmDJTPl7gvOqN75/c0cO2Zze7KPmmCK9jUAGOf/TCWf
+         0mGe3YpJe7YoaPFmfKk82nTMoSEpSCjU9HqBpLtuKD7d1x6vxrL9RuPuLlWDxKIlb85w
+         ltiAXFEcO4Kf7vrMB4S2GlXZWyc2iNUbzw/2Cxom6PlxYTFyuZb61zEHeN1oL6WVHq55
+         i74IUM+/FpkMgAyWZYRywnraTFeBk3psgrzDp0AjurI55dyfxakrL6X6yYxhnY/DsmSO
+         uHPNo3wGnPJDzZXXnjdzzIzTI2ysQx1mgdtQqhN1YmwhAv6QrH0xCTYThvq+GKhUeWx7
+         1ixw==
+X-Gm-Message-State: AOAM533k43LrOmX8pKap8MwbN8n+4QC5vR+YXfpZkdMRqEq2sKf+F1iJ
+        R7l8NBs8R/V9T/76SlFkywgNJA==
+X-Google-Smtp-Source: ABdhPJxZZxKF0/AUF+MScBXa8zZXuQ+lX7KkH7oqN3X8Y0ebQY5u9x4x5ou8dadW03hvgkUjiMZCBw==
+X-Received: by 2002:a17:90a:7c4e:: with SMTP id e14mr4310401pjl.52.1593101626297;
+        Thu, 25 Jun 2020 09:13:46 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id v7sm22710119pfn.147.2020.06.25.09.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 09:13:45 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 09:13:39 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 02/22] kbuild: add support for Clang LTO
+Message-ID: <20200625161339.GA173089@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-3-samitolvanen@google.com>
+ <20200625022647.GB2871607@ubuntu-n2-xlarge-x86>
 MIME-Version: 1.0
-References: <20200623150935.32181-1-geert+renesas@glider.be>
-In-Reply-To: <20200623150935.32181-1-geert+renesas@glider.be>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 25 Jun 2020 18:11:03 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHY7b1nNoOU-LuXiriFPcTC4ZfMccivhJWJvAUGPhwMzQ@mail.gmail.com>
-Message-ID: <CAMj1kXHY7b1nNoOU-LuXiriFPcTC4ZfMccivhJWJvAUGPhwMzQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/libstub: EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER
- should not default to yes
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625022647.GB2871607@ubuntu-n2-xlarge-x86>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 at 17:09, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER is deprecated, so it should not
-> be enabled by default.
->
-> In light of commit 4da0b2b7e67524cc ("efi/libstub: Re-enable command
-> line initrd loading for x86"), keep the default for X86.
->
-> Fixes: cf6b83664895a5c7 ("efi/libstub: Make initrd file loader configurable")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, Jun 24, 2020 at 07:26:47PM -0700, Nathan Chancellor wrote:
+> Hi Sami,
+> 
+> On Wed, Jun 24, 2020 at 01:31:40PM -0700, 'Sami Tolvanen' via Clang Built Linux wrote:
+> > This change adds build system support for Clang's Link Time
+> > Optimization (LTO). With -flto, instead of ELF object files, Clang
+> > produces LLVM bitcode, which is compiled into native code at link
+> > time, allowing the final binary to be optimized globally. For more
+> > details, see:
+> > 
+> >   https://llvm.org/docs/LinkTimeOptimization.html
+> > 
+> > The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
+> > which defaults to LTO being disabled. To use LTO, the architecture
+> > must select ARCH_SUPPORTS_LTO_CLANG and support:
+> > 
+> >   - compiling with Clang,
+> >   - compiling inline assembly with Clang's integrated assembler,
+> >   - and linking with LLD.
+> > 
+> > While using full LTO results in the best runtime performance, the
+> > compilation is not scalable in time or memory. CONFIG_THINLTO
+> > enables ThinLTO, which allows parallel optimization and faster
+> > incremental builds. ThinLTO is used by default if the architecture
+> > also selects ARCH_SUPPORTS_THINLTO:
+> > 
+> >   https://clang.llvm.org/docs/ThinLTO.html
+> > 
+> > To enable LTO, LLVM tools must be used to handle bitcode files. The
+> > easiest way is to pass the LLVM=1 option to make:
+> > 
+> >   $ make LLVM=1 defconfig
+> >   $ scripts/config -e LTO_CLANG
+> >   $ make LLVM=1
+> > 
+> > Alternatively, at least the following LLVM tools must be used:
+> > 
+> >   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
+> > 
+> > To prepare for LTO support with other compilers, common parts are
+> > gated behind the CONFIG_LTO option, and LTO can be disabled for
+> > specific files by filtering out CC_FLAGS_LTO.
+> > 
+> > Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
+> > follow-up patches.
+> > 
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  Makefile                          | 16 ++++++++
+> >  arch/Kconfig                      | 66 +++++++++++++++++++++++++++++++
+> >  include/asm-generic/vmlinux.lds.h | 11 ++++--
+> >  scripts/Makefile.build            |  9 ++++-
+> >  scripts/Makefile.modfinal         |  9 ++++-
+> >  scripts/Makefile.modpost          | 24 ++++++++++-
+> >  scripts/link-vmlinux.sh           | 32 +++++++++++----
+> >  7 files changed, 151 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/Makefile b/Makefile
+> > index ac2c61c37a73..0c7fe6fb2143 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -886,6 +886,22 @@ KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
+> >  export CC_FLAGS_SCS
+> >  endif
+> >  
+> > +ifdef CONFIG_LTO_CLANG
+> > +ifdef CONFIG_THINLTO
+> > +CC_FLAGS_LTO_CLANG := -flto=thin $(call cc-option, -fsplit-lto-unit)
+> > +KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
+> > +else
+> > +CC_FLAGS_LTO_CLANG := -flto
+> > +endif
+> > +CC_FLAGS_LTO_CLANG += -fvisibility=default
+> > +endif
+> > +
+> > +ifdef CONFIG_LTO
+> > +CC_FLAGS_LTO	:= $(CC_FLAGS_LTO_CLANG)
+> > +KBUILD_CFLAGS	+= $(CC_FLAGS_LTO)
+> > +export CC_FLAGS_LTO
+> > +endif
+> > +
+> >  # arch Makefile may override CC so keep this after arch Makefile is included
+> >  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+> >  
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index 8cc35dc556c7..e00b122293f8 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -552,6 +552,72 @@ config SHADOW_CALL_STACK
+> >  	  reading and writing arbitrary memory may be able to locate them
+> >  	  and hijack control flow by modifying the stacks.
+> >  
+> > +config LTO
+> > +	bool
+> > +
+> > +config ARCH_SUPPORTS_LTO_CLANG
+> > +	bool
+> > +	help
+> > +	  An architecture should select this option if it supports:
+> > +	  - compiling with Clang,
+> > +	  - compiling inline assembly with Clang's integrated assembler,
+> > +	  - and linking with LLD.
+> > +
+> > +config ARCH_SUPPORTS_THINLTO
+> > +	bool
+> > +	help
+> > +	  An architecture should select this option if it supports Clang's
+> > +	  ThinLTO.
+> > +
+> > +config THINLTO
+> > +	bool "Clang ThinLTO"
+> > +	depends on LTO_CLANG && ARCH_SUPPORTS_THINLTO
+> > +	default y
+> > +	help
+> > +	  This option enables Clang's ThinLTO, which allows for parallel
+> > +	  optimization and faster incremental compiles. More information
+> > +	  can be found from Clang's documentation:
+> > +
+> > +	    https://clang.llvm.org/docs/ThinLTO.html
+> > +
+> > +choice
+> > +	prompt "Link Time Optimization (LTO)"
+> > +	default LTO_NONE
+> > +	help
+> > +	  This option enables Link Time Optimization (LTO), which allows the
+> > +	  compiler to optimize binaries globally.
+> > +
+> > +	  If unsure, select LTO_NONE.
+> > +
+> > +config LTO_NONE
+> > +	bool "None"
+> > +
+> > +config LTO_CLANG
+> > +	bool "Clang's Link Time Optimization (EXPERIMENTAL)"
+> > +	depends on CC_IS_CLANG && CLANG_VERSION >= 110000 && LD_IS_LLD
+> 
+> I am curious, what is the reason for gating this at clang 11.0.0?
+> 
+> Presumably this? https://github.com/ClangBuiltLinux/linux/issues/510
+> 
+> It might be nice to notate this so that we do not have to wonder :)
 
-Queued as a fix, thanks.
+Yes, that's the reason. I'll add a note about it. Thanks!
 
-> ---
->  drivers/firmware/efi/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index e6fc022bc87e03ab..56055c61904e49f4 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -127,7 +127,7 @@ config EFI_ARMSTUB_DTB_LOADER
->  config EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER
->         bool "Enable the command line initrd loader" if !X86
->         depends on EFI_STUB && (EFI_GENERIC_STUB || X86)
-> -       default y
-> +       default y if X86
->         help
->           Select this config option to add support for the initrd= command
->           line parameter, allowing an initrd that resides on the same volume
-> --
-> 2.17.1
->
+Sami
