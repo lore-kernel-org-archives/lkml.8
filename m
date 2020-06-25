@@ -2,138 +2,56 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4021E20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CE820672
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391329AbgFYWCY (ORCPT
+        id S2391338AbgFYWEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:02:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:28028 "EHLO mga17.intel.com"
+        Thu, 25 Jun 2020 18:04:04 -0400
+Received: from mail.itouring.de ([188.40.134.68]:37352 "EHLO mail.itouring.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390431AbgFYWCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:02:24 -0400
-IronPort-SDR: DmC4P91v2JiNRWw03I36NYigDecAwVU4dtnYh2nHSkqTmK5NQM2ttxJ3lYPjG/a2X4TBVKMd6y
- Xb4R4lFsqqiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="125322478"
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="125322478"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 15:02:23 -0700
-IronPort-SDR: gDHQaT1VFcIUjjilKxCrtBQl2lM/KCJFtD9n7mv4x1PGWxE08O4Kz+dw5JyNozokOjcRB+CLDS
- vCcbmsbPhBYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="299070067"
-Received: from jproldan-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
-  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2020 15:02:13 -0700
-Date:   Fri, 26 Jun 2020 01:02:11 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: Re: [PATCH v12 4/9] tpm: tpm_tis: Add verify_data_integrity handle
- to tpm_tis_phy_ops
-Message-ID: <20200625220211.GJ20341@linux.intel.com>
-References: <20200625144650.269719-1-amirmizi6@gmail.com>
- <20200625144650.269719-5-amirmizi6@gmail.com>
+        id S2390431AbgFYWEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 18:04:02 -0400
+Received: from tux.applied-asynchrony.com (p5ddd79e0.dip0.t-ipconnect.de [93.221.121.224])
+        by mail.itouring.de (Postfix) with ESMTPSA id 15B114160251;
+        Fri, 26 Jun 2020 00:04:01 +0200 (CEST)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+        by tux.applied-asynchrony.com (Postfix) with ESMTP id BFD36F01605;
+        Fri, 26 Jun 2020 00:03:52 +0200 (CEST)
+Subject: Re: [PATCH] sched/cfs: change initial value of runnable_avg
+From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200624154422.29166-1-vincent.guittot@linaro.org>
+ <7f2b3135-328b-a510-ce23-49e3f5c20965@applied-asynchrony.com>
+ <CAKfTPtD4+gUkz7Z2o9yyuK09M0bmP=Y+pZTYswNt=yVC4WVkyQ@mail.gmail.com>
+ <c4574b9e-852d-8f04-91cb-0fbae9f89833@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <fdc863f1-5e59-6d8a-7eff-7f4d1108f78e@applied-asynchrony.com>
+Date:   Fri, 26 Jun 2020 00:03:52 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625144650.269719-5-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <c4574b9e-852d-8f04-91cb-0fbae9f89833@applied-asynchrony.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 05:46:44PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> When using I2C bus protocol, the TPM has the ability to report data
-> integrity on incoming or outgoing command parameter bytes.
-> According to the TCG specs, if this data validation functionality is
-> enabled via the TPM_DATA_CSUM_ENABLE register, the TPM will update the
-> TPM_DATA_CSUM register after reception of the last command byte and after
-> the last response byte has been read.
-> 
-> Data integrity is checked if a "verify_data_integrity" handle is defined in
-> "tpm_tis_phy_ops".
-> 
-> Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
-> Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> ---
->  drivers/char/tpm/tpm_tis_core.c | 14 ++++++++++++++
->  drivers/char/tpm/tpm_tis_core.h |  2 ++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> index e136467..347c020 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -347,6 +347,13 @@ static int __tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
->  		return size;
->  	}
->  
-> +	if (priv->phy_ops->verify_data_integrity)
-> +		if (!priv->phy_ops->verify_data_integrity(priv, buf,
-> +							  size)) {
-> +			size = -EIO;
-> +			return size;
-> +		}
-> +
->  	return size;
->  }
->  
-> @@ -419,6 +426,13 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
->  		return rc;
->  	}
->  
-> +	if (priv->phy_ops->verify_data_integrity) {
-> +		if (!priv->phy_ops->verify_data_integrity(priv, buf, len)) {
-> +			rc = -EIO;
-> +			return rc;
-> +		}
-> +	}
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-> index 6cc6b76..cd97c01 100644
-> --- a/drivers/char/tpm/tpm_tis_core.h
-> +++ b/drivers/char/tpm/tpm_tis_core.h
-> @@ -107,6 +107,8 @@ struct tpm_tis_phy_ops {
->  	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
->  	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
->  	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
-> +	bool (*verify_data_integrity)(struct tpm_tis_data *data, const u8 *buf,
-> +				      size_t len);
->  };
->  
->  static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
-> -- 
-> 2.7.4
-> 
+On 2020-06-25 12:42, Holger Hoffstätte wrote:
+<loadavg weirdness>
 
-As I've said before, I'm not too eager to add a new callback and nothing
-in the commit message rationalizes adding one.
+Nevermind, it turned out to be something else after all.
+I'm not entirely sure *what* exactly yet, but for some reason my loadavg
+is high again for no good reason.
+Sorry for the false alarm.
 
-/Jarkko
+-h
