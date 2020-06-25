@@ -2,225 +2,290 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB51CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC67C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C556B2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:12:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gZ9lm5GJ"
+	by mail.kernel.org (Postfix) with ESMTP id E272A2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404613AbgFYMMg (ORCPT
+        id S2404567AbgFYMNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:12:36 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:41905 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404397AbgFYMMe (ORCPT
+        Thu, 25 Jun 2020 08:13:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32456 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404397AbgFYMNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:12:34 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200625121232euoutp02fb10e4ae3c69de5e70e39b7b6a4c6694~byFMNYDcF2847228472euoutp02l
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:12:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200625121232euoutp02fb10e4ae3c69de5e70e39b7b6a4c6694~byFMNYDcF2847228472euoutp02l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593087152;
-        bh=r2YT8qcUQvVggMMJZuYcGzmqkKrEtSaC/jUBzXklzHg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=gZ9lm5GJX8zSYn6hxUqOx/nDBRXXrhKft0P5LrBDJOxgoyNLXqQ5TmGaGtIVK0ltJ
-         FzoVajLwqkDd5k6XCsuCuH0Pd6ib1f/5XxGWZ1EkDlesdpnhPiGFNoB9Ca2zWH02JU
-         8zc/unirqQEa/DMOYhbNdFw9SjhGLhnZXBd5RDVA=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200625121231eucas1p25a695661397003624facaafce7eaba5c~byFL2OKhJ1012410124eucas1p2y;
-        Thu, 25 Jun 2020 12:12:31 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 75.98.05997.FA494FE5; Thu, 25
-        Jun 2020 13:12:31 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200625121231eucas1p15f9882e3d46aabd71835dbdba4c3e651~byFLbvHvC2321623216eucas1p1-;
-        Thu, 25 Jun 2020 12:12:31 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200625121231eusmtrp236613c8ea77d6351fe1c2131faa508da~byFLa6jhA2442224422eusmtrp2U;
-        Thu, 25 Jun 2020 12:12:31 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-e9-5ef494afc5bc
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 87.C4.06314.FA494FE5; Thu, 25
-        Jun 2020 13:12:31 +0100 (BST)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200625121230eusmtip2466d09df0997094c011652c8f475c6ad~byFKzbT-P0139301393eusmtip2-;
-        Thu, 25 Jun 2020 12:12:30 +0000 (GMT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Lukasz Luba <lukasz.luba@arm.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <ee2e4acb-3986-3227-da1f-177d2756d194@samsung.com>
-Date:   Thu, 25 Jun 2020 14:12:30 +0200
+        Thu, 25 Jun 2020 08:13:18 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PC2mwq097887;
+        Thu, 25 Jun 2020 08:13:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyt608h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 08:13:12 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PC2ukP098698;
+        Thu, 25 Jun 2020 08:13:12 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyt607t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 08:13:12 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PC6BFa014586;
+        Thu, 25 Jun 2020 12:13:10 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma05wdc.us.ibm.com with ESMTP id 31uus1btg6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 12:13:10 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PCDAKr46465370
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 12:13:10 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36B8B112063;
+        Thu, 25 Jun 2020 12:13:10 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25B75112061;
+        Thu, 25 Jun 2020 12:13:10 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 12:13:10 +0000 (GMT)
+Subject: Re: [PATCH] tpm: tpm2-space: Resize session and context buffers
+ dynamically
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200625042424.370072-1-jarkko.sakkinen@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <2f8a0127-d2ba-21aa-75b3-2dfccfb52eab@linux.ibm.com>
+Date:   Thu, 25 Jun 2020 08:13:09 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <6f8b1119-62b1-942d-cfde-6f1e9a28c40c@arm.com>
-Content-Language: en-US
+In-Reply-To: <20200625042424.370072-1-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDKsWRmVeSWpSXmKPExsWy7djPc7rrp3yJMzi8z8hi44z1rBbXvzxn
-        teh//JrZ4vz5DewWZ5vesFtsenyN1eLyrjlsFp97jzBazDi/j8liYVMLu8XtxhVsFofftLNa
-        fDvxiNGB12PNvDWMHjtn3WX32LSqk81j85J6j74tqxg9Pm+SC2CL4rJJSc3JLEst0rdL4Mr4
-        d2w6S8EDlYrOTVuYGhifyHYxcnJICJhIrDu/m62LkYtDSGAFo8S/1u+sEM4XRolPp14wQzif
-        GSWW7O9igWmZvOYaVGI5o0TT5UWsIAkhgbeMEtP7fUFsYQE7ifnXdoHFRQRCJNbNnQfWwCzw
-        k1ni/aYTzCAJNgF9iYNnT4JN5QVq+DvjJiOIzSKgKvFnVgcTiC0qECFxvHsyO0SNoMTJmU+A
-        6jk4OAWsJd6tFQUJMwuIS9x6Mp8JwpaX2P52DjPEoS/ZJc4fVYWwXSTunrrLBGELS7w6voUd
-        wpaR+L8TpJcLyG5mlDjdMJUdwulhlNj7ZQsbRJW1xOePB9hAFjMLaEqs36UPEXaUeHvsDTNI
-        WEKAT+LGW0GIG/gkJm2bDhXmlehoE4KoVpV4fqoH6gRpia7/61gnMCrNQvLYLCTfzELyzSyE
-        vQsYWVYxiqeWFuempxYb5aWW6xUn5haX5qXrJefnbmIEprHT/45/2cG460/SIUYBDkYlHt4D
-        E7/ECbEmlhVX5h5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQozQHi5I4r/Gil7FCAumJ
-        JanZqakFqUUwWSYOTqkGxqYghUV2vaHBRe9X1D9XmbKYdbGpVlfbtcfTFhmk/THmPLx+/dQj
-        tfz/opsSo7dtm+nNy/fM7qLZS3fb7r9OEqeNyje6TTjdcLVIwW9tkt6tVyu558XJypXOUmSJ
-        TRa8EmL4c2f5DKNsVd86dpezfnf+Hl6TyV7+oe3uJlWTEwsrDnEqqjP0K7EUZyQaajEXFScC
-        AN29E6pfAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsVy+t/xe7rrp3yJM2jrELXYOGM9q8X1L89Z
-        Lfofv2a2OH9+A7vF2aY37BabHl9jtbi8aw6bxefeI4wWM87vY7JY2NTCbnG7cQWbxeE37awW
-        3048YnTg9Vgzbw2jx85Zd9k9Nq3qZPPYvKTeo2/LKkaPz5vkAtii9GyK8ktLUhUy8otLbJWi
-        DS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DL+HZvOUvBApaJz0xamBsYnsl2M
-        nBwSAiYSk9dcY+5i5OIQEljKKDHx4CcmiIS0ROPp1VC2sMSfa11sILaQwGtGie830kFsYQE7
-        ifnXdrGC2CICIRKXu88wggxiFvjNLNH77CPU1O/MEl+u7wXrZhPQlzh49iQLiM0L1P13xk1G
-        EJtFQFXiz6wOsG2iAhESLff/sEPUCEqcnPkEqJ6Dg1PAWuLdWlGQMLOAusSfeZeYIWxxiVtP
-        5jNB2PIS29/OYZ7AKDQLSfcsJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4m
-        RmDkbjv2c/MOxksbgw8xCnAwKvHwHpj4JU6INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX5
-        8UWlOanFhxhNgX6byCwlmpwPTCp5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtS
-        i2D6mDg4pRoYPU9dknrJ+bF42r6Ev7s4JzCaq1/4/qZ+nlFI31+/3f7a/rPZ9OJXxIYpvDb+
-        Vn1i32rby/5zZLs4OHO3y6mJnmPYclR+goyU8vTp7JzRm37ve/qUvXVzwpetqWrdThUhT0y7
-        56w+2b5BLLtslmrii38xM7XK+y23rd19LmXl9TUJp19WaT3lVmIpzkg01GIuKk4EAKzmvUDy
-        AgAA
-X-CMS-MailID: 20200625121231eucas1p15f9882e3d46aabd71835dbdba4c3e651
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-        <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-        <20200623191129.GA4171@kozik-lap>
-        <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
-        <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
-        <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
-        <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
-        <4c3b01af-2337-1eba-4675-6488105144c8@samsung.com>
-        <6f8b1119-62b1-942d-cfde-6f1e9a28c40c@arm.com>
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_05:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ cotscore=-2147483648 mlxscore=0 phishscore=0 clxscore=1011
+ lowpriorityscore=0 adultscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.06.2020 14:02, Lukasz Luba wrote:
-> 
-> 
-> On 6/25/20 12:30 PM, Kamil Konieczny wrote:
->> Hi Lukasz,
->>
->> On 25.06.2020 12:02, Lukasz Luba wrote:
->>> Hi Sylwester,
->>>
->>> On 6/24/20 4:11 PM, Sylwester Nawrocki wrote:
->>>> Hi All,
->>>>
->>>> On 24.06.2020 12:32, Lukasz Luba wrote:
->>>>> I had issues with devfreq governor which wasn't called by devfreq
->>>>> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
->>>>> for it [1]. If the CPU which scheduled the next work went idle, the
->>>>> devfreq workqueue will not be kicked and devfreq governor won't check
->>>>> DMC status and will not decide to decrease the frequency based on low
->>>>> busy_time.
->>>>> The same applies for going up with the frequency. They both are
->>>>> done by the governor but the workqueue must be scheduled periodically.
->>>>
->>>> As I have been working on resolving the video mixer IOMMU fault issue
->>>> described here: https://patchwork.kernel.org/patch/10861757
->>>> I did some investigation of the devfreq operation, mostly on Odroid U3.
->>>>
->>>> My conclusions are similar to what Lukasz says above. I would like to add
->>>> that broken scheduling of the performance counters read and the devfreq
->>>> updates seems to have one more serious implication. In each call, which
->>>> normally should happen periodically with fixed interval we stop the counters,
->>>> read counter values and start the counters again. But if period between
->>>> calls becomes long enough to let any of the counters overflow, we will
->>>> get wrong performance measurement results. My observations are that
->>>> the workqueue job can be suspended for several seconds and conditions for
->>>> the counter overflow occur sooner or later, depending among others
->>>> on the CPUs load.
->>>> Wrong bus load measurement can lead to setting too low interconnect bus
->>>> clock frequency and then bad things happen in peripheral devices.
->>>>
->>>> I agree the workqueue issue needs to be fixed. I have some WIP code to use
->>>> the performance counters overflow interrupts instead of SW polling and with
->>>> that the interconnect bus clock control seems to work much better.
->>>>
->>>
->>> Thank you for sharing your use case and investigation results. I think
->>> we are reaching a decent number of developers to maybe address this
->>> issue: 'workqueue issue needs to be fixed'.
->>> I have been facing this devfreq workqueue issue ~5 times in different
->>> platforms.
->>>
->>> Regarding the 'performance counters overflow interrupts' there is one
->>> thing worth to keep in mind: variable utilization and frequency.
->>> For example, in order to make a conclusion in algorithm deciding that
->>> the device should increase or decrease the frequency, we fix the period
->>> of observation, i.e. to 500ms. That can cause the long delay if the
->>> utilization of the device suddenly drops. For example we set an
->>> overflow threshold to value i.e. 1000 and we know that at 1000MHz
->>> and full utilization (100%) the counter will reach that threshold
->>> after 500ms (which we want, because we don't want too many interrupts
->>> per sec). What if suddenly utilization drops to 2% (i.e. from 5GB/s
->>> to 250MB/s (what if it drops to 25MB/s?!)), the counter will reach the
->>> threshold after 50*500ms = 25s. It is impossible just for the counters
->>> to predict next utilization and adjust the threshold. [...]
->>
->> irq triggers for underflow and overflow, so driver can adjust freq
->>
-> 
-> Probably possible on some platforms, depends on how many PMU registers
-> are available, what information can be can assign to them and type of
-> interrupt. A lot of hassle and still - platform and device specific.
-> Also, drivers should not adjust the freq, governors (different types
-> of them with different settings that they can handle) should do it.
-> 
-> What the framework can do is to take this responsibility and provide
-> generic way to monitor the devices (or stop if they are suspended).
-> That should work nicely with the governors, which try to predict the
-> next best frequency. From my experience the more fluctuating intervals
-> the governors are called, the more odd decisions they make.
-> That's why I think having a predictable interval i.e. 100ms is something
-> desirable. Tuning the governors is easier in this case, statistics
-> are easier to trace and interpret, solution is not to platform specific,
-> etc.
-> 
-> Kamil do you have plans to refresh and push your next version of the
-> workqueue solution?
+On 6/25/20 12:24 AM, Jarkko Sakkinen wrote:
+> Re-allocate context and session buffers when needed. Scale them in page
+> increments so that the reallocation is only seldomly required, and thus
+> causes minimal stress to the system. Add a static maximum limit of four
+> pages for buffer sizes.
+>
+> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+> Tested only for compilation.
+>   drivers/char/tpm/tpm2-space.c | 80 ++++++++++++++++++++++++-----------
+>   include/linux/tpm.h           |  6 ++-
+>   2 files changed, 59 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
+> index 982d341d8837..acb9e82bf9e8 100644
+> --- a/drivers/char/tpm/tpm2-space.c
+> +++ b/drivers/char/tpm/tpm2-space.c
+> @@ -15,6 +15,8 @@
+>   #include <asm/unaligned.h>
+>   #include "tpm.h"
+>   
+> +#define TPM2_SPACE_MAX_BUFFER_SIZE	(4 * PAGE_SIZE)
 
-I do not, as Bartek takes over my work,
-+CC Bartek
+PAGE_SIZE is 64k on ppc64. Rather use 4 * 4096?
 
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+
+Rest looks good.
+
+
+> +
+>   enum tpm2_handle_types {
+>   	TPM2_HT_HMAC_SESSION	= 0x02000000,
+>   	TPM2_HT_POLICY_SESSION	= 0x03000000,
+> @@ -47,9 +49,12 @@ int tpm2_init_space(struct tpm_space *space)
+>   	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+>   	if (space->session_buf == NULL) {
+>   		kfree(space->context_buf);
+> +		space->context_buf = NULL;
+>   		return -ENOMEM;
+>   	}
+>   
+> +	space->context_size = PAGE_SIZE;
+> +	space->session_size = PAGE_SIZE;
+>   	return 0;
+>   }
+>   
+> @@ -116,11 +121,13 @@ static int tpm2_load_context(struct tpm_chip *chip, u8 *buf,
+>   	return 0;
+>   }
+>   
+> -static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
+> -			     unsigned int buf_size, unsigned int *offset)
+> +static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 **buf,
+> +			     unsigned int *buf_size, unsigned int *offset)
+>   {
+> -	struct tpm_buf tbuf;
+> +	unsigned int new_buf_size;
+>   	unsigned int body_size;
+> +	struct tpm_buf tbuf;
+> +	void *new_buf;
+>   	int rc;
+>   
+>   	rc = tpm_buf_init(&tbuf, TPM2_ST_NO_SESSIONS, TPM2_CC_CONTEXT_SAVE);
+> @@ -131,31 +138,48 @@ static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
+>   
+>   	rc = tpm_transmit_cmd(chip, &tbuf, 0, NULL);
+>   	if (rc < 0) {
+> -		dev_warn(&chip->dev, "%s: failed with a system error %d\n",
+> -			 __func__, rc);
+> -		tpm_buf_destroy(&tbuf);
+> -		return -EFAULT;
+> +		rc = -EFAULT;
+> +		goto err;
+>   	} else if (tpm2_rc_value(rc) == TPM2_RC_REFERENCE_H0) {
+> -		tpm_buf_destroy(&tbuf);
+> -		return -ENOENT;
+> +		rc = -ENOENT;
+> +		goto out;
+>   	} else if (rc) {
+> -		dev_warn(&chip->dev, "%s: failed with a TPM error 0x%04X\n",
+> -			 __func__, rc);
+> -		tpm_buf_destroy(&tbuf);
+> -		return -EFAULT;
+> +		rc = -EFAULT;
+> +		goto err;
+>   	}
+>   
+>   	body_size = tpm_buf_length(&tbuf) - TPM_HEADER_SIZE;
+> -	if ((*offset + body_size) > buf_size) {
+> -		dev_warn(&chip->dev, "%s: out of backing storage\n", __func__);
+> -		tpm_buf_destroy(&tbuf);
+> -		return -ENOMEM;
+> +	/* We grow the buffer in page increments. */
+> +	new_buf_size = PFN_UP(*offset + body_size);
+> +
+> +	if (new_buf_size > TPM2_SPACE_MAX_BUFFER_SIZE) {
+> +		rc = -ENOMEM;
+> +		goto err;
+>   	}
+>   
+> -	memcpy(&buf[*offset], &tbuf.data[TPM_HEADER_SIZE], body_size);
+> +	if (new_buf_size > *buf_size) {
+> +		new_buf = krealloc(*buf, new_buf_size, GFP_KERNEL);
+> +		if (!new_buf) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +
+> +		*buf = new_buf;
+> +		*buf_size = new_buf_size;
+> +	}
+> +
+> +	memcpy(*buf + *offset, &tbuf.data[TPM_HEADER_SIZE], body_size);
+>   	*offset += body_size;
+> +
+> +out:
+>   	tpm_buf_destroy(&tbuf);
+> -	return 0;
+> +	return rc;
+> +
+> +err:
+> +	dev_warn(&chip->dev, "%s: ret=%d\n", __func__, rc);
+> +
+> +	tpm_buf_destroy(&tbuf);
+> +	return rc;
+>   }
+>   
+>   void tpm2_flush_space(struct tpm_chip *chip)
+> @@ -311,8 +335,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
+>   	       sizeof(space->context_tbl));
+>   	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
+>   	       sizeof(space->session_tbl));
+> -	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
+> -	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
+> +	memcpy(chip->work_space.context_buf, space->context_buf,
+> +	       space->context_size);
+> +	memcpy(chip->work_space.session_buf, space->session_buf,
+> +	       space->session_size);
+>   
+>   	rc = tpm2_load_space(chip);
+>   	if (rc) {
+> @@ -492,7 +518,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
+>   			continue;
+>   
+>   		rc = tpm2_save_context(chip, space->context_tbl[i],
+> -				       space->context_buf, PAGE_SIZE,
+> +				       &space->context_buf,
+> +				       &space->context_size,
+>   				       &offset);
+>   		if (rc == -ENOENT) {
+>   			space->context_tbl[i] = 0;
+> @@ -509,7 +536,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
+>   			continue;
+>   
+>   		rc = tpm2_save_context(chip, space->session_tbl[i],
+> -				       space->session_buf, PAGE_SIZE,
+> +				       &space->session_buf,
+> +				       &space->session_size,
+>   				       &offset);
+>   
+>   		if (rc == -ENOENT) {
+> @@ -557,8 +585,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
+>   	       sizeof(space->context_tbl));
+>   	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
+>   	       sizeof(space->session_tbl));
+> -	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
+> -	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
+> +	memcpy(space->context_buf, chip->work_space.context_buf,
+> +	       space->context_size);
+> +	memcpy(space->session_buf, chip->work_space.session_buf,
+> +	       space->session_size);
+>   
+>   	return 0;
+>   out:
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 03e9b184411b..9ea39e8f7162 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -92,10 +92,12 @@ enum tpm_duration {
+>   #define TPM_PPI_VERSION_LEN		3
+>   
+>   struct tpm_space {
+> +	u8  *context_buf;
+> +	u8  *session_buf;
+> +	u32 context_size;
+> +	u32 session_size;
+>   	u32 context_tbl[3];
+> -	u8 *context_buf;
+>   	u32 session_tbl[3];
+> -	u8 *session_buf;
+>   };
+>   
+>   struct tpm_bios_log {
+
 
