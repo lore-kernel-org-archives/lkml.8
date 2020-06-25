@@ -2,376 +2,811 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99EC207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhaHMbjL"
+	by mail.kernel.org (Postfix) with ESMTP id 81C58207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593099488;
+	bh=04CIInEqhwC0+WEPFT1ajLU9Rt4Eneix2M2IBAYlc8U=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Icw4r+W3wJOMjo1LssB24E3MBahHxeq1mlziqUvajjiPXaoFlenfQd1iy2C3j+LQb
+	 toDHIFHIAqVigY0zxW24D/NqK/SYpBAjYWWhsBlJ6tK0GKtYa7rcFWXzy10ospLNoj
+	 L+xgQx7fKke5FYZA/mxWoggZZs8IV3WyZKDrc+S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405932AbgFYPh7 (ORCPT
+        id S2405935AbgFYPiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405159AbgFYPh4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:37:56 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD715C08C5C1;
-        Thu, 25 Jun 2020 08:37:56 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d12so2963616ply.1;
-        Thu, 25 Jun 2020 08:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=g2cgJ+7MczxOg79OI1tbP0EQA/VC0sOGt1JvuGb7PFI=;
-        b=YhaHMbjL5wdH5svKnqpdMZpz0w+1a/tROAOKzZS9qY+Av6wCXr7BEBYuWWqzbCUmHw
-         /8tsVoAw8ljcouhEpcHhruD8gOGuP6QXE7Tl+SEB0bAKzv8U0wJhG+bcayvSAgAz8bcf
-         YVAHT/k5R9KXTUrsDyxGyx3ryJIsXmzGfkrdeJ5FVAcYywMoF834NLcWVVteNU5tCsZO
-         pAfL050Uclh8XTqJd64N0ZbaE6M/0v/UuoGWnFpfL25UK8Ug9dmMjwMZrRTyTEji4mq5
-         eskM0aiCV8iI5MOdfnmjS/P3fHm81NdnH+N41mgEqFaSQk+7eMX9DRbuF6lZDvFiXaiP
-         Daaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=g2cgJ+7MczxOg79OI1tbP0EQA/VC0sOGt1JvuGb7PFI=;
-        b=M+p++rcHXM2M6bWRtZi8LZjNvhTJcJkpbFCjBce8e2H95ReXPEyvFgr559HD56vYSh
-         f8YgXpSgektG773YIiOIjxa+otnttuweE5a7v9Mhp6Anu+20zr4yODr6DmJ2m4Qu7zJF
-         zzl9dioUF70zFtPUw9NjnXuFkENPI1dBA8DDQCvRx+6RjSRARlFOF4vH6WYyBb6Eoeaq
-         3Lqmv37yK/11cM9QgN59VNi8lA1MHMrXu68t3UT+S2eNSpboPcKdHAkhSwgnqq4rc03K
-         JQ9aQtBuA3aO/FuupSBOrIKTQGkHUp5MGkh9YX19JcHg05Vs1zOZD558vJtHXbw93EhM
-         K8aw==
-X-Gm-Message-State: AOAM533/gqJzvBvUZe7FTMAV8j+sW7Zt7gYmwVThk7OZ3exDYIR8uwAo
-        JDy/QByy0UKbjXvtZlSHPOM=
-X-Google-Smtp-Source: ABdhPJya3lCJ+G8rfqBZnWqaHa7HRAFQdi4IbcbAOvygrwWsh6wfbgwPQ8015Dre1GpeIOlueZAAjg==
-X-Received: by 2002:a17:90a:cd01:: with SMTP id d1mr3955729pju.212.1593099476337;
-        Thu, 25 Jun 2020 08:37:56 -0700 (PDT)
-Received: from localhost.localdomain ([131.107.147.194])
-        by smtp.gmail.com with ESMTPSA id i14sm22980813pfo.14.2020.06.25.08.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 08:37:56 -0700 (PDT)
-From:   Andres Beltran <lkmlabelt@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, parri.andrea@gmail.com,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
-Date:   Thu, 25 Jun 2020 11:37:23 -0400
-Message-Id: <20200625153723.8428-4-lkmlabelt@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200625153723.8428-1-lkmlabelt@gmail.com>
-References: <20200625153723.8428-1-lkmlabelt@gmail.com>
+        Thu, 25 Jun 2020 11:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405159AbgFYPiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 11:38:06 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C023207D8;
+        Thu, 25 Jun 2020 15:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593099484;
+        bh=04CIInEqhwC0+WEPFT1ajLU9Rt4Eneix2M2IBAYlc8U=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=zV00KbJiPFnmG6iaRp/7Lveg7xJrJRmLERiqPcU+kJmxgNb4SKaNdSyIsjz/9ExNZ
+         XNRidx7Emirvom8TW/GzXzpuCQzYjkpczC7z+VQ/JaiG1P23vh/D6Brpf1qC7/hmtD
+         WdPXZonQy1suh2sh6Eg0mvQ/Ai6YKsRPmPwasWks=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 82739352129E; Thu, 25 Jun 2020 08:38:04 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 08:38:04 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>, kernel test robot <lkp@intel.com>,
+        kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [rcu:rcu/next 35/35] kernel/rcu/tree.c:251:8: error: implicit
+ declaration of function 'arch_atomic_add_return'; did you mean
+Message-ID: <20200625153804.GP9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202006250300.ic32FsdY%lkp@intel.com>
+ <20200624203025.GJ9247@paulmck-ThinkPad-P72>
+ <CANpmjNO5uBSZj0gHy0t+O2VhD+UjG58+zON0AFX8i7MNSO5a6Q@mail.gmail.com>
+ <20200625112926.GO4781@hirez.programming.kicks-ass.net>
+ <20200625141125.GE117543@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625141125.GE117543@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, pointers to guest memory are passed to Hyper-V as
-transaction IDs in netvsc. In the face of errors or malicious
-behavior in Hyper-V, netvsc should not expose or trust the transaction
-IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-use small integers generated by vmbus_requestor as requests
-(transaction) IDs.
+On Thu, Jun 25, 2020 at 04:11:25PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 25, 2020 at 01:29:26PM +0200, Peter Zijlstra wrote:
+> > I fear the same. Let me see if I can quickly modify the atomic scripts
+> > to generate the required fallbacks.
+> 
+> Something like so ought to work, I suppose.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org
-Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
----
- drivers/net/hyperv/hyperv_net.h   | 10 +++++
- drivers/net/hyperv/netvsc.c       | 75 +++++++++++++++++++++++++------
- drivers/net/hyperv/rndis_filter.c |  1 +
- include/linux/hyperv.h            |  1 +
- 4 files changed, 73 insertions(+), 14 deletions(-)
+Thank you!
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index abda736e7c7d..14735c98e798 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -847,6 +847,16 @@ struct nvsp_message {
- 
- #define NETVSC_XDP_HDRM 256
- 
-+#define NETVSC_MIN_OUT_MSG_SIZE (sizeof(struct vmpacket_descriptor) + \
-+				 sizeof(struct nvsp_message))
-+#define NETVSC_MIN_IN_MSG_SIZE sizeof(struct vmpacket_descriptor)
-+
-+/* Estimated requestor size:
-+ * out_ring_size/min_out_msg_size + in_ring_size/min_in_msg_size
-+ */
-+#define NETVSC_RQSTOR_SIZE (netvsc_ring_bytes / NETVSC_MIN_OUT_MSG_SIZE + \
-+			    netvsc_ring_bytes / NETVSC_MIN_IN_MSG_SIZE)
-+
- struct multi_send_data {
- 	struct sk_buff *skb; /* skb containing the pkt */
- 	struct hv_netvsc_packet *pkt; /* netvsc pkt pending */
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 41f5cf0bb997..c73d5aef4436 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -50,7 +50,7 @@ void netvsc_switch_datapath(struct net_device *ndev, bool vf)
- 
- 	vmbus_sendpacket(dev->channel, init_pkt,
- 			       sizeof(struct nvsp_message),
--			       (unsigned long)init_pkt,
-+			       VMBUS_RQST_ID_NO_RESPONSE,
- 			       VM_PKT_DATA_INBAND, 0);
- }
- 
-@@ -163,7 +163,7 @@ static void netvsc_revoke_recv_buf(struct hv_device *device,
- 		ret = vmbus_sendpacket(device->channel,
- 				       revoke_packet,
- 				       sizeof(struct nvsp_message),
--				       (unsigned long)revoke_packet,
-+				       VMBUS_RQST_ID_NO_RESPONSE,
- 				       VM_PKT_DATA_INBAND, 0);
- 		/* If the failure is because the channel is rescinded;
- 		 * ignore the failure since we cannot send on a rescinded
-@@ -213,7 +213,7 @@ static void netvsc_revoke_send_buf(struct hv_device *device,
- 		ret = vmbus_sendpacket(device->channel,
- 				       revoke_packet,
- 				       sizeof(struct nvsp_message),
--				       (unsigned long)revoke_packet,
-+				       VMBUS_RQST_ID_NO_RESPONSE,
- 				       VM_PKT_DATA_INBAND, 0);
- 
- 		/* If the failure is because the channel is rescinded;
-@@ -304,6 +304,7 @@ static int netvsc_init_buf(struct hv_device *device,
- 	unsigned int buf_size;
- 	size_t map_words;
- 	int ret = 0;
-+	u64 rqst_id;
- 
- 	/* Get receive buffer area. */
- 	buf_size = device_info->recv_sections * device_info->recv_section_size;
-@@ -350,13 +351,21 @@ static int netvsc_init_buf(struct hv_device *device,
- 
- 	trace_nvsp_send(ndev, init_packet);
- 
-+	rqst_id = vmbus_next_request_id(&device->channel->requestor, (u64)init_packet);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		netdev_err(ndev, "No request id available\n");
-+		goto cleanup;
-+	}
-+
- 	/* Send the gpadl notification request */
- 	ret = vmbus_sendpacket(device->channel, init_packet,
- 			       sizeof(struct nvsp_message),
--			       (unsigned long)init_packet,
-+			       rqst_id,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	if (ret != 0) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&device->channel->requestor, rqst_id);
- 		netdev_err(ndev,
- 			"unable to send receive buffer's gpadl to netvsp\n");
- 		goto cleanup;
-@@ -432,13 +441,21 @@ static int netvsc_init_buf(struct hv_device *device,
- 
- 	trace_nvsp_send(ndev, init_packet);
- 
-+	rqst_id = vmbus_next_request_id(&device->channel->requestor, (u64)init_packet);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		netdev_err(ndev, "No request id available\n");
-+		goto cleanup;
-+	}
-+
- 	/* Send the gpadl notification request */
- 	ret = vmbus_sendpacket(device->channel, init_packet,
- 			       sizeof(struct nvsp_message),
--			       (unsigned long)init_packet,
-+			       rqst_id,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	if (ret != 0) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&device->channel->requestor, rqst_id);
- 		netdev_err(ndev,
- 			   "unable to send send buffer's gpadl to netvsp\n");
- 		goto cleanup;
-@@ -496,6 +513,7 @@ static int negotiate_nvsp_ver(struct hv_device *device,
- {
- 	struct net_device *ndev = hv_get_drvdata(device);
- 	int ret;
-+	u64 rqst_id;
- 
- 	memset(init_packet, 0, sizeof(struct nvsp_message));
- 	init_packet->hdr.msg_type = NVSP_MSG_TYPE_INIT;
-@@ -503,15 +521,24 @@ static int negotiate_nvsp_ver(struct hv_device *device,
- 	init_packet->msg.init_msg.init.max_protocol_ver = nvsp_ver;
- 	trace_nvsp_send(ndev, init_packet);
- 
-+	rqst_id = vmbus_next_request_id(&device->channel->requestor, (u64)init_packet);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		netdev_err(ndev, "No request id available\n");
-+		return -EAGAIN;
-+	}
-+
- 	/* Send the init request */
- 	ret = vmbus_sendpacket(device->channel, init_packet,
- 			       sizeof(struct nvsp_message),
--			       (unsigned long)init_packet,
-+			       rqst_id,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 
--	if (ret != 0)
-+	if (ret != 0) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&device->channel->requestor, rqst_id);
- 		return ret;
-+	}
- 
- 	wait_for_completion(&net_device->channel_init_wait);
- 
-@@ -542,7 +569,7 @@ static int negotiate_nvsp_ver(struct hv_device *device,
- 
- 	ret = vmbus_sendpacket(device->channel, init_packet,
- 				sizeof(struct nvsp_message),
--				(unsigned long)init_packet,
-+				VMBUS_RQST_ID_NO_RESPONSE,
- 				VM_PKT_DATA_INBAND, 0);
- 
- 	return ret;
-@@ -599,7 +626,7 @@ static int netvsc_connect_vsp(struct hv_device *device,
- 	/* Send the init request */
- 	ret = vmbus_sendpacket(device->channel, init_packet,
- 				sizeof(struct nvsp_message),
--				(unsigned long)init_packet,
-+				VMBUS_RQST_ID_NO_RESPONSE,
- 				VM_PKT_DATA_INBAND, 0);
- 	if (ret != 0)
- 		goto cleanup;
-@@ -680,10 +707,19 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
- 				    const struct vmpacket_descriptor *desc,
- 				    int budget)
- {
--	struct sk_buff *skb = (struct sk_buff *)(unsigned long)desc->trans_id;
-+	struct sk_buff *skb;
- 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
- 	u16 q_idx = 0;
- 	int queue_sends;
-+	u64 cmd_rqst;
-+
-+	cmd_rqst = vmbus_request_addr(&channel->requestor, (u64)desc->trans_id);
-+	if (cmd_rqst == VMBUS_RQST_ERROR) {
-+		netdev_err(ndev, "Incorrect transaction id\n");
-+		return;
-+	}
-+
-+	skb = (struct sk_buff *)cmd_rqst;
- 
- 	/* Notify the layer above us */
- 	if (likely(skb)) {
-@@ -822,7 +858,7 @@ static inline int netvsc_send_pkt(
- 	struct net_device *ndev = hv_get_drvdata(device);
- 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
- 	struct netdev_queue *txq = netdev_get_tx_queue(ndev, packet->q_idx);
--	u64 req_id;
-+	u64 rqst_id;
- 	int ret;
- 	u32 ring_avail = hv_get_avail_to_write_percent(&out_channel->outbound);
- 
-@@ -838,13 +874,18 @@ static inline int netvsc_send_pkt(
- 	else
- 		rpkt->send_buf_section_size = packet->total_data_buflen;
- 
--	req_id = (ulong)skb;
- 
- 	if (out_channel->rescind)
- 		return -ENODEV;
- 
- 	trace_nvsp_send_pkt(ndev, out_channel, rpkt);
- 
-+	rqst_id = vmbus_next_request_id(&out_channel->requestor, (u64)skb);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		ret = -EAGAIN;
-+		goto ret_check;
-+	}
-+
- 	if (packet->page_buf_cnt) {
- 		if (packet->cp_partial)
- 			pb += packet->rmsg_pgcnt;
-@@ -852,14 +893,15 @@ static inline int netvsc_send_pkt(
- 		ret = vmbus_sendpacket_pagebuffer(out_channel,
- 						  pb, packet->page_buf_cnt,
- 						  &nvmsg, sizeof(nvmsg),
--						  req_id);
-+						  rqst_id);
- 	} else {
- 		ret = vmbus_sendpacket(out_channel,
- 				       &nvmsg, sizeof(nvmsg),
--				       req_id, VM_PKT_DATA_INBAND,
-+				       rqst_id, VM_PKT_DATA_INBAND,
- 				       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	}
- 
-+ret_check:
- 	if (ret == 0) {
- 		atomic_inc_return(&nvchan->queue_sends);
- 
-@@ -868,9 +910,13 @@ static inline int netvsc_send_pkt(
- 			ndev_ctx->eth_stats.stop_queue++;
- 		}
- 	} else if (ret == -EAGAIN) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&out_channel->requestor, rqst_id);
- 		netif_tx_stop_queue(txq);
- 		ndev_ctx->eth_stats.stop_queue++;
- 	} else {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&out_channel->requestor, rqst_id);
- 		netdev_err(ndev,
- 			   "Unable to send packet pages %u len %u, ret %d\n",
- 			   packet->page_buf_cnt, packet->total_data_buflen,
-@@ -1422,6 +1468,7 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
- 		       netvsc_poll, NAPI_POLL_WEIGHT);
- 
- 	/* Open the channel */
-+	device->channel->rqstor_size = NETVSC_RQSTOR_SIZE;
- 	ret = vmbus_open(device->channel, netvsc_ring_bytes,
- 			 netvsc_ring_bytes,  NULL, 0,
- 			 netvsc_channel_cb, net_device->chan_table);
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index b81ceba38218..4d96e8e5ea24 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1114,6 +1114,7 @@ static void netvsc_sc_open(struct vmbus_channel *new_sc)
- 	/* Set the channel before opening.*/
- 	nvchan->channel = new_sc;
- 
-+	new_sc->rqstor_size = NETVSC_RQSTOR_SIZE;
- 	ret = vmbus_open(new_sc, netvsc_ring_bytes,
- 			 netvsc_ring_bytes, NULL, 0,
- 			 netvsc_channel_cb, nvchan);
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index c509d20ab7db..d8194924983d 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -730,6 +730,7 @@ struct vmbus_requestor {
- };
- 
- #define VMBUS_RQST_ERROR U64_MAX
-+#define VMBUS_RQST_ID_NO_RESPONSE (U64_MAX - 1)
- 
- struct vmbus_device {
- 	u16  dev_type;
--- 
-2.25.1
+I have queued this up under your earlier patch on v5.8-rc1 as -rcu
+branch "rcu/urgent".  I have started testing.
 
+							Thanx, Paul
+
+> ---
+> Subject: locking/atomics: Provide the arch_atomic_ interface to generic code
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Thu Jun 25 15:55:14 CEST 2020
+> 
+> Architectures with instrumented (KASAN/KCSAN) atomic operations
+> natively provide arch_atomic_ variants that are not instrumented.
+> 
+> It turns out that some generic code also requires arch_atomic_ in
+> order to avoid instrumentation, so provide the arch_atomic_ interface
+> as a direct map into the regular atomic_ interface for
+> non-instrumented architectures.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/atomic-fallback.h       |  236 +++++++++++++++++++++++++++++++++-
+>  scripts/atomic/gen-atomic-fallback.sh |   31 ++++
+>  2 files changed, 266 insertions(+), 1 deletion(-)
+> 
+> --- a/include/linux/atomic-fallback.h
+> +++ b/include/linux/atomic-fallback.h
+> @@ -77,6 +77,9 @@
+>  
+>  #endif /* cmpxchg64_relaxed */
+>  
+> +#define arch_atomic_read atomic_read
+> +#define arch_atomic_read_acquire atomic_read_acquire
+> +
+>  #ifndef atomic_read_acquire
+>  static __always_inline int
+>  atomic_read_acquire(const atomic_t *v)
+> @@ -86,6 +89,9 @@ atomic_read_acquire(const atomic_t *v)
+>  #define atomic_read_acquire atomic_read_acquire
+>  #endif
+>  
+> +#define arch_atomic_set atomic_set
+> +#define arch_atomic_set_release atomic_set_release
+> +
+>  #ifndef atomic_set_release
+>  static __always_inline void
+>  atomic_set_release(atomic_t *v, int i)
+> @@ -95,6 +101,13 @@ atomic_set_release(atomic_t *v, int i)
+>  #define atomic_set_release atomic_set_release
+>  #endif
+>  
+> +#define arch_atomic_add atomic_add
+> +
+> +#define arch_atomic_add_return atomic_add_return
+> +#define arch_atomic_add_return_acquire atomic_add_return_acquire
+> +#define arch_atomic_add_return_release atomic_add_return_release
+> +#define arch_atomic_add_return_relaxed atomic_add_return_relaxed
+> +
+>  #ifndef atomic_add_return_relaxed
+>  #define atomic_add_return_acquire atomic_add_return
+>  #define atomic_add_return_release atomic_add_return
+> @@ -137,6 +150,11 @@ atomic_add_return(int i, atomic_t *v)
+>  
+>  #endif /* atomic_add_return_relaxed */
+>  
+> +#define arch_atomic_fetch_add atomic_fetch_add
+> +#define arch_atomic_fetch_add_acquire atomic_fetch_add_acquire
+> +#define arch_atomic_fetch_add_release atomic_fetch_add_release
+> +#define arch_atomic_fetch_add_relaxed atomic_fetch_add_relaxed
+> +
+>  #ifndef atomic_fetch_add_relaxed
+>  #define atomic_fetch_add_acquire atomic_fetch_add
+>  #define atomic_fetch_add_release atomic_fetch_add
+> @@ -179,6 +197,13 @@ atomic_fetch_add(int i, atomic_t *v)
+>  
+>  #endif /* atomic_fetch_add_relaxed */
+>  
+> +#define arch_atomic_sub atomic_sub
+> +
+> +#define arch_atomic_sub_return atomic_sub_return
+> +#define arch_atomic_sub_return_acquire atomic_sub_return_acquire
+> +#define arch_atomic_sub_return_release atomic_sub_return_release
+> +#define arch_atomic_sub_return_relaxed atomic_sub_return_relaxed
+> +
+>  #ifndef atomic_sub_return_relaxed
+>  #define atomic_sub_return_acquire atomic_sub_return
+>  #define atomic_sub_return_release atomic_sub_return
+> @@ -221,6 +246,11 @@ atomic_sub_return(int i, atomic_t *v)
+>  
+>  #endif /* atomic_sub_return_relaxed */
+>  
+> +#define arch_atomic_fetch_sub atomic_fetch_sub
+> +#define arch_atomic_fetch_sub_acquire atomic_fetch_sub_acquire
+> +#define arch_atomic_fetch_sub_release atomic_fetch_sub_release
+> +#define arch_atomic_fetch_sub_relaxed atomic_fetch_sub_relaxed
+> +
+>  #ifndef atomic_fetch_sub_relaxed
+>  #define atomic_fetch_sub_acquire atomic_fetch_sub
+>  #define atomic_fetch_sub_release atomic_fetch_sub
+> @@ -263,6 +293,8 @@ atomic_fetch_sub(int i, atomic_t *v)
+>  
+>  #endif /* atomic_fetch_sub_relaxed */
+>  
+> +#define arch_atomic_inc atomic_inc
+> +
+>  #ifndef atomic_inc
+>  static __always_inline void
+>  atomic_inc(atomic_t *v)
+> @@ -272,6 +304,11 @@ atomic_inc(atomic_t *v)
+>  #define atomic_inc atomic_inc
+>  #endif
+>  
+> +#define arch_atomic_inc_return atomic_inc_return
+> +#define arch_atomic_inc_return_acquire atomic_inc_return_acquire
+> +#define arch_atomic_inc_return_release atomic_inc_return_release
+> +#define arch_atomic_inc_return_relaxed atomic_inc_return_relaxed
+> +
+>  #ifndef atomic_inc_return_relaxed
+>  #ifdef atomic_inc_return
+>  #define atomic_inc_return_acquire atomic_inc_return
+> @@ -353,6 +390,11 @@ atomic_inc_return(atomic_t *v)
+>  
+>  #endif /* atomic_inc_return_relaxed */
+>  
+> +#define arch_atomic_fetch_inc atomic_fetch_inc
+> +#define arch_atomic_fetch_inc_acquire atomic_fetch_inc_acquire
+> +#define arch_atomic_fetch_inc_release atomic_fetch_inc_release
+> +#define arch_atomic_fetch_inc_relaxed atomic_fetch_inc_relaxed
+> +
+>  #ifndef atomic_fetch_inc_relaxed
+>  #ifdef atomic_fetch_inc
+>  #define atomic_fetch_inc_acquire atomic_fetch_inc
+> @@ -434,6 +476,8 @@ atomic_fetch_inc(atomic_t *v)
+>  
+>  #endif /* atomic_fetch_inc_relaxed */
+>  
+> +#define arch_atomic_dec atomic_dec
+> +
+>  #ifndef atomic_dec
+>  static __always_inline void
+>  atomic_dec(atomic_t *v)
+> @@ -443,6 +487,11 @@ atomic_dec(atomic_t *v)
+>  #define atomic_dec atomic_dec
+>  #endif
+>  
+> +#define arch_atomic_dec_return atomic_dec_return
+> +#define arch_atomic_dec_return_acquire atomic_dec_return_acquire
+> +#define arch_atomic_dec_return_release atomic_dec_return_release
+> +#define arch_atomic_dec_return_relaxed atomic_dec_return_relaxed
+> +
+>  #ifndef atomic_dec_return_relaxed
+>  #ifdef atomic_dec_return
+>  #define atomic_dec_return_acquire atomic_dec_return
+> @@ -524,6 +573,11 @@ atomic_dec_return(atomic_t *v)
+>  
+>  #endif /* atomic_dec_return_relaxed */
+>  
+> +#define arch_atomic_fetch_dec atomic_fetch_dec
+> +#define arch_atomic_fetch_dec_acquire atomic_fetch_dec_acquire
+> +#define arch_atomic_fetch_dec_release atomic_fetch_dec_release
+> +#define arch_atomic_fetch_dec_relaxed atomic_fetch_dec_relaxed
+> +
+>  #ifndef atomic_fetch_dec_relaxed
+>  #ifdef atomic_fetch_dec
+>  #define atomic_fetch_dec_acquire atomic_fetch_dec
+> @@ -605,6 +659,13 @@ atomic_fetch_dec(atomic_t *v)
+>  
+>  #endif /* atomic_fetch_dec_relaxed */
+>  
+> +#define arch_atomic_and atomic_and
+> +
+> +#define arch_atomic_fetch_and atomic_fetch_and
+> +#define arch_atomic_fetch_and_acquire atomic_fetch_and_acquire
+> +#define arch_atomic_fetch_and_release atomic_fetch_and_release
+> +#define arch_atomic_fetch_and_relaxed atomic_fetch_and_relaxed
+> +
+>  #ifndef atomic_fetch_and_relaxed
+>  #define atomic_fetch_and_acquire atomic_fetch_and
+>  #define atomic_fetch_and_release atomic_fetch_and
+> @@ -647,6 +708,8 @@ atomic_fetch_and(int i, atomic_t *v)
+>  
+>  #endif /* atomic_fetch_and_relaxed */
+>  
+> +#define arch_atomic_andnot atomic_andnot
+> +
+>  #ifndef atomic_andnot
+>  static __always_inline void
+>  atomic_andnot(int i, atomic_t *v)
+> @@ -656,6 +719,11 @@ atomic_andnot(int i, atomic_t *v)
+>  #define atomic_andnot atomic_andnot
+>  #endif
+>  
+> +#define arch_atomic_fetch_andnot atomic_fetch_andnot
+> +#define arch_atomic_fetch_andnot_acquire atomic_fetch_andnot_acquire
+> +#define arch_atomic_fetch_andnot_release atomic_fetch_andnot_release
+> +#define arch_atomic_fetch_andnot_relaxed atomic_fetch_andnot_relaxed
+> +
+>  #ifndef atomic_fetch_andnot_relaxed
+>  #ifdef atomic_fetch_andnot
+>  #define atomic_fetch_andnot_acquire atomic_fetch_andnot
+> @@ -737,6 +805,13 @@ atomic_fetch_andnot(int i, atomic_t *v)
+>  
+>  #endif /* atomic_fetch_andnot_relaxed */
+>  
+> +#define arch_atomic_or atomic_or
+> +
+> +#define arch_atomic_fetch_or atomic_fetch_or
+> +#define arch_atomic_fetch_or_acquire atomic_fetch_or_acquire
+> +#define arch_atomic_fetch_or_release atomic_fetch_or_release
+> +#define arch_atomic_fetch_or_relaxed atomic_fetch_or_relaxed
+> +
+>  #ifndef atomic_fetch_or_relaxed
+>  #define atomic_fetch_or_acquire atomic_fetch_or
+>  #define atomic_fetch_or_release atomic_fetch_or
+> @@ -779,6 +854,13 @@ atomic_fetch_or(int i, atomic_t *v)
+>  
+>  #endif /* atomic_fetch_or_relaxed */
+>  
+> +#define arch_atomic_xor atomic_xor
+> +
+> +#define arch_atomic_fetch_xor atomic_fetch_xor
+> +#define arch_atomic_fetch_xor_acquire atomic_fetch_xor_acquire
+> +#define arch_atomic_fetch_xor_release atomic_fetch_xor_release
+> +#define arch_atomic_fetch_xor_relaxed atomic_fetch_xor_relaxed
+> +
+>  #ifndef atomic_fetch_xor_relaxed
+>  #define atomic_fetch_xor_acquire atomic_fetch_xor
+>  #define atomic_fetch_xor_release atomic_fetch_xor
+> @@ -821,6 +903,11 @@ atomic_fetch_xor(int i, atomic_t *v)
+>  
+>  #endif /* atomic_fetch_xor_relaxed */
+>  
+> +#define arch_atomic_xchg atomic_xchg
+> +#define arch_atomic_xchg_acquire atomic_xchg_acquire
+> +#define arch_atomic_xchg_release atomic_xchg_release
+> +#define arch_atomic_xchg_relaxed atomic_xchg_relaxed
+> +
+>  #ifndef atomic_xchg_relaxed
+>  #define atomic_xchg_acquire atomic_xchg
+>  #define atomic_xchg_release atomic_xchg
+> @@ -863,6 +950,11 @@ atomic_xchg(atomic_t *v, int i)
+>  
+>  #endif /* atomic_xchg_relaxed */
+>  
+> +#define arch_atomic_cmpxchg atomic_cmpxchg
+> +#define arch_atomic_cmpxchg_acquire atomic_cmpxchg_acquire
+> +#define arch_atomic_cmpxchg_release atomic_cmpxchg_release
+> +#define arch_atomic_cmpxchg_relaxed atomic_cmpxchg_relaxed
+> +
+>  #ifndef atomic_cmpxchg_relaxed
+>  #define atomic_cmpxchg_acquire atomic_cmpxchg
+>  #define atomic_cmpxchg_release atomic_cmpxchg
+> @@ -905,6 +997,11 @@ atomic_cmpxchg(atomic_t *v, int old, int
+>  
+>  #endif /* atomic_cmpxchg_relaxed */
+>  
+> +#define arch_atomic_try_cmpxchg atomic_try_cmpxchg
+> +#define arch_atomic_try_cmpxchg_acquire atomic_try_cmpxchg_acquire
+> +#define arch_atomic_try_cmpxchg_release atomic_try_cmpxchg_release
+> +#define arch_atomic_try_cmpxchg_relaxed atomic_try_cmpxchg_relaxed
+> +
+>  #ifndef atomic_try_cmpxchg_relaxed
+>  #ifdef atomic_try_cmpxchg
+>  #define atomic_try_cmpxchg_acquire atomic_try_cmpxchg
+> @@ -1002,6 +1099,8 @@ atomic_try_cmpxchg(atomic_t *v, int *old
+>  
+>  #endif /* atomic_try_cmpxchg_relaxed */
+>  
+> +#define arch_atomic_sub_and_test atomic_sub_and_test
+> +
+>  #ifndef atomic_sub_and_test
+>  /**
+>   * atomic_sub_and_test - subtract value from variable and test result
+> @@ -1020,6 +1119,8 @@ atomic_sub_and_test(int i, atomic_t *v)
+>  #define atomic_sub_and_test atomic_sub_and_test
+>  #endif
+>  
+> +#define arch_atomic_dec_and_test atomic_dec_and_test
+> +
+>  #ifndef atomic_dec_and_test
+>  /**
+>   * atomic_dec_and_test - decrement and test
+> @@ -1037,6 +1138,8 @@ atomic_dec_and_test(atomic_t *v)
+>  #define atomic_dec_and_test atomic_dec_and_test
+>  #endif
+>  
+> +#define arch_atomic_inc_and_test atomic_inc_and_test
+> +
+>  #ifndef atomic_inc_and_test
+>  /**
+>   * atomic_inc_and_test - increment and test
+> @@ -1054,6 +1157,8 @@ atomic_inc_and_test(atomic_t *v)
+>  #define atomic_inc_and_test atomic_inc_and_test
+>  #endif
+>  
+> +#define arch_atomic_add_negative atomic_add_negative
+> +
+>  #ifndef atomic_add_negative
+>  /**
+>   * atomic_add_negative - add and test if negative
+> @@ -1072,6 +1177,8 @@ atomic_add_negative(int i, atomic_t *v)
+>  #define atomic_add_negative atomic_add_negative
+>  #endif
+>  
+> +#define arch_atomic_fetch_add_unless atomic_fetch_add_unless
+> +
+>  #ifndef atomic_fetch_add_unless
+>  /**
+>   * atomic_fetch_add_unless - add unless the number is already a given value
+> @@ -1097,6 +1204,8 @@ atomic_fetch_add_unless(atomic_t *v, int
+>  #define atomic_fetch_add_unless atomic_fetch_add_unless
+>  #endif
+>  
+> +#define arch_atomic_add_unless atomic_add_unless
+> +
+>  #ifndef atomic_add_unless
+>  /**
+>   * atomic_add_unless - add unless the number is already a given value
+> @@ -1115,6 +1224,8 @@ atomic_add_unless(atomic_t *v, int a, in
+>  #define atomic_add_unless atomic_add_unless
+>  #endif
+>  
+> +#define arch_atomic_inc_not_zero atomic_inc_not_zero
+> +
+>  #ifndef atomic_inc_not_zero
+>  /**
+>   * atomic_inc_not_zero - increment unless the number is zero
+> @@ -1131,6 +1242,8 @@ atomic_inc_not_zero(atomic_t *v)
+>  #define atomic_inc_not_zero atomic_inc_not_zero
+>  #endif
+>  
+> +#define arch_atomic_inc_unless_negative atomic_inc_unless_negative
+> +
+>  #ifndef atomic_inc_unless_negative
+>  static __always_inline bool
+>  atomic_inc_unless_negative(atomic_t *v)
+> @@ -1147,6 +1260,8 @@ atomic_inc_unless_negative(atomic_t *v)
+>  #define atomic_inc_unless_negative atomic_inc_unless_negative
+>  #endif
+>  
+> +#define arch_atomic_dec_unless_positive atomic_dec_unless_positive
+> +
+>  #ifndef atomic_dec_unless_positive
+>  static __always_inline bool
+>  atomic_dec_unless_positive(atomic_t *v)
+> @@ -1163,6 +1278,8 @@ atomic_dec_unless_positive(atomic_t *v)
+>  #define atomic_dec_unless_positive atomic_dec_unless_positive
+>  #endif
+>  
+> +#define arch_atomic_dec_if_positive atomic_dec_if_positive
+> +
+>  #ifndef atomic_dec_if_positive
+>  static __always_inline int
+>  atomic_dec_if_positive(atomic_t *v)
+> @@ -1184,6 +1301,9 @@ atomic_dec_if_positive(atomic_t *v)
+>  #include <asm-generic/atomic64.h>
+>  #endif
+>  
+> +#define arch_atomic64_read atomic64_read
+> +#define arch_atomic64_read_acquire atomic64_read_acquire
+> +
+>  #ifndef atomic64_read_acquire
+>  static __always_inline s64
+>  atomic64_read_acquire(const atomic64_t *v)
+> @@ -1193,6 +1313,9 @@ atomic64_read_acquire(const atomic64_t *
+>  #define atomic64_read_acquire atomic64_read_acquire
+>  #endif
+>  
+> +#define arch_atomic64_set atomic64_set
+> +#define arch_atomic64_set_release atomic64_set_release
+> +
+>  #ifndef atomic64_set_release
+>  static __always_inline void
+>  atomic64_set_release(atomic64_t *v, s64 i)
+> @@ -1202,6 +1325,13 @@ atomic64_set_release(atomic64_t *v, s64
+>  #define atomic64_set_release atomic64_set_release
+>  #endif
+>  
+> +#define arch_atomic64_add atomic64_add
+> +
+> +#define arch_atomic64_add_return atomic64_add_return
+> +#define arch_atomic64_add_return_acquire atomic64_add_return_acquire
+> +#define arch_atomic64_add_return_release atomic64_add_return_release
+> +#define arch_atomic64_add_return_relaxed atomic64_add_return_relaxed
+> +
+>  #ifndef atomic64_add_return_relaxed
+>  #define atomic64_add_return_acquire atomic64_add_return
+>  #define atomic64_add_return_release atomic64_add_return
+> @@ -1244,6 +1374,11 @@ atomic64_add_return(s64 i, atomic64_t *v
+>  
+>  #endif /* atomic64_add_return_relaxed */
+>  
+> +#define arch_atomic64_fetch_add atomic64_fetch_add
+> +#define arch_atomic64_fetch_add_acquire atomic64_fetch_add_acquire
+> +#define arch_atomic64_fetch_add_release atomic64_fetch_add_release
+> +#define arch_atomic64_fetch_add_relaxed atomic64_fetch_add_relaxed
+> +
+>  #ifndef atomic64_fetch_add_relaxed
+>  #define atomic64_fetch_add_acquire atomic64_fetch_add
+>  #define atomic64_fetch_add_release atomic64_fetch_add
+> @@ -1286,6 +1421,13 @@ atomic64_fetch_add(s64 i, atomic64_t *v)
+>  
+>  #endif /* atomic64_fetch_add_relaxed */
+>  
+> +#define arch_atomic64_sub atomic64_sub
+> +
+> +#define arch_atomic64_sub_return atomic64_sub_return
+> +#define arch_atomic64_sub_return_acquire atomic64_sub_return_acquire
+> +#define arch_atomic64_sub_return_release atomic64_sub_return_release
+> +#define arch_atomic64_sub_return_relaxed atomic64_sub_return_relaxed
+> +
+>  #ifndef atomic64_sub_return_relaxed
+>  #define atomic64_sub_return_acquire atomic64_sub_return
+>  #define atomic64_sub_return_release atomic64_sub_return
+> @@ -1328,6 +1470,11 @@ atomic64_sub_return(s64 i, atomic64_t *v
+>  
+>  #endif /* atomic64_sub_return_relaxed */
+>  
+> +#define arch_atomic64_fetch_sub atomic64_fetch_sub
+> +#define arch_atomic64_fetch_sub_acquire atomic64_fetch_sub_acquire
+> +#define arch_atomic64_fetch_sub_release atomic64_fetch_sub_release
+> +#define arch_atomic64_fetch_sub_relaxed atomic64_fetch_sub_relaxed
+> +
+>  #ifndef atomic64_fetch_sub_relaxed
+>  #define atomic64_fetch_sub_acquire atomic64_fetch_sub
+>  #define atomic64_fetch_sub_release atomic64_fetch_sub
+> @@ -1370,6 +1517,8 @@ atomic64_fetch_sub(s64 i, atomic64_t *v)
+>  
+>  #endif /* atomic64_fetch_sub_relaxed */
+>  
+> +#define arch_atomic64_inc atomic64_inc
+> +
+>  #ifndef atomic64_inc
+>  static __always_inline void
+>  atomic64_inc(atomic64_t *v)
+> @@ -1379,6 +1528,11 @@ atomic64_inc(atomic64_t *v)
+>  #define atomic64_inc atomic64_inc
+>  #endif
+>  
+> +#define arch_atomic64_inc_return atomic64_inc_return
+> +#define arch_atomic64_inc_return_acquire atomic64_inc_return_acquire
+> +#define arch_atomic64_inc_return_release atomic64_inc_return_release
+> +#define arch_atomic64_inc_return_relaxed atomic64_inc_return_relaxed
+> +
+>  #ifndef atomic64_inc_return_relaxed
+>  #ifdef atomic64_inc_return
+>  #define atomic64_inc_return_acquire atomic64_inc_return
+> @@ -1460,6 +1614,11 @@ atomic64_inc_return(atomic64_t *v)
+>  
+>  #endif /* atomic64_inc_return_relaxed */
+>  
+> +#define arch_atomic64_fetch_inc atomic64_fetch_inc
+> +#define arch_atomic64_fetch_inc_acquire atomic64_fetch_inc_acquire
+> +#define arch_atomic64_fetch_inc_release atomic64_fetch_inc_release
+> +#define arch_atomic64_fetch_inc_relaxed atomic64_fetch_inc_relaxed
+> +
+>  #ifndef atomic64_fetch_inc_relaxed
+>  #ifdef atomic64_fetch_inc
+>  #define atomic64_fetch_inc_acquire atomic64_fetch_inc
+> @@ -1541,6 +1700,8 @@ atomic64_fetch_inc(atomic64_t *v)
+>  
+>  #endif /* atomic64_fetch_inc_relaxed */
+>  
+> +#define arch_atomic64_dec atomic64_dec
+> +
+>  #ifndef atomic64_dec
+>  static __always_inline void
+>  atomic64_dec(atomic64_t *v)
+> @@ -1550,6 +1711,11 @@ atomic64_dec(atomic64_t *v)
+>  #define atomic64_dec atomic64_dec
+>  #endif
+>  
+> +#define arch_atomic64_dec_return atomic64_dec_return
+> +#define arch_atomic64_dec_return_acquire atomic64_dec_return_acquire
+> +#define arch_atomic64_dec_return_release atomic64_dec_return_release
+> +#define arch_atomic64_dec_return_relaxed atomic64_dec_return_relaxed
+> +
+>  #ifndef atomic64_dec_return_relaxed
+>  #ifdef atomic64_dec_return
+>  #define atomic64_dec_return_acquire atomic64_dec_return
+> @@ -1631,6 +1797,11 @@ atomic64_dec_return(atomic64_t *v)
+>  
+>  #endif /* atomic64_dec_return_relaxed */
+>  
+> +#define arch_atomic64_fetch_dec atomic64_fetch_dec
+> +#define arch_atomic64_fetch_dec_acquire atomic64_fetch_dec_acquire
+> +#define arch_atomic64_fetch_dec_release atomic64_fetch_dec_release
+> +#define arch_atomic64_fetch_dec_relaxed atomic64_fetch_dec_relaxed
+> +
+>  #ifndef atomic64_fetch_dec_relaxed
+>  #ifdef atomic64_fetch_dec
+>  #define atomic64_fetch_dec_acquire atomic64_fetch_dec
+> @@ -1712,6 +1883,13 @@ atomic64_fetch_dec(atomic64_t *v)
+>  
+>  #endif /* atomic64_fetch_dec_relaxed */
+>  
+> +#define arch_atomic64_and atomic64_and
+> +
+> +#define arch_atomic64_fetch_and atomic64_fetch_and
+> +#define arch_atomic64_fetch_and_acquire atomic64_fetch_and_acquire
+> +#define arch_atomic64_fetch_and_release atomic64_fetch_and_release
+> +#define arch_atomic64_fetch_and_relaxed atomic64_fetch_and_relaxed
+> +
+>  #ifndef atomic64_fetch_and_relaxed
+>  #define atomic64_fetch_and_acquire atomic64_fetch_and
+>  #define atomic64_fetch_and_release atomic64_fetch_and
+> @@ -1754,6 +1932,8 @@ atomic64_fetch_and(s64 i, atomic64_t *v)
+>  
+>  #endif /* atomic64_fetch_and_relaxed */
+>  
+> +#define arch_atomic64_andnot atomic64_andnot
+> +
+>  #ifndef atomic64_andnot
+>  static __always_inline void
+>  atomic64_andnot(s64 i, atomic64_t *v)
+> @@ -1763,6 +1943,11 @@ atomic64_andnot(s64 i, atomic64_t *v)
+>  #define atomic64_andnot atomic64_andnot
+>  #endif
+>  
+> +#define arch_atomic64_fetch_andnot atomic64_fetch_andnot
+> +#define arch_atomic64_fetch_andnot_acquire atomic64_fetch_andnot_acquire
+> +#define arch_atomic64_fetch_andnot_release atomic64_fetch_andnot_release
+> +#define arch_atomic64_fetch_andnot_relaxed atomic64_fetch_andnot_relaxed
+> +
+>  #ifndef atomic64_fetch_andnot_relaxed
+>  #ifdef atomic64_fetch_andnot
+>  #define atomic64_fetch_andnot_acquire atomic64_fetch_andnot
+> @@ -1844,6 +2029,13 @@ atomic64_fetch_andnot(s64 i, atomic64_t
+>  
+>  #endif /* atomic64_fetch_andnot_relaxed */
+>  
+> +#define arch_atomic64_or atomic64_or
+> +
+> +#define arch_atomic64_fetch_or atomic64_fetch_or
+> +#define arch_atomic64_fetch_or_acquire atomic64_fetch_or_acquire
+> +#define arch_atomic64_fetch_or_release atomic64_fetch_or_release
+> +#define arch_atomic64_fetch_or_relaxed atomic64_fetch_or_relaxed
+> +
+>  #ifndef atomic64_fetch_or_relaxed
+>  #define atomic64_fetch_or_acquire atomic64_fetch_or
+>  #define atomic64_fetch_or_release atomic64_fetch_or
+> @@ -1886,6 +2078,13 @@ atomic64_fetch_or(s64 i, atomic64_t *v)
+>  
+>  #endif /* atomic64_fetch_or_relaxed */
+>  
+> +#define arch_atomic64_xor atomic64_xor
+> +
+> +#define arch_atomic64_fetch_xor atomic64_fetch_xor
+> +#define arch_atomic64_fetch_xor_acquire atomic64_fetch_xor_acquire
+> +#define arch_atomic64_fetch_xor_release atomic64_fetch_xor_release
+> +#define arch_atomic64_fetch_xor_relaxed atomic64_fetch_xor_relaxed
+> +
+>  #ifndef atomic64_fetch_xor_relaxed
+>  #define atomic64_fetch_xor_acquire atomic64_fetch_xor
+>  #define atomic64_fetch_xor_release atomic64_fetch_xor
+> @@ -1928,6 +2127,11 @@ atomic64_fetch_xor(s64 i, atomic64_t *v)
+>  
+>  #endif /* atomic64_fetch_xor_relaxed */
+>  
+> +#define arch_atomic64_xchg atomic64_xchg
+> +#define arch_atomic64_xchg_acquire atomic64_xchg_acquire
+> +#define arch_atomic64_xchg_release atomic64_xchg_release
+> +#define arch_atomic64_xchg_relaxed atomic64_xchg_relaxed
+> +
+>  #ifndef atomic64_xchg_relaxed
+>  #define atomic64_xchg_acquire atomic64_xchg
+>  #define atomic64_xchg_release atomic64_xchg
+> @@ -1970,6 +2174,11 @@ atomic64_xchg(atomic64_t *v, s64 i)
+>  
+>  #endif /* atomic64_xchg_relaxed */
+>  
+> +#define arch_atomic64_cmpxchg atomic64_cmpxchg
+> +#define arch_atomic64_cmpxchg_acquire atomic64_cmpxchg_acquire
+> +#define arch_atomic64_cmpxchg_release atomic64_cmpxchg_release
+> +#define arch_atomic64_cmpxchg_relaxed atomic64_cmpxchg_relaxed
+> +
+>  #ifndef atomic64_cmpxchg_relaxed
+>  #define atomic64_cmpxchg_acquire atomic64_cmpxchg
+>  #define atomic64_cmpxchg_release atomic64_cmpxchg
+> @@ -2012,6 +2221,11 @@ atomic64_cmpxchg(atomic64_t *v, s64 old,
+>  
+>  #endif /* atomic64_cmpxchg_relaxed */
+>  
+> +#define arch_atomic64_try_cmpxchg atomic64_try_cmpxchg
+> +#define arch_atomic64_try_cmpxchg_acquire atomic64_try_cmpxchg_acquire
+> +#define arch_atomic64_try_cmpxchg_release atomic64_try_cmpxchg_release
+> +#define arch_atomic64_try_cmpxchg_relaxed atomic64_try_cmpxchg_relaxed
+> +
+>  #ifndef atomic64_try_cmpxchg_relaxed
+>  #ifdef atomic64_try_cmpxchg
+>  #define atomic64_try_cmpxchg_acquire atomic64_try_cmpxchg
+> @@ -2109,6 +2323,8 @@ atomic64_try_cmpxchg(atomic64_t *v, s64
+>  
+>  #endif /* atomic64_try_cmpxchg_relaxed */
+>  
+> +#define arch_atomic64_sub_and_test atomic64_sub_and_test
+> +
+>  #ifndef atomic64_sub_and_test
+>  /**
+>   * atomic64_sub_and_test - subtract value from variable and test result
+> @@ -2127,6 +2343,8 @@ atomic64_sub_and_test(s64 i, atomic64_t
+>  #define atomic64_sub_and_test atomic64_sub_and_test
+>  #endif
+>  
+> +#define arch_atomic64_dec_and_test atomic64_dec_and_test
+> +
+>  #ifndef atomic64_dec_and_test
+>  /**
+>   * atomic64_dec_and_test - decrement and test
+> @@ -2144,6 +2362,8 @@ atomic64_dec_and_test(atomic64_t *v)
+>  #define atomic64_dec_and_test atomic64_dec_and_test
+>  #endif
+>  
+> +#define arch_atomic64_inc_and_test atomic64_inc_and_test
+> +
+>  #ifndef atomic64_inc_and_test
+>  /**
+>   * atomic64_inc_and_test - increment and test
+> @@ -2161,6 +2381,8 @@ atomic64_inc_and_test(atomic64_t *v)
+>  #define atomic64_inc_and_test atomic64_inc_and_test
+>  #endif
+>  
+> +#define arch_atomic64_add_negative atomic64_add_negative
+> +
+>  #ifndef atomic64_add_negative
+>  /**
+>   * atomic64_add_negative - add and test if negative
+> @@ -2179,6 +2401,8 @@ atomic64_add_negative(s64 i, atomic64_t
+>  #define atomic64_add_negative atomic64_add_negative
+>  #endif
+>  
+> +#define arch_atomic64_fetch_add_unless atomic64_fetch_add_unless
+> +
+>  #ifndef atomic64_fetch_add_unless
+>  /**
+>   * atomic64_fetch_add_unless - add unless the number is already a given value
+> @@ -2204,6 +2428,8 @@ atomic64_fetch_add_unless(atomic64_t *v,
+>  #define atomic64_fetch_add_unless atomic64_fetch_add_unless
+>  #endif
+>  
+> +#define arch_atomic64_add_unless atomic64_add_unless
+> +
+>  #ifndef atomic64_add_unless
+>  /**
+>   * atomic64_add_unless - add unless the number is already a given value
+> @@ -2222,6 +2448,8 @@ atomic64_add_unless(atomic64_t *v, s64 a
+>  #define atomic64_add_unless atomic64_add_unless
+>  #endif
+>  
+> +#define arch_atomic64_inc_not_zero atomic64_inc_not_zero
+> +
+>  #ifndef atomic64_inc_not_zero
+>  /**
+>   * atomic64_inc_not_zero - increment unless the number is zero
+> @@ -2238,6 +2466,8 @@ atomic64_inc_not_zero(atomic64_t *v)
+>  #define atomic64_inc_not_zero atomic64_inc_not_zero
+>  #endif
+>  
+> +#define arch_atomic64_inc_unless_negative atomic64_inc_unless_negative
+> +
+>  #ifndef atomic64_inc_unless_negative
+>  static __always_inline bool
+>  atomic64_inc_unless_negative(atomic64_t *v)
+> @@ -2254,6 +2484,8 @@ atomic64_inc_unless_negative(atomic64_t
+>  #define atomic64_inc_unless_negative atomic64_inc_unless_negative
+>  #endif
+>  
+> +#define arch_atomic64_dec_unless_positive atomic64_dec_unless_positive
+> +
+>  #ifndef atomic64_dec_unless_positive
+>  static __always_inline bool
+>  atomic64_dec_unless_positive(atomic64_t *v)
+> @@ -2270,6 +2502,8 @@ atomic64_dec_unless_positive(atomic64_t
+>  #define atomic64_dec_unless_positive atomic64_dec_unless_positive
+>  #endif
+>  
+> +#define arch_atomic64_dec_if_positive atomic64_dec_if_positive
+> +
+>  #ifndef atomic64_dec_if_positive
+>  static __always_inline s64
+>  atomic64_dec_if_positive(atomic64_t *v)
+> @@ -2288,4 +2522,4 @@ atomic64_dec_if_positive(atomic64_t *v)
+>  #endif
+>  
+>  #endif /* _LINUX_ATOMIC_FALLBACK_H */
+> -// 1fac0941c79bf0ae100723cc2ac9b94061f0b67a
+> +// 9d95b56f98d82a2a26c7b79ccdd0c47572d50a6f
+> --- a/scripts/atomic/gen-atomic-fallback.sh
+> +++ b/scripts/atomic/gen-atomic-fallback.sh
+> @@ -58,6 +58,21 @@ cat << EOF
+>  EOF
+>  }
+>  
+> +gen_proto_order_variant()
+> +{
+> +	local meta="$1"; shift
+> +	local pfx="$1"; shift
+> +	local name="$1"; shift
+> +	local sfx="$1"; shift
+> +	local order="$1"; shift
+> +	local arch="$1"
+> +	local atomic="$2"
+> +
+> +	local basename="${arch}${atomic}_${pfx}${name}${sfx}"
+> +
+> +	printf "#define arch_${basename}${order} ${basename}${order}\n"
+> +}
+> +
+>  #gen_proto_order_variants(meta, pfx, name, sfx, arch, atomic, int, args...)
+>  gen_proto_order_variants()
+>  {
+> @@ -72,6 +87,22 @@ gen_proto_order_variants()
+>  
+>  	local template="$(find_fallback_template "${pfx}" "${name}" "${sfx}" "${order}")"
+>  
+> +	if [ -z "$arch" ]; then
+> +		gen_proto_order_variant "${meta}" "${pfx}" "${name}" "${sfx}" "" "$@"
+> +
+> +		if meta_has_acquire "${meta}"; then
+> +			gen_proto_order_variant "${meta}" "${pfx}" "${name}" "${sfx}" "_acquire" "$@"
+> +		fi
+> +		if meta_has_release "${meta}"; then
+> +			gen_proto_order_variant "${meta}" "${pfx}" "${name}" "${sfx}" "_release" "$@"
+> +		fi
+> +		if meta_has_relaxed "${meta}"; then
+> +			gen_proto_order_variant "${meta}" "${pfx}" "${name}" "${sfx}" "_relaxed" "$@"
+> +		fi
+> +
+> +		echo ""
+> +	fi
+> +
+>  	# If we don't have relaxed atomics, then we don't bother with ordering fallbacks
+>  	# read_acquire and set_release need to be templated, though
+>  	if ! meta_has_relaxed "${meta}"; then
