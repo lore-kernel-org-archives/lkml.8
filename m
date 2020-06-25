@@ -2,138 +2,139 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D702E2088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593100044;
-	bh=IgCDJ/4NXHUUIMvtdNOkk30i4IMtWPYAHp9uh6q/7II=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gfTMEuGEnCmNmST9E0xDVtBh0qVoNbx7hZRcLoTIaJI5/57UZHpb7FpNDN49kDOLR
-	 gZBWRvbmNLqC+SG5IEiWDilf6eFTpmK9u6ruqmBLYFB3LwupQEOLO1/MlWnTc/3br6
-	 JbwxkfjfVyH3S76u7NBU7dIB3VdqIVWCG68AWD8Q=
+	by mail.kernel.org (Postfix) with ESMTP id D39AF20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:52:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iBMYAQ01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406065AbgFYPrX (ORCPT
+        id S2390270AbgFYPwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406053AbgFYPrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:47:15 -0400
-Received: from localhost.localdomain (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47BB520836;
-        Thu, 25 Jun 2020 15:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593100034;
-        bh=IgCDJ/4NXHUUIMvtdNOkk30i4IMtWPYAHp9uh6q/7II=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtWCfzOyrAUT8ZVl5yyPzzbekoxnU/i2wT7XzsMfHFK/69iJnys9T9xcrJ9RJjcwW
-         2vV0hBG5e2qp0rfi9B24YzOQR96N2BFb6/BmFhRO0ku3Mw6KgtkBk/M3QnWwoacuV2
-         5XDtWW9mj542HRoiC5zD7dMIv/nF91cbiha2xxjk=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] ALSA: compress: fix partial_drain completion state
-Date:   Thu, 25 Jun 2020 21:16:51 +0530
-Message-Id: <20200625154651.99758-4-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200625154651.99758-1-vkoul@kernel.org>
-References: <20200625154651.99758-1-vkoul@kernel.org>
+        Thu, 25 Jun 2020 11:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389744AbgFYPwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 11:52:12 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C07C08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:52:12 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b15so4600472edy.7
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KXqoAfwqJjFswhwLZp3+6buwkSwmtb+FpqbKTmlJZoY=;
+        b=iBMYAQ01jjIK2rgc9mVr+Yly8ObD4pm58VppkGjO71MrklExKxdwSKwWFuP9YkSMax
+         vMiKxZI9B0EFAul7JTwn8UhhRGSpfvKL0+dtbk9Pa5T00iX7tBM0ceq9B81xzAEHeecb
+         /gFnqMvJAhk4K2nj3CwK4jafNNa61MnrqJqWOhDmlRn4SsNOXBvB0SXoWY9RDcShQ5sf
+         c5dIltSFrsuKw2h0e6D3zXXaJCXnuMOjyjMyN3XUk/mv3CfpMlt8GYket32jOOJfj/Cd
+         erYnaLeELb5vAMrWYGVD5+F1x+gfPoqYphOQEtLZtVtu8GtkaljRimp7G7gL9CmUYHxH
+         Rteg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KXqoAfwqJjFswhwLZp3+6buwkSwmtb+FpqbKTmlJZoY=;
+        b=iGK/kR1uXwjaT/MiUS6JjXQjPzuWttVEoUJ+9ytO2p85zmrloNCTaFQDh5rRyb1p3n
+         K4f+0yHDqJCzVMMvPhnKY5R+V4rekrCauIBGx2imGrBTO/ty01CLv/NfBFyeCeTP+pih
+         LhwOyZ5Dhu1TJo0+Z7C6vNQcgAYBvdR/n2qq7Xt8e0YzMq9pWWsMGtOgWUiBfdOsJgWk
+         o5RUBxWjlHsqqUTcbOaE/PHYuhE2nXL9ghCuLtmHXXW78sH+IynbI65k/FsEOnLRxxvv
+         mMGaZPQ+2BOkWHZ1hwTIgyMPoOoiyJKaYNo8SpxTjXocLN89pLgFzSLLLMKq8hi5wR6w
+         0RmA==
+X-Gm-Message-State: AOAM530mKVkqafIVAuwGQPi7/O/v245U1Bi8JDqa7bFh1VqTQKMtJ2pt
+        i6rq+qAyrENgiyNxA3sQix1qBMYnBxlA9w==
+X-Google-Smtp-Source: ABdhPJwbt395lRqEkrc239QutfG7/2q46qATHxzzPM6+/whTFZe8sqUtd5p2MOO4Rt2ysNAmZ0Gz7A==
+X-Received: by 2002:a50:9a82:: with SMTP id p2mr23429201edb.130.1593100330935;
+        Thu, 25 Jun 2020 08:52:10 -0700 (PDT)
+Received: from [192.168.1.4] (212-5-158-60.ip.btc-net.bg. [212.5.158.60])
+        by smtp.googlemail.com with ESMTPSA id e1sm4809370edn.16.2020.06.25.08.52.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 08:52:10 -0700 (PDT)
+Subject: Re: [PATCH] [v2] media: venus: core: Fix runtime PM imbalance in
+ venus_probe
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <812ead80-766b-1dad-1447-ffab5d7d2ee8@linaro.org>
+Date:   Thu, 25 Jun 2020 18:52:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On partial_drain completion we should be in SNDRV_PCM_STATE_RUNNING
-state, so set that for partially draining streams in
-snd_compr_drain_notify() and use a flag for partially draining streams
+Hi Dinghao,
 
-While at it, add locks for stream state change in
-snd_compr_drain_notify() as well.
+On 6/24/20 9:30 AM, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced. For other error
+> paths after this call, things are the same.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+> 
+> Changelog:
+> 
+> v2: - Add pm_runtime_get_noresume() on failure of
+>       pm_runtime_put_sync() to balance PM counter instead of
+>       releasing everything here.
 
-Fixes: f44f2a5417b2 ("ALSA: compress: fix drain calls blocking other compress functions (v6)")
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- include/sound/compress_driver.h | 12 +++++++++++-
- sound/core/compress_offload.c   |  4 ++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+You are adding pm_runtime_get_noresume in pm_runtime_put_sync error path
+but the patch description is referring to pm_runtime_get_sync. I'm confused.
 
-diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
-index 3df8d8c90191..93a5897201ea 100644
---- a/include/sound/compress_driver.h
-+++ b/include/sound/compress_driver.h
-@@ -66,6 +66,7 @@ struct snd_compr_runtime {
-  * @direction: stream direction, playback/recording
-  * @metadata_set: metadata set flag, true when set
-  * @next_track: has userspace signal next track transition, true when set
-+ * @partial_drain: undergoing partial_drain for stream, true when set
-  * @private_data: pointer to DSP private data
-  * @dma_buffer: allocated buffer if any
-  */
-@@ -78,6 +79,7 @@ struct snd_compr_stream {
- 	enum snd_compr_direction direction;
- 	bool metadata_set;
- 	bool next_track;
-+	bool partial_drain;
- 	void *private_data;
- 	struct snd_dma_buffer dma_buffer;
- };
-@@ -187,7 +189,15 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
- 	if (snd_BUG_ON(!stream))
- 		return;
- 
--	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-+	mutex_lock(&stream->device->lock);
-+	/* for partial_drain case we are back to running state on success */
-+	if (stream->partial_drain) {
-+		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
-+		stream->partial_drain = false; /* clear this flag as well */
-+	} else {
-+		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
-+	}
-+	mutex_unlock(&stream->device->lock);
- 
- 	wake_up(&stream->runtime->sleep);
- }
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index e618580feac4..1c4b2cf450a0 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -803,6 +803,9 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
- 
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
- 	if (!retval) {
-+		/* clear flags and stop any drain wait */
-+		stream->partial_drain = false;
-+		stream->metadata_set = false;
- 		snd_compr_drain_notify(stream);
- 		stream->runtime->total_bytes_available = 0;
- 		stream->runtime->total_bytes_transferred = 0;
-@@ -960,6 +963,7 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 	if (stream->next_track == false)
- 		return -EPERM;
- 
-+	stream->partial_drain = true;
- 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_PARTIAL_DRAIN);
- 	if (retval) {
- 		pr_debug("Partial drain returned failure\n");
+> ---
+>  drivers/media/platform/qcom/venus/core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 203c6538044f..b0b932bf8c02 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -287,8 +287,10 @@ static int venus_probe(struct platform_device *pdev)
+>  		goto err_core_deinit;
+>  
+>  	ret = pm_runtime_put_sync(dev);
+> -	if (ret)
+> +	if (ret) {
+> +		pm_runtime_get_noresume(dev);
+>  		goto err_dev_unregister;
+> +	}
+>  
+>  	return 0;
+>  
+> @@ -299,6 +301,7 @@ static int venus_probe(struct platform_device *pdev)
+>  err_venus_shutdown:
+>  	venus_shutdown(core);
+>  err_runtime_disable:
+> +	pm_runtime_put_noidle(dev);
+>  	pm_runtime_set_suspended(dev);
+>  	pm_runtime_disable(dev);
+>  	hfi_destroy(core);
+> 
+
 -- 
-2.26.2
-
+regards,
+Stan
