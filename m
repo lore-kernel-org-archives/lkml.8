@@ -2,176 +2,260 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A93207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF5B207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgFYEK2 (ORCPT
+        id S1727794AbgFYEMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 00:10:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:31305 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgFYEK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 00:10:27 -0400
-IronPort-SDR: R3LIb5QUHg3s1vVRzMLa3m2HYmhn1z/lc/D3gXkdriFznqjuh6teHq7DPDvBP6CzykP10CW8GA
- 3+R7OFYhCsIQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="206281954"
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="206281954"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 21:10:26 -0700
-IronPort-SDR: PA5RbYj180MmNNLXEkwRTDpDn0spzRUSVjVRMQf6tckml8ddNnAkgSkdIseJthByyGIcUmwe3x
- rAq8oUqwNzHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="479345089"
-Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Jun 2020 21:10:25 -0700
-Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1joJDU-0001Lp-ME; Thu, 25 Jun 2020 04:10:24 +0000
-Date:   Thu, 25 Jun 2020 12:10:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:auto-latest] BUILD SUCCESS
- 9f2a2b6c23758d798f548911f6119def723d1029
-Message-ID: <5ef4239b.tA9+r81ak2u6u2en%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 25 Jun 2020 00:12:40 -0400
+Received: from out20-26.mail.aliyun.com ([115.124.20.26]:41484 "EHLO
+        out20-26.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbgFYEMj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 00:12:39 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0910485-0.000687189-0.908264;FP=10108297775467472176|1|1|1|0|-1|-1|-1;HT=e02c03294;MF=aiden.leong@aibsd.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.Hs8KRsM_1593058336;
+Received: from ubuntu(mailfrom:aiden.leong@aibsd.com fp:SMTPD_---.Hs8KRsM_1593058336)
+          by smtp.aliyun-inc.com(10.147.43.95);
+          Thu, 25 Jun 2020 12:12:32 +0800
+From:   Aiden Leong <aiden.leong@aibsd.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [RFC] Reed-Solomon Code: Update no_eras to the actual number of errors
+Date:   Wed, 24 Jun 2020 21:10:53 -0700
+Message-Id: <20200625041141.8053-1-aiden.leong@aibsd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  auto-latest
-branch HEAD: 9f2a2b6c23758d798f548911f6119def723d1029  Merge branch 'core/urgent'
+Corr and eras_pos are updated to actual correction pattern and erasure
+positions, but no_eras is not.
 
-elapsed time: 725m
+When this library is used to recover lost bytes, we normally memset the
+lost trunk of bytes to zero as a placeholder. Unfortunately, if the lost
+byte is zero, b[i] is zero too. Without correct no_eras, users won't be
+able to determine the valid length of corr and eras_pos.
 
-configs tested: 106
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arc                     haps_hs_smp_defconfig
-s390                             allyesconfig
-powerpc                          g5_defconfig
-mips                        jmr3927_defconfig
-sh                           se7751_defconfig
-arm                       imx_v6_v7_defconfig
-arm                            xcep_defconfig
-arm                      pxa255-idp_defconfig
-arm                          tango4_defconfig
-arm                             pxa_defconfig
-arm                         lpc18xx_defconfig
-mips                           ip27_defconfig
-arm                     eseries_pxa_defconfig
-mips                      loongson3_defconfig
-parisc                            allnoconfig
-arm                            lart_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200624
-i386                 randconfig-a006-20200624
-i386                 randconfig-a003-20200624
-i386                 randconfig-a001-20200624
-i386                 randconfig-a005-20200624
-i386                 randconfig-a004-20200624
-i386                 randconfig-a013-20200624
-i386                 randconfig-a016-20200624
-i386                 randconfig-a012-20200624
-i386                 randconfig-a014-20200624
-i386                 randconfig-a011-20200624
-i386                 randconfig-a015-20200624
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allmodconfig
-um                               allyesconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-
+Signed-off-by: Aiden Leong <aiden.leong@aibsd.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/md/dm-verity-fec.c      |  2 +-
+ fs/pstore/ram_core.c            |  2 +-
+ include/linux/rslib.h           |  4 ++--
+ lib/reed_solomon/decode_rs.c    | 20 ++++++++++++++------
+ lib/reed_solomon/reed_solomon.c |  4 ++--
+ lib/reed_solomon/test_rslib.c   | 18 ++++++++++++------
+ 6 files changed, 32 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/md/dm-verity-fec.c b/drivers/md/dm-verity-fec.c
+index fb41b4f23c48..ae8366a50244 100644
+--- a/drivers/md/dm-verity-fec.c
++++ b/drivers/md/dm-verity-fec.c
+@@ -50,7 +50,7 @@ static int fec_decode_rs8(struct dm_verity *v, struct dm_verity_fec_io *fio,
+ 	for (i = 0; i < v->fec->roots; i++)
+ 		par[i] = fec[i];
+ 
+-	return decode_rs8(fio->rs, data, par, v->fec->rsn, NULL, neras,
++	return decode_rs8(fio->rs, data, par, v->fec->rsn, NULL, &neras,
+ 			  fio->erasures, 0, NULL);
+ }
+ 
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index aa8e0b65ff1a..fcc661a60640 100644
+--- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -115,7 +115,7 @@ static int persistent_ram_decode_rs8(struct persistent_ram_zone *prz,
+ 
+ 	for (i = 0; i < prz->ecc_info.ecc_size; i++)
+ 		prz->ecc_info.par[i] = ecc[i];
+-	return decode_rs8(prz->rs_decoder, data, prz->ecc_info.par, len,
++	return decode_rs8(prz->rs_decoder, data, prz->ecc_info.par, &len,
+ 				NULL, 0, NULL, 0, NULL);
+ }
+ 
+diff --git a/include/linux/rslib.h b/include/linux/rslib.h
+index 238bb85243d3..80662abc9af7 100644
+--- a/include/linux/rslib.h
++++ b/include/linux/rslib.h
+@@ -64,7 +64,7 @@ int encode_rs8(struct rs_control *rs, uint8_t *data, int len, uint16_t *par,
+ #endif
+ #ifdef CONFIG_REED_SOLOMON_DEC8
+ int decode_rs8(struct rs_control *rs, uint8_t *data, uint16_t *par, int len,
+-		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
++		uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
+ 	       uint16_t *corr);
+ #endif
+ 
+@@ -75,7 +75,7 @@ int encode_rs16(struct rs_control *rs, uint16_t *data, int len, uint16_t *par,
+ #endif
+ #ifdef CONFIG_REED_SOLOMON_DEC16
+ int decode_rs16(struct rs_control *rs, uint16_t *data, uint16_t *par, int len,
+-		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
++		uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
+ 		uint16_t *corr);
+ #endif
+ 
+diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
+index 805de84ae83d..122bc08eb75f 100644
+--- a/lib/reed_solomon/decode_rs.c
++++ b/lib/reed_solomon/decode_rs.c
+@@ -24,6 +24,7 @@
+ 	int count = 0;
+ 	int num_corrected;
+ 	uint16_t msk = (uint16_t) rs->nn;
++	int no_eras_orig = no_eras ? *no_eras : 0;
+ 
+ 	/*
+ 	 * The decoder buffers are in the rs control struct. They are
+@@ -106,11 +107,11 @@
+ 	memset(&lambda[1], 0, nroots * sizeof(lambda[0]));
+ 	lambda[0] = 1;
+ 
+-	if (no_eras > 0) {
++	if (no_eras_orig > 0) {
+ 		/* Init lambda to be the erasure locator polynomial */
+ 		lambda[1] = alpha_to[rs_modnn(rs,
+ 					prim * (nn - 1 - (eras_pos[0] + pad)))];
+-		for (i = 1; i < no_eras; i++) {
++		for (i = 1; i < no_eras_orig; i++) {
+ 			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
+ 			for (j = i + 1; j > 0; j--) {
+ 				tmp = index_of[lambda[j - 1]];
+@@ -129,8 +130,8 @@
+ 	 * Begin Berlekamp-Massey algorithm to determine error+erasure
+ 	 * locator polynomial
+ 	 */
+-	r = no_eras;
+-	el = no_eras;
++	r = no_eras_orig;
++	el = no_eras_orig;
+ 	while (++r <= nroots) {	/* r is the step number */
+ 		/* Compute discrepancy at the r-th step in poly-form */
+ 		discr_r = 0;
+@@ -158,8 +159,8 @@
+ 				} else
+ 					t[i + 1] = lambda[i + 1];
+ 			}
+-			if (2 * el <= r + no_eras - 1) {
+-				el = r + no_eras - el;
++			if (2 * el <= r + no_eras_orig - 1) {
++				el = r + no_eras_orig - el;
+ 				/*
+ 				 * 2 lines below: B(x) <-- inv(discr_r) *
+ 				 * lambda(x)
+@@ -312,14 +313,21 @@
+ 				eras_pos[j++] = loc[i] - pad;
+ 			}
+ 		}
++		if (no_eras > 0)
++			*no_eras = j;
+ 	} else if (data && par) {
+ 		/* Apply error to data and parity */
++		j = 0;
+ 		for (i = 0; i < count; i++) {
+ 			if (loc[i] < (nn - nroots))
+ 				data[loc[i] - pad] ^= b[i];
+ 			else
+ 				par[loc[i] - pad - len] ^= b[i];
++			if (b[i])
++				j++;
+ 		}
++		if (no_eras > 0)
++			*no_eras = j;
+ 	}
+ 
+ 	return  num_corrected;
+diff --git a/lib/reed_solomon/reed_solomon.c b/lib/reed_solomon/reed_solomon.c
+index bbc01bad3053..b2c811674c98 100644
+--- a/lib/reed_solomon/reed_solomon.c
++++ b/lib/reed_solomon/reed_solomon.c
+@@ -359,7 +359,7 @@ EXPORT_SYMBOL_GPL(encode_rs8);
+  *  errors. The count includes errors in the parity.
+  */
+ int decode_rs8(struct rs_control *rsc, uint8_t *data, uint16_t *par, int len,
+-	       uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
++	       uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
+ 	       uint16_t *corr)
+ {
+ #include "decode_rs.c"
+@@ -410,7 +410,7 @@ EXPORT_SYMBOL_GPL(encode_rs16);
+  *  errors. The count includes errors in the parity.
+  */
+ int decode_rs16(struct rs_control *rsc, uint16_t *data, uint16_t *par, int len,
+-		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
++		uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
+ 		uint16_t *corr)
+ {
+ #include "decode_rs.c"
+diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
+index 4eb29f365ece..b30a4aea8796 100644
+--- a/lib/reed_solomon/test_rslib.c
++++ b/lib/reed_solomon/test_rslib.c
+@@ -258,7 +258,7 @@ static void compute_syndrome(struct rs_control *rsc, uint16_t *data,
+ 
+ /* Test up to error correction capacity */
+ static void test_uc(struct rs_control *rs, int len, int errs,
+-		int eras, int trials, struct estat *stat,
++		int *eras, int trials, struct estat *stat,
+ 		struct wspace *ws, int method)
+ {
+ 	int dlen = len - rs->codec->nroots;
+@@ -327,8 +327,11 @@ static int ex_rs_helper(struct rs_control *rs, struct wspace *ws,
+ 		pr_info("  %s\n", desc[method]);
+ 
+ 	for (errs = 0; errs <= nroots / 2; errs++)
+-		for (eras = 0; eras <= nroots - 2 * errs; eras++)
+-			test_uc(rs, len, errs, eras, trials, &stat, ws, method);
++		for (eras = 0; eras <= nroots - 2 * errs; eras++) {
++			int no_eras = ers;
++
++			test_uc(rs, len, errs, &no_eras, trials, &stat, ws, method);
++		}
+ 
+ 	if (v >= V_CSUMMARY) {
+ 		pr_info("    Decodes wrong:        %d / %d\n",
+@@ -364,7 +367,7 @@ static int exercise_rs(struct rs_control *rs, struct wspace *ws,
+ 
+ /* Tests for correct behaviour beyond error correction capacity */
+ static void test_bc(struct rs_control *rs, int len, int errs,
+-		int eras, int trials, struct bcstat *stat,
++		int *eras, int trials, struct bcstat *stat,
+ 		struct wspace *ws)
+ {
+ 	int nroots = rs->codec->nroots;
+@@ -420,8 +423,11 @@ static int exercise_rs_bc(struct rs_control *rs, struct wspace *ws,
+ 			eras = 0;
+ 
+ 		cutoff = nroots <= len - errs ? nroots : len - errs;
+-		for (; eras <= cutoff; eras++)
+-			test_bc(rs, len, errs, eras, trials, &stat, ws);
++		for (; eras <= cutoff; eras++) {
++			int no_eras = eras;
++
++			test_bc(rs, len, errs, &no_eras, trials, &stat, ws);
++		}
+ 	}
+ 
+ 	if (v >= V_CSUMMARY) {
+-- 
+2.25.1
+
