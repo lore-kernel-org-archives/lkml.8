@@ -8,25 +8,25 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D339BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69160C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1396206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD1B206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405523AbgFYOsK (ORCPT
+        id S2405535AbgFYOsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:48:10 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:51434 "EHLO
+        Thu, 25 Jun 2020 10:48:14 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:51435 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2405393AbgFYOsH (ORCPT
+        with ESMTP id S2405367AbgFYOsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:48:07 -0400
+        Thu, 25 Jun 2020 10:48:09 -0400
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 05PElpeA015297;
-        Thu, 25 Jun 2020 17:47:51 +0300
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 05PElm22015282;
+        Thu, 25 Jun 2020 17:47:48 +0300
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id A5834639BE; Thu, 25 Jun 2020 17:47:51 +0300 (IDT)
+        id 3A497639BE; Thu, 25 Jun 2020 17:47:48 +0300 (IDT)
 From:   amirmizi6@gmail.com
 To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
         oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
@@ -40,10 +40,10 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
         shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
         Amir Mizinski <amirmizi6@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v12 8/9] tpm: Add YAML schema for TPM TIS I2C options
-Date:   Thu, 25 Jun 2020 17:46:48 +0300
-Message-Id: <20200625144650.269719-9-amirmizi6@gmail.com>
+        Christophe Ricard <christophe-h.ricard@st.com>
+Subject: [PATCH v12 3/9] tpm: tpm_tis: Add retry in case of protocol failure.
+Date:   Thu, 25 Jun 2020 17:46:43 +0300
+Message-Id: <20200625144650.269719-4-amirmizi6@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200625144650.269719-1-amirmizi6@gmail.com>
 References: <20200625144650.269719-1-amirmizi6@gmail.com>
@@ -56,78 +56,187 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amir Mizinski <amirmizi6@gmail.com>
 
-Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
-PTP based physical layer.
+Added a retry mechanism on any protocol error when sending a command or
+receiving a response. This was changed to comply with
+the TCG PC Client Device Driver Design Principles for TPM 2.0.
 
-This patch adds the documentation for corresponding device tree bindings of
-I2C based Physical TPM.
-Refer to the 'I2C Interface Definition' section in
-'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-for specification.
+When sending a command, a loop is added in "tpm_tis_send_main()" that calls
+"tpm_tis_send_data()" and then issues a retry attempt if any error occurs.
+When receiving a response, the following new function derived from
+"tpm_tis_recv()" is added: "__tpm_tis_recv()". "tpm_tis_recv()" is modified
+to call "__tpm_tis_recv()" in a loop. If any error occurs, a retry is
+initiated by setting TPM_STS.responseRetry and "__tpm_tis_recv()" is
+called again.
+In both cases a retry is attempted up to "TPM_RETRY" times.
 
+Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/security/tpm/tpm-tis-i2c.yaml         | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+ drivers/char/tpm/tpm_tis_core.c | 62 ++++++++++++++++++++++++++---------------
+ drivers/char/tpm/tpm_tis_core.h |  1 +
+ 2 files changed, 41 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-new file mode 100644
-index 0000000..68b13d5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 6b33620..e136467 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -305,29 +305,24 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
+ 	return size;
+ }
+ 
+-static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
++static int __tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+ 	int size = 0;
+ 	int status;
+ 	u32 expected;
+ 
+-	if (count < TPM_HEADER_SIZE) {
+-		size = -EIO;
+-		goto out;
+-	}
+-
+ 	size = recv_data(chip, buf, TPM_HEADER_SIZE);
+ 	/* read first 10 bytes, including tag, paramsize, and result */
+ 	if (size < TPM_HEADER_SIZE) {
+ 		dev_err(&chip->dev, "Unable to read header\n");
+-		goto out;
++		return size;
+ 	}
+ 
+ 	expected = be32_to_cpu(*(__be32 *) (buf + 2));
+ 	if (expected > count || expected < TPM_HEADER_SIZE) {
+ 		size = -EIO;
+-		goto out;
++		return size;
+ 	}
+ 
+ 	size += recv_data(chip, &buf[TPM_HEADER_SIZE],
+@@ -335,22 +330,45 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ 	if (size < expected) {
+ 		dev_err(&chip->dev, "Unable to read remainder of result\n");
+ 		size = -ETIME;
+-		goto out;
++		return size;
+ 	}
+ 
+ 	if (tpm_tis_wait_for_stat(chip, TPM_STS_VALID, TPM_STS_VALID,
+ 				  chip->timeout_c, &priv->int_queue,
+ 				  false) < 0) {
+ 		size = -ETIME;
+-		goto out;
++		return size;
+ 	}
 +
-+title: I2C PTP based TPM Device Tree Bindings
+ 	status = tpm_tis_status(chip);
+ 	if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
+ 		dev_err(&chip->dev, "Error left over data\n");
+ 		size = -EIO;
++		return size;
++	}
 +
-+maintainers:
-+  - Amir Mizinski <amirmizi6@gmail.com>
++	return size;
++}
 +
-+description:
-+  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
++static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
++{
++	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
++	int size;
++	int i;
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          # Nuvoton's Trusted Platform Module (TPM) (NPCT75x)
-+          - nuvoton,npct75x
-+      - const: tcg,tpm-tis-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt:
-+    maxItems: 1
-+
-+  crc-checksum:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Set this flag to enable CRC checksum.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      tpm@2e {
-+        compatible = "nuvoton,npct75x", "tcg,tpm-tis-i2c";
-+        reg = <0x2e>;
-+        crc-checksum;
-+      };
-+    };
-+...
++	if (count < TPM_HEADER_SIZE) {
++		size = -EIO;
+ 		goto out;
+ 	}
+ 
++	for (i = 0; i < TPM_RETRY; i++) {
++		size = __tpm_tis_recv(chip, buf, count);
++		if (size <= 0)
++			tpm_tis_write8(priv, TPM_STS(priv->locality),
++				       TPM_STS_RESPONSE_RETRY);
++		else
++			goto out;
++	}
+ out:
+ 	tpm_tis_ready(chip);
+ 	return size;
+@@ -375,7 +393,7 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+ 					  chip->timeout_b, &priv->int_queue,
+ 					  false) < 0) {
+ 			rc = -ETIME;
+-			goto out_err;
++			return rc;
+ 		}
+ 	}
+ 
+@@ -384,13 +402,13 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+ 		if (burstcnt < 0) {
+ 			dev_err(&chip->dev, "Unable to read burstcount\n");
+ 			rc = burstcnt;
+-			goto out_err;
++			return rc;
+ 		}
+ 		burstcnt = min_t(int, burstcnt, len - count);
+ 		rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
+ 					 burstcnt, buf + count);
+ 		if (rc < 0)
+-			goto out_err;
++			return rc;
+ 
+ 		count += burstcnt;
+ 	}
+@@ -398,14 +416,10 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+ 				  TPM_STS_VALID, chip->timeout_a,
+ 				  &priv->int_queue, false) < 0) {
+ 		rc = -ETIME;
+-		goto out_err;
++		return rc;
+ 	}
+ 
+ 	return 0;
+-
+-out_err:
+-	tpm_tis_ready(chip);
+-	return rc;
+ }
+ 
+ static void disable_interrupts(struct tpm_chip *chip)
+@@ -434,13 +448,17 @@ static void disable_interrupts(struct tpm_chip *chip)
+ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+-	int rc;
++	int rc, i;
+ 	u32 ordinal;
+ 	unsigned long dur;
+ 
+-	rc = tpm_tis_send_data(chip, buf, len);
+-	if (rc < 0)
+-		return rc;
++	for (i = 0; i < TPM_RETRY; i++) {
++		rc = tpm_tis_send_data(chip, buf, len);
++		if (rc >= 0)
++			break;
++	}
++	if (i == TPM_RETRY)
++		goto out_err;
+ 
+ 	/* go and do it */
+ 	rc = tpm_tis_write8(priv, TPM_STS(priv->locality), TPM_STS_GO);
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index d06c65b..6cc6b76 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -34,6 +34,7 @@ enum tis_status {
+ 	TPM_STS_GO = 0x20,
+ 	TPM_STS_DATA_AVAIL = 0x10,
+ 	TPM_STS_DATA_EXPECT = 0x08,
++	TPM_STS_RESPONSE_RETRY = 0x02,
+ };
+ 
+ enum tis_int_flags {
 -- 
 2.7.4
 
