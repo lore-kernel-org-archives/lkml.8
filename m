@@ -2,95 +2,86 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7723CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89783C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4924020702
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l92CtjAe"
+	by mail.kernel.org (Postfix) with ESMTP id 6713A20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405176AbgFYNkX (ORCPT
+        id S2405206AbgFYNks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404987AbgFYNkU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:40:20 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC64C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:40:20 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l17so5620399wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=KPWXGDbVQkcDm1gGHkW48BVFm+ibUkH1wIn5/D/7Wjw=;
-        b=l92CtjAeRejXi4p9e8J1taigZfp2hQA/FKh+fglRAsnmePoIJhKVKbiiHMRp7jpz4w
-         +35mUyqjtiWC7qhChsQw1Aios1TudPBym8FQ5YspoDiYzoR4mwqeRukFJN8gfoE7w/pz
-         LM6s9sCSSxWqxru9bI3ysv19/aIDITs+Z9ZEsR1BvJUAQVmt8naO0PZm2PzT/tm+tH1u
-         pc7CKw7yYQSqnoAGRAG2y3+EYyvkWxrj/JKgtFS1fiGZqwgnWL6H2wzClsnlGqMcUaYS
-         sxygTIpFQ1qRNRvmb2ONuSS6eXWuMFxvuVy0X8ZozoEFlaU/izN+pnlJSt+ZAvinRMmK
-         AC0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KPWXGDbVQkcDm1gGHkW48BVFm+ibUkH1wIn5/D/7Wjw=;
-        b=EgctyFPHlp/z2b1BGtngqaHdWalsNutkJVaueG4VhLtV0d53Y741Rf1bFpBoUeOGJs
-         p5JWWpijIBqOsPDTBi97GRpHG1kwfBmhxFO6gVZpUM4jiUtlQ3g0XybkghVUISRAjnyq
-         daw+ZA+g87+isPQU5o/VmtZgmWWCs4z1RsIU8143E1E2WYeG1OOM8gkYub4vOBpFTHnP
-         2zG9QAcs4kJPOIoFgJvzXTIXBWf/mWHUH+ay4EVk6lYmTqXD93/epL8/sanxT73DZYf+
-         9N1S1wur5+F8OdYS4tP/XvqkHUL/lC2aYbiBNpjvfBDYLt+e7x6hTFcKV0KMUePrsdxU
-         rTGg==
-X-Gm-Message-State: AOAM533B+jXkl4BH1BGypkH3TnP+tQN+wITwMHFGKTnpX5MFIpC+l0u5
-        Sawt+H6hxI8ck/ShG0O+kHtT/gy5lGc=
-X-Google-Smtp-Source: ABdhPJwbt3oGnIvJg+7dsWBfkM+Sv08Ufbpvz0SvKOt0mmUORc2CbQ0bpG+HQRPUwtyXsZaxmYGgVg==
-X-Received: by 2002:a1c:6408:: with SMTP id y8mr3379927wmb.122.1593092419322;
-        Thu, 25 Jun 2020 06:40:19 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id y17sm32972273wrd.58.2020.06.25.06.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:40:18 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 14:40:17 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
-Message-ID: <20200625134017.GR954398@dell>
-References: <20200625131036.43953-1-andriy.shevchenko@linux.intel.com>
+        Thu, 25 Jun 2020 09:40:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55220 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404966AbgFYNkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:40:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E9490AEDD;
+        Thu, 25 Jun 2020 13:40:44 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id E966C1E1274; Thu, 25 Jun 2020 15:40:44 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 15:40:44 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH] mm: Skip opportunistic reclaim for dma pinned pages
+Message-ID: <20200625134044.GD17788@quack2.suse.cz>
+References: <20200624191417.16735-1-chris@chris-wilson.co.uk>
+ <20200625114209.GA7703@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200625131036.43953-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200625114209.GA7703@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020, Andy Shevchenko wrote:
-
-> Intel Tiger Lake PCH-H has the same LPSS than Intel Broxton.
-> Add the new IDs to the list of supported devices.
+On Thu 25-06-20 12:42:09, Matthew Wilcox wrote:
+> On Wed, Jun 24, 2020 at 08:14:17PM +0100, Chris Wilson wrote:
+> > A side effect of the LRU shrinker not being dma aware is that we will
+> > often attempt to perform direct reclaim on the persistent group of dma
+> > pages while continuing to use the dma HW (an issue as the HW may already
+> > be actively waiting for the next user request), and even attempt to
+> > reclaim a partially allocated dma object in order to satisfy pinning
+> > the next user page for that object.
+> > 
+> > It is to be expected that such pages are made available for reclaim at
+> > the end of the dma operation [unpin_user_pages()], and for truly
+> > longterm pins to be proactively recovered via device specific shrinkers
+> > [i.e. stop the HW, allow the pages to be returned to the system, and
+> > then compete again for the memory].
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/mfd/intel-lpss-pci.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> Why are DMA pinned pages still on the LRU list at all?  I never got an
+> answer to this that made sense to me.  By definition, a page which is
+> pinned for DMA is being accessed, and needs to at the very least change
+> position on the LRU list, so just take it off the list when DMA-pinned
+> and put it back on the list when DMA-unpinned.
 
-Applied, thanks.
+Well, we do mark_page_accessed() when pinning in GUP. This is not perfect
+but it's as good as it gets with CPU having no control when the page is
+actually accessed. Also taking the page off and then back to LRU list would
+increase the contention on the LRU list locks and generally cost
+performance so for short term pins it is not desirable... Otherwise I agree
+that conceptually it would make some sence although I'm not sure some
+places wouldn't get confused by e.g. page cache pages not being on LRU
+list. 
 
+								Honza
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
