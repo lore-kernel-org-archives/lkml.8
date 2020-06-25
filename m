@@ -2,115 +2,217 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09522C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D99E620791
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RBKdveDB"
+	by mail.kernel.org (Postfix) with ESMTP id A866A2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593117540;
+	bh=FZe8dCIMAMpfTBiQg7JCOhqZ7dSnvqbHLy9oZpU+oMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MRrSUG5xqi50tXusZucPw+pVh372oFC+DG/Mv5YwKWRq3/0zxAS4R+R/fPQ40w0Tz
+	 q7dH9H0+IVm7Kbv5BQQUrgpnNwa44GbbcM2n5gEReiIFxyDpvLKoyj/DHvEJdSXSNS
+	 0/73/awA+sfqEj0dcih57g9pEaX+pDjJYWrUoxFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436575AbgFYUhZ (ORCPT
+        id S2407202AbgFYUi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47424 "EHLO
+        Thu, 25 Jun 2020 16:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404887AbgFYUhJ (ORCPT
+        with ESMTP id S2404887AbgFYUi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:37:09 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E32AFC08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:37:09 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x8so2420579plm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:37:09 -0700 (PDT)
+        Thu, 25 Jun 2020 16:38:58 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298F6C08C5C1;
+        Thu, 25 Jun 2020 13:38:58 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id b7so3805970pju.0;
+        Thu, 25 Jun 2020 13:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zH4NCz4WUaJ18HzpAMLRB8JzZlzE4XmxaFkgad5236Q=;
-        b=RBKdveDB6/6TryZmoNNALhVnkzSsz2R1ULWjvCpcvukqeMwo0hJIk9HrScRw9ugson
-         xp2VUC3/+oZibhV2ktrPBevQZ01heoCGaHB/q3pX2tYDKAkzMDAnS509Kjmw6py7sBnO
-         iDJiP31nLw90dXJS/kd9DdxoeZQKV42Tk6wmQ=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fal5fqZa3XRJjCDuPEDO6zOzKkuAxW+azO7zrgA/xGY=;
+        b=aLT7qv2dcaqHBFn4kQfpKHtVN6sYDmcOrsDuprsoieasLVliTBRM5T7A0pMy0gAIuq
+         uvzufWdVBX/DMTjf4ECX6E6STgixlstptr4e2vkMqq18VpTcSn3n6SX9js5Om4xyiV9a
+         DYp1o9qmkI/I0JFPZ1ZsEOcWwNf0eWWiJH54+iyf/YzTO2q5UB6e5A+GF2QwIXs4sBHd
+         b1XL1CvOk3K67j/6DY0PI+3Wo0o7O6kajqv1f0evKIOwUjPwHHFN/mhXBh2WfNEsb2mV
+         bE52EFH9Miu4IddBuds+4aDN4vFcKbEYyPvEGkVQyQMfHXPS9cG06ZWTZDoXqYY49Ul1
+         nUXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zH4NCz4WUaJ18HzpAMLRB8JzZlzE4XmxaFkgad5236Q=;
-        b=ApuVYL+yxgmpuhTouJsAh3Hrb2dfIjjkOvF23XuVHtwcuiP4YtvIJDcxU5LP3mqe44
-         J/xn8el2qt4rEHGuw7wSadJBwyDkhao5oDQFrNqbTJaau6dq7LFRaD51KmbgBWTTMXzc
-         wmJe17y+vAhGreBQIxfB6DN/Awcd5dmsfbxf1e1Y7nD74jhs0SAaKRObok27GjEcI4oD
-         SPcbaWRIpBz15QoAvlt07cqgrod3g5sW0HH/yT6qUHxYQEG0JBGvrImtBuBrjIgvGtlq
-         J4qUX2f/R7dCrmVn7DoKKfD/qqvJwLd2f9CqopgGyDulIeVn1Q7sSiSQUbTqTz6SmHL9
-         mvQA==
-X-Gm-Message-State: AOAM5324as5UEa17P307T84Ha4t2bnmB57IAvFkK9kuHldQxfRLUO5ts
-        ko16ir9HqxVrLH/OKGNicOvYWQ==
-X-Google-Smtp-Source: ABdhPJz2pFPgByh8wHP5gvDAbO6WFvVcu96QLX6WXAcgHZxo44RtCOOw8GvDsRRsJb/3q0x6ZUOY1w==
-X-Received: by 2002:a17:902:dc86:: with SMTP id n6mr35678275pld.82.1593117429438;
-        Thu, 25 Jun 2020 13:37:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cm13sm9447469pjb.5.2020.06.25.13.37.07
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=fal5fqZa3XRJjCDuPEDO6zOzKkuAxW+azO7zrgA/xGY=;
+        b=kvHx32n84pLF9E5ZT7wsR2KyCNx3N4+ZRkfiOLdKsjQ3RDaFKKehOyzATTHTxSQwVj
+         akSAORh5ojQjbdtJtsZmKSBixsm/WlYVyYSo2u9TuWZh/c+ua+kfJMd0cDnW/Ur7UP2R
+         Acpsqkh3yVaeQDZAEc3EQOh+lj3T3brzdR+rMjbziqxCl+U6XpivxnY46+VT37Zw2c/h
+         y/igIsEEeXm2cPrLimM+35G9mOjuEqvsQMvgb+8xpsgjVemcFzOGaxPZhEkQj5HVsSc9
+         myPYjsJzOo1xDeEstCBlmHUMk11Unoda+CVvfYWF9qmffi1DoAU3hiqgu26B2H3hMWWE
+         dcTA==
+X-Gm-Message-State: AOAM533ZnfqIx4dwdrWNnQLeg3fiANm/b6WpmE1XcloGKc8F1D6i6lNX
+        hHaNJ/nYwPOM790Vm8SgA84=
+X-Google-Smtp-Source: ABdhPJwHUrhTo0VdWyqXJVodPYWb24wQPdUWi/z7ywPj+PvwIUdMoVmkl8yxs2jJOixXvCCSjCoc6w==
+X-Received: by 2002:a17:90a:a383:: with SMTP id x3mr5457506pjp.199.1593117537570;
+        Thu, 25 Jun 2020 13:38:57 -0700 (PDT)
+Received: from google.com ([2601:647:4001:3000::e690])
+        by smtp.gmail.com with ESMTPSA id y7sm9823972pjm.54.2020.06.25.13.38.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 13:37:07 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH drivers/misc v2 2/4] lkdtm/heap: Avoid edge and middle of slabs
-Date:   Thu, 25 Jun 2020 13:37:02 -0700
-Message-Id: <20200625203704.317097-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200625203704.317097-1-keescook@chromium.org>
-References: <20200625203704.317097-1-keescook@chromium.org>
+        Thu, 25 Jun 2020 13:38:55 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 13:38:52 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        Arjun Roy <arjunroy@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        SeongJae Park <sjpark@amazon.de>, linux-man@vger.kernel.org
+Subject: Re: [PATCH v8 3/4] mm/madvise: introduce process_madvise() syscall:
+ an external memory hinting API
+Message-ID: <20200625203852.GA55572@google.com>
+References: <20200622192900.22757-1-minchan@kernel.org>
+ <20200622192900.22757-4-minchan@kernel.org>
+ <alpine.DEB.2.22.394.2006241251080.35388@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2006241251080.35388@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Har har, after I moved the slab freelist pointer into the middle of the
-slab, now it looks like the contents are getting poisoned. Adjust the
-test to avoid the freelist pointer again.
+On Wed, Jun 24, 2020 at 01:00:14PM -0700, David Rientjes wrote:
+> On Mon, 22 Jun 2020, Minchan Kim wrote:
+> 
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 551ed816eefe..23abca3f93fa 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/falloc.h>
+> >  #include <linux/fadvise.h>
+> >  #include <linux/sched.h>
+> > +#include <linux/sched/mm.h>
+> >  #include <linux/ksm.h>
+> >  #include <linux/fs.h>
+> >  #include <linux/file.h>
+> > @@ -995,6 +996,18 @@ madvise_behavior_valid(int behavior)
+> >  	}
+> >  }
+> >  
+> > +static bool
+> > +process_madvise_behavior_valid(int behavior)
+> > +{
+> > +	switch (behavior) {
+> > +	case MADV_COLD:
+> > +	case MADV_PAGEOUT:
+> > +		return true;
+> > +	default:
+> > +		return false;
+> > +	}
+> > +}
+> > +
+> >  /*
+> >   * The madvise(2) system call.
+> >   *
+> > @@ -1042,6 +1055,11 @@ madvise_behavior_valid(int behavior)
+> >   *  MADV_DONTDUMP - the application wants to prevent pages in the given range
+> >   *		from being included in its core dump.
+> >   *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
+> > + *  MADV_COLD - the application is not expected to use this memory soon,
+> > + *		deactivate pages in this range so that they can be reclaimed
+> > + *		easily if memory pressure hanppens.
+> > + *  MADV_PAGEOUT - the application is not expected to use this memory soon,
+> > + *		page out the pages in this range immediately.
+> >   *
+> >   * return values:
+> >   *  zero    - success
+> > @@ -1176,3 +1194,106 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+> >  {
+> >  	return do_madvise(current, current->mm, start, len_in, behavior);
+> >  }
+> > +
+> > +static int process_madvise_vec(struct task_struct *target_task,
+> > +		struct mm_struct *mm, struct iov_iter *iter, int behavior)
+> > +{
+> > +	struct iovec iovec;
+> > +	int ret = 0;
+> > +
+> > +	while (iov_iter_count(iter)) {
+> > +		iovec = iov_iter_iovec(iter);
+> > +		ret = do_madvise(target_task, mm, (unsigned long)iovec.iov_base,
+> > +					iovec.iov_len, behavior);
+> > +		if (ret < 0)
+> > +			break;
+> > +		iov_iter_advance(iter, iovec.iov_len);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static ssize_t do_process_madvise(int pidfd, struct iov_iter *iter,
+> > +				int behavior, unsigned int flags)
+> > +{
+> > +	ssize_t ret;
+> > +	struct pid *pid;
+> > +	struct task_struct *task;
+> > +	struct mm_struct *mm;
+> > +	size_t total_len = iov_iter_count(iter);
+> > +
+> > +	if (flags != 0)
+> > +		return -EINVAL;
+> > +
+> > +	pid = pidfd_get_pid(pidfd);
+> > +	if (IS_ERR(pid))
+> > +		return PTR_ERR(pid);
+> > +
+> > +	task = get_pid_task(pid, PIDTYPE_PID);
+> > +	if (!task) {
+> > +		ret = -ESRCH;
+> > +		goto put_pid;
+> > +	}
+> > +
+> > +	if (task->mm != current->mm &&
+> > +			!process_madvise_behavior_valid(behavior)) {
+> > +		ret = -EINVAL;
+> > +		goto release_task;
+> > +	}
+> > +
+> > +	mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
+> > +	if (IS_ERR_OR_NULL(mm)) {
+> > +		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
+> > +		goto release_task;
+> > +	}
+> > 
+> 
+> mm is always task->mm right?  I'm wondering if it would be better to find 
+> the mm directly in process_madvise_vec() rather than passing it into the 
+> function.  I'm not sure why we'd pass both task and mm here.
 
-Fixes: 3202fa62fb43 ("slub: relocate freelist pointer to middle of object")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/misc/lkdtm/heap.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+That's because of hint Jann provided in the past version.
+https://lore.kernel.org/linux-api/CAG48ez27=pwm5m_N_988xT1huO7g7h6arTQL44zev6TD-h-7Tg@mail.gmail.com/
 
-diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
-index 3c5cec85edce..1323bc16f113 100644
---- a/drivers/misc/lkdtm/heap.c
-+++ b/drivers/misc/lkdtm/heap.c
-@@ -58,11 +58,12 @@ void lkdtm_READ_AFTER_FREE(void)
- 	int *base, *val, saw;
- 	size_t len = 1024;
- 	/*
--	 * The slub allocator uses the first word to store the free
--	 * pointer in some configurations. Use the middle of the
--	 * allocation to avoid running into the freelist
-+	 * The slub allocator will use the either the first word or
-+	 * the middle of the allocation to store the free pointer,
-+	 * depending on configurations. Store in the second word to
-+	 * avoid running into the freelist.
- 	 */
--	size_t offset = (len / sizeof(*base)) / 2;
-+	size_t offset = sizeof(*base);
- 
- 	base = kmalloc(len, GFP_KERNEL);
- 	if (!base) {
--- 
-2.25.1
-
+Thanks for the review, David.
