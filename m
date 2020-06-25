@@ -2,102 +2,144 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A84EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7235EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E9A20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5121B20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uD+jq8TW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mDZm0gGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406530AbgFYT3h (ORCPT
+        id S2406555AbgFYTc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:29:37 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:51963 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406461AbgFYT3g (ORCPT
+        Thu, 25 Jun 2020 15:32:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406116AbgFYTcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:29:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593113375; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=bZEXLpiFS2CTcQQYib0XcL0ZOSWmr7D6wUi6jTv1x9A=; b=uD+jq8TWae4opQN33qnka5BajcM6i9fkU3YOdAzPeD5Vwib/M/CFlSWqL0B3uQQUEwaKEeo7
- OcQQdWsC62c+n8dpjBNFkuNk8LCH+MqvrwouCuzZ3Zkp5qRKXKBCMANCg2b3wwlbrDDA0tur
- 7GzmGqSx+LM04gDYxSlb2w5eBUg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5ef4fb1bfe1db4db892ca91c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 19:29:31
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 65246C43395; Thu, 25 Jun 2020 19:29:31 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5F9BC433CA;
-        Thu, 25 Jun 2020 19:29:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5F9BC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [RESEND PATCHv3 2/2] dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845, SM8150
-Date:   Fri, 26 Jun 2020 00:59:05 +0530
-Message-Id: <09da1ba319dc4a27ef4e4e177e67e68f1cb4f35b.1593112534.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1593112534.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1593112534.git.saiprakash.ranjan@codeaurora.org>
+        Thu, 25 Jun 2020 15:32:25 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAD8C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:32:24 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ev7so3050589pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aiCyaSfPElHdBJ1rU4jQnvBfG3hDID3mTTJS9XuQz+Q=;
+        b=mDZm0gGa4yZbKDGF9rgasIeYxWV9KiHwNiMw4ndiNsCn3uE7R//SGEQLJE3mdDSI9/
+         HpYkrdPyVuwor8peEnUfcbBGXiofFnd9veTD7NWibiAP8Ve8E8gCOzG31rjOvREFV1Bf
+         JgsOujSu3baR0YmlQhh5NEYw2pxgOkuVQSleeQxner2eUY5rh1bZK2fJ9oTRt0snh+M+
+         w5fHbf1pXC29S4Vdgqgal1yygHmQF+xISjlsoEB9iBq9A7j/gBZC02UXmgSOGcV/V0l2
+         EEwNoJRyrtCrwRdjdM5UwbSh/doG0vV/wAS2jKyrjWA8airu6HPV73/rpljmn2VIho8e
+         Lz0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aiCyaSfPElHdBJ1rU4jQnvBfG3hDID3mTTJS9XuQz+Q=;
+        b=nxdIh8rX1PR9Jm0Vp0yqiM6iHssriBlJYuQJkvyVTsKHgP1EkykReDCWaHWrWCNzqh
+         BujMLILa2WoY4X7TQk+5afKS0+p5lTIOUtOhBel7QIT60gNXw3DcpTvwG0JsLY1nkns6
+         X2SXC8MTbxnvqxt3uaOrSzgY3ysEei4/Et7j/dqBw6eTALwUD2PKMJh0ucEcFxiaHOLi
+         GpPMJfs5A/WSZHkr5E7rGl4Twv6dSmtJ6Lwba3e934jJOoGIzUsSyOtXcbA97JbvPdgi
+         CRA38gFDlxL0Ws9ysuzeugiaz93WEXms9Ix2104xAiyoldo2jEhgOXRv1WR8VyynfpaO
+         5Srg==
+X-Gm-Message-State: AOAM533VqTEZjY610Gwc61ejDHvo1zAkwrWsZXFBtZYApKJr4n/vrQMO
+        SnHV1I2MQdzXEt49Ba5bVIoolA==
+X-Google-Smtp-Source: ABdhPJzHjBuSoIFTZJ1sk5l9LqVn8mN4nFIUCyUrTGu3HSZs8Ut1ULHUwpBV+FgkM8L4HnNscu3bNQ==
+X-Received: by 2002:a17:90b:88b:: with SMTP id bj11mr5103958pjb.51.1593113544026;
+        Thu, 25 Jun 2020 12:32:24 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id c141sm9061908pfc.167.2020.06.25.12.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 12:32:23 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 12:32:17 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 05/22] kbuild: lto: postpone objtool
+Message-ID: <20200625193217.GA59566@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624203200.78870-6-samitolvanen@google.com>
+ <20200624211908.GT4817@hirez.programming.kicks-ass.net>
+ <20200624214925.GB120457@google.com>
+ <20200625074716.GX4817@hirez.programming.kicks-ass.net>
+ <20200625162226.GC173089@google.com>
+ <20200625183351.GH4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625183351.GH4800@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing compatible for watchdog timer on QCS404,
-SC7180, SDM845 and SM8150 SoCs.
+On Thu, Jun 25, 2020 at 08:33:51PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 25, 2020 at 09:22:26AM -0700, Sami Tolvanen wrote:
+> > On Thu, Jun 25, 2020 at 09:47:16AM +0200, Peter Zijlstra wrote:
+> 
+> > > Right, then we need to make --no-vmlinux work properly when
+> > > !DEBUG_ENTRY, which I think might be buggered due to us overriding the
+> > > argument when the objname ends with "vmlinux.o".
+> > 
+> > Right. Can we just remove that and  pass --vmlinux to objtool in
+> > link-vmlinux.sh, or is the override necessary somewhere else?
+> 
+> Think we can remove it; it was just convenient when running manually.
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Great, I'll change this in v2.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-index 5448cc537a03..0709ddf0b6a5 100644
---- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-@@ -15,6 +15,10 @@ allOf:
- properties:
-   compatible:
-     enum:
-+      - qcom,apss-wdt-qcs404
-+      - qcom,apss-wdt-sc7180
-+      - qcom,apss-wdt-sdm845
-+      - qcom,apss-wdt-sm8150
-       - qcom,kpss-timer
-       - qcom,kpss-wdt
-       - qcom,kpss-wdt-apq8064
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> > > > > > +ifdef CONFIG_STACK_VALIDATION
+> > > > > > +ifneq ($(SKIP_STACK_VALIDATION),1)
+> > > > > > +cmd_ld_ko_o +=								\
+> > > > > > +	$(objtree)/tools/objtool/objtool				\
+> > > > > > +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
+> > > > > > +		--module						\
+> > > > > > +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
+> > > > > > +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
+> > > > > > +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
+> > > > > > +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
+> > > > > > +		$(@:.ko=$(prelink-ext).o);
+> > > > > > +
+> > > > > > +endif # SKIP_STACK_VALIDATION
+> > > > > > +endif # CONFIG_STACK_VALIDATION
+> > > > > 
+> > > > > What about the objtool invocation from link-vmlinux.sh ?
+> > > > 
+> > > > What about it? The existing objtool_link invocation in link-vmlinux.sh
+> > > > works fine for our purposes as well.
+> > > 
+> > > Well, I was wondering why you're adding yet another objtool invocation
+> > > while we already have one.
+> > 
+> > Because we can't run objtool until we have compiled bitcode to native
+> > code, so for modules, we're need another invocation after everything has
+> > been compiled.
+> 
+> Well, that I understand, my question was why we need one in
+> scripts/link-vmlinux.sh and an additional one. I think we're just
+> talking past one another and agree we only need one.
 
+We need just one for vmlinux.o, but this rule adds an objtool invocation
+for kernel modules, which we also couldn't check earlier. We link all
+the bitcode for modules into <module>.lto.o and run modpost and objtool
+on that before building the final .ko.
+
+Sami
