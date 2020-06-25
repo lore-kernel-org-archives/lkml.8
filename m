@@ -6,41 +6,43 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9744C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012192072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6EC2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgFZAHn (ORCPT
+        id S1726893AbgFZAHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:07:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:63633 "EHLO mga09.intel.com"
+        Thu, 25 Jun 2020 20:07:50 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11602 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbgFZAHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:07:41 -0400
-IronPort-SDR: bQEAzG6z5CXyN1osxxp+quTr5BnxQllGk2yIZAgRcZvhEUWh/dQlii4nC5J8aiTXYHszv+O7xV
- z60ZbXgl5fvA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="146633818"
+        id S1725936AbgFZAHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:07:44 -0400
+IronPort-SDR: b/o3bgEBl/7LeFeX1JHUdZm4sOlTdzIbv1afLwrXrgGiEKvFytC19qBtJ8Lm5lfr6HF8FfgByU
+ QGuCe1cwLxoA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229870944"
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="146633818"
+   d="scan'208";a="229870944"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:07:39 -0700
-IronPort-SDR: 37AFNh7w2FLq7Xlz2iv5YnX04JnUsNMsmWsQtxtBDjquqbf7gTZMrG6upNdPfLdhvufjz1l5uJ
- f/fjKIy4eZ7w==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:07:13 -0700
+IronPort-SDR: SCgRkAYbql9izvCjtRPbr2DwF1vMkOGNMHYbkqJu0LzTl8avkpNjcmJg7/atMxWqexL8qG4xEt
+ XvfjNyR2y/rw==
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="276198085"
+   d="scan'208";a="265491889"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:07:39 -0700
-Subject: [PATCH 12/12] ACPI: NFIT: Add runtime firmware activate support
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:07:12 -0700
+Subject: [PATCH 07/12] tools/testing/nvdimm: Emulate firmware activation
+ commands
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-nvdimm@lists.01.org
-Cc:     vishal.l.verma@intel.com, linux-acpi@vger.kernel.org,
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        vishal.l.verma@intel.com, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 25 Jun 2020 16:51:24 -0700
-Message-ID: <159312908490.1850128.13763087150201006817.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 25 Jun 2020 16:50:58 -0700
+Message-ID: <159312905799.1850128.2108805065253287501.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -52,724 +54,347 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Plumb the platform specific backend for the generic libnvdimm firmware
-activate interface. Register dimm level operations to arm/disarm
-activation, and register bus level operations to report the dynamic
-platform-quiesce time relative to the number of dimms armed for firmware
-activation.
+Augment the existing firmware update emulation to track activations and
+validate proper update vs activate sequencing.
 
-A new nfit-specific bus attribute "firmware_activate_noidle" is added to
-allow the activation to switch between platform enforced, and OS
-opportunistic device quiesce. Another nfit-specific bus attribute
-"firmware_activate_nosuspend" is added to allow activation to be
-initiated at runtime rather than a suspend-callback.
+The DIMM firmware activate capability has a concept of a maximum amount
+of time platform firmware will quiesce the system relative to how many
+DIMMs are being activated in parallel. Simulate that DIMM activation
+happens serially, 1 second per-DIMM, and limit the max at 3 seconds. The
+nfit_test0 bus emulates 5 DIMMs so it will take 2 activations to update
+all DIMMs.
 
+Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-nfit |   35 ++
- drivers/acpi/nfit/core.c                 |   45 +++
- drivers/acpi/nfit/intel.c                |  426 ++++++++++++++++++++++++++++++
- drivers/acpi/nfit/intel.h                |    3 
- drivers/acpi/nfit/nfit.h                 |   11 +
- drivers/nvdimm/core.c                    |    8 +
- drivers/nvdimm/dimm_devs.c               |    4 
- include/linux/libnvdimm.h                |    6 
- 8 files changed, 531 insertions(+), 7 deletions(-)
+ drivers/acpi/nfit/intel.h        |    5 +
+ tools/testing/nvdimm/test/nfit.c |  209 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 210 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-nfit b/Documentation/ABI/testing/sysfs-bus-nfit
-index a1cb44dcb908..c25d6d19f6e0 100644
---- a/Documentation/ABI/testing/sysfs-bus-nfit
-+++ b/Documentation/ABI/testing/sysfs-bus-nfit
-@@ -202,6 +202,41 @@ Description:
- 		functions. See the section named 'NVDIMM Root Device _DSMs' in
- 		the ACPI specification.
+diff --git a/drivers/acpi/nfit/intel.h b/drivers/acpi/nfit/intel.h
+index 868d073731cc..49a598623024 100644
+--- a/drivers/acpi/nfit/intel.h
++++ b/drivers/acpi/nfit/intel.h
+@@ -132,6 +132,9 @@ struct nd_intel_fw_activate_dimminfo {
+ 	u8 reserved[7];
+ } __packed;
  
-+What:		/sys/bus/nd/devices/ndbusX/nfit/firmware_activate_noidle
-+Date:		Apr, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-nvdimm@lists.01.org
-+Description:
-+		(RW) The Intel platform implementation of firmware activate
-+		support exposes an option let the platform force idle devices in
-+		the system over the activation event, or trust that the OS will
-+		do it. The safe default is to let the platform force idle
-+		devices since the kernel is already in a suspend state, and on
-+		the chance that a driver does not properly quiesce bus-mastering
-+		after a suspend callback the platform will handle it.  However,
-+		the activation might abort if, for example, platform firmware
-+		determines that the activation time exceeds the max PCI-E
-+		completion timeout. Since the platform does not know whether the
-+		OS is running the activation from a suspend context it aborts,
-+		but if the system owner trusts driver suspend callback to be
-+		sufficient then 'firmware_activation_noidle' can be
-+		enabled to bypass the activation abort.
++#define ND_INTEL_DIMM_FWA_ARM 1
++#define ND_INTEL_DIMM_FWA_DISARM 0
 +
-+What:		/sys/bus/nd/devices/ndbusX/nfit/firmware_activate_nosuspend
-+Date:		Apr, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-nvdimm@lists.01.org
-+Description:
-+		(RW) The Intel platform implementation of firmware activate
-+		enforces a memory-controller quiesce event while DMA might be
-+		in-flight. That in-flight DMA may timeout awaiting the
-+		activation to complete and cause undefined system behavior.
-+		For this reason firmware activate is, by default, limited to
-+		be carried out after all system device drivers have executed
-+		their power-management-suspend callbacks. Otherwise, setting
-+		this override allows firmware activate to be triggered outside
-+		of the the suspend context by writing "activate" to
-+		/sys/bus/nd/devices/ndbusX/firmware_activate.
+ struct nd_intel_fw_activate_arm {
+ 	u8 activate_arm;
+ 	u32 status;
+@@ -160,6 +163,8 @@ struct nd_intel_bus_fw_activate_businfo {
+ #define ND_INTEL_BUS_FWA_STATUS_NOIDLE (6 | 5 << 16)
+ #define ND_INTEL_BUS_FWA_STATUS_ABORT  (6 | 6 << 16)
  
- What:		/sys/bus/nd/devices/regionX/nfit/range_index
- Date:		Jun, 2015
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 78cc9e2d2aa3..e3e716f46e96 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -1392,8 +1392,15 @@ static umode_t nfit_visible(struct kobject *kobj, struct attribute *a, int n)
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
- 
--	if (a == &dev_attr_scrub.attr && !ars_supported(nvdimm_bus))
--		return 0;
-+	if (a == &dev_attr_scrub.attr)
-+		return ars_supported(nvdimm_bus) ? a->mode : 0;
-+
-+	if (a == &dev_attr_firmware_activate_noidle.attr)
-+		return intel_fwa_supported(nvdimm_bus) ? a->mode : 0;
-+
-+	if (a == &dev_attr_firmware_activate_nosuspend.attr)
-+		return intel_fwa_supported(nvdimm_bus) ? a->mode : 0;
-+
- 	return a->mode;
- }
- 
-@@ -1402,6 +1409,8 @@ static struct attribute *acpi_nfit_attributes[] = {
- 	&dev_attr_scrub.attr,
- 	&dev_attr_hw_error_scrub.attr,
- 	&dev_attr_bus_dsm_mask.attr,
-+	&dev_attr_firmware_activate_noidle.attr,
-+	&dev_attr_firmware_activate_nosuspend.attr,
- 	NULL,
++#define ND_INTEL_BUS_FWA_IODEV_FORCE_IDLE (0)
++#define ND_INTEL_BUS_FWA_IODEV_OS_IDLE (1)
+ struct nd_intel_bus_fw_activate {
+ 	u8 iodev_state;
+ 	u32 status;
+diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
+index 2b0bfbfc0abb..a1a5dc645b40 100644
+--- a/tools/testing/nvdimm/test/nfit.c
++++ b/tools/testing/nvdimm/test/nfit.c
+@@ -173,6 +173,9 @@ struct nfit_test_fw {
+ 	u64 version;
+ 	u32 size_received;
+ 	u64 end_time;
++	bool armed;
++	bool missed_activate;
++	unsigned long last_activate;
  };
  
-@@ -2019,6 +2028,26 @@ static const struct nvdimm_security_ops *acpi_nfit_get_security_ops(int family)
+ struct nfit_test {
+@@ -345,7 +348,7 @@ static int nd_intel_test_finish_fw(struct nfit_test *t,
+ 			__func__, t, nd_cmd, buf_len, idx);
+ 
+ 	if (fw->state == FW_STATE_UPDATED) {
+-		/* update already done, need cold boot */
++		/* update already done, need activation */
+ 		nd_cmd->status = 0x20007;
+ 		return 0;
  	}
+@@ -430,6 +433,7 @@ static int nd_intel_test_finish_query(struct nfit_test *t,
+ 		}
+ 		dev_dbg(dev, "%s: transition out verify\n", __func__);
+ 		fw->state = FW_STATE_UPDATED;
++		fw->missed_activate = false;
+ 		/* fall through */
+ 	case FW_STATE_UPDATED:
+ 		nd_cmd->status = 0;
+@@ -1178,6 +1182,134 @@ static int nd_intel_test_cmd_master_secure_erase(struct nfit_test *t,
+ 	return 0;
  }
  
-+static const struct nvdimm_fw_ops *acpi_nfit_get_fw_ops(
-+		struct nfit_mem *nfit_mem)
++static unsigned long last_activate;
++
++static int nvdimm_bus_intel_fw_activate_businfo(struct nfit_test *t,
++		struct nd_intel_bus_fw_activate_businfo *nd_cmd,
++		unsigned int buf_len)
 +{
-+	unsigned long mask;
-+	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-+	struct nvdimm_bus_descriptor *nd_desc = &acpi_desc->nd_desc;
++	int i, armed = 0;
++	int state;
++	u64 tmo;
 +
-+	if (!nd_desc->fw_ops)
-+		return NULL;
++	for (i = 0; i < NUM_DCR; i++) {
++		struct nfit_test_fw *fw = &t->fw[i];
 +
-+	if (nfit_mem->family != NVDIMM_FAMILY_INTEL)
-+		return NULL;
++		if (fw->armed)
++			armed++;
++	}
 +
-+	mask = nfit_mem->dsm_mask & NVDIMM_INTEL_FW_ACTIVATE_CMDMASK;
-+	if (mask != NVDIMM_INTEL_FW_ACTIVATE_CMDMASK)
-+		return NULL;
++	/*
++	 * Emulate 3 second activation max, and 1 second incremental
++	 * quiesce time per dimm requiring multiple activates to get all
++	 * DIMMs updated.
++	 */
++	if (armed)
++		state = ND_INTEL_FWA_ARMED;
++	else if (!last_activate || time_after(jiffies, last_activate + 3 * HZ))
++		state = ND_INTEL_FWA_IDLE;
++	else
++		state = ND_INTEL_FWA_BUSY;
 +
-+	return intel_fw_ops;
++	tmo = armed * USEC_PER_SEC;
++	*nd_cmd = (struct nd_intel_bus_fw_activate_businfo) {
++		.capability = ND_INTEL_BUS_FWA_CAP_FWQUIESCE
++			| ND_INTEL_BUS_FWA_CAP_OSQUIESCE
++			| ND_INTEL_BUS_FWA_CAP_RESET,
++		.state = state,
++		.activate_tmo = tmo,
++		.cpu_quiesce_tmo = tmo,
++		.io_quiesce_tmo = tmo,
++		.max_quiesce_tmo = 3 * USEC_PER_SEC,
++	};
++
++	return 0;
 +}
 +
- static int acpi_nfit_register_dimms(struct acpi_nfit_desc *acpi_desc)
- {
- 	struct nfit_mem *nfit_mem;
-@@ -2095,7 +2124,8 @@ static int acpi_nfit_register_dimms(struct acpi_nfit_desc *acpi_desc)
- 				acpi_nfit_dimm_attribute_groups,
- 				flags, cmd_mask, flush ? flush->hint_count : 0,
- 				nfit_mem->flush_wpq, &nfit_mem->id[0],
--				acpi_nfit_get_security_ops(nfit_mem->family));
-+				acpi_nfit_get_security_ops(nfit_mem->family),
-+				acpi_nfit_get_fw_ops(nfit_mem));
- 		if (!nvdimm)
- 			return -ENOMEM;
- 
-@@ -2170,8 +2200,10 @@ static void acpi_nfit_init_dsms(struct acpi_nfit_desc *acpi_desc)
- 	if (acpi_desc->bus_cmd_force_en) {
- 		nd_desc->cmd_mask = acpi_desc->bus_cmd_force_en;
- 		mask = &nd_desc->bus_family_mask;
--		if (acpi_desc->family_dsm_mask[NVDIMM_BUS_FAMILY_INTEL])
-+		if (acpi_desc->family_dsm_mask[NVDIMM_BUS_FAMILY_INTEL]) {
- 			set_bit(NVDIMM_BUS_FAMILY_INTEL, mask);
-+			nd_desc->fw_ops = intel_bus_fw_ops;
-+		}
- 	}
- 
- 	adev = to_acpi_dev(acpi_desc);
-@@ -2202,6 +2234,11 @@ static void acpi_nfit_init_dsms(struct acpi_nfit_desc *acpi_desc)
- 	for_each_set_bit(i, &dsm_mask, BITS_PER_LONG)
- 		if (acpi_check_dsm(adev->handle, guid, 1, 1ULL << i))
- 			set_bit(i, mask);
++static int nvdimm_bus_intel_fw_activate(struct nfit_test *t,
++		struct nd_intel_bus_fw_activate *nd_cmd,
++		unsigned int buf_len)
++{
++	struct nd_intel_bus_fw_activate_businfo info;
++	u32 status = 0;
++	int i;
 +
-+	if (*mask == dsm_mask) {
-+		set_bit(NVDIMM_BUS_FAMILY_INTEL, &nd_desc->bus_family_mask);
-+		nd_desc->fw_ops = intel_bus_fw_ops;
++	nvdimm_bus_intel_fw_activate_businfo(t, &info, sizeof(info));
++	if (info.state == ND_INTEL_FWA_BUSY)
++		status = ND_INTEL_BUS_FWA_STATUS_BUSY;
++	else if (info.activate_tmo > info.max_quiesce_tmo)
++		status = ND_INTEL_BUS_FWA_STATUS_TMO;
++	else if (info.state == ND_INTEL_FWA_IDLE)
++		status = ND_INTEL_BUS_FWA_STATUS_NOARM;
++
++	dev_dbg(&t->pdev.dev, "status: %d\n", status);
++	nd_cmd->status = status;
++	if (status && status != ND_INTEL_BUS_FWA_STATUS_TMO)
++		return 0;
++
++	last_activate = jiffies;
++	for (i = 0; i < NUM_DCR; i++) {
++		struct nfit_test_fw *fw = &t->fw[i];
++
++		if (!fw->armed)
++			continue;
++		if (fw->state != FW_STATE_UPDATED)
++			fw->missed_activate = true;
++		else
++			fw->state = FW_STATE_NEW;
++		fw->armed = false;
++		fw->last_activate = last_activate;
 +	}
++
++	return 0;
++}
++
++static int nd_intel_test_cmd_fw_activate_dimminfo(struct nfit_test *t,
++		struct nd_intel_fw_activate_dimminfo *nd_cmd,
++		unsigned int buf_len, int dimm)
++{
++	struct nd_intel_bus_fw_activate_businfo info;
++	struct nfit_test_fw *fw = &t->fw[dimm];
++	u32 result, state;
++
++	nvdimm_bus_intel_fw_activate_businfo(t, &info, sizeof(info));
++
++	if (info.state == ND_INTEL_FWA_BUSY)
++		state = ND_INTEL_FWA_BUSY;
++	else if (info.state == ND_INTEL_FWA_IDLE)
++		state = ND_INTEL_FWA_IDLE;
++	else if (fw->armed)
++		state = ND_INTEL_FWA_ARMED;
++	else
++		state = ND_INTEL_FWA_IDLE;
++
++	result = ND_INTEL_DIMM_FWA_NONE;
++	if (last_activate && fw->last_activate == last_activate &&
++			state == ND_INTEL_FWA_IDLE) {
++		if (fw->missed_activate)
++			result = ND_INTEL_DIMM_FWA_NOTSTAGED;
++		else
++			result = ND_INTEL_DIMM_FWA_SUCCESS;
++	}
++
++	*nd_cmd = (struct nd_intel_fw_activate_dimminfo) {
++		.result = result,
++		.state = state,
++	};
++
++	return 0;
++}
++
++static int nd_intel_test_cmd_fw_activate_arm(struct nfit_test *t,
++		struct nd_intel_fw_activate_arm *nd_cmd,
++		unsigned int buf_len, int dimm)
++{
++	struct nfit_test_fw *fw = &t->fw[dimm];
++
++	fw->armed = nd_cmd->activate_arm == ND_INTEL_DIMM_FWA_ARM;
++	nd_cmd->status = 0;
++	return 0;
++}
+ 
+ static int get_dimm(struct nfit_mem *nfit_mem, unsigned int func)
+ {
+@@ -1296,6 +1428,14 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
+ 				rc = nd_intel_test_cmd_master_secure_erase(t,
+ 						buf, buf_len, i);
+ 				break;
++			case NVDIMM_INTEL_FW_ACTIVATE_DIMMINFO:
++				rc = nd_intel_test_cmd_fw_activate_dimminfo(
++					t, buf, buf_len, i);
++				break;
++			case NVDIMM_INTEL_FW_ACTIVATE_ARM:
++				rc = nd_intel_test_cmd_fw_activate_arm(
++					t, buf, buf_len, i);
++				break;
+ 			case ND_INTEL_ENABLE_LSS_STATUS:
+ 				rc = nd_intel_test_cmd_set_lss_status(t,
+ 						buf, buf_len);
+@@ -1380,9 +1520,9 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
+ 		if (!nd_desc)
+ 			return -ENOTTY;
+ 
+-		if (cmd == ND_CMD_CALL) {
++		if (cmd == ND_CMD_CALL && call_pkg->nd_family
++				== NVDIMM_BUS_FAMILY_NFIT) {
+ 			func = call_pkg->nd_command;
+-
+ 			buf_len = call_pkg->nd_size_in + call_pkg->nd_size_out;
+ 			buf = (void *) call_pkg->nd_payload;
+ 
+@@ -1406,7 +1546,26 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
+ 			default:
+ 				return -ENOTTY;
+ 			}
+-		}
++		} else if (cmd == ND_CMD_CALL && call_pkg->nd_family
++				== NVDIMM_BUS_FAMILY_INTEL) {
++			func = call_pkg->nd_command;
++			buf_len = call_pkg->nd_size_in + call_pkg->nd_size_out;
++			buf = (void *) call_pkg->nd_payload;
++
++			switch (func) {
++			case NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO:
++				rc = nvdimm_bus_intel_fw_activate_businfo(t,
++						buf, buf_len);
++				return rc;
++			case NVDIMM_BUS_INTEL_FW_ACTIVATE:
++				rc = nvdimm_bus_intel_fw_activate(t, buf,
++						buf_len);
++				return rc;
++			default:
++				return -ENOTTY;
++			}
++		} else if (cmd == ND_CMD_CALL)
++			return -ENOTTY;
+ 
+ 		if (!nd_desc || !test_bit(cmd, &nd_desc->cmd_mask))
+ 			return -ENOTTY;
+@@ -1832,6 +1991,7 @@ static void nfit_test0_setup(struct nfit_test *t)
+ 	struct acpi_nfit_flush_address *flush;
+ 	struct acpi_nfit_capabilities *pcap;
+ 	unsigned int offset = 0, i;
++	unsigned long *acpi_mask;
+ 
+ 	/*
+ 	 * spa0 (interleave first half of dimm0 and dimm1, note storage
+@@ -2558,6 +2718,12 @@ static void nfit_test0_setup(struct nfit_test *t)
+ 			&acpi_desc->dimm_cmd_force_en);
+ 	set_bit(NVDIMM_INTEL_MASTER_SECURE_ERASE,
+ 			&acpi_desc->dimm_cmd_force_en);
++	set_bit(NVDIMM_INTEL_FW_ACTIVATE_DIMMINFO, &acpi_desc->dimm_cmd_force_en);
++	set_bit(NVDIMM_INTEL_FW_ACTIVATE_ARM, &acpi_desc->dimm_cmd_force_en);
++
++	acpi_mask = &acpi_desc->family_dsm_mask[NVDIMM_BUS_FAMILY_INTEL];
++	set_bit(NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO, acpi_mask);
++	set_bit(NVDIMM_BUS_INTEL_FW_ACTIVATE, acpi_mask);
  }
  
- static ssize_t range_index_show(struct device *dev,
-diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-index 1113b679cd7b..437ebab08d9f 100644
---- a/drivers/acpi/nfit/intel.c
-+++ b/drivers/acpi/nfit/intel.c
-@@ -7,6 +7,86 @@
- #include "intel.h"
- #include "nfit.h"
+ static void nfit_test1_setup(struct nfit_test *t)
+@@ -2733,6 +2899,7 @@ static int nfit_ctl_test(struct device *dev)
+ 			struct nd_cmd_clear_error clear_err;
+ 			struct nd_cmd_ars_status ars_stat;
+ 			struct nd_cmd_ars_cap ars_cap;
++			struct nd_intel_bus_fw_activate_businfo fwa_info;
+ 			char buf[sizeof(struct nd_cmd_ars_status)
+ 				+ sizeof(struct nd_ars_record)];
+ 		};
+@@ -2761,11 +2928,15 @@ static int nfit_ctl_test(struct device *dev)
+ 			.module = THIS_MODULE,
+ 			.provider_name = "ACPI.NFIT",
+ 			.ndctl = acpi_nfit_ctl,
++			.bus_family_mask = 1UL << NVDIMM_BUS_FAMILY_NFIT
++				| 1UL << NVDIMM_BUS_FAMILY_INTEL,
+ 		},
+ 		.bus_dsm_mask = 1UL << NFIT_CMD_TRANSLATE_SPA
+ 			| 1UL << NFIT_CMD_ARS_INJECT_SET
+ 			| 1UL << NFIT_CMD_ARS_INJECT_CLEAR
+ 			| 1UL << NFIT_CMD_ARS_INJECT_GET,
++		.family_dsm_mask[NVDIMM_BUS_FAMILY_INTEL] =
++			NVDIMM_BUS_INTEL_FW_ACTIVATE_CMDMASK,
+ 		.dev = &adev->dev,
+ 	};
  
-+static ssize_t firmware_activate_noidle_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
-+	struct nvdimm_bus_descriptor *nd_desc = to_nd_desc(nvdimm_bus);
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+
-+	return sprintf(buf, "%s\n", acpi_desc->fwa_noidle ? "Y" : "N");
-+}
-+
-+static ssize_t firmware_activate_noidle_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t size)
-+{
-+	struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
-+	struct nvdimm_bus_descriptor *nd_desc = to_nd_desc(nvdimm_bus);
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+	ssize_t rc;
-+	bool val;
-+
-+	rc = kstrtobool(buf, &val);
-+	if (rc)
-+		return rc;
-+	if (val != acpi_desc->fwa_noidle)
-+		acpi_desc->fwa_cap = NVDIMM_FWA_CAP_INVALID;
-+	acpi_desc->fwa_noidle = val;
-+	return size;
-+}
-+DEVICE_ATTR_RW(firmware_activate_noidle);
-+
-+static ssize_t firmware_activate_nosuspend_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
-+	struct nvdimm_bus_descriptor *nd_desc = to_nd_desc(nvdimm_bus);
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+
-+	return sprintf(buf, "%s\n", acpi_desc->fwa_nosuspend ? "Y" : "N");
-+}
-+
-+static ssize_t firmware_activate_nosuspend_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t size)
-+{
-+	struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
-+	struct nvdimm_bus_descriptor *nd_desc = to_nd_desc(nvdimm_bus);
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+	ssize_t rc;
-+	bool val;
-+
-+	rc = kstrtobool(buf, &val);
-+	if (rc)
-+		return rc;
-+	if (val != acpi_desc->fwa_nosuspend) {
-+		/*
-+		 * Invalidate cached capability state and update sysfs
-+		 * permissions.
-+		 */
-+		acpi_desc->fwa_cap = NVDIMM_FWA_CAP_INVALID;
-+		acpi_desc->fwa_nosuspend = val;
-+		rc = nvdimm_bus_update_sysfs(nvdimm_bus);
-+	}
-+
-+	if (rc == 0)
-+		rc = size;
-+	return rc;
-+}
-+DEVICE_ATTR_RW(firmware_activate_nosuspend);
-+
-+bool intel_fwa_supported(struct nvdimm_bus *nvdimm_bus)
-+{
-+	struct nvdimm_bus_descriptor *nd_desc = to_nd_desc(nvdimm_bus);
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+	unsigned long *mask;
-+
-+	if (!test_bit(NVDIMM_BUS_FAMILY_INTEL, &nd_desc->bus_family_mask))
-+		return false;
-+
-+	mask = &acpi_desc->family_dsm_mask[NVDIMM_BUS_FAMILY_INTEL];
-+	return *mask == NVDIMM_BUS_INTEL_FW_ACTIVATE_CMDMASK;
-+}
-+
- static unsigned long intel_security_flags(struct nvdimm *nvdimm,
- 		enum nvdimm_passphrase_type ptype)
- {
-@@ -389,3 +469,349 @@ static const struct nvdimm_security_ops __intel_security_ops = {
- };
+@@ -2932,6 +3103,36 @@ static int nfit_ctl_test(struct device *dev)
+ 		return -EIO;
+ 	}
  
- const struct nvdimm_security_ops *intel_security_ops = &__intel_security_ops;
-+
-+static int intel_bus_fwa_businfo(struct nvdimm_bus_descriptor *nd_desc,
-+		struct nd_intel_bus_fw_activate_businfo *info)
-+{
-+	struct {
-+		struct nd_cmd_pkg pkg;
-+		struct nd_intel_bus_fw_activate_businfo cmd;
-+	} nd_cmd = {
++	/* test firmware activate bus info */
++	cmd_size = sizeof(cmd.fwa_info);
++	cmd = (struct nfit_ctl_test_cmd) {
 +		.pkg = {
 +			.nd_command = NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO,
 +			.nd_family = NVDIMM_BUS_FAMILY_INTEL,
-+			.nd_size_out =
-+				sizeof(struct nd_intel_bus_fw_activate_businfo),
-+			.nd_fw_size =
-+				sizeof(struct nd_intel_bus_fw_activate_businfo),
++			.nd_size_out = cmd_size,
++			.nd_fw_size = cmd_size,
++		},
++		.fwa_info = {
++			.state = ND_INTEL_FWA_IDLE,
++			.capability = ND_INTEL_BUS_FWA_CAP_FWQUIESCE
++				| ND_INTEL_BUS_FWA_CAP_OSQUIESCE,
++			.activate_tmo = 1,
++			.cpu_quiesce_tmo = 1,
++			.io_quiesce_tmo = 1,
++			.max_quiesce_tmo = 1,
 +		},
 +	};
-+	int rc;
-+
-+	rc = nd_desc->ndctl(nd_desc, NULL, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd),
-+			NULL);
-+	*info = nd_cmd.cmd;
-+	return rc;
-+}
-+
-+/* The fw_ops expect to be called with the nvdimm_bus_lock() held */
-+static enum nvdimm_fwa_state intel_bus_fwa_state(
-+		struct nvdimm_bus_descriptor *nd_desc)
-+{
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+	struct nd_intel_bus_fw_activate_businfo info;
-+	struct device *dev = acpi_desc->dev;
-+	enum nvdimm_fwa_state state;
-+	int rc;
-+
-+	/*
-+	 * It should not be possible for platform firmware to return
-+	 * busy because activate is a synchronous operation. Treat it
-+	 * similar to invalid, i.e. always refresh / poll the status.
-+	 */
-+	switch (acpi_desc->fwa_state) {
-+	case NVDIMM_FWA_INVALID:
-+	case NVDIMM_FWA_BUSY:
-+		break;
-+	default:
-+		/* check if capability needs to be refreshed */
-+		if (acpi_desc->fwa_cap == NVDIMM_FWA_CAP_INVALID)
-+			break;
-+		return acpi_desc->fwa_state;
-+	}
-+
-+	/* Refresh with platform firmware */
-+	rc = intel_bus_fwa_businfo(nd_desc, &info);
++	rc = setup_result(cmd.buf, cmd_size);
 +	if (rc)
-+		return NVDIMM_FWA_INVALID;
-+
-+	switch (info.state) {
-+	case ND_INTEL_FWA_IDLE:
-+		state = NVDIMM_FWA_IDLE;
-+		break;
-+	case ND_INTEL_FWA_BUSY:
-+		state = NVDIMM_FWA_BUSY;
-+		break;
-+	case ND_INTEL_FWA_ARMED:
-+		if (info.activate_tmo > info.max_quiesce_tmo)
-+			state = NVDIMM_FWA_ARM_OVERFLOW;
-+		else
-+			state = NVDIMM_FWA_ARMED;
-+		break;
-+	default:
-+		dev_err_once(dev, "invalid firmware activate state %d\n",
-+				info.state);
-+		return NVDIMM_FWA_INVALID;
++		return rc;
++	rc = acpi_nfit_ctl(&acpi_desc->nd_desc, NULL, ND_CMD_CALL,
++			&cmd, sizeof(cmd.pkg) + cmd_size, &cmd_rc);
++	if (rc < 0 || cmd_rc) {
++		dev_dbg(dev, "%s: failed at: %d rc: %d cmd_rc: %d\n",
++				__func__, __LINE__, rc, cmd_rc);
++		return -EIO;
 +	}
 +
-+	/*
-+	 * Capability data is available in the same payload as state.
-+	 * While it can be assumed that it does not change it may need
-+	 * to be re-evaluated relative to the ->fwa_noidle and
-+	 * ->fwa_nosuspend settings.
-+	 */
-+	if (acpi_desc->fwa_cap == NVDIMM_FWA_CAP_INVALID) {
-+		if (info.capability & (ND_INTEL_BUS_FWA_CAP_FWQUIESCE))
-+			acpi_desc->fwa_cap = NVDIMM_FWA_CAP_QUIESCE;
-+		else if (acpi_desc->fwa_noidle && (info.capability
-+					& ND_INTEL_BUS_FWA_CAP_OSQUIESCE))
-+			acpi_desc->fwa_cap = NVDIMM_FWA_CAP_QUIESCE;
-+		else
-+			acpi_desc->fwa_cap = NVDIMM_FWA_CAP_NONE;
-+	}
-+
-+	if (acpi_desc->fwa_cap == NVDIMM_FWA_CAP_QUIESCE
-+			&& acpi_desc->fwa_nosuspend)
-+		acpi_desc->fwa_cap = NVDIMM_FWA_CAP_LIVE;
-+
-+	acpi_desc->fwa_state = state;
-+
-+	return state;
-+}
-+
-+static enum nvdimm_fwa_capability intel_bus_fwa_capability(
-+		struct nvdimm_bus_descriptor *nd_desc)
-+{
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+
-+	if (acpi_desc->fwa_cap > NVDIMM_FWA_CAP_INVALID)
-+		return acpi_desc->fwa_cap;
-+
-+	if (intel_bus_fwa_state(nd_desc) > NVDIMM_FWA_INVALID)
-+		return acpi_desc->fwa_cap;
-+
-+	return NVDIMM_FWA_CAP_INVALID;
-+}
-+
-+static int intel_bus_fwa_activate(struct nvdimm_bus_descriptor *nd_desc)
-+{
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-+	struct {
-+		struct nd_cmd_pkg pkg;
-+		struct nd_intel_bus_fw_activate cmd;
-+	} nd_cmd = {
-+		.pkg = {
-+			.nd_command = NVDIMM_BUS_INTEL_FW_ACTIVATE,
-+			.nd_family = NVDIMM_BUS_FAMILY_INTEL,
-+			.nd_size_in = sizeof(nd_cmd.cmd.iodev_state),
-+			.nd_size_out =
-+				sizeof(struct nd_intel_bus_fw_activate),
-+			.nd_fw_size =
-+				sizeof(struct nd_intel_bus_fw_activate),
-+		},
-+		/*
-+		 * Even though activate is run from a suspended context,
-+		 * for safety, still ask platform firmware to force
-+		 * quiesce devices by default. Let a module
-+		 * parameter override that policy.
-+		 */
-+		.cmd = {
-+			.iodev_state = acpi_desc->fwa_noidle
-+				? ND_INTEL_BUS_FWA_IODEV_OS_IDLE
-+				: ND_INTEL_BUS_FWA_IODEV_FORCE_IDLE,
-+		},
-+	};
-+	int rc;
-+
-+	switch (intel_bus_fwa_state(nd_desc)) {
-+	case NVDIMM_FWA_ARMED:
-+	case NVDIMM_FWA_ARM_OVERFLOW:
-+		break;
-+	default:
-+		return -ENXIO;
-+	}
-+
-+	rc = nd_desc->ndctl(nd_desc, NULL, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd),
-+			NULL);
-+
-+	/*
-+	 * Whether the command succeeded, or failed, the agent checking
-+	 * for the result needs to query the DIMMs individually.
-+	 * Increment the activation count to invalidate all the DIMM
-+	 * states at once (it's otherwise not possible to take
-+	 * acpi_desc->init_mutex in this context)
-+	 */
-+	acpi_desc->fwa_state = NVDIMM_FWA_INVALID;
-+	acpi_desc->fwa_count++;
-+
-+	dev_dbg(acpi_desc->dev, "result: %d\n", rc);
-+
-+	return rc;
-+}
-+
-+static const struct nvdimm_bus_fw_ops __intel_bus_fw_ops = {
-+	.activate_state = intel_bus_fwa_state,
-+	.capability = intel_bus_fwa_capability,
-+	.activate = intel_bus_fwa_activate,
-+};
-+
-+const struct nvdimm_bus_fw_ops *intel_bus_fw_ops = &__intel_bus_fw_ops;
-+
-+static int intel_fwa_dimminfo(struct nvdimm *nvdimm,
-+		struct nd_intel_fw_activate_dimminfo *info)
-+{
-+	struct {
-+		struct nd_cmd_pkg pkg;
-+		struct nd_intel_fw_activate_dimminfo cmd;
-+	} nd_cmd = {
-+		.pkg = {
-+			.nd_command = NVDIMM_INTEL_FW_ACTIVATE_DIMMINFO,
-+			.nd_family = NVDIMM_FAMILY_INTEL,
-+			.nd_size_out =
-+				sizeof(struct nd_intel_fw_activate_dimminfo),
-+			.nd_fw_size =
-+				sizeof(struct nd_intel_fw_activate_dimminfo),
-+		},
-+	};
-+	int rc;
-+
-+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-+	*info = nd_cmd.cmd;
-+	return rc;
-+}
-+
-+static enum nvdimm_fwa_state intel_fwa_state(struct nvdimm *nvdimm)
-+{
-+	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-+	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-+	struct nd_intel_fw_activate_dimminfo info;
-+	int rc;
-+
-+	/*
-+	 * Similar to the bus state, since activate is synchronous the
-+	 * busy state should resolve within the context of 'activate'.
-+	 */
-+	switch (nfit_mem->fwa_state) {
-+	case NVDIMM_FWA_INVALID:
-+	case NVDIMM_FWA_BUSY:
-+		break;
-+	default:
-+		/* If no activations occurred the old state is still valid */
-+		if (nfit_mem->fwa_count == acpi_desc->fwa_count)
-+			return nfit_mem->fwa_state;
-+	}
-+
-+	rc = intel_fwa_dimminfo(nvdimm, &info);
-+	if (rc)
-+		return NVDIMM_FWA_INVALID;
-+
-+	switch (info.state) {
-+	case ND_INTEL_FWA_IDLE:
-+		nfit_mem->fwa_state = NVDIMM_FWA_IDLE;
-+		break;
-+	case ND_INTEL_FWA_BUSY:
-+		nfit_mem->fwa_state = NVDIMM_FWA_BUSY;
-+		break;
-+	case ND_INTEL_FWA_ARMED:
-+		nfit_mem->fwa_state = NVDIMM_FWA_ARMED;
-+		break;
-+	default:
-+		nfit_mem->fwa_state = NVDIMM_FWA_INVALID;
-+		break;
-+	}
-+
-+	switch (info.result) {
-+	case ND_INTEL_DIMM_FWA_NONE:
-+		nfit_mem->fwa_result = NVDIMM_FWA_RESULT_NONE;
-+		break;
-+	case ND_INTEL_DIMM_FWA_SUCCESS:
-+		nfit_mem->fwa_result = NVDIMM_FWA_RESULT_SUCCESS;
-+		break;
-+	case ND_INTEL_DIMM_FWA_NOTSTAGED:
-+		nfit_mem->fwa_result = NVDIMM_FWA_RESULT_NOTSTAGED;
-+		break;
-+	case ND_INTEL_DIMM_FWA_NEEDRESET:
-+		nfit_mem->fwa_result = NVDIMM_FWA_RESULT_NEEDRESET;
-+		break;
-+	case ND_INTEL_DIMM_FWA_MEDIAFAILED:
-+	case ND_INTEL_DIMM_FWA_ABORT:
-+	case ND_INTEL_DIMM_FWA_NOTSUPP:
-+	case ND_INTEL_DIMM_FWA_ERROR:
-+	default:
-+		nfit_mem->fwa_result = NVDIMM_FWA_RESULT_FAIL;
-+		break;
-+	}
-+
-+	nfit_mem->fwa_count = acpi_desc->fwa_count;
-+
-+	return nfit_mem->fwa_state;
-+}
-+
-+static enum nvdimm_fwa_result intel_fwa_result(struct nvdimm *nvdimm)
-+{
-+	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-+	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-+
-+	if (nfit_mem->fwa_count == acpi_desc->fwa_count
-+			&& nfit_mem->fwa_result > NVDIMM_FWA_RESULT_INVALID)
-+		return nfit_mem->fwa_result;
-+
-+	if (intel_fwa_state(nvdimm) > NVDIMM_FWA_INVALID)
-+		return nfit_mem->fwa_result;
-+
-+	return NVDIMM_FWA_RESULT_INVALID;
-+}
-+
-+static int intel_fwa_arm(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arm)
-+{
-+	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-+	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-+	struct {
-+		struct nd_cmd_pkg pkg;
-+		struct nd_intel_fw_activate_arm cmd;
-+	} nd_cmd = {
-+		.pkg = {
-+			.nd_command = NVDIMM_INTEL_FW_ACTIVATE_ARM,
-+			.nd_family = NVDIMM_FAMILY_INTEL,
-+			.nd_size_in = sizeof(nd_cmd.cmd.activate_arm),
-+			.nd_size_out =
-+				sizeof(struct nd_intel_fw_activate_arm),
-+			.nd_fw_size =
-+				sizeof(struct nd_intel_fw_activate_arm),
-+		},
-+		.cmd = {
-+			.activate_arm = arm == NVDIMM_FWA_ARM
-+				? ND_INTEL_DIMM_FWA_ARM
-+				: ND_INTEL_DIMM_FWA_DISARM,
-+		},
-+	};
-+	int rc;
-+
-+	switch (intel_fwa_state(nvdimm)) {
-+	case NVDIMM_FWA_INVALID:
-+		return -ENXIO;
-+	case NVDIMM_FWA_BUSY:
-+		return -EBUSY;
-+	case NVDIMM_FWA_IDLE:
-+		if (arm == NVDIMM_FWA_DISARM)
-+			return 0;
-+		break;
-+	case NVDIMM_FWA_ARMED:
-+		if (arm == NVDIMM_FWA_ARM)
-+			return 0;
-+		break;
-+	default:
-+		return -ENXIO;
-+	}
-+
-+	/*
-+	 * Invalidate the bus-level state, now that we're committed to
-+	 * changing the 'arm' state.
-+	 */
-+	acpi_desc->fwa_state = NVDIMM_FWA_INVALID;
-+	nfit_mem->fwa_state = NVDIMM_FWA_INVALID;
-+
-+	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-+
-+	dev_dbg(acpi_desc->dev, "%s result: %d\n", arm == NVDIMM_FWA_ARM
-+			? "arm" : "disarm", rc);
-+	return rc;
-+}
-+
-+static const struct nvdimm_fw_ops __intel_fw_ops = {
-+	.activate_state = intel_fwa_state,
-+	.activate_result = intel_fwa_result,
-+	.arm = intel_fwa_arm,
-+};
-+
-+const struct nvdimm_fw_ops *intel_fw_ops = &__intel_fw_ops;
-diff --git a/drivers/acpi/nfit/intel.h b/drivers/acpi/nfit/intel.h
-index 49a598623024..b768234ccebc 100644
---- a/drivers/acpi/nfit/intel.h
-+++ b/drivers/acpi/nfit/intel.h
-@@ -169,4 +169,7 @@ struct nd_intel_bus_fw_activate {
- 	u8 iodev_state;
- 	u32 status;
- } __packed;
-+
-+extern const struct nvdimm_fw_ops *intel_fw_ops;
-+extern const struct nvdimm_bus_fw_ops *intel_bus_fw_ops;
- #endif
-diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
-index 97c122628975..b0c2e83d0fea 100644
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -220,6 +220,9 @@ struct nfit_mem {
- 	struct list_head list;
- 	struct acpi_device *adev;
- 	struct acpi_nfit_desc *acpi_desc;
-+	enum nvdimm_fwa_state fwa_state;
-+	enum nvdimm_fwa_result fwa_result;
-+	int fwa_count;
- 	char id[NFIT_DIMM_ID_LEN+1];
- 	struct resource *flush_wpq;
- 	unsigned long dsm_mask;
-@@ -265,6 +268,11 @@ struct acpi_nfit_desc {
- 	unsigned int scrub_tmo;
- 	int (*blk_do_io)(struct nd_blk_region *ndbr, resource_size_t dpa,
- 			void *iobuf, u64 len, int rw);
-+	enum nvdimm_fwa_state fwa_state;
-+	enum nvdimm_fwa_capability fwa_cap;
-+	int fwa_count;
-+	bool fwa_noidle;
-+	bool fwa_nosuspend;
- };
- 
- enum scrub_mode {
-@@ -367,4 +375,7 @@ void __acpi_nvdimm_notify(struct device *dev, u32 event);
- int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc);
- void acpi_nfit_desc_init(struct acpi_nfit_desc *acpi_desc, struct device *dev);
-+bool intel_fwa_supported(struct nvdimm_bus *nvdimm_bus);
-+extern struct device_attribute dev_attr_firmware_activate_noidle;
-+extern struct device_attribute dev_attr_firmware_activate_nosuspend;
- #endif /* __NFIT_H__ */
-diff --git a/drivers/nvdimm/core.c b/drivers/nvdimm/core.c
-index 0cbb5620cd45..56fca9f059fd 100644
---- a/drivers/nvdimm/core.c
-+++ b/drivers/nvdimm/core.c
-@@ -484,6 +484,14 @@ static const struct attribute_group nvdimm_bus_attribute_group = {
- 	.is_visible = nvdimm_bus_visible,
- };
- 
-+int nvdimm_bus_update_sysfs(struct nvdimm_bus *nvdimm_bus)
-+{
-+	struct device *dev = &nvdimm_bus->dev;
-+
-+	return sysfs_update_group(&dev->kobj, &nvdimm_bus_attribute_group);
-+}
-+EXPORT_SYMBOL_GPL(nvdimm_bus_update_sysfs);
-+
- const struct attribute_group *nvdimm_bus_attribute_groups[] = {
- 	&nvdimm_bus_attribute_group,
- 	NULL,
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index 85835f9add7a..b6d9fa8f72df 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -562,7 +562,8 @@ struct nvdimm *__nvdimm_create(struct nvdimm_bus *nvdimm_bus,
- 		void *provider_data, const struct attribute_group **groups,
- 		unsigned long flags, unsigned long cmd_mask, int num_flush,
- 		struct resource *flush_wpq, const char *dimm_id,
--		const struct nvdimm_security_ops *sec_ops)
-+		const struct nvdimm_security_ops *sec_ops,
-+		const struct nvdimm_fw_ops *fw_ops)
- {
- 	struct nvdimm *nvdimm = kzalloc(sizeof(*nvdimm), GFP_KERNEL);
- 	struct device *dev;
-@@ -592,6 +593,7 @@ struct nvdimm *__nvdimm_create(struct nvdimm_bus *nvdimm_bus,
- 	dev->devt = MKDEV(nvdimm_major, nvdimm->id);
- 	dev->groups = groups;
- 	nvdimm->sec.ops = sec_ops;
-+	nvdimm->fw_ops = fw_ops;
- 	nvdimm->sec.overwrite_tmo = 0;
- 	INIT_DELAYED_WORK(&nvdimm->dwork, nvdimm_security_overwrite_query);
- 	/*
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index 15dbcb718316..815f57f23b7a 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -244,6 +244,7 @@ struct nvdimm_fw_ops {
- 	int (*arm)(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arg);
- };
- 
-+int nvdimm_bus_update_sysfs(struct nvdimm_bus *bus);
- void badrange_init(struct badrange *badrange);
- int badrange_add(struct badrange *badrange, u64 addr, u64 length);
- void badrange_forget(struct badrange *badrange, phys_addr_t start,
-@@ -269,14 +270,15 @@ struct nvdimm *__nvdimm_create(struct nvdimm_bus *nvdimm_bus,
- 		void *provider_data, const struct attribute_group **groups,
- 		unsigned long flags, unsigned long cmd_mask, int num_flush,
- 		struct resource *flush_wpq, const char *dimm_id,
--		const struct nvdimm_security_ops *sec_ops);
-+		const struct nvdimm_security_ops *sec_ops,
-+		const struct nvdimm_fw_ops *fw_ops);
- static inline struct nvdimm *nvdimm_create(struct nvdimm_bus *nvdimm_bus,
- 		void *provider_data, const struct attribute_group **groups,
- 		unsigned long flags, unsigned long cmd_mask, int num_flush,
- 		struct resource *flush_wpq)
- {
- 	return __nvdimm_create(nvdimm_bus, provider_data, groups, flags,
--			cmd_mask, num_flush, flush_wpq, NULL, NULL);
-+			cmd_mask, num_flush, flush_wpq, NULL, NULL, NULL);
+ 	return 0;
  }
  
- const struct nd_cmd_desc *nd_cmd_dimm_desc(int cmd);
 
