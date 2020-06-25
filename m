@@ -2,162 +2,117 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3177C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6601420706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9199A20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VeX/+nmR"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EBvs8dVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406641AbgFYRGb (ORCPT
+        id S2404484AbgFYRG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:06:31 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41856 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404376AbgFYRGa (ORCPT
+        Thu, 25 Jun 2020 13:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404317AbgFYRGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:06:30 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05PH4s1j015335;
-        Thu, 25 Jun 2020 12:04:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593104694;
-        bh=ONVcVn3bey9yl+Y9AA3TJVO17GyEvycrQ6oGUr5xABk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VeX/+nmR89jbqhMaGIjQZcXyTRkVf8XN2TGdHgOPTjeN+6tIIcJUj2UJZ2qNOwjzN
-         k2wDLNwWtVI5hmoI0mW8Rn/Z9fB47/08j5fiB+xrAUcD2YZgUZLH4gU2dGvq9IA3Zv
-         rSoDjm1EjYdkCj77mB9ShAKbSWmADriglQu3FODw=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05PH4sqM075398
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jun 2020 12:04:54 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 25
- Jun 2020 12:04:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 25 Jun 2020 12:04:53 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05PH4pWG025571;
-        Thu, 25 Jun 2020 12:04:52 -0500
-Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
- initial allowed window
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jan Kiszka <jan.kiszka@siemens.com>, <wim@linux-watchdog.org>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <20200624114534.1362-1-t-kristo@ti.com>
- <20200624114534.1362-3-t-kristo@ti.com>
- <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
- <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
- <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
-Date:   Thu, 25 Jun 2020 20:04:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 25 Jun 2020 13:06:55 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE21DC08C5C1;
+        Thu, 25 Jun 2020 10:06:55 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0ed10035c3b797f40e07e6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:35c3:b797:f40e:7e6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0DE871EC0105;
+        Thu, 25 Jun 2020 19:06:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1593104814;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Mz+5XiJg/4gIbNnFRXTUvB5IcOGglq3P9cG4urMJ7vU=;
+        b=EBvs8dVZOaWaDuc/gmJa2Bc0TxHA4tvP0dlRrrmW8TvNyIt6SjeMoWS3Pea6bE0zAXaiGN
+        DUqHYuo4KMyxvUedS9DfQn3hzSPQwTINHJ3HO/puwU8P3cUbx8PBp518oDjvxLWdy8S6/b
+        p0jtl3j9Ri4qysa/tgRLeq0mXif4RBk=
+Date:   Thu, 25 Jun 2020 19:06:48 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 09/21] x86/sgx: Add __sgx_alloc_epc_page() and
+ sgx_free_epc_page()
+Message-ID: <20200625170648.GH20319@zn.tnic>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-10-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200617220844.57423-10-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2020 16:35, Guenter Roeck wrote:
-> On 6/25/20 1:32 AM, Tero Kristo wrote:
->> On 24/06/2020 18:24, Jan Kiszka wrote:
->>> On 24.06.20 13:45, Tero Kristo wrote:
->>>> If the RTI watchdog has been started by someone (like bootloader) when
->>>> the driver probes, we must adjust the initial ping timeout to match the
->>>> currently running watchdog window to avoid generating watchdog reset.
->>>>
->>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>> ---
->>>>    drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
->>>>    1 file changed, 25 insertions(+)
->>>>
->>>> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
->>>> index d456dd72d99a..02ea2b2435f5 100644
->>>> --- a/drivers/watchdog/rti_wdt.c
->>>> +++ b/drivers/watchdog/rti_wdt.c
->>>> @@ -55,11 +55,13 @@ static int heartbeat;
->>>>     * @base - base io address of WD device
->>>>     * @freq - source clock frequency of WDT
->>>>     * @wdd  - hold watchdog device as is in WDT core
->>>> + * @min_hw_heartbeat_save - save of the min hw heartbeat value
->>>>     */
->>>>    struct rti_wdt_device {
->>>>        void __iomem        *base;
->>>>        unsigned long        freq;
->>>>        struct watchdog_device    wdd;
->>>> +    unsigned int        min_hw_heartbeat_save;
->>>>    };
->>>>    static int rti_wdt_start(struct watchdog_device *wdd)
->>>> @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
->>>>        /* put watchdog in active state */
->>>>        writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
->>>> +    if (wdt->min_hw_heartbeat_save) {
->>>> +        wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
->>>> +        wdt->min_hw_heartbeat_save = 0;
->>>> +    }
->>>> +
->>>>        return 0;
->>>>    }
->>>> @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device *pdev)
->>>>            goto err_iomap;
->>>>        }
->>>> +    if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
->>>> +        u32 time_left;
->>>> +        u32 heartbeat;
->>>> +
->>>> +        set_bit(WDOG_HW_RUNNING, &wdd->status);
->>>> +        time_left = rti_wdt_get_timeleft(wdd);
->>>> +        heartbeat = readl(wdt->base + RTIDWDPRLD);
->>>> +        heartbeat <<= WDT_PRELOAD_SHIFT;
->>>> +        heartbeat /= wdt->freq;
->>>> +        if (time_left < heartbeat / 2)
->>>> +            wdd->min_hw_heartbeat_ms = 0;
->>>> +        else
->>>> +            wdd->min_hw_heartbeat_ms =
->>>> +                (time_left - heartbeat / 2 + 1) * 1000;
->>>> +
->>>> +        wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
->>>> +    }
->>>> +
->>>>        ret = watchdog_register_device(wdd);
->>>>        if (ret) {
->>>>            dev_err(dev, "cannot register watchdog device\n");
->>>>
->>>
->>> This assumes that the bootloader also programmed a 50% window, right? The pending U-Boot patch will do that, but what if that may chance or someone uses a different setup?
->>
->> Yes, we assume 50%. I think based on the hw design, 50% is the only sane value to be used, otherwise you just shrink the open window too much and for no apparent reason.
->>
+On Thu, Jun 18, 2020 at 01:08:31AM +0300, Jarkko Sakkinen wrote:
+> Add __sgx_alloc_epc_page(), which iterates through EPC sections and borrows
+> a page structure that is not used by anyone else. When a page is no longer
+> needed it must be released with sgx_free_epc_page(). This function
+> implicitly calls ENCLS[EREMOVE], which will return the page to the
+> uninitialized state (i.e. not required from caller part).
 > 
-> Not sure if that is a valid assumption. Someone who designs a watchdog
-> with such a narrow ping window might as well also use it. The question
-> is if you want to rely on that assumption, or check and change it if needed.
+> Acked-by: Jethro Beekman <jethro@fortanix.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/sgx/main.c | 61 ++++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/cpu/sgx/sgx.h  |  3 ++
+>  2 files changed, 64 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+> index c5831e3db14a..b776d249289f 100644
+> --- a/arch/x86/kernel/cpu/sgx/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/main.c
+> @@ -83,6 +83,67 @@ static bool __init sgx_page_reclaimer_init(void)
+>  	return true;
+>  }
+>  
+> +static struct sgx_epc_page *__sgx_alloc_epc_page_from_section(struct sgx_epc_section *section)
+> +{
+> +	struct sgx_epc_page *page;
+> +
+> +	if (list_empty(&section->page_list))
+> +		return NULL;
+> +
+> +	page = list_first_entry(&section->page_list, struct sgx_epc_page, list);
+> +	list_del_init(&page->list);
 
-Right, if that is a blocker, I can modify the code. Should be maybe 
-couple of lines addition.
+<---- newline here.
 
-> Also, I wonder if we should add an API function such as
-> "set_last_hw_keepalive()" to avoid all that complexity.
+> +	return page;
+> +}
 
-I can try adding that also if it is desirable.
+Otherwise looks good; nice comments.
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
