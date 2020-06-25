@@ -2,231 +2,150 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE03206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="ga5KarxQ"
+	by mail.kernel.org (Postfix) with ESMTP id 43FC6206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405509AbgFYVCb (ORCPT
+        id S2405547AbgFYVFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:02:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405347AbgFYVCa (ORCPT
+        Thu, 25 Jun 2020 17:05:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57164 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405432AbgFYVFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:02:30 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EC2C08C5C1;
-        Thu, 25 Jun 2020 14:02:30 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 36ED6BD0; Thu, 25 Jun 2020 17:02:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 36ED6BD0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1593118949;
-        bh=iST8XkIlQ85fzJAwuiSKyiqDFbh3r31yI6UMz6u1jfs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ga5KarxQmAulkj8m3/QeIx0Fh1gSLWBawXHcXeYj2k8pPTWphFrtUcGwUk3bc5B4i
-         pm8+mXl6Uw9vmL7fl8F4tArNoUkuETLQuqO2B9fvZ6cTFanM5wzc93O+ClIubGCQPL
-         iemdIEQnK8qdJPrEO0e1y7XKN0z5qMcjO/WcFda0=
-Date:   Thu, 25 Jun 2020 17:02:29 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: unable to handle kernel paging request in rb_erase
-Message-ID: <20200625210229.GE6605@fieldses.org>
-References: <0000000000005016dd05a5e6b308@google.com>
- <20200603043435.13820-1-hdanton@sina.com>
- <20200603144326.GA2035@fieldses.org>
- <20200604035359.2516-1-hdanton@sina.com>
- <20200604215812.GC3458@fieldses.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604215812.GC3458@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Thu, 25 Jun 2020 17:05:20 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PL2c5E032951;
+        Thu, 25 Jun 2020 17:05:16 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vws8u8f9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:05:16 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PL3C39035001;
+        Thu, 25 Jun 2020 17:05:16 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vws8u8e6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:05:16 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PKtoCu021859;
+        Thu, 25 Jun 2020 21:05:13 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma05fra.de.ibm.com with ESMTP id 31uusg12s0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 21:05:13 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PL5BO463111650
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 21:05:11 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5915042042;
+        Thu, 25 Jun 2020 21:05:11 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 387CD42041;
+        Thu, 25 Jun 2020 21:05:10 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 21:05:10 +0000 (GMT)
+Message-ID: <1593119109.27152.393.camel@linux.ibm.com>
+Subject: Re: [PATCH 03/12] ima: Free the entire rule when deleting a list of
+ rules
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Thu, 25 Jun 2020 17:05:09 -0400
+In-Reply-To: <20200623003236.830149-4-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-4-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_16:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 cotscore=-2147483648 spamscore=0
+ suspectscore=2 impostorscore=0 mlxscore=0 adultscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 05:58:12PM -0400, J. Bruce Fields wrote:
-> On Thu, Jun 04, 2020 at 11:53:59AM +0800, Hillf Danton wrote:
-> > 
-> > On Wed, 3 Jun 2020 12:48:49 -0400 J. Bruce Fields wrote:
-> > > On Wed, Jun 03, 2020 at 10:43:26AM -0400, J. Bruce Fields wrote:
-> > > > On Wed, Jun 03, 2020 at 12:34:35PM +0800, Hillf Danton wrote:
-> > > > > 
-> > > > > On Tue, 2 Jun 2020 17:55:17 -0400 "J. Bruce Fields" wrote:
-> > > > > > 
-> > > > > > As far as I know, this one's still unresolved.  I can't see the bug from
-> > > > > > code inspection, and we don't have a reproducer.  If anyone else sees
-> > > > > > this or has an idea what might be going wrong, I'd be interested.--b.
-> > > > > 
-> > > > > It's a PF reported in the syz-executor.3 context (PID: 8682 on CPU:1),
-> > > > > meanwhile there's another at 
-> > > > > 
-> > > > >  https://lore.kernel.org/lkml/20200603011425.GA13019@fieldses.org/T/#t
-> > > > >  Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
-> > > > > 
-> > > > > in the kworker context, and one of the quick questions is, is it needed
-> > > > > to serialize the two players, say, using a mutex?
-> > > > 
-> > > > nfsd_reply_cache_shutdown() doesn't take any locks.  All the data
-> > > > structures it's tearing down are per-network-namespace, and it's assumed
-> > > > all the users of that structure are gone by the time we get here.
-> > > > 
-> > > > I wonder if that assumption's correct.  Looking at nfsd_exit_net()....
-> > 
-> > IIUC it's correct for the kworker case where the ns in question is on
-> > the cleanup list, and for the syscall as well because the report is
-> > triggered in the error path, IOW the new ns is not yet visible to the
-> > kworker ATM.
+On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
+> Use ima_free_rule() to fix memory leaks of allocated ima_rule_entry
+> members, such as .fsname and .keyrings, when deleting a list of rules.
 > 
-> Sorry, I'm not familiar with the namespace code and I'm not following
-> you.
+> This fixes a memory leak seen when loading by a valid rule that contains
+> an additional piece of allocated memory, such as an fsname, followed by
+> an invalid rule that triggers a policy load failure:
 > 
-> I'm trying to figure out what prevents the network namespace exit method
-> being called while nfsd is still processing an rpc call from that
-> network namespace.
+>  # echo -e "dont_measure fsname=securityfs\nbad syntax" > \
+>     /sys/kernel/security/ima/policy
+>  -bash: echo: write error: Invalid argument
+>  # echo scan > /sys/kernel/debug/kmemleak
+>  # cat /sys/kernel/debug/kmemleak
+>  unreferenced object 0xffff9bab67ca12c0 (size 16):
+>    comm "tee", pid 684, jiffies 4295212803 (age 252.344s)
+>    hex dump (first 16 bytes):
+>      73 65 63 75 72 69 74 79 66 73 00 6b 6b 6b 6b a5  securityfs.kkkk.
+>    backtrace:
+>      [<00000000adc80b1b>] kstrdup+0x2e/0x60
+>      [<00000000d504cb0d>] ima_parse_add_rule+0x7d4/0x1020
+>      [<00000000444825ac>] ima_write_policy+0xab/0x1d0
+>      [<000000002b7f0d6c>] vfs_write+0xde/0x1d0
+>      [<0000000096feedcf>] ksys_write+0x68/0xe0
+>      [<0000000052b544a2>] do_syscall_64+0x56/0xa0
+>      [<000000007ead1ba7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Fixes: f1b08bbcbdaf ("ima: define a new policy condition based on the filesystem name")
+> Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-Looking at this some more:
+Thanks!  Thinking about it some more.  It makes more sense to define
+ima_free_rule() here in this patch.
 
-Each server socket (struct svc_xprt) holds a reference on the struct net
-that's not released until svc_xprt_free().
+Mimi
 
-The svc_xprt is itself referenced as long as an rpc for that socket is
-being processed, the referenced released in svc_xprt_release().  Which
-isn't called until the rpc is processed and the reply sent.
+> ---
+>  security/integrity/ima/ima_policy.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 1320333201c6..94ca3b8abb69 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -1431,15 +1431,11 @@ ssize_t ima_parse_add_rule(char *rule)
+>  void ima_delete_rules(void)
+>  {
+>  	struct ima_rule_entry *entry, *tmp;
+> -	int i;
+>  
+>  	temp_ima_appraise = 0;
+>  	list_for_each_entry_safe(entry, tmp, &ima_temp_rules, list) {
+> -		for (i = 0; i < MAX_LSM_RULES; i++)
+> -			kfree(entry->lsm[i].args_p);
+> -
+>  		list_del(&entry->list);
+> -		kfree(entry);
+> +		ima_free_rule(entry);
+>  	}
+>  }
+>  
 
-So, assuming nfsd_exit_net() can't be called while we're still holding
-references to the struct net, there can't still be any reply cache
-processing going on when nfsd_reply_cache_shutdown() is called.
-
-So, still a mystery to me how this is happening.
-
---b.
-
-> 
-> 
-> > ---
-> > v2: Use linux/highmem.h instead of asm/cacheflush.sh
-> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > ---
-> > net/sunrpc/svcsock.c | 1 +
-> > 1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> > index 5c4ec9386f81..c537272f9c7e 100644
-> > --- a/net/sunrpc/svcsock.c
-> > +++ b/net/sunrpc/svcsock.c
-> > @@ -44,6 +44,7 @@
-> > #include <net/tcp.h>
-> > #include <net/tcp_states.h>
-> > #include <linux/uaccess.h>
-> > +#include <linux/highmem.h>
-> > #include <asm/ioctls.h>
-> > 
-> > #include <linux/sunrpc/types.h>
-> > -- 
-> > 2.25.0
-> > 
-> 
-> --
-> Chuck Lever
-> 
-> 
-
-> 
-> --b.
-> 
-> > 
-> > Then we can not draw a race between the two parties, and the two reports
-> > are not related... but of independent glitches.
-> > 
-> > > > 
-> > > > nfsd_reply_cache_shutdown() is one of the first things we do, so I think
-> > > > we're depending on the assumption that the interfaces in that network
-> > > > namespace, and anything referencing associated sockets (in particular,
-> > > > any associated in-progress rpc's), must be gone before our net exit
-> > > > method is called.
-> > > > 
-> > > > I wonder if that's a good assumption.
-> > > 
-> > > I think that assumption must be the problem.
-> > > 
-> > > That would explain why the crashes are happening in nfsd_exit_net as
-> > > opposed to somewhere else, and why we're only seeing them since
-> > > 3ba75830ce17 "nfsd4: drc containerization".
-> > > 
-> > > I wonder what *is* safe to assume when the net exit method is called?
-> > > 
-> > > --b.
-> > > 
-> > > > 
-> > > > --b.
-> > > > 
-> > > > > 
-> > > > > 
-> > > > > > On Sun, May 17, 2020 at 11:59:12PM -0700, syzbot wrote:
-> > > > > > > Hello,
-> > > > > > > 
-> > > > > > > syzbot found the following crash on:
-> > > > > > > 
-> > > > > > > HEAD commit:    9b1f2cbd Merge tag 'clk-fixes-for-linus' of git://git.kern..
-> > > > > > > git tree:       upstream
-> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15dfdeaa100000
-> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
-> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0e37e9d19bded16b8ab9
-> > > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > > 
-> > > > > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > > > > 
-> > > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > > Reported-by: syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com
-> > > > > > > 
-> > > > > > > BUG: unable to handle page fault for address: ffff887ffffffff0
-> > > > > > > #PF: supervisor read access in kernel mode
-> > > > > > > #PF: error_code(0x0000) - not-present page
-> > > > > > > PGD 0 P4D 0 
-> > > > > > > Oops: 0000 [#1] PREEMPT SMP KASAN
-> > > > > > > CPU: 1 PID: 8682 Comm: syz-executor.3 Not tainted 5.7.0-rc5-syzkaller #0
-> > > > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > > > > > RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
-> > > > > > > RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
-> > > > > > > Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
-> > > > > > > RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
-> > > > > > > RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
-> > > > > > > RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
-> > > > > > > RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
-> > > > > > > R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
-> > > > > > > R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
-> > > > > > > FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> > > > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > > > CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
-> > > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > > > > Call Trace:
-> > > > > > >  nfsd_reply_cache_free_locked+0x198/0x380 fs/nfsd/nfscache.c:127
-> > > > > > >  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
-> > > > > > >  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
-> > > > > > >  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
-> > > > > > >  setup_net+0x50c/0x860 net/core/net_namespace.c:364
-> > > > > > >  copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
-> > > > > > >  create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:108
-> > > > > > >  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:229
-> > > > > > >  ksys_unshare+0x43d/0x8e0 kernel/fork.c:2970
-> > > > > > >  __do_sys_unshare kernel/fork.c:3038 [inline]
-> > > > > > >  __se_sys_unshare kernel/fork.c:3036 [inline]
-> > > > > > >  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3036
-> > > > > > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> > > > > > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
