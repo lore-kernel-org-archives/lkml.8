@@ -2,149 +2,125 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E703BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D64C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F0720720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2082A20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390147AbgFYHRY (ORCPT
+        id S2390213AbgFYHTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 03:17:24 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7090 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgFYHRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 03:17:24 -0400
-IronPort-SDR: ELC4xTYZNdFfJ3L7hzIt+sbNoPUnXnkskCLcVAwmrKobFSn4Hg4IDwKPJQm6Wup/VJhH7epeC9
- 5sk0b+JsWq9Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="133215695"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="133215695"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 00:17:23 -0700
-IronPort-SDR: 9SU8WSOXjOb5cGfblHCGaq4sbltWg3ZPoCkOiUtleR9YbF5N4YmR0x/cq0Jpk7BHB9Lcgk/TVU
- 36t/6pIx+png==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="263857069"
-Received: from yijiangw-mobl1.ccr.corp.intel.com (HELO [10.255.28.52]) ([10.255.28.52])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 00:17:20 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 2/7] iommu/vt-d: Remove global page support in devTLB
- flush
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1592926996-47914-3-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <cfbddc34-b70b-1ee6-9a9f-fa76e484de70@linux.intel.com>
-Date:   Thu, 25 Jun 2020 15:17:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 03:19:17 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44727 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390040AbgFYHTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 03:19:16 -0400
+Received: by mail-io1-f71.google.com with SMTP id h15so3394729ioj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 00:19:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=tBweWrlp9QBdM+tZJ8oYCBFdvpoaRXNosMtfX1KU8uk=;
+        b=UN5xSAjLuYlpvkISPXGXW/8feEQTYgJea1lwt+JOXwhbhWoauI166HuAkWBnyx+OMm
+         NobDV3Cqu7sasEB4TPZwsTD0LuPSqdKisyCh5aTgAtI56oS4XEswtMPgcCkSJdwZl/jr
+         5gA2qhEelEyGhHDC6jd6mZ622rUqm3R1FJorGEyihqYh9kD2pKNE8sV5X8f+eLOzjyUM
+         pm4m7imn7vPQs/hZQUfJJbMw/RATJsyGNB0i9HjdF489vMREtsPduylcDhQeg6api6Zd
+         exQURUeIeUBerRE5n9HsYoJAgA/zhvWQ/mGUdz3jHW/N+fmHZqrvJHbk9kzlKPQ2+FJ7
+         dYvA==
+X-Gm-Message-State: AOAM532oYcRliK2pI2NKHFvT0Hq6Vp7Sn699fuYbnW5RIsO5Vk7LmA3S
+        /5/+8FmamsQ4mdcmK8l3f6rmmkKUKWwV1gyMasGxC171gyg1
+X-Google-Smtp-Source: ABdhPJwzCFOYiSBWVs8Rm1FraN7MIhBCXwPciVJCXKG9L24PaYiDFoux9SeA1zjfdHygR4LG93HTBpk60+aM3SvzJ0wg1BeD7CmA
 MIME-Version: 1.0
-In-Reply-To: <1592926996-47914-3-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:1496:: with SMTP id 144mr28476498iou.6.1593069554767;
+ Thu, 25 Jun 2020 00:19:14 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 00:19:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ea237605a8e368a9@google.com>
+Subject: WARNING in idr_alloc
+From:   syzbot <syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com>
+To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/23 23:43, Jacob Pan wrote:
-> Global pages support is removed from VT-d spec 3.0 for dev TLB
-> invalidation. This patch is to remove the bits for vSVA. Similar change
-> already made for the native SVA. See the link below.
-> 
+Hello,
 
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+syzbot found the following crash on:
 
-Best regards,
-baolu
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15ddb429100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=f31428628ef672716ea8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15252c4b100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10159291100000
 
-> Link: https://lkml.org/lkml/2019/8/26/651
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   drivers/iommu/intel/dmar.c  | 4 +---
->   drivers/iommu/intel/iommu.c | 4 ++--
->   include/linux/intel-iommu.h | 3 +--
->   3 files changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-> index cc46dff98fa0..d9f973fa1190 100644
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -1437,8 +1437,7 @@ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
->   
->   /* PASID-based device IOTLB Invalidate */
->   void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
-> -			      u32 pasid,  u16 qdep, u64 addr,
-> -			      unsigned int size_order, u64 granu)
-> +			      u32 pasid,  u16 qdep, u64 addr, unsigned int size_order)
->   {
->   	unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size_order - 1);
->   	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
-> @@ -1446,7 +1445,6 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->   	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) | QI_DEV_EIOTLB_SID(sid) |
->   		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
->   		QI_DEV_IOTLB_PFSID(pfsid);
-> -	desc.qw1 = QI_DEV_EIOTLB_GLOB(granu);
->   
->   	/*
->   	 * If S bit is 0, we only flush a single page. If S bit is set,
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 9129663a7406..96340da57075 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -5466,7 +5466,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   						info->pfsid, pasid,
->   						info->ats_qdep,
->   						inv_info->addr_info.addr,
-> -						size, granu);
-> +						size);
->   			break;
->   		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
->   			if (info->ats_enabled)
-> @@ -5474,7 +5474,7 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   						info->pfsid, pasid,
->   						info->ats_qdep,
->   						inv_info->addr_info.addr,
-> -						size, granu);
-> +						size);
->   			else
->   				pr_warn_ratelimited("Passdown device IOTLB flush w/o ATS!\n");
->   			break;
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 729386ca8122..9a6614880773 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -380,7 +380,6 @@ enum {
->   
->   #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
->   #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
-> -#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
->   #define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
->   #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
->   #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
-> @@ -704,7 +703,7 @@ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
->   
->   void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->   			      u32 pasid, u16 qdep, u64 addr,
-> -			      unsigned int size_order, u64 granu);
-> +			      unsigned int size_order);
->   void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu,
->   			  int pasid);
->   
-> 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 6830 at lib/idr.c:84 idr_alloc+0x11c/0x130 lib/idr.c:84
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 6830 Comm: syz-executor583 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:105 [inline]
+ fixup_bug arch/x86/kernel/traps.c:100 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:197
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:216
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:idr_alloc+0x11c/0x130 lib/idr.c:84
+Code: 00 00 00 44 89 e0 48 8b 4c 24 58 65 48 33 0c 25 28 00 00 00 75 1e 48 83 c4 60 5b 5d 41 5c 41 5d 41 5e 41 5f c3 e8 b4 6d c4 fd <0f> 0b 41 bc ea ff ff ff eb b7 e8 f5 6c 95 fd 0f 1f 44 00 00 41 57
+RSP: 0018:ffffc90001077c68 EFLAGS: 00010293
+RAX: ffff88809f48a580 RBX: 00000000ffff0301 RCX: ffffffff83af606b
+RDX: 0000000000000000 RSI: ffffffff83af610c RDI: 0000000000000005
+RBP: 1ffff9200020ef8d R08: ffff88809f48a580 R09: fffffbfff1516d79
+R10: ffffffff8a8b6bc7 R11: fffffbfff1516d78 R12: 00000000ffff0300
+R13: ffffffff8a837ae0 R14: ffff8880a1f7d640 R15: 0000000000000a20
+ qrtr_port_assign net/qrtr/qrtr.c:703 [inline]
+ __qrtr_bind.isra.0+0x12e/0x5c0 net/qrtr/qrtr.c:756
+ qrtr_bind+0x1c1/0x24a net/qrtr/qrtr.c:805
+ __sys_bind+0x20e/0x250 net/socket.c:1657
+ __do_sys_bind net/socket.c:1668 [inline]
+ __se_sys_bind net/socket.c:1666 [inline]
+ __x64_sys_bind+0x6f/0xb0 net/socket.c:1666
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x4401a9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffee5bbb0e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401a9
+RDX: 000000000000000c RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a30
+R13: 0000000000401ac0 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
