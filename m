@@ -2,101 +2,143 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E4EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BB6207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:54:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpZpJwst"
+	by mail.kernel.org (Postfix) with ESMTP id 71682207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593061040;
+	bh=rh2t4ZM9sSp43OqmPhVB9ZMLCRZ3PrCAUtZMZLiH3Ak=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lLSOB0qTBDrccNZk+tTgecRGKLC/nhY9UunFu5ogv4OGOOqSEMfNTslP+9GUdY/wI
+	 2jCDDDFak2JI5ZCI615ktzQe14s67XuOPpgXK6hMFy6ulLDys9V46ZBVltVXXmWEzB
+	 QqJbxyKCuPSLGrszuH4cPmGtV1PDnLsQ0fognLR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389757AbgFYEyU (ORCPT
+        id S2389775AbgFYE5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 00:54:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389460AbgFYEyT (ORCPT
+        Thu, 25 Jun 2020 00:57:18 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:46777 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgFYE5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 00:54:19 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F69C061573;
-        Wed, 24 Jun 2020 21:54:17 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id d7so2450873lfi.12;
-        Wed, 24 Jun 2020 21:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=spFlyvOX5WrFipaQERjg7g3CcCPYXQRDEZlGnRwq8Rk=;
-        b=NpZpJwstRVsvcCrsmRFtTv2S7ydm88PJWhM4X7wUIm0I0/+gdlDt0J4CL54X+oVHGl
-         ao/Wqf2p5RVvzMKdhdZqm5mM6jPqENz+nhg0ExEqv1+LVwmwfcxJEn1iZGEmsAipndDt
-         /CdPhGqxs3C3fnd4ZXth8ZsXasRyYlwpdE1v80CrDqSAQIFqpjrMJfd8TjIQto3FgqvG
-         BhEm/HbZPY9sFfE88M1SQw6XtIjiCXU9/aD8GeW6cxJIv8vlVicrfeYu1kCu2dpA6ha6
-         S0pzjnjV+p8Y9R7J7QqaOdu9VNnuiR4H6Fq2AEWQOAJSUYdiE7S3hDMJ30rgfxWbj7/j
-         jcuw==
+        Thu, 25 Jun 2020 00:57:18 -0400
+Received: by mail-ej1-f65.google.com with SMTP id p20so4575922ejd.13;
+        Wed, 24 Jun 2020 21:57:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=spFlyvOX5WrFipaQERjg7g3CcCPYXQRDEZlGnRwq8Rk=;
-        b=MhcTLitHIkUydTAekv7AlP5Wh6JIKyaGrw5WfRh9bjnayH9JjBZDyF6h5kkiSZceos
-         O2KC2cfzk5q4RorEN3L8xTvpGoNnBOXB0g/w6gkjCkCtjNM2o9lOCRn2N3qaZgVAqIoz
-         WfpqueDAymog1J3J8r64BxZZnu7BFKJqMN9LhJ/qpXCQ35KNGbZt+j9DSJBh6KJrjSm2
-         Db+Hz2ecgG1HvJsDNtv4/KQ0oLav3pVHLlDqkvjaMt+B92KMdxN+OyWsKYeKbD2/81HD
-         Zvpfi3/5H+n/kut3VcI3uAdaATxYquyUA3ky4DQF7DHsiX7n5FArXl1QXcT+sQwfbepO
-         cQ8A==
-X-Gm-Message-State: AOAM5333x1reho4/M/rX5NzRrvc+w10N2lDkFwgoUA394qWXCswAeOT2
-        +uiiSj3E6P7S3g4oDx7NFRBNUXP+MzTtegAoomMUVVYI
-X-Google-Smtp-Source: ABdhPJyPKLHu6msNhH+qUS2yrOx/yxYvf5BIW4+VIdv40+a4CRmIqIEnT9wAnqoXcWXkaMnfNHCca8zWvWYIHN8pIYE=
-X-Received: by 2002:a05:6512:550:: with SMTP id h16mr1210060lfl.155.1593060854233;
- Wed, 24 Jun 2020 21:54:14 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hDQOaa5HH/zr8eVIcjkrYiG3AZ14kTxtIgkPZZdVMpc=;
+        b=QBki+8UhP3NaYfdlxlzA3KzSb3f/lVdYFygFwcrg0IvLAb1TB19fa34+dwEHBT6cxp
+         z2mEX7l0iZdv9JaqSrB7ndnHLvJThs3OG8fdlEi4Pk37Kr2n1Q7orwWJeaNbt3RIJiJS
+         oq1aLOWy3dSrNC+Xd3bqo81ZQKFIW7tUUJifZ0KYTwVvCpTytEubFUgjUWJzdU6EFXt+
+         8vyOJ8pMxQcM8ClJvRUdE8C7EFjs3MJqVyKYrFD1qLX1rDzeAJb+wnmn0De+3l7FkLAw
+         ufAZDbmKZOg8ETrKqn+ga2Bc4+0ovHCR2ow1d2SeH1ptW6PxLx/rbgyPMjajmIy0VSFI
+         BeFw==
+X-Gm-Message-State: AOAM5310RYUGQyPlj2NRIe9a6R5iPT+fdB6wiZtyLSwKnbQTKNGVXiSd
+        00vT587SVU9INozhjISak3JggkN4BQ8=
+X-Google-Smtp-Source: ABdhPJyW7oW77/uxdprLrtBZGhiqru+4GXD0IlYicbu4DlhrOTY/ErhsIJMw1leAKmJGzocjCSLoTw==
+X-Received: by 2002:a17:906:e298:: with SMTP id gg24mr27562253ejb.120.1593061035256;
+        Wed, 24 Jun 2020 21:57:15 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id by20sm2857025ejc.119.2020.06.24.21.57.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 21:57:14 -0700 (PDT)
+Subject: ath9k broken [was: Linux 5.7.3]
+To:     Gabriel C <nix.or.die@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, lwn@lwn.net,
+        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel@qca.qualcomm.com,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <1592410366125160@kroah.com>
+ <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
+Date:   Thu, 25 Jun 2020 06:57:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-From:   Jack Wang <xjtuwjp@gmail.com>
-Date:   Thu, 25 Jun 2020 06:54:02 +0200
-Message-ID: <CAD+HZHUdiDoODn6jpVcZrffGm2J9xe23i8BL8FrgPPCNKO6MDg@mail.gmail.com>
-Subject: [Question]many kernel error "neighbour: ndisc_cache: neighbor table overflow!"
-To:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Folks,
+On 25. 06. 20, 0:05, Gabriel C wrote:
+> Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org>:
+>>
+>> I'm announcing the release of the 5.7.3 kernel.
+>>
+> 
+> Hello Greg,
+> 
+>> Qiujun Huang (5):
+>>       ath9k: Fix use-after-free Read in htc_connect_service
+>>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+>>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+>>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+>>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+>>
+> 
+> We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
+> while working fine on <5.7.3.
+> 
+> I don't have myself such HW, and the reported doesn't have any experience
+> in bisecting the kernel, so we build kernels, each with one of the
+> above commits reverted,
+> to find the bad commit.
+> 
+> The winner is:
+> 
+> commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
+> Author: Qiujun Huang <hqjagain@gmail.com>
+> Date:   Sat Apr 4 12:18:38 2020 +0800
+> 
+>     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+> 
+>     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+> ...
+> 
+> Reverting this one fixed his problem.
 
-In one of our big cluster, due to capacity increase, more servers are
-added to the cluster, and we saw from many pserver reporting error
-message below:
- "neighbour: ndisc_cache: neighbor table overflow!"
+Obvious question: is 5.8-rc1 (containing the commit) broken too?
 
-We've tested increasing the gc_thresh values in sysctl.conf, after
-reboot, the errors are gone
+I fail to see how the commit could cause an issue like this. Is this
+really reproducibly broken with the commit and irreproducible without
+it? As it looks like a USB/wiring problem:
+usb 1-2: USB disconnect, device number 2
+ath: phy0: Reading Magic # failed
+ath: phy0: Unable to initialize hardware; initialization status: -5
+...
+usb 1-2: device descriptor read/64, error -110
+usb 1-2: device descriptor read/64, error -71
 
-+# Threshold when garbage collector becomes more aggressive about
-+# purging entries. Entries older than 5 seconds will be cleared
-+# when over this number.  Default: 512
-+net.ipv4.neigh.default.gc_thresh2 = 4096
-+net.ipv6.neigh.default.gc_thresh2 = 4096
-+
-+# Maximum number of non-PERMANENT neighbor entries allowed.  Increase
-+# this when using large numbers of interfaces and when communicating
-+# with large numbers of directly-connected peers.  Default: 1024
-+net.ipv4.neigh.default.gc_thresh3 = 8192
-+net.ipv6.neigh.default.gc_thresh3 = 8192
+Ccing ath9k maintainers too.
 
-But we still have many systems running in production, so my question
-is: is it safe to apply the setting on the fly when servers are
-running with busy traffic? or we have to apply the setting only
-through sysctl during boot?
+> I don't have so much info about the HW, besides a dmesg showing the
+> phy breaking.
+> I also added the reporter to CC too.
+> 
+> https://gist.github.com/AngryPenguinPL/1e545f0da3c2339e443b9e5044fcccea
+> 
+> If you need more info, please let me know and I'll try my best to get
+> it as fast as possible for you.
 
-Most of our servers with default settings are running kernel 4.14.137~4.14.154
-
-Thanks in advance!
-
-Best regards!
-
-Jack Wang
+thanks,
+-- 
+js
