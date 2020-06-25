@@ -2,111 +2,106 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C74C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90109C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14292078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P1LfKqFc"
+	by mail.kernel.org (Postfix) with ESMTP id 7975720789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389242AbgFYBZZ (ORCPT
+        id S2389077AbgFYB2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:25:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388928AbgFYBZX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:25:23 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F299DC061573;
-        Wed, 24 Jun 2020 18:25:22 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49sj4c29Z7z9sSt;
-        Thu, 25 Jun 2020 11:25:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593048321;
-        bh=wZqYCZ4rzjYy8J0Uc//CISQWPwtAY2uNSf3i5tgRVVc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P1LfKqFcSwtX9D0asb00y5WoSuSk2j7NvHv1XE/LT3TXlwVwM+gB8N8UpdgSojiA/
-         ZokR68IqW22ZB+xz7paQqsPkUENIOyCq4VFTy6IFUbUnKZrwKexu6J/W6lgOyLhZxh
-         8BhnXrFGNWvOJDQUrLu3DohcQa+Zv1dOMnYV7Li4rQ0Wo/NEwurKEIQdm/mEZVM24c
-         aEbRSa1PUnRtLF63tmmkeCLZCSiQTfH/hJJaSkUj6fdi84kN5esGUxBo1URiEBMAR1
-         lgol+MoKlXXu5JX5A1ajBQF6zwwTiNcOKJ7V7eQj2eDhxSTXPJBT2PwEsnKkreYYye
-         Z5p2zVngSmqgw==
-Date:   Thu, 25 Jun 2020 11:25:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Qian Cai <cai@lca.pw>
-Cc:     David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        paulmck@kernel.org, rcu@vger.kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: Null-ptr-deref due to "vfs, fsinfo: Add an RCU safe per-ns
- mount list"
-Message-ID: <20200625112517.4cf8f3a9@canb.auug.org.au>
-In-Reply-To: <20200624155707.GA1259@lca.pw>
-References: <31941725-BEB0-4839-945A-4952C2B5ADC7@lca.pw>
-        <2961585.1589326192@warthog.procyon.org.uk>
-        <20200624155707.GA1259@lca.pw>
+        Wed, 24 Jun 2020 21:28:54 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51192 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388928AbgFYB2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 21:28:54 -0400
+IronPort-SDR: xeFxiMCGqjecpaiU4aU81xv5dlhwhBi2WxmNvIguZ9EqcpzpeMun6EShezOBg5zGTeF9DY7S4k
+ /89whH0/1+0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="144752680"
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="144752680"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 18:28:53 -0700
+IronPort-SDR: qx2p1oPmyFpV7qj2mftNsBMYxvFw0Uz7HJYUrO6I3sAC25ReEXk8vjRzPzaE1aNXU8cI4DfPnP
+ wzqn7yAxt6VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="275875386"
+Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 18:28:36 -0700
+Date:   Thu, 25 Jun 2020 04:28:32 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 02/21] x86/cpufeatures: x86/msr: Add Intel SGX Launch
+ Control hardware bits
+Message-ID: <20200625012832.GE21758@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-3-jarkko.sakkinen@linux.intel.com>
+ <20200624130434.GC8492@zn.tnic>
+ <20200624143440.GD25092@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/t.bTb4R9aiObfQs2q7bZVl/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624143440.GD25092@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/t.bTb4R9aiObfQs2q7bZVl/
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 24, 2020 at 07:34:40AM -0700, Sean Christopherson wrote:
+> On Wed, Jun 24, 2020 at 03:04:34PM +0200, Borislav Petkov wrote:
+> > On Thu, Jun 18, 2020 at 01:08:24AM +0300, Jarkko Sakkinen wrote:
+> > > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > 
+> > > Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
+> > > Launch Control.
+> > > 
+> > > Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
+> > > SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
+> > > called enclaves, are always signed. All enclaves signed with the public key
+> > > are unconditionally allowed to initialize. [1]
+> > > 
+> > > Add FEATURE_CONTROL_SGX_LE_WR bit of the feature control MSR, which informs
+> > 
+> > LE_WR or LC_ENABLED?
+> 
+> It should be FEAT_CTL_SGX_LC_ENABLED, i.e. the actual code is correct.  We
+> updated the #define to use the SDM name to be consistent with the other bits
+> and neglected to update the changelog.
+> 
+> Thanks!
+>  
+> > With that addressed:
+> > 
+> > Reviewed-by: Borislav Petkov <bp@suse.de>
 
-Hi all,
+I'll update the commit according to this information.
 
-On Wed, 24 Jun 2020 11:57:07 -0400 Qian Cai <cai@lca.pw> wrote:
->
-> On Wed, May 13, 2020 at 12:29:52AM +0100, David Howells wrote:
-> > Qian Cai <cai@lca.pw> wrote:
-> >  =20
-> > > Reverted the linux-next commit ee8ad8190cb1 (=E2=80=9Cvfs, fsinfo: Ad=
-d an RCU safe per-ns mount list=E2=80=9D) fixed the null-ptr-deref. =20
-> >=20
-> > Okay, I'm dropping this commit for now. =20
->=20
-> What's the point of re-adding this buggy patch to linux-next again since
-> 0621 without fixing the previous reported issue at all? Reverting the
-> commit will still fix the crash below immediately, i.e.,
->=20
-> dbc87e74d022 ("vfs, fsinfo: Add an RCU safe per-ns mount list")
+> > 
+> > -- 
+> > Regards/Gruss,
+> >     Boris.
+> > 
+> > https://people.kernel.org/tglx/notes-about-netiquette
 
-I have added a revert of that commit to linux-next today.
+Thank you.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/t.bTb4R9aiObfQs2q7bZVl/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7z/P0ACgkQAVBC80lX
-0GzqtggAhCC4k0Z3m35GbDRg7iW8yoeoyG5WHwIfVompDg7cqrbQs6XjVthYCghl
-B+/FDUDfo3wfGBy5PH1NdJRoZxwqYXWu69YvqA2jP+sNqDdsqu1uziKd2sDvthed
-FOEtxYWPYWQitRelIp2XF6T4K3wlsyP7nGZUUx987veQeL0Za8QFGln5LiGVywZr
-ZulkTHbDrMZBcDfUNjU4WHE1cVF0SfdwrknS7biVgJNtduBVVqCn3IVWJew3Z76R
-sv00DDNGe2FJiwvRPh48yXGjXLuDLFtJXnegEx2aojP8W/c09a5jsinmpnFRD70r
-O/xQWiHBqS8361DqqE09QtGStQFtpw==
-=/b6E
------END PGP SIGNATURE-----
-
---Sig_/t.bTb4R9aiObfQs2q7bZVl/--
+/Jarkko
