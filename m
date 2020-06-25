@@ -2,325 +2,143 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5908C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDE5C206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C62A420781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k36VGpGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404180AbgFYLKp (ORCPT
+        id S2404180AbgFYLO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:10:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:33668 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404042AbgFYLKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:10:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFF861FB;
-        Thu, 25 Jun 2020 04:10:43 -0700 (PDT)
-Received: from [10.57.13.97] (unknown [10.57.13.97])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF0DF3F73C;
-        Thu, 25 Jun 2020 04:10:40 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] dma-direct: provide the ability to reserve
- per-numa CMA
-To:     Barry Song <song.bao.hua@hisilicon.com>, hch@lst.de,
-        m.szyprowski@samsung.com, will@kernel.org,
-        ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com
-Cc:     iommu@lists.linux-foundation.org, linuxarm@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Steve Capper <steve.capper@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <20200625074330.13668-1-song.bao.hua@hisilicon.com>
- <20200625074330.13668-2-song.bao.hua@hisilicon.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <11672f20-6011-1a70-8def-fc662f52d50f@arm.com>
-Date:   Thu, 25 Jun 2020 12:10:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 07:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404130AbgFYLO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 07:14:58 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB158C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 04:14:57 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q15so5149307wmj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 04:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R/lDDVQxBaGyt+9YnrsQ1wKsoAv0GGQeOtACQNKqcjA=;
+        b=k36VGpGdF5OlhC+8f1yEnrrYH8Ad3A5QPOITnITknSyJCbzwoGN78Phj6ZxCGzPxxP
+         kfqk0XRGUZAuVYSSfevip8RpnneAjP5HY01vLdRN5mv4/0MIGvIsFV3roI86k/FdQd1Z
+         uUJGRXZtkTjCxdIJ2qRbkCYpAm0K65IdTCXNicemA5LBSda8pFhWChhQzbzA5n4TlUX9
+         4kfmO3h6SmX/YkuH7DPpSGNQgLCdbhpjbA+54w5Y/6tVi7qbP1E9IVRjb5cBuvRJ4f53
+         OIwi1yoa8kGusFkZ9fR7tPZ00ZUEZVhYc6PMH0UqC/xrkyll6mHxz6S5UiYMgpk1f14c
+         csvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R/lDDVQxBaGyt+9YnrsQ1wKsoAv0GGQeOtACQNKqcjA=;
+        b=QYbvVJkhH/RVf9LTCnM4FGOd6Y4NjohYQjInBGWrPVHPB5LAtchaPe3eJ9amHr8t99
+         SE55e/5Cym4uCSsft/XGFVwJVNCmyyCwZP0HlEf/3SamO1+s0xCUhdE6hZZHbyFhbC/7
+         zoGSWafEaw7ZtT9IEbrljKHfymXETdNnjfHbMAxkvn7Ib3/B4c6v0zmyoRT2Lv9s0z0W
+         PjYKxU2EfAzLAZ2gcnr/kWRBeu0x7zag+D0LCdaWrgfeNpq50O5q93lol4OELVrpLYv3
+         JU9rR40o4yKneQWh+ay8c8/WNZSnvr2kovHVy87cQmEYgxMmEV522SzzpLgjoYpcroCz
+         xXdQ==
+X-Gm-Message-State: AOAM530MouIfjaQHkuVQglSY6ZFxyqLbVm5C7tPUxEOQeGbbCDjehmb5
+        b62ihlFfpjKCA1o31VxgYkN/3A==
+X-Google-Smtp-Source: ABdhPJxgdPBbbMLdq/cmKASgPLLX/kkQN2E3eojVcP9qm12NwASF3dDjPJXzHTgAZP6ShUd3wYJ70Q==
+X-Received: by 2002:a7b:cb0f:: with SMTP id u15mr2850767wmj.34.1593083696262;
+        Thu, 25 Jun 2020 04:14:56 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id f14sm14454978wro.90.2020.06.25.04.14.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 04:14:55 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 12:14:52 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: Fix locking issues with governors
+Message-ID: <20200625111452.GA200288@google.com>
+References: <49c7d64460cdb39b006991e5251260eb0eea9f2a.1593082448.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200625074330.13668-2-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <49c7d64460cdb39b006991e5251260eb0eea9f2a.1593082448.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-25 08:43, Barry Song wrote:
-> This is useful for at least two scenarios:
-> 1. ARM64 smmu will get memory from local numa node, it can save its
-> command queues and page tables locally. Tests show it can decrease
-> dma_unmap latency at lot. For example, without this patch, smmu on
-> node2 will get memory from node0 by calling dma_alloc_coherent(),
-> typically, it has to wait for more than 560ns for the completion of
-> CMD_SYNC in an empty command queue; with this patch, it needs 240ns
-> only.
-> 2. when we set iommu passthrough, drivers will get memory from CMA,
-> local memory means much less latency.
-> 
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->   include/linux/dma-contiguous.h |  4 ++
->   kernel/dma/Kconfig             | 10 ++++
->   kernel/dma/contiguous.c        | 99 ++++++++++++++++++++++++++++++----
->   3 files changed, 104 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
-> index 03f8e98e3bcc..278a80a40456 100644
-> --- a/include/linux/dma-contiguous.h
-> +++ b/include/linux/dma-contiguous.h
-> @@ -79,6 +79,8 @@ static inline void dma_contiguous_set_default(struct cma *cma)
->   
->   void dma_contiguous_reserve(phys_addr_t addr_limit);
->   
-> +void dma_pernuma_cma_reserve(void);
-> +
->   int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
->   				       phys_addr_t limit, struct cma **res_cma,
->   				       bool fixed);
-> @@ -128,6 +130,8 @@ static inline void dma_contiguous_set_default(struct cma *cma) { }
->   
->   static inline void dma_contiguous_reserve(phys_addr_t limit) { }
->   
-> +static inline void dma_pernuma_cma_reserve(void) { }
-> +
->   static inline int dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t base,
->   				       phys_addr_t limit, struct cma **res_cma,
->   				       bool fixed)
-> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> index d006668c0027..aeb976b1d21c 100644
-> --- a/kernel/dma/Kconfig
-> +++ b/kernel/dma/Kconfig
-> @@ -104,6 +104,16 @@ config DMA_CMA
->   if  DMA_CMA
->   comment "Default contiguous memory area size:"
->   
-> +config CMA_PERNUMA_SIZE_MBYTES
-> +	int "Size in Mega Bytes for per-numa CMA areas"
-> +	depends on NUMA
-> +	default 16 if ARM64
-> +	default 0
-> +	help
-> +	  Defines the size (in MiB) of the per-numa memory area for Contiguous
-> +	  Memory Allocator. Every numa node will get a separate CMA with this
-> +	  size. If the size of 0 is selected, per-numa CMA is disabled.
-> +
+Hey Viresh
 
-I think this needs to be cleverer than just a static config option. 
-Pretty much everything else CMA-related is runtime-configurable to some 
-degree, and doing any per-node setup when booting on a single-node 
-system would be wasted effort.
+On Thursday 25 Jun 2020 at 16:24:16 (+0530), Viresh Kumar wrote:
+> The locking around governors handling isn't adequate currently. The list
+> of governors should never be traversed without locking in place. Also we
+> must make sure the governor isn't removed while it is still referenced
+> by code.
 
-Since this is conceptually very similar to the existing hugetlb_cma 
-implementation I'm also wondering about inconsistency with respect to 
-specifying per-node vs. total sizes.
+Thanks for having a look at this!
 
-Another thought, though, is that systems large enough to have multiple 
-NUMA nodes tend not to be short on memory, so it might not be 
-unreasonable to base this all on whatever size the default area is 
-given, and simply have a binary on/off switch to control the per-node 
-aspect.
+This solves the issue for the reference to policy->last_governor, but
+given that your patch is based on top of
+20200623142138.209513-3-qperret@google.com, 'default_governor' needs a
+similar treatment I think.
 
->   config CMA_SIZE_MBYTES
->   	int "Size in Mega Bytes"
->   	depends on !CMA_SIZE_SEL_PERCENTAGE
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index 15bc5026c485..bcbd53aead93 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -30,7 +30,14 @@
->   #define CMA_SIZE_MBYTES 0
->   #endif
->   
-> +#ifdef CONFIG_CMA_PERNUMA_SIZE_MBYTES
-> +#define CMA_SIZE_PERNUMA_MBYTES CONFIG_CMA_PERNUMA_SIZE_MBYTES
-> +#else
-> +#define CMA_SIZE_PERNUMA_MBYTES 0
-> +#endif
-> +
->   struct cma *dma_contiguous_default_area;
-> +static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
->   
->   /*
->    * Default global CMA area size can be defined in kernel's .config.
-> @@ -44,6 +51,8 @@ struct cma *dma_contiguous_default_area;
->    */
->   static const phys_addr_t size_bytes __initconst =
->   	(phys_addr_t)CMA_SIZE_MBYTES * SZ_1M;
-> +static const phys_addr_t pernuma_size_bytes __initconst =
-> +	(phys_addr_t)CMA_SIZE_PERNUMA_MBYTES * SZ_1M;
->   static phys_addr_t  size_cmdline __initdata = -1;
->   static phys_addr_t base_cmdline __initdata;
->   static phys_addr_t limit_cmdline __initdata;
-> @@ -96,6 +105,33 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
->   
->   #endif
->   
-> +void __init dma_pernuma_cma_reserve(void)
-> +{
-> +	int nid;
-> +
-> +	if (!pernuma_size_bytes || nr_online_nodes <= 1)
-> +		return;
-> +
-> +	for_each_node_state(nid, N_ONLINE) {
+Perhaps something along the lines of the (completely untested) snippet
+below?
 
-Do we need/want notifiers to handle currently-offline nodes coming 
-online later (I'm not sure off-hand how NUMA interacts with stuff like 
-"maxcpus=n")?
-
-> +		int ret;
-> +		char name[20];
-> +
-> +		snprintf(name, sizeof(name), "pernuma%d", nid);
-> +		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
-> +						 0, false, name,
-> +						 &dma_contiguous_pernuma_area[nid],
-> +						 nid);
-> +		if (ret) {
-> +			pr_warn("%s: reservation failed: err %d, node %d", __func__,
-> +				ret, nid);
-> +			continue;
-> +		}
-> +
-> +		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
-> +			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
-> +	}
-> +}
-> +
->   /**
->    * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
->    * @limit: End address of the reserved memory (optional, 0 for any).
-> @@ -222,22 +258,31 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
->    * @gfp:   Allocation flags.
->    *
->    * This function allocates contiguous memory buffer for specified device. It
-> - * tries to use device specific contiguous memory area if available, or the
-> - * default global one.
-> + * tries to use device specific contiguous memory area if available, or it
-> + * tries to use per-numa cma, if the allocation fails, it will fallback to
-> + * try default global one.
->    *
-> - * Note that it byapss one-page size of allocations from the global area as
-> - * the addresses within one page are always contiguous, so there is no need
-> - * to waste CMA pages for that kind; it also helps reduce fragmentations.
-> + * Note that it bypass one-page size of allocations from the per-numa and
-> + * global area as the addresses within one page are always contiguous, so
-> + * there is no need to waste CMA pages for that kind; it also helps reduce
-> + * fragmentations.
->    */
->   struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
->   {
->   	size_t count = size >> PAGE_SHIFT;
->   	struct page *page = NULL;
->   	struct cma *cma = NULL;
-> +	int nid = dev ? dev_to_node(dev) : NUMA_NO_NODE;
-
-dev should never be NULL here (the existing check below could be cleaned 
-up if we're refactoring anyway).
-
-> +	bool alloc_from_pernuma = false;
->   
->   	if (dev && dev->cma_area)
->   		cma = dev->cma_area;
-> -	else if (count > 1)
-> +	else if ((nid != NUMA_NO_NODE) && dma_contiguous_pernuma_area[nid]
-> +		&& !(gfp & (GFP_DMA | GFP_DMA32))
-> +		&& (count > 1)) {
-> +		cma = dma_contiguous_pernuma_area[nid];
-> +		alloc_from_pernuma = true;
-> +	} else if (count > 1)
-
-Well this is a big ugly mess... I'd suggest restructuring the whole 
-function to bail out immediately if (count == 1 && !dev->cma_area), then 
-try the per-device, per-node and default areas in turn until something 
-works.
-
->   		cma = dma_contiguous_default_area;
->   
->   	/* CMA can be used only in the context which permits sleeping */
-> @@ -246,6 +291,11 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
->   		size_t cma_align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
->   
->   		page = cma_alloc(cma, count, cma_align, gfp & __GFP_NOWARN);
-> +
-> +		/* fall back to default cma if failed in per-numa cma */
-> +		if (!page && alloc_from_pernuma)
-> +			page = cma_alloc(dma_contiguous_default_area, count,
-> +				cma_align, gfp & __GFP_NOWARN);
->   	}
->   
->   	return page;
-> @@ -264,9 +314,40 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
->    */
->   void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
->   {
-> -	if (!cma_release(dev_get_cma_area(dev), page,
-> -			 PAGE_ALIGN(size) >> PAGE_SHIFT))
-> -		__free_pages(page, get_order(size));
-> +	/* if dev has its own cma, free page from there */
-> +	if (dev && dev->cma_area) {
-
-Again, no new redundant NULL checks please.
-
-> +		if (cma_release(dev->cma_area, page, PAGE_ALIGN(size) >> PAGE_SHIFT))
-> +			return;
-> +	} else {
-> +		/*
-> +		 * otherwise, page is from either per-numa cma or default cma
-> +		 */
-> +		int nid = dev ? dev_to_node(dev) : NUMA_NO_NODE;
-> +
-> +		if (nid != NUMA_NO_NODE) {
-> +			int i;
-> +
-> +			/*
-> +			 * Literally we only need to call cma_release() on pernuma cma of
-> +			 * node nid, howerver, a corner case is that users might write
-> +			 * /sys/devices/pci-x/numa_node to change node to workaround firmware
-> +			 * bug, so it might allocate memory from nodeA CMA, but free from nodeB
-> +			 * CMA.
-> +			 */
-
-Why bother with this dance at all? You have the page, so you can't not 
-know where it is. Just use page_to_nid() like hugetlb_cma does.
-
-Robin.
-
-> +			for (i = 0; i < MAX_NUMNODES; i++) {
-> +				if (cma_release(dma_contiguous_pernuma_area[i], page,
-> +							PAGE_ALIGN(size) >> PAGE_SHIFT))
-> +					return;
-> +			}
-> +		}
-> +
-> +		if (cma_release(dma_contiguous_default_area, page,
-> +					PAGE_ALIGN(size) >> PAGE_SHIFT))
-> +			return;
-> +	}
-> +
-> +	/* not in any cma, free from buddy */
-> +	__free_pages(page, get_order(size));
->   }
->   
->   /*
-> 
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index dad6b85f4c89..9d7cf2ce2768 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1062,6 +1062,17 @@ __weak struct cpufreq_governor *cpufreq_default_governor(void)
+ 	return NULL;
+ }
+ 
++static bool get_default_governor(void)
++{
++	bool ret;
++
++	mutex_lock(&cpufreq_governor_mutex);
++	ret = default_governor && !try_module_get(default_governor->owner);
++	mutex_unlock(&cpufreq_governor_mutex);
++
++	return ret;
++}
++
+ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+ {
+ 	struct cpufreq_governor *gov = NULL;
+@@ -1073,20 +1084,21 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+ 		/* Update policy governor to the one used before hotplug. */
+ 		gov = get_governor(policy->last_governor);
+ 		if (gov) {
+-			put_governor = true;
+ 			pr_debug("Restoring governor %s for cpu %d\n",
+ 				 policy->governor->name, policy->cpu);
+-		} else if (default_governor) {
++		} else if (get_default_governor()) {
+ 			gov = default_governor;
+ 		} else {
+ 			return -ENODATA;
+ 		}
++		put_governor = true;
+ 	} else {
+ 		/* Use the default policy if there is no last_policy. */
+ 		if (policy->last_policy) {
+ 			pol = policy->last_policy;
+-		} else if (default_governor) {
++		} else if (get_default_governor()) {
+ 			pol = cpufreq_parse_policy(default_governor->name);
++			module_put(default_governor->owner);
+ 			/*
+ 			 * In case the default governor is neiter "performance"
+ 			 * nor "powersave", fall back to the initial policy
