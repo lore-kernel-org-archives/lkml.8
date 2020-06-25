@@ -2,205 +2,208 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92017C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBF4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63CD22080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030D820707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIRxH08o"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MTbK/Uqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406690AbgFYRQn (ORCPT
+        id S2406721AbgFYRSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404187AbgFYRQm (ORCPT
+        Thu, 25 Jun 2020 13:18:38 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:24720 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404187AbgFYRSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:16:42 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209FCC08C5C1;
-        Thu, 25 Jun 2020 10:16:42 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h15so6647142wrq.8;
-        Thu, 25 Jun 2020 10:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yVQ9UuGl9K3XAoQkcU4sk60ru7Jl6/1Dd6NAYAebMXg=;
-        b=lIRxH08oBEtuy5h9XR66KqcOrsxZ0XlddiBu/lKKdWleODwNSaQM/WbnVXHsuvLvUh
-         agkgoxKGXBnSKFm5gB7hSS8yJLE7HDathIX15iveNqp21BTU9vcigalAcCXU8EY3JWUf
-         XXnTC11ape0jhLCHnTImNZr21PRnH2MsmwirJjJLe9LGrwMFt+DcYCgAIvfqU8A8taOh
-         ybrXosKbJnHy75RxSPj8T0YjjU67Se6ZfNLppxcybAorylHPm0I4ykbEs/80gTIaLRNa
-         qcv8Y7zSXGPg0IH2JfejT6U0tKcKzi1YPU3skGHjhTbj09Mc7YDgIz8mnexPVKRvWwyP
-         5enQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yVQ9UuGl9K3XAoQkcU4sk60ru7Jl6/1Dd6NAYAebMXg=;
-        b=bMLP+m4wTk8X1vr5C+3hN9wCaoTD2l/q5KP1IgBvNUXNs+GhVJQyOgjWB2fG8OBGeo
-         3xN7PqlclYlnjCjKbMKWgL59Q1QvsAiakZhnIXrbj18WnGGshdlsdGIbn+AJ5wGd+m6x
-         g+f+p/57z3pPTZYEPl+/LOM6XcJyRCP1ZMO+/RJ13nN3Z2+GmojqhP1RjunRo23VSEl8
-         lFXsc7htpHsnuCRpAAG+dsnAIfgDHHiJogPqsDOqGb1EXg69yvLSiTh6c+AiepaM5zLc
-         ywQVrUkDQE2ldPORSdYYlADWp5dsUvXtKT1nbCvnHhzxj1FzkH5Y9EyBswCCXCRYl7BA
-         aXYA==
-X-Gm-Message-State: AOAM530Pi5XC/VUTvThYXZ5IzkbHgPEQParVdO5p0g7jUcsSkfiEye06
-        5ZCc22j1Lh+e/YzOF72WBar31b657aCznneec2c=
-X-Google-Smtp-Source: ABdhPJxZfMZ1K1HQA1XbNumMSVKKi36ZAB/pjLuv0BsyN6lesNEXqVUKOGIt8dkTenZnxe/2Sy9ztW2+SpjOTTCGJSU=
-X-Received: by 2002:adf:ef89:: with SMTP id d9mr24684664wro.124.1593105400767;
- Thu, 25 Jun 2020 10:16:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625165042.13708-1-mironov.ivan@gmail.com>
-In-Reply-To: <20200625165042.13708-1-mironov.ivan@gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 25 Jun 2020 13:16:29 -0400
-Message-ID: <CADnq5_NgvGEW+4t5gzLdaOJo0HC10M5iEaE+j7O6yKB9H6H-5w@mail.gmail.com>
-Subject: Re: [PATCH v1] drm/amd/powerplay: Fix NULL dereference in lock_bus()
- on Vega20 w/o RAS
-To:     Ivan Mironov <mironov.ivan@gmail.com>
-Cc:     amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Bjorn Nostvold <bjorn.nostvold@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        "for 3.8" <stable@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 25 Jun 2020 13:18:36 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200625171832epoutp02d49f576831dc4386083297349418ab3d~b2QXPXmkO1189011890epoutp02G
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 17:18:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200625171832epoutp02d49f576831dc4386083297349418ab3d~b2QXPXmkO1189011890epoutp02G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593105512;
+        bh=e1UqTC42OgOEeURf7nmkwWqj9cfZtAkWqrw5aq0Mhtw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=MTbK/UqfwnrIintISo0Qq9F5oWQw/2ViUmpbYJmx9zb2/uOmtjc90l7/Zz726eHkL
+         fDrqAwndH0PGjEMHlrYYWUbbsK8iqdVueRYug+9qMXuqgA/OuABeDHki8+atmxM7pB
+         pySPpxmm5Yyk/VM9w+jOC3o/q6YTlF7IVzY5tkoE=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200625171830epcas5p193baf1ccde11b9d8242203f667294d34~b2QV5xku11015710157epcas5p1z;
+        Thu, 25 Jun 2020 17:18:30 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F2.33.09467.66CD4FE5; Fri, 26 Jun 2020 02:18:30 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200625171829epcas5p268486a0780571edb4999fc7b3caab602~b2QUuXNpR2484524845epcas5p2K;
+        Thu, 25 Jun 2020 17:18:29 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200625171829epsmtrp18d779d7491e2a3427a39cd2050bf1022~b2QUtjpYj1577615776epsmtrp1G;
+        Thu, 25 Jun 2020 17:18:29 +0000 (GMT)
+X-AuditID: b6c32a49-a29ff700000024fb-3e-5ef4dc66819a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4C.77.08382.56CD4FE5; Fri, 26 Jun 2020 02:18:29 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200625171826epsmtip20eb790a1bfe3be2f7ce238420f3475ec~b2QSSxx4q1929119291epsmtip2c;
+        Thu, 25 Jun 2020 17:18:26 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org
+Cc:     asml.silence@gmail.com, Damien.LeMoal@wdc.com, hch@infradead.org,
+        linux-fsdevel@vger.kernel.org, mb@lightnvm.io,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        selvakuma.s1@samsung.com, nj.shetty@samsung.com,
+        javier.gonz@samsung.com, Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH v2 0/2] zone-append support in io-uring and aio
+Date:   Thu, 25 Jun 2020 22:45:47 +0530
+Message-Id: <1593105349-19270-1-git-send-email-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsWy7bCmlm7anS9xBlOPqVn8nj6F1WLOqm2M
+        Fqvv9rNZdP3bwmLR2v6NyeL0hEVMFu9az7FYPL7zmd3i6P+3bBZTpjUxWuy9pW2xZ+9JFovL
+        u+awWazYfoTFYtvv+cwWV6YsYrZ4/eMkm8X5v8dZHYQ8ds66y+6xeYWWx+WzpR6bPk1i9+i+
+        +oPRo2/LKkaPz5vkPNoPdDN5bHrylimAM4rLJiU1J7MstUjfLoEr40vrB9aC58oVv2/uYG5g
+        XCDTxcjJISFgIrFsxnzmLkYuDiGB3YwSt54th3I+MUose7qCFcL5xigxc+4iFpiWIzefM0Ik
+        9gIlWpayQTifGSW2XmoEauHgYBPQlLgwuRTEFBGwkdi5RAWkhFngCpPE8xmzWUEGCQvYS/y7
+        d40NpIZFQFXi/GQ2kDCvgLNE85/JULvkJG6e6wS7SEJgLofE8bbFTBAJF4kFRy5B2cISr45v
+        YYewpSRe9rdB2cUSv+4chWruYJS43jATaqq9xMU9f5lAFjMD3bl+lz5ImFmAT6L39xOwsIQA
+        r0RHmxBEtaLEvUlPWSFscYmHM5ZA2R4S1yZOBJsoJBArsexQE/sERplZCEMXMDKuYpRMLSjO
+        TU8tNi0wzEst1ytOzC0uzUvXS87P3cQITjdanjsY7z74oHeIkYmD8RCjBAezkghviNunOCHe
+        lMTKqtSi/Pii0pzU4kOM0hwsSuK8Sj/OxAkJpCeWpGanphakFsFkmTg4pRqYqkzeCHtnfpy5
+        +qrGJ19Dbcdu3ryN5nIbzqr1qE2foFhT1ntmuSxDRcd0fW9miRu2KstnMRzwfCPEfkQoZ/Xl
+        OsaekweSvf1uHSh9Zsa15FN/2z313Yc2qjxW61C+v1dd4XBRkYBymdL0xj/bt6y/0cVZa3jS
+        6NDlGUe45wiaW382X2quqKndM3VrTciD/fuXPnDWvBh5JvxamlC9Bc/2SVtFryW+SVxho/Bu
+        lotf7c8XKvsmuFS7aoRNial8oP6h7YVJkV9hqZrsskL36e9OdSxZo/8g6QrL+3v+t3Iq1cKu
+        ZJ1QsHn60VYv3aRSXdeFcX76q6n3ln35sFKh+vLclPhQ9Yf3rj6Qj/l0/0mlEktxRqKhFnNR
+        cSIAlrSUF6YDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsWy7bCSvG7qnS9xBpcvi1v8nj6F1WLOqm2M
+        Fqvv9rNZdP3bwmLR2v6NyeL0hEVMFu9az7FYPL7zmd3i6P+3bBZTpjUxWuy9pW2xZ+9JFovL
+        u+awWazYfoTFYtvv+cwWV6YsYrZ4/eMkm8X5v8dZHYQ8ds66y+6xeYWWx+WzpR6bPk1i9+i+
+        +oPRo2/LKkaPz5vkPNoPdDN5bHrylimAM4rLJiU1J7MstUjfLoEr40vrB9aC58oVv2/uYG5g
+        XCDTxcjJISFgInHk5nPGLkYuDiGB3YwSnTd/sEMkxCWar8HYwhIr/z1nhyj6yChx/fEBli5G
+        Dg42AU2JC5NLQWpEBBwkuo4/ZgKpYRZ4wiTR+W0jI0hCWMBe4t+9a2wg9SwCqhLnJ7OBhHkF
+        nCWa/0xmgZgvJ3HzXCfzBEaeBYwMqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxgoNa
+        S3MH4/ZVH/QOMTJxMB5ilOBgVhLhDXH7FCfEm5JYWZValB9fVJqTWnyIUZqDRUmc90bhwjgh
+        gfTEktTs1NSC1CKYLBMHp1QDU/sBh6LDARe/XHAz2ris3Znx3cS8xX/9NsxJ2aFabpt/eLbV
+        S/bF/i9WVtcd+ZXUX/7/ZdXhDFXnpZuXv2vq/PRnJ8cyJ9O4ldznY75MX1sn+FvOPn3BLP/n
+        m2+t9m403FnE6SI/KeLdrt/Cikm7WXMO/vo237dNSst3XvHtBx6BOqkXnUMTHtlEPLMq2vx+
+        0a6VG+6UuzT+vjNvEY/O/NNG5zbmzThr3HU+rWOqIq9BgfoL9cOrik6snbUzbHfbg3ufTGZc
+        Wej37/ohYfnYQp37l3YxTtZaJBYrmqQ8N+Coe9VKRduUvZs4T+24Gv/jg8DePJ2NTbcnPdtf
+        sv/wFD+xol0RB9d0H9H8WNsiabRJiaU4I9FQi7moOBEAsInSN9kCAAA=
+X-CMS-MailID: 20200625171829epcas5p268486a0780571edb4999fc7b3caab602
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200625171829epcas5p268486a0780571edb4999fc7b3caab602
+References: <CGME20200625171829epcas5p268486a0780571edb4999fc7b3caab602@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+[Revised as per feedback from Damien, Pavel, Jens, Christoph, Matias, Wilcox]
 
-Alex
+This patchset enables zone-append using io-uring/linux-aio, on block IO path.
+Purpose is to provide zone-append consumption ability to applications which are
+using zoned-block-device directly.
 
-On Thu, Jun 25, 2020 at 1:14 PM Ivan Mironov <mironov.ivan@gmail.com> wrote:
->
-> I updated my system with Radeon VII from kernel 5.6 to kernel 5.7, and
-> following started to happen on each boot:
->
->         ...
->         BUG: kernel NULL pointer dereference, address: 0000000000000128
->         ...
->         CPU: 9 PID: 1940 Comm: modprobe Tainted: G            E     5.7.2-200.im0.fc32.x86_64 #1
->         Hardware name: System manufacturer System Product Name/PRIME X570-P, BIOS 1407 04/02/2020
->         RIP: 0010:lock_bus+0x42/0x60 [amdgpu]
->         ...
->         Call Trace:
->          i2c_smbus_xfer+0x3d/0xf0
->          i2c_default_probe+0xf3/0x130
->          i2c_detect.isra.0+0xfe/0x2b0
->          ? kfree+0xa3/0x200
->          ? kobject_uevent_env+0x11f/0x6a0
->          ? i2c_detect.isra.0+0x2b0/0x2b0
->          __process_new_driver+0x1b/0x20
->          bus_for_each_dev+0x64/0x90
->          ? 0xffffffffc0f34000
->          i2c_register_driver+0x73/0xc0
->          do_one_initcall+0x46/0x200
->          ? _cond_resched+0x16/0x40
->          ? kmem_cache_alloc_trace+0x167/0x220
->          ? do_init_module+0x23/0x260
->          do_init_module+0x5c/0x260
->          __do_sys_init_module+0x14f/0x170
->          do_syscall_64+0x5b/0xf0
->          entry_SYSCALL_64_after_hwframe+0x44/0xa9
->         ...
->
-> Error appears when some i2c device driver tries to probe for devices
-> using adapter registered by `smu_v11_0_i2c_eeprom_control_init()`.
-> Code supporting this adapter requires `adev->psp.ras.ras` to be not
-> NULL, which is true only when `amdgpu_ras_init()` detects HW support by
-> calling `amdgpu_ras_check_supported()`.
->
-> Before 9015d60c9ee1, adapter was registered by
->
->         -> amdgpu_device_ip_init()
->           -> amdgpu_ras_recovery_init()
->             -> amdgpu_ras_eeprom_init()
->               -> smu_v11_0_i2c_eeprom_control_init()
->
-> after verifying that `adev->psp.ras.ras` is not NULL in
-> `amdgpu_ras_recovery_init()`. Currently it is registered
-> unconditionally by
->
->         -> amdgpu_device_ip_init()
->           -> pp_sw_init()
->             -> hwmgr_sw_init()
->               -> vega20_smu_init()
->                 -> smu_v11_0_i2c_eeprom_control_init()
->
-> Fix simply adds HW support check (ras == NULL => no support) before
-> calling `smu_v11_0_i2c_eeprom_control_{init,fini}()`.
->
-> Please note that there is a chance that similar fix is also required for
-> CHIP_ARCTURUS. I do not know whether any actual Arcturus hardware without
-> RAS exist, and whether calling `smu_i2c_eeprom_init()` makes any sense
-> when there is no HW support.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 9015d60c9ee1 ("drm/amdgpu: Move EEPROM I2C adapter to amdgpu_device")
-> Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
-> Tested-by: Bjorn Nostvold <bjorn.nostvold@gmail.com>
-> ---
-> Changelog:
->
-> v1:
->   - Added "Tested-by" for another user who used this patch to fix the
->     same issue.
->
-> v0:
->   - Patch introduced.
-> ---
->  drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-> index 2fb97554134f..c2e0fbbccf56 100644
-> --- a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-> +++ b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-> @@ -522,9 +522,11 @@ static int vega20_smu_init(struct pp_hwmgr *hwmgr)
->         priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].version = 0x01;
->         priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].size = sizeof(DpmActivityMonitorCoeffInt_t);
->
-> -       ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
-> -       if (ret)
-> -               goto err4;
-> +       if (adev->psp.ras.ras) {
-> +               ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
-> +               if (ret)
-> +                       goto err4;
-> +       }
->
->         return 0;
->
-> @@ -560,7 +562,8 @@ static int vega20_smu_fini(struct pp_hwmgr *hwmgr)
->                         (struct vega20_smumgr *)(hwmgr->smu_backend);
->         struct amdgpu_device *adev = hwmgr->adev;
->
-> -       smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
-> +       if (adev->psp.ras.ras)
-> +               smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
->
->         if (priv) {
->                 amdgpu_bo_free_kernel(&priv->smu_tables.entry[TABLE_PPTABLE].handle,
-> --
-> 2.26.2
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+The application may specify RWF_ZONE_APPEND flag with write when it wants to
+send zone-append. RWF_* flags work with a certain subset of APIs e.g. uring,
+aio, and pwritev2. An error is reported if zone-append is requested using
+pwritev2. It is not in the scope of this patchset to support pwritev2 or any
+other sync write API for reasons described later.
+
+Zone-append completion result --->
+With zone-append, where write took place can only be known after completion.
+So apart from usual return value of write, additional mean is needed to obtain
+the actual written location.
+
+In aio, this is returned to application using res2 field of io_event -
+
+struct io_event {
+        __u64           data;           /* the data field from the iocb */
+        __u64           obj;            /* what iocb this event came from */
+        __s64           res;            /* result code for this event */
+        __s64           res2;           /* secondary result */
+};
+
+In io-uring, cqe->flags is repurposed for zone-append result.
+
+struct io_uring_cqe {
+        __u64   user_data;      /* sqe->data submission passed back */
+        __s32   res;            /* result code for this event */
+        __u32   flags;
+};
+
+Since 32 bit flags is not sufficient, we choose to return zone-relative offset
+in sector/512b units. This can cover zone-size represented by chunk_sectors.
+Applications will have the trouble to combine this with zone start to know
+disk-relative offset. But if more bits are obtained by pulling from res field
+that too would compel application to interpret res field differently, and it
+seems more painstaking than the former option.
+To keep uniformity, even with aio, zone-relative offset is returned.
+
+Append using io_uring fixed-buffer --->
+This is flagged as not-supported at the moment. Reason being, for fixed-buffer
+io-uring sends iov_iter of bvec type. But current append-infra in block-layer
+does not support such iov_iter.
+
+Block IO vs File IO --->
+For now, the user zone-append interface is supported only for zoned-block-device.
+Regular files/block-devices are not supported. Regular file-system (e.g. F2FS)
+will not need this anyway, because zone peculiarities are abstracted within FS.
+At this point, ZoneFS also likes to use append implicitly rather than explicitly.
+But if/when ZoneFS starts supporting explicit/on-demand zone-append, the check
+allowing-only-block-device should be changed.
+
+Semantics --->
+Zone-append, by its nature, may perform write on a different location than what
+was specified. It does not fit into POSIX, and trying to fit may just undermine
+its benefit. It may be better to keep semantics as close to zone-append as
+possible i.e. specify zone-start location, and obtain the actual-write location
+post completion. Towards that goal, existing async APIs seem to fit fine.
+Async APIs (uring, linux aio) do not work on implicit write-pointer and demand
+explicit write offset (which is what we need for append). Neither write-pointer
+is taken as input, nor it is updated on completion. And there is a clear way to
+get zone-append result. Zone-aware applications while using these async APIs
+can be fine with, for the lack of better word, zone-append semantics itself.
+
+Sync APIs work with implicit write-pointer (at least few of those), and there is
+no way to obtain zone-append result, making it hard for user-space zone-append.
+
+Tests --->
+Using new interface in fio (uring and libaio engine) by extending zbd tests
+for zone-append: https://github.com/axboe/fio/pull/1026
+
+Changes since v1:
+- No new opcodes in uring or aio. Use RWF_ZONE_APPEND flag instead.
+- linux-aio changes vanish because of no new opcode
+- Fixed the overflow and other issues mentioned by Damien
+- Simplified uring support code, fixed the issues mentioned by Pavel
+- Added error checks
+
+Kanchan Joshi (1):
+  fs,block: Introduce RWF_ZONE_APPEND and handling in direct IO path
+
+Selvakumar S (1):
+  io_uring: add support for zone-append
+
+ fs/block_dev.c          | 28 ++++++++++++++++++++++++----
+ fs/io_uring.c           | 32 ++++++++++++++++++++++++++++++--
+ include/linux/fs.h      |  9 +++++++++
+ include/uapi/linux/fs.h |  5 ++++-
+ 4 files changed, 67 insertions(+), 7 deletions(-)
+
+-- 
+2.7.4
+
