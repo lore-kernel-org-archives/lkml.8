@@ -2,278 +2,247 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99341C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD88206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71341206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="BauguZ0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404645AbgFYMRc (ORCPT
+        id S2404650AbgFYMSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:17:32 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:6814 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404343AbgFYMRb (ORCPT
+        Thu, 25 Jun 2020 08:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404475AbgFYMR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:17:31 -0400
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 25 Jun 2020 05:17:30 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 25 Jun 2020 05:17:27 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 25 Jun 2020 17:47:02 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 47F504A5B; Thu, 25 Jun 2020 17:47:02 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [v2] drm/msm/dpu: add support for dither block in display
-Date:   Thu, 25 Jun 2020 17:46:59 +0530
-Message-Id: <1593087419-903-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 25 Jun 2020 08:17:59 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F889C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:17:59 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t194so5691933wmt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aA/oXrkv3sIy+s2Zp87t2t4rA27Esv7FPgR5kYDO2Ko=;
+        b=BauguZ0b2C8HJrzUizMCRyp+s56kk9/WlVHsF82HHJ/NSEAvFJlBn0pGIcffmJHk+t
+         zkWH6DMsT/W6wF6p7zptOq0diTzk2pnVtrp88121PFTHh49uhmJgfI6aCr+eIcO4pUkp
+         qkj/JmOypfYmcJjsnQu9xtWJgEFGq7jSTpBdU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aA/oXrkv3sIy+s2Zp87t2t4rA27Esv7FPgR5kYDO2Ko=;
+        b=pKckwPSVMAEDeuz3Ma/bp8ZBlNzsU5NOJFRafzGdlewZAPDmAu0ibwDV3wdmLw3034
+         01XqWF+5xEm0lgjCwmnanvDMzzfznNAfG0RxlIh8tfua0yT0b3nLV8whlFxl/2UmNfJD
+         xJtGXzOz+q19/iulyvlPUuyS/wVrc2oX24HmZhoLCXFv3SRbZgyGd606jn1nh2QP6f1m
+         l9DlFBaMebOTn9+/P//Ees3DONhCaNePmrEsl1oGA3E8JmdBTGPxprk1sqA40E65PPVL
+         Nlu/l+/5Nl9MBYu5jSmhV/h1+kfXG7+vZSUqGcg72+SMQpfwT/mLl2p2zIU/tj5Ps+Da
+         1qkg==
+X-Gm-Message-State: AOAM532NktB6bHgihcjjtVl9sPdotywPWlgODY9d3xyM+w2lbyZr2Yf6
+        oKoeX7k1357O6PyFigl/TkS4ig==
+X-Google-Smtp-Source: ABdhPJzJgrOf1IvTIuo5ckdk8A5+c8I2EDpfgIjr6HNxJY1iwBurIE4Cc4aGzr5Gw1lHTVtUd48q5g==
+X-Received: by 2002:a1c:e355:: with SMTP id a82mr3162219wmh.165.1593087477784;
+        Thu, 25 Jun 2020 05:17:57 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id k126sm6799176wme.17.2020.06.25.05.17.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 05:17:56 -0700 (PDT)
+Subject: Re: [PATCH net-next v2] bridge: mrp: Extend MRP netlink interface
+ with IFLA_BRIDGE_MRP_CLEAR
+To:     kernel test robot <lkp@intel.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        roopa@cumulusnetworks.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+Cc:     kbuild-all@lists.01.org
+References: <20200625070630.3267620-1-horatiu.vultur@microchip.com>
+ <202006251953.iZkqIUMb%lkp@intel.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <e0c847b9-8af5-c24f-8813-cffb388e3e23@cumulusnetworks.com>
+Date:   Thu, 25 Jun 2020 15:17:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <202006251953.iZkqIUMb%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change enables dither block for primary interface
-in display.
+On 25/06/2020 15:03, kernel test robot wrote:
+> Hi Horatiu,
+> 
+> Thank you for the patch! Perhaps something to improve:
+> 
 
-Enabled for 6bpc in the current version.
+Hi,
+I think you should drop the __rcu tag for the mrp_list member and also
+from the "list" member of struct br_mrp to fix most of the below.
 
-Changes in v1:
- - Remove redundant error checks (Rob).
+Cheers,
+ Nik
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c     | 39 +++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c | 63 +++++++++++++++++++++----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h | 28 +++++++++++
- 3 files changed, 121 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 63976dc..14df5ac 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -208,6 +208,36 @@ struct dpu_encoder_virt {
- 
- #define to_dpu_encoder_virt(x) container_of(x, struct dpu_encoder_virt, base)
- 
-+static u32 dither_matrix[DITHER_MATRIX_SZ] = {
-+	15, 7, 13, 5, 3, 11, 1, 9, 12, 4, 14, 6, 0, 8, 2, 10
-+};
-+
-+static void _dpu_encoder_setup_dither(struct dpu_encoder_phys *phys)
-+{
-+	struct dpu_hw_dither_cfg dither_cfg = { 0 };
-+
-+	if (!phys->hw_pp || !phys->hw_pp->ops.setup_dither)
-+		return;
-+
-+	switch (phys->connector->display_info.bpc) {
-+	case 6:
-+		dither_cfg.c0_bitdepth = 6;
-+		dither_cfg.c1_bitdepth = 6;
-+		dither_cfg.c2_bitdepth = 6;
-+		dither_cfg.c3_bitdepth = 6;
-+		dither_cfg.temporal_en = 0;
-+		break;
-+	default:
-+		phys->hw_pp->ops.setup_dither(phys->hw_pp, NULL);
-+		return;
-+	}
-+
-+	memcpy(&dither_cfg.matrix, dither_matrix,
-+			sizeof(u32) * DITHER_MATRIX_SZ);
-+
-+	phys->hw_pp->ops.setup_dither(phys->hw_pp, &dither_cfg);
-+}
-+
- void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys *phys_enc,
- 		enum dpu_intr_idx intr_idx)
- {
-@@ -1082,6 +1112,7 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
- 	struct dpu_encoder_virt *dpu_enc = NULL;
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
-+	int i;
- 
- 	if (!drm_enc || !drm_enc->dev) {
- 		DPU_ERROR("invalid parameters\n");
-@@ -1104,6 +1135,14 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
- 				dpu_kms->catalog);
- 
- 	_dpu_encoder_update_vsync_source(dpu_enc, &dpu_enc->disp_info);
-+
-+	if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
-+		for (i = 0; i < dpu_enc->num_phys_encs; i++) {
-+			struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
-+
-+			_dpu_encoder_setup_dither(phys);
-+		}
-+	}
- }
- 
- void dpu_encoder_virt_runtime_resume(struct drm_encoder *drm_enc)
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-index d110a40..7411ab6 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-@@ -28,6 +28,16 @@
- #define PP_FBC_BUDGET_CTL               0x038
- #define PP_FBC_LOSSY_MODE               0x03C
- 
-+#define PP_DITHER_EN			0x000
-+#define PP_DITHER_BITDEPTH		0x004
-+#define PP_DITHER_MATRIX		0x008
-+
-+#define DITHER_DEPTH_MAP_INDEX 9
-+
-+static u32 dither_depth_map[DITHER_DEPTH_MAP_INDEX] = {
-+	0, 0, 0, 0, 0, 0, 0, 1, 2
-+};
-+
- static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
- 		const struct dpu_mdss_cfg *m,
- 		void __iomem *addr,
-@@ -49,6 +59,37 @@ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static void dpu_hw_pp_setup_dither(struct dpu_hw_pingpong *pp,
-+				    struct dpu_hw_dither_cfg *cfg)
-+{
-+	struct dpu_hw_blk_reg_map *c;
-+	u32 i, base, data = 0;
-+
-+	c = &pp->hw;
-+	base = pp->caps->sblk->dither.base;
-+	if (!cfg) {
-+		DPU_REG_WRITE(c, base + PP_DITHER_EN, 0);
-+		return;
-+	}
-+
-+	data = dither_depth_map[cfg->c0_bitdepth] & REG_MASK(2);
-+	data |= (dither_depth_map[cfg->c1_bitdepth] & REG_MASK(2)) << 2;
-+	data |= (dither_depth_map[cfg->c2_bitdepth] & REG_MASK(2)) << 4;
-+	data |= (dither_depth_map[cfg->c3_bitdepth] & REG_MASK(2)) << 6;
-+	data |= (cfg->temporal_en) ? (1 << 8) : 0;
-+
-+	DPU_REG_WRITE(c, base + PP_DITHER_BITDEPTH, data);
-+
-+	for (i = 0; i < DITHER_MATRIX_SZ - 3; i += 4) {
-+		data = (cfg->matrix[i] & REG_MASK(4)) |
-+			((cfg->matrix[i + 1] & REG_MASK(4)) << 4) |
-+			((cfg->matrix[i + 2] & REG_MASK(4)) << 8) |
-+			((cfg->matrix[i + 3] & REG_MASK(4)) << 12);
-+		DPU_REG_WRITE(c, base + PP_DITHER_MATRIX + i, data);
-+	}
-+	DPU_REG_WRITE(c, base + PP_DITHER_EN, 1);
-+}
-+
- static int dpu_hw_pp_setup_te_config(struct dpu_hw_pingpong *pp,
- 		struct dpu_hw_tear_check *te)
- {
-@@ -180,15 +221,19 @@ static u32 dpu_hw_pp_get_line_count(struct dpu_hw_pingpong *pp)
- 	return line;
- }
- 
--static void _setup_pingpong_ops(struct dpu_hw_pingpong_ops *ops,
--	const struct dpu_pingpong_cfg *hw_cap)
-+static void _setup_pingpong_ops(struct dpu_hw_pingpong *c,
-+				unsigned long features)
- {
--	ops->setup_tearcheck = dpu_hw_pp_setup_te_config;
--	ops->enable_tearcheck = dpu_hw_pp_enable_te;
--	ops->connect_external_te = dpu_hw_pp_connect_external_te;
--	ops->get_vsync_info = dpu_hw_pp_get_vsync_info;
--	ops->poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
--	ops->get_line_count = dpu_hw_pp_get_line_count;
-+	c->ops.setup_tearcheck = dpu_hw_pp_setup_te_config;
-+	c->ops.enable_tearcheck = dpu_hw_pp_enable_te;
-+	c->ops.connect_external_te = dpu_hw_pp_connect_external_te;
-+	c->ops.get_vsync_info = dpu_hw_pp_get_vsync_info;
-+	c->ops.poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
-+	c->ops.get_line_count = dpu_hw_pp_get_line_count;
-+
-+	if (test_bit(DPU_PINGPONG_DITHER, &features) &&
-+		IS_SC7180_TARGET(c->hw.hwversion))
-+		c->ops.setup_dither = dpu_hw_pp_setup_dither;
- };
- 
- static struct dpu_hw_blk_ops dpu_hw_ops;
-@@ -212,7 +257,7 @@ struct dpu_hw_pingpong *dpu_hw_pingpong_init(enum dpu_pingpong idx,
- 
- 	c->idx = idx;
- 	c->caps = cfg;
--	_setup_pingpong_ops(&c->ops, c->caps);
-+	_setup_pingpong_ops(c, c->caps->features);
- 
- 	dpu_hw_blk_init(&c->base, DPU_HW_BLK_PINGPONG, idx, &dpu_hw_ops);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-index d73cb73..065996b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-@@ -10,6 +10,8 @@
- #include "dpu_hw_util.h"
- #include "dpu_hw_blk.h"
- 
-+#define DITHER_MATRIX_SZ 16
-+
- struct dpu_hw_pingpong;
- 
- struct dpu_hw_tear_check {
-@@ -35,6 +37,26 @@ struct dpu_hw_pp_vsync_info {
- };
- 
- /**
-+ * struct dpu_hw_dither_cfg - dither feature structure
-+ * @flags: for customizing operations
-+ * @temporal_en: temperal dither enable
-+ * @c0_bitdepth: c0 component bit depth
-+ * @c1_bitdepth: c1 component bit depth
-+ * @c2_bitdepth: c2 component bit depth
-+ * @c3_bitdepth: c2 component bit depth
-+ * @matrix: dither strength matrix
-+ */
-+struct dpu_hw_dither_cfg {
-+	u64 flags;
-+	u32 temporal_en;
-+	u32 c0_bitdepth;
-+	u32 c1_bitdepth;
-+	u32 c2_bitdepth;
-+	u32 c3_bitdepth;
-+	u32 matrix[DITHER_MATRIX_SZ];
-+};
-+
-+/**
-  *
-  * struct dpu_hw_pingpong_ops : Interface to the pingpong Hw driver functions
-  *  Assumption is these functions will be called after clocks are enabled
-@@ -82,6 +104,12 @@ struct dpu_hw_pingpong_ops {
- 	 * Obtain current vertical line counter
- 	 */
- 	u32 (*get_line_count)(struct dpu_hw_pingpong *pp);
-+
-+	/**
-+	 * Setup dither matix for pingpong block
-+	 */
-+	void (*setup_dither)(struct dpu_hw_pingpong *pp,
-+			struct dpu_hw_dither_cfg *cfg);
- };
- 
- struct dpu_hw_pingpong {
--- 
-1.9.1
+> [auto build test WARNING on net-next/master]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Horatiu-Vultur/bridge-mrp-Extend-MRP-netlink-interface-with-IFLA_BRIDGE_MRP_CLEAR/20200625-150941
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 147373d968f1c1b5d6bb71e4e8b7495eeb9cdcae
+> config: i386-randconfig-s001-20200624 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.2-dirty
+>         # save the attached .config to linux build tree
+>         make W=1 C=1 ARCH=i386 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+>    net/bridge/br_mrp.c:106:18: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [usertype] @@     got restricted __be16 [usertype] @@
+>    net/bridge/br_mrp.c:106:18: sparse:     expected unsigned short [usertype]
+>    net/bridge/br_mrp.c:106:18: sparse:     got restricted __be16 [usertype]
+>    net/bridge/br_mrp.c:281:23: sparse: sparse: incorrect type in argument 1 (different modifiers) @@     expected struct list_head *entry @@     got struct list_head [noderef] * @@
+>    net/bridge/br_mrp.c:281:23: sparse:     expected struct list_head *entry
+>    net/bridge/br_mrp.c:281:23: sparse:     got struct list_head [noderef] *
+>    net/bridge/br_mrp.c:332:28: sparse: sparse: incorrect type in argument 1 (different modifiers) @@     expected struct list_head *new @@     got struct list_head [noderef] * @@
+>    net/bridge/br_mrp.c:332:28: sparse:     expected struct list_head *new
+>    net/bridge/br_mrp.c:332:28: sparse:     got struct list_head [noderef] *
+>    net/bridge/br_mrp.c:332:40: sparse: sparse: incorrect type in argument 2 (different modifiers) @@     expected struct list_head *head @@     got struct list_head [noderef] * @@
+>    net/bridge/br_mrp.c:332:40: sparse:     expected struct list_head *head
+>    net/bridge/br_mrp.c:332:40: sparse:     got struct list_head [noderef] *
+>    net/bridge/br_mrp.c:691:29: sparse: sparse: incorrect type in argument 1 (different modifiers) @@     expected struct list_head const *head @@     got struct list_head [noderef] * @@
+>    net/bridge/br_mrp.c:691:29: sparse:     expected struct list_head const *head
+>    net/bridge/br_mrp.c:691:29: sparse:     got struct list_head [noderef] *
+>>> net/bridge/br_mrp.c:383:9: sparse: sparse: dereference of noderef expression
+>>> net/bridge/br_mrp.c:383:9: sparse: sparse: dereference of noderef expression
+>>> net/bridge/br_mrp.c:383:9: sparse: sparse: dereference of noderef expression
+> 
+> vim +383 net/bridge/br_mrp.c
+> 
+>    284	
+>    285	/* Adds a new MRP instance.
+>    286	 * note: called under rtnl_lock
+>    287	 */
+>    288	int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance)
+>    289	{
+>    290		struct net_bridge_port *p;
+>    291		struct br_mrp *mrp;
+>    292		int err;
+>    293	
+>    294		/* If the ring exists, it is not possible to create another one with the
+>    295		 * same ring_id
+>    296		 */
+>    297		mrp = br_mrp_find_id(br, instance->ring_id);
+>    298		if (mrp)
+>    299			return -EINVAL;
+>    300	
+>    301		if (!br_mrp_get_port(br, instance->p_ifindex) ||
+>    302		    !br_mrp_get_port(br, instance->s_ifindex))
+>    303			return -EINVAL;
+>    304	
+>    305		/* It is not possible to have the same port part of multiple rings */
+>    306		if (!br_mrp_unique_ifindex(br, instance->p_ifindex) ||
+>    307		    !br_mrp_unique_ifindex(br, instance->s_ifindex))
+>    308			return -EINVAL;
+>    309	
+>    310		mrp = kzalloc(sizeof(*mrp), GFP_KERNEL);
+>    311		if (!mrp)
+>    312			return -ENOMEM;
+>    313	
+>    314		mrp->ring_id = instance->ring_id;
+>    315		mrp->prio = instance->prio;
+>    316	
+>    317		p = br_mrp_get_port(br, instance->p_ifindex);
+>    318		spin_lock_bh(&br->lock);
+>    319		p->state = BR_STATE_FORWARDING;
+>    320		p->flags |= BR_MRP_AWARE;
+>    321		spin_unlock_bh(&br->lock);
+>    322		rcu_assign_pointer(mrp->p_port, p);
+>    323	
+>    324		p = br_mrp_get_port(br, instance->s_ifindex);
+>    325		spin_lock_bh(&br->lock);
+>    326		p->state = BR_STATE_FORWARDING;
+>    327		p->flags |= BR_MRP_AWARE;
+>    328		spin_unlock_bh(&br->lock);
+>    329		rcu_assign_pointer(mrp->s_port, p);
+>    330	
+>    331		INIT_DELAYED_WORK(&mrp->test_work, br_mrp_test_work_expired);
+>  > 332		list_add_tail_rcu(&mrp->list, &br->mrp_list);
+>    333	
+>    334		err = br_mrp_switchdev_add(br, mrp);
+>    335		if (err)
+>    336			goto delete_mrp;
+>    337	
+>    338		return 0;
+>    339	
+>    340	delete_mrp:
+>    341		br_mrp_del_impl(br, mrp);
+>    342	
+>    343		return err;
+>    344	}
+>    345	
+>    346	/* Deletes the MRP instance from which the port is part of
+>    347	 * note: called under rtnl_lock
+>    348	 */
+>    349	void br_mrp_port_del(struct net_bridge *br, struct net_bridge_port *p)
+>    350	{
+>    351		struct br_mrp *mrp = br_mrp_find_port(br, p);
+>    352	
+>    353		/* If the port is not part of a MRP instance just bail out */
+>    354		if (!mrp)
+>    355			return;
+>    356	
+>    357		br_mrp_del_impl(br, mrp);
+>    358	}
+>    359	
+>    360	/* Deletes existing MRP instance based on ring_id
+>    361	 * note: called under rtnl_lock
+>    362	 */
+>    363	int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance)
+>    364	{
+>    365		struct br_mrp *mrp = br_mrp_find_id(br, instance->ring_id);
+>    366	
+>    367		if (!mrp)
+>    368			return -EINVAL;
+>    369	
+>    370		br_mrp_del_impl(br, mrp);
+>    371	
+>    372		return 0;
+>    373	}
+>    374	
+>    375	/* Deletes all MRP instances on the bridge
+>    376	 * note: called under rtnl_lock
+>    377	 */
+>    378	int br_mrp_clear(struct net_bridge *br)
+>    379	{
+>    380		struct br_mrp *mrp;
+>    381		struct br_mrp *tmp;
+>    382	
+>  > 383		list_for_each_entry_safe(mrp, tmp, &br->mrp_list, list) {
+>    384			br_mrp_del_impl(br, mrp);
+>    385		}
+>    386	
+>    387		return 0;
+>    388	}
+>    389	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
 
