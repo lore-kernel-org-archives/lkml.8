@@ -5,130 +5,152 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F72C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A89920789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243C720789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sZXf7Z4u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otZFkn+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389868AbgFYFYA (ORCPT
+        id S2389902AbgFYFYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
+        Thu, 25 Jun 2020 01:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389559AbgFYFYA (ORCPT
+        with ESMTP id S2389559AbgFYFYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 01:24:00 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC02C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:24:00 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id n123so2137821ybf.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:24:00 -0700 (PDT)
+        Thu, 25 Jun 2020 01:24:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB3BC061573;
+        Wed, 24 Jun 2020 22:24:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f9so2520187pfn.0;
+        Wed, 24 Jun 2020 22:24:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GN+vwP6awwYeHuE8Nxiqbib4DkikNLChIdT3TjcmjCQ=;
-        b=sZXf7Z4uTzNP+UaPk4pvsBCB6Gb0KK2NKJ2Uj2afN3SNByxwcpyOH5XIzCMP6mIA+2
-         CnnbQis6REgQ7JqaCwg9MtoIc4rbrAKsfUI4rpxVIYPyMUze2M6Qaw+jHudWWiYl+/fS
-         QgMlyLL7eXQ2fJGZU66vUqktic6M3Khz09xX4hocet+bGg2alfsUYEF8nHDEB0wXA0Gi
-         6Z1h0KovhSdX62UmrEIfec1z0hlYhHrB3JpMUn9XxHdNNmWVq3FiFwDnJR5VEwaHLme/
-         zPlzIWwt4FrIfTca7NMZAjrtEuib2Fe39kqHKoCc5TeZqurravOsZyu7zWqwtcccppkX
-         twSQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GXdubhTV2rFDKkg/iMiISj5sENkZjDy3A69VIM0beEA=;
+        b=otZFkn+xlIJ6hX0J8f+jfwEquSCD1xAz5RZpMUYHAPHAnVIvN+uW98AINOqq4g+NOm
+         xL4CZPN2A0vT/ab2Jd2XCzsm6Q5/w8wOML61MOiIDVoBMz0OrpivZ0swlsFXgZwZAcwW
+         7DyEZ3/HcKlU1DhOwjTO29PCtzk1lP3TKVS7Lx/82NZEuHIr7JuegxtHHeg4Ha6AI9QG
+         daBSc/WMaTGe71/ywHgvTXa54cykNjtby8nkPFqvB34fchJIGyb42BqUtsasKGCOi50C
+         DFE+jfZGA7VjFK02RrnQRC5elhGL3QxISyOk3L9XjmBFuebg2RHUMANKgHLaVXcl4OpP
+         E8GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GN+vwP6awwYeHuE8Nxiqbib4DkikNLChIdT3TjcmjCQ=;
-        b=uGksDepCoYGUsmCt6GoPpI03JrK+E46H4F3qnvQw2yoVkwzxTdSPPSEyXCqH6D+eZR
-         I3al4hWJh2J7LsOaPGkaOqYuZupx2ZYFbIqmyMUt8zcDtS7FzT60SfigL+VO3MVpxc3O
-         QIr9I1gDBrCIWpvwukSwEZnKyavsm/51eqmIniqUWhqdKTvxcDl+93xtWuFszffBUXXP
-         MXaEMnlj+ttWhKB/i9e0FAdoyJ4IYdTMpAdFwFpd1tQIgjXfLpLW3bnlT1ILaQc0/Zgb
-         sYwN//RqIPLPStuWOLiGiwoqidpEm1OwrdMPP2bxmiTmTWU5BjVtZRb09lpK2k6SClKN
-         5YjA==
-X-Gm-Message-State: AOAM530x8r6n/Cv7qirRm4qLMD99Eqr/GMC9oMOkoj+zG8AtV8Sp0+n6
-        6qs7SOmDAgvakskKbV1kQvDbmxo0oZu6yUhEWPM=
-X-Google-Smtp-Source: ABdhPJwFBExNOvnqSjcHjjCVFajvYo439vZFDatYszxkdzA35ELrTHJE0dawomj2kgWq9q2Xs7xI85GoF1jMKWsa2A8=
-X-Received: by 2002:a5b:582:: with SMTP id l2mr45827370ybp.147.1593062639308;
- Wed, 24 Jun 2020 22:23:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GXdubhTV2rFDKkg/iMiISj5sENkZjDy3A69VIM0beEA=;
+        b=KPPb3QshvGySRkFFgd59VqMy0U6S5RZaO/AhcFaBtxv6hb0ZKUq+8RkB2vINk5AnMi
+         8XIP9wgvxS4ILOkdLWgnKJESAPhoQ82FjW3s+kGjmt8yfqvS8w5+eOWtpDRhCL/yeF7R
+         fK0KnzHMeITGoND3DtPOoY/tc8VTZKcMbVJqmAcxHg1tMfdZrfKSwwcVjZHty/D/cLwP
+         uhZXxXqzAioPORvSXPsT8fW3CrdFimYtr5q8cDeOOyu+jpugXfwPg9D+g/Q4Mg7EnBUS
+         aRlc2DF+kvRXS2QZRNfYPx2qvTpfeOV6FXTR7rZ9DdkL0gumQe2TYnB/RrHIkeOXz8ge
+         UmrQ==
+X-Gm-Message-State: AOAM530o6lA9xqgxvw6+nvh8ElPDhpX2KqTq2RGBdSzeHu2GWqa93THp
+        rHXIpcoImjlNs0g+sg3di2o=
+X-Google-Smtp-Source: ABdhPJwXGyiFwlJTNgi0iC6m1Ar4lC3vQXDwOYiT2Ha8Mwjs8VUcVJ7cPdCOD7pg7k+ICwf1UB/M+Q==
+X-Received: by 2002:a05:6a00:7c6:: with SMTP id n6mr30520985pfu.120.1593062689506;
+        Wed, 24 Jun 2020 22:24:49 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id hv15sm6763798pjb.17.2020.06.24.22.24.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 22:24:48 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 22:24:46 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        kernel@collabora.com
+Subject: Re: [PATCH v4 4/7] ACPI: button: Use input_device_enabled() helper
+Message-ID: <20200625052446.GF248110@dtor-ws>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <20200608112211.12125-5-andrzej.p@collabora.com>
 MIME-Version: 1.0
-References: <20200622233854.10889-1-rcampbell@nvidia.com> <20200622233854.10889-2-rcampbell@nvidia.com>
- <53751f8e-d901-df2e-a2e0-1b1484b31b81@nvidia.com>
-In-Reply-To: <53751f8e-d901-df2e-a2e0-1b1484b31b81@nvidia.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Thu, 25 Jun 2020 15:23:48 +1000
-Message-ID: <CACAvsv5NqqF704HyvTd6DH43-one06OO7Z=uENUS5RSOJzP8Jg@mail.gmail.com>
-Subject: Re: [Nouveau] [RESEND PATCH 1/3] nouveau: fix migrate page regression
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>, Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608112211.12125-5-andrzej.p@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 at 10:51, John Hubbard <jhubbard@nvidia.com> wrote:
->
-> On 2020-06-22 16:38, Ralph Campbell wrote:
-> > The patch to add zero page migration to GPU memory inadvertantly included
->
-> inadvertently
->
-> > part of a future change which broke normal page migration to GPU memory
-> > by copying too much data and corrupting GPU memory.
-> > Fix this by only copying one page instead of a byte count.
-> >
-> > Fixes: 9d4296a7d4b3 ("drm/nouveau/nouveau/hmm: fix migrate zero page to GPU")
-> > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> > ---
-> >   drivers/gpu/drm/nouveau/nouveau_dmem.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> > index e5c230d9ae24..cc9993837508 100644
-> > --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> > +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> > @@ -550,7 +550,7 @@ static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm,
-> >                                        DMA_BIDIRECTIONAL);
-> >               if (dma_mapping_error(dev, *dma_addr))
-> >                       goto out_free_page;
-> > -             if (drm->dmem->migrate.copy_func(drm, page_size(spage),
-> > +             if (drm->dmem->migrate.copy_func(drm, 1,
-> >                       NOUVEAU_APER_VRAM, paddr, NOUVEAU_APER_HOST, *dma_addr))
-> >                       goto out_dma_unmap;
-> >       } else {
-> >
->
->
-> I Am Not A Nouveau Expert, nor is it really clear to me how
-> page_size(spage) came to contain something other than a page's worth of
-> byte count, but this fix looks accurate to me. It's better for
-> maintenance, too, because the function never intends to migrate "some
-> number of bytes". It intends to migrate exactly one page.
->
-> Hope I'm not missing something fundamental, but:
-I'm actually a bit confused here too.  Because, it *looks* like the
-function takes a byte count, not a page count, and unless I'm missing
-something too, it's setup the copy class for a byte count also.
+On Mon, Jun 08, 2020 at 01:22:08PM +0200, Andrzej Pietrasiewicz wrote:
+> A new helper is available, so use it.
+> 
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> ---
+>  drivers/acpi/button.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+> index ff7ab291f678..4deb2b48d03c 100644
+> --- a/drivers/acpi/button.c
+> +++ b/drivers/acpi/button.c
+> @@ -411,7 +411,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
+>  		input = button->input;
+>  		if (button->type == ACPI_BUTTON_TYPE_LID) {
+>  			mutex_lock(&button->input->mutex);
+> -			users = button->input->users;
+> +			users = input_device_enabled(button->input);
+>  			mutex_unlock(&button->input->mutex);
+>  			if (users)
 
->
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com
->
->
-> thanks,
-> --
-> John Hubbard
-> NVIDIA
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+This chunk (pre-patch) is really wrong. 'users' value is obsolete and
+can not be trusted the moment we unlocked the mutex. "if" needs to be
+inside critical section.
+
+>  				acpi_lid_update_state(device, true);
+> @@ -460,7 +460,7 @@ static int acpi_button_resume(struct device *dev)
+>  
+>  	button->suspended = false;
+>  	mutex_lock(&input->mutex);
+> -	if (button->type == ACPI_BUTTON_TYPE_LID && input->users) {
+> +	if (button->type == ACPI_BUTTON_TYPE_LID && input_device_enabled(input)) {
+>  		button->last_state = !!acpi_lid_evaluate_state(device);
+>  		button->last_time = ktime_get();
+>  		acpi_lid_initialize_state(device);
+> -- 
+> 2.17.1
+> 
+
+Thanks.
+
+-- 
+Dmitry
