@@ -2,97 +2,158 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B40C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CABC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07173207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD09207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEi9td/3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lw/G9AZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406147AbgFYSWg (ORCPT
+        id S2406158AbgFYSWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
+        Thu, 25 Jun 2020 14:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405815AbgFYSWe (ORCPT
+        with ESMTP id S2390556AbgFYSV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:22:34 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1F7C08C5C1;
-        Thu, 25 Jun 2020 11:22:33 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y10so6909726eje.1;
-        Thu, 25 Jun 2020 11:22:33 -0700 (PDT)
+        Thu, 25 Jun 2020 14:21:29 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8479C08C5C1;
+        Thu, 25 Jun 2020 11:21:28 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id w6so6888024ejq.6;
+        Thu, 25 Jun 2020 11:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v8geYdYVNbF2rBwzEMDOXkFAFkAYNm3uyIolEhmynSQ=;
-        b=oEi9td/3wSG1TfTzeZOqQLFC8Rylwdn1Ss0asHlgWIDEr2soxzQ+Q+ppWngvOk6QBj
-         uplo7+7UTdsXYTPdi8xOk5s+qbUPaXTmNG51iKLyGKVvNEV9XNtEg7oQjqFAW6HO6P8J
-         o5JBCvvo5VcoxhsdiWvWqwLDcq49JMPe+JLIYruYt/fodDhauPBz+DDr8UyXVtUzViiY
-         FY7NZckqA10YV2rvfWJ1QHJBPdO0X039l1sqmufVs2JKcSzulo4MUOggJebgrxOQbDgu
-         xpjMwZB7EfXMyuUrCFXLLsxN0MVVY6J5jhcADKKNjIZHpPlnQJhF75aAWcTLUMQw4V6p
-         URMw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
+        b=lw/G9AZ0JhLp6mKFGbUXgOhKEJq6WIJ7cIQOw5MJE0Yux3vjHzXe8U0oR1NAWc0cLy
+         La6AtEa19/sN5MXoc8F06zOdtlkueZ1HPwZiMD1IZ7WGO4X85dOvDSfc9cKkm+XjyQA6
+         cwGTTnYWb3gvJkKgCCLpHpU2LNuKmOLac9/FW30w9TRTUP9FqQJMOcNva+kyU1R6vVAo
+         B2+c2BEdIusCEVNGCdCJ/n9yP/LOkb/pjTXkh/9KYYCtJ3F2ppyZPc6p/8HLjj7xCoGf
+         dfYoaV1xG/2/hRXH6FFX/BgM5EbFodVsVdE4abAdYm0Qh1Ujw/CKfPIoV6M56ENb3oOS
+         zb/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v8geYdYVNbF2rBwzEMDOXkFAFkAYNm3uyIolEhmynSQ=;
-        b=h7eVARcohrumS6VsThxbroop2NQ3LEF+IhoC2Zrt/7MX+R6uKU9RpaoznlL6/qKz+G
-         vBkU3jk/jgAl+VzLqTQRqtKy9ZvmmPqOSwMKUkoQ8/9ALfd3kog8OBLGhclPo5muObhU
-         IOE7wfDCeWy8asp6aVyPTXzSdFtkmKP8K+GIhqzaJ886FJe0S4wKbZ1Sc/4/SxMzyjTp
-         EGb3NVw1DTHOB9CJMIyeUJts3h9Xd0TmAOGf/FVIZQTdkWbM8chfZKjOLvFdDOZTP0Nk
-         ZANAfMqFxv/joM5/VCWAFDk2W6OCJPXmiOsu4wHGGm46om+W4miUlI6cz8sZwh+jxAcl
-         9LrA==
-X-Gm-Message-State: AOAM53302myCh9kQL1B+1wq50Xm5SM2SRIZs9mDQE+j8ny2gOoxt2rfZ
-        ny96wtfuxcTAmTC6/5xC4xo=
-X-Google-Smtp-Source: ABdhPJwYuKHKu8ML78wL+jaQLqXrQCzIvC0LSKLl8JU//05HxvBuQruSWlLJAM3qfISlZB1rhyLmBg==
-X-Received: by 2002:a17:906:da19:: with SMTP id fi25mr9261887ejb.369.1593109352334;
-        Thu, 25 Jun 2020 11:22:32 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id lm22sm1524867ejb.109.2020.06.25.11.22.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
+        b=XjZqrUiFSrJtk5XBtNFjYNAaTIKBqMlOLYOpUwmNrjNhOkz85yRqAq7QVRktXd351p
+         NQ+xYIc3hriLLOMFqVZoh4ECEuNA9Zf3khe9ekyVG+joKFRX1nlHegm8TkFMGZYHQR2a
+         UawdaeZeFxk11Aix5OWG2bLDFFlpFJjfGBQ+RYD8H+jdG5UE1vipz7vPYIGZajQK5+CH
+         ebQ/EgLWtoriS6o762VO694pqsTD3sEZ11I3I01KcreSaIQd32hLPVFmdAU2W/aWzf8/
+         ME4qcvseDN/xGv4x33pmKI6hgn9IBMjISEwZs4j1jJJejN09EPNewDRUh/DpFebwZtpI
+         9l7w==
+X-Gm-Message-State: AOAM5329FJHIBCk9iM5M/MS2yIZN5xszhiVSLE/PRTNg29cP5Uu5uV6W
+        NqbRUZU8aI7TYHNWYjS/LHA=
+X-Google-Smtp-Source: ABdhPJwYbZsIVqcWEZ6FdDlOUbZjB+V3Gp3dC4XjE1TgMUPnOnF6TRL429WIWYcwe8CIBGAOyCkohA==
+X-Received: by 2002:a17:906:3042:: with SMTP id d2mr9618978ejd.420.1593109287647;
+        Thu, 25 Jun 2020 11:21:27 -0700 (PDT)
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:22:31 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 20:22:23 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Andres Beltran <lkmlabelt@gmail.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH 0/3] Drivers: hv: vmbus: vmbus_requestor data structure
-Message-ID: <20200625182223.GA318674@andrea>
-References: <20200625153723.8428-1-lkmlabelt@gmail.com>
+        Thu, 25 Jun 2020 11:21:27 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 02/13] arm64: dts: qcom: msm8992: Fix SDHCI1
+Date:   Thu, 25 Jun 2020 20:21:06 +0200
+Message-Id: <20200625182118.131476-3-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
+References: <20200625182118.131476-1-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625153723.8428-1-lkmlabelt@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Andres Beltran (3):
->   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
->     hardening
->   scsi: storvsc: Use vmbus_requestor to generate transaction ids for
->     VMBus hardening
->   hv_netvsc: Use vmbus_requestor to generate transaction ids for VMBus
->     hardening
+This commit ensures the correct IRQ type is set
+and disables the device by default.
+The mmc-hs400-1_8v property is also moved to
+Bullhead as it might not be present on all boards.
 
-For the series,
+The node has been renamed to sdhci@ instead of mmc@
+and the phandle was changed to sdhc_1 to comply with
+the newer DTS style.
 
-Tested-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ .../boot/dts/qcom/msm8992-bullhead-rev-101.dts   |  6 ++++++
+ arch/arm64/boot/dts/qcom/msm8992.dtsi            | 16 +++++++++-------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-Thanks,
-  Andrea
+diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+index a2de69292d28..1061fd5404aa 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
++++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+@@ -271,3 +271,9 @@ pm8994_l32: l32 {
+ 		};
+ 	};
+ };
++
++&sdhc_1 {
++	status = "okay";
++
++	mmc-hs400-1_8v;
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index 43b2e4cd26f0..8ef1cb8ba8ef 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -158,18 +158,19 @@ frame@f9028000 {
+ 			};
+ 		};
+ 
+-		sdhci1: mmc@f9824900 {
++		sdhc_1: sdhci@f9824900 {
+ 			compatible = "qcom,sdhci-msm-v4";
+ 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+ 
+-			interrupts = <GIC_SPI 123 IRQ_TYPE_NONE>,
+-					<GIC_SPI 138 IRQ_TYPE_NONE>;
++			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "hc_irq", "pwr_irq";
+ 
+ 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+-				<&gcc GCC_SDCC1_AHB_CLK>;
+-			clock-names = "core", "iface";
++				<&gcc GCC_SDCC1_AHB_CLK>,
++				<&xo_board>;
++			clock-names = "core", "iface", "xo";
+ 
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on
+@@ -179,8 +180,9 @@ sdhci1: mmc@f9824900 {
+ 
+ 			regulator-always-on;
+ 			bus-width = <8>;
+-			mmc-hs400-1_8v;
+-			status = "okay";
++			non-removable;
++
++			status = "disabled";
+ 		};
+ 
+ 		blsp1_uart2: serial@f991e000 {
+-- 
+2.27.0
+
