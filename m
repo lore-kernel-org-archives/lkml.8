@@ -2,167 +2,173 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6857FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B6020767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:32:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oHDmyDW8"
+	by mail.kernel.org (Postfix) with ESMTP id 4F02220789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406713AbgFYWca (ORCPT
+        id S2406727AbgFYWft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:32:30 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13767 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404060AbgFYWc2 (ORCPT
+        Thu, 25 Jun 2020 18:35:49 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:28325 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728374AbgFYWft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:32:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef525cd0000>; Thu, 25 Jun 2020 15:31:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 25 Jun 2020 15:32:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 25 Jun 2020 15:32:28 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jun
- 2020 22:32:26 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 25 Jun 2020 22:32:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hJgRWP/8UBXqYktyBIz0hQENGAMToAU1XyRKiFztCN/YITF3Jn00jDss6cgACdbTtqArsXWpGZLS4RRN3VrDg6QX9WF38baAZ/Dud1Nf9WDVduLoeU5ZoX8zWdmwTY1tja8GvJ4k6gpTPECWINga07ySNenQPH254hxmQoZt60ZJXqEaZq0bs/6JOPLAU0zKfMLxLqZLjZhbbjIC9xHsxQtPplVaH2r82SM+bblmmYw67s+zOEVKWDhFEOvZJfufKFgr/PF63HdIgCHxq7IMvA0UWtPZgGL0ZwzBuEA6/SfMTtOrI4ngIqCMeEsPrJwSVbjFa5wvuOxg08wVnR9WpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BBT4oXmAgqHlR4wtELUFVV/DkDUb7NSZEI3m+QnPTaU=;
- b=JKtLKKxOeDQ/OoJMjLvcZXNirE5+slhWnjBr6rMpDVsIcfqd7ALuxUu98s6h/xG5BwdLt72cLNyPeyV7ltldsl+slUr3EfT+GJegCALCcCZdwp2xVCdfOIk0JFU6BxyUjDJvhNrAc/YFEyCd6wekV+MFdfNkSqEONXYG34EaG/bevxb2x6Y86/iiB1eHx/ZzP9/Dkv3A5bmTHLklfQUy64PiXEaAWstZVxWiMBOh8loL0tHH1HZYaQMniPQLXu2aCKoKYNGeKt/EOqclbRTeDGCebZpODYkibTeo7mW+q6CDvlV458NA255l+ZqTU19CjwKNbpBBJAXK9TeelOKYsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com (2603:10b6:a03:9a::17)
- by BYAPR12MB3126.namprd12.prod.outlook.com (2603:10b6:a03:df::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Thu, 25 Jun
- 2020 22:32:25 +0000
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2]) by BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2%2]) with mapi id 15.20.3109.026; Thu, 25 Jun 2020
- 22:32:25 +0000
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Sachin Nikam <Snikam@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Yu-Huan Hsu <YHsu@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: RE: [PATCH v6 2/4] dt-bindings: arm-smmu: Add binding for Tegra194
- SMMU
-Thread-Topic: [PATCH v6 2/4] dt-bindings: arm-smmu: Add binding for Tegra194
- SMMU
-Thread-Index: AQHWOsoatXeRYg22cUKdLG2g64TOnKjl/cCAgAQNp9A=
-Date:   Thu, 25 Jun 2020 22:32:25 +0000
-Message-ID: <BYAPR12MB28227065EDF92A406A770ECBB3920@BYAPR12MB2822.namprd12.prod.outlook.com>
-References: <20200604234414.21912-1-vdumpa@nvidia.com>
- <20200604234414.21912-3-vdumpa@nvidia.com> <20200623083827.GC4098287@ulmo>
-In-Reply-To: <20200623083827.GC4098287@ulmo>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=VDUMPA@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-06-25T22:32:21.5028718Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=65d84281-7db6-49a0-bed5-2431a618c7a1;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [216.228.112.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 346089c7-a281-4665-9351-08d81957a298
-x-ms-traffictypediagnostic: BYAPR12MB3126:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3126F22C7BB7C1E1B17EEAC3B3920@BYAPR12MB3126.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0445A82F82
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9+/yCn9iEGOzX9xCfzUbcnNDckJEC9nQ4iQIcmkoWCT1H6BxSy7yH1UpA2n+EdT11qfYBvV/Rj9mR68GX2fyDblAzdCUxzvFO87B+iGO9pxqPW9M6gInIg5hRwK0xW0iFfYgl2M0lRLTS2afr5e/ZbfuROmoZzbvmt3gw9n4xYQkbgHhDjoOlVrvp/OQG49cmRvOZi4KPwJQuik+DkxHuDGAvDZHwX7x1u1cMfPINtwLvqrBoK8HaG+sWu6Cb8ClP+hALsL3dOwczVYoSwPhEaQVCSdIqvJ/J3vOv0TM1jNs23BVVGXeRvBxlqcpzUkVUhR6o/HZoJebcI3UJCjq7Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2822.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(366004)(396003)(376002)(136003)(33656002)(6506007)(107886003)(316002)(54906003)(26005)(71200400001)(478600001)(7696005)(558084003)(2906002)(186003)(4326008)(52536014)(55016002)(9686003)(86362001)(6916009)(76116006)(66556008)(8936002)(66446008)(66476007)(64756008)(5660300002)(8676002)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: +k7+tlB9+4EtuKOjx0wjupqMHa3NLwfZhesuo63F6qzQGOyhVA/29dD3l8JpiIsNIIgxZ4APgpMRMdc5lq3dzONjgcTWeh+LgM2Iwyw+n7mzU1X+VzawLVxMxnG6LgCYZ/PoVAby2kJv4PIK0fNrq+Ljy+zerPwFUqqjCKfoF8TgEVmjERx5yygTIv4dLk41biEBA971dZXWrHoS0HPTspqpVbyaSjYGqzeTYuPjOXfBnsSarwf3ZDgtaQ3hMNPYXFVQRh6w+76eoqOWBF28sOxvDFWyo/iOCOHxH6p/jfsjZyzkcbCjFxVVAT8sdzPnLlDPkXSwD2r1gWEuTfxhDO3NZxF5mpOeqVFC+G8+eOJEeZWIJ18slDSGNgO9B08FODP/ooja0F+kWBQ60KnXdLM+fmsqVFrGWzzXnjHYedQadRnrBx7F3MV7bMcGH3Khz0DfV9lrhx7GfAtpIlawCUo0OvF15nJs2juV6thtsVgcsKonOa/WM/ooOh8VgBWO
+        Thu, 25 Jun 2020 18:35:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U0iFBoh_1593124536;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0iFBoh_1593124536)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 26 Jun 2020 06:35:36 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, david@redhat.com,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: [Patch v2] mm/sparse: never partially remove memmap for early section
+Date:   Fri, 26 Jun 2020 06:35:34 +0800
+Message-Id: <20200625223534.18024-1-richard.weiyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2822.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 346089c7-a281-4665-9351-08d81957a298
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2020 22:32:25.1533
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q9lgTtMK6X74OzojGX8XIRz9jz+M8VHmDXOEWXwrDxgbY9mpenI/LGMpyx0fypTyflR3+lHQ44RPMbKAnjLEnQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3126
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593124301; bh=BBT4oXmAgqHlR4wtELUFVV/DkDUb7NSZEI3m+QnPTaU=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=oHDmyDW8I7GfYIVeLKTsopRdzkvSYz6oOggAIPERlGKHSPBiLBDD1Ad09SACrE4vz
-         iigJOH21YDP1hRIgA+WNIgJscg7ElLCPQ6OabVJ7e32plz7oDANSLkmoGyBrkdTBHy
-         k3lOIzr7lvHak17aENL3bU0qM4jzbAquhWLF8UWB5BgY3tME7Y0fa2T45hRlJxaKda
-         zFkuXoqGqrLT/hp42DMFmZ1vR0MRUiEZtnoXvIZjlDvMdnipVFuyikox3uOuLtfVxl
-         LZnpKNXa9h6fXsD0WAhekXX9K4McuBhkWZrCqq1HmsJU907XhchgCPpOIB3+8frZXf
-         8T+yzyDpUtdPw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +              - nvdia,tegra194-smmu-500
->The -500 suffix here seems a bit redundant since there's no other type of =
-SMMU in Tegra194, correct?
+For early sections, its memmap is handled specially even sub-section is
+enabled. The memmap could only be populated as a whole.
 
-Yeah, there is only one type of SMMU supported in T194. It was added to be =
-synonymous with mmu-500.  Can be removed.
+Quoted from the comment of section_activate():
 
--KR
+    * The early init code does not consider partially populated
+    * initial sections, it simply assumes that memory will never be
+    * referenced.  If we hot-add memory into such a section then we
+    * do not need to populate the memmap and can simply reuse what
+    * is already there.
+
+While current section_deactivate() breaks this rule. When hot-remove a
+sub-section, section_deactivate() would depopulate its memmap. The
+consequence is if we hot-add this subsection again, its memmap never get
+proper populated.
+
+We can reproduce the case by following steps:
+
+1. Hacking qemu to allow sub-section early section
+
+   diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+   index 51b3050d01..c6a78d83c0 100644
+   --- a/hw/i386/pc.c
+   +++ b/hw/i386/pc.c
+   @@ -1010,7 +1010,7 @@ void pc_memory_init(PCMachineState *pcms,
+            }
+
+            machine->device_memory->base =
+   -            ROUND_UP(0x100000000ULL + x86ms->above_4g_mem_size, 1 * GiB);
+   +            0x100000000ULL + x86ms->above_4g_mem_size;
+
+            if (pcmc->enforce_aligned_dimm) {
+                /* size device region assuming 1G page max alignment per slot */
+
+2. Bootup qemu with PSE disabled and a sub-section aligned memory size
+
+   Part of the qemu command would look like this:
+
+   sudo x86_64-softmmu/qemu-system-x86_64 \
+       --enable-kvm -cpu host,pse=off \
+       -m 4160M,maxmem=20G,slots=1 \
+       -smp sockets=2,cores=16 \
+       -numa node,nodeid=0,cpus=0-1 -numa node,nodeid=1,cpus=2-3 \
+       -machine pc,nvdimm \
+       -nographic \
+       -object memory-backend-ram,id=mem0,size=8G \
+       -device nvdimm,id=vm0,memdev=mem0,node=0,addr=0x144000000,label-size=128k
+
+3. Re-config a pmem device with sub-section size in guest
+
+   ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax --size=16M
+
+Then you would see the following call trace:
+
+   pmem0: detected capacity change from 0 to 16777216
+   BUG: unable to handle page fault for address: ffffec73c51000b4
+   #PF: supervisor write access in kernel mode
+   #PF: error_code(0x0002) - not-present page
+   PGD 81ff8067 P4D 81ff8067 PUD 81ff7067 PMD 1437cb067 PTE 0
+   Oops: 0002 [#1] SMP NOPTI
+   CPU: 16 PID: 1348 Comm: ndctl Kdump: loaded Tainted: G        W         5.8.0-rc2+ #24
+   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.4
+   RIP: 0010:memmap_init_zone+0x154/0x1c2
+   Code: 77 16 f6 40 10 02 74 10 48 03 48 08 48 89 cb 48 c1 eb 0c e9 3a ff ff ff 48 89 df 48 c1 e7 06 48f
+   RSP: 0018:ffffbdc7011a39b0 EFLAGS: 00010282
+   RAX: ffffec73c5100088 RBX: 0000000000144002 RCX: 0000000000144000
+   RDX: 0000000000000004 RSI: 007ffe0000000000 RDI: ffffec73c5100080
+   RBP: 027ffe0000000000 R08: 0000000000000001 R09: ffff9f8d38f6d708
+   R10: ffffec73c0000000 R11: 0000000000000000 R12: 0000000000000004
+   R13: 0000000000000001 R14: 0000000000144200 R15: 0000000000000000
+   FS:  00007efe6b65d780(0000) GS:ffff9f8d3f780000(0000) knlGS:0000000000000000
+   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+   CR2: ffffec73c51000b4 CR3: 000000007d718000 CR4: 0000000000340ee0
+   Call Trace:
+    move_pfn_range_to_zone+0x128/0x150
+    memremap_pages+0x4e4/0x5a0
+    devm_memremap_pages+0x1e/0x60
+    dev_dax_probe+0x69/0x160 [device_dax]
+    really_probe+0x298/0x3c0
+    driver_probe_device+0xe1/0x150
+    ? driver_allows_async_probing+0x50/0x50
+    bus_for_each_drv+0x7e/0xc0
+    __device_attach+0xdf/0x160
+    bus_probe_device+0x8e/0xa0
+    device_add+0x3b9/0x740
+    __devm_create_dev_dax+0x127/0x1c0
+    __dax_pmem_probe+0x1f2/0x219 [dax_pmem_core]
+    dax_pmem_probe+0xc/0x1b [dax_pmem]
+    nvdimm_bus_probe+0x69/0x1c0 [libnvdimm]
+    really_probe+0x147/0x3c0
+    driver_probe_device+0xe1/0x150
+    device_driver_attach+0x53/0x60
+    bind_store+0xd1/0x110
+    kernfs_fop_write+0xce/0x1b0
+    vfs_write+0xb6/0x1a0
+    ksys_write+0x5f/0xe0
+    do_syscall_64+0x4d/0x90
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+ mm/sparse.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index b2b9a3e34696..a06085738295 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -825,10 +825,14 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+ 		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+ 	}
+ 
+-	if (section_is_early && memmap)
+-		free_map_bootmem(memmap);
+-	else
++	/*
++	 * The memmap of early sections is always fully populated. See
++	 * section_activate() and pfn_valid() .
++	 */
++	if (!section_is_early)
+ 		depopulate_section_memmap(pfn, nr_pages, altmap);
++	else if (memmap)
++		free_map_bootmem(memmap);
+ 
+ 	if (empty)
+ 		ms->section_mem_map = (unsigned long)NULL;
+-- 
+2.20.1 (Apple Git-117)
+
