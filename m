@@ -2,164 +2,88 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF56AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06AC7206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TH93+1Ym"
+	by mail.kernel.org (Postfix) with ESMTP id B67AA206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407545AbgFYWjr (ORCPT
+        id S2407554AbgFYWjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:39:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59469 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2407536AbgFYWjq (ORCPT
+        Thu, 25 Jun 2020 18:39:55 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:41028 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2407537AbgFYWjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:39:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593124784;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=l2eZLw468VrPBQvMvs1l+0bhdKyGLRYbkNFt0SVZO7A=;
-        b=TH93+1YmRH4+vg6sJFdFoYo68nrOitDb25kq2SacYRzM19fdlfjYGiWtXkH+DIAwCF/GLk
-        wIz64VtvykfcfyEmHZcf6k9BME78EiD5ySMQR61+xEkCbDQqD5Ue4Ry4/UB1ffSuTFIdbM
-        AcFO0hHR7ObvCydTswc7k1A+BfwK628=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-C87WdbeiOm-jJ0rHIyCFWA-1; Thu, 25 Jun 2020 18:39:24 -0400
-X-MC-Unique: C87WdbeiOm-jJ0rHIyCFWA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B774D804002;
-        Thu, 25 Jun 2020 22:39:21 +0000 (UTC)
-Received: from virtlab423.virt.lab.eng.bos.redhat.com (virtlab423.virt.lab.eng.bos.redhat.com [10.19.152.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B3B6780880;
-        Thu, 25 Jun 2020 22:39:16 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
-        abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
-Subject: [PATCH v4 0/3] Preventing job distribution to isolated CPUs
-Date:   Thu, 25 Jun 2020 18:34:40 -0400
-Message-Id: <20200625223443.2684-1-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 25 Jun 2020 18:39:55 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U0i1MZd_1593124792;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U0i1MZd_1593124792)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 26 Jun 2020 06:39:52 +0800
+Date:   Fri, 26 Jun 2020 06:39:52 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>, Baoquan He <bhe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200625223952.GA17926@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <CAPcyv4gMQsBSQ-kXM6H_zz96ZTJ5F0XnDfq6_mZTn4t9JwmEpA@mail.gmail.com>
+ <4D73CD59-BFD5-401A-A001-41F7BF5641BA@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4D73CD59-BFD5-401A-A001-41F7BF5641BA@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set is originated from one of the patches that have been
-posted earlier as a part of "Task_isolation" mode [1] patch series
-by Alex Belits <abelits@marvell.com>. There are only a couple of
-changes that I am proposing in this patch-set compared to what Alex
-has posted earlier.
- 
- 
-Context
-=======
-On a broad level, all three patches that are included in this patch
-set are meant to improve the driver/library to respect isolated
-CPUs by not pinning any job on it. Not doing so could impact
-the latency values in RT use-cases.
+On Thu, Jun 25, 2020 at 07:53:37AM +0200, David Hildenbrand wrote:
+>
+>
+>> Am 25.06.2020 um 01:47 schrieb Dan Williams <dan.j.williams@intel.com>:
+>> 
+>> ﻿On Wed, Jun 24, 2020 at 3:44 PM Wei Yang
+>> <richard.weiyang@linux.alibaba.com> wrote:
+>> [..]
+>>>> So, you are right that there is a mismatch here, but I think the
+>>>> comprehensive fix is to allow early sections to be partially
+>>>> depopulated/repopulated rather than have section_activate() and
+>>>> section_deacticate() special case early sections. The special casing
+>>>> is problematic in retrospect as section_deactivate() can't be
+>>>> maintained without understand special rules in section_activate().
+>>> 
+>>> Hmm... This means we need to adjust pfn_valid() too, which always return true
+>>> for early sections.
+>> 
+>> Right, rather than carry workarounds in 3 locations, and the bug that
+>> has resulted from then getting out of sync, just teach early section
+>> mapping to allow for the subsection populate/depopulate.
+>> 
+>
+>I prefer the easy fix first - IOW what we Here here. Especially, pfn_to_online_page() will need changes as well.
+>
 
+Hi, David,
 
-Patches
-=======
-* Patch1:
-  The first patch is meant to make cpumask_local_spread()
-  aware of the isolated CPUs. It ensures that the CPUs that
-  are returned by this API only includes housekeeping CPUs.
+Which part of pfn_to_online_page() needs to be changed? pfn_valid_within()
+would call pfn_valid() to check the pfn first. This looks enough for me.
 
-* Patch2:
-  This patch ensures that a probe function that is called
-  using work_on_cpu() doesn't run any task on an isolated CPU.
+I may not follow you at this part.
 
-* Patch3:
-  This patch makes store_rps_map() aware of the isolated
-  CPUs so that rps don't queue any jobs on an isolated CPU. 
-
-
-Proposed Changes
-================
-To fix the above-mentioned issues Alex has used housekeeping_cpumask().
-The only changes that I am proposing here are:
-- Removing the dependency on CONFIG_TASK_ISOLATION that was proposed by
-  Alex. As it should be safe to rely on housekeeping_cpumask()
-  even when we don't have any isolated CPUs and we want
-  to fall back to using all available CPUs in any of the above scenarios.
-- Using both HK_FLAG_DOMAIN and HK_FLAG_WQ in Patch2 & 3, this is
-  because we would want the above fixes not only when we have isolcpus but
-  also with something like systemd's CPU affinity.
-
-
-Testing
-=======
-* Patch 1:
-  Fix for cpumask_local_spread() is tested by creating VFs, loading
-  iavf module and by adding a tracepoint to confirm that only housekeeping
-  CPUs are picked when an appropriate profile is set up and all remaining
-  CPUs when no CPU isolation is configured.
-
-* Patch 2:
-  To test the PCI fix, I hotplugged a virtio-net-pci from qemu console
-  and forced its addition to a specific node to trigger the code path that
-  includes the proposed fix and verified that only housekeeping CPUs
-  are included via tracepoint.
-
-* Patch 3:
-  To test the fix in store_rps_map(), I tried configuring an isolated
-  CPU by writing to /sys/class/net/en*/queues/rx*/rps_cpus which
-  resulted in 'write error: Invalid argument' error. For the case
-  where a non-isolated CPU is writing in rps_cpus the above operation
-  succeeded without any error.
-
-
-Changes from v3[2]:
-==================
-- In patch 1, replaced HK_FLAG_WQ with HK_FLAG_MANAGED_IRQ based on the
-  suggestion from Frederic Weisbecker.
-
-Changes from v2[3]:
-==================
-Both the following suggestions are from Peter Zijlstra.
-- Patch1: Removed the extra while loop from cpumask_local_spread and fixed
-  the code styling issues.
-- Patch3: Change to use cpumask_empty() for verifying that the requested
-  CPUs are available in the the housekeeping CPUs.
-
-Changes from v1[4]:
-==================
-- Included the suggestions made by Bjorn Helgaas in the commit message.
-- Included the 'Reviewed-by' and 'Acked-by' received for Patch-2.
-
-
-[1] https://patchwork.ozlabs.org/project/netdev/patch/51102eebe62336c6a4e584c7a503553b9f90e01c.camel@marvell.com/
-[2] https://patchwork.ozlabs.org/project/linux-pci/cover/20200623192331.215557-1-nitesh@redhat.com/
-[3] https://patchwork.ozlabs.org/project/linux-pci/cover/20200622234510.240834-1-nitesh@redhat.com/
-[4] https://patchwork.ozlabs.org/project/linux-pci/cover/20200610161226.424337-1-nitesh@redhat.com/
-
-
-Alex Belits (3):
-  lib: Restrict cpumask_local_spread to houskeeping CPUs
-  PCI: Restrict probe functions to housekeeping CPUs
-  net: Restrict receive packets queuing to housekeeping CPUs
-
- drivers/pci/pci-driver.c |  5 ++++-
- lib/cpumask.c            | 16 +++++++++++-----
- net/core/net-sysfs.c     | 10 +++++++++-
- 3 files changed, 24 insertions(+), 7 deletions(-)
+>At least my ack stands.
 
 -- 
-
+Wei Yang
+Help you, Help me
