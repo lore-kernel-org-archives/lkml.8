@@ -2,253 +2,118 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0342076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8C520702
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:53:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n3FRfqC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404424AbgFYLs6 (ORCPT
+        id S2404321AbgFYLxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:48:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3440 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404220AbgFYLs6 (ORCPT
+        Thu, 25 Jun 2020 07:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728063AbgFYLxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:48:58 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PBVSBo125033;
-        Thu, 25 Jun 2020 07:47:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ux0059uk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 07:47:50 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PBWSu1128867;
-        Thu, 25 Jun 2020 07:47:49 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ux0059tg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 07:47:49 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PBiq9w010916;
-        Thu, 25 Jun 2020 11:47:47 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31uus71rye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 11:47:47 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PBliZx28377324
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 11:47:44 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CCF84203F;
-        Thu, 25 Jun 2020 11:47:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7414742045;
-        Thu, 25 Jun 2020 11:47:40 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.77.196.238])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jun 2020 11:47:40 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
-        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        anju@linux.vnet.ibm.com, kan.liang@linux.intel.com,
-        kjain@linux.ibm.com
-Subject: [RFC 1/3] perf jevents: Add support for parsing perchip/percore events
-Date:   Thu, 25 Jun 2020 17:17:16 +0530
-Message-Id: <20200625114718.229911-2-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200625114718.229911-1-kjain@linux.ibm.com>
-References: <20200625114718.229911-1-kjain@linux.ibm.com>
+        Thu, 25 Jun 2020 07:53:24 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90A6C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 04:53:23 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o2so5625550wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 04:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L4pFCzHJgLhT16AIpG64Yl9/rDj1/+gYvG4jvCw9F50=;
+        b=n3FRfqC1licA7sUvOVNsmYWGO4K/7vUEPRhyqo4fBRqJTuRXkEEQHh7uwPCnN+FcSf
+         ENydElYHJy9PUQYU9sfu1loBq5H0SIftbO5Sht4ahrm0xfMnJWRT8ci/38Brp/clygPK
+         L+kiUfWAo1teGmyfYs8LGk4Be7IorgzrIWkIJkU3+o97MGk2rpkBjG0TTaRxtyGh3tTs
+         EeCP+GkZCM3t1EJHFzQFkTYrnf8HsuUcHNDQc4lZ7iWF+4scXEzFr1ns/1MxaOcUwWTj
+         JPmiymJ2xlffeNK125ctWiPcqf8r9RQ46JpCxIewZ2tZTAghyq1qmdPz+xuCXqYbiZRg
+         gZRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L4pFCzHJgLhT16AIpG64Yl9/rDj1/+gYvG4jvCw9F50=;
+        b=pV804WnO8MtXZIDmzawRafO6JkW3GKve7Ejlul3+qkCtPKtybyESeYFTDMLRoVEuTg
+         Z2Q4YFk8IsJBLoUNRFOmMkwMzDUzgUCrZBXh33nptbEx1z54yOfn0+5ZUpJEqGlZg8xE
+         iUzTc6FWK7EpHT9RZS8+PqaFsmoAhnPES1k8+tvDV4/XTbdAWCLUiu20Vrtu0Zcl0owd
+         iIux64l8Qn5qEYo/XT2pgg1hQ9eRORX/Kc4c1+R85+26Vc5r3Qr+SBD0yYjqIiJhHvWz
+         ASev/bM1YVam6ks7+GqlwdpmUxb9axX1fLOSTS8G6Z4QsGZH0t6rk1q5nakOJpDM5ebF
+         4ulw==
+X-Gm-Message-State: AOAM530WuTBAQNYNVklf/uyZILydKrBwRAE/3hJp1UYX5NK9q3B/Z/ku
+        O1N+tsN2IVJGrShoRlSDS5aXBg==
+X-Google-Smtp-Source: ABdhPJzB3iG4QLOlxIPODy0q2tWS2+hoPSsNM/MppS52ewBi9bFqIsOWO5K4QEbJ3JGH6DNum7H2Og==
+X-Received: by 2002:a1c:2d54:: with SMTP id t81mr3196690wmt.154.1593086002391;
+        Thu, 25 Jun 2020 04:53:22 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id 104sm32104033wrl.25.2020.06.25.04.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 04:53:21 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 12:53:18 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org
+Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
+Message-ID: <20200625115318.GA219598@google.com>
+References: <20200623142138.209513-1-qperret@google.com>
+ <20200623142138.209513-3-qperret@google.com>
+ <20200625113602.z2xrwebd2gngbww3@vireshk-i7>
+ <CAJZ5v0g=+2OFKVk2ZnmK-33knUwqcaOOQ+q9ZWnmeoBD9KOX9g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_04:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=3
- clxscore=1011 bulkscore=0 cotscore=-2147483648 mlxlogscore=999
- phishscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
- priorityscore=1501 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006250070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0g=+2OFKVk2ZnmK-33knUwqcaOOQ+q9ZWnmeoBD9KOX9g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set up the "PerChip" field  so that perf knows they are
-per chip events.
+On Thursday 25 Jun 2020 at 13:44:34 (+0200), Rafael J. Wysocki wrote:
+> On Thu, Jun 25, 2020 at 1:36 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > This change is not right IMO. This part handles the set-policy case,
+> > where there are no governors. Right now this code, for some reasons
+> > unknown to me, forcefully uses the default governor set to indicate
+> > the policy, which is not a great idea in my opinion TBH. This doesn't
+> > and shouldn't care about governor modules and should only be looking
+> > at strings instead of governor pointer.
+> 
+> Sounds right.
+> 
+> > Rafael, I even think we should remove this code completely and just
+> > rely on what the driver has sent to us. Using the selected governor
+> > for set policy drivers is very confusing and also we shouldn't be
+> > forced to compiling any governor for the set-policy case.
+> 
+> Well, AFAICS the idea was to use the default governor as a kind of
+> default policy proxy, but I agree that strings should be sufficient
+> for that.
 
-Set up the "PerCore" field  so that perf knows they are
-per core events and add these fields to pmu_event structure.
+I agree with all the above. I'd much rather not rely on the default
+governor name to populate the default policy, too, so +1 from me.
 
-Similar to the way we had "PerPkg field
-to specify perpkg events.
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- tools/perf/pmu-events/jevents.c    | 34 ++++++++++++++++++++++++------
- tools/perf/pmu-events/jevents.h    |  3 ++-
- tools/perf/pmu-events/pmu-events.h |  2 ++
- 3 files changed, 32 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index fa86c5f997cc..21fd7990ded5 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -323,7 +323,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 				    char *pmu, char *unit, char *perpkg,
- 				    char *metric_expr,
- 				    char *metric_name, char *metric_group,
--				    char *deprecated, char *metric_constraint)
-+				    char *deprecated, char *perchip, char *percore,
-+				    char *metric_constraint)
- {
- 	struct perf_entry_data *pd = data;
- 	FILE *outfp = pd->outfp;
-@@ -357,6 +358,10 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 		fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
- 	if (deprecated)
- 		fprintf(outfp, "\t.deprecated = \"%s\",\n", deprecated);
-+	if (perchip)
-+		fprintf(outfp, "\t.perchip = \"%s\",\n", perchip);
-+	if (percore)
-+		fprintf(outfp, "\t.percore = \"%s\",\n", percore);
- 	if (metric_constraint)
- 		fprintf(outfp, "\t.metric_constraint = \"%s\",\n", metric_constraint);
- 	fprintf(outfp, "},\n");
-@@ -378,6 +383,8 @@ struct event_struct {
- 	char *metric_group;
- 	char *deprecated;
- 	char *metric_constraint;
-+	char *perchip;
-+	char *percore;
- };
- 
- #define ADD_EVENT_FIELD(field) do { if (field) {		\
-@@ -406,6 +413,8 @@ struct event_struct {
- 	op(metric_name);					\
- 	op(metric_group);					\
- 	op(deprecated);						\
-+	op(perchip);						\
-+	op(percore);						\
- } while (0)
- 
- static LIST_HEAD(arch_std_events);
-@@ -425,7 +434,8 @@ static int save_arch_std_events(void *data, char *name, char *event,
- 				char *desc, char *long_desc, char *pmu,
- 				char *unit, char *perpkg, char *metric_expr,
- 				char *metric_name, char *metric_group,
--				char *deprecated, char *metric_constraint)
-+				char *deprecated, char *perchip, char *percore,
-+				char *metric_constraint)
- {
- 	struct event_struct *es;
- 
-@@ -489,7 +499,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
- 	  char **name, char **long_desc, char **pmu, char **filter,
- 	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
- 	  char **metric_group, unsigned long long eventcode,
--	  char **deprecated, char **metric_constraint)
-+	  char **deprecated, char **perchip, char **percore,
-+	  char **metric_constraint)
- {
- 	/* try to find matching event from arch standard values */
- 	struct event_struct *es;
-@@ -518,7 +529,8 @@ int json_events(const char *fn,
- 		      char *pmu, char *unit, char *perpkg,
- 		      char *metric_expr,
- 		      char *metric_name, char *metric_group,
--		      char *deprecated, char *metric_constraint),
-+		      char *deprecated, char *perchip, char *percore,
-+		      char *metric_constraint),
- 	  void *data)
- {
- 	int err;
-@@ -548,6 +560,8 @@ int json_events(const char *fn,
- 		char *metric_name = NULL;
- 		char *metric_group = NULL;
- 		char *deprecated = NULL;
-+		char *perchip = NULL;
-+		char *percore = NULL;
- 		char *metric_constraint = NULL;
- 		char *arch_std = NULL;
- 		unsigned long long eventcode = 0;
-@@ -629,6 +643,10 @@ int json_events(const char *fn,
- 				addfield(map, &perpkg, "", "", val);
- 			} else if (json_streq(map, field, "Deprecated")) {
- 				addfield(map, &deprecated, "", "", val);
-+			} else if (json_streq(map, field, "PerChip")) {
-+				addfield(map, &perchip, "", "", val);
-+			} else if (json_streq(map, field, "PerCore")) {
-+				addfield(map, &percore, "", "", val);
- 			} else if (json_streq(map, field, "MetricName")) {
- 				addfield(map, &metric_name, "", "", val);
- 			} else if (json_streq(map, field, "MetricGroup")) {
-@@ -676,13 +694,15 @@ int json_events(const char *fn,
- 					&long_desc, &pmu, &filter, &perpkg,
- 					&unit, &metric_expr, &metric_name,
- 					&metric_group, eventcode,
--					&deprecated, &metric_constraint);
-+					&deprecated, &perchip, &percore,
-+					&metric_constraint);
- 			if (err)
- 				goto free_strings;
- 		}
- 		err = func(data, name, real_event(name, event), desc, long_desc,
- 			   pmu, unit, perpkg, metric_expr, metric_name,
--			   metric_group, deprecated, metric_constraint);
-+			   metric_group, deprecated, perchip, percore,
-+			   metric_constraint);
- free_strings:
- 		free(event);
- 		free(desc);
-@@ -693,6 +713,8 @@ int json_events(const char *fn,
- 		free(filter);
- 		free(perpkg);
- 		free(deprecated);
-+		free(perchip);
-+		free(percore);
- 		free(unit);
- 		free(metric_expr);
- 		free(metric_name);
-diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
-index 2afc8304529e..3c439ecdac7c 100644
---- a/tools/perf/pmu-events/jevents.h
-+++ b/tools/perf/pmu-events/jevents.h
-@@ -8,7 +8,8 @@ int json_events(const char *fn,
- 				char *pmu,
- 				char *unit, char *perpkg, char *metric_expr,
- 				char *metric_name, char *metric_group,
--				char *deprecated, char *metric_constraint),
-+				char *deprecated, char *perchip, char *percore,
-+				char *metric_constraint),
- 		void *data);
- char *get_cpu_str(void);
- 
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index c8f306b572f4..13d96b732963 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -19,6 +19,8 @@ struct pmu_event {
- 	const char *metric_group;
- 	const char *deprecated;
- 	const char *metric_constraint;
-+	const char *perchip;
-+	const char *percore;
- };
- 
- /*
--- 
-2.26.2
-
+Thanks,
+Quentin
