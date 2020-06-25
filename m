@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79437C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4155C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA7820789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2FE20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgPRy86R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2ehGRGI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407036AbgFYSNV (ORCPT
+        id S2407060AbgFYSN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53408 "EHLO
+        Thu, 25 Jun 2020 14:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406015AbgFYSNN (ORCPT
+        with ESMTP id S2407029AbgFYSNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:13:13 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61AD1C08C5DB;
-        Thu, 25 Jun 2020 11:13:13 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id rk21so6879723ejb.2;
-        Thu, 25 Jun 2020 11:13:13 -0700 (PDT)
+        Thu, 25 Jun 2020 14:13:18 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62CC6C08C5C1;
+        Thu, 25 Jun 2020 11:13:18 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so6884965ejd.0;
+        Thu, 25 Jun 2020 11:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
-        b=kgPRy86RCjK61P4JzPLhTuqMYAvNraZVLKP9tulRjVRduZf4MVUIK44FoyDWK5AN9W
-         YV6rGvqWVCa54W06UOkIFe4I6EDB4OzEXbk5D4/X9wkSA+BFgvmnJM1WSFiOh+qRXnY0
-         Ag5jExA0eHugUoGee6cecz76WvIUKzeFvn/wNaaD9aHRdQHYiT0dlwvos2CuCSQ6HUL/
-         sYW0WvWtsEbCpk8ZJ5VW78jUSNet/mhjH/EXd/D6UdF4mB4bfIyRTjY1Zhqcem8V6Ix0
-         SBX0vmZAyq6OaxD2zc5CmhLJmSn16+EcVDfpvT82XCMz2luOX19POnLemzTi1/fT8ZHa
-         fS/g==
+        bh=YaqwY05/r3k7x6kZ9wCj64JmBphdqzDzvJ/AelDNrH0=;
+        b=a2ehGRGI6AlMtvlsLGnRsJR3dq4x0ZAyn+2UIQIloRnNPZ67Tg+nFXRIIRkT2VtrWR
+         T4Y6Rm/n/KjtbZFYQ+1iGh3lnXiEdJhBPEeopn8z9D5OLg/zBeRP65zFZx8H3NM9J2Ak
+         bF7fmgnf9dLdSetSXQPU1WjSEHEhXohRBWtQPOvrDHWVeL/Tc8bD8vqD9535m10Mb/JH
+         +vjwwQnatRH+P0AwYybNUwroJUEOkfJCvbCPqKRp8TSFqLbiUnXIPyjbgsEBde8yov0o
+         noPee9hbRLjyj8m0N+U/yA23S0ZOUsrFhNNBipiJszq6v7V0b3GyYRcekmUDj9gkRefl
+         UoPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
-        b=jN46w9bSVMY5RmIuOkl8FfMKwg22kI7nKja3o6p6tLZC7numcjTIO20Qw5SwarK8S4
-         GdkIYvcVlEeXHIj+puZ5l15j5FII1zvHPw2yHejlRfVxSUd24zfSswcLBnnvnMqjrYtF
-         D1TwK3X/DBGi/xNjQNiTyPYaTit8lZyUzIpB/x8QIKVB2+bHfhOXMBxk4Ui0f60Nxmxo
-         tLoYwzYaei0MCB1neF/xCZh7EQWTCJtz/I06fNPxdOjw4444HeCN3RMTJkRF+pCEajvx
-         UOVFf6NymjNKdV1copE+sElQ+zTDTDjtcCOzeKUjLeBZ25rd9Dyf1wZLlArSCgbPjuUl
-         Ju6g==
-X-Gm-Message-State: AOAM532Bo3yrvOe+AzkVHvZjeR0sd0FkM7aUlD7rRfSwV1uasY/jf3Gh
-        Xa9wmHygpYib3kZ5CTKMlww=
-X-Google-Smtp-Source: ABdhPJxViezGSDGGke+gHlt8fABhYW3e4W/dtt5RdAruP1Pc+E/AZUuQ9/bu6TP3GaLIGKtoQQnntQ==
-X-Received: by 2002:a17:906:2b88:: with SMTP id m8mr32248780ejg.509.1593108792100;
-        Thu, 25 Jun 2020 11:13:12 -0700 (PDT)
+        bh=YaqwY05/r3k7x6kZ9wCj64JmBphdqzDzvJ/AelDNrH0=;
+        b=BdRZVqfI1/vIuW7TNvpXMJXRnu4izKMUY0N2XFhESVv0TFbx85OY0AwZ9Ud30rmIDJ
+         Ys2UtlIm4QKrO+tzIX/kQy+hRJ3BubKdSc4blR+x5e+9SgoCpNRVtrld0cyTLucKEEhD
+         vt7E5nTh8af/g5eNq5Njea75Piyg0Or+pjRtLsIFPzUDPJsm9rxy6TeAI3G4K0QGcY2Q
+         F+mF8J/bBdPopCrzKMcRsZcL8HA2sqgkAKOA5JM0tPi+StVTtlLwh+K9q7hTTKA58wPZ
+         7+Qi30vVnGgTXPXybmySUrBnxGqSryr5aXEU+hmnuLY3Eezue4iMZ7IKnHbIgVZVBXPn
+         UWsA==
+X-Gm-Message-State: AOAM531y5MG9whLPlpt6EagJYpwwOgKxNq4ypZ5oIKqb2UevXFflzOGP
+        CS2E7VYilLa9QX2EAh53bAD77CIyID0=
+X-Google-Smtp-Source: ABdhPJwTZxgljQFiscKjkufCd+SPF5kR/74nvJYDnDu7vD4FHB5L24T7FUtTYCnpt/lMjqbUiRu8vA==
+X-Received: by 2002:a17:906:5496:: with SMTP id r22mr31993911ejo.449.1593108797147;
+        Thu, 25 Jun 2020 11:13:17 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id p4sm19511112edj.64.2020.06.25.11.13.10
+        by smtp.googlemail.com with ESMTPSA id p4sm19511112edj.64.2020.06.25.11.13.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:13:11 -0700 (PDT)
+        Thu, 25 Jun 2020 11:13:16 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/13] arm64: dts: qcom: msm8992: Fix SDHCI1
-Date:   Thu, 25 Jun 2020 20:12:50 +0200
-Message-Id: <20200625181303.129874-3-konradybcio@gmail.com>
+Subject: [PATCH v2 04/13] arm64: dts: qcom: bullhead: Move UART pinctrl to SoC
+Date:   Thu, 25 Jun 2020 20:12:52 +0200
+Message-Id: <20200625181303.129874-5-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625181303.129874-1-konradybcio@gmail.com>
 References: <20200625181303.129874-1-konradybcio@gmail.com>
@@ -84,76 +84,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit ensures the correct IRQ type is set
-and disables the device by default.
-The mmc-hs400-1_8v property is also moved to
-Bullhead as it might not be present on all boards.
+This pinout is common for every 8992-based device and
+should therefore reside in the SoC device tree.
 
-The node has been renamed to sdhci@ instead of mmc@
-and the phandle was changed to sdhc_1 to comply with
-the newer DTS style.
+Also convert addresses into phandles.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../boot/dts/qcom/msm8992-bullhead-rev-101.dts   |  6 ++++++
- arch/arm64/boot/dts/qcom/msm8992.dtsi            | 16 +++++++++-------
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ .../boot/dts/qcom/msm8992-bullhead-rev-101.dts      | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-index a2de69292d28..1061fd5404aa 100644
+index 4f70681e730d..5969b5cfdc85 100644
 --- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
 +++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-@@ -271,3 +271,9 @@ pm8994_l32: l32 {
- 		};
+@@ -23,15 +23,6 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	soc {
+-		serial@f991e000 {
+-			status = "okay";
+-			pinctrl-names = "default", "sleep";
+-			pinctrl-0 = <&blsp1_uart2_default>;
+-			pinctrl-1 = <&blsp1_uart2_sleep>;
+-		};
+-	};
+-
+ 	reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+@@ -48,6 +39,10 @@ ramoops@1ff00000 {
  	};
  };
-+
-+&sdhc_1 {
+ 
++&blsp1_uart2 {
 +	status = "okay";
-+
-+	mmc-hs400-1_8v;
 +};
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index 43b2e4cd26f0..8ef1cb8ba8ef 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -158,18 +158,19 @@ frame@f9028000 {
- 			};
- 		};
- 
--		sdhci1: mmc@f9824900 {
-+		sdhc_1: sdhci@f9824900 {
- 			compatible = "qcom,sdhci-msm-v4";
- 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
--			interrupts = <GIC_SPI 123 IRQ_TYPE_NONE>,
--					<GIC_SPI 138 IRQ_TYPE_NONE>;
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "hc_irq", "pwr_irq";
- 
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
--				<&gcc GCC_SDCC1_AHB_CLK>;
--			clock-names = "core", "iface";
-+				<&gcc GCC_SDCC1_AHB_CLK>,
-+				<&xo_board>;
-+			clock-names = "core", "iface", "xo";
- 
- 			pinctrl-names = "default", "sleep";
- 			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on
-@@ -179,8 +180,9 @@ sdhci1: mmc@f9824900 {
- 
- 			regulator-always-on;
- 			bus-width = <8>;
--			mmc-hs400-1_8v;
--			status = "okay";
-+			non-removable;
 +
-+			status = "disabled";
- 		};
- 
- 		blsp1_uart2: serial@f991e000 {
+ &rpm_requests {
+ 	pm8994-regulators {
+ 		compatible = "qcom,rpm-pm8994-regulators";
 -- 
 2.27.0
 
