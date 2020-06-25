@@ -2,84 +2,207 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4703F212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A22420781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593084668;
+	bh=QZi38O3Ut1h7YzJoaUyhp2CHCHV0usUcEWfCLDyFQ0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QjRAnlx58z/xBaz+WRxJSQSjLx5g4Card99e/Tf9x3lDz650teXbM8oysR3AKQjRs
+	 tEAm2GxuHIce6r84iGDISGALIY4so2SzuadMvor8uzzYE2KqOjYpoZcnpC4LukFlhm
+	 2F3DH8ilVjC/5yZFkMf2uXJ2AIJqgCVInLYAnRFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404285AbgFYLaS (ORCPT
+        id S2404296AbgFYLbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:30:18 -0400
-Received: from gofer.mess.org ([88.97.38.141]:56613 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404267AbgFYLaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:30:17 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id DBCF7C6383; Thu, 25 Jun 2020 12:30:14 +0100 (BST)
-Date:   Thu, 25 Jun 2020 12:30:14 +0100
-From:   Sean Young <sean@mess.org>
-To:     Greg KH <greg@kroah.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Krufky <mkrufky@linuxtv.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Jaedon Shin <jaedon.shin@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
-        Satendra Singh Thakur <satendra.t@samsung.com>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH stable 4.9 00/21] Unbreak 32-bit DVB applications on
- 64-bit kernels
-Message-ID: <20200625113014.GA24273@gofer.mess.org>
-References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
- <20200623191334.GA279616@kroah.com>
+        Thu, 25 Jun 2020 07:31:07 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43031 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404219AbgFYLbG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 07:31:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id s10so4407243oih.10;
+        Thu, 25 Jun 2020 04:31:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ceR1V6p7RGNF++3XLjRXzuggrknx1RWLDfnDURTRa10=;
+        b=kd3wbd1zjOuLTYKgkCuIDIVgLb5vg+vCuqGAtSBD6PZbdqrctAad5X/b4uidrtqUqA
+         R4K9tFhcY/46nCrqCYoV2t2FI1aG0d/+vQSO2mx8eWy9OKQ/cisvng72tOQkI4Q5Q1l7
+         Qt5qsiaiJmfmunUH1akbwEhIQoPZB7+duOSKkqFIHODTGfnwGuD8Iu27xw4OsyxAsCYn
+         kwW+kpPqGEx33zw8imLoEFMmKVF6j8lBr1AwskJQ+wJMKyw3bKNNXI2o7sE1HgTAdS0+
+         DkvYP4cHGp8PqtF4pNCRGEXnKnBWwqalGy0i5N6Px87/WQgtxsv7c9F3D8s/98m8Hz5P
+         XqyQ==
+X-Gm-Message-State: AOAM532QD9YdNcMDv/dViOVwiQmT8mAecK8sh1UgJhTRz1TqJvqb+jgH
+        Jx0GwpvlAtZhspBlZXs9FVMoLYr+1CoUBcx5n5E=
+X-Google-Smtp-Source: ABdhPJyklNBNQHH5j4xZ+MpbLP5vgIKFp9exs0rtM1iu2YH+8Aw6RTM6P9vtPnorNsBYobo61Jnpn1Fur6T/ALSpXvY=
+X-Received: by 2002:a54:4585:: with SMTP id z5mr1822683oib.110.1593084664345;
+ Thu, 25 Jun 2020 04:31:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623191334.GA279616@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200612204820.20111-2-david.e.box@linux.intel.com> <20200624211549.GA2586552@bjorn-Precision-5520>
+In-Reply-To: <20200624211549.GA2586552@bjorn-Precision-5520>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Jun 2020 13:30:53 +0200
+Message-ID: <CAJZ5v0i8dCN=HMFk_+ZX-Wr73P6kdQBtV0i3FtrZrO9cegXsvQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>, shyjumon.n@intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 09:13:34PM +0200, Greg KH wrote:
-> On Fri, Jun 05, 2020 at 09:24:57AM -0700, Florian Fainelli wrote:
-> > Hi all,
-> > 
-> > This long patch series was motivated by backporting Jaedon's changes
-> > which add a proper ioctl compatibility layer for 32-bit applications
-> > running on 64-bit kernels. We have a number of Android TV-based products
-> > currently running on the 4.9 kernel and this was broken for them.
-> > 
-> > Thanks to Robert McConnell for identifying and providing the patches in
-> > their initial format.
-> > 
-> > In order for Jaedon's patches to apply cleanly a number of changes were
-> > applied to support those changes. If you deem the patch series too big
-> > please let me know.
-> 
-> Now queued up,t hanks.
+On Wed, Jun 24, 2020 at 11:15 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Jun 12, 2020 at 01:48:19PM -0700, David E. Box wrote:
+> > StorageD3Enable is a boolean property that indicates that the platform
+> > wants to use D3 for PCIe storage drives during suspend-to-idle. It is a
+> > BIOS work around that is currently in use on shipping systems like some
+> > Intel Comet Lake platforms. It is meant to change default driver policy for
+> > suspend that may cause higher power consumption.
+> >
+> > Add the DSD property for recognition by fwnode calls and provide an
+> > exported symbol for device drivers to use to read the property as needed.
+> >
+> > Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> >  drivers/acpi/property.c |  3 +++
+> >  drivers/pci/pci-acpi.c  | 59 +++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci.h     |  2 ++
+> >  3 files changed, 64 insertions(+)
+> >
+> > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> > index e601c4511a8b..c2e2ae774a19 100644
+> > --- a/drivers/acpi/property.c
+> > +++ b/drivers/acpi/property.c
+> > @@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
+> >       /* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
+> >       GUID_INIT(0x6c501103, 0xc189, 0x4296,
+> >                 0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
+> > +     /* Storage device needs D3 GUID: 5025030f-842f-4ab4-a561-99a5189762d0 */
+> > +     GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
+> > +               0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
+> >  };
+> >
+> >  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > index d21969fba6ab..732df524e09c 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -972,6 +972,65 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
+> >       return val == 1;
+> >  }
+> >
+> > +/**
+> > + * pci_acpi_storage_d3 - whether root port requests D3 for idle suspend
+> > + * @pdev: PCI device to check
+> > + *
+> > + * Returns true if the ACPI companion device contains the "StorageD3Enable"
+> > + * _DSD property and the value is 1. This indicates that the root port is
+> > + * used by a storage device and the platform is requesting D3 for the
+> > + * device during suspend to idle in order to support platform pm.
+> > + */
+> > +bool pci_acpi_storage_d3(struct pci_dev *dev)
+> > +{
+> > +     const struct fwnode_handle *fwnode;
+> > +     struct acpi_device *adev;
+> > +     struct pci_dev *root;
+> > +     acpi_handle handle;
+> > +     acpi_status status;
+> > +     bool ret = false;
+> > +     u8 val;
+> > +
+> > +     /*
+> > +      * Look for _DSD property specifying that the storage device on
+> > +      * the port must use D3 to support deep platform power savings during
+> > +      * suspend-to-idle
+> > +      */
+> > +     root = pci_find_pcie_root_port(dev);
+>
+> I think this would need to be updated to apply to v5.8-rc1 after
+> 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and
+> pci_find_pcie_root_port()").
+>
+> https://git.kernel.org/linus/6ae72bfa656e
+>
+> > +     if (!root)
+> > +             return false;
+> > +
+> > +     adev = ACPI_COMPANION(&root->dev);
+> > +     if (!adev) {
+> > +             /*
+> > +              * It is possible that the ACPI companion is not yet bound
+> > +              * for the root port so look it up manually here.
+> > +              */
+> > +             if (!adev && !pci_dev_is_added(root))
+> > +                     adev = acpi_pci_find_companion(&root->dev);
+>
+> I see that you copied this "ACPI companion not yet bound" thing from
+> acpi_pci_bridge_d3().  But it's ugly.
+>
+> Isn't there a way we can bind the ACPI companion during normal PCI
+> enumeration so we don't need this exception case?
+>
+> I really do not like the idea of putting this code in the PCI core
+> because AFAICT the PCI core can do nothing with this information.
+>
+> If we could make sure during enumeration that the root port always has
+> an ACPI companion, this code could go to the nvme driver itself.  And
+> we could also clean up the ugliness in acpi_pci_bridge_d3().
+>
+> Rafael, is that possible?  I don't really know how the companion
+> device gets set.
 
-Sorry about the delay getting this reviewed. I've spent the morning going
-through them and it looks good. Of the all the dvb ioctl, only the
-FE_SET_PROPERTY and FE_GET_PROPERTY ioctls need special handling and this
-series fixes that.
+That's a bit convoluted.
 
-Belated,
+device_add() calls device_platform_notify(), before calling bus_add_device().
 
-Reviewed-by: Sean Young <sean@mess.org>
+device_platform_notify() calls acpi_platform_notify() which invokes
+acpi_device_notify() that looks for the companion via
+type->find_companion() which for PCI points to
+acpi_pci_find_companion().  If found, the companion is attached to the
+dev structure as a physical_node, via acpi_bind_one().
 
+So by the time bus_probe_device() runs, the companion should be there
+already - if it is there at all.
 
-Sean
+The parent ACPI companion should be present when the child is probing
+too, as per the above.
+
+> Maybe this is could be done somewhere around pci_device_add()?
+
+It is done in there.
+
+It is not necessary to call acpi_pci_find_companion() from
+pci_acpi_storage_d3() as long as that function is required to be
+called by the target device's driver probe or later.
+
+Ths acpi_pci_bridge_d3() case is different, though, AFAICS, because it
+is invoked in the pci_pm_init() path, via pci_bridge_d3_possible(),
+and that gets called from pci_device_add() *before* calling
+device_add().
+
+Mika, is that why acpi_pci_find_companion() gets callled from
+acpi_pci_bridge_d3()?
