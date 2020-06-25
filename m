@@ -2,167 +2,120 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD58C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2660C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E8E206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BEE2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404425AbgFYL7o (ORCPT
+        id S2404443AbgFYMBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:59:44 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36132 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404285AbgFYL7o (ORCPT
+        Thu, 25 Jun 2020 08:01:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36728 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404285AbgFYMBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:59:44 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id B28902A50E8
-Subject: Re: [PATCH v3 2/2] platform/chrome: typec: Register Type C switches
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>
-References: <20200519214604.180036-1-pmalani@chromium.org>
- <20200519214604.180036-2-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <4a7507b2-ca2e-7a01-4abc-2a38d33a50ed@collabora.com>
-Date:   Thu, 25 Jun 2020 13:59:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 08:01:53 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PBa7fA164541;
+        Thu, 25 Jun 2020 08:01:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts0hfce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 08:01:25 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PBaUB3170434;
+        Thu, 25 Jun 2020 08:01:24 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts0hfbg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 08:01:24 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PBxj3i010065;
+        Thu, 25 Jun 2020 12:01:23 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 31uurtbqb8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 12:01:23 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PC1MR114156440
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 12:01:22 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0804124058;
+        Thu, 25 Jun 2020 12:01:22 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFE98124052;
+        Thu, 25 Jun 2020 12:01:18 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.115.79])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 12:01:18 +0000 (GMT)
+X-Mailer: emacs 27.0.91 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Bibo Mao <maobibo@loongson.cn>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Daniel Silsby <dansilsby@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] mm/huge_memory.c: update tlb entry if pmd is changed
+In-Reply-To: <07f78e99-6e59-0bce-8ac0-50d7c7600461@oracle.com>
+References: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
+ <1592990792-1923-2-git-send-email-maobibo@loongson.cn>
+ <07f78e99-6e59-0bce-8ac0-50d7c7600461@oracle.com>
+Date:   Thu, 25 Jun 2020 17:31:16 +0530
+Message-ID: <87lfkbl5gz.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200519214604.180036-2-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_05:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ adultscore=0 mlxscore=0 malwarescore=0 clxscore=1011 phishscore=0
+ suspectscore=8 spamscore=0 impostorscore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+Mike Kravetz <mike.kravetz@oracle.com> writes:
 
-On 19/5/20 23:46, Prashant Malani wrote:
-> Register Type C mux and switch handles, when provided via firmware
-> bindings. These will allow the cros-ec-typec driver, and also alternate
-> mode drivers to configure connected Muxes correctly, according to PD
-> information retrieved from the Chrome OS EC.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> On 6/24/20 2:26 AM, Bibo Mao wrote:
+>> When set_pmd_at is called in function do_huge_pmd_anonymous_page,
+>> new tlb entry can be added by software on MIPS platform.
+>> 
+>> Here add update_mmu_cache_pmd when pmd entry is set, and
+>> update_mmu_cache_pmd is defined as empty excepts arc/mips platform.
+>> This patch has no negative effect on other platforms except arc/mips
+>> system.
+>
+> I am confused by this comment.  It appears that update_mmu_cache_pmd
+> is defined as non-empty on arc, mips, powerpc and sparc architectures.
+> Am I missing something?
+>
+> If those architectures do provide update_mmu_cache_pmd, then the previous
+> patch and this one now call update_mmu_cache_pmd with the actual faulting
+> address instead of the huge page aligned address.  This was intentional
+> for mips.  However, are there any potential issues on the other architectures?
+> I am no expert in any of those architectures.  arc looks like it could be
+> problematic as update_mmu_cache_pmd calls update_mmu_cache and then
+> operates on (address & PAGE_MASK).  That could now be different.
+>
 
+Also we added update_mmu_cache_pmd to update a THP entry. That could be
+different from a hugetlb entry on some architectures. If we need to do
+hugetlb equivalent for update_mmu_cache, we should add a different
+function.
 
-Applied this patch for 5.9 to support ACPI devices, as discussed, the first
-patch, the DT bindings, are still not ready.
-
-Thanks,
- Enric
-
-> ---
-> 
-> Changes in v3:
-> - Added Acked-by tag.
-> - Fixed Heikki's email address in Reviewed-by tag.
-> 
-> Changes in v2:
-> - Changed dev_info prints to dev_dbg.
-> 
->  drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 66b8d21092af..6e79f917314b 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -14,6 +14,8 @@
->  #include <linux/platform_data/cros_usbpd_notify.h>
->  #include <linux/platform_device.h>
->  #include <linux/usb/typec.h>
-> +#include <linux/usb/typec_mux.h>
-> +#include <linux/usb/role.h>
->  
->  #define DRV_NAME "cros-ec-typec"
->  
-> @@ -25,6 +27,9 @@ struct cros_typec_port {
->  	struct typec_partner *partner;
->  	/* Port partner PD identity info. */
->  	struct usb_pd_identity p_identity;
-> +	struct typec_switch *ori_sw;
-> +	struct typec_mux *mux;
-> +	struct usb_role_switch *role_sw;
->  };
->  
->  /* Platform-specific data for the Chrome OS EC Type C controller. */
-> @@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
->  	return 0;
->  }
->  
-> +static int cros_typec_get_switch_handles(struct cros_typec_port *port,
-> +					 struct fwnode_handle *fwnode,
-> +					 struct device *dev)
-> +{
-> +	port->mux = fwnode_typec_mux_get(fwnode, NULL);
-> +	if (IS_ERR(port->mux)) {
-> +		dev_dbg(dev, "Mux handle not found.\n");
-> +		goto mux_err;
-> +	}
-> +
-> +	port->ori_sw = fwnode_typec_switch_get(fwnode);
-> +	if (IS_ERR(port->ori_sw)) {
-> +		dev_dbg(dev, "Orientation switch handle not found.\n");
-> +		goto ori_sw_err;
-> +	}
-> +
-> +	port->role_sw = fwnode_usb_role_switch_get(fwnode);
-> +	if (IS_ERR(port->role_sw)) {
-> +		dev_dbg(dev, "USB role switch handle not found.\n");
-> +		goto role_sw_err;
-> +	}
-> +
-> +	return 0;
-> +
-> +role_sw_err:
-> +	usb_role_switch_put(port->role_sw);
-> +ori_sw_err:
-> +	typec_switch_put(port->ori_sw);
-> +mux_err:
-> +	typec_mux_put(port->mux);
-> +
-> +	return -ENODEV;
-> +}
-> +
->  static void cros_unregister_ports(struct cros_typec_data *typec)
->  {
->  	int i;
-> @@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
->  	for (i = 0; i < typec->num_ports; i++) {
->  		if (!typec->ports[i])
->  			continue;
-> +		usb_role_switch_put(typec->ports[i]->role_sw);
-> +		typec_switch_put(typec->ports[i]->ori_sw);
-> +		typec_mux_put(typec->ports[i]->mux);
->  		typec_unregister_port(typec->ports[i]->port);
->  	}
->  }
-> @@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
->  			ret = PTR_ERR(cros_port->port);
->  			goto unregister_ports;
->  		}
-> +
-> +		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
-> +		if (ret)
-> +			dev_dbg(dev, "No switch control for port %d\n",
-> +				port_num);
->  	}
->  
->  	return 0;
-> 
+-aneesh
