@@ -2,139 +2,95 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39AF20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B015B208C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iBMYAQ01"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DuiS5Jyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390270AbgFYPwN (ORCPT
+        id S2390477AbgFYPyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59786 "EHLO
+        Thu, 25 Jun 2020 11:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389744AbgFYPwM (ORCPT
+        with ESMTP id S2389678AbgFYPyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:52:12 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C07C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:52:12 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id b15so4600472edy.7
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 08:52:12 -0700 (PDT)
+        Thu, 25 Jun 2020 11:54:22 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA0EC08C5C1;
+        Thu, 25 Jun 2020 08:54:21 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p3so3487384pgh.3;
+        Thu, 25 Jun 2020 08:54:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KXqoAfwqJjFswhwLZp3+6buwkSwmtb+FpqbKTmlJZoY=;
-        b=iBMYAQ01jjIK2rgc9mVr+Yly8ObD4pm58VppkGjO71MrklExKxdwSKwWFuP9YkSMax
-         vMiKxZI9B0EFAul7JTwn8UhhRGSpfvKL0+dtbk9Pa5T00iX7tBM0ceq9B81xzAEHeecb
-         /gFnqMvJAhk4K2nj3CwK4jafNNa61MnrqJqWOhDmlRn4SsNOXBvB0SXoWY9RDcShQ5sf
-         c5dIltSFrsuKw2h0e6D3zXXaJCXnuMOjyjMyN3XUk/mv3CfpMlt8GYket32jOOJfj/Cd
-         erYnaLeELb5vAMrWYGVD5+F1x+gfPoqYphOQEtLZtVtu8GtkaljRimp7G7gL9CmUYHxH
-         Rteg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t3TNDoNuL9vjeEkISORiqXUd88wGv+PqQ0SpmQj4j+E=;
+        b=DuiS5JyzlWIwBUWUokM9JQo1RGFMRbVaZL/De6h7AvRGXjTNCAJ3ffedD5WXnGsRBD
+         CBCw3i2xaRN22fTRsDIipu1IPSJAemMIL2YVfAikqM33geN4JEZs5niFHlHU5oUDdPiV
+         7L7KHynNwrn0eeS6tnL+/09jxwOKibHClV53vRR4BZUETj0s8edAAo9hyn4duRnfuiZQ
+         3bHKc2mXXkDEVO6RR2DcpLIEb4QUUk5ZGvyeo+0t3ofQ18wrXSWmgzrcfHbEAzLb1IXz
+         f5qebSOPWoCIwiFsBPIxhp89D6qceBQPm7kPvBgky2ZxSSl9xu64uEzVmqOMqbfOpGQ4
+         Dx1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KXqoAfwqJjFswhwLZp3+6buwkSwmtb+FpqbKTmlJZoY=;
-        b=iGK/kR1uXwjaT/MiUS6JjXQjPzuWttVEoUJ+9ytO2p85zmrloNCTaFQDh5rRyb1p3n
-         K4f+0yHDqJCzVMMvPhnKY5R+V4rekrCauIBGx2imGrBTO/ty01CLv/NfBFyeCeTP+pih
-         LhwOyZ5Dhu1TJo0+Z7C6vNQcgAYBvdR/n2qq7Xt8e0YzMq9pWWsMGtOgWUiBfdOsJgWk
-         o5RUBxWjlHsqqUTcbOaE/PHYuhE2nXL9ghCuLtmHXXW78sH+IynbI65k/FsEOnLRxxvv
-         mMGaZPQ+2BOkWHZ1hwTIgyMPoOoiyJKaYNo8SpxTjXocLN89pLgFzSLLLMKq8hi5wR6w
-         0RmA==
-X-Gm-Message-State: AOAM530mKVkqafIVAuwGQPi7/O/v245U1Bi8JDqa7bFh1VqTQKMtJ2pt
-        i6rq+qAyrENgiyNxA3sQix1qBMYnBxlA9w==
-X-Google-Smtp-Source: ABdhPJwbt395lRqEkrc239QutfG7/2q46qATHxzzPM6+/whTFZe8sqUtd5p2MOO4Rt2ysNAmZ0Gz7A==
-X-Received: by 2002:a50:9a82:: with SMTP id p2mr23429201edb.130.1593100330935;
-        Thu, 25 Jun 2020 08:52:10 -0700 (PDT)
-Received: from [192.168.1.4] (212-5-158-60.ip.btc-net.bg. [212.5.158.60])
-        by smtp.googlemail.com with ESMTPSA id e1sm4809370edn.16.2020.06.25.08.52.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 08:52:10 -0700 (PDT)
-Subject: Re: [PATCH] [v2] media: venus: core: Fix runtime PM imbalance in
- venus_probe
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <812ead80-766b-1dad-1447-ffab5d7d2ee8@linaro.org>
-Date:   Thu, 25 Jun 2020 18:52:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t3TNDoNuL9vjeEkISORiqXUd88wGv+PqQ0SpmQj4j+E=;
+        b=NUTqcK9Kpv7R4WaFF3q1y9NhdObvdoc9WVvlUh4OA+r6UvJQlGSPY6z4IXNsvLdt0T
+         LfhCI5OUpH/K2hUYOH4BiA0RfPYvsFYg5sOIN2Tkl542MEdrnx7hAqDG11Ka/NN9ukmK
+         /LXWER/AH8JNU5g/cskXuTfG8IRzWrqlLNpamA9uP0bvY/sNtMmLqTd6mmlat0MHpkz6
+         ETb8WW7EiwdkTTtGsgQGKoimQ85qvr4JOmLIzuD8Qz84brFgNd1xutPDOpuky9liudJL
+         LRWqYlACzseLzFoVY11HgUm4k6XEzy0vy371SLhVLEkXOXRQAGDzMYFDmkz/73ObOT2R
+         FyZA==
+X-Gm-Message-State: AOAM531YLGpbiHdrTNWXCDS4u/y3PvStV1lCPavpDQc4ns6/D3zcmVWt
+        cKFNKlIYCE1CL7wkgkvoBv4=
+X-Google-Smtp-Source: ABdhPJyZNWcj86QyWLzSW1e3a048p2vmzm48x+k4iqj6rtb65Oa/LRY9Ue+g+hpiyuVBw5kuunDwaQ==
+X-Received: by 2002:a63:2946:: with SMTP id p67mr3394288pgp.227.1593100461488;
+        Thu, 25 Jun 2020 08:54:21 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i184sm22745477pfc.73.2020.06.25.08.54.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jun 2020 08:54:20 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 08:54:19 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/139] 4.14.186-rc3 review
+Message-ID: <20200625155419.GA149301@roeck-us.net>
+References: <20200624172341.891497820@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200624063024.17059-1-dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624172341.891497820@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dinghao,
-
-On 6/24/20 9:30 AM, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced. For other error
-> paths after this call, things are the same.
+On Wed, Jun 24, 2020 at 07:26:56PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.186 release.
+> There are 139 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
-> 
-> Changelog:
-> 
-> v2: - Add pm_runtime_get_noresume() on failure of
->       pm_runtime_put_sync() to balance PM counter instead of
->       releasing everything here.
-
-You are adding pm_runtime_get_noresume in pm_runtime_put_sync error path
-but the patch description is referring to pm_runtime_get_sync. I'm confused.
-
-> ---
->  drivers/media/platform/qcom/venus/core.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index 203c6538044f..b0b932bf8c02 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -287,8 +287,10 @@ static int venus_probe(struct platform_device *pdev)
->  		goto err_core_deinit;
->  
->  	ret = pm_runtime_put_sync(dev);
-> -	if (ret)
-> +	if (ret) {
-> +		pm_runtime_get_noresume(dev);
->  		goto err_dev_unregister;
-> +	}
->  
->  	return 0;
->  
-> @@ -299,6 +301,7 @@ static int venus_probe(struct platform_device *pdev)
->  err_venus_shutdown:
->  	venus_shutdown(core);
->  err_runtime_disable:
-> +	pm_runtime_put_noidle(dev);
->  	pm_runtime_set_suspended(dev);
->  	pm_runtime_disable(dev);
->  	hfi_destroy(core);
+> Responses should be made by Fri, 26 Jun 2020 17:23:12 +0000.
+> Anything received after that time might be too late.
 > 
 
--- 
-regards,
-Stan
+Build results:
+	total: 171 pass: 171 fail: 0
+Qemu test results:
+	total: 408 pass: 408 fail: 0
+
+Guenter
