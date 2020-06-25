@@ -2,96 +2,138 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 256BA207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F408207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gEFD/h6/"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AOwchFPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406605AbgFYXS4 (ORCPT
+        id S2407768AbgFYXTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:18:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44258 "EHLO
+        Thu, 25 Jun 2020 19:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406523AbgFYXSy (ORCPT
+        with ESMTP id S2406461AbgFYXTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:18:54 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA054C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 16:18:54 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id k7so3172965vso.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 16:18:54 -0700 (PDT)
+        Thu, 25 Jun 2020 19:19:36 -0400
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 532B1C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 16:19:36 -0700 (PDT)
+Received: by mail-io1-xd34.google.com with SMTP id c4so7946091iot.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 16:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UZUejZ4FxIPzgalcSBOTl7RrSB8oG1JXXKFu2TzIVTY=;
-        b=gEFD/h6/YccJ6NUPfYT/xgz0X+isX8Cd6CGn2UCUGx7jpM3t81GIEKLZxSIh9n3gSf
-         LyFFAVqzLW2EOg2vox4IxQFv/KkghELE3h+1pMYcAk3L5vCjE1vuqYv6ModKBhiykPJm
-         E+uZ3A7Yo3f2524NLn2qvAOct1Q0SfZjBL3KQ=
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=gXl5/p0573ZJRbwiRmTK/Thk5dGxKEwaqQGqi7gfkCU=;
+        b=AOwchFPXuB/qlH4hAxwdiSdqbb9aYQFbZLFGcBEkoPeblxHTmtuRSHADfp3j9QvBi7
+         PeKPqGL35L9BwaDBE8fBu7iWey5Hb4wToVoUsCFWnwP8OZIgI7EcRrK5gsq7XpfI13kc
+         S+4ihWYlIEt5v4sFwMgGd79cXikvnytF8strBN2DGifolDdiVdGj1JKOl2pidZ3qRK9T
+         aMkq7xG2w7c6OkApGQdc52mzQ2oSL+WNqyPQSdSkM/gckwfkYnNZMIgX7cZDKwnVR4VV
+         yuFRFFVTamKNMnAkIaMhdEmOic8OGEMz36BFlsWSmAv79fCC2adrAzi3sKWf5jzjudyJ
+         VvQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UZUejZ4FxIPzgalcSBOTl7RrSB8oG1JXXKFu2TzIVTY=;
-        b=PaTczHXuhYnWPVHAmMIQE8/f1DLOIAN/w3Fery0pSlHTb+cAm45TgeRNZTTE+DLGQR
-         BCwhEHxoMf3yjTLkaiVhHESpNU+tkF9JPzPDkyTQjTBEo3bJjRtFqUfS0zYVqGqr9KhL
-         M73rpnzEnQpMi6TakQmBp6VVVNYzOivOoPS1d5jmQWMNdGh1uHHhYjK+UqNmW9Cc0Q4N
-         vCanxX4LDerBnNkn5TY9RcH6axYTWHrY0oH2HhTV5pPJkmEOx5iNmGTEDL6Gx3K2Ic8U
-         eLi72M66ytRVDLXPHMyP8rH7vKvPMM3bMlnUnNptTPjHiozifyPpjwYkWUtVdVLFXphY
-         pyRQ==
-X-Gm-Message-State: AOAM532IG6m7WMRGD0ijnWli6AYpoGbHqhC+Gj+q9VBZ3cMU+/MxifrZ
-        lXvQT5Y8jFcyeuetuCKrlh30T9sglcjEa2WdyVt9V1FM
-X-Google-Smtp-Source: ABdhPJzhi8dHdwc7k/3b1+iOeFD6RskzYY/+B8+g9RbXB08kX6vZ9AZiixX+D9Pnv0ODrkx1cdSZ8uCd7wY1U33lSFI=
-X-Received: by 2002:a05:6102:1167:: with SMTP id k7mr517235vsg.71.1593127133874;
- Thu, 25 Jun 2020 16:18:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200624111128.v2.1.Ibae403db54245c458d14297f1892c77c5055da41@changeid>
- <1593080522.28236.17.camel@suse.com>
-In-Reply-To: <1593080522.28236.17.camel@suse.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Thu, 25 Jun 2020 16:18:42 -0700
-Message-ID: <CANFp7mUmk=HqPyJ5TS5uQPyaEtOWdz=D+7XBS8MyikuF9y9EJQ@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: btusb: Reset port on cmd timeout
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Rocky Liao <rjliao@codeaurora.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        linux-usb@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=gXl5/p0573ZJRbwiRmTK/Thk5dGxKEwaqQGqi7gfkCU=;
+        b=L2dsZGd9InGqTp7oGVAY6CvtMFK7KY7Gl82HSpcLiwt7hNWRZ2frsgBBZaL+kJa3xW
+         bgctJre0bPTpkpPakvK/elNxUOk78lcoDVRLjdYX7g23HtuOz12/eLeQNn2JORVdIu1l
+         Hi2HOYFo23HdzFkYP4vd1POcGtOWqEwcLkIxnHToy8o9t+cLENM5WRw/388ZMFMes8iI
+         V3XXAqkyECtwDyEKRvKvvkcMjQpwf6BRivXPPPA8kWbrxJcJQC9NTBO0ZMuRMTISBIW9
+         W0zqfQh9NeSJ9wVqWw2Q4xyKP4qPy3US/05S28LV7exh3jiwtNrORxkW5C3QBscxmtHt
+         pFyg==
+X-Gm-Message-State: AOAM533PM5sHPzaci5XVrOUcP0l9Nx8gl1QGmfDT/IQ/AC+P+ltNonR/
+        J2wV6gSM9guLY9nuDRHeGOlSov2QxDOI3x0Y
+X-Google-Smtp-Source: ABdhPJzQDaH1oCH1pHv0A4+sqnoZhHGPK3PU4SwGFAnZ7cKvuI1IKycPTSvNpZOsmJlIPWwF6qQzZw==
+X-Received: by 2002:a5d:914d:: with SMTP id y13mr552819ioq.48.1593127175678;
+        Thu, 25 Jun 2020 16:19:35 -0700 (PDT)
+Received: from ziepe.ca ([206.223.160.26])
+        by smtp.gmail.com with ESMTPSA id c20sm14155116iot.33.2020.06.25.16.19.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 16:19:35 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1job9a-00ENMt-33; Thu, 25 Jun 2020 20:19:34 -0300
+Date:   Thu, 25 Jun 2020 20:19:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: Enabling interrupts in QEMU TPM TIS
+Message-ID: <20200625231934.GU6578@ziepe.ca>
+References: <1ca3a53d-2b83-7522-5ce1-83d9cc2f207d@linux.ibm.com>
+ <20200625172802.GS6578@ziepe.ca>
+ <0a524093-e744-e266-6087-ddc17b5c598c@linux.ibm.com>
+ <5b3267b7-57d5-badf-6664-9d47bc9909e7@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5b3267b7-57d5-badf-6664-9d47bc9909e7@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the heads up Oliver -- I will send a patch with a comment on this.
+On Thu, Jun 25, 2020 at 06:48:09PM -0400, Stefan Berger wrote:
+> On 6/25/20 5:26 PM, Stefan Berger wrote:
+> > On 6/25/20 1:28 PM, Jason Gunthorpe wrote:
+> > > On Thu, Jun 25, 2020 at 10:56:43AM -0400, Stefan Berger wrote:
+> > > > Hello!
+> > > > 
+> > > >   I want to enable IRQs now in QEMU's TPM TIS device model and I
+> > > > need to work
+> > > > with the following patch to Linux TIS. I am wondering whether
+> > > > the changes
+> > > > there look reasonable to you? Windows works with the QEMU modifications
+> > > > as-is, so maybe it's a bug in the TIS code (which I had not run into
+> > > > before).
+> > > > 
+> > > > 
+> > > > The point of the loop I need to introduce in the interrupt
+> > > > handler is that
+> > > > while the interrupt handler is running another interrupt may
+> > > > occur/be posted
+> > > > that then does NOT cause the interrupt handler to be invoked again but
+> > > > causes a stall, unless the loop is there.
+> > > That seems like a qemu bug, TPM interrupts are supposed to be level
+> > > interrupts, not edge.
+> > 
+> > 
+> > Following this document here the hardware may choose to support
+> > different types of interrutps:
+> > 
+> > https://trustedcomputinggroup.org/wp-content/uploads/PC-Client-Specific-Platform-TPM-Profile-for-TPM-2p0-v1p04_r0p37_pub-1.pdf
+> > 
+> > 
+> > Table 23. Edge falling or rising, level low or level high.
+> > 
+> > So with different steps in the driver causing different types of
+> > interrupts, we may get into such situations where we process some
+> > interrupt 'reasons' but then another one gets posted, I guess due to
+> > parallel processing.
+> 
+> 
+> Another data point: I had the TIS driver working on IRQ 5 (festeoi) without
+> the introduction of this loop. There are additional bits being set while the
+> interrupt handler is running, but the handler deals with them in the next
+> invocation. On IRQ 13 (edge), it does need the loop since the next interrupt
+> handler invocation is not happening. 
 
-On Thu, Jun 25, 2020 at 3:22 AM Oliver Neukum <oneukum@suse.com> wrote:
->
-> Am Mittwoch, den 24.06.2020, 11:11 -0700 schrieb Abhishek Pandit-
-> Subedi:
-> > QCA_ROME sometimes gets into a state where it is unresponsive to
-> > commands. Since it doesn't have support for a reset gpio, reset the usb
-> > port when this occurs instead.
->
-> Hi,
->
-> on first glance this looks like an unbalanced PM reference. It is not
-> because the operation is suicidal, but this deserves a comment, unless
-> you want to get a note telling you that you caused an imbalance every
-> few weeks.
->
->         Regards
->                 Oliver
->
+A loop like that is never the correct way to handle edge interrupts.
+
+I don't think the tpm driver was ever designed for edge, so most
+likely the structure and order of the hard irq is not correct.
+
+Jason
