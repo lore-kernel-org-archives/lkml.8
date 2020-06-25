@@ -2,160 +2,186 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA83C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66CF220789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A843C20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:54:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGJIN5xG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389597AbgFYCyP (ORCPT
+        id S2389617AbgFYCyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 22:54:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:6872 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389357AbgFYCyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 22:54:14 -0400
-IronPort-SDR: Of0YFrmnGS1aSqgskh2RbDeSdvhB5nXC7fbRo/4bRI7BEXBFRC3XSALcUFkWhvuuOw++7gptCp
- Aei3u5vIK4uw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="124395282"
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="124395282"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 19:54:13 -0700
-IronPort-SDR: Rb5biXPkkNbzdDEdfkqxz78d7vhNAIydGqFtQWeRt9iPmK2+ovWiz4OgnGER0Hl+dzipiBce6V
- 3K1J50dfjA3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="479491832"
-Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Jun 2020 19:54:09 -0700
-Date:   Thu, 25 Jun 2020 05:54:08 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Jiandi An <anjiandi@codeaurora.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v5 1/2] acpi: Extend TPM2 ACPI table with missing log
- fields
-Message-ID: <20200625025408.GD270125@linux.intel.com>
-References: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
- <20200623120636.1453470-2-stefanb@linux.vnet.ibm.com>
- <20200625000021.GC21758@linux.intel.com>
- <9d94c704-5774-ceeb-e4f3-010f74ffe37b@linux.ibm.com>
- <20200625023431.GB270125@linux.intel.com>
- <20200625025251.GC270125@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625025251.GC270125@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Wed, 24 Jun 2020 22:54:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389357AbgFYCyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 22:54:52 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540D6C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 19:54:51 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so2583666pge.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 19:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fAhw99hSHSp4oWrS0namYNm6Go3NsuSaLTMdS2js2yg=;
+        b=tGJIN5xGsgN1is4VPvkWyDq1pQcJK/f4mEt+aWjJHg7bZ3RJcDogKlmQ0OSbuVj4dk
+         m8f1/44VpRJ3kiSvogq4WXlZ3AY6U2bU3iwIhwsi9/432OcHSqoK785PT1o24waKPk3y
+         JkpBWrh9BmojPyt6eC9QUQqiXQK5t8N4VSGy8DmuPGEt9bR/ONK3zzbAggeOqH7PR7UW
+         TlCDWeZoRDnx4wuJN4Y2p4v0QoXAKAgzmw1+ZZV1tyk93pdcs1CcjpKikxhpATOSO5Lc
+         RsNnXAUUon3g9H+ZafgA/DX3BsvOxBOIRnnzmEgwjDKYQudXSSRn33PYSWi6eyNCcZWx
+         whGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fAhw99hSHSp4oWrS0namYNm6Go3NsuSaLTMdS2js2yg=;
+        b=tImNQCHoSM+o05vGvFn1d36AP1eFAnIKe9wxDEP52yWMtzmYC3UfXptfkRDCJ79YVF
+         BPFx//nUKPXjqX00541T8l6ec7ptQTfqiug1smRWAXYvFXGgv6dBodQgLNnKZmEZwE32
+         bIes8gT0lOftiTtpSzTS0c0L6pLcpea2AD8Nc42J9k3M8RffZ0aPF1QUd1FOKporW7eD
+         C59Ym+BoyGv8FZsQtEHRlEcWPHCAhzcOHC23aZvpZ5tRoMi3pLpfrO/xVrZ9vWNncHL1
+         QIAMH4lejHevAqEkzObB41lxig55FePFGe1gnPx8Mk66AIoOH22t1UjjPcbZvEe7ucU1
+         AFuQ==
+X-Gm-Message-State: AOAM533e0elF7r7heEuHJuRPjWdRKHpLGJT76WxbmnrN2PrrTunLwkHC
+        mLE9NQnZEGKWP3Jk1/DLz9WOyovp17w=
+X-Google-Smtp-Source: ABdhPJypIwr6XPQgemt6CJF4aVOuSE9P8rFDuFGhKBDr+zcFrzEKlnZEEU3wYydNz5mYaZJaYnAkvg==
+X-Received: by 2002:a63:de18:: with SMTP id f24mr23694179pgg.415.1593053690835;
+        Wed, 24 Jun 2020 19:54:50 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([122.182.254.114])
+        by smtp.gmail.com with ESMTPSA id y10sm18593000pgi.54.2020.06.24.19.54.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jun 2020 19:54:50 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     boris.ostrovsky@oracle.com, jgross@suse.com, sstabellini@kernel.org
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Paul Durrant <xadimgnik@gmail.com>
+Subject: [PATCH 1/2] xen/privcmd: Corrected error handling path and mark pages dirty
+Date:   Thu, 25 Jun 2020 08:32:39 +0530
+Message-Id: <1593054160-12628-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 05:52:56AM +0300, Jarkko Sakkinen wrote:
-> On Thu, Jun 25, 2020 at 05:34:38AM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Jun 24, 2020 at 08:38:25PM -0400, Stefan Berger wrote:
-> > > On 6/24/20 8:00 PM, Jarkko Sakkinen wrote:
-> > > > On Tue, Jun 23, 2020 at 08:06:35AM -0400, Stefan Berger wrote:
-> > > > > From: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > 
-> > > > > Recent extensions of the TPM2 ACPI table added 3 more fields
-> > > > > including 12 bytes of start method specific parameters and Log Area
-> > > > > Minimum Length (u32) and Log Area Start Address (u64). So, we extend
-> > > > > the existing structure with these fields to allow non-UEFI systems
-> > > > > to access the TPM2's log.
-> > > > > 
-> > > > > The specification that has the new fields is the following:
-> > > > >    TCG ACPI Specification
-> > > > >    Family "1.2" and "2.0"
-> > > > >    Version 1.2, Revision 8
-> > > > > 
-> > > > > Adapt all existing table size calculations to use
-> > > > > offsetof(struct acpi_table_tpm2, start_method_specific)
-> > > > > [where start_method_specific is a newly added field]
-> > > > > rather than sizeof(struct acpi_table_tpm2) so that the addition
-> > > > > of the new fields does not affect current systems that may not
-> > > > > have them.
-> > > > > 
-> > > > I found at least one regression from this patch. Please remove my
-> > > > reviewed-by comment form the next version.
-> > > > 
-> > > > Should have:
-> > > > 
-> > > >    Link: https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
-> > > > 
-> > > > Please, add this.
-> > > > 
-> > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > Cc: linux-acpi@vger.kernel.org
-> > > > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > ---
-> > > > >   drivers/char/tpm/tpm_crb.c | 13 ++++++++++---
-> > > > >   drivers/char/tpm/tpm_tis.c |  4 +++-
-> > > > >   include/acpi/actbl3.h      |  5 +++--
-> > > > >   3 files changed, 16 insertions(+), 6 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-> > > > > index a9dcf31eadd2..0565aa5482f9 100644
-> > > > > --- a/drivers/char/tpm/tpm_crb.c
-> > > > > +++ b/drivers/char/tpm/tpm_crb.c
-> > > > > @@ -669,7 +669,9 @@ static int crb_acpi_add(struct acpi_device *device)
-> > > > >   	status = acpi_get_table(ACPI_SIG_TPM2, 1,
-> > > > >   				(struct acpi_table_header **) &buf);
-> > > > > -	if (ACPI_FAILURE(status) || buf->header.length < sizeof(*buf)) {
-> > > > > +	if (ACPI_FAILURE(status) || buf->header.length <
-> > > > > +			offsetof(struct acpi_table_tpm2,
-> > > > > +				 start_method_specific)) {
-> > > > >   		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
-> > > > >   		return -EINVAL;
-> > > > >   	}
-> > > > > @@ -684,14 +686,19 @@ static int crb_acpi_add(struct acpi_device *device)
-> > > > >   		return -ENOMEM;
-> > > > >   	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
-> > > > > -		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_smc))) {
-> > > > > +		if (buf->header.length <
-> > > > > +			(offsetof(struct acpi_table_tpm2,
-> > > > > +				  start_method_specific) +
-> > > > Should be
-> > > > 
-> > > >    offsetof(struct acpti_table_tpm2, log_area_minimum_length)
-> > > 
-> > > 
-> > > The old code had sizeof(*buf) with buf being 'struct acpi_table_tpm2' and
-> > > that was equivalent to offsetof(struct acpi_table_tpm2,
-> > > start_method_specific) since 'start_method_specific' is the first new field
-> > > that we are adding right here. Also see 3rd paragraph in the patch
-> > > description. The replacement rule described there should apply to all
-> > > sizeof() calculations on 'struct acpi_table_tpm2.'
-> > 
-> > Aren't you ignoring sizeof(*crb_smc) then?
-> 
-> Duh, it's there I see. Sorry, my mistake.
-> 
-> Please put the new fields in a separate struct:
-> 
-> struct acpi_tpm2_phy {
-> 	u8  start_method_specific[12];
-> 	u32 log_area_minimum_length;
-> 	u64 log_area_start_address;
-> };
-> 
-> This way we don't have to obfuscate all the calculations and zero out
-> the need for 1/2 in this patch set.
+Previously, if lock_pages() end up partially mapping pages, it used
+to return -ERRNO due to which unlock_pages() have to go through
+each pages[i] till *nr_pages* to validate them. This can be avoided
+by passing correct number of partially mapped pages & -ERRNO separately,
+while returning from lock_pages() due to error.
 
-Also remark that, if you continue the current patch, that would need
-tested-by from ARM whereas a new struct does not because the ARM code
-is intact.
+With this fix unlock_pages() doesn't need to validate pages[i] till
+*nr_pages* for error scenario and few condition checks can be ignored.
 
-/Jarkko
+As discussed, pages need to be marked as dirty before unpinned it in
+unlock_pages() which was oversight.
+
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Paul Durrant <xadimgnik@gmail.com>
+---
+Hi,
+
+I'm compile tested this, but unable to run-time test, so any testing
+help is much appriciated.
+
+ drivers/xen/privcmd.c | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+index a250d11..0da417c 100644
+--- a/drivers/xen/privcmd.c
++++ b/drivers/xen/privcmd.c
+@@ -580,43 +580,44 @@ static long privcmd_ioctl_mmap_batch(
+ 
+ static int lock_pages(
+ 	struct privcmd_dm_op_buf kbufs[], unsigned int num,
+-	struct page *pages[], unsigned int nr_pages)
++	struct page *pages[], unsigned int nr_pages, int *pinned)
+ {
+ 	unsigned int i;
++	int errno = 0, page_count = 0;
+ 
+ 	for (i = 0; i < num; i++) {
+ 		unsigned int requested;
+-		int pinned;
+ 
++		*pinned += page_count;
+ 		requested = DIV_ROUND_UP(
+ 			offset_in_page(kbufs[i].uptr) + kbufs[i].size,
+ 			PAGE_SIZE);
+ 		if (requested > nr_pages)
+ 			return -ENOSPC;
+ 
+-		pinned = get_user_pages_fast(
++		page_count = get_user_pages_fast(
+ 			(unsigned long) kbufs[i].uptr,
+ 			requested, FOLL_WRITE, pages);
+-		if (pinned < 0)
+-			return pinned;
++		if (page_count < 0) {
++			errno = page_count;
++			return errno;
++		}
+ 
+-		nr_pages -= pinned;
+-		pages += pinned;
++		nr_pages -= page_count;
++		pages += page_count;
+ 	}
+ 
+-	return 0;
++	return errno;
+ }
+ 
+ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+ {
+ 	unsigned int i;
+ 
+-	if (!pages)
+-		return;
+-
+ 	for (i = 0; i < nr_pages; i++) {
+-		if (pages[i])
+-			put_page(pages[i]);
++		if (!PageDirty(page))
++			set_page_dirty_lock(page);
++		put_page(pages[i]);
+ 	}
+ }
+ 
+@@ -630,6 +631,7 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ 	struct xen_dm_op_buf *xbufs = NULL;
+ 	unsigned int i;
+ 	long rc;
++	int pinned = 0;
+ 
+ 	if (copy_from_user(&kdata, udata, sizeof(kdata)))
+ 		return -EFAULT;
+@@ -683,9 +685,11 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ 		goto out;
+ 	}
+ 
+-	rc = lock_pages(kbufs, kdata.num, pages, nr_pages);
+-	if (rc)
++	rc = lock_pages(kbufs, kdata.num, pages, nr_pages, &pinned);
++	if (rc < 0) {
++		nr_pages = pinned;
+ 		goto out;
++	}
+ 
+ 	for (i = 0; i < kdata.num; i++) {
+ 		set_xen_guest_handle(xbufs[i].h, kbufs[i].uptr);
+-- 
+1.9.1
+
