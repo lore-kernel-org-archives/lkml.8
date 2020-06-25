@@ -2,108 +2,118 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C43C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E80020706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A6020706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZFZhLqG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ua7P+YZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405099AbgFYNPe (ORCPT
+        id S2404918AbgFYNOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35180 "EHLO
+        Thu, 25 Jun 2020 09:14:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404960AbgFYNPS (ORCPT
+        with ESMTP id S2404884AbgFYNOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:15:18 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0B5C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:15:17 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y13so3179669lfe.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:15:17 -0700 (PDT)
+        Thu, 25 Jun 2020 09:14:33 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD16C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:32 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a6so6715451wmm.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QR42zeOxTbypLVBEYvN0oGwLT+XNTPkg4CKLs7fOlZw=;
-        b=hZFZhLqGFkWD9h49jD6CJlTPXP3YL996Dz3eHtbo2MDlkPwK4/UK4sM+I2s1T7Qye4
-         EhvYuIhv4wNWTk6S7kedARBMDZZ3skz8ZMb3WBL4qKlrkublXnFmBhbFqvkmFjyHccec
-         zNOJgS6VS7A47awqrq3P4OA5sH7c6nRpQo5QAwCuYazZtfs8igl5mNdVqFX4ThMLjy+8
-         n7GuogX5mu91modmHWL80aoboFyanW8dz2bMl0mubkmfBIobQsH1tvCAJA0JbasJb2ey
-         ZKbraHoUr9gxeLDsZODQ8NQOJjbURyVMSLXNEKZo5iO9ZNGUmLnQMia/wgNRrvHR348j
-         Uv/g==
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wraev6ZBkvjCXqVdZoeks0aAoF06EDUQslGWSfcwelE=;
+        b=ua7P+YZJwVqfWDyuPBaOjCABX1tSBuIIGIhiG1M2l3I9pUVwlIpIaLg4tk1vR6DAEh
+         xQUnQ2orukTjqBWFut7xqaSuDXy3DXYDlYGhTELnZtsUvD/Cd3xIEN/CKH74JI9PA6Nd
+         rKmturGSVa/8/WsP6oa76tKofsgGbvmi2qPtMaPE9UnhUkfeIXrHGwoUuXQLnVbgGfCp
+         ucEEpOl318TFEhm1s0ykC4Twr8wGoZHtkpkL58rV/Y3cfXmvJcJiWP/Ry9azYYe//N5v
+         mJmJzCEebK98IQhJoPjkGbS7E29bK4nED+seNPErBGhKnMyITD3dUnEHtjk8780W46ud
+         Motg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QR42zeOxTbypLVBEYvN0oGwLT+XNTPkg4CKLs7fOlZw=;
-        b=p33O2m6ezWFKiEYBacBQY5X8c2lUY3o5QpSm4nkvEgVzucLLGfBX/NEcuS91a2BpwF
-         OYvJjF1HEWF51DURkjCxBhVoZImvxDadLh32VlVWB5ZJOqKiHSpPq91kPsFdVW5ipCWz
-         0ijldnK0jpU3ujYTCzMdL/6bCLFS5GGQUEhjzuh8+ejxCtrR1B+PB1Q3+x/aX7YVMpRV
-         10qeeOEFDY1NPmpftiQ9EjWRwvaKScAhKTkcZ6NhjrcbScYFARLY0iUhTqoHyNxHQiE6
-         o22+7MC5PyboIzuedb1IzQdfWXJMsVn/RxT7XbgPMwNthIG0UmOVH9K1+h5a2Ky/TNhe
-         WNaw==
-X-Gm-Message-State: AOAM532yH3meg3fWW1hFrSPjMDUIz4Q/NfZGoj+OarFC7QCx5wiHHL9A
-        jp0t0wA9SE+Uo5w1rh5tuxQ=
-X-Google-Smtp-Source: ABdhPJwzgnJuL3K2LW4ohUpxzWu37UAp+RFuOi10vfvqKVDHappu8GzNB5BMfab7VBvLBXPKTc6snw==
-X-Received: by 2002:ac2:5e29:: with SMTP id o9mr17880697lfg.196.1593090916198;
-        Thu, 25 Jun 2020 06:15:16 -0700 (PDT)
-Received: from mail-personal.localdomain ([185.204.1.215])
-        by smtp.gmail.com with ESMTPSA id t13sm4809148ljg.78.2020.06.25.06.15.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:15:15 -0700 (PDT)
-Received: by mail-personal.localdomain (Postfix, from userid 1000)
-        id A8986611B4; Thu, 25 Jun 2020 16:15:17 +0300 (EEST)
-Date:   Thu, 25 Jun 2020 16:15:17 +0300
-From:   Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-To:     Aiden Leong <aiden.leong@aibsd.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        dm-devel <dm-devel@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [RFC] Reed-Solomon Code: Update no_eras to the actual number of
- errors
-Message-ID: <20200625131517.GD1036@mail-personal>
-References: <20200625041141.8053-1-aiden.leong@aibsd.com>
- <202006242231.E17DAB2@keescook>
- <5f4008d5-1ddd-443e-9190-a8565746698d.aiden.leong@aibsd.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wraev6ZBkvjCXqVdZoeks0aAoF06EDUQslGWSfcwelE=;
+        b=gTEtCvZmy2V488ooiTKj6HAwfxG4/HLqz5aSXWeC4FTLCQ0feeu1qpHp3CoUBhDmRs
+         t3tVRFFWVG/s1L9Q5IMplL5JlTG38nlYXcdkpjUxanYyHN5qWgXUSPJdx3CTcUb9grUx
+         W7qiSh7iw102LIGRhIM+M5UopKM7HfustZ05GA1dEdtHSen5LBkC1XwTIC+6xell2UT/
+         FeE3bv5qjfHl/gS9zpVusD/4HcPMcb2JFSz9mtwGddc23LzkZWWHomIJzV3b7BAbRV79
+         kQKI74NBBfU89Rc0V3ysiGpiDaBLsfWNkze5HX5sPqXtEVKj+ipAujZ3Gii/fMyHUXZg
+         q0lg==
+X-Gm-Message-State: AOAM53329WX5YxeUoy7Ieir57SdSa2NE74qqYGdu9r3BPYriy4dwwlmH
+        v38sWTrmcYvMZITaqz312Pobxg==
+X-Google-Smtp-Source: ABdhPJwSD6tTR4A51iFYqmD+o4uh7mMxnCrC2utrSiSA099BJejStzsjCmFzuSX9rIPS1ekV3bn+rQ==
+X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr3259403wme.152.1593090871469;
+        Thu, 25 Jun 2020 06:14:31 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8523:2d03:c126:6748:7a9d:2d])
+        by smtp.gmail.com with ESMTPSA id 30sm28006922wrm.74.2020.06.25.06.14.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 06:14:30 -0700 (PDT)
+From:   David Brazdil <dbrazdil@google.com>
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com, David Brazdil <dbrazdil@google.com>
+Subject: [PATCH v4 04/15] arm64: kvm: Use build-time defines in has_vhe()
+Date:   Thu, 25 Jun 2020 14:14:09 +0100
+Message-Id: <20200625131420.71444-5-dbrazdil@google.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200625131420.71444-1-dbrazdil@google.com>
+References: <20200625131420.71444-1-dbrazdil@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5f4008d5-1ddd-443e-9190-a8565746698d.aiden.leong@aibsd.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, 
+Build system compiles hyp code with macros specifying if the code belongs
+to VHE or nVHE. Use these macros to evaluate has_vhe() at compile time.
 
-On 2020-06-25 14:46:11, Aiden Leong wrote:
->
->BTW: I do believe these functions should be split into a function family. It's really hard to call them correctly and hard to debug as well.
+Signed-off-by: David Brazdil <dbrazdil@google.com>
+---
+ arch/arm64/include/asm/virt.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-I don't think the functions should be split up. Most probably it is the
-documentation that should be improved :) But, I do agree that it is not
-that easy to call the functions correctly.
-
-Best,
-Ferdinand
-
+diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+index 5051b388c654..09977acc007d 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -85,10 +85,17 @@ static inline bool is_kernel_in_hyp_mode(void)
+ 
+ static __always_inline bool has_vhe(void)
+ {
+-	if (cpus_have_final_cap(ARM64_HAS_VIRT_HOST_EXTN))
++	/*
++	 * The following macros are defined for code specic to VHE/nVHE.
++	 * If has_vhe() is inlined into those compilation units, it can
++	 * be determined statically. Otherwise fall back to caps.
++	 */
++	if (__is_defined(__KVM_VHE_HYPERVISOR__))
+ 		return true;
+-
+-	return false;
++	else if (__is_defined(__KVM_NVHE_HYPERVISOR__))
++		return false;
++	else
++		return cpus_have_final_cap(ARM64_HAS_VIRT_HOST_EXTN);
+ }
+ 
+ #endif /* __ASSEMBLY__ */
 -- 
-Ferdinand Blomqvist
-ferdinand.blomqvist[at]gmail.com
-GPG key: 9EFB 7A2C 0432 4EC5 32BA FA61 CFE9 4164 93E8 B9E4
+2.27.0
+
