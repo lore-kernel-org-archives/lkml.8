@@ -2,172 +2,91 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B64C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E19C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF5E420709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:10:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XFUKQALO"
+	by mail.kernel.org (Postfix) with ESMTP id 3D79A204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405041AbgFYNKd (ORCPT
+        id S2405057AbgFYNKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:10:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44159 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404696AbgFYNKd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:10:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593090631;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LN1Esb/7Hi/Z/DHHBSlOzerqkyDCNAofXS9512fRksY=;
-        b=XFUKQALOBC2xZJu/Ett5Lq9hpoB2rOfb3CcbBYRjxAT4RbzGWQwr6dhP3MlfFdkeiGYwx/
-        8U/a79PSRrBXOQGCoqGktsjehtqDGY/0RXEI9tA9aBtheX9R+Ud/Tj+Jm99mbq43BqZlkU
-        8aWfMj1vqMBtUGbd8N/rFDhGtNRNj/Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-kOw_BvQeM5GFVWO-Gh_oew-1; Thu, 25 Jun 2020 09:10:25 -0400
-X-MC-Unique: kOw_BvQeM5GFVWO-Gh_oew-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2452107ACF2;
-        Thu, 25 Jun 2020 13:10:22 +0000 (UTC)
-Received: from localhost (ovpn-115-49.ams2.redhat.com [10.36.115.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 588BE79315;
-        Thu, 25 Jun 2020 13:10:21 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 14:10:20 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v4 17/18] nitro_enclaves: Add overview documentation
-Message-ID: <20200625131020.GD221479@stefanha-x1.localdomain>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-18-andraprs@amazon.com>
- <20200623085915.GF32718@stefanha-x1.localdomain>
- <746fcd7d-5946-35ec-6471-8bf8dccdf400@amazon.com>
+        Thu, 25 Jun 2020 09:10:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:35371 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405050AbgFYNKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:10:40 -0400
+IronPort-SDR: LJKlswmNps43eaL6y3ByfdAWSKx+I6hLOqugHCO+tbw1eifecZbmzSakdrWi+2l5DcFUfJGmtr
+ hro/lezCRhbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="133304104"
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="133304104"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 06:10:39 -0700
+IronPort-SDR: QYnii4KgMoIfkw+TJ/Zs5W/mR1Ia3g4vT6FDdX4HFXpn5ZH+k7wwEHTuWW+mO+1wtY2mZc/BeU
+ /vyPuBEYxFug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="385458847"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Jun 2020 06:10:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 83E2B13B; Thu, 25 Jun 2020 16:10:37 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
+Date:   Thu, 25 Jun 2020 16:10:36 +0300
+Message-Id: <20200625131036.43953-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <746fcd7d-5946-35ec-6471-8bf8dccdf400@amazon.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hoZxPH4CaxYzWscb"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---hoZxPH4CaxYzWscb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Intel Tiger Lake PCH-H has the same LPSS than Intel Broxton.
+Add the new IDs to the list of supported devices.
 
-On Wed, Jun 24, 2020 at 05:39:39PM +0300, Paraschiv, Andra-Irina wrote:
->=20
->=20
-> On 23/06/2020 11:59, Stefan Hajnoczi wrote:
-> > On Mon, Jun 22, 2020 at 11:03:28PM +0300, Andra Paraschiv wrote:
-> > > +The kernel bzImage, the kernel command line, the ramdisk(s) are part=
- of the
-> > > +Enclave Image Format (EIF); plus an EIF header including metadata su=
-ch as magic
-> > > +number, eif version, image size and CRC.
-> > > +
-> > > +Hash values are computed for the entire enclave image (EIF), the ker=
-nel and
-> > > +ramdisk(s). That's used, for example, to check that the enclave imag=
-e that is
-> > > +loaded in the enclave VM is the one that was intended to be run.
-> > > +
-> > > +These crypto measurements are included in a signed attestation docum=
-ent
-> > > +generated by the Nitro Hypervisor and further used to prove the iden=
-tity of the
-> > > +enclave; KMS is an example of service that NE is integrated with and=
- that checks
-> > > +the attestation doc.
-> > > +
-> > > +The enclave image (EIF) is loaded in the enclave memory at offset 8 =
-MiB. The
-> > > +init process in the enclave connects to the vsock CID of the primary=
- VM and a
-> > > +predefined port - 9000 - to send a heartbeat value - 0xb7. This mech=
-anism is
-> > > +used to check in the primary VM that the enclave has booted.
-> > > +
-> > > +If the enclave VM crashes or gracefully exits, an interrupt event is=
- received by
-> > > +the NE driver. This event is sent further to the user space enclave =
-process
-> > > +running in the primary VM via a poll notification mechanism. Then th=
-e user space
-> > > +enclave process can exit.
-> > > +
-> > > +[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
-> > > +[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
-> > > +[3] https://lwn.net/Articles/807108/
-> > > +[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parame=
-ters.html
-> > > +[5] https://man7.org/linux/man-pages/man7/vsock.7.html
-> > Is the EIF specification and the attestation protocol available?
->=20
-> For now, they are not publicly available. Once the refs are available (e.=
-g.
-> AWS documentation, GitHub documentation), I'll include them in the kernel
-> documentation as well.
->=20
-> As a note here, the NE project is currently in preview
-> (https://aws.amazon.com/ec2/nitro/nitro-enclaves/) and part of the
-> documentation / codebase will be publicly available when NE is generally
-> available (GA). This will be in addition to the ones already publicly
-> available, like the NE kernel driver.
->=20
-> Let me know if I can help with any particular questions / clarifications.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/intel-lpss-pci.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Thanks!
-
-Stefan
-
---hoZxPH4CaxYzWscb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl70ojwACgkQnKSrs4Gr
-c8hY1Af49KQr66earh3/QlA88cMkax3Hj7qRR9/hKpBS8qDRjwSHzSDhvemS0Qrf
-jH84GXs6j8Kjj2VdXFpyEaH183Ktz+27ydyMETDYpAvakhvOkBW5bSE6qqpK/EE1
-CuI2kIDVBDSCxul81JSB4ATnAfa6plUgUntTUjF4mhvLBWp3HgYW6S07o5LvzaD9
-6XcoDarRxGWErRs/3tVPHQrTtpMztrIxkp3eu+AiPdQuID4JUiKSzgMSne1lThRP
-9OZjF1nyAkx+UxBDFYpf5MmyKB4aEUz6UmFdLKoIGYExnAfuS+9rMtgWW+Rcnwpc
-uwLL0sfOGSkX8jJwQJWTV+ItlRhy
-=dz1i
------END PGP SIGNATURE-----
-
---hoZxPH4CaxYzWscb--
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 046222684b8b..cc64cdda41c1 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -230,6 +230,22 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x34ea), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x34eb), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x34fb), (kernel_ulong_t)&spt_info },
++	/* TGL-H */
++	{ PCI_VDEVICE(INTEL, 0x43a7), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43a8), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43a9), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43aa), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43ab), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43ad), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43ae), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43d8), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43da), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43e8), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43e9), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43ea), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43eb), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43fb), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43fd), (kernel_ulong_t)&bxt_info },
+ 	/* EHL */
+ 	{ PCI_VDEVICE(INTEL, 0x4b28), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4b29), (kernel_ulong_t)&bxt_uart_info },
+-- 
+2.27.0
 
