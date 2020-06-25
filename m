@@ -2,81 +2,68 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB421C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A36E2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32492072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqf78dgy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lo5wCOnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389328AbgFYBvl (ORCPT
+        id S2389320AbgFYBwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388930AbgFYBvl (ORCPT
+        Wed, 24 Jun 2020 21:52:41 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:35185 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389143AbgFYBwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:51:41 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59CFC061573;
-        Wed, 24 Jun 2020 18:51:39 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id d15so2921207edm.10;
-        Wed, 24 Jun 2020 18:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8gW7J8BAetBJwK98yQto94cpXYwJ/k0fZqb/2/kATFk=;
-        b=lqf78dgy9rvKKalxHDquLiJFMViu3qFoQR0KxWmjHqnNSl/ksXiXfTAiaLrExBFCrY
-         JOy9uCop1R9ffBDVbY+29FEzl+q10Ug3fO8wAe+HKJ/P6vtAWwai7FK4eDy82vhRf1Mn
-         exuh3N43472YhS0Hb8dfV8m5gt0VKKH26UDBmZ6lkZJzsP9oclOh2BbLrSF5cTk1/SgQ
-         Aq2wGDscUVAwPahnFbVtzRNlateW1JFfuXMj0b1Cl21o4l1XdOjY+CsXxkyM0toNgJkr
-         MnCRBgCMEIwEiZVBg5Nl1gTucrp7iOLvAhaMY6gAmFMZHD+aJDeBQWPzXJXIV/Tv9qKr
-         2OUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8gW7J8BAetBJwK98yQto94cpXYwJ/k0fZqb/2/kATFk=;
-        b=tiMfk1GGS8FXIhreu9HGk3NvOiMNz6f9bpqlv9aNNMMjSwt+YPBG3TUkloeyJQUGhd
-         vPbEfGoRQR+0coFCyS0tiSToivqhnuANaWemNM2Trnf7JLleZ07/E906wKMiBwA9JY+n
-         kmY0+XcnYQ/ijXW6Favpud7lS4UewqIqMElMLT6fvaRswLH0fm3iTVh9nWhyHgOiAtXr
-         om9ww3o8bZaFrTeCtFe6RToi0yaQhU3tdbYXv0icaKYrW/mWjwqjlsNjGkX+825EZOvM
-         7USVX004cIpvBhOyAYeE6uQpgJE3QizOTksvPvK2slpShZjC7NkYGdqclqEt0LMS4lWz
-         TgAg==
-X-Gm-Message-State: AOAM533myjnfBMdCBwG5PvP7A0816B07cMRvd4CudPK9TgsNDeKM9uWE
-        AegCSZ6aFf3nXiojk4t3vEgKfoch
-X-Google-Smtp-Source: ABdhPJxQAB+FaIqKzudxOgORcOU63lsakKjKV59Soc8EwGPrgX9oyeASrlWiDY0PctDI+kUdfeesRQ==
-X-Received: by 2002:a50:e8c8:: with SMTP id l8mr24023616edn.386.1593049898201;
-        Wed, 24 Jun 2020 18:51:38 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id u13sm10737816ejx.3.2020.06.24.18.51.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 18:51:37 -0700 (PDT)
-Subject: Re: [PATCH net 1/3] net: bcmgenet: re-remove bcmgenet_hfb_add_filter
-To:     Doug Berger <opendmb@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1593047695-45803-1-git-send-email-opendmb@gmail.com>
- <1593047695-45803-2-git-send-email-opendmb@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <05f0fc4f-51a7-f59f-f045-e84315bb0a9f@gmail.com>
-Date:   Wed, 24 Jun 2020 18:51:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Wed, 24 Jun 2020 21:52:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593049960; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=8B6Pxy32SmGdNLfWwVSEcjH7KvONhou3Vtz1xrwMALQ=; b=lo5wCOnDnvSOu/AlzGWamg6PUE+LhE/HaejaOctFGo14qUuyKLFBrp0ksUBu6WbHR8tpPcM8
+ I5oC0xSfZjSxbsydGJotnhJ+2J06k9pabGkyc43+vebA4OvbjV0FHGjBK/U1+nU3OD3jszfs
+ MJUpU86b/ZRppVrk/JA+D5doVsc=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5ef403570206ad41d12b1015 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 01:52:23
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 58EFBC433C8; Thu, 25 Jun 2020 01:52:22 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70DB7C433C6;
+        Thu, 25 Jun 2020 01:52:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 70DB7C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v3 3/4] docs: Add documentation for user space client
+ interface
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+References: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
+ <1591899224-3403-4-git-send-email-hemantk@codeaurora.org>
+ <20200619063948.GC3245@Mani-XPS-13-9360>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <7b64f78e-40c7-7c65-3832-4bbc5da93674@codeaurora.org>
+Date:   Wed, 24 Jun 2020 18:52:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1593047695-45803-2-git-send-email-opendmb@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200619063948.GC3245@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,24 +71,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mani,
 
+On 6/18/20 11:39 PM, Manivannan Sadhasivam wrote:
+> On Thu, Jun 11, 2020 at 11:13:43AM -0700, Hemant Kumar wrote:
+>> MHI user space client driver is creating device file node
+>> for user application to perform file operations. File
+>> operations are handled by MHI core driver. Currently
+>> Loopback MHI channel is supported by this driver.
+>>
+>> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+>> ---
+>>   Documentation/mhi/index.rst |  1 +
+>>   Documentation/mhi/uci.rst   | 19 +++++++++++++++++++
+>>   2 files changed, 20 insertions(+)
+>>   create mode 100644 Documentation/mhi/uci.rst
+>>
+>> diff --git a/Documentation/mhi/index.rst b/Documentation/mhi/index.rst
+>> index 1d8dec3..c75a371 100644
+>> --- a/Documentation/mhi/index.rst
+>> +++ b/Documentation/mhi/index.rst
+>> @@ -9,6 +9,7 @@ MHI
+>>   
+>>      mhi
+>>      topology
+>> +   uci
+>>   
+>>   .. only::  subproject and html
+>>   
+>> diff --git a/Documentation/mhi/uci.rst b/Documentation/mhi/uci.rst
+>> new file mode 100644
+>> index 0000000..a5c5c4f
+>> --- /dev/null
+>> +++ b/Documentation/mhi/uci.rst
+>> @@ -0,0 +1,19 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +=================================
+>> +User space Client Interface (UCI)
+> 
+> Stick to 'Userspace' everywhere.
+Done.
+> 
+>> +=================================
+>> +
+>> +UCI driver enables user space clients to communicate to external MHI devices
+>> +like modem and WLAN. It creates standard character device file nodes for user
+> 
+> UCI driver creates a single char device, isn't it?
+No, it is created per device name. For example Loopback has its own char 
+device file node. if we add another channel for a new mhi device new 
+device file node would be created.
+> 
+>> +space clients to perform open, read, write, pool and close file operations.
+>> +
+> 
+> poll? Btw, you need to mention explicitly how this char device can be used.
+> You are just mentioning standard file operations.
+Will fix poll.My idea was indeed to mention generic file operations so 
+that we dont have to be specific with use case. Any userspace entity who 
+wants to communicate over mhi can use the driver. Reason we have this 
+driver is to abstract the mhi core specific details. Even for loopback 
+use case, userspace can echo to device file node on one channel and get 
+a same in response from another channel back. I can add more examples of
+other user space drivers use case if that helps.
+> 
+>> +Device file node is created with format:-
+>> +
+>> +/dev/mhi_<controller_name>_<mhi_device_name>
+>> +
+>> +controller_name is the name of underlying bus used to transfer data.
+> 
+> underlying controller instance.
+Done.
+> 
+>> +mhi_device_name is the name of the MHI channel being used by MHI client
+> 
+> What do you mean by MHI client here? Are you referring to userspace client?
+yes. i can say "MHI client in userspace"?
+> 
+>> +to send or receive data using MHI protocol. MHI channels are statically
+>> +defined by MHI specification. Driver currently supports LOOPBACK channel
+>> +index 0 (Host to device) and 1 (Device to Host).
+> 
+> s/index/identifier
+Done.
+> 
+> And explain a bit on how this LOOPBACK channel is getting used.
+Done.
+> 
+> Thanks,
+> Mani
+> 
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
 
-On 6/24/2020 6:14 PM, Doug Berger wrote:
-> This function was originally removed by Baoyou Xie in
-> commit e2072600a241 ("net: bcmgenet: remove unused function in
-> bcmgenet.c") to prevent a build warning.
-> 
-> Some of the functions removed by Baoyou Xie are now used for
-> WAKE_FILTER support so his commit was reverted, but this function
-> is still unused and the kbuild test robot dutifully reported the
-> warning.
-> 
-> This commit once again removes the remaining unused hfb functions.
-> 
-> Fixes: 14da1510fedc ("Revert "net: bcmgenet: remove unused function in bcmgenet.c"")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Florian
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
