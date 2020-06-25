@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A314CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8807C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2EE207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67F920700
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgFYXz7 (ORCPT
+        id S1726686AbgFYX5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:55:59 -0400
-Received: from mga03.intel.com ([134.134.136.65]:34534 "EHLO mga03.intel.com"
+        Thu, 25 Jun 2020 19:57:13 -0400
+Received: from mga01.intel.com ([192.55.52.88]:32905 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgFYXz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:55:58 -0400
-IronPort-SDR: 15pE1wgleqcHyS8PPzsfvV7VjHbuISoBvSz0yHSjUqIimBOLZlW8KtAinOgG/yo/kt5UrZJ7K+
- BJ8IKGDxRbpw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="145186313"
+        id S1726082AbgFYX5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 19:57:13 -0400
+IronPort-SDR: M/FFNP/58ajsH/6+e+L0MIxKwIDQpNfH/sB9Re6yc4Pys1KRCCXc1qpxHE0+WRA5TBj/gVq4bA
+ TgOnu6uXMQKQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="163203531"
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="145186313"
+   d="scan'208";a="163203531"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 16:55:57 -0700
-IronPort-SDR: RCKUMFxz5l/slR1fPtZITVe1h8nWHHZUgjMikvs9+KVv/tL4xK9lQFiRFTetzcbdMd1Xr93k5g
- /POnD8sxUkrA==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 16:57:12 -0700
+IronPort-SDR: 2PprpwLU6vt+8rd54I08UFoRXKAIkHFQRlj2eDmYU9pnSrf7ifu6FbO/5MU0+1tlURkSYc+8gN
+ tU3lSVwrfh/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="311259198"
+   d="scan'208";a="302169039"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 25 Jun 2020 16:55:56 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 25 Jun 2020 16:57:11 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jobil-0001sU-TD; Thu, 25 Jun 2020 23:55:55 +0000
-Date:   Fri, 26 Jun 2020 07:54:59 +0800
+        id 1jobjy-0001su-Px; Thu, 25 Jun 2020 23:57:10 +0000
+Date:   Fri, 26 Jun 2020 07:56:53 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 68f7b5cc835de7d5b6c7696533c126018171e793
-Message-ID: <5ef53953.+LtF7QHgyt5eGPqK%lkp@intel.com>
+Subject: [tip:sched/core] BUILD SUCCESS
+ 01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c
+Message-ID: <5ef539c5.yHuGp88WDdmFhgWW%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,12 +54,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/urgent
-branch HEAD: 68f7b5cc835de7d5b6c7696533c126018171e793  sched/cfs: change initial value of runnable_avg
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/core
+branch HEAD: 01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c  sched/core: Remove mmdrop() definition
 
-elapsed time: 726m
+elapsed time: 727m
 
-configs tested: 114
+configs tested: 120
 configs skipped: 5
 
 The following configs have been built successfully.
@@ -143,6 +143,12 @@ powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
+x86_64               randconfig-a004-20200624
+x86_64               randconfig-a002-20200624
+x86_64               randconfig-a003-20200624
+x86_64               randconfig-a005-20200624
+x86_64               randconfig-a001-20200624
+x86_64               randconfig-a006-20200624
 i386                 randconfig-a002-20200624
 i386                 randconfig-a006-20200624
 i386                 randconfig-a003-20200624
@@ -167,10 +173,10 @@ sparc64                             defconfig
 sparc64                           allnoconfig
 sparc64                          allyesconfig
 sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
 um                               allmodconfig
+um                                allnoconfig
 um                               allyesconfig
+um                                  defconfig
 x86_64                               rhel-7.6
 x86_64                    rhel-7.6-kselftests
 x86_64                               rhel-8.3
