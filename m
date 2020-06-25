@@ -2,126 +2,159 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751F120706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C7720773
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:49:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jHPCgI5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404057AbgFYKmd (ORCPT
+        id S2404065AbgFYKs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:42:33 -0400
-Received: from mail.itouring.de ([188.40.134.68]:35408 "EHLO mail.itouring.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404000AbgFYKmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:42:32 -0400
-Received: from tux.applied-asynchrony.com (p5ddd79e0.dip0.t-ipconnect.de [93.221.121.224])
-        by mail.itouring.de (Postfix) with ESMTPSA id AF248416080F;
-        Thu, 25 Jun 2020 12:42:29 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.applied-asynchrony.com (Postfix) with ESMTP id 615B1F01605;
-        Thu, 25 Jun 2020 12:42:29 +0200 (CEST)
-Subject: Re: [PATCH] sched/cfs: change initial value of runnable_avg
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>
-References: <20200624154422.29166-1-vincent.guittot@linaro.org>
- <7f2b3135-328b-a510-ce23-49e3f5c20965@applied-asynchrony.com>
- <CAKfTPtD4+gUkz7Z2o9yyuK09M0bmP=Y+pZTYswNt=yVC4WVkyQ@mail.gmail.com>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <c4574b9e-852d-8f04-91cb-0fbae9f89833@applied-asynchrony.com>
-Date:   Thu, 25 Jun 2020 12:42:29 +0200
+        Thu, 25 Jun 2020 06:48:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403997AbgFYKs4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:48:56 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7744C061573;
+        Thu, 25 Jun 2020 03:48:55 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c11so2946154lfh.8;
+        Thu, 25 Jun 2020 03:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ogZcy9cOrOsNSfio7x0qys7hDFYRAcov2/q+DXfsFdA=;
+        b=jHPCgI5BsMocvW8SV5RvHGKHe0HI4Dy/1Gyxos/+PhLsL57o0fWti0JL5Fe+5OVNeG
+         tIbRkbBh8J6xllsyA2qrR3KPRYwRJpyP1xJOpnrAKxRruRnNFgP8sLXfFHajFiycrDpX
+         HVcMtQ0ueugOWoog3+uQ239/i+aiQMC91qpv0MqMySdmLtX2mnm26Txa6vE/p9kx8DxI
+         byJTmR9tuDbbAABZcgh+hGMyqvFWKQK2TuQw0mamkDULSbHK3NrW+N+NzYFuu+hfSBXz
+         b8fJfMdmmYd7bo2h0zvy+CgmfYu1VM7tli+8dQMNoQqnGlN9I5aiZDmokAbWyq579N+D
+         TpoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ogZcy9cOrOsNSfio7x0qys7hDFYRAcov2/q+DXfsFdA=;
+        b=qK6jW/HgMwTz5sXNvyCjw8b95l5FKSQMq+RmQTvfDWAbkXwtOjCCqcSQT7f4rJPXIv
+         hCQd0fuNJZCS13UMmMC2w0PBd8x0gQj7Od3cT9zhpVHDfjieHk/uWFKi3c9dgKZGhRJw
+         YRUH0yYs01Hi7HFsz7oUGzARyvSQJWm8qixEg9NTAe6H18DpqW4cyMAesmBl6Az7V57n
+         X4PqeT/oqkSF+EQ4k30MugR+qF3ObvVrbBu7G/DbNFKeVl9zhRmhFmuFTk9cq09KQKuB
+         2F6+vH7H6h0vFv/c0lzfvOT9IoMPSrZ0sgYC4GDGoQkpLl/wS08qHKiA9e+BVp/vOiGe
+         wEUg==
+X-Gm-Message-State: AOAM533kbGKl1KNgvN4PabQN7LBCehNtf4Vaaue4HUgIYlHatEZAb+mb
+        hHg/6WjSTBdV4rwzXCvpSdf4qQm7gpxHk8mkgg==
+X-Google-Smtp-Source: ABdhPJxN6TcXzxevroPnEK30hW4CvRpq4wNyHg2zzEc9L6a6tpQB99E/XZmlSWjvnypBN6xOhTixBDoMK7EXnOFXEhY=
+X-Received: by 2002:ac2:5443:: with SMTP id d3mr18103967lfn.121.1593082134255;
+ Thu, 25 Jun 2020 03:48:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtD4+gUkz7Z2o9yyuK09M0bmP=Y+pZTYswNt=yVC4WVkyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1592410366125160@kroah.com> <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
+ <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
+In-Reply-To: <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
+From:   Gabriel C <nix.or.die@googlemail.com>
+Date:   Thu, 25 Jun 2020 12:48:27 +0200
+Message-ID: <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
+Subject: Re: ath9k broken [was: Linux 5.7.3]
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable <stable@vger.kernel.org>, lwn@lwn.net,
+        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
+        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-25 11:56, Vincent Guittot wrote:
-> On Thu, 25 Jun 2020 at 11:24, Holger Hoffstätte
-> <holger@applied-asynchrony.com> wrote:
->>
->> On 2020-06-24 17:44, Vincent Guittot wrote:
->>> Some performance regression on reaim benchmark have been raised with
->>>     commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
->>>
->>> The problem comes from the init value of runnable_avg which is initialized
->>> with max value. This can be a problem if the newly forked task is finally
->>> a short task because the group of CPUs is wrongly set to overloaded and
->>> tasks are pulled less agressively.
->>>
->>> Set initial value of runnable_avg equals to util_avg to reflect that there
->>> is no waiting time so far.
->>>
->>> Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to classify group")
->>> Reported-by: kernel test robot <rong.a.chen@intel.com>
->>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->>> ---
->>>    kernel/sched/fair.c | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>> index 0424a0af5f87..45e467bf42fc 100644
->>> --- a/kernel/sched/fair.c
->>> +++ b/kernel/sched/fair.c
->>> @@ -806,7 +806,7 @@ void post_init_entity_util_avg(struct task_struct *p)
->>>                }
->>>        }
->>>
->>> -     sa->runnable_avg = cpu_scale;
->>> +     sa->runnable_avg = sa->util_avg;
->>>
->>>        if (p->sched_class != &fair_sched_class) {
->>>                /*
->>>
->>
->> Something is wrong here. I woke up my machine from suspend-to-RAM this morning
->> and saw that a completely idle machine had a loadavg of ~7. According to my
-> 
-> Just to make sure: Are you speaking about loadavg that is output by
-> /proc/loadavg or load_avg which is the PELT load ?
+Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@kernel.org>:
+>
+> On 25. 06. 20, 0:05, Gabriel C wrote:
+> > Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org>:
+> >>
+> >> I'm announcing the release of the 5.7.3 kernel.
+> >>
+> >
+> > Hello Greg,
+> >
+> >> Qiujun Huang (5):
+> >>       ath9k: Fix use-after-free Read in htc_connect_service
+> >>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
+> >>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+> >>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+> >>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+> >>
+> >
+> > We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
+> > while working fine on <5.7.3.
+> >
+> > I don't have myself such HW, and the reported doesn't have any experience
+> > in bisecting the kernel, so we build kernels, each with one of the
+> > above commits reverted,
+> > to find the bad commit.
+> >
+> > The winner is:
+> >
+> > commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
+> > Author: Qiujun Huang <hqjagain@gmail.com>
+> > Date:   Sat Apr 4 12:18:38 2020 +0800
+> >
+> >     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+> >
+> >     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+> > ...
+> >
+> > Reverting this one fixed his problem.
+>
+> Obvious question: is 5.8-rc1 (containing the commit) broken too?
 
-/proc/loadavg
+Yes, it does, just checked.
 
->> monitoring system this happened to be the loadavg right before I suspended.
->> I've reverted this, rebooted, created a loadavg >0, suspended and after wake up
->> loadavg again correctly ranges between 0 and whatever, as expected.
-> 
-> I'm not sure to catch why ~7 is bad compared to correctly ranges
-> between 0 and whatever. Isn't ~7 part of the whatever ?
+git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
+v5.8-rc1
+v5.8-rc2
 
-After wakeup the _baseline_ for loadavg seemed to be the last value before suspend,
-not 0. The 7 then was the base loadavg for a _mostly idle machine_ (just reading
-mail etc.), i.e. it never went below said baseline again, no matter the
-_actual_ load.
+>
+> I fail to see how the commit could cause an issue like this. Is this
+> really reproducibly broken with the commit and irreproducible without
+> it?
 
-Here's an image: https://imgur.com/a/kd2stqO
+I can't see something obvious wrong either, but yes it's reproducible on his HW.
+Kernel with this commit breaks the dongle, with the commit reverted it works.
 
-Before 02:00 last night the load was ~7 (compiled something), then all processes
-were terminated and the machine was suspended. After wakeup the machine was mostly
-idle (9am..11am), yet measured loadavg continued with the same value as before.
-I didn't notice this right away since my CPU meter on the desktop didn't show any
-*actual* activity (because there was none). The spike at ~11am is the revert/reboot.
-After that loadavg became normal again, i.e. representative of the actual load,
-even after suspend/resume cycles.
-I suspend/resume every night and the only thing that changed recently was this
-patch, so.. :)
+>As it looks like a USB/wiring problem:
+> usb 1-2: USB disconnect, device number 2
+> ath: phy0: Reading Magic # failed
+> ath: phy0: Unable to initialize hardware; initialization status: -5
+> ...
+> usb 1-2: device descriptor read/64, error -110
+> usb 1-2: device descriptor read/64, error -71
+>
+> Ccing ath9k maintainers too.
+>
+> > I don't have so much info about the HW, besides a dmesg showing the
+> > phy breaking.
+> > I also added the reporter to CC too.
+> >
+> > https://gist.github.com/AngryPenguinPL/1e545f0da3c2339e443b9e5044fcccea
+> >
+> > If you need more info, please let me know and I'll try my best to get
+> > it as fast as possible for you.
+>
 
--h
+Best Regards,
+
+Gabriel C
