@@ -2,224 +2,108 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C02DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5287620706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L6GN/yTU"
+	by mail.kernel.org (Postfix) with ESMTP id E6C3D2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593090991;
+	bh=hzVTufSqgXwAPMu2gHwPhbk4gm9XBC4oqWn21X0IZ0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dY+F2053BNMKrMZDR2nCXwYPR3tnbc9TqZegynw+Kfher0OHYAUlxu8dX6WeUkOqm
+	 pIxqmApgxtdzYrrIQwhK3DsNi6ldYVO2phFwbZMkjNCK45RqHL7SlsU5adGeOev3dM
+	 qXDhhKJ3MKgqee9r8nxbSJQTmCAkmodLrcHuvHJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405118AbgFYNPq (ORCPT
+        id S2404958AbgFYNQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404834AbgFYNOg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:14:36 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0464FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:35 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f139so5878250wmf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kuR4zqn460ZfDvOPRZLBdbatU3Tl1+GK/DM2MsbbDYE=;
-        b=L6GN/yTULlibROyq7dwxJEpfOR9idYf2tNFIPd390S+//8i/sDzyXWY8L8ngX0BmtE
-         hsHNfixR1RZPoTZ7O9ndXAOPxn8W1w3/3yqWVLMiA5/YairtLVWSHu8z5MYKAcehYrs+
-         Ny5pOzpitZGzdjf638XktPBLh0AY0ZGsAy9BPdt/Z9qH4GLDuRjLci4fhTMBsvjyKplw
-         bGwJKNeKMZ8zPUozt8P/Mbalws29i6cej9OyrXJq27LEgMdSuKwLHsfgPwe2xUquGlDU
-         mp9ZBtC0j+EdYEede1FCz/AqN4V5MzQILFML0M5BASdZ6/qaRxRs2QZc+9HH8xG7EGSV
-         KMgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kuR4zqn460ZfDvOPRZLBdbatU3Tl1+GK/DM2MsbbDYE=;
-        b=Ru6aeaSmix7fTLiWWLMzWA3seztvj+098f/HlIgMjnMllhsLN8ygqRpQpNfuHZNSWh
-         +6QSSznnjEjeudhje5v58rPYF+bvGjfSoqWEMP4ijuQw1+T92MxFphodsT71AYS0qFsG
-         lieIeMKzeupuieigd9kIyoBImIX/Ufd8s9hxKYgeBa01xeeo8kO7MjFGUG/mle4EDDr7
-         UdS6FgKBdc8vTrV8IGXxxGlB/OweRnIHoqA1nXKmm/uY3jHK/1JQsa0O2XkV2mt/PYoM
-         DKZUBFv13c6KAGOTe34HdsMkYkMkrrGwsRyzwIGwNBownBqLGcbOJfskdjv13tfW9ffL
-         cwRw==
-X-Gm-Message-State: AOAM531LOWXtz3G7zxqRkAvSVOpIJOngQHnR3qqd1jutgm1dqZc/oAPd
-        1enLGKXLBzdR7l781CvziZTTEg==
-X-Google-Smtp-Source: ABdhPJzjfkKDfkUwAkvXXlxbiBPTEw+5nTG7FyH0H8W76y+Lt4gtAq38QOX0jPlZdLDTDKE6B2VYeA==
-X-Received: by 2002:a7b:c441:: with SMTP id l1mr3158785wmi.7.1593090873533;
-        Thu, 25 Jun 2020 06:14:33 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8523:2d03:c126:6748:7a9d:2d])
-        by smtp.gmail.com with ESMTPSA id t16sm9874525wru.9.2020.06.25.06.14.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 06:14:32 -0700 (PDT)
-From:   David Brazdil <dbrazdil@google.com>
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        Thu, 25 Jun 2020 09:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404825AbgFYNQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:16:28 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21D15206A1;
+        Thu, 25 Jun 2020 13:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593090988;
+        bh=hzVTufSqgXwAPMu2gHwPhbk4gm9XBC4oqWn21X0IZ0k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ctZnhPPDJHtzPcQnLaPl/EtZl6MpuCnn1PYgaWi3dOTtapIiF6TbhyNK1ocOWuY1G
+         hXRLxa5J0cFLuuN1BlV+LPIHLN5IW274OeHHf7AR/iw9vE+CrPA+RAseI2FBiKMkWv
+         Uu/sF2Y4eHA0lhKE885aHzMjotSnwkEezGLcmiZU=
+Date:   Thu, 25 Jun 2020 14:16:20 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, android-kvm@google.com,
-        kernel-team@android.com, Andrew Scull <ascull@google.com>,
-        David Brazdil <dbrazdil@google.com>
-Subject: [PATCH v4 05/15] arm64: kvm: Handle calls to prefixed hyp functions
-Date:   Thu, 25 Jun 2020 14:14:10 +0100
-Message-Id: <20200625131420.71444-6-dbrazdil@google.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625131420.71444-1-dbrazdil@google.com>
-References: <20200625131420.71444-1-dbrazdil@google.com>
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 12/13] arm64: Remove dev->archdata.iommu pointer
+Message-ID: <20200625131620.GA8161@willie-the-truck>
+References: <20200625130836.1916-1-joro@8bytes.org>
+ <20200625130836.1916-13-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625130836.1916-13-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Scull <ascull@google.com>
+On Thu, Jun 25, 2020 at 03:08:35PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> There are no users left, all drivers have been converted to use the
+> per-device private pointer offered by IOMMU core.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/arm64/include/asm/device.h | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/device.h b/arch/arm64/include/asm/device.h
+> index 12b778d55342..996498751318 100644
+> --- a/arch/arm64/include/asm/device.h
+> +++ b/arch/arm64/include/asm/device.h
+> @@ -6,9 +6,6 @@
+>  #define __ASM_DEVICE_H
+>  
+>  struct dev_archdata {
+> -#ifdef CONFIG_IOMMU_API
+> -	void *iommu;			/* private IOMMU data */
+> -#endif
+>  };
 
-Once hyp functions are moved to a hyp object, they will have prefixed symbols.
-This change declares and gets the address of the prefixed version for calls to
-the hyp functions.
+Acked-by: Will Deacon <will@kernel.org>
 
-To aid migration, the hyp functions that have not yet moved have their prefixed
-versions aliased to their non-prefixed version. This begins with all the hyp
-functions being listed and will reduce to none of them once the migration is
-complete.
+Thanks, Joerg.
 
-Signed-off-by: Andrew Scull <ascull@google.com>
-
-[David: Extracted kvm_call_hyp nVHE branches into own helper macros, added
-        comments around symbol aliases.]
-Signed-off-by: David Brazdil <dbrazdil@google.com>
----
- arch/arm64/include/asm/kvm_asm.h  | 19 +++++++++++++++++++
- arch/arm64/include/asm/kvm_host.h | 17 ++++++++++++++---
- arch/arm64/kernel/image-vars.h    | 26 ++++++++++++++++++++++++++
- 3 files changed, 59 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-index 352aaebf4198..6a682d66a640 100644
---- a/arch/arm64/include/asm/kvm_asm.h
-+++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -42,6 +42,24 @@
- 
- #include <linux/mm.h>
- 
-+/*
-+ * Translate name of a symbol defined in nVHE hyp to the name seen
-+ * by kernel proper. All nVHE symbols are prefixed by the build system
-+ * to avoid clashes with the VHE variants.
-+ */
-+#define kvm_nvhe_sym(sym)	__kvm_nvhe_##sym
-+
-+#define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
-+#define DECLARE_KVM_NVHE_SYM(sym)	extern char kvm_nvhe_sym(sym)[]
-+
-+/*
-+ * Define a pair of symbols sharing the same name but one defined in
-+ * VHE and the other in nVHE hyp implementations.
-+ */
-+#define DECLARE_KVM_HYP_SYM(sym)		\
-+	DECLARE_KVM_VHE_SYM(sym);		\
-+	DECLARE_KVM_NVHE_SYM(sym)
-+
- /* Translate a kernel address of @sym into its equivalent linear mapping */
- #define kvm_ksym_ref(sym)						\
- 	({								\
-@@ -50,6 +68,7 @@
- 			val = lm_alias(&sym);				\
- 		val;							\
- 	 })
-+#define kvm_ksym_ref_nvhe(sym)	kvm_ksym_ref(kvm_nvhe_sym(sym))
- 
- struct kvm;
- struct kvm_vcpu;
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index c3e6fcc664b1..49d1a5cd8f8f 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -448,6 +448,18 @@ void kvm_arm_resume_guest(struct kvm *kvm);
- 
- u64 __kvm_call_hyp(void *hypfn, ...);
- 
-+#define kvm_call_hyp_nvhe(f, ...)					\
-+	do {								\
-+		DECLARE_KVM_NVHE_SYM(f);				\
-+		__kvm_call_hyp(kvm_ksym_ref_nvhe(f), ##__VA_ARGS__);	\
-+	} while(0)
-+
-+#define kvm_call_hyp_nvhe_ret(f, ...)					\
-+	({								\
-+		DECLARE_KVM_NVHE_SYM(f);				\
-+		__kvm_call_hyp(kvm_ksym_ref_nvhe(f), ##__VA_ARGS__);	\
-+	})
-+
- /*
-  * The couple of isb() below are there to guarantee the same behaviour
-  * on VHE as on !VHE, where the eret to EL1 acts as a context
-@@ -459,7 +471,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
- 			f(__VA_ARGS__);					\
- 			isb();						\
- 		} else {						\
--			__kvm_call_hyp(kvm_ksym_ref(f), ##__VA_ARGS__); \
-+			kvm_call_hyp_nvhe(f, ##__VA_ARGS__);		\
- 		}							\
- 	} while(0)
- 
-@@ -471,8 +483,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
- 			ret = f(__VA_ARGS__);				\
- 			isb();						\
- 		} else {						\
--			ret = __kvm_call_hyp(kvm_ksym_ref(f),		\
--					     ##__VA_ARGS__);		\
-+			ret = kvm_call_hyp_nvhe_ret(f, ##__VA_ARGS__);	\
- 		}							\
- 									\
- 		ret;							\
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index 3dc27da47712..36444bac6a05 100644
---- a/arch/arm64/kernel/image-vars.h
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -63,6 +63,32 @@ __efistub__ctype		= _ctype;
- 
- #define KVM_NVHE_ALIAS(sym) __kvm_nvhe_##sym = sym;
- 
-+/* Symbols defined in debug-sr.c (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__kvm_get_mdcr_el2);
-+
-+/* Symbols defined in switch.c (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__kvm_vcpu_run_nvhe);
-+
-+/* Symbols defined in sysreg-sr.c (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__kvm_enable_ssbs);
-+
-+/* Symbols defined in timer-sr.c (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__kvm_timer_set_cntvoff);
-+
-+/* Symbols defined in tlb.c (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__kvm_flush_vm_context);
-+KVM_NVHE_ALIAS(__kvm_tlb_flush_local_vmid);
-+KVM_NVHE_ALIAS(__kvm_tlb_flush_vmid);
-+KVM_NVHE_ALIAS(__kvm_tlb_flush_vmid_ipa);
-+
-+/* Symbols defined in vgic-v3-sr.c (not yet compiled with nVHE build rules). */
-+KVM_NVHE_ALIAS(__vgic_v3_get_ich_vtr_el2);
-+KVM_NVHE_ALIAS(__vgic_v3_init_lrs);
-+KVM_NVHE_ALIAS(__vgic_v3_read_vmcr);
-+KVM_NVHE_ALIAS(__vgic_v3_restore_aprs);
-+KVM_NVHE_ALIAS(__vgic_v3_save_aprs);
-+KVM_NVHE_ALIAS(__vgic_v3_write_vmcr);
-+
- #endif /* CONFIG_KVM */
- 
- #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
--- 
-2.27.0
-
+Will
