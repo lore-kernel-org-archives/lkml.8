@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D123C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE50C2081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98AA20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxq/39J/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCcGulH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgFYXek (ORCPT
+        id S1725991AbgFYXeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:34:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46712 "EHLO
+        Thu, 25 Jun 2020 19:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgFYXeb (ORCPT
+        with ESMTP id S1725900AbgFYXea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:34:31 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB16AC08C5DB;
-        Thu, 25 Jun 2020 16:34:30 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dp18so7605767ejc.8;
-        Thu, 25 Jun 2020 16:34:30 -0700 (PDT)
+        Thu, 25 Jun 2020 19:34:30 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4367C08C5C1;
+        Thu, 25 Jun 2020 16:34:29 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so7636538ejd.0;
+        Thu, 25 Jun 2020 16:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lJKpt55I3R2NHkjVsgV/EWx4EQxkw9Y42GuSmQWOQXU=;
-        b=pxq/39J/HzF5FnfLG8tYvq1/+c390Jd0rqKCrUnunytlGr9uZw/Mgq2w578+pjIWJf
-         WZqUJGbCO61ur2vd7QCevQsZcj+NIi9UjSGnS3YyHmKw3FxkkoZcCt3LlfEV4338ev1w
-         9Bczs27fTbJNr8bndTTisKK/ZsdojA4a99pK/7aW0oWgwjmceybFrFrI7r4lYOmlbeS8
-         qgDV+Lsej+AEfSyfqXggpmO2mPO3Sx20Pbqvh6Yxbgvw/OU42MCAioMYHpqXMqC7j46Y
-         yKWxn5Up4XKx3McGfhMd+7m4gW+AjX6tBco9M+0xkU4e4ZE7/fdCYihoFTr9b7EKJSgC
-         LCZw==
+        bh=kTpL1gD5GIJIE37fBvllr7//tnkm3Mje2qpM2UoKUL0=;
+        b=MCcGulH6dRTj6Q256xnR01Ji76woRxHOyyI4xzMrBtHSCBbLKUJmU1Is6WFxZ7C5BI
+         nWlpzOwxKdRvpjA1SorR6VKvUXdAtsHcCwHFEvTHQSIAWhB2ZzaKOoohlzn6zGdPLip3
+         uQ7ChBA+HAH0sFIhd0+NMdQpDM/j/3TmeeEbFuyAeOHulBu54/40BDGncdc23A1zkO/+
+         DRYkjKRXHxkwKCThAt75icuwfKPcBY9y8VlXd4RNcftwCuz+Pv+JgKYFp/NbzwoufNo7
+         FpPasm/SvoilOxfKztX+J3gG6KX2TQkK+m+zFhkny42meaLzp22m9InjJocFn0fsvnZf
+         MClg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lJKpt55I3R2NHkjVsgV/EWx4EQxkw9Y42GuSmQWOQXU=;
-        b=m9IcWq6ly229FnK9XDdCYnxk47MNwtmqWlerasZLU4HmOwNlvucnH1vIFlzu1A/i28
-         4W0G3dX9UqCz1PyC8rAeXBU0p06+adEJABJiA+O+nG/KDZpPcGKwTm423eEdWGeSOwfF
-         LgPszkDWC4xN9sKRoxTOwxVyNvWgUZcL323T46A1ZThfaaZI4a5oFujgPCyqcZjJfyl7
-         BpEiHespqBPDZVOeI3FAKen3bxfr1X59RHTQlTFx2edaDl2rSmpp47izEOiZHdEQfNJV
-         wZwnSrK1iCQlTFsXRkTEq7sDyWMPn+Xtr3tCze5RkeJqae8vPYAF9l6tjp9amPHiQbkp
-         SJVg==
-X-Gm-Message-State: AOAM5327xqRnYIq6AO4ZlAqjFvMTQZc85XEO1Lg8Z7Z/ONKcvAD92V0X
-        0k4T1OTR4930I810l25jYcI=
-X-Google-Smtp-Source: ABdhPJxXoJeAuTaXqzLAHRPDqgOakuV+GrqFOKerXoME00ak1nOrv3A8bPEJDYhUJURBLd67gnE0aA==
-X-Received: by 2002:a17:906:1c4b:: with SMTP id l11mr160095ejg.307.1593128069669;
-        Thu, 25 Jun 2020 16:34:29 -0700 (PDT)
+        bh=kTpL1gD5GIJIE37fBvllr7//tnkm3Mje2qpM2UoKUL0=;
+        b=pWSDyjw4CdB2uQabirCkh7hk1lLcaUMS1VT/VNMcVIjc/GrS9WZ7p/ISQLkQKibwrt
+         4Bd1naXo6VCmj3Rz/RnOwcuPyEEOKmwem5d3gmilQG+59yHq4HzOueGaL/5b66qQIkGp
+         rI5Y1Atw8cTk7OLknHEIbFlUCrjoW5pqY8ALER881ie6PyMPns2tlCB/tcS7GgEqugTO
+         SPVhwSPVDQf4K0hrlDPsD28wkJIyqFYEz8boxJh+wxeWiky09Y2aua79vrnF24MiIIbs
+         UtGpTH/CQ8pcSnXOd7AMvlz/5F2pxSn2iXkB7qWOEYcPYzXDUayrrwk1TYYtmXnZOGJD
+         R3bA==
+X-Gm-Message-State: AOAM532cYv3sf83fXeziFg6ONm7NwvafUXZ2yrlW1+sPhbGsT1XWo4vE
+        PZ1awd+lgcxLLazd4iIdN2o=
+X-Google-Smtp-Source: ABdhPJzM3P9H8FjaJmzBtlI0gvL1uDPEMwhmnivaTcX/aCa074OqLYr1rnwQAPlBB9q/1B2ksQNZ2w==
+X-Received: by 2002:a17:906:c24e:: with SMTP id bl14mr161159ejb.285.1593128068569;
+        Thu, 25 Jun 2020 16:34:28 -0700 (PDT)
 Received: from localhost.localdomain ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id u2sm13699184edq.29.2020.06.25.16.34.28
+        by smtp.gmail.com with ESMTPSA id u2sm13699184edq.29.2020.06.25.16.34.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 16:34:29 -0700 (PDT)
+        Thu, 25 Jun 2020 16:34:27 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: [PATCH 04/10] arm: dts: owl-s500: Add Reset Controller support
-Date:   Fri, 26 Jun 2020 02:34:16 +0300
-Message-Id: <9fac12b305c4b4b79cbc9ffa874b1614ffc10dae.1593124368.git.cristian.ciocaltea@gmail.com>
+Subject: [PATCH 03/10] arm: dts: owl-s500: Add DMA controller
+Date:   Fri, 26 Jun 2020 02:34:15 +0300
+Message-Id: <53a92ab876246025cacccd1e0753b5b2910e37da.1593124368.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1593124368.git.cristian.ciocaltea@gmail.com>
 References: <cover.1593124368.git.cristian.ciocaltea@gmail.com>
@@ -79,34 +79,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reset controller property and bindings header for the
-Actions Semi S500 SoC DTS.
+Add DMA controller node for Actions Semi S500 SoC.
+
+Note the Actions Semi Owl SoC's DMA driver seems to be fully compatible
+with the Actions Semi S500 SoC, even though this is not explicitly
+mentioned in the source code. Hence, for the moment, enable the DMA
+controller node using the "actions,s900-dma" compatible string.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 ---
- arch/arm/boot/dts/owl-s500.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/owl-s500.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm/boot/dts/owl-s500.dtsi b/arch/arm/boot/dts/owl-s500.dtsi
-index 0f4fc5487dad..0b7ba2926f0e 100644
+index ac3d04c75dd5..0f4fc5487dad 100644
 --- a/arch/arm/boot/dts/owl-s500.dtsi
 +++ b/arch/arm/boot/dts/owl-s500.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/actions,s500-cmu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/owl-s500-powergate.h>
-+#include <dt-bindings/reset/actions,s500-reset.h>
- 
- / {
- 	compatible = "actions,s500";
-@@ -188,6 +189,7 @@ cmu: clock-controller@b0160000 {
- 			reg = <0xb0160000 0x8000>;
- 			clocks = <&hosc>, <&losc>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
+@@ -205,5 +205,19 @@ sps: power-controller@b01b0100 {
+ 			reg = <0xb01b0100 0x100>;
+ 			#power-domain-cells = <1>;
  		};
- 
- 		timer: timer@b0168000 {
++
++		dma: dma-controller@b0260000 {
++			compatible = "actions,s900-dma";
++			reg = <0xb0260000 0xd00>;
++			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++			#dma-cells = <1>;
++			dma-channels = <12>;
++			dma-requests = <46>;
++			clocks = <&cmu CLK_DMAC>;
++			power-domains = <&sps S500_PD_DMA>;
++		};
+ 	};
+ };
 -- 
 2.27.0
 
