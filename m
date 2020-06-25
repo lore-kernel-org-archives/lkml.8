@@ -2,85 +2,95 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7723CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 571C120672
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4924020702
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l92CtjAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405192AbgFYNi7 convert rfc822-to-8bit (ORCPT
+        id S2405176AbgFYNkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:38:59 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36989 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405038AbgFYNi5 (ORCPT
+        Thu, 25 Jun 2020 09:40:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404987AbgFYNkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:38:57 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1B2C11BF214;
-        Thu, 25 Jun 2020 13:38:54 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 25 Jun 2020 09:40:20 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC64C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:40:20 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l17so5620399wmj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=KPWXGDbVQkcDm1gGHkW48BVFm+ibUkH1wIn5/D/7Wjw=;
+        b=l92CtjAeRejXi4p9e8J1taigZfp2hQA/FKh+fglRAsnmePoIJhKVKbiiHMRp7jpz4w
+         +35mUyqjtiWC7qhChsQw1Aios1TudPBym8FQ5YspoDiYzoR4mwqeRukFJN8gfoE7w/pz
+         LM6s9sCSSxWqxru9bI3ysv19/aIDITs+Z9ZEsR1BvJUAQVmt8naO0PZm2PzT/tm+tH1u
+         pc7CKw7yYQSqnoAGRAG2y3+EYyvkWxrj/JKgtFS1fiGZqwgnWL6H2wzClsnlGqMcUaYS
+         sxygTIpFQ1qRNRvmb2ONuSS6eXWuMFxvuVy0X8ZozoEFlaU/izN+pnlJSt+ZAvinRMmK
+         AC0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KPWXGDbVQkcDm1gGHkW48BVFm+ibUkH1wIn5/D/7Wjw=;
+        b=EgctyFPHlp/z2b1BGtngqaHdWalsNutkJVaueG4VhLtV0d53Y741Rf1bFpBoUeOGJs
+         p5JWWpijIBqOsPDTBi97GRpHG1kwfBmhxFO6gVZpUM4jiUtlQ3g0XybkghVUISRAjnyq
+         daw+ZA+g87+isPQU5o/VmtZgmWWCs4z1RsIU8143E1E2WYeG1OOM8gkYub4vOBpFTHnP
+         2zG9QAcs4kJPOIoFgJvzXTIXBWf/mWHUH+ay4EVk6lYmTqXD93/epL8/sanxT73DZYf+
+         9N1S1wur5+F8OdYS4tP/XvqkHUL/lC2aYbiBNpjvfBDYLt+e7x6hTFcKV0KMUePrsdxU
+         rTGg==
+X-Gm-Message-State: AOAM533B+jXkl4BH1BGypkH3TnP+tQN+wITwMHFGKTnpX5MFIpC+l0u5
+        Sawt+H6hxI8ck/ShG0O+kHtT/gy5lGc=
+X-Google-Smtp-Source: ABdhPJwbt3oGnIvJg+7dsWBfkM+Sv08Ufbpvz0SvKOt0mmUORc2CbQ0bpG+HQRPUwtyXsZaxmYGgVg==
+X-Received: by 2002:a1c:6408:: with SMTP id y8mr3379927wmb.122.1593092419322;
+        Thu, 25 Jun 2020 06:40:19 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id y17sm32972273wrd.58.2020.06.25.06.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 06:40:18 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 14:40:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
+Message-ID: <20200625134017.GR954398@dell>
+References: <20200625131036.43953-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200625132226.GC2548@localhost>
-References: <20200623143014.47864-1-antoine.tenart@bootlin.com> <20200623143014.47864-7-antoine.tenart@bootlin.com> <20200625132226.GC2548@localhost>
-Subject: Re: [PATCH net-next v4 6/8] net: phy: mscc: timestamping and PHC support
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        allan.nielsen@microchip.com, foss@0leil.net
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Message-ID: <159309233393.397581.16273630291558095966@kwain>
-Date:   Thu, 25 Jun 2020 15:38:54 +0200
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200625131036.43953-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Richard,
+On Thu, 25 Jun 2020, Andy Shevchenko wrote:
 
-Quoting Richard Cochran (2020-06-25 15:22:26)
-> On Tue, Jun 23, 2020 at 04:30:12PM +0200, Antoine Tenart wrote:
-> > @@ -978,9 +1483,32 @@ static int __vsc8584_init_ptp(struct phy_device *phydev)
-> >  
-> >       vsc85xx_ts_eth_cmp1_sig(phydev);
-> >  
-> > +     vsc8531->mii_ts.rxtstamp = vsc85xx_rxtstamp;
-> > +     vsc8531->mii_ts.txtstamp = vsc85xx_txtstamp;
-> > +     vsc8531->mii_ts.hwtstamp = vsc85xx_hwtstamp;
-> > +     vsc8531->mii_ts.ts_info  = vsc85xx_ts_info;
-> > +     phydev->mii_ts = &vsc8531->mii_ts;
-> > +
-> > +     memcpy(&vsc8531->ptp->caps, &vsc85xx_clk_caps, sizeof(vsc85xx_clk_caps));
-> > +
-> > +     vsc8531->ptp->ptp_clock = ptp_clock_register(&vsc8531->ptp->caps,
-> > +                                                  &phydev->mdio.dev);
-> > +     if (IS_ERR(vsc8531->ptp->ptp_clock))
-> > +             return PTR_ERR(vsc8531->ptp->ptp_clock);
+> Intel Tiger Lake PCH-H has the same LPSS than Intel Broxton.
+> Add the new IDs to the list of supported devices.
 > 
-> The ptp_clock_register() method can also return NULL:
-> 
->  * Returns a valid pointer on success or PTR_ERR on failure.  If PHC
->  * support is missing at the configuration level, this function
->  * returns NULL, and drivers are expected to gracefully handle that
->  * case separately.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/intel-lpss-pci.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 
-If ptp_clock_register returns NULL because PHC support is missing, the
-clock won't be exported. Beside that, I don't think we can do much in
-the error path, so this should be safe.
-
-Thanks,
-Antoine
+Applied, thanks.
 
 -- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
