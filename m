@@ -2,323 +2,180 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C74AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE74C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE7C20836
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38D72078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wq1vjX8Y"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BzwIdhXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388429AbgFYALD (ORCPT
+        id S2388987AbgFYALf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388735AbgFYAKt (ORCPT
+        Wed, 24 Jun 2020 20:11:35 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12433 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388412AbgFYALe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 20:10:49 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7311CC061797
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 17:10:49 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d10so1911659pls.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 17:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wKxZHWXThmdwG5TzsbBZbCq86w+CMX62l9gqbYlj/xg=;
-        b=Wq1vjX8Y/9dYjZiuQcJ/ZNMbmUtYy8AxZ80Pa21oizdUuFir8VgnsZkQ4JhrcyPmm0
-         vpB1kJaBnDcSr4z+vVCDEi/xdpGSDfY2oN2Sv42lvFml0MA+hDu2koaaGs7CJjsGy05O
-         neBXQAKmdtn7YajytCTGGIzlnEieKevNdZR7lyTIfVwfjoQo8EwqhYaWNbI8z7k2xU3O
-         11GE2N7eZCz3Gv+Umj6kPnno9rxkCOzHbcEXglxNWsk1Zb5QqbFSn8tY+yphAYXKfZFb
-         rnjZip4jEQSuKMBGp5rsP5lyHIV0HwVUtEIYX3s2bNb3jdPmAnzl4bE9rcAyyrjmqbdO
-         nwqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wKxZHWXThmdwG5TzsbBZbCq86w+CMX62l9gqbYlj/xg=;
-        b=BJgqrzRTI7jCBAC+O4lLbG7OWoDyP4nKzbLm0xOzq2zdjUo49YnYj0cMBQDj1gCptc
-         6oCc6CH91CY7U2/8/SjgQTtTTbNj9a9AjV6Rki0wuZLVwfqF2w40aQyXiXPEqUuEW6Ns
-         xrRRQd4BkuWyLN9xGsoCbmpgGPc+fQAKNpVCcG2D0a1AMLMBoSM1tDFbcBBI8f1DN2tW
-         W70tUYOMzw+bwucuBiWyzSY7+CKqolE61wxP3JcKFtRfRvEN/MRoUafjrrtWJ6o8IDaK
-         aScLYsvajEiBzqcFDgbSn8q7dlDi8auAl4iApA2hWAj45ctqBn67WNDhgzJeWtCI8jf4
-         AYWw==
-X-Gm-Message-State: AOAM531kJb1AQ3keMq2/DaO9BqEo0aPdvCRy0cbO2VnI8lWalHcZh7PT
-        T4AmXpDBdMOaoROwjdTFgSZejwpdhj8=
-X-Google-Smtp-Source: ABdhPJymIBmCwAQtljjPiaUT73HauLgg3YsTyCkmm4i7eIzCr2/sbSrfulZFdAJs6Z5kNNgnbO6iQg==
-X-Received: by 2002:a17:90a:f996:: with SMTP id cq22mr387159pjb.208.1593043848732;
-        Wed, 24 Jun 2020 17:10:48 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id n19sm17458671pgb.0.2020.06.24.17.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 17:10:48 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v2 4/5] pinctrl: qcom: Allow pinctrl-msm code to be loadable as a module
-Date:   Thu, 25 Jun 2020 00:10:38 +0000
-Message-Id: <20200625001039.56174-5-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200625001039.56174-1-john.stultz@linaro.org>
-References: <20200625001039.56174-1-john.stultz@linaro.org>
+        Wed, 24 Jun 2020 20:11:34 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef3eba90000>; Wed, 24 Jun 2020 17:11:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 24 Jun 2020 17:11:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 24 Jun 2020 17:11:34 -0700
+Received: from [10.2.59.206] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jun
+ 2020 00:11:30 +0000
+Subject: Re: [PATCH] mm: Skip opportunistic reclaim for dma pinned pages
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Chris Wilson <chris@chris-wilson.co.uk>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <intel-gfx@lists.freedesktop.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200624191417.16735-1-chris@chris-wilson.co.uk>
+ <20200624192116.GO6578@ziepe.ca>
+ <44708b2e-479f-7d58-fe01-29cfd6c70bdb@nvidia.com>
+ <20200624232047.GP6578@ziepe.ca>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <887ac706-65f0-3089-b51b-47aabf7d3847@nvidia.com>
+Date:   Wed, 24 Jun 2020 17:11:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200624232047.GP6578@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593043882; bh=HgfzVvVqN21hLMs0lCHOTEd/EC0i4XdyaUbWxeMoOfA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BzwIdhXhJaR4a1GFOREXvpV6vUVM0xoljaj4gyGV2TZqstSNPlA0ceFN6s9KnFBdE
+         iH/boJYVyAOCocaXJ1GaY8MFDkY3XmDaWzguouPg/G5bCA7EMIsi76lhhdcj7zWsy1
+         XxFw8VvTeWEvK8lVKxA3Rmxa7MWeAdYQZPwvUgg86Kf8VWTQ72tk4LhlnTWgJAFMke
+         G56/gtNQ+7U9O3rOBvgPxoAsdVr8oAzhJXMTS/KO9TdyvLTuXwR6BUlUvdAYg/Xorh
+         UNuwyyk6SdwNfzBalWj6udbUWgd/aDchn8JWAgxcaCAuAaKmQbGuu3R6Te/OBRqkQ8
+         shubp1yPfhMOA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tweaks to allow pinctrl-msm code to be loadable as a module.
-This is needed in order to support having the qcom-scm driver,
-which pinctrl-msm calls into, configured as a module.
+On 2020-06-24 16:20, Jason Gunthorpe wrote:
+...
+> I think Yang explained it - the page is removed from the mappings but
+> freeing it does not happen because page_ref_freeze() does not succeed
+> due to the pin.
+> 
+> Presumably the mappings can reconnect to the same physical page if
+> it is re-faulted to avoid any data corruption.
+> 
+> So, the issue here is the mappings are trashed while the page remains
+> - and trashing the mapping triggers a mmu notifier which upsets i915.
+> 
+>> What's less clear is why the comment and the commit description
+>> only talk about reclaim, when there are additional things that call
+>> try_to_unmap(), including:
+>>
+>>      migrate_vma_unmap()
+>>      split_huge_page_to_list() --> unmap_page()
+> 
+> It looks like the same unmap first then abort if the refcount is still
+> elevated design as shrink_page_list() ?
 
-This requires that we tweak Kconfigs selecting PINCTRL_MSM to
-also depend on QCOM_SCM || QCOM_SCM=n so that we match the
-module setting of QCOM_SCM.
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: iommu@lists.linux-foundation.org
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2:
-* Module description and whitespace fixes suggested by Bjorn
-* Added QCOM_SCM || QCOM_SCM=n bits on Kconfigs selecting
-  PINCTRL_MSM. Reported by both Todd and Bjorn.
----
- drivers/pinctrl/qcom/Kconfig       | 24 +++++++++++++++++++++++-
- drivers/pinctrl/qcom/pinctrl-msm.c |  2 ++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+Yes. I was just wondering why the documentation here seems to ignore the
+other, non-reclaim cases. Anyway, though...
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index ff1ee159dca2..11228ae3d826 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -2,7 +2,7 @@
- if (ARCH_QCOM || COMPILE_TEST)
- 
- config PINCTRL_MSM
--	bool
-+	tristate
- 	select PINMUX
- 	select PINCONF
- 	select GENERIC_PINCONF
-@@ -11,6 +11,7 @@ config PINCTRL_MSM
- config PINCTRL_APQ8064
- 	tristate "Qualcomm APQ8064 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -19,6 +20,7 @@ config PINCTRL_APQ8064
- config PINCTRL_APQ8084
- 	tristate "Qualcomm APQ8084 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -27,6 +29,7 @@ config PINCTRL_APQ8084
- config PINCTRL_IPQ4019
- 	tristate "Qualcomm IPQ4019 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -35,6 +38,7 @@ config PINCTRL_IPQ4019
- config PINCTRL_IPQ8064
- 	tristate "Qualcomm IPQ8064 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -43,6 +47,7 @@ config PINCTRL_IPQ8064
- config PINCTRL_IPQ8074
- 	tristate "Qualcomm Technologies, Inc. IPQ8074 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
-@@ -53,6 +58,7 @@ config PINCTRL_IPQ8074
- config PINCTRL_IPQ6018
- 	tristate "Qualcomm Technologies, Inc. IPQ6018 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
-@@ -63,6 +69,7 @@ config PINCTRL_IPQ6018
- config PINCTRL_MSM8660
- 	tristate "Qualcomm 8660 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -71,6 +78,7 @@ config PINCTRL_MSM8660
- config PINCTRL_MSM8960
- 	tristate "Qualcomm 8960 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -79,6 +87,7 @@ config PINCTRL_MSM8960
- config PINCTRL_MDM9615
- 	tristate "Qualcomm 9615 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -87,6 +96,7 @@ config PINCTRL_MDM9615
- config PINCTRL_MSM8X74
- 	tristate "Qualcomm 8x74 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -95,6 +105,7 @@ config PINCTRL_MSM8X74
- config PINCTRL_MSM8916
- 	tristate "Qualcomm 8916 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -103,6 +114,7 @@ config PINCTRL_MSM8916
- config PINCTRL_MSM8976
- 	tristate "Qualcomm 8976 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -113,6 +125,7 @@ config PINCTRL_MSM8976
- config PINCTRL_MSM8994
- 	tristate "Qualcomm 8994 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -122,6 +135,7 @@ config PINCTRL_MSM8994
- config PINCTRL_MSM8996
- 	tristate "Qualcomm MSM8996 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -130,6 +144,7 @@ config PINCTRL_MSM8996
- config PINCTRL_MSM8998
- 	tristate "Qualcomm MSM8998 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -138,6 +153,7 @@ config PINCTRL_MSM8998
- config PINCTRL_QCS404
- 	tristate "Qualcomm QCS404 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -146,6 +162,7 @@ config PINCTRL_QCS404
- config PINCTRL_QDF2XXX
- 	tristate "Qualcomm Technologies QDF2xxx pin controller driver"
- 	depends on GPIOLIB && ACPI
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the GPIO driver for the TLMM block found on the
-@@ -183,6 +200,7 @@ config PINCTRL_QCOM_SSBI_PMIC
- config PINCTRL_SC7180
- 	tristate "Qualcomm Technologies Inc SC7180 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -192,6 +210,7 @@ config PINCTRL_SC7180
- config PINCTRL_SDM660
- 	tristate "Qualcomm Technologies Inc SDM660 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -201,6 +220,7 @@ config PINCTRL_SDM660
- config PINCTRL_SDM845
- 	tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
- 	depends on GPIOLIB && (OF || ACPI)
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -210,6 +230,7 @@ config PINCTRL_SDM845
- config PINCTRL_SM8150
- 	tristate "Qualcomm Technologies Inc SM8150 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-@@ -219,6 +240,7 @@ config PINCTRL_SM8150
- config PINCTRL_SM8250
- 	tristate "Qualcomm Technologies Inc SM8250 pin controller driver"
- 	depends on GPIOLIB && OF
-+	depends on QCOM_SCM || !QCOM_SCM
- 	select PINCTRL_MSM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 83b7d64bc4c1..e8e3ba8207af 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1355,3 +1355,5 @@ int msm_pinctrl_remove(struct platform_device *pdev)
- }
- EXPORT_SYMBOL(msm_pinctrl_remove);
- 
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. TLMM driver");
-+MODULE_LICENSE("GPL v2");
+
+> 
+>> I do like this code change, though. And I *think* it's actually safe to
+>> do this, as it stays away from writeback or other filesystem activity.
+>> But let me double check that, in case I'm forgetting something.
+
+...OK, I've checked, and I like it a little bit less now. Mainly for
+structural reasons, though. I think it would work correctly. But
+here's a concern: try_to_unmap() should only fail to unmap if there is a
+reason to not unmap. Having a page be pinned for dma is a reason to not
+*free* a page, and it's also a reason to be careful about writeback and
+page buffers for writeback and such. But I'm not sure that it's a reason
+to fail to remove mappings.
+
+True, most (all?) of the reasons that we remove mappings, generally are
+for things that are not allowed while a page is dma-pinned...at least,
+today. But still, there's nothing fundamental about a mapping that
+should prevent it from coming or going while a page is undergoing
+dma.
+
+So, it's merely a convenient, now-misnamed location in the call stack
+to fail out. That's not great. It might be better, as Jason hints at
+below, to fail out a little earlier, instead. That would lead to a more
+places to call page_maybe_dma_pinned(), but that's not a real problem,
+because it's still a small number of places.
+
+After writing all of that...I don't feel strongly about it, because
+TTU is kind of synonymous with "I'm about to do a dma-pin-unfriendly
+operation".
+
+Maybe some of the more experienced fs or mm people have strong opinions
+one way or the other?
+
+
+> 
+> It would be nice to have an explanation why it is OK now to change
+> it..
+
+Yes. Definitely good to explain that in the commit log. I think
+it's triggered by the existence of page_maybe_dma_pinned(). Until
+that was added, figuring out if dma was involved required basically
+just guesswork. Now we have a way to guess much more accurately. :)
+
+> 
+> I don't know, but could it be that try_to_unmap() has to be done
+> before checking the refcount as each mapping is included in the
+> refcount? ie we couldn't know a DMA pin was active in advance?
+> 
+> Now that we have your pin stuff we can detect a DMA pin without doing
+> all the unmaps?
+> 
+
+Once something calls pin_user_page*(), then the pages will be marked
+as dma-pinned, yes. So no, there is no need to wait until try_to_unmap()
+to find out.
+
+A final note: depending on where page_maybe_dma_pinned() ends up
+getting called, this might prevent a fair number of the problems that
+Jan originally reported [1], and that I also reported separately!
+
+Well, not all of the problems, and only after the filesystems get
+converted to call pin_user_pages() (working on that next), but...I think
+it would actually avoid the crash our customer reported back in early
+2018. Even though we don't have the full file lease + pin_user_pages()
+solution in place.
+
+That's because reclaim is what triggers the problems that we saw. And
+with this patch, we bail out of reclaim early.
+
+
+[1] https://www.spinics.net/lists/linux-mm/msg142700.html
+
+
+thanks,
 -- 
-2.17.1
-
+John Hubbard
+NVIDIA
