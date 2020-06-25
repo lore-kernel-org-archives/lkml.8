@@ -7,141 +7,113 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77580C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F812065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 562392076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zves/PjM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DJYjoIBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406579AbgFYTRc (ORCPT
+        id S2406607AbgFYTRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:17:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
+        Thu, 25 Jun 2020 15:17:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390959AbgFYTRY (ORCPT
+        with ESMTP id S2390701AbgFYTRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:17:24 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4B2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:23 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r12so6983182wrj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:23 -0700 (PDT)
+        Thu, 25 Jun 2020 15:17:25 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4ECAC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:24 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o2so7091357wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VJTFtlmSJJssMoK2NzaWqKKHmjNJh935ngd0RHoSQ4I=;
-        b=zves/PjMXG5dsDUU3LkKSqvd8Bb0cLVC4eNdrmRTaXPn3sjcy9wIXCjmp4oOjJ298l
-         YwImrnxAene93jXTIWVWM7v1FnFrZ2XY/VT3blGeG+jT79aoHFGu1p5/clb2w+cMbLX3
-         b093iveq45CviyVp7oOKIxrnO/t3MVXzq44W/IWi77iSIsZ482hjzQKzReXHdOVjv3XL
-         kD+qjvbQVJPQsSEtil8n/WCGrxnO/6kdotX1ZWjp2HJbChf8oPE4thsI9msSAs/bKVER
-         gz8oecwLYYbbG+Li7kB9lUjOPlCnykyn00TgD9mURb3uGkJm+yPXNknQkKxyS1j6Ijdl
-         u1mA==
+        bh=akaAj645pp+5kfB2OMHemKghBJ6xbAKNYnmCPlCSuI4=;
+        b=DJYjoIBYSS2lz1zbBDeTTsMP/zoqEcyAlbRPPhemK424wFYbrYKJ8nOzwJXHGnnrO3
+         xVgD4p5dW2IluzPSraMewfwy7VLOGiKVCJqXoDhOuj8jMgZ9uFV95vgLagUVoSclZUrP
+         Yv/58ap4pjA2xK83ar6XJtiLkw7ZJj5t269M7AZOksbPNAlUw4aFRPSbVFEz0BLnhyHq
+         ah2wRxrr/EB7e+CW9CzyK0IMcpAr6vOkCNG0NVggAASTusAgwhRbVrUgz2+agpr7FOE9
+         SfBUXPOM288pdFyoWOh4ihtvLnURlwfrdksVtHOcyl0PxOaxc5rbCSWywe23opzNF5EH
+         axvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VJTFtlmSJJssMoK2NzaWqKKHmjNJh935ngd0RHoSQ4I=;
-        b=VX3gUIWGUQdlFdSr7LcdWPa9AsU6W5xBrWGRxQd1YVFeq1G2sUZ7BFCrk1vrtLKtzX
-         6XlTCj3AblHLhBafw3NVxlHiKiaprzBCsN30D+ZhqHLfAdPuq7qgbJYCRgAR+u9KLWaH
-         YSX3BCNs5dNmNVSPXubqdNc1GTVwVVDOe4obFugQMU8Z/t0lHOWtGvhREmS/0oXbTmJV
-         u10zAGPTXpi9Z4qQ2+6QB3VJI/XQ/ZTZaFx1KpW4RGq/F9iyexqZnAHwyvBAEDYprF9O
-         1aOOVPe4MJNOJjHGVOJ3C6EOKFmeU2PWR4O2eRFLqjORdxcWq6OlEo9H2mwMLxn8IRh5
-         EX3Q==
-X-Gm-Message-State: AOAM531FES8khhlr3UK4C13ZygfzJOwOU3C757L87ROR0Fu2fmnCsKsS
-        2+nafwZBCOv5/dBtkz8bhANWgA==
-X-Google-Smtp-Source: ABdhPJymLg8gydmo/J1S/z2FvMDOD/E0XTWBEtx2MX9NS1hIZsEuZGaoD+dfeVXI2wMZrmEbLwn25g==
-X-Received: by 2002:a5d:46d0:: with SMTP id g16mr41499262wrs.229.1593112642402;
-        Thu, 25 Jun 2020 12:17:22 -0700 (PDT)
+        bh=akaAj645pp+5kfB2OMHemKghBJ6xbAKNYnmCPlCSuI4=;
+        b=L3PUva8z4L2/4HXkeoLj3JhFOicfwohkK8S3mr3SwiFvLOpvicX/AFkctODcy3cNrj
+         EKSP39OxpYqon0+7++MK/l4mu1B/r9byd7X9pTs+REv14Q331+wTsTz+9DFxPxyVcBaU
+         4zEhTDsQNnxyqmwH509Kj97nNSswAnFOWi0X9WAnfdBDHYaXy6m3rAzgISOxIa2Kjuvi
+         qr/nC7QgLg10/jysp6L1hA72pvIaYoEeTWBogM742SRbr+NoVpk4pXkyCxOqNQecxJc1
+         6WSBieZX9otOGCAUdUYvnoZlplQKGd555uVDR7llw4kIDIIRMzrUo0j+q3EBpk3Gr3Tj
+         EA3w==
+X-Gm-Message-State: AOAM533myA2VNuZzI8/MJaMhxvx+bFN11/IyQTXLwIPzeNs69WyU7QOJ
+        3I1PJI3DhudX4Qv4MVP2xD6iUw==
+X-Google-Smtp-Source: ABdhPJxxuE2UVuaT+d/IHqyXzR0hzE7J39cB8NHtnMbnpwgisQf2e9In0WZInXBmGfRGOzs1i6h3QA==
+X-Received: by 2002:a05:600c:2108:: with SMTP id u8mr5436244wml.189.1593112643364;
+        Thu, 25 Jun 2020 12:17:23 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.21
+        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 12:17:21 -0700 (PDT)
+        Thu, 25 Jun 2020 12:17:22 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lgirdwood@gmail.com, broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Tony Lindgren <tony@atomide.com>
-Subject: [RESEND 07/10] regulator: cpcap-regulator: Remove declared and set, but never used variable 'ignore'
-Date:   Thu, 25 Jun 2020 20:17:05 +0100
-Message-Id: <20200625191708.4014533-8-lee.jones@linaro.org>
+Subject: [RESEND 08/10] regulator: cpcap-regulator: Demote kerneldoc header to standard comment
+Date:   Thu, 25 Jun 2020 20:17:06 +0100
+Message-Id: <20200625191708.4014533-9-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625191708.4014533-1-lee.jones@linaro.org>
 References: <20200625191708.4014533-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's okay to not check the return value that you're not conserned
-about, however it is not okay to assign a variable and not check or
-use the result.
+Nothing about this comment identifies it as a kerneldoc header.
+They're missing all of their struct's property descriptions and
+the correct 'struct *' header.
 
-Fixes W=1 warnings(s):
+Fixes the following W=1 warning(s):
 
- drivers/regulator/cpcap-regulator.c:172:13: warning: variable ‘ignore’ set but not used [-Wunused-but-set-variable]
- 172 | int error, ignore;
- | ^~~~~~
- drivers/regulator/cpcap-regulator.c: In function ‘cpcap_regulator_disable’:
- drivers/regulator/cpcap-regulator.c:196:13: warning: variable ‘ignore’ set but not used [-Wunused-but-set-variable]
- 196 | int error, ignore;
- | ^~~~~~
+ drivers/regulator/cpcap-regulator.c:99: warning: cannot understand function prototype: 'struct cpcap_regulator '
+ drivers/regulator/cpcap-regulator.c:337: warning: cannot understand function prototype: 'const struct cpcap_regulator omap4_regulators[] = '
 
 Cc: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/regulator/cpcap-regulator.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/regulator/cpcap-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/regulator/cpcap-regulator.c b/drivers/regulator/cpcap-regulator.c
-index f80781d58a282..fbf823b830308 100644
+index fbf823b830308..221e8db358c9e 100644
 --- a/drivers/regulator/cpcap-regulator.c
 +++ b/drivers/regulator/cpcap-regulator.c
-@@ -169,7 +169,7 @@ enum cpcap_regulator_id {
- static int cpcap_regulator_enable(struct regulator_dev *rdev)
- {
- 	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
--	int error, ignore;
-+	int error;
+@@ -89,7 +89,7 @@
+  */
+ #define CPCAP_REG_OFF_MODE_SEC		BIT(15)
  
- 	error = regulator_enable_regmap(rdev);
- 	if (error)
-@@ -180,7 +180,7 @@ static int cpcap_regulator_enable(struct regulator_dev *rdev)
- 					   regulator->assign_mask,
- 					   regulator->assign_mask);
- 		if (error)
--			ignore = regulator_disable_regmap(rdev);
-+			regulator_disable_regmap(rdev);
- 	}
+-/**
++/*
+  * SoC specific configuration for CPCAP regulator. There are at least three
+  * different SoCs each with their own parameters: omap3, omap4 and tegra2.
+  *
+@@ -325,7 +325,7 @@ static const unsigned int vvib_val_tbl[] = { 1300000, 1800000, 2000000,
+ static const unsigned int vusb_val_tbl[] = { 0, 3300000, };
+ static const unsigned int vaudio_val_tbl[] = { 0, 2775000, };
  
- 	return error;
-@@ -193,7 +193,7 @@ static int cpcap_regulator_enable(struct regulator_dev *rdev)
- static int cpcap_regulator_disable(struct regulator_dev *rdev)
- {
- 	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
--	int error, ignore;
-+	int error;
- 
- 	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
- 		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
-@@ -204,9 +204,9 @@ static int cpcap_regulator_disable(struct regulator_dev *rdev)
- 
- 	error = regulator_disable_regmap(rdev);
- 	if (error && (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC)) {
--		ignore = regmap_update_bits(rdev->regmap, regulator->assign_reg,
--					    regulator->assign_mask,
--					    regulator->assign_mask);
-+		regmap_update_bits(rdev->regmap, regulator->assign_reg,
-+				   regulator->assign_mask,
-+				   regulator->assign_mask);
- 	}
- 
- 	return error;
+-/**
++/*
+  * SoC specific configuration for omap4. The data below is comes from Motorola
+  * Linux kernel tree. It's basically the values of cpcap_regltr_data,
+  * cpcap_regulator_mode_values and cpcap_regulator_off_mode_values, see
 -- 
 2.25.1
 
