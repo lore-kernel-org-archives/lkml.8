@@ -2,96 +2,195 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F537C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E072082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593073635;
-	bh=GncOVRnsRbmrObVuGed/d33M2KDkzxTcEILATAJbLBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KPvIUW5Xb9wCnEKMp2Q72gqwkzXj+AFFx22O+XiWItg8KcqU28ixf0E2S7eGyPrSj
-	 wpgXMnQi0zjplBo0ui/FcDYcrHqrjYl7ZoMzzS0uk5jT43wBrOl+nANXb0J3yKzAQJ
-	 5VDahyWGcWhtBSoeMqE+ByRKTSAzbGsqTItfvkXA=
+	by mail.kernel.org (Postfix) with ESMTP id 4298B207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390652AbgFYI1O (ORCPT
+        id S2390621AbgFYI2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
+        Thu, 25 Jun 2020 04:28:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41260 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389747AbgFYI1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:27:12 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC6FB207E8;
-        Thu, 25 Jun 2020 08:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593073632;
-        bh=GncOVRnsRbmrObVuGed/d33M2KDkzxTcEILATAJbLBA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KLWf/lD9VcylMACtq8p1wJiRL0bWr2kYSku0VKCkfSWkCAqHKhXHxHOSwvWTS7j3l
-         w9u9NiMdpF5uccefpWlPwAM4Q9i0V+Qe7aZAsJdNvHebMPPRWYp9leOEenbVEgwE27
-         4Y8WoUS9Iu/d8VHbgPuJp11WLopn88ZGoDVDvOts=
-Date:   Thu, 25 Jun 2020 09:27:06 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
+        id S2389298AbgFYI2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:28:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 16114ACF1;
+        Thu, 25 Jun 2020 08:28:39 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 10:28:38 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200625082706.GA7584@willie-the-truck>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624211540.GS4817@hirez.programming.kicks-ass.net>
- <20200624213014.GB26253@google.com>
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: buffer allocation: was: [PATCH v3 3/3] printk: use the lockless
+ ringbuffer
+Message-ID: <20200625082838.GF6156@alley>
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624213014.GB26253@google.com>
+In-Reply-To: <20200618144919.9806-4-john.ogness@linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 02:30:14PM -0700, Sami Tolvanen wrote:
-> On Wed, Jun 24, 2020 at 11:15:40PM +0200, Peter Zijlstra wrote:
-> > On Wed, Jun 24, 2020 at 01:31:38PM -0700, Sami Tolvanen wrote:
-> > > This patch series adds support for building x86_64 and arm64 kernels
-> > > with Clang's Link Time Optimization (LTO).
-> > > 
-> > > In addition to performance, the primary motivation for LTO is to allow
-> > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
-> > > Pixel devices have shipped with LTO+CFI kernels since 2018.
-> > > 
-> > > Most of the patches are build system changes for handling LLVM bitcode,
-> > > which Clang produces with LTO instead of ELF object files, postponing
-> > > ELF processing until a later stage, and ensuring initcall ordering.
-> > > 
-> > > Note that first objtool patch in the series is already in linux-next,
-> > > but as it's needed with LTO, I'm including it also here to make testing
-> > > easier.
-> > 
-> > I'm very sad that yet again, memory ordering isn't addressed. LTO vastly
-> > increases the range of the optimizer to wreck things.
-> 
-> I believe Will has some thoughts about this, and patches, but I'll let
-> him talk about it.
+On Thu 2020-06-18 16:55:19, John Ogness wrote:
+> Replace the existing ringbuffer usage and implementation with
+> lockless ringbuffer usage. Even though the new ringbuffer does not
+> require locking, all existing locking is left in place. Therefore,
+> this change is purely replacing the underlining ringbuffer.
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -1176,11 +1068,46 @@ static void __init set_percpu_data_ready(void)
+>  	__printk_percpu_data_ready = true;
+>  }
+>  
+> +static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
+> +				     struct printk_record *r)
+> +{
+> +	struct prb_reserved_entry e;
+> +	struct printk_record dest_r;
+> +
+> +	prb_rec_init_wr(&dest_r, r->info->text_len, r->info->dict_len);
+> +
+> +	if (!prb_reserve(&e, rb, &dest_r))
+> +		return 0;
+> +
+> +	memcpy(&dest_r.text_buf[0], &r->text_buf[0], dest_r.text_buf_size);
+> +	if (dest_r.dict_buf) {
+> +		memcpy(&dest_r.dict_buf[0], &r->dict_buf[0],
+> +		       dest_r.dict_buf_size);
+> +	}
+> +	dest_r.info->facility = r->info->facility;
+> +	dest_r.info->level = r->info->level;
+> +	dest_r.info->flags = r->info->flags;
+> +	dest_r.info->ts_nsec = r->info->ts_nsec;
+> +	dest_r.info->caller_id = r->info->caller_id;
+> +
+> +	prb_commit(&e);
+> +
+> +	return prb_record_text_space(&e);
+> +}
+> +
+> +static char setup_text_buf[CONSOLE_EXT_LOG_MAX] __initdata;
+> +static char setup_dict_buf[CONSOLE_EXT_LOG_MAX] __initdata;
+> +
+>  void __init setup_log_buf(int early)
+>  {
+> +	struct prb_desc *new_descs;
+> +	struct printk_info info;
+> +	struct printk_record r;
+>  	unsigned long flags;
+> +	char *new_dict_buf;
+>  	char *new_log_buf;
+>  	unsigned int free;
+> +	u64 seq;
+>  
+>  	/*
+>  	 * Some archs call setup_log_buf() multiple times - first is very
+> @@ -1201,17 +1128,50 @@ void __init setup_log_buf(int early)
+>  
+>  	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
+>  	if (unlikely(!new_log_buf)) {
+> -		pr_err("log_buf_len: %lu bytes not available\n",
+> +		pr_err("log_buf_len: %lu text bytes not available\n",
+>  			new_log_buf_len);
+>  		return;
+>  	}
+>  
+> +	new_dict_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
+> +	if (unlikely(!new_dict_buf)) {
+> +		/* dictionary failure is allowed */
+> +		pr_err("log_buf_len: %lu dict bytes not available\n",
+> +			new_log_buf_len);
+> +	}
+> +
+> +	new_descs = memblock_alloc((new_log_buf_len >> PRB_AVGBITS) *
+> +				   sizeof(struct prb_desc), LOG_ALIGN);
+> +	if (unlikely(!new_descs)) {
+> +		pr_err("log_buf_len: %lu desc bytes not available\n",
+> +			new_log_buf_len >> PRB_AVGBITS);
+> +		if (new_dict_buf)
+> +			memblock_free(__pa(new_dict_buf), new_log_buf_len);
+> +		memblock_free(__pa(new_log_buf), new_log_buf_len);
+> +		return;
+> +	}
+> +
+> +	prb_rec_init_rd(&r, &info,
+> +			&setup_text_buf[0], sizeof(setup_text_buf),
+> +			&setup_dict_buf[0], sizeof(setup_dict_buf));
+> +
+>  	logbuf_lock_irqsave(flags);
+> +
+> +	prb_init(&printk_rb_dynamic,
+> +		 new_log_buf, bits_per(new_log_buf_len) - 1,
+> +		 new_dict_buf, bits_per(new_log_buf_len) - 1,
 
-Thanks for reminding me! I will get patches out ASAP (I've been avoiding the
-rebase from hell, but this is the motivation I need).
+This does not check whether new_dict_buf was really allocated.
 
-Will
+We should reuse the static one when it was not allocated. But it might
+become tricky. We would need to preserve the sequence
+numbers of each copied messages and do not copy the dictionary.
+
+I suggest to make it easy and switch to the new buffers only when
+all three could get allocated.
+
+Well, we still should try to preserve the sequence numbers. For this,
+we might need to allow storing empty messages instead of the lost ones.
+
+
+> +		 new_descs, (bits_per(new_log_buf_len) - 1) - PRB_AVGBITS);
+
+This is likely safe because new_log_buf_len is assigned only when it is
+greater than the previous one. As a result bits_per(new_log_buf_len)
+- 1) should be greater than PRB_AVGBITS.
+
+Well, I still feel a bit uneasy about these PRB_AVGBITS operations,
+including new_log_buf_len >> PRB_AVGBITS used above.
+
+A more safe design would be to add some sanity checks at the beginning of
+the function. And maybe convert new_log_buf_let to number of bits.
+Then operate with the number of bits in the rest of the function.
+It might be easier to make sure that we are on the safe side.
+
+
+>  	log_buf_len = new_log_buf_len;
+>  	log_buf = new_log_buf;
+>  	new_log_buf_len = 0;
+> -	free = __LOG_BUF_LEN - log_next_idx;
+> -	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
+> +
+> +	free = __LOG_BUF_LEN;
+> +	prb_for_each_record(0, &printk_rb_static, seq, &r)
+> +		free -= add_to_rb(&printk_rb_dynamic, &r);
+> +
+> +	prb = &printk_rb_dynamic;
+
+This might deserve a comment that this is safe (no lost message)
+because it is called early enough when everything is still running
+on the boot CPU.
+
+> +
+>  	logbuf_unlock_irqrestore(flags);
+>  
+>  	pr_info("log_buf_len: %u bytes\n", log_buf_len);
+
+Best Regards,
+Petr
