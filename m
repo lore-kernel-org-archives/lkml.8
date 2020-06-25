@@ -7,114 +7,120 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC46C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7239CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEEB72065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC6B2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dCAo2lhM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ChFks/XE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406560AbgFYTR2 (ORCPT
+        id S2391050AbgFYTRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
+        Thu, 25 Jun 2020 15:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390775AbgFYTRW (ORCPT
+        with ESMTP id S2406523AbgFYTRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:17:22 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346D6C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b6so7010901wrs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:22 -0700 (PDT)
+        Thu, 25 Jun 2020 15:17:20 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BADFC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:19 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q15so6637139wmj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dtxyN/1kKIF9/7TTE8iRG6sUFtmO+Fu1upUgVSih01U=;
-        b=dCAo2lhMHJ6NdZfByQXxyz/SilOR/HaQ4pU6fAkuElnZt1kyUUuWW2txb7RP5Sx71d
-         vPyJ+232KysYhAHj/oXvRQFfipE38M//axfZd6N7wNBzZdRFiaw9PpV3gjYTBOGqQdp6
-         SSsdT9motcSOSYnmISrrkVk0qXEmHXBKgrfMwAVaqtoY9k8PFSuHp8pto4xyc/j7leAY
-         g9vwZCZYX59BKX4NPsZnzEx59VQoikmfepvWXsMfBFzu23yrwxoKS1CtX2yupeJ5l2Ve
-         ejZGLPZr2e0cQAavi37yJcRawSGCUMqTMugvD+tmKqh99xDzcLd7njI7mCs1IcuzRREO
-         TgFA==
+        bh=+r7WAzJKscpz2A7LfanwlEQFW/6BOounTqgY0FCqgHk=;
+        b=ChFks/XEc7bzV0CTcMWfhB7IgCRQxU/ix22NfRn6vDTUiSMVowVLaUl6yu7QMlcVVZ
+         HIpJw4xTHVybS62gdWM1VHFFBSK0dTQm5ovklGSePPlvX4kAkJhIkf4FubT+ZkZ9yhij
+         CTVZrQko7ww3J9imShFnpURQHqUoLNB/YAfvXak+Efsy+I07bcLsAD++oVv9gQA5rUe/
+         1Nm5+BIUSvod+52HYDbqpSQKJogjRpztt5k8ZN6oHSxjr2MOUuZLeddwge1f5DpitMgp
+         toasWrca/RulM3TnAxEnjBxB38zyKS1zf5HDbx2hn5aZZWbfKiCM/W50ed83S/NIjsYg
+         8+2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dtxyN/1kKIF9/7TTE8iRG6sUFtmO+Fu1upUgVSih01U=;
-        b=BCZq9kdnCNvC60GAQued61HEJeVxPSIOCltiTYYf+r1ipsZj7C63slmHd/XP5hiBlt
-         LFzA1JAdzXZ1dTWTKlCRy7HGuNqH5PYVAg3cgb9nAVUpnZZDh6YHaJo2sCktmoCAAEU5
-         acGtPUIufKxUsehP6HSN8OTMIx8eWxWV5854dLFqmKjMBRKst/VkNCgpp63+Odr7O+j1
-         eYo8IE9R5LX7l8gpHB5DoI0PUMPSpx6xADFvMNLFSdyeqIoXMmTj8Gla23NeczbVRttD
-         MrJldU+7qmX13YfJmCloMduR+uIXw38yYBWXnGpOkouRfOYDoxAc0hY+E7zjAYoe7xVw
-         /UZQ==
-X-Gm-Message-State: AOAM531erHg0CeutE4WgTFfw5DfRIlRi5spz+Hkw+6CIQMm/jl8rNJGp
-        QbbBdCnZyHkgf25N4bBz49Z1Kw==
-X-Google-Smtp-Source: ABdhPJzCK3QqVbhCKU/8mHFqhgDbsJuNWAuV/wA5EVreGSMHRhwhU/xzif2uG9N7vr5wfQE6elguEw==
-X-Received: by 2002:a5d:630c:: with SMTP id i12mr17386670wru.158.1593112640968;
-        Thu, 25 Jun 2020 12:17:20 -0700 (PDT)
+        bh=+r7WAzJKscpz2A7LfanwlEQFW/6BOounTqgY0FCqgHk=;
+        b=cfcx5urKHm7d+cWPme6ehwnEDpgBwS8x5LN8ofC6Wj2B6R1Utx8Lx0A/a7y0jfTb3x
+         gcdRHDAuwO0ZYv1bI4RY1AKF9Jb2o9jO+Kh9LTWHr+R+B0HzOtlWwSkJCo1YITn6wQr1
+         N4+bLkMmlPk7kQT8AB4xgDolZN2CM7Qm6McNFDskgZRLSqBWV8Gjk/n+hI6Oepqsz573
+         DZRBNjhQBoKX3BarrvkVB2yB1DyyHQvtIHizXAaeeUJqwu8MxQMiTZ5ibS7yBKcsS0rz
+         AD4XkQUUSWhU3mJHp8Eb0D6ZjOnS/4mAP7g9WD1cE/LeKma4DkfyN7Ua1Hvg19TVg54C
+         Lusw==
+X-Gm-Message-State: AOAM531E3uO2dMB4JwObQT/RuZLj34B9S99MaTzSuqg+QRuhua2DQ0u2
+        cNimHuIjLE1+GFhWXSiyPPc9EeOVDu8XvQ==
+X-Google-Smtp-Source: ABdhPJxocm800/ZlJ2PBjWP1tsP9WN64x1zPnFXiyjxHxw49nomSN71rB9+UScUF2TFK7UoUqEPKzw==
+X-Received: by 2002:a7b:c348:: with SMTP id l8mr5484694wmj.54.1593112638103;
+        Thu, 25 Jun 2020 12:17:18 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.20
+        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 12:17:20 -0700 (PDT)
+        Thu, 25 Jun 2020 12:17:17 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lgirdwood@gmail.com, broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>, patches@opensource.cirrus.com
-Subject: [RESEND 06/10] regulator: wm8350-regulator: Repair odd formatting in documentation
-Date:   Thu, 25 Jun 2020 20:17:04 +0100
-Message-Id: <20200625191708.4014533-7-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [RESEND 04/10] regulator: dbx500-prcmu: Remove unused function dbx500_regulator_testcase()
+Date:   Thu, 25 Jun 2020 20:17:02 +0100
+Message-Id: <20200625191708.4014533-5-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625191708.4014533-1-lee.jones@linaro.org>
 References: <20200625191708.4014533-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc expects function arguments to be in the format '@.*:'.  If
-this format is not followed the kerneldoc tooling/parsers/validators
-get confused.
+There isn't any code present within the current kernel to
+override this 'weak' function.  Besides returning '0', which
+is never checked anyway, the whole function appears to be
+superfluous.
 
-Fixes the following W=1 warning(s):
+Consequently fixes W=1 warning:
 
- drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'wm8350' not described in 'wm8350_register_led'
- drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'lednum' not described in 'wm8350_register_led'
- drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'dcdc' not described in 'wm8350_register_led'
- drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'isink' not described in 'wm8350_register_led'
- drivers/regulator/wm8350-regulator.c:1234: warning: Function parameter or member 'pdata' not described in 'wm8350_register_led'
+ drivers/regulator/dbx500-prcmu.c:113:27: warning: no previous prototype for ‘dbx500_regulator_testcase’ [-Wmissing-prototypes]
+ 113 | int __attribute__((weak)) dbx500_regulator_testcase(
+ | ^~~~~~~~~~~~~~~~~~~~~~~~~
 
-Cc: patches@opensource.cirrus.com
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/regulator/wm8350-regulator.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/regulator/dbx500-prcmu.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
-index ae5f0e7fce8bb..2e7bfdf7c87bb 100644
---- a/drivers/regulator/wm8350-regulator.c
-+++ b/drivers/regulator/wm8350-regulator.c
-@@ -1216,11 +1216,11 @@ EXPORT_SYMBOL_GPL(wm8350_register_regulator);
- /**
-  * wm8350_register_led - Register a WM8350 LED output
-  *
-- * @param wm8350 The WM8350 device to configure.
-- * @param lednum LED device index to create.
-- * @param dcdc The DCDC to use for the LED.
-- * @param isink The ISINK to use for the LED.
-- * @param pdata Configuration for the LED.
-+ * @wm8350: The WM8350 device to configure.
-+ * @lednum: LED device index to create.
-+ * @dcdc: The DCDC to use for the LED.
-+ * @isink: The ISINK to use for the LED.
-+ * @pdata: Configuration for the LED.
-  *
-  * The WM8350 supports the use of an ISINK together with a DCDC to
-  * provide a power-efficient LED driver.  This function registers the
+diff --git a/drivers/regulator/dbx500-prcmu.c b/drivers/regulator/dbx500-prcmu.c
+index f604c8db6d0e9..c3ad6aa6b5d37 100644
+--- a/drivers/regulator/dbx500-prcmu.c
++++ b/drivers/regulator/dbx500-prcmu.c
+@@ -110,13 +110,6 @@ static int ux500_regulator_status_show(struct seq_file *s, void *p)
+ }
+ DEFINE_SHOW_ATTRIBUTE(ux500_regulator_status);
+ 
+-int __attribute__((weak)) dbx500_regulator_testcase(
+-	struct dbx500_regulator_info *regulator_info,
+-	int num_regulators)
+-{
+-	return 0;
+-}
+-
+ int
+ ux500_regulator_debug_init(struct platform_device *pdev,
+ 	struct dbx500_regulator_info *regulator_info,
+@@ -152,7 +145,6 @@ ux500_regulator_debug_init(struct platform_device *pdev,
+ 	if (!rdebug.state_after_suspend)
+ 		goto exit_free;
+ 
+-	dbx500_regulator_testcase(regulator_info, num_regulators);
+ 	return 0;
+ 
+ exit_free:
 -- 
 2.25.1
 
