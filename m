@@ -2,127 +2,123 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1368B20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E2320709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QcPIfJT0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XcX3a+0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390953AbgFYJnt (ORCPT
+        id S2403932AbgFYJoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59106 "EHLO
+        Thu, 25 Jun 2020 05:44:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390531AbgFYJnr (ORCPT
+        with ESMTP id S2389894AbgFYJon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:43:47 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70FADC061795
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:43:47 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h15so5125228wrq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:43:47 -0700 (PDT)
+        Thu, 25 Jun 2020 05:44:43 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A54CC061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:44:42 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b4so4667261qkn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MqP8eNt5kwKUBAByimv8vaw/hFZlRD99sPA2Bo3gQ/A=;
-        b=QcPIfJT0OYuMimVCuS3u7waeycKOlpWv1A6SwNnzq88479wkKhcjXVPkab2vluMUX5
-         LeeTArYmmhswzaY/daOOdr5sF6wdkDWQp17nI/brLbmrDDjepmJdul0+lk+0uX1UxvZr
-         buN0EhR1tUvzo4Z/TumMGB9c57ZCJHgulDKYH/BU9AGQURU7Dld75NtJwyyBlsrabgpG
-         dCWzNGGCrFwBPWctYAT6eG9ugrrhh08GlrzsmMrgGshMttLdCvsa3pwMT3xBVjpgSJKH
-         7X+DHAadcNLe9HyuDwmDuQxk9yu4mk1E+zQKjoS76LezdLZc2d5mAutvLXMQ6Dehan0v
-         VqCA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1GMTwLCToGzRyMGTUAq/URVrCLuwQVDwo9wF5IivAvI=;
+        b=XcX3a+0PMppzVzbIfVrB5X25sL/w2Riiq2f5PjW7W7l8yVcXDPLGOLDhFdyYmHVSMd
+         JBII7/BrDlpkYvLYAFuEzG+aw8It6bXyxCrPKRNGRNQnnLQKVtbo+vcPTyaph0tu5wsC
+         GOAmXyHNNjHlX2n44tFzHImcHsI59BB3vnPo+YBU9kaJ0OPh1ESxOmTmI4cd35+Nm2x1
+         erynJMG0dwPGER2r8tcU3ySJXV7tVRGE00i5lgWpMoGY2soi/kzEFCqDyjQy93dYm0IX
+         UPUAF20SFY0F1W0SPPUKeZr++gMKmCpUkQ4MATwjBlWW8FwnF0EH3cVAtX9jWANEKCxD
+         X48w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MqP8eNt5kwKUBAByimv8vaw/hFZlRD99sPA2Bo3gQ/A=;
-        b=MmkLUbt5EL2LusVCwMay9/GIy8IF0eKazP7SYMShzCAeoMZR117KxDCaaQskB6DuVi
-         VlmVjVPHcUlvBo/aqeQ3kcz7a9mt54IKzIrb7N3st52Vvh6/QQAUhXZ6iciVc/LtEHmL
-         81fJKzIyoQYbn4EEKzosDEM3xXOmUvT+gimBiyki/fCJ/+ZdMpgVa3JNo1NWFMf7EOMT
-         EgTD3WVi6kh2IMk44H5I7x0jyB6BerkQ+DlLyiuCmtHCXhGhF9k6osJh/HWH7YTI521n
-         4Ts/yfExVCifkTNKqzyuust0t1pD/2C1tYJcxziCiK4YFKpWkoMYbEiti0EqoUn56K+y
-         yuwA==
-X-Gm-Message-State: AOAM5312XhAL36HnmP/egBhOIXIUNZ/l+li5juFWzls8RClcEPqy2JlR
-        sB7fjd++4qQ+ICOxkOFKj5KvfA==
-X-Google-Smtp-Source: ABdhPJxi4S3Sc2l8ebR+2X/0lvGbwaCCrXXH0BrvjqecfUvwyNjsH13vgYRHtDkjWkf3uBbECp8RmQ==
-X-Received: by 2002:a5d:4845:: with SMTP id n5mr19419236wrs.353.1593078226184;
-        Thu, 25 Jun 2020 02:43:46 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id f13sm10976485wmb.33.2020.06.25.02.43.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 02:43:45 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 10:43:43 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     jingoohan1@gmail.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jamey Hicks <jamey.hicks@hp.com>,
-        Andrew Zabolotny <zap@homelink.ru>
-Subject: Re: [PATCH 6/8] backlight: backlight: Supply description for
- function args in existing Kerneldocs
-Message-ID: <20200625094343.koh2ln4fy6v6h7mo@holly.lan>
-References: <20200624145721.2590327-1-lee.jones@linaro.org>
- <20200624145721.2590327-7-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1GMTwLCToGzRyMGTUAq/URVrCLuwQVDwo9wF5IivAvI=;
+        b=ULWhPqNd0Ho7MYVWuXm5ZsOh1mvczlPTkYcBcfZwMG1RfCaAxdndAm74wLwtao7Ru8
+         0UVTZ2pmtcj+YZ1FBRJdqbqNnwElgAynhv2bFSPIH8vQV9P2q+sA6e07Xr7/2NlYYfxe
+         WmB0G2hAEkK3XGcN3RBhNlr4xXd4IedjCgHtJoEVkVYWKz71wqVeWn0cMYr3a138J6Mo
+         ZPDniZy64l6+ZnVdqzz6E1cBr0YG/5dzCwISys6mgHUaK9xBQlZr1srY2shx0lGJF6qa
+         aZAeenmb/rNUuUxXL8jDLSm7UtCB+/RH1dV1QtmSUadte1S5UJM1EyVqJng4VBXE98dH
+         RW1w==
+X-Gm-Message-State: AOAM532L+e+3v0v22E2RanNLOlg/Ou+lgC0DaW2EiPbo08IRbgHBpDS2
+        Z8GshuW4Rij5O6w3fOtbrgmWBfdfn61Xrgv+AhPAjw==
+X-Google-Smtp-Source: ABdhPJzAwW60txtzFlDEDE6uwmXZYkZkRAJbcV8CmEn67kg7LXc6pMf9VoVqFmP2GrezH2Ir+okYKI3dDZH4j8OOW70=
+X-Received: by 2002:a37:aac4:: with SMTP id t187mr26574253qke.263.1593078281485;
+ Thu, 25 Jun 2020 02:44:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624145721.2590327-7-lee.jones@linaro.org>
+References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-9-warthog618@gmail.com>
+ <CAMpxmJVbiH9mh2c8aAS+GG9a76w9c0Nrrv-VDVhpo+wSyQ2NeQ@mail.gmail.com> <20200624140806.GA7569@sol>
+In-Reply-To: <20200624140806.GA7569@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 25 Jun 2020 11:44:30 +0200
+Message-ID: <CAMpxmJXbzFvR9h4fXvCwDMz4t6N16o2Y88K94aPwu6MFuCzqrg@mail.gmail.com>
+Subject: Re: [PATCH 08/22] gpiolib: cdev: complete the irq/thread timestamp handshake
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:57:19PM +0100, Lee Jones wrote:
-> Kerneldoc syntax is used, but not complete.  Descriptions required.
-> 
-> Prevents warnings like:
-> 
->  drivers/video/backlight/backlight.c:329: warning: Function parameter or member 'reason' not described in 'backlight_force_update'
->  drivers/video/backlight/backlight.c:354: warning: Function parameter or member 'props' not described in 'backlight_device_register'
-> 
-> Cc: <stable@vger.kernel.org>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: Jamey Hicks <jamey.hicks@hp.com>
-> Cc: Andrew Zabolotny <zap@homelink.ru>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Wed, Jun 24, 2020 at 4:08 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Wed, Jun 24, 2020 at 04:00:42PM +0200, Bartosz Golaszewski wrote:
+> > wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+> > >
+> > > Reset the timestamp field to 0 after using it in lineevent_irq_thread=
+.
+> > >
+> > > The timestamp is set by lineevent_irq_handler and is tested by
+> > > lineevent_irq_thread to determine if it is called from a nested thead=
+ed
+> > > interrupt.
+> > > lineevent_irq_thread is assuming that the nested, or otherwise, statu=
+s
+> > > of the IRQ is static, i.e. it is either always nested or never nested=
+.
+> > > This change removes that assumption, resetting the timestamp so it ca=
+n
+> > > be re-used to determine the nested state of subsequent interrupts.
+> > >
+> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > >
+> >
+> > This change makes sense to me but I'm having a hard time processing
+> > the explanation. If we're requesting the interrupt and allocating the
+> > lineevent state in the same function - how can we run into a situation
+> > here the status of the irq would change like what you describe?
+> >
+>
+> I'm not totally sure myself, as my understanding of how interrupts are
+> shared in the kernel is pretty sketchy, but my concern is that if we
+> are sharing the irq then whoever we are sharing with may release the irq
+> and we go from nested to unnested.  Or vice versa.  Not sure if that is
+> valid, but that was my concern, and it seemed like a minor change to
+> cover it just in case.
+>
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+It's my understanding that a shared interrupt must be explicitly
+requested as shared by all previous users or request_irq() will fail.
+In this case: we call request_threaded_irq() without the IRQF_SHARED
+flag so it's never a shared interrupt. Even if someone previously
+requested it as shared - our call will simply fail.
 
+I still think that resetting the timestamp is fine because it's not
+being set to 0 in hardirq context. We just need a different
+explanation.
 
-> ---
->  drivers/video/backlight/backlight.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-> index 92d80aa0c0ef1..744ba58488e01 100644
-> --- a/drivers/video/backlight/backlight.c
-> +++ b/drivers/video/backlight/backlight.c
-> @@ -320,6 +320,7 @@ ATTRIBUTE_GROUPS(bl_device);
->   * backlight_force_update - tell the backlight subsystem that hardware state
->   *   has changed
->   * @bd: the backlight device to update
-> + * @reason: reason for update
->   *
->   * Updates the internal state of the backlight in response to a hardware event,
->   * and generate a uevent to notify userspace
-> @@ -344,6 +345,7 @@ EXPORT_SYMBOL(backlight_force_update);
->   * @devdata: an optional pointer to be stored for private driver use. The
->   *   methods may retrieve it by using bl_get_data(bd).
->   * @ops: the backlight operations structure.
-> + * @props: pointer to backlight's properties structure.
->   *
->   * Creates and registers new backlight device. Returns either an
->   * ERR_PTR() or a pointer to the newly allocated device.
-> -- 
-> 2.25.1
-> 
+Bart
