@@ -2,136 +2,193 @@ Return-Path: <SRS0=rtH4=AH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B50C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24236C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C37206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J5yt0phj"
+	by mail.kernel.org (Postfix) with ESMTP id 0A1DF2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgFZAFd (ORCPT
+        id S1725959AbgFZAGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:05:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56115 "EHLO ozlabs.org"
+        Thu, 25 Jun 2020 20:06:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:52828 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbgFZAFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:05:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49tHG21Khhz9sQt;
-        Fri, 26 Jun 2020 10:05:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593129931;
-        bh=1/NpNWSRYiuRWHY1OaZc1T1Yqf2ZVowm/dB1HXxkKjc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=J5yt0phjrDQhLtXHDFTgmRLJ1RWOhMw2rjH8Ggtn5bNqEx+omYjBKxFKNUzq/Ksp8
-         xZQV4Qu9j+lc4IrmrjVidJv3E+z/RpSLooEDoKKMKdpxJWlKhx04wJoIjXss7Ilfig
-         flA0X7KUabWPehZjAWB49ClBXi65maql1Tlr8BEO5MRNQbCThrj6uaKRe4qCll5XCD
-         DNbC4J2RAhVsB7yxA+dbNrQzdtmGp6KwuBLbGdVpyKpCtNagGBMVdup5JLBkctQsVC
-         +NOZkM5Rht2Wr+3CAhO4yNgSWhUjx6lWma+oOCyiBIM7LI8Aj9GXZaJXTWgC832xdI
-         SbjailGCKR3Nw==
-Date:   Fri, 26 Jun 2020 10:05:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>
-Subject: linux-next: manual merge of the bpf-next tree with the bpf tree
-Message-ID: <20200626100527.4dad8695@canb.auug.org.au>
+        id S1725601AbgFZAGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:06:36 -0400
+IronPort-SDR: z4VGufpsHOg/6ZzWUZP9j5a+uHohL6XRpOsI8ftKQWZMuW+tgy32rna3A+sk/lb2DfwQD1D7Ls
+ RsmuDrD3aDCA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="144216399"
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="144216399"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:06:35 -0700
+IronPort-SDR: 3wEKX7poML61AVWa+R+QN3AbCCN3ihex4zKTmDuNHj5B3vsCoTAED3TxENjIyDNEatnBfPBoi3
+ bJ/6VkAgtipw==
+X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
+   d="scan'208";a="453192731"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:06:35 -0700
+Subject: [PATCH 00/12] ACPI/NVDIMM: Runtime Firmware Activation
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 25 Jun 2020 16:50:20 -0700
+Message-ID: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/WG=8.S1mSbgElhtsPHXXGa2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/WG=8.S1mSbgElhtsPHXXGa2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Quoting the documentation:
 
-Hi all,
+    Some persistent memory devices run a firmware locally on the device /
+    "DIMM" to perform tasks like media management, capacity provisioning,
+    and health monitoring. The process of updating that firmware typically
+    involves a reboot because it has implications for in-flight memory
+    transactions. However, reboots are disruptive and at least the Intel
+    persistent memory platform implementation, described by the Intel ACPI
+    DSM specification [1], has added support for activating firmware at
+    runtime.
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+    [1]: https://docs.pmem.io/persistent-memory/
 
-  tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
+The approach taken is to abstract the Intel platform specific mechanism
+behind a libnvdimm-generic sysfs interface. The interface could support
+runtime-firmware-activation on another architecture without need to
+change userspace tooling.
 
-between commits:
+The ACPI NFIT implementation involves a set of device-specific-methods
+(DSMs) to 'arm' individual devices for activation and bus-level
+'trigger' method to execute the activation. Informational / enumeration
+methods are also provided at the bus and device level.
 
-  9c82a63cf370 ("libbpf: Fix CO-RE relocs against .text section")
-  647b502e3d54 ("selftests/bpf: Refactor some net macros to bpf_tracing_net=
-.h")
+One complicating aspect of the memory device firmware activation is that
+the memory controller may need to be quiesced, no memory cycles, during
+the activation. While the platform has mechanisms to support holding off
+in-flight DMA during the activation, the device response to that delay
+is potentially undefined. The platform may reject a runtime firmware
+update if, for example a PCI-E device does not support its completion
+timeout value being increased to meet the activation time. Outside of
+device timeouts the quiesce period may also violate application
+timeouts.
 
-from the bpf tree and commit:
+Given the above device and application timeout considerations the
+implementation defaults to hooking into the suspend path to trigger the
+activation, i.e. that a suspend-resume cycle (at least up to the syscore
+suspend point) is required. That default policy ensures that the system
+is in a quiescent state before ceasing memory controller responses for
+the activate. However, if desired, runtime activation without suspend
+can be forced as an override.
 
-  84544f5637ff ("selftests/bpf: Move newer bpf_iter_* type redefining to a =
-new header file")
+The ndctl utility grows the following extensions / commands to drive
+this mechanism:
 
-from the bpf-next tree.
+1/ The existing update-firmware command will 'arm' devices where the
+   firmware image is staged by default.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+    ndctl update-firmware all -f firmware_image.bin
 
---=20
-Cheers,
-Stephen Rothwell
+2/ The existing ability to enumerate firmware-update capabilities now
+   includes firmware activate capabilities at the 'bus' and 'dimm/device'
+   level:
 
-diff --cc tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
-index 75ecf956a2df,cec82a419800..000000000000
---- a/tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
-+++ b/tools/testing/selftests/bpf/progs/bpf_iter_netlink.c
-@@@ -11,21 -7,7 +7,7 @@@
- =20
-  char _license[] SEC("license") =3D "GPL";
- =20
-- #define sk_rmem_alloc	sk_backlog.rmem_alloc
-- #define sk_refcnt	__sk_common.skc_refcnt
--=20
-- struct bpf_iter_meta {
-- 	struct seq_file *seq;
-- 	__u64 session_id;
-- 	__u64 seq_num;
-- } __attribute__((preserve_access_index));
--=20
-- struct bpf_iter__netlink {
-- 	struct bpf_iter_meta *meta;
-- 	struct netlink_sock *sk;
-- } __attribute__((preserve_access_index));
--=20
- -static inline struct inode *SOCK_INODE(struct socket *socket)
- +static __attribute__((noinline)) struct inode *SOCK_INODE(struct socket *=
-socket)
-  {
-  	return &container_of(socket, struct socket_alloc, socket)->vfs_inode;
-  }
+    ndctl list -BDF -b nfit_test.0
+    [
+      {
+        "provider":"nfit_test.0",
+        "dev":"ndbus2",
+        "scrub_state":"idle",
+        "firmware":{
+          "activate_method":"suspend",
+          "activate_state":"idle"
+        },
+        "dimms":[
+          {
+            "dev":"nmem1",
+            "id":"cdab-0a-07e0-ffffffff",
+            "handle":0,
+            "phys_id":0,
+            "security":"disabled",
+            "firmware":{
+              "current_version":0,
+              "can_update":true
+            }
+          },
+    ...
 
---Sig_/WG=8.S1mSbgElhtsPHXXGa2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+3/ When the system can support activation without quiesce, or when the
+   suspend-resume requirement is going to be suppressed, the new
+   activate-firmware command wraps that functionality:
 
------BEGIN PGP SIGNATURE-----
+    ndctl activate-firmware nfit_test.0 --force
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl71O8cACgkQAVBC80lX
-0GzFHgf9GX71ZbtDGNbranQUQJZc/0K9s1lhhuoezD/QXpocFtHTWi9car8A5AjJ
-nJaRR1B4SkzrRnca/dOsxzhMEGhK9hvkipIR9mxKARGcE5Zd8Pa6ng1pxHasiJSp
-kAAbg3UcCfZ0wwbWskSROHvc7UHHXnIeL20hLy92Dl+9YqaivpElhEnb3UO7KUTi
-mhAa3tss/aW4mXWe+u88S0Capv/No9OCP2kLlvADq2GVidpO74vzBE6lTcHMnVJ+
-BFokVFwIL5k3f1oeu4KQayqnynj8y9kkA+4ZeJ/ELW14oLeH5KT1+RFA54jfK2Ey
-C/5QO/iVPc99U2hgssUA6MzRbCYWog==
-=LMGA
------END PGP SIGNATURE-----
+One major open question for review is how users can trigger
+firmware-activation via suspend without doing a full trip through the
+BIOS. The activation currently requires CONFIG_PM_DEBUG to enable that
+flow. This seems an awkward dependency for something that is expected to
+be a production capability.
 
---Sig_/WG=8.S1mSbgElhtsPHXXGa2--
+---
+
+Dan Williams (12):
+      libnvdimm: Validate command family indices
+      ACPI: NFIT: Move bus_dsm_mask out of generic nvdimm_bus_descriptor
+      ACPI: NFIT: Define runtime firmware activation commands
+      tools/testing/nvdimm: Cleanup dimm index passing
+      tools/testing/nvdimm: Add command debug messages
+      tools/testing/nvdimm: Prepare nfit_ctl_test() for ND_CMD_CALL emulation
+      tools/testing/nvdimm: Emulate firmware activation commands
+      driver-core: Introduce DEVICE_ATTR_ADMIN_{RO,RW}
+      libnvdimm: Convert to DEVICE_ATTR_ADMIN_RO()
+      libnvdimm: Add runtime firmware activation sysfs interface
+      PM, libnvdimm: Add syscore_quiesced() callback for firmware activation
+      ACPI: NFIT: Add runtime firmware activate support
+
+
+ Documentation/ABI/testing/sysfs-bus-nfit           |   35 ++
+ Documentation/ABI/testing/sysfs-bus-nvdimm         |    2 
+ .../driver-api/nvdimm/firmware-activate.rst        |   74 +++
+ drivers/acpi/nfit/core.c                           |  146 +++++--
+ drivers/acpi/nfit/intel.c                          |  426 ++++++++++++++++++++
+ drivers/acpi/nfit/intel.h                          |   61 +++
+ drivers/acpi/nfit/nfit.h                           |   39 ++
+ drivers/base/syscore.c                             |   18 +
+ drivers/nvdimm/bus.c                               |   46 ++
+ drivers/nvdimm/core.c                              |  103 +++++
+ drivers/nvdimm/dimm_devs.c                         |   99 +++++
+ drivers/nvdimm/namespace_devs.c                    |    2 
+ drivers/nvdimm/nd-core.h                           |    1 
+ drivers/nvdimm/pfn_devs.c                          |    2 
+ drivers/nvdimm/region_devs.c                       |    2 
+ include/linux/device.h                             |    4 
+ include/linux/libnvdimm.h                          |   53 ++
+ include/linux/syscore_ops.h                        |    2 
+ include/linux/sysfs.h                              |    7 
+ include/uapi/linux/ndctl.h                         |    5 
+ kernel/power/suspend.c                             |    2 
+ tools/testing/nvdimm/test/nfit.c                   |  367 ++++++++++++++---
+ 22 files changed, 1382 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-nvdimm
+ create mode 100644 Documentation/driver-api/nvdimm/firmware-activate.rst
+
+base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
