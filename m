@@ -2,152 +2,169 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB6020709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6374C20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407278AbgFYViI (ORCPT
+        id S2407288AbgFYViP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:38:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63425 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403961AbgFYViI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:38:08 -0400
-IronPort-SDR: nJnPDYKoE3ua7Jm2b9sjU8+nkVQNSnC6gPeB3yzmjP1oQKdLwVnOmGiL+z45D4yzgaHSJeP/g6
- Xpg5rX0r7Vjg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229823169"
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="229823169"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:38:07 -0700
-IronPort-SDR: 0o4IOhTtRnbIFnZPVDgSG6xqIFfkdJFQxupGt9xeh8X+/fJNrIcH8hUWcYqI8d7ew0HXFk5ytD
- MDfVRAJ6Yf/w==
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="453153185"
-Received: from clittle-mobl1.amr.corp.intel.com (HELO [10.255.1.144]) ([10.255.1.144])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:37:57 -0700
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace (patch
- v2)
-To:     Borislav Petkov <bp@alien8.de>,
-        Daniel Gutson <daniel@eclypsium.com>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Thu, 25 Jun 2020 17:38:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27576 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403961AbgFYViM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:38:12 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PLY8Tr176894;
+        Thu, 25 Jun 2020 17:38:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31w3a395a4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:38:06 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PLYEGt177555;
+        Thu, 25 Jun 2020 17:38:05 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31w3a3959p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:38:05 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PLPi7O005601;
+        Thu, 25 Jun 2020 21:38:04 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02dal.us.ibm.com with ESMTP id 31uurtb0bp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 21:38:04 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PLc3lR41222630
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 21:38:03 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8124E112067;
+        Thu, 25 Jun 2020 21:38:03 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 57362112063;
+        Thu, 25 Jun 2020 21:38:03 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 21:38:03 +0000 (GMT)
+Subject: Re: [PATCH v2] tpm: tpm2-space: Resize session and context buffers
+ dynamically
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>
-References: <20200625211029.34733-1-daniel.gutson@eclypsium.com>
- <20200625211453.GS20319@zn.tnic>
- <CAFmMkTGy5vOiPUpWw6HfQv-JM90JqLBcsKwMpbWdsjaLBw730Q@mail.gmail.com>
- <20200625212736.GT20319@zn.tnic>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <5b1699b5-6766-b5c8-fe1f-faf5a9b7c97e@intel.com>
-Date:   Thu, 25 Jun 2020 14:37:57 -0700
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <a6444592-234b-d77e-7403-812e19691e72@linux.ibm.com>
+Date:   Thu, 25 Jun 2020 17:38:03 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200625212736.GT20319@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_16:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ adultscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 malwarescore=0 phishscore=0
+ cotscore=-2147483648 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 2:27 PM, Borislav Petkov wrote:
-> On Thu, Jun 25, 2020 at 06:16:12PM -0300, Daniel Gutson wrote:
->> What didn't become clear from the thread last time is the direction to
->> proceed. Concrete suggestion?
-> Here are two:
-> 
-> https://lkml.kernel.org/r/20200619161752.GG32683@zn.tnic
-> https://lkml.kernel.org/r/20200619161026.GF32683@zn.tnic
-> 
-> but before that happens, I'd like to hear Dave confirm that when we
-> expose all that information to userspace, it will actually be true and
-> show the necessary bits which *actually* tell you that encryption is
-> enabled.
-> 
-> If you're still unclear, go over the thread again pls.
+On 6/25/20 12:38 AM, Jarkko Sakkinen wrote:
+> Re-allocate context and session buffers when needed. Scale them in page
+> increments so that the reallocation is only seldomly required, and thus
+> causes minimal stress to the system. Add a static maximum limit of four
+> pages for buffer sizes.
+>
+> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+> Tested only for compilation.
+> v2: TPM2_SPACE_DEFAULT_BUFFER_SIZE
+>   drivers/char/tpm/tpm2-space.c | 87 ++++++++++++++++++++++++-----------
+>   include/linux/tpm.h           |  6 ++-
+>   2 files changed, 64 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
+> index 982d341d8837..b8ece01d6afb 100644
+> --- a/drivers/char/tpm/tpm2-space.c
+> +++ b/drivers/char/tpm/tpm2-space.c
+> @@ -15,6 +15,9 @@
+>   #include <asm/unaligned.h>
+>   #include "tpm.h"
+>   
+> +#define TPM2_SPACE_DEFAULT_BUFFER_SIZE	PAGE_SIZE
+> +#define TPM2_SPACE_MAX_BUFFER_SIZE	(4 * PAGE_SIZE)
+> +
+>   enum tpm2_handle_types {
+>   	TPM2_HT_HMAC_SESSION	= 0x02000000,
+>   	TPM2_HT_POLICY_SESSION	= 0x03000000,
+> @@ -557,8 +588,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
+>   	       sizeof(space->context_tbl));
+>   	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
+>   	       sizeof(space->session_tbl));
+> -	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
+> -	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
+> +	memcpy(space->context_buf, chip->work_space.context_buf,
+> +	       space->context_size);
 
-It boils down to this: we shouldn't expose low-level, vendor-specific
-implementation details if we can avoid it.  Let's expose something that
-app can actually use.
 
-Something that will work for all of the TME, MKTME and SEV platforms
-that I know of and continue to work for a while would be to have a
-per-numa-node (/sys/devices/system/node[X]/file) that says: "user data
-on this node is protected by memory encryption".
+You have to allocate the max size the in tpm_chip_alloc (tpm-chip.c):
 
-SEV guests would always have a 1 in all nodes.
+    chip->work_space.context_buf = kzalloc(TPM2_SPACE_MAX_BUFFER_SIZE, 
+GFP_KERNEL);
 
-TME systems with no platform screwiness like PMEM would always have a 1.
 
-Old systems would have a 0 in there.
+> +	memcpy(space->session_buf, chip->work_space.session_buf,
+> +	       space->session_size);
+>   
 
-TME systems which also have PMEM-only nodes would set 0 in PMEM nodes
-and 1 on DRAM nodes.
 
-Systems with screwy EFI_MEMORY_CPU_CRYPTO mixing within NUMA nodes would
-turn it off for the screwy nodes.
+same for this
 
-Is that concrete enough?
+
+>   	return 0;
+>   out:
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 03e9b184411b..9ea39e8f7162 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -92,10 +92,12 @@ enum tpm_duration {
+>   #define TPM_PPI_VERSION_LEN		3
+>   
+>   struct tpm_space {
+> +	u8  *context_buf;
+> +	u8  *session_buf;
+> +	u32 context_size;
+> +	u32 session_size;
+>   	u32 context_tbl[3];
+> -	u8 *context_buf;
+>   	u32 session_tbl[3];
+> -	u8 *session_buf;
+>   };
+>   
+>   struct tpm_bios_log {
+
+
