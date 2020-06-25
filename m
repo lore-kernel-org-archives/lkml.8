@@ -2,149 +2,126 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3401120857
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:22:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XvqTcKvU"
+	by mail.kernel.org (Postfix) with ESMTP id BA558204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406076AbgFYQWg (ORCPT
+        id S2406094AbgFYQZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390728AbgFYQWe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:22:34 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F3BC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:22:34 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id j12so3228452pfn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cYEaM8fKpZG71PCkfHkApRmPtCwvXrrY+JocHC3nIv8=;
-        b=XvqTcKvUnBqjH+Xq2/BDnD76lMTzDE39N73VPsal3e7jDR5L9CqPzEwi/HtJXxg5pZ
-         sSViKozmxlxfRjR5junnpvtTtyW6G2rRQEW8ZFvCQk6aCeqvQ+zuO9yimSN9sFS7QooW
-         PvXgArAb+SfCZcIY+Pqu9KdLFcAqo8UvqBCXGiy9t48Z69ZF5FReGe2odlppsG/6UARl
-         Mdd0bQaWJWxZe0j9OL67jRPrRKjRhuCt16S32a8eOmCrvrHTXERopZ1dh0M2Ua2NwCSI
-         Ek6M040jALm4P02V4qkx9xuhsfQb+UTvzenYTCIy4JIByKPSb7KkGeYN6II1dO0BKO5s
-         5Xmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cYEaM8fKpZG71PCkfHkApRmPtCwvXrrY+JocHC3nIv8=;
-        b=HZlK8s0s1hKmvnj8ADUoZeH2xXdYChzaN3vXPoRPOG/pGlkix2fs1SXvha0QCwYvdv
-         NCLXyblEjXqGTs/CGPD+ubi2KV3JviSXkXN53n+6EAyZf/u1TdpsER7skqd0V7Dc7+nJ
-         IdtE2apelhoLsvmNgYFklHSSzS4H5owlp2jKyw5f/KJ009k8lpJKX1pmmGAWXflz7ldc
-         ahAMwNhTS5ZWJyml+TRVrsnmRXK1C0e597Gj6+4jTEFSLku66YUup+PS67N/fJ0fapjS
-         qiR0CxMX+KUOULAZMBD6AcRRDr6iHypLAKKGBQLHUDPQkQzXFGqDKJalnKZJOI2zNHiG
-         W+Rg==
-X-Gm-Message-State: AOAM531aJpucj5uKL/M5kvG1kre15UjDvVfzQRmVpbVD0qM7uy1gkHfB
-        V98VHUGUJzqyWb2VmHhX8W9eQg==
-X-Google-Smtp-Source: ABdhPJyBu5UBNmD93hBhA1nGG7iT9G95iHuvLnDzS07QCS69km8HMKCSBSO/u5bBKV8BF6Gd+7YLGw==
-X-Received: by 2002:a63:7313:: with SMTP id o19mr27664372pgc.307.1593102153849;
-        Thu, 25 Jun 2020 09:22:33 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id 7sm10151225pgh.80.2020.06.25.09.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 09:22:32 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 09:22:26 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 05/22] kbuild: lto: postpone objtool
-Message-ID: <20200625162226.GC173089@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-6-samitolvanen@google.com>
- <20200624211908.GT4817@hirez.programming.kicks-ass.net>
- <20200624214925.GB120457@google.com>
- <20200625074716.GX4817@hirez.programming.kicks-ass.net>
+        Thu, 25 Jun 2020 12:25:41 -0400
+Received: from mga17.intel.com ([192.55.52.151]:57733 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403774AbgFYQZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 12:25:41 -0400
+IronPort-SDR: u6XJbGrSiCBnPK2yuWidMn5K81r3e5SRQok+qCx/868SI0NqfEnl1D8L1HvtQ0BclGBaJzMhEC
+ FboovSrdY8bQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="125206964"
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="125206964"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 09:25:40 -0700
+IronPort-SDR: 1zS+rKFXbHVQPEC745baSDFiDF5jgMUXzZR8vksvauU4x2EUqzh4xrkgKCNl9SBfMX6UlBpuNR
+ sTWBigkKJ+JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="293931084"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2020 09:25:40 -0700
+Date:   Thu, 25 Jun 2020 09:25:40 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+Message-ID: <20200625162540.GC3437@linux.intel.com>
+References: <20200622220442.21998-1-peterx@redhat.com>
+ <20200622220442.21998-2-peterx@redhat.com>
+ <20200625061544.GC2141@linux.intel.com>
+ <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625074716.GX4817@hirez.programming.kicks-ass.net>
+In-Reply-To: <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 09:47:16AM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 24, 2020 at 02:49:25PM -0700, Sami Tolvanen wrote:
-> > On Wed, Jun 24, 2020 at 11:19:08PM +0200, Peter Zijlstra wrote:
-> > > On Wed, Jun 24, 2020 at 01:31:43PM -0700, Sami Tolvanen wrote:
-> > > > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> > > > index 30827f82ad62..12b115152532 100644
-> > > > --- a/include/linux/compiler.h
-> > > > +++ b/include/linux/compiler.h
-> > > > @@ -120,7 +120,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-> > > >  /* Annotate a C jump table to allow objtool to follow the code flow */
-> > > >  #define __annotate_jump_table __section(.rodata..c_jump_table)
-> > > >  
-> > > > -#ifdef CONFIG_DEBUG_ENTRY
-> > > > +#if defined(CONFIG_DEBUG_ENTRY) || defined(CONFIG_LTO_CLANG)
-> > > >  /* Begin/end of an instrumentation safe region */
-> > > >  #define instrumentation_begin() ({					\
-> > > >  	asm volatile("%c0:\n\t"						\
-> > > 
-> > > Why would you be doing noinstr validation for lto builds? That doesn't
-> > > make sense.
+On Thu, Jun 25, 2020 at 10:09:13AM +0200, Paolo Bonzini wrote:
+> On 25/06/20 08:15, Sean Christopherson wrote:
+> > IMO, kvm_cpuid() is simply buggy.  If KVM attempts to access a non-existent
+> > MSR then it darn well should warn.
 > > 
-> > This is just to avoid a ton of noinstr warnings when we run objtool on
-> > vmlinux.o, but I'm also fine with skipping noinstr validation with LTO.
-> 
-> Right, then we need to make --no-vmlinux work properly when
-> !DEBUG_ENTRY, which I think might be buggered due to us overriding the
-> argument when the objname ends with "vmlinux.o".
-
-Right. Can we just remove that and  pass --vmlinux to objtool in
-link-vmlinux.sh, or is the override necessary somewhere else?
-
-> > > > +ifdef CONFIG_STACK_VALIDATION
-> > > > +ifneq ($(SKIP_STACK_VALIDATION),1)
-> > > > +cmd_ld_ko_o +=								\
-> > > > +	$(objtree)/tools/objtool/objtool				\
-> > > > +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
-> > > > +		--module						\
-> > > > +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
-> > > > +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
-> > > > +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
-> > > > +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
-> > > > +		$(@:.ko=$(prelink-ext).o);
-> > > > +
-> > > > +endif # SKIP_STACK_VALIDATION
-> > > > +endif # CONFIG_STACK_VALIDATION
-> > > 
-> > > What about the objtool invocation from link-vmlinux.sh ?
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 8a294f9747aa..7ef7283011d6 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -1013,7 +1013,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> >                 *ebx = entry->ebx;
+> >                 *ecx = entry->ecx;
+> >                 *edx = entry->edx;
+> > -               if (function == 7 && index == 0) {
+> > +               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) &&
+> > +                   (vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR)) {
+> >                         u64 data;
+> >                         if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+> >                             (data & TSX_CTRL_CPUID_CLEAR))
 > > 
-> > What about it? The existing objtool_link invocation in link-vmlinux.sh
-> > works fine for our purposes as well.
 > 
-> Well, I was wondering why you're adding yet another objtool invocation
-> while we already have one.
+> That works too, but I disagree that warning is the correct behavior
+> here.  It certainly should warn as long as kvm_get_msr blindly returns
+> zero.  However, for a guest it's fine to access a potentially
+> non-existent MSR if you're ready to trap the #GP, and the point of this
+> series is to let cpuid.c or any other KVM code do the same.
 
-Because we can't run objtool until we have compiled bitcode to native
-code, so for modules, we're need another invocation after everything has
-been compiled.
+I get the "what" of the change, and even the "why" to some extent, but I
+dislike the idea of supporting/encouraging blind reads/writes to MSRs.
+Blind writes are just asking for problems, and suppressing warnings on reads
+is almost guaranteed to be suppressing a KVM bug.
 
-Sami
+Case in point, looking at the TSX thing again, I actually think the fix
+should be:
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 5eb618dbf211..64322446e590 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -1013,9 +1013,9 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+                *ebx = entry->ebx;
+                *ecx = entry->ecx;
+                *edx = entry->edx;
+-               if (function == 7 && index == 0) {
++               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) {
+                        u64 data;
+-                       if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
++                       if (!kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data) &&
+                            (data & TSX_CTRL_CPUID_CLEAR))
+                                *ebx &= ~(F(RTM) | F(HLE));
+                }
+
+
+On VMX, MSR_IA32_TSX_CTRL will be added to the so called shared MSR array
+regardless of whether or not it is being advertised to userspace (this is
+a bug in its own right).  Using the host_initiated variant means KVM will
+incorrectly bypass VMX's ARCH_CAP_TSX_CTRL_MSR check, i.e. incorrectly
+clear the bits if userspace is being weird and stuffed MSR_IA32_TSX_CTRL
+without advertising it to the guest.
+
+In short, the whole MSR_IA32_TSX_CTRL implementation seems messy and this
+is just papering over that mess.  The correct fix is to invoke setup_msrs()
+on writes to MSR_IA32_ARCH_CAPABILITIES, filtering MSR_IA32_TSX_CTRL out of
+shared MSRs when it's not advertised, and change kvm_cpuid() to use the
+unpriveleged variant.
+
+TSC_CTRL aside, if we insist on pointing a gun at our foot at some point,
+this should be a dedicated flavor of MSR access, e.g. msr_data.kvm_initiated,
+so that it at least requires intentionally loading the gun.
