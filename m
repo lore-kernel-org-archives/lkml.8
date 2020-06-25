@@ -2,150 +2,218 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3C6206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BFF20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="ycezOlQN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G2+XxG2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405498AbgFYOpj (ORCPT
+        id S2405489AbgFYOph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:45:39 -0400
-Received: from smtp75.iad3a.emailsrvr.com ([173.203.187.75]:49539 "EHLO
-        smtp75.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405444AbgFYOpc (ORCPT
+        Thu, 25 Jun 2020 10:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405447AbgFYOpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:45:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1593096330;
-        bh=j3ODRoMKy1KlfOTUcwEgR0+btbQugqbU0ApOQFED+WM=;
-        h=Date:Subject:From:To:From;
-        b=ycezOlQNiDFjJ3HAg4xvtwtNcC5Zi5zZj6wUWtAg8EEx8EgW8sd8hQ42JLS2WCbGZ
-         CQPwMVJyvFhstkwQ8uIWFd0b4NIfExTqIFe67Z1j6Ik+7Vnm9xeboe9/0vZ427zhpO
-         zE6sMGaIp4kXwI6set7/1TOsiF7+wNhSOlaQmFxs=
-Received: from app49.wa-webapps.iad3a (relay-webapps.rsapps.net [172.27.255.140])
-        by smtp26.relay.iad3a.emailsrvr.com (SMTP Server) with ESMTP id 326435579;
-        Thu, 25 Jun 2020 10:45:30 -0400 (EDT)
-Received: from deepplum.com (localhost.localdomain [127.0.0.1])
-        by app49.wa-webapps.iad3a (Postfix) with ESMTP id 1A782E003F;
-        Thu, 25 Jun 2020 10:45:30 -0400 (EDT)
-Received: by apps.rackspace.com
-    (Authenticated sender: dpreed@deepplum.com, from: dpreed@deepplum.com) 
-    with HTTP; Thu, 25 Jun 2020 10:45:30 -0400 (EDT)
-X-Auth-ID: dpreed@deepplum.com
-Date:   Thu, 25 Jun 2020 10:45:30 -0400 (EDT)
-Subject: Re: [PATCH v2] Fix undefined operation VMXOFF during reboot and crash
-From:   "David P. Reed" <dpreed@deepplum.com>
-To:     "Sean Christopherson" <sean.j.christopherson@intel.com>
-Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "X86 ML" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Allison Randal" <allison@lohutok.net>,
-        "Enrico Weigelt" <info@metux.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        "=?utf-8?Q?Peter_Zijlstra_=28Intel=29?=" <peterz@infradead.org>,
-        "Randy Dunlap" <rdunlap@infradead.org>,
-        "Martin Molnar" <martin.molnar.programming@gmail.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Alexandre Chartre" <alexandre.chartre@oracle.com>,
-        "Jann Horn" <jannh@google.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "LKML" <linux-kernel@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Importance: Normal
-X-Priority: 3 (Normal)
-X-Type: plain
-Message-ID: <1593096330.105426106@apps.rackspace.com>
-X-Mailer: webmail/17.3.12-RC
-X-Classification-ID: 47c80f5e-4484-4e30-ad65-1b5c68dc618e-1-1
+        Thu, 25 Jun 2020 10:45:31 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20AEC08C5DC
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:30 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l2so4732050wmf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=OoOn6nS87ZidHX21sGTjERIvR6aejkwl1RkPRA8UQB0=;
+        b=G2+XxG2KTvJLLLkYJ4JyN+CEHg8y0zLekzqE0jcco/ttYAolOWEQJFO1BiAsMnNM8r
+         /QjE8YHD6lCKQYdi9pzY3sTr3ve83hnSexS0jisvtcyWQVVkQx15eilrsbCJAypiez08
+         yDFn1StzRRntr1BetbaFswtJiniXghTb8d6r0yP4TQu+DSW99GJDa1mah/SJleK569HJ
+         lMkasvtNugOxW68N6BsdpSW1gjIi/Z8VHHWkffc36WgLRUAMX5nKw6cXaqTkP8DIVCha
+         Ml+AqdG+H67N5kbrVUBEVHI0i6KP9BrwQhM84METF2YK/0BfDyceWeJPmIK6cPfixF8g
+         /Zqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=OoOn6nS87ZidHX21sGTjERIvR6aejkwl1RkPRA8UQB0=;
+        b=Kin57QpiX4DvyC2P/ITDwWs3t4sV7ONWtCWRRrhzE9fuYERXip8uwpTYamkpDlpTKv
+         CiSApBzXdXVWZt19LESL+lEUYTxaE8MNBnuANLajpFZ/DDY4Kgi/aoVw+6VH6FGMXg3P
+         gddoxL7cep+B/k51C97r9ArrNQDuZd34lG68MLvErGfjA/WQVES2XCMq2jNeE/LdM6p8
+         SUGFPJ/sQqPsbBpQ+tLU5V7hYJhwSYnd4RTx3xCm0pccMcioUnNs4n+w+AypmuorCV8F
+         fr6Xh3JmTzGi1J7205oZo+hg6dqja+0CZ7HAReWEMTfD++tytO8ZDfU8X2YsEpyPIuY7
+         LL/Q==
+X-Gm-Message-State: AOAM531m5RySKozjYVKbPWWJ5yavOjDE/fnAJeT1ClTWfjyn9lGSKdpq
+        ZgpoCV5qqWua281ZtX5+zJTLPw==
+X-Google-Smtp-Source: ABdhPJwKxnWPv1U71martk1kxU4/Tb0LCX7+Lf5k20be9/lZK1yet2K8Sse94XB6F5JdiTmjkIpF3Q==
+X-Received: by 2002:a7b:cc85:: with SMTP id p5mr3673151wma.18.1593096329483;
+        Thu, 25 Jun 2020 07:45:29 -0700 (PDT)
+Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
+        by smtp.gmail.com with ESMTPSA id u186sm13062706wmu.10.2020.06.25.07.45.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 07:45:28 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
+        amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/5] thermal: core: Add notifications call in the framework
+Date:   Thu, 25 Jun 2020 16:45:09 +0200
+Message-Id: <20200625144509.17918-5-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Sorry: this is resent because my mailer included HTML, rejected by LKML]=
-=0AThanks for the response, Sean ... I had thought everyone was too busy to=
- follow up from the first version.=0A=C2=A0=0AI confess I'm not sure why th=
-is should be broken up into a patch series, given that it is so very small =
-and is all aimed at the same category of bug.=0A=C2=A0=0AAnd the "emergency=
-" path pre-existed, I didn't want to propose removing it, since I assumed i=
-t was there for a reason. I didn't want to include my own judgement as to w=
-hether there should only be one path. (I'm pretty sure I didn't find a VMXO=
-FF in KVM separately from the instance in this include file, but I will che=
-ck).=0A=C2=A0=0AA question: if I make it a series, I have to test each patc=
-h doesn't break something individually, in order to handle the case where o=
-ne patch is accepted and the others are not. Do I need to test each individ=
-ual patch thoroughly as an independent patch against all those cases?=0AI k=
-now the combination don't break anything and fixes the issues I've discover=
-ed by testing all combinations (and I've done some thorough testing of pani=
-cs, oopses crashes, kexec, ... under all combinations of CR4.VMXE enablemen=
-t and crash source to verify the fix fixes the problem's manifestations and=
- to verify that it doesn't break any of the working paths.=0A=C2=A0=0AThat =
-said, I'm willing to do a v3 "series" based on these suggestions if it will=
- smooth its acceptance. If it's not going to get accepted after doing that,=
- my motivation is flagging.=0AOn Thursday, June 25, 2020 2:06am, "Sean Chri=
-stopherson" <sean.j.christopherson@intel.com> said:=0A=0A=0A=0A> On Thu, Ju=
-n 11, 2020 at 03:48:18PM -0400, David P. Reed wrote:=0A> > -/** Disable VMX=
- on the current CPU=0A> > +/* Disable VMX on the current CPU=0A> > *=0A> > =
-- * vmxoff causes a undefined-opcode exception if vmxon was not run=0A> > -=
- * on the CPU previously. Only call this function if you know VMX=0A> > - *=
- is enabled.=0A> > + * vmxoff causes an undefined-opcode exception if vmxon=
- was not run=0A> > + * on the CPU previously. Only call this function direc=
-tly if you know VMX=0A> > + * is enabled *and* CPU is in VMX root operation=
-.=0A> > */=0A> > static inline void cpu_vmxoff(void)=0A> > {=0A> > - asm vo=
-latile ("vmxoff");=0A> > + asm volatile ("vmxoff" ::: "cc", "memory"); /* c=
-lears all flags on success=0A> */=0A> > cr4_clear_bits(X86_CR4_VMXE);=0A> >=
- }=0A> >=0A> > @@ -47,17 +47,35 @@ static inline int cpu_vmx_enabled(void)=
-=0A> > return __read_cr4() & X86_CR4_VMXE;=0A> > }=0A> >=0A> > -/** Disable=
- VMX if it is enabled on the current CPU=0A> > - *=0A> > - * You shouldn't =
-call this if cpu_has_vmx() returns 0.=0A> > +/*=0A> > + * Safely disable VM=
-X root operation if active=0A> > + * Note that if CPU is not in VMX root op=
-eration this=0A> > + * VMXOFF will fault an undefined operation fault,=0A> =
-> + * so use the exception masking facility to handle that RARE=0A> > + * c=
-ase.=0A> > + * You shouldn't call this directly if cpu_has_vmx() returns 0=
-=0A> > + */=0A> > +static inline void cpu_vmxoff_safe(void)=0A> > +{=0A> > =
-+ asm volatile("1:vmxoff\n\t" /* clears all flags on success */=0A> =0A> Eh=
-, I wouldn't bother with the comment, there are a million other caveats=0A>=
- with VMXOFF that are far more interesting.=0A> =0A> > + "2:\n\t"=0A> > + _=
-ASM_EXTABLE(1b, 2b)=0A> > + ::: "cc", "memory");=0A> =0A> Adding the memory=
- and flags clobber should be a separate patch.=0A> =0A> > + cr4_clear_bits(=
-X86_CR4_VMXE);=0A> > +}=0A> =0A> =0A> I don't see any value in safe/unsafe =
-variants. The only in-kernel user of=0A> VMXOFF outside of the emergency fl=
-ows is KVM, which has its own VMXOFF=0A> helper, i.e. all users of cpu_vmxo=
-ff() want the "safe" variant. Just add=0A> the exception fixup to cpu_vmxof=
-f() and call it good.=0A> =0A> > +=0A> > +/*=0A> > + * Force disable VMX if=
- it is enabled on the current CPU,=0A> > + * when it is unknown whether CPU=
- is in VMX operation.=0A> > */=0A> > static inline void __cpu_emergency_vmx=
-off(void)=0A> > {=0A> > - if (cpu_vmx_enabled())=0A> > - cpu_vmxoff();=0A> =
-> + if (!cpu_vmx_enabled())=0A> > + return;=0A> > + cpu_vmxoff_safe();=0A> =
-=0A> Unnecessary churn.=0A> =0A> > }=0A> >=0A> > -/** Disable VMX if it is =
-supported and enabled on the current CPU=0A> > +/* Force disable VMX if it =
-is supported on current CPU=0A> > */=0A> > static inline void cpu_emergency=
-_vmxoff(void)=0A> > {=0A> > diff --git a/arch/x86/kernel/reboot.c b/arch/x8=
-6/kernel/reboot.c=0A> > index e040ba6be27b..b0e6b106a67e 100644=0A> > --- a=
-/arch/x86/kernel/reboot.c=0A> > +++ b/arch/x86/kernel/reboot.c=0A> > @@ -54=
-0,21 +540,14 @@ static void emergency_vmx_disable_all(void)=0A> > *=0A> > *=
- For safety, we will avoid running the nmi_shootdown_cpus()=0A> > * stuff u=
-nnecessarily, but we don't have a way to check=0A> > - * if other CPUs have=
- VMX enabled. So we will call it only if the=0A> > - * CPU we are running o=
-n has VMX enabled.=0A> > - *=0A> > - * We will miss cases where VMX is not =
-enabled on all CPUs. This=0A> > - * shouldn't do much harm because KVM alwa=
-ys enable VMX on all=0A> > - * CPUs anyway. But we can miss it on the small=
- window where KVM=0A> > - * is still enabling VMX.=0A> > + * if other CPUs =
-have VMX enabled.=0A> > */=0A> > - if (cpu_has_vmx() && cpu_vmx_enabled()) =
-{=0A> > + if (cpu_has_vmx()) {=0A> > /* Disable VMX on this CPU. */=0A> > -=
- cpu_vmxoff();=0A> > + cpu_emergency_vmxoff();=0A> =0A> This also needs to =
-be in a separate patch. And it should use=0A> __cpu_emergency_vmxoff() inst=
-ead of cpu_emergency_vmxoff().=0A> =0A> >=0A> > /* Halt and disable VMX on =
-the other CPUs */=0A> > nmi_shootdown_cpus(vmxoff_nmi);=0A> > -=0A> > }=0A>=
- > }=0A> >=0A> > --=0A> > 2.26.2=0A> >=0A>
+The generic netlink protocol is implemented but the different
+notification functions are not yet connected to the core code.
+
+These changes add the notification calls in the different
+corresponding places.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/thermal_core.c    | 21 +++++++++++++++++++++
+ drivers/thermal/thermal_helpers.c | 11 +++++++++--
+ drivers/thermal/thermal_sysfs.c   | 15 ++++++++++++++-
+ 3 files changed, 44 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 58c95aeafb7f..1388c03d1190 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -215,6 +215,8 @@ int thermal_zone_device_set_policy(struct thermal_zone_device *tz,
+ 	mutex_unlock(&tz->lock);
+ 	mutex_unlock(&thermal_governor_lock);
+ 
++	thermal_notify_tz_gov_change(tz->id, policy);
++
+ 	return ret;
+ }
+ 
+@@ -406,12 +408,25 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
+ static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
+ {
+ 	enum thermal_trip_type type;
++	int trip_temp, hyst = 0;
+ 
+ 	/* Ignore disabled trip points */
+ 	if (test_bit(trip, &tz->trips_disabled))
+ 		return;
+ 
++	tz->ops->get_trip_temp(tz, trip, &trip_temp);
+ 	tz->ops->get_trip_type(tz, trip, &type);
++	if (tz->ops->get_trip_hyst)
++		tz->ops->get_trip_hyst(tz, trip, &hyst);
++
++	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
++		if (tz->last_temperature < trip_temp &&
++		    tz->temperature >= trip_temp)
++			thermal_notify_tz_trip_up(tz->id, trip);
++		if (tz->last_temperature >= trip_temp &&
++		    tz->temperature < (trip_temp - hyst))
++			thermal_notify_tz_trip_down(tz->id, trip);
++	}
+ 
+ 	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
+ 		handle_critical_trips(tz, trip, type);
+@@ -443,6 +458,8 @@ static void update_temperature(struct thermal_zone_device *tz)
+ 	mutex_unlock(&tz->lock);
+ 
+ 	trace_thermal_temperature(tz);
++
++	thermal_genl_sampling_temp(tz->id, temp);
+ }
+ 
+ static void thermal_zone_device_init(struct thermal_zone_device *tz)
+@@ -1398,6 +1415,8 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+ 	if (atomic_cmpxchg(&tz->need_update, 1, 0))
+ 		thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+ 
++	thermal_notify_tz_create(tz->id, tz->type);
++
+ 	return tz;
+ 
+ unregister:
+@@ -1469,6 +1488,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
+ 	ida_destroy(&tz->ida);
+ 	mutex_destroy(&tz->lock);
+ 	device_unregister(&tz->device);
++
++	thermal_notify_tz_delete(tz->id);
+ }
+ EXPORT_SYMBOL_GPL(thermal_zone_device_unregister);
+ 
+diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
+index 6ed24b4e23d3..7893ace1d90f 100644
+--- a/drivers/thermal/thermal_helpers.c
++++ b/drivers/thermal/thermal_helpers.c
+@@ -175,6 +175,14 @@ void thermal_zone_set_trips(struct thermal_zone_device *tz)
+ 	mutex_unlock(&tz->lock);
+ }
+ 
++void thermal_cdev_set_cur_state(struct thermal_cooling_device *cdev, int target)
++{
++	if (cdev->ops->set_cur_state(cdev, target))
++		return;
++	thermal_notify_cdev_update(cdev->id, target);
++	thermal_cooling_device_stats_update(cdev, target);
++}
++
+ void thermal_cdev_update(struct thermal_cooling_device *cdev)
+ {
+ 	struct thermal_instance *instance;
+@@ -192,8 +200,7 @@ void thermal_cdev_update(struct thermal_cooling_device *cdev)
+ 			target = instance->target;
+ 	}
+ 
+-	if (!cdev->ops->set_cur_state(cdev, target))
+-		thermal_cooling_device_stats_update(cdev, target);
++	thermal_cdev_set_cur_state(cdev, target);
+ 
+ 	mutex_unlock(&cdev->lock);
+ 	trace_cdev_update(cdev, target);
+diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+index aa99edb4dff7..ff449943f757 100644
+--- a/drivers/thermal/thermal_sysfs.c
++++ b/drivers/thermal/thermal_sysfs.c
+@@ -124,7 +124,8 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct thermal_zone_device *tz = to_thermal_zone(dev);
+ 	int trip, ret;
+-	int temperature;
++	int temperature, hyst = 0;
++	enum thermal_trip_type type;
+ 
+ 	if (!tz->ops->set_trip_temp)
+ 		return -EPERM;
+@@ -139,6 +140,18 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
+ 	if (ret)
+ 		return ret;
+ 
++	if (tz->ops->get_trip_hyst) {
++		ret = tz->ops->get_trip_hyst(tz, trip, &hyst);
++		if (ret)
++			return ret;
++	}
++
++	ret = tz->ops->get_trip_type(tz, trip, &type);
++	if (ret)
++		return ret;
++
++	thermal_notify_tz_trip_change(tz->id, trip, type, temperature, hyst);
++
+ 	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+ 
+ 	return count;
+-- 
+2.17.1
 
