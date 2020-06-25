@@ -2,39 +2,40 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43FEB206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCC62084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436548AbgFYUSh (ORCPT
+        id S2436560AbgFYUSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:18:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:20502 "EHLO mga18.intel.com"
+        Thu, 25 Jun 2020 16:18:41 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20511 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405054AbgFYUSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:18:36 -0400
-IronPort-SDR: /gQxry8IuEsFe3opJlTNQ0bx9rT3/xxg2fv9uFeRhWb2ECbrWDs0ld/tYll3XDaSrUwsSxMirT
- MElMrAfxDRxw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505218"
+        id S2405054AbgFYUSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 16:18:38 -0400
+IronPort-SDR: 70qIfUSniV9Ogzjvchw7++CwfJd7YpcEMzN14ug6ztD1cAkHNbaA7YU/TiZyGTVm285+z+Cg4n
+ dejpVv52sUhw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505231"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="132505218"
+   d="scan'208";a="132505231"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:35 -0700
-IronPort-SDR: yWQGN4+/oLTUQHbFUM6OSWd7QSpUxGCVE4UI5jVxe5EYzFYdBh8l0QNo5Fyvx/+50fRof7mfYg
- 4LOBWknPLVGQ==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:36 -0700
+IronPort-SDR: OCj8X18RzPEgCVU7UZ4wevdkiXteEEwYQoPeJ4Ilj1HT6u7H6LDGgxu9eQrrKaSjV4nAluB97a
+ Wi0TsTntXqAA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="453132202"
+   d="scan'208";a="453132215"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:34 -0700
+  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:35 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
@@ -55,168 +56,78 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4 00/12] x86: tag application address space for devices
-Date:   Thu, 25 Jun 2020 13:17:10 -0700
-Message-Id: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v4 02/12] iommu/vt-d: Change flags type to unsigned int in binding mm
+Date:   Thu, 25 Jun 2020 13:17:12 -0700
+Message-Id: <1593116242-31507-3-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
+References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Typical hardware devices require a driver stack to translate application
-buffers to hardware addresses, and a kernel-user transition to notify the
-hardware of new work. What if both the translation and transition overhead
-could be eliminated? This is what Shared Virtual Address (SVA) and ENQCMD
-enabled hardware like Data Streaming Accelerator (DSA) aims to achieve.
-Applications map portals in their local-address-space and directly submit
-work to them using a new instruction.
+"flags" passed to intel_svm_bind_mm() is a bit mask and should be
+defined as "unsigned int" instead of "int".
 
-This series enables ENQCMD and associated management of the new MSR
-(MSR_IA32_PASID). This new MSR allows an application address space to be
-associated with what the PCIe spec calls a Process Address Space ID (PASID).
-This PASID tag is carried along with all requests between applications and
-devices and allows devices to interact with the process address space.
+Change its type to "unsigned int".
 
-SVA and ENQCMD enabled device drivers need this series. The phase 2 DSA
-patches with SVA and ENQCMD support was released on the top of this series:
-https://lore.kernel.org/patchwork/cover/1244060/
-
-This series only provides simple and basic support for ENQCMD and the MSR:
-1. Clean up type definitions (patch 1-2). These patches can be in a
-   separate series.
-   - Define "pasid" as "u32" consistently
-   - Define "flags" as "unsigned int"
-2. Explain different various technical terms used in the series (patch 3).
-3. Enumerate support for ENQCMD in the processor (patch 4).
-4. Handle FPU PASID state and the MSR during context switch (patches 5-6).
-5. Define "pasid" in mm_struct (patch 7).
-5. Clear PASID state for new mm and forked and cloned thread (patch 8-9).
-6. Allocate and free PASID for a process (patch 10).
-7. Fix up the PASID MSR in #GP handler when one thread in a process
-   executes ENQCMD for the first time (patches 11-12).
-
-This patch series and the DSA phase 2 series are in
-https://github.com/intel/idxd-driver/tree/idxd-stage2
-
-References:
-1. Detailed information on the ENQCMD/ENQCMDS instructions and the
-IA32_PASID MSR can be found in Intel Architecture Instruction Set
-Extensions and Future Features Programming Reference:
-https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
-
-2. Detailed information on DSA can be found in DSA specification:
-https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
-
-Chang log:
-v4:
-- Define PASID as "u32" instead of "unsigned int" in patch 1, 7, 10, 12.
-  (Christoph)
-- Drop v3 patch 2 which changes PASID type in ocxl because it's not related
-  to x86 and was rejected by ocxl maintainer Frederic Barrat
-- A split patch which changes PASID type to u32 in crypto/hisilicon/qm.c
-  was released separately to linux-crypto mailing list because it's not
-  related to x86 and is a standalone patch:
-
-v3:
-- Change names of bind_mm() and unbind_mm() to match to new APIs in
-  patch 4 (Baolu)
-- Change CONFIG_PCI_PASID to CONFIG_IOMMU_SUPPORT because non-PCI device
-  can have PASID in ARM in patch 8 (Jean)
-- Add a few sanity checks in __free_pasid() and alloc_pasid() in
-  patch 11 (Baolu)
-- Add patch 12 to define a new flag "has_valid_pasid" for a task and
-  use the flag to identify if the task has a valid PASID MSR (PeterZ)
-- Add fpu__pasid_write() to update the MSR in fixup() in patch 13
-- Check if mm->pasid can be found in fixup() in patch 13
-
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
 v2:
-- Add patches 1-3 to define "pasid" and "flags" as "unsigned int"
-  consistently (Thomas)
-  (these 3 patches could be in a separate patch set)
-- Add patch 8 to move "pasid" to generic mm_struct (Christoph).
-  Jean-Philippe Brucker released a virtually same patch. Upstream only
-  needs one of the two.
-- Add patch 9 to initialize PASID in a new mm.
-- Plus other changes described in each patch (Thomas)
+- Add this new patch per Thomas' comment.
 
-Ashok Raj (1):
-  docs: x86: Add documentation for SVA (Shared Virtual Addressing)
+ drivers/iommu/intel/svm.c   | 7 ++++---
+ include/linux/intel-iommu.h | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-Fenghua Yu (9):
-  iommu: Change type of pasid to u32
-  iommu/vt-d: Change flags type to unsigned int in binding mm
-  x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
-  x86/msr-index: Define IA32_PASID MSR
-  mm: Define pasid in mm
-  fork: Clear PASID for new mm
-  x86/process: Clear PASID state for a newly forked/cloned thread
-  x86/mmu: Allocate/free PASID
-  x86/traps: Fix up invalid PASID
-
-Peter Zijlstra (1):
-  sched: Define and initialize a flag to identify valid PASID in the
-    task
-
-Yu-cheng Yu (1):
-  x86/fpu/xstate: Add supervisor PASID state for ENQCMD feature
-
- Documentation/x86/index.rst                   |   1 +
- Documentation/x86/sva.rst                     | 287 ++++++++++++++++++
- arch/x86/include/asm/cpufeatures.h            |   1 +
- arch/x86/include/asm/fpu/types.h              |  10 +
- arch/x86/include/asm/fpu/xstate.h             |   2 +-
- arch/x86/include/asm/iommu.h                  |   3 +
- arch/x86/include/asm/mmu_context.h            |  14 +
- arch/x86/include/asm/msr-index.h              |   3 +
- arch/x86/kernel/cpu/cpuid-deps.c              |   1 +
- arch/x86/kernel/fpu/xstate.c                  |   4 +
- arch/x86/kernel/process.c                     |  18 ++
- arch/x86/kernel/traps.c                       |  14 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h    |   4 +-
- .../drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c    |   2 +-
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c |   2 +-
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c |   2 +-
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c |   2 +-
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.h |   2 +-
- .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  |   4 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c       |   6 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ids.h       |   4 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c       |   2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        |   8 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h        |   8 +-
- .../gpu/drm/amd/amdkfd/cik_event_interrupt.c  |   2 +-
- drivers/gpu/drm/amd/amdkfd/kfd_dbgdev.c       |   2 +-
- drivers/gpu/drm/amd/amdkfd/kfd_dbgmgr.h       |   2 +-
- .../drm/amd/amdkfd/kfd_device_queue_manager.c |   7 +-
- drivers/gpu/drm/amd/amdkfd/kfd_events.c       |   8 +-
- drivers/gpu/drm/amd/amdkfd/kfd_events.h       |   4 +-
- drivers/gpu/drm/amd/amdkfd/kfd_iommu.c        |   6 +-
- drivers/gpu/drm/amd/amdkfd/kfd_pasid.c        |   2 +-
- drivers/gpu/drm/amd/amdkfd/kfd_priv.h         |  18 +-
- drivers/gpu/drm/amd/amdkfd/kfd_process.c      |   2 +-
- .../gpu/drm/amd/include/kgd_kfd_interface.h   |   2 +-
- drivers/iommu/amd/amd_iommu.h                 |  10 +-
- drivers/iommu/amd/iommu.c                     |  31 +-
- drivers/iommu/amd/iommu_v2.c                  |  20 +-
- drivers/iommu/intel/dmar.c                    |   7 +-
- drivers/iommu/intel/intel-pasid.h             |  24 +-
- drivers/iommu/intel/iommu.c                   |   4 +-
- drivers/iommu/intel/pasid.c                   |  31 +-
- drivers/iommu/intel/svm.c                     | 225 ++++++++++++--
- drivers/iommu/iommu.c                         |   2 +-
- drivers/misc/uacce/uacce.c                    |   2 +-
- include/linux/amd-iommu.h                     |   8 +-
- include/linux/intel-iommu.h                   |  14 +-
- include/linux/intel-svm.h                     |   2 +-
- include/linux/iommu.h                         |  10 +-
- include/linux/mm_types.h                      |   6 +
- include/linux/sched.h                         |   3 +
- include/linux/uacce.h                         |   2 +-
- kernel/fork.c                                 |  12 +
- 53 files changed, 716 insertions(+), 156 deletions(-)
- create mode 100644 Documentation/x86/sva.rst
-
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index 778089d198eb..8a0cf2f0dd54 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -427,7 +427,8 @@ int intel_svm_unbind_gpasid(struct device *dev, u32 pasid)
+ 
+ /* Caller must hold pasid_mutex, mm reference */
+ static int
+-intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
++intel_svm_bind_mm(struct device *dev, unsigned int flags,
++		  struct svm_dev_ops *ops,
+ 		  struct mm_struct *mm, struct intel_svm_dev **sd)
+ {
+ 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+@@ -954,7 +955,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
+ {
+ 	struct iommu_sva *sva = ERR_PTR(-EINVAL);
+ 	struct intel_svm_dev *sdev = NULL;
+-	int flags = 0;
++	unsigned int flags = 0;
+ 	int ret;
+ 
+ 	/*
+@@ -963,7 +964,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
+ 	 * and intel_svm etc.
+ 	 */
+ 	if (drvdata)
+-		flags = *(int *)drvdata;
++		flags = *(unsigned int *)drvdata;
+ 	mutex_lock(&pasid_mutex);
+ 	ret = intel_svm_bind_mm(dev, flags, NULL, mm, &sdev);
+ 	if (ret)
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 314a95870e47..4d20f93a5e2d 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -759,7 +759,7 @@ struct intel_svm {
+ 	struct mm_struct *mm;
+ 
+ 	struct intel_iommu *iommu;
+-	int flags;
++	unsigned int flags;
+ 	u32 pasid;
+ 	int gpasid; /* In case that guest PASID is different from host PASID */
+ 	struct list_head devs;
 -- 
 2.19.1
 
