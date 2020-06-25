@@ -2,124 +2,142 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C42C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A87C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB1120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DD020706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404201AbgFYLY6 (ORCPT
+        id S2404221AbgFYL0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:24:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55444 "EHLO mx2.suse.de"
+        Thu, 25 Jun 2020 07:26:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:35202 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404042AbgFYLY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:24:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E7CB1AD60;
-        Thu, 25 Jun 2020 11:24:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id AB4511E1274; Thu, 25 Jun 2020 13:24:55 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 13:24:55 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Chris Wilson <chris@chris-wilson.co.uk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] mm: Skip opportunistic reclaim for dma pinned pages
-Message-ID: <20200625112455.GC17788@quack2.suse.cz>
-References: <20200624191417.16735-1-chris@chris-wilson.co.uk>
- <20200624192116.GO6578@ziepe.ca>
- <44708b2e-479f-7d58-fe01-29cfd6c70bdb@nvidia.com>
- <20200624232047.GP6578@ziepe.ca>
- <887ac706-65f0-3089-b51b-47aabf7d3847@nvidia.com>
+        id S2404042AbgFYL0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 07:26:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A17521FB;
+        Thu, 25 Jun 2020 04:26:10 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01D683F73C;
+        Thu, 25 Jun 2020 04:26:08 -0700 (PDT)
+References: <20200624172605.26715-1-qais.yousef@arm.com> <20200624172605.26715-3-qais.yousef@arm.com> <jhj5zbgroct.mognet@arm.com> <20200625110006.q3iepcrh2uh4oizv@e107158-lin.cambridge.arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] sched/uclamp: Protect uclamp fast path code with static key
+Message-ID: <jhjpn9ngzlx.mognet@arm.com>
+In-reply-to: <20200625110006.q3iepcrh2uh4oizv@e107158-lin.cambridge.arm.com>
+Date:   Thu, 25 Jun 2020 12:26:04 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <887ac706-65f0-3089-b51b-47aabf7d3847@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 24-06-20 17:11:30, John Hubbard wrote:
-> On 2020-06-24 16:20, Jason Gunthorpe wrote:
-> > > I do like this code change, though. And I *think* it's actually safe to
-> > > do this, as it stays away from writeback or other filesystem activity.
-> > > But let me double check that, in case I'm forgetting something.
-> 
-> ...OK, I've checked, and I like it a little bit less now. Mainly for
-> structural reasons, though. I think it would work correctly. But
-> here's a concern: try_to_unmap() should only fail to unmap if there is a
-> reason to not unmap. Having a page be pinned for dma is a reason to not
-> *free* a page, and it's also a reason to be careful about writeback and
-> page buffers for writeback and such. But I'm not sure that it's a reason
-> to fail to remove mappings.
-> 
-> True, most (all?) of the reasons that we remove mappings, generally are
-> for things that are not allowed while a page is dma-pinned...at least,
-> today. But still, there's nothing fundamental about a mapping that
-> should prevent it from coming or going while a page is undergoing
-> dma.
-> 
-> So, it's merely a convenient, now-misnamed location in the call stack
-> to fail out. That's not great. It might be better, as Jason hints at
-> below, to fail out a little earlier, instead. That would lead to a more
-> places to call page_maybe_dma_pinned(), but that's not a real problem,
-> because it's still a small number of places.
 
-Agreed, I think that shrink_page_list() as Michal writes is a better place
-for the page_may_be_dma_pinned() check. But other than that I agree it is
-good to avoid all the unnecessary work of preparing a page for reclaim when
-we can now check there's no hope of reclaiming it (at this time).
+On 25/06/20 12:00, Qais Yousef wrote:
+> Hi Valentin
+>
+> On 06/25/20 01:16, Valentin Schneider wrote:
+>> In schedutil_cpu_util(), when uclamp isn't compiled it, we have an explicit
+>> 'goto max'. When uclamp *is* compiled in, that's taken care of by the
+>> "natural" RT uclamp aggregation... Which doesn't happen until we flip the
+>> static key.
+>>
+>> It's yucky, but if you declare the key in the internal sched header, you
+>> could reuse it in the existing 'goto max' (or sysctl value, when we make
+>> that tweakable) path.
+>
+> Not sure if this is the best way forward. I need to think about it.
+> While I am not keen on enabling in kernel users of util clamp, but there was
+> already an attempt to do so. This approach will not allow us to implement
+> something in the future for that. Which maybe is what we want..
+>
 
-> > I don't know, but could it be that try_to_unmap() has to be done
-> > before checking the refcount as each mapping is included in the
-> > refcount? ie we couldn't know a DMA pin was active in advance?
-> > 
-> > Now that we have your pin stuff we can detect a DMA pin without doing
-> > all the unmaps?
-> > 
-> 
-> Once something calls pin_user_page*(), then the pages will be marked
-> as dma-pinned, yes. So no, there is no need to wait until try_to_unmap()
-> to find out.
+Just to be clear, I'm not suggesting to add any in-kernel toggling of
+uclamp outside of the scheduler: by keeping that to the internal sched
+header & schedutil, we're keeping it contained to internal scheduler land.
 
-Yeah, I'm pretty sure the page ref check happens so late because earlier it
-was impossible to tell whether there are "external" page references reclaim
-cannot get rid of - filesystem may (but need not!) hold a page reference
-for its private data, page tables will hold references as well, etc. Now
-with page_may_be_dma_pinned() we can detect at least one class of external
-references (i.e. pins) early so it's stupid not to do that.
+Since a diff is worth a thousand words, here's what I was thinking of (not
+even compiled):
+---
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 7fbaee24c824..68731c3316ef 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -210,7 +210,7 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+        unsigned long dl_util, util, irq;
+        struct rq *rq = cpu_rq(cpu);
 
-> A final note: depending on where page_maybe_dma_pinned() ends up
-> getting called, this might prevent a fair number of the problems that
-> Jan originally reported [1], and that I also reported separately!
-> 
-> Well, not all of the problems, and only after the filesystems get
-> converted to call pin_user_pages() (working on that next), but...I think
-> it would actually avoid the crash our customer reported back in early
-> 2018. Even though we don't have the full file lease + pin_user_pages()
-> solution in place.
-> 
-> That's because reclaim is what triggers the problems that we saw. And
-> with this patch, we bail out of reclaim early.
+-	if (!IS_BUILTIN(CONFIG_UCLAMP_TASK) &&
++	if ((!IS_BUILTIN(CONFIG_UCLAMP_TASK) || !static_branch_likely(&sched_uclamp_used)) &&
+            type == FREQUENCY_UTIL && rt_rq_is_runnable(&rq->rt)) {
+                return max;
+        }
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 1d4e94c1e5fe..3fd5c792f247 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1638,6 +1638,7 @@ static const_debug __maybe_unused unsigned int sysctl_sched_features =
 
-I agree that with this change, some races will become much less likely for
-some usecases. But as you say, it's not a full solution.
+ extern struct static_key_false sched_numa_balancing;
+ extern struct static_key_false sched_schedstats;
++extern struct static_key_false sched_uclamp_used;
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+ static inline u64 global_rt_period(void)
+ {
+---
+
+>> > + * As soon as userspace modifies any of the uclamp knobs, the static key is
+>> > + * enabled, since we have an actual users that make use of uclamp
+>> > + * functionality.
+>> > + *
+>> > + * The knobs that would enable this static key are:
+>> > + *
+>> > + *   * A task modifying its uclamp value with sched_setattr().
+>>
+>> That one makes it not just userspace, right? While the sched_setattr()
+>> stuff is expected to be unexported, it isn't ATM and we may expect some
+>> modules to ask for a uclamp API eventually.
+>
+> This has already come up with another thread [1]. I think in-kernel users
+> shouldn't go through this path. I will propose something to give stronger
+> guarantees in this regard.
+>
+
+True; and they'll have to go through another path anyway once the unexport
+thing happens.
+
+>> > -	if (update_root_tg)
+>> > +	if (update_root_tg) {
+>> >            uclamp_update_root_tg();
+>> > +		static_branch_enable(&sched_uclamp_used);
+>>
+>> I don't think it matters ATM, but shouldn't we flip that *before* updating
+>> the TG's to avoid any future surprises?
+>
+> What sort of surprises are you thinking of?
+>
+
+Say if we end up adding static key checks in some other uclamp functions
+(which are called in the TG update) and don't change this here, someone
+will have to scratch their heads to figure out the key enablement needs to
+be moved one line higher. It's harmless future-proofing, I think.
+
+> Thanks
