@@ -2,108 +2,120 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C02DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB04C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C3D2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593090991;
-	bh=hzVTufSqgXwAPMu2gHwPhbk4gm9XBC4oqWn21X0IZ0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dY+F2053BNMKrMZDR2nCXwYPR3tnbc9TqZegynw+Kfher0OHYAUlxu8dX6WeUkOqm
-	 pIxqmApgxtdzYrrIQwhK3DsNi6ldYVO2phFwbZMkjNCK45RqHL7SlsU5adGeOev3dM
-	 qXDhhKJ3MKgqee9r8nxbSJQTmCAkmodLrcHuvHJQ=
+	by mail.kernel.org (Postfix) with ESMTP id 373A0206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:19:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJPF4tfy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404958AbgFYNQ3 (ORCPT
+        id S2404883AbgFYNTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404825AbgFYNQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:16:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D15206A1;
-        Thu, 25 Jun 2020 13:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593090988;
-        bh=hzVTufSqgXwAPMu2gHwPhbk4gm9XBC4oqWn21X0IZ0k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ctZnhPPDJHtzPcQnLaPl/EtZl6MpuCnn1PYgaWi3dOTtapIiF6TbhyNK1ocOWuY1G
-         hXRLxa5J0cFLuuN1BlV+LPIHLN5IW274OeHHf7AR/iw9vE+CrPA+RAseI2FBiKMkWv
-         Uu/sF2Y4eHA0lhKE885aHzMjotSnwkEezGLcmiZU=
-Date:   Thu, 25 Jun 2020 14:16:20 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 12/13] arm64: Remove dev->archdata.iommu pointer
-Message-ID: <20200625131620.GA8161@willie-the-truck>
-References: <20200625130836.1916-1-joro@8bytes.org>
- <20200625130836.1916-13-joro@8bytes.org>
+        Thu, 25 Jun 2020 09:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404740AbgFYNTO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:19:14 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CD8EC08C5C1;
+        Thu, 25 Jun 2020 06:19:13 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id q15so5525139wmj.2;
+        Thu, 25 Jun 2020 06:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=f9FUAM+HjG/LNLfRosbcl3bBMMrLzklOHZMKb4wAc2k=;
+        b=jJPF4tfyLUblaZ9xEP9PyVmRFHjEJE28Rm7BBb7ghx7/ryPYyoafyW+SesPePiMMPp
+         +M6Q/DyIMOGEnIpflZtDw0Z/JA3PyXN6nyDqebpKNB9nVQwZPZJuYnHkWxx/bW1pUic8
+         Ftk18bITSkNaM55FK80qPPzEiHo4POjL/6UY+3hazZxZmdTRmqrK4x3LkUIf4CJ4OUMU
+         y4coP1x/G4Hjx3LvpnFt6j05/5bZHnVI5f2udFD2jsQDAGKkhg5vuu0nEyzpRAD2jhfm
+         w5RL2IaGy+x71+O1AUag1OogNBtt4rnKylYNpYlSTT/2zxtz2C2wuSPuPr8qCigc3SQO
+         MqnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f9FUAM+HjG/LNLfRosbcl3bBMMrLzklOHZMKb4wAc2k=;
+        b=hqN+ZqL9IJiTpWOGTDOfvyAn0HE+5FUKFM/qpYue6/yyTzWUkFLkJ/ownwVUNh/W3t
+         UDCm8feAst59Hr3WX0lwgD5JwZroegaMBM4sSUhpDswy7DMG8DckIuipNuAPxJ/r2xgE
+         do4siueAz6f/G6op7wR7eFIPnYxLuQiFh3VYHpI2YS1LYgr4yBH3KVhsOuNAZofqo7H7
+         O2gaob0clC73PGvNxhcYL18fIbJL5pg6mrUFOAguWL+vlW98Qutmx/oFpEi4YelKEsGD
+         aM4zFwCkl6a3GovMva/QiglcGNNOkSXEhGgnKytdr9yMEMmzF4RRrF4LSLLeijWadmZ+
+         CGlA==
+X-Gm-Message-State: AOAM531L0yqKatmn4QxojOTqEBNo6qzbuHyAsOmCuyFGkKY+8uf3aNn5
+        FHpokHct8xPaG/btkWqSrEg=
+X-Google-Smtp-Source: ABdhPJydz7UW3IjrP79n4UTVjNFqvxkFq946vQ06ktm3ym/5WufH1QBd//0vsIPtFRo8scssm4Woyw==
+X-Received: by 2002:a1c:2d4b:: with SMTP id t72mr3284619wmt.105.1593091151960;
+        Thu, 25 Jun 2020 06:19:11 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:4cc:a210:8e70:5aff:fe7e:da0a])
+        by smtp.gmail.com with ESMTPSA id w128sm68974wmb.19.2020.06.25.06.19.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 06:19:11 -0700 (PDT)
+From:   Antonio Borneo <borneo.antonio@gmail.com>
+To:     Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>, linux-usb@vger.kernel.org
+Cc:     Antonio Borneo <borneo.antonio@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] usbip: tools: add in man page how to load the client's module
+Date:   Thu, 25 Jun 2020 15:17:32 +0200
+Message-Id: <2da8fc9e34440c1fa5f9007baaa3921767cdec50.1593090874.git.borneo.antonio@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200618000831.1048255-1-borneo.antonio@gmail.com>
+References: <20200618000831.1048255-1-borneo.antonio@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625130836.1916-13-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 03:08:35PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> There are no users left, all drivers have been converted to use the
-> per-device private pointer offered by IOMMU core.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/arm64/include/asm/device.h | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/device.h b/arch/arm64/include/asm/device.h
-> index 12b778d55342..996498751318 100644
-> --- a/arch/arm64/include/asm/device.h
-> +++ b/arch/arm64/include/asm/device.h
-> @@ -6,9 +6,6 @@
->  #define __ASM_DEVICE_H
->  
->  struct dev_archdata {
-> -#ifdef CONFIG_IOMMU_API
-> -	void *iommu;			/* private IOMMU data */
-> -#endif
->  };
+While the man page usbipd.8 already informs the user on which
+kernel module has to be used on server side, the man page usbip.8
+does not provide any equivalent information on client side.
+Also, it could be hard for a newbie to identify the proper usbip
+client kernel module, due to the name "vhci-hcd" that has no
+immediate assonance with usbip.
 
-Acked-by: Will Deacon <will@kernel.org>
+Add in usbip.8 the command to add the module vhci-hcd, similarly
+as it's already present in usbipd.8 for usbip-host.
+While there, rephrase the description of the command "usbip list
+--remote=server".
 
-Thanks, Joerg.
+Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+--
 
-Will
+v1->v2: rephrase the description of command "usbip list ..."
+        fix a typo in commit message
+---
+ tools/usb/usbip/doc/usbip.8 | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/usb/usbip/doc/usbip.8 b/tools/usb/usbip/doc/usbip.8
+index a6097be25d28..a15d20063b98 100644
+--- a/tools/usb/usbip/doc/usbip.8
++++ b/tools/usb/usbip/doc/usbip.8
+@@ -83,7 +83,9 @@ List local USB devices.
+ .SH EXAMPLES
+ 
+     client:# usbip list --remote=server
+-        - List exportable usb devices on the server.
++        - List devices exported by remote server.
++
++    client:# modprobe vhci-hcd
+ 
+     client:# usbip attach --remote=server --busid=1-2
+         - Connect the remote USB device.
+
+base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
+-- 
+2.27.0
+
