@@ -2,116 +2,137 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96151C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E725C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA40207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB3120709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:20:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="JZLYbqBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389745AbgFYFOe (ORCPT
+        id S2389777AbgFYFT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:14:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:60997 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgFYFOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 01:14:34 -0400
-IronPort-SDR: 2HemDhHIziST6J5M3L/+sqJSIp+Mb8hna5oxCQRGMKX6CATTkfdz7opc+hYk+63tLEK4i6rkqc
- YOGQFOPCoaOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="142990619"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="142990619"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 22:14:33 -0700
-IronPort-SDR: 4o09eHyp3wmNSZzI3NtwxSxBiCe3Vk3cL/R1SjaNUZ8Pl78eaIUbVeYzqmdgGAk2U/wDNMfqBR
- GFRdzGrgC8fQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="479518432"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Jun 2020 22:14:31 -0700
-Date:   Thu, 25 Jun 2020 13:15:34 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 2/2][v3] PM / s2idle: Code cleanup to make s2idle
- consistent with normal idle path
-Message-ID: <20200625051534.GA22907@chenyu-office.sh.intel.com>
-References: <cover.1592892767.git.yu.c.chen@intel.com>
- <a00278cc5db9f4845006cff130fd91a58c0d92d1.1592892767.git.yu.c.chen@intel.com>
- <15473183.xuek0xzqYe@kreacher>
+        Thu, 25 Jun 2020 01:19:59 -0400
+Received: from sonic313-21.consmr.mail.gq1.yahoo.com ([98.137.65.84]:35698
+        "EHLO sonic313-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389705AbgFYFT7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 01:19:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1593062398; bh=nNbuaihPm9AroQRBhAhelCSNPjnrx2O1HLOA95a0Tpc=; h=From:To:Cc:Subject:Date:References:From:Subject; b=JZLYbqBtckbSqh99naE4PZDvlo/BBokQhph46/oaqGM5Fi6OACDHIs0q0yMmhPvrOrxOi8EvHKHxusufvhHfjg2rSXgdyjwyuOlwhzmLPcVDu9W/fNdYBVqgaCjP4/GJNsVEmblhS1SFqG0BeG7yIptPdix8ukt+F+eyy/Af3YBvQpPqE+/1diaeIO3W+oCYecVoPK9drKmkchMkjccjDzN5NIxniFu8iSaYTpFqXN8FS+L69k3Olw2lWHsIQDKl+nRc9o5Rpu0YPMurxASTZSQCECTYdTmaFFRK8WsieSieHv2l9yRgg7bFtpW8JspxfPA8iXDoI9wzJYBUEo6btw==
+X-YMail-OSG: G2xB2kwVM1lGJZBr8SL9gjGkCVNgX1RfQcr10RSUT8npVu5HiA0byqQCBnG90EJ
+ 0A3MG0mqWo41.N8N_tK9z5uIe73bu5.1SOuq7gmDfGaAQkek5IvU2csHcqyGgwcSWVnQxJNBqxoB
+ n7XF._gqnGj3PUdmlDzjdVyFNQC89TP0cstcYDhwaQCNAIZWqynq7hxjCfi8Yq0XzT4It.8YnREo
+ awBE6K4rw9HCPj9Mrl.TYYgbwwcA9gKLoC5YL87M7Qb_zReGmbqnLwZv_jPC5DjbFkJtZYPlQl16
+ fgfWq6zmVxhmy7AsgaLJdHp1naiPZkkcmQH071oFOzCpPKK4n6dnQrn5R5LrEGp_W6YbPexCuaqo
+ MMTg7tkyPX1wglob.hh8KDV5SjDePuXFMyZBzLwkCuheXc_KOkcSKc.03z1aCP0CdExYCH891GdW
+ AjqSRzIpfdmxoDVAb_mVNmhxznBlhteVIu1iefj8NqJyd3L3oum0NIY2Zl2_ekIlLg4mIKiXWboO
+ GZwK9KnXHo8MT18KQ1gBfHcgxAZphiUCdOgBO3tYZ_kJcCuTDYPSnrrYydhWbXMyKDsLVbIAj33m
+ iED6POCONZtI7cHfT1h26NW2Quf5IChtf.0pjaOBUUjx7TC79hqTlD979aVHade9hfkR8hLdWmZt
+ F4LAp8cymGbQz1rLFWEnkzgIaBXvj3mU.a2glVRpBj_TXoNrJAQvQSwhAZm6rOu6RAEOM04uDXiC
+ .ltP8AiVbntejVMZrqhi6w04IZKwSjIR_z4OR6i3gY3JjHOHt3WkuoT7GNPKfwvAEZ8dwxByAJSk
+ J8.pS.HPMA9CK9ZCUnW8B7B85JzBTsNRI3HyW6FLoZfq3n5_BMF0EGjSn.UIkszKIrgu5lhKPeWh
+ EA_5.1FSBbVJvLi47PDg5SQ1xNfeOlnOLlLkA_DLVyIbC4lLMvCUdU1KgQWMDHqqQDyyDgxB8N4p
+ px4uzgNtEsuAiVpEeyTKhzKxbA4obf93CPQGD1IdSVhxkjYF__A9Nii6Yz6EKendnJ5ciUGa3xAw
+ bJDYuL1xuKHWlLAN.CynwLXHn8TE6qEhfQOUVw6MzJa4BgswUwmCSn9ZSyMvWBAZv7aZoHxNuxL.
+ .yWcA6jie.6yGcGdcf7RfKT5EYjNFbBacjvNbglhvVNGhNTP0MULavaa9xb8jBFruBme5igP2_F1
+ JxYFkHqAMU7VBCqcWpJlVl2yzugsb9zBz0S_qdfmB.z_ZaWb8oEPtRHG3uDsJl5lPO7iCtXQdCLL
+ zklMiUNBTGoQYWRCuPYlQL.SC_swGtv.1XclY3kVpKqqPfUL7s.pHucmQOw0EZ_C3WdcBBS_51hs
+ mthXSfzxgGQC3sRhn3N8zWD5vyGZjtrvr_oN91ovJDkvwOOWvsP7XA1TECXNLc3QyQuBx8J06ETX
+ BWaifbZ1yhAOfbkKnJ6zp.pq3R9x0
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.gq1.yahoo.com with HTTP; Thu, 25 Jun 2020 05:19:58 +0000
+Received: by smtp420.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 168749c4308c8b7d943811892a3c5e51;
+          Thu, 25 Jun 2020 05:19:57 +0000 (UTC)
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Gao Xiang <hsiangkao@redhat.com>,
+        Hongyu Jin <hongyu.jin@unisoc.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 4.19.y] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+Date:   Thu, 25 Jun 2020 13:19:39 +0800
+Message-Id: <20200625051939.32454-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15473183.xuek0xzqYe@kreacher>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+References: <20200625051939.32454-1-hsiangkao.ref@aol.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-On Tue, Jun 23, 2020 at 07:57:59PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Subject: [PATCH] cpuidle: Rearrange s2idle-specific idle state entry code
-> 
-> Implement call_cpuidle_s2idle() in analogy with call_cpuidle()
-> for the s2idle-specific idle state entry and invoke it from
-> cpuidle_idle_call() to make the s2idle-specific idle entry code
-> path look more similar to the "regular" idle entry one.
-> 
-> No intentional functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/cpuidle/cpuidle.c |    6 +++---
->  kernel/sched/idle.c       |   15 +++++++++++----
->  2 files changed, 14 insertions(+), 7 deletions(-)
-> 
-> Index: linux-pm/kernel/sched/idle.c
-> ===================================================================
-> --- linux-pm.orig/kernel/sched/idle.c
-> +++ linux-pm/kernel/sched/idle.c
-> @@ -96,6 +96,15 @@ void __cpuidle default_idle_call(void)
->  	}
->  }
->  
-> +static int call_cpuidle_s2idle(struct cpuidle_driver *drv,
-> +			       struct cpuidle_device *dev)
-> +{
-> +	if (current_clr_polling_and_test())
-> +		return -EBUSY;
-> +
-> +	return cpuidle_enter_s2idle(drv, dev);
-> +}
-> +
->  static int call_cpuidle(struct cpuidle_driver *drv, struct cpuidle_device *dev,
->  		      int next_state)
->  {
-> @@ -171,11 +180,9 @@ static void cpuidle_idle_call(void)
->  		if (idle_should_enter_s2idle()) {
->  			rcu_idle_enter();
->  
-> -			entered_state = cpuidle_enter_s2idle(drv, dev);
-> -			if (entered_state > 0) {
-> -				local_irq_enable();
-> +			entered_state = call_cpuidle_s2idle(drv, dev);
-I guess this changes the context a little bit that(comparing to [1/2 patch],
-after this modification, when we found that TIF_NEED_RESCHED is set we can have
-a second chance in the following call_cpuidle to do a second s2idle try. However
-in [1/2 patch], it might exit the s2idle phase directly once when we see
-TIF_NEED_RESCHED is set(because entered_state is postive we treat it as a successful
-s2idle). In summary I think the change (patch [2/2]) is more robust.
-Acked-by: Chen Yu <yu.c.chen@intel.com>
+From: Gao Xiang <hsiangkao@redhat.com>
 
-Thanks,
-Chenyu
+commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
+
+Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
+specific aarch64 environment easily, which wasn't shown before.
+
+After digging into that, I found that high 32 bits of page->private
+was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
+behavior with specific compiler options). Actually we only use low
+32 bits to keep the page information since page->private is only 4
+bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
+uses the upper 32 bits by mistake.
+
+Let's fix it now.
+
+Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+This fix has been merged into Linus's tree just now (today).
+Since the patch could not directly be applied to 4.19, manually handle this.
+
+ drivers/staging/erofs/unzip_vle.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
+index 684ff06fc7bf..630fd1f4f123 100644
+--- a/drivers/staging/erofs/unzip_vle.h
++++ b/drivers/staging/erofs/unzip_vle.h
+@@ -169,22 +169,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
+ static inline void z_erofs_onlinepage_fixup(struct page *page,
+ 	uintptr_t index, bool down)
+ {
+-	unsigned long *p, o, v, id;
+-repeat:
+-	p = &page_private(page);
+-	o = READ_ONCE(*p);
++	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
++	int orig, orig_index, val;
+ 
+-	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
+-	if (id) {
++repeat:
++	orig = atomic_read(u.o);
++	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
++	if (orig_index) {
+ 		if (!index)
+ 			return;
+ 
+-		BUG_ON(id != index);
++		DBG_BUGON(orig_index != index);
+ 	}
+ 
+-	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
+-		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned)down);
+-	if (cmpxchg(p, o, v) != o)
++	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
++		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
++	if (atomic_cmpxchg(u.o, orig, val) != orig)
+ 		goto repeat;
+ }
+ 
+-- 
+2.24.0
+
