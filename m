@@ -4,130 +4,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E262C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDA520679
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D2420679
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0CHlPpO"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UG8w6M3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403983AbgFYJqR (ORCPT
+        id S2390982AbgFYJr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:46:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59508 "EHLO
+        Thu, 25 Jun 2020 05:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389894AbgFYJqQ (ORCPT
+        with ESMTP id S2390052AbgFYJr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:46:16 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B1CC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:46:15 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a6so6325613wmm.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vxl/tdv9kpWIOuN2YYNY6bKce9KEtpxUCz4B4fhlwMs=;
-        b=E0CHlPpOfBqGZD74u+uo1w2hr2b1CGencolNHf1PknVTcOxLfkAyK0NwwnxeXTXuU0
-         erbhuiFNXLPZwf1SAvTRASh2mqXkZ6aTB0SJCg80WaNjT0ezOSXNsgviYZTjcM8OEWmi
-         sZi2QRcp/wO3FZSK3XqSW0FOB/fkmUZFzoG1824UAes7Ig//VM0qw6HVxGoqQNFcX3iS
-         jd+jf4R1MrEAS00a7umB5+6Hy5isDM2yy7brQkbH8HIect9U6iorDx0D1413r8gJC0+n
-         m+MUBrJP00jUMujNhu4sivLcL4lh/QUbL+cj4zhkfaAN0qF93X6bLZzJZmR7ZsS154gf
-         Ov9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vxl/tdv9kpWIOuN2YYNY6bKce9KEtpxUCz4B4fhlwMs=;
-        b=XNd2ER3j5AgglUuy/tPnq7j21Iny7n/6OkKMBAnBfriGth+xyKPs39zNRuA3X4jAXo
-         cvml5e+04yvRmss+GyNQmlJu5UfEQed4SEDrvcdl02SQ+h17t+zEm6yTf358yKSDUFmj
-         MpyAUN5HfH7SbhJo8CKqOSLE0xY5f8J6Vatup0vdMXkfMhqT8P7Isf9ct6bMXoft8mXt
-         CrOwucbmAaZ7sN5/jodw1IjT/i+/9ply71tVOZTyfqPvftZastJNiAA1esyhuSrqkec4
-         +BWQ4+DiddY2ZNWJZFCnB2ZQ2AAuhDTWdjy+NAcYdEjeZ0jcyhKj9SMHVQma8Jtus7Hb
-         oXNQ==
-X-Gm-Message-State: AOAM533gB4kCwZmAPnKFqtlVY0/F6IQhHZ5TGfp68V2al4sNWj4I6sj6
-        ed/qomiVDrcptgBxSmYAHO0Q7w==
-X-Google-Smtp-Source: ABdhPJyJPSUnMWkYym/l/M3quKvkj6eev/Am+p1MkAozrU5ybki4gZEqiO8/NowLH+fVWnbtW2vWew==
-X-Received: by 2002:a1c:a557:: with SMTP id o84mr2445278wme.42.1593078374694;
-        Thu, 25 Jun 2020 02:46:14 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id w2sm19962496wrs.77.2020.06.25.02.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 02:46:14 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 10:46:12 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     jingoohan1@gmail.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 8/8] backlight: qcom-wled: Remove unused configs for LED3
- and LED4
-Message-ID: <20200625094612.fn3o5bd37t7vadsc@holly.lan>
-References: <20200624145721.2590327-1-lee.jones@linaro.org>
- <20200624145721.2590327-9-lee.jones@linaro.org>
+        Thu, 25 Jun 2020 05:47:28 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFF3C061573;
+        Thu, 25 Jun 2020 02:47:28 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3BE2C521;
+        Thu, 25 Jun 2020 11:47:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593078445;
+        bh=Rd6+/EiGtZUUer4Z7+8mWfSC18i6Ms0DFb9zau1uDdM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UG8w6M3V8VNc3AN7Br+6+dNZDthnouJVTanLFWakrkvOVbZv+hJOpdJhllO8IzUhN
+         4dI05+mZo182HoEIt9uuuYB0fMPbQjOK6ZhR/Mn6RfBbwMhbrFnOCd2pjSPcgmik65
+         LqWRlwz5C32wYvyxhLxjZNP/yEHEEhBs/h1z4Sl0=
+Date:   Thu, 25 Jun 2020 12:47:24 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        niklas soderlund <niklas.soderlund@ragnatech.se>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Steve Longerbeam <steve_longerbeam@mentor.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com
+Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
+ ENUM/GET/SET INPUT
+Message-ID: <20200625094724.GE5865@pendragon.ideasonboard.com>
+References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
+ <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
+ <20200625020138.GW5980@pendragon.ideasonboard.com>
+ <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200624145721.2590327-9-lee.jones@linaro.org>
+In-Reply-To: <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:57:21PM +0100, Lee Jones wrote:
-> Fixes W=1 warnings:
-> 
->  drivers/video/backlight/qcom-wled.c:1294:34: warning: ‘wled4_string_cfg’ defined but not used [-Wunused-const-variable=]
->  1294 | static const struct wled_var_cfg wled4_string_cfg = {
->  | ^~~~~~~~~~~~~~~~
->  drivers/video/backlight/qcom-wled.c:1290:34: warning: ‘wled3_string_cfg’ defined but not used [-Wunused-const-variable=]
->  1290 | static const struct wled_var_cfg wled3_string_cfg = {
->  | ^~~~~~~~~~~~~~~~
-> 
-> Cc: <stable@vger.kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: linux-arm-msm@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Hi Ramzi,
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-
-> ---
->  drivers/video/backlight/qcom-wled.c | 8 --------
->  1 file changed, 8 deletions(-)
+On Thu, Jun 25, 2020 at 11:30:46AM +0200, Ramzi Ben Meftah wrote:
+> On Thu, Jun 25, 2020 at 05:01:38AM +0300, Laurent Pinchart wrote:
+> > On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
+> >> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
+> >>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >> 
+> >>  +Niklas, +Laurent
+> >> 
+> >> Niklas, Laurent, how does this play with CAP_IO_MC ?
+> > 
+> > I don't think it's related to CAP_IO_MC, but I don't think it's a good
+> > idea either :-) Routing doesn't go through the subdev [gs]_input
+> > operations in MC-based drivers. It should be configured through link
+> > setup instead. This patch goes in the wrong direction, sorry Steve.
 > 
-> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-> index 4c8c34b994414..c25c31199952c 100644
-> --- a/drivers/video/backlight/qcom-wled.c
-> +++ b/drivers/video/backlight/qcom-wled.c
-> @@ -1287,14 +1287,6 @@ static const struct wled_var_cfg wled4_string_i_limit_cfg = {
->  	.size = ARRAY_SIZE(wled4_string_i_limit_values),
->  };
->  
-> -static const struct wled_var_cfg wled3_string_cfg = {
-> -	.size = 8,
-> -};
-> -
-> -static const struct wled_var_cfg wled4_string_cfg = {
-> -	.size = 16,
-> -};
-> -
->  static const struct wled_var_cfg wled5_mod_sel_cfg = {
->  	.size = 2,
->  };
-> -- 
-> 2.25.1
-> 
+> ENUMINPUT ioctl allow to get the input signal status. Is there an alternative
+> with Media Controller?
+
+No there isn't at the moment. I'm not opposed to adding such a feature,
+but VIDIOC_ENUMINPUT isn't the right choice. This would have to be a
+subdev pad operation (v4l2_subdev_pad_ops), not a video operation
+(v4l2_subdev_video_ops). We also likely shouldn't call it "enum" input,
+as it would retrieve properties of the input corresponding to the pad,
+not enumerate inputs.
+
+> >>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
+> >>> ioctls for use via v4l2 subdevice node.
+> >>>
+> >>> This commit should probably not be pushed upstream, because the (old)
+> >>> idea of video inputs conflicts with the newer concept of establishing
+> >>> media links between src->sink pads.
+> >>>
+> >>> However it might make sense for some subdevices to support enum/get/set
+> >>> inputs. One example would be the analog front end subdevice for the
+> >>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
+> >>> can be done without requiring the implementation of media entities that
+> >>> would define the analog source for which to establish a media link.
+> >>>
+> >>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >>> ---
+> >>>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
+> >>>  include/media/v4l2-subdev.h           | 11 +++++++++++
+> >>>  2 files changed, 20 insertions(+)
+> >>>
+> >>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>> index 6b989fe..73fbfe9 100644
+> >>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> >>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> >>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+> >>>  			return -ENOTTY;
+> >>>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
+> >>>
+> >>> +	case VIDIOC_ENUMINPUT:
+> >>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
+> >>> +
+> >>> +	case VIDIOC_G_INPUT:
+> >>> +		return v4l2_subdev_call(sd, video, g_input, arg);
+> >>> +
+> >>> +	case VIDIOC_S_INPUT:
+> >>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
+> >>> +
+> >>>  	case VIDIOC_G_CTRL:
+> >>>  		if (!vfh->ctrl_handler)
+> >>>  			return -ENOTTY;
+> >>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> >>> index f7fe78a..6e1a9cd 100644
+> >>> --- a/include/media/v4l2-subdev.h
+> >>> +++ b/include/media/v4l2-subdev.h
+> >>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
+> >>>   * @g_input_status: get input status. Same as the status field in the
+> >>>   *	&struct &v4l2_input
+> >>>   *
+> >>> + * @enuminput: enumerate inputs. Should return the same input status as
+> >>> + *      @g_input_status if the passed input index is the currently active
+> >>> + *      input.
+> >>> + *
+> >>> + * @g_input: returns the currently active input index.
+> >>> + *
+> >>> + * @s_input: set the active input.
+> >>> + *
+> >>>   * @s_stream: used to notify the driver that a video stream will start or has
+> >>>   *	stopped.
+> >>>   *
+> >>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
+> >>>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> >>>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> >>>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
+> >>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
+> >>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
+> >>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
+> >>>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
+> >>>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
+> >>>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
+
+-- 
+Regards,
+
+Laurent Pinchart
