@@ -2,95 +2,148 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 185F8207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFE120768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405580AbgFYOzI (ORCPT
+        id S2405676AbgFYOz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:55:08 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:38510 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405425AbgFYOzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:55:07 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id C3418FB03;
-        Thu, 25 Jun 2020 16:55:04 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1airAkfx232Y; Thu, 25 Jun 2020 16:55:03 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 3490445273; Thu, 25 Jun 2020 16:55:03 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 16:55:03 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] drm/etnaviv: Ignore MC bit when checking for runtime
- suspend
-Message-ID: <20200625145503.GA48167@bogon.m.sigxcpu.org>
-References: <cover.1583176306.git.agx@sigxcpu.org>
- <4c61fde86c5e0dced249221dbc0a8d4207d5bffa.camel@pengutronix.de>
+        Thu, 25 Jun 2020 10:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405482AbgFYOz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:55:57 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D236EC08C5C1;
+        Thu, 25 Jun 2020 07:55:56 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: nicolas)
+        with ESMTPSA id 5ED4D2A5603
+Message-ID: <2d41ab4daef0e9a188e6416d0dc4a5abe20bb195.camel@collabora.com>
+Subject: Re: [RFC 5/7] media: uapi: h264: pad v4l2_ctrl_h264_pps to 64-bit
+From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Thu, 25 Jun 2020 10:55:50 -0400
+In-Reply-To: <20200623182809.1375-6-ezequiel@collabora.com>
+References: <20200623182809.1375-1-ezequiel@collabora.com>
+         <20200623182809.1375-6-ezequiel@collabora.com>
+Organization: Collabora
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-5mB/fLJIBDmsj/H+AEVD"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c61fde86c5e0dced249221dbc0a8d4207d5bffa.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Tue, Mar 03, 2020 at 12:55:04PM +0100, Lucas Stach wrote:
-> On Mo, 2020-03-02 at 20:13 +0100, Guido Günther wrote:
-> > At least GC7000 fails to enter runtime suspend for long periods of time since
-> > the MC becomes busy again even when the FE is idle. The rest of the series
-> > makes detecting similar issues easier to debug in the future by checking
-> > all known bits in debugfs and also warning in the EBUSY case.
-> 
-> Thanks, series applied to etnaviv/next.
-> 
-> > Tested on GC7000 with a reduced runtime delay of 50ms. Patches are
-> > against next-20200226.
-> 
-> I've already wondered if 200ms is too long, 50ms sounds more
-> reasonable. Do you have any numbers on the power draw on the i.MX8M
-> with idle GPU, vs. being fully power gated?
 
-The difference is at least 250mW. It makes a huge difference over here.
-We hit
-https://lore.kernel.org/dri-devel/20200614064601.7872-1-navid.emamdoost@gmail.com/
-recently and you notice instantly when that happens when looking at the
-SoC temperature.
+--=-5mB/fLJIBDmsj/H+AEVD
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
- -- Guido
-> 
-> Regards,
-> Lucas
-> 
-> > Thanks to Lucas Stach for pointing me in the right direction.
-> > 
-> > Guido Günther (5):
-> >   drm/etnaviv: Fix typo in comment
-> >   drm/etnaviv: Update idle bits
-> >   drm/etnaviv: Consider all kwnown idle bits in debugfs
-> >   drm/etnaviv: Ignore MC when checking runtime suspend idleness
-> >   drm/etnaviv: Warn when GPU doesn't idle fast enough
-> > 
-> >  drivers/gpu/drm/etnaviv/etnaviv_gpu.c  | 26 ++++++++++++++++++++++----
-> >  drivers/gpu/drm/etnaviv/state_hi.xml.h |  7 +++++++
-> >  2 files changed, 29 insertions(+), 4 deletions(-)
-> > 
-> 
+Le mardi 23 juin 2020 =C3=A0 15:28 -0300, Ezequiel Garcia a =C3=A9crit :
+> The struct does not contain 64-bit types, and therefore
+> doesn't suffer from compatibility issues.
+>=20
+> However, having it aligned to 64-bits is cleaner and
+> has the advantage of allowing future extensions.
+
+This one seems a bit random too, it's a final/fixed bitstream syntax.
+I'm not certain this is really needed.
+
+>=20
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 +++
+>  drivers/media/v4l2-core/v4l2-ctrls.c                      | 5 +++++
+>  include/media/h264-ctrls.h                                | 1 +
+>  3 files changed, 9 insertions(+)
+>=20
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index e3b5a28fb965..2c682f81aaad 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1662,6 +1662,9 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type =
+-
+>      * - __u16
+>        - ``flags``
+>        - See :ref:`Picture Parameter Set Flags <h264_pps_flags>`
+> +    * - __u32
+> +      - ``reserved``
+> +      - Applications and drivers must set this to zero.
+> =20
+>  .. _h264_pps_flags:
+> =20
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-co=
+re/v4l2-ctrls.c
+> index a751c14f9c22..003333b6c7f7 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -1735,6 +1735,7 @@ static int std_validate_compound(const struct v4l2_=
+ctrl *ctrl, u32 idx,
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+>  	struct v4l2_ctrl_h264_decode_params *p_h264_dec_params;
+> +	struct v4l2_ctrl_h264_pps *p_h264_pps;
+>  	struct v4l2_ctrl_hevc_sps *p_hevc_sps;
+>  	struct v4l2_ctrl_hevc_pps *p_hevc_pps;
+>  	struct v4l2_ctrl_hevc_slice_params *p_hevc_slice_params;
+> @@ -1792,7 +1793,11 @@ static int std_validate_compound(const struct v4l2=
+_ctrl *ctrl, u32 idx,
+>  		break;
+> =20
+>  	case V4L2_CTRL_TYPE_H264_SPS:
+> +		break;
+>  	case V4L2_CTRL_TYPE_H264_PPS:
+> +		p_h264_pps =3D p;
+> +		zero_reserved(*p_h264_pps);
+> +		break;
+>  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+>  		break;
+>  	case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index a938d16b901c..4119dc4486f3 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -111,6 +111,7 @@ struct v4l2_ctrl_h264_pps {
+>  	__s8 chroma_qp_index_offset;
+>  	__s8 second_chroma_qp_index_offset;
+>  	__u16 flags;
+> +	__u32 reserved;
+>  };
+> =20
+>  struct v4l2_ctrl_h264_scaling_matrix {
+
+--=-5mB/fLJIBDmsj/H+AEVD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXvS69gAKCRBxUwItrAao
+HEUIAJ9iIhGr2wan1WWM4uxySWtzEwaOAgCePb4hoAdrfOmAciC6Md6rdjr/uWE=
+=562I
+-----END PGP SIGNATURE-----
+
+--=-5mB/fLJIBDmsj/H+AEVD--
+
