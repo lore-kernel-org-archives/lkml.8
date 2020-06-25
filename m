@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AECEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0074120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544C0207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405842AbgFYS0B (ORCPT
+        id S2406149AbgFYS0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:26:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:43192 "EHLO foss.arm.com"
+        Thu, 25 Jun 2020 14:26:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:43232 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404019AbgFYS0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:26:01 -0400
+        id S2404019AbgFYS0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:26:13 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE4E9D6E;
-        Thu, 25 Jun 2020 11:26:00 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02B9DD6E;
+        Thu, 25 Jun 2020 11:26:13 -0700 (PDT)
 Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16FF03F71E;
-        Thu, 25 Jun 2020 11:25:58 -0700 (PDT)
-References: <20200624195811.435857-1-maz@kernel.org> <20200624195811.435857-15-maz@kernel.org>
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5737C3F71E;
+        Thu, 25 Jun 2020 11:26:11 -0700 (PDT)
+References: <20200624195811.435857-1-maz@kernel.org> <20200624195811.435857-16-maz@kernel.org>
 User-agent: mu4e 0.9.17; emacs 26.3
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     Marc Zyngier <maz@kernel.org>
@@ -39,10 +39,10 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Florian Fainelli <f.fainelli@gmail.com>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
-Subject: Re: [PATCH v2 14/17] arm64: Kill __smp_cross_call and co
-In-reply-to: <20200624195811.435857-15-maz@kernel.org>
-Date:   Thu, 25 Jun 2020 19:25:56 +0100
-Message-ID: <jhjh7uzgfyj.mognet@arm.com>
+Subject: Re: [PATCH v2 15/17] arm64: Remove custom IRQ stat accounting
+In-reply-to: <20200624195811.435857-16-maz@kernel.org>
+Date:   Thu, 25 Jun 2020 19:26:09 +0100
+Message-ID: <jhjftajgfy6.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,24 +52,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 24/06/20 20:58, Marc Zyngier wrote:
-> @@ -852,8 +841,7 @@ void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
->  #ifdef CONFIG_IRQ_WORK
->  void arch_irq_work_raise(void)
->  {
-> -	if (__smp_cross_call)
-> -		smp_cross_call(cpumask_of(smp_processor_id()), IPI_IRQ_WORK);
-> +	smp_cross_call(cpumask_of(smp_processor_id()), IPI_IRQ_WORK);
-
-AIU the following commit:
-
-  eb631bb5bf5b ("arm64: Support arch_irq_work_raise() via self IPIs")
-
-It seems arm64 hasn't needed that check since
-
-  4b3dc9679cf7 ("arm64: force CONFIG_SMP=y and remove redundant #ifdefs")
-
-Did I get that right?
-
->  }
->  #endif
+> @@ -801,26 +802,15 @@ void show_ipi_list(struct seq_file *p, int prec)
+>       unsigned int cpu, i;
 >
+>       for (i = 0; i < NR_IPI; i++) {
+> +		unsigned int irq = irq_desc_get_irq(ipi_desc[i]);
+>               seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
+>                          prec >= 4 ? " " : "");
+>               for_each_online_cpu(cpu)
+> -			seq_printf(p, "%10u ",
+> -				   __get_irq_stat(cpu, ipi_irqs[i]));
+> +			seq_printf(p, "%10u ", kstat_irqs_cpu(irq, cpu));
+>               seq_printf(p, "      %s\n", ipi_types[i]);
+
+How attached are we to that custom IPI printout? AIUI we *could* give them
+a "prettier" name in request_percpu_irq() and let the standard procfs
+printout take the wheel.
