@@ -2,176 +2,140 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70068C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F99C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9BD2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A4F2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:44:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u+xRIflT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391140AbgFYUmv (ORCPT
+        id S2391154AbgFYUo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390477AbgFYUmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:42:50 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BBA220767;
-        Thu, 25 Jun 2020 20:42:47 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 16:42:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Thu, 25 Jun 2020 16:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391125AbgFYUoY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 16:44:24 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EE8C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:44:23 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x207so3596723pfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OJIWob+W3gkDD1uP1ASRGO41yjBk8/1OpCvhfpmJs8w=;
+        b=u+xRIflTTe1eUnFBT4p5WF8e480mirYe7NpkH2bv8nIzTiLuJKFDeofANH1OOeic5x
+         /6LK2tKveHvX+ICIbkWmq08rmtn819jD7iIKFocYGQk/nSgnIbrqYX/AbZdYHeM60SNn
+         CtV1RNdwOPTuN/E8WwRhrKZRTz4WD4vkoDwu5ykRGGc8KcylpXPXSJt7Pdfdn9hj2EXN
+         200SrPmEYQFRASiGasXTcWH+JhpbKs/XvE/RfLKzplaVJtYbAW22CNeSFvqXwX4VCjfA
+         nJSH4Pr22jSucBL9jLDnFEupk/Y8P+6KswwaztgzAHsNJc7X1nmP+6w8E272L9/g+Dod
+         0r9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OJIWob+W3gkDD1uP1ASRGO41yjBk8/1OpCvhfpmJs8w=;
+        b=fjVl/4EufgJyaq6a3GMjRWER9CLmBnrVKtfY91e9Bchc7xs1/pXa8oAuJaiDVmAfvt
+         hb2YBQmRZdyijnWK7lRuXBqvU/Rp/mForMO7tjGp4PvofJnfwJgAO/qACg9SuYgwHnZ1
+         NWAgWNTLiHH5Q7Y6DT/766f1gL5UhndXLmus2dPVeWjf7kqGcNmkHt4LU37ZSztfNxYZ
+         7XZVr5VXQRrxFrHnukXgH9QYKNU4tzPDhA+jLdEhoIG2iWYsgrOUmFxT0WA1FoQ4kLVl
+         pdLva0Pj9ifl4S7/nw0zOJmt1zN7L0rEJAjYmEtQVpYw6Lz2FdRMxkE9ysJbFvR7z4YW
+         c/Pg==
+X-Gm-Message-State: AOAM532Mm9bsLoPcM+qLyGcLv/r6LlNbVH3o3BmbhyRSFmDGz6otbEJ4
+        +s8Fa91hBT5MZ8b08/z0vwaW1Dkc
+X-Google-Smtp-Source: ABdhPJzFhAn2/SSIKUbwB3Gmn1pjQeQ+zba2hlNLxfpD5Z5CUhCeaeWCTeNeW7UCKdcn1Ek5ltUcxQ==
+X-Received: by 2002:a63:a13:: with SMTP id 19mr27225468pgk.100.1593117862934;
+        Thu, 25 Jun 2020 13:44:22 -0700 (PDT)
+Received: from localhost (g2.222-224-226.ppp.wakwak.ne.jp. [222.224.226.2])
+        by smtp.gmail.com with ESMTPSA id 27sm9222139pjg.19.2020.06.25.13.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 13:44:22 -0700 (PDT)
+From:   Stafford Horne <shorne@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200625164246.4b75e157@oasis.local.home>
-In-Reply-To: <1860125983.13444.1593115112644.JavaMail.zimbra@efficios.com>
-References: <20200625094454.732790f7@oasis.local.home>
-        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
-        <20200625150459.4a5d7221@oasis.local.home>
-        <1860125983.13444.1593115112644.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: [PATCH] init: Align init_task to avoid conflict with MUTEX_FLAGS
+Date:   Fri, 26 Jun 2020 05:44:09 +0900
+Message-Id: <20200625204410.3168791-1-shorne@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 15:58:32 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+When booting on 32-bit machines (seen on OpenRISC) I saw this warning
+with CONFIG_DEBUG_MUTEXES turned on.
 
-> >> >		if (ts != save_before) {
-> >> >			/* slow path - Was preempted between C and E */
-> >> >			/* The update to write_stamp could have overwritten the update to
-> >> >			 * it by the preempting event,  
-> >> 
-> >> This sentence is hard to parse.  
-> > 
-> > Ah, that needs better wording: "An interrupt of this event could have
-> > written to the write_stamp before this interrupt wrote to it.  
-> 
-> I would have though the part "before this interrupt wrote to it" would
-> actually be "before this event wrote to it" (?) Am I confused ?
+    ------------[ cut here ]------------
+    WARNING: CPU: 0 PID: 0 at kernel/locking/mutex.c:1242 __mutex_unlock_slowpath+0x328/0x3ec
+    DEBUG_LOCKS_WARN_ON(__owner_task(owner) != current)
+    Modules linked in:
+    CPU: 0 PID: 0 Comm: swapper Not tainted 5.8.0-rc1-simple-smp-00005-g2864e2171db4-dirty #179
+    Call trace:
+    [<(ptrval)>] dump_stack+0x34/0x48
+    [<(ptrval)>] __warn+0x104/0x158
+    [<(ptrval)>] ? __mutex_unlock_slowpath+0x328/0x3ec
+    [<(ptrval)>] warn_slowpath_fmt+0x7c/0x94
+    [<(ptrval)>] __mutex_unlock_slowpath+0x328/0x3ec
+    [<(ptrval)>] mutex_unlock+0x18/0x28
+    [<(ptrval)>] __cpuhp_setup_state_cpuslocked.part.0+0x29c/0x2f4
+    [<(ptrval)>] ? page_alloc_cpu_dead+0x0/0x30
+    [<(ptrval)>] ? start_kernel+0x0/0x684
+    [<(ptrval)>] __cpuhp_setup_state+0x4c/0x5c
+    [<(ptrval)>] page_alloc_init+0x34/0x68
+    [<(ptrval)>] ? start_kernel+0x1a0/0x684
+    [<(ptrval)>] ? early_init_dt_scan_nodes+0x60/0x70
+    irq event stamp: 0
 
-No, this is what I get for replying while in a meeting ;-)
+I traced this to kernel/locking/mutex.c storing 3 bits of MUTEX_FLAGS in
+the task_struct pointer (mutex.owner).  There is a comment saying that
+task_structs are always aligned to L1_CACHE_BYTES.  This is not true for
+the init_task.
 
-Yes, it's "before this event".
+On 64-bit machines this is not a problem because symbol addresses are
+naturally aligned to 64-bits providing 3 bits for MUTEX_FLAGS.  Howerver,
+for 32-bit machines the symbol address only has 2 bits available.
 
-> 
-> > Which
-> > means this event could have made the write_stamp go backwards. Need to
-> > put back the write stamp using the before stamp, as that can only be
-> > updated by events that interrupt this current one."
-> > 
-> >   
-> >>   
-> >> >                          but before and after should be
-> >> >			 * the same for all completed top events */
-> >> >			after = local_read(write_stamp);
-> >> >			if (save_before > after)
-> >> >				local_cmpxchg(write_stamp, after, save_before);  
-> >> 
-> >> What is the type of write_stamp, and how does it work on 32-bit architectures
-> >> with
-> >> NMIs ?
-> >>   
-> > 
-> > local64_cmpxchg(), I left it out of change log, as this is the
-> > algorithm not all the details. See the patch for those ;-)  
-> 
-> I'm still concerned about local64 on 32-bit, as per my prior email.
+Fix this by setting init_task alignment to at least L1_CACHE_BYTES.
 
-Yes. And I think we could make a local_time() wrapper of local_t to do
-these updates for us. They don't need to be totally atomic, just appear
-to be.
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+---
+ init/init_task.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
-> >   
-> >> I'm not entirely sure to understand what this cmpxchg try to
-> >> accomplish. Moreover, what happens if right after an interrupt nests
-> >> between [C] and [E], another interrupt try to write into the buffer
-> >> after before that cmpxchg ?  
-> > 
-> > We are just fixing up this events write into write_stamp. We only worry
-> > about being interrupted between C and D, as then we set the write stamp
-> > backward. But any interrupting event will also update the before time
-> > stamp. That is, the before_stamp can only be the last time stamp of an
-> > event that interrupted us here. By doing the cmpxchg, we only update
-> > the write stamp to the before stamp of the last event to interrupt this
-> > event and if the cmpxchg fails, that means another event came in and
-> > updated it to its own time stamp which is what we want it to be!  
-> 
-> This seems to assume that before_stamp is always written to in a monotonic
-> fashion except in this very specific corner-case. But what happens if this
-> algorithm is interrupted between reading the clock() current time and
-> writing to before_stamp ? This can happen both for the outer event and
-> at various nesting levels as well. I'm concerned that this scenario
-> would also cause before_stamp to go backwards, but would not be handled
-> correctly.
+diff --git a/init/init_task.c b/init/init_task.c
+index 15089d15010a..d2d2af018d0d 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -64,6 +64,8 @@ unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)]
+ struct task_struct init_task
+ #ifdef CONFIG_ARCH_TASK_STRUCT_ON_STACK
+ 	__init_task_data
++#else
++	__aligned(L1_CACHE_BYTES)
+ #endif
+ = {
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+-- 
+2.26.2
 
-For this version I'm using local64_t for before_stamp. I'll look into
-other ways to update it for 32 bit. Sequence updates should be easy to
-implement (if it hasn't already).
-
-
-> > 
-> > The buffer would look like this:
-> > 
-> >  ----+------------------+------------------+------------------+----
-> >  ... | time 2 : event 2 | time ? : event 1 | time 3 : event 3 | ...
-> >  ----+------------------+------------------+------------------+----
-> > 
-> > 
-> > What do you put in for event 1's time. It's time stamp is before time
-> > 2, but the recorded event is after event 2. We can't use event 3 as a
-> > time.  
-> 
-> I solve this by using cmpxchg instead of xadd for [C], and retry space
-> reservation with a new timestamp. ;-)
-
-Not if it breaks user space. 10 years ago I may have considered a
-change like that, but not today.
-
-
-> 
-> Can we have this scenario at an extra nesting level ? Basically
-> we add an outermost event 0 at nesting level 0, and shift events 1, 2, 3
-> to nesting levels 1, 2 in your scenario ? If it is possible, will the
-> special-case handling it also trigger ?
-
-I'm not sure I understand what you mean. The outer most event only
-cares that its timestamp is:
-
- 1) In order between other events in the buffer
- 2) Exists between the time the event started recording and the time it
-    finished recording. As the caller doesn't care where the timestamp
-    lies within that event.
-
-This is true even if this trace happens within a nesting event.
-
--- Steve
