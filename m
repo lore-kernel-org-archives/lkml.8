@@ -2,146 +2,250 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B451C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE98DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B94B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9268B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgFYEYB (ORCPT
+        id S1727912AbgFYEYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 00:24:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27978 "EHLO mga09.intel.com"
+        Thu, 25 Jun 2020 00:24:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:57263 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgFYEYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 00:24:00 -0400
-IronPort-SDR: /VyxqyaFq++yxyl9zoqCLyvC9ViSbNY+nXnOlBoE17mLlnL0bv1+8BRnfOyeBVKiKtcszyOdcE
- 9+wyU/UmkFGw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146246035"
+        id S1726058AbgFYEYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 00:24:34 -0400
+IronPort-SDR: s1E2fiMfkpqLSI8YyumMtCECQ1M1RxvKAxTbJc7ajjlf0bNShvlZihPuxz5L7ArSuVpWHFlg5r
+ huinz7sgBJDA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="142973391"
 X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="146246035"
+   d="scan'208";a="142973391"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 21:23:59 -0700
-IronPort-SDR: wn6pbKZSjt6KA7vrnM6zVRfPvdg0paanvOI94eMoZWfE9hNk658QDFgcn6iJhvoKuEXgsErZak
- HRe+Idgq4U3w==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 21:24:33 -0700
+IronPort-SDR: M9sWZ4KJcjaGXAHk2xwObZq8CKZPsk8W6xcueHqAGCzy1+NAbW9QnapF4vXqTkO3Kw57Bdheat
+ WBc9ePAGmjDw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="311863765"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 21:23:58 -0700
-Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
-        by linux.intel.com (Postfix) with ESMTP id 95689580298;
-        Wed, 24 Jun 2020 21:23:55 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
- <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
- <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
-Date:   Thu, 25 Jun 2020 12:23:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+   d="scan'208";a="479509984"
+Received: from skurzyno-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.40.230])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Jun 2020 21:24:27 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] tpm: tpm2-space: Resize session and context buffers dynamically
+Date:   Thu, 25 Jun 2020 07:24:20 +0300
+Message-Id: <20200625042424.370072-1-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Re-allocate context and session buffers when needed. Scale them in page
+increments so that the reallocation is only seldomly required, and thus
+causes minimal stress to the system. Add a static maximum limit of four
+pages for buffer sizes.
 
-Hi Philipp,
+Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+Tested only for compilation.
+ drivers/char/tpm/tpm2-space.c | 80 ++++++++++++++++++++++++-----------
+ include/linux/tpm.h           |  6 ++-
+ 2 files changed, 59 insertions(+), 27 deletions(-)
 
-On 18/6/2020 8:25 pm, Philipp Zabel wrote:
-> Hi Rahul,
->
-> On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
->> This PWM controller does not have any other consumer, it is a
->> dedicated PWM controller for fan attached to the system. Add
->> driver for this PWM fan controller.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/pwm/Kconfig         |   9 +
->>  drivers/pwm/Makefile        |   1 +
->>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 410 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
->>
-> [...]
->> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
->> new file mode 100644
->> index 000000000000..3c7077acb161
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-intel-lgm.c
->> @@ -0,0 +1,400 @@
-> [...]
->> +static int lgm_pwm_probe(struct platform_device *pdev)
->> +{
->> +	struct lgm_pwm_chip *pc;
->> +	struct device *dev = &pdev->dev;
->> +	void __iomem *io_base;
->> +	int ret;
->> +
->> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
->> +	if (!pc)
->> +		return -ENOMEM;
->> +
->> +	io_base = devm_platform_ioremap_resource(pdev, 0);
->> +	if (IS_ERR(io_base))
->> +		return PTR_ERR(io_base);
->> +
->> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
->> +	if (IS_ERR(pc->regmap)) {
->> +		ret = PTR_ERR(pc->regmap);
->> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
->> +		return ret;
->> +	}
->> +
->> +	pc->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(pc->clk)) {
->> +		ret = PTR_ERR(pc->clk);
->> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
->> +		return ret;
->> +	}
->> +
->> +	pc->rst = devm_reset_control_get(dev, NULL);
->> +	if (IS_ERR(pc->rst)) {
->> +		ret = PTR_ERR(pc->rst);
->> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
->> +		return ret;
->> +	}
-> Please use devm_reset_control_get_exclusive() to make it explicit an
-> that exclusive reset control is requested. Given how the reset control
-> is used, I think this driver could also use
-> devm_reset_control_get_shared() to potentially allow sharing a reset
-> line with other devices.
+diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
+index 982d341d8837..acb9e82bf9e8 100644
+--- a/drivers/char/tpm/tpm2-space.c
++++ b/drivers/char/tpm/tpm2-space.c
+@@ -15,6 +15,8 @@
+ #include <asm/unaligned.h>
+ #include "tpm.h"
+ 
++#define TPM2_SPACE_MAX_BUFFER_SIZE	(4 * PAGE_SIZE)
++
+ enum tpm2_handle_types {
+ 	TPM2_HT_HMAC_SESSION	= 0x02000000,
+ 	TPM2_HT_POLICY_SESSION	= 0x03000000,
+@@ -47,9 +49,12 @@ int tpm2_init_space(struct tpm_space *space)
+ 	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+ 	if (space->session_buf == NULL) {
+ 		kfree(space->context_buf);
++		space->context_buf = NULL;
+ 		return -ENOMEM;
+ 	}
+ 
++	space->context_size = PAGE_SIZE;
++	space->session_size = PAGE_SIZE;
+ 	return 0;
+ }
+ 
+@@ -116,11 +121,13 @@ static int tpm2_load_context(struct tpm_chip *chip, u8 *buf,
+ 	return 0;
+ }
+ 
+-static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
+-			     unsigned int buf_size, unsigned int *offset)
++static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 **buf,
++			     unsigned int *buf_size, unsigned int *offset)
+ {
+-	struct tpm_buf tbuf;
++	unsigned int new_buf_size;
+ 	unsigned int body_size;
++	struct tpm_buf tbuf;
++	void *new_buf;
+ 	int rc;
+ 
+ 	rc = tpm_buf_init(&tbuf, TPM2_ST_NO_SESSIONS, TPM2_CC_CONTEXT_SAVE);
+@@ -131,31 +138,48 @@ static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
+ 
+ 	rc = tpm_transmit_cmd(chip, &tbuf, 0, NULL);
+ 	if (rc < 0) {
+-		dev_warn(&chip->dev, "%s: failed with a system error %d\n",
+-			 __func__, rc);
+-		tpm_buf_destroy(&tbuf);
+-		return -EFAULT;
++		rc = -EFAULT;
++		goto err;
+ 	} else if (tpm2_rc_value(rc) == TPM2_RC_REFERENCE_H0) {
+-		tpm_buf_destroy(&tbuf);
+-		return -ENOENT;
++		rc = -ENOENT;
++		goto out;
+ 	} else if (rc) {
+-		dev_warn(&chip->dev, "%s: failed with a TPM error 0x%04X\n",
+-			 __func__, rc);
+-		tpm_buf_destroy(&tbuf);
+-		return -EFAULT;
++		rc = -EFAULT;
++		goto err;
+ 	}
+ 
+ 	body_size = tpm_buf_length(&tbuf) - TPM_HEADER_SIZE;
+-	if ((*offset + body_size) > buf_size) {
+-		dev_warn(&chip->dev, "%s: out of backing storage\n", __func__);
+-		tpm_buf_destroy(&tbuf);
+-		return -ENOMEM;
++	/* We grow the buffer in page increments. */
++	new_buf_size = PFN_UP(*offset + body_size);
++
++	if (new_buf_size > TPM2_SPACE_MAX_BUFFER_SIZE) {
++		rc = -ENOMEM;
++		goto err;
+ 	}
+ 
+-	memcpy(&buf[*offset], &tbuf.data[TPM_HEADER_SIZE], body_size);
++	if (new_buf_size > *buf_size) {
++		new_buf = krealloc(*buf, new_buf_size, GFP_KERNEL);
++		if (!new_buf) {
++			rc = -ENOMEM;
++			goto err;
++		}
++
++		*buf = new_buf;
++		*buf_size = new_buf_size;
++	}
++
++	memcpy(*buf + *offset, &tbuf.data[TPM_HEADER_SIZE], body_size);
+ 	*offset += body_size;
++
++out:
+ 	tpm_buf_destroy(&tbuf);
+-	return 0;
++	return rc;
++
++err:
++	dev_warn(&chip->dev, "%s: ret=%d\n", __func__, rc);
++
++	tpm_buf_destroy(&tbuf);
++	return rc;
+ }
+ 
+ void tpm2_flush_space(struct tpm_chip *chip)
+@@ -311,8 +335,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
+ 	       sizeof(space->context_tbl));
+ 	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
+ 	       sizeof(space->session_tbl));
+-	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
+-	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
++	memcpy(chip->work_space.context_buf, space->context_buf,
++	       space->context_size);
++	memcpy(chip->work_space.session_buf, space->session_buf,
++	       space->session_size);
+ 
+ 	rc = tpm2_load_space(chip);
+ 	if (rc) {
+@@ -492,7 +518,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
+ 			continue;
+ 
+ 		rc = tpm2_save_context(chip, space->context_tbl[i],
+-				       space->context_buf, PAGE_SIZE,
++				       &space->context_buf,
++				       &space->context_size,
+ 				       &offset);
+ 		if (rc == -ENOENT) {
+ 			space->context_tbl[i] = 0;
+@@ -509,7 +536,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
+ 			continue;
+ 
+ 		rc = tpm2_save_context(chip, space->session_tbl[i],
+-				       space->session_buf, PAGE_SIZE,
++				       &space->session_buf,
++				       &space->session_size,
+ 				       &offset);
+ 
+ 		if (rc == -ENOENT) {
+@@ -557,8 +585,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
+ 	       sizeof(space->context_tbl));
+ 	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
+ 	       sizeof(space->session_tbl));
+-	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
+-	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
++	memcpy(space->context_buf, chip->work_space.context_buf,
++	       space->context_size);
++	memcpy(space->session_buf, chip->work_space.session_buf,
++	       space->session_size);
+ 
+ 	return 0;
+ out:
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 03e9b184411b..9ea39e8f7162 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -92,10 +92,12 @@ enum tpm_duration {
+ #define TPM_PPI_VERSION_LEN		3
+ 
+ struct tpm_space {
++	u8  *context_buf;
++	u8  *session_buf;
++	u32 context_size;
++	u32 session_size;
+ 	u32 context_tbl[3];
+-	u8 *context_buf;
+ 	u32 session_tbl[3];
+-	u8 *session_buf;
+ };
+ 
+ struct tpm_bios_log {
+-- 
+2.25.1
 
-devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusive().
-Code as below:
-static inline struct reset_control *devm_reset_control_get(
-                                struct device *dev, const char *id)
-{
-        return devm_reset_control_get_exclusive(dev, id);
-}
-Am i missing something else?
-
-Regards,
-Rahul
