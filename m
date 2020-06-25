@@ -2,181 +2,141 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC73C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441D5207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB8A206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:13:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSqndLJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389959AbgFYGGl (ORCPT
+        id S2389566AbgFYGNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 02:06:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40705 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726493AbgFYGGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 02:06:40 -0400
-IronPort-SDR: 9BRbVBKoLunCJAlAZuMYU2RcjWUZF4Joe4qUEfNZExaW7pbBHwDSsaA9lkH8Wx0u/Ta4yue1lz
- XTQuw76v3LVA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="206313495"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="206313495"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 23:06:40 -0700
-IronPort-SDR: KV2EeYtsgOpUEMuTQmojb/uFlpndbWT4nTpKIo8IJZPnx8tIUyGX3VhBgsflesTIr01LIMUDsl
- hBd/APZfmdyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="354362405"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 24 Jun 2020 23:06:40 -0700
-Date:   Wed, 24 Jun 2020 23:06:39 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "David P. Reed" <dpreed@deepplum.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Allison Randal <allison@lohutok.net>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] Fix undefined operation VMXOFF during reboot and crash
-Message-ID: <20200625060639.GB2141@linux.intel.com>
-References: <CALCETrWw3WKLx1k94NfH1jJm-XLid_G-zy8jz_Afdf3KkWjquw@mail.gmail.com>
- <20200611194817.2303-1-dpreed@deepplum.com>
+        Thu, 25 Jun 2020 02:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727800AbgFYGNH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 02:13:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08844C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:13:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q5so4528124wru.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=iA2LoEFl42PAfMHt6BhD+YKFpB/tKVOEuCLtgIdaUcg=;
+        b=iSqndLJ9qLVyw7p18ZTcH6bXibo55m/izg5YbG0MwtaVDbnfdmaUgYZF5S/7GFi/vt
+         5J+ZrctuzeZm4BNxufro5YRuDWIV2ZwNqpzDvJyC/hnMMeYG/Ml6HWwPLwFic4SzFOdP
+         f/lRvuYn4Tl3ZtUnGVVXMfZJSCHj1b3emgXbCmHO4o3MR3i1O/8hzxeJ+fqjvkOtpF/c
+         ul7g6TM1aAgS1z3hNo3TbqBmJ596IWY4D4OtKItMlAan8x5doJNvOd0X4KUK0BkTV8rf
+         txQlU9JpqItgodRxWijXUBNAVRfCTAw7GLCjRh5Xvt9QCr1/75F2R0f7ld5hWzR3QsBv
+         Ot8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=iA2LoEFl42PAfMHt6BhD+YKFpB/tKVOEuCLtgIdaUcg=;
+        b=KtBHGXinnrAskYXcIfNbuNwPQu/qr41YCN4N0rPgAD7mAKCrAlf7jCHovKdXSRPNOc
+         hiRx7vhbaVI8hvu9/C2gKne45GVOOxi3w/gMTbWzjAK+WxO9Fov5vWVfi9IHU8F/cGZK
+         99g9tCXVutEAZ3Gej241uebSGY4fEjwpkrn5fEDA4bz0JOjyaQzb/OtWbEVnJokt10SK
+         Sy+IabRq2cgeZ23SKkU5CTXvQePcrSs3nB74u+l7rwmkmY4+dZL0cW5nkn98sT9husGh
+         MtzET/MLUMyxjV9jJ45iWZaDMMSMTyc47TgYlTVaZf0IDT0RxCW4kes5XkVnvSwFcSHR
+         Jihg==
+X-Gm-Message-State: AOAM532pRkbLeeQQYOQhOOxDZeFnutTCiT0PXe4RFmWULPPcSz3aTk6O
+        c3W4EGoTkgjHz/hSfhCF8eFR9Q==
+X-Google-Smtp-Source: ABdhPJwq2swoxVQwWpcIMTGj0ih5YY/4JmDKH2eqYJuaBV/SepD18Aj4As76aHk2nf7cBTjKdyLEWQ==
+X-Received: by 2002:a5d:62cc:: with SMTP id o12mr27479942wrv.365.1593065585521;
+        Wed, 24 Jun 2020 23:13:05 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id j24sm28793190wrd.43.2020.06.24.23.13.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 23:13:04 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 07:13:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
+Message-ID: <20200625061302.GK954398@dell>
+References: <20200609110136.GJ4106@dell>
+ <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
+ <0709f20bc61afb6656bc57312eb69f56@walle.cc>
+ <970bf15b1106df3355b13e06e8dc6f01@walle.cc>
+ <0e9e25cc-b3f2-926a-31dd-c6fafa7d581b@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200611194817.2303-1-dpreed@deepplum.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e9e25cc-b3f2-926a-31dd-c6fafa7d581b@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 03:48:18PM -0400, David P. Reed wrote:
-> -/** Disable VMX on the current CPU
-> +/* Disable VMX on the current CPU
->   *
-> - * vmxoff causes a undefined-opcode exception if vmxon was not run
-> - * on the CPU previously. Only call this function if you know VMX
-> - * is enabled.
-> + * vmxoff causes an undefined-opcode exception if vmxon was not run
-> + * on the CPU previously. Only call this function directly if you know VMX
-> + * is enabled *and* CPU is in VMX root operation.
->   */
->  static inline void cpu_vmxoff(void)
->  {
-> -	asm volatile ("vmxoff");
-> +	asm volatile ("vmxoff" ::: "cc", "memory"); /* clears all flags on success */
->  	cr4_clear_bits(X86_CR4_VMXE);
->  }
->  
-> @@ -47,17 +47,35 @@ static inline int cpu_vmx_enabled(void)
->  	return __read_cr4() & X86_CR4_VMXE;
->  }
->  
-> -/** Disable VMX if it is enabled on the current CPU
-> - *
-> - * You shouldn't call this if cpu_has_vmx() returns 0.
-> +/*
-> + * Safely disable VMX root operation if active
-> + * Note that if CPU is not in VMX root operation this
-> + * VMXOFF will fault an undefined operation fault,
-> + * so use the exception masking facility to handle that RARE
-> + * case.
-> + * You shouldn't call this directly if cpu_has_vmx() returns 0
-> + */
-> +static inline void cpu_vmxoff_safe(void)
-> +{
-> +       asm volatile("1:vmxoff\n\t" /* clears all flags on success */
+On Wed, 24 Jun 2020, Frank Rowand wrote:
+> On 2020-06-22 16:03, Michael Walle wrote:
+> > Am 2020-06-14 12:26, schrieb Michael Walle:
+> >> Hi Rob,
+> >>
+> >> Am 2020-06-10 00:03, schrieb Rob Herring:
+> >> [..]
+> >>> Yes, we should use 'reg' whenever possible. If we don't have 'reg',
+> >>> then you shouldn't have a unit-address either and you can simply match
+> >>> on the node name (standard DT driver matching is with compatible,
+> >>> device_type, and node name (w/o unit-address)). We've generally been
+> >>> doing 'classname-N' when there's no 'reg' to do 'classname@N'.
+> >>> Matching on 'classname-N' would work with node name matching as only
+> >>> unit-addresses are stripped.
+> >>
+> >> This still keeps me thinking. Shouldn't we allow the (MFD!) device
+> >> driver creator to choose between "classname@N" and "classname-N".
+> >> In most cases N might not be made up, but it is arbitrarily chosen;
+> >> for example you've chosen the bank for the ab8500 reg. It is not
+> >> a defined entity, like an I2C address if your parent is an I2C bus,
+> >> or a SPI chip select, or the memory address in case of MMIO. Instead
+> >> the device driver creator just chooses some "random" property from
+> >> the datasheet; another device creator might have chosen another
+> >> property. Wouldn't it make more sense, to just say this MFD provides
+> >> N pwm devices and the subnodes are matching based on pwm-{0,1..N-1}?
+> >> That would also be the logical consequence of the current MFD sub
+> >> device to OF node matching code, which just supports N=1.
 
-Eh, I wouldn't bother with the comment, there are a million other caveats
-with VMXOFF that are far more interesting.
+It's funny.  You reiterate things like "arbitrarily chosen" and
+"randomly chosen from the datasheet" but yet your suggestion is just
+that.  The only difference is that you wish to place the numerical
+differentiator in the node name, rather than the reg property.  Worse
+still, you are suggesting that you wish to just enumerate them off
+sequentially from some arbitrary base (likely 0).
 
-> +		    "2:\n\t"
-> +                    _ASM_EXTABLE(1b, 2b)
-> +                    ::: "cc",  "memory");
+I don't know of many cases off, the top of my head at least, where
+this is a problem.  As you've mentioned, in the case of the AB8500,
+the bank is used which is semantically how the devices are actually
+addressed.  It's not random, it's physical.
 
-Adding the memory and flags clobber should be a separate patch.
+How are the identical devices addressed/identified/differentiated
+from each other on your H/W?  You must have a way of saying "I want
+PWM X to act in a different way from PWM Y".  What is 'X' and 'Y' in
+your datasheet?
 
-> +       cr4_clear_bits(X86_CR4_VMXE);
-> +}
-
-
-I don't see any value in safe/unsafe variants.  The only in-kernel user of
-VMXOFF outside of the emergency flows is KVM, which has its own VMXOFF
-helper, i.e. all users of cpu_vmxoff() want the "safe" variant.  Just add
-the exception fixup to cpu_vmxoff() and call it good.
-
-> +
-> +/*
-> + * Force disable VMX if it is enabled on the current CPU,
-> + * when it is unknown whether CPU is in VMX operation.
->   */
->  static inline void __cpu_emergency_vmxoff(void)
->  {
-> -	if (cpu_vmx_enabled())
-> -		cpu_vmxoff();
-> +	if (!cpu_vmx_enabled())
-> +		return;
-> +	cpu_vmxoff_safe();
-
-Unnecessary churn.
-
->  }
->  
-> -/** Disable VMX if it is supported and enabled on the current CPU
-> +/* Force disable VMX if it is supported on current CPU
->   */
->  static inline void cpu_emergency_vmxoff(void)
->  {
-> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> index e040ba6be27b..b0e6b106a67e 100644
-> --- a/arch/x86/kernel/reboot.c
-> +++ b/arch/x86/kernel/reboot.c
-> @@ -540,21 +540,14 @@ static void emergency_vmx_disable_all(void)
->  	 *
->  	 * For safety, we will avoid running the nmi_shootdown_cpus()
->  	 * stuff unnecessarily, but we don't have a way to check
-> -	 * if other CPUs have VMX enabled. So we will call it only if the
-> -	 * CPU we are running on has VMX enabled.
-> -	 *
-> -	 * We will miss cases where VMX is not enabled on all CPUs. This
-> -	 * shouldn't do much harm because KVM always enable VMX on all
-> -	 * CPUs anyway. But we can miss it on the small window where KVM
-> -	 * is still enabling VMX.
-> +	 * if other CPUs have VMX enabled.
->  	 */
-> -	if (cpu_has_vmx() && cpu_vmx_enabled()) {
-> +	if (cpu_has_vmx()) {
->  		/* Disable VMX on this CPU. */
-> -		cpu_vmxoff();
-> +		cpu_emergency_vmxoff();
-
-This also needs to be in a separate patch.  And it should use
-__cpu_emergency_vmxoff() instead of cpu_emergency_vmxoff().
-
->  
->  		/* Halt and disable VMX on the other CPUs */
->  		nmi_shootdown_cpus(vmxoff_nmi);
-> -
->  	}
->  }
->  
-> -- 
-> 2.26.2
-> 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
