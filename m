@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B93C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F3720775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7725020775
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593106102;
-	bh=+cLEMVjTku86MUcyGtnbvMhIVdtdfpWtlg8bHe0HxS0=;
+	s=default; t=1593106187;
+	bh=Mdn554FBmeGZkZ8w0k+GDwEHMYXU9SfEnzckAyKcffQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BwLF/jegVM7Dl5Ob5Dvad88I6SyRxPOYN2TgHOcy432gnhuDAQWRqvzidSWLQhcWh
-	 8Z4AZ90z435AoSrNggTErS/8Gaj8d83oXNQjsGOacHk7l8p4W6+UvgJrHiKqYnJt/i
-	 3zXfHSNWCKxRGGod4ktnccvF8eJh8u9sZU09tuL0=
+	b=0kMawTD5Bge39YBMyr8924h0JY6tk6nYRTZwxO1xHp/INIkXKytGbzmxqPTEYad01
+	 tf36ODRL/VlDX+zCph3A4x0dFFu3CpTKp8L17nQK048BttwM1GSQmecnvesUyHF/LQ
+	 nlXIy2JP+vLdyTy75yTKvHkbO9m9RyWE4w3lbdrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406814AbgFYR2U (ORCPT
+        id S2406764AbgFYR3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:28:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Thu, 25 Jun 2020 13:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406806AbgFYR2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:28:16 -0400
+        id S2404761AbgFYR3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 13:29:44 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FBA720789;
-        Thu, 25 Jun 2020 17:28:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9FD920773;
+        Thu, 25 Jun 2020 17:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593106095;
-        bh=+cLEMVjTku86MUcyGtnbvMhIVdtdfpWtlg8bHe0HxS0=;
+        s=default; t=1593106184;
+        bh=Mdn554FBmeGZkZ8w0k+GDwEHMYXU9SfEnzckAyKcffQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0cyfFj7v5iSRT89cZq8Y9xYLAAk8mLVxDviIpgkIJlZxvK4KK5OlK5huFnye9MS47
-         ZwxWovMm0Vr0C66ep/ca4Z26xPMNfPRsCZT1bXJeAK7vrFk3mU7nV2OR5gcoQnjcjC
-         MTqUm/V1aUluuVyZMdqQmTlo/Pl2/aIkXJXWWtUU=
-Date:   Thu, 25 Jun 2020 18:28:13 +0100
+        b=Pfi4/R3h4rhDiYYZp43UX5d1BcnGqlLUKkHLObAL+9rEPeuAIZfN6GMBvfPDE/atR
+         YhXskWG6tnVBiC6rlyiNB8MsK/EWj2ZnJxaH20bcxpXFIX1XvD2wfip4cBcSiNu837
+         dmnqoTGAR9Hl5K3M6SqYTZnEj7doWX1CljgpbEIQ=
+Date:   Thu, 25 Jun 2020 18:29:42 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/10] regulator: devres: Fix issues with kerneldoc
- headers
-Message-ID: <20200625172813.GD5686@sirena.org.uk>
+Subject: Re: [PATCH 03/10] regulator: of_regulator: Add missing colon for
+ rdev kerneldoc argument
+Message-ID: <20200625172942.GE5686@sirena.org.uk>
 References: <20200625163614.4001403-1-lee.jones@linaro.org>
- <20200625163614.4001403-3-lee.jones@linaro.org>
+ <20200625163614.4001403-4-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Ycz6tD7Th1CMF4v7"
+        protocol="application/pgp-signature"; boundary="HnQK338I3UIa/qiP"
 Content-Disposition: inline
-In-Reply-To: <20200625163614.4001403-3-lee.jones@linaro.org>
+In-Reply-To: <20200625163614.4001403-4-lee.jones@linaro.org>
 X-Cookie: One organism, one vote.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,34 +61,40 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Ycz6tD7Th1CMF4v7
+--HnQK338I3UIa/qiP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 25, 2020 at 05:36:06PM +0100, Lee Jones wrote:
+On Thu, Jun 25, 2020 at 05:36:07PM +0100, Lee Jones wrote:
+> Kerneldoc validation gets confused if syntax isn't "@.*: ".
+>=20
+> Adding the missing colons squashes the following W=3D1 warnings:
 
->  /**
->   * devm_regulator_register - Resource managed regulator_register()
-> + * @dev: device for regulator "consumer"
->   * @regulator_desc: regulator to register
->   * @config: runtime configuration for regulator
->   *
+>   * of_check_coupling_data - Parse rdev's coupling properties and check d=
+ata
+>   *			    consistency
+> - * @rdev - pointer to regulator_dev whose data is checked
+> + * @rdev: - pointer to regulator_dev whose data is checked
 
-That's an odd style you're using in your "change" here - why the quotes?
+It shuts up the warning but are you sure this is going to get formatted
+well by the tools?  We now have a - as the first character in the
+description which I'm guessing the tools are going to render which won't
+look great.
 
---Ycz6tD7Th1CMF4v7
+--HnQK338I3UIa/qiP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl703qwACgkQJNaLcl1U
-h9CPzwf/f6B18e6dGjmBa+8dJyb5hUKJgu2+kk5vswg3ivYrjYrAxbcncwebfftP
-YDOydKCVr4S8SO57d8X9hHYlp3cOHt0zXkBGrPPdz54ndy7fa6nPOjlWxyR1Ry8j
-YuDJW9VgtF1oVuVrSL1nR/AXCMo31Oz67DTdGfvoAeVKsVZTJ/9EbcGT4aBQRKG8
-FapFIYQ7efRCXG5vjBsQo9NGFxwVmwYO1IvKLTvNb0AK8Lr5Ss3pWti2p4XJIr3W
-oBpWJmVW+x/1j1wJG84fCyK4XcLkaN+eOi8rUM4kBxIqBxwzf+DbDsQll7znCNVR
-0jcdkr4ZPT6f2B+bTb+aVmvcafR4ww==
-=oM5u
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl703wUACgkQJNaLcl1U
+h9A8uAf/Rel1Tx+AQgdsbZJ8O0V7u7igu9aZsU9svS7GeDlFFcEBJfwIZGGGVlx7
+XLipyUPDILWL2myXYjOnM96S+HcxAhKI8vK95a8FYFyzKRLbjqgWuIpspP7SOFHo
+vPg+08LnnLNY0e0fB9nLbHw8bOTyWaM7UDdZfCiMULtjasznA78wIy/C02qOqQad
+aHuRnmZ6c75CBdBlMyabTE9d0ub2VsxvhL6O3543kAJ+bhmqKdzFOYRWiLbvsWdU
+Yaqak/YOoIObijZ7583LpLPwIYp2DCB/ns1lSC3KqviakEjvbVQ2OZulWoM9gsT7
+9it71Cn7YhvsbYbUBQY0gJNU5SDngQ==
+=g378
 -----END PGP SIGNATURE-----
 
---Ycz6tD7Th1CMF4v7--
+--HnQK338I3UIa/qiP--
