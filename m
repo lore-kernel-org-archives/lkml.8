@@ -2,145 +2,153 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB766C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D89C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3FD8206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B2420775
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AIE1va1p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405344AbgFYOUt (ORCPT
+        id S2405347AbgFYOYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:20:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:51444 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404890AbgFYOUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:20:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D6A8C0A;
-        Thu, 25 Jun 2020 07:20:47 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECA833F73C;
-        Thu, 25 Jun 2020 07:20:45 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 15:20:43 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Joel Fernandes <joelaf@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        hsinyi@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Quentin Perret <qperret@google.com>, ctheegal@codeaurora.org,
-        Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cros_ec_spi: Even though we're RT priority, don't bump
- cpu freq
-Message-ID: <20200625142043.dicfhqop4hkhr7ji@e107158-lin.cambridge.arm.com>
-References: <CAD=FV=WuYZRO=sv4ODr0SFk0gTtvCW0dNQXbFGrBDqRgjYv-jA@mail.gmail.com>
- <20200619153851.vigshoae3ahiy63x@e107158-lin.cambridge.arm.com>
- <CAD=FV=XursDFUWL=aGUwFgXc4BugUMdT5e+Fwwo5w2gReCjUaQ@mail.gmail.com>
- <20200623164021.lcrnwpli7wdlsn5i@e107158-lin.cambridge.arm.com>
- <CAJWu+ooXdgqSGisZXnHBtYLo9oQBiaNR=HhKseBN+YFGz-L6Xg@mail.gmail.com>
- <20200624165500.idrugfgplqgi654v@e107158-lin.cambridge.arm.com>
- <CAJWu+oqHUq6fvkfRgAx4qx8x1dm-J-h6moeVskCU3gkRybCPqQ@mail.gmail.com>
- <20200624175236.nblndmg6dfq2vr2u@e107158-lin.cambridge.arm.com>
- <CAJWu+oreQRCAkBhNQ-n6BPjYsdOL074ff8551sF3r7OxsseEVQ@mail.gmail.com>
- <CAD=FV=Xf29qsiBSUit7xoVpxzLnoBT9vZ+0JBGN2bFefDBKG4w@mail.gmail.com>
+        Thu, 25 Jun 2020 10:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405189AbgFYOYc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:24:32 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C85A7C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:24:31 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q19so6747298lji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y+ZtbKOKX10FRQ/X2SmiDT2iPwxMyGZIFzesaKUw/OU=;
+        b=AIE1va1pK6qjTUIYzsqfq69DSL60n3yRxhhJAUQ4ljo9HbnzGYGmzB06jqCpGnRGvm
+         FLQJbddriT4bUI6Np72Zg2oIRPtdfckb/kWyIydY9842xrPMEFX0UQnMbHtTXcvAdrtM
+         BlhZXKdWCMlaI1hz2Xlpk++uAshiCgzl8eiaDOaKYMb+CRQcclI4/RiD3Xf6oLapJ+eA
+         bKrek8UrYI9Aj0CRgK6umLa2T+wz2NW/4RQw391bTv7Dk2zhamMCVrdOJu3nCCNCkljO
+         ZPpytb0dgLNaupmZGVIt+yFK9OgrMw1vmMrIAtC6KGQEA54sC3qDbX52crKQAWEg0ahU
+         +raQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y+ZtbKOKX10FRQ/X2SmiDT2iPwxMyGZIFzesaKUw/OU=;
+        b=Qjh0CRyHs8DB7+tDNtgS3uq/RWCmazsNzA/9I0VFwgtMc1jdMdy8Qho5OlwkCFj7pP
+         PQ506NI7zQ6f57i9Ql4+GC/NS+3HOd4xsujJunM9LXjLK4+PXSu7u6VsIUkZw1wu9y14
+         6CxTLlHkvoDgOtr1a2Lzv4YSgLD4LDxzCUwEMp2Cmvf3RODQHRzMQ+ouZymaSh1mQE1n
+         IfFw8dfoHLoorUwCW4C00B09oxrjzLpX2tgyLc/5H2OQKn7wlZaV/pCs1JGh7w0aLQ8Z
+         jhqC9h+29RIWk3/S3qcdZEU6iaxHJf37J7uhnOWBjCMo4HctZ233qZ7Fcd2Np3QclyoF
+         P0PQ==
+X-Gm-Message-State: AOAM53376BEP3GRqhqOPlLv5X6yUzygHzJ10RhtlnYHPWeXCb5xDmIY8
+        qXESVkc9qJvCXpaLkuo9zFoN+lT7Y/ZYVl4kaAD2ug==
+X-Google-Smtp-Source: ABdhPJxPgkRDIQn+rur+DUyyMOCmeL6Rcf7WSslIvGFOV9fp5nQeRVyy4GySaOMLVD53kxrl5RJ1QkbyRQOUst/GZvI=
+X-Received: by 2002:a2e:5c47:: with SMTP id q68mr18010266ljb.30.1593095070064;
+ Thu, 25 Jun 2020 07:24:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Xf29qsiBSUit7xoVpxzLnoBT9vZ+0JBGN2bFefDBKG4w@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+ <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+ <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+ <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+ <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+ <1593012069.28403.11.camel@HansenPartnership.com>
+In-Reply-To: <1593012069.28403.11.camel@HansenPartnership.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 25 Jun 2020 19:54:18 +0530
+Message-ID: <CAFA6WYMF+JjrB9Cx9TdgDzMeQSvPZfMNapzD-MH4ALVoUoo1sQ@mail.gmail.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Jerome Forissier <jerome@forissier.org>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/24/20 11:29, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, Jun 24, 2020 at 10:55 AM Joel Fernandes <joelaf@google.com> wrote:
+On Wed, 24 Jun 2020 at 20:51, James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
+> > Apologies for delay in my reply as I was busy with some other stuff.
 > >
-> > On Wed, Jun 24, 2020 at 1:52 PM Qais Yousef <qais.yousef@arm.com> wrote:
-> > >
-> > > On 06/24/20 13:35, Joel Fernandes wrote:
-> > >
-> > > [...]
-> > >
-> > > > > Doing the in-kernel opt-out via API should be fine, I think. But this will
-> > > > > need to be discussed in the wider circle. It will already clash with this for
-> > > > > example
-> > > > >
-> > > > > https://lore.kernel.org/lkml/20200619172011.5810-1-qais.yousef@arm.com/
-> > > >
-> > > > Have not yet looked closer at that patch, but are you saying this
-> > > > patch clashes with that work? Sorry I am operating on 2 hours of sleep
-> > > > here.
-> > >
-> > > The series is an optimization to remove the uclamp overhead from the scheduler
-> > > fastpath until the userspace uses it. It introduces a static key that is
-> > > disabled by default and will cause uclamp logic not to execute in the fast
-> > > path. Once the userspace starts using util clamp, which we detect by either
-> > >
-> > >         1. Changing uclamp value of a task with sched_setattr()
-> > >         2. Modifying the default sysctl_sched_util_clamp_{min, max}
-> > >         3. Modifying the default cpu.uclamp.{min, max} value in cgroup
-> > >
-> > > If we start having in-kernel users changing uclamp value this means drivers
-> > > will cause the system to opt-in into uclamp automatically even if the
-> > > userspace doesn't actually use it.
-> > >
-> > > I think we can solve this by providing a special API to opt-out safely. Which
-> > > is the right thing to do anyway even if we didn't have this clash.
+> > On Fri, 19 Jun 2020 at 20:30, James Bottomley
+> > <James.Bottomley@hansenpartnership.com> wrote:
+> [...]
+> > > it's about consistency with what the kernel types mean.  When some
+> > > checker detects your using little endian operations on a big endian
+> > > structure (like in the prink for instance) they're going to keep
+> > > emailing you about it.
 > >
-> > Makes sense, thanks.
-> 
-> OK, so I think the summary is:
-> 
-> 1. There are enough external dependencies that are currently in the
-> works that it makes sense for those to land first without trying to
-> cram my patch to cros_ec in.
+> > As mentioned above, using different terminology is meant to cause
+> > more confusion than just difference in endianness which is manageable
+> > inside TEE.
+> >
+> > And I think it's safe to say that the kernel implements UUID in big
+> > endian format and thus uses %pUb whereas OP-TEE implements UUID in
+> > little endian format and thus uses %pUl.
+>
+> So what I think you're saying is that if we still had uuid_be and
+> uuid_le you'd use uuid_le, because that's exactly the structure
+> described in the docs.  But because we renamed
+>
+> uuid_be -> uuid_t
+> uuid_le -> guid_t
+>
+> You can't use guid_t as a kernel type because it has the wrong name?
 
-+1
+Isn't the rename commit description [1] pretty clear about which is
+the true UUID type from Linux point of view?
 
-> 
-> 2. Maybe, as part of the work that's already going on, someone will
-> add an API that I can use.  If so then I can write my patch once that
-> lands.
+[1]
+commit f9727a17db9bab71ddae91f74f11a8a2f9a0ece6
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Wed May 17 10:02:48 2017 +0200
 
-I won't be adding this API. Mainly because I can't argue for it personally as
-I'm still not convinced it's a valid way of handling RT default boosting
-behavior from within the kernel. But it's a valid discussion to have if you
-want to drive it.
+    uuid: rename uuid types
 
-> 
-> 3. If nobody adds an API then I could look at adding the API myself
-> once everything else is settled.
-> 
-> 4. It looks as if the patch you mentioned originally [1] that allows
-> userspace to just fully disable uclamp for RT tasks will land
-> eventually (if we're stuck for a short term solution we can pick the
-> existing patch).  I believe Chrome OS will use that to just fully
-> disable the default boosting for RT tasks across our system and (if
-> needed) add boosts on a case-by-case basis.  Once we do that, the
-> incentive to land a patch for cros_ec will be mostly gone and probably
-> we could consider my patch abandoned.  While it would technically
-> still be sane to land it won't have any real-world benefit.
+    Our "little endian" UUID really is a Wintel GUID, so rename it and its
+    helpers such (guid_t).  The big endian UUID is the **only true** one, so
+    give it the name uuid_t.  The uuid_le and uuid_be names are retained for
+    now, but will hopefully go away soon.  The exception to that are the _cmp
+    helpers that will be replaced by better primitives ASAP and thus don't
+    get the new names.
 
-I think this is the best way forward. I'm interesting in hearing what
-difficulties you encounter while doing this work.
+    Also the _to_bin helpers are named to match the better named uuid_parse
+    routine in userspace.
 
-Regarding the patch [1], I need to tweak the way it is implemented and send v6,
-but there are no objection to the idea and interface, so hopefully once I send
-v6 it'd be accepted.
+    Also remove the existing typedef in XFS that's now been superceeded by
+    the generic type name.
 
-Thanks
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+    [andy: also update the UUID_LE/UUID_BE macros including fallout]
+    Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+    Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+    Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
---
-Qais Yousef
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-> [1] https://lore.kernel.org/r/20200511154053.7822-1-qais.yousef@arm.com
+-Sumit
+
+>
+> James
+>
