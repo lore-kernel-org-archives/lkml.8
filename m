@@ -7,102 +7,116 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D197C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C08C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76AE7206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D54206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bmX8oMZh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Clvr0gA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406350AbgFYQgr (ORCPT
+        id S2406360AbgFYQgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38476 "EHLO
+        Thu, 25 Jun 2020 12:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406322AbgFYQgf (ORCPT
+        with ESMTP id S2406316AbgFYQge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:36:35 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791A0C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:36:35 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g18so6548493wrm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:36:35 -0700 (PDT)
+        Thu, 25 Jun 2020 12:36:34 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A1CC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:36:34 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h15so6504936wrq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7w/pnlnnQSHCAirkmRSLoxGGcJUAfrsJnqhR6P4aZuM=;
-        b=bmX8oMZhEkT5mR32QGDXGU5JDQxWrWOUHAsLmg7Kq1troHvADX/on1a8CxOZMN63bJ
-         cPt9Syn8oX4fOe/xAg1BmVMI6U9bn+meIzNYXvLdVWTVa0LWsSpnOBpt9k20vkwn1AOE
-         RSkkICZ7JlI16quRqokQEhsLx0U/TnXhM8fRtPm5fNQ/louYdiE5O0q2S0BCs9Uh3Tcr
-         p37e7ITisX2e9fOlKKCRuzEfCqh+AVyl0wWSVNtq5b7Jr2rqnsa5krhIVzowcHCTKdyU
-         ww7yD2K1XABWmbzeyi2VcYHrZt2gfqbNzFGo55H0fxpNM+nXcLOKCMFY8jxyq67YW7b/
-         BBrQ==
+        bh=p8b+PVloZKecBIPRr/OI23SwGO/e4hTRF+SmOkygulE=;
+        b=Clvr0gA4nLJBZGW6W/+HM9VWedZywRI9gj5x8nbcChWuKDVxsOPcRqm7opsvillYev
+         VnVcVawCHAs8atU6mQP1AWBBYIqUyZ4pcdT06OcEnaS3BK+Yd043lFERn83GnlFAq+RJ
+         Hwp75B6pHUL1Jm7ON5CEN+o+kne7pIVGhQ7rZlXaRVc0Wmwlfe71YmqKo9tV3gdB+mq4
+         get8f7O5pMdch0xN3a8XCzwfJcHqdNnuyMGX24kEXxzEb33aLnQFyOlBI/RJBCKMjCPN
+         m/yWapgMU5DHtKSQwOYafBEfjASBncKU/oB1ppJqV37Zf+eSN24EdsC22njJm+696N0y
+         7BHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7w/pnlnnQSHCAirkmRSLoxGGcJUAfrsJnqhR6P4aZuM=;
-        b=Q4obXSgX8LX5Qy90w5EWDbYsJVl6dineISqSVq4XayU3isIzBla/dMHZUo92Tm1+at
-         JLazWTPWst8u/oWRfWY2Xuw5M+o3VOtBVAuc/KwS6gv/XTxmgnf521LcEocT91w6LDEh
-         PZldyCyLyYBtYOhXcfkJLMUDUx8WhrSqeXkwPOn8oP2Tl6bMfeX9uRKWlJ9fnI82s7Ok
-         /3CCAoDHfvpdK/syKRDMPEo1QSYQqVw0ekblMiF+sCyhV0M6ZbzRUEwiEZjqWr7tOuA1
-         et7SUv2o6vypBdz3BUwg72zFTZzkTop6c8HflCQBYL2KQsu9XhmGB0nHcJzPHH/unpN4
-         XUFw==
-X-Gm-Message-State: AOAM532HSWX4RqmJaXiKWSfkU/zzxHKz29KmlX4a6cMTpuUjFHuJRwxz
-        CQsqKk87EELqijOheWy0pY/WySWEGqo=
-X-Google-Smtp-Source: ABdhPJwkefas7Xjc8zxfcgoc5NtjPc9XHGGk7tV1NQOV6YhohojlxLzCRryaWgBWuGxwQ0OnYotAhQ==
-X-Received: by 2002:adf:9bc1:: with SMTP id e1mr8307199wrc.253.1593102994153;
-        Thu, 25 Jun 2020 09:36:34 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id a15sm36729089wrh.54.2020.06.25.09.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=p8b+PVloZKecBIPRr/OI23SwGO/e4hTRF+SmOkygulE=;
+        b=MAaPk4YW+EHjrCoTbjpdQJ3M+xpGBEU6bjOtE4hnYmlLqZW2HVecu+An0UQh9uBKu8
+         wFUJ3Eyu4lpxTgDz1c0KfMnxFfq4zPawYhS9o9Vlj8fzi99Z6PuFLvARFkdbUwkvDDoL
+         u5G+4KTmI237sfdL90bSRF07R6Jp+4XwMpHCmX9jaa1hWBd4pEzHVD/8Vzwb4Kn963SC
+         +MZ87VxiDxu+Pw/83pleQqAHACTYeBzR/IrQgAtN9lpxuuU6JiyZ0gII/V7NHNbTUsF3
+         n8c+TD9N/w64tRjYxGhsktBVfeHo7DLz3jIXaj0X0Jy6yubsVwgP2nsMb2jVII4Itsem
+         ZHKw==
+X-Gm-Message-State: AOAM5311v1mm+1FnvKICHE8uLg9fCW7gveEqqDabYM3nk6AhAeKjNzzk
+        h/bIcwc7zjoMOIN/gLU2EiuNA+TWxj8=
+X-Google-Smtp-Source: ABdhPJyr1ofOi7hZPmKskeIrOB05REDu3cC6GxuHEK6qzVDcUnQbMElvkDMUwm1aSNxpOCPQ6f7Jig==
+X-Received: by 2002:adf:8067:: with SMTP id 94mr35980537wrk.427.1593102993280;
         Thu, 25 Jun 2020 09:36:33 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id a15sm36729089wrh.54.2020.06.25.09.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 09:36:32 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lgirdwood@gmail.com, broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 10/10] regulator: max14577-regulator: Demote kerneldoc header to standard comment
-Date:   Thu, 25 Jun 2020 17:36:14 +0100
-Message-Id: <20200625163614.4001403-11-lee.jones@linaro.org>
+Subject: [PATCH 09/10] regulator: da9063-regulator: Fix .suspend 'initialized field overwritten' warnings
+Date:   Thu, 25 Jun 2020 17:36:13 +0100
+Message-Id: <20200625163614.4001403-10-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625163614.4001403-1-lee.jones@linaro.org>
 References: <20200625163614.4001403-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing about this comment identifies it as a kerneldoc header.
-It's missing all of it's function argument descriptions and the
-correct function header.
+Looks as though 9f75ce666199 ("regulator: da9063: fix suspend") failed
+to clean-up all of the existing .suspend variable initialisations.
+This has led to some 'initilized field overwritten' issues now present
+in W=1 builds.
 
-Fixes the following W=1 warning(s):
+This patch squashes the following build warnings:
 
- drivers/regulator/max14577-regulator.c:166: warning: Function parameter or member 'max14577' not described in 'max14577_get_regma
- drivers/regulator/max14577-regulator.c:166: warning: Function parameter or member 'reg_id' not described in 'max14577_get_regmap'
+ In file included from drivers/regulator/da9063-regulator.c:17:
+ include/linux/regmap.h:1124:37: warning: initialized field overwritten [-Woverride-init]
+ 1124 | #define REG_FIELD(_reg, _lsb, _msb) { | ^
+ drivers/regulator/da9063-regulator.c:27:2: note: in expansion of macro ‘REG_FIELD’
+ 27 | REG_FIELD(_reg, __builtin_ffs((int)_mask) - 1, | ^~~~~~~~~
+ drivers/regulator/da9063-regulator.c:515:14: note: in expansion of macro ‘BFIELD’
+ 515 | .suspend = BFIELD(DA9063_REG_LDO9_CONT, DA9063_VLDO9_SEL),
+ | ^~~~~~
+ include/linux/regmap.h:1124:37: note: (near initialization for ‘da9063_regulator_info[11].suspend’)
+ 1124 | #define REG_FIELD(_reg, _lsb, _msb) { | ^
+ drivers/regulator/da9063-regulator.c:27:2: note: in expansion of macro ‘REG_FIELD’
+ 27 | REG_FIELD(_reg, __builtin_ffs((int)_mask) - 1, | ^~~~~~~~~
+ drivers/regulator/da9063-regulator.c:515:14: note: in expansion of macro ‘BFIELD’
+ 515 | .suspend = BFIELD(DA9063_REG_LDO9_CONT, DA9063_VLDO9_SEL),
+ | ^~~~~~
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/regulator/max14577-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/da9063-regulator.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/regulator/max14577-regulator.c b/drivers/regulator/max14577-regulator.c
-index 07a150c9bbf22..e34face736f48 100644
---- a/drivers/regulator/max14577-regulator.c
-+++ b/drivers/regulator/max14577-regulator.c
-@@ -155,7 +155,7 @@ static const struct regulator_desc max77836_supported_regulators[] = {
- 	[MAX77836_LDO2] = MAX77836_LDO_REG(2),
- };
- 
--/**
-+/*
-  * Registers for regulators of max77836 use different I2C slave addresses so
-  * different regmaps must be used for them.
-  *
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index e1d6c8f6d40bb..fe65b5acaf280 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -512,7 +512,6 @@ static const struct da9063_regulator_info da9063_regulator_info[] = {
+ 	},
+ 	{
+ 		DA9063_LDO(DA9063, LDO9, 950, 50, 3600),
+-		.suspend = BFIELD(DA9063_REG_LDO9_CONT, DA9063_VLDO9_SEL),
+ 	},
+ 	{
+ 		DA9063_LDO(DA9063, LDO11, 900, 50, 3600),
 -- 
 2.25.1
 
