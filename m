@@ -2,158 +2,105 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD76C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD09207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lw/G9AZ0"
+	by mail.kernel.org (Postfix) with ESMTP id E38D120781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406158AbgFYSWt (ORCPT
+        id S2390770AbgFYSZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390556AbgFYSV3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:21:29 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8479C08C5C1;
-        Thu, 25 Jun 2020 11:21:28 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w6so6888024ejq.6;
-        Thu, 25 Jun 2020 11:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
-        b=lw/G9AZ0JhLp6mKFGbUXgOhKEJq6WIJ7cIQOw5MJE0Yux3vjHzXe8U0oR1NAWc0cLy
-         La6AtEa19/sN5MXoc8F06zOdtlkueZ1HPwZiMD1IZ7WGO4X85dOvDSfc9cKkm+XjyQA6
-         cwGTTnYWb3gvJkKgCCLpHpU2LNuKmOLac9/FW30w9TRTUP9FqQJMOcNva+kyU1R6vVAo
-         B2+c2BEdIusCEVNGCdCJ/n9yP/LOkb/pjTXkh/9KYYCtJ3F2ppyZPc6p/8HLjj7xCoGf
-         dfYoaV1xG/2/hRXH6FFX/BgM5EbFodVsVdE4abAdYm0Qh1Ujw/CKfPIoV6M56ENb3oOS
-         zb/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
-        b=XjZqrUiFSrJtk5XBtNFjYNAaTIKBqMlOLYOpUwmNrjNhOkz85yRqAq7QVRktXd351p
-         NQ+xYIc3hriLLOMFqVZoh4ECEuNA9Zf3khe9ekyVG+joKFRX1nlHegm8TkFMGZYHQR2a
-         UawdaeZeFxk11Aix5OWG2bLDFFlpFJjfGBQ+RYD8H+jdG5UE1vipz7vPYIGZajQK5+CH
-         ebQ/EgLWtoriS6o762VO694pqsTD3sEZ11I3I01KcreSaIQd32hLPVFmdAU2W/aWzf8/
-         ME4qcvseDN/xGv4x33pmKI6hgn9IBMjISEwZs4j1jJJejN09EPNewDRUh/DpFebwZtpI
-         9l7w==
-X-Gm-Message-State: AOAM5329FJHIBCk9iM5M/MS2yIZN5xszhiVSLE/PRTNg29cP5Uu5uV6W
-        NqbRUZU8aI7TYHNWYjS/LHA=
-X-Google-Smtp-Source: ABdhPJwYbZsIVqcWEZ6FdDlOUbZjB+V3Gp3dC4XjE1TgMUPnOnF6TRL429WIWYcwe8CIBGAOyCkohA==
-X-Received: by 2002:a17:906:3042:: with SMTP id d2mr9618978ejd.420.1593109287647;
-        Thu, 25 Jun 2020 11:21:27 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:21:27 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/13] arm64: dts: qcom: msm8992: Fix SDHCI1
-Date:   Thu, 25 Jun 2020 20:21:06 +0200
-Message-Id: <20200625182118.131476-3-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
-References: <20200625182118.131476-1-konradybcio@gmail.com>
+        Thu, 25 Jun 2020 14:25:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:43018 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390025AbgFYSZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:25:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59F2CD6E;
+        Thu, 25 Jun 2020 11:25:06 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3BAE3F71E;
+        Thu, 25 Jun 2020 11:25:04 -0700 (PDT)
+References: <20200624195811.435857-1-maz@kernel.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
+Subject: Re: [PATCH v2 00/17] arm/arm64: Turning IPIs into normal interrupts
+In-reply-to: <20200624195811.435857-1-maz@kernel.org>
+Date:   Thu, 25 Jun 2020 19:24:59 +0100
+Message-ID: <jhjmu4rgg04.mognet@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit ensures the correct IRQ type is set
-and disables the device by default.
-The mmc-hs400-1_8v property is also moved to
-Bullhead as it might not be present on all boards.
+Hi Marc,
 
-The node has been renamed to sdhci@ instead of mmc@
-and the phandle was changed to sdhc_1 to comply with
-the newer DTS style.
+On 24/06/20 20:57, Marc Zyngier wrote:
+> For as long as SMP ARM has existed, IPIs have been handled as
+> something special. The arch code and the interrupt controller exchange
+> a couple of hooks (one to generate an IPI, another to handle it).
+>
+> Although this is perfectly manageable, it prevents the use of features
+> that we could use if IPIs were Linux IRQs (such as pseudo-NMIs). It
+> also means that each interrupt controller driver has to follow an
+> architecture-specific interface instead of just implementing the base
+> irqchip functionalities. The arch code also duplicates a number of
+> things that the core irq code already does (such as calling
+> set_irq_regs(), irq_enter()...).
+>
+> This series tries to remedy this on arm/arm64 by offering a new
+> registration interface where the irqchip gives the arch code a range
+> of interrupts to use for IPIs. The arch code requests these as normal
+> per-cpu interrupts.
+>
+> The bulk of the work is at the interrupt controller level, where all 5
+> irqchips used on arm+SMP/arm64 get converted.
+>
+> Finally, we drop the legacy registration interface as well as the
+> custom statistics accounting.
+>
+> Note that I have had a look at providing a "generic" interface by
+> expanding the kernel/irq/ipi.c bag of helpers, but so far all
+> irqchips have very different requirements, so there is hardly anything
+> to consolidate for now. Maybe some as hip04 and the Marvell horror get
+> cleaned up (the latter certainly could do with a good dusting).
+>
+> This has been tested on a bunch of 32 and 64bit guests (GICv2, GICv3),
+> as well as 64bit bare metal (GICv3). The RPi part has only been tested
+> in QEMU as a 64bit guest, while the HiSi and Marvell parts have only
+> been compile-tested.
+>
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../boot/dts/qcom/msm8992-bullhead-rev-101.dts   |  6 ++++++
- arch/arm64/boot/dts/qcom/msm8992.dtsi            | 16 +++++++++-------
- 2 files changed, 15 insertions(+), 7 deletions(-)
+I gave that a spin on Juno r0 and HiKey960 (both GICv2), all good! I also
+wanted to try it out on my eMAG (to get some GICv3 airtime) but ran into
+"technical difficulties". I think I'll need to get someone to go poke
+it (most likely next week). I'm pretty sure I'm the one who should be
+asking you for hardware, but if there's anything specific you need me to
+test, please shout.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-index a2de69292d28..1061fd5404aa 100644
---- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-@@ -271,3 +271,9 @@ pm8994_l32: l32 {
- 		};
- 	};
- };
-+
-+&sdhc_1 {
-+	status = "okay";
-+
-+	mmc-hs400-1_8v;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index 43b2e4cd26f0..8ef1cb8ba8ef 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -158,18 +158,19 @@ frame@f9028000 {
- 			};
- 		};
- 
--		sdhci1: mmc@f9824900 {
-+		sdhc_1: sdhci@f9824900 {
- 			compatible = "qcom,sdhci-msm-v4";
- 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
--			interrupts = <GIC_SPI 123 IRQ_TYPE_NONE>,
--					<GIC_SPI 138 IRQ_TYPE_NONE>;
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "hc_irq", "pwr_irq";
- 
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
--				<&gcc GCC_SDCC1_AHB_CLK>;
--			clock-names = "core", "iface";
-+				<&gcc GCC_SDCC1_AHB_CLK>,
-+				<&xo_board>;
-+			clock-names = "core", "iface", "xo";
- 
- 			pinctrl-names = "default", "sleep";
- 			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on
-@@ -179,8 +180,9 @@ sdhci1: mmc@f9824900 {
- 
- 			regulator-always-on;
- 			bus-width = <8>;
--			mmc-hs400-1_8v;
--			status = "okay";
-+			non-removable;
-+
-+			status = "disabled";
- 		};
- 
- 		blsp1_uart2: serial@f991e000 {
--- 
-2.27.0
+I have a few extra nits/comments in some patches, but it's all fairly minor
+so FWIW you can also add, for patches [01-10, 14-15]:
 
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+
+I haven't really looked at those other irqchips, but I can give it a shot
+if no one else shows up. Also I'll most likely look at the arm side, but
+I'm afraid I'm too well-done right now to pay much more attention to
+details.
