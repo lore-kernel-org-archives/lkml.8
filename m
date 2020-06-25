@@ -2,96 +2,128 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD007C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB1420773
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2022053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DuPj/XWc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ckSbRH6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403997AbgFYKbm (ORCPT
+        id S2404035AbgFYKdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:31:42 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:43749 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403816AbgFYKbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:31:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593081100; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=uniitDF92Om9eWqQEbl7z3lfvQkVJMZ8568QaLGavN4=; b=DuPj/XWc4EvYnlqlEUxXaM18ZSiiE/hWnEpbur3QHa9d31i8KJuQ7OWJPazSbS1n8qArmekF
- Ac2BFNtrU7cLFSJB6r46zSglJZ+6vfRxsaLJVJAzhB9XVDvlkmFN/paxxS5U4dctW832f1NZ
- 8d2vkocpivrxwfVwHKgFKgNIWvg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
- 5ef47d090206ad41d1c6c453 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 10:31:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 293E4C433C8; Thu, 25 Jun 2020 10:31:36 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C2EAC433C6;
-        Thu, 25 Jun 2020 10:31:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C2EAC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist
-Date:   Thu, 25 Jun 2020 16:01:23 +0530
-Message-Id: <20200625103123.7240-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 25 Jun 2020 06:33:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403816AbgFYKdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:33:39 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB50C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 03:33:38 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 22so5044300wmg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 03:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=cwS7iBZ35KlWA6jBEXe+RY7hU/oltm4mf+ZLVTmBHbg=;
+        b=ckSbRH6Y9xOKw8TwFf5S6Fhk1vOPMMffz1PvAsd5fQkuEUwGeqv8ZMfu7b4VseJXq+
+         Q+Zwl6jtJPG6b8nC0vUNjXsuJBAHkcblkb0pQgjxdlrWuvAO3vVH5EOdN8ykR1fFNkO2
+         0Y3+9hQyIHdmKpwtONksi/eq/d8zwBaAwnMZiCl2cMapDRa21bVFWnrvJmrLcOy/lGA5
+         r1jIAR/pLarr4nRMPCFRPDiBFXE3KVAPa2+iPKV0c4lCbi24fnFNTvU8a5C/BFnrqmFF
+         NBvqmgslp9dIo5O2WX8S0qZbHFB5FnOKAffE3NigkrXiKcASZlQGDfgOFNp/1b16IVxq
+         irbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cwS7iBZ35KlWA6jBEXe+RY7hU/oltm4mf+ZLVTmBHbg=;
+        b=rNUUvuSJ/SOcYxDx1h18mfFXnCWjk6M11WZBMGz5dT+hB+hcaKqzkDCMqg6rkFRiw8
+         xX4cxRh6rLoYkWWNkyR0odVwOPf81+ZMcWm863NEToxvXTFlHOUmgn9ntUduxgSZn26u
+         cLEHO8CpDOWupH65BFMxNXzrCcSzZlcDBaaj+XMI1EnPBf4dMLcG2zbuoMO/q80cQLdk
+         cPKEVS8EY7wG5eLm467PDhAxSkb3Px2+K3b/alLcJXBuZvMLdTln6Cgo1xiKqfng5HJ0
+         rAmvmC/U5i6iXNSuht6IIfT74igkPWvAFfql0FBrpZ1ktRFrGT/pvwqvChf0wZF4mDnK
+         r98A==
+X-Gm-Message-State: AOAM530vxvDO1NenMb2ZnAeNsXcmAZIAhb8Qp05pZaJx81VtmmRU4S8h
+        dHkplIir+J71Hmb5CV+t0Q82Gg==
+X-Google-Smtp-Source: ABdhPJxRQCCMvNxIjXjxszNKanKw0pTi4YzKhm6dZatNk1oJ81au17V7nolB179hYdVcODuntoi7tQ==
+X-Received: by 2002:a7b:ce97:: with SMTP id q23mr2641581wmj.89.1593081217260;
+        Thu, 25 Jun 2020 03:33:37 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id t4sm5852497wmf.4.2020.06.25.03.33.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 03:33:36 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 11:33:34 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     jingoohan1@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Software Engineering <sbabic@denx.de>
+Subject: Re: [PATCH 3/8] backlight: ili922x: Add missing kerneldoc
+ descriptions for CHECK_FREQ_REG() args
+Message-ID: <20200625103334.GO954398@dell>
+References: <20200624145721.2590327-1-lee.jones@linaro.org>
+ <20200624145721.2590327-4-lee.jones@linaro.org>
+ <20200625094051.u4hanl3rycczlwiy@holly.lan>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200625094051.u4hanl3rycczlwiy@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QCOM KRYO{3,4}XX silver/LITTLE CPU cores are based on
-Cortex-A55 and are SSB safe, hence add them to SSB
-safelist -> arm64_ssb_cpus[].
+On Thu, 25 Jun 2020, Daniel Thompson wrote:
 
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/kernel/cpu_errata.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On Wed, Jun 24, 2020 at 03:57:16PM +0100, Lee Jones wrote:
+> > Kerneldoc syntax is used, but not complete.  Descriptions required.
+> > 
+> > Prevents warnings like:
+> > 
+> >  drivers/video/backlight/ili922x.c:116: warning: Function parameter or member 's' not described in 'CHECK_FREQ_REG'
+> >  drivers/video/backlight/ili922x.c:116: warning: Function parameter or member 'x' not described in 'CHECK_FREQ_REG'
+> > 
+> > Cc: <stable@vger.kernel.org>
+> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Cc: Software Engineering <sbabic@denx.de>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/video/backlight/ili922x.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/video/backlight/ili922x.c b/drivers/video/backlight/ili922x.c
+> > index 9c5aa3fbb2842..8cb4b9d3c3bba 100644
+> > --- a/drivers/video/backlight/ili922x.c
+> > +++ b/drivers/video/backlight/ili922x.c
+> > @@ -107,6 +107,8 @@
+> >   *	lower frequency when the registers are read/written.
+> >   *	The macro sets the frequency in the spi_transfer structure if
+> >   *	the frequency exceeds the maximum value.
+> > + * @s: pointer to controller side proxy for an SPI slave device
+> 
+> What's wrong with "a pointer to an SPI device"?
+> 
+> I am aware, having looked it up to find out what the above actually
+> means, that this is how struct spi_device is described in its own kernel
+> doc but quoting at that level of detail of both overkill and confusing.
 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index ad06d6802d2e..cf50c53e9357 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -460,6 +460,8 @@ static const struct midr_range arm64_ssb_cpus[] = {
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
- 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
-+	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
-+	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
- 	{},
- };
- 
+I figured that using the official description would be better than
+making something up.  However if you think it's better to KISS, then I
+can change it.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
