@@ -2,125 +2,107 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F64C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 112D1206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yAkZzlAi"
+	by mail.kernel.org (Postfix) with ESMTP id 695462070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390939AbgFYKJp (ORCPT
+        id S2390586AbgFYKKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:09:45 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:20063 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389646AbgFYKJo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:09:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593079783; x=1624615783;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=91wcyIUMXvrszLtEiAYcm3v1KkXgyJ9lJRfph/lUfUM=;
-  b=yAkZzlAiKEe0iVyJvWdbP7PSeRajuYMVV/+2+UMcR+ACUK+lsNBDHK2Q
-   Z6mcUFVuyTXMUVJUSuAN3lqzBv+U6k2HNr7jWACO365fRUNxpp3kFMApn
-   qkyZaFhGhE+sQaj4fk8U2P10T8L86GGtgcQYLxxByTvQnkWLnqouyYJt0
-   7BksTLlRrInQDkdNlY7smcTVGSnmtUHWWc4ugsVE534Ha3+cB4EWOhtyC
-   gsEh7ZxsAjgwC87Q+18IEBa0DAGVJQ8H8Wpe1G2igEGIA5FaPQkT9a6YO
-   3FkSPOcpHlcHU8KaGKe9zr9ZvBq5NakJmZ5/JVqeK/QNnwpO0u1PLMugW
-   A==;
-IronPort-SDR: 3h7MP/Kw1EztnhrxpuyFO/5vmmb6b0aJ0i+b6BD2UmPTng9SIQUBK8BHEGcefl2n4n0d990fnY
- FzClEBR0ile38wSUyvAiggCEEjCKnQtnyLKATbh3B1cyqpynsAW7bsfoVDYPNJmGAyyRqYv2a6
- M2CTSD1rPkQdge3JzWjBsCyUIuTHdTz8IWmjVApJKqx1U7yU6NlVmnX3sKfkFAemcKiKpMlFSY
- L6dLdgZGuOqzMBTeEMro419YJfV2ommazCw28EAX7+D8aJ4bUDfuXuxnkQNWaUgXVSXkz3k5LD
- m/w=
+        Thu, 25 Jun 2020 06:10:53 -0400
+Received: from mga02.intel.com ([134.134.136.20]:21359 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389568AbgFYKKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:10:52 -0400
+IronPort-SDR: yyu7GAGruH533Zwx5UfwGE6sAo8mZDJmMjQGok03sm18umpc84El3bCwUi+MNfnx/K5yk5xHyW
+ pxM5sMCmGRfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="133259340"
 X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="85037929"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jun 2020 03:09:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 25 Jun 2020 03:09:28 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 25 Jun 2020 03:09:37 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <linux-kernel@vger.kernel.org>
-CC:     <mturquette@linaro.org>, <bbrezillon@kernel.org>,
-        <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Claudiu Beznea" <claudiu.beznea@microchip.com>
-Subject: [PATCH 2/2] clk: at91: main: do not continue if oscillators already prepared
-Date:   Thu, 25 Jun 2020 13:09:28 +0300
-Message-ID: <1593079768-9349-2-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593079768-9349-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1593079768-9349-1-git-send-email-claudiu.beznea@microchip.com>
+   d="scan'208";a="133259340"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 03:10:46 -0700
+IronPort-SDR: PFsp/SsCVenUnNedV0CEWxdvXRhWP/c8o1xR0H0gXdq1qb/ZBGwr3ItsyEJ1n7PfCmRbKEA+iJ
+ IyvEJVEHi9AA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="263887183"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.28.52]) ([10.255.28.52])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 03:10:43 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 6/7] iommu/vt-d: Warn on out-of-range invalidation address
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1592926996-47914-7-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <d87d15fd-71d5-6735-74df-583024826ab0@linux.intel.com>
+Date:   Thu, 25 Jun 2020 18:10:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1592926996-47914-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return in clk_main_osc_prepare()/clk_main_rc_osc_prepare() if
-oscillators are already enabled.
+Hi,
 
-Fixes: 27cb1c2083373 ("clk: at91: rework main clk implementation")
-Fixes: 1bdf02326b71e ("clk: at91: make use of syscon/regmap internally")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/clk/at91/clk-main.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+On 2020/6/23 23:43, Jacob Pan wrote:
+> For guest requested IOTLB invalidation, address and mask are provided as
+> part of the invalidation data. VT-d HW silently ignores any address bits
+> below the mask. SW shall also allow such case but give warning if
+> address does not align with the mask. This patch relax the fault
+> handling from error to warning and proceed with invalidation request
+> with the given mask.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/intel/iommu.c | 7 +++----
+>   1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 5ea5732d5ec4..50fc62413a35 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -5439,13 +5439,12 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
+>   
+>   		switch (BIT(cache_type)) {
+>   		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> +			/* HW will ignore LSB bits based on address mask */
+>   			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+>   			    size &&
+>   			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> -				pr_err_ratelimited("Address out of range, 0x%llx, size order %llu\n",
+> -						   inv_info->addr_info.addr, size);
+> -				ret = -ERANGE;
+> -				goto out_unlock;
+> +				WARN_ONCE(1, "Address out of range, 0x%llx, size order %llu\n",
+> +					  inv_info->addr_info.addr, size);
 
-diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
-index 37c22667e831..46b4d2131989 100644
---- a/drivers/clk/at91/clk-main.c
-+++ b/drivers/clk/at91/clk-main.c
-@@ -74,13 +74,11 @@ static int clk_main_osc_prepare(struct clk_hw *hw)
- 	regmap_read(regmap, AT91_CKGR_MOR, &tmp);
- 	tmp &= ~MOR_KEY_MASK;
- 
--	if (tmp & AT91_PMC_OSCBYPASS)
-+	if (tmp & (AT91_PMC_OSCBYPASS | AT91_PMC_MOSCEN))
- 		return 0;
- 
--	if (!(tmp & AT91_PMC_MOSCEN)) {
--		tmp |= AT91_PMC_MOSCEN | AT91_PMC_KEY;
--		regmap_write(regmap, AT91_CKGR_MOR, tmp);
--	}
-+	tmp |= AT91_PMC_MOSCEN | AT91_PMC_KEY;
-+	regmap_write(regmap, AT91_CKGR_MOR, tmp);
- 
- 	while (!clk_main_osc_ready(regmap))
- 		cpu_relax();
-@@ -186,10 +184,12 @@ static int clk_main_rc_osc_prepare(struct clk_hw *hw)
- 
- 	regmap_read(regmap, AT91_CKGR_MOR, &mor);
- 
--	if (!(mor & AT91_PMC_MOSCRCEN))
--		regmap_update_bits(regmap, AT91_CKGR_MOR,
--				   MOR_KEY_MASK | AT91_PMC_MOSCRCEN,
--				   AT91_PMC_MOSCRCEN | AT91_PMC_KEY);
-+	if (mor & AT91_PMC_MOSCRCEN)
-+		return 0;
-+
-+	regmap_update_bits(regmap, AT91_CKGR_MOR,
-+			   MOR_KEY_MASK | AT91_PMC_MOSCRCEN,
-+			   AT91_PMC_MOSCRCEN | AT91_PMC_KEY);
- 
- 	while (!clk_main_rc_osc_ready(regmap))
- 		cpu_relax();
--- 
-2.7.4
+I don't think WARN_ONCE() is suitable here. It makes users think it's a
+kernel bug. How about pr_warn_ratelimited()?
 
+Best regards,
+baolu
+
+>   			}
+>   
+>   			/*
+> 
