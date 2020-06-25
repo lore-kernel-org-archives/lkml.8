@@ -2,87 +2,162 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70923C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A218C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6282070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2742100A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:19:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FKth+Ykk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403988AbgFYKTl (ORCPT
+        id S2404001AbgFYKTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:19:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:57100 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403975AbgFYKTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:19:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A99881FB;
-        Thu, 25 Jun 2020 03:19:39 -0700 (PDT)
-Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DEB0F3F73C;
-        Thu, 25 Jun 2020 03:19:38 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] firmware: arm_scmi: Use HAVE_ARM_SMCCC_DISCOVERY instead of ARM_PSCI_FW
-Date:   Thu, 25 Jun 2020 11:19:37 +0100
-Message-Id: <20200625101937.51939-1-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 25 Jun 2020 06:19:52 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:42351 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403810AbgFYKTv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:19:51 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200625101949euoutp017b7f967c0ce0396ddbd8a0d4cd66a489~bwixz8f6r2346323463euoutp01t
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 10:19:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200625101949euoutp017b7f967c0ce0396ddbd8a0d4cd66a489~bwixz8f6r2346323463euoutp01t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593080389;
+        bh=hWK6IRwNugx67GEBMWvV0xLl8H3ym1TL4+IGDZ9xQ18=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=FKth+Ykk8S4r5qM/HT04auJ3H88cRhMKLd3T3G7r134xn3h12DNX9NzOwVA7AtNEs
+         6X06+4yd76v0GHIFks3BSwRA6D8AGJ6lKMrDc65lfZrGlzwuPdgO1a6a/62IW7evXY
+         aeExJ7dxiyzUeogKwYSY6FTRMf+fpx0SG+DD8B4U=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200625101948eucas1p1cde01f945dcfc3d8df00d09f0e133640~bwiwuqAWK1407614076eucas1p1L;
+        Thu, 25 Jun 2020 10:19:48 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9D.10.06456.44A74FE5; Thu, 25
+        Jun 2020 11:19:48 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200625101947eucas1p1defded45105fda1038f49c4a7b32ac12~bwiwNcMg30937309373eucas1p1q;
+        Thu, 25 Jun 2020 10:19:47 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200625101947eusmtrp143583aae4a927f36c0efac5fc5b656f1~bwiwMmF731283212832eusmtrp1i;
+        Thu, 25 Jun 2020 10:19:47 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-87-5ef47a444647
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id A9.F2.06314.34A74FE5; Thu, 25
+        Jun 2020 11:19:47 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200625101946eusmtip237fa30e71d37c3b185a7de4dc8ff2cfc~bwivNdHdw1802218022eusmtip2Z;
+        Thu, 25 Jun 2020 10:19:46 +0000 (GMT)
+Subject: Re: [RESEND PATCH v5 3/5] drivers core: allow probe_err accept
+ integer and pointer types
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <3e5106a3-b7f5-e4f0-1bd1-d4af09b8c641@samsung.com>
+Date:   Thu, 25 Jun 2020 12:19:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VfQdwHotuGWMUGUvEWNcZNkm+VkdmNuVJDS_T6hbcTqsg@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTURjHObu7d9fV6jqVPVlkjSwMyqw+HOiFCoNbH8LIECq1m9505Ey2
+        tJSiyF6mpmk10qXLLJkuw9J8pTJXaWrmW1raRMqJKNkqNyqhF+dd5Lffc57n+Z///3BoQu4k
+        fWlV/DFeE8/FKSmpuLrp5+tVwSmOiDXWIRKPZT9D+EFuOYn1H2wUfuO0Uzj1djmFe7+PEbjl
+        U68Yp+XckeCK4T4S99TnU9iif4zwveeDEmzJ2o8LHHoCN36xkVvms2XGMsT29HURrP3deQlb
+        ZxiUsDd0eSRbYU6j2JfZ3SK2oaBMwg5lNIvYyjun2ayHZsQ+zbwqZicrFofI9kk3RvNxqiRe
+        E7j5oDS2q7tVlGAiT5gvmsgzSC9ORx40MOuhx/oepSMpLWdKEEw0jrgLB4KyyzmUUEwiuNbU
+        QP1beV90jhAaJgQjpTclQmFH0N9fOr1P015MFNRlrk1HEtqbCYSGJNcEwZhJcP7pIFw6FBMA
+        vyr7ZzRlzGZ4ZEudsSRm/KFz1CFysQ8TDlnFhe4ZT2jJs83MeDC7od/aM8ME4wc1E/mEwAo4
+        6yglBZ/FNNwybRI4GExv8wiBvWC8+aFE4EXQdvWS+ylOw1CJkAsYHYKq+3XuhQ1gfT1FuWIR
+        06bL6wNdCMxWqGvcKeA8eDfhKTiYB1eqrxPCsQx0F+SCxlIYaq9y6ymguNNJZSOlYVYuw6ws
+        hllZDP+vLURiM1LwiVp1DK8NiuePr9Zyam1ifMzqqKPqCjT9Gdt+N3+rRc7uQxbE0Eg5V/Zl
+        YDJCTnJJ2mS1BQFNKL1l29rbIuSyaC45hdccjdQkxvFaC1pIi5UK2bqisXA5E8Md44/wfAKv
+        +dcV0R6+Z9AOLtgxqMSaDuNJ48dC+1SY6Jv6M/5cORBtmGMN1S3/ccE6opNGvrKf25M/PF5z
+        dhXXEFCT/kRZbAxQXVyh2usTNbrE19iqOuAfltDxqD6j/IPRLw28781hOkNyY59u0K97tn1f
+        6q4FxtoXSXmRp+4qli2dW8u2HraMh06Ff40YUIq1sVzQSkKj5f4CojXVvYgDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupileLIzCtJLcpLzFFi42I5/e/4PV3nqi9xBrfmKlm8nHCY0WLjjPWs
+        FlMfPmGzuPL1PZtF8+L1bBZXv79ktjj55iqLRefEJewWmx5fY7W4vGsOm8WhqXsZLdYeuctu
+        cagv2mLul6nMFgc/PGF14PdYM28No8flaxeZPd7faGX32DnrLrvH7I6ZrB6bVnWyeZyYcInJ
+        Y//cNewe97uPM3lsXlLv0bdlFaPHgd7JLB6fN8kF8Ebp2RTll5akKmTkF5fYKkUbWhjpGVpa
+        6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZVy8dIqpYDlrxar25awNjFNZuhg5OSQETCRu
+        L2ph7mLk4hASWMooMXfeS0aIhLjE7vlvmSFsYYk/17rYIIreMkp8XjYLyOHgEBZIltjZa9TF
+        yM4hIqAvsb8MpIJZYB2rxIfPf1ggyrezSJzb/RFsDpuApsTfzTfZQGxeATuJPU+awY5gEVCV
+        uPD8CxOILSoQK/Ht3haoGkGJkzOfgNVwCgRK3LxzGcxmFjCTmLf5ITOELS+x/e0cKFtcounL
+        StYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvqFSfmFpfmpesl5+duYgSmg23Hfm7e
+        wXhpY/AhRgEORiUe3g+3PscJsSaWFVfmHmKU4GBWEuF1Ons6Tog3JbGyKrUoP76oNCe1+BCj
+        KdBzE5mlRJPzgakqryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QD
+        o6vV+VM9b9sDmPevdjiifXxXSd5Hdncr37s7/2wJZJpnPF9ST7YjVX7depnER2s2xVXluOmJ
+        PZp57XTzqT379ykmJMm9krbnubjhMKfVTlMzg8ty9ZaVee/Su1S004QWTZO5td7qxweDzZXT
+        XKS/VSjLH7R9urr9itTCnouy0lps1SuvSSUlKLEUZyQaajEXFScCANjlS6IdAwAA
+X-CMS-MailID: 20200625101947eucas1p1defded45105fda1038f49c4a7b32ac12
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f
+References: <20200624114127.3016-1-a.hajda@samsung.com>
+        <CGME20200624114136eucas1p1c84f81b1d78e2dbad7ac1b762f0a4b4f@eucas1p1.samsung.com>
+        <20200624114127.3016-4-a.hajda@samsung.com>
+        <2203e0c2-016b-4dbe-452d-63c857f06dd1@arm.com>
+        <CAHp75VfpP1cGK3FvTL0hBudRY2N_7GpXYRuUHUCipz7X2sMLmQ@mail.gmail.com>
+        <be755825-b413-e5c1-7ea4-06506b20d1f0@arm.com>
+        <20200624150434.GH5472@sirena.org.uk>
+        <381de683-df5e-4112-5690-13dd9272ae22@arm.com>
+        <70b61b75-c68b-ad89-5f6a-f1d681b9f5d0@samsung.com>
+        <CAHp75VfQdwHotuGWMUGUvEWNcZNkm+VkdmNuVJDS_T6hbcTqsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e5bfb21d98b6 ("firmware: smccc: Add HAVE_ARM_SMCCC_DISCOVERY to
-identify SMCCC v1.1 and above") introduced new config option to identify
-the availability of SMCCC discoverability of version and features
-transparently hiding the indirect dependency on ARM_PSCI_FW.
 
-Commit 5a897e3ab429 ("firmware: arm_scmi: fix psci dependency") just
-worked around the build dependency making SCMI SMC/HVC transport depend
-on ARM_PSCI_FW at the time. Since it really just relies on SMCCC directly
-and not on ARM_PSCI_FW, let us move to use CONFIG_HAVE_ARM_SMCCC_DISCOVERY
-instead of CONFIG_ARM_PSCI_FW.
+On 25.06.2020 10:41, Andy Shevchenko wrote:
+> On Wed, Jun 24, 2020 at 10:40 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> On 24.06.2020 17:16, Robin Murphy wrote:
+> ...
+>
+>> I have proposed such thing in my previous iteration[1], except it was
+>> macro because of variadic arguments.
+> You may have a function with variadic arguments. Macros are beasts and
+> make in some cases more harm than help.
 
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/firmware/arm_scmi/Makefile | 2 +-
- drivers/firmware/arm_scmi/driver.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 1cad32b38b29..70c5a8c986a5 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -4,6 +4,6 @@ scmi-bus-y = bus.o
- scmi-driver-y = driver.o
- scmi-transport-y = shmem.o
- scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
--scmi-transport-$(CONFIG_ARM_PSCI_FW) += smc.o
-+scmi-transport-$(CONFIG_HAVE_ARM_SMCCC_DISCOVERY) += smc.o
- scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
- obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 7483cacf63f9..38e71a2c4fbb 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -901,7 +901,7 @@ ATTRIBUTE_GROUPS(versions);
- /* Each compatible listed below must have descriptor associated with it */
- static const struct of_device_id scmi_of_match[] = {
- 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
--#ifdef CONFIG_ARM_PSCI_FW
-+#ifdef CONFIG_HAVE_ARM_SMCCC_DISCOVERY
- 	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc},
- #endif
- 	{ /* Sentinel */ },
--- 
-2.17.1
+What harm it can do in this particular case?
+
+With macro we have simple straightforward one-liner, with quite good 
+type-checking.
+
+Maybe I am wrong, but I suspect creation of variadic function would 
+require much more coding.
+
+
+Regards
+
+Andrzej
+
+
 
