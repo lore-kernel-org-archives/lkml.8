@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0221C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1BFF20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE12206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G2+XxG2K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j+2JlAdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405489AbgFYOph (ORCPT
+        id S2405471AbgFYOpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
+        Thu, 25 Jun 2020 10:45:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405447AbgFYOpb (ORCPT
+        with ESMTP id S2405428AbgFYOp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:45:31 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20AEC08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:30 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l2so4732050wmf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:30 -0700 (PDT)
+        Thu, 25 Jun 2020 10:45:28 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6EEC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:27 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 22so5830841wmg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OoOn6nS87ZidHX21sGTjERIvR6aejkwl1RkPRA8UQB0=;
-        b=G2+XxG2KTvJLLLkYJ4JyN+CEHg8y0zLekzqE0jcco/ttYAolOWEQJFO1BiAsMnNM8r
-         /QjE8YHD6lCKQYdi9pzY3sTr3ve83hnSexS0jisvtcyWQVVkQx15eilrsbCJAypiez08
-         yDFn1StzRRntr1BetbaFswtJiniXghTb8d6r0yP4TQu+DSW99GJDa1mah/SJleK569HJ
-         lMkasvtNugOxW68N6BsdpSW1gjIi/Z8VHHWkffc36WgLRUAMX5nKw6cXaqTkP8DIVCha
-         Ml+AqdG+H67N5kbrVUBEVHI0i6KP9BrwQhM84METF2YK/0BfDyceWeJPmIK6cPfixF8g
-         /Zqw==
+        bh=PKPieQCHF+nm/iYn6FAQVcl/MzY/rRP6qinUb5RW81I=;
+        b=j+2JlAdRSRFZfAnfxCM0CrpTZ+bahzEHxSfrfwFu0Zuve3qUAEZ4rSirAGqN4PwK1T
+         PpBvFuCOHUh3nOd8Mkrac43OY9760SfUTQnf3fOzt1lJFIkNKC+c/uStRxegVgPN3kv8
+         QSvhUbx2GGGTkgnndzpda8np1tboP8eifIbPrUpgwF+wdUSF0DfOu9GIE4h532YABufs
+         sVboxLHAoWYbp8VU2YKtIBNmZmlVSGGzk1I9wJT/mNusrjWnmwbqqLSKmpQ9kH/GcGDt
+         FBl7MSVOO7DCnSBS301HHbhicSmgV7gmB+L9+rFpLe+cbypd/nCU0EQg7EysRRuCE5yt
+         uwHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=OoOn6nS87ZidHX21sGTjERIvR6aejkwl1RkPRA8UQB0=;
-        b=Kin57QpiX4DvyC2P/ITDwWs3t4sV7ONWtCWRRrhzE9fuYERXip8uwpTYamkpDlpTKv
-         CiSApBzXdXVWZt19LESL+lEUYTxaE8MNBnuANLajpFZ/DDY4Kgi/aoVw+6VH6FGMXg3P
-         gddoxL7cep+B/k51C97r9ArrNQDuZd34lG68MLvErGfjA/WQVES2XCMq2jNeE/LdM6p8
-         SUGFPJ/sQqPsbBpQ+tLU5V7hYJhwSYnd4RTx3xCm0pccMcioUnNs4n+w+AypmuorCV8F
-         fr6Xh3JmTzGi1J7205oZo+hg6dqja+0CZ7HAReWEMTfD++tytO8ZDfU8X2YsEpyPIuY7
-         LL/Q==
-X-Gm-Message-State: AOAM531m5RySKozjYVKbPWWJ5yavOjDE/fnAJeT1ClTWfjyn9lGSKdpq
-        ZgpoCV5qqWua281ZtX5+zJTLPw==
-X-Google-Smtp-Source: ABdhPJwKxnWPv1U71martk1kxU4/Tb0LCX7+Lf5k20be9/lZK1yet2K8Sse94XB6F5JdiTmjkIpF3Q==
-X-Received: by 2002:a7b:cc85:: with SMTP id p5mr3673151wma.18.1593096329483;
-        Thu, 25 Jun 2020 07:45:29 -0700 (PDT)
+        bh=PKPieQCHF+nm/iYn6FAQVcl/MzY/rRP6qinUb5RW81I=;
+        b=YvXbrk34+n3tRCoxC1+mn5MA0Mv7VG/EIH/5VTdbm42+flUYsMSSKeF6nRLgSlDzk9
+         XtRsmmLe+4jTnjWTBg1anRINaAtPuZIlDwA/UEUC3AlshuOoisJL+x+vMoL544IB0VwE
+         X8urDm3mgpZbaydzlpCGFQ0PAaonEOla9alasUvb5zQTSR7X7iQvfzDEH6NXhaWnXajn
+         T6llQ0tFMVokyycOAZ8voU+jx4h/A/ZmFjl/2Heo7dSWXgde7A5U676isO+FH1CepULL
+         YlUOTN2MfCbS3ZEZdJgQpSSpYHAla2wSWNMJRD+R8tiFlWcBnweq5GUxmuYZ1xe6MH0e
+         AL6g==
+X-Gm-Message-State: AOAM531NxmQZqKPBj+6itrzhyeGZy6wGXA6/khMkL9k/C2DwXlvDYQNX
+        Bt0qREnD/jOXpADER1c4rttG3g==
+X-Google-Smtp-Source: ABdhPJzffN5+QlD/Xdx8ngAfeI3sfiXOJrUqwwi0JLiohDrlOfiAwvWDHzYRVxLJqA5aEL2xZwcwlw==
+X-Received: by 2002:a1c:f003:: with SMTP id a3mr3644775wmb.119.1593096326264;
+        Thu, 25 Jun 2020 07:45:26 -0700 (PDT)
 Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.gmail.com with ESMTPSA id u186sm13062706wmu.10.2020.06.25.07.45.28
+        by smtp.gmail.com with ESMTPSA id u186sm13062706wmu.10.2020.06.25.07.45.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 07:45:28 -0700 (PDT)
+        Thu, 25 Jun 2020 07:45:25 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
 Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
         amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] thermal: core: Add notifications call in the framework
-Date:   Thu, 25 Jun 2020 16:45:09 +0200
-Message-Id: <20200625144509.17918-5-daniel.lezcano@linaro.org>
+Subject: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
+Date:   Thu, 25 Jun 2020 16:45:07 +0200
+Message-Id: <20200625144509.17918-3-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200625144509.17918-1-daniel.lezcano@linaro.org>
 References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
@@ -73,147 +73,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The generic netlink protocol is implemented but the different
-notification functions are not yet connected to the core code.
-
-These changes add the notification calls in the different
-corresponding places.
+In order to set the scene for the new generic netlink thermal
+management and notifications, let remove the old dead code remaining
+in the uapi headers.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/thermal/thermal_core.c    | 21 +++++++++++++++++++++
- drivers/thermal/thermal_helpers.c | 11 +++++++++--
- drivers/thermal/thermal_sysfs.c   | 15 ++++++++++++++-
- 3 files changed, 44 insertions(+), 3 deletions(-)
+ include/linux/thermal.h      |  5 -----
+ include/uapi/linux/thermal.h | 12 +-----------
+ 2 files changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 58c95aeafb7f..1388c03d1190 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -215,6 +215,8 @@ int thermal_zone_device_set_policy(struct thermal_zone_device *tz,
- 	mutex_unlock(&tz->lock);
- 	mutex_unlock(&thermal_governor_lock);
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index faf7ad031e42..fc93a6348082 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -302,11 +302,6 @@ struct thermal_zone_params {
+ 	int offset;
+ };
  
-+	thermal_notify_tz_gov_change(tz->id, policy);
-+
- 	return ret;
- }
+-struct thermal_genl_event {
+-	u32 orig;
+-	enum events event;
+-};
+-
+ /**
+  * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
+  *
+diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
+index 96218378dda8..22df67ed9e9c 100644
+--- a/include/uapi/linux/thermal.h
++++ b/include/uapi/linux/thermal.h
+@@ -6,21 +6,12 @@
  
-@@ -406,12 +408,25 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
- static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
- {
- 	enum thermal_trip_type type;
-+	int trip_temp, hyst = 0;
+ /* Adding event notification support elements */
+ #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
+-#define THERMAL_GENL_VERSION                    0x01
++#define THERMAL_GENL_VERSION                    0x02
+ #define THERMAL_GENL_MCAST_GROUP_NAME           "thermal_mc_grp"
  
- 	/* Ignore disabled trip points */
- 	if (test_bit(trip, &tz->trips_disabled))
- 		return;
- 
-+	tz->ops->get_trip_temp(tz, trip, &trip_temp);
- 	tz->ops->get_trip_type(tz, trip, &type);
-+	if (tz->ops->get_trip_hyst)
-+		tz->ops->get_trip_hyst(tz, trip, &hyst);
-+
-+	if (tz->last_temperature != THERMAL_TEMP_INVALID) {
-+		if (tz->last_temperature < trip_temp &&
-+		    tz->temperature >= trip_temp)
-+			thermal_notify_tz_trip_up(tz->id, trip);
-+		if (tz->last_temperature >= trip_temp &&
-+		    tz->temperature < (trip_temp - hyst))
-+			thermal_notify_tz_trip_down(tz->id, trip);
-+	}
- 
- 	if (type == THERMAL_TRIP_CRITICAL || type == THERMAL_TRIP_HOT)
- 		handle_critical_trips(tz, trip, type);
-@@ -443,6 +458,8 @@ static void update_temperature(struct thermal_zone_device *tz)
- 	mutex_unlock(&tz->lock);
- 
- 	trace_thermal_temperature(tz);
-+
-+	thermal_genl_sampling_temp(tz->id, temp);
- }
- 
- static void thermal_zone_device_init(struct thermal_zone_device *tz)
-@@ -1398,6 +1415,8 @@ thermal_zone_device_register(const char *type, int trips, int mask,
- 	if (atomic_cmpxchg(&tz->need_update, 1, 0))
- 		thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
- 
-+	thermal_notify_tz_create(tz->id, tz->type);
-+
- 	return tz;
- 
- unregister:
-@@ -1469,6 +1488,8 @@ void thermal_zone_device_unregister(struct thermal_zone_device *tz)
- 	ida_destroy(&tz->ida);
- 	mutex_destroy(&tz->lock);
- 	device_unregister(&tz->device);
-+
-+	thermal_notify_tz_delete(tz->id);
- }
- EXPORT_SYMBOL_GPL(thermal_zone_device_unregister);
- 
-diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
-index 6ed24b4e23d3..7893ace1d90f 100644
---- a/drivers/thermal/thermal_helpers.c
-+++ b/drivers/thermal/thermal_helpers.c
-@@ -175,6 +175,14 @@ void thermal_zone_set_trips(struct thermal_zone_device *tz)
- 	mutex_unlock(&tz->lock);
- }
- 
-+void thermal_cdev_set_cur_state(struct thermal_cooling_device *cdev, int target)
-+{
-+	if (cdev->ops->set_cur_state(cdev, target))
-+		return;
-+	thermal_notify_cdev_update(cdev->id, target);
-+	thermal_cooling_device_stats_update(cdev, target);
-+}
-+
- void thermal_cdev_update(struct thermal_cooling_device *cdev)
- {
- 	struct thermal_instance *instance;
-@@ -192,8 +200,7 @@ void thermal_cdev_update(struct thermal_cooling_device *cdev)
- 			target = instance->target;
- 	}
- 
--	if (!cdev->ops->set_cur_state(cdev, target))
--		thermal_cooling_device_stats_update(cdev, target);
-+	thermal_cdev_set_cur_state(cdev, target);
- 
- 	mutex_unlock(&cdev->lock);
- 	trace_cdev_update(cdev, target);
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index aa99edb4dff7..ff449943f757 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -124,7 +124,8 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
- {
- 	struct thermal_zone_device *tz = to_thermal_zone(dev);
- 	int trip, ret;
--	int temperature;
-+	int temperature, hyst = 0;
-+	enum thermal_trip_type type;
- 
- 	if (!tz->ops->set_trip_temp)
- 		return -EPERM;
-@@ -139,6 +140,18 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
- 	if (ret)
- 		return ret;
- 
-+	if (tz->ops->get_trip_hyst) {
-+		ret = tz->ops->get_trip_hyst(tz, trip, &hyst);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = tz->ops->get_trip_type(tz, trip, &type);
-+	if (ret)
-+		return ret;
-+
-+	thermal_notify_tz_trip_change(tz->id, trip, type, temperature, hyst);
-+
- 	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
- 
- 	return count;
+-/* Events supported by Thermal Netlink */
+-enum events {
+-	THERMAL_AUX0,
+-	THERMAL_AUX1,
+-	THERMAL_CRITICAL,
+-	THERMAL_DEV_FAULT,
+-};
+-
+ /* attributes of thermal_genl_family */
+ enum {
+ 	THERMAL_GENL_ATTR_UNSPEC,
+-	THERMAL_GENL_ATTR_EVENT,
+ 	__THERMAL_GENL_ATTR_MAX,
+ };
+ #define THERMAL_GENL_ATTR_MAX (__THERMAL_GENL_ATTR_MAX - 1)
+@@ -28,7 +19,6 @@ enum {
+ /* commands supported by the thermal_genl_family */
+ enum {
+ 	THERMAL_GENL_CMD_UNSPEC,
+-	THERMAL_GENL_CMD_EVENT,
+ 	__THERMAL_GENL_CMD_MAX,
+ };
+ #define THERMAL_GENL_CMD_MAX (__THERMAL_GENL_CMD_MAX - 1)
 -- 
 2.17.1
 
