@@ -5,78 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7846CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E101DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACA220781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB0620781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODFyvm5V"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NyEtXQud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406019AbgFYSV6 (ORCPT
+        id S2406045AbgFYSWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54788 "EHLO
+        Thu, 25 Jun 2020 14:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404171AbgFYSVu (ORCPT
+        with ESMTP id S2405903AbgFYSVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:21:50 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76ABC08C5DB;
-        Thu, 25 Jun 2020 11:21:49 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id g1so4947891edv.6;
-        Thu, 25 Jun 2020 11:21:49 -0700 (PDT)
+        Thu, 25 Jun 2020 14:21:55 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30B6C08C5C1;
+        Thu, 25 Jun 2020 11:21:54 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h15so6860080wrq.8;
+        Thu, 25 Jun 2020 11:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=A69JzujOnyhenXPlRXTW6BkPoGZ0iXxM/MOzTEanPgQ=;
-        b=ODFyvm5V8bJa2FAJCCG3ScLpGvuqvyll5vw+2FS1j8/f3AMh3o/RBwmH0pAJmbooEA
-         IHhRPcnmy7f7F9vB4FMkQdE8d/a+XdhkzH9FWOtKhKIcXLc9yHTn1SWLGMV4orkQNszE
-         SqaApbEwBSw+7CUXs/uAi/PdTn76L6AF2BekoIxFeC87v0eExUhl9HrEhIhygrjhERYI
-         IoSWfbGdrrYLC1TevvEKFO+uXY8fqzEDfPMVHn20vKZiA0ouzcTWZcs2/8C0i+F9hvjp
-         e5WdAgTj2t0guBrdyf61r2FuTHFEN7cDEYJUkhnbxOSiGxnfsGvwepN+iNCj9SCk3GEo
-         EPBQ==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1jwFq5S23vPzbNJSmrZrgIsKoZN4GTlh6PdOkISx7aY=;
+        b=NyEtXQudR4pLxM9yltdxoOlvEPVNBsKan1eHHSiMxVaFZHIkU2d10gR6YakV88025l
+         97ELYaLl7xj5OM8POW24GS6S7Q71A7qq/LydfsYJBPoljFJVjDGiu79rsfgl44maHeTv
+         CYByd+paQbGFcLSZvt02AdCUMdpogSIKd0UECEDt2uL6WPEYIr8wyZWRyQE0oeYU5XLu
+         D7IaQ7pzM53UrmKUedw8BY11vIw9CYn2xJ3zu8DSpD0K+BAoJzovG2YwumZesXjKMvHX
+         nDQmvmZ1XzUuSQrPBpKk2+cXMxu2cr/Y6poqKQeNGsCeH78IV5CXvxVb6X+/dQuyZ3xZ
+         lFwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=A69JzujOnyhenXPlRXTW6BkPoGZ0iXxM/MOzTEanPgQ=;
-        b=iabDMrgcxIYBEFEYjkow+AkraKystP1DT+9bhMk+ej0+w9fuzEC/ylFoGQtVuyzqaA
-         50dbOe9gL/vaI6RBs2NXVC05rVQASfes3nR2HAkoe9jGFN3lzWXNVSqS57pGqv8C62Sk
-         0wDJUIQyZeY0Asw80ULeGvYtq2LywnFSkLg4Xk0jSDTaZbrBpvufW4gI/EhLdWHuJtGr
-         bdGeb1OoNKGdA4ZKJLplcG8+fQ1XW83krCz3sduuuILLBPceCBxsNKIB56YnS91S9lA4
-         khBDRThTJlehOKEgHtqY8SlTi/+kyzcRXV11djjDywWaUMkAA2F7ezgilVktYl79Vzzj
-         kuyA==
-X-Gm-Message-State: AOAM531CJfxdq8cEq7q720DoL2/1jepsH302O9/5ITfo6ID0UIn8Plxl
-        +hIkwhKmnzDscNgyHqnh8Is=
-X-Google-Smtp-Source: ABdhPJzmfvbOjx/IWB5RRMpXTfXgVoCKevHrkNt9wPBD16ZSLt4MMQH4HpoXMxfQErxEdfaFpeUGJg==
-X-Received: by 2002:a50:f413:: with SMTP id r19mr13324539edm.17.1593109308677;
-        Thu, 25 Jun 2020 11:21:48 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1jwFq5S23vPzbNJSmrZrgIsKoZN4GTlh6PdOkISx7aY=;
+        b=RF1Mnr2m+KsXQiEs7LmuSnTGEyAnn6NxRuqzB3tEILBp/i2hiBUOz5A5Qxd2hrDAZZ
+         /DAeZRpxngeJ1IH1832uyv1B90tzpUVDITYyutpmyapdYxkvkGijF603X8bZXZFzGF5E
+         zvk1fVFbSBRd50LdwyLt8Tj7e/hJyISWbwcBeKJ/W7ru0lj+XasZ+3WKZaCrJo9HxtLu
+         9Wk9bcCcYWvjSLH/Z2lzx9OmE7VAJ6qD7W051TFB9SjeC/IgZnEmnNLmd6btSVi+m7fK
+         TCvRX2v37O5eILJWNjWIaxTsj5G0WVwoSDCa6a5SsXzWgMixs/rqGa6Uv8a/u8CfEfYP
+         8VhA==
+X-Gm-Message-State: AOAM532ow0wMATXXFccQ/MNF7tJshhQfsyAZi9M0YUq2K8USc/mscEoK
+        hQYnygtdXG2xGP0cKJuUZiRE/6wm
+X-Google-Smtp-Source: ABdhPJxoWeHHa9uUOMDwo1O0nU3whkjZr5zI4DDFkqvZSjaKRhH1psS3keHtfjdJ2XPmlyFHlX+UxA==
+X-Received: by 2002:a5d:6809:: with SMTP id w9mr40364931wru.182.1593109313476;
+        Thu, 25 Jun 2020 11:21:53 -0700 (PDT)
+Received: from localhost.localdomain (p200300f1370fee00428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:370f:ee00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id y6sm14312233wmy.0.2020.06.25.11.21.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:21:48 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/13] arm64: dts: qcom: msm8992: Add PSCI support.
-Date:   Thu, 25 Jun 2020 20:21:14 +0200
-Message-Id: <20200625182118.131476-11-konradybcio@gmail.com>
+        Thu, 25 Jun 2020 11:21:52 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jbrunet@baylibre.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] net: stmmac: dwmac-meson8b: use clk_parent_data for clock registration
+Date:   Thu, 25 Jun 2020 20:21:42 +0200
+Message-Id: <20200625182142.1673053-1-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
-References: <20200625182118.131476-1-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,30 +77,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This SoC's firmware does not fully support the PSCI
-spec, but it's good enough to bring the cores up.
+Simplify meson8b_init_rgmii_tx_clk() by using struct clk_parent_data to
+initialize the clock parents. No functional changes intended.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 49 +++++++------------
+ 1 file changed, 17 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index c4c9a108ae1e..bc3acc0cf9bf 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -135,6 +135,11 @@ pmu {
- 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
- 	};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+index 544bc621146c..5afcf05bbf9c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+@@ -69,8 +69,6 @@
+  */
+ #define PRG_ETH0_ADJ_SKEW		GENMASK(24, 20)
  
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "hvc";
+-#define MUX_CLK_NUM_PARENTS		2
+-
+ struct meson8b_dwmac;
+ 
+ struct meson8b_dwmac_data {
+@@ -110,12 +108,12 @@ static void meson8b_dwmac_mask_bits(struct meson8b_dwmac *dwmac, u32 reg,
+ 
+ static struct clk *meson8b_dwmac_register_clk(struct meson8b_dwmac *dwmac,
+ 					      const char *name_suffix,
+-					      const char **parent_names,
++					      const struct clk_parent_data *parents,
+ 					      int num_parents,
+ 					      const struct clk_ops *ops,
+ 					      struct clk_hw *hw)
+ {
+-	struct clk_init_data init;
++	struct clk_init_data init = { };
+ 	char clk_name[32];
+ 
+ 	snprintf(clk_name, sizeof(clk_name), "%s#%s", dev_name(dwmac->dev),
+@@ -124,7 +122,7 @@ static struct clk *meson8b_dwmac_register_clk(struct meson8b_dwmac *dwmac,
+ 	init.name = clk_name;
+ 	init.ops = ops;
+ 	init.flags = CLK_SET_RATE_PARENT;
+-	init.parent_names = parent_names;
++	init.parent_data = parents;
+ 	init.num_parents = num_parents;
+ 
+ 	hw->init = &init;
+@@ -134,11 +132,12 @@ static struct clk *meson8b_dwmac_register_clk(struct meson8b_dwmac *dwmac,
+ 
+ static int meson8b_init_rgmii_tx_clk(struct meson8b_dwmac *dwmac)
+ {
+-	int i, ret;
+ 	struct clk *clk;
+ 	struct device *dev = dwmac->dev;
+-	const char *parent_name, *mux_parent_names[MUX_CLK_NUM_PARENTS];
+-	struct meson8b_dwmac_clk_configs *clk_configs;
++	static const struct clk_parent_data mux_parents[] = {
++		{ .fw_name = "clkin0", },
++		{ .fw_name = "clkin1", },
 +	};
-+
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
+ 	static const struct clk_div_table div_table[] = {
+ 		{ .div = 2, .val = 2, },
+ 		{ .div = 3, .val = 3, },
+@@ -148,62 +147,48 @@ static int meson8b_init_rgmii_tx_clk(struct meson8b_dwmac *dwmac)
+ 		{ .div = 7, .val = 7, },
+ 		{ /* end of array */ }
+ 	};
++	struct meson8b_dwmac_clk_configs *clk_configs;
++	struct clk_parent_data parent_data = { };
+ 
+ 	clk_configs = devm_kzalloc(dev, sizeof(*clk_configs), GFP_KERNEL);
+ 	if (!clk_configs)
+ 		return -ENOMEM;
+ 
+-	/* get the mux parents from DT */
+-	for (i = 0; i < MUX_CLK_NUM_PARENTS; i++) {
+-		char name[16];
+-
+-		snprintf(name, sizeof(name), "clkin%d", i);
+-		clk = devm_clk_get(dev, name);
+-		if (IS_ERR(clk)) {
+-			ret = PTR_ERR(clk);
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(dev, "Missing clock %s\n", name);
+-			return ret;
+-		}
+-
+-		mux_parent_names[i] = __clk_get_name(clk);
+-	}
+-
+ 	clk_configs->m250_mux.reg = dwmac->regs + PRG_ETH0;
+ 	clk_configs->m250_mux.shift = PRG_ETH0_CLK_M250_SEL_SHIFT;
+ 	clk_configs->m250_mux.mask = PRG_ETH0_CLK_M250_SEL_MASK;
+-	clk = meson8b_dwmac_register_clk(dwmac, "m250_sel", mux_parent_names,
+-					 MUX_CLK_NUM_PARENTS, &clk_mux_ops,
++	clk = meson8b_dwmac_register_clk(dwmac, "m250_sel", mux_parents,
++					 ARRAY_SIZE(mux_parents), &clk_mux_ops,
+ 					 &clk_configs->m250_mux.hw);
+ 	if (WARN_ON(IS_ERR(clk)))
+ 		return PTR_ERR(clk);
+ 
+-	parent_name = __clk_get_name(clk);
++	parent_data.hw = &clk_configs->m250_mux.hw;
+ 	clk_configs->m250_div.reg = dwmac->regs + PRG_ETH0;
+ 	clk_configs->m250_div.shift = PRG_ETH0_CLK_M250_DIV_SHIFT;
+ 	clk_configs->m250_div.width = PRG_ETH0_CLK_M250_DIV_WIDTH;
+ 	clk_configs->m250_div.table = div_table;
+ 	clk_configs->m250_div.flags = CLK_DIVIDER_ALLOW_ZERO |
+ 				      CLK_DIVIDER_ROUND_CLOSEST;
+-	clk = meson8b_dwmac_register_clk(dwmac, "m250_div", &parent_name, 1,
++	clk = meson8b_dwmac_register_clk(dwmac, "m250_div", &parent_data, 1,
+ 					 &clk_divider_ops,
+ 					 &clk_configs->m250_div.hw);
+ 	if (WARN_ON(IS_ERR(clk)))
+ 		return PTR_ERR(clk);
+ 
+-	parent_name = __clk_get_name(clk);
++	parent_data.hw = &clk_configs->m250_div.hw;
+ 	clk_configs->fixed_div2.mult = 1;
+ 	clk_configs->fixed_div2.div = 2;
+-	clk = meson8b_dwmac_register_clk(dwmac, "fixed_div2", &parent_name, 1,
++	clk = meson8b_dwmac_register_clk(dwmac, "fixed_div2", &parent_data, 1,
+ 					 &clk_fixed_factor_ops,
+ 					 &clk_configs->fixed_div2.hw);
+ 	if (WARN_ON(IS_ERR(clk)))
+ 		return PTR_ERR(clk);
+ 
+-	parent_name = __clk_get_name(clk);
++	parent_data.hw = &clk_configs->fixed_div2.hw;
+ 	clk_configs->rgmii_tx_en.reg = dwmac->regs + PRG_ETH0;
+ 	clk_configs->rgmii_tx_en.bit_idx = PRG_ETH0_RGMII_TX_CLK_EN;
+-	clk = meson8b_dwmac_register_clk(dwmac, "rgmii_tx_en", &parent_name, 1,
++	clk = meson8b_dwmac_register_clk(dwmac, "rgmii_tx_en", &parent_data, 1,
+ 					 &clk_gate_ops,
+ 					 &clk_configs->rgmii_tx_en.hw);
+ 	if (WARN_ON(IS_ERR(clk)))
 -- 
 2.27.0
 
