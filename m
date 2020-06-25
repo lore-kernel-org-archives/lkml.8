@@ -2,98 +2,194 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15451C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF2B420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="n08L3MBT"
+	by mail.kernel.org (Postfix) with ESMTP id 37E49207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390412AbgFYHlp (ORCPT
+        id S2390335AbgFYHpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 03:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390288AbgFYHlo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 03:41:44 -0400
-X-Greylist: delayed 400 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 Jun 2020 00:41:44 PDT
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922B2C061573;
-        Thu, 25 Jun 2020 00:41:44 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 49ssHB268wzKmgv;
-        Thu, 25 Jun 2020 09:35:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593070500;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=30dYw6jJSc3h50zr6f6o1QF9VOz2xKEDt+vOebdkixg=;
-        b=n08L3MBTph5lqmuRJ2kmDCcR6yET3yCAq0yBhTwz5owm1W5+KKQdSKdxxEWmJI36EJxyw4
-        fOP03et5MpGm8V9mnexWInoZttjfy3C8isXOJZ52Tw/9vlq1CINL7jsEG/u6D5QCgn6X0I
-        7vNFVxvusEbX2gG+4uEG1jew7eeOT2vS15e5J1NmLZqf0Jlx8vW8d3vTgBbxxKVmlQ+D4G
-        xKuJOeiTli4B+dhWTi6aMtsKAXXnDf9dRwD/s5VZFmCI+hALHQDXJfnc0krXbAav9lrNak
-        VobZuvvvePGMueRiycbp2Oq0ZXrmS6FfSCBJuGu6Oy4WGTPYyCWT3xa4o5fDeQ==
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id nWv_Bsve4R4C; Thu, 25 Jun 2020 09:34:58 +0200 (CEST)
-Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200623060526.29922-1-mans0n@gorani.run>
- <CAHp75VfMQh3KW276uAwBV-nOVTnLaAspGijPHyZjuHzm4XLPag@mail.gmail.com>
-From:   Sungbo Eo <mans0n@gorani.run>
-Message-ID: <7965f173-2668-b122-1ba8-9fbf7d169e33@gorani.run>
-Date:   Thu, 25 Jun 2020 16:34:52 +0900
+        Thu, 25 Jun 2020 03:45:25 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45030 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390196AbgFYHpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 03:45:25 -0400
+IronPort-SDR: ih2qe31/MnSyPRcoySATnDIYBWJAhMcu6sB+8eWOoKNqVAsivDpyh1QK69Vz08TxeJYl7KY0Vh
+ X3tJJVWWGRTw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="229508976"
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="229508976"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 00:45:23 -0700
+IronPort-SDR: fbWzgUQtZj9rXxZUjUJVkz+RfkqTTiv2Y+nqxk/NV9Kg09VzHEKCyhF695CyYtvoLjOkKSWQP2
+ 65/Iz63EJEkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="385396963"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 25 Jun 2020 00:45:18 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 25 Jun 2020 10:45:17 +0300
+Date:   Thu, 25 Jun 2020 10:45:17 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Azhar Shaikh <azhar.shaikh@intel.com>,
+        Casey Bowman <casey.g.bowman@intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Yicheng Li <yichengli@chromium.org>
+Subject: Re: [PATCH 2/2] platform/chrome: cros_ec_typec: Add TBT compat
+ support
+Message-ID: <20200625074517.GC1487@kuha.fi.intel.com>
+References: <20200624080926.165107-1-pmalani@chromium.org>
+ <20200624080926.165107-2-pmalani@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfMQh3KW276uAwBV-nOVTnLaAspGijPHyZjuHzm4XLPag@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-MBO-SPAM-Probability: 0
-X-Rspamd-Score: -2.19 / 15.00 / 15.00
-X-Rspamd-Queue-Id: E2DD71811
-X-Rspamd-UID: 6fbf59
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624080926.165107-2-pmalani@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-24 22:01, Andy Shevchenko wrote:
-> On Tue, Jun 23, 2020 at 9:06 AM Sungbo Eo <mans0n@gorani.run> wrote:
->>
->> This patch adds support for the PCA9570 I2C GPO expander.
+On Wed, Jun 24, 2020 at 01:09:24AM -0700, Prashant Malani wrote:
+> Add mux control support for Thunderbolt compatibility mode.
 > 
->> Tested in kernel 5.4 on an ipq40xx platform.
->>
->> This is my first time submitting a whole driver patch, and I'm not really familiar with this PCA expander series.
->> Please let me know how I can improve this patch further. (Do I also need to document the DT compatible string?)
->>
->> FYI there's an unmerged patch for this chip.
->> http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
->> I don't have PCA9571 either so I didn't add support for it.
-> 
-> My very first questions to such (simple) driver submissions is: Have
-> you conducted research of existing drivers and found that none is
-> suitable for this chip?
-> Do this and answer in a commit message, if it will be still valid.
-> 
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Co-developed-by: Azhar Shaikh <azhar.shaikh@intel.com>
+> Co-developed-by: Casey Bowman <casey.g.bowman@intel.com>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
-I've done a more extensive research for i2c expanders and found out that 
-gw-pld, max732x, pcf857x also use i2c_smbus_write_byte() without reg 
-address. But their architectures are more complex than pca9570 and I'm 
-not sure if I can make them compatible with pca9570. (I still don't 
-understand what "quasi-bidirectional" in pcf857x means...)
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 70 ++++++++++++++++++++++++-
+>  1 file changed, 69 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 1df1386f32e4..0c041b79cbba 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/usb/typec_altmode.h>
+>  #include <linux/usb/typec_dp.h>
+>  #include <linux/usb/typec_mux.h>
+> +#include <linux/usb/typec_tbt.h>
+>  #include <linux/usb/role.h>
+>  
+>  #define DRV_NAME "cros-ec-typec"
+> @@ -24,6 +25,7 @@
+>  /* Supported alt modes. */
+>  enum {
+>  	CROS_EC_ALTMODE_DP = 0,
+> +	CROS_EC_ALTMODE_TBT,
+>  	CROS_EC_ALTMODE_MAX,
+>  };
+>  
+> @@ -165,6 +167,14 @@ static void cros_typec_register_port_altmodes(struct cros_typec_data *typec,
+>  	port->p_altmode[CROS_EC_ALTMODE_DP].svid = USB_TYPEC_DP_SID;
+>  	port->p_altmode[CROS_EC_ALTMODE_DP].mode = USB_TYPEC_DP_MODE;
+>  
+> +	/*
+> +	 * Register TBT compatibility alt mode. The EC will not enter the mode
+> +	 * if it doesn't support it, so it's safe to register it unconditionally
+> +	 * here for now.
+> +	 */
+> +	port->p_altmode[CROS_EC_ALTMODE_TBT].svid = USB_TYPEC_TBT_SID;
+> +	port->p_altmode[CROS_EC_ALTMODE_TBT].mode = TYPEC_ANY_MODE;
+> +
+>  	port->state.alt = NULL;
+>  	port->state.mode = TYPEC_STATE_USB;
+>  	port->state.data = NULL;
+> @@ -391,6 +401,62 @@ static int cros_typec_usb_safe_state(struct cros_typec_port *port)
+>  	return typec_mux_set(port->mux, &port->state);
+>  }
+>  
+> +/*
+> + * Spoof the VDOs that were likely communicated by the partner for TBT alt
+> + * mode.
+> + */
+> +static int cros_typec_enable_tbt(struct cros_typec_data *typec,
+> +				 int port_num,
+> +				 struct ec_response_usb_pd_control_v2 *pd_ctrl)
+> +{
+> +	struct cros_typec_port *port = typec->ports[port_num];
+> +	struct typec_thunderbolt_data data;
+> +	int ret;
+> +
+> +	if (typec->pd_ctrl_ver < 2) {
+> +		dev_err(typec->dev,
+> +			"PD_CTRL version too old: %d\n", typec->pd_ctrl_ver);
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	/* Device Discover Mode VDO */
+> +	data.device_mode = TBT_MODE;
+> +
+> +	if (pd_ctrl->control_flags & USB_PD_CTRL_TBT_LEGACY_ADAPTER)
+> +		data.device_mode = TBT_SET_ADAPTER(TBT_ADAPTER_TBT3);
+> +
+> +	/* Cable Discover Mode VDO */
+> +	data.cable_mode = TBT_MODE;
+> +	data.cable_mode |= TBT_SET_CABLE_SPEED(pd_ctrl->cable_speed);
+> +
+> +	if (pd_ctrl->control_flags & USB_PD_CTRL_OPTICAL_CABLE)
+> +		data.cable_mode |= TBT_CABLE_OPTICAL;
+> +
+> +	if (pd_ctrl->control_flags & USB_PD_CTRL_ACTIVE_LINK_UNIDIR)
+> +		data.cable_mode |= TBT_CABLE_LINK_TRAINING;
+> +
+> +	if (pd_ctrl->cable_gen)
+> +		data.cable_mode |= TBT_CABLE_ROUNDED;
+> +
+> +	/* Enter Mode VDO */
+> +	data.enter_vdo = TBT_SET_CABLE_SPEED(pd_ctrl->cable_speed);
+> +
+> +	if (pd_ctrl->control_flags & USB_PD_CTRL_ACTIVE_CABLE)
+> +		data.enter_vdo |= TBT_ENTER_MODE_ACTIVE_CABLE;
+> +
+> +	if (!port->state.alt) {
+> +		port->state.alt = &port->p_altmode[CROS_EC_ALTMODE_TBT];
+> +		ret = cros_typec_usb_safe_state(port);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	port->state.data = &data;
+> +	port->state.mode = TYPEC_TBT_MODE;
+> +
+> +	return typec_mux_set(port->mux, &port->state);
+> +}
+> +
+>  /* Spoof the VDOs that were likely communicated by the partner. */
+>  static int cros_typec_enable_dp(struct cros_typec_data *typec,
+>  				int port_num,
+> @@ -448,7 +514,9 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (mux_flags & USB_PD_MUX_DP_ENABLED) {
+> +	if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
+> +		ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
+> +	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
+>  		ret = cros_typec_enable_dp(typec, port_num, pd_ctrl);
+>  	} else if (mux_flags & USB_PD_MUX_SAFE_MODE) {
+>  		ret = cros_typec_usb_safe_state(port);
+> -- 
+> 2.27.0.111.gc72c7da667-goog
+
+thanks,
+
+-- 
+heikki
