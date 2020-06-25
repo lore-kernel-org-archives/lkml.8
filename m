@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCC62084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C17C42084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436560AbgFYUSl (ORCPT
+        id S2436583AbgFYUSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:18:41 -0400
+        Thu, 25 Jun 2020 16:18:46 -0400
 Received: from mga18.intel.com ([134.134.136.126]:20511 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405054AbgFYUSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:18:38 -0400
-IronPort-SDR: 70qIfUSniV9Ogzjvchw7++CwfJd7YpcEMzN14ug6ztD1cAkHNbaA7YU/TiZyGTVm285+z+Cg4n
- dejpVv52sUhw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505231"
+        id S2407112AbgFYUSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 16:18:41 -0400
+IronPort-SDR: sYDPmao2EtycM8EZjTWpFPdr+zgqpOOWzEDYuxsQYsNwkEyVEm41z6D6e/PJT9Hfxydyxy17XP
+ 0IMw0qs8s+tA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505246"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="132505231"
+   d="scan'208";a="132505246"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:36 -0700
-IronPort-SDR: OCj8X18RzPEgCVU7UZ4wevdkiXteEEwYQoPeJ4Ilj1HT6u7H6LDGgxu9eQrrKaSjV4nAluB97a
- Wi0TsTntXqAA==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:37 -0700
+IronPort-SDR: ib/jGCML+XCjcJM6Go+108tJoF30jWAIcbqg8d2qcL9VqjsIegCcAIi4BJMF3OQ/oQgpbQhjUL
+ hg2JxnQHi32w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="453132215"
+   d="scan'208";a="453132227"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:35 -0700
+  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:37 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
@@ -56,9 +56,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4 02/12] iommu/vt-d: Change flags type to unsigned int in binding mm
-Date:   Thu, 25 Jun 2020 13:17:12 -0700
-Message-Id: <1593116242-31507-3-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v4 04/12] x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+Date:   Thu, 25 Jun 2020 13:17:14 -0700
+Message-Id: <1593116242-31507-5-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
 References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
@@ -67,67 +67,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"flags" passed to intel_svm_bind_mm() is a bit mask and should be
-defined as "unsigned int" instead of "int".
+Work submission instruction comes in two flavors. ENQCMD can be called
+both in ring 3 and ring 0 and always uses the contents of PASID MSR when
+shipping the command to the device. ENQCMDS allows a kernel driver to
+submit commands on behalf of a user process. The driver supplies the
+PASID value in ENQCMDS. There isn't any usage of ENQCMD in the kernel
+as of now.
 
-Change its type to "unsigned int".
+The CPU feature flag is shown as "enqcmd" in /proc/cpuinfo.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 v2:
-- Add this new patch per Thomas' comment.
+- Re-write commit message (Thomas)
 
- drivers/iommu/intel/svm.c   | 7 ++++---
- include/linux/intel-iommu.h | 2 +-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/cpuid-deps.c   | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 778089d198eb..8a0cf2f0dd54 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -427,7 +427,8 @@ int intel_svm_unbind_gpasid(struct device *dev, u32 pasid)
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 02dabc9e77b0..4469618c410f 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -351,6 +351,7 @@
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
+ #define X86_FEATURE_MOVDIRI		(16*32+27) /* MOVDIRI instruction */
+ #define X86_FEATURE_MOVDIR64B		(16*32+28) /* MOVDIR64B instruction */
++#define X86_FEATURE_ENQCMD		(16*32+29) /* ENQCMD and ENQCMDS instructions */
  
- /* Caller must hold pasid_mutex, mm reference */
- static int
--intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
-+intel_svm_bind_mm(struct device *dev, unsigned int flags,
-+		  struct svm_dev_ops *ops,
- 		  struct mm_struct *mm, struct intel_svm_dev **sd)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-@@ -954,7 +955,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
- {
- 	struct iommu_sva *sva = ERR_PTR(-EINVAL);
- 	struct intel_svm_dev *sdev = NULL;
--	int flags = 0;
-+	unsigned int flags = 0;
- 	int ret;
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index 3cbe24ca80ab..3a02707c1f4d 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -69,6 +69,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_CQM_MBM_TOTAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_AVX512_BF16,		X86_FEATURE_AVX512VL  },
++	{ X86_FEATURE_ENQCMD,			X86_FEATURE_XSAVES    },
+ 	{}
+ };
  
- 	/*
-@@ -963,7 +964,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
- 	 * and intel_svm etc.
- 	 */
- 	if (drvdata)
--		flags = *(int *)drvdata;
-+		flags = *(unsigned int *)drvdata;
- 	mutex_lock(&pasid_mutex);
- 	ret = intel_svm_bind_mm(dev, flags, NULL, mm, &sdev);
- 	if (ret)
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 314a95870e47..4d20f93a5e2d 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -759,7 +759,7 @@ struct intel_svm {
- 	struct mm_struct *mm;
- 
- 	struct intel_iommu *iommu;
--	int flags;
-+	unsigned int flags;
- 	u32 pasid;
- 	int gpasid; /* In case that guest PASID is different from host PASID */
- 	struct list_head devs;
 -- 
 2.19.1
 
