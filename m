@@ -2,148 +2,137 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C282BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B51C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A715420775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BCE20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o6S9OlhI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390716AbgFYQBX (ORCPT
+        id S2403804AbgFYQD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:01:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:8994 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389860AbgFYQBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:01:23 -0400
-IronPort-SDR: wvsPCB3kDduSRBI331zVH+XSJnddDkk8j6qg9DMLt63ATMFG4KCgjRD5i+Xiob9ZqCI41F9yn7
- LkkhiJi7ILZA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="210045459"
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="210045459"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 09:01:12 -0700
-IronPort-SDR: CsQygifcDk8DFAey5CQ6LeHuWnnplDbIaS7GGyUPOy5hXwKJNkUbqOCkMF+MZf9XogK5icvkpg
- 3IbgctGxI+Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="297634961"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2020 09:01:11 -0700
-Received: from [10.249.229.54] (abudanko-mobl.ccr.corp.intel.com [10.249.229.54])
-        by linux.intel.com (Postfix) with ESMTP id 0EFE45804D6;
-        Thu, 25 Jun 2020 09:01:09 -0700 (PDT)
-Subject: Re: [PATCH v8 04/13] perf stat: factor out body of event handling
- loop for system wide
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
- <eeeff629-925a-530b-9803-f274337ae473@linux.intel.com>
- <20200623145630.GK2619137@krava>
- <51d5511a-e9a7-2865-c81b-57488e820f8d@linux.intel.com>
- <20200625121719.GI2719003@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <fdaba173-a046-beae-f8f2-07840c879475@linux.intel.com>
-Date:   Thu, 25 Jun 2020 19:01:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200625121719.GI2719003@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Jun 2020 12:03:29 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:13752 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389860AbgFYQD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 12:03:27 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200625160324epoutp02c9cf5799c390bdafb85b4e376e8d9d5c~b1OxkTUvc2866328663epoutp028
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 16:03:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200625160324epoutp02c9cf5799c390bdafb85b4e376e8d9d5c~b1OxkTUvc2866328663epoutp028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593101005;
+        bh=9ALuHxf5OBjHgU3MNpNNEuG4GURbQGPtK7QiyttU4Dg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=o6S9OlhIOdkwgyS4f+rNZzQQo+8UsGimsT5ZpiWrMOxu4tdGiU5oQp9DWt7c1mMR8
+         cDxynylwn+UEafvYIr/XgluuYXwECRVxWbtS1HpwEXtl19YSHvy/Q9HSUVtWsOcJuP
+         mCkJX+gp8gEGPHbskFmmIagvDM3DWXOY1fsTf6aQ=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200625160324epcas5p2918e42ecec14bf11563ed3c50d4c5b89~b1Ow1DsHv1896018960epcas5p2M;
+        Thu, 25 Jun 2020 16:03:24 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        58.70.09475.CCAC4FE5; Fri, 26 Jun 2020 01:03:24 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200625160323epcas5p3f36a90efa2bf7bcbdd71bdccf2a20eb0~b1OwEhhf60412604126epcas5p3r;
+        Thu, 25 Jun 2020 16:03:23 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200625160323epsmtrp2501f58aea64887ede6f5b7e9aeb2d109~b1OwD0vKo1518415184epsmtrp2z;
+        Thu, 25 Jun 2020 16:03:23 +0000 (GMT)
+X-AuditID: b6c32a4b-389ff70000002503-1a-5ef4caccc5a4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1A.06.08382.BCAC4FE5; Fri, 26 Jun 2020 01:03:23 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200625160322epsmtip1d34613f5e8ae439fc1d363c8f8620326~b1Ou_eT8B1641616416epsmtip1v;
+        Thu, 25 Jun 2020 16:03:22 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     linux-scsi@vger.kernel.org
+Cc:     avri.altman@wdc.com, martin.petersen@oracle.com,
+        sfr@canb.auug.org.au, linux-kernel@vger.kernel.org,
+        jejb@linux.ibm.com, Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH -next] scsi: ufs: ufs-exynos: Fix build warning
+Date:   Thu, 25 Jun 2020 21:14:05 +0530
+Message-Id: <20200625154405.60448-1-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsWy7bCmlu6ZU1/iDLbMY7F4MG8bm8XLn1fZ
+        LBbd2MZkcXnXHDaL7us72CyWH//HZLF171V2B3aPxhs32DwmLDrA6PHx6S0Wj74tqxg9Pm+S
+        82g/0M0UwBbFZZOSmpNZllqkb5fAlTGl4S1zwWKOin/v/BsY57B3MXJySAiYSPyZeZ21i5GL
+        Q0hgN6PEs2OfwRJCAp8YJTYs8oFIfGOU2PzqNCtMx/cPH5kgEnsZJWZvOQ3ltDBJTLz4FqyK
+        TUBb4u70LUwgtoiAnMTm5V9ZQIqYBZYxShz69AIsISxgL3G/dQ1jFyMHB4uAqsTqz7kgYV4B
+        G4kDm29CbZOXWL3hADNIr4TALnaJXbsWMEIkXCQerZzMAmELS7w6vgXqISmJz+/2soHMlBDI
+        lujZZQwRrpFYOu8YVLm9xIErc1hASpgFNCXW79IHCTML8En0/n7CBNHJK9HRJgRRrSrR/O4q
+        VKe0xMTubqjLPCQePTwCDaxYifMvl7NPYJSZhTB0ASPjKkbJ1ILi3PTUYtMC47zUcr3ixNzi
+        0rx0veT83E2M4CjX8t7B+OjBB71DjEwcjIcYJTiYlUR4Q9w+xQnxpiRWVqUW5ccXleakFh9i
+        lOZgURLnVfpxJk5IID2xJDU7NbUgtQgmy8TBKdXA9NCMv1Q6XyDwlVGWvtYb09WTrCUiEp7L
+        MK0MCT8l/sR1Z3JfRtIuhuaGQ+fTbm23Pu9Z5lv66Fraa6lljVo+4hG3fz7hvPro1s8fG5d5
+        nG04Yrz4fnJF1vWEzlkvtz1znaxnY7rk8oVvzAIpU+9kBsv27n29ca/I8n22ZWZ3HN/otUye
+        NvdqVNi1GvaG35fMt1hWcuUdnz316Z67ou/3pk959OTSp7X/BDxPF53cuPEg56HOd9lKl76x
+        zW65/jduTUDrnoudnseSXN8sndzy9KvTusXeOc0sS/gThWcHak++lTmj/+nxe20xK181fi/Q
+        N5S5NWnx5lStxTrG/h4VR08yF+2bwjfz8iKjXe/nntZUYinOSDTUYi4qTgQAMkhA/2EDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpiluLIzCtJLcpLzFFi42LZdlhJTvf0qS9xBr2v+C0ezNvGZvHy51U2
+        i0U3tjFZXN41h82i+/oONovlx/8xWWzde5Xdgd2j8cYNNo8Jiw4wenx8eovFo2/LKkaPz5vk
+        PNoPdDMFsEVx2aSk5mSWpRbp2yVwZUxpeMtcsJij4t87/wbGOexdjJwcEgImEt8/fGTqYuTi
+        EBLYzSjx58J1JoiEtMT1jROgioQlVv57DmYLCTQxSTz65wRiswloS9ydvgWsXkRATmLz8q8s
+        IIOYBdYwSky984wFJCEsYC9xv3UNYxcjBweLgKrE6s+5IGFeARuJA5tvskLMl5dYveEA8wRG
+        ngWMDKsYJVMLinPTc4sNCwzzUsv1ihNzi0vz0vWS83M3MYKDSUtzB+P2VR/0DjEycTAeYpTg
+        YFYS4Q1x+xQnxJuSWFmVWpQfX1Sak1p8iFGag0VJnPdG4cI4IYH0xJLU7NTUgtQimCwTB6dU
+        A1PEj7oNRd5VC47NSxBa/P2m3dNbUkUOCSd7Ijv4qj3uXuW0F7n/Up7j8s/N+8yfhp9f2L5g
+        XUy+go+hXo3+rzp3iSfzjhubCmxon5D5Uu+FuLHehXUP1ynGyvWWzfXynR2x57lEZciyCwbh
+        xefc37S3r07vSZFdMHd+ya5nl4/78J88ELH97D/b7jfvDd94hrOHMBZmT9fJXaqWmrZu8yyf
+        eseU5auuH+3uctQTeBfZ0lov8z/x4WeWw4LNpXOD3vzdu2zx+46fhR/dGi1jE65PnPX1iYtn
+        iLxe3JzW2fOv3psh8urbn7Wye3cp2G/yCl0dYFyz4KBG8KRGRqZaj727teXVJrn6zdhfdD/x
+        pocSS3FGoqEWc1FxIgA4haG4lQIAAA==
+X-CMS-MailID: 20200625160323epcas5p3f36a90efa2bf7bcbdd71bdccf2a20eb0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200625160323epcas5p3f36a90efa2bf7bcbdd71bdccf2a20eb0
+References: <CGME20200625160323epcas5p3f36a90efa2bf7bcbdd71bdccf2a20eb0@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While building for x86_64 allmodconfig, below warning reported
 
-On 25.06.2020 15:17, Jiri Olsa wrote:
-> On Wed, Jun 24, 2020 at 05:27:41PM +0300, Alexey Budankov wrote:
->>
->> On 23.06.2020 17:56, Jiri Olsa wrote:
->>> On Wed, Jun 17, 2020 at 11:37:43AM +0300, Alexey Budankov wrote:
->>>>
->>>> Introduce process_timeout() and process_interval() functions that
->>>> factor out body of event handling loop for attach and system wide
->>>> monitoring use cases.
->>>>
->>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>> ---
->>>>  tools/perf/builtin-stat.c | 28 ++++++++++++++++++++--------
->>>>  1 file changed, 20 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->>>> index 9be020e0098a..31f7ccf9537b 100644
->>>> --- a/tools/perf/builtin-stat.c
->>>> +++ b/tools/perf/builtin-stat.c
->>>> @@ -475,6 +475,23 @@ static void process_interval(void)
->>>>  	print_counters(&rs, 0, NULL);
->>>>  }
->>>>  
->>>> +static bool print_interval(unsigned int interval, int *times)
->>>> +{
->>>> +	if (interval) {
->>>> +		process_interval();
->>>> +		if (interval_count && !(--(*times)))
->>>> +			return true;
->>>> +	}
->>>> +	return false;
->>>> +}
->>>> +
->>>> +static bool process_timeout(int timeout, unsigned int interval, int *times)
->>>> +{
->>>> +	if (timeout)
->>>> +		return true;
->>>> +	return print_interval(interval, times);
->>>> +}
->>>
->>> I think it's confusing to keep this together, that
->>> process_timeout triggers also interval processing
->>>
->>> I think you can keep the timeout separated from interval
->>> processing and rename the print_interval to process_interval
->>> and process_interval to __process_interval
->>
->> Well, ok.
->>
->> I will rename process_interval() to __process_interval() and
->> then print_interval() to process_interval().
->>
->> Regarding timeout let's have it like this:
->>
->> static bool process_timeout(int timeout)
->> {
->> 	return timeout ? true : false;
->> }
-> 
-> can't this just stay as value check after finished poll?
-> 
-> 	if (timeout)
-> 		break;
-> 
-> and then separate call to process_interval(interval, times)?
+WARNING: modpost: missing MODULE_LICENSE() in drivers/scsi/ufs/ufs-exynos.o
 
-Like this? Still makes sense to have it in a single function.
+Add the missing license/author/description tags.
 
-static bool process_timing_settings(int timeout, unsigned int interval, int *times)
-{
-	bool res = timeout ? true : false;
-        if (!res)
- 		res = process_interval(interval, times);
- 	return res;
-}
+Fixes: 55f4b1f73631 ("scsi: ufs: ufs-exynos: Add UFS host support for Exynos SoCs")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ drivers/scsi/ufs/ufs-exynos.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-~Alexey
+diff --git a/drivers/scsi/ufs/ufs-exynos.c b/drivers/scsi/ufs/ufs-exynos.c
+index 16544b3dad47..b0796066a449 100644
+--- a/drivers/scsi/ufs/ufs-exynos.c
++++ b/drivers/scsi/ufs/ufs-exynos.c
+@@ -1290,3 +1290,8 @@ static struct platform_driver exynos_ufs_pltform = {
+ 	},
+ };
+ module_platform_driver(exynos_ufs_pltform);
++
++MODULE_AUTHOR("Alim Akhtar <alim.akhtar@samsung.com>");
++MODULE_AUTHOR("Seungwon Jeon  <essuuj@gmail.com>");
++MODULE_DESCRIPTION("Exynos UFS HCI Driver");
++MODULE_LICENSE("GPL v2");
+
+base-commit: 3f9437c6234d95d96967f1b438a4fb71b6be254d
+-- 
+2.17.1
+
