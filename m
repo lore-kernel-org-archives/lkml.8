@@ -2,153 +2,143 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D89C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A59C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B2420775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:24:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AIE1va1p"
+	by mail.kernel.org (Postfix) with ESMTP id E610320702
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405347AbgFYOYd (ORCPT
+        id S2405366AbgFYOZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405189AbgFYOYc (ORCPT
+        Thu, 25 Jun 2020 10:25:57 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:56452 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405189AbgFYOZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:24:32 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C85A7C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:24:31 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id q19so6747298lji.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:24:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y+ZtbKOKX10FRQ/X2SmiDT2iPwxMyGZIFzesaKUw/OU=;
-        b=AIE1va1pK6qjTUIYzsqfq69DSL60n3yRxhhJAUQ4ljo9HbnzGYGmzB06jqCpGnRGvm
-         FLQJbddriT4bUI6Np72Zg2oIRPtdfckb/kWyIydY9842xrPMEFX0UQnMbHtTXcvAdrtM
-         BlhZXKdWCMlaI1hz2Xlpk++uAshiCgzl8eiaDOaKYMb+CRQcclI4/RiD3Xf6oLapJ+eA
-         bKrek8UrYI9Aj0CRgK6umLa2T+wz2NW/4RQw391bTv7Dk2zhamMCVrdOJu3nCCNCkljO
-         ZPpytb0dgLNaupmZGVIt+yFK9OgrMw1vmMrIAtC6KGQEA54sC3qDbX52crKQAWEg0ahU
-         +raQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y+ZtbKOKX10FRQ/X2SmiDT2iPwxMyGZIFzesaKUw/OU=;
-        b=Qjh0CRyHs8DB7+tDNtgS3uq/RWCmazsNzA/9I0VFwgtMc1jdMdy8Qho5OlwkCFj7pP
-         PQ506NI7zQ6f57i9Ql4+GC/NS+3HOd4xsujJunM9LXjLK4+PXSu7u6VsIUkZw1wu9y14
-         6CxTLlHkvoDgOtr1a2Lzv4YSgLD4LDxzCUwEMp2Cmvf3RODQHRzMQ+ouZymaSh1mQE1n
-         IfFw8dfoHLoorUwCW4C00B09oxrjzLpX2tgyLc/5H2OQKn7wlZaV/pCs1JGh7w0aLQ8Z
-         jhqC9h+29RIWk3/S3qcdZEU6iaxHJf37J7uhnOWBjCMo4HctZ233qZ7Fcd2Np3QclyoF
-         P0PQ==
-X-Gm-Message-State: AOAM53376BEP3GRqhqOPlLv5X6yUzygHzJ10RhtlnYHPWeXCb5xDmIY8
-        qXESVkc9qJvCXpaLkuo9zFoN+lT7Y/ZYVl4kaAD2ug==
-X-Google-Smtp-Source: ABdhPJxPgkRDIQn+rur+DUyyMOCmeL6Rcf7WSslIvGFOV9fp5nQeRVyy4GySaOMLVD53kxrl5RJ1QkbyRQOUst/GZvI=
-X-Received: by 2002:a2e:5c47:: with SMTP id q68mr18010266ljb.30.1593095070064;
- Thu, 25 Jun 2020 07:24:30 -0700 (PDT)
+        Thu, 25 Jun 2020 10:25:57 -0400
+Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.150])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id D12202005A;
+        Thu, 25 Jun 2020 14:25:55 +0000 (UTC)
+Received: from us4-mdac16-14.at1.mdlocal (unknown [10.110.49.196])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id CE7B6800A7;
+        Thu, 25 Jun 2020 14:25:55 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mx1-us1.ppe-hosted.com (unknown [10.110.49.107])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 596CA100076;
+        Thu, 25 Jun 2020 14:25:55 +0000 (UTC)
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id D8C24280079;
+        Thu, 25 Jun 2020 14:25:54 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Jun
+ 2020 15:25:47 +0100
+Subject: Re: [PATCH v2 net-next] net: core: use listified Rx for GRO_NORMAL in
+ napi_gro_receive()
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexander Lobakin <alobakin@dlink.ru>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191014080033.12407-1-alobakin@dlink.ru>
+ <20200624210606.GA1362687@zx2c4.com>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <948c5844-b8e4-81d3-b5eb-b13b1d3cda38@solarflare.com>
+Date:   Thu, 25 Jun 2020 15:25:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
- <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
- <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
- <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
- <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
- <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
- <1593012069.28403.11.camel@HansenPartnership.com>
-In-Reply-To: <1593012069.28403.11.camel@HansenPartnership.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 25 Jun 2020 19:54:18 +0530
-Message-ID: <CAFA6WYMF+JjrB9Cx9TdgDzMeQSvPZfMNapzD-MH4ALVoUoo1sQ@mail.gmail.com>
-Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Jerome Forissier <jerome@forissier.org>,
-        Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200624210606.GA1362687@zx2c4.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25502.003
+X-TM-AS-Result: No-8.467000-8.000000-10
+X-TMASE-MatchedRID: 6lay9u8oTUP4ECMHJTM/ufZvT2zYoYOwC/ExpXrHizz5+tteD5RzhSM5
+        wlSREDM/WmsJv3fWRTB/t5tveyBGENQ2aCZEo62uW1M77Gh1ugYCn5QffvZFlZm3TxN83Lo4xhj
+        hqpdN+tOgsFZCbdeTipGMbxV80b6VapfXOeR2mRBfYa9W9OjitUqAhuLHn5fEHdFjikZMLIdj8X
+        zdqXhnXgwF8/THlfq/yhwb4lo9EEbRcG2uoPA4K1D5LQ3Tl9H74OCVFpLw5QdjEZl+QzZVx462G
+        g+W5SqYvTmxe72H2fw0bxihdDeK0UhOq1If1JZJolVO7uyOCDWXGEdoE+kH/xlLPW+8b7SaLxCe
+        axJSK3nhSunPCuGncBjGorU1NmcepjulPTq1lMjQeUylZ/mLlx5FmvZzFEQu4y4k0rGe+U1+Dha
+        0AlenCaA8+iTsk6pAX7bicKxRIU23sNbcHjySQd0H8LFZNFG7CKFCmhdu5cWiItBUvtSBTuEj2l
+        W5ghb68OX2rXTBoSTUKzkd80eTXBWEjKJBN/KG2Y3fBwwcQFREa0tj12CQNy7wfafhNZfoX+VGu
+        9Js0FqigEHy7J4S6ylkreA5r24aYnCi5itk3iprD5+Qup1qU56oP1a0mRIj
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--8.467000-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25502.003
+X-MDID: 1593095155-7j6FC8I8iKWF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 20:51, James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
+On 24/06/2020 22:06, Jason A. Donenfeld wrote:
+> Hi Alexander,
 >
-> On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
-> > Apologies for delay in my reply as I was busy with some other stuff.
-> >
-> > On Fri, 19 Jun 2020 at 20:30, James Bottomley
-> > <James.Bottomley@hansenpartnership.com> wrote:
-> [...]
-> > > it's about consistency with what the kernel types mean.  When some
-> > > checker detects your using little endian operations on a big endian
-> > > structure (like in the prink for instance) they're going to keep
-> > > emailing you about it.
-> >
-> > As mentioned above, using different terminology is meant to cause
-> > more confusion than just difference in endianness which is manageable
-> > inside TEE.
-> >
-> > And I think it's safe to say that the kernel implements UUID in big
-> > endian format and thus uses %pUb whereas OP-TEE implements UUID in
-> > little endian format and thus uses %pUl.
+> This patch introduced a behavior change around GRO_DROP:
 >
-> So what I think you're saying is that if we still had uuid_be and
-> uuid_le you'd use uuid_le, because that's exactly the structure
-> described in the docs.  But because we renamed
+> napi_skb_finish used to sometimes return GRO_DROP:
 >
-> uuid_be -> uuid_t
-> uuid_le -> guid_t
->
-> You can't use guid_t as a kernel type because it has the wrong name?
+>> -static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
+>> +static gro_result_t napi_skb_finish(struct napi_struct *napi,
+>> +				    struct sk_buff *skb,
+>> +				    gro_result_t ret)
+>>  {
+>>  	switch (ret) {
+>>  	case GRO_NORMAL:
+>> -		if (netif_receive_skb_internal(skb))
+>> -			ret = GRO_DROP;
+>> +		gro_normal_one(napi, skb);
+>>
+> But under your change, gro_normal_one and the various calls that makes
+> never propagates its return value, and so GRO_DROP is never returned to
+> the caller, even if something drops it.
+This followed the pattern set by napi_frags_finish(), and is
+ intentional: gro_normal_one() usually defers processing of
+ the skb to the end of the napi poll, so by the time we know
+ that the network stack has dropped it, the caller has long
+ since returned.
+In fact the RX will be handled by netif_receive_skb_list_internal(),
+ which can't return NET_RX_SUCCESS vs. NET_RX_DROP, because it's
+ handling many skbs which might not all have the same verdict.
 
-Isn't the rename commit description [1] pretty clear about which is
-the true UUID type from Linux point of view?
+When originally doing this work I felt this was OK because
+ almost no-one was sensitive to the return value — almost the
+ only callers that were were in our own sfc driver, and then
+ only for making bogus decisions about interrupt moderation.
+Alexander just followed my lead, so don't blame him ;-)
 
-[1]
-commit f9727a17db9bab71ddae91f74f11a8a2f9a0ece6
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Wed May 17 10:02:48 2017 +0200
+> For some context, I'm consequently mulling over this change in my code,
+> since checking for GRO_DROP now constitutes dead code:
+Incidentally, it's only dead because dev_gro_receive() can't
+ return GRO_DROP either.  If it could, napi_skb_finish()
+ would pass that on.  And napi_gro_frags() (which AIUI is the
+ better API for some performance reasons that I can't remember)
+ can still return GRO_DROP too.
 
-    uuid: rename uuid types
+However, I think that incrementing your rx_dropped stat when
+ the network stack chose to drop the packet is the wrong
+ thing to do anyway (IMHO rx_dropped is for "there was a
+ packet on the wire but either the hardware or the driver was
+ unable to receive it"), so I'd say go ahead and remove the
+ check.
 
-    Our "little endian" UUID really is a Wintel GUID, so rename it and its
-    helpers such (guid_t).  The big endian UUID is the **only true** one, so
-    give it the name uuid_t.  The uuid_le and uuid_be names are retained for
-    now, but will hopefully go away soon.  The exception to that are the _cmp
-    helpers that will be replaced by better primitives ASAP and thus don't
-    get the new names.
-
-    Also the _to_bin helpers are named to match the better named uuid_parse
-    routine in userspace.
-
-    Also remove the existing typedef in XFS that's now been superceeded by
-    the generic type name.
-
-    Signed-off-by: Christoph Hellwig <hch@lst.de>
-    [andy: also update the UUID_LE/UUID_BE macros including fallout]
-    Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-    Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-    Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-    Signed-off-by: Christoph Hellwig <hch@lst.de>
-
--Sumit
-
->
-> James
->
+HTH
+-ed
