@@ -2,114 +2,92 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06018C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FEE206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LRUs5CEq"
+	by mail.kernel.org (Postfix) with ESMTP id E1ACA206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389962AbgFYGNz (ORCPT
+        id S2389995AbgFYGPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 02:13:55 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:22897 "EHLO m43-7.mailgun.net"
+        Thu, 25 Jun 2020 02:15:45 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1295 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389678AbgFYGNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 02:13:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593065634; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=OokbzRGBh4vM/wAytBHd5gph7Yx4DvpSixDVA2ZxHJ4=; b=LRUs5CEqZU6046Y8yCVVmc+wUOh/uxrb2H/cBpaOGw2bVPg8jvUNFP95asJXNu6OgHdEkkr1
- KGjQxsceBeSzKCRmmD5b9VbJqYQNT39w0idhcPSSh+faeRw0+1WYu0IS/sl1Lx9XXEvk2lSK
- MzNm64P/x2ih77g6RBtm/CYptzY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5ef4408ba6e154319f53344d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 06:13:31
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6ABCC43395; Thu, 25 Jun 2020 06:13:29 +0000 (UTC)
-Received: from snimmala-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: snimmala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EECCCC433C6;
-        Thu, 25 Jun 2020 06:13:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EECCCC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=snimmala@codeaurora.org
-From:   Sai Harshini Nimmala <snimmala@codeaurora.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Sai Harshini Nimmala <snimmala@codeaurora.org>,
-        adharmap@codeaurora.org, shalagra@codeaurora.org,
-        dickey@codeaurora.org, satyap@codeaurora.org,
-        pkondeti@codeaurora.org, clingutla@codeaurora.org,
-        aiquny@codeaurora.org, rgottimu@codeaurora.org,
-        Puja Gupta <pujag@codeaurora.org>
-Subject: [PATCH] Revert "sched/deadline: Remove cpu_active_mask from cpudl_find()"
-Date:   Wed, 24 Jun 2020 23:13:15 -0700
-Message-Id: <1593065595-17794-1-git-send-email-snimmala@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S1728725AbgFYGPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 02:15:45 -0400
+IronPort-SDR: gZv1sbJmZSchx6x77BqXPZCdAwycyxqp7b+qB1LFFSyOeJJgVZJiTbN6+kfPhxUMfwo5ww181T
+ Gt47GwNpkXvQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="143004693"
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="143004693"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 23:15:44 -0700
+IronPort-SDR: pmYSq/Xyxye5COV5SEv9efeTmQPcYF6VHtReRl4K52GVZdA1XSH1go1Db5lE44HXVVW2MzenKD
+ howU8o3Q+vAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="479529959"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Jun 2020 23:15:44 -0700
+Date:   Wed, 24 Jun 2020 23:15:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
+Message-ID: <20200625061544.GC2141@linux.intel.com>
+References: <20200622220442.21998-1-peterx@redhat.com>
+ <20200622220442.21998-2-peterx@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622220442.21998-2-peterx@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original commit 9659e1ee removes checking the cpu_active_mask
-while finding the best cpu to place a deadline task, citing the reason that
-this mask rarely changes and removing the check will give performance
-gains.
-However, on hotplugging, the cpu dying path has a brief duration between
-the CPUHP_TEARDOWN_CPU and CPUHP_AP_SCHED_STARTING hotplug states where
-the DL task can be scheduled on this cpu because the corresponding cpu
-bit in cpu->free_cpus has not been cleared yet. Without the
-cpu_active_mask check we could end up putting a DL task on such cpus
-leading to a BUG.
-The cpu_active_mask will be updated promptly before either of these
-states and will provide a more accurate check for the use case above.
+On Mon, Jun 22, 2020 at 06:04:41PM -0400, Peter Xu wrote:
+> MSR accesses can be one of:
+> 
+>   (1) KVM internal access,
+>   (2) userspace access (e.g., via KVM_SET_MSRS ioctl),
+>   (3) guest access.
+> 
+> The ignore_msrs was previously handled by kvm_get_msr_common() and
+> kvm_set_msr_common(), which is the bottom of the msr access stack.  It's
+> working in most cases, however it could dump unwanted warning messages to dmesg
+> even if kvm get/set the msrs internally when calling __kvm_set_msr() or
+> __kvm_get_msr() (e.g. kvm_cpuid()).  Ideally we only want to trap cases (2)
+> or (3), but not (1) above.
+> 
+> To achieve this, move the ignore_msrs handling upper until the callers of
+> __kvm_get_msr() and __kvm_set_msr().  To identify the "msr missing" event, a
+> new return value (KVM_MSR_RET_INVALID==2) is used for that.
 
-Signed-off-by: Puja Gupta <pujag@codeaurora.org>
-Signed-off-by: Sai Harshini Nimmala <snimmala@codeaurora.org>
----
- kernel/sched/cpudeadline.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+IMO, kvm_cpuid() is simply buggy.  If KVM attempts to access a non-existent
+MSR then it darn well should warn.
 
-diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-index 5cc4012..0346837 100644
---- a/kernel/sched/cpudeadline.c
-+++ b/kernel/sched/cpudeadline.c
-@@ -120,7 +120,8 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
- 	const struct sched_dl_entity *dl_se = &p->dl;
- 
- 	if (later_mask &&
--	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
-+	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr) &&
-+	    cpumask_and(later_mask, later_mask, cpu_active_mask)) {
- 		return 1;
- 	} else {
- 		int best_cpu = cpudl_maximum(cp);
-@@ -128,6 +129,7 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
- 		WARN_ON(best_cpu != -1 && !cpu_present(best_cpu));
- 
- 		if (cpumask_test_cpu(best_cpu, p->cpus_ptr) &&
-+		    cpumask_test_cpu(best_cpu, cpu_active_mask) &&
- 		    dl_time_before(dl_se->deadline, cp->elements[0].dl)) {
- 			if (later_mask)
- 				cpumask_set_cpu(best_cpu, later_mask);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 8a294f9747aa..7ef7283011d6 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -1013,7 +1013,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+                *ebx = entry->ebx;
+                *ecx = entry->ecx;
+                *edx = entry->edx;
+-               if (function == 7 && index == 0) {
++               if (function == 7 && index == 0 && (*ebx | (F(RTM) | F(HLE))) &&
++                   (vcpu->arch.arch_capabilities & ARCH_CAP_TSX_CTRL_MSR)) {
+                        u64 data;
+                        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+                            (data & TSX_CTRL_CPUID_CLEAR))
 
