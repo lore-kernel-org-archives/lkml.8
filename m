@@ -2,97 +2,258 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7573C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86E0220789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovEAbNeo"
+	by mail.kernel.org (Postfix) with ESMTP id 877F420672
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391297AbgFYWAZ (ORCPT
+        id S2407447AbgFYWAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390621AbgFYWAY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:00:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E97AC08C5C1;
-        Thu, 25 Jun 2020 15:00:24 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r18so3960370pgk.11;
-        Thu, 25 Jun 2020 15:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GBzH//KmJweZqU1/t4NDIS0bmXLOLviC6svDPzdyyOU=;
-        b=ovEAbNeoADhejrcUiR/6HkFpdj3T1nph5TiVN9nX370M9gg2pbnG12T930k7++sHfV
-         Forn6VTlRAgwyxGMnZBmoFz9/AL37L7g/dIOrb/xMQDNCkrnixbnvQViR7KTvecMsCB1
-         ufdYVecs/GCD8jMoHNvUFp2eoO+G7EJMoccx4FjZGhKt1G9A221dhFWkQ7JhgFwUnUvG
-         46YcfTDkep9+1mrrOLqM1k1BoryUDIEbpgEovYm7UXAo2w7oGN/oisxa9BeubEcYr9xc
-         QFFLXm9+OkYeoJ6c59/vUrA/tHR4IypB6fweoMq4vzFKwHiokVdaT/E4fFcD/1XUiErB
-         D3LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GBzH//KmJweZqU1/t4NDIS0bmXLOLviC6svDPzdyyOU=;
-        b=V3Z3YOzvoOKYN2rCwsfBEXcmsH+0PNc/K4guhSOB/R7l7QpcVzIP87SKDWgwxFJPiH
-         HKg14tC1DYViE8Se9FAfmGdNoQy/CnSdRhJEYGzdJhsSxmn2RWg1qRGXVyhO5VPt3XrY
-         Cp1OyNG9t4FRQOOEcjioaQjb4KUKyjr36TVRdF49d42wq1uAOpWe9t10jt/+Cpo0CYe2
-         5jSEStEpfcZxHumJTZdo+uumWc5VCzoic9CNGD+JgkBCNAAQDYjmIY5/XcjMnASU4EXZ
-         sh0n3fI42ac9rlc8hnJNz8aDZRRZJq/qqr9BcFRyi08H8MFqFxVPpry9+5oqRD49zGqZ
-         uHcg==
-X-Gm-Message-State: AOAM532NLyNkI+hnnt+tZFZKxJ6oaxe5eXEVeOW0GdIKkj2KndeVrd/X
-        sz1qvQyl7rdJj4KaSmYrPzkbj8arXprv1w==
-X-Google-Smtp-Source: ABdhPJzU9yjQDKc53mVohB8PcCBFq+VAFz19hDFTx9L9+PjvpN7QtGGxkeJh0i6E5cg5C2Y7emnEvw==
-X-Received: by 2002:aa7:85cd:: with SMTP id z13mr36414397pfn.321.1593122423657;
-        Thu, 25 Jun 2020 15:00:23 -0700 (PDT)
-Received: from localhost ([2001:e42:102:1532:160:16:113:140])
-        by smtp.gmail.com with ESMTPSA id j36sm21405968pgj.39.2020.06.25.15.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 15:00:23 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Fri, 26 Jun 2020 06:00:16 +0800
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
-        <GR-Linux-NIC-Dev@marvell.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Manish Chopra <manishc@marvell.com>,
-        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 1/2] fix trailing */ in block comment
-Message-ID: <20200625220016.g3wqthtauypxlp6g@Rk>
-References: <20200625153614.63912-1-coiby.xu@gmail.com>
- <20200625153614.63912-2-coiby.xu@gmail.com>
- <20200625172510.GF2549@kadam>
+        Thu, 25 Jun 2020 18:00:40 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59727 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390621AbgFYWAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 18:00:39 -0400
+IronPort-SDR: AiVQ02Ei4UOsl6ECosMiHVydwCJnm8cnUlnx2ZSUlLsLasoN0mU8qdBR67SBljjAMY2rNcC132
+ 5jXVJ7RfaX6g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="206618487"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="206618487"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 15:00:35 -0700
+IronPort-SDR: yCzSdiiLKPj8zl4rdaFKRBUkeCfWTbaRJqt88Q2Y7mnE9nDCCD8VSkLl4xoagm1OzW3Znar/l6
+ TMvZJbUWf19g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="299062276"
+Received: from jproldan-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
+  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2020 15:00:25 -0700
+Date:   Fri, 26 Jun 2020 01:00:23 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Christophe Ricard <christophe-h.ricard@st.com>
+Subject: Re: [PATCH v12 3/9] tpm: tpm_tis: Add retry in case of protocol
+ failure.
+Message-ID: <20200625220023.GI20341@linux.intel.com>
+References: <20200625144650.269719-1-amirmizi6@gmail.com>
+ <20200625144650.269719-4-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625172510.GF2549@kadam>
+In-Reply-To: <20200625144650.269719-4-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:25:10PM +0300, Dan Carpenter wrote:
->The subject isn't right (no subsystem prefix) and we need a commit
->message.
->
->regards,
->dan carpenter
+On Thu, Jun 25, 2020 at 05:46:43PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Added a retry mechanism on any protocol error when sending a command or
+> receiving a response. This was changed to comply with
+> the TCG PC Client Device Driver Design Principles for TPM 2.0.
 
-Thank you for pointing out the exact problems!
+We don't have to comply with this.
 
---
-Best regards,
-Coiby
+> When sending a command, a loop is added in "tpm_tis_send_main()" that calls
+> "tpm_tis_send_data()" and then issues a retry attempt if any error occurs.
+> When receiving a response, the following new function derived from
+> "tpm_tis_recv()" is added: "__tpm_tis_recv()". "tpm_tis_recv()" is modified
+> to call "__tpm_tis_recv()" in a loop. If any error occurs, a retry is
+> initiated by setting TPM_STS.responseRetry and "__tpm_tis_recv()" is
+> called again.
+> In both cases a retry is attempted up to "TPM_RETRY" times.
+> 
+> Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
+> Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> ---
+>  drivers/char/tpm/tpm_tis_core.c | 62 ++++++++++++++++++++++++++---------------
+>  drivers/char/tpm/tpm_tis_core.h |  1 +
+>  2 files changed, 41 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> index 6b33620..e136467 100644
+> --- a/drivers/char/tpm/tpm_tis_core.c
+> +++ b/drivers/char/tpm/tpm_tis_core.c
+> @@ -305,29 +305,24 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
+>  	return size;
+>  }
+>  
+> -static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +static int __tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>  {
+>  	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>  	int size = 0;
+>  	int status;
+>  	u32 expected;
+>  
+> -	if (count < TPM_HEADER_SIZE) {
+> -		size = -EIO;
+> -		goto out;
+> -	}
+> -
+>  	size = recv_data(chip, buf, TPM_HEADER_SIZE);
+>  	/* read first 10 bytes, including tag, paramsize, and result */
+>  	if (size < TPM_HEADER_SIZE) {
+>  		dev_err(&chip->dev, "Unable to read header\n");
+> -		goto out;
+> +		return size;
+>  	}
+>  
+>  	expected = be32_to_cpu(*(__be32 *) (buf + 2));
+>  	if (expected > count || expected < TPM_HEADER_SIZE) {
+>  		size = -EIO;
+> -		goto out;
+> +		return size;
+>  	}
+>  
+>  	size += recv_data(chip, &buf[TPM_HEADER_SIZE],
+> @@ -335,22 +330,45 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>  	if (size < expected) {
+>  		dev_err(&chip->dev, "Unable to read remainder of result\n");
+>  		size = -ETIME;
+> -		goto out;
+> +		return size;
+>  	}
+>  
+>  	if (tpm_tis_wait_for_stat(chip, TPM_STS_VALID, TPM_STS_VALID,
+>  				  chip->timeout_c, &priv->int_queue,
+>  				  false) < 0) {
+>  		size = -ETIME;
+> -		goto out;
+> +		return size;
+>  	}
+> +
+>  	status = tpm_tis_status(chip);
+>  	if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
+>  		dev_err(&chip->dev, "Error left over data\n");
+>  		size = -EIO;
+> +		return size;
+> +	}
+> +
+> +	return size;
+> +}
+> +
+> +static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+> +	int size;
+> +	int i;
+> +
+> +	if (count < TPM_HEADER_SIZE) {
+> +		size = -EIO;
+>  		goto out;
+>  	}
+>  
+> +	for (i = 0; i < TPM_RETRY; i++) {
+> +		size = __tpm_tis_recv(chip, buf, count);
+> +		if (size <= 0)
+> +			tpm_tis_write8(priv, TPM_STS(priv->locality),
+> +				       TPM_STS_RESPONSE_RETRY);
+> +		else
+> +			goto out;
+> +	}
+>  out:
+>  	tpm_tis_ready(chip);
+>  	return size;
+> @@ -375,7 +393,7 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  					  chip->timeout_b, &priv->int_queue,
+>  					  false) < 0) {
+>  			rc = -ETIME;
+> -			goto out_err;
+> +			return rc;
+>  		}
+>  	}
+>  
+> @@ -384,13 +402,13 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  		if (burstcnt < 0) {
+>  			dev_err(&chip->dev, "Unable to read burstcount\n");
+>  			rc = burstcnt;
+> -			goto out_err;
+> +			return rc;
+>  		}
+>  		burstcnt = min_t(int, burstcnt, len - count);
+>  		rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
+>  					 burstcnt, buf + count);
+>  		if (rc < 0)
+> -			goto out_err;
+> +			return rc;
+>  
+>  		count += burstcnt;
+>  	}
+> @@ -398,14 +416,10 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  				  TPM_STS_VALID, chip->timeout_a,
+>  				  &priv->int_queue, false) < 0) {
+>  		rc = -ETIME;
+> -		goto out_err;
+> +		return rc;
+>  	}
+>  
+>  	return 0;
+> -
+> -out_err:
+> -	tpm_tis_ready(chip);
+> -	return rc;
+>  }
+>  
+>  static void disable_interrupts(struct tpm_chip *chip)
+> @@ -434,13 +448,17 @@ static void disable_interrupts(struct tpm_chip *chip)
+>  static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  {
+>  	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+> -	int rc;
+> +	int rc, i;
+>  	u32 ordinal;
+>  	unsigned long dur;
+>  
+> -	rc = tpm_tis_send_data(chip, buf, len);
+> -	if (rc < 0)
+> -		return rc;
+> +	for (i = 0; i < TPM_RETRY; i++) {
+> +		rc = tpm_tis_send_data(chip, buf, len);
+> +		if (rc >= 0)
+> +			break;
+> +	}
+> +	if (i == TPM_RETRY)
+> +		goto out_err;
+>  
+>  	/* go and do it */
+>  	rc = tpm_tis_write8(priv, TPM_STS(priv->locality), TPM_STS_GO);
+> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+> index d06c65b..6cc6b76 100644
+> --- a/drivers/char/tpm/tpm_tis_core.h
+> +++ b/drivers/char/tpm/tpm_tis_core.h
+> @@ -34,6 +34,7 @@ enum tis_status {
+>  	TPM_STS_GO = 0x20,
+>  	TPM_STS_DATA_AVAIL = 0x10,
+>  	TPM_STS_DATA_EXPECT = 0x08,
+> +	TPM_STS_RESPONSE_RETRY = 0x02,
+>  };
+>  
+>  enum tis_int_flags {
+> -- 
+> 2.7.4
+> 
+
+Just based on the explanation this looks like a bunch of unconsidered
+changes. You have explain yourself better.
+
+/Jarkko
