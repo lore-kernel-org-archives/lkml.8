@@ -3,88 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96108C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1CB2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 384E4206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405402AbgFYOh6 (ORCPT
+        id S2405409AbgFYOil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405340AbgFYOh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:37:57 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65F83206B7;
-        Thu, 25 Jun 2020 14:37:55 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 10:37:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 25 Jun 2020 10:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405340AbgFYOik (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:38:40 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7750C08C5C1;
+        Thu, 25 Jun 2020 07:38:39 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 8A9472A557F
+Subject: Re: [RFC 0/4] futex2: Add new futex interface
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yordan Karadzhov <y.karadz@gmail.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Jason Behmer <jbehmer@google.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Clark Williams <williams@redhat.com>,
-        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
-        Darren Hart <dvhart@vmware.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
-Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
- running time stamp
-Message-ID: <20200625103753.4ac4a9a2@oasis.local.home>
-In-Reply-To: <126813531.12266.1593093195147.JavaMail.zimbra@efficios.com>
-References: <20200625094454.732790f7@oasis.local.home>
-        <126813531.12266.1593093195147.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Peter Zijlstra <peterz@infradead.org>, krisman@collabora.com,
+        Collabora kernel ML <kernel@collabora.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, pgriffais@valvesoftware.com,
+        Florian Weimer <fweimer@redhat.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        malteskarupke@web.de, Linux API <linux-api@vger.kernel.org>
+References: <20200612185122.327860-1-andrealmeid@collabora.com>
+ <CAK8P3a1fwYX-S84ukxEWBt_DZ09MdBLbQyf4Jgrr-AeqG89jeA@mail.gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <475e8c39-7d11-f80b-3b4a-e51be5d0963d@collabora.com>
+Date:   Thu, 25 Jun 2020 11:38:29 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAK8P3a1fwYX-S84ukxEWBt_DZ09MdBLbQyf4Jgrr-AeqG89jeA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 09:53:15 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+Hello Arnd,
 
-> ----- On Jun 25, 2020, at 9:44 AM, rostedt rostedt@goodmis.org wrote:
+On 6/25/20 3:48 AM, Arnd Bergmann wrote:
+> On Fri, Jun 12, 2020 at 8:51 PM André Almeida <andrealmeid@collabora.com> wrote:
 > 
-> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> > 
-> > [ SEVEN YEAR PROBLEM SOLVED! ]
-> > 
-> > Up until now, if an event is interrupted while it is recorded by an
-> > interrupt, and that interrupt records events, the time of those events will
-> > all be the same. This is because events only record the delta of the time
-> > since the previous event (or beginning of a page), and to handle updating
-> > the time keeping for that of nested events is extremely racy. After years of
-> > thinking about this and several failed attempts, I finally have a solution
-> > to solve this puzzle.  
+>> - The proposed interface uses ktime_t type for absolute timeout, and I
+>>   assumed that it should use values in a nsec resolution. If this is true,
+>>   we have some problems with i386 ABI, please check out the
+>>   COMPAT_32BIT_TIME implementation in patch 1 for more details. I
+>>   haven't added a time64 implementation yet, until this is clarified.
 > 
-> Out of curiosity, considering that LTTng has solved this problem 10+ years ago
-> with a simpler concurrency-friendly time-stamping model, why not simply use it
-> rather than add complexity to the current ftrace timestamp scheme ?
+> ktime_t is not part of the uapi headers, and has always been considered
+> an implementation detail of the kernel so far. I would argue it should
+> stay that way. The most sensible alternatives would be to either use
+> a "__u64 *timeout" argument for a relative timeout, or a
+> "struct __kernel_timespec *timeout" for an absolute timeout.
+> 
+> old_time32_t also makes no sense for multiple reasons:
+> 
+> - It's another kernel internal type and not part of the uapi headers
+> - your time32 call has different calling conventions from your time64
+>   version, not just a different type.
+> - there should be no need to add syscalls that are known to be buggy
+>   when there is a replacement type that does not have that bug.
+> 
 
-Because it requires updating all the tools that read this from user
-space.
+Thanks for the input. As stated by tglx at [1], "supporting relative
+timeouts is wrong to begin with", my next patch will use "struct
+__kernel_timespec *timeout" for an absolute timeout.
 
-I found a solution that works, so why change it and cause the backward
-compatibility pain now?
+>> - Is expected to have a x32 ABI implementation as well? In the case of
+>>   wait and wake, we could use the same as x86_64 ABI. However, for the
+>>   waitv (aka wait on multiple futexes) we would need a proper x32 entry
+>>   since we are dealing with 32bit pointers.
+> 
+> For new syscalls, I'd actually recommend not having a separate
+> entry point, but just checking 'if (in_compat_syscall())' inside of the
+> implementation to pick one behavior vs the other when accessing
+> the user pointers. This keeps the implementation simpler and
+> avoids assigning a new x32 syscall number that would be different
+> from all the other architectures.
+> 
 
--- Steve
+Cool, this will make the code cleaner.
+
+>       Arnd
+> 
+
+
+Thanks,
+	André
+
+[1] https://lkml.org/lkml/2019/7/31/1499
