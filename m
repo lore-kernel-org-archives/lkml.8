@@ -2,106 +2,129 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19CF32067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064002076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593072775;
+	bh=hFDSF6sOyHk09xBbSGXCSJ7Em905+sQZ3Jw5UdSgHV8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gNnzQnXC8nDxX0b1xaKbPrX13HXkjZB8ni37IfVuWCzdmeVc1gIdmJ8E6dSmzLYiP
+	 guLsn4BJVoT2UeG5mz95pGByYSVYUzcqgooFDdQw0RQ+DhQo3DEfNNpAYEObs9370h
+	 Yyr+xHLLLzAORqkXMMMfGyxgImAVocQWBjI2BmlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390503AbgFYILj (ORCPT
+        id S2390511AbgFYIMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:11:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:52457 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgFYILi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:11:38 -0400
-Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1Mq33i-1j2gDL1V58-00n5Wr; Thu, 25 Jun 2020 10:11:29 +0200
-Date:   Thu, 25 Jun 2020 10:11:28 +0200 (CEST)
-From:   Thomas Ruf <freelancer@rufusul.de>
-Reply-To: Thomas Ruf <freelancer@rufusul.de>
-To:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     Federico Vaga <federico.vaga@cern.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>
-Message-ID: <84270660.632865.1593072688966@mailbusiness.ionos.de>
-In-Reply-To: <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
-Subject: Re: DMA Engine: Transfer From Userspace
+        Thu, 25 Jun 2020 04:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbgFYIMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:12:53 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FFDB2067D;
+        Thu, 25 Jun 2020 08:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593072772;
+        bh=hFDSF6sOyHk09xBbSGXCSJ7Em905+sQZ3Jw5UdSgHV8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wajtMIDFxtK5LLIDrbKmwtzS9/M5CgCQN4zTXbE8/DDNcLXzi1STfYFv+j/nOtPfH
+         ZFDQkMzjJ20GLc/xMuQOC0szrItUDL/GJ315KGMpP8iDpI40ybpQi787V/BTBo9yYP
+         76PYC2BW92IQ47rgvV3RC2Jmg+W+2lEEg8y5qn2c=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1joN06-006HRd-Mb; Thu, 25 Jun 2020 09:12:50 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:HRzZ5peGV0s505yrNUmy14wLZnN+vfwR82ESXZO9Xn8IosI2Nhb
- tS27+7lVHfyqGmG1X4PlBHEF7VEIRakVZt++yNkg3elhFmdOok/ghZSucGsZ7cEc/CXZi68
- yrGkoR1jdBuNeaYRi52VBN3HGODudojDMPoitdQSngxITKvUATEWz0FTY1iNbmfQfj+sNhx
- Ph+4shDH6JvSWaA/2Ixdw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Wc8ojQSYAcE=:agm+E9A9YdkiLYUwIfZEsU
- P5e+UVwhMxR2FkAyYvkjGEVfNUIxDvaAqnhIM/rd8I3pYLWL/WrQdsgFTh4nrKnx8L5p5M8Ma
- tTp+qSxmmRaFACz134/c0gcsXWDpOOw/ejBiqQAdAWcYkn08CwSN/UPeGNkOYeZ8F7sR+Ut5J
- hGKBX6n9xT9T0JJfptJQpc5gsMlImiW1ixgNsu90X/M90uW/qVgiKn/yJl9NgNk6kqGzcDnVX
- pobN2gS9pL/pDgbjYrDoQIO6ZCBtu466N2PUvYKL/sfgqNevpEX71LNJ+t8C7EyAamCB/4d+p
- o+KCthWANWuASXEOTzG17H3YNwPG+O4de+iCepWXFF2vWMYnZk0HKhFecMC6qhE4AyE9vrsHN
- Wi6isW8yJqmBYLFPaoi4tjhhwY1r7DfBbQ7fklCJl7g5jgk2wwwwVY5SLhIuW7MhdGgKO4RyX
- LCZZpRms2z9S3tPY6w0D5/hXxZ4nERr8091PUGhjLc1RcKUJtypMI+4hq5QGWUagHPBVJfI1f
- eadrp2Y+YQNTXWLz3yQYSR+5EgfU/AHffU8XkJTif4YtANAToU/8douLYqgbnxk1adSySKadb
- k43cJykTNmWJ5Dnd9S8219J8NsuK2fX4ciTeRNY24bm2kZMnAaBVq/YYRQwz/2UQxr9enluZ2
- e8wXzVRi/luspXO2u+1xdBUa1J2B+7Kz12nVhccnXGa92q7Ou7YMq/+2HS/fO6OuTac5xvKtM
- yrEYVgeDU6BvYaYONSBb8mxPkIEfoQcDfWxD0IVipnhtaOju+zCtrJXPFNNPKlEWjARLv7BC1
- hKjo1LZjZv4LrnnXSMEbztwgrQyR4Rjxbb0eUr7iVDjyAtOnFE=
+Date:   Thu, 25 Jun 2020 09:12:50 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH v3 05/15] arm64: kvm: Build hyp-entry.S separately for
+ VHE/nVHE
+In-Reply-To: <20200622102041.myve2otyoj5q7j5s@google.com>
+References: <20200618122537.9625-1-dbrazdil@google.com>
+ <20200618122537.9625-6-dbrazdil@google.com>
+ <5029f8fb4a7816e11de7469c09347c79@kernel.org>
+ <20200622102041.myve2otyoj5q7j5s@google.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <491f3c8877897a4ac69d69fb7354c1cb@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi David,
 
-> On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
+On 2020-06-22 11:20, David Brazdil wrote:
+> Hi Marc,
 > 
+>> > -	void *dst = lm_alias(__bp_harden_hyp_vecs + slot * SZ_2K);
+>> > +	char *vec = has_vhe() ? __bp_harden_hyp_vecs
+>> > +			      : kvm_nvhe_sym(__bp_harden_hyp_vecs);
+>> 
+>> If we get this construct often, then something that abstracts
+>> the uggliness of the symbol duality would be nice...
 > 
-> 
-> 
-> On 6/21/2020 12:24 AM, Vinod Koul wrote:
-> > On 19-06-20, 16:31, Dave Jiang wrote:
-> >>
-> >>
-> >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> >>> Hello,
-> >>>
-> >>> is there the possibility of using a DMA engine channel from userspace?
-> >>>
-> >>> Something like:
-> >>> - configure DMA using ioctl() (or whatever configuration mechanism)
-> >>> - read() or write() to trigger the transfer
-> >>>
-> >>
-> >> I may have supposedly promised Vinod to look into possibly providing
-> >> something like this in the future. But I have not gotten around to do that
-> >> yet. Currently, no such support.
-> > 
-> > And I do still have serious reservations about this topic :) Opening up
-> > userspace access to DMA does not sound very great from security point of
-> > view.
-> 
-> What about doing it with DMA engine that supports PASID? That way the user can 
-> really only trash its own address space and kernel is protected.
+> Agreed, I do hope that this will end up being limited to finding the 
+> address of
+> the hyp-init vector once EL2 becomes self-contained. Even this vector 
+> selection
+> can be done in EL2 where the symbol duality does not exist.
+> If we were to hide it, there is a trade off between code "elegance" and 
+> clarity
+> of what's happening under the hood. I was thinking we could extract 
+> this
+> `has_vhe() ? foo : __kvm_nvhe_foo` as a `#define foo` but I do worry 
+> that
+> anybody debugging this code would be cursing my name.
 
-Sounds interesting! Not sure if this is really needed in that case...
-I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
-But i will do some checks if my code is really suitable to avoid misusage.
+I would say that whoever is debugging this code better have an 
+understanding
+of how things are supposed to work. Given that this is only a handful of
+people so far, I think your name is safe! ;-)
 
-Best regards,
-Thomas
+> It would also not work
+> with other macros that take symbol names, notably kvm_ksym_ref. But 
+> that can be
+> rewritten to accept a pointer instead. The more verbose but less magic 
+> approach
+> is to have a bunch of different helpers for various situations, eg.
+> __pa_symbol_nvhe. What would be your preference?
+
+I'd be happy with the (maybe temporary) magic approach. It helps 
+reasoning
+about things, and makes the transition smoother. Yes, bugs could crop up
+there, but given the static nature of obtaining a symbol's address, I'm
+fairly confident we'll get it right. The same cannot be said about 
+pointers
+though.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
