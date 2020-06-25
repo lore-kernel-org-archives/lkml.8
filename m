@@ -2,207 +2,172 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A22420781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593084668;
-	bh=QZi38O3Ut1h7YzJoaUyhp2CHCHV0usUcEWfCLDyFQ0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QjRAnlx58z/xBaz+WRxJSQSjLx5g4Card99e/Tf9x3lDz650teXbM8oysR3AKQjRs
-	 tEAm2GxuHIce6r84iGDISGALIY4so2SzuadMvor8uzzYE2KqOjYpoZcnpC4LukFlhm
-	 2F3DH8ilVjC/5yZFkMf2uXJ2AIJqgCVInLYAnRFQ=
+	by mail.kernel.org (Postfix) with ESMTP id 93C0A20836
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hMZIKCkE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404296AbgFYLbH (ORCPT
+        id S2404342AbgFYLcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:31:07 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43031 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404219AbgFYLbG (ORCPT
+        Thu, 25 Jun 2020 07:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404274AbgFYLb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:31:06 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s10so4407243oih.10;
-        Thu, 25 Jun 2020 04:31:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ceR1V6p7RGNF++3XLjRXzuggrknx1RWLDfnDURTRa10=;
-        b=kd3wbd1zjOuLTYKgkCuIDIVgLb5vg+vCuqGAtSBD6PZbdqrctAad5X/b4uidrtqUqA
-         R4K9tFhcY/46nCrqCYoV2t2FI1aG0d/+vQSO2mx8eWy9OKQ/cisvng72tOQkI4Q5Q1l7
-         Qt5qsiaiJmfmunUH1akbwEhIQoPZB7+duOSKkqFIHODTGfnwGuD8Iu27xw4OsyxAsCYn
-         kwW+kpPqGEx33zw8imLoEFMmKVF6j8lBr1AwskJQ+wJMKyw3bKNNXI2o7sE1HgTAdS0+
-         DkvYP4cHGp8PqtF4pNCRGEXnKnBWwqalGy0i5N6Px87/WQgtxsv7c9F3D8s/98m8Hz5P
-         XqyQ==
-X-Gm-Message-State: AOAM532QD9YdNcMDv/dViOVwiQmT8mAecK8sh1UgJhTRz1TqJvqb+jgH
-        Jx0GwpvlAtZhspBlZXs9FVMoLYr+1CoUBcx5n5E=
-X-Google-Smtp-Source: ABdhPJyklNBNQHH5j4xZ+MpbLP5vgIKFp9exs0rtM1iu2YH+8Aw6RTM6P9vtPnorNsBYobo61Jnpn1Fur6T/ALSpXvY=
-X-Received: by 2002:a54:4585:: with SMTP id z5mr1822683oib.110.1593084664345;
- Thu, 25 Jun 2020 04:31:04 -0700 (PDT)
+        Thu, 25 Jun 2020 07:31:58 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CEAC061795;
+        Thu, 25 Jun 2020 04:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=25KfWqTg5VgYg3/Dyq0fuOQ2ndu57hg32uRL8rzgLQM=; b=hMZIKCkEzhGgbe7QeG+ypRFK/O
+        qk5gq28BAHhlWFdwae7+1BKIcUcsn8Gsec4d1/FOm89F3owYZdYRN+Z7dxR8EwX1ryuxs5Qdlzztm
+        GiiMOPMto2/02VlUcETaNqI3K8ggTBChPeDZ7L7ah8hdi2N/TzJBsI8zpUByP5HI4vKWa/VKCuYiY
+        m1HDAbN2U7h85AjVikVhadfIROzsOemw2XieblpHZyhvlfB/UFzUsULjKMFgJszZkEcF2glew+P2i
+        3PI+EVE6gCanw/RAdqMvGgcCC0tI8oc3d3pvvIqXMHnfPozLveID5hj+mCWbbNp19qETJT6EwIJz/
+        K24Fe3Ig==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joQ6X-0001zi-Ea; Thu, 25 Jun 2020 11:31:41 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: [PATCH 6/6] mm: Add memalloc_nowait
+Date:   Thu, 25 Jun 2020 12:31:22 +0100
+Message-Id: <20200625113122.7540-7-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200625113122.7540-1-willy@infradead.org>
+References: <20200625113122.7540-1-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200612204820.20111-2-david.e.box@linux.intel.com> <20200624211549.GA2586552@bjorn-Precision-5520>
-In-Reply-To: <20200624211549.GA2586552@bjorn-Precision-5520>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jun 2020 13:30:53 +0200
-Message-ID: <CAJZ5v0i8dCN=HMFk_+ZX-Wr73P6kdQBtV0i3FtrZrO9cegXsvQ@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] PCI: Add ACPI StorageD3Enable _DSD support
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>, shyjumon.n@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:15 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jun 12, 2020 at 01:48:19PM -0700, David E. Box wrote:
-> > StorageD3Enable is a boolean property that indicates that the platform
-> > wants to use D3 for PCIe storage drives during suspend-to-idle. It is a
-> > BIOS work around that is currently in use on shipping systems like some
-> > Intel Comet Lake platforms. It is meant to change default driver policy for
-> > suspend that may cause higher power consumption.
-> >
-> > Add the DSD property for recognition by fwnode calls and provide an
-> > exported symbol for device drivers to use to read the property as needed.
-> >
-> > Link: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/power-management-for-storage-hardware-devices-intro
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> >  drivers/acpi/property.c |  3 +++
-> >  drivers/pci/pci-acpi.c  | 59 +++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci.h     |  2 ++
-> >  3 files changed, 64 insertions(+)
-> >
-> > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> > index e601c4511a8b..c2e2ae774a19 100644
-> > --- a/drivers/acpi/property.c
-> > +++ b/drivers/acpi/property.c
-> > @@ -45,6 +45,9 @@ static const guid_t prp_guids[] = {
-> >       /* Thunderbolt GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
-> >       GUID_INIT(0x6c501103, 0xc189, 0x4296,
-> >                 0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
-> > +     /* Storage device needs D3 GUID: 5025030f-842f-4ab4-a561-99a5189762d0 */
-> > +     GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
-> > +               0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
-> >  };
-> >
-> >  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index d21969fba6ab..732df524e09c 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -972,6 +972,65 @@ static bool acpi_pci_bridge_d3(struct pci_dev *dev)
-> >       return val == 1;
-> >  }
-> >
-> > +/**
-> > + * pci_acpi_storage_d3 - whether root port requests D3 for idle suspend
-> > + * @pdev: PCI device to check
-> > + *
-> > + * Returns true if the ACPI companion device contains the "StorageD3Enable"
-> > + * _DSD property and the value is 1. This indicates that the root port is
-> > + * used by a storage device and the platform is requesting D3 for the
-> > + * device during suspend to idle in order to support platform pm.
-> > + */
-> > +bool pci_acpi_storage_d3(struct pci_dev *dev)
-> > +{
-> > +     const struct fwnode_handle *fwnode;
-> > +     struct acpi_device *adev;
-> > +     struct pci_dev *root;
-> > +     acpi_handle handle;
-> > +     acpi_status status;
-> > +     bool ret = false;
-> > +     u8 val;
-> > +
-> > +     /*
-> > +      * Look for _DSD property specifying that the storage device on
-> > +      * the port must use D3 to support deep platform power savings during
-> > +      * suspend-to-idle
-> > +      */
-> > +     root = pci_find_pcie_root_port(dev);
->
-> I think this would need to be updated to apply to v5.8-rc1 after
-> 6ae72bfa656e ("PCI: Unify pcie_find_root_port() and
-> pci_find_pcie_root_port()").
->
-> https://git.kernel.org/linus/6ae72bfa656e
->
-> > +     if (!root)
-> > +             return false;
-> > +
-> > +     adev = ACPI_COMPANION(&root->dev);
-> > +     if (!adev) {
-> > +             /*
-> > +              * It is possible that the ACPI companion is not yet bound
-> > +              * for the root port so look it up manually here.
-> > +              */
-> > +             if (!adev && !pci_dev_is_added(root))
-> > +                     adev = acpi_pci_find_companion(&root->dev);
->
-> I see that you copied this "ACPI companion not yet bound" thing from
-> acpi_pci_bridge_d3().  But it's ugly.
->
-> Isn't there a way we can bind the ACPI companion during normal PCI
-> enumeration so we don't need this exception case?
->
-> I really do not like the idea of putting this code in the PCI core
-> because AFAICT the PCI core can do nothing with this information.
->
-> If we could make sure during enumeration that the root port always has
-> an ACPI companion, this code could go to the nvme driver itself.  And
-> we could also clean up the ugliness in acpi_pci_bridge_d3().
->
-> Rafael, is that possible?  I don't really know how the companion
-> device gets set.
+Similar to memalloc_noio() and memalloc_nofs(), memalloc_nowait()
+guarantees we will not sleep to reclaim memory.  Use it to simplify
+dm-bufio's allocations.
 
-That's a bit convoluted.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ drivers/md/dm-bufio.c    | 30 ++++++++----------------------
+ include/linux/sched.h    |  1 +
+ include/linux/sched/mm.h | 12 ++++++++----
+ 3 files changed, 17 insertions(+), 26 deletions(-)
 
-device_add() calls device_platform_notify(), before calling bus_add_device().
+diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
+index 6d1565021d74..140ada9a2c8f 100644
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -412,23 +412,6 @@ static void *alloc_buffer_data(struct dm_bufio_client *c, gfp_t gfp_mask,
+ 
+ 	*data_mode = DATA_MODE_VMALLOC;
+ 
+-	/*
+-	 * __vmalloc allocates the data pages and auxiliary structures with
+-	 * gfp_flags that were specified, but pagetables are always allocated
+-	 * with GFP_KERNEL, no matter what was specified as gfp_mask.
+-	 *
+-	 * Consequently, we must set per-process flag PF_MEMALLOC_NOIO so that
+-	 * all allocations done by this process (including pagetables) are done
+-	 * as if GFP_NOIO was specified.
+-	 */
+-	if (gfp_mask & __GFP_NORETRY) {
+-		unsigned noio_flag = memalloc_noio_save();
+-		void *ptr = __vmalloc(c->block_size, gfp_mask);
+-
+-		memalloc_noio_restore(noio_flag);
+-		return ptr;
+-	}
+-
+ 	return __vmalloc(c->block_size, gfp_mask);
+ }
+ 
+@@ -866,9 +849,6 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
+ 	 * dm-bufio is resistant to allocation failures (it just keeps
+ 	 * one buffer reserved in cases all the allocations fail).
+ 	 * So set flags to not try too hard:
+-	 *	GFP_NOWAIT: don't wait; if we need to sleep we'll release our
+-	 *		    mutex and wait ourselves.
+-	 *	__GFP_NORETRY: don't retry and rather return failure
+ 	 *	__GFP_NOMEMALLOC: don't use emergency reserves
+ 	 *	__GFP_NOWARN: don't print a warning in case of failure
+ 	 *
+@@ -877,7 +857,9 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
+ 	 */
+ 	while (1) {
+ 		if (dm_bufio_cache_size_latch != 1) {
+-			b = alloc_buffer(c, GFP_NOWAIT | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			unsigned nowait_flag = memalloc_nowait_save();
++			b = alloc_buffer(c, GFP_KERNEL | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			memalloc_nowait_restore(nowait_flag);
+ 			if (b)
+ 				return b;
+ 		}
+@@ -886,8 +868,12 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
+ 			return NULL;
+ 
+ 		if (dm_bufio_cache_size_latch != 1 && !tried_noio_alloc) {
++			unsigned noio_flag;
++
+ 			dm_bufio_unlock(c);
+-			b = alloc_buffer(c, GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			noio_flag = memalloc_noio_save();
++			b = alloc_buffer(c, GFP_KERNEL | __GFP_NOMEMALLOC | __GFP_NOWARN);
++			memalloc_noio_restore(noio_flag);
+ 			dm_bufio_lock(c);
+ 			if (b)
+ 				return b;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 90336850e940..b1c2cddd366c 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -803,6 +803,7 @@ struct task_struct {
+ #endif
+ 	unsigned			memalloc_noio:1;
+ 	unsigned			memalloc_nofs:1;
++	unsigned			memalloc_nowait:1;
+ 	unsigned			memalloc_nocma:1;
+ 
+ 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 6f7b59a848a6..6484569f50df 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -179,12 +179,16 @@ static inline bool in_vfork(struct task_struct *tsk)
+ static inline gfp_t current_gfp_context(gfp_t flags)
+ {
+ 	if (unlikely(current->memalloc_noio || current->memalloc_nofs ||
+-		     current->memalloc_nocma)) {
++		     current->memalloc_nocma) || current->memalloc_nowait) {
+ 		/*
+-		 * NOIO implies both NOIO and NOFS and it is a weaker context
+-		 * so always make sure it makes precedence
++		 * Clearing DIRECT_RECLAIM means we won't get to the point
++		 * of testing IO or FS, so we don't need to bother clearing
++		 * them.  noio implies neither IO nor FS and it is a weaker
++		 * context so always make sure it takes precedence.
+ 		 */
+-		if (current->memalloc_noio)
++		if (current->memalloc_nowait)
++			flags &= ~__GFP_DIRECT_RECLAIM;
++		else if (current->memalloc_noio)
+ 			flags &= ~(__GFP_IO | __GFP_FS);
+ 		else if (current->memalloc_nofs)
+ 			flags &= ~__GFP_FS;
+-- 
+2.27.0
 
-device_platform_notify() calls acpi_platform_notify() which invokes
-acpi_device_notify() that looks for the companion via
-type->find_companion() which for PCI points to
-acpi_pci_find_companion().  If found, the companion is attached to the
-dev structure as a physical_node, via acpi_bind_one().
-
-So by the time bus_probe_device() runs, the companion should be there
-already - if it is there at all.
-
-The parent ACPI companion should be present when the child is probing
-too, as per the above.
-
-> Maybe this is could be done somewhere around pci_device_add()?
-
-It is done in there.
-
-It is not necessary to call acpi_pci_find_companion() from
-pci_acpi_storage_d3() as long as that function is required to be
-called by the target device's driver probe or later.
-
-Ths acpi_pci_bridge_d3() case is different, though, AFAICS, because it
-is invoked in the pci_pm_init() path, via pci_bridge_d3_possible(),
-and that gets called from pci_device_add() *before* calling
-device_add().
-
-Mika, is that why acpi_pci_find_companion() gets callled from
-acpi_pci_bridge_d3()?
