@@ -2,114 +2,214 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E333C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF41720707
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0L6gU8J"
+	by mail.kernel.org (Postfix) with ESMTP id 7952C2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403793AbgFYIof (ORCPT
+        id S2403800AbgFYIpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
+        Thu, 25 Jun 2020 04:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390025AbgFYIoe (ORCPT
+        with ESMTP id S2390025AbgFYIpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:44:34 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86507C061573;
-        Thu, 25 Jun 2020 01:44:34 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so3004894pgq.1;
-        Thu, 25 Jun 2020 01:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SPuyZpiaeMW7v65IWK0vJIfRpGGit+CNrEvkfOmMaMI=;
-        b=h0L6gU8JGT61YqfoP+6NtN2CGutWMoBlAPkHcd0b+WTQUkyP3+uZwq2EPf7xRZw1ik
-         L3LTpgiJk3k87izqf3vzxiQLnqp+Gsa8Ls3SCDIyxJvUEHiPzbsbWgoyxpQEnwZdJ8Ef
-         FP7BH16dCiXgYKUXAG3pfmrbrpgy6t5iAWXD+oebejGXRNROLQlzBQtT14XA8RwJP/0g
-         kdMHSOqYXcAOqIJ0UuH63pHG9THW+EcIwKzZAYlPxFtJI0m9AKpEX93X9PkUZn+GtTrm
-         oo/gB8ThYGQ1WLK4CnJAMrJioRQmov0i7lj0r9n48XdOyQFhtQUE+Op5V5AZFd3pB4If
-         yU5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SPuyZpiaeMW7v65IWK0vJIfRpGGit+CNrEvkfOmMaMI=;
-        b=AnI8hhg6BSzPg0zwdwJwek7EMQJ1y7oCeceSz+OB7hZjnIT6q/dUEXPscJRuLDCKPJ
-         6USrwEpLNQRVlD9YgwGDuhaoes+2kgF0XZnvdd94oyJlosKwsnGCmKBHXmlmkCCwI2KQ
-         CdAJvNSBvp+D4/a8YNq6+1RUnWmircijQprVSLsbjnsoPu4J4RlFixBcoF/FQzcwpmH7
-         0KXX3zmuIV3CdKJrIsEGhdaKetn9YQ3v89BfC5CzEFmquGAJRbVxo+HFi6IlYHE6Vo3b
-         Fuv0fRTT/870sNdGIZv7a9J5sXfwSZsffVbrMh9xyzmuJkWzcYDbdIdT282eWExcq5mr
-         o2gg==
-X-Gm-Message-State: AOAM531D8OzsE25kZKJdj6ABIMGl7JGF7/pRCbnHGV1RXLZ9nWmmH0BE
-        pO4oaz37ckbMw1dHptLl6BgiL9sknxwR4NKZ4as=
-X-Google-Smtp-Source: ABdhPJxnPbRn1omTeH5cZ7Nex1nPz2Ru5X+fyfNVcPe/WaqCZQrrv59LHmA7bOPKHoxcgD1pC5cc6RbAYesk3IsSj7Q=
-X-Received: by 2002:a63:ff52:: with SMTP id s18mr25908886pgk.203.1593074673817;
- Thu, 25 Jun 2020 01:44:33 -0700 (PDT)
+        Thu, 25 Jun 2020 04:45:44 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73913C061573;
+        Thu, 25 Jun 2020 01:45:44 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1joNVr-0002of-OW; Thu, 25 Jun 2020 10:45:39 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 360551C0092;
+        Thu, 25 Jun 2020 10:45:39 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 08:45:38 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] x86/msr: Filter MSR writes
+Cc:     kernel test robot <lkp@intel.com>, Borislav Petkov <bp@suse.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200612105026.GA22660@zn.tnic>
+References: <20200612105026.GA22660@zn.tnic>
 MIME-Version: 1.0
-References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-11-warthog618@gmail.com>
- <CAHp75VdG4r95ZU8G9TfL+jkT63+Gppb8w5TRvAtCR_pAk0o=NA@mail.gmail.com>
- <20200624155714.GB8622@sol> <20200624225803.GA3600@sol>
-In-Reply-To: <20200624225803.GA3600@sol>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 25 Jun 2020 11:44:21 +0300
-Message-ID: <CAHp75VdCGpvoK8RZGwbehOd3eORE+qwFR31ucFxtU4vdc5pvYg@mail.gmail.com>
-Subject: Re: [PATCH 10/22] gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159307473887.16989.17345471306220440079.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 1:58 AM Kent Gibson <warthog618@gmail.com> wrote:
-> On Wed, Jun 24, 2020 at 11:57:14PM +0800, Kent Gibson wrote:
-> > On Wed, Jun 24, 2020 at 05:46:33PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Jun 23, 2020 at 7:03 AM Kent Gibson <warthog618@gmail.com> wrote:
+The following commit has been merged into the x86/misc branch of tip:
 
-...
+Commit-ID:     a7e1f67ed29f0c339e2aa7483d13b085127566ab
+Gitweb:        https://git.kernel.org/tip/a7e1f67ed29f0c339e2aa7483d13b085127566ab
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Wed, 10 Jun 2020 21:37:49 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 25 Jun 2020 10:39:02 +02:00
 
-> > > I stumbled over this myself, but...
-> > >
-> > > > -               if (test_bit(hwgpio, gcdev->watched_lines))
-> > > > +               if (test_and_set_bit(hwgpio, gcdev->watched_lines))
-> > > >                         return -EBUSY;
-> > > >
-> > > >                 gpio_desc_to_lineinfo(desc, &lineinfo);
-> > > > @@ -897,7 +897,6 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> > > >                 if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
-> > > >                         return -EFAULT;
-> > > >
-> > > > -               set_bit(hwgpio, gcdev->watched_lines);
-> > > >                 return 0;
-> > >
-> > > ...I think it's not an equivalent despite races involved. If you set
-> > > bit and return error code, you will have the wrong state.
+x86/msr: Filter MSR writes
 
-> Perhaps you are referring to the case where the copy_to_user fails?
+Add functionality to disable writing to MSRs from userspace. Writes can
+still be allowed by supplying the allow_writes=on module parameter. The
+kernel will be tainted so that it shows in oopses.
 
-Yes.
+Having unfettered access to all MSRs on a system is and has always been
+a disaster waiting to happen. Think performance counter MSRs, MSRs with
+sticky or locked bits, MSRs making major system changes like loading
+microcode, MTRRs, PAT configuration, TSC counter, security mitigations
+MSRs, you name it.
 
-> To be honest I considered that to be so unlikely that I ignored it.
-> Is there a relevant failure mode that I'm missing?
+This also destroys all the kernel's caching of MSR values for
+performance, as the recent case with MSR_AMD64_LS_CFG showed.
 
-The traditional question for such cases is "what can possibly go wrong?"
-I wouldn't underestimate the probability of failure.
+Another example is writing MSRs by mistake by simply typing the wrong
+MSR address. System freezes have been experienced that way.
 
+In general, poking at MSRs under the kernel's feet is a bad bad idea.
 
--- 
-With Best Regards,
-Andy Shevchenko
+So log writing to MSRs by default. Longer term, such writes will be
+disabled by default.
+
+If userspace still wants to do that, then proper interfaces should be
+defined which are under the kernel's control and accesses to those MSRs
+can be synchronized and sanitized properly.
+
+[ Fix sparse warnings. ]
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Link: https://lkml.kernel.org/r/20200612105026.GA22660@zn.tnic
+---
+ arch/x86/kernel/msr.c | 69 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 69 insertions(+)
+
+diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
+index 1547be3..49dcfb8 100644
+--- a/arch/x86/kernel/msr.c
++++ b/arch/x86/kernel/msr.c
+@@ -42,6 +42,14 @@
+ static struct class *msr_class;
+ static enum cpuhp_state cpuhp_msr_state;
+ 
++enum allow_write_msrs {
++	MSR_WRITES_ON,
++	MSR_WRITES_OFF,
++	MSR_WRITES_DEFAULT,
++};
++
++static enum allow_write_msrs allow_writes = MSR_WRITES_DEFAULT;
++
+ static ssize_t msr_read(struct file *file, char __user *buf,
+ 			size_t count, loff_t *ppos)
+ {
+@@ -70,6 +78,24 @@ static ssize_t msr_read(struct file *file, char __user *buf,
+ 	return bytes ? bytes : err;
+ }
+ 
++static int filter_write(u32 reg)
++{
++	switch (allow_writes) {
++	case MSR_WRITES_ON:  return 0;
++	case MSR_WRITES_OFF: return -EPERM;
++	default: break;
++	}
++
++	if (reg == MSR_IA32_ENERGY_PERF_BIAS)
++		return 0;
++
++	pr_err_ratelimited("Write to unrecognized MSR 0x%x by %s\n"
++			   "Please report to x86@kernel.org\n",
++			   reg, current->comm);
++
++	return 0;
++}
++
+ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 			 size_t count, loff_t *ppos)
+ {
+@@ -84,6 +110,10 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 	if (err)
+ 		return err;
+ 
++	err = filter_write(reg);
++	if (err)
++		return err;
++
+ 	if (count % 8)
+ 		return -EINVAL;	/* Invalid chunk size */
+ 
+@@ -92,9 +122,13 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 			err = -EFAULT;
+ 			break;
+ 		}
++
++		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
++
+ 		err = wrmsr_safe_on_cpu(cpu, reg, data[0], data[1]);
+ 		if (err)
+ 			break;
++
+ 		tmp += 2;
+ 		bytes += 8;
+ 	}
+@@ -242,6 +276,41 @@ static void __exit msr_exit(void)
+ }
+ module_exit(msr_exit)
+ 
++static int set_allow_writes(const char *val, const struct kernel_param *cp)
++{
++	/* val is NUL-terminated, see kernfs_fop_write() */
++	char *s = strstrip((char *)val);
++
++	if (!strcmp(s, "on"))
++		allow_writes = MSR_WRITES_ON;
++	else if (!strcmp(s, "off"))
++		allow_writes = MSR_WRITES_OFF;
++	else
++		allow_writes = MSR_WRITES_DEFAULT;
++
++	return 0;
++}
++
++static int get_allow_writes(char *buf, const struct kernel_param *kp)
++{
++	const char *res;
++
++	switch (allow_writes) {
++	case MSR_WRITES_ON:  res = "on"; break;
++	case MSR_WRITES_OFF: res = "off"; break;
++	default: res = "default"; break;
++	}
++
++	return sprintf(buf, "%s\n", res);
++}
++
++static const struct kernel_param_ops allow_writes_ops = {
++	.set = set_allow_writes,
++	.get = get_allow_writes
++};
++
++module_param_cb(allow_writes, &allow_writes_ops, NULL, 0600);
++
+ MODULE_AUTHOR("H. Peter Anvin <hpa@zytor.com>");
+ MODULE_DESCRIPTION("x86 generic MSR driver");
+ MODULE_LICENSE("GPL");
