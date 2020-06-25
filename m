@@ -2,416 +2,167 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81257C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09371C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C78E2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C5B20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QdiN+KN1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knKRqtKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390870AbgFYSse (ORCPT
+        id S2406166AbgFYSsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58942 "EHLO
+        Thu, 25 Jun 2020 14:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390007AbgFYSsd (ORCPT
+        with ESMTP id S2390875AbgFYSst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:48:33 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C481BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:48:32 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id r5so4122747vso.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:48:32 -0700 (PDT)
+        Thu, 25 Jun 2020 14:48:49 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DC0AC08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:48:49 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id g6so4686796qtr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2HSTlC+xvvTVEIiDZNjif/2YAB7NC9wGDci4TXjb5k4=;
-        b=QdiN+KN1PCgdTfT0qykspOWdQ0GE4a85keVNhJF/B9KD8nX5OCzgdo9kGqhhOVkDRo
-         GtNrZJ5gc0rix6/CbFnqDTKqFgkUW+1wadHAcXvEMhQ2JN191kY3xSNDLi9AHOS0q4l9
-         QGy8G5DkOZtfKQMzuV6cg3GZYbt6UvDuk5Z30=
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=KSzIS4R7pLrhz4aCSES8O8YLNhHnwl2dEbCnP+qYXsc=;
+        b=knKRqtKFatSe2XltGnadadXYJpHZawUTiMMobs3BChNf5NM/0u4nk3w1QtVHi/2TGJ
+         MGNBG0TtVcq9viEuR8zd0jqEo96IcfEx2gHSvdbcB3ckYEBrQpTXPq6tK7H3viZFPRCh
+         W+tC3F45N6UTYj0fflhVzOdIoHvpOoyhbYthTQDmVfNUqHx0tGPh7vhaiXJwh7WiaksG
+         7Kf5IMLzUrlNU6YJQr6tdlMkp4qTejHrXN7RwXjbYezMfBQiMV6OqL4xP8Ruhg7l7wC+
+         7t2aLAeRG5q6VH6HMvzX+Eg6XRp5dSUfVkt84VBZgheT20HcdfWZHWgyMfgVe44smHLm
+         eYww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2HSTlC+xvvTVEIiDZNjif/2YAB7NC9wGDci4TXjb5k4=;
-        b=c+q2rwzKd64j+NvWLXgN8mlXLymgnXc/fZRJM2N+MtRlAXovAAMhNgagNFwxQWDG0S
-         f3t5yV1eMt6rpYS4X5yd+fzVx6facytXtWWioTQh+NoS2wFzbakk66JVERHA2+kal436
-         4+va8ltrz/7eXJSrqhYgbiyQzDNHD0g6rYRjEL6axpbGvtVEI3XfM8GT1OnWppe9rcOJ
-         eUtHjCWodlhqcFHCCg7qqvBJRcbpq/pCNaKiYULctPfyk4y54nY2pp6lonkMrt8wTt/1
-         h5c2UrSiOvh2J2f4w1SAUjixh29O/PMfbLHBX+V5GFIZQ4g+vTsZ3mccXR2S6lxyHM98
-         93NQ==
-X-Gm-Message-State: AOAM533x3vErKCid7ZaPJgamNDEbs+3Edz3LtToxZEed59L5KwOwUuuB
-        hbe/RfG1Ut/16hjsQK/o2XjDn+1PVXY=
-X-Google-Smtp-Source: ABdhPJxZWUZX12aAMfwThETs6F9512q4RCD9NxDNixK4a0bsidpocntQ8UT55P2END/8ZI+g2npPXQ==
-X-Received: by 2002:a67:efd2:: with SMTP id s18mr7930861vsp.129.1593110911281;
-        Thu, 25 Jun 2020 11:48:31 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id z22sm3189261vsi.1.2020.06.25.11.48.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 11:48:30 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id z9so1102585uai.6
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:48:29 -0700 (PDT)
-X-Received: by 2002:ab0:29c1:: with SMTP id i1mr23082895uaq.120.1593110909222;
- Thu, 25 Jun 2020 11:48:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
- <159304830840.62212.6716845486281369794@swboyd.mtv.corp.google.com>
- <CAD=FV=X=hbrT4o-PDs70zodAMUKEyLty7L92GtkyYBKQX_tt+w@mail.gmail.com> <159306803629.62212.16332166359080248822@swboyd.mtv.corp.google.com>
-In-Reply-To: <159306803629.62212.16332166359080248822@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 25 Jun 2020 11:48:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WsmKrWYhvGSq7CYhsQW9fvZ318py2oCawwv5NYOhVB4w@mail.gmail.com>
-Message-ID: <CAD=FV=WsmKrWYhvGSq7CYhsQW9fvZ318py2oCawwv5NYOhVB4w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Switch SPI to use GPIO for CS
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-        <devicetree@vger.kernel.org>, LKML" <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=KSzIS4R7pLrhz4aCSES8O8YLNhHnwl2dEbCnP+qYXsc=;
+        b=YWbQbjVmNCm7PrOMsaQQqYKETrVfCeKDLZ5KSSjHRPmWKUWGcmpEOtZazrQl+Oj+f1
+         pvPRxrkkrbfoUalGEr4S5gsH6lrLBadLVCZyRhii8UBNstMRK8urBs9g0ecuXi1QKg0e
+         3mvtRWqcVs9ie8TXJ6MNT06s2EwZ/4oU7CnZ6izKIEvdme9eoF6ocE7wEnynG+kGAgjg
+         evMxCCFVEXS3Gk6dljQxEc0Yt0Z8uWGBUWnVFLWALAN2g3IHcA1bcBvs03Zk7aiSUkuK
+         kP/nBAncFSYB8h7nXrN1Y/JxH8VD22m9coO9PFTrtDYnoRH2vt7Betqs4PlGn7MaJHcI
+         pXaQ==
+X-Gm-Message-State: AOAM533cnm7xhpoKF1QnI5L5kRAdkqTjPSXQOZ6dCOx2sV34+MQ6Issv
+        0DxEHAscByhhcz5IKABGmxtJ+TNZEu8eIAlJJSg=
+X-Google-Smtp-Source: ABdhPJwpHZDZ91owWQoTpMlESBLCeHg8NuUS9EMzPrkO+lVDZd6/NrsL86bqM72qrEUkcdUo9qL+h6YICos7y0g6pbU=
+X-Received: by 2002:ad4:44a6:: with SMTP id n6mr2687847qvt.113.1593110928539;
+ Thu, 25 Jun 2020 11:48:48 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 11:47:52 -0700
+In-Reply-To: <20200622231536.7jcshis5mdn3vr54@google.com>
+Message-Id: <20200625184752.73095-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20200622231536.7jcshis5mdn3vr54@google.com>
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+Subject: [PATCH v2] vmlinux.lds: add PGO and AutoFDO input sections
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "=?UTF-8?q?F=C4=81ng-ru=C3=AC=20S=C3=B2ng?=" <maskray@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Jian Cai <jiancai@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Basically, consider .text.{hot|unlikely|unknown}.* part of .text, too.
 
-On Wed, Jun 24, 2020 at 11:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Doug Anderson (2020-06-24 20:35:16)
-> > Hi,
-> >
-> > On Wed, Jun 24, 2020 at 6:25 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Douglas Anderson (2020-06-24 17:08:04)
-> > > > The geni SPI protocol appears to have been designed without taking
-> > > > Linux needs into account.  In all the normal flows it takes care of
-> > > > setting chip select itself.  However, Linux likes to manage the chip
-> > > > select so it can do fancy things.
-> > > >
-> > > > Back when we first landed the geni SPI driver we worked around this
-> > > > by:
-> > > > - Always setting the FRAGMENTATION bit in transfers, which (I believe)
-> > > >   tells the SPI controller not to mess with the chip select during
-> > > >   transfers.
-> > > > - Controlling the chip select manually by sending the SPI controller
-> > > >   commands to assert or deassert the chip select.
-> > > >
-> > > > Our workaround was fine and it's been working OK, but it's really
-> > > > quite inefficient.  A normal SPI transaction now needs to do:
-> > > > 1. Start a command to set the chip select.
-> > > > 2. Wait for an interrupt from controller saying chip select done.
-> > > > 3. Do a transfer.
-> > > > 4. Start a command to unset the chip select.
-> > > > 5. Wait for an interrupt from controller saying chip select done.
-> > >
-> > > I thought the GENI hardware was supposed to be able to queue commands up
-> > > and then plow through them to interrupt the CPU when it finished. If
-> > > that was supported would there be any problems? I assume we could remove
-> > > the wait for CS disable and interrupt on step 5 and also the wait for
-> > > CS/interrupt on step 2 because it is bundled with the transfer in step
-> > > 3.
-> >
-> > Do you have any details or pointers to documentation on said ability
-> > to queue commands?  I don't think I've ever heard of it.
-> >
-> > How exactly would it work, anyway?  There's no sequence number or
-> > anything in GENI and there's a single "DONE" interrupt that signals
-> > both "CS Done" and "Transfer Done", so without some really good docs
-> > I'd have a really hard time figuring out how this is supposed to work.
->
-> The driver is written to do the simplest thing possible, FIFOs and lots
-> of interrupts. There are three different modes: PIO, DMA, and GSI/GPI
-> (Generic Software Interface/Generic Programming Interface (those are
-> ridiculous acronyms)). I don't know if the DMA mode gains anything,
-> probably not except for large transfers but then why not use GSI? The
-> performance gain, as far as I can tell, is to use GSI/GPI to program
-> sequences into the serial engine (SE) and then kick them off and wait.
-> The other side benefit of this is that it lets us share the same QUP
-> between different EEs (execution environments) in the system.
->
-> I hope someone at qcom can help to upstream support for this if
-> performance is important. Otherwise we're left to stick band-aids on a
-> driver that is polling a FIFO (sadness). I googled for the google pixel4
-> kernel and found this[1] so maybe that can be used as a reference to
-> support GSI mode. It looks like CS is stuck into the GSI queue thing
-> (see go_flags and FRAGMENTATION[3]).
+When compiling with profiling information (collected via PGO
+instrumentations or AutoFDO sampling), Clang will separate code into
+.text.hot, .text.unlikely, or .text.unknown sections based on profiling
+information. After D79600 (clang-11), these sections will have a
+trailing `.` suffix, ie.  .text.hot., .text.unlikely., .text.unknown..
 
-Definitely I'd be interested to see patches to make SPI work faster.
-I'm going to try to characterize how slow things still are and then
-will probably try to convince Qualcomm to help since I didn't see lots
-of other obvious speedups.  Maybe, as you say, GSI/GPI is magic.
+When using -ffunction-sections together with profiling infomation,
+either explicitly (FGKASLR) or implicitly (LTO), code may be placed in
+sections following the convention:
+.text.hot.<foo>, .text.unlikely.<bar>, .text.unknown.<baz>
+where <foo>, <bar>, and <baz> are functions.  (This produces one section
+per function; we generally try to merge these all back via linker script
+so that we don't have 50k sections).
 
-One thing I realized thinking through all this, though.  If we just
-naively queue chip select commands without waiting for completion
-we'll break Linux's assumptions.  Specifically Linux assumes that when
-the SPI driver's set_cs() command returns that the chip select has
-actually been set.  If a SPI client drivers sometimes need chip select
-to be asserted for a minimum amount of time and so they need to know
-that set_cs() actually did its job.  Checkout "struct spi_transfer"
-and elements like "delay_usecs".  I know cros_ec uses some of these
-fancier features.  See do_cros_ec_pkt_xfer_spi() for reference.
+For the above cases, we need to teach our linker scripts that such
+sections might exist and that we'd explicitly like them grouped
+together, otherwise we can wind up with code outside of the
+_stext/_etext boundaries that might not be mapped properly for some
+architectures, resulting in boot failures.
 
-Ah, I guess if the GSI/GPI mode is fancy enough, though, maybe we
-could implement one layer higher in the SPI core and provide a
-transfer_one_message() instead of transfer_one().  Then we'd be fully
-in charge of doing all of the delays ourselves.  So if we could queue
-up a "set cs, optional delay, do transfer, optional delay, set cs,
-optional delay, ..." then maybe it'd be OK.  I guess if there could be
-multiple execution environments using the SPI we'd absolutely need to
-implement this anyway since other EEs using the QUP would screw up the
-standard timeout calculations.  Even if we did this, though, we still
-might have trouble with multiple EEs for some fancier Linux drivers
-without more work.  Specifically Linux drivers are allowed to call
-spi_bus_lock() and then assume that they have full control of the bus
-even across multiple messages.  I guess we'd need some way to make
-sure that other EEs aren't running and then lock them out?  We also
-would have to figure out how to handle the Linux API which allows you
-to mess with lots of SPI parameters (including transfer speed) in the
-middle of a message.
+If the linker script is not told about possible input sections, then
+where the section is placed as output is a heuristic-laiden mess that's
+non-portable between linkers (ie. BFD and LLD), and has resulted in many
+hard to debug bugs.  Kees Cook is working on cleaning this up by adding
+--orphan-handling=3Dwarn linker flag used in ARCH=3Dpowerpc to additional
+architectures. In the case of linker scripts, borrowing from the Zen of
+Python: explicit is better than implicit.
 
+Also, ld.bfd's internal linker script considers .text.hot AND
+.text.hot.* to be part of .text, as well as .text.unlikely and
+.text.unlikely.*. I didn't see support for .text.unknown.*, and didn't
+see Clang producing such code in our kernel builds, but I see code in
+LLVM that can produce such section names if profiling information is
+missing. That may point to a larger issue with generating or collecting
+profiles, but I would much rather be safe and explicit than have to
+debug yet another issue related to orphan section placement.
 
-So I guess the summary of this is:
+Cc: stable@vger.kernel.org
+Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=3Da=
+dd44f8d5c5c05e08b11e033127a744d61c26aee
+Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=3D1=
+de778ed23ce7492c523d5850c6c6dbb34152655
+Link: https://reviews.llvm.org/D79600
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=3D1084760
+Reported-by: Jian Cai <jiancai@google.com>
+Debugged-by: Luis Lozano <llozano@google.com>
+Suggested-by: F=C4=81ng-ru=C3=AC S=C3=B2ng <maskray@google.com>
+Tested-by: Luis Lozano <llozano@google.com>
+Tested-by: Manoj Gupta <manojgupta@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V1 -> V2:
+* Add .text.unknown.*.  It's not strictly necessary for us yet, but I
+  really worry that it could become a problem for us. Either way, I'm
+  happy to drop for a V3, but I'm suggesting we not.
+* Beef up commit message.
+* Drop references to LLD; the LLVM change had nothing to do with LLD.
+  I've realized I have a Pavlovian-response to changes from F=C4=81ng-ru=C3=
+=AC
+  that I associate with LLD.  I'm seeking professional help for my
+  ailment. Forgive me.
+* Add link to now public CrOS bug.
 
-- Using GSI mode is a reason to not use GPIOs for chip select assuming
-that GSI mode can actually support everything we need and is actually
-faster.
+ include/asm-generic/vmlinux.lds.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-- If there are multiple EEs then (mabye?) we can't use GPIOs for chip
-select even ignoring GSI mode.  I don't know enough about multiple EEs
-and what kind of sharing is supported to know for sure.  Is it
-expected that multiple EEs are talking to the same physical peripheral
-or are they using the same QUP but w/ a different chip select?  Are
-pin mux settings forced to be the same for all EEs?
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinu=
+x.lds.h
+index d7c7c7f36c4a..245c1af4c057 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -560,7 +560,10 @@
+  */
+ #define TEXT_TEXT							\
+ 		ALIGN_FUNCTION();					\
+-		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
++		*(.text.hot .text.hot.*)				\
++		*(TEXT_MAIN .text.fixup)				\
++		*(.text.unlikely .text.unlikely.*)			\
++		*(.text.unknown .text.unknown.*)			\
+ 		NOINSTR_TEXT						\
+ 		*(.text..refcount)					\
+ 		*(.ref.text)						\
+--=20
+2.27.0.111.gc72c7da667-goog
 
-
-I guess the question is: are we interested in a short term speedup
-while we wait for a better solution?  Maybe the right solution is to
-just override this to use GPIOs only on boards known not to support
-multiple EEs instead of overriding it in the overall SoC device tree
-file?
-
-
-> > > Where is the delay? On step 2 where we wait to transfer or at step 5
-> > > when we wait for CS to be dropped, or both?
-> >
-> > Presumably every CS change takes the same amount of time?  ...so I'd
-> > say "both".  If it really matters I can try to measure.
->
-> Sure. You say you got a 25% speedup so I'm curious where the time
-> improvement came from and what the raw numbers were before and after
-> this patch.
-
-In all cases I did 3 runs, so providing the average and raw:
-
-# flashrom -p ec -r /tmp/foo.bin
-
-IRQs before: 55796 ((55258 + 55613 + 56519) / 3)
-IRQs after: 37512 ((37654 + 36312 + 38571) / 3)
-
-Time before: 11.991 ((12.049 + 11.985 + 11.938) / 3)
-Time after: 9.111 ((8.894 + 9.428 + 9.012) / 3)
-
-# time flashrom -p ec -w /tmp/foo.bin
-
-IRQs before: 52568 ((52343 + 52666 + 52696) / 3)
-IRQs after: 36507 ((36051 + 35745 + 37727) / 3)
-
-Time before: 13.015 ((12.940 + 13.004 + 13.100) / 3)
-Time after: 9.325 ((8.934 + 9.520 +9.522) / 3)
-
-
-I also gathered a bunch of timings.  Timings at boot are pretty wild
-because so many things are happening at once, but it calms down a bit
-later on.  Here are two patches I used for timings which also include
-some sample timings in their description:
-
-https://crrev.com/c/2267286
-https://crrev.com/c/2267290
-
-The quick summary is: even assuming no other overhead at all it takes
-about 8 - 9 us just to assert the chip select.  The IRQ overhead isn't
-a ton usually (2 - 4 us) but it takes a little while (~10us with lots
-of variation) before we start running again on the task that was
-waiting.
-
-One thing I did note in the commit message is that I can also get a
-speedup (though not as impressive) without configuring the CS to be a
-GPIO by just caching the chip select state in the driver and avoiding
-setting the chip select when it's already correct.  I still have this
-patch, though it doesn't do anything if we switch the CS to GPIO.  I
-can still post it if needed.  I stuck it at
-<https://crrev.com/c/2267278> for now.  That only gave a 15% speedup,
-not 25%.
-
-
-> > > > Things are made a bit worse because the Linux GPIO framework assumes
-> > > > that setting a chip select is quick.  Thus the SPI core can be seen to
-> > > > tell us to set our chip select even when it's already in the right
-> > > > state and we were dutifully kicking off commands and waiting for
-> > > > interrupts.  While we could optimize that particular case, we'd still
-> > > > be left with the slowness when we actually needed to toggle the chip
-> > > > select.
-> > >
-> > > One thing to note is that the GPIO driver doesn't tell us that it has
-> > > actually asserted/deasserted the GPIO. It writes to the controller and
-> > > moves on so we don't know when it has actually gone into effect.
-> > > Hopefully moving to GPIO mode doesn't mean we get weird problems where
-> > > CS isn't asserted yet and a transfer starts wiggling the lines.
-> >
-> > cs-gpios is a pretty normal Linux concept and not something I
-> > invented.  It's documented to work just fine and I can't see this as
-> > being a real problem.
->
-> This isn't just cs-gpios though. It's a general problem for the gpio
-> controller on qcom platforms. I take it that it's worked well in the
-> past so you feel confident that cs-gpios is solid. That's fair.
-
-Hrm.  Is the qcom gpio driver somehow different from other platforms?
-I think most code assumes that if it asserts a GPIO that it's
-asserted, since it might be doing timing based on setting that GPIO.
-I mean there are certainly things like pin rise times and also the
-time it takes for the MMIO write to go over the bus, but I don't think
-we need to worry about them here.
-
-
-> > > > With this change I tested reading the firmware off the EC connected to
-> > > > a ChromeOS device (flashrom -p ec -r ...).  I saw about a 25% speedup
-> > > > in total runtime of the command and a 30% reduction in interrupts
-> > > > generated (measured by /proc/interrupts).
-> > >
-> > > I see nothing wrong with specifying the CS gpios in DT. Seems like that
-> > > should always be there and then the driver should decide to use GPIO
-> > > mode or not. So
-> > >
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > >
-> > > for that part.
-> >
-> > I appreciate the tag, but I'm not sure it's working the way you're
-> > thinking it does?  See:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> >
-> > From there, when you specify spi-gpios it's saying: definitely use
-> > this GPIO as the chip select, don't use your native one.  The bindings
-> > explicitly show how you would specify the native GPIO.
-> >
-> > If we wanted the SPI controller to decide one way or the other on its
-> > own, I guess we'd need an entirely new property saying that if it
-> > wanted to control its chip select with GPIO then here's the GPIO and
-> > then we'd need to provide a pinmux config for that.  That feels
-> > overkill to me since I really see no reason not to use it as a GPIO.
->
-> In the case of GPI or DMA mode or not either of those there seems to be
-> quite a bit of overkill^Wconfigurability. Maybe the device node should
-> get a different compatible string in these cases so that we can
-> differentiate what is the intended mode of operation of the QUP.
-> Otherwise I don't see how GSI could be supported when cs-gpios is
-> present.
->
-> The thing that shouldn't be happening is needing to change the dts file
-> at the SoC level to make the driver do something different when that
-> something different can be decided by the OS. More succinctly, from a DT
-> perspective something is wrong if we're tweaking this node to change
-> driver behavior.
-
-I agree that GSI doesn't seem like it could be supported when cs-gpios
-is present.
-
-I guess I'm not quite as wedded to the immutability of the dts.  While
-it's nice to not totally churn the dts and we're supposed to keep in
-mind that the dts is supposed to be mostly stable, it doesn't feel
-horrible to me to say that if you wanted to enable GSI that you'd have
-to change the dts.
-
-How about if we look at it this way: wouldn't it be possible to design
-a board where the chip select of the SPI was over on some totally
-different GPIO that's not part of a QUP?  The generic SPI bindings
-(spi-controller.yaml) explicitly call this out as an OK thing to do,
-saying that you could even have some devices using the native
-controller chip select and some devices using a GPIO and that's OK.
-
-Assuming we accept that as a valid use case then the SPI driver needs
-to be able to work in a non-GSI mode if it's doing a transfer that's
-using a GPIO chip select, right?  So if the dts specifies cs-gpios it
-will still need to work.
-
-
-Describing the SPI connection using cs-gpios instead of the native cs
-is also not false.  The chip select line _is_ hooked up to a GPIO.
-That same line can also be muxed to be the native chip select but that
-doesn't make it untrue that it can also be thought of as a GPIO.
-
-I mean, we could also certainly add an entry like this:
-
-  qcom,native-cs-gpio = <...>
-
-...and then we could add a second pinmux config in addition to
-"default" called "native-cs-gpio" or something.  Then, if the driver
-detected that "native-cs-gpio" (the GPIO and the pinconf) were there
-and the driver hadn't yet implemented GSI and the driver knew there
-weren't multiple execution environments then it could change the
-pinmux and just set the GPIO in its set_cs() function.  That would be
-more pristine from a device tree perspective (we're describing
-_everything_), but it would also be a heck of a lot more code and
-complexity.
-
-
-Maybe yet another way to think about this whole thing: presumably we
-would need firmware changes if we wanted to support sharing a SPI port
-across multiple execution environments, right?  The dts describes not
-just hardware but also (to some extent) firmware.  When we have
-firmware that supports multiple EEs and it's all working then that
-would be a good time to change the dts to describe the device+firmware
-combo.
-
-
-So to wrap it all up w/ a bow:
-
-* I can post the SPI change that avoids setting the CS if it was
-already right so everyone can get a (smaller) perf boost right away.
-Simple and clean.
-
-* We make the change to use cs-gpios just in board-specific device
-trees for boards known not to support multiple EEs.  If/when firmware
-changes are needed to support multiple EEs we'll update the dts.
-
-* Geni SPI driver should always support both cs-gpios and native cs,
-so we don't have to worry about incompatible changes.  Both are valid
-ways to describe the device (assuming multiple EEs aren't used).
-
-* If/when we get GSI code we won't be able to use it without changing
-away from cs-gpios but cs-gpios should still be functional.
-
-
-> > It's kinda like saying: if an SoC provided two different ways to set a
-> > pin, one of which always delayed 50 us to assert and one that asserted
-> > instantly, do we really need to write drivers to support both modes?
-> > No.  The mode which delays 50 us is useless and there was no good
-> > reason for the SoC to invent that mode and no reason to try to support
-> > it in software.
-> >
->
-> [1] https://android.googlesource.com/kernel/msm/+/refs/heads/android-msm-coral-4.14-android10-c2f2/drivers/spi/spi-geni-qcom.c
->
-> P.S. I see that android "fixed"[2] a race condition in the interrupt
-> routine. Sounds familiar...
->
-> [2] https://android.googlesource.com/kernel/msm/+/4ba87b2911be7a83e710c0211f2c1e512d3cd196
-> [3] https://android.googlesource.com/kernel/msm/+/refs/heads/android-msm-coral-4.14-android10-c2f2/drivers/spi/spi-geni-qcom.c#655
-
-It makes me incredibly disappointed to see fixes like this that
-weren't posted upstream.
-
--Doug
