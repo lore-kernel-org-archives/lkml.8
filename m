@@ -2,86 +2,89 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A932CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78DF62070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cbJ49egf"
+	by mail.kernel.org (Postfix) with ESMTP id A9DE72084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390819AbgFYKOy (ORCPT
+        id S2403816AbgFYKSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389773AbgFYKOw (ORCPT
+        Thu, 25 Jun 2020 06:18:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35058 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389773AbgFYKSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:14:52 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7431C061573;
-        Thu, 25 Jun 2020 03:14:51 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0ed100f934f9e71bd17243.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:f934:f9e7:1bd1:7243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3CA8F1EC0105;
-        Thu, 25 Jun 2020 12:14:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593080088;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=wZEaiRB22xa7BcRCKe3HuRHsBBwhLUBTrmGUHGuXtCI=;
-        b=cbJ49egfsTPDPA0eCEA0nvoKG0L2FvTzOqmQ1yrjTlmOhslozoqWySWPgieVp8Em0SEAof
-        ME8e1WsY05VUCZC/NKer/BvgX1PHHN4HSUuk0GpRcJYtb0gnPDGBpCEOPcSkj4xyadZQoQ
-        k+CoLRo9sqUZhyl2CvBE4p5nQUpYpxA=
-Date:   Thu, 25 Jun 2020 12:14:41 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Serge Ayoun <serge.ayoun@intel.com>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 08/21] x86/sgx: Initialize metadata for Enclave Page
- Cache (EPC) sections
-Message-ID: <20200625101441.GC20319@zn.tnic>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-9-jarkko.sakkinen@linux.intel.com>
+        Thu, 25 Jun 2020 06:18:06 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 041812A39A1
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v2 0/7] arm64: dts: mediatek: Add support for Lenovo IdeaPad Duet Chromebook
+Date:   Thu, 25 Jun 2020 12:17:50 +0200
+Message-Id: <20200625101757.101775-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200617220844.57423-9-jarkko.sakkinen@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:08:30AM +0300, Jarkko Sakkinen wrote:
-> +static inline struct sgx_epc_section *sgx_get_epc_section(
-> +		struct sgx_epc_page *page)
+These series adds basic support for the Lenovo IdeaPad Duet Chromebook, a
+2-in-1 detachable devices using the MediaTek MT8183 SoC. The first patch
+only adds the new compatible names in the mediatek binding. The second
+patch, adds the missing compatible to instantiate the PMIC regulators.
+The next patch adds missing devices to support better the board and fixes
+some warnings found running dtbs_check. And finally, the latest
+introduces support for the board itself.
 
-Just let it stick out - breaking lines on arg opening brace are the
-ugliest. Also:
+All the patches has been tested on Lenovo IdeaPad Duet Chromebook with
+the patches applied on top of 5.8-rc1 and with serial console, booting
+without problems and being able to go to the login prompt.
 
-  bdc48fa11e46 ("checkpatch/coding-style: deprecate 80-column warning")
+Best regards,
+  Enric
 
-Thx.
+Changes in v2:
+- Replace cluster-sleepX for cluster-sleep-x (Matthias Brugger)
+- [6/7] Move adding #phy-cells to this patch. (Matthias Brugger)
+- [7/7] Move adding #phy-cells out of this patch. (Matthias Brugger)
+
+Enric Balletbo i Serra (7):
+  dt-bindings: arm64: dts: mediatek: Add mt8183-kukui-krane-sku176
+  arm64: dts: mt6358: Add the compatible for the regulators
+  arm64: dts: mt8183: Add MediaTek's peripheral configuration controller
+  arm64: dts: mt8183: Fix unit name warnings
+  arm64: dts: mt8183-evb: Fix unit name warnings
+  arm64: dts: mt8183: Add USB3.0 support
+  arm64: dts: mt8183: Add krane-sku176 board
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   5 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+ arch/arm64/boot/dts/mediatek/mt6358.dtsi      |   2 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   4 +-
+ .../mediatek/mt8183-kukui-krane-sku176.dts    |  18 +
+ .../boot/dts/mediatek/mt8183-kukui-krane.dtsi | 343 ++++++++
+ .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 788 ++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  68 +-
+ 8 files changed, 1225 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
 
 -- 
-Regards/Gruss,
-    Boris.
+2.27.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
