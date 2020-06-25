@@ -2,91 +2,64 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F114C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117F6207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TXs317Ch"
+	by mail.kernel.org (Postfix) with ESMTP id 4A3F52076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405037AbgFYNY2 (ORCPT
+        id S2405042AbgFYNYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404935AbgFYNY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:24:27 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7623BC08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:24:26 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b92so3209729pjc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=eWSfWI4wpEme8MrwfvQ7LPuMKGxIgLayOyX6JwETS9k=;
-        b=TXs317Chw7NlZME2mN7859gja5QL9DFyQzGIbvLyC0Z35kZPOYP34joAI5KMOaN5PK
-         Y77JHyvhP0f0iy4PPvYyb3iqfJhnEeW3XAc/Yq4Mo6Plmgmrc3xGo58DDXeQ85sneA47
-         PJPwd2z3+2sBXiPkmSRiEmNcu7THXZR/EyE43riF8IF51yLxi9ckeQh1tzSL36Zp2OZd
-         Y2WdMe051I5Rir1G6lfaQ5QnuC0igLb9IuHs4cFtpBkSN02avQR1M/U9A7IsJQ3qWikQ
-         QO54UdFpQW+EBxCNjZ11lXroQgTPm+3/aPJPO+A6aI0CijcjTfwCCGbumI9waZ7JDcp4
-         gMog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eWSfWI4wpEme8MrwfvQ7LPuMKGxIgLayOyX6JwETS9k=;
-        b=fQ3z/v7uOjuzFAXIQA4jjEy56LQmNuXWM0v/aLE17gJDZkQz7Zcq1md1xIvjCNx9j4
-         nguLkYoaf1ed80AUEAgxyb4psb+7+7I+ajZS56HYktTPZtXb0L8ro6udRe1SlIGaDC6w
-         ELatFY75wokTYLNNfn2P4zpsbOoDHtc9tkOd84OiavsmBg64ymWeu85zbzuPbkg2wj8A
-         Pv54Fi315GCSOmpcf0kComRmfIerhuOG1+WgOHhraSmVNy411/NO0GIc/hhH/txJYfvC
-         GBFkEVUk4hSnfVZC7ExS0XkPVx5ol6WViNqEGHvMJYdhgl79WoMgyhQh/Z8mo+g8UKXu
-         BXFA==
-X-Gm-Message-State: AOAM531k9hbkn0CMlHUPJKtnHNKFyCCmQOt2tfezMOAW92h1PeIWOYO4
-        H/3gyiGkfBdjWdsrgQjs21DgGq5LS1bAjA==
-X-Google-Smtp-Source: ABdhPJxz6W6AkCZ4Vb3R22w+iIOiwz8jbFDCPrudgODkVLqlhWeN9HIjLKRDHz7pD59URGE0+fPI5g==
-X-Received: by 2002:a17:902:8690:: with SMTP id g16mr33052502plo.257.1593091465728;
-        Thu, 25 Jun 2020 06:24:25 -0700 (PDT)
-Received: from ?IPv6:2600:380:6c49:6812:d113:f43c:df53:19ee? ([2600:380:6c49:6812:d113:f43c:df53:19ee])
-        by smtp.gmail.com with ESMTPSA id h5sm24249689pfb.120.2020.06.25.06.24.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 06:24:24 -0700 (PDT)
-Subject: Re: [PATCH 5.9] io_uring: fix NULL-mm for linked reqs
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <f7d8272bcf142fe2c11c85ecd86f7f75f6e48316.1593077850.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <41f3f2db-bc1c-22cc-d93c-4ed31cfb225f@kernel.dk>
-Date:   Thu, 25 Jun 2020 07:24:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 25 Jun 2020 09:24:52 -0400
+Received: from ms.lwn.net ([45.79.88.28]:58870 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405046AbgFYNYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:24:51 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id EC8762AE;
+        Thu, 25 Jun 2020 13:24:50 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 07:24:49 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH 01/10] mfd: wm8350-core: Supply description
+ wm8350_reg_{un}lock args
+Message-ID: <20200625072449.4d3e3fca@lwn.net>
+In-Reply-To: <20200625071313.GM954398@dell>
+References: <20200625064619.2775707-1-lee.jones@linaro.org>
+        <20200625064619.2775707-2-lee.jones@linaro.org>
+        <20200625065608.GB2789306@kroah.com>
+        <20200625071313.GM954398@dell>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <f7d8272bcf142fe2c11c85ecd86f7f75f6e48316.1593077850.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/20 3:38 AM, Pavel Begunkov wrote:
-> __io_queue_sqe() tries to handle all request of a link,
-> so it's not enough to grab mm in io_sq_thread_acquire_mm()
-> based just on the head.
+On Thu, 25 Jun 2020 08:13:13 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> > Why are all of these documentation fixes for stable?  
 > 
-> Don't check req->needs_mm and do it always.
+> Because they fix compiler warnings.
+> 
+> Not correct?
 
-Applied, thanks.
+I am overjoyed to see people fixing docs build warnings, it is work that
+is desperately needed.  That said, these warning fixes are probably not
+stable material; the problem is bigger and longer-term than that.
 
--- 
-Jens Axboe
+Thanks,
 
+jon
