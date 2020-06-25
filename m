@@ -2,121 +2,221 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40824206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="koaPYN2w"
+	by mail.kernel.org (Postfix) with ESMTP id 43FEB206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436537AbgFYURQ (ORCPT
+        id S2436548AbgFYUSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407101AbgFYURO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:17:14 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEC8C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:17:14 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j4so3297630plk.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZfbKgemW+h2MxakeR0KWqGEyeZapu5dTocFIrlzaeTk=;
-        b=koaPYN2wBZx0y+NwH0a3Pgb4IbwCzVKE0QofUhT/yNqkp3+2eOH+J3TeQKgs0AJIid
-         yhijL7J+yBwsg1advmT17TkrfJsnIbPlHhgkbXgw68uBlowbo+9465HUE7eFCjrYKhDZ
-         wqV5Ff+vqqyUJDn+B85ahXC8e2Yxtom8h2Ls0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZfbKgemW+h2MxakeR0KWqGEyeZapu5dTocFIrlzaeTk=;
-        b=qI0/Itafwo6gKEuTY8AyyUMP2Rp3EKnIJB2eWAUZnEy+bwK0OXidkdCYlxLz95iaJ/
-         mLI6LFLWx8DuWNSyTWl+W5ROIDEBNjDxrvSFdKBIxfI7qazx7ZAfBbGoAi6Cd3IMXkwI
-         L3z3LrrKFBPJzuKbm5Yaq5tT1XE2PJFiId6KziAb2DTDWubfPgPnslvOJXjGumnGzZz9
-         yvEoOGVyOvLLjyugduDkQpgY39i/AKBltYVVV1yIYBHSMeXe9cuUixb0b8+643ouOTOS
-         B/8DT45WM7jzyE6JHa85YJQI+8/Of4Bc13RMZ/x2lyPD/9jlBok4b5SyNUf/oLdYV8xu
-         ESZQ==
-X-Gm-Message-State: AOAM530m8LRnfZGfz1c8QSGuuJk8eianx0VUFTI30ckEzX5Wd+L25SL9
-        Axaebkc/93K+r3MBfCbzGEn6Dw==
-X-Google-Smtp-Source: ABdhPJwPiKQ2jBtfYOBSS7xaUWBbx2DJaXUSav4Q73TNrW9/BI70Esu/z3iw48+y0xzuhrISTm+Jyg==
-X-Received: by 2002:a17:902:207:: with SMTP id 7mr35561059plc.169.1593116234073;
-        Thu, 25 Jun 2020 13:17:14 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id t4sm2067565pjs.39.2020.06.25.13.17.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 13:17:13 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Evan Green <evgreen@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [REPOST PATCH] arm64: dts: qcom: Fix WiFi supplies on sc7180-idp
-Date:   Thu, 25 Jun 2020 13:17:09 -0700
-Message-Id: <20200625131658.REPOST.1.I32960cd32bb84d6db4127c906d7e371fa29caebf@changeid>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Jun 2020 16:18:37 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20502 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405054AbgFYUSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 16:18:36 -0400
+IronPort-SDR: /gQxry8IuEsFe3opJlTNQ0bx9rT3/xxg2fv9uFeRhWb2ECbrWDs0ld/tYll3XDaSrUwsSxMirT
+ MElMrAfxDRxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505218"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="132505218"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:35 -0700
+IronPort-SDR: yWQGN4+/oLTUQHbFUM6OSWd7QSpUxGCVE4UI5jVxe5EYzFYdBh8l0QNo5Fyvx/+50fRof7mfYg
+ 4LOBWknPLVGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="453132202"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:34 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Jean-Philippe Brucker" <jean-philippe@linaro.org>,
+        "Christoph Hellwig" <hch@infradeed.org>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Jacob Jun Pan" <jacob.jun.pan@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        "Sohil Mehta" <sohil.mehta@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v4 00/12] x86: tag application address space for devices
+Date:   Thu, 25 Jun 2020 13:17:10 -0700
+Message-Id: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WiFi supplies that were added recently can't have done anything
-useful because they were missing the "-supply" suffix.  Booting
-without the "-supply" suffix would give these messages:
+Typical hardware devices require a driver stack to translate application
+buffers to hardware addresses, and a kernel-user transition to notify the
+hardware of new work. What if both the translation and transition overhead
+could be eliminated? This is what Shared Virtual Address (SVA) and ENQCMD
+enabled hardware like Data Streaming Accelerator (DSA) aims to achieve.
+Applications map portals in their local-address-space and directly submit
+work to them using a new instruction.
 
-ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-0.8-cx-mx not found, using dummy regulator
-ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-1.8-xo not found, using dummy regulator
-ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-1.3-rfa not found, using dummy regulator
-ath10k_snoc 18800000.wifi: 18800000.wifi supply vdd-3.3-ch0 not found, using dummy regulator
+This series enables ENQCMD and associated management of the new MSR
+(MSR_IA32_PASID). This new MSR allows an application address space to be
+associated with what the PCIe spec calls a Process Address Space ID (PASID).
+This PASID tag is carried along with all requests between applications and
+devices and allows devices to interact with the process address space.
 
-Let's add the "-supply" suffix.
+SVA and ENQCMD enabled device drivers need this series. The phase 2 DSA
+patches with SVA and ENQCMD support was released on the top of this series:
+https://lore.kernel.org/patchwork/cover/1244060/
 
-Fixes: 1e7594a38f37 ("arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-I don't have an IDP setup but I have a similar board.  Testing on IDP
-would, of course, be appreciated.
+This series only provides simple and basic support for ENQCMD and the MSR:
+1. Clean up type definitions (patch 1-2). These patches can be in a
+   separate series.
+   - Define "pasid" as "u32" consistently
+   - Define "flags" as "unsigned int"
+2. Explain different various technical terms used in the series (patch 3).
+3. Enumerate support for ENQCMD in the processor (patch 4).
+4. Handle FPU PASID state and the MSR during context switch (patches 5-6).
+5. Define "pasid" in mm_struct (patch 7).
+5. Clear PASID state for new mm and forked and cloned thread (patch 8-9).
+6. Allocate and free PASID for a process (patch 10).
+7. Fix up the PASID MSR in #GP handler when one thread in a process
+   executes ENQCMD for the first time (patches 11-12).
 
-Repost because I screwed up the "after-the-cut" notes on first post.
+This patch series and the DSA phase 2 series are in
+https://github.com/intel/idxd-driver/tree/idxd-stage2
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+References:
+1. Detailed information on the ENQCMD/ENQCMDS instructions and the
+IA32_PASID MSR can be found in Intel Architecture Instruction Set
+Extensions and Future Features Programming Reference:
+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 39dbfc89689e..472f7f41cc93 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -391,10 +391,10 @@ video-firmware {
- 
- &wifi {
- 	status = "okay";
--	vdd-0.8-cx-mx = <&vreg_l9a_0p6>;
--	vdd-1.8-xo = <&vreg_l1c_1p8>;
--	vdd-1.3-rfa = <&vreg_l2c_1p3>;
--	vdd-3.3-ch0 = <&vreg_l10c_3p3>;
-+	vdd-0.8-cx-mx-supply = <&vreg_l9a_0p6>;
-+	vdd-1.8-xo-supply = <&vreg_l1c_1p8>;
-+	vdd-1.3-rfa-supply = <&vreg_l2c_1p3>;
-+	vdd-3.3-ch0-supply = <&vreg_l10c_3p3>;
- 	wifi-firmware {
- 		iommus = <&apps_smmu 0xc2 0x1>;
- 	};
+2. Detailed information on DSA can be found in DSA specification:
+https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+
+Chang log:
+v4:
+- Define PASID as "u32" instead of "unsigned int" in patch 1, 7, 10, 12.
+  (Christoph)
+- Drop v3 patch 2 which changes PASID type in ocxl because it's not related
+  to x86 and was rejected by ocxl maintainer Frederic Barrat
+- A split patch which changes PASID type to u32 in crypto/hisilicon/qm.c
+  was released separately to linux-crypto mailing list because it's not
+  related to x86 and is a standalone patch:
+
+v3:
+- Change names of bind_mm() and unbind_mm() to match to new APIs in
+  patch 4 (Baolu)
+- Change CONFIG_PCI_PASID to CONFIG_IOMMU_SUPPORT because non-PCI device
+  can have PASID in ARM in patch 8 (Jean)
+- Add a few sanity checks in __free_pasid() and alloc_pasid() in
+  patch 11 (Baolu)
+- Add patch 12 to define a new flag "has_valid_pasid" for a task and
+  use the flag to identify if the task has a valid PASID MSR (PeterZ)
+- Add fpu__pasid_write() to update the MSR in fixup() in patch 13
+- Check if mm->pasid can be found in fixup() in patch 13
+
+v2:
+- Add patches 1-3 to define "pasid" and "flags" as "unsigned int"
+  consistently (Thomas)
+  (these 3 patches could be in a separate patch set)
+- Add patch 8 to move "pasid" to generic mm_struct (Christoph).
+  Jean-Philippe Brucker released a virtually same patch. Upstream only
+  needs one of the two.
+- Add patch 9 to initialize PASID in a new mm.
+- Plus other changes described in each patch (Thomas)
+
+Ashok Raj (1):
+  docs: x86: Add documentation for SVA (Shared Virtual Addressing)
+
+Fenghua Yu (9):
+  iommu: Change type of pasid to u32
+  iommu/vt-d: Change flags type to unsigned int in binding mm
+  x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+  x86/msr-index: Define IA32_PASID MSR
+  mm: Define pasid in mm
+  fork: Clear PASID for new mm
+  x86/process: Clear PASID state for a newly forked/cloned thread
+  x86/mmu: Allocate/free PASID
+  x86/traps: Fix up invalid PASID
+
+Peter Zijlstra (1):
+  sched: Define and initialize a flag to identify valid PASID in the
+    task
+
+Yu-cheng Yu (1):
+  x86/fpu/xstate: Add supervisor PASID state for ENQCMD feature
+
+ Documentation/x86/index.rst                   |   1 +
+ Documentation/x86/sva.rst                     | 287 ++++++++++++++++++
+ arch/x86/include/asm/cpufeatures.h            |   1 +
+ arch/x86/include/asm/fpu/types.h              |  10 +
+ arch/x86/include/asm/fpu/xstate.h             |   2 +-
+ arch/x86/include/asm/iommu.h                  |   3 +
+ arch/x86/include/asm/mmu_context.h            |  14 +
+ arch/x86/include/asm/msr-index.h              |   3 +
+ arch/x86/kernel/cpu/cpuid-deps.c              |   1 +
+ arch/x86/kernel/fpu/xstate.c                  |   4 +
+ arch/x86/kernel/process.c                     |  18 ++
+ arch/x86/kernel/traps.c                       |  14 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h    |   4 +-
+ .../drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c    |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.h |   2 +-
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c  |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c       |   6 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ids.h       |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c       |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c        |   8 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.h        |   8 +-
+ .../gpu/drm/amd/amdkfd/cik_event_interrupt.c  |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_dbgdev.c       |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_dbgmgr.h       |   2 +-
+ .../drm/amd/amdkfd/kfd_device_queue_manager.c |   7 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_events.c       |   8 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_events.h       |   4 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_iommu.c        |   6 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_pasid.c        |   2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_priv.h         |  18 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c      |   2 +-
+ .../gpu/drm/amd/include/kgd_kfd_interface.h   |   2 +-
+ drivers/iommu/amd/amd_iommu.h                 |  10 +-
+ drivers/iommu/amd/iommu.c                     |  31 +-
+ drivers/iommu/amd/iommu_v2.c                  |  20 +-
+ drivers/iommu/intel/dmar.c                    |   7 +-
+ drivers/iommu/intel/intel-pasid.h             |  24 +-
+ drivers/iommu/intel/iommu.c                   |   4 +-
+ drivers/iommu/intel/pasid.c                   |  31 +-
+ drivers/iommu/intel/svm.c                     | 225 ++++++++++++--
+ drivers/iommu/iommu.c                         |   2 +-
+ drivers/misc/uacce/uacce.c                    |   2 +-
+ include/linux/amd-iommu.h                     |   8 +-
+ include/linux/intel-iommu.h                   |  14 +-
+ include/linux/intel-svm.h                     |   2 +-
+ include/linux/iommu.h                         |  10 +-
+ include/linux/mm_types.h                      |   6 +
+ include/linux/sched.h                         |   3 +
+ include/linux/uacce.h                         |   2 +-
+ kernel/fork.c                                 |  12 +
+ 53 files changed, 716 insertions(+), 156 deletions(-)
+ create mode 100644 Documentation/x86/sva.rst
+
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.19.1
 
