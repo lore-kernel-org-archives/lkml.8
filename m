@@ -2,171 +2,222 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE59C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15DD20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9C4206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ggd+eURO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SHhYBkJi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405181AbgFYUsE (ORCPT
+        id S2405234AbgFYUv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49210 "EHLO
+        Thu, 25 Jun 2020 16:51:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405077AbgFYUsC (ORCPT
+        with ESMTP id S2405182AbgFYUv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:48:02 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A13FC08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:48:02 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id d15so5272523edm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:48:02 -0700 (PDT)
+        Thu, 25 Jun 2020 16:51:27 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB14C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:51:27 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u26so7499259wmn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tn33QMHZ+qNx5YT7oVBhQ/nQOONeR57qMeYBaxKkSXo=;
-        b=Ggd+eURO6bXZrXb/VrO6+GxK6IB0ymlMRAjfKYtjDGfvFU0I0yzRD6yvgotEk3BWPf
-         PGehawuwWuxJffh9+td9mlCHcAVUQNWj2ejefuznqGo8V+4g+wTK+ufuWOvYOvF38Sup
-         7nzPAtDMJb+KbyRYO0JXywstw/xOGIiXzZDlSixrgKtxcDWVHwPcShzNUeSjCkYWiKUd
-         2c9/E+zttHjji2yyoaRZ+fuMLDcTKrFh6AV3QLqK17VFBDK/HfnKPU/diOPh45NxYWre
-         62t3JyO6a9VOns7Ewz3MXGMCdE9+p4yl8BRtNzVIF3LHlDZSGqc89OP4BfMlGiedk6HO
-         k2fA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ju1U+tPndCh0ArRsOyQQP1OuDrYeOK89CttbwD+tA2w=;
+        b=SHhYBkJiwdDam4QgitQRrlJfKsdLwmI7uPhVCNqSaOV5WVwl3dCAW4UlsO4aFnymiy
+         Ly9hBiXqNGFi8qSWwCfpJLQanD3/FB/mSdYlIZL7hEhDi9HEgRVOiMxryU4HUKaDZAOH
+         qoB3RuIvQV4MoUZ4/UwqleSRJFVp88zMKIo+QFQuQ+6P4tnn87vhdXnOkikNTY5XYL32
+         lAxXNQLKzg/qeuUUZmdc/7Hv1MNNnhfEAtlynSuaupW45OTPZjzr1j6A6567GodiiRBC
+         IVdkHGyreyxu6WiHWPKv6Tq08d0FEaKnHG4UOMOq3itViht9CfIC/b1tXSdd5+LumZ/2
+         EjxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tn33QMHZ+qNx5YT7oVBhQ/nQOONeR57qMeYBaxKkSXo=;
-        b=LGVi9c9iNu9EoqTYELVa8yADghS1FD+8aJx+b5tp0Qg3Q2Mi4pOQ10h/shs0DufHGJ
-         pXDjam+E0QGEDlkGzyPmnt/V6EpvZmdQbmCJowUhL3BrC9LY0WP4frfEkwwFc66QxbTV
-         FZ4MKKBojpjQAghe6iC6wwIMMBnksUhBLXQXiU+aRoaDDUkz8Xl1j+V3UcipsaO6xXfE
-         trH2126WQrmzN+2KYa93zGeWhXuULyjmm9PdqDj1ISo6u8tdkKLE/xwKnICdy10CZHXp
-         Q4KhsUE+GNWsS572D2g2qfnNn9buK/uBApIq+gMSbS7DpavOvhZwZAInbQKqv3xJ3/nm
-         BLmQ==
-X-Gm-Message-State: AOAM533FztyIymacczvvitPd5yQgPtB0dUKhqjQp53rpUU7YWI8a6blM
-        HSTF1r7kpEeLjnQLFulqCXFhJLXYc533Rj8WxyDnBA==
-X-Google-Smtp-Source: ABdhPJxMYbJ9UZDD3lxVN3tEGwHQsEYytGrM3sJo+TNPXLGdrEYJ2a4RfAquxSOd7PoDH9I6lJXON22hhfJyFvcjD50=
-X-Received: by 2002:a50:e606:: with SMTP id y6mr28081edm.303.1593118080706;
- Thu, 25 Jun 2020 13:48:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ju1U+tPndCh0ArRsOyQQP1OuDrYeOK89CttbwD+tA2w=;
+        b=auKeOEv6cJBe5mNBdXXD1IVs8oaRCy1CXP3WkLU1hWbVL9VY0QS51hjAuO742v+Fdq
+         gL81mqwy5BOmafi6rJZwjLN/kmgrHjXbpYhvuynzH7fo66qpxmrADyNA7Bmau8+ky+Aj
+         XMjbcA7G3ZKa96t0jeXf2BGa9qGG5QE/Jr3XCqdk5laKgcHZ4AJ2k+VfDr9GTxistyDm
+         NiPuqSExkzTrs+IVtuCIU2pFzfj9+l2OjuT8+BZz5YpL33KLiZU+BDfO1CeZgbsNV9PN
+         RwPjUPcLK+LDihEbPf1ll95tIfXJgjNHr0dpY97PIo21OZhOkG/gYHBGj2A9DiQ7+Xg/
+         UdCQ==
+X-Gm-Message-State: AOAM533SIQn7ta0wcE2l3qRhJ5dCW2IHj9k0z62AiK+SahfbM5EuL6rX
+        N0iuIxApRVd84P9JWFOy0X17Ng==
+X-Google-Smtp-Source: ABdhPJxbJCYoIUbP86SyUwiFATrrWaKC2ZDlF8UdEPr7tYWahscflEno7v16wZ9J7yJXIYTaNLBepQ==
+X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr5493720wmk.149.1593118285933;
+        Thu, 25 Jun 2020 13:51:25 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id r3sm13960263wrg.70.2020.06.25.13.51.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 13:51:25 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     broonie@kernel.org, lgirdwood@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/1] regulator: devres: Standardise on function documentation headers
+Date:   Thu, 25 Jun 2020 21:50:53 +0100
+Message-Id: <20200625205053.4191910-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200625064614.101183-1-wvw@google.com> <20200625102305.gu3xo4ovcqyd35vd@vireshk-i7>
-In-Reply-To: <20200625102305.gu3xo4ovcqyd35vd@vireshk-i7>
-From:   Wei Wang <wvw@google.com>
-Date:   Thu, 25 Jun 2020 13:47:49 -0700
-Message-ID: <CAGXk5yrA=oXZs9KAaELsO7+ex7xCggEwdWSC_KXrUWQnvKEpWQ@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: schedutil: force frequency update when limits change
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>, dsmythies@telus.net,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 3:23 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 24-06-20, 23:46, Wei Wang wrote:
-> > To avoid reducing the frequency of a CPU prematurely, we skip reducing
-> > the frequency if the CPU had been busy recently.
-> >
-> > This should not be done when the limits of the policy are changed, for
-> > example due to thermal throttling. We should always get the frequency
-> > within the new limits as soon as possible.
-> >
-> > There was a fix in
-> > commit 600f5badb78c ("cpufreq: schedutil: Don't skip freq update when
-> > limits change") upstream which introduced another flag. However, the
-> > fix didn't address the case when next_freq is the same as previously
-> > voted, which is then checked in sugov_update_next_freq. As a result, the
-> > frequency would be stuck at low until the high demanding workload quits.
-> >
-> > test trace:
-> >   kworker/u19:0-1872  ( 1872) [002] ....   347.878871: cpu_frequency_limits: min=600000 max=2348000 cpu_id=6
-> >          dhry64-11525 (11525) [007] d.h2   347.880012: sugov_should_update_freq: thermal limit on policy6
-> >          dhry64-11525 (11525) [007] d.h2   347.880012: sugov_deferred_update: policy6 skipped update
-> >          dhry64-11525 (11525) [007] d.h2   347.884040: sugov_deferred_update: policy6 skipped update
->
-> I am not sure these are helpful in the logs as the code which
-> generated them isn't there in the kernel.
->
-Yes, those traceprintk were added to those particular functions to help debug.
+Line up descriptions, start description with a lower-case character and
+omit old definitions such as quoting the old argument "consumer".
 
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/regulator/devres.c | 52 +++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-> > ...
-> >
-> > This patch fixes this by skipping the check and forcing an update in
-> > this case. The second flag was kept as the limits_change flag could be
-> > updated in thermal kworker from another CPU.
->
-> I am sorry but I am not fully sure of what the problem is. Can you
-> describe that by giving an example with some random frequency, and
-> tell the expected and actual behavior ?
->
-The problem is sugov thought next_freq already updated (but actually
-skipped by the rate limit thing) and all following updates will be
-skipped.
-Actually this is specifically for Android common kernel 4.19's issue
-which has sugov_up_down_rate_limit in sugov_update_next_freq, let's
-continue discussion there.
+diff --git a/drivers/regulator/devres.c b/drivers/regulator/devres.c
+index 3f73ce8590007..3091210889e31 100644
+--- a/drivers/regulator/devres.c
++++ b/drivers/regulator/devres.c
+@@ -41,8 +41,8 @@ static struct regulator *_devm_regulator_get(struct device *dev, const char *id,
+ 
+ /**
+  * devm_regulator_get - Resource managed regulator_get()
+- * @dev: device for regulator "consumer"
+- * @id: Supply name or regulator ID.
++ * @dev: device to supply
++ * @id:  supply name or regulator ID.
+  *
+  * Managed regulator_get(). Regulators returned from this function are
+  * automatically regulator_put() on driver detach. See regulator_get() for more
+@@ -56,8 +56,8 @@ EXPORT_SYMBOL_GPL(devm_regulator_get);
+ 
+ /**
+  * devm_regulator_get_exclusive - Resource managed regulator_get_exclusive()
+- * @dev: device for regulator "consumer"
+- * @id: Supply name or regulator ID.
++ * @dev: device to supply
++ * @id:  supply name or regulator ID.
+  *
+  * Managed regulator_get_exclusive(). Regulators returned from this function
+  * are automatically regulator_put() on driver detach. See regulator_get() for
+@@ -72,8 +72,8 @@ EXPORT_SYMBOL_GPL(devm_regulator_get_exclusive);
+ 
+ /**
+  * devm_regulator_get_optional - Resource managed regulator_get_optional()
+- * @dev: device for regulator "consumer"
+- * @id: Supply name or regulator ID.
++ * @dev: device to supply
++ * @id:  supply name or regulator ID.
+  *
+  * Managed regulator_get_optional(). Regulators returned from this
+  * function are automatically regulator_put() on driver detach. See
+@@ -130,9 +130,9 @@ static void devm_regulator_bulk_release(struct device *dev, void *res)
+ /**
+  * devm_regulator_bulk_get - managed get multiple regulator consumers
+  *
+- * @dev:           Device to supply
+- * @num_consumers: Number of consumers to register
+- * @consumers:     Configuration of consumers; clients are stored here.
++ * @dev:           device to supply
++ * @num_consumers: number of consumers to register
++ * @consumers:     configuration of consumers; clients are stored here.
+  *
+  * @return 0 on success, an errno on failure.
+  *
+@@ -173,9 +173,9 @@ static void devm_rdev_release(struct device *dev, void *res)
+ 
+ /**
+  * devm_regulator_register - Resource managed regulator_register()
+- * @dev:  device to supply
++ * @dev:            device to supply
+  * @regulator_desc: regulator to register
+- * @config: runtime configuration for regulator
++ * @config:         runtime configuration for regulator
+  *
+  * Called by regulator drivers to register a regulator.  Returns a
+  * valid pointer to struct regulator_dev on success or an ERR_PTR() on
+@@ -259,10 +259,10 @@ static void devm_regulator_destroy_supply_alias(struct device *dev, void *res)
+  * devm_regulator_register_supply_alias - Resource managed
+  * regulator_register_supply_alias()
+  *
+- * @dev: device that will be given as the regulator "consumer"
+- * @id: Supply name or regulator ID
++ * @dev:       device to supply
++ * @id:        supply name or regulator ID
+  * @alias_dev: device that should be used to lookup the supply
+- * @alias_id: Supply name or regulator ID that should be used to lookup the
++ * @alias_id:  supply name or regulator ID that should be used to lookup the
+  * supply
+  *
+  * The supply alias will automatically be unregistered when the source
+@@ -300,8 +300,8 @@ EXPORT_SYMBOL_GPL(devm_regulator_register_supply_alias);
+  * devm_regulator_unregister_supply_alias - Resource managed
+  * regulator_unregister_supply_alias()
+  *
+- * @dev: device that will be given as the regulator "consumer"
+- * @id: Supply name or regulator ID
++ * @dev: device to supply
++ * @id:  supply name or regulator ID
+  *
+  * Unregister an alias registered with
+  * devm_regulator_register_supply_alias(). Normally this function
+@@ -327,12 +327,12 @@ EXPORT_SYMBOL_GPL(devm_regulator_unregister_supply_alias);
+  * devm_regulator_bulk_register_supply_alias - Managed register
+  * multiple aliases
+  *
+- * @dev: device that will be given as the regulator "consumer"
+- * @id: List of supply names or regulator IDs
++ * @dev:       device to supply
++ * @id:        list of supply names or regulator IDs
+  * @alias_dev: device that should be used to lookup the supply
+- * @alias_id: List of supply names or regulator IDs that should be used to
+- * lookup the supply
+- * @num_id: Number of aliases to register
++ * @alias_id:  list of supply names or regulator IDs that should be used to
++ *             lookup the supply
++ * @num_id:    number of aliases to register
+  *
+  * @return 0 on success, an errno on failure.
+  *
+@@ -377,9 +377,9 @@ EXPORT_SYMBOL_GPL(devm_regulator_bulk_register_supply_alias);
+  * devm_regulator_bulk_unregister_supply_alias - Managed unregister
+  * multiple aliases
+  *
+- * @dev: device that will be given as the regulator "consumer"
+- * @id: List of supply names or regulator IDs
+- * @num_id: Number of aliases to unregister
++ * @dev:    device to supply
++ * @id:     list of supply names or regulator IDs
++ * @num_id: number of aliases to unregister
+  *
+  * Unregister aliases registered with
+  * devm_regulator_bulk_register_supply_alias(). Normally this function
+@@ -423,7 +423,7 @@ static void devm_regulator_destroy_notifier(struct device *dev, void *res)
+  * regulator_register_notifier
+  *
+  * @regulator: regulator source
+- * @nb: notifier block
++ * @nb:        notifier block
+  *
+  * The notifier will be registers under the consumer device and be
+  * automatically be unregistered when the source device is unbound.
+@@ -460,7 +460,7 @@ EXPORT_SYMBOL_GPL(devm_regulator_register_notifier);
+  * regulator_unregister_notifier()
+  *
+  * @regulator: regulator source
+- * @nb: notifier block
++ * @nb:        notifier block
+  *
+  * Unregister a notifier registered with devm_regulator_register_notifier().
+  * Normally this function will not need to be called and the resource
+-- 
+2.25.1
 
-Thanks!
--Wei
-> > Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-> > Signed-off-by: Wei Wang <wvw@google.com>
-> > ---
-> >  kernel/sched/cpufreq_schedutil.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > index 7fbaee24c824..dc2cd768022e 100644
-> > --- a/kernel/sched/cpufreq_schedutil.c
-> > +++ b/kernel/sched/cpufreq_schedutil.c
-> > @@ -102,11 +102,12 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
-> >  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
-> >                                  unsigned int next_freq)
-> >  {
-> > -     if (sg_policy->next_freq == next_freq)
-> > +     if (!sg_policy->need_freq_update && sg_policy->next_freq == next_freq)
->
-> AFAIU, if the next freq is same as currently programmed one, there is
-> no need to force update it.
->
-> >               return false;
-> >
-> >       sg_policy->next_freq = next_freq;
-> >       sg_policy->last_freq_update_time = time;
-> > +     sg_policy->need_freq_update = false;
-> >
-> >       return true;
-> >  }
-> > @@ -178,7 +179,6 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
-> >       if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
-> >               return sg_policy->next_freq;
-> >
-> > -     sg_policy->need_freq_update = false;
-> >       sg_policy->cached_raw_freq = freq;
-> >       return cpufreq_driver_resolve_freq(policy, freq);
-> >  }
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
->
-> --
-> viresh
