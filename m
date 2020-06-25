@@ -2,96 +2,90 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB52AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC31FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A959520767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593123985;
-	bh=S1U8fm3RinMOZnK4GNXNOMX0hyikWzh9B/PbOPUG65M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dd29mWF0VGsyjhogkEzU8KVZMytxPXDIK6EpKNTXXbI4i6EaWX5rDO3oCyEZfZFWx
-	 TYDDWtGe+PW6Y30VTK+S3y2vTSuWxWPyP0K2xgIWrtf56Iv2jj7qoS2i9DoNKB9Ebk
-	 UJiAlwClwJiSahSg8LEHaAq85c+tbzqM5jGf9wbY=
+	by mail.kernel.org (Postfix) with ESMTP id BC9EA20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406487AbgFYW0X (ORCPT
+        id S2406615AbgFYW06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55618 "EHLO mail.kernel.org"
+        Thu, 25 Jun 2020 18:26:58 -0400
+Received: from mga12.intel.com ([192.55.52.136]:53997 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403905AbgFYW0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:26:22 -0400
-Received: from localhost (p54b332a0.dip0.t-ipconnect.de [84.179.50.160])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7706620767;
-        Thu, 25 Jun 2020 22:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593123981;
-        bh=S1U8fm3RinMOZnK4GNXNOMX0hyikWzh9B/PbOPUG65M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AUyYaEdVBfVEMd9N9yuKAnXmb/69ZDgtwbqs47UiYNruPIjxgXKilN98rIL1gOIJj
-         QEbufrTI5XUDT7gn3LeuAIfnbSffFNL5R1e/Nmq943u4vXcRStGxRoa2CdaB1Ja4wh
-         EVCW7tYRszGlvoHTiOpwpbpDWtCyzvAxCrKdVUqk=
-Date:   Fri, 26 Jun 2020 00:26:04 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com, joel@jms.id.au
-Subject: Re: [PATCH v2 1/2] i2c: fsi: Fix the port number field in status
- register
-Message-ID: <20200625222604.GA17905@kunai>
-References: <20200609201555.11401-1-eajames@linux.ibm.com>
- <20200609201555.11401-2-eajames@linux.ibm.com>
+        id S2403905AbgFYW06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 18:26:58 -0400
+IronPort-SDR: CSMZOrRMrY9tL1XyD5yRmcoRi5QpGZbQP0CbG7TOCwjDsYxL+k6S5JAMn2fy23nmF4Poj9r/Ow
+ 3Rh+Pzv8mcoA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="124748794"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="124748794"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 15:26:57 -0700
+IronPort-SDR: njrzfzUtC8+nKGs2G/NpEGTxfFgOHOL5/y/dxmYAdoTlhAZQdS5hDwd7PXU8vh3BpEittZ6s/v
+ aH6Qpljz7c0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="276176831"
+Received: from jproldan-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
+  by orsmga003.jf.intel.com with ESMTP; 25 Jun 2020 15:26:46 -0700
+Date:   Fri, 26 Jun 2020 01:26:45 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v33 10/21] mm: Introduce vm_ops->may_mprotect()
+Message-ID: <20200625222645.GK20341@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-11-jarkko.sakkinen@linux.intel.com>
+ <20200625171416.GI20319@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609201555.11401-2-eajames@linux.ibm.com>
+In-Reply-To: <20200625171416.GI20319@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 07:14:16PM +0200, Borislav Petkov wrote:
+> On Thu, Jun 18, 2020 at 01:08:32AM +0300, Jarkko Sakkinen wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > Add vm_ops()->may_mprotect() to check additional constraints.
+> > 
+> > SGX uses this callback to add two constraints:
+> > 
+> > 1. Verify that the address range does not have holes: for each page
+> >    address, there is an actual enclave page created.
+> > 2. Mapped permissions do not surpass the lowest enclave page permissions
+> >    in the address range.
+> > 
+> > linux-mm@kvack.org
+> > Andrew Morton <akpm@linux-foundation.org>
+> 
+> Something ate the Cc:s. Lemme add the mm list, akpm is already on Cc.
+> 
+> Leaving in the rest for mm folks.
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you. So it seems. I've fixed them now.
 
-On Tue, Jun 09, 2020 at 03:15:54PM -0500, Eddie James wrote:
-> The port number field in the status register was not correct, so fix it.
->=20
-> Fixes: d6ffb6300116 ("i2c: Add FSI-attached I2C master algorithm")
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-
-Applied to for-current, thanks!
-
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl71JHYACgkQFA3kzBSg
-KbZ78xAAsHf3FMK1Z6NjNDk7Cv6KLeu+HJLgR8G6J0GBLpY5XAkRo61ROEerVfrf
-W+2+8xEVI/ODV9HeBaDQD3FNop5ui5PsdFt81yNrfTAylFSg1oWsSN/h67po6e42
-070v/t1DRAR6gYrged1F+nd0eIQy4b+SP1kOlWPRkCb5tZli2WwlzXAq/k74jemY
-5rBSamNVOltjj/9h4ZJrzO9a3mwc5kAyGDl2ZE/OELpxh1i/AHqMs1xQcccnxnhc
-5QJ6El5AkgX1tKI8UtujDprYV4YeqwuAOx//OICcRc/NyqGr5pXNz1g+qxF7pQrE
-uo6WYdyDtr40NNsHtyc6nk3xLK4pjYEdob6uu/BrMxHbKDG4mXJU8TkutNY0L7xN
-x+kTOEXCy4Qa8fnwBljylRGEinMe9vAuhpkC+5cwIggcaWIJakwZ8XyBNiFaSqcI
-+LnuC3oaVlQCHdM1t2XP2P/tbs7RCERxoP0Tm5K5AIMW1tisMtKntQBSlIosrX4T
-3zIwvIqO8N2vzwoFdOtdpDUlg+727xWP9A4g/4dJYHfl6QVYsaC8I3BRDzPTRAt1
-eWRKqZpqtefKWdcfoDaJmQaF/pYAR+7QCCVuk0Hn3NYebDOI+LUI/vMnxY9fnAF4
-9H6kKyyOMMS7geKGY+IiCv5pp9la0RYuEY2nUNk/zj1w6CggSgQ=
-=EG/2
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+/Jarkko
