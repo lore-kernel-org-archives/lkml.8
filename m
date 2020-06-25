@@ -7,164 +7,121 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F381AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3199AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD3C20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3E420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zvo+DFOf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fwq8THI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405426AbgFYOp0 (ORCPT
+        id S2405441AbgFYOp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:45:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
+        Thu, 25 Jun 2020 10:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405300AbgFYOpZ (ORCPT
+        with ESMTP id S2405300AbgFYOp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:45:25 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1293EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:25 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h15so6111972wrq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:25 -0700 (PDT)
+        Thu, 25 Jun 2020 10:45:26 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EB3C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:26 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z13so6125348wrw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=bo4xi/0Bx+XFg3im2nhz/8W/RRRM3sogtNr3wocc+Wk=;
-        b=zvo+DFOfAZQ/oaCUq+P4yrrb5XLzEu/RYOJYw1Z1GpdjHNjHqYoxAkL201ZNImBMGh
-         ZtbRBvEjC1MzV3ZWlOdZIZfM+n/0qZOvPdriNpuwpZ0ChfTHocESNRon6wouJHyq3sFa
-         h7i1yf315lZpnsZzX+HMURGOiYo/5y7jdAW+iubXew36e/zHIjrYlPCjB2Hr6PEA5e4z
-         CvXqQL+8no0uSTSuihO0gQcjaglKCTOSmzLzTuKb4yc+KMi+1/7sPAFiWg4CRqd+hnRX
-         hWgfBM7nU21llXIBg6FIZ1yKqkhnbOfDf3ID9gLXfNBWhNls5AGTxT/8c2VMbHQnkRAZ
-         rWeA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=G8Wsf4BanCeOfla3xsfSnoOdB+NpmOPJTeCm4R9KGig=;
+        b=Fwq8THI57Wfw2ppOhr0OfJ50ABPxeTq9Ds0kBm/j8fuq6iU29crIRFjtxbZW71YmeR
+         FA78MHLPk0sPab/U8sGGUeHvsS5VAXrPYz9qenpqfdqWdnJ55rwPm7l0yfg3qYkBMwP6
+         4SxQDGQmXzu/IKwPUvUDZXgA0ejXO/BK2LdGuk2IjL0ZTgRCEyJXOjPtarXkNOKBdK4r
+         u9x0Y8kbRqXQb8jw4Tl4Q6qv/APVTEDZXZsnKeE7M5a7kDyXzu65CxnMVXeMwuq99345
+         QoFY9KMwjlOy2nTdqzTKDbm3k6vScEcyYNrEothU7yfgp3qkXg3X25X1uPx7kqWKyXDk
+         nJsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bo4xi/0Bx+XFg3im2nhz/8W/RRRM3sogtNr3wocc+Wk=;
-        b=SiePkKtz0k8rHcWS8oWnC4SHN2g5JKbW/r1b4BcrF4iX+rzGWT33n1/AqvoHNZ9hWL
-         mHBOCrOFeu7vMEg6lsUzzK2LVQ3C3sUAkq3mbuWHl6apztbBJRQVhCqcQ2Cyy+RCsgH/
-         tRVMGY2ZzybN9O+J1SFba5S2Bn710Q7ugrjcrGY7oUIqet4Hfd351BcOZOwVDMDCMV+Q
-         OcvC0BaJa1xRCqqPHyU645rk8b6KRq+1wkwgt4uS2QRkCxLroDYWZ7JhW/Vz1NMZwk1V
-         9waTaoSjHNBSDrGc4pX+96L18kLrI+z0cnGr0ehsKIkuB20f39bUnSa5xe9/+Yk8Z22i
-         I0vw==
-X-Gm-Message-State: AOAM530PXBpUrg4hQaF4yOdymw6uPAZHhkz+mZ68N9nrFcG+E08/m+Xi
-        wPsB/R5pGFtY8NMJAZIjKdMxow==
-X-Google-Smtp-Source: ABdhPJxttvWtD/N+NqZ6N6jSDWnSZOn5hE5xsLRSD9PlyGwK/T8O52c5CNNP3WXOb13WCESBBA8HYQ==
-X-Received: by 2002:adf:e908:: with SMTP id f8mr13783328wrm.3.1593096323600;
-        Thu, 25 Jun 2020 07:45:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=G8Wsf4BanCeOfla3xsfSnoOdB+NpmOPJTeCm4R9KGig=;
+        b=i8KwNW0N3wv8f7yezc00fkzzjddg5qO8UIuVrrNuqoSPAwUwHqeXfgGMaNedC0wJV1
+         3Rv/t2l9fmA+hqfs9x4rb23IeSJUig4xnclxqqUPjuEr1frjN2Dn72E9iT0+pZ/Zffvs
+         ouwFEEQovqfwekZOL1fiO8EN/t5/4eWxFaIpdAUKHnpQtpLOBlU5hat3SPrBGU1q4pHt
+         fmiVejZvTOcAMGlwblWQH/5IrihYy1YGdEf6khs0dTkwRoQk0uvAXaORPbUUcTb+nu3+
+         VVlzkvoA8LvtKtt1OJ5T+SB1ItS78MbjF16m/H+oYuwxETXTitD+xLGAKzPT5wt5gzLO
+         2qgA==
+X-Gm-Message-State: AOAM532zdSSJM7eF8R/LCg1j+h+WabWgdlA9s8KfopX8PAAX0jxR//bv
+        GFW1YCF58Ed8Gdg8M3sfrUmt0A==
+X-Google-Smtp-Source: ABdhPJzHiLS+iahY6B7WctvubZj9C1PLB4G0n2IxgVhBJ+CYoVg3X6Ma9If/5BwfSMN1EbT1o5/w7w==
+X-Received: by 2002:a5d:6ac1:: with SMTP id u1mr36462098wrw.123.1593096324648;
+        Thu, 25 Jun 2020 07:45:24 -0700 (PDT)
 Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.gmail.com with ESMTPSA id u186sm13062706wmu.10.2020.06.25.07.45.22
+        by smtp.gmail.com with ESMTPSA id u186sm13062706wmu.10.2020.06.25.07.45.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 07:45:22 -0700 (PDT)
+        Thu, 25 Jun 2020 07:45:24 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
 Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
         amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] thermal: core: Add helpers to browse the cdev, tz and governor list
-Date:   Thu, 25 Jun 2020 16:45:05 +0200
-Message-Id: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+Subject: [PATCH v2 2/5] thermal: core: Get thermal zone by id
+Date:   Thu, 25 Jun 2020 16:45:06 +0200
+Message-Id: <20200625144509.17918-2-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cdev, tz and governor list, as well as their respective locks are
-statically defined in the thermal_core.c file.
+The next patch will introduce the generic netlink protocol to handle
+events, sampling and command from the thermal framework. In order to
+deal with the thermal zone, it uses its unique identifier to
+characterize it in the message. Passing an integer is more efficient
+than passing an entire string.
 
-In order to give a sane access to these list, like browsing all the
-thermal zones or all the cooling devices, let's define a set of
-helpers where we pass a callback as a parameter to be called for each
-thermal entity.
-
-We keep the self-encapsulation and ensure the locks are correctly
-taken when looking at the list.
+This change provides a function returning back a thermal zone pointer
+corresponding to the identifier passed as parameter.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/thermal/thermal_core.c | 51 ++++++++++++++++++++++++++++++++++
- drivers/thermal/thermal_core.h |  9 ++++++
- 2 files changed, 60 insertions(+)
+ drivers/thermal/thermal_core.c | 14 ++++++++++++++
+ drivers/thermal/thermal_core.h |  2 ++
+ 2 files changed, 16 insertions(+)
 
 diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 2a3f83265d8b..e2f8d2550ecd 100644
+index e2f8d2550ecd..58c95aeafb7f 100644
 --- a/drivers/thermal/thermal_core.c
 +++ b/drivers/thermal/thermal_core.c
-@@ -611,6 +611,57 @@ void thermal_zone_device_rebind_exception(struct thermal_zone_device *tz,
- 	mutex_unlock(&thermal_list_lock);
+@@ -662,6 +662,20 @@ int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
+ 	return ret;
  }
  
-+int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
-+			      void *data)
++struct thermal_zone_device *thermal_zone_get_by_id(int id)
 +{
-+	struct thermal_governor *gov;
-+	int ret = 0;
-+
-+	mutex_lock(&thermal_governor_lock);
-+	list_for_each_entry(gov, &thermal_governor_list, governor_list) {
-+		ret = cb(gov, data);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&thermal_governor_lock);
-+
-+	return ret;
-+}
-+
-+int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
-+					      void *), void *data)
-+{
-+	struct thermal_cooling_device *cdev;
-+	int ret = 0;
-+
-+	mutex_lock(&thermal_list_lock);
-+	list_for_each_entry(cdev, &thermal_cdev_list, node) {
-+		ret = cb(cdev, data);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&thermal_list_lock);
-+
-+	return ret;
-+}
-+
-+int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
-+			  void *data)
-+{
-+	struct thermal_zone_device *tz;
-+	int ret = 0;
++	struct thermal_zone_device *tz = NULL;
 +
 +	mutex_lock(&thermal_list_lock);
 +	list_for_each_entry(tz, &thermal_tz_list, node) {
-+		ret = cb(tz, data);
-+		if (ret)
++		if (tz->id == id)
 +			break;
 +	}
 +	mutex_unlock(&thermal_list_lock);
 +
-+	return ret;
++	return tz;
 +}
 +
  void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
  					  const char *cdev_type, size_t size)
  {
 diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 4e271016b7a9..bb8f8aee79eb 100644
+index bb8f8aee79eb..7e8f45db6bbf 100644
 --- a/drivers/thermal/thermal_core.h
 +++ b/drivers/thermal/thermal_core.h
-@@ -41,6 +41,15 @@ extern struct thermal_governor *__governor_thermal_table_end[];
- 	     __governor < __governor_thermal_table_end;	\
- 	     __governor++)
+@@ -50,6 +50,8 @@ int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
+ int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
+ 			      void *thermal_governor);
  
-+int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
-+			  void *);
-+
-+int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
-+					      void *), void *);
-+
-+int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
-+			      void *thermal_governor);
++struct thermal_zone_device *thermal_zone_get_by_id(int id);
 +
  struct thermal_attr {
  	struct device_attribute attr;
