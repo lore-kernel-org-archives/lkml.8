@@ -2,156 +2,86 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A932CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314832070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78DF62070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Sby9t5rj"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cbJ49egf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390400AbgFYKM7 (ORCPT
+        id S2390819AbgFYKOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:12:59 -0400
-Received: from mail-eopbgr80082.outbound.protection.outlook.com ([40.107.8.82]:34166
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389773AbgFYKM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:12:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OxyjOHwvh0fnLT62F3M3DF6kIslzMPyYELwikCLI3PUjZel4NqD1QRRwsTFiW3LcJPnWEezq+AOmh25hSd63iAB8wBdHgrpm/TNLUB6Bl2q69EJ3EpyjyN7w+QsYof3uTpMLC9plHVb70hZo65hJrRNa5s7oQNgDT5kqTYBJvU/XaPloaq1aL6oohaWpKIW6sIDW6FFB2yAO1by989cwfztciGSh9TGXVpeHGCfkaNDqlpw3f7oM9O05ObIt9Hu+lfKrwdB9yGro2OqAV5xx4fL6M8xCfBFHfU6q8yO+yceaWxeD1w5cHweAkOxM1gpvdqFEOYKIs4UepTY7D71FaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WM8BxBjnJEglo55ZCaAgQ96CYpDBqGjuiGNl8/wnhhA=;
- b=JoWpJiQU4SWcLw1NEjs5tJfGEZvJNpWYo/7m968AXQiJHPA6l4RVBmJ8LXYSXkgCp9KA2pGSkaMFE3PB01AiejE6jWMDSudxFCR9M4YWz85FuBGIdi8KmKCAJzgAxJi0sD80intBIooG/RSxe2m68mrqmZpbf2mug6A4xfoKENmYi7ZAj4ZW7fiU0a5MgD9bSECGmCrF6AbrgqXnMmiMbXm2dXWOGm5Jpergh8LVvUg+/JkODVNQJDBfCon3reFSXeRNAk9DZk2xuhJ+qztGc17xZ6Gbg11+Nh7Eg66ok8/Lw8CiRxTSgGUeU3xenkFJCgl35hs77Toeyhgpq+wiwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WM8BxBjnJEglo55ZCaAgQ96CYpDBqGjuiGNl8/wnhhA=;
- b=Sby9t5rjRV8m1aFXJvYbYgLG4qpp6cPF23R1LAtCYmBVZYZdgOkuVu1C7Y86LslBMCC4d2x3DpOeKvmSESanX7Jz9U3hrpqkFXstum0bcK9qhkzeYadSoHZR14qr+Cp4X/jIwc95fN+CxBJppkffnIJDYH6lWvEzD//E99WZJT4=
-Received: from VI1PR04MB4800.eurprd04.prod.outlook.com (2603:10a6:803:5a::12)
- by VI1PR0402MB3696.eurprd04.prod.outlook.com (2603:10a6:803:1e::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Thu, 25 Jun
- 2020 10:12:54 +0000
-Received: from VI1PR04MB4800.eurprd04.prod.outlook.com
- ([fe80::1c58:aed8:bd10:6c9e]) by VI1PR04MB4800.eurprd04.prod.outlook.com
- ([fe80::1c58:aed8:bd10:6c9e%3]) with mapi id 15.20.3131.021; Thu, 25 Jun 2020
- 10:12:54 +0000
-From:   "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
-CC:     "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Varun Sethi <V.Sethi@nxp.com>
-Subject: RE: [PATCH] tty: serial: fsl_lpuart: minimum baud rate support
-Thread-Topic: [PATCH] tty: serial: fsl_lpuart: minimum baud rate support
-Thread-Index: AQHWStkwXdsTbHthxU26kv5p1F4BKA==
-Date:   Thu, 25 Jun 2020 10:12:54 +0000
-Message-ID: <VI1PR04MB4800F6C28186CE70F3E1D197F3920@VI1PR04MB4800.eurprd04.prod.outlook.com>
-References: <1593078545-11272-1-git-send-email-vabhav.sharma@oss.nxp.com>
- <20200625100410.GA3327034@kroah.com>
-In-Reply-To: <20200625100410.GA3327034@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [103.49.154.18]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ecdfde6f-e8ad-4e0a-dcb4-08d818f0538a
-x-ms-traffictypediagnostic: VI1PR0402MB3696:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB36969B24F5B37C3A67864C7DB2920@VI1PR0402MB3696.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0445A82F82
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: T/vVwkd8C2WLltNqXokvVd5Z3+NdjU2W/GlWKKYCXdFPYgl3boc0gH4eX456+s/8Efi5gtdKIuMbo3IcKng+5rlCu25YliRiiW4VTTGofLIyyvgqdt7LNUC0MVDwjPzbzfN0qHp8YoCAWNRHp1F9Lt1uIDsR9geFXv6pYKBv4aL64U/RsQbytiG5CFA7rqnT1a1iRXdBcMXgqJKkyuhS7D0xQQm9gIGFeFARhnns+GQ2B2n+A76IllDsP5eh0fVOSgjV/I73Ar9XJ7NOP3lggZzE/0qXGebHuivFBaVX3dBwaekgdYvt2q0bV43zdPle3mBN+HK/anKloYM2f3HDyQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4800.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(39860400002)(136003)(6506007)(8676002)(86362001)(52536014)(186003)(2906002)(8936002)(26005)(9686003)(54906003)(55016002)(7696005)(316002)(110136005)(4326008)(478600001)(66446008)(5660300002)(33656002)(53546011)(76116006)(66946007)(71200400001)(66556008)(66476007)(83380400001)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: KTFFpK0mEp1YWaIi4kJxgFz0cVXyQYZX15t2BKp1zjgbZej9AnbGmIbrWKB60D68MhbDsLHN/QTsLoTzbD0OURLgtJZ7kNX9tEwUSR+tKy3eMGw9q/75i3YOCTtGR5O8A2m403kMbZM8r+5kM/yrcMDa5qDDi3blv/jZypbMyaGGv7uDVgd5FCP6d4IKanx5859TWYCSlj5TftVeub3HrCriQSCgql5Vl27CTTYKZD9f5GMqp9gYXOnlzwycpa5NrQfrZ1zjZOzRcdlnkdBS5TXwQQ2HR6iSAecga9DNsz/bWHZjijRrdf6RiEj9R+I7EWiA9QjO2qKlJFOVtsEUYHc9OdhbqXlZfkl0FsOocaXQYOtYSplmfiwFAYU3qXP+WEQP42BG1FEHpxQ4T1TqukxrXd4aUKH/9lzrTGGctfeLGz1Ds9I3ydq42dZsbqRsZFXlA70nj43jgAyWrZ2iJMI0XscVx5h9HeEOG69a3+x0ZicsLRc0pgUuEOQVgTb2
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 25 Jun 2020 06:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389773AbgFYKOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:14:52 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7431C061573;
+        Thu, 25 Jun 2020 03:14:51 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0ed100f934f9e71bd17243.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:f934:f9e7:1bd1:7243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3CA8F1EC0105;
+        Thu, 25 Jun 2020 12:14:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1593080088;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wZEaiRB22xa7BcRCKe3HuRHsBBwhLUBTrmGUHGuXtCI=;
+        b=cbJ49egfsTPDPA0eCEA0nvoKG0L2FvTzOqmQ1yrjTlmOhslozoqWySWPgieVp8Em0SEAof
+        ME8e1WsY05VUCZC/NKer/BvgX1PHHN4HSUuk0GpRcJYtb0gnPDGBpCEOPcSkj4xyadZQoQ
+        k+CoLRo9sqUZhyl2CvBE4p5nQUpYpxA=
+Date:   Thu, 25 Jun 2020 12:14:41 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Serge Ayoun <serge.ayoun@intel.com>, akpm@linux-foundation.org,
+        andriy.shevchenko@linux.intel.com, asapek@google.com,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 08/21] x86/sgx: Initialize metadata for Enclave Page
+ Cache (EPC) sections
+Message-ID: <20200625101441.GC20319@zn.tnic>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-9-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4800.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecdfde6f-e8ad-4e0a-dcb4-08d818f0538a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2020 10:12:54.4133
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nSUVaxN6pmoKg2aawEanKwyjH2sS6WHBNrIhdjUpF73wUVWygCFHv8mm00IQh8lr/iRRo4Y6dUzxHw3bksWuOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3696
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200617220844.57423-9-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 18, 2020 at 01:08:30AM +0300, Jarkko Sakkinen wrote:
+> +static inline struct sgx_epc_section *sgx_get_epc_section(
+> +		struct sgx_epc_page *page)
 
+Just let it stick out - breaking lines on arg opening brace are the
+ugliest. Also:
 
-> -----Original Message-----
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Thursday, June 25, 2020 3:34 PM
-> To: Vabhav Sharma (OSS) <vabhav.sharma@oss.nxp.com>
-> Cc: jslaby@suse.com; linux-serial@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Varun Sethi <V.Sethi@nxp.com>; Vabhav Sharma
-> <vabhav.sharma@nxp.com>
-> Subject: Re: [PATCH] tty: serial: fsl_lpuart: minimum baud rate support
->=20
-> On Thu, Jun 25, 2020 at 03:19:05PM +0530, Vabhav Sharma wrote:
-> > From: Vabhav Sharma <vabhav.sharma@nxp.com>
-> >
-> > The formula for the baud rate is
-> > baud rate =3D "baud clock / ((OSR+1) =D7 SBR)
-> >
-> > Algorithm used in function lpuart32_serial_setbrg() only changes the
-> > SBR. Even with maxmum value put in, OSR stays at 0x7 and the lowest
-> > baud rate would be ~ 2600 bps
-> >
-> > Update the algorithm to allow driver operation at 1200,2400 or
-> > 600 bps
-> >
-> > Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> > ---
-> >  drivers/tty/serial/fsl_lpuart.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/fsl_lpuart.c
-> > b/drivers/tty/serial/fsl_lpuart.c index 90298c4..0fd0fa5f 100644
-> > --- a/drivers/tty/serial/fsl_lpuart.c
-> > +++ b/drivers/tty/serial/fsl_lpuart.c
-> > @@ -1925,6 +1925,10 @@ static void __lpuart32_serial_setbrg(struct
-> uart_port *port,
-> >  			tmp_sbr++;
-> >  		}
-> >
-> > +		if (tmp_sbr > UARTBAUD_SBR_MASK) {
-> > +			continue;
-> > +		}
->=20
-> Always use scripts/checkpatch.pl on your patches so you do not get grumpy
-> emails from maintainers telling you to use scripts/checkpatch.pl on your
-> patches...
-Indeed, I run the script before sending patch
-./scripts/checkpatch.pl 0001-tty-serial-fsl_lpuart-minimum-baud-rate-suppor=
-t.patch
-total: 0 errors, 0 warnings, 10 lines checked
+  bdc48fa11e46 ("checkpatch/coding-style: deprecate 80-column warning")
 
-0001-tty-serial-fsl_lpuart-minimum-baud-rate-support.patch has no obvious s=
-tyle problems and is ready for submission.
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
