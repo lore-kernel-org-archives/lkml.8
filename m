@@ -2,184 +2,87 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8667EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70923C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4D92070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6282070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403971AbgFYKS5 (ORCPT
+        id S2403988AbgFYKTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:18:57 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57029 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403880AbgFYKS4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:18:56 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 5C50D3C0582;
-        Thu, 25 Jun 2020 12:18:54 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id FkFmujpGv_IU; Thu, 25 Jun 2020 12:18:49 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 351AA3C0588;
-        Thu, 25 Jun 2020 12:18:40 +0200 (CEST)
-Received: from vmlxhi-110.adit-jv.com (10.72.93.196) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 25 Jun
- 2020 12:18:39 +0200
-Date:   Thu, 25 Jun 2020 12:18:35 +0200
-From:   Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-Message-ID: <20200625101835.GA5081@vmlxhi-110.adit-jv.com>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
- <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
- <20200625094724.GE5865@pendragon.ideasonboard.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200625094724.GE5865@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.196]
+        Thu, 25 Jun 2020 06:19:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:57100 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403975AbgFYKTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:19:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A99881FB;
+        Thu, 25 Jun 2020 03:19:39 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DEB0F3F73C;
+        Thu, 25 Jun 2020 03:19:38 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] firmware: arm_scmi: Use HAVE_ARM_SMCCC_DISCOVERY instead of ARM_PSCI_FW
+Date:   Thu, 25 Jun 2020 11:19:37 +0100
+Message-Id: <20200625101937.51939-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+Commit e5bfb21d98b6 ("firmware: smccc: Add HAVE_ARM_SMCCC_DISCOVERY to
+identify SMCCC v1.1 and above") introduced new config option to identify
+the availability of SMCCC discoverability of version and features
+transparently hiding the indirect dependency on ARM_PSCI_FW.
 
-On Thu, Jun 25, 2020 at 12:47:24PM +0300, Laurent Pinchart wrote:
-> Hi Ramzi,
-> 
-> On Thu, Jun 25, 2020 at 11:30:46AM +0200, Ramzi Ben Meftah wrote:
-> > On Thu, Jun 25, 2020 at 05:01:38AM +0300, Laurent Pinchart wrote:
-> > > On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
-> > >> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
-> > >>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > >> 
-> > >>  +Niklas, +Laurent
-> > >> 
-> > >> Niklas, Laurent, how does this play with CAP_IO_MC ?
-> > > 
-> > > I don't think it's related to CAP_IO_MC, but I don't think it's a good
-> > > idea either :-) Routing doesn't go through the subdev [gs]_input
-> > > operations in MC-based drivers. It should be configured through link
-> > > setup instead. This patch goes in the wrong direction, sorry Steve.
-> > 
-> > ENUMINPUT ioctl allow to get the input signal status. Is there an alternative
-> > with Media Controller?
-> 
-> No there isn't at the moment. I'm not opposed to adding such a feature,
-> but VIDIOC_ENUMINPUT isn't the right choice. This would have to be a
-> subdev pad operation (v4l2_subdev_pad_ops), not a video operation
-> (v4l2_subdev_video_ops). We also likely shouldn't call it "enum" input,
-> as it would retrieve properties of the input corresponding to the pad,
-> not enumerate inputs.
-> 
+Commit 5a897e3ab429 ("firmware: arm_scmi: fix psci dependency") just
+worked around the build dependency making SCMI SMC/HVC transport depend
+on ARM_PSCI_FW at the time. Since it really just relies on SMCCC directly
+and not on ARM_PSCI_FW, let us move to use CONFIG_HAVE_ARM_SMCCC_DISCOVERY
+instead of CONFIG_ARM_PSCI_FW.
 
-Looking to v4l2_subdev_pad_ops, there is g_input_status which seems to fulfill
-this need. But, seems this is not expose to user space although many drivers
-do implememt it.
-Should I add VIDIOC_SUBDEV_G_INPUT_STATUS?
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/firmware/arm_scmi/Makefile | 2 +-
+ drivers/firmware/arm_scmi/driver.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> > >>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> > >>> ioctls for use via v4l2 subdevice node.
-> > >>>
-> > >>> This commit should probably not be pushed upstream, because the (old)
-> > >>> idea of video inputs conflicts with the newer concept of establishing
-> > >>> media links between src->sink pads.
-> > >>>
-> > >>> However it might make sense for some subdevices to support enum/get/set
-> > >>> inputs. One example would be the analog front end subdevice for the
-> > >>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> > >>> can be done without requiring the implementation of media entities that
-> > >>> would define the analog source for which to establish a media link.
-> > >>>
-> > >>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > >>> ---
-> > >>>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
-> > >>>  include/media/v4l2-subdev.h           | 11 +++++++++++
-> > >>>  2 files changed, 20 insertions(+)
-> > >>>
-> > >>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> > >>> index 6b989fe..73fbfe9 100644
-> > >>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> > >>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> > >>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
-> > >>>  			return -ENOTTY;
-> > >>>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
-> > >>>
-> > >>> +	case VIDIOC_ENUMINPUT:
-> > >>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> > >>> +
-> > >>> +	case VIDIOC_G_INPUT:
-> > >>> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> > >>> +
-> > >>> +	case VIDIOC_S_INPUT:
-> > >>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> > >>> +
-> > >>>  	case VIDIOC_G_CTRL:
-> > >>>  		if (!vfh->ctrl_handler)
-> > >>>  			return -ENOTTY;
-> > >>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> > >>> index f7fe78a..6e1a9cd 100644
-> > >>> --- a/include/media/v4l2-subdev.h
-> > >>> +++ b/include/media/v4l2-subdev.h
-> > >>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
-> > >>>   * @g_input_status: get input status. Same as the status field in the
-> > >>>   *	&struct &v4l2_input
-> > >>>   *
-> > >>> + * @enuminput: enumerate inputs. Should return the same input status as
-> > >>> + *      @g_input_status if the passed input index is the currently active
-> > >>> + *      input.
-> > >>> + *
-> > >>> + * @g_input: returns the currently active input index.
-> > >>> + *
-> > >>> + * @s_input: set the active input.
-> > >>> + *
-> > >>>   * @s_stream: used to notify the driver that a video stream will start or has
-> > >>>   *	stopped.
-> > >>>   *
-> > >>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
-> > >>>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> > >>>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> > >>>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> > >>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> > >>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> > >>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
-> > >>>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
-> > >>>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
-> > >>>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 1cad32b38b29..70c5a8c986a5 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -4,6 +4,6 @@ scmi-bus-y = bus.o
+ scmi-driver-y = driver.o
+ scmi-transport-y = shmem.o
+ scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
+-scmi-transport-$(CONFIG_ARM_PSCI_FW) += smc.o
++scmi-transport-$(CONFIG_HAVE_ARM_SMCCC_DISCOVERY) += smc.o
+ scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
+ obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 7483cacf63f9..38e71a2c4fbb 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -901,7 +901,7 @@ ATTRIBUTE_GROUPS(versions);
+ /* Each compatible listed below must have descriptor associated with it */
+ static const struct of_device_id scmi_of_match[] = {
+ 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
+-#ifdef CONFIG_ARM_PSCI_FW
++#ifdef CONFIG_HAVE_ARM_SMCCC_DISCOVERY
+ 	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc},
+ #endif
+ 	{ /* Sentinel */ },
 -- 
-Best Regards,
-Ramzi Ben Meftah.
+2.17.1
+
