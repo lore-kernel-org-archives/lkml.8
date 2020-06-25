@@ -5,70 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D60C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E80CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90DF720720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFCD20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iBLx1e59"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6Tu4K49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390944AbgFYJi7 (ORCPT
+        id S2390953AbgFYJjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
+        Thu, 25 Jun 2020 05:39:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390914AbgFYJi5 (ORCPT
+        with ESMTP id S2390350AbgFYJjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:38:57 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C781C061573;
-        Thu, 25 Jun 2020 02:38:53 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o11so5108191wrv.9;
-        Thu, 25 Jun 2020 02:38:53 -0700 (PDT)
+        Thu, 25 Jun 2020 05:39:53 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1311FC061573;
+        Thu, 25 Jun 2020 02:39:53 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 17so5226008wmo.1;
+        Thu, 25 Jun 2020 02:39:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=tL+FccFFqTcjb6bX8W92TsCzve7bd5pnKbHcClrHQeo=;
-        b=iBLx1e595CFGQ48uN3nqRC6WkwIPgviwk9WfjP1KItpDcz9ZEqi/H8Dc3pOxjeDPTl
-         zyEJ3No8KWVhy/sAb52Ei9sQXk1+CCoVcppLYQLJcIT0RtnUj5+gXyl1WLmta7TNYwkr
-         Fc6HfIv2k+i6Eb1OGnOCoTupEwMTV5i2tRS+6Xi5R3aBusN4LVI214jadpCPWAt8fBzG
-         yfBGGwZ/bvnk/ux8XfJTnAsAxiMySsvRvsP+wF+u92Cf2RG37AGIo7jidwFDlGFIHp3u
-         LBMQsmgCrCk3PMCVt2eWRrumU4dmyAjkA7slxXOQZ3Lixc0/Z5YjTOXWP2eXWLvCtNxe
-         HEhw==
+        bh=/68m/0qX3Mydm4zAirYJHeFbtGle4A8tT80zVLI5GE0=;
+        b=W6Tu4K49fBDXt6lNb6gEA7Vxktia+sKAQ9RryHAMp6+7g4fmS8tHf625/rD8h7XbHC
+         p5CNP74hc9fcVzuTou9/AOgKTwBWzB5unjjBNDw4p8LQNAzHbXHZAyruoZiW7lGkEz9t
+         OYhfzy/PB4z/Cn/Sk4UDuwNYnLVa8UjI8q7bdZv3tSSGPUWn7p9CezyLn4J4vVZYtR2o
+         fzCK/zAMFKN7eRjaI6WSoOyCh80BpsLpbLkqgp8Pb+DVDNTfS7T1cYPcUaOPs6/aWUCf
+         v+EVx8hRfWgAq3QeQu2ZkF/NzIdmk3pXO8uCmE67/sVydndb1WvBJW7qGmMkh0Yy/uYt
+         4K/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tL+FccFFqTcjb6bX8W92TsCzve7bd5pnKbHcClrHQeo=;
-        b=UbL8FRT1/tizqusklBoLqrnURrD1z/89wnXELqERkt096OqBSnl6rlKkC2flfv6xpd
-         jiLZypFV5xUyxqXmPhpW2rfdRnSLXEAJrvPbmljpoehrOPdASoUWd20OFehz44GLaraZ
-         L0ZcnWG/0don8J4RBtvZnQRkWRcnKnxgHsgKLQyrUBad0t4Nx6WeLTj15ENZz6xEo9mE
-         hkGIi6QzzctoMR/u+xlmAmxVZHVZ2tuUQYQ5qz/RnlfrSUQ7rWtWCZIChvDPqCExH1BO
-         x3i37reHE63VJInZiGlFYJRybwv4H3OPx37tR1EFgPK5WevyRpIJ8SF+fCnraepHZ7YD
-         0qeg==
-X-Gm-Message-State: AOAM53241GaXGOR/MSQhfxdvoGLVIkd8IWzTlSH3zz5UKw+NteBfVaze
-        5YuSGanET60VoLCDwRZLuhE=
-X-Google-Smtp-Source: ABdhPJwTFNLKPPWpa8fcIIXfh+INu7ov2YZ1nsEDCT5rGZgyNLc1gB+G8ozIFYRz1OD4vji3vJOA/Q==
-X-Received: by 2002:adf:e90d:: with SMTP id f13mr6332217wrm.146.1593077932079;
-        Thu, 25 Jun 2020 02:38:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/68m/0qX3Mydm4zAirYJHeFbtGle4A8tT80zVLI5GE0=;
+        b=d4WiYBc1fEVQKVO9VoS6lKGz1ZZj5O5Z37fYjT+yAsSuZ0LmyiQ47jAgqeIL7fzRKQ
+         Gxl8prFo70se9pnKR9l15fEPNnqqFr2B//Og9PFdrIUe0NVDB+d2YzBY/hZOWeBTOi8E
+         H8/enpoM/mvNkFVp1VZxMRPcbhSdWZzTpYT78954CGWE29m1rZEapRQIBOi5eP63+PXu
+         6cXdGWze/jZWMPkoLgWjWg/s4psIrWz/BM/rIF1g3x5rqqtlUIQLzjFo+eAtyv5W0Smj
+         tEcE4t+mo18PRKGVSPFRwd4uDkuTxS5Qga2hj19V8wE0MqlQFSzOxyQP04TY/UNCjnlg
+         dFBQ==
+X-Gm-Message-State: AOAM533THS9l5Or0tafb6ZQVnMKGTL/jVGDxWAXCn3zMqxXlWpTniVCn
+        2aQI63xCK08nY5PU5+4KsKGUa3Gx
+X-Google-Smtp-Source: ABdhPJyr8FiAdJvetYzrq4xlC+YM/a+xqqTkr03TpYx80zetWAHOdfJ39yR/G3uNS9pjXAlNKqEYnQ==
+X-Received: by 2002:a1c:790c:: with SMTP id l12mr2356499wme.50.1593077991751;
+        Thu, 25 Jun 2020 02:39:51 -0700 (PDT)
 Received: from localhost.localdomain ([5.100.193.85])
-        by smtp.gmail.com with ESMTPSA id v5sm11067282wre.87.2020.06.25.02.38.51
+        by smtp.gmail.com with ESMTPSA id g16sm26858895wrh.91.2020.06.25.02.39.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 02:38:51 -0700 (PDT)
+        Thu, 25 Jun 2020 02:39:51 -0700 (PDT)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] io_uring: fix hanging iopoll in case of -EAGAIN
-Date:   Thu, 25 Jun 2020 12:37:10 +0300
-Message-Id: <22111b29e298f5f606130fcf4307bda99dbec089.1593077359.git.asml.silence@gmail.com>
+Subject: [PATCH 5.9] io_uring: fix NULL-mm for linked reqs
+Date:   Thu, 25 Jun 2020 12:38:13 +0300
+Message-Id: <f7d8272bcf142fe2c11c85ecd86f7f75f6e48316.1593077850.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1593077359.git.asml.silence@gmail.com>
-References: <cover.1593077359.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,49 +74,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-io_do_iopoll() won't do anything with a request unless
-req->iopoll_completed is set. So io_complete_rw_iopoll() has to set
-it, otherwise io_do_iopoll() will poll a file again and again even
-though the request of interest was completed long time ago.
+__io_queue_sqe() tries to handle all request of a link,
+so it's not enough to grab mm in io_sq_thread_acquire_mm()
+based just on the head.
 
-Also, remove -EAGAIN check from io_issue_sqe() as it races with
-the changed lines. The request will take the long way and be
-resubmitted from io_iopoll*().
+Don't check req->needs_mm and do it always.
 
-Fixes: bbde017a32b3 ("io_uring: add memory barrier to synchronize
-io_kiocb's result and iopoll_completed")
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- fs/io_uring.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ fs/io_uring.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/fs/io_uring.c b/fs/io_uring.c
-index c686061c3762..fb88a537f471 100644
+index 21bc86670c56..e7b1e696fecd 100644
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -2104,10 +2104,8 @@ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
- 
- 	WRITE_ONCE(req->result, res);
- 	/* order with io_poll_complete() checking ->result */
--	if (res != -EAGAIN) {
--		smp_wmb();
--		WRITE_ONCE(req->iopoll_completed, 1);
--	}
-+	smp_wmb();
-+	WRITE_ONCE(req->iopoll_completed, 1);
+@@ -2000,10 +2000,9 @@ static void io_sq_thread_drop_mm(struct io_ring_ctx *ctx)
+ 	}
  }
  
- /*
-@@ -5592,9 +5590,6 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	if ((ctx->flags & IORING_SETUP_IOPOLL) && req->file) {
- 		const bool in_async = io_wq_current_is_worker();
+-static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
+-				   struct io_kiocb *req)
++static int __io_sq_thread_acquire_mm(struct io_ring_ctx *ctx)
+ {
+-	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
++	if (!current->mm) {
+ 		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
+ 			return -EFAULT;
+ 		kthread_use_mm(ctx->sqo_mm);
+@@ -2012,6 +2011,14 @@ static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
+ 	return 0;
+ }
  
--		if (req->result == -EAGAIN)
--			return -EAGAIN;
--
- 		/* workqueue context doesn't hold uring_lock, grab it now */
- 		if (in_async)
- 			mutex_lock(&ctx->uring_lock);
++static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
++				   struct io_kiocb *req)
++{
++	if (!io_op_defs[req->opcode].needs_mm)
++		return 0;
++	return __io_sq_thread_acquire_mm(ctx);
++}
++
+ #ifdef CONFIG_BLOCK
+ static bool io_resubmit_prep(struct io_kiocb *req, int error)
+ {
+@@ -2788,7 +2795,7 @@ static void io_async_buf_retry(struct callback_head *cb)
+ 	ctx = req->ctx;
+ 
+ 	__set_current_state(TASK_RUNNING);
+-	if (!io_sq_thread_acquire_mm(ctx, req)) {
++	if (!__io_sq_thread_acquire_mm(ctx)) {
+ 		mutex_lock(&ctx->uring_lock);
+ 		__io_queue_sqe(req, NULL);
+ 		mutex_unlock(&ctx->uring_lock);
 -- 
 2.24.0
 
