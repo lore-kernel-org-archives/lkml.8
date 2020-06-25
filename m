@@ -2,272 +2,161 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C821DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91ADB2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aagFeOoX"
+	by mail.kernel.org (Postfix) with ESMTP id BBEBD20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593094112;
+	bh=YGN4p5dYcELo9egUJfOMYpOA/qlt5arHfbSMT4y7U/I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nPaVVmAJKgjiFnSCv2wUzaSJ0HYvhqsOnwqVYH7OXvlparm7jDEJmECItMkUjCm70
+	 tgHxUvnu+dWEJD2YwgSDGjuuKm2xTt1wHbFxiuleD/hB0F3ERGZ2ke1LXAd45fe7vj
+	 YmRAj5Nxnu14uS3oOSabPKQzDVKDqVwMZ18nv/Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405273AbgFYOIU (ORCPT
+        id S2405289AbgFYOIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404890AbgFYOIT (ORCPT
+        Thu, 25 Jun 2020 10:08:31 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42742 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404890AbgFYOIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:08:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B53C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:08:17 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so5990096wrw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:08:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=atgNZ9EJInKqGvpdpvxSAKfzqEVZDOyKFFqDeCoAyPs=;
-        b=aagFeOoXCuolSaMaDqmYiuNxxH6euM5mK3NyhWSyUCk0ircDreMOtMB/8R6z5qseJA
-         h3ixeVLZZnkz/OvGmtFUQxZvENjNt6cDN/74YnAXjBO94h860DIEM/hlqs+ckRGyOIq4
-         9ujsQV9hqnwgRxirZnJKJf+61SzXJsNhQT+lVc4HESJ9nGr0fMYygO865o31OSjGm2a/
-         cCDozX00wq4Rghor4sbouwQXY3ur5BBUG/0LW+hCzS7gZvS/h1dWGQvr80kEI7Xx+B1/
-         klilOsCRVEVjKr8JGtC6EyrAAJzfwpkLOzCEFhlUD75xMaAsFjQOE1wZ+awSPVvAmpc/
-         tjew==
+        Thu, 25 Jun 2020 10:08:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t6so5338628otk.9;
+        Thu, 25 Jun 2020 07:08:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=atgNZ9EJInKqGvpdpvxSAKfzqEVZDOyKFFqDeCoAyPs=;
-        b=ax6/rgDrc9Ze18OYdmqoBwQG/Qm+1g9RpxO3rkAkQRZLeO2s5+Bauz/d+g/j6nTITc
-         Ge6n1IafpVft5p8fa97V1a9eLm04AzKh/913ZuqfdFQxyYBg8Y0l7vcPrYXl2d2efoYv
-         pKqbl0CoO3ee2532iYFDhi2wTXjcGVO3ty8hm+zukTUWbUInU/8LLubSoRnGByljfI7K
-         g18BCsKxQ0fBMPuAnKVAlpPEk66VhTeME37B4r875hlWdWovBT60QaKzIvkFyE7BBHU2
-         Gxs0F5ITtYpMqzFjUNjFk+y4BvWSbOvPtQNCJcNvP0cQa1XgTRZh36dBt5UfZVz/lcMb
-         pE7A==
-X-Gm-Message-State: AOAM531lvxV71GjydRyGg7j7Fxxqv++jFd2u4hnZzuOC00VhxR7+ZIvF
-        VAFMPzo1O149ZmVuDMIxQIzT8kTsQGfhzFMVpi06gw==
-X-Google-Smtp-Source: ABdhPJwE5O/Or2NpcZc/Uf3IWvEvm4q78FO4GSYIDKAWh1AA2bVElgrhkCEGLAnpMndAH9RgGn5NtZlX4iU9QCGSdy8=
-X-Received: by 2002:adf:e5d0:: with SMTP id a16mr3791909wrn.48.1593094096181;
- Thu, 25 Jun 2020 07:08:16 -0700 (PDT)
+        bh=b1G0Ez0jA0KKuMLKX/f3wLMblA8vWgfaiNzP5I6+jGk=;
+        b=aK3lBukc7zs2n5uRHmm10ETi0VTasx8FLZFbDljgQ8Qi7ETg3j8aMBBGCe30NP7umr
+         +eu7J+sTghaBEbGz9ftPnjGhd7FE5ztMXu2zhOvWg11jbZTjar3yS7uKmxaagyBl4nLI
+         hDTa0bW6furyrKkS/fNH0CKvh4RX44ssIZOziUUGZZEqVzh5GWG1Zw7zJMWYKYSOCsGx
+         /xlpee3cFvZaPeI9Fq8l/VPne3uNgTzG7GVuxLp080kt7uMBE4vwbAtcEYWOdeBGK+6A
+         IYNHcf7UbC7GgNOL16XRvaSO3N8rsibDYy4HTVbWXr7uXJwsyXeSZ7pTJN8rOFM1p7D3
+         9qlw==
+X-Gm-Message-State: AOAM533CJqrxBpzzTE1OiPPvxNAwKiFIkr/nrLeEwT2foBAWmKBUILWW
+        +Qmu/LhBs8MDM5k1v41RfoiVJtFg50xZXCTCD30=
+X-Google-Smtp-Source: ABdhPJwQf1p7c/AXGZmwgxwwEMmerXk7khBfNnfyYqWCY5frEiveZRVNhDq2zcxvgennBXiVTqJDg1dcwqTyyOrWhQI=
+X-Received: by 2002:a05:6830:10ca:: with SMTP id z10mr26064118oto.167.1593094109209;
+ Thu, 25 Jun 2020 07:08:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200625114718.229911-1-kjain@linux.ibm.com> <20200625114718.229911-2-kjain@linux.ibm.com>
-In-Reply-To: <20200625114718.229911-2-kjain@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 25 Jun 2020 07:08:04 -0700
-Message-ID: <CAP-5=fWG9rxObKJ38dQ=VUf3_mQbNDCTzgU1kkyw=9uVfBa+qw@mail.gmail.com>
-Subject: Re: [RFC 1/3] perf jevents: Add support for parsing perchip/percore events
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <20200623142138.209513-1-qperret@google.com> <20200623142138.209513-3-qperret@google.com>
+ <20200625113602.z2xrwebd2gngbww3@vireshk-i7> <CAJZ5v0g=+2OFKVk2ZnmK-33knUwqcaOOQ+q9ZWnmeoBD9KOX9g@mail.gmail.com>
+ <20200625115318.GA219598@google.com> <CAJZ5v0jQkeu5dJXxXN2eQ+cAwv8oSK_wZZgTW3cvMZX0ks9jHQ@mail.gmail.com>
+ <20200625134953.GA242742@google.com>
+In-Reply-To: <20200625134953.GA242742@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Jun 2020 16:08:18 +0200
+Message-ID: <CAJZ5v0iRSJgZ3H4rUJBzDB-gTvKUcyo0eubQm=wjKnGq0DBH2g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
+To:     Quentin Perret <qperret@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Paul Clarke <pc@us.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 4:47 AM Kajol Jain <kjain@linux.ibm.com> wrote:
+On Thu, Jun 25, 2020 at 3:50 PM Quentin Perret <qperret@google.com> wrote:
 >
-> Set up the "PerChip" field  so that perf knows they are
-> per chip events.
+> On Thursday 25 Jun 2020 at 15:28:43 (+0200), Rafael J. Wysocki wrote:
+> > On Thu, Jun 25, 2020 at 1:53 PM Quentin Perret <qperret@google.com> wrote:
+> > >
+> > > On Thursday 25 Jun 2020 at 13:44:34 (+0200), Rafael J. Wysocki wrote:
+> > > > On Thu, Jun 25, 2020 at 1:36 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > > > This change is not right IMO. This part handles the set-policy case,
+> > > > > where there are no governors. Right now this code, for some reasons
+> > > > > unknown to me, forcefully uses the default governor set to indicate
+> > > > > the policy, which is not a great idea in my opinion TBH. This doesn't
+> > > > > and shouldn't care about governor modules and should only be looking
+> > > > > at strings instead of governor pointer.
+> > > >
+> > > > Sounds right.
+> > > >
+> > > > > Rafael, I even think we should remove this code completely and just
+> > > > > rely on what the driver has sent to us. Using the selected governor
+> > > > > for set policy drivers is very confusing and also we shouldn't be
+> > > > > forced to compiling any governor for the set-policy case.
+> > > >
+> > > > Well, AFAICS the idea was to use the default governor as a kind of
+> > > > default policy proxy, but I agree that strings should be sufficient
+> > > > for that.
+> > >
+> > > I agree with all the above. I'd much rather not rely on the default
+> > > governor name to populate the default policy, too, so +1 from me.
+> >
+> > So before this series the default governor was selected at the kernel
+> > configuration time (pre-build) and was always built-in.  Because it
+> > could not go away, its name could be used to indicate the default
+> > policy for the "setpolicy" drivers.
+> >
+> > After this series, however, it cannot be used this way reliably, but
+> > you can still pass cpufreq_param_governor to cpufreq_parse_policy()
+> > instead of def_gov->name in cpufreq_init_policy(), can't you?
 >
-> Set up the "PerCore" field  so that perf knows they are
-> per core events and add these fields to pmu_event structure.
->
-> Similar to the way we had "PerPkg field
-> to specify perpkg events.
->
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  tools/perf/pmu-events/jevents.c    | 34 ++++++++++++++++++++++++------
->  tools/perf/pmu-events/jevents.h    |  3 ++-
->  tools/perf/pmu-events/pmu-events.h |  2 ++
->  3 files changed, 32 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index fa86c5f997cc..21fd7990ded5 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -323,7 +323,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
->                                     char *pmu, char *unit, char *perpkg,
->                                     char *metric_expr,
->                                     char *metric_name, char *metric_group,
-> -                                   char *deprecated, char *metric_constraint)
-> +                                   char *deprecated, char *perchip, char *percore,
-> +                                   char *metric_constraint)
->  {
->         struct perf_entry_data *pd = data;
->         FILE *outfp = pd->outfp;
-> @@ -357,6 +358,10 @@ static int print_events_table_entry(void *data, char *name, char *event,
->                 fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
->         if (deprecated)
->                 fprintf(outfp, "\t.deprecated = \"%s\",\n", deprecated);
-> +       if (perchip)
-> +               fprintf(outfp, "\t.perchip = \"%s\",\n", perchip);
-> +       if (percore)
-> +               fprintf(outfp, "\t.percore = \"%s\",\n", percore);
->         if (metric_constraint)
->                 fprintf(outfp, "\t.metric_constraint = \"%s\",\n", metric_constraint);
->         fprintf(outfp, "},\n");
-> @@ -378,6 +383,8 @@ struct event_struct {
->         char *metric_group;
->         char *deprecated;
->         char *metric_constraint;
-> +       char *perchip;
-> +       char *percore;
->  };
->
->  #define ADD_EVENT_FIELD(field) do { if (field) {               \
-> @@ -406,6 +413,8 @@ struct event_struct {
->         op(metric_name);                                        \
->         op(metric_group);                                       \
->         op(deprecated);                                         \
-> +       op(perchip);                                            \
-> +       op(percore);                                            \
->  } while (0)
->
->  static LIST_HEAD(arch_std_events);
-> @@ -425,7 +434,8 @@ static int save_arch_std_events(void *data, char *name, char *event,
->                                 char *desc, char *long_desc, char *pmu,
->                                 char *unit, char *perpkg, char *metric_expr,
->                                 char *metric_name, char *metric_group,
-> -                               char *deprecated, char *metric_constraint)
-> +                               char *deprecated, char *perchip, char *percore,
-> +                               char *metric_constraint)
->  {
->         struct event_struct *es;
->
-> @@ -489,7 +499,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
->           char **name, char **long_desc, char **pmu, char **filter,
->           char **perpkg, char **unit, char **metric_expr, char **metric_name,
->           char **metric_group, unsigned long long eventcode,
-> -         char **deprecated, char **metric_constraint)
-> +         char **deprecated, char **perchip, char **percore,
-> +         char **metric_constraint)
->  {
->         /* try to find matching event from arch standard values */
->         struct event_struct *es;
-> @@ -518,7 +529,8 @@ int json_events(const char *fn,
->                       char *pmu, char *unit, char *perpkg,
->                       char *metric_expr,
->                       char *metric_name, char *metric_group,
-> -                     char *deprecated, char *metric_constraint),
-> +                     char *deprecated, char *perchip, char *percore,
-> +                     char *metric_constraint),
->           void *data)
->  {
->         int err;
-> @@ -548,6 +560,8 @@ int json_events(const char *fn,
->                 char *metric_name = NULL;
->                 char *metric_group = NULL;
->                 char *deprecated = NULL;
-> +               char *perchip = NULL;
-> +               char *percore = NULL;
->                 char *metric_constraint = NULL;
->                 char *arch_std = NULL;
->                 unsigned long long eventcode = 0;
-> @@ -629,6 +643,10 @@ int json_events(const char *fn,
->                                 addfield(map, &perpkg, "", "", val);
->                         } else if (json_streq(map, field, "Deprecated")) {
->                                 addfield(map, &deprecated, "", "", val);
-> +                       } else if (json_streq(map, field, "PerChip")) {
-> +                               addfield(map, &perchip, "", "", val);
-> +                       } else if (json_streq(map, field, "PerCore")) {
-> +                               addfield(map, &percore, "", "", val);
->                         } else if (json_streq(map, field, "MetricName")) {
->                                 addfield(map, &metric_name, "", "", val);
->                         } else if (json_streq(map, field, "MetricGroup")) {
-> @@ -676,13 +694,15 @@ int json_events(const char *fn,
->                                         &long_desc, &pmu, &filter, &perpkg,
->                                         &unit, &metric_expr, &metric_name,
->                                         &metric_group, eventcode,
-> -                                       &deprecated, &metric_constraint);
-> +                                       &deprecated, &perchip, &percore,
-> +                                       &metric_constraint);
->                         if (err)
->                                 goto free_strings;
->                 }
->                 err = func(data, name, real_event(name, event), desc, long_desc,
->                            pmu, unit, perpkg, metric_expr, metric_name,
-> -                          metric_group, deprecated, metric_constraint);
-> +                          metric_group, deprecated, perchip, percore,
-> +                          metric_constraint);
->  free_strings:
->                 free(event);
->                 free(desc);
-> @@ -693,6 +713,8 @@ int json_events(const char *fn,
->                 free(filter);
->                 free(perpkg);
->                 free(deprecated);
-> +               free(perchip);
-> +               free(percore);
->                 free(unit);
->                 free(metric_expr);
->                 free(metric_name);
-> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
-> index 2afc8304529e..3c439ecdac7c 100644
-> --- a/tools/perf/pmu-events/jevents.h
-> +++ b/tools/perf/pmu-events/jevents.h
-> @@ -8,7 +8,8 @@ int json_events(const char *fn,
->                                 char *pmu,
->                                 char *unit, char *perpkg, char *metric_expr,
->                                 char *metric_name, char *metric_group,
-> -                               char *deprecated, char *metric_constraint),
-> +                               char *deprecated, char *perchip, char *percore,
-> +                               char *metric_constraint),
->                 void *data);
->  char *get_cpu_str(void);
->
-> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-> index c8f306b572f4..13d96b732963 100644
-> --- a/tools/perf/pmu-events/pmu-events.h
-> +++ b/tools/perf/pmu-events/pmu-events.h
-> @@ -19,6 +19,8 @@ struct pmu_event {
->         const char *metric_group;
->         const char *deprecated;
->         const char *metric_constraint;
-> +       const char *perchip;
-> +       const char *percore;
+> Good point. I also need to fallback to the default builtin governor if
+> the command line parameter isn't valid (or non-existent), so perhaps
+> something like so?
 
-(In general this looks good! Some nits)
-Could we document perchip and percore? Agreed that the style here is
-not to comment.
-I'm a little confused as to why these need to be const char* and can't
-just be a bool? Perhaps other variables shouldn't be const char* too.
-Is there ever a case where both perchip and percore could be true?
-Would something like an enum capture this better? I can imagine other
-cases uncore and it seems a little strange to add a new "const char*"
-each time.
+Yes, that should work if I haven't missed anything.
 
-I'm wondering if there needs to be a glossary of terms, so that the
-use of terms like core, chip, thread, socket, cpu, package is kept
-consistent. It's not trivially clear what the difference between a
-chip and a socket is, for example. Mapping terms to other vendors
-commonly used terms, such as "complex" would also be useful.
-
-Thanks,
-Ian
-
->  };
+> iff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index dad6b85f4c89..20a2020abf88 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -653,6 +653,23 @@ static unsigned int cpufreq_parse_policy(char *str_governor)
+>         return CPUFREQ_POLICY_UNKNOWN;
+>  }
 >
->  /*
-> --
-> 2.26.2
->
+> +static unsigned int cpufreq_default_policy(void)
+> +{
+> +       unsigned int pol;
+> +
+> +       pol = cpufreq_parse_policy(cpufreq_param_governor);
+> +       if (pol != CPUFREQ_POLICY_UNKNOWN)
+> +               return pol;
+> +
+> +       if (IS_BUILTIN(CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE))
+> +               return CPUFREQ_POLICY_PERFORMANCE;
+> +
+> +       if (IS_BUILTIN(CONFIG_CPU_FREQ_DEFAULT_GOV_POWERSAVE))
+> +               return CPUFREQ_POLICY_POWERSAVE;
+> +
+> +       return CPUFREQ_POLICY_UNKNOWN;
+> +}
+> +
+>  /**
+>   * cpufreq_parse_governor - parse a governor string only for has_target()
+>   * @str_governor: Governor name.
+> @@ -1085,8 +1102,8 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>                 /* Use the default policy if there is no last_policy. */
+>                 if (policy->last_policy) {
+>                         pol = policy->last_policy;
+> -               } else if (default_governor) {
+> -                       pol = cpufreq_parse_policy(default_governor->name);
+> +               } else {
+> +                       pol = cpufreq_default_policy();
+>                         /*
+>                          * In case the default governor is neiter "performance"
+>                          * nor "powersave", fall back to the initial policy
