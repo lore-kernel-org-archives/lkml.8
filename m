@@ -2,181 +2,113 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5296320767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFFD20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:34:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHe9U+DM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406599AbgFYTdv (ORCPT
+        id S2406626AbgFYTeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:33:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48146 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406068AbgFYTdu (ORCPT
+        Thu, 25 Jun 2020 15:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406068AbgFYTeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:33:50 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PJVZGf096833;
-        Thu, 25 Jun 2020 15:33:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3gg8x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 15:33:39 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PJWncc105143;
-        Thu, 25 Jun 2020 15:33:39 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3gg8d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 15:33:39 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PJKmDr020695;
-        Thu, 25 Jun 2020 19:33:37 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31uus726d2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 19:33:37 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PJXZHx9830696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 19:33:35 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 939C642049;
-        Thu, 25 Jun 2020 19:33:35 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AEFBD42047;
-        Thu, 25 Jun 2020 19:33:33 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.142.225])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jun 2020 19:33:33 +0000 (GMT)
-Message-ID: <1593113613.27152.345.camel@linux.ibm.com>
-Subject: Re: [PATCH 02/12] ima: Create a function to free a rule entry
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Date:   Thu, 25 Jun 2020 15:33:33 -0400
-In-Reply-To: <20200623003236.830149-3-tyhicks@linux.microsoft.com>
-References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
-         <20200623003236.830149-3-tyhicks@linux.microsoft.com>
+        Thu, 25 Jun 2020 15:34:14 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D268C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:34:12 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e8so3803811pgc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q0J5Xk6mCPnUPRpzzom1w8HYk2OMjF2U12o6CaGIZbI=;
+        b=iHe9U+DMm1SaOAraCfyPB9wqg6y5TvPInl3c3iEZVoEBETKgq+z6PyVwhveT3LovV4
+         xm/oCR7ZUnoOB5z9Y04zlkt6TPOSgUvxT5mTQN5hm1RDgfYWnPE5SaMpW+ENE21SsWDX
+         fKIa962OVry32EYsBWkXrPYKQ5qecWRMxTWOyggjemzHIpk+t31bNHqHPlLNELxihxjb
+         OCsRal6Bp7NUMXATRwhStJ0CI/PpaZx3aQZ2CpILA1jHfDHFfnJg+VTUaluwkChWgXPv
+         e/NHpuuzLai7OEkTSrl3Y7PGfEeUT89AHIG4K5hsBVTGOF9SaDabkHwHQFoykfmVhMhh
+         am6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q0J5Xk6mCPnUPRpzzom1w8HYk2OMjF2U12o6CaGIZbI=;
+        b=mMOdMUvWOXmkUOV3Ym65rJrNxnLIW/cu++0xZOKOCoc8gRda18pIYFyu4p9N+91uc/
+         K2Mp8tYMMk9tIAWQvGQ4DhWPeDPgcmNINgtFdbptNlEEQBWxRnlnXWzgOU3JWtdd5wqE
+         yjDVtFPO5wpi3ekIQWWKh6USK1Y5fBg8gnQfMr4YkAVIZqKkjOq9XSbWCO0Z0XkPdCrq
+         WHXCYJNYSLkMq96zIq89tF11WM1s+ZCBwFDZbwTfrpnjavWg2levQg8PnACiOzq8SJYa
+         zX7RrWDlhsqxQqG6IjV+BMUZf9GsZ80TSIx36hQQhdrKyr0T7FD+PuHczIbSNYj8cNJ6
+         Ykkw==
+X-Gm-Message-State: AOAM531t4rTzsSA1mg4VAga7pQ3zt6wL/OktlYJj6ixAf9VTHAyNhpvg
+        UyDVs+omHsk5mXFq3HWYc8nVAdTACAR/T7iT2tY=
+X-Google-Smtp-Source: ABdhPJy90oRnlULXMEPkMJknatRF3lo3UkFkHpFR9sAqtWwwhfeJkySh2aFaZyvl8p4eunVSOddARuVSBSKqqEArK5U=
+X-Received: by 2002:a63:f042:: with SMTP id s2mr26834670pgj.4.1593113651475;
+ Thu, 25 Jun 2020 12:34:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200625170356.225136-1-enric.balletbo@collabora.com>
+ <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com> <026b38ff947e338a468567dfd20fbde1419bb094.camel@perches.com>
+In-Reply-To: <026b38ff947e338a468567dfd20fbde1419bb094.camel@perches.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 25 Jun 2020 22:33:55 +0300
+Message-ID: <CAHp75VcFeCf0vnk2Ea_-QdTW5gyRZvgEXwX7-VSd3rKch7pSwQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: Clarify SPDX license with GPL-2.0-only
+To:     Joe Perches <joe@perches.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yicheng Li <yichengli@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_15:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- adultscore=0 phishscore=0 suspectscore=2 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 spamscore=0 cotscore=-2147483648
- clxscore=1011 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006250113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
-> There are several possible pieces of allocated memory in a rule entry.
-> Create a function that can free all allocated memory for a given rule
-> entry.
-> 
-> This patch introduces no functional changes but sets the groundwork for
-> some memory leak fixes.
-> 
-> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+On Thu, Jun 25, 2020 at 10:29 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2020-06-25 at 22:06 +0300, Andy Shevchenko wrote:
+> > On Thu, Jun 25, 2020 at 9:25 PM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> > > Remove the ambiguity with GPL-2.0 and use an explicit GPL-2.0-only
+> > > tag.
+> >
+> > Is there any? Last time IIRC Greg told me that in the kernel the old
+> > and new variants are okay.
+>
+> If there wasn't any ambiguity, the older license
+> style wouldn't be deprecated by SPDX.org.
 
-Having a function to release all memory associated with a policy rule
-in general is a good idea.  However, in the case of the shallow copy,
-we're not removing any IMA rules, just updating the LSM info.
+They are _not_ deprecated according to kernel documentation:
+https://elixir.bootlin.com/linux/latest/source/LICENSES/preferred/GPL-2.0
 
-There is an opportunity to transition from the builtin policy rules to
-a custom IMA policy.  Afterwards IMA policy rules may only be
-appended.
+So, fix documentation in the kernel then.
 
-An IMA custom policy based on LSM info may be loaded prior to the LSM
-policy.  These LSM based rules are inactive until the corresponding
-LSM rule is loaded.  In some environments, LSM policies are loaded and
-removed frequently.  The IMA rules themselves are not removed, just
-the LSM info is updated to reflect the current LSM info.
-
-> ---
->  security/integrity/ima/ima_policy.c | 33 +++++++++++++++++++++++++++--
->  1 file changed, 31 insertions(+), 2 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 236a731492d1..1320333201c6 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -261,6 +261,27 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
->  		security_filter_rule_free(entry->lsm[i].rule);
->  		kfree(entry->lsm[i].args_p);
->  	}
-> +}
-> +
-> +static void ima_free_rule(struct ima_rule_entry *entry)
-> +{
-> +	if (!entry)
-> +		return;
-> +
-> +	/*
-> +	 * entry->template->fields may be allocated in ima_parse_rule() but that
-> +	 * reference is owned by the corresponding ima_template_desc element in
-> +	 * the defined_templates list and cannot be freed here
-> +	 */
-> +
-> +	/*
-> +	 * When freeing newly added ima_rule_entry members, consider if you
-> +	 * need to disown any references after the shallow copy in
-> +	 * ima_lsm_copy_rule()
-> +	 */
-> +	kfree(entry->fsname);
-> +	kfree(entry->keyrings);
-> +	ima_lsm_free_rule(entry);
->  	kfree(entry);
->  }
->  
-> @@ -298,10 +319,18 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
->  			pr_warn("rule for LSM \'%s\' is undefined\n",
->  				(char *)entry->lsm[i].args_p);
->  	}
-> +
-> +	/* Disown all references that were shallow copied */
-> +	entry->fsname = NULL;
-> +	entry->keyrings = NULL;
-> +	entry->template = NULL;
->  	return nentry;
->  
->  out_err:
-> -	ima_lsm_free_rule(nentry);
-> +	nentry->fsname = NULL;
-> +	nentry->keyrings = NULL;
-> +	nentry->template = NULL;
-> +	ima_free_rule(nentry);
-
->  	return NULL;
->  }
->  
-> @@ -315,7 +344,7 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
->  
->  	list_replace_rcu(&entry->list, &nentry->list);
->  	synchronize_rcu();
-> -	ima_lsm_free_rule(entry);
-> +	ima_free_rule(entry);
-
-This should only update the LSM info, nothing else.
-
->  
->  	return 0;
->  }
-
+-- 
+With Best Regards,
+Andy Shevchenko
