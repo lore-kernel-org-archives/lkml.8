@@ -2,336 +2,185 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF09EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E392081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F3A20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593086996;
+	bh=YtvJmzxiCsWnM5agnWOPwEuSMfb0y1g8sUyc7NjR5Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tg/GRfDXYdnyaPDlMHKwd5lw0kIEluwBl9ZIPBR6/5oZAmDH1mXqzeTyN5mvbloAq
+	 zjTOkiX88ZIjAA+xkch1FYW+NAmBC8VnHnMPLGCpV4a8E/eLPeLfb8h52qzNgnwuo/
+	 ADxOVeS1qdsEe/NIJcg/jO1Su943D9evJCRS6ExA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404451AbgFYMJu (ORCPT
+        id S2404509AbgFYMJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:09:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49128 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404222AbgFYMJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:09:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 24A05ACAE;
-        Thu, 25 Jun 2020 12:09:47 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 14:09:46 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: record_printk_text tricks: was: [PATCH v3 3/3] printk: use the
- lockless ringbuffer
-Message-ID: <20200625120946.GG6156@alley>
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
- <20200618144919.9806-4-john.ogness@linutronix.de>
+        Thu, 25 Jun 2020 08:09:54 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55640 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404222AbgFYMJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 08:09:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g75so5295366wme.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:09:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7ITcFTPhqH0yFOromZtekoS/tTUxNAq+U9QVX/lhl28=;
+        b=IY5yAJMvqCCiYYl69gSMEWnxGA1ppm9tZtIQ0nY95v2PT14V4fuBXw5XFKgzBRImfu
+         3OJnEv58J4uiIPreYWc7cg0CJ3SaOLaugaRllDWeI8/laAL/GD2uFgwLSP3q+iwWSx3j
+         NUEmFlqoWaW8B5RAyvl8Xz6tK/d2fmvJ3XBtv01XL45aff72CqX0aWVVPGI3G32qmZno
+         JvNwaSleGJJuODwdsLKy+SGmJbpfr6jLWpc6FErVTzfLVi+bzF5BiuZElguhYg1J5+uF
+         Qx+UftIllF0UAERuj06aWqU9XMkJxBgnU0qlq6bz5FWFOKYx+ufw73AU6kkjjBXMZvFJ
+         29eQ==
+X-Gm-Message-State: AOAM531qEzZJxUmkdlJQ+0ecKnTeXnA1Bur+JipCdUKH9/h5UZkPCyGP
+        /xN1cuk+R/o6sPn99TVut8o=
+X-Google-Smtp-Source: ABdhPJxhjAIFp0j2T3CJ1uC8RQuRiiUpxlMjDETjqjLgOD8JmBIQvHas/txrISYnid6IfswG8QQNTA==
+X-Received: by 2002:a05:600c:2058:: with SMTP id p24mr3029922wmg.74.1593086990388;
+        Thu, 25 Jun 2020 05:09:50 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id x18sm11707853wmi.35.2020.06.25.05.09.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 05:09:49 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 14:09:48 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v3 7/8] mm/mempolicy: use a standard migration target
+ allocation callback
+Message-ID: <20200625120948.GH1320@dhcp22.suse.cz>
+References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592892828-1934-8-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618144919.9806-4-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1592892828-1934-8-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-06-18 16:55:19, John Ogness wrote:
-> Replace the existing ringbuffer usage and implementation with
-> lockless ringbuffer usage. Even though the new ringbuffer does not
-> require locking, all existing locking is left in place. Therefore,
-> this change is purely replacing the underlining ringbuffer.
+On Tue 23-06-20 15:13:47, Joonsoo Kim wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> There is a well-defined migration target allocation callback.
+> Use it.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -1344,72 +1304,150 @@ static size_t print_prefix(const struct printk_log *msg, bool syslog,
->  	return len;
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/internal.h  |  1 -
+>  mm/mempolicy.c | 30 ++++++------------------------
+>  mm/migrate.c   |  8 ++++++--
+>  3 files changed, 12 insertions(+), 27 deletions(-)
+> 
+> diff --git a/mm/internal.h b/mm/internal.h
+> index fb7f7fe..4f9f6b6 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -613,7 +613,6 @@ static inline bool is_migrate_highatomic_page(struct page *page)
 >  }
 >  
-> -static size_t msg_print_text(const struct printk_log *msg, bool syslog,
-> -			     bool time, char *buf, size_t size)
-> +static size_t record_print_text(struct printk_record *r, bool syslog,
-> +				bool time)
+>  void setup_zone_pageset(struct zone *zone);
+> -extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
+>  
+>  struct migration_target_control {
+>  	int nid;		/* preferred node id */
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index a3abf64..85a3f21 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -1065,28 +1065,6 @@ static int migrate_page_add(struct page *page, struct list_head *pagelist,
+>  	return 0;
+>  }
+>  
+> -/* page allocation callback for NUMA node migration */
+> -struct page *alloc_new_node_page(struct page *page, unsigned long node)
+> -{
+> -	if (PageHuge(page)) {
+> -		return alloc_huge_page_nodemask(
+> -			page_hstate(compound_head(page)), node,
+> -			NULL, __GFP_THISNODE, false);
+> -	} else if (PageTransHuge(page)) {
+> -		struct page *thp;
+> -
+> -		thp = alloc_pages_node(node,
+> -			(GFP_TRANSHUGE | __GFP_THISNODE),
+> -			HPAGE_PMD_ORDER);
+> -		if (!thp)
+> -			return NULL;
+> -		prep_transhuge_page(thp);
+> -		return thp;
+> -	} else
+> -		return __alloc_pages_node(node, GFP_HIGHUSER_MOVABLE |
+> -						    __GFP_THISNODE, 0);
+> -}
+> -
+>  /*
+>   * Migrate pages from one node to a target node.
+>   * Returns error or the number of pages not migrated.
+> @@ -1097,6 +1075,10 @@ static int migrate_to_node(struct mm_struct *mm, int source, int dest,
+>  	nodemask_t nmask;
+>  	LIST_HEAD(pagelist);
+>  	int err = 0;
+> +	struct migration_target_control mtc = {
+> +		.nid = dest,
+> +		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
+> +	};
+>  
+>  	nodes_clear(nmask);
+>  	node_set(source, nmask);
+> @@ -1111,8 +1093,8 @@ static int migrate_to_node(struct mm_struct *mm, int source, int dest,
+>  			flags | MPOL_MF_DISCONTIG_OK, &pagelist);
+>  
+>  	if (!list_empty(&pagelist)) {
+> -		err = migrate_pages(&pagelist, alloc_new_node_page, NULL, dest,
+> -					MIGRATE_SYNC, MR_SYSCALL);
+> +		err = migrate_pages(&pagelist, alloc_migration_target, NULL,
+> +				(unsigned long)&mtc, MIGRATE_SYNC, MR_SYSCALL);
+>  		if (err)
+>  			putback_movable_pages(&pagelist);
+>  	}
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 7c4cd74..1c943b0 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1590,9 +1590,13 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+>  		struct list_head *pagelist, int node)
 >  {
-> -	const char *text = log_text(msg);
-> -	size_t text_size = msg->text_len;
-> -	size_t len = 0;
-> +	size_t text_len = r->info->text_len;
-> +	size_t buf_size = r->text_buf_size;
-> +	char *text = r->text_buf;
->  	char prefix[PREFIX_MAX];
-> -	const size_t prefix_len = print_prefix(msg, syslog, time, prefix);
-> +	bool truncated = false;
-> +	size_t prefix_len;
-> +	size_t line_len;
-> +	size_t len = 0;
-> +	char *next;
+>  	int err;
+> +	struct migration_target_control mtc = {
+> +		.nid = node,
+> +		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
+> +	};
 >  
-> -	do {
-> -		const char *next = memchr(text, '\n', text_size);
-> -		size_t text_len;
-> +	prefix_len = info_print_prefix(r->info, syslog, time, prefix);
->  
-> +	/*
-> +	 * Add the prefix for each line by shifting the rest of the text to
-> +	 * make room for each prefix. If the buffer is not large enough for
-> +	 * all the prefixes, then drop the trailing text and report the
-> +	 * largest length that includes full lines with their prefixes.
+> -	err = migrate_pages(pagelist, alloc_new_node_page, NULL, node,
+> -			MIGRATE_SYNC, MR_SYSCALL);
+> +	err = migrate_pages(pagelist, alloc_migration_target, NULL,
+> +			(unsigned long)&mtc, MIGRATE_SYNC, MR_SYSCALL);
+>  	if (err)
+>  		putback_movable_pages(pagelist);
+>  	return err;
+> -- 
+> 2.7.4
 
-This should go up as the function description.
-
-Sigh, this function does (already did) many subltle decisions. We
-should mention them in the description. My current understanding is
-the following:
-
-/*
- * Prepare the record for printing. The text is shifted in the given
- * buffer to avoid a need for another one. The following operations
- * are done:
- *
- *   - Add prefix for each line.
- *   - Add the trailing newline that has been removed in vprintk_store().
- *   - Drop truncated lines that do not longer fit into the buffer.
- *
- * Return: The length of the updated text, including the added
- * prefixes, newline. The dropped line(s) are not counted.
- */
-
-> +	 *
-> +	 * @text_len: bytes of unprocessed text
-> +	 * @line_len: bytes of current line (newline _not_ included)
-> +	 * @text:     pointer to beginning of current line
-> +	 * @len:      number of bytes processed (size of r->text_buf done)
-
-Please, move this to the variable declaration.
-
-> +	 */
-> +	for (;;) {
-> +		next = memchr(text, '\n', text_len);
->  		if (next) {
-> -			text_len = next - text;
-> -			next++;
-> -			text_size -= next - text;
-> +			line_len = next - text;
->  		} else {
-> -			text_len = text_size;
-> +			/*
-> +			 * No newline. If the text was previously truncated,
-> +			 * assume this line was truncated and do not include
-> +			 * it.
-> +			 */
-
-The word "assume" is confusing. The last line _must_ have been truncated when
-"truncated" is set. I would write:
-
-			/* Drop incomplete truncated lines. */
-
-> +			if (truncated)
-> +				break;
-> +			line_len = text_len;
->  		}
->  
-> -		if (buf) {
-> -			if (prefix_len + text_len + 1 >= size - len)
-> +		/*
-> +		 * Ensure there is enough buffer available to shift this line
-> +		 * (and add a newline at the end).
-> +		 */
-> +		if (len + prefix_len + line_len + 1 > buf_size)
-> +			break;
-> +
-> +		/*
-> +		 * Ensure there is enough buffer available to shift all
-> +		 * remaining text (and add a newline at the end). If this
-> +		 * test fails, then there must be a newline (i.e.
-> +		 * text_len > line_len because the previous test succeeded).
-> +		 */
-> +		if (len + prefix_len + text_len + 1 > buf_size) {
-> +			/*
-> +			 * Truncate @text_len so that there is enough space
-> +			 * for a prefix. A newline will not be added because
-> +			 * the last line of the text is now truncated and
-> +			 * will not be included.
-> +			 */
-> +			text_len = (buf_size - len) - prefix_len;
-
-This is confusing. The check requires that one more character gets truncated.
-And it should be perfectly fine to truncate '\n' from the previous
-line. The final '\n' is always added.
-
-There are more problems with this branch. See below for alternative code.
-
-> +
-> +			/*
-> +			 * Ensure there is still a newline. Otherwise this
-> +			 * line may have been truncated and will not be
-> +			 * included.
-> +			 */
-> +			if (memchr(text, '\n', text_len) == NULL)
- >  				break;
-
-This looks superfluous. We do this check only when the first check of "line_len"
-passed. It means that at least one line is printable.
-
-I would personally replace this part of the code by:
-
-		/*
-		 * Truncate the remaining text when it does not longer
-		 * fit into the buffer.
-		 *
-		 * Note that this check could fail only when
-		 * text_len > line_len because the previous check
-		 * passed.
-		 */
-		if (len + prefix_len + text_len + 1 > buf_size) {
-			text_len = buf_size - len - prefix_len - 1;
-			truncated = 1;
-		}
-
-Or we could actually switch the two checks and do:
-
-		/*
-		 * Truncate the text if it would not longer fit into
-		 * the given buffer.
-		 */
-		if (len + prefix_len + text_len + 1 > buf_size) {
-			text_len = buf_size - len - prefix_len - 1;
-			truncated = 1;
-		}
-
-		/* Drop even the current line when truncated */
-		if (line_len > text_len)
-			break;
- 
-
-> -			memcpy(buf + len, prefix, prefix_len);
-> -			len += prefix_len;
-> -			memcpy(buf + len, text, text_len);
-> -			len += text_len;
-> -			buf[len++] = '\n';
-> -		} else {
-> -			/* SYSLOG_ACTION_* buffer size only calculation */
-> -			len += prefix_len + text_len + 1;
-> +			/* Note that the last line will not be included. */
-> +			truncated = true;
->  		}
->  
-> -		text = next;
-> -	} while (text);
-> +		memmove(text + prefix_len, text, text_len);
-> +		memcpy(text, prefix, prefix_len);
-> +
-> +		/* Advance beyond the newly added prefix and existing line. */
-> +		text += prefix_len + line_len;
-> +
-> +		/* The remaining text has only decreased by the line. */
-> +		text_len -= line_len;
-> +
-> +		len += prefix_len + line_len + 1;
-> +
-> +		if (text_len) {
-> +			/* Advance past the newline. */
-> +			text++;
-> +			text_len--;
-
-"text_len" might be zero at this point when the stored string ended
-with newline.
-
-It might happen already now when the original text ended by "\n\n".
-Only the very last '\n' gets removed in vprintk_store().
-
-It actually looks reasonable to do the extra cycle and printk
-the (requested) empty line.
-
-Except that we might end here also when the text was truncated right
-before the newline marker. Well, this is a corner case, the string
-is truncated anyway, so we could do whatever is easier in this case.
-
-
-Well, it will need another update after we remove logbuf_lock. I think that
-we will need to store the final '\n'. Or at least we would need to
-reserve a space for it.
-
-Anyway, it might deserve some comment somewhere. See below for
-alternative code.
-
-
-> +		} else {
-> +			/* The final line, add a newline. */
-> +			*text = '\n';
-> +			break;
-> +		}
-
-I do not have strong opinion. The code does things by small steps that
-might be checked easily. But it has many steps and it might hide some
-subtle catches like the one commented right above.
-
-I wonder if the following would be easier:
-
-		len += prefix_len + line_len + 1;
-
-		/* Add the trailing newline removed in vprintk_store(). */
-		if (text_len == line_len) {
-			text[prefix_len + line_len] = '\n';
-			break;
-		}
-
-		/* Advance beyond the added prefix and the related line */
-		text += prefix_len + line_len + 1;
-
-		/*
-		 * The remaining text has only decreased by the line.
-		 *
-		 * Special case is when text_len becomes zero. It
-		 * happens when the original string ended with "\n\n".
-		 * The cycle is correctly repeated and the empty line
-		 * with a prefix printed.
-		 */
-		text_len -= (line_len + 1);
-> +	}
->  
->  	return len;
->  }
->  
-> +static size_t get_record_text_size(struct printk_info *info,
-> +				   unsigned int line_count,
-> +				   bool syslog, bool time)
-> +{
-> +	char prefix[PREFIX_MAX];
-> +	size_t prefix_len;
-> +
-> +	prefix_len = info_print_prefix(info, syslog, time, prefix);
-> +
-> +	/*
-> +	 * Each line will be preceded with a prefix. The intermediate
-> +	 * newlines are already within the text, but a final trailing
-> +	 * newline will be added.
-> +	 */
-> +	return ((prefix_len * line_count) + info->text_len + 1);
-
-Note: This might need an update when lockbuf_lock gets removed and the
-trailing newline is not longer removed. We will need to explicitly
-add it when it was missing.
-
-We might need to check LOG_NEWLINE flag here. Or come with even better
-solution.
-
-> +}
-
-Best Regards,
-Petr
+-- 
+Michal Hocko
+SUSE Labs
