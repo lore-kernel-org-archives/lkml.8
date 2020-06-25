@@ -2,216 +2,286 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A407AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D7A207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B6620707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="GGQOrR70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406946AbgFYRwh (ORCPT
+        id S2406966AbgFYRzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405562AbgFYRwg (ORCPT
+        Thu, 25 Jun 2020 13:55:11 -0400
+Received: from mail.efficios.com ([167.114.26.124]:43646 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405512AbgFYRzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:52:36 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC42C08C5C1;
-        Thu, 25 Jun 2020 10:52:35 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 34B042A5774
-Message-ID: <d2d50756882b7cf23673c3a1b444c03d59648278.camel@collabora.com>
-Subject: Re: [RFC 7/7] media: uapi: make H264 stateless codec interface
- public
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Thu, 25 Jun 2020 14:51:56 -0300
-In-Reply-To: <478a33a8-89e2-7ed8-4efe-76d62ddc223a@xs4all.nl>
-References: <20200623182809.1375-1-ezequiel@collabora.com>
-         <20200623182809.1375-8-ezequiel@collabora.com>
-         <478a33a8-89e2-7ed8-4efe-76d62ddc223a@xs4all.nl>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Thu, 25 Jun 2020 13:55:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id EA3542CC777;
+        Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 5ENrKCBFt7lN; Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 698E82CC776;
+        Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 698E82CC776
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593107707;
+        bh=s716aDp98Dr/SIAE/48mnmzR2fW1La/xStErEctad3c=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=GGQOrR70XFcsHmyup2g370Hs25QXPh5HN8G3p35tWkZie6Zc/JWvSYsAD4Kooa4If
+         WisSZoCz4eIsx30RDvDoFN3KD0HvzkB+7bD9uNeC+xJb7ZTJi0XR43rUV4TwVGH3m5
+         s4TkF6pr7KF+GBxdCCCEkTs70rpUN3tp8/IRrs9eyeBz7KVxVLJiU1QOj5N2fK/CNR
+         MniQ/i58XjD8osfwgAsY0T41AyJMygzcmkK/1DqEWFq3HzShcmEWVN9OaJ0w0tMw10
+         cyz6Ko55VEu/BWtfn95rq3yrR7VxrgY2CMSFfypArsRHkSFFb4ZeTkUK8E2K1uITWH
+         ElccimYDHjxTA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id QnUDMg0KEsHH; Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 48FB22CCC1B;
+        Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+Date:   Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jason Behmer <jbehmer@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Clark Williams <williams@redhat.com>,
+        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Darren Hart <dvhart@vmware.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
+Message-ID: <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200625094454.732790f7@oasis.local.home>
+References: <20200625094454.732790f7@oasis.local.home>
+Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
+ running time stamp
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: ring-buffer: Have nested events still record running time stamp
+Thread-Index: Oi/DYJHJZGU+iSwGlvJ0DWai5d+WPg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-25 at 09:52 +0200, Hans Verkuil wrote:
-> On 23/06/2020 20:28, Ezequiel Garcia wrote:
-> > The H264 interface is now ready to be part of the official
-> > public API.
-> > 
-> > In addition, sanitize header includes.
-> > 
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  drivers/staging/media/hantro/hantro_hw.h                  | 5 ++---
-> >  include/media/v4l2-ctrls.h                                | 3 ++-
-> >  include/media/v4l2-h264.h                                 | 2 +-
-> >  .../{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h}  | 8 ++------
-> >  4 files changed, 7 insertions(+), 11 deletions(-)
-> >  rename include/{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h} (96%)
+----- On Jun 25, 2020, at 9:44 AM, rostedt rostedt@goodmis.org wrote:
+
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > 
-> This isn't quite how this should be done.
+[...]
+> Here's the design of this solution:
 > 
-> The V4L2_PIX_FMT_H264_SLICE define and the V4L2_CTRL_TYPE_H264_* defines should
-> move to videodev2.h.
+> All this is per cpu, and only needs to worry about nested events (not
+> parallel events).
 > 
-
-OK.
-
-> The remaining CID defines and the data structures should be moved to v4l2-controls.h.
+> The players:
 > 
-
-OK.
-
-> Yes, I know, v4l2-controls.h is getting large. At some point (could actually be
-> done in a follow-up patch) the codec controls in v4l2-controls.h should be split off
-> into their own header (v4l2-codec-controls.h).
+> write_tail: The index in the buffer where new events can be written to.
+>     It is incremented via local_add() to reserve space for a new event.
 > 
-
-OK, that makes sense.
-
-> One more thing that I was wondering about:
+> before_stamp: A time stamp set by all events before reserving space.
 > 
-> #define V4L2_CID_MPEG_VIDEO_H264_SPS            (V4L2_CID_MPEG_BASE+1000)
+> write_stamp: A time stamp updated by events after it has successfully
+>     reserved space.
+
+What are the types used for before_stamp and write_stamp ? If those
+are 64-bit integers, how does sharing them between nested contexts
+work on 32-bit architectures ?
+
 > 
-> These controls are at V4L2_CID_MPEG_BASE+1000. But I was wondering if:
+> next_write: A copy of "write_tail" used to help with races.
 > 
-> 1) wouldn't it be a good thing to use new CID values since this is the actual
->    uAPI version? This series changes the layout of several structs, so creating
->    new CID values to prevent confusion in applications might be a good idea.
+>	/* Save the current position of write */
+> [A]	w = local_read(write_tail);
+>	barrier();
+>	/* Read both before and write stamps before touching anything */
+>	before = READ_ONCE(before_stamp);
+>	after = local_read(write_stamp);
+>	barrier();
 > 
-> 2) related to 1): should we make a new control class for stateless codecs?
->    Currently it is mixed in with the stateful codec controls, but I am not so
->    sure that that is such a good idea. Creating a separate stateless codec
->    control class would be a clean separation of stateful and stateless, and it
->    would probably improve the documentation as well.
+>	/*
+>	 * If before and after are the same, then this event is not
+>	 * preempting a time update. If it is, then reserve space for adding
+
+You should use the term "interrupt" rather than "preempting", because as you
+stated yourself, this algorithm only works with nested interrupts, not with
+preemption.
+
+>	 * a full time stamp (this can turn into a time extend which is
+>	 * just an extended time delta but fill up the extra space).
+>	 */
+>	if (after != before)
+>		abs = true;
 > 
-
-Good idea.
-
->    The only 'standard' codec control that is used by stateless codecs is
->    V4L2_CID_MPEG_VIDEO_H264_PROFILE in hantro, although it is not clear to me
->    how it is used. It looks like it is just to report the supported profiles?
->    But it isn't present in the cedrus driver, so it's a bit odd.
+>	ts = clock();
 > 
-
-I can take a look and add profiles to cedrus as well.
-
-> Thank you for working on finalizing the H264 API.
+>	/* Now update the before_stamp (everyone does this!) */
+> [B]	WRITE_ONCE(before_stamp, ts);
 > 
-
-Thanks for the guidelines and feedback.
-
-I will drop this patch for now, since I think we
-now have a clear guideline on how to go public
-(which was the goal of this RFC!).
-
-I will move forward the H264 uAPI changes,
-and then we can try to push H264, MPEG-2 and VP8
-public, as these interfaces are the ones
-that seem stable.
-
-Thanks!
-Ezequiel  
-
-> Regards,
+>	/* Read the current next_write and update it to what we want write
+>	 * to be after we reserve space. */
+> 	next = READ_ONCE(next_write);
+>	WRITE_ONCE(next_write, w + len);
 > 
-> 	Hans
+>	/* Now reserve space on the buffer */
+> [C]	write = local_add_return(len, write_tail);
+
+So the reservation is not "just" an add instruction, it's actually an xadd on
+x86. Is that really faster than a cmpxchg ?
+
 > 
-> > diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-> > index 4053d8710e04..48d5be144319 100644
-> > --- a/drivers/staging/media/hantro/hantro_hw.h
-> > +++ b/drivers/staging/media/hantro/hantro_hw.h
-> > @@ -11,9 +11,8 @@
-> >  
-> >  #include <linux/interrupt.h>
-> >  #include <linux/v4l2-controls.h>
-> > -#include <media/h264-ctrls.h>
-> > -#include <media/mpeg2-ctrls.h>
-> > -#include <media/vp8-ctrls.h>
-> > +
-> > +#include <media/v4l2-ctrls.h>
-> >  #include <media/videobuf2-core.h>
-> >  
-> >  #define DEC_8190_ALIGN_MASK	0x07U
-> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> > index f40e2cbb21d3..fc725ba2ebd8 100644
-> > --- a/include/media/v4l2-ctrls.h
-> > +++ b/include/media/v4l2-ctrls.h
-> > @@ -13,13 +13,14 @@
-> >  #include <linux/videodev2.h>
-> >  #include <media/media-request.h>
-> >  
-> > +#include <linux/v4l2-h264-ctrls.h>
-> > +
-> >  /*
-> >   * Include the stateless codec compound control definitions.
-> >   * This will move to the public headers once this API is fully stable.
-> >   */
-> >  #include <media/mpeg2-ctrls.h>
-> >  #include <media/fwht-ctrls.h>
-> > -#include <media/h264-ctrls.h>
-> >  #include <media/vp8-ctrls.h>
-> >  #include <media/hevc-ctrls.h>
-> >  
-> > diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
-> > index f08ba181263d..d2314f4d4490 100644
-> > --- a/include/media/v4l2-h264.h
-> > +++ b/include/media/v4l2-h264.h
-> > @@ -10,7 +10,7 @@
-> >  #ifndef _MEDIA_V4L2_H264_H
-> >  #define _MEDIA_V4L2_H264_H
-> >  
-> > -#include <media/h264-ctrls.h>
-> > +#include <media/v4l2-ctrls.h>
-> >  
-> >  /**
-> >   * struct v4l2_h264_reflist_builder - Reference list builder object
-> > diff --git a/include/media/h264-ctrls.h b/include/uapi/linux/v4l2-h264-ctrls.h
-> > similarity index 96%
-> > rename from include/media/h264-ctrls.h
-> > rename to include/uapi/linux/v4l2-h264-ctrls.h
-> > index 6446ec9f283d..a06f60670d68 100644
-> > --- a/include/media/h264-ctrls.h
-> > +++ b/include/uapi/linux/v4l2-h264-ctrls.h
-> > @@ -2,14 +2,10 @@
-> >  /*
-> >   * These are the H.264 state controls for use with stateless H.264
-> >   * codec drivers.
-> > - *
-> > - * It turns out that these structs are not stable yet and will undergo
-> > - * more changes. So keep them private until they are stable and ready to
-> > - * become part of the official public API.
-> >   */
-> >  
-> > -#ifndef _H264_CTRLS_H_
-> > -#define _H264_CTRLS_H_
-> > +#ifndef __LINUX_V4L2_H264_CONTROLS_H
-> > +#define __LINUX_V4L2_H264_CONTROLS_H
-> >  
-> >  #include <linux/videodev2.h>
-> >  
-> > 
+>	/* Set tail to be were this event's data is */
+>	tail = write - len;
+> 
+> 	if (w == tail) {
+> 
+>		/* Nothing preempted this between A and C */
+> [D]		local_set(write_stamp, ts);
+>		barrier();
+> [E]		save_before = READ_ONCE(before_stamp);
+> 
+> 		if (!abs) {
+>			/* This did not preempt a time update */
+>			delta = ts - a;
 
+What does "a" refer to ? What triggers its update ?
 
+>		} else {
+>			/* slow path */
+>			if (w == next) {
+
+If it's a slow path, why try to play games with a delta timestamp ? Space
+should not be an issue for a slow path like this. It would be simpler to just
+use the full timestamp here.
+
+>				/* This event preempted the previous event
+>				 * just after it reserved its buffer.
+
+You mean nesting after [C] but before [D].
+
+>				 * It's timestamp should be "before_stamp" */
+
+It's -> Its
+
+>				delta = ts - before;
+>				abs = 0; /* No need for that full time stamp */
+
+What worries me about this "optimization" is what happens in a multi-nesting scenario.
+If we just fallback to a full timestamp as soon as nesting is detected, things become
+really simple for multiple nesting. However using a delta timestamp adds a lot of
+additional states to consider, and those are not discussed here.
+
+More specifically, one scenario I'm concerned about is:
+
+Nesting level 0                      Nesting level 1                      Nesting level 2
+
+[A] w = local_read(write_tail);
+    before = READ_ONCE(before_stamp);
+[B] WRITE_ONCE(before_stamp, ts);
+    WRITE_ONCE(next_write, w + len);
+[C] write = local_add_return(len,
+    write_tail);
+   <interrupted>
+                                    [A] w = local_read(write_tail);
+                                        before = READ_ONCE(before_stamp);
+                                    [B] WRITE_ONCE(before_stamp, ts);
+                                    <interrupted>
+                                                                          [A] w = local_read(write_tail);
+                                                                              before = READ_ONCE(before_stamp);
+                                                                          [B] WRITE_ONCE(before_stamp, ts);
+                                                                              WRITE_ONCE(next_write, w + len);
+                                                                          [C] write = local_add_return(len,
+                                                                              write_tail);
+                                                                              if (w == tail) { -> true
+                                                                                if (!abs) { -> false
+                                                                                  if (w == next) { -> true
+
+Nesting level 2 then ends up using the "before_stamp" of nesting level 1 to generate
+the time delta, but the delta is really between the event from nesting level 0 and the
+event at nesting level 2, because nesting level 1 will only record its event _after_
+the event of nesting level 2.
+
+>			} else {
+>				delta = ts; /* The full time stamp will be in use */
+>			}
+>		}
+>		if (ts != save_before) {
+>			/* slow path - Was preempted between C and E */
+>			/* The update to write_stamp could have overwritten the update to
+>			 * it by the preempting event,
+
+This sentence is hard to parse.
+
+>                          but before and after should be
+>			 * the same for all completed top events */
+>			after = local_read(write_stamp);
+>			if (save_before > after)
+>				local_cmpxchg(write_stamp, after, save_before);
+
+What is the type of write_stamp, and how does it work on 32-bit architectures with
+NMIs ?
+
+I'm not entirely sure to understand what this cmpxchg try to accomplish. Moreover,
+what happens if right after an interrupt nests between [C] and [E], another interrupt
+try to write into the buffer after before that cmpxchg ?
+
+>		}
+>	} else {
+>		/* slow path - Preempted between A and C */
+> 
+>		after = local_read(write_stamp);
+>		temp_ts = clock();
+>		barrier();
+> [F]		if (write == local_read(write_tail) && after < temp_ts) {
+>			/* This was not preempted since C and F
+>			 * The last write_stamp is still valid for the previous event
+>			 * in the buffer. */
+>			delta = temp_ts - after;
+>			/* OK to keep this new time stamp */
+>			ts = temp_ts;
+>		} else {
+>			/* Preempted between C and F
+>			 * Well, there's no use to try to know what the time stamp
+>			 * is for the previous event. Just set delta to zero and
+>			 * be the same time as that event that preempted us before
+>			 * the reservation of the buffer. */
+> 
+>			delta = 0;
+
+If this is a rare case, why not just use a full timestamp instead ?
+
+Thanks,
+
+Mathieu
+
+>		}
+>		/* No need to use full timestamps here */
+>		abs = 0;
+>	}
+> -- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
