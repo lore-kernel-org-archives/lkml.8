@@ -2,138 +2,179 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB7F2207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LDoeI3L5"
+	by mail.kernel.org (Postfix) with ESMTP id 0F546207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593106291;
+	bh=WhqBDPdOBNk4Nn0nlm/U/FBDprV3efhSWtdS+mTEZhI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k5BGooKp3jGoD7unuM7LP+x98lLw9iOfWfBn1SNZv8I0Ig1EiYXDP4nyolwpJCbcP
+	 zrXFwAaIOoBjs8nLt2+5GChkJiszg5e+QMkDiM4pJY3Ijni+v/g6jZau7i5qtv0Lh1
+	 BeOuM5xtFHekYjdzH2dkPCR8z7IHHaxXQAWYzstc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406800AbgFYRbU (ORCPT
+        id S2406820AbgFYRba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404698AbgFYRbT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:31:19 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A32C08C5C1;
-        Thu, 25 Jun 2020 10:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GCepHJh9IvbGOEQER27ddp06egUGwt041SLYlZAWLGQ=; b=LDoeI3L5sL64qfTFZFbfaFhX/j
-        0+0LzH5jw1ocXadxpn1oRN2Um70u4pffz79BOnas1937BaA+AtbBkQyW+QqLZOkK1LAftXyTojsVJ
-        Tsw3QmjN0k4vt+tbj8Wow5n96aciCp9QP8tdyv1S2x2lydDNyBMc2a3giXkzhYzkqVeSq9T2bCiah
-        YRbE3EwQrKkqXkLioWoo18nE3hCLaAr3ggQChuy91sk3yksfpFhaO57VgLOjnflw9MDRM2QMhGUSy
-        D9Qc5V6MPeZIjXqFap2i6TRu3MkW7t0Y8u4tGe9yoSIkqBUWoW//Cz2M5yzQguhun7ezsJ62rmYE9
-        y4pNw5WA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1joVi6-00020t-Ru; Thu, 25 Jun 2020 17:30:50 +0000
-Date:   Thu, 25 Jun 2020 18:30:50 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v33 10/21] mm: Introduce vm_ops->may_mprotect()
-Message-ID: <20200625173050.GF7703@casper.infradead.org>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-11-jarkko.sakkinen@linux.intel.com>
- <20200625171416.GI20319@zn.tnic>
+        Thu, 25 Jun 2020 13:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404698AbgFYRb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 13:31:29 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEDB20789;
+        Thu, 25 Jun 2020 17:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593106288;
+        bh=WhqBDPdOBNk4Nn0nlm/U/FBDprV3efhSWtdS+mTEZhI=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=KNaQ/3jj9TpuSnPt+fOmTGLlW7zN97Hc5nMeEhGWFn3RY4Vu5yOi/rL1784qarDyK
+         p9hWwTE8sLerEFX9rM+jYpsgztP56cS6phku8LqLBrkd8JcN8KNPpoVQD+Ru6HllCU
+         KTeOrcYXJqrOnQ00srcPg/hv/0Q/e8ghv8knwqvk=
+Date:   Thu, 25 Jun 2020 10:31:27 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>, boris.ostrovsky@oracle.com,
+        jgross@suse.com, konrad.wilk@oracle.com, jasowang@redhat.com,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org, linux-imx@nxp.com
+Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
+In-Reply-To: <20200624181026-mutt-send-email-mst@kernel.org>
+Message-ID: <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
+References: <20200624091732.23944-1-peng.fan@nxp.com> <20200624050355-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s> <20200624163940-mutt-send-email-mst@kernel.org> <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
+ <20200624181026-mutt-send-email-mst@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625171416.GI20319@zn.tnic>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 07:14:16PM +0200, Borislav Petkov wrote:
-> On Thu, Jun 18, 2020 at 01:08:32AM +0300, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
+> On Wed, Jun 24, 2020 at 02:53:54PM -0700, Stefano Stabellini wrote:
+> > On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
+> > > On Wed, Jun 24, 2020 at 10:59:47AM -0700, Stefano Stabellini wrote:
+> > > > On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
+> > > > > On Wed, Jun 24, 2020 at 05:17:32PM +0800, Peng Fan wrote:
+> > > > > > Export xen_swiotlb for all platforms using xen swiotlb
+> > > > > > 
+> > > > > > Use xen_swiotlb to determine when vring should use dma APIs to map the
+> > > > > > ring: when xen_swiotlb is enabled the dma API is required. When it is
+> > > > > > disabled, it is not required.
+> > > > > > 
+> > > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > 
+> > > > > Isn't there some way to use VIRTIO_F_IOMMU_PLATFORM for this?
+> > > > > Xen was there first, but everyone else is using that now.
+> > > > 
+> > > > Unfortunately it is complicated and it is not related to
+> > > > VIRTIO_F_IOMMU_PLATFORM :-(
+> > > > 
+> > > > 
+> > > > The Xen subsystem in Linux uses dma_ops via swiotlb_xen to translate
+> > > > foreign mappings (memory coming from other VMs) to physical addresses.
+> > > > On x86, it also uses dma_ops to translate Linux's idea of a physical
+> > > > address into a real physical address (this is unneeded on ARM.)
+> > > > 
+> > > > 
+> > > > So regardless of VIRTIO_F_IOMMU_PLATFORM, dma_ops should be used on Xen/x86
+> > > > always and on Xen/ARM if Linux is Dom0 (because it has foreign
+> > > > mappings.) That is why we have the if (xen_domain) return true; in
+> > > > vring_use_dma_api.
+> > > 
+> > > VIRTIO_F_IOMMU_PLATFORM makes guest always use DMA ops.
+> > > 
+> > > Xen hack predates VIRTIO_F_IOMMU_PLATFORM so it *also*
+> > > forces DMA ops even if VIRTIO_F_IOMMU_PLATFORM is clear.
+> > >
+> > > Unfortunately as a result Xen never got around to
+> > > properly setting VIRTIO_F_IOMMU_PLATFORM.
+> > 
+> > I don't think VIRTIO_F_IOMMU_PLATFORM would be correct for this because
+> > the usage of swiotlb_xen is not a property of virtio,
 > 
-> Something ate the Cc:s. Lemme add the mm list, akpm is already on Cc.
 > 
-> Leaving in the rest for mm folks.
+> Basically any device without VIRTIO_F_ACCESS_PLATFORM
+> (that is it's name in latest virtio spec, VIRTIO_F_IOMMU_PLATFORM is
+> what linux calls it) is declared as "special, don't follow normal rules
+> for access".
+> 
+> So yes swiotlb_xen is not a property of virtio, but what *is* a property
+> of virtio is that it's not special, just a regular device from DMA POV.
 
-Thanks!
+I am trying to understand what you meant but I think I am missing
+something.
 
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index dc7b87310c10..be40b9c29327 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -542,6 +542,8 @@ struct vm_operations_struct {
-> >  	void (*close)(struct vm_area_struct * area);
-> >  	int (*split)(struct vm_area_struct * area, unsigned long addr);
-> >  	int (*mremap)(struct vm_area_struct * area);
-> > +	int (*may_mprotect)(struct vm_area_struct *vma, unsigned long start,
-> > +			    unsigned long end, unsigned long prot);
+Are you saying that modern virtio should always have
+VIRTIO_F_ACCESS_PLATFORM, hence use normal dma_ops as any other devices?
 
-This is unlike any other vm operation.  Every other one is a verb.
+If that is the case, how is it possible that virtio breaks on ARM using
+the default dma_ops? The breakage is not Xen related (except that Xen
+turns dma_ops on). The original message from Peng was:
 
-> > diff --git a/mm/mprotect.c b/mm/mprotect.c
-> > index ce8b8a5eacbb..f7731dc13ff0 100644
-> > --- a/mm/mprotect.c
-> > +++ b/mm/mprotect.c
-> > @@ -603,13 +603,21 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
-> >  			goto out;
-> >  		}
-> >  
-> > +		tmp = vma->vm_end;
-> > +		if (tmp > end)
-> > +			tmp = end;
-> > +
-> > +		if (vma->vm_ops && vma->vm_ops->may_mprotect) {
-> > +			error = vma->vm_ops->may_mprotect(vma, nstart, tmp,
-> > +							  prot);
-> > +			if (error)
-> > +				goto out;
-> > +		}
-> > +
-> >  		error = security_file_mprotect(vma, reqprot, prot);
-> >  		if (error)
-> >  			goto out;
-> >  
+  vring_map_one_sg -> vring_use_dma_api
+                   -> dma_map_page
+  		       -> __swiotlb_map_page
+  		                ->swiotlb_map_page
+  				->__dma_map_area(phys_to_virt(dma_to_phys(dev, dev_addr)), size, dir);
+  However we are using per device dma area for rpmsg, phys_to_virt
+  could not return a correct virtual address for virtual address in
+  vmalloc area. Then kernel panic.
 
-I think the right way to do this is:
+I must be missing something. Maybe it is because it has to do with RPMesg?
+ 
 
-                error = security_file_mprotect(vma, reqprot, prot);
-                if (error)
-                        goto out;
+> > > > You might have noticed that I missed one possible case above: Xen/ARM
+> > > > DomU :-)
+> > > > 
+> > > > Xen/ARM domUs don't need swiotlb_xen, it is not even initialized. So if
+> > > > (xen_domain) return true; would give the wrong answer in that case.
+> > > > Linux would end up calling the "normal" dma_ops, not swiotlb-xen, and
+> > > > the "normal" dma_ops fail.
+> > > > 
+> > > > 
+> > > > The solution I suggested was to make the check in vring_use_dma_api more
+> > > > flexible by returning true if the swiotlb_xen is supposed to be used,
+> > > > not in general for all Xen domains, because that is what the check was
+> > > > really meant to do.
+> > > 
+> > > Why not fix DMA ops so they DTRT (nop) on Xen/ARM DomU? What is wrong with that?
+> > 
+> > swiotlb-xen is not used on Xen/ARM DomU, the default dma_ops are the
+> > ones that are used. So you are saying, why don't we fix the default
+> > dma_ops to work with virtio?
+> > 
+> > It is bad that the default dma_ops crash with virtio, so yes I think it
+> > would be good to fix that. However, even if we fixed that, the if
+> > (xen_domain()) check in vring_use_dma_api is still a problem.
+> 
+> Why is it a problem? It just makes virtio use DMA API.
+> If that in turn works, problem solved.
 
-                tmp = vma->vm_end;
-                if (tmp > end)
-                        tmp = end;
-+		if (vma->vm_ops->mprotect)
-+			error = vma->vm_ops->mprotect(vma, &prev, nstart, tmp,
-+					newflags);
-+		else
-+			error = mprotect_fixup(vma, &prev, nstart, tmp,
-+					newflags);
--               error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
-                if (error)
-                        goto out;
+You are correct in the sense that it would work. However I do think it
+is wrong for vring_use_dma_api to enable dma_ops/swiotlb-xen for Xen/ARM
+DomUs that don't need it. There are many different types of Xen guests,
+Xen x86 is drastically different from Xen ARM, it seems wrong to treat
+them the same way.
 
-and then the vma owner can do whatever it needs to before calling
-mprotect_fixup(), which is already not static.
 
-(how did we get to v33 with this kind of problem still in the patch set?)
+
+Anyway, re-reading the last messages of the original thread [1], it
+looks like Peng had a clear idea on how to fix the general issue. Peng,
+what happened with that?
+
+
+[1] https://lore.kernel.org/patchwork/patch/1033801/#1222404
