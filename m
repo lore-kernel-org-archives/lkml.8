@@ -2,74 +2,107 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E20C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9594DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3685C2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593089822;
-	bh=kzaLKrREKLzRea6TUdWAoSQVtDNNj/8G/ZUDOabAD2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J2TawW5mzUb6NOA67fP8AxeLQegds8UPanWMvoW5MViYt+JtBlCFZY6TQWIqycY0m
-	 k0vUlf3d/rL3RkiQcbCgknsf7MjHetHdY9nvLHIg3qM59DGw3R0zCBUuJIXmggeY4e
-	 4Tvyb32Oda5mwKAxfTPWlh3YojCIpe1kpvkm9OY0=
+	by mail.kernel.org (Postfix) with ESMTP id 75A7A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404840AbgFYM5A (ORCPT
+        id S2404806AbgFYM6i convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404723AbgFYM47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:56:59 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 057D12063A;
-        Thu, 25 Jun 2020 12:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593089819;
-        bh=kzaLKrREKLzRea6TUdWAoSQVtDNNj/8G/ZUDOabAD2I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QJTtzwmwzWA2xKg8Z9TmfLY1vrj+do4O1oqiphD8lH5tUaCRftHhIB1DW5uZkgTVW
-         QSGQMj+jJ2qKJZmBRB/L5QenTsKIDOLBGM7zFyLcL7ShSxbGIn673QHc04vZYebROp
-         W6vxWtumIHBBRMLmNiKzQviCgSYoHz47THh8HGrk=
-Date:   Thu, 25 Jun 2020 18:26:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] phy: sun4i-usb: fix dereference of pointer phy0 before
- it is null checked
-Message-ID: <20200625125655.GC6228@vkoul-mobl>
-References: <20200625124428.83564-1-colin.king@canonical.com>
+        Thu, 25 Jun 2020 08:58:38 -0400
+Received: from smtprelay08.ispgateway.de ([134.119.228.98]:28265 "EHLO
+        smtprelay08.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404650AbgFYM6i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 08:58:38 -0400
+X-Greylist: delayed 2034 seconds by postgrey-1.27 at vger.kernel.org; Thu, 25 Jun 2020 08:58:36 EDT
+Received: from [89.1.81.74] (helo=ipc1.ka-ro)
+        by smtprelay08.ispgateway.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <LW@KARO-electronics.de>)
+        id 1joQvk-0003Qs-9b; Thu, 25 Jun 2020 14:24:36 +0200
+Date:   Thu, 25 Jun 2020 14:24:35 +0200
+From:   Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Sriram Dash <sriram.dash@samsung.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH BUGFIX] can: m_can: make m_can driver work with sleep state
+ pinconfig
+Message-ID: <20200625142435.50371e2f@ipc1.ka-ro>
+Organization: Ka-Ro electronics GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625124428.83564-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Df-Sender: bHdAa2Fyby1lbGVjdHJvbmljcy5kb21haW5mYWN0b3J5LWt1bmRlLmRl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-06-20, 13:44, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently pointer phy0 is being dereferenced via the assignment of
-> phy on the call to phy_get_drvdata before phy0 is null checked, this
-> can lead to a null pointer dereference. Fix this by performing the
-> null check on phy0 before the call to phy_get_drvdata. Also replace
-> the phy0 == NULL check with the more usual !phy0 idiom.
+Hi,
 
-Applied, thanks
+When trying to use the m_can driver on an stm32mp15 based system, I
+found that I could not send or receive any data.
+Analyzing the pinctrl registers revealed, that the pins were
+configured for sleep state even when the can interfaces were in use.
+
+Looking at the m_can_platform.c driver I found that:
+
+commit f524f829b75a ("can: m_can: Create a m_can platform framework")
+
+introduced a call to m_can_class_suspend() in the m_can_runtime_suspend()
+function which wasn't there in the original code and which causes the
+pins used by the controller to be configured for sleep state.
+
+commit 0704c5743694 ("can: m_can_platform: remove unnecessary m_can_class_resume() call")
+already removed a bogus call to m_can_class_resume() from the
+m_can_runtime_resume() function, but failed to remove the matching
+call to m_can_class_suspend() from the m_can_runtime_suspend() function.
+
+Removing the bogus call to m_can_class_suspend() in the
+m_can_runtime_suspend() function fixes this.
+
+Fixes: f524f829b75a ("can: m_can: Create a m_can platform framework")
+Fixes: 0704c5743694 ("can: m_can_platform: remove unnecessary m_can_class_resume() call")
+Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+---
+ drivers/net/can/m_can/m_can_platform.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
+index 38ea5e600fb8..e6d0cb9ee02f 100644
+--- a/drivers/net/can/m_can/m_can_platform.c
++++ b/drivers/net/can/m_can/m_can_platform.c
+@@ -144,8 +144,6 @@ static int __maybe_unused m_can_runtime_suspend(struct device *dev)
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct m_can_classdev *mcan_class = netdev_priv(ndev);
+ 
+-	m_can_class_suspend(dev);
+-
+ 	clk_disable_unprepare(mcan_class->cclk);
+ 	clk_disable_unprepare(mcan_class->hclk);
+ 
 -- 
-~Vinod
+2.11.0
+
+
+
+-- 
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Geschäftsführer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
