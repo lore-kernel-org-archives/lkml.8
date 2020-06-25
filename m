@@ -2,136 +2,134 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B524CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA810C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 994992072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3292072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dhVJmH7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390785AbgFYI6G (ORCPT
+        id S2403810AbgFYI6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:58:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37192 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390330AbgFYI6F (ORCPT
+        Thu, 25 Jun 2020 04:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390330AbgFYI6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:58:05 -0400
-Received: by mail-ot1-f66.google.com with SMTP id v13so4576756otp.4;
-        Thu, 25 Jun 2020 01:58:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qLPZD7PFE1Gd0rOLnIGy3Ohui9fGoP3OOJI6weOrvCc=;
-        b=GlgKsX1EvGkXIGaSR7PKaPyxJPWvYATJ/wF/js5HVj1f87/5u+a1dTEYxDY4Di6sWV
-         P6Lz8uZ3FxBAlyEbYnHPi49IVuueTxMlq4Qcc1Id6xfiXg7Lt/jAD3Jtjxl5NYAVJgpN
-         qC5juJ3YtbSrJ2KcHUFUJcqOy1UVPIrTxFxAP3UyA7cqX1Wu8M4TWNjhZU309oCTvbyu
-         Vb6bKnIYZP1So6lZ5lWgEoYjrZOkxcRj/gmhk9aXDyPxGKI+MpQVS0tLRyonJdHqzTKS
-         lL7bNI1Q+iUheJ5Gax7kqdfM8KiXRPpuA5TCsB6FLqD2vY2zuBnHbLnHIs/KENBIzB+X
-         uR7w==
-X-Gm-Message-State: AOAM533YdzmxTHT5aZQnG4IYDQaeZ2wtArHwpa38fLBIr0ilEOthYOBv
-        bkfJSg411pzpNhPyVI/NPkUfkpsqapDjIK+UeZo=
-X-Google-Smtp-Source: ABdhPJykpfn0DLcmVLEthmAqqqmjCHMhTsy0UwLlx+zOOQgay++hZ1cGg1mJxWDV9LviySSWeN+kBuSsGmUWVMQOlpQ=
-X-Received: by 2002:a9d:6254:: with SMTP id i20mr1590023otk.145.1593075483314;
- Thu, 25 Jun 2020 01:58:03 -0700 (PDT)
+        Thu, 25 Jun 2020 04:58:19 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76FAC061573;
+        Thu, 25 Jun 2020 01:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=oaHjYuJa/3zuClzIH+/g+fhPoe4mw4jvJXlUfLpBRwo=; b=dhVJmH7iCebSecH6ztLVh/a9AX
+        q/FRl+8k3rSxsroM7W9JVbb4ruGWGY7b3ylToiN3VKMgxN8q00TRkiBpCp8haU8MShPGRK/s8jkgg
+        w3YBszL7uKIGNLBTLhESs/x80y6d0palNb62gZGEGSMiegKRbb9GXJ9f1wHqqmzeO1jX7JiN9/HsX
+        aTa1JqeZNh93t14b58sd/SSqgpOlSZ8pEHH5Qo6ELxJU7Vf2AGwoPRrjAW1izwzD6GTzOsKkAJ0LL
+        Ve/bAcUlLidRSKJGMMkj+0+VwBHrbE7cgi6LsUKtOByycYPJrSQmUl57IXr4MTgW/JLH3ka/h2HLc
+        xcYWPkgA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joNhc-0003bQ-FK; Thu, 25 Jun 2020 08:57:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE9DA3003E5;
+        Thu, 25 Jun 2020 10:57:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AA33E2010773D; Thu, 25 Jun 2020 10:57:45 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 10:57:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200625085745.GD117543@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
+ <20200625080313.GY4817@hirez.programming.kicks-ass.net>
+ <20200625082433.GC117543@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200625032430.152447-1-saravanak@google.com>
-In-Reply-To: <20200625032430.152447-1-saravanak@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 25 Jun 2020 10:57:52 +0200
-Message-ID: <CAMuHMdWiAPOGPh+LCwxebfwZTxQvwEi7G3R1btdEz6xWkbFPUQ@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
- deferred probe
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Toan Le <toanle@apm.com>,
-        Feng Kan <fkan@apm.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625082433.GC117543@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
+On Thu, Jun 25, 2020 at 10:24:33AM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 25, 2020 at 10:03:13AM +0200, Peter Zijlstra wrote:
 
-Thanks for your patch!
+> > I'm sure Will will respond, but the basic issue is the trainwreck C11
+> > made of dependent loads.
+> > 
+> > Anyway, here's a link to the last time this came up:
+> > 
+> >   https://lore.kernel.org/linux-arm-kernel/20171116174830.GX3624@linux.vnet.ibm.com/
+> 
+> Another good read:
+> 
+>   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
+> 
+> and having (partially) re-read that, I now worry intensily about things
+> like latch_tree_find(), cyc2ns_read_begin, __ktime_get_fast_ns().
+> 
+> It looks like kernel/time/sched_clock.c uses raw_read_seqcount() which
+> deviates from the above patterns by, for some reason, using a primitive
+> that includes an extra smp_rmb().
+> 
+> And this is just the few things I could remember off the top of my head,
+> who knows what else is out there.
 
-On Thu, Jun 25, 2020 at 5:24 AM Saravana Kannan <saravanak@google.com> wrote:
-> Under the following conditions:
-> - driver A is built in and can probe device-A
-> - driver B is a module and can probe device-B
+As an example, let us consider __ktime_get_fast_ns(), the critical bit
+is:
 
-I think this is not correct: in my case driver B is builtin, too.
+		seq = raw_read_seqcount_latch(&tkf->seq);
+		tkr = tkf->base + (seq & 0x01);
+		now = tkr->base;
 
-> - device-A is supplier of device-B
->
-> Without this patch:
-> 1. device-A is added.
-> 2. device-B is added.
-> 3. dpm_list is now [device-A, device-B].
-> 4. driver-A defers probe of device-A.
-> 5. deferred probe of device-A is reattempted
+And we hard rely on that being a dependent load, so:
 
-I think this is misleading: in my case driver-A did not defer the probe
-of device-A, and driver-A never returned -EPROBE_DEFER.
-Probing was merely paused, due to fw_devlink_pause();
+  LOAD	seq, (tkf->seq)
+  LOAD  tkr, tkf->base
+  AND   seq, 1
+  MUL   seq, sizeof(tk_read_base)
+  ADD	tkr, seq
+  LOAD  now, (tkr->base)
 
-> 6. device-A is moved to end of dpm_list.
-> 6. dpm_list is now [device-B, device-A].
-> 7. driver-B is loaded and probes device-B.
-> 8. dpm_list stays as [device-B, device-A].
->
-> Suspend (which goes in the reverse order of dpm_list) fails because
-> device-A (supplier) is suspended before device-B (consumer).
->
-> With this patch:
-> 1. device-A is added.
-> 2. device-B is added.
-> 3. dpm_list is now [device-A, device-B].
-> 4. driver-A defers probe of device-A.
-> 5. deferred probe of device-A is reattempted later.
-> 6. dpm_list is now [device-B, device-A].
-> 7. driver-B is loaded and probes device-B.
-> 8. dpm_list is now [device-A, device-B].
->
-> Suspend works because device-B (consumer) is suspended before device-A
-> (supplier).
->
-> Fixes: 494fd7b7ad10 ("PM / core: fix deferred probe breaking suspend resume order")
-> Fixes: 716a7a259690 ("driver core: fw_devlink: Add support for batching fwnode parsing")
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+Such that we obtain 'now' as a direct dependency on 'seq'. This ensures
+the loads are ordered.
 
-This fixes wake-up by GPIO key on r8a7740/armadillo and sh73a0/kzm9g.
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+A compiler can wreck this by translating it into something like:
 
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -109,6 +109,8 @@ static void deferred_probe_work_func(struct work_struct *work)
->                  * probe makes that very unsafe.
->                  */
->                 device_pm_move_to_tail(dev);
-> +               /* Greg/Rafael: SHOULD I DELETE THIS? ^^ I think I should, but
-> +                * I'm worried if it'll have some unintended consequeneces. */
+  LOAD	seq, (tkf->seq)
+  LOAD  tkr, tkf->base
+  AND   seq, 1
+  CMP	seq, 0
+  JE	1f
+  ADD	tkr, sizeof(tk_read_base)
+1:
+  LOAD  now, (tkr->base)
 
-Works fine for me with the call to device_pm_move_to_tail() removed, too
-(at least on the two boards that showed the issue before).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Because now the machine can speculate and load now before seq, breaking
+the ordering.
