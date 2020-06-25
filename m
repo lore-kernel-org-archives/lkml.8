@@ -2,163 +2,98 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEBBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9124A20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:40:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vjDkS1ct"
+	by mail.kernel.org (Postfix) with ESMTP id 605DB207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407575AbgFYWkx (ORCPT
+        id S2407553AbgFYWpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:40:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405127AbgFYWkv (ORCPT
+        Thu, 25 Jun 2020 18:45:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15276 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403795AbgFYWpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:40:51 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C57FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 15:40:51 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f6so30206pjq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 15:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jrKbnig9QFRhNV6K+9Xoewg6ga8WAeyx+cHHuuAPHlw=;
-        b=vjDkS1ct1augvE723FB1+5WPfwzfajqrtAMZRYo0dTgN5aCXnRVc3P9qUPioCfxE8z
-         zC7awdkoztnyQMH6KrmbAZB+gM3wWozXAHd+5NlrM3zI27aeWEvQfCn5USOdaH1puVqn
-         n+mQi5qyO3ediG9Fy54lBVH83MmSL8Q2+fhkZaaYmruol7QRBk3j2qUtL3wKRM4CV0O8
-         azUuw9K3+1ptvV6oCv9rk3Jq7Xiiwx3xcCAujAANMFcNjec9DVvR2cW5QPifyHeO10Cg
-         wZRh3A465gRs3JRICOc49N6SHyq0l8hzKjlz8ZyjwxNNSR3yFRHh1hd8rpoRIRuIIfw5
-         Pg0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jrKbnig9QFRhNV6K+9Xoewg6ga8WAeyx+cHHuuAPHlw=;
-        b=QAmx0HimXVrNhuLKJIvmywqYKbwk/8uUWgnmukuJEutfBFDnqrR1ShC1xHFDLKAxBg
-         o+iDEaD8hAESIx6vHdv49pKUwMxMeyRK93nRlBiRge5NOrwBQcjLv7trssETpxQS0WO/
-         dOMOBLhIrHE3HDnzDGiqvvdmFoKw4WodpBSgwxInBL/LpuyxDunbwHIRcOhd/Ml5KJZn
-         OO1482HO4TGxOQWKNnnxmh7qMT/3DEZrdtAHjPA6g1pvZFSdcTSiy1qpkY0lp0BZseGY
-         IBD7EJAOQHylJWxb1/qm9sS9BsMacoikySfWd3eFArSgP/UY6jr2RzOuJXxIlJUxJL9v
-         /5/w==
-X-Gm-Message-State: AOAM5305Zdto0luYK/8yzLgfjtj1AjfbISBbW0lSx8pOEd63OSy84EA7
-        jz7QRkj89T6OL00kSwL6YRFXZA==
-X-Google-Smtp-Source: ABdhPJx7TfSqe9+zt9NPoQSooOWfE2e9/T8a5met4FrI5ZnaAeXh7ahhb/KuD0I40m4aCdLgLVgkpw==
-X-Received: by 2002:a17:90a:7c4e:: with SMTP id e14mr256081pjl.52.1593124850158;
-        Thu, 25 Jun 2020 15:40:50 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id k92sm9112547pje.30.2020.06.25.15.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 15:40:49 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 15:40:42 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        mhelsley@vmware.com
-Subject: Re: [RFC][PATCH] objtool,x86_64: Replace recordmcount with objtool
-Message-ID: <20200625224042.GA169781@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-5-samitolvanen@google.com>
- <20200624212737.GV4817@hirez.programming.kicks-ass.net>
- <20200624214530.GA120457@google.com>
- <20200625074530.GW4817@hirez.programming.kicks-ass.net>
- <20200625161503.GB173089@google.com>
- <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625200235.GQ4781@hirez.programming.kicks-ass.net>
+        Thu, 25 Jun 2020 18:45:45 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PMXMks121815;
+        Thu, 25 Jun 2020 18:45:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3n1dq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 18:45:39 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PMXqYx123125;
+        Thu, 25 Jun 2020 18:45:39 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3n1d6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 18:45:39 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PMdumo028439;
+        Thu, 25 Jun 2020 22:45:37 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 31uusg13w3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 22:45:37 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PMjZvB3211694
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 22:45:35 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19EF811C04A;
+        Thu, 25 Jun 2020 22:45:35 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2B5611C076;
+        Thu, 25 Jun 2020 22:45:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 22:45:33 +0000 (GMT)
+Message-ID: <1593125133.27152.417.camel@linux.ibm.com>
+Subject: Re: [PATCH 11/12] ima: Use the common function to detect LSM
+ conditionals in a rule
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Thu, 25 Jun 2020 18:45:33 -0400
+In-Reply-To: <20200623003236.830149-12-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-12-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_19:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=761
+ lowpriorityscore=0 impostorscore=0 spamscore=0 cotscore=-2147483648
+ clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:02:35PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 25, 2020 at 09:15:03AM -0700, Sami Tolvanen wrote:
-> > On Thu, Jun 25, 2020 at 09:45:30AM +0200, Peter Zijlstra wrote:
+On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
+> Make broader use of ima_rule_contains_lsm_cond() to check if a given
+> rule contains an LSM conditional. This is a code cleanup and has no
+> user-facing change.
 > 
-> > > At least for x86_64 I can do a really quick take for a recordmcount pass
-> > > in objtool, but I suppose you also need this for ARM64 ?
-> > 
-> > Sure, sounds good. arm64 uses -fpatchable-function-entry with clang, so we
-> > don't need recordmcount there.
-> 
-> This is on top of my local pile:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git master
-> 
-> which notably includes the static_call series.
-> 
-> Not boot tested, but it generates the required sections and they look
-> more or less as expected, ymmv.
-> 
-> ---
->  arch/x86/Kconfig              |  1 -
->  scripts/Makefile.build        |  3 ++
->  scripts/link-vmlinux.sh       |  2 +-
->  tools/objtool/builtin-check.c |  9 ++---
->  tools/objtool/builtin.h       |  2 +-
->  tools/objtool/check.c         | 81 +++++++++++++++++++++++++++++++++++++++++++
->  tools/objtool/check.h         |  1 +
->  tools/objtool/objtool.h       |  1 +
->  8 files changed, 91 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index a291823f3f26..189575c12434 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -174,7 +174,6 @@ config X86
->  	select HAVE_EXIT_THREAD
->  	select HAVE_FAST_GUP
->  	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
-> -	select HAVE_FTRACE_MCOUNT_RECORD
->  	select HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_TRACER
->  	select HAVE_GCC_PLUGINS
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-This breaks DYNAMIC_FTRACE according to kernel/trace/ftrace.c:
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-  #ifndef CONFIG_FTRACE_MCOUNT_RECORD
-  # error Dynamic ftrace depends on MCOUNT_RECORD
-  #endif
-
-And the build errors after that seem to confirm this. It looks like we might
-need another flag to skip recordmcount.
-
-Anyway, since objtool is run before recordmcount, I just left this unchanged
-for testing and ignored the recordmcount warnings about __mcount_loc already
-existing. Something is a bit off still though, I see this at boot:
-
-  ------------[ ftrace bug ]------------
-  ftrace failed to modify
-  [<ffffffff81000660>] __tracepoint_iter_initcall_level+0x0/0x40
-   actual:   0f:1f:44:00:00
-  Initializing ftrace call sites
-  ftrace record flags: 0
-   (0)
-   expected tramp: ffffffff81056500
-  ------------[ cut here ]------------
-
-Otherwise, this looks pretty good.
-
-Sami
+Mimi
