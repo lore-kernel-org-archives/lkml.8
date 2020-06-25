@@ -2,165 +2,72 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6965FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAA97206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mM0ISaCR"
+	by mail.kernel.org (Postfix) with ESMTP id 511F1206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405236AbgFYRhH (ORCPT
+        id S2406834AbgFYRhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:37:07 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:19634 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbgFYRhG (ORCPT
+        Thu, 25 Jun 2020 13:37:52 -0400
+Received: from out28-74.mail.aliyun.com ([115.124.28.74]:40688 "EHLO
+        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728181AbgFYRhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:37:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593106626; x=1624642626;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=TBJlsNi6EkrGTKSTk1vvF3t132dofHTu9Y2/7H6Ck1I=;
-  b=mM0ISaCRJl3xIBatbS55nGllrYjet+cNLEH9/zDzKOxTEPyQNeURjK2a
-   1MEnsN/EVHU0Zqa/6Ob6b7HByUea+/C+rU+onFqmzIoswnlnHLG+HYufG
-   M0qG+uxH8I/cuoEFdlTHQK93T8SkKBkJKE0DTn41E6c6YWvJPvtcnDaLi
-   w=;
-IronPort-SDR: p+c4FLm88WG8ByjniKpF4JhxFLx70kr2tcWp4GyF2O8BFiQKW6LWB1r6rUjEsrvCInEJyd9M8Z
- Xp4sZOtloRlA==
-X-IronPort-AV: E=Sophos;i="5.75,280,1589241600"; 
-   d="scan'208";a="47011046"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 25 Jun 2020 17:37:01 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 769A3A1788;
-        Thu, 25 Jun 2020 17:36:59 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 25 Jun 2020 17:36:58 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.109) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 25 Jun 2020 17:36:48 +0000
-Subject: Re: [PATCH v4 17/18] nitro_enclaves: Add overview documentation
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-18-andraprs@amazon.com>
- <20200623085915.GF32718@stefanha-x1.localdomain>
- <746fcd7d-5946-35ec-6471-8bf8dccdf400@amazon.com>
- <20200625131020.GD221479@stefanha-x1.localdomain>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <e37f9647-3a29-5619-4c90-26a24dde6a65@amazon.com>
-Date:   Thu, 25 Jun 2020 20:36:38 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Thu, 25 Jun 2020 13:37:51 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1705442|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00394338-0.000234983-0.995822;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.HsRfZK5_1593106660;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HsRfZK5_1593106660)
+          by smtp.aliyun-inc.com(10.147.41.231);
+          Fri, 26 Jun 2020 01:37:45 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        paul.burton@mips.com, paul@crapouillou.net, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, ak@linux.intel.com,
+        ebiederm@xmission.com, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: [PATCH v2 0/3] Add support for Ingenic X1830 SoC and Y&A CU1830-Neo board.
+Date:   Fri, 26 Jun 2020 01:37:13 +0800
+Message-Id: <20200625173716.56146-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200625131020.GD221479@stefanha-x1.localdomain>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.109]
-X-ClientProxiedBy: EX13D10UWB001.ant.amazon.com (10.43.161.111) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+v1->v2:
+1.Add DT node for LED.
+2.Update defconfig for LED.
+
+周琰杰 (Zhou Yanjie) (3):
+  MIPS: Ingenic: Add Ingenic X1830 support.
+  dt-bindings: MIPS: Add Ingenic X1830 based boards.
+  MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
+
+ .../devicetree/bindings/mips/ingenic/devices.yaml  |  12 +-
+ arch/mips/boot/dts/ingenic/Makefile                |   1 +
+ arch/mips/boot/dts/ingenic/cu1830-neo.dts          | 168 ++++++++++++
+ arch/mips/boot/dts/ingenic/x1830.dtsi              | 300 +++++++++++++++++++++
+ arch/mips/configs/cu1830-neo_defconfig             | 123 +++++++++
+ arch/mips/jz4740/Kconfig                           |  10 +
+ 6 files changed, 611 insertions(+), 3 deletions(-)
+ create mode 100644 arch/mips/boot/dts/ingenic/cu1830-neo.dts
+ create mode 100755 arch/mips/boot/dts/ingenic/x1830.dtsi
+ create mode 100644 arch/mips/configs/cu1830-neo_defconfig
+
+-- 
+2.11.0
 
 
-On 25/06/2020 16:10, Stefan Hajnoczi wrote:
-> On Wed, Jun 24, 2020 at 05:39:39PM +0300, Paraschiv, Andra-Irina wrote:
->>
->> On 23/06/2020 11:59, Stefan Hajnoczi wrote:
->>> On Mon, Jun 22, 2020 at 11:03:28PM +0300, Andra Paraschiv wrote:
->>>> +The kernel bzImage, the kernel command line, the ramdisk(s) are part =
-of the
->>>> +Enclave Image Format (EIF); plus an EIF header including metadata suc=
-h as magic
->>>> +number, eif version, image size and CRC.
->>>> +
->>>> +Hash values are computed for the entire enclave image (EIF), the kern=
-el and
->>>> +ramdisk(s). That's used, for example, to check that the enclave image=
- that is
->>>> +loaded in the enclave VM is the one that was intended to be run.
->>>> +
->>>> +These crypto measurements are included in a signed attestation docume=
-nt
->>>> +generated by the Nitro Hypervisor and further used to prove the ident=
-ity of the
->>>> +enclave; KMS is an example of service that NE is integrated with and =
-that checks
->>>> +the attestation doc.
->>>> +
->>>> +The enclave image (EIF) is loaded in the enclave memory at offset 8 M=
-iB. The
->>>> +init process in the enclave connects to the vsock CID of the primary =
-VM and a
->>>> +predefined port - 9000 - to send a heartbeat value - 0xb7. This mecha=
-nism is
->>>> +used to check in the primary VM that the enclave has booted.
->>>> +
->>>> +If the enclave VM crashes or gracefully exits, an interrupt event is =
-received by
->>>> +the NE driver. This event is sent further to the user space enclave p=
-rocess
->>>> +running in the primary VM via a poll notification mechanism. Then the=
- user space
->>>> +enclave process can exit.
->>>> +
->>>> +[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
->>>> +[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
->>>> +[3] https://lwn.net/Articles/807108/
->>>> +[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-paramet=
-ers.html
->>>> +[5] https://man7.org/linux/man-pages/man7/vsock.7.html
->>> Is the EIF specification and the attestation protocol available?
->> For now, they are not publicly available. Once the refs are available (e=
-.g.
->> AWS documentation, GitHub documentation), I'll include them in the kernel
->> documentation as well.
->>
->> As a note here, the NE project is currently in preview
->> (https://aws.amazon.com/ec2/nitro/nitro-enclaves/) and part of the
->> documentation / codebase will be publicly available when NE is generally
->> available (GA). This will be in addition to the ones already publicly
->> available, like the NE kernel driver.
->>
->> Let me know if I can help with any particular questions / clarifications.
-> Thanks!
-
-You are welcome.
-
-Andra
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
 
