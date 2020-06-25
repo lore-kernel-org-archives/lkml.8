@@ -2,195 +2,189 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC857C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94795C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853FD20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593086808;
-	bh=uYA15OPi4WMZSM4xohqdnOhCSpX3DGNAuDnQL3l31bw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rsmdBeqNL6599duIkxAfdJVWQhEfknNPCoJ/xRMyTF4CHZYDGj4PWrm6nduTN7Rqj
-	 4zuyaRj/IO9v9L8TzyKVrW2NGXqTDGO7uVNTVLgWFH9MmwRZXW7YjA6/ctHIi89i1S
-	 +akS16eYrthOfJgXVtDT13LqpFfW/q3Y5XDIXkhA=
+	by mail.kernel.org (Postfix) with ESMTP id 58D3D2081A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="npqkY1av"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404492AbgFYMGr (ORCPT
+        id S2404450AbgFYMIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:06:47 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33004 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404222AbgFYMGq (ORCPT
+        Thu, 25 Jun 2020 08:08:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404222AbgFYMIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:06:46 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n6so5033395otl.0;
-        Thu, 25 Jun 2020 05:06:45 -0700 (PDT)
+        Thu, 25 Jun 2020 08:08:15 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5911CC061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:08:15 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so6203106ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8VCeG8CVZJE62G3OepGAp/AxnH7OVgFXH/aRSOH8684=;
+        b=npqkY1avQHjiny6A92tzl3z9UAYdGy+uFBV2Aa97J4sPisdK69SFMbK5d+keVmof+x
+         51zF0uzM72RT7jk7DY0hooF0wjd2gzYQh8pLcAmeLZkowS23fa4PE7HlNDr2St3X9qxE
+         dcoYhGLVL6MXTvSL/HC70qKGeXkVj9wDomj03TNPa4ho5BJkOoMC+sHP0JDUio7ikzzQ
+         kIiHPRk9bY3bcDNI/IcBtHshOZNQ+99hUgrpxbI8qcrrvFYeDVRL6oZcgmV9OmIC3H8Z
+         R+hbvLyQRJXqJ9ZgBz5AxRcY7JS6pCqiWdCTpLhOjYrdgAlfsPbIj/zhb8jJKU1Fupw2
+         mCug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rD/XDnXIKX8gNhT/DuKyWWpCmsBD1jr7T2XgYaQBYJQ=;
-        b=H+hiF3xg+yVjD5dVHOyzq6oMDavu21+adZp52vIq4/e9ER0Adx6yXhN6s+a3TeFUSs
-         2Bjsa0q1obKSn9fckL0V2qdFYOkOl/wow1tkdFyaCDETMZrahuOFa18ffXIMkuFzW2c+
-         aS04dAe3J5l7t1B0qO58jv/8w2oVguXMfo8c0hwttq2QQ+nZA7AZv0B3Jm50C5f3Amkt
-         YPgi9dvZ/eAHvoJPQbttFJTXqbJPl2rWHi8/4jZ/6JgYQyXQemuXh+pxuXQ1lIq718cq
-         SgfXLJ9L5FFW4E09f3Hg/nJs7y3b/beXQRZSgvGPyVx2NcaRsRCXQ6a0+if3w6321lhA
-         O0aw==
-X-Gm-Message-State: AOAM533LaEYkY4xFebpI2b3blXIIRIOzMVBaixFMcguyfMZHtL+tN5Kc
-        Aa0LezSo1iwguU0NH8Wq5G/h65+/bbmB22P6VFD2hnJ0
-X-Google-Smtp-Source: ABdhPJxZ5HE61KmrZClwMlPjhbYjedR8tZFyYwac2mmi23TtFNeN3JzwcImgSG9LuPFH0jGfiufbraqmXRuh6M68dPI=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr25614213otn.118.1593086804897;
- Thu, 25 Jun 2020 05:06:44 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8VCeG8CVZJE62G3OepGAp/AxnH7OVgFXH/aRSOH8684=;
+        b=kMjvqGGzp4BmFp5mGx+cvN2zZmUHrJCnGdAOVn9i8NtGNcqcg4j8kgzF3hBEfCKPAq
+         EfxsIDQBw4WkHyDZruABerXauwZ8E7sp8YeI0TZQPiRZsLUf6esgVqUrhursxvPt3wZ4
+         f2Jx0IeQHZCrwUTUEstbR/Do0mAqoYwfOk9tsAZjCLr50rV5g8aMAby2unnihZtdqTU8
+         kWRgdgKwl92dTq3WBvYev4e02U7wcUnx5U4LrCXHOJSw0y2TBhKp4rWBomySAtr8i+s3
+         DBBqpTaT6dWCG3XO2MTNq+mvi5c56WCEDP7zwPECIg87YQ+oO0/+y/FDxkXL5bk2ePL6
+         +5eA==
+X-Gm-Message-State: AOAM533jARbjaEsJ8K6odRZOmXeAmmTeQJp6THVpY/r8m49SFav3e5zh
+        Yrg+Nel0Q4P2sPsDGMU9QavMkFs8o+Fne2W9lF92KA==
+X-Google-Smtp-Source: ABdhPJzBzogeRB8sXaBfCWH7bH0b9Yc/0O4EU/pKh2VjKNmpdzBUyuKSvPVT3UlxcKo/WVoH90Eal1d4/axNQ3e7bHE=
+X-Received: by 2002:a05:651c:512:: with SMTP id o18mr17592449ljp.226.1593086893664;
+ Thu, 25 Jun 2020 05:08:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200608174134.11157-1-sean.j.christopherson@intel.com>
-In-Reply-To: <20200608174134.11157-1-sean.j.christopherson@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jun 2020 14:06:33 +0200
-Message-ID: <CAJZ5v0inhpW1vbYJYPqWgkekK7hKhgO_fE5JmemT+p2qh7RFaw@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during wakeup
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Brad Campbell <lists2009@fnarfbargle.com>,
-        Liam Merwick <liam.merwick@oracle.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm-devel <kvm@vger.kernel.org>
+References: <20200624154422.29166-1-vincent.guittot@linaro.org>
+ <7f2b3135-328b-a510-ce23-49e3f5c20965@applied-asynchrony.com>
+ <CAKfTPtD4+gUkz7Z2o9yyuK09M0bmP=Y+pZTYswNt=yVC4WVkyQ@mail.gmail.com> <c4574b9e-852d-8f04-91cb-0fbae9f89833@applied-asynchrony.com>
+In-Reply-To: <c4574b9e-852d-8f04-91cb-0fbae9f89833@applied-asynchrony.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 25 Jun 2020 14:08:02 +0200
+Message-ID: <CAKfTPtAfMZOvE47EAa8pZE3EJBafQoAaGBZsj+z7XEXB980yqg@mail.gmail.com>
+Subject: Re: [PATCH] sched/cfs: change initial value of runnable_avg
+To:     =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 7:49 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Thu, 25 Jun 2020 at 12:42, Holger Hoffst=C3=A4tte
+<holger@applied-asynchrony.com> wrote:
 >
-> Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
-> where firmware doesn't initialize or save/restore across S3.  This fixes
-> a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
-> taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
+> On 2020-06-25 11:56, Vincent Guittot wrote:
+> > On Thu, 25 Jun 2020 at 11:24, Holger Hoffst=C3=A4tte
+> > <holger@applied-asynchrony.com> wrote:
+> >>
+> >> On 2020-06-24 17:44, Vincent Guittot wrote:
+> >>> Some performance regression on reaim benchmark have been raised with
+> >>>     commit 070f5e860ee2 ("sched/fair: Take into account runnable_avg =
+to classify group")
+> >>>
+> >>> The problem comes from the init value of runnable_avg which is initia=
+lized
+> >>> with max value. This can be a problem if the newly forked task is fin=
+ally
+> >>> a short task because the group of CPUs is wrongly set to overloaded a=
+nd
+> >>> tasks are pulled less agressively.
+> >>>
+> >>> Set initial value of runnable_avg equals to util_avg to reflect that =
+there
+> >>> is no waiting time so far.
+> >>>
+> >>> Fixes: 070f5e860ee2 ("sched/fair: Take into account runnable_avg to c=
+lassify group")
+> >>> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> >>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> >>> ---
+> >>>    kernel/sched/fair.c | 2 +-
+> >>>    1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >>> index 0424a0af5f87..45e467bf42fc 100644
+> >>> --- a/kernel/sched/fair.c
+> >>> +++ b/kernel/sched/fair.c
+> >>> @@ -806,7 +806,7 @@ void post_init_entity_util_avg(struct task_struct=
+ *p)
+> >>>                }
+> >>>        }
+> >>>
+> >>> -     sa->runnable_avg =3D cpu_scale;
+> >>> +     sa->runnable_avg =3D sa->util_avg;
+> >>>
+> >>>        if (p->sched_class !=3D &fair_sched_class) {
+> >>>                /*
+> >>>
+> >>
+> >> Something is wrong here. I woke up my machine from suspend-to-RAM this=
+ morning
+> >> and saw that a completely idle machine had a loadavg of ~7. According =
+to my
+> >
+> > Just to make sure: Are you speaking about loadavg that is output by
+> > /proc/loadavg or load_avg which is the PELT load ?
 >
-> Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
-> with the case where the MSR is locked, and because APs already redo
-> init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
-> used to reinitialize APs upon wakeup.  Do the call in the early wakeup
-> flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
-> a resume hook is not guaranteed to work, as KVM does VMXON in its own
-> resume hook, kvm_resume(), when KVM has active guests.
+> /proc/loadavg
 >
-> Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
-> Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
-> Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
-> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Cc: stable@vger.kernel.org # v5.6
-> Fixes: 21bd3467a58e ("KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >> monitoring system this happened to be the loadavg right before I suspe=
+nded.
+> >> I've reverted this, rebooted, created a loadavg >0, suspended and afte=
+r wake up
+> >> loadavg again correctly ranges between 0 and whatever, as expected.
+> >
+> > I'm not sure to catch why ~7 is bad compared to correctly ranges
+> > between 0 and whatever. Isn't ~7 part of the whatever ?
+>
+> After wakeup the _baseline_ for loadavg seemed to be the last value befor=
+e suspend,
+> not 0. The 7 then was the base loadavg for a _mostly idle machine_ (just =
+reading
+> mail etc.), i.e. it never went below said baseline again, no matter the
+> _actual_ load.
+>
+> Here's an image: https://imgur.com/a/kd2stqO
+>
+> Before 02:00 last night the load was ~7 (compiled something), then all pr=
+ocesses
+> were terminated and the machine was suspended. After wakeup the machine w=
+as mostly
+> idle (9am..11am), yet measured loadavg continued with the same value as b=
+efore.
+> I didn't notice this right away since my CPU meter on the desktop didn't =
+show any
+> *actual* activity (because there was none). The spike at ~11am is the rev=
+ert/reboot.
 
-Given the regression fix nature of this patch, is it being taken care
-of by anyone (tip in particular) already?
+you have reverted only this patch ?
 
-> ---
+TBH, there is no link between these 2 metrics and I don't see how the
+init value of runnable_avg can impact loadavg. As explained, loadavg
+is doing a snapshot of nr_running every 5 seconds whereas the impact
+of changing this init value will have disappeared in far less than
+300ms most of the time.
+
+Let me try to reproduce this on my system
+
+
+> After that loadavg became normal again, i.e. representative of the actual=
+ load,
+> even after suspend/resume cycles.
+> I suspend/resume every night and the only thing that changed recently was=
+ this
+> patch, so.. :)
 >
-> v2:
->   - Collect Reviewed/Tested tags. [Brad, Liam, Maxim].
->   - Include asm/cpu.h to fix Zhaoxin and Centaur builds. [Brad, LKP]
->   - Add Cc to stable. [Liam]
->
->  arch/x86/include/asm/cpu.h    | 5 +++++
->  arch/x86/kernel/cpu/centaur.c | 1 +
->  arch/x86/kernel/cpu/cpu.h     | 4 ----
->  arch/x86/kernel/cpu/zhaoxin.c | 1 +
->  arch/x86/power/cpu.c          | 6 ++++++
->  5 files changed, 13 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-> index dd17c2da1af5..da78ccbd493b 100644
-> --- a/arch/x86/include/asm/cpu.h
-> +++ b/arch/x86/include/asm/cpu.h
-> @@ -58,4 +58,9 @@ static inline bool handle_guest_split_lock(unsigned long ip)
->         return false;
->  }
->  #endif
-> +#ifdef CONFIG_IA32_FEAT_CTL
-> +void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
-> +#else
-> +static inline void init_ia32_feat_ctl(struct cpuinfo_x86 *c) {}
-> +#endif
->  #endif /* _ASM_X86_CPU_H */
-> diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
-> index 426792565d86..c5cf336e5077 100644
-> --- a/arch/x86/kernel/cpu/centaur.c
-> +++ b/arch/x86/kernel/cpu/centaur.c
-> @@ -3,6 +3,7 @@
->  #include <linux/sched.h>
->  #include <linux/sched/clock.h>
->
-> +#include <asm/cpu.h>
->  #include <asm/cpufeature.h>
->  #include <asm/e820/api.h>
->  #include <asm/mtrr.h>
-> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-> index 37fdefd14f28..38ab6e115eac 100644
-> --- a/arch/x86/kernel/cpu/cpu.h
-> +++ b/arch/x86/kernel/cpu/cpu.h
-> @@ -80,8 +80,4 @@ extern void x86_spec_ctrl_setup_ap(void);
->
->  extern u64 x86_read_arch_cap_msr(void);
->
-> -#ifdef CONFIG_IA32_FEAT_CTL
-> -void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
-> -#endif
-> -
->  #endif /* ARCH_X86_CPU_H */
-> diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
-> index df1358ba622b..05fa4ef63490 100644
-> --- a/arch/x86/kernel/cpu/zhaoxin.c
-> +++ b/arch/x86/kernel/cpu/zhaoxin.c
-> @@ -2,6 +2,7 @@
->  #include <linux/sched.h>
->  #include <linux/sched/clock.h>
->
-> +#include <asm/cpu.h>
->  #include <asm/cpufeature.h>
->
->  #include "cpu.h"
-> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-> index aaff9ed7ff45..b0d3c5ca6d80 100644
-> --- a/arch/x86/power/cpu.c
-> +++ b/arch/x86/power/cpu.c
-> @@ -193,6 +193,8 @@ static void fix_processor_context(void)
->   */
->  static void notrace __restore_processor_state(struct saved_context *ctxt)
->  {
-> +       struct cpuinfo_x86 *c;
-> +
->         if (ctxt->misc_enable_saved)
->                 wrmsrl(MSR_IA32_MISC_ENABLE, ctxt->misc_enable);
->         /*
-> @@ -263,6 +265,10 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
->         mtrr_bp_restore();
->         perf_restore_debug_store();
->         msr_restore_context(ctxt);
-> +
-> +       c = &cpu_data(smp_processor_id());
-> +       if (cpu_has(c, X86_FEATURE_MSR_IA32_FEAT_CTL))
-> +               init_ia32_feat_ctl(c);
->  }
->
->  /* Needed by apm.c */
-> --
-> 2.26.0
->
+> -h
