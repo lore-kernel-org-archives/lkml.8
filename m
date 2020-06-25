@@ -2,40 +2,40 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A624BC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC256C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87B902145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8EB8207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436592AbgFYUSt (ORCPT
+        id S2436600AbgFYUSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:18:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:20502 "EHLO mga18.intel.com"
+        Thu, 25 Jun 2020 16:18:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20516 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436552AbgFYUSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2436562AbgFYUSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 16:18:42 -0400
-IronPort-SDR: wt1lPn9k/RrN9kfqhCRnLzEs3cJEibu+vu2upCgXSSq47NOTmWFxkoy3JQsQpuI8Vxu6KuLgs9
- O8G7pRmcaSbw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505259"
+IronPort-SDR: UKy2X53apJa0ntqbYZ6YGu41s4HygopKstAFIOSzxX/2MGmImkzTsnHoISKCd/4Pe3NG//+mHY
+ lk+aSzyhOQ2g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505286"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="132505259"
+   d="scan'208";a="132505286"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:38 -0700
-IronPort-SDR: ACH0fC0g9GuV3el4xvsnYVbOtzPoHzb6Ls7RryCMJeeQ3Glc8T4vghmO1WnjEj5PulpVqmusf6
- RI4Tr151dhpQ==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:40 -0700
+IronPort-SDR: hguf0MI+TInOK/uV/QbxRQ1hKalWrvpl2SYCI2mUSC18YpqyS0oh64dVKHK4o11nnZoP2pIext
+ 1tZ03oLjL2Uw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="453132230"
+   d="scan'208";a="453132242"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:37 -0700
+  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:39 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
@@ -55,11 +55,10 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ravi V Shankar" <ravi.v.shankar@intel.com>
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4 05/12] x86/fpu/xstate: Add supervisor PASID state for ENQCMD feature
-Date:   Thu, 25 Jun 2020 13:17:15 -0700
-Message-Id: <1593116242-31507-6-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v4 08/12] fork: Clear PASID for new mm
+Date:   Thu, 25 Jun 2020 13:17:18 -0700
+Message-Id: <1593116242-31507-9-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
 References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
@@ -68,109 +67,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu-cheng Yu <yu-cheng.yu@intel.com>
+When a new mm is created, its PASID should be cleared, i.e. the PASID is
+initialized to its init state 0 on both ARM and X86.
 
-ENQCMD instruction reads PASID from IA32_PASID MSR. The MSR is stored
-in the task's supervisor FPU PASID state and is context switched by
-XSAVES/XRSTORS.
-
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 v2:
-- Modify the commit message (Thomas)
+- Add this patch to initialize PASID value for a new mm.
 
- arch/x86/include/asm/fpu/types.h  | 10 ++++++++++
- arch/x86/include/asm/fpu/xstate.h |  2 +-
- arch/x86/kernel/fpu/xstate.c      |  4 ++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
+ include/linux/mm_types.h | 2 ++
+ kernel/fork.c            | 8 ++++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
-index f098f6cab94b..00f8efd4c07d 100644
---- a/arch/x86/include/asm/fpu/types.h
-+++ b/arch/x86/include/asm/fpu/types.h
-@@ -114,6 +114,7 @@ enum xfeature {
- 	XFEATURE_Hi16_ZMM,
- 	XFEATURE_PT_UNIMPLEMENTED_SO_FAR,
- 	XFEATURE_PKRU,
-+	XFEATURE_PASID,
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index d61285cfe027..d60d2ec10881 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -22,6 +22,8 @@
+ #endif
+ #define AT_VECTOR_SIZE (2*(AT_VECTOR_SIZE_ARCH + AT_VECTOR_SIZE_BASE + 1))
  
- 	XFEATURE_MAX,
- };
-@@ -128,6 +129,7 @@ enum xfeature {
- #define XFEATURE_MASK_Hi16_ZMM		(1 << XFEATURE_Hi16_ZMM)
- #define XFEATURE_MASK_PT		(1 << XFEATURE_PT_UNIMPLEMENTED_SO_FAR)
- #define XFEATURE_MASK_PKRU		(1 << XFEATURE_PKRU)
-+#define XFEATURE_MASK_PASID		(1 << XFEATURE_PASID)
++/* Initial PASID value is 0. */
++#define INIT_PASID	0
  
- #define XFEATURE_MASK_FPSSE		(XFEATURE_MASK_FP | XFEATURE_MASK_SSE)
- #define XFEATURE_MASK_AVX512		(XFEATURE_MASK_OPMASK \
-@@ -229,6 +231,14 @@ struct pkru_state {
- 	u32				pad;
- } __packed;
- 
-+/*
-+ * State component 10 is supervisor state used for context-switching the
-+ * PASID state.
-+ */
-+struct ia32_pasid_state {
-+	u64 pasid;
-+} __packed;
-+
- struct xstate_header {
- 	u64				xfeatures;
- 	u64				xcomp_bv;
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index 422d8369012a..ab9833c57aaa 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -33,7 +33,7 @@
- 				      XFEATURE_MASK_BNDCSR)
- 
- /* All currently supported supervisor features */
--#define XFEATURE_MASK_SUPERVISOR_SUPPORTED (0)
-+#define XFEATURE_MASK_SUPERVISOR_SUPPORTED (XFEATURE_MASK_PASID)
- 
- /*
-  * Unsupported supervisor features. When a supervisor feature in this mask is
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index bda2e5eaca0e..31629e43383c 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -37,6 +37,7 @@ static const char *xfeature_names[] =
- 	"AVX-512 ZMM_Hi256"		,
- 	"Processor Trace (unused)"	,
- 	"Protection Keys User registers",
-+	"PASID state",
- 	"unknown xstate feature"	,
- };
- 
-@@ -51,6 +52,7 @@ static short xsave_cpuid_features[] __initdata = {
- 	X86_FEATURE_AVX512F,
- 	X86_FEATURE_INTEL_PT,
- 	X86_FEATURE_PKU,
-+	X86_FEATURE_ENQCMD,
- };
- 
- /*
-@@ -316,6 +318,7 @@ static void __init print_xstate_features(void)
- 	print_xstate_feature(XFEATURE_MASK_ZMM_Hi256);
- 	print_xstate_feature(XFEATURE_MASK_Hi16_ZMM);
- 	print_xstate_feature(XFEATURE_MASK_PKRU);
-+	print_xstate_feature(XFEATURE_MASK_PASID);
+ struct address_space;
+ struct mem_cgroup;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 142b23645d82..43b5f112604d 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1007,6 +1007,13 @@ static void mm_init_owner(struct mm_struct *mm, struct task_struct *p)
+ #endif
  }
  
- /*
-@@ -590,6 +593,7 @@ static void check_xstate_against_struct(int nr)
- 	XCHECK_SZ(sz, nr, XFEATURE_ZMM_Hi256, struct avx_512_zmm_uppers_state);
- 	XCHECK_SZ(sz, nr, XFEATURE_Hi16_ZMM,  struct avx_512_hi16_state);
- 	XCHECK_SZ(sz, nr, XFEATURE_PKRU,      struct pkru_state);
-+	XCHECK_SZ(sz, nr, XFEATURE_PASID,     struct ia32_pasid_state);
- 
- 	/*
- 	 * Make *SURE* to add any feature numbers in below if
++static void mm_init_pasid(struct mm_struct *mm)
++{
++#ifdef CONFIG_IOMMU_SUPPORT
++	mm->pasid = INIT_PASID;
++#endif
++}
++
+ static void mm_init_uprobes_state(struct mm_struct *mm)
+ {
+ #ifdef CONFIG_UPROBES
+@@ -1035,6 +1042,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ 	mm_init_cpumask(mm);
+ 	mm_init_aio(mm);
+ 	mm_init_owner(mm, p);
++	mm_init_pasid(mm);
+ 	RCU_INIT_POINTER(mm->exe_file, NULL);
+ 	mmu_notifier_subscriptions_init(mm);
+ 	init_tlb_flush_pending(mm);
 -- 
 2.19.1
 
