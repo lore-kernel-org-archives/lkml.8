@@ -2,124 +2,197 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5930AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45577C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37CB6206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D922206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hdvl5q2v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U0hJmRHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390030AbgFYGV5 (ORCPT
+        id S2390048AbgFYGXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 02:21:57 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31388 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728725AbgFYGV4 (ORCPT
+        Thu, 25 Jun 2020 02:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbgFYGXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 02:21:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593066115;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=RANWi8MsV3pCLZkoJfRG4MlBXvH11AYTJIWScwC3Zys=;
-        b=Hdvl5q2v06DBNJYb69cENHECgC2JNkKj5rVGJWxwJ0cDNlolUauor8sb5gwO35vTHZ6Ilf
-        DZgRktToE2Uindy1Ax2u8KgqbTb2vB0vNc5Rdze3OXGCQflkNElGUmYvxuZyC64M0kz9mV
-        wgvHrjZxY0tCwQ2Dpb5YAx2EB6I9zqU=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-kIVE8w1aPK-cXtJrqAD0pw-1; Thu, 25 Jun 2020 02:21:53 -0400
-X-MC-Unique: kIVE8w1aPK-cXtJrqAD0pw-1
-Received: by mail-qv1-f70.google.com with SMTP id bk16so3355774qvb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:21:53 -0700 (PDT)
+        Thu, 25 Jun 2020 02:23:35 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F5FC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:23:35 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d66so2565730pfd.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/l5lZUAwAOiLrNXEv1gvSMAQqUbQiJYKCiZiNEaYUM8=;
+        b=U0hJmRHWVGxpMRi8vUYCo71xeUUnavayuQF7tn8jVEa5OmqrLq0l8OCVSkL4Dfl+v8
+         dCv8RrNBQSSLW2Kluh2RQ7/4qOe7ruDjrfo2MbTZSs6ai2a9Od2OouoWgYFX/0uQI0Tw
+         ww8sIZ4UKYuXN9wnsQ5H0ikJqIZLCnfSkGK+wJtI2cYbXUqLWCU6iRFetUK4GM4gWmlr
+         3VDSdfqHN4ngxdlffOyDZKFG7I3rdXwJrHbyAttp5SW7APOM8/KZTCa9F9H8SkUzvtwv
+         yOu+8Sf5kEfz+U95YblnReoeMblfWBA5vmlTWN/yFt94TWCxTPP93GSGAPXQxvXC7ZBh
+         rE7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=RANWi8MsV3pCLZkoJfRG4MlBXvH11AYTJIWScwC3Zys=;
-        b=m4fPmUJBaiAJFpbuauelkXiTYN7wkv+qak+gtK/5HZJtAib4NOhMV30HntKvvrSK6H
-         4fbX35A+3rm9C9zHwOXaFpSr5gap+8SGQ2Q/TNkFXvSaW2QV4E5gPFdSNOEWL/ItAjM0
-         jqxLAspUq0RCxIQlB3EY1pZQCdXnbcBB1b8X+aKBidhfs9ExGJCMUvUEeeQ8kPdYWzZq
-         HkDSgkBDRXttqdwcU2cMmXkLMlO99gyJyWBiSgxsMInLqjEtl7nrVLwE/4P6+5yZP5AL
-         AxL9v0ac/sLWlnLLULly/fIzna1l+OVy9rMhoEXu4XItn5e4cZtA3D2+/gOXwP7oKAt2
-         gTBQ==
-X-Gm-Message-State: AOAM530r+HX8zzEapjnrWRrbmHZbk6AuthNed6gYpZxikNI8RtwjvyPC
-        T/6CRjGtlk0zZu7YVrJ3dJ88Cg6kZSlsVYGHjL0yNhpwxCX0Bt11h03sqUUbniWOV8ArlrBCMa+
-        fnsnsNysRgvnX0V1PjyE8whGl
-X-Received: by 2002:a37:aa83:: with SMTP id t125mr30115546qke.231.1593066112737;
-        Wed, 24 Jun 2020 23:21:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy7DZxp3j6YwaiC9QEGZtJDfKb+Eetc7xPdd+bygMwcAVIIYh69HcGEphZuTg+ZeyNGB5yjFA==
-X-Received: by 2002:a37:aa83:: with SMTP id t125mr30115533qke.231.1593066112493;
-        Wed, 24 Jun 2020 23:21:52 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id y16sm5202042qkb.116.2020.06.24.23.21.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 23:21:51 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 23:21:50 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Kylene Jo Hall <kjhall@us.ibm.com>,
-        "Ferry Toth :" <ferry.toth@elsinga.info>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@osdl.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm_tis: Remove the HID IFX0102
-Message-ID: <20200625062150.idm6j3vm2neyt4sh@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org, Kylene Jo Hall <kjhall@us.ibm.com>,
-        "Ferry Toth :" <ferry.toth@elsinga.info>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@osdl.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/l5lZUAwAOiLrNXEv1gvSMAQqUbQiJYKCiZiNEaYUM8=;
+        b=lYhnmXdnoXk5FazH1DnsabcvZhPv2KhivOO2AJeqNwlcCi0my/jVT3wtujVOIw2DKy
+         s+H7uu9A7T5SuVmjjwhZUP81NdX3AzwBbwkXlcY4asbMgR+hsJ0XPd7Sf5RX6GopOnCX
+         zJrURBvcszDDhPJwaoDCIC7/V2it8Xtecv/VIEAYGy70yM/sZ1KbxqIMiC68cBRZQg1l
+         H0k8Der0KkXfA9POZEfSpQzJFynduArFcrqyub65JDMDo3Wf2SushwDBwdsqqcdhpUQ1
+         SiDsZQxk1YIGbZRiCvA4XX98XzRWde6w5ZO6t0mvIXJMscNIlpEb5p5jEywuvnDHahXG
+         RJhQ==
+X-Gm-Message-State: AOAM531OPN/3VKT5hGpUyhTRioVYShMM7k26mPGQEdC+A89hR99wz5yV
+        zLu7fUmfqynJ6Yw6IvT8avDx
+X-Google-Smtp-Source: ABdhPJzWDZNU4b7m/1RZxdo/B/wqAes/B5eEk3KQ8pd3S3r5nMg/dgAmTM438eteq25dwOTXwJa8Og==
+X-Received: by 2002:a63:d208:: with SMTP id a8mr24550351pgg.351.1593066214532;
+        Wed, 24 Jun 2020 23:23:34 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id y12sm22058672pfm.158.2020.06.24.23.23.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jun 2020 23:23:33 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 11:53:27 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+Subject: Re: [PATCH v3 3/4] docs: Add documentation for user space client
+ interface
+Message-ID: <20200625062327.GA6965@Mani-XPS-13-9360>
+References: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
+ <1591899224-3403-4-git-send-email-hemantk@codeaurora.org>
+ <20200619063948.GC3245@Mani-XPS-13-9360>
+ <7b64f78e-40c7-7c65-3832-4bbc5da93674@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <7b64f78e-40c7-7c65-3832-4bbc5da93674@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu Jun 25 20, Jarkko Sakkinen wrote:
->Acer C720 running Linux v5.3 reports this in klog:
->
->tpm_tis: 1.2 TPM (device-id 0xB, rev-id 16)
->tpm tpm0: tpm_try_transmit: send(): error -5
->tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
->tpm_tis tpm_tis: Could not get TPM timeouts and durations
->tpm_tis 00:08: 1.2 TPM (device-id 0xB, rev-id 16)
->tpm tpm0: tpm_try_transmit: send(): error -5
->tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
->tpm_tis 00:08: Could not get TPM timeouts and durations
->ima: No TPM chip found, activating TPM-bypass!
->tpm_inf_pnp 00:08: Found TPM with ID IFX0102
->
->% git --no-pager grep IFX0102 drivers/char/tpm
->drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
->drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
->
->Obviously IFX0102 was added to the HID table for the TCG TIS driver by
->mistake.
->
->Fixes: 93e1b7d42e1e ("[PATCH] tpm: add HID module parameter")
->Link: https://bugzilla.kernel.org/show_bug.cgi?id=203877
->Cc: Kylene Jo Hall <kjhall@us.ibm.com>
->Reported-by: Ferry Toth: <ferry.toth@elsinga.info>
->Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Wed, Jun 24, 2020 at 06:52:20PM -0700, Hemant Kumar wrote:
+> Hi Mani,
+> 
+> On 6/18/20 11:39 PM, Manivannan Sadhasivam wrote:
+> > On Thu, Jun 11, 2020 at 11:13:43AM -0700, Hemant Kumar wrote:
+> > > MHI user space client driver is creating device file node
+> > > for user application to perform file operations. File
+> > > operations are handled by MHI core driver. Currently
+> > > Loopback MHI channel is supported by this driver.
+> > > 
+> > > Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> > > ---
+> > >   Documentation/mhi/index.rst |  1 +
+> > >   Documentation/mhi/uci.rst   | 19 +++++++++++++++++++
+> > >   2 files changed, 20 insertions(+)
+> > >   create mode 100644 Documentation/mhi/uci.rst
+> > > 
+> > > diff --git a/Documentation/mhi/index.rst b/Documentation/mhi/index.rst
+> > > index 1d8dec3..c75a371 100644
+> > > --- a/Documentation/mhi/index.rst
+> > > +++ b/Documentation/mhi/index.rst
+> > > @@ -9,6 +9,7 @@ MHI
+> > >      mhi
+> > >      topology
+> > > +   uci
+> > >   .. only::  subproject and html
+> > > diff --git a/Documentation/mhi/uci.rst b/Documentation/mhi/uci.rst
+> > > new file mode 100644
+> > > index 0000000..a5c5c4f
+> > > --- /dev/null
+> > > +++ b/Documentation/mhi/uci.rst
+> > > @@ -0,0 +1,19 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +=================================
+> > > +User space Client Interface (UCI)
+> > 
+> > Stick to 'Userspace' everywhere.
+> Done.
+> > 
+> > > +=================================
+> > > +
+> > > +UCI driver enables user space clients to communicate to external MHI devices
+> > > +like modem and WLAN. It creates standard character device file nodes for user
+> > 
+> > UCI driver creates a single char device, isn't it?
+> No, it is created per device name. For example Loopback has its own char
+> device file node. if we add another channel for a new mhi device new device
+> file node would be created.
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Okay, then please add a line saying that there will be separate chardev nodes
+for each channel specified.
 
+> > 
+> > > +space clients to perform open, read, write, pool and close file operations.
+> > > +
+> > 
+> > poll? Btw, you need to mention explicitly how this char device can be used.
+> > You are just mentioning standard file operations.
+> Will fix poll.My idea was indeed to mention generic file operations so that
+> we dont have to be specific with use case. Any userspace entity who wants to
+> communicate over mhi can use the driver. Reason we have this driver is to
+> abstract the mhi core specific details. Even for loopback use case,
+> userspace can echo to device file node on one channel and get a same in
+> response from another channel back. I can add more examples of
+> other user space drivers use case if that helps.
+
+Yes, just add couple of examples.
+
+> > 
+> > > +Device file node is created with format:-
+> > > +
+> > > +/dev/mhi_<controller_name>_<mhi_device_name>
+> > > +
+> > > +controller_name is the name of underlying bus used to transfer data.
+> > 
+> > underlying controller instance.
+> Done.
+> > 
+> > > +mhi_device_name is the name of the MHI channel being used by MHI client
+> > 
+> > What do you mean by MHI client here? Are you referring to userspace client?
+> yes. i can say "MHI client in userspace"?
+
+Okay. The naming conventions used in MHI are a bit weird. So from the start
+itself I stuck with some fixed names and client is one of them. The term client
+itself refers to both client device and a driver used to talk to the device in
+the host. So we should explicitly mention if it is a userspace client driver
+or the client device.
+
+Thanks,
+Mani
+
+> > 
+> > > +to send or receive data using MHI protocol. MHI channels are statically
+> > > +defined by MHI specification. Driver currently supports LOOPBACK channel
+> > > +index 0 (Host to device) and 1 (Device to Host).
+> > 
+> > s/index/identifier
+> Done.
+> > 
+> > And explain a bit on how this LOOPBACK channel is getting used.
+> Done.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > -- 
+> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> > > a Linux Foundation Collaborative Project
+> > > 
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
