@@ -2,123 +2,131 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F14C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FCEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 796B4206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A97020720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NMNPIkKG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enr0X+1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390891AbgFYJeX (ORCPT
+        id S2390897AbgFYJgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:34:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27195 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390025AbgFYJeW (ORCPT
+        Thu, 25 Jun 2020 05:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390074AbgFYJgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:34:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593077660;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X3/CoGz/NWenAAMC8TdUU7tz4aPqJHOm/DKPIoXzmHs=;
-        b=NMNPIkKGrfpz+NxoQnjW2qQ87jk0VDOpTejnPv/2q0EJC9L7u+/wlwCDMKK1ZNMHkTfJ0R
-        66kRWYJ3T1+7uHYmybR+r0BvtokNty4xJES7v/JvV+jao+1BCTIqjBujPnfWpxSt8YLX1Z
-        GdtiJPOKRAAQYclvz3e5r3luwdE15vI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-yCJRN7wxMpuX8h_9MHCFng-1; Thu, 25 Jun 2020 05:34:18 -0400
-X-MC-Unique: yCJRN7wxMpuX8h_9MHCFng-1
-Received: by mail-wr1-f71.google.com with SMTP id p10so6403716wrn.19
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:34:17 -0700 (PDT)
+        Thu, 25 Jun 2020 05:36:54 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACE1C061573;
+        Thu, 25 Jun 2020 02:36:54 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id m2so2968472pjv.2;
+        Thu, 25 Jun 2020 02:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4Hd+pWg4j0phB+P+4cJXi8pVMww0fxVhUKsYuMdJ18s=;
+        b=enr0X+1FED05Xcz6nN64RVPCKQ47RKy+c/SSW1KUzuF65KqVqZQZ1BlUj4sTf0Pi3g
+         c2Z5ZeiEiJvS33BtB5m4qA6koS17c/naYxmqaOPMcsml61cvno6t30flHQ6QccESDFaD
+         ePSkzaVYCY4lGQKlR6u/nO8FtMwJjgB8zQfHR6Rwir7F5Oh6SZdAZ19ZsEBrOaE0cYEv
+         t09/3zEO0rMnbKzuShJX5nBB7eygRpsltMrmO0VVCcyii7Sa/5cKd4ebxZjJSGwB/Fen
+         7CbP8Dv/OmN8JH6upHgIcHA7wIvsA0H4IWrAm4LT9jLz9CNN9YaGIdkaHE7fqws8kl3V
+         CIRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=X3/CoGz/NWenAAMC8TdUU7tz4aPqJHOm/DKPIoXzmHs=;
-        b=a/cZSoTR6pMhGbeSsJbAbBZIwJ2u4oG6GtQBNZOjAVR+DVJcYPPbSKq4d3eApd/cBR
-         CJyJsHGmDxV4X7o71QZJFspu4z1ZVL0R0WFPmJ/5ugKYQtEjQaizYXvuAiimQwRnDBy8
-         H29FqKOIua3FSXSlc8YBr77LQsIhkfgo6TxY5+aD0568d0UpsRhiEqljEH0boCGo/ZdI
-         CxajFeQHPHPuUav1a5MCyoRN2Ja9HJHQsFMoyY8gPK3s8X4JOI3p8USZ1iESH5PRtdWx
-         TQTQgw/DQHKuUBn8cG0WUaWBLLXMiLyARheCcjZNls8sP2pvSaBLi9Cind8w3fMINRzd
-         5WiA==
-X-Gm-Message-State: AOAM530qFKFWDO4hN93GQiPKtlNonI74UOxl+YegnONGQ1ZoBdsRMidQ
-        w6nTOc9EyeN7cGHGOwLI1CpaSpoM06KUOAXALWpBg0KMcjLvzly1My5jb5SbAWWpzZy+Z/+SKWW
-        J8o1AVmgJeAwRsOOtThJkLgyZ
-X-Received: by 2002:adf:e648:: with SMTP id b8mr36650751wrn.386.1593077657052;
-        Thu, 25 Jun 2020 02:34:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxO9rxFO6NydlVlkFTYJOZIr4JNxTX3tcKMvj9G0tZ4+At9YfEzvpMMWp1NSAjw90OcVZBk8g==
-X-Received: by 2002:adf:e648:: with SMTP id b8mr36650724wrn.386.1593077656790;
-        Thu, 25 Jun 2020 02:34:16 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id c66sm12336747wma.20.2020.06.25.02.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 02:34:16 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Joerg Roedel <joro@8bytes.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 0/4] KVM: SVM: Code move follow-up
-In-Reply-To: <20200625080325.28439-1-joro@8bytes.org>
-References: <20200625080325.28439-1-joro@8bytes.org>
-Date:   Thu, 25 Jun 2020 11:34:14 +0200
-Message-ID: <87r1u3cwvd.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4Hd+pWg4j0phB+P+4cJXi8pVMww0fxVhUKsYuMdJ18s=;
+        b=KsBxvtm1qRiT4p64HR6rceUb4aFRjgavhvX2p1EWuzFWFm3WQ3k9V9q41WMYdJUcbf
+         m+EvxfHbT+kVBXvd6EPTYH4S8g6fC6mksSXCQRB413Bli790EEt9k/CSReJCW5F5Nu1d
+         mcqlr0VyWvKs1uFSRSnYol/9QFo+u6sJpDrTtLoqb5/8uSe+YCmYpJeenGPa0dVtg26d
+         l6F6dUeIOKL2jzJyRlVUhN0Da5IQCMi4waFVAHRlgJX952j4mZYiVPnAqMM/rOCmJNod
+         YyOnRXGeRZ3NUjJ/7A05ZHI1NSD5pc5Gn1RTg79nNoBSfHm2PUkx7V4g8G74GMisESZ2
+         6daw==
+X-Gm-Message-State: AOAM531L2lwOZ9h6/6O+WTvjXJbdU5NVXiE8RDPXkgX+e869jJTK58Qj
+        MYl3jsoepOzLDSdvvTyC47M=
+X-Google-Smtp-Source: ABdhPJzq9uKDmS7mkO+J+x3Wjfo4H1BMgoekKZEO20rs9jBUX3Z4sv4gDrsfMQ8FnpWzD/PT0qyUVg==
+X-Received: by 2002:a17:902:8302:: with SMTP id bd2mr24624555plb.110.1593077814213;
+        Thu, 25 Jun 2020 02:36:54 -0700 (PDT)
+Received: from sol (220-235-108-194.dyn.iinet.net.au. [220.235.108.194])
+        by smtp.gmail.com with ESMTPSA id n189sm22848124pfn.108.2020.06.25.02.36.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jun 2020 02:36:53 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 17:36:47 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 10/22] gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
+Message-ID: <20200625093647.GA18209@sol>
+References: <20200623040107.22270-1-warthog618@gmail.com>
+ <20200623040107.22270-11-warthog618@gmail.com>
+ <CAHp75VdG4r95ZU8G9TfL+jkT63+Gppb8w5TRvAtCR_pAk0o=NA@mail.gmail.com>
+ <20200624155714.GB8622@sol>
+ <20200624225803.GA3600@sol>
+ <CAHp75VdCGpvoK8RZGwbehOd3eORE+qwFR31ucFxtU4vdc5pvYg@mail.gmail.com>
+ <20200625091307.GA16386@sol>
+ <CAHp75VeDOGArs2MxJJRNHbNRsJU4K+KYPY=pF+mgtwbakQf4BQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeDOGArs2MxJJRNHbNRsJU4K+KYPY=pF+mgtwbakQf4BQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joerg Roedel <joro@8bytes.org> writes:
+On Thu, Jun 25, 2020 at 12:23:49PM +0300, Andy Shevchenko wrote:
+> On Thu, Jun 25, 2020 at 12:13 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > On Thu, Jun 25, 2020 at 11:44:21AM +0300, Andy Shevchenko wrote:
+> > > On Thu, Jun 25, 2020 at 1:58 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > On Wed, Jun 24, 2020 at 11:57:14PM +0800, Kent Gibson wrote:
+> 
+> ...
+> 
+> > > > Perhaps you are referring to the case where the copy_to_user fails?
+> > >
+> > > Yes.
+> > >
+> > > > To be honest I considered that to be so unlikely that I ignored it.
+> > > > Is there a relevant failure mode that I'm missing?
+> > >
+> > > The traditional question for such cases is "what can possibly go wrong?"
+> > > I wouldn't underestimate the probability of failure.
+> > >
+> >
+> > The worst case is the watch is enabled and the userspace gets an
+> > EFAULT so it thinks it failed.  If userspace retries then they get
+> > EBUSY, so userspace accounting gets muddled.
+> >
+> > We can clear the watch bit if the copy_to_user fails - before
+> > returning the EFAULT. Would that be satisfactory?
+> 
+> Perhaps. I didn't check that scenario.
+> 
 
-> From: Joerg Roedel <jroedel@suse.de>
->
-> Hi,
->
-> here is small series to follow-up on the review comments for moving
-> the kvm-amd module code to its own sub-directory. The comments were
-> only about renaming structs and symbols, so there are no functional
-> changes in these patches.
->
-> The comments addressed here are all from [1].
->
-> Regards,
->
-> 	Joerg
->
-> [1] https://lore.kernel.org/lkml/87d0917ezq.fsf@vitty.brq.redhat.com/
->
+To be clear I'm suggesting this:
 
-Thank you for the follow-up!
+        gpio_desc_to_lineinfo(desc, &lineinfo);
+ 
+-       if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
++       if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
++               clear_bit(lineinfo.offset, gcdev->watched_lines);
+                return -EFAULT;
++       }
 
-> Joerg Roedel (4):
->   KVM: SVM: Rename struct nested_state to svm_nested_state
->   KVM: SVM: Add vmcb_ prefix to mark_*() functions
->   KVM: SVM: Add svm_ prefix to set/clr/is_intercept()
->   KVM: SVM: Rename svm_nested_virtualize_tpr() to
->     nested_svm_virtualize_tpr()
->
->  arch/x86/kvm/svm/avic.c   |   2 +-
->  arch/x86/kvm/svm/nested.c |   8 +--
->  arch/x86/kvm/svm/sev.c    |   2 +-
->  arch/x86/kvm/svm/svm.c    | 138 +++++++++++++++++++-------------------
->  arch/x86/kvm/svm/svm.h    |  20 +++---
->  5 files changed, 85 insertions(+), 85 deletions(-)
+That undoes the set, returning the watch state to what it was before the
+call.
 
-Series:
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
-
+Cheers,
+Kent.
