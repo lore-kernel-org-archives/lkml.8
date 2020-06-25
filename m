@@ -2,112 +2,140 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D26AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46606C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3339C206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237D8206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593088962;
+	bh=QTKVIlJyYkq9x8igprDkk4WuBfCk37WJUWpBu7U0Lv8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jcjJtW79p8rOmyMs3V3pdEETS53PfeL0njM1t+iafPBnEULjN7ZZ/zdWShNwzcWfT
+	 7DW6Nz9twhFNZOU4HJvb3wtqo/gUO/qD9fvnVipWEm6NxZpq8Co+ZLmHgx18v4wChy
+	 IWObfTbOjkwvOq2U2FZ6rz6VO9g2h0I4tmycH67Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404764AbgFYMmg (ORCPT
+        id S2404776AbgFYMmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:42:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34498 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404578AbgFYMm3 (ORCPT
+        Thu, 25 Jun 2020 08:42:40 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36587 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404765AbgFYMmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:42:29 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PCcXA8017501;
-        Thu, 25 Jun 2020 08:42:27 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyhybqw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 08:42:26 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PCYABV015165;
-        Thu, 25 Jun 2020 12:42:26 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma05wdc.us.ibm.com with ESMTP id 31uus1byn6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 12:42:26 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PCgP9e41943422
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 12:42:25 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF7C9AE05C;
-        Thu, 25 Jun 2020 12:42:25 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B722DAE05F;
-        Thu, 25 Jun 2020 12:42:25 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jun 2020 12:42:25 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v6 0/2] tpm2: Make TPM2 logs accessible for non-UEFI firmware
-Date:   Thu, 25 Jun 2020 08:42:20 -0400
-Message-Id: <20200625124222.1954580-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 25 Jun 2020 08:42:38 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 17so5783986wmo.1;
+        Thu, 25 Jun 2020 05:42:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zqYYU+XzLTo4RZ3+vh2KfRtchjL+OjYySOUllgC9oo8=;
+        b=LzksH/QjS06oxtxtx5uT+9yAfGlHdc/hEVx539NjsuFbdjtaIhhKIeEXkL8BvwyDiu
+         S3JGcqI5iFYUxK/kDBstsrXSSk0h8ApAmSnbV8bp/P1wJD0we7OTMeVR29fam6gl8DTA
+         1VkUyBjkb1Xlh1sOnZcbIpqiDpBu3yyzPm+jIfU6C/NKnSLlrSthKltC9Toztn/GM3Qs
+         N7Tl3Z5gKbxriRKVdMajbvgrNDs0Up/Un9LYQHWqvsNqekUEbqY7LxefmiKV5/iovvsz
+         JOcTwzP98Z3dsnckKzLeer7zsI5/5h3UwILjQIkwmu7DrSM3g0J9fjNs+QTeb6xxt0N6
+         +JhQ==
+X-Gm-Message-State: AOAM5318DXRU55DawIgJJWlF4Y7ysqYB215iqa92uSUAJrGvFwLKRLWw
+        0nM8octfpneLYS6nqSomxlxGh19q
+X-Google-Smtp-Source: ABdhPJwrxoXQ+HCO1VVYYUvEmwFEOPYklBv2D67vfvs9fNB1wlADT0sE5tlgxNrUNZ128ZofveX60g==
+X-Received: by 2002:a1c:80c8:: with SMTP id b191mr3021699wmd.37.1593088956395;
+        Thu, 25 Jun 2020 05:42:36 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id t5sm11739610wmj.37.2020.06.25.05.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 05:42:35 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 14:42:34 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 1/6] mm: Replace PF_MEMALLOC_NOIO with memalloc_noio
+Message-ID: <20200625124234.GM1320@dhcp22.suse.cz>
+References: <20200625113122.7540-1-willy@infradead.org>
+ <20200625113122.7540-2-willy@infradead.org>
+ <20200625122239.GJ1320@dhcp22.suse.cz>
+ <20200625123418.GB7703@casper.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_05:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- spamscore=0 phishscore=0 suspectscore=0 bulkscore=0 impostorscore=0
- mlxscore=0 mlxlogscore=614 lowpriorityscore=0 malwarescore=0 adultscore=0
- clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006250078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625123418.GB7703@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+On Thu 25-06-20 13:34:18, Matthew Wilcox wrote:
+> On Thu, Jun 25, 2020 at 02:22:39PM +0200, Michal Hocko wrote:
+> > On Thu 25-06-20 12:31:17, Matthew Wilcox wrote:
+> > > We're short on PF_* flags, so make memalloc_noio its own bit where we
+> > > have plenty of space.
+> > 
+> > I do not mind moving that outside of the PF_* space. Unless I
+> > misremember all flags in this space were intented to be set only on the
+> > current which rules out any RMW races and therefore they can be
+> > lockless. I am not sure this holds for the bitfield you are adding this
+> > to. At least in_memstall seem to be set on external task as well. But
+> > this would require double checking. Maybe that is not really intended or
+> > just a bug.
+> 
+> I was going from the comment:
+> 
+>         /* Unserialized, strictly 'current' */
+> (which you can't see from the context of the diff, but is above the block)
+> 
+> The situation with ->flags is a little more ambiguous:
+> 
+> /*
+>  * Only the _current_ task can read/write to tsk->flags, but other
+>  * tasks can access tsk->flags in readonly mode for example
+>  * with tsk_used_math (like during threaded core dumping).
+>  * There is however an exception to this rule during ptrace
+>  * or during fork: the ptracer task is allowed to write to the
+>  * child->flags of its traced child (same goes for fork, the parent
+>  * can write to the child->flags), because we're guaranteed the
+>  * child is not running and in turn not changing child->flags
+>  * at the same time the parent does it.
+>  */
 
-This series of patches adds an optional extensions for the TPM2 ACPI table
-with additional fields found in the TPM2 TCG ACPI specification (reference
-is in the patch) that allow access to the log's address and its size. We
-then modify the code that so far only enables access to a TPM 1.2's log for
-a TPM2 as well. This then enables access to the TPM2's log on non-UEFI
-system that for example run SeaBIOS.
+OK, I have obviously missed that.
 
-   Stefan
+> but it wasn't unsafe to use the PF_ flags in the way that you were.
+> It's just crowded.
+> 
+> If in_memstall is set on other tasks, then it should be moved to the
+> PFA flags, which there are plenty of.
+> 
+> But a quick grep shows it only being read on other tasks and always
+> set on current:
+> 
+> kernel/sched/psi.c:     *flags = current->in_memstall;
+> kernel/sched/psi.c:      * in_memstall setting & accounting needs to be atomic wrt
+> kernel/sched/psi.c:     current->in_memstall = 1;
+> kernel/sched/psi.c:      * in_memstall clearing & accounting needs to be atomic wrt
+> kernel/sched/psi.c:     current->in_memstall = 0;
+> kernel/sched/psi.c:     if (task->in_memstall)
 
-v5->v6:
- - Moved extensions of TPM2 table into acpi_tpm2_phy.
+Have a look at cgroup_move_task. So I believe this is something to be
+fixed but independent on your change.
 
-v4->v5:
- - Added R-bs and A-bs.
+Feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-v3->v4:
-  - Repost as one series
-
-v2->v3:
-  - Split the series into two separate patches
-  - Added comments to ACPI table fields
-  - Added check for null pointer to log area and zero log size
-
-v1->v2:
-  - Repost of the series
-
-
-Stefan Berger (2):
-  acpi: Extend TPM2 ACPI table with missing log fields
-  tpm: Add support for event log pointer found in TPM2 ACPI table
-
- drivers/char/tpm/eventlog/acpi.c | 59 ++++++++++++++++++++------------
- include/acpi/actbl3.h            |  7 ++++
- 2 files changed, 45 insertions(+), 21 deletions(-)
+> kernel/sched/stats.h:           if (p->in_memstall)
+> kernel/sched/stats.h:           if (p->in_memstall)
+> kernel/sched/stats.h:   if (unlikely(p->in_iowait || p->in_memstall)) {
+> kernel/sched/stats.h:           if (p->in_memstall)
+> kernel/sched/stats.h:   if (unlikely(rq->curr->in_memstall))
+> 
+> so I think everything is fine.
 
 -- 
-2.26.2
-
+Michal Hocko
+SUSE Labs
