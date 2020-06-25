@@ -2,117 +2,67 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B529AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE671C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F32620789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ag48Ej54"
+	by mail.kernel.org (Postfix) with ESMTP id A2E0420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389568AbgFYC57 (ORCPT
+        id S2389648AbgFYDBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 22:57:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388930AbgFYC56 (ORCPT
+        Wed, 24 Jun 2020 23:01:16 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:45097 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389589AbgFYDBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 22:57:58 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C991C061573;
-        Wed, 24 Jun 2020 19:57:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49sl7Q29dtz9sRf;
-        Thu, 25 Jun 2020 12:57:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593053876;
-        bh=psPe9FzujwmVzuE9PFq9+5QBvHHW8QOUloymleHrmB0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Ag48Ej54AJGxJsdBdpiEhqFZENi3qz0QyS2Oz5N/MKZcYhCrKjwBFQhLq4fvRCXZ/
-         gJyRNiAC1QSaHQTazLRNHjKM9c4oTZY9pb6h9Xdr3bPNHg673GvvRl16m0UYBPMXTV
-         EqoEbQCBfmL8tmUL865HR7jn/MyQCcs4OmnxQnUZPFOsUch5PcfUKVoJLXf+1OjteM
-         3hJoiaBPR311aFtxdk/9oyYueTvEHL25wcPYSJ/bFBIhfAJpX5Z7ZpD0R/HSr/vnel
-         nLcWrWcHQN/94vOibwgiEdlty4MOiQ+x79GURsSFmmRQGuhbJcNO2jQ5m1KEjMMm3x
-         ZJOrV+Fts3ETA==
-Date:   Thu, 25 Jun 2020 12:57:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: linux-next: build failure after merge of the rcu tree
-Message-ID: <20200625125753.6ec44d50@canb.auug.org.au>
+        Wed, 24 Jun 2020 23:01:13 -0400
+Received: by mail-il1-f197.google.com with SMTP id c1so3002982ilk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 20:01:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=wKHziB1HTjinXOROzU9x8QSF9UVTTl5CGULxlu3fS2A=;
+        b=mM3awSkdqvHJIkzxysqgAqsaZ3cvofatwHqZqG4TRAXs1D3OfDYvCzGKUFLI9XvB91
+         5iFTlj6TkQwNJX5EU/8oX9KN5HX7ljGcPRdq4SFHysHJQ/mqEBBG42/v6FI6LO9kH4Dy
+         HZkAEl6LFI8C+6FDThT72rnoqisGYmLxJwX3yG/2o7OnI79E4e6SJl0cKhup2tRJWI13
+         SWGQ7dWIJMejCz1jFZRZo7P0yYfz3PoehCStGmTGFN5ncILf434LuGnTj0/PDuX1qyz0
+         vwjgq/QE9wMdh+fWJLx8pIcN67oRBsijzfXTARYmT/0sjqE46ZN12tS3nircsbfrX0IE
+         saHw==
+X-Gm-Message-State: AOAM530EbNezvLaDnTFYWwvV9fpnPwHi3KrvykYwElKrNwA7WRz0qZs1
+        Gryksy7ZCcjZWE6um5RDJ+94PhnCmb4PRUqCYgcgMtO0V8IV
+X-Google-Smtp-Source: ABdhPJxbs1SAyL/M/fgk3l40cIJl7wJzsJfAm+GKPt/0zA1RuUK6bKXZkytrERisRhBiK2xMcbSQIrQom47jw0jbMN8Qdv/m0rQo
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bJTHBuQJEM8peeNQsjWP.RA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a92:290b:: with SMTP id l11mr31731641ilg.145.1593054071282;
+ Wed, 24 Jun 2020 20:01:11 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 20:01:11 -0700
+In-Reply-To: <00000000000047770d05a1c70ecb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000006e0ff05a8dfce2d@google.com>
+Subject: Re: KASAN: null-ptr-deref Write in blk_mq_map_swqueue
+From:   syzbot <syzbot+313d95e8a7a49263f88d@syzkaller.appspotmail.com>
+To:     a@unstable.cc, axboe@kernel.dk, b.a.t.m.a.n@lists.open-mesh.org,
+        bvanassche@acm.org, davem@davemloft.net, dongli.zhang@oracle.com,
+        hdanton@sina.com, jianchao.w.wang@oracle.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bJTHBuQJEM8peeNQsjWP.RA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-After merging the rcu tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
-
-kernel/rcu/tree.c: In function 'rcu_dynticks_eqs_enter':
-kernel/rcu/tree.c:251:8: error: implicit declaration of function 'arch_atom=
-ic_add_return'; did you mean 'atomic_add_return'? [-Werror=3Dimplicit-funct=
-ion-declaration]
-  251 |  seq =3D arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dyntick=
-s);
-      |        ^~~~~~~~~~~~~~~~~~~~~~
-      |        atomic_add_return
-kernel/rcu/tree.c: In function 'rcu_dynticks_eqs_exit':
-kernel/rcu/tree.c:281:3: error: implicit declaration of function 'arch_atom=
-ic_andnot'; did you mean 'atomic_andnot'? [-Werror=3Dimplicit-function-decl=
-aration]
-  281 |   arch_atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
-      |   ^~~~~~~~~~~~~~~~~~
-      |   atomic_andnot
-kernel/rcu/tree.c: In function 'rcu_dynticks_curr_cpu_in_eqs':
-kernel/rcu/tree.c:314:11: error: implicit declaration of function 'arch_ato=
-mic_read'; did you mean 'atomic_read'? [-Werror=3Dimplicit-function-declara=
-tion]
-  314 |  return !(arch_atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
-      |           ^~~~~~~~~~~~~~~~
-      |           atomic_read
-
-Caused by commit
-
-  d2f8491368e5 ("rcu: Fixup noinstr warnings")
-
-I reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bJTHBuQJEM8peeNQsjWP.RA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl70ErEACgkQAVBC80lX
-0GzaYgf9EeSnACAXZv6/pEn2jlqn/dAiRC6IBF+fsXdlu++mqbGuc05PRXyH1zK2
-1z7zAHlbU9cEM9R4723WGeyTwRBN+LV1jjO1YAe0OXisJI5HWoXcLNToEnMd4+8b
-rB9a6g3YaK9FF1SAJGgQupzgKY5jReo7dT5ueRUPGpdLILBH4BqJ+LvXXeIa+ZQW
-m/SLbON0cgHgYR1v5FEgqQqS+a/fNGe+bNGHQGenTaaUXluzdrOi1q+yYV8BNn8D
-Ux5yUhZyAAa9edwiTnhUd+FpejIKv/ojBHkudhuSRNDTpwbirf/XzXH3zTysRfQZ
-NctqjW1sM8LmQAo1WZtmJC9K3TqGoA==
-=Y+S6
------END PGP SIGNATURE-----
-
---Sig_/bJTHBuQJEM8peeNQsjWP.RA--
+This bug is marked as fixed by commit:
+blk-mq: Fix a recently introduced regression in
+But I can't find it in any tested tree for more than 90 days.
+Is it a correct commit? Please update it by replying:
+#syz fix: exact-commit-title
+Until then the bug is still considered open and
+new crashes with the same signature are ignored.
