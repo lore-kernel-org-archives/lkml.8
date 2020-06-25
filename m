@@ -2,92 +2,90 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3005F2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C2B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="gj0MuGKT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nq4CSGHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403804AbgFYUka (ORCPT
+        id S2391123AbgFYUlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47952 "EHLO
+        Thu, 25 Jun 2020 16:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389406AbgFYUk3 (ORCPT
+        with ESMTP id S2390477AbgFYUlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:40:29 -0400
-X-Greylist: delayed 155487 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 Jun 2020 13:40:29 PDT
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65B9C08C5C1;
-        Thu, 25 Jun 2020 13:40:29 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 1C8E879A1; Thu, 25 Jun 2020 16:40:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1C8E879A1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1593117629;
-        bh=grAX8yggjJQZeEuTqT849+RECeUjWPrYL7L8CDwHWzM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gj0MuGKTpqfBnugVSHAllzwtU32mbRNrz5LhpqXoB8FX/dI6FdoUiXA6zXnyorll9
-         J8Wg0vYTe1AOKJQyhZwkkl/QiRqNB70nQBPja5EppPVNzeFep+Z8g/ySzPNxVjIaPi
-         XVxnHn82AD79SvIa9xchcmtUWE/pnD9cata6TvZo=
-Date:   Thu, 25 Jun 2020 16:40:29 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] SUNRPC: Add missing definition of
- ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
-Message-ID: <20200625204029.GD6605@fieldses.org>
-References: <9e9882a2fb57b6f9d98a0a5d8b6bf9cff9fcbd93.1592202173.git.christophe.leroy@csgroup.eu>
- <733E4CAF-A9E5-491F-B0C7-69CA84E5DFA5@oracle.com>
+        Thu, 25 Jun 2020 16:41:03 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1573C08C5C1;
+        Thu, 25 Jun 2020 13:41:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/2bW0xwZ5cZ7Q/OI3540tqTPoWla01utvPMOqtukTuE=; b=Nq4CSGHnylZr8gaRQjjf1h1Spy
+        5KaXr+5rE3qQpDgHmHRXaNi75WS05bGcWhP9acJvGqrjLtzIQDlDUPKYYeifdKt1O1R2ceBQjrJqt
+        RzfS+A5GpcKv0a3JouZPBQnaS2zme1XtQwxgfPVmkIJKsEZze3vnzBguVXsdW3hYSN3WT7aqDleof
+        NuzPWdhoGHkEu0+YEceVl81aLiabb6N9sfvVCtJ/824pdwZYHF5VLtDrK+XzK5Gk3qbI/u0wHMeKk
+        t0ox8cPRLhgoRs7qPRkklJQMlBdojQQHgamSziWSII+6GN+ZFyf9bj7uK1YsZXZO1sjwKkvrptePu
+        TZhsexJA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joYft-00055m-0p; Thu, 25 Jun 2020 20:40:45 +0000
+Date:   Thu, 25 Jun 2020 21:40:44 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
+Message-ID: <20200625204044.GH7703@casper.infradead.org>
+References: <20200625113122.7540-1-willy@infradead.org>
+ <20200625184832.GP7606@magnolia>
+ <20200625203611.GS1320@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <733E4CAF-A9E5-491F-B0C7-69CA84E5DFA5@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200625203611.GS1320@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 08:33:40AM -0400, Chuck Lever wrote:
-> 
-> 
-> > On Jun 15, 2020, at 2:25 AM, Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+On Thu, Jun 25, 2020 at 10:36:11PM +0200, Michal Hocko wrote:
+> On Thu 25-06-20 11:48:32, Darrick J. Wong wrote:
+> > On Thu, Jun 25, 2020 at 12:31:16PM +0100, Matthew Wilcox (Oracle) wrote:
+> > > I want a memalloc_nowait like we have memalloc_noio and memalloc_nofs
+> > > for an upcoming patch series, and Jens also wants it for non-blocking
+> > > io_uring.  It turns out we already have dm-bufio which could benefit
+> > > from memalloc_nowait, so it may as well go into the tree now.
+> > > 
+> > > The biggest problem is that we're basically out of PF_ flags, so we need
+> > > to find somewhere else to store the PF_MEMALLOC_NOWAIT flag.  It turns
+> > > out the PF_ flags are really supposed to be used for flags which are
+> > > accessed from other tasks, and the MEMALLOC flags are only going to
+> > > be used by this task.  So shuffling everything around frees up some PF
+> > > flags and generally makes the world a better place.
 > > 
-> > Even if that's only a warning, not including asm/cacheflush.h
-> > leads to svc_flush_bvec() being empty allthough powerpc defines
-> > ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE.
-> > 
-> >  CC      net/sunrpc/svcsock.o
-> > net/sunrpc/svcsock.c:227:5: warning: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
-> > #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
-> >     ^
-> > 
-> > Include linux/highmem.h so that asm/cacheflush.h will be included.
-> > 
-> > Reported-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Cc: Chuck Lever <chuck.lever@oracle.com>
-> > Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
-> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > So, uh, how does this intersect with the patch "xfs: reintroduce
+> > PF_FSTRANS for transaction reservation recursion protection" that
+> > re-adds PF_TRANS because uh I guess we lost some subtlety or another at
+> > some point?
 > 
-> LGTM.
-> 
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> This is independent, really. It just relocates the NOFS flag. PF_TRANS
+> is reintroduced for a different reason. When I have replaced the
+> original PF_TRANS by PF_MEMALLOC_NOFS I didn't realized that xfs doesn't
+> need only the NOFS semantic but also the transaction tracking so this
+> cannot be a single bit only. So it has to be added back. But
+> PF_MEMALLOC_NOFS needs to stay for the scoped NOFS semantic.
 
-Thanks, applying for 5.8.--b.
+If XFS needs to track transactions, why doesn't it use
+current->journal_info like btrfs/ceph/ext4/gfs2/nilfs2/reiserfs?
