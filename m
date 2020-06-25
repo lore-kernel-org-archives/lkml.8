@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D539CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D446207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0522078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593045874;
-	bh=eVp9tWQlzgqoCNiY2YM/qYEqSjzcQEgmoD76TAskP7M=;
+	s=default; t=1593045880;
+	bh=WV809j7uf+nLdFOKkEK30xXhXcTAwmFcvbW6ahIvOwg=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=ejxj/BDWPRgcVZgAIoqPe66e/dIrR64Aks2qbCOXOg+d4abD6J0s0RNrnjREqA4iu
-	 FPxwviNjkFyri4lpHzxxDADyo2gtWU77k79swUvMO/FUJYbzbhlRgZpiML0xcYD6bp
-	 Xxm2tb/2In/JwU7Jl0hUwfKDRaoiTEfrjE4GVox4=
+	b=QRN7Kdrbwvmta1lmitwWs1BR8g1quB15T1zb5DrKs4EKFTxwhaTI9pGMZDffxfJR0
+	 drmm3/1ZrZXwU7ljfXUHSQ17O/4a+R6Kxh2nDmo20Pm2S1M2RZgWlZLi551HqvVoD2
+	 6BmCNRgpiPjAuSzLek3cN78pQISgwAXILlTrDvr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388942AbgFYAoc (ORCPT
+        id S2389314AbgFYAoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:44:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
+        Wed, 24 Jun 2020 20:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388624AbgFYAoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 20:44:32 -0400
+        id S2388624AbgFYAoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 20:44:38 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 089BC20781;
-        Thu, 25 Jun 2020 00:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 507E620781;
+        Thu, 25 Jun 2020 00:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593045872;
-        bh=eVp9tWQlzgqoCNiY2YM/qYEqSjzcQEgmoD76TAskP7M=;
+        s=default; t=1593045878;
+        bh=WV809j7uf+nLdFOKkEK30xXhXcTAwmFcvbW6ahIvOwg=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=aBKeXan4vTgSVF5NHBYg+bkaxjAgAf5xdOp2V4GciGmKBOXJ+FnJkqa5oFXgVRnYS
-         fiL0TR3zLiYyKuVuTffkUdWY+fDyFvQBFE8C6iaVxBAtUEqPNtaILtimO6I45b+yz4
-         VxP4jQPGbkowu53ARkarQlaUiDhxbIIMGllklK24=
+        b=qgIKWvUuOuzuYF/VFCOv/eyeXQ21DoyEtr0K/6iJAqz3yJ46kFsYxd38QiAWxE12D
+         MNnQxkp+IiMdAWguWWfqwR+yCJdMt2X5A0BXC7OrNNTqh8QF23wDAW4GjgTlJ5w1w/
+         gjpqRrmDVkrgr60ZSsGMhEpoETWtHsW5IXNIgY2Y=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <189407f54906d2b07c91de7a4eeb6d8c8934280f.1592210452.git-series.maxime@cerno.tech>
-References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech> <189407f54906d2b07c91de7a4eeb6d8c8934280f.1592210452.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH v5 09/27] clk: bcm: rpi: Remove pllb_arm_lookup global pointer
+In-Reply-To: <59f6208b6fe3367e735b0cca4f65c2c937639af9.1592210452.git-series.maxime@cerno.tech>
+References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech> <59f6208b6fe3367e735b0cca4f65c2c937639af9.1592210452.git-series.maxime@cerno.tech>
+Subject: Re: [PATCH v5 10/27] clk: bcm: rpi: Switch to clk_hw_register_clkdev
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-rpi-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com,
@@ -56,20 +56,18 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Maxime Ripard <maxime@cerno.tech>
 To:     Maxime Ripard <maxime@cerno.tech>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Wed, 24 Jun 2020 17:44:31 -0700
-Message-ID: <159304587118.62212.15548134071653686347@swboyd.mtv.corp.google.com>
+Date:   Wed, 24 Jun 2020 17:44:37 -0700
+Message-ID: <159304587766.62212.15787650832626513961@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maxime Ripard (2020-06-15 01:40:49)
-> The pllb_arm_lookup pointer in the struct raspberrypi_clk is not used for
-> anything but to store the returned pointer to clkdev_hw_create, and is not
-> used anywhere else in the driver.
->=20
-> Let's remove that global pointer from the structure.
+Quoting Maxime Ripard (2020-06-15 01:40:50)
+> Since we don't care about retrieving the clk_lookup structure pointer
+> returned by clkdev_hw_create, we can just use the clk_hw_register_clkdev
+> function.
 >=20
 > Cc: Michael Turquette <mturquette@baylibre.com>
 > Cc: linux-clk@vger.kernel.org
