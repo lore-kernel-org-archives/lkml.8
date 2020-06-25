@@ -2,89 +2,110 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB39420720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593088838;
-	bh=MrvC0DnxMOCVW4K7xW2KUL/6bwFQ0f8fjDAfVJIYhwo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1ROMTobbvwuesNu5ViwL5PRLoRmcj22VwXRF5S2kG0kYj6gYooEKoKKLXSiOwCH+1
-	 KMsopRLFZqM+lvfWvA11bHDayS3cnhBMmQ5gHbzONes2mraExmErIaCKqRYbFsMQv5
-	 sLdtICL3BGZqibM4Mgafo9R8P7YnUjRNfSMFvqwE=
+	by mail.kernel.org (Postfix) with ESMTP id 5EE58206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404709AbgFYMkh (ORCPT
+        id S2404713AbgFYMlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:40:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41117 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404518AbgFYMkh (ORCPT
+        Thu, 25 Jun 2020 08:41:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60886 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404610AbgFYMlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:40:37 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k15so5066073otp.8;
-        Thu, 25 Jun 2020 05:40:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/4Q7cNyCHgFwtbixvXKVMYOkWKngQIt9leUsi1ZtkmU=;
-        b=fqmwjjEho73coxsbOZ/2HAcQY3hZo7jli08pJp5Wr3APDUCRPxRgpSmieJH2czw93d
-         BP4X564KggSGR8M4TMWmpQpgiiVs3uO47NyQVs4X3inIUFlYsGpv2rkbqQ9d2m+RaH62
-         6FtvnqwUo8deB37KBhco/4yYEcfxOKWHm0CkVRo8bNf0W9CBYlIh1oF21SAf1iwVeGOK
-         j4agO11+wpxIFoUlltJ3h07BVHhEYfVwolBalZRj6TY/bzuyANgG7RHys54WArOjaMyU
-         e6Llbbi5p4VK2fcbbbyc3p1OxDcxKNYJxjbNjw5yfFSR4NETX4oW5+BWfRk3gYbeO3dI
-         XV8w==
-X-Gm-Message-State: AOAM532BlB8Ybyvxsy4TSQAI+0+tSGtAxUpr/F+V2qDjBuwoi6PWU7o/
-        C9n790dNlTO7d7Tpx4tNuQ2G//NXqkIpf8p8SI9BLVrt
-X-Google-Smtp-Source: ABdhPJw0un7objV5flfnnBnZo+tmdqboDoqdw8ng5kschQs75L/mr0KqDdim5q59tFuZUJKYRf/TlkEPSUJxKiaEkJg=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr27085381otb.262.1593088836602;
- Thu, 25 Jun 2020 05:40:36 -0700 (PDT)
+        Thu, 25 Jun 2020 08:41:31 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PCXTCQ004196;
+        Thu, 25 Jun 2020 08:41:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ux00p3fh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 08:41:21 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PCXsQP006368;
+        Thu, 25 Jun 2020 08:41:20 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ux00p3ew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 08:41:20 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PCZd5N023602;
+        Thu, 25 Jun 2020 12:41:20 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma04dal.us.ibm.com with ESMTP id 31uurq6xhp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 12:41:20 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PCfJbw52494680
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 12:41:19 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3458C112061;
+        Thu, 25 Jun 2020 12:41:19 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24CD5112063;
+        Thu, 25 Jun 2020 12:41:19 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 12:41:19 +0000 (GMT)
+Subject: Re: [PATCH v2] tpm: tpm2-space: Resize session and context buffers
+ dynamically
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <8d19d5e2-91bc-09ad-6b94-d51a7aad6376@linux.ibm.com>
+Date:   Thu, 25 Jun 2020 08:41:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200624185140.3842391-1-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20200624185140.3842391-1-srinivas.pandruvada@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jun 2020 14:40:25 +0200
-Message-ID: <CAJZ5v0j1DiySSO+5Vu3SUB9T_yOGbYhX=+g=tZu8jK43ANASdw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: DPTF: Add battery participant for TigerLake
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_05:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 cotscore=-2147483648 priorityscore=1501 adultscore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
+ spamscore=0 malwarescore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 8:51 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
+On 6/25/20 12:38 AM, Jarkko Sakkinen wrote:
+> Re-allocate context and session buffers when needed. Scale them in page
+> increments so that the reallocation is only seldomly required, and thus
+> causes minimal stress to the system. Add a static maximum limit of four
+> pages for buffer sizes.
 >
-> Added ACPI ID for battery participant for TigerLake.
->
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  drivers/acpi/dptf/dptf_power.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
-> index 5fab7e350db8..92b996a564d0 100644
-> --- a/drivers/acpi/dptf/dptf_power.c
-> +++ b/drivers/acpi/dptf/dptf_power.c
-> @@ -228,6 +228,7 @@ static const struct acpi_device_id int3407_device_ids[] = {
->         {"INT3407", 0},
->         {"INT3532", 0},
->         {"INTC1047", 0},
-> +       {"INTC1050", 0},
->         {"", 0},
->  };
->  MODULE_DEVICE_TABLE(acpi, int3407_device_ids);
-> --
+> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Applied as 5.8-rc material, thanks!
+
+You don't want to try a fixes tag? None of the previous versions of this 
+code will work with newer versions of the TPM 2 then...
+
+
+    Stefan
+
+
