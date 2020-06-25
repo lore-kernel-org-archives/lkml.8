@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1005C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79EDA20E65
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7502F20E65
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404393AbgFYLxj (ORCPT
+        id S2404437AbgFYLxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
+        Thu, 25 Jun 2020 07:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404352AbgFYLxg (ORCPT
+        with ESMTP id S2404378AbgFYLxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:53:36 -0400
+        Thu, 25 Jun 2020 07:53:38 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF04FC061573;
-        Thu, 25 Jun 2020 04:53:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE4E8C061795;
+        Thu, 25 Jun 2020 04:53:37 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1joQRY-0005pv-Au; Thu, 25 Jun 2020 13:53:24 +0200
+        id 1joQRh-0005sI-8O; Thu, 25 Jun 2020 13:53:33 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ED3B51C0470;
-        Thu, 25 Jun 2020 13:53:23 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 11:53:23 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D39AB1C0470;
+        Thu, 25 Jun 2020 13:53:32 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 11:53:32 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/core: Remove mmdrop() definition
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+Subject: [tip: x86/entry] x86/entry: Increase entry_stack size to a full page
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Marco Elver <elver@google.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200618190810.790211-1-bigeasy@linutronix.de>
-References: <20200618190810.790211-1-bigeasy@linutronix.de>
+        Lai Jiangshan <jiangshanlai@gmail.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200618144801.819246178@infradead.org>
+References: <20200618144801.819246178@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159308600375.16989.9629111920355709564.tip-bot2@tip-bot2>
+Message-ID: <159308601261.16989.8417394079734931145.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,42 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c
-Gitweb:        https://git.kernel.org/tip/01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Thu, 18 Jun 2020 21:08:10 +02:00
+Commit-ID:     c7aadc09321d8f9a1d3bd1e6d8a47222ecddf6c5
+Gitweb:        https://git.kernel.org/tip/c7aadc09321d8f9a1d3bd1e6d8a47222ecddf6c5
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 17 Jun 2020 18:25:57 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 25 Jun 2020 13:45:45 +02:00
+CommitterDate: Thu, 25 Jun 2020 13:45:40 +02:00
 
-sched/core: Remove mmdrop() definition
+x86/entry: Increase entry_stack size to a full page
 
-Commit
-   bf2c59fce4074 ("sched/core: Fix illegal RCU from offline CPUs")
+Marco crashed in bad_iret with a Clang11/KCSAN build due to
+overflowing the stack. Now that we run C code on it, expand it to a
+full page.
 
-introduced a definition for mmdrop() but a a few lines above there is
-already mmdrop() defined as static inline.
-
-Remove the newly introduced mmdrop() definition.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
+Reported-by: Marco Elver <elver@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200618190810.790211-1-bigeasy@linutronix.de
+Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+Tested-by: Marco Elver <elver@google.com>
+Link: https://lkml.kernel.org/r/20200618144801.819246178@infradead.org
 ---
- include/linux/sched/mm.h | 2 --
- 1 file changed, 2 deletions(-)
+ arch/x86/include/asm/processor.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 480a4d1..a98604e 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -49,8 +49,6 @@ static inline void mmdrop(struct mm_struct *mm)
- 		__mmdrop(mm);
- }
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 42cd333..03b7c4c 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -370,7 +370,7 @@ struct x86_hw_tss {
+ #define IO_BITMAP_OFFSET_INVALID	(__KERNEL_TSS_LIMIT + 1)
  
--void mmdrop(struct mm_struct *mm);
--
- /*
-  * This has to be called after a get_task_mm()/mmget_not_zero()
-  * followed by taking the mmap_lock for writing before modifying the
+ struct entry_stack {
+-	unsigned long		words[64];
++	char	stack[PAGE_SIZE];
+ };
+ 
+ struct entry_stack_page {
