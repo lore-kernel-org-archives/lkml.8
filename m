@@ -4,138 +4,179 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CABC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4C720767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5296320767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406582AbgFYTcg (ORCPT
+        id S2406599AbgFYTdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:32:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:51336 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406116AbgFYTcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:32:35 -0400
-IronPort-SDR: L87Y24AbTm1zSuo3jM9hq2lwaK+R+LuXj0tjK1R/Yxh4/A8s1zA/o48s3WyMuotBV73RUgCAMC
- F0OvuO0H4F5Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229771891"
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="229771891"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 12:32:35 -0700
-IronPort-SDR: etYHETo53L1uPh13M3zLNlnSPV2BuCw99dFxHIzzOhgBoNotpSxUwwXkOJDL8cbzRwOXGUCVVV
- jMYptsNm4wjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="479753275"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 12:32:35 -0700
-Received: from [10.249.229.54] (abudanko-mobl.ccr.corp.intel.com [10.249.229.54])
-        by linux.intel.com (Postfix) with ESMTP id DD0915804B4;
-        Thu, 25 Jun 2020 12:32:30 -0700 (PDT)
-Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
- fdarray__filter() call
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
- <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
- <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
- <20200625171405.GL2719003@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
-Date:   Thu, 25 Jun 2020 22:32:29 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200625171405.GL2719003@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Jun 2020 15:33:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48146 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406068AbgFYTdu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 15:33:50 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PJVZGf096833;
+        Thu, 25 Jun 2020 15:33:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3gg8x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 15:33:39 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PJWncc105143;
+        Thu, 25 Jun 2020 15:33:39 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31vtt3gg8d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 15:33:39 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PJKmDr020695;
+        Thu, 25 Jun 2020 19:33:37 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31uus726d2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 19:33:37 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PJXZHx9830696
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 19:33:35 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 939C642049;
+        Thu, 25 Jun 2020 19:33:35 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEFBD42047;
+        Thu, 25 Jun 2020 19:33:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 19:33:33 +0000 (GMT)
+Message-ID: <1593113613.27152.345.camel@linux.ibm.com>
+Subject: Re: [PATCH 02/12] ima: Create a function to free a rule entry
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Thu, 25 Jun 2020 15:33:33 -0400
+In-Reply-To: <20200623003236.830149-3-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-3-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_15:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 phishscore=0 suspectscore=2 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 spamscore=0 cotscore=-2147483648
+ clxscore=1011 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 25.06.2020 20:14, Jiri Olsa wrote:
-> On Wed, Jun 24, 2020 at 08:19:32PM +0300, Alexey Budankov wrote:
->>
->> On 17.06.2020 11:35, Alexey Budankov wrote:
->>>
->>> Skip fds with zeroed revents field from count and avoid fds moving
->>> at fdarray__filter() call so fds indices returned by fdarray__add()
->>> call stay the same and can be used for direct access and processing
->>> of fd revents status field at entries array of struct fdarray object.
->>>
->>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>> ---
->>>  tools/lib/api/fd/array.c   | 11 +++++------
->>>  tools/perf/tests/fdarray.c | 20 ++------------------
->>>  2 files changed, 7 insertions(+), 24 deletions(-)
->>>
->>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
->>> index 58d44d5eee31..97843a837370 100644
->>> --- a/tools/lib/api/fd/array.c
->>> +++ b/tools/lib/api/fd/array.c
->>> @@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
->>>  		return 0;
->>>  
->>>  	for (fd = 0; fd < fda->nr; ++fd) {
->>> +		if (!fda->entries[fd].revents)
->>> +			continue;
->>> +
->>
->> So it looks like this condition also filters out non signaling events fds, not only
->> control and others fds, and this should be somehow avoided so such event related fds
->> would be counted. Several options have been proposed so far:
->>
->> 1) Explicit typing of fds via API extension and filtering based on the types:
->>    a) with separate fdarray__add_stat() call
->>    b) with type arg of existing fdarray__add() call
->>    c) various memory management design is possible
->>
->> 2) Playing tricks with fd positions inside entries and assumptions on fdarray API calls ordering
->>    - looks more like a hack than a designed solution
->>
->> 3) Rewrite of fdarray class to allocate separate object for every added fds
->>    - can be replaced with nonscrewing of fds by __filter()
->>
->> 4) Distinct between fds types at fdarray__filter() using .revents == 0 condition
->>    - seems to have corner cases and thus not applicable
->>
->> 5) Extension of fdarray__poll(, *arg_ptr, arg_size) with arg of fds array to atomically poll
->>    on fdarray_add()-ed fds and external arg fds and then external arg fds processing
->>
->> 6) Rewrite of fdarray class on epoll() call basis
->>    - introduces new scalability restrictions for Perf tool
+On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
+> There are several possible pieces of allocated memory in a rule entry.
+> Create a function that can free all allocated memory for a given rule
+> entry.
 > 
-> hum, how many fds for polling do you expect in your workloads?
-
-Currently it is several hundreds so default of 1K is easily hit and 
-"Profile a Large Number of PMU Events on Multi-Core Systems" section [1]
-recommends:
-
-soft nofile 65535
-hard nofile 65535
-
-for for /etc/security/limits.conf settings.
-
-~Alexey
-
-[1] https://software.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/configuration-recipes/profiling-hardware-without-sampling-drivers.html
-
+> This patch introduces no functional changes but sets the groundwork for
+> some memory leak fixes.
 > 
-> jirka
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+
+Having a function to release all memory associated with a policy rule
+in general is a good idea.  However, in the case of the shallow copy,
+we're not removing any IMA rules, just updating the LSM info.
+
+There is an opportunity to transition from the builtin policy rules to
+a custom IMA policy.  Afterwards IMA policy rules may only be
+appended.
+
+An IMA custom policy based on LSM info may be loaded prior to the LSM
+policy.  These LSM based rules are inactive until the corresponding
+LSM rule is loaded.  In some environments, LSM policies are loaded and
+removed frequently.  The IMA rules themselves are not removed, just
+the LSM info is updated to reflect the current LSM info.
+
+> ---
+>  security/integrity/ima/ima_policy.c | 33 +++++++++++++++++++++++++++--
+>  1 file changed, 31 insertions(+), 2 deletions(-)
 > 
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 236a731492d1..1320333201c6 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -261,6 +261,27 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
+>  		security_filter_rule_free(entry->lsm[i].rule);
+>  		kfree(entry->lsm[i].args_p);
+>  	}
+> +}
+> +
+> +static void ima_free_rule(struct ima_rule_entry *entry)
+> +{
+> +	if (!entry)
+> +		return;
+> +
+> +	/*
+> +	 * entry->template->fields may be allocated in ima_parse_rule() but that
+> +	 * reference is owned by the corresponding ima_template_desc element in
+> +	 * the defined_templates list and cannot be freed here
+> +	 */
+> +
+> +	/*
+> +	 * When freeing newly added ima_rule_entry members, consider if you
+> +	 * need to disown any references after the shallow copy in
+> +	 * ima_lsm_copy_rule()
+> +	 */
+> +	kfree(entry->fsname);
+> +	kfree(entry->keyrings);
+> +	ima_lsm_free_rule(entry);
+>  	kfree(entry);
+>  }
+>  
+> @@ -298,10 +319,18 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+>  			pr_warn("rule for LSM \'%s\' is undefined\n",
+>  				(char *)entry->lsm[i].args_p);
+>  	}
+> +
+> +	/* Disown all references that were shallow copied */
+> +	entry->fsname = NULL;
+> +	entry->keyrings = NULL;
+> +	entry->template = NULL;
+>  	return nentry;
+>  
+>  out_err:
+> -	ima_lsm_free_rule(nentry);
+> +	nentry->fsname = NULL;
+> +	nentry->keyrings = NULL;
+> +	nentry->template = NULL;
+> +	ima_free_rule(nentry);
+
+>  	return NULL;
+>  }
+>  
+> @@ -315,7 +344,7 @@ static int ima_lsm_update_rule(struct ima_rule_entry *entry)
+>  
+>  	list_replace_rcu(&entry->list, &nentry->list);
+>  	synchronize_rcu();
+> -	ima_lsm_free_rule(entry);
+> +	ima_free_rule(entry);
+
+This should only update the LSM info, nothing else.
+
+>  
+>  	return 0;
+>  }
+
