@@ -2,143 +2,98 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5908C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C62A420781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:15:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k36VGpGd"
+	by mail.kernel.org (Postfix) with ESMTP id 24448206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 11:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404180AbgFYLO7 (ORCPT
+        id S2404220AbgFYLP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404130AbgFYLO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 07:14:58 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB158C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 04:14:57 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q15so5149307wmj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 04:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R/lDDVQxBaGyt+9YnrsQ1wKsoAv0GGQeOtACQNKqcjA=;
-        b=k36VGpGdF5OlhC+8f1yEnrrYH8Ad3A5QPOITnITknSyJCbzwoGN78Phj6ZxCGzPxxP
-         kfqk0XRGUZAuVYSSfevip8RpnneAjP5HY01vLdRN5mv4/0MIGvIsFV3roI86k/FdQd1Z
-         uUJGRXZtkTjCxdIJ2qRbkCYpAm0K65IdTCXNicemA5LBSda8pFhWChhQzbzA5n4TlUX9
-         4kfmO3h6SmX/YkuH7DPpSGNQgLCdbhpjbA+54w5Y/6tVi7qbP1E9IVRjb5cBuvRJ4f53
-         OIwi1yoa8kGusFkZ9fR7tPZ00ZUEZVhYc6PMH0UqC/xrkyll6mHxz6S5UiYMgpk1f14c
-         csvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R/lDDVQxBaGyt+9YnrsQ1wKsoAv0GGQeOtACQNKqcjA=;
-        b=QYbvVJkhH/RVf9LTCnM4FGOd6Y4NjohYQjInBGWrPVHPB5LAtchaPe3eJ9amHr8t99
-         SE55e/5Cym4uCSsft/XGFVwJVNCmyyCwZP0HlEf/3SamO1+s0xCUhdE6hZZHbyFhbC/7
-         zoGSWafEaw7ZtT9IEbrljKHfymXETdNnjfHbMAxkvn7Ib3/B4c6v0zmyoRT2Lv9s0z0W
-         PjYKxU2EfAzLAZ2gcnr/kWRBeu0x7zag+D0LCdaWrgfeNpq50O5q93lol4OELVrpLYv3
-         JU9rR40o4yKneQWh+ay8c8/WNZSnvr2kovHVy87cQmEYgxMmEV522SzzpLgjoYpcroCz
-         xXdQ==
-X-Gm-Message-State: AOAM530MouIfjaQHkuVQglSY6ZFxyqLbVm5C7tPUxEOQeGbbCDjehmb5
-        b62ihlFfpjKCA1o31VxgYkN/3A==
-X-Google-Smtp-Source: ABdhPJxgdPBbbMLdq/cmKASgPLLX/kkQN2E3eojVcP9qm12NwASF3dDjPJXzHTgAZP6ShUd3wYJ70Q==
-X-Received: by 2002:a7b:cb0f:: with SMTP id u15mr2850767wmj.34.1593083696262;
-        Thu, 25 Jun 2020 04:14:56 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id f14sm14454978wro.90.2020.06.25.04.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 04:14:55 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 12:14:52 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: Fix locking issues with governors
-Message-ID: <20200625111452.GA200288@google.com>
-References: <49c7d64460cdb39b006991e5251260eb0eea9f2a.1593082448.git.viresh.kumar@linaro.org>
+        Thu, 25 Jun 2020 07:15:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:34206 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404169AbgFYLP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 07:15:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 680B21FB;
+        Thu, 25 Jun 2020 04:15:55 -0700 (PDT)
+Received: from [10.57.13.97] (unknown [10.57.13.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 571643F73C;
+        Thu, 25 Jun 2020 04:15:53 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] arm64: mm: reserve per-numa CMA after numa_init
+To:     Barry Song <song.bao.hua@hisilicon.com>, hch@lst.de,
+        m.szyprowski@samsung.com, will@kernel.org,
+        ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com
+Cc:     iommu@lists.linux-foundation.org, linuxarm@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <20200625074330.13668-1-song.bao.hua@hisilicon.com>
+ <20200625074330.13668-3-song.bao.hua@hisilicon.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <53b97598-6c83-1cb2-5763-4ded441403c5@arm.com>
+Date:   Thu, 25 Jun 2020 12:15:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49c7d64460cdb39b006991e5251260eb0eea9f2a.1593082448.git.viresh.kumar@linaro.org>
+In-Reply-To: <20200625074330.13668-3-song.bao.hua@hisilicon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Viresh
+On 2020-06-25 08:43, Barry Song wrote:
+> Right now, smmu is using dma_alloc_coherent() to get memory to save queues
+> and tables. Typically, on ARM64 server, there is a default CMA located at
+> node0, which could be far away from node2, node3 etc.
+> with this patch, smmu will get memory from local numa node to save command
+> queues and page tables. that means dma_unmap latency will be shrunk much.
+> Meanwhile, when iommu.passthrough is on, device drivers which call dma_
+> alloc_coherent() will also get local memory and avoid the travel between
+> numa nodes.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> ---
+>   arch/arm64/mm/init.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 1e93cfc7c47a..07d4d1fe7983 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -420,6 +420,8 @@ void __init bootmem_init(void)
+>   
+>   	arm64_numa_init();
+>   
+> +	dma_pernuma_cma_reserve();
+> +
 
-On Thursday 25 Jun 2020 at 16:24:16 (+0530), Viresh Kumar wrote:
-> The locking around governors handling isn't adequate currently. The list
-> of governors should never be traversed without locking in place. Also we
-> must make sure the governor isn't removed while it is still referenced
-> by code.
+It might be worth putting this after the hugetlb_cma_reserve() call for 
+clarity, since the comment below applies equally to this call too.
 
-Thanks for having a look at this!
+Robin.
 
-This solves the issue for the reference to policy->last_governor, but
-given that your patch is based on top of
-20200623142138.209513-3-qperret@google.com, 'default_governor' needs a
-similar treatment I think.
-
-Perhaps something along the lines of the (completely untested) snippet
-below?
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index dad6b85f4c89..9d7cf2ce2768 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1062,6 +1062,17 @@ __weak struct cpufreq_governor *cpufreq_default_governor(void)
- 	return NULL;
- }
- 
-+static bool get_default_governor(void)
-+{
-+	bool ret;
-+
-+	mutex_lock(&cpufreq_governor_mutex);
-+	ret = default_governor && !try_module_get(default_governor->owner);
-+	mutex_unlock(&cpufreq_governor_mutex);
-+
-+	return ret;
-+}
-+
- static int cpufreq_init_policy(struct cpufreq_policy *policy)
- {
- 	struct cpufreq_governor *gov = NULL;
-@@ -1073,20 +1084,21 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
- 		/* Update policy governor to the one used before hotplug. */
- 		gov = get_governor(policy->last_governor);
- 		if (gov) {
--			put_governor = true;
- 			pr_debug("Restoring governor %s for cpu %d\n",
- 				 policy->governor->name, policy->cpu);
--		} else if (default_governor) {
-+		} else if (get_default_governor()) {
- 			gov = default_governor;
- 		} else {
- 			return -ENODATA;
- 		}
-+		put_governor = true;
- 	} else {
- 		/* Use the default policy if there is no last_policy. */
- 		if (policy->last_policy) {
- 			pol = policy->last_policy;
--		} else if (default_governor) {
-+		} else if (get_default_governor()) {
- 			pol = cpufreq_parse_policy(default_governor->name);
-+			module_put(default_governor->owner);
- 			/*
- 			 * In case the default governor is neiter "performance"
- 			 * nor "powersave", fall back to the initial policy
+>   	/*
+>   	 * must be done after arm64_numa_init() which calls numa_init() to
+>   	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
+> 
