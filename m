@@ -2,108 +2,63 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D63AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E358C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC72206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0D420767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405733AbgFYPGp (ORCPT
+        id S2405627AbgFYPKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:06:45 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37680 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405309AbgFYPGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:06:44 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id 857A72A5609
-Message-ID: <00e105d0706d6ae704eaedb2fe5371606fb2f9d6.camel@collabora.com>
-Subject: Re: [RFC 3/7] media: uapi: h264: clarify pic_order_cnt_bit_size
- field
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Thu, 25 Jun 2020 11:06:37 -0400
-In-Reply-To: <20200623182809.1375-4-ezequiel@collabora.com>
-References: <20200623182809.1375-1-ezequiel@collabora.com>
-         <20200623182809.1375-4-ezequiel@collabora.com>
-Organization: Collabora
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-HRCQ/pXd/WmidTPZ7a7p"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 25 Jun 2020 11:10:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:55546 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405425AbgFYPKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 11:10:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B320FC0A;
+        Thu, 25 Jun 2020 08:10:49 -0700 (PDT)
+Received: from [192.168.0.110] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E36813F6CF;
+        Thu, 25 Jun 2020 08:10:48 -0700 (PDT)
+Subject: Re: [PATCH v5 0/7] arm_pmu: Use NMI for perf interrupt
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, maz@kernel.org, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20200617113851.607706-1-alexandru.elisei@arm.com>
+Message-ID: <4c615abd-7eee-ac3d-1ce4-939906d26b87@arm.com>
+Date:   Thu, 25 Jun 2020 16:11:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200617113851.607706-1-alexandru.elisei@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---=-HRCQ/pXd/WmidTPZ7a7p
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 6/17/20 12:38 PM, Alexandru Elisei wrote:
+> The series makes the arm_pmu driver use NMIs for the perf interrupt when
+> NMIs are available on the platform (currently, only arm64 + GICv3). To make
+> it easier to play with the patches, I've pushed a branch at [1]:
+>
+> $ git clone -b pmu-nmi-v5 git://linux-arm.org/linux-ae
 
-Le mardi 23 juin 2020 =C3=A0 15:28 -0300, Ezequiel Garcia a =C3=A9crit :
-> From: Philipp Zabel <p.zabel@pengutronix.de>
->=20
-> Since pic_order_cnt_bit_size is not a syntax element itself, explicitly
-> state that it is the total size in bits of the pic_order_cnt_lsb,
-> delta_pic_order_cnt_bottom, delta_pic_order_cnt[0], and
-> delta_pic_order_cnt[1] syntax elements contained in the slice.
->=20
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> [Ezequiel: rebase]
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+For people who wanted to test the series, but couldn't because their firmware was
+setting SCR_EL3.FIQ, I pushed some patches [1] to fix that. Now pseudo-NMIs work
+on all GICv3 security + SCR_EL3.FIQ combinations.
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+[1] https://lists.infradead.org/pipermail/linux-arm-kernel/2020-June/580143.html
 
-> ---
->  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index 7af12447a5b0..0808a36777b6 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1813,7 +1813,9 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type =
--
->        - Size in bits of the dec_ref_pic_marking() syntax element.
->      * - __u32
->        - ``pic_order_cnt_bit_size``
-> -      -
-> +      - Combined size in bits of the picture order count related syntax
-> +        elements: pic_order_cnt_lsb, delta_pic_order_cnt_bottom,
-> +        delta_pic_order_cnt0, and delta_pic_order_cnt1.
->      * - __u8
->        - ``cabac_init_idc``
->        -
-
---=-HRCQ/pXd/WmidTPZ7a7p
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXvS9fQAKCRBxUwItrAao
-HHIhAKCIRsmacXsXoKdS6FG/g6sNjw0MVwCfcaJ1P8AWKbUk4BbBbwId7VvbekI=
-=neI2
------END PGP SIGNATURE-----
-
---=-HRCQ/pXd/WmidTPZ7a7p--
-
+Thanks,
+Alex
