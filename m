@@ -2,209 +2,150 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F674C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB974C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3A4206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B84207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407600AbgFYWuB (ORCPT
+        id S2407615AbgFYW5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:50:01 -0400
-Received: from mga03.intel.com ([134.134.136.65]:29562 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405903AbgFYWuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:50:01 -0400
-IronPort-SDR: /7Kw5i2Ia3ukJ9Napp97tQhGzrYG1OS1tDW5UE5/Xpq/S7FsZhqzsVmfdyKEtK//dbEJygULjy
- 7dlWW41xv/DQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="145163597"
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="145163597"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 15:50:00 -0700
-IronPort-SDR: PGR+aiRMrJiEpVfeTkD/7FOwZYABvO/nzjR/4etEPEGm4t+mbQEfMpW3+nbCAK9y28zmMlrnfS
- gsBZ7MqJhg+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="479638543"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.255.228.165])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Jun 2020 15:49:59 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, lenb@kernel.org,
-        dsmythies@telus.net, bp@alien8.de, tglx@linutronix.de,
-        mingo@redhat.com, hpa@zytor.com, peterz@infradead.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [UPDATE][PATCH v3 1/2] cpufreq: intel_pstate: Allow enable/disable energy efficiency
-Date:   Thu, 25 Jun 2020 15:49:31 -0700
-Message-Id: <20200625224931.1468150-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
-MIME-Version: 1.0
+        Thu, 25 Jun 2020 18:57:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54608 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406272AbgFYW5H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 18:57:07 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PMWx4Z075491;
+        Thu, 25 Jun 2020 18:56:51 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vx91cbxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 18:56:51 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PMg9vL113179;
+        Thu, 25 Jun 2020 18:56:51 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vx91cbxe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 18:56:50 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PMsuGx018908;
+        Thu, 25 Jun 2020 22:56:48 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06fra.de.ibm.com with ESMTP id 31uusps3jf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 22:56:48 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PMtQeH59376086
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 22:55:27 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 06C61AE055;
+        Thu, 25 Jun 2020 22:56:46 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BBF77AE053;
+        Thu, 25 Jun 2020 22:56:44 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 22:56:44 +0000 (GMT)
+Message-ID: <1593125804.27152.426.camel@linux.ibm.com>
+Subject: Re: [PATCH 12/12] ima: Support additional conditionals in the
+ KEXEC_CMDLINE hook function
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec@lists.infradead.org
+Date:   Thu, 25 Jun 2020 18:56:44 -0400
+In-Reply-To: <20200623003236.830149-13-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-13-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_19:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0
+ phishscore=0 spamscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ bulkscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default intel_pstate driver disables energy efficiency by setting
-MSR_IA32_POWER_CTL bit 19 for Kaby Lake desktop CPU model in HWP mode.
-This CPU model is also shared by Coffee Lake desktop CPUs. This allows
-these systems to reach maximum possible frequency. But this adds power
-penalty, which some customers don't want. They want some way to enable/
-disable dynamically.
+On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
+> Take the properties of the kexec kernel's inode and the current task
+> ownership into consideration when matching a KEXEC_CMDLINE operation to
+> the rules in the IMA policy. This allows for some uniformity when
+> writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
+> and KEXEC_CMDLINE operations.
+> 
+> Prior to this patch, it was not possible to write a set of rules like
+> this:
+> 
+>  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+>  measure func=KEXEC_KERNEL_CHECK
+>  measure func=KEXEC_INITRAMFS_CHECK
+>  measure func=KEXEC_CMDLINE
+> 
+> The inode information associated with the kernel being loaded by a
+> kexec_kernel_load(2) syscall can now be included in the decision to
+> measure or not
+> 
+> Additonally, the uid, euid, and subj_* conditionals can also now be
+> used in KEXEC_CMDLINE rules. There was no technical reason as to why
+> those conditionals weren't being considered previously other than
+> ima_match_rules() didn't have a valid inode to use so it immediately
+> bailed out for KEXEC_CMDLINE operations rather than going through the
+> full list of conditional comparisons.
 
-So, add an additional attribute "energy_efficiency_enable" under
-/sys/devices/system/cpu/intel_pstate/ for these CPU models. This allows
-to read and write bit 19 ("Disable Energy Efficiency Optimization") in
-the MSR IA32_POWER_CTL.
+This makes a lot of sense.
 
-This attribute is present in both HWP and non-HWP mode as this has an
-effect in both modes. Refer to Intel Software Developer's manual for
-details. The scope of this bit is package wide. Also these systems
-support only one package. So read/write MSR on the current CPU is
-enough.
+<snip>
+ 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index c1583d98c5e5..82acd66bf653 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -731,13 +731,15 @@ int ima_load_data(enum kernel_load_data_id id)
+>   * @eventname: event name to be used for the buffer entry.
+>   * @func: IMA hook
+>   * @pcr: pcr to extend the measurement
+> + * @inode: inode associated with the object being measured (NULL for KEY_CHECK)
+>   * @keyring: keyring name to determine the action to be performed
+>   *
+>   * Based on policy, the buffer is measured into the ima log.
+>   */
+>  void process_buffer_measurement(const void *buf, int size,
+>  				const char *eventname, enum ima_hooks func,
+> -				int pcr, const char *keyring)
+> +				int pcr, struct inode *inode,
+> +				const char *keyring)
+>  {
 
-Suggested-by: Len Brown <lenb@kernel.org>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-v3 update
-Moved the MSR bit definition to msr-index.h from intel_pstate.c as Doug
-wanted. Offline checking with Borislav, for MSR defintion it is
-fine to move to  msr-index.h even for single user of the definition. But
-here the MSR definition is already in msr-index.h, but adding the MSR bit
-definition also.
+The file descriptor is passed as the first arg to
+process_measurement().  Sorry for the patch churn, but could we do the
+same for process_buffer_measurements.  As much as possible lets keep
+them in same.
 
- Documentation/admin-guide/pm/intel_pstate.rst |  9 ++++
- arch/x86/include/asm/msr-index.h              |  1 +
- drivers/cpufreq/intel_pstate.c                | 47 ++++++++++++++++++-
- 3 files changed, 55 insertions(+), 2 deletions(-)
+thanks,
 
-diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
-index 39d80bc29ccd..1ca2684a94d7 100644
---- a/Documentation/admin-guide/pm/intel_pstate.rst
-+++ b/Documentation/admin-guide/pm/intel_pstate.rst
-@@ -431,6 +431,15 @@ argument is passed to the kernel in the command line.
- 	supported in the current configuration, writes to this attribute will
- 	fail with an appropriate error.
- 
-+``energy_efficiency_enable``
-+	This attribute is only present on platforms, which has CPUs matching
-+	Kaby Lake or Coffee Lake desktop CPU model. By default
-+	"energy_efficiency" is disabled on these CPU models in HWP mode by this
-+	driver. Enabling energy efficiency may limit maximum operating
-+	frequency in both HWP and non HWP mode. In non HWP mode, this attribute
-+	has an effect in turbo range only. But in HWP mode, this attribute also
-+	has an effect in non turbo range.
-+
- Interpretation of Policy Attributes
- -----------------------------------
- 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index e8370e64a155..fec86ad14f8d 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -254,6 +254,7 @@
- #define MSR_PEBS_FRONTEND		0x000003f7
- 
- #define MSR_IA32_POWER_CTL		0x000001fc
-+#define MSR_IA32_POWER_CTL_BIT_EE	19
- 
- #define MSR_IA32_MC0_CTL		0x00000400
- #define MSR_IA32_MC0_STATUS		0x00000401
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 8e23a698ce04..daa1d9c12098 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -1218,6 +1218,42 @@ static ssize_t store_hwp_dynamic_boost(struct kobject *a,
- 	return count;
- }
- 
-+static ssize_t show_energy_efficiency_enable(struct kobject *kobj,
-+					     struct kobj_attribute *attr,
-+					     char *buf)
-+{
-+	u64 power_ctl;
-+	int enable;
-+
-+	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-+	enable = (power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE)) >> MSR_IA32_POWER_CTL_BIT_EE;
-+	return sprintf(buf, "%d\n", !enable);
-+}
-+
-+static ssize_t store_energy_efficiency_enable(struct kobject *a,
-+					      struct kobj_attribute *b,
-+					      const char *buf, size_t count)
-+{
-+	u64 power_ctl;
-+	u32 input;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 10, &input);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&intel_pstate_driver_lock);
-+	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
-+	if (input)
-+		power_ctl &= ~BIT(MSR_IA32_POWER_CTL_BIT_EE);
-+	else
-+		power_ctl |= BIT(MSR_IA32_POWER_CTL_BIT_EE);
-+	wrmsrl(MSR_IA32_POWER_CTL, power_ctl);
-+	mutex_unlock(&intel_pstate_driver_lock);
-+
-+	return count;
-+}
-+
- show_one(max_perf_pct, max_perf_pct);
- show_one(min_perf_pct, min_perf_pct);
- 
-@@ -1228,6 +1264,7 @@ define_one_global_rw(min_perf_pct);
- define_one_global_ro(turbo_pct);
- define_one_global_ro(num_pstates);
- define_one_global_rw(hwp_dynamic_boost);
-+define_one_global_rw(energy_efficiency_enable);
- 
- static struct attribute *intel_pstate_attributes[] = {
- 	&status.attr,
-@@ -1241,6 +1278,8 @@ static const struct attribute_group intel_pstate_attr_group = {
- 	.attrs = intel_pstate_attributes,
- };
- 
-+static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[];
-+
- static void __init intel_pstate_sysfs_expose_params(void)
- {
- 	struct kobject *intel_pstate_kobject;
-@@ -1273,6 +1312,12 @@ static void __init intel_pstate_sysfs_expose_params(void)
- 				       &hwp_dynamic_boost.attr);
- 		WARN_ON(rc);
- 	}
-+
-+	if (x86_match_cpu(intel_pstate_cpu_ee_disable_ids)) {
-+		rc = sysfs_create_file(intel_pstate_kobject,
-+				       &energy_efficiency_enable.attr);
-+		WARN_ON(rc);
-+	}
- }
- /************************** sysfs end ************************/
- 
-@@ -1288,8 +1333,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
- 		cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
- }
- 
--#define MSR_IA32_POWER_CTL_BIT_EE	19
--
- /* Disable energy efficiency optimization */
- static void intel_pstate_disable_ee(int cpu)
- {
--- 
-2.25.4
-
+Mimi
