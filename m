@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C422206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733DC206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vuRTp0pw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eCsjtb0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406250AbgFYQcF (ORCPT
+        id S2406261AbgFYQcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37698 "EHLO
+        Thu, 25 Jun 2020 12:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406198AbgFYQbn (ORCPT
+        with ESMTP id S2406186AbgFYQbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:31:43 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8AFC08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:31:43 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z13so6503886wrw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:31:43 -0700 (PDT)
+        Thu, 25 Jun 2020 12:31:39 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4813AC08C5DE
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:31:39 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g75so6177532wme.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k8LHcx9qvNOxdNgpbKyrwuZ34KPVZZIgrr7AZi6KeZA=;
-        b=vuRTp0pwkrASLzZlEd7t4bzVTihvDKzr6q/V1/a5h2KOgNHNmLVb3LCRQs3fqx6eDs
-         g066CUVbKbA1D6tXqZLZP15dAlDHHd/sUfhuhsXQ6mq6VPWr2PWIipubrFXNm+EPZlZS
-         4DB3EK9bHiHFNPdNdKLwfjNFwx5IrjiTWbthsvgfnUVdVMvUA/cCOZMgBzPblB7y9Wk2
-         bwQvt4Wb13Js+kWH1OQ7tjj7UY7JaBPIA9Pc3xO2lYp5vxkZUGtBd49ngrtmOqeWcXHL
-         voXi/mVlWJiM4sQoRJ4ilt5yTDUEBXzrNxdxa2qjofTn7ZAy96MtnSiItN21r4dAfPa1
-         9pcw==
+        bh=EoDDRWYqSRFNxuy0oLGiJ2BCcmCTg6+79vgN6npQkDY=;
+        b=eCsjtb0CD0LDkL/xpQgVQpUKp46erAgw6x4yrXv2r8sD3j++WjCcmIyOt1/Ru6SBKS
+         31Wn7T59R8BrNIi+NbhvYd1Dwd7McIkOUfHsMrPDmjJ7Eevz7+PwJ2mZlbE1thlXu6td
+         qpIf95KNd37Ub8rtfwRk8obKD8t7NdwtO3qLfJpkGf56W6hHceqWDZe+g+lR3tycgaNf
+         ftPDOpr/JIFpSRm/X6hLfJOuvtaGSqyecEG6Wmnilnk7XeamBZuOZ30XIIiCyLLJ6FyS
+         /lod4D62NPUbBm6aLWDd0162ZdkwbS2gLu+NVSsCgaDE7Gsv93oeh4HR1+6xDDHaJ0jt
+         8iUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k8LHcx9qvNOxdNgpbKyrwuZ34KPVZZIgrr7AZi6KeZA=;
-        b=h6CLt4clPoWdzMH8SM9AKujVpnHKgXM3z1nAXy/ey5jv1NHX1092hLaS8W1KW2FRFR
-         FlpxDMz4BtbvJP24N0+1mZVRNQeuhFUlUbaKdlom3vjNqmwc4DwbtURh/9vfCx594mQV
-         6XkpBfWFeaGmVubu00ThEH+lWIMlF7IyVeh4G/OZHhgyOAChei7MqMbbe8YoiLcWR7ax
-         mCqDjS0gRFJ08H2fFh9sYEJNv6tHHOfoDpXBQhgjxOmsRX4/X8mqypk2GWppU6wo4ngE
-         mZkCZJZd39zvWKVi5OUOJyvavgTxN1GxPgeulF7hIKJQtsadDtGhnTb8yyWIrscctbFE
-         cEoA==
-X-Gm-Message-State: AOAM532kHWxBYF/ZxInG3Q9i9wPGhw/QGvYV3IO/NJg3bpcieGPE5tGJ
-        N4VaNIFGfPyiH7eEMlyd9oFABg==
-X-Google-Smtp-Source: ABdhPJyDBx8MGsajh2N8dhN8HkgjNiO+zy04k92leLBktFBwL31ExA1tkRhJDISfX6ialHdYh3QUng==
-X-Received: by 2002:a5d:4b41:: with SMTP id w1mr425998wrs.27.1593102702205;
-        Thu, 25 Jun 2020 09:31:42 -0700 (PDT)
+        bh=EoDDRWYqSRFNxuy0oLGiJ2BCcmCTg6+79vgN6npQkDY=;
+        b=tpDD3phNhpomMoN69pW3n3vf6T9XOEmeGi206hQZMlJ7m5bST1sGghEagKlZm9Qs1P
+         b6a0WzDWlK/vvsFeuxZP/tn6ocQGgYXzQuMGJ74FRUktPD3A/zTAB+6BX7I1LfsX/ZHs
+         +Hh7xOCYlkFJBTrV095I5RbSZN8EdhdfA3iA8D370Va6nHAgjEJ6WRoHk8iW7GOMNxNq
+         JYzUnOWD2TQL/XBD+6ydQU+F6SJnQ9xSWz9vkmXQdvu9761d36X6N4XzwVWNKkJKuAWL
+         Sv42D2kFLd+H49aYLkWVuUTPonjUYRDQF8ubnnO2nANEg9ZxKjBB5i/8NcS1S97e+Bqn
+         w0uA==
+X-Gm-Message-State: AOAM5326AXqDY71OZRVD4XvPa1L1pqLZ8EiegRQrA6AIRZPffBIL9ca2
+        QD67TfLht/nO4jZUf+n24GaVog==
+X-Google-Smtp-Source: ABdhPJxs0E1ZwZRgy1IPBlo62VKJtW4RR3mcSMYVd6SruY6FQ67fUZ/rYYoLZFZyV6U9/jG7A6WazQ==
+X-Received: by 2002:a7b:cbcb:: with SMTP id n11mr4041219wmi.99.1593102698025;
+        Thu, 25 Jun 2020 09:31:38 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id l8sm32090847wrq.15.2020.06.25.09.31.41
+        by smtp.gmail.com with ESMTPSA id l8sm32090847wrq.15.2020.06.25.09.31.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 09:31:41 -0700 (PDT)
+        Thu, 25 Jun 2020 09:31:37 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lee.jones@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 08/10] mfd: si476x-i2c: Add description for si476x_core_fwver_to_revision()'s arg 'func'
-Date:   Thu, 25 Jun 2020 17:31:25 +0100
-Message-Id: <20200625163127.4000462-9-lee.jones@linaro.org>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 04/10] mfd: ab3100-otp: Add missing colon(s) for all documented kerneldoc arguments
+Date:   Thu, 25 Jun 2020 17:31:21 +0100
+Message-Id: <20200625163127.4000462-5-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625163127.4000462-1-lee.jones@linaro.org>
 References: <20200625163127.4000462-1-lee.jones@linaro.org>
@@ -76,36 +76,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc syntax is used, but not complete.
+Kerneldoc validation gets confused if syntax isn't "@.*: ".
 
-Descriptions are required for all arguments.
+Adding the missing colons squashes the following W=1 warnings:
 
-Fixes the following W=1 build warning:
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'dev' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'locked' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'freq' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'paf' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'imeich' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'cid' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'tac' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'fac' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'svn' not described in 'ab3100_otp'
+ drivers/mfd/ab3100-otp.c:60: warning: Function parameter or member 'debugfs' not described in 'ab3100_otp'
 
- drivers/mfd/si476x-i2c.c:550: warning: Function parameter or member 'func' not described in 'si476x_core_fwver_to_revision'
-
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mfd/si476x-i2c.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/mfd/ab3100-otp.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mfd/si476x-i2c.c b/drivers/mfd/si476x-i2c.c
-index c8d28b844def8..517d49bcd667b 100644
---- a/drivers/mfd/si476x-i2c.c
-+++ b/drivers/mfd/si476x-i2c.c
-@@ -534,6 +534,11 @@ static irqreturn_t si476x_core_interrupt(int irq, void *dev)
+diff --git a/drivers/mfd/ab3100-otp.c b/drivers/mfd/ab3100-otp.c
+index c4751fb9bc224..c393102e3a394 100644
+--- a/drivers/mfd/ab3100-otp.c
++++ b/drivers/mfd/ab3100-otp.c
+@@ -29,22 +29,22 @@
+ 
  /**
-  * si476x_firmware_version_to_revision()
-  * @core: Core device structure
-+ * @func: Selects the boot function of the device:
-+ *         *_BOOTLOADER  - Boot loader
-+ *         *_FM_RECEIVER - FM receiver
-+ *         *_AM_RECEIVER - AM receiver
-+ *         *_WB_RECEIVER - Weatherband receiver
-  * @major:  Firmware major number
-  * @minor1: Firmware first minor number
-  * @minor2: Firmware second minor number
+  * struct ab3100_otp
+- * @dev containing device
+- * @locked whether the OTP is locked, after locking, no more bits
++ * @dev: containing device
++ * @locked: whether the OTP is locked, after locking, no more bits
+  *       can be changed but before locking it is still possible
+  *       to change bits from 1->0.
+- * @freq clocking frequency for the OTP, this frequency is either
++ * @freq: clocking frequency for the OTP, this frequency is either
+  *       32768Hz or 1MHz/30
+- * @paf product activation flag, indicates whether this is a real
++ * @paf: product activation flag, indicates whether this is a real
+  *       product (paf true) or a lab board etc (paf false)
+- * @imeich if this is set it is possible to override the
++ * @imeich: if this is set it is possible to override the
+  *       IMEI number found in the tac, fac and svn fields with
+  *       (secured) software
+- * @cid customer ID
+- * @tac type allocation code of the IMEI
+- * @fac final assembly code of the IMEI
+- * @svn software version number of the IMEI
+- * @debugfs a debugfs file used when dumping to file
++ * @cid: customer ID
++ * @tac: type allocation code of the IMEI
++ * @fac: final assembly code of the IMEI
++ * @svn: software version number of the IMEI
++ * @debugfs: a debugfs file used when dumping to file
+  */
+ struct ab3100_otp {
+ 	struct device *dev;
 -- 
 2.25.1
 
