@@ -2,115 +2,172 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B64C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7F9206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5E420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:10:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XFUKQALO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405026AbgFYNJs (ORCPT
+        id S2405041AbgFYNKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404839AbgFYNIn (ORCPT
+        Thu, 25 Jun 2020 09:10:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44159 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404696AbgFYNKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:08:43 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26897C08C5DD
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:08:43 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B92BC44A; Thu, 25 Jun 2020 15:08:38 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     iommu@lists.linux-foundation.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Thu, 25 Jun 2020 09:10:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593090631;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LN1Esb/7Hi/Z/DHHBSlOzerqkyDCNAofXS9512fRksY=;
+        b=XFUKQALOBC2xZJu/Ett5Lq9hpoB2rOfb3CcbBYRjxAT4RbzGWQwr6dhP3MlfFdkeiGYwx/
+        8U/a79PSRrBXOQGCoqGktsjehtqDGY/0RXEI9tA9aBtheX9R+Ud/Tj+Jm99mbq43BqZlkU
+        8aWfMj1vqMBtUGbd8N/rFDhGtNRNj/Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-kOw_BvQeM5GFVWO-Gh_oew-1; Thu, 25 Jun 2020 09:10:25 -0400
+X-MC-Unique: kOw_BvQeM5GFVWO-Gh_oew-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2452107ACF2;
+        Thu, 25 Jun 2020 13:10:22 +0000 (UTC)
+Received: from localhost (ovpn-115-49.ams2.redhat.com [10.36.115.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 588BE79315;
+        Thu, 25 Jun 2020 13:10:21 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 14:10:20 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 05/13] iommu/rockchip: Use dev_iommu_priv_get/set()
-Date:   Thu, 25 Jun 2020 15:08:28 +0200
-Message-Id: <20200625130836.1916-6-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200625130836.1916-1-joro@8bytes.org>
-References: <20200625130836.1916-1-joro@8bytes.org>
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v4 17/18] nitro_enclaves: Add overview documentation
+Message-ID: <20200625131020.GD221479@stefanha-x1.localdomain>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-18-andraprs@amazon.com>
+ <20200623085915.GF32718@stefanha-x1.localdomain>
+ <746fcd7d-5946-35ec-6471-8bf8dccdf400@amazon.com>
+MIME-Version: 1.0
+In-Reply-To: <746fcd7d-5946-35ec-6471-8bf8dccdf400@amazon.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hoZxPH4CaxYzWscb"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+--hoZxPH4CaxYzWscb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Remove the use of dev->archdata.iommu and use the private per-device
-pointer provided by IOMMU core code instead.
+On Wed, Jun 24, 2020 at 05:39:39PM +0300, Paraschiv, Andra-Irina wrote:
+>=20
+>=20
+> On 23/06/2020 11:59, Stefan Hajnoczi wrote:
+> > On Mon, Jun 22, 2020 at 11:03:28PM +0300, Andra Paraschiv wrote:
+> > > +The kernel bzImage, the kernel command line, the ramdisk(s) are part=
+ of the
+> > > +Enclave Image Format (EIF); plus an EIF header including metadata su=
+ch as magic
+> > > +number, eif version, image size and CRC.
+> > > +
+> > > +Hash values are computed for the entire enclave image (EIF), the ker=
+nel and
+> > > +ramdisk(s). That's used, for example, to check that the enclave imag=
+e that is
+> > > +loaded in the enclave VM is the one that was intended to be run.
+> > > +
+> > > +These crypto measurements are included in a signed attestation docum=
+ent
+> > > +generated by the Nitro Hypervisor and further used to prove the iden=
+tity of the
+> > > +enclave; KMS is an example of service that NE is integrated with and=
+ that checks
+> > > +the attestation doc.
+> > > +
+> > > +The enclave image (EIF) is loaded in the enclave memory at offset 8 =
+MiB. The
+> > > +init process in the enclave connects to the vsock CID of the primary=
+ VM and a
+> > > +predefined port - 9000 - to send a heartbeat value - 0xb7. This mech=
+anism is
+> > > +used to check in the primary VM that the enclave has booted.
+> > > +
+> > > +If the enclave VM crashes or gracefully exits, an interrupt event is=
+ received by
+> > > +the NE driver. This event is sent further to the user space enclave =
+process
+> > > +running in the primary VM via a poll notification mechanism. Then th=
+e user space
+> > > +enclave process can exit.
+> > > +
+> > > +[1] https://aws.amazon.com/ec2/nitro/nitro-enclaves/
+> > > +[2] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+> > > +[3] https://lwn.net/Articles/807108/
+> > > +[4] https://www.kernel.org/doc/html/latest/admin-guide/kernel-parame=
+ters.html
+> > > +[5] https://man7.org/linux/man-pages/man7/vsock.7.html
+> > Is the EIF specification and the attestation protocol available?
+>=20
+> For now, they are not publicly available. Once the refs are available (e.=
+g.
+> AWS documentation, GitHub documentation), I'll include them in the kernel
+> documentation as well.
+>=20
+> As a note here, the NE project is currently in preview
+> (https://aws.amazon.com/ec2/nitro/nitro-enclaves/) and part of the
+> documentation / codebase will be publicly available when NE is generally
+> available (GA). This will be in addition to the ones already publicly
+> available, like the NE kernel driver.
+>=20
+> Let me know if I can help with any particular questions / clarifications.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/rockchip-iommu.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks!
 
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index d25c2486ca07..e5d86b7177de 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -836,7 +836,7 @@ static size_t rk_iommu_unmap(struct iommu_domain *domain, unsigned long _iova,
- 
- static struct rk_iommu *rk_iommu_from_dev(struct device *dev)
- {
--	struct rk_iommudata *data = dev->archdata.iommu;
-+	struct rk_iommudata *data = dev_iommu_priv_get(dev);
- 
- 	return data ? data->iommu : NULL;
- }
-@@ -1059,7 +1059,7 @@ static struct iommu_device *rk_iommu_probe_device(struct device *dev)
- 	struct rk_iommudata *data;
- 	struct rk_iommu *iommu;
- 
--	data = dev->archdata.iommu;
-+	data = dev_iommu_priv_get(dev);
- 	if (!data)
- 		return ERR_PTR(-ENODEV);
- 
-@@ -1073,7 +1073,7 @@ static struct iommu_device *rk_iommu_probe_device(struct device *dev)
- 
- static void rk_iommu_release_device(struct device *dev)
- {
--	struct rk_iommudata *data = dev->archdata.iommu;
-+	struct rk_iommudata *data = dev_iommu_priv_get(dev);
- 
- 	device_link_del(data->link);
- }
-@@ -1100,7 +1100,7 @@ static int rk_iommu_of_xlate(struct device *dev,
- 	iommu_dev = of_find_device_by_node(args->np);
- 
- 	data->iommu = platform_get_drvdata(iommu_dev);
--	dev->archdata.iommu = data;
-+	dev_iommu_priv_set(dev, data);
- 
- 	platform_device_put(iommu_dev);
- 
--- 
-2.27.0
+Stefan
+
+--hoZxPH4CaxYzWscb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl70ojwACgkQnKSrs4Gr
+c8hY1Af49KQr66earh3/QlA88cMkax3Hj7qRR9/hKpBS8qDRjwSHzSDhvemS0Qrf
+jH84GXs6j8Kjj2VdXFpyEaH183Ktz+27ydyMETDYpAvakhvOkBW5bSE6qqpK/EE1
+CuI2kIDVBDSCxul81JSB4ATnAfa6plUgUntTUjF4mhvLBWp3HgYW6S07o5LvzaD9
+6XcoDarRxGWErRs/3tVPHQrTtpMztrIxkp3eu+AiPdQuID4JUiKSzgMSne1lThRP
+9OZjF1nyAkx+UxBDFYpf5MmyKB4aEUz6UmFdLKoIGYExnAfuS+9rMtgWW+Rcnwpc
+uwLL0sfOGSkX8jJwQJWTV+ItlRhy
+=dz1i
+-----END PGP SIGNATURE-----
+
+--hoZxPH4CaxYzWscb--
 
