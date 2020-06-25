@@ -2,166 +2,113 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E5CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D7220709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593088309;
-	bh=uZyquXWX2uZbi7C4PfxooqqslUf/H9KACJBSxEKBJzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=noZdPqjhXAV++ojQtL2feAvKv/gQQYcq8pKYyA8wvMlqHAEqLZvO9QpAAWpGwJvxG
-	 eM7t9CzuhctqWXCzJj1r36Gctdt3yPA6EpfoCkg/VGUP1nOi6KdkLeyeUP35sVswxM
-	 rfC7jrIZ91Y2HFNi5Kix4AHOhVdMTxhWt0oNbf/w=
+	by mail.kernel.org (Postfix) with ESMTP id 174C320709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:33:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hquYfcFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404671AbgFYMbr (ORCPT
+        id S2404688AbgFYMdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:31:47 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:45098 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404343AbgFYMbr (ORCPT
+        Thu, 25 Jun 2020 08:33:03 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31031 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404451AbgFYMdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:31:47 -0400
-Received: by mail-ej1-f66.google.com with SMTP id a1so5724405ejg.12;
-        Thu, 25 Jun 2020 05:31:45 -0700 (PDT)
+        Thu, 25 Jun 2020 08:33:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593088381;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4QAA6xTzivbUQMA9MfIr8KswP1KP4qpqOKsLkXMz+OE=;
+        b=hquYfcFjFb3GQTuEInUnMWpfkFSqcr3qx+4jDfZwggx1P6M5iJciZu5ipc/PhmM4FMZ99i
+        1TnZ1GMsnTjqXaTGY5N/95O3AI7Yy+Iw9MoPTn1KikKcK5k01gz/Wxrk6RP9tcee3wnzJd
+        YSvNPXV/7Bbr4N2J4f84ZzcGuPIxOvw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-hGq5q48qP_yNA9J7m7qN8w-1; Thu, 25 Jun 2020 08:32:59 -0400
+X-MC-Unique: hGq5q48qP_yNA9J7m7qN8w-1
+Received: by mail-wr1-f71.google.com with SMTP id d6so6700845wrn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:32:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LfL/J6kcjTPEsDskt6aLX8PefsDeHP4anavcHPUMTKA=;
-        b=K8tP2qbXQI2hBSalRv4SKfazP6iRV3H2GezAc8E8Uh9rrhiWuQ8Uqg34LY7Fb6evnI
-         l0B30MTdDB8NfVH+KqkGnEjAhchh7qqCHacKA4oePCjNf6TrHlbE0h6RdihWtzcD6spO
-         IE8vZBokrOoqo6uM3O/nZUnpG3CboXOzspyfNggmh3UZuWqH9stnfsm8dKW0rUYkyuq6
-         laFq5z4Bb37H2lDLFaKcdL6RTThXEoBdGPecY/sJJA1qLPPP8FRrX51vy/UNLpxHukgN
-         TzJQMEzsGodiU98ggnmLqKKHWgzO/aMakaLVJ7b+s9Sl9MnE0UqIB2SnSEaU/RL4mTx4
-         J3XA==
-X-Gm-Message-State: AOAM530w5IK5YXKYgtRq/pvNRb0vyX7+bEIhjkMbTaP28RkyOk1Dd0gq
-        MTQHz5NVGHmYaldpcgU8ebY=
-X-Google-Smtp-Source: ABdhPJyiXDwgXlrcNxDquN/m7X009TUFeb5rEVdNCJL2oLKPwCGm2N5mD6JL7UM8/mFBSoWnOD0BJw==
-X-Received: by 2002:a17:906:3d41:: with SMTP id q1mr30164872ejf.12.1593088305149;
-        Thu, 25 Jun 2020 05:31:45 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id u13sm11449983ejx.3.2020.06.25.05.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 05:31:44 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 14:31:43 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 2/6] mm: Add become_kswapd and restore_kswapd
-Message-ID: <20200625123143.GK1320@dhcp22.suse.cz>
-References: <20200625113122.7540-1-willy@infradead.org>
- <20200625113122.7540-3-willy@infradead.org>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4QAA6xTzivbUQMA9MfIr8KswP1KP4qpqOKsLkXMz+OE=;
+        b=cdFN7kNoFTf2gICzci9ocXUlKXDNqbjEfz1s0hWqVP/ezAMG8LtIp0Dz6AxLclzLZq
+         YHMebRM9JV6n4f+584zFKXPi3IKC39l+xlpO8ZaUX777B3/Wr4qI+5D/40nIaelvO8P+
+         7NzEt7BbExTXsgdIN6Uk8H6tlNYl9zVTQouM5+ptbszj8b5wxQyQ18snSRvwWX2eTC1m
+         hZIqsP43tP5UmsT3LYPpstNAWUpo/BMYy3fiy1jst82J0+Ee+U3be51LcTHIjmwYUp1e
+         KD7aVh7sTVnqtGmCDaqCHnKGyTbOTwR/nRGXcUvawt3oRF3NjEkR4UbdPpX4xJ5AfV/e
+         wxnQ==
+X-Gm-Message-State: AOAM531vz0cDzCQFwSqOLwLnbK+GG2trwrRSpxqspssP7CeYJubl5ED6
+        swYwSbexw7qV6IboykAtxUOFA4YZJC3QpqvAHS5pHxBGvfSKo9/Ufjkr9RNow4j0b/Ra7RzZF9+
+        /FerTy81+aNt162W7e0LNZIzS
+X-Received: by 2002:adf:ff8c:: with SMTP id j12mr36129916wrr.230.1593088378319;
+        Thu, 25 Jun 2020 05:32:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJza6yC5dQ/KR4rQM92i44NL4zzevHmVpFRpkaZKX3IcBVU9bdyAaS6xr67Dsr0Uv3NHlppSyg==
+X-Received: by 2002:adf:ff8c:: with SMTP id j12mr36129899wrr.230.1593088378068;
+        Thu, 25 Jun 2020 05:32:58 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:91d0:a5f0:9f34:4d80? ([2001:b07:6468:f312:91d0:a5f0:9f34:4d80])
+        by smtp.gmail.com with ESMTPSA id b18sm30801881wrn.88.2020.06.25.05.32.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 05:32:57 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: Use VMCALL and VMMCALL mnemonics in kvm_para.h
+To:     Uros Bizjak <ubizjak@gmail.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200623183439.5526-1-ubizjak@gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <30a01d1f-5b36-5171-3d0a-e14fa7afa62e@redhat.com>
+Date:   Thu, 25 Jun 2020 14:32:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625113122.7540-3-willy@infradead.org>
+In-Reply-To: <20200623183439.5526-1-ubizjak@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 25-06-20 12:31:18, Matthew Wilcox wrote:
-> Since XFS needs to pretend to be kswapd in some of its worker threads,
-> create methods to save & restore kswapd state.  Don't bother restoring
-> kswapd state in kswapd -- the only time we reach this code is when we're
-> exiting and the task_struct is about to be destroyed anyway.
+On 23/06/20 20:34, Uros Bizjak wrote:
+> Current minimum required version of binutils is 2.23,
+> which supports VMCALL and VMMCALL instruction mnemonics.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-Certainly better than an opencoded PF_$FOO manipulation
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-I would just ask for a clarification because this is rellying to have a
-good MM knowledge to follow
-
-> +/*
-> + * Tell the memory management that we're a "memory allocator",
-
-I would go with.
-Tell the memory management that the caller is working on behalf of the
-background memory reclaim (aka kswapd) and help it to make a forward
-progress. That means that it will get an access to memory reserves
-should there be a need to allocate memory in order to make a forward
-progress. Note that the caller has to be extremely careful when doing
-that.
-
-Or something like that.
-
-> + * and that if we need more memory we should get access to it
-> + * regardless (see "__alloc_pages()"). "kswapd" should
-> + * never get caught in the normal page freeing logic.
-> + *
-> + * (Kswapd normally doesn't need memory anyway, but sometimes
-> + * you need a small amount of memory in order to be able to
-> + * page out something else, and this flag essentially protects
-> + * us from recursively trying to free more memory as we're
-> + * trying to free the first piece of memory in the first place).
-> + */
-> +#define KSWAPD_PF_FLAGS		(PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD)
-> +
-> +static inline unsigned long become_kswapd(void)
-> +{
-> +	unsigned long flags = current->flags & KSWAPD_PF_FLAGS;
-> +	current->flags |= KSWAPD_PF_FLAGS;
-> +	return flags;
-> +}
-> +
-> +static inline void restore_kswapd(unsigned long flags)
-> +{
-> +	current->flags &= ~(flags ^ KSWAPD_PF_FLAGS);
-> +}
-> +
->  static inline void set_current_io_flusher(void)
->  {
->  	current->flags |= PF_LOCAL_THROTTLE;
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index b6d84326bdf2..27ae76699899 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -3870,19 +3870,7 @@ static int kswapd(void *p)
->  	if (!cpumask_empty(cpumask))
->  		set_cpus_allowed_ptr(tsk, cpumask);
+> Replace the byte-wise specification of VMCALL and
+> VMMCALL with these proper mnemonics.
+> 
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> CC: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_para.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+> index 49d3a9edb06f..01317493807e 100644
+> --- a/arch/x86/include/asm/kvm_para.h
+> +++ b/arch/x86/include/asm/kvm_para.h
+> @@ -18,7 +18,7 @@ static inline bool kvm_check_and_clear_guest_paused(void)
+>  #endif /* CONFIG_KVM_GUEST */
 >  
-> -	/*
-> -	 * Tell the memory management that we're a "memory allocator",
-> -	 * and that if we need more memory we should get access to it
-> -	 * regardless (see "__alloc_pages()"). "kswapd" should
-> -	 * never get caught in the normal page freeing logic.
-> -	 *
-> -	 * (Kswapd normally doesn't need memory anyway, but sometimes
-> -	 * you need a small amount of memory in order to be able to
-> -	 * page out something else, and this flag essentially protects
-> -	 * us from recursively trying to free more memory as we're
-> -	 * trying to free the first piece of memory in the first place).
-> -	 */
-> -	tsk->flags |= PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD;
-> +	become_kswapd();
->  	set_freezable();
+>  #define KVM_HYPERCALL \
+> -        ALTERNATIVE(".byte 0x0f,0x01,0xc1", ".byte 0x0f,0x01,0xd9", X86_FEATURE_VMMCALL)
+> +        ALTERNATIVE("vmcall", "vmmcall", X86_FEATURE_VMMCALL)
 >  
->  	WRITE_ONCE(pgdat->kswapd_order, 0);
-> @@ -3932,8 +3920,6 @@ static int kswapd(void *p)
->  			goto kswapd_try_sleep;
->  	}
->  
-> -	tsk->flags &= ~(PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD);
-> -
->  	return 0;
->  }
->  
-> -- 
-> 2.27.0
+>  /* For KVM hypercalls, a three-byte sequence of either the vmcall or the vmmcall
+>   * instruction.  The hypervisor may replace it with something else but only the
 > 
 
--- 
-Michal Hocko
-SUSE Labs
+Queued, thanks.
+
