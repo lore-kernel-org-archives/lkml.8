@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04428C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E3AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6ABF20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACD220702
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Okgzc/Jn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iRnQElWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405066AbgFYNPE (ORCPT
+        id S2405035AbgFYNO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35096 "EHLO
+        Thu, 25 Jun 2020 09:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404969AbgFYNOt (ORCPT
+        with ESMTP id S2404988AbgFYNOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:14:49 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF862C08C5DC
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:48 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 17so5893870wmo.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:48 -0700 (PDT)
+        Thu, 25 Jun 2020 09:14:52 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACA6C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:52 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so5895063wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:14:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ETvcnIdoYOd6fKRkr8kW0WKFku8qOtdzIFy0DsfdfKU=;
-        b=Okgzc/Jnhq/ZtNvgRmU0RPWD7yyRO9AEZ4X+49Cd25zX0I/s5yIM5M1jVXZ/WpTNvv
-         eqnhcbK/B66VKiGhBbTzcrgbJof4EpMrrUJwOzbOpWFcFCjtJ9vdlFIc3ziBouKPpy+a
-         3eqgJC3bsDLdbR8rcdCxt0aPC5qKGaxTCkgRCdP8e5/Ge/TNsuGYLpBRvpDXqV1+TdVi
-         hqBj0HtV2lpswo/suhTmeirJSGwj09i/aND3huyDwYPdhbLDeTQZI3YkytO1NhJwVD3X
-         xcMoqCoRGb7+TywX0UmciB86ZKOuTtMz/KJffnTVB+k+ZbsnfiMH82tggSL63uQGjCQK
-         80sQ==
+        bh=2xpUOlwp0j4kixcuMcqYD0AVOmVjntpoGLeDVKp6rbQ=;
+        b=iRnQElWNuHWk5fkQJF9im7CPlbJ9s/Bv5rCHrLY97GTMyPQ2dZYP36n/XKpi63GaHn
+         JA1R/BQlEchrEHNOQwpdifXawZeODF0nGmB92XE1WjeQEoE2PqOZuCQhAF9rn9N5gNZy
+         BMBB4OlK8yg0mXG8GihwNzAkOFUBbWjICQ71Ipnn3KMaWKjAb/jV9bprS88dweJBZLpT
+         d5qV++ZR8gnS+iLMEWT0cv2f9upcX3PVnwIVbNslO1QGcenEcmH6uqXPvLljk9KbySxi
+         z0sTO6eC0+ZGJlnxY5xs5+hzu2pjm0BQbhnwy10yWjsLoHhvfTNppPi/TqtACFX2TN6r
+         RXxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ETvcnIdoYOd6fKRkr8kW0WKFku8qOtdzIFy0DsfdfKU=;
-        b=IL3X+K9aqQh2bdjkleuNyfpJ8tuyPnYVA1Dzh5iJTfCi/GUeQ4Ae/UoSxc2B1/6u1y
-         EXR23CzOHUH570t70zV6x7uH/7VXBszKu0UAUn4dCnBf2ESFvbVGlnaSaWSABr138hf7
-         SfmjciTYgQCF4OjhQut6q+gPSmvpUZ9kQsAsv6/PXWeWBYd79dcNo/VdJ4Kx1/DICsrs
-         xlkaWtoCQ5rxop6jzuNsiqvRauC5Akj5Wu8aDjuyYR8/rqGx8a4NhE+NAwWl9br6MDhc
-         Kmn16D/AXpz2jYZuXza8PvNWdl6ABbdsE3V4ez5pzvTHvOGU+OHk76PP3Q3Vx+xYUm7S
-         q0Cw==
-X-Gm-Message-State: AOAM532siScwxUG2cfYA0PqpC9h75qPSbXwjncH0YSjauQpmR2X2dr4T
-        vpTJIJXvNm0s1s2QxqrDF+YcIg==
-X-Google-Smtp-Source: ABdhPJzsxT2/tFsbVgmThb5b99ShdDMJHyyME9TgWW5rpzINN9MdAqckQFWofUF84Be2eT03dISZFQ==
-X-Received: by 2002:a1c:f60d:: with SMTP id w13mr3489927wmc.51.1593090887222;
-        Thu, 25 Jun 2020 06:14:47 -0700 (PDT)
+        bh=2xpUOlwp0j4kixcuMcqYD0AVOmVjntpoGLeDVKp6rbQ=;
+        b=mfcf57kd+WVwSKiUdOsMZQ3ADVT5W5EQgN3ww5E8f4CC+EIGYRv9OuEk6dNXF5K0CV
+         DMOR4jFd0iuQJTGDVT0tCilrPUm6nETUv98iemOCQrScZQA01rAZd7jPZHctCXKKW0HV
+         TKuUozI9PwC59hzUyexZ+TqfS/fCNobn55UlnMOdugRJ5x/DRuhqS2EWL78+8jC2JOdS
+         6UbSLD/yA/Tx+92To0kTPnTZtiezOwEoT3/LkjFH9I3BUBK7cxeP0uZQKMdFjba0tRb+
+         dSVLjGIO2MDeIPoYMin2AQARF2EykK6pfpg6VXyO+9T81G2fZn5bCVDRJJlj5GCnr6Rx
+         Bxfg==
+X-Gm-Message-State: AOAM533GHrMwWe/od8Z4K6rijil7v9NSUZqUjKobZtuHpTNGh7j7Gsyp
+        jhzFJA/AKBtfJwW7xFXdByfQag==
+X-Google-Smtp-Source: ABdhPJxGxJja/jT5oTKGrw+3w0aijL5YvUJiF17syWz5nrHEReD8sNkVNAERPfeh53aofCnuLFYTBA==
+X-Received: by 2002:a1c:7fd7:: with SMTP id a206mr3350840wmd.104.1593090890761;
+        Thu, 25 Jun 2020 06:14:50 -0700 (PDT)
 Received: from localhost ([2a01:4b00:8523:2d03:c126:6748:7a9d:2d])
-        by smtp.gmail.com with ESMTPSA id d2sm31803367wrs.95.2020.06.25.06.14.46
+        by smtp.gmail.com with ESMTPSA id x18sm11904701wmi.35.2020.06.25.06.14.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 06:14:46 -0700 (PDT)
+        Thu, 25 Jun 2020 06:14:49 -0700 (PDT)
 From:   David Brazdil <dbrazdil@google.com>
 To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -69,9 +68,9 @@ To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
 Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, android-kvm@google.com,
         kernel-team@android.com, David Brazdil <dbrazdil@google.com>
-Subject: [PATCH v4 11/15] arm64: kvm: Split hyp/sysreg-sr.c to VHE/nVHE
-Date:   Thu, 25 Jun 2020 14:14:16 +0100
-Message-Id: <20200625131420.71444-12-dbrazdil@google.com>
+Subject: [PATCH v4 13/15] arm64: kvm: Compile remaining hyp/ files for both VHE/nVHE
+Date:   Thu, 25 Jun 2020 14:14:18 +0100
+Message-Id: <20200625131420.71444-14-dbrazdil@google.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625131420.71444-1-dbrazdil@google.com>
 References: <20200625131420.71444-1-dbrazdil@google.com>
@@ -82,601 +81,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sysreg-sr.c contains KVM's code for saving/restoring system registers, with
-some code shared between VHE/nVHE. These common routines are moved to
-a header file, VHE-specific code is moved to vhe/sysreg-sr.c and nVHE-specific
-code to nvhe/sysreg-sr.c.
+The following files in hyp/ contain only code shared by VHE/nVHE:
+  vgic-v3-sr.c, aarch32.c, vgic-v2-cpuif-proxy.c, entry.S, fpsimd.S
+Compile them under both configurations. Deletions in image-vars.h reflect
+eliminated dependencies of nVHE code on the rest of the kernel.
 
 Signed-off-by: David Brazdil <dbrazdil@google.com>
 ---
- arch/arm64/include/asm/kvm_host.h             |   6 +-
- arch/arm64/include/asm/kvm_hyp.h              |   5 +-
- arch/arm64/kernel/image-vars.h                |   7 -
- arch/arm64/kvm/arm.c                          |   8 +-
- arch/arm64/kvm/hyp/Makefile                   |   4 +-
- .../{sysreg-sr.c => include/hyp/sysreg-sr.h}  | 158 ++----------------
- arch/arm64/kvm/hyp/nvhe/Makefile              |   2 +-
- arch/arm64/kvm/hyp/nvhe/switch.c              |   1 +
- arch/arm64/kvm/hyp/nvhe/sysreg-sr.c           |  46 +++++
- arch/arm64/kvm/hyp/vhe/Makefile               |   2 +-
- arch/arm64/kvm/hyp/vhe/switch.c               |   2 +-
- arch/arm64/kvm/hyp/vhe/sysreg-sr.c            | 114 +++++++++++++
- 12 files changed, 191 insertions(+), 164 deletions(-)
- rename arch/arm64/kvm/hyp/{sysreg-sr.c => include/hyp/sysreg-sr.h} (56%)
- create mode 100644 arch/arm64/kvm/hyp/nvhe/sysreg-sr.c
- create mode 100644 arch/arm64/kvm/hyp/vhe/sysreg-sr.c
+ arch/arm64/kernel/image-vars.h   | 29 -----------------------------
+ arch/arm64/kvm/hyp/Makefile      | 13 +------------
+ arch/arm64/kvm/hyp/nvhe/Makefile |  5 +++--
+ arch/arm64/kvm/hyp/vhe/Makefile  |  4 +++-
+ 4 files changed, 7 insertions(+), 44 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 49d1a5cd8f8f..e0920df1d0c1 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -338,7 +338,7 @@ struct kvm_vcpu_arch {
- 	struct vcpu_reset_state	reset_state;
- 
- 	/* True when deferrable sysregs are loaded on the physical CPU,
--	 * see kvm_vcpu_load_sysregs and kvm_vcpu_put_sysregs. */
-+	 * see kvm_vcpu_load_sysregs_vhe and kvm_vcpu_put_sysregs_vhe. */
- 	bool sysregs_loaded_on_cpu;
- 
- 	/* Guest PV state */
-@@ -639,8 +639,8 @@ static inline int kvm_arm_have_ssbd(void)
- 	}
- }
- 
--void kvm_vcpu_load_sysregs(struct kvm_vcpu *vcpu);
--void kvm_vcpu_put_sysregs(struct kvm_vcpu *vcpu);
-+void kvm_vcpu_load_sysregs_vhe(struct kvm_vcpu *vcpu);
-+void kvm_vcpu_put_sysregs_vhe(struct kvm_vcpu *vcpu);
- 
- int kvm_set_ipa_limit(void);
- 
-diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-index 82fa05d15b8b..997c5bda1ac7 100644
---- a/arch/arm64/include/asm/kvm_hyp.h
-+++ b/arch/arm64/include/asm/kvm_hyp.h
-@@ -66,14 +66,15 @@ int __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu);
- void __timer_enable_traps(struct kvm_vcpu *vcpu);
- void __timer_disable_traps(struct kvm_vcpu *vcpu);
- 
-+#ifdef __KVM_NVHE_HYPERVISOR__
- void __sysreg_save_state_nvhe(struct kvm_cpu_context *ctxt);
- void __sysreg_restore_state_nvhe(struct kvm_cpu_context *ctxt);
-+#else
- void sysreg_save_host_state_vhe(struct kvm_cpu_context *ctxt);
- void sysreg_restore_host_state_vhe(struct kvm_cpu_context *ctxt);
- void sysreg_save_guest_state_vhe(struct kvm_cpu_context *ctxt);
- void sysreg_restore_guest_state_vhe(struct kvm_cpu_context *ctxt);
--void __sysreg32_save_state(struct kvm_vcpu *vcpu);
--void __sysreg32_restore_state(struct kvm_vcpu *vcpu);
-+#endif
- 
- void __debug_switch_to_guest(struct kvm_vcpu *vcpu);
- void __debug_switch_to_host(struct kvm_vcpu *vcpu);
 diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index 663d5b70fa49..05c642621d61 100644
+index 221024e745c9..8ba32bff7bb2 100644
 --- a/arch/arm64/kernel/image-vars.h
 +++ b/arch/arm64/kernel/image-vars.h
-@@ -76,13 +76,6 @@ KVM_NVHE_ALIAS(abort_guest_exit_start);
- KVM_NVHE_ALIAS(__fpsimd_restore_state);
- KVM_NVHE_ALIAS(__fpsimd_save_state);
+@@ -63,35 +63,6 @@ __efistub__ctype		= _ctype;
  
--/* Symbols defined in sysreg-sr.c (not yet compiled with nVHE build rules). */
--KVM_NVHE_ALIAS(__kvm_enable_ssbs);
--KVM_NVHE_ALIAS(__sysreg32_restore_state);
--KVM_NVHE_ALIAS(__sysreg32_save_state);
--KVM_NVHE_ALIAS(__sysreg_restore_state_nvhe);
--KVM_NVHE_ALIAS(__sysreg_save_state_nvhe);
+ #define KVM_NVHE_ALIAS(sym) __kvm_nvhe_##sym = sym;
+ 
+-/* Symbols defined in aarch32.c (not yet compiled with nVHE build rules). */
+-KVM_NVHE_ALIAS(kvm_skip_instr32);
 -
- /* Symbols defined in timer-sr.c (not yet compiled with nVHE build rules). */
- KVM_NVHE_ALIAS(__kvm_timer_set_cntvoff);
- KVM_NVHE_ALIAS(__timer_disable_traps);
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 8d3d66ebf295..8ca2c111cec2 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -351,7 +351,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 	kvm_vgic_load(vcpu);
- 	kvm_timer_vcpu_load(vcpu);
--	kvm_vcpu_load_sysregs(vcpu);
-+	if (has_vhe())
-+		kvm_vcpu_load_sysregs_vhe(vcpu);
- 	kvm_arch_vcpu_load_fp(vcpu);
- 	kvm_vcpu_pmu_restore_guest(vcpu);
- 	if (kvm_arm_is_pvtime_enabled(&vcpu->arch))
-@@ -369,7 +370,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- {
- 	kvm_arch_vcpu_put_fp(vcpu);
--	kvm_vcpu_put_sysregs(vcpu);
-+	if (has_vhe())
-+		kvm_vcpu_put_sysregs_vhe(vcpu);
- 	kvm_timer_vcpu_put(vcpu);
- 	kvm_vgic_put(vcpu);
- 	kvm_vcpu_pmu_restore_host(vcpu);
-@@ -1302,7 +1304,7 @@ static void cpu_init_hyp_mode(void)
- 	 */
- 	if (this_cpu_has_cap(ARM64_SSBS) &&
- 	    arm64_get_ssbd_state() == ARM64_SSBD_FORCE_DISABLE) {
--		kvm_call_hyp(__kvm_enable_ssbs);
-+		kvm_call_hyp_nvhe(__kvm_enable_ssbs);
- 	}
- }
- 
+-/* Symbols defined in entry.S (not yet compiled with nVHE build rules). */
+-KVM_NVHE_ALIAS(__guest_enter);
+-KVM_NVHE_ALIAS(__guest_exit);
+-KVM_NVHE_ALIAS(abort_guest_exit_end);
+-KVM_NVHE_ALIAS(abort_guest_exit_start);
+-
+-/* Symbols defined in fpsimd.S (not yet compiled with nVHE build rules). */
+-KVM_NVHE_ALIAS(__fpsimd_restore_state);
+-KVM_NVHE_ALIAS(__fpsimd_save_state);
+-
+-/* Symbols defined in vgic-v2-cpuif-proxy.c (not yet compiled with nVHE build rules). */
+-KVM_NVHE_ALIAS(__vgic_v2_perform_cpuif_access);
+-
+-/* Symbols defined in vgic-v3-sr.c (not yet compiled with nVHE build rules). */
+-KVM_NVHE_ALIAS(__vgic_v3_activate_traps);
+-KVM_NVHE_ALIAS(__vgic_v3_deactivate_traps);
+-KVM_NVHE_ALIAS(__vgic_v3_get_ich_vtr_el2);
+-KVM_NVHE_ALIAS(__vgic_v3_init_lrs);
+-KVM_NVHE_ALIAS(__vgic_v3_perform_cpuif_access);
+-KVM_NVHE_ALIAS(__vgic_v3_read_vmcr);
+-KVM_NVHE_ALIAS(__vgic_v3_restore_aprs);
+-KVM_NVHE_ALIAS(__vgic_v3_restore_state);
+-KVM_NVHE_ALIAS(__vgic_v3_save_aprs);
+-KVM_NVHE_ALIAS(__vgic_v3_save_state);
+-KVM_NVHE_ALIAS(__vgic_v3_write_vmcr);
+-
+ /* Alternative callbacks for init-time patching of nVHE hyp code. */
+ KVM_NVHE_ALIAS(arm64_enable_wa2_handling);
+ KVM_NVHE_ALIAS(kvm_patch_vector_branch);
 diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-index fc09025d2e97..f49797237818 100644
+index ef1aa7fe8f5a..f54f0e89a71c 100644
 --- a/arch/arm64/kvm/hyp/Makefile
 +++ b/arch/arm64/kvm/hyp/Makefile
-@@ -13,8 +13,8 @@ subdir-ccflags-y := -I$(incdir)				\
- obj-$(CONFIG_KVM) += hyp.o vhe/ nvhe/
+@@ -10,16 +10,5 @@ subdir-ccflags-y := -I$(incdir)				\
+ 		    -DDISABLE_BRANCH_PROFILING		\
+ 		    $(DISABLE_STACKLEAK_PLUGIN)
+ 
+-obj-$(CONFIG_KVM) += hyp.o vhe/ nvhe/
++obj-$(CONFIG_KVM) += vhe/ nvhe/
  obj-$(CONFIG_KVM_INDIRECT_VECTORS) += smccc_wa.o
- 
--hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o sysreg-sr.o \
--	 entry.o fpsimd.o
-+hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o entry.o \
-+	 fpsimd.o
- 
- # KVM code is run at a different exception code with a different map, so
- # compiler instrumentation that inserts callbacks or checks into the code may
-diff --git a/arch/arm64/kvm/hyp/sysreg-sr.c b/arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h
-similarity index 56%
-rename from arch/arm64/kvm/hyp/sysreg-sr.c
-rename to arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h
-index 2493439a5c54..3e0585fbd403 100644
---- a/arch/arm64/kvm/hyp/sysreg-sr.c
-+++ b/arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h
-@@ -4,6 +4,9 @@
-  * Author: Marc Zyngier <marc.zyngier@arm.com>
-  */
- 
-+#ifndef __ARM64_KVM_HYP_SYSREG_SR_H__
-+#define __ARM64_KVM_HYP_SYSREG_SR_H__
-+
- #include <linux/compiler.h>
- #include <linux/kvm_host.h>
- 
-@@ -12,30 +15,18 @@
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_hyp.h>
- 
--/*
-- * Non-VHE: Both host and guest must save everything.
-- *
-- * VHE: Host and guest must save mdscr_el1 and sp_el0 (and the PC and
-- * pstate, which are handled as part of the el2 return state) on every
-- * switch (sp_el0 is being dealt with in the assembly code).
-- * tpidr_el0 and tpidrro_el0 only need to be switched when going
-- * to host userspace or a different VCPU.  EL1 registers only need to be
-- * switched when potentially going to run a different VCPU.  The latter two
-- * classes are handled as part of kvm_arch_vcpu_load and kvm_arch_vcpu_put.
-- */
 -
--static void __hyp_text __sysreg_save_common_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_save_common_state(struct kvm_cpu_context *ctxt)
- {
- 	ctxt->sys_regs[MDSCR_EL1]	= read_sysreg(mdscr_el1);
- }
- 
--static void __hyp_text __sysreg_save_user_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_save_user_state(struct kvm_cpu_context *ctxt)
- {
- 	ctxt->sys_regs[TPIDR_EL0]	= read_sysreg(tpidr_el0);
- 	ctxt->sys_regs[TPIDRRO_EL0]	= read_sysreg(tpidrro_el0);
- }
- 
--static void __hyp_text __sysreg_save_el1_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_save_el1_state(struct kvm_cpu_context *ctxt)
- {
- 	ctxt->sys_regs[CSSELR_EL1]	= read_sysreg(csselr_el1);
- 	ctxt->sys_regs[SCTLR_EL1]	= read_sysreg_el1(SYS_SCTLR);
-@@ -60,7 +51,7 @@ static void __hyp_text __sysreg_save_el1_state(struct kvm_cpu_context *ctxt)
- 	ctxt->gp_regs.spsr[KVM_SPSR_EL1]= read_sysreg_el1(SYS_SPSR);
- }
- 
--static void __hyp_text __sysreg_save_el2_return_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_save_el2_return_state(struct kvm_cpu_context *ctxt)
- {
- 	ctxt->gp_regs.regs.pc		= read_sysreg_el2(SYS_ELR);
- 	ctxt->gp_regs.regs.pstate	= read_sysreg_el2(SYS_SPSR);
-@@ -69,39 +60,18 @@ static void __hyp_text __sysreg_save_el2_return_state(struct kvm_cpu_context *ct
- 		ctxt->sys_regs[DISR_EL1] = read_sysreg_s(SYS_VDISR_EL2);
- }
- 
--void __hyp_text __sysreg_save_state_nvhe(struct kvm_cpu_context *ctxt)
--{
--	__sysreg_save_el1_state(ctxt);
--	__sysreg_save_common_state(ctxt);
--	__sysreg_save_user_state(ctxt);
--	__sysreg_save_el2_return_state(ctxt);
--}
+-hyp-y := vgic-v3-sr.o aarch32.o vgic-v2-cpuif-proxy.o entry.o \
+-	 fpsimd.o
 -
--void sysreg_save_host_state_vhe(struct kvm_cpu_context *ctxt)
--{
--	__sysreg_save_common_state(ctxt);
--}
--NOKPROBE_SYMBOL(sysreg_save_host_state_vhe);
--
--void sysreg_save_guest_state_vhe(struct kvm_cpu_context *ctxt)
--{
--	__sysreg_save_common_state(ctxt);
--	__sysreg_save_el2_return_state(ctxt);
--}
--NOKPROBE_SYMBOL(sysreg_save_guest_state_vhe);
--
--static void __hyp_text __sysreg_restore_common_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_restore_common_state(struct kvm_cpu_context *ctxt)
- {
- 	write_sysreg(ctxt->sys_regs[MDSCR_EL1],	  mdscr_el1);
- }
- 
--static void __hyp_text __sysreg_restore_user_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_restore_user_state(struct kvm_cpu_context *ctxt)
- {
- 	write_sysreg(ctxt->sys_regs[TPIDR_EL0],		tpidr_el0);
- 	write_sysreg(ctxt->sys_regs[TPIDRRO_EL0],	tpidrro_el0);
- }
- 
--static void __hyp_text __sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
- {
- 	write_sysreg(ctxt->sys_regs[MPIDR_EL1],		vmpidr_el2);
- 	write_sysreg(ctxt->sys_regs[CSSELR_EL1],	csselr_el1);
-@@ -160,8 +130,7 @@ static void __hyp_text __sysreg_restore_el1_state(struct kvm_cpu_context *ctxt)
- 	write_sysreg_el1(ctxt->gp_regs.spsr[KVM_SPSR_EL1],SYS_SPSR);
- }
- 
--static void __hyp_text
--__sysreg_restore_el2_return_state(struct kvm_cpu_context *ctxt)
-+static inline void __hyp_text __sysreg_restore_el2_return_state(struct kvm_cpu_context *ctxt)
- {
- 	u64 pstate = ctxt->gp_regs.regs.pstate;
- 	u64 mode = pstate & PSR_AA32_MODE_MASK;
-@@ -187,28 +156,7 @@ __sysreg_restore_el2_return_state(struct kvm_cpu_context *ctxt)
- 		write_sysreg_s(ctxt->sys_regs[DISR_EL1], SYS_VDISR_EL2);
- }
- 
--void __hyp_text __sysreg_restore_state_nvhe(struct kvm_cpu_context *ctxt)
--{
--	__sysreg_restore_el1_state(ctxt);
--	__sysreg_restore_common_state(ctxt);
--	__sysreg_restore_user_state(ctxt);
--	__sysreg_restore_el2_return_state(ctxt);
--}
--
--void sysreg_restore_host_state_vhe(struct kvm_cpu_context *ctxt)
--{
--	__sysreg_restore_common_state(ctxt);
--}
--NOKPROBE_SYMBOL(sysreg_restore_host_state_vhe);
--
--void sysreg_restore_guest_state_vhe(struct kvm_cpu_context *ctxt)
--{
--	__sysreg_restore_common_state(ctxt);
--	__sysreg_restore_el2_return_state(ctxt);
--}
--NOKPROBE_SYMBOL(sysreg_restore_guest_state_vhe);
--
--void __hyp_text __sysreg32_save_state(struct kvm_vcpu *vcpu)
-+static inline void __hyp_text __sysreg32_save_state(struct kvm_vcpu *vcpu)
- {
- 	u64 *spsr, *sysreg;
- 
-@@ -230,7 +178,7 @@ void __hyp_text __sysreg32_save_state(struct kvm_vcpu *vcpu)
- 		sysreg[DBGVCR32_EL2] = read_sysreg(dbgvcr32_el2);
- }
- 
--void __hyp_text __sysreg32_restore_state(struct kvm_vcpu *vcpu)
-+static inline void __hyp_text __sysreg32_restore_state(struct kvm_vcpu *vcpu)
- {
- 	u64 *spsr, *sysreg;
- 
-@@ -252,82 +200,4 @@ void __hyp_text __sysreg32_restore_state(struct kvm_vcpu *vcpu)
- 		write_sysreg(sysreg[DBGVCR32_EL2], dbgvcr32_el2);
- }
- 
--/**
-- * kvm_vcpu_load_sysregs - Load guest system registers to the physical CPU
-- *
-- * @vcpu: The VCPU pointer
-- *
-- * Load system registers that do not affect the host's execution, for
-- * example EL1 system registers on a VHE system where the host kernel
-- * runs at EL2.  This function is called from KVM's vcpu_load() function
-- * and loading system register state early avoids having to load them on
-- * every entry to the VM.
-- */
--void kvm_vcpu_load_sysregs(struct kvm_vcpu *vcpu)
--{
--	struct kvm_cpu_context *guest_ctxt = &vcpu->arch.ctxt;
--	struct kvm_cpu_context *host_ctxt;
--
--	if (!has_vhe())
--		return;
--
--	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
--	__sysreg_save_user_state(host_ctxt);
--
--	/*
--	 * Load guest EL1 and user state
--	 *
--	 * We must restore the 32-bit state before the sysregs, thanks
--	 * to erratum #852523 (Cortex-A57) or #853709 (Cortex-A72).
--	 */
--	__sysreg32_restore_state(vcpu);
--	__sysreg_restore_user_state(guest_ctxt);
--	__sysreg_restore_el1_state(guest_ctxt);
--
--	vcpu->arch.sysregs_loaded_on_cpu = true;
--
--	activate_traps_vhe_load(vcpu);
--}
--
--/**
-- * kvm_vcpu_put_sysregs - Restore host system registers to the physical CPU
-- *
-- * @vcpu: The VCPU pointer
-- *
-- * Save guest system registers that do not affect the host's execution, for
-- * example EL1 system registers on a VHE system where the host kernel
-- * runs at EL2.  This function is called from KVM's vcpu_put() function
-- * and deferring saving system register state until we're no longer running the
-- * VCPU avoids having to save them on every exit from the VM.
-- */
--void kvm_vcpu_put_sysregs(struct kvm_vcpu *vcpu)
--{
--	struct kvm_cpu_context *guest_ctxt = &vcpu->arch.ctxt;
--	struct kvm_cpu_context *host_ctxt;
--
--	if (!has_vhe())
--		return;
--
--	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
--	deactivate_traps_vhe_put();
--
--	__sysreg_save_el1_state(guest_ctxt);
--	__sysreg_save_user_state(guest_ctxt);
--	__sysreg32_save_state(vcpu);
--
--	/* Restore host user state */
--	__sysreg_restore_user_state(host_ctxt);
--
--	vcpu->arch.sysregs_loaded_on_cpu = false;
--}
--
--void __hyp_text __kvm_enable_ssbs(void)
--{
--	u64 tmp;
--
--	asm volatile(
--	"mrs	%0, sctlr_el2\n"
--	"orr	%0, %0, %1\n"
--	"msr	sctlr_el2, %0"
--	: "=&r" (tmp) : "L" (SCTLR_ELx_DSSBS));
--}
-+#endif /* __ARM64_KVM_HYP_SYSREG_SR_H__ */
+-# KVM code is run at a different exception code with a different map, so
+-# compiler instrumentation that inserts callbacks or checks into the code may
+-# cause crashes. Just disable it.
+-GCOV_PROFILE	:= n
+-KASAN_SANITIZE	:= n
+-UBSAN_SANITIZE	:= n
+-KCOV_INSTRUMENT	:= n
 diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-index b3cb67b63d67..61a8160f0dd9 100644
+index 0f4c544f07db..ad8729f5e814 100644
 --- a/arch/arm64/kvm/hyp/nvhe/Makefile
 +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-@@ -6,7 +6,7 @@
+@@ -6,8 +6,9 @@
  asflags-y := -D__KVM_NVHE_HYPERVISOR__
  ccflags-y := -D__KVM_NVHE_HYPERVISOR__
  
--obj-y := debug-sr.o switch.o tlb.o hyp-init.o ../hyp-entry.o
-+obj-y := sysreg-sr.o debug-sr.o switch.o tlb.o hyp-init.o ../hyp-entry.o
+-obj-y := timer-sr.o sysreg-sr.o debug-sr.o switch.o tlb.o hyp-init.o \
+-	 ../hyp-entry.o
++obj-y := timer-sr.o sysreg-sr.o debug-sr.o switch.o tlb.o hyp-init.o
++obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
++	 ../fpsimd.o ../hyp-entry.o
  
  obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
  extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
-diff --git a/arch/arm64/kvm/hyp/nvhe/switch.c b/arch/arm64/kvm/hyp/nvhe/switch.c
-index 7f6b8d3dc637..f08bfb951df6 100644
---- a/arch/arm64/kvm/hyp/nvhe/switch.c
-+++ b/arch/arm64/kvm/hyp/nvhe/switch.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <hyp/switch.h>
-+#include <hyp/sysreg-sr.h>
- 
- #include <linux/arm-smccc.h>
- #include <linux/kvm_host.h>
-diff --git a/arch/arm64/kvm/hyp/nvhe/sysreg-sr.c b/arch/arm64/kvm/hyp/nvhe/sysreg-sr.c
-new file mode 100644
-index 000000000000..710cf28ab1ec
---- /dev/null
-+++ b/arch/arm64/kvm/hyp/nvhe/sysreg-sr.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2012-2015 - ARM Ltd
-+ * Author: Marc Zyngier <marc.zyngier@arm.com>
-+ */
-+
-+#include <hyp/sysreg-sr.h>
-+
-+#include <linux/compiler.h>
-+#include <linux/kvm_host.h>
-+
-+#include <asm/kprobes.h>
-+#include <asm/kvm_asm.h>
-+#include <asm/kvm_emulate.h>
-+#include <asm/kvm_hyp.h>
-+
-+/*
-+ * Non-VHE: Both host and guest must save everything.
-+ */
-+
-+void __hyp_text __sysreg_save_state_nvhe(struct kvm_cpu_context *ctxt)
-+{
-+	__sysreg_save_el1_state(ctxt);
-+	__sysreg_save_common_state(ctxt);
-+	__sysreg_save_user_state(ctxt);
-+	__sysreg_save_el2_return_state(ctxt);
-+}
-+
-+void __hyp_text __sysreg_restore_state_nvhe(struct kvm_cpu_context *ctxt)
-+{
-+	__sysreg_restore_el1_state(ctxt);
-+	__sysreg_restore_common_state(ctxt);
-+	__sysreg_restore_user_state(ctxt);
-+	__sysreg_restore_el2_return_state(ctxt);
-+}
-+
-+void __hyp_text __kvm_enable_ssbs(void)
-+{
-+	u64 tmp;
-+
-+	asm volatile(
-+	"mrs	%0, sctlr_el2\n"
-+	"orr	%0, %0, %1\n"
-+	"msr	sctlr_el2, %0"
-+	: "=&r" (tmp) : "L" (SCTLR_ELx_DSSBS));
-+}
 diff --git a/arch/arm64/kvm/hyp/vhe/Makefile b/arch/arm64/kvm/hyp/vhe/Makefile
-index 62bdaf272b03..2801582a739a 100644
+index a1dbbc5409bd..090fd1e14be2 100644
 --- a/arch/arm64/kvm/hyp/vhe/Makefile
 +++ b/arch/arm64/kvm/hyp/vhe/Makefile
-@@ -6,7 +6,7 @@
+@@ -6,7 +6,9 @@
  asflags-y := -D__KVM_VHE_HYPERVISOR__
  ccflags-y := -D__KVM_VHE_HYPERVISOR__
  
--obj-y := debug-sr.o switch.o tlb.o ../hyp-entry.o
-+obj-y := sysreg-sr.o debug-sr.o switch.o tlb.o ../hyp-entry.o
+-obj-y := timer-sr.o sysreg-sr.o debug-sr.o switch.o tlb.o ../hyp-entry.o
++obj-y := timer-sr.o sysreg-sr.o debug-sr.o switch.o tlb.o
++obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
++	 ../fpsimd.o ../hyp-entry.o
  
  # KVM code is run at a different exception code with a different map, so
  # compiler instrumentation that inserts callbacks or checks into the code may
-diff --git a/arch/arm64/kvm/hyp/vhe/switch.c b/arch/arm64/kvm/hyp/vhe/switch.c
-index e8d76cab44e4..c0d33deba77e 100644
---- a/arch/arm64/kvm/hyp/vhe/switch.c
-+++ b/arch/arm64/kvm/hyp/vhe/switch.c
-@@ -120,7 +120,7 @@ static int __kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
- 	 * HCR_EL2.TGE.
- 	 *
- 	 * We have already configured the guest's stage 1 translation in
--	 * kvm_vcpu_load_sysregs above.  We must now call __activate_vm
-+	 * kvm_vcpu_load_sysregs_vhe above.  We must now call __activate_vm
- 	 * before __activate_traps, because __activate_vm configures
- 	 * stage 2 translation, and __activate_traps clear HCR_EL2.TGE
- 	 * (among other things).
-diff --git a/arch/arm64/kvm/hyp/vhe/sysreg-sr.c b/arch/arm64/kvm/hyp/vhe/sysreg-sr.c
-new file mode 100644
-index 000000000000..996471e4c138
---- /dev/null
-+++ b/arch/arm64/kvm/hyp/vhe/sysreg-sr.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2012-2015 - ARM Ltd
-+ * Author: Marc Zyngier <marc.zyngier@arm.com>
-+ */
-+
-+#include <hyp/sysreg-sr.h>
-+
-+#include <linux/compiler.h>
-+#include <linux/kvm_host.h>
-+
-+#include <asm/kprobes.h>
-+#include <asm/kvm_asm.h>
-+#include <asm/kvm_emulate.h>
-+#include <asm/kvm_hyp.h>
-+
-+/*
-+ * VHE: Host and guest must save mdscr_el1 and sp_el0 (and the PC and
-+ * pstate, which are handled as part of the el2 return state) on every
-+ * switch (sp_el0 is being dealt with in the assembly code).
-+ * tpidr_el0 and tpidrro_el0 only need to be switched when going
-+ * to host userspace or a different VCPU.  EL1 registers only need to be
-+ * switched when potentially going to run a different VCPU.  The latter two
-+ * classes are handled as part of kvm_arch_vcpu_load and kvm_arch_vcpu_put.
-+ */
-+
-+void sysreg_save_host_state_vhe(struct kvm_cpu_context *ctxt)
-+{
-+	__sysreg_save_common_state(ctxt);
-+}
-+NOKPROBE_SYMBOL(sysreg_save_host_state_vhe);
-+
-+void sysreg_save_guest_state_vhe(struct kvm_cpu_context *ctxt)
-+{
-+	__sysreg_save_common_state(ctxt);
-+	__sysreg_save_el2_return_state(ctxt);
-+}
-+NOKPROBE_SYMBOL(sysreg_save_guest_state_vhe);
-+
-+void sysreg_restore_host_state_vhe(struct kvm_cpu_context *ctxt)
-+{
-+	__sysreg_restore_common_state(ctxt);
-+}
-+NOKPROBE_SYMBOL(sysreg_restore_host_state_vhe);
-+
-+void sysreg_restore_guest_state_vhe(struct kvm_cpu_context *ctxt)
-+{
-+	__sysreg_restore_common_state(ctxt);
-+	__sysreg_restore_el2_return_state(ctxt);
-+}
-+NOKPROBE_SYMBOL(sysreg_restore_guest_state_vhe);
-+
-+/**
-+ * kvm_vcpu_load_sysregs_vhe - Load guest system registers to the physical CPU
-+ *
-+ * @vcpu: The VCPU pointer
-+ *
-+ * Load system registers that do not affect the host's execution, for
-+ * example EL1 system registers on a VHE system where the host kernel
-+ * runs at EL2.  This function is called from KVM's vcpu_load() function
-+ * and loading system register state early avoids having to load them on
-+ * every entry to the VM.
-+ */
-+void kvm_vcpu_load_sysregs_vhe(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_cpu_context *guest_ctxt = &vcpu->arch.ctxt;
-+	struct kvm_cpu_context *host_ctxt;
-+
-+	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
-+	__sysreg_save_user_state(host_ctxt);
-+
-+	/*
-+	 * Load guest EL1 and user state
-+	 *
-+	 * We must restore the 32-bit state before the sysregs, thanks
-+	 * to erratum #852523 (Cortex-A57) or #853709 (Cortex-A72).
-+	 */
-+	__sysreg32_restore_state(vcpu);
-+	__sysreg_restore_user_state(guest_ctxt);
-+	__sysreg_restore_el1_state(guest_ctxt);
-+
-+	vcpu->arch.sysregs_loaded_on_cpu = true;
-+
-+	activate_traps_vhe_load(vcpu);
-+}
-+
-+/**
-+ * kvm_vcpu_put_sysregs_vhe - Restore host system registers to the physical CPU
-+ *
-+ * @vcpu: The VCPU pointer
-+ *
-+ * Save guest system registers that do not affect the host's execution, for
-+ * example EL1 system registers on a VHE system where the host kernel
-+ * runs at EL2.  This function is called from KVM's vcpu_put() function
-+ * and deferring saving system register state until we're no longer running the
-+ * VCPU avoids having to save them on every exit from the VM.
-+ */
-+void kvm_vcpu_put_sysregs_vhe(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_cpu_context *guest_ctxt = &vcpu->arch.ctxt;
-+	struct kvm_cpu_context *host_ctxt;
-+
-+	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
-+	deactivate_traps_vhe_put();
-+
-+	__sysreg_save_el1_state(guest_ctxt);
-+	__sysreg_save_user_state(guest_ctxt);
-+	__sysreg32_save_state(vcpu);
-+
-+	/* Restore host user state */
-+	__sysreg_restore_user_state(host_ctxt);
-+
-+	vcpu->arch.sysregs_loaded_on_cpu = false;
-+}
 -- 
 2.27.0
 
