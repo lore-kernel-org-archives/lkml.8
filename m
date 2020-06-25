@@ -4,68 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B19C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B42F12088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E332072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gpLkR53P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="hejhZixO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgFYXpu (ORCPT
+        id S1726613AbgFYXp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:45:50 -0400
+        Thu, 25 Jun 2020 19:45:58 -0400
 Received: from esa4.hgst.iphmx.com ([216.71.154.42]:4093 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgFYXpd (ORCPT
+        with ESMTP id S1726403AbgFYXp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:45:33 -0400
+        Thu, 25 Jun 2020 19:45:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593128732; x=1624664732;
+  t=1593128728; x=1624664728;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aWD4YBmJs4KzatxYQf8rnaaoWvjExyC78q596yR2/no=;
-  b=gpLkR53PDcyF5A2LfInAXArW7n0fkm7bEm0HWTNjDxIGqsgoxpP3dwao
-   5g0G64U9jdXlriIgR9Puyh/To5Mo6RGCc0mJ4uRCqVEuaH2hWnDQAFr6e
-   5Y1cw9qpUE3H1s+yV3AtkO+KyITCaOepmwKRmzHpUkz1wPlc8FPzmWGkW
-   i2oD0PaZYDNeFeDyaxqFoFWDlYbtIM0R3IsxWRCw8kqWuuojXhAKBq7Af
-   hslzRFt2TVVAjNCVd2DgOsHVbP268kjHIXxVVinusLUlTN/+5umdMuidt
-   x9jm+K3dWqjoq/dBCvFRa/UHDRiorlm0dqr9eIxr83cdVKJf+n3EVEUGO
-   Q==;
-IronPort-SDR: LEy8adutllvsJbhfcbhPdTyMO4ykJNc+TSPDiiuZSOO9SNcLe7jo/JPUz2xYh6Q6qGqW5ivb0P
- IyKZVqwUFS16Yh3tPcKcRe4GZjO2DQFqs+/8WzjxcfFSGmlET/Of2HmXZfaqhb9PhCg3Rp7Y0D
- ZwRSFQooQV4dR6PDvTY1KvStkfBIRlO9HzdgbUAmZT4Tin7W/0W0TXG/LxS6dm1047YRrsi4+i
- kpyuacw9o8VWaLMrJtl6+N5wetFM/E07v+8XIEctYtLvATgWG1zWVEM++pxdLu2Zacm/26VzkS
- vzY=
+  bh=M/aLmMoaf+R1cfTR4Mi4doOLt0MJCtDnvFjCl4cVqNk=;
+  b=hejhZixO4l/dG2gmpj+wQ772nvwNsZrsdT9uuagyDXwYksiO29jdpo8L
+   Np2lEiQI9WyH/VGRtenXV3ms3hP3laxKsKaYFZwO548Fy+4C+pHNkhM4I
+   TrfRwSGNpnAWQIXIy7s308rQhWAVEpod1s+DrOk6m6pLirLM68AvHeRWI
+   74U4CoEXVhSzm9g5JbXd0FytelzGuRBsA4dGnGi+Go2GrgUqKwIVERj+k
+   vQXZ0K8x4aWGnSnmosxgwSBhBFq+MttV6xVyaccjTawhopSKhUkz/RQWG
+   St95oZTNoS4v8PGI6RC+tn+q3vxkgMsiN5u4iBNY0FzlJfarcmXRc5LW7
+   g==;
+IronPort-SDR: 9H6UgJJP6yyYX0w6rCJ4g8kia7YTJu/5AiiQJA7uTfG9K15co5mpZvmEwIl/pwakjC1YyOviRf
+ 2JRzBW5WwtEu6Dxp208/6a5mfuDnqAtXm6WV/92Ok2u9R18HAXF56U77jHKVOD1WErKIb8FO10
+ bYQ4sL+AyAjuvt2CulllrzLwyIULz9mMzhxmerGaJNOHVlzsR0oBDT5lDV9njJlCDoPONuQUWw
+ nTrALwxyv0dgSoho+RYkFkccyJisbKmfcsZVF6Tg4Z0Tj/sxmkNcsZFIVv4xNNOZH+akFLW6Mm
+ POY=
 X-IronPort-AV: E=Sophos;i="5.75,280,1589212800"; 
-   d="scan'208";a="140953470"
+   d="scan'208";a="140953464"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 26 Jun 2020 07:45:28 +0800
-IronPort-SDR: 5Y9PsVGruZUsvAKOVgZal1lGdCaGdcrulz/sDjgiA8z+hPScz4D/njnKonzjlqpQnjQZuG5x1k
- vAdcnkpwS5mkgP5IsQGgRJt3Iotqxss1o=
+  by ob1.hgst.iphmx.com with ESMTP; 26 Jun 2020 07:45:27 +0800
+IronPort-SDR: 2nboY54Evh/Vyz4d0NwWoyGAolDfH5VmMn5Ltd7JOkhkOmoxaBLZpnMY3+3ck90eTzHTNaeJe2
+ TN4fQMaOqaGmQrh+ncMfY6S7QtcqXFZQA=
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 16:34:28 -0700
-IronPort-SDR: qzucKY1oxxKLbrAVAstjJ6LHkYhYSEJngCI+ItcjpIHTI3dmgOGrYo+V24ODpy0uGkhcgytR3B
- fUSIjAQFVOTQ==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 16:34:27 -0700
+IronPort-SDR: rsP8xzULUfBFMDuMCtJGe0TMaOrFxT6DTyZwDjC5tdJA7trEYutCByptrNB4uMfLlWXegYkKzb
+ pktVpb+3JPPA==
 WDCIronportException: Internal
 Received: from 2349pbt5e4f.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.78])
-  by uls-op-cesaip01.wdc.com with ESMTP; 25 Jun 2020 16:45:28 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 25 Jun 2020 16:45:26 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
         linux-riscv@lists.infradead.org,
         Masahiro Yamada <masahiroy@kernel.org>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Heinrich Schuchardt <xypron.glpk@gmx.de>,
         linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 10/11] efi: Rename arm-init to efi-init common for all arch
-Date:   Thu, 25 Jun 2020 16:45:15 -0700
-Message-Id: <20200625234516.31406-11-atish.patra@wdc.com>
+Subject: [RFC PATCH 07/11] include: pe.h: Add RISC-V related PE definition
+Date:   Thu, 25 Jun 2020 16:45:12 -0700
+Message-Id: <20200625234516.31406-8-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200625234516.31406-1-atish.patra@wdc.com>
 References: <20200625234516.31406-1-atish.patra@wdc.com>
@@ -76,21 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm-init is responsible for setting up efi runtime and doesn't actually
-do any ARM specific stuff. RISC-V can use the same source code as it is.
-
-Rename it to efi-init so that RISC-V can use it.
+Define RISC-V related machine types.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Link: https://lore.kernel.org/r/20200415195422.19866-3-atish.patra@wdc.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/firmware/efi/{arm-init.c => efi-init.c} | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
+ include/linux/pe.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/efi-init.c
-similarity index 100%
-rename from drivers/firmware/efi/arm-init.c
-rename to drivers/firmware/efi/efi-init.c
+diff --git a/include/linux/pe.h b/include/linux/pe.h
+index 8ad71d763a77..daf09ffffe38 100644
+--- a/include/linux/pe.h
++++ b/include/linux/pe.h
+@@ -55,6 +55,9 @@
+ #define	IMAGE_FILE_MACHINE_POWERPC	0x01f0
+ #define	IMAGE_FILE_MACHINE_POWERPCFP	0x01f1
+ #define	IMAGE_FILE_MACHINE_R4000	0x0166
++#define	IMAGE_FILE_MACHINE_RISCV32	0x5032
++#define	IMAGE_FILE_MACHINE_RISCV64	0x5064
++#define	IMAGE_FILE_MACHINE_RISCV128	0x5128
+ #define	IMAGE_FILE_MACHINE_SH3		0x01a2
+ #define	IMAGE_FILE_MACHINE_SH3DSP	0x01a3
+ #define	IMAGE_FILE_MACHINE_SH3E		0x01a4
 -- 
 2.24.0
 
