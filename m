@@ -2,106 +2,117 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90109C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7975720789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D68207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d1aVjd6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389077AbgFYB2y (ORCPT
+        id S2389114AbgFYBcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:28:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51192 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388928AbgFYB2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:28:54 -0400
-IronPort-SDR: xeFxiMCGqjecpaiU4aU81xv5dlhwhBi2WxmNvIguZ9EqcpzpeMun6EShezOBg5zGTeF9DY7S4k
- /89whH0/1+0Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="144752680"
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="144752680"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 18:28:53 -0700
-IronPort-SDR: qx2p1oPmyFpV7qj2mftNsBMYxvFw0Uz7HJYUrO6I3sAC25ReEXk8vjRzPzaE1aNXU8cI4DfPnP
- wzqn7yAxt6VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="275875386"
-Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2020 18:28:36 -0700
-Date:   Thu, 25 Jun 2020 04:28:32 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 02/21] x86/cpufeatures: x86/msr: Add Intel SGX Launch
- Control hardware bits
-Message-ID: <20200625012832.GE21758@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-3-jarkko.sakkinen@linux.intel.com>
- <20200624130434.GC8492@zn.tnic>
- <20200624143440.GD25092@linux.intel.com>
+        Wed, 24 Jun 2020 21:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388778AbgFYBcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 21:32:32 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D3FCC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:32:31 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id m62so2644888vsd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 18:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XtRqnFKMq7QWn535IlFHjHWcZAxjN0VLjwC/896jlvU=;
+        b=d1aVjd6yxFbak1tHbsvs9zmZuPoJr3VYb++bxNsP3u/l0ck+vRZgAJqvzFSjV4ZQap
+         515974zSW7VEMAEsxtsT33Qc9Qp0eL9+ldEA9QO9+vKLwBXbOxEvXrXz8ZqkpKgDVSj1
+         GdAG9CIDOZ9mBvKspeI3J8f0+9jYSdLLlBodc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XtRqnFKMq7QWn535IlFHjHWcZAxjN0VLjwC/896jlvU=;
+        b=ukjNm5hHs/ds+ndU/+FhIgbKoaOTtJz6RrmGFlMYID7aqm2rsOwe/NBBz9GnfRrFMm
+         /z9Dln811TymrIwJTPF+G1Vu4FBeJXtPSDLapOZq9N3m9gEOhWPZJhVU8yKDfDLC5vls
+         bVizrnjpykQ2BUZs2mzQQQNczclzAoCzPvfoh0RsHlUvWpCKFUF1a+j/YK3GzusZ8IEB
+         BQyYH4Aluq3TvL2h6pVid1dB3h8RdOTOZqMAOwBNWbFACdLDejMWTfjlTSf5sWxCKkqB
+         qKdi8DAyXodfrA2fNFPRoFOy/iXCU89YArej2WCM2yYsJHf0sQ/GHxpsnex+/W7sqsVG
+         Wxcg==
+X-Gm-Message-State: AOAM530WUQ7S7BEtq8+uRGvFeEm+Nad9R+utW94L2HZVUicNz8Z5y6EC
+        ATA3oFn8WEmdeFgBBfOyBHAniEvcXfg+E4hWFeXDJA==
+X-Google-Smtp-Source: ABdhPJzYaB/kCEJd87MiPVqMvYksyxaLqfa4ViJFIWAPpH6tRPKME0t9nHSeC0bgyNtoqzORrDKvdQDWzweZlqq5WUs=
+X-Received: by 2002:a67:b405:: with SMTP id x5mr25629621vsl.79.1593048750350;
+ Wed, 24 Jun 2020 18:32:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624143440.GD25092@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200624084524.259560-1-drinkcat@chromium.org> <20200624120408.12c8fa0d@oasis.local.home>
+In-Reply-To: <20200624120408.12c8fa0d@oasis.local.home>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 25 Jun 2020 09:32:19 +0800
+Message-ID: <CANMq1KAVXvMJpNXQoBPMPmSF=vPphvCC_SCFsX03CkR6PY7AKA@mail.gmail.com>
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 07:34:40AM -0700, Sean Christopherson wrote:
-> On Wed, Jun 24, 2020 at 03:04:34PM +0200, Borislav Petkov wrote:
-> > On Thu, Jun 18, 2020 at 01:08:24AM +0300, Jarkko Sakkinen wrote:
-> > > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > 
-> > > Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
-> > > Launch Control.
-> > > 
-> > > Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
-> > > SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
-> > > called enclaves, are always signed. All enclaves signed with the public key
-> > > are unconditionally allowed to initialize. [1]
-> > > 
-> > > Add FEATURE_CONTROL_SGX_LE_WR bit of the feature control MSR, which informs
-> > 
-> > LE_WR or LC_ENABLED?
-> 
-> It should be FEAT_CTL_SGX_LC_ENABLED, i.e. the actual code is correct.  We
-> updated the #define to use the SDM name to be consistent with the other bits
-> and neglected to update the changelog.
-> 
-> Thanks!
->  
-> > With that addressed:
-> > 
-> > Reviewed-by: Borislav Petkov <bp@suse.de>
+On Thu, Jun 25, 2020 at 12:04 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Wed, 24 Jun 2020 16:45:24 +0800
+> Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> > trace_printk is only meant as a debugging tool, and should never be
+> > compiled into production code without source code changes, as
+> > indicated by the warning that shows up on boot if any trace_printk
+> > is called:
+> >  **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+> >  **                                                      **
+> >  ** trace_printk() being used. Allocating extra memory.  **
+> >  **                                                      **
+> >  ** This means that this is a DEBUG kernel and it is     **
+> >  ** unsafe for production use.                           **
+> >
+> > If this option is set to n, the kernel will generate a build-time
+> > error if trace_printk is used.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+>
+> Interesting. Note, this will prevent modules with trace_printk from
+> being loaded as well.
 
-I'll update the commit according to this information.
+Err, all of these changes are in macros (nothing gets built in the
+kernel), so this will prevent modules with trace_printk from being
+_built_.
 
-> > 
-> > -- 
-> > Regards/Gruss,
-> >     Boris.
-> > 
-> > https://people.kernel.org/tglx/notes-about-netiquette
+Now, if you set the option to =y when building the module (separately,
+even though the rest of the kernel has =n) then I don't see why the
+module could not be loaded.
 
-Thank you.
-
-/Jarkko
+>
+> -- Steve
