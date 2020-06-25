@@ -2,105 +2,99 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D588C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4393206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0BB20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e9HsILcR"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="jxxVBcFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406298AbgFYQcY (ORCPT
+        id S2390795AbgFYQcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:32:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406180AbgFYQcU (ORCPT
+        Thu, 25 Jun 2020 12:32:39 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:7420 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390007AbgFYQci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:32:20 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5F6C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:32:20 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b92so3472952pjc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d+K5u9P3ZstJbh0afCn3t6yP6SQdou+jClfehHgXvl0=;
-        b=e9HsILcRH/pogv3ijUVs+4/J/zhRS+a9VPMnmgkqWLI/Wu+FCS7PTwh5XhntUipUaZ
-         muZUSvBlz8dSrHWLaOfujK6bPtWafyVrJrYxCM+8aIqsvZMDHI4diUYrrDb5i8alZCZv
-         FGSLp58yBCU8OXO+v0yG+cNH7ms+B6+uw/PkylgoreBkytLJlPBRhTMD2hPnOaaT3ysC
-         RTHlZYauCqEXG4Xu1y7CSuugLAx/j0aOeMMyiFhjvtB1xaC7BmjmSMEDEfp63D5/gfyP
-         idDddczzLeppEbtrkDgp3NRlTH+ZJFsMhpHwzwzlM2Mlvye8SnIf9DDcPZHa0GrBXwhV
-         fcOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d+K5u9P3ZstJbh0afCn3t6yP6SQdou+jClfehHgXvl0=;
-        b=Z6W03W9PQaV1mCrpFKaOvHbc7oo3KphuIx2SplIWX5cfqNqn/a7gjtldh2a0uIXDRv
-         FhxNCCdeDpEjeWxHZvshKPSXPUJFcTCPoveyHcDNJIPYGNsFgfwNij4PU1R/FIDMWKj7
-         +PFubRTqyY2sNrXwWZdwPWkOAH3v/vrVBl30MUQah61QIz1moPKNx0o4CVJpZIIxJ6b2
-         GynkoXLF04gsfbK4UfYTNEeLt8NEU2rQxhYEtEla53NBMnycj2mxFsm0kHJ3yzDHcsNH
-         yyvozsaEEW+yVSPk6b1kamY5+4Hvm2Oi9yu7Y/eNrF6xkHYHolyPirMAlem69HQvoyou
-         i1Zg==
-X-Gm-Message-State: AOAM530B+yJQ5+L9fnYlQwzU4DnPW9Q3q6IFV5YiM/6GjforFp4tXHbc
-        JD7LHCgbEGnr6C5LU/af6Jwo6OXlNNCOp8Ysai/XVQ==
-X-Google-Smtp-Source: ABdhPJytwmdVQWB9BByogkA6BvCJzw6QJUuG4tFembUiKOQGqpiuUYMBGeeEJXdh18HpVLsrJpSQy4yk5BXZNon+nw0=
-X-Received: by 2002:a17:902:b698:: with SMTP id c24mr32946349pls.223.1593102739486;
- Thu, 25 Jun 2020 09:32:19 -0700 (PDT)
+        Thu, 25 Jun 2020 12:32:38 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PGQJFF017311;
+        Thu, 25 Jun 2020 09:32:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0818;
+ bh=wrEfSMqC13aIM9VXqXL1TEgtz+RXlEWadjiNY+kcFMY=;
+ b=jxxVBcFDx9NL2VJpgPt/m9Olhj3LHFhbOI1/ks8NOTiU7hx22Ko3NU3r368c/AWIRWCl
+ Rs1a6Gjpyyr7U0T7fGEqw8/b0qQQpXINVAHy4g/gLIx3266ocrL53AOS+IjOqXEua68j
+ WUjaTjjN5cc0yeNCzx89xB9sLE5Npmqw2F5csTsxHjr4QuZaq9AKemuzZWnzAamEpjCq
+ C6ayIOCks6aXzwfeNR6mJXKvmnJEjWElQRhgnN0vPZd16kBCisiERtM5ttBtp3ax4VrC
+ u1xaT0NgCCzD/9B27vypb1PkAk8w95AQoEnIREu9fImDLwDvDfq6L9awrONymAyyNFLD ZQ== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 31uuqh0jcw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 09:32:35 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Jun
+ 2020 09:32:32 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 25 Jun 2020 09:32:33 -0700
+Received: from [10.193.39.5] (unknown [10.193.39.5])
+        by maili.marvell.com (Postfix) with ESMTP id ECC053F7040;
+        Thu, 25 Jun 2020 09:32:29 -0700 (PDT)
+Subject: Re: [EXT] [PATCH] qed: add missing error test for
+ DBG_STATUS_NO_MATCHING_FRAMING_MODE
+To:     Colin King <colin.king@canonical.com>,
+        Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        <netdev@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200624101302.8316-1-colin.king@canonical.com>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <a562bb9e-f158-3cdb-f969-fcbf88a2fad8@marvell.com>
+Date:   Thu, 25 Jun 2020 19:32:28 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0
 MIME-Version: 1.0
-References: <20200624035920.835571-1-natechancellor@gmail.com> <1bbb6956-d9de-e0c8-5b45-20b6fecc2189@infradead.org>
-In-Reply-To: <1bbb6956-d9de-e0c8-5b45-20b6fecc2189@infradead.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 25 Jun 2020 09:32:07 -0700
-Message-ID: <CAKwvOd=5nE6fkwp8iw0JqwQFp5KcUaC7RyEf2L6+tkbp9smsvg@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/boot: Use address-of operator on section symbols
-To:     Geoff Levand <geoff@infradead.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Joel Stanley <joel@jms.id.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200624101302.8316-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_11:2020-06-25,2020-06-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 6:19 PM Geoff Levand <geoff@infradead.org> wrote:
->
-> Hi Nathan,
->
-> On 6/23/20 8:59 PM, Nathan Chancellor wrote:
-> > These are not true arrays, they are linker defined symbols, which are
-> > just addresses.  Using the address of operator silences the warning
-> > and does not change the resulting assembly with either clang/ld.lld
-> > or gcc/ld (tested with diff + objdump -Dr).
->
-> Thanks for your patch.  I tested this patch applied to v5.8-rc2 on a
-> PS3 and it seems OK.
+Hi Colin!
 
-PS3?  Folks still have ones that can boot Linux?  Those ****ers took
-my Yellow Dog Linux away from me; I enjoyed depositing that settlement
-check!  Hopefully by now, folks have figured out how to roll back the
-system firmware?
+Thanks for catching this, indeed this was missed!
 
->
-> Tested-by: Geoff Levand <geoff@infradead.org>
->
->
-> --
+> 
+>  	/* DBG_STATUS_INVALID_FILTER_TRIGGER_DWORDS */
+>  	"The filter/trigger constraint dword offsets are not enabled for 
+> recording",
+> -
+> +	/* DBG_STATUS_NO_MATCHING_FRAMING_MODE */
+> +	"No matching framing mode",
+> 
 
--- 
-Thanks,
-~Nick Desaulniers
+Could you please however change the string to
+
+	"No matching framing mode found for the enabled blocks/Storms - use less
+dwords for blocks data",
+
+If you don't have much time, I can repost this for you. With this change it'll
+ be in sync with our internal error descriptions.
+
+Thanks
+  Igor
