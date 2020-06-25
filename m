@@ -2,172 +2,154 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA8E20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593095931;
-	bh=zxWp8BmWa920a0+o2fBQiG+V+AqjY0vOBj+m52+jqV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IUX5S5sHvskbwLPpxhM/7nUt3NMiAmJgsDQMuyxgEX0DjHGxqHfRHpKiOw/Q38swE
-	 zHnww9TokOUVwF+2gd5NmZJplgEC6B9+DzVWe/aJBU0ro1Fd17xHDNHzNGY+ST7ouo
-	 369swa3pECJp52qJmymJ8mNNPk/cmybiA8GirZoU=
+	by mail.kernel.org (Postfix) with ESMTP id E224E206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405429AbgFYOiu (ORCPT
+        id S2405401AbgFYOmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:38:50 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:45184 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405411AbgFYOiu (ORCPT
+        Thu, 25 Jun 2020 10:42:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405340AbgFYOmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:38:50 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 05PEcQAX008959;
-        Thu, 25 Jun 2020 23:38:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05PEcQAX008959
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593095907;
-        bh=ijPZb1cfulvfr7nl4mn4pmwbl3GKFLftlqTTQQ9OMEc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OznUSqNEqRwb9eSqLiT0Q6D+ovJNlmwc02GFYtezeKuLjq3Zl4BfDOXROeFx9tON1
-         iqmr3lKpeEos+rVdZDVXay4TD4UVgiNzFvAUTs1BGs8Rz3IYk46DXgzcqynWLhwOSZ
-         OrsNx0HahNWTZTy9eSXlZbad+a/RXhmssSP9eHOlh0+R8A2NVdFwqhXIgjDcquRXd6
-         09DKR5pTWf+f3pDkm4PIxV4IlNruY0BhnF3Q+W+R6U7C1dNB3jC7ChnBoV+XlJlxwF
-         JJYeXuVH82yC1cfbXnxlJqEOdmSrh6SLm8j+G3jEn0fZl6qc1VO2F2hstm/1U5M4P+
-         TIP02jpz6v7ug==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id m25so3668741vsp.8;
-        Thu, 25 Jun 2020 07:38:27 -0700 (PDT)
-X-Gm-Message-State: AOAM5307P+XvSxbN/q+ZzGCSLLPCo+tIIvB1VgWhqsvu/GVxq5azQBsX
-        TnPnx+lPRG7zRasNs/Lw+ztxxEqah60AVWaWlHM=
-X-Google-Smtp-Source: ABdhPJyvOYDrxR1TD/0As+dJtiC0TVMxIpD2R/NeE0UMXfGRlubszQEpcdvJygsMSzOaXDMnb7MTpA0vPI/hmyAnMhA=
-X-Received: by 2002:a67:2d42:: with SMTP id t63mr26451715vst.181.1593095906216;
- Thu, 25 Jun 2020 07:38:26 -0700 (PDT)
+        Thu, 25 Jun 2020 10:42:55 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7028EC08C5C1;
+        Thu, 25 Jun 2020 07:42:54 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: nicolas)
+        with ESMTPSA id E14B42A5073
+Message-ID: <dc584b3a4eebdf259e555200dbc4bf8467d60591.camel@collabora.com>
+Subject: Re: [RFC 0/7] media: Clean and make H264 stateless uAPI public
+From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Thu, 25 Jun 2020 10:42:48 -0400
+In-Reply-To: <20200623182809.1375-1-ezequiel@collabora.com>
+References: <20200623182809.1375-1-ezequiel@collabora.com>
+Organization: Collabora
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-HCoWxv4QLGgZqLc/WquU"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
- <20200623114614.792648-4-yamada.masahiro@socionext.com> <20200623122413.GA954398@dell>
- <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com> <20200624181605.GJ954398@dell>
-In-Reply-To: <20200624181605.GJ954398@dell>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 25 Jun 2020 23:37:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
-Message-ID: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd
- from simple-bus
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Thu, 25 Jun 2020, Masahiro Yamada wrote:
->
-> > On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
-> > >
-> > > > 'make ARCH=arm dtbs_check' emits the following warning:
-> > > >
-> > > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> > > >
-> > > > Maybe, simple-mfd could be a better fit for this device.
-> > >
-> > > The two should be equivalent.
-> >
-> > Yes, I know.
-> > That's why I can change "simple-bus" to "simple-mfd"
-> > with no risk.
-> >
-> > The difference is schema-check.
-> >
-> > The node name for "simple-bus" is checked by 'make dtbs_check'.
-> >
-> > See this code:
-> > https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.yaml#L17
-> >
-> > Even if I rename the node, it does not accept the
-> > unit name '1,1f00000'
-> >
-> > > What do you mean by "maybe"?  Does this squash the warning?
-> >
-> > "maybe" means I am not quite sure
-> > which compatible is a better fit
-> > to describe this device.
-> >
-> > As mentioned above, simple-bus and simple-mfd
-> > are interchangeable from a driver point of view.
-> >
-> > This add-on board is integrated with various peripherals
-> > such as 16550a serial, smsc9115 ether etc.
-> > The address-decode is implemented in a CPLD device.
-> > It has chip selects and local addresses, which are mapped to
-> > the parent.
-> >
-> > It can be either simple-bus or simple-mfd, I think.
-> >
-> >
-> > dt-schema checks the node name of simple-bus.
-> > Currently, there is no check for simple-mfd.
-> >
-> > So, I think this patch is an easy solution
-> > to fix the warning.
->
-> Yes, looking at the documentation it seems as though 'simple-mfd'
-> would be a better fit.  Is the device a single IP with various
-> different functions?
 
+--=-HCoWxv4QLGgZqLc/WquU
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Not an IP.
+Le mardi 23 juin 2020 =C3=A0 15:28 -0300, Ezequiel Garcia a =C3=A9crit :
+> The recent patch posted by Jernej (which I'm including for context),
+> encouraged me to address all the known issues in the uAPI.
+>=20
+> I hope we can finally make this uAPI interface
+> public; it would be nice to address the other codec
+> interfaces so we can move the codec drivers out of staging.
+>=20
+> It should be noted that there is already GStreamer native
+> support for this interface, which will be part of 1.18,
+> once it's released [1], as well as support in Chromium [2].
 
-This is a small board that consists of
-a CPLD + ethernet controller + serial controller + LED, etc.
+Keep in mind, no one did a MultiView and/or SVC implementation in
+userspace yet. Multiview seems to share a lot of interlacing, which
+ffmpeg implementation covers, but some validation would be nice.
 
+As for SVC, I only started looking at that this means for decoding. It
+looks like buffer "holding" mechanism is mostly what we need, I'd would
+simply like to verify, as I was told that scaling down might be
+required when SVC stream is missing (but perhaps this is optional ?)
 
->
-> > Rob is in Cc. Please add comments if any.
-> >
-> > > Isn't the issue caused by the ','?
-> >
-> > Right.
-> >
-> > The node name of simple-bus
-> > must meet the regular expression:
-> > "^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
-> >
-> >
-> > Even if I rename the node
-> > "support-card@1,1f00000"
-> > to "bus@1,1f00000", the warning is still
-> > displayed due to ','
-> >
-> > "1,1f00000" means
-> > the address 0x01f00000 of chip select 1.
->
-> Is this an officially accepted format?
+>=20
+> The basic idea here is to sanitize the interface,
+> making sure the structs are aligned to 64-bit,
+> adding reserved fields for padding where suitable.
+>=20
+> These reserved fields can then be used to support future extensions,
+> in case such need appears.
+>=20
+> In addition to this, moving the slice invariant fields
+> to the per-frame control, makes the frame-mode driver
+> implementation much nicer and the interface; see patch 6/7 for details.
+>=20
+> I'm not adding a MAINTAINERS entry, but I'd like to do so,
+> so we make sure any uAPI changes are sent to those involved.
+>=20
+> Another potential change is the addition of a "Since:" tag to the
+> control specification, so we can document which kernel version
+> added the interface. This might prove useful if reserved
+> fields are then used to extend the interface.
+>=20
+> Finally, I'm sneaking here a change from Philipp Zabel
+> which apparently fell thru the cracks.
 
+Thanks a lot of working on this.
 
-I am not sure if it is official.
+>=20
+> [1] https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/tree/maste=
+r/sys/v4l2codecs
+> [2] https://chromium.googlesource.com/chromium/src.git/+/refs/heads/maste=
+r/media/gpu/v4l2/
+>=20
+> Ezequiel Garcia (5):
+>   fixup! media: uapi: h264: update reference lists
+>   media: uapi: h264: increase size of fields
+>   media: uapi: h264: pad v4l2_ctrl_h264_pps to 64-bit
+>   media: uapi: h264: Clean slice invariants syntax elements
+>   media: uapi: make H264 stateless codec interface public
+>=20
+> Jernej Skrabec (1):
+>   media: uapi: h264: update reference lists
+>=20
+> Philipp Zabel (1):
+>   media: uapi: h264: clarify pic_order_cnt_bit_size field
+>=20
+>  .../media/v4l/ext-ctrls-codec.rst             | 135 ++++++++++++------
+>  drivers/media/v4l2-core/v4l2-ctrls.c          |  31 ++++
+>  drivers/media/v4l2-core/v4l2-h264.c           |   8 +-
+>  .../staging/media/hantro/hantro_g1_h264_dec.c |  21 ++-
+>  drivers/staging/media/hantro/hantro_h264.c    |   3 +-
+>  drivers/staging/media/hantro/hantro_hw.h      |   5 +-
+>  drivers/staging/media/rkvdec/rkvdec-h264.c    |   6 +-
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  15 +-
+>  include/media/v4l2-ctrls.h                    |   3 +-
+>  include/media/v4l2-h264.h                     |   5 +-
+>  .../linux/v4l2-h264-ctrls.h}                  |  73 ++++++----
+>  11 files changed, 194 insertions(+), 111 deletions(-)
+>  rename include/{media/h264-ctrls.h =3D> uapi/linux/v4l2-h264-ctrls.h} (8=
+8%)
+>=20
 
-Rob said the data fields should be separated by commas.
-https://www.spinics.net/lists/devicetree/msg201565.html
+--=-HCoWxv4QLGgZqLc/WquU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
+-----BEGIN PGP SIGNATURE-----
 
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXvS36AAKCRBxUwItrAao
+HI/OAKDYK//qcJ5LXqGIBBjLa+eHSxO40QCaA4bUa9ALKuqrtC3OJUKzx9Kd4zc=
+=3NNq
+-----END PGP SIGNATURE-----
 
+--=-HCoWxv4QLGgZqLc/WquU--
 
--- 
-Best Regards
-Masahiro Yamada
