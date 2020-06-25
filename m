@@ -2,260 +2,146 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B451C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF5B207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B94B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgFYEMk (ORCPT
+        id S1726742AbgFYEYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 00:12:40 -0400
-Received: from out20-26.mail.aliyun.com ([115.124.20.26]:41484 "EHLO
-        out20-26.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbgFYEMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 00:12:39 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0910485-0.000687189-0.908264;FP=10108297775467472176|1|1|1|0|-1|-1|-1;HT=e02c03294;MF=aiden.leong@aibsd.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.Hs8KRsM_1593058336;
-Received: from ubuntu(mailfrom:aiden.leong@aibsd.com fp:SMTPD_---.Hs8KRsM_1593058336)
-          by smtp.aliyun-inc.com(10.147.43.95);
-          Thu, 25 Jun 2020 12:12:32 +0800
-From:   Aiden Leong <aiden.leong@aibsd.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [RFC] Reed-Solomon Code: Update no_eras to the actual number of errors
-Date:   Wed, 24 Jun 2020 21:10:53 -0700
-Message-Id: <20200625041141.8053-1-aiden.leong@aibsd.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 25 Jun 2020 00:24:01 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27978 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgFYEYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 00:24:00 -0400
+IronPort-SDR: /VyxqyaFq++yxyl9zoqCLyvC9ViSbNY+nXnOlBoE17mLlnL0bv1+8BRnfOyeBVKiKtcszyOdcE
+ 9+wyU/UmkFGw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146246035"
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="146246035"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 21:23:59 -0700
+IronPort-SDR: wn6pbKZSjt6KA7vrnM6zVRfPvdg0paanvOI94eMoZWfE9hNk658QDFgcn6iJhvoKuEXgsErZak
+ HRe+Idgq4U3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="311863765"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 21:23:58 -0700
+Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
+        by linux.intel.com (Postfix) with ESMTP id 95689580298;
+        Wed, 24 Jun 2020 21:23:55 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
+ <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
+ <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+Date:   Thu, 25 Jun 2020 12:23:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Corr and eras_pos are updated to actual correction pattern and erasure
-positions, but no_eras is not.
 
-When this library is used to recover lost bytes, we normally memset the
-lost trunk of bytes to zero as a placeholder. Unfortunately, if the lost
-byte is zero, b[i] is zero too. Without correct no_eras, users won't be
-able to determine the valid length of corr and eras_pos.
+Hi Philipp,
 
-Signed-off-by: Aiden Leong <aiden.leong@aibsd.com>
----
- drivers/md/dm-verity-fec.c      |  2 +-
- fs/pstore/ram_core.c            |  2 +-
- include/linux/rslib.h           |  4 ++--
- lib/reed_solomon/decode_rs.c    | 20 ++++++++++++++------
- lib/reed_solomon/reed_solomon.c |  4 ++--
- lib/reed_solomon/test_rslib.c   | 18 ++++++++++++------
- 6 files changed, 32 insertions(+), 18 deletions(-)
+On 18/6/2020 8:25 pm, Philipp Zabel wrote:
+> Hi Rahul,
+>
+> On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>> This PWM controller does not have any other consumer, it is a
+>> dedicated PWM controller for fan attached to the system. Add
+>> driver for this PWM fan controller.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  drivers/pwm/Kconfig         |   9 +
+>>  drivers/pwm/Makefile        |   1 +
+>>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 410 insertions(+)
+>>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+>>
+> [...]
+>> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+>> new file mode 100644
+>> index 000000000000..3c7077acb161
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-intel-lgm.c
+>> @@ -0,0 +1,400 @@
+> [...]
+>> +static int lgm_pwm_probe(struct platform_device *pdev)
+>> +{
+>> +	struct lgm_pwm_chip *pc;
+>> +	struct device *dev = &pdev->dev;
+>> +	void __iomem *io_base;
+>> +	int ret;
+>> +
+>> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+>> +	if (!pc)
+>> +		return -ENOMEM;
+>> +
+>> +	io_base = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(io_base))
+>> +		return PTR_ERR(io_base);
+>> +
+>> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
+>> +	if (IS_ERR(pc->regmap)) {
+>> +		ret = PTR_ERR(pc->regmap);
+>> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pc->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(pc->clk)) {
+>> +		ret = PTR_ERR(pc->clk);
+>> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pc->rst = devm_reset_control_get(dev, NULL);
+>> +	if (IS_ERR(pc->rst)) {
+>> +		ret = PTR_ERR(pc->rst);
+>> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
+>> +		return ret;
+>> +	}
+> Please use devm_reset_control_get_exclusive() to make it explicit an
+> that exclusive reset control is requested. Given how the reset control
+> is used, I think this driver could also use
+> devm_reset_control_get_shared() to potentially allow sharing a reset
+> line with other devices.
 
-diff --git a/drivers/md/dm-verity-fec.c b/drivers/md/dm-verity-fec.c
-index fb41b4f23c48..ae8366a50244 100644
---- a/drivers/md/dm-verity-fec.c
-+++ b/drivers/md/dm-verity-fec.c
-@@ -50,7 +50,7 @@ static int fec_decode_rs8(struct dm_verity *v, struct dm_verity_fec_io *fio,
- 	for (i = 0; i < v->fec->roots; i++)
- 		par[i] = fec[i];
- 
--	return decode_rs8(fio->rs, data, par, v->fec->rsn, NULL, neras,
-+	return decode_rs8(fio->rs, data, par, v->fec->rsn, NULL, &neras,
- 			  fio->erasures, 0, NULL);
- }
- 
-diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
-index aa8e0b65ff1a..fcc661a60640 100644
---- a/fs/pstore/ram_core.c
-+++ b/fs/pstore/ram_core.c
-@@ -115,7 +115,7 @@ static int persistent_ram_decode_rs8(struct persistent_ram_zone *prz,
- 
- 	for (i = 0; i < prz->ecc_info.ecc_size; i++)
- 		prz->ecc_info.par[i] = ecc[i];
--	return decode_rs8(prz->rs_decoder, data, prz->ecc_info.par, len,
-+	return decode_rs8(prz->rs_decoder, data, prz->ecc_info.par, &len,
- 				NULL, 0, NULL, 0, NULL);
- }
- 
-diff --git a/include/linux/rslib.h b/include/linux/rslib.h
-index 238bb85243d3..80662abc9af7 100644
---- a/include/linux/rslib.h
-+++ b/include/linux/rslib.h
-@@ -64,7 +64,7 @@ int encode_rs8(struct rs_control *rs, uint8_t *data, int len, uint16_t *par,
- #endif
- #ifdef CONFIG_REED_SOLOMON_DEC8
- int decode_rs8(struct rs_control *rs, uint8_t *data, uint16_t *par, int len,
--		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
-+		uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
- 	       uint16_t *corr);
- #endif
- 
-@@ -75,7 +75,7 @@ int encode_rs16(struct rs_control *rs, uint16_t *data, int len, uint16_t *par,
- #endif
- #ifdef CONFIG_REED_SOLOMON_DEC16
- int decode_rs16(struct rs_control *rs, uint16_t *data, uint16_t *par, int len,
--		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
-+		uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
- 		uint16_t *corr);
- #endif
- 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 805de84ae83d..122bc08eb75f 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -24,6 +24,7 @@
- 	int count = 0;
- 	int num_corrected;
- 	uint16_t msk = (uint16_t) rs->nn;
-+	int no_eras_orig = no_eras ? *no_eras : 0;
- 
- 	/*
- 	 * The decoder buffers are in the rs control struct. They are
-@@ -106,11 +107,11 @@
- 	memset(&lambda[1], 0, nroots * sizeof(lambda[0]));
- 	lambda[0] = 1;
- 
--	if (no_eras > 0) {
-+	if (no_eras_orig > 0) {
- 		/* Init lambda to be the erasure locator polynomial */
- 		lambda[1] = alpha_to[rs_modnn(rs,
- 					prim * (nn - 1 - (eras_pos[0] + pad)))];
--		for (i = 1; i < no_eras; i++) {
-+		for (i = 1; i < no_eras_orig; i++) {
- 			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
- 			for (j = i + 1; j > 0; j--) {
- 				tmp = index_of[lambda[j - 1]];
-@@ -129,8 +130,8 @@
- 	 * Begin Berlekamp-Massey algorithm to determine error+erasure
- 	 * locator polynomial
- 	 */
--	r = no_eras;
--	el = no_eras;
-+	r = no_eras_orig;
-+	el = no_eras_orig;
- 	while (++r <= nroots) {	/* r is the step number */
- 		/* Compute discrepancy at the r-th step in poly-form */
- 		discr_r = 0;
-@@ -158,8 +159,8 @@
- 				} else
- 					t[i + 1] = lambda[i + 1];
- 			}
--			if (2 * el <= r + no_eras - 1) {
--				el = r + no_eras - el;
-+			if (2 * el <= r + no_eras_orig - 1) {
-+				el = r + no_eras_orig - el;
- 				/*
- 				 * 2 lines below: B(x) <-- inv(discr_r) *
- 				 * lambda(x)
-@@ -312,14 +313,21 @@
- 				eras_pos[j++] = loc[i] - pad;
- 			}
- 		}
-+		if (no_eras > 0)
-+			*no_eras = j;
- 	} else if (data && par) {
- 		/* Apply error to data and parity */
-+		j = 0;
- 		for (i = 0; i < count; i++) {
- 			if (loc[i] < (nn - nroots))
- 				data[loc[i] - pad] ^= b[i];
- 			else
- 				par[loc[i] - pad - len] ^= b[i];
-+			if (b[i])
-+				j++;
- 		}
-+		if (no_eras > 0)
-+			*no_eras = j;
- 	}
- 
- 	return  num_corrected;
-diff --git a/lib/reed_solomon/reed_solomon.c b/lib/reed_solomon/reed_solomon.c
-index bbc01bad3053..b2c811674c98 100644
---- a/lib/reed_solomon/reed_solomon.c
-+++ b/lib/reed_solomon/reed_solomon.c
-@@ -359,7 +359,7 @@ EXPORT_SYMBOL_GPL(encode_rs8);
-  *  errors. The count includes errors in the parity.
-  */
- int decode_rs8(struct rs_control *rsc, uint8_t *data, uint16_t *par, int len,
--	       uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
-+	       uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
- 	       uint16_t *corr)
- {
- #include "decode_rs.c"
-@@ -410,7 +410,7 @@ EXPORT_SYMBOL_GPL(encode_rs16);
-  *  errors. The count includes errors in the parity.
-  */
- int decode_rs16(struct rs_control *rsc, uint16_t *data, uint16_t *par, int len,
--		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
-+		uint16_t *s, int *no_eras, int *eras_pos, uint16_t invmsk,
- 		uint16_t *corr)
- {
- #include "decode_rs.c"
-diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
-index 4eb29f365ece..b30a4aea8796 100644
---- a/lib/reed_solomon/test_rslib.c
-+++ b/lib/reed_solomon/test_rslib.c
-@@ -258,7 +258,7 @@ static void compute_syndrome(struct rs_control *rsc, uint16_t *data,
- 
- /* Test up to error correction capacity */
- static void test_uc(struct rs_control *rs, int len, int errs,
--		int eras, int trials, struct estat *stat,
-+		int *eras, int trials, struct estat *stat,
- 		struct wspace *ws, int method)
- {
- 	int dlen = len - rs->codec->nroots;
-@@ -327,8 +327,11 @@ static int ex_rs_helper(struct rs_control *rs, struct wspace *ws,
- 		pr_info("  %s\n", desc[method]);
- 
- 	for (errs = 0; errs <= nroots / 2; errs++)
--		for (eras = 0; eras <= nroots - 2 * errs; eras++)
--			test_uc(rs, len, errs, eras, trials, &stat, ws, method);
-+		for (eras = 0; eras <= nroots - 2 * errs; eras++) {
-+			int no_eras = ers;
-+
-+			test_uc(rs, len, errs, &no_eras, trials, &stat, ws, method);
-+		}
- 
- 	if (v >= V_CSUMMARY) {
- 		pr_info("    Decodes wrong:        %d / %d\n",
-@@ -364,7 +367,7 @@ static int exercise_rs(struct rs_control *rs, struct wspace *ws,
- 
- /* Tests for correct behaviour beyond error correction capacity */
- static void test_bc(struct rs_control *rs, int len, int errs,
--		int eras, int trials, struct bcstat *stat,
-+		int *eras, int trials, struct bcstat *stat,
- 		struct wspace *ws)
- {
- 	int nroots = rs->codec->nroots;
-@@ -420,8 +423,11 @@ static int exercise_rs_bc(struct rs_control *rs, struct wspace *ws,
- 			eras = 0;
- 
- 		cutoff = nroots <= len - errs ? nroots : len - errs;
--		for (; eras <= cutoff; eras++)
--			test_bc(rs, len, errs, eras, trials, &stat, ws);
-+		for (; eras <= cutoff; eras++) {
-+			int no_eras = eras;
-+
-+			test_bc(rs, len, errs, &no_eras, trials, &stat, ws);
-+		}
- 	}
- 
- 	if (v >= V_CSUMMARY) {
--- 
-2.25.1
+devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusive().
+Code as below:
+static inline struct reset_control *devm_reset_control_get(
+                                struct device *dev, const char *id)
+{
+        return devm_reset_control_get_exclusive(dev, id);
+}
+Am i missing something else?
 
+Regards,
+Rahul
