@@ -2,105 +2,111 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91729C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3B220720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0746520720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gdjDuDb8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbxKOXHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390785AbgFYJFH (ORCPT
+        id S2389907AbgFYJGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:05:07 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39284 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389473AbgFYJFH (ORCPT
+        Thu, 25 Jun 2020 05:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727878AbgFYJGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:05:07 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P92DCN042815;
-        Thu, 25 Jun 2020 09:05:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=6p1/RFHaVHhyTKsdD/zUstV9/O0VSIYItjrUNz/5ZuQ=;
- b=gdjDuDb8HlQHOTbgcFWIg4JP3G6b5wP2LokCkNkbCFnC7vyzgVxlEqx4VRAPPswUIety
- Wg8pKIl/gFVoFJMKt5GpDNgvI4EXZmi0QVhLp5+105xvLBxLvKLQxulXnsqKMWUm7jer
- W6dv7I4p1b/zQKhxAP2wp2dH4rQP6Hd4ReYXrPflQtKLvGNPPqk9tYIF1KZQ0tQ93A1W
- UbZC8Aq7N36wvOdKg6B5gbx/8wBoxQvWNGea6MUTDTfaPA3/2sgfW2vmiTaz45VlVmpt
- jMGEHmxbzwM70P8uWtw5yNnrwhTAzEIQLNTY5ruDJbRyDgxK9x4PubdWG5lnhGm/o+dy bw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31uustycw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jun 2020 09:05:01 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05P94FGj168673;
-        Thu, 25 Jun 2020 09:05:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31uur8nnx5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 09:05:00 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05P94vI2031214;
-        Thu, 25 Jun 2020 09:04:59 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 25 Jun 2020 09:04:57 +0000
-Date:   Thu, 25 Jun 2020 12:04:49 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] intel_idle: Fix uninitialized variable bug
-Message-ID: <20200625090449.GA2549@kadam>
-References: <20200624131921.GB9972@mwanda>
- <CAJZ5v0hG2FL0VSeE+ind9MSMc_c7nA4KjKxFPdMhVOPrMdYJKQ@mail.gmail.com>
+        Thu, 25 Jun 2020 05:06:21 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269C6C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:06:21 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id u8so2748091pje.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vylqwLtVkAhs68RnWsWSlAhcUo1YmQ++iHRAkEL/5mA=;
+        b=sbxKOXHt8L3uvLDygPOkxJHqrl4jrnBuLdeLgB7vUOUtH/auhCNCtFS3SwHJOEKkfz
+         0IPP1BZFUaB8dXcROcXamEjPjjB6pxNnbJvy7116WUorGDLaU57SBxUGQHtDuXewgR2i
+         xzCmakuDLwazlzPS04SwV3lFQUyV5fyrHc7Zjpzy6uLskWhyRSU+ke2gE3w1YTu6Prje
+         g/tI7KywvVqj2Kzw3BOaGKByh5e1hnC5WDQ5S0v6Hn2vB1PMGG2sXm4HzPQrbt/RQ9GX
+         TIEBidISf48ptK61QboxrpXUFoR65YvDAFKFobJwE357y/T5IcC1kKG7TMk8UYWLgZrO
+         PaYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vylqwLtVkAhs68RnWsWSlAhcUo1YmQ++iHRAkEL/5mA=;
+        b=SblZrnSzaLmfQ8+I7NC/CTKgz4i1/e86XogbjcyFPbwqYsvP2F0tt9u3oQmjY0GDLt
+         +hmWT4xzyTtfNoLnQAWaruIHttO8qYBsJR//AaDWi6kTKsdRE6CWQwkPde7wWCDz1dsK
+         idkuU8jUxEjdp4l6IAu5AiUGPmbCupb6o/nJHnF5didqIeAuTv11ypGGBOx6Uds6NHog
+         KkUcrsGTE8RZj89UGRGJsZgRHj07McvsriEd9CnUJ6z8CKKN4BPLSFn6Ct/6WtJjcLBH
+         Y8JtmbWmpcMnURiPW2f8cdzX+lMyOvOg8cnXE7iH0WsXNkw1b0SFDsLAPJ8MUOfNQ5tG
+         wwqA==
+X-Gm-Message-State: AOAM532LdLi8cd6ywqoA8uHeZBNwomcU2i3t/ZAyZwsfkfMIIlHkCZYx
+        4uqjkpqHp3RhAKLDbzbyNdI=
+X-Google-Smtp-Source: ABdhPJx5ciQ9sDOfrzKVH74cmWvr6eNRhXe/ZtSeWw8hLijwg334P+nM3RXOTUA+hP6hVHXgEiEQyg==
+X-Received: by 2002:a17:90a:d809:: with SMTP id a9mr2307991pjv.212.1593075980539;
+        Thu, 25 Jun 2020 02:06:20 -0700 (PDT)
+Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
+        by smtp.gmail.com with ESMTPSA id m4sm18842659pgp.32.2020.06.25.02.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 02:06:20 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 02:06:18 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Serge Hallyn <serge@hallyn.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 3/3] nsproxy: support CLONE_NEWTIME with setns()
+Message-ID: <20200625090618.GC151695@gmail.com>
+References: <20200619153559.724863-1-christian.brauner@ubuntu.com>
+ <20200619153559.724863-4-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=koi8-r
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hG2FL0VSeE+ind9MSMc_c7nA4KjKxFPdMhVOPrMdYJKQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250056
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9662 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250056
+In-Reply-To: <20200619153559.724863-4-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:41:05PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jun 24, 2020 at 3:19 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> >
-> > The "tick" variable isn't initialized if "lapic_timer_always_reliable"
-> > is true.
+On Fri, Jun 19, 2020 at 05:35:59PM +0200, Christian Brauner wrote:
+> So far setns() was missing time namespace support. This was partially due
+> to it simply not being implemented but also because vdso_join_timens()
+> could still fail which made switching to multiple namespaces atomically
+> problematic. This is now fixed so support CLONE_NEWTIME with setns()
 > 
-> If lapic_timer_always_reliable is true, then
-> static_cpu_has(X86_FEATURE_ARAT) must also be true AFAICS.
-> 
-> So the lapic_timer_always_reliable check in there looks redundant.
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Cc: Serge Hallyn <serge@hallyn.com>
+> Cc: Dmitry Safonov <dima@arista.com>
+> Cc: Andrei Vagin <avagin@gmail.com>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Can the lapic_timer_always_reliable variable just be removed entirely
-and replaced with an static_cpu_has(X86_FEATURE_ARAT) check?
+Hi Christian,
 
-regards,
-dan carpenter
+I have reviewed this series and it looks good to me.
 
+We decided to not change the return type of vdso_join_timens to avoid
+conflicts with the arm64 timens patchset. With this change, you can add
+my Reviewed-by to all patched in this series.
+
+Reviewed-by: Andrei Vagin <avagin@gmail.com>
+
+Thanks,
+Andrei
