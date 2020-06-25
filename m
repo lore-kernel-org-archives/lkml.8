@@ -2,222 +2,216 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36005C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB3F20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sFfFzlBZ"
+	by mail.kernel.org (Postfix) with ESMTP id 34D7A207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406935AbgFYRw1 (ORCPT
+        id S2406946AbgFYRwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50194 "EHLO
+        Thu, 25 Jun 2020 13:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405562AbgFYRw0 (ORCPT
+        with ESMTP id S2405562AbgFYRwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:52:26 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AAF2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 10:52:26 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id d4so6096294otk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 10:52:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yrZ2fY9WrTaypJt+sZgGoNyHFbZy3M4E4I5hfw0mTfw=;
-        b=sFfFzlBZwWpraJ6jRuapOCOKSygjVulQ/rqhqEcZWWtn8I9wPs5SeR64GQBF5ho1TL
-         /7VIWlxCUfCyoMTKA0z7oTM+Qo97sHURB2JuAj5c2xtrTvr0KTKTWqV8R+5pdLVeIcR9
-         rPBfFJHp5ycenXoTB+AmnnzwTCFaKzu4EPpdmU1nDDgkMZGQzHTV3bUg/CtarN1XsfFr
-         pJKnRJKAsbum00k7hz42NJRszPC6yCrmwrUJ32uplle/FL5svBQJ8lfs2R07SCriNOA4
-         fq2Cc1rQxqrDchZSfuQ2qwVdNhy6xikQ9d6ArI4byI93mtxMlHep+rFDNNSzU0ltQMRG
-         pYoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yrZ2fY9WrTaypJt+sZgGoNyHFbZy3M4E4I5hfw0mTfw=;
-        b=WOXQmT6TXmJkmlz7edYuq0BB1VqmMJ33MPuYWKjnfwRextti6kKz97Xxg91fVCpjOr
-         8pqFkibd0oB3MBp1UJOI9SlO8flqfhalZBb8wG8s8bW20R6oaQUKec7l8X1V2ZuyrCO6
-         GqD5DxDFoBxvQThls9ZwVdz0oolXewKUPKLZFTMvFC5Wz+/fTiPPJZ1wS71SWXGiQ6ci
-         G7p4AFMEINkZ2R8NTDi166ujKVDxbG9ucZgUeV9+NIH6JwvqmwPgptLQp5RQAnu7nANl
-         9tBk9hLTZMrViOY04pN1waDLryqerX/V7LFmtPxJdTigkISNuy1ZBniDX/XguDRJkzhd
-         kIow==
-X-Gm-Message-State: AOAM531POpzDhNV7PSEF2zL/tM3XoL1IA6F1CJZbshdltutcrJo5PTDo
-        dxe81OOybH6ZwsmYfTu+SDfaza+JlKK5VdZpfcFv/w==
-X-Google-Smtp-Source: ABdhPJxD72QqOollRgpUr8DNVPYWzzgpfhSVTIHf/kl7SIgKh1cVaA6bqg+8CA5wFpdwWKImIOspyn4RC6QblaLauLQ=
-X-Received: by 2002:a9d:6048:: with SMTP id v8mr29889627otj.231.1593107545163;
- Thu, 25 Jun 2020 10:52:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625032430.152447-1-saravanak@google.com> <CAJZ5v0h1JHLK2PA45ZfNBeQrRoH+UkEi6-vRR-=HLz7AAnC1vA@mail.gmail.com>
- <CAGETcx8AQPZ92vKKwq6-U8fbToCWtHvu4OT4hXzOGiCUst15fw@mail.gmail.com>
- <CAJZ5v0i=riYAA1wnuDBhBLfWQiGnaRW8fxkCU5X-3=noqSEhrQ@mail.gmail.com>
- <CAGETcx8J5fs42_HMVyYvbX1=gqGTnavEuDOH+LHprZYRbXvUzw@mail.gmail.com>
- <CAJZ5v0i-ySdNmToh=ExT9H_88bhHVeUNfTNWxXG1SzaP8a5j-w@mail.gmail.com>
- <CAGETcx9iLH8fBEA0a9=iPsObzaePg9Zj0A9T_7NSKH6KSq3vFg@mail.gmail.com> <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 25 Jun 2020 10:51:49 -0700
-Message-ID: <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
- deferred probe
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Thu, 25 Jun 2020 13:52:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC42C08C5C1;
+        Thu, 25 Jun 2020 10:52:35 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 34B042A5774
+Message-ID: <d2d50756882b7cf23673c3a1b444c03d59648278.camel@collabora.com>
+Subject: Re: [RFC 7/7] media: uapi: make H264 stateless codec interface
+ public
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Thu, 25 Jun 2020 14:51:56 -0300
+In-Reply-To: <478a33a8-89e2-7ed8-4efe-76d62ddc223a@xs4all.nl>
+References: <20200623182809.1375-1-ezequiel@collabora.com>
+         <20200623182809.1375-8-ezequiel@collabora.com>
+         <478a33a8-89e2-7ed8-4efe-76d62ddc223a@xs4all.nl>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:47 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Jun 25, 2020 at 7:09 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > On Thu, Jun 25, 2020 at 10:03 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Thu, Jun 25, 2020 at 7:01 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > >
-> > > > On Thu, Jun 25, 2020 at 9:58 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, Jun 25, 2020 at 6:49 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > >
-> > > > > > Dropping Feng Kan <fkan@apm.com> and Toan Le <toanle@apm.com> because
-> > > > > > their mails are bouncing.
-> > > > > >
-> > > > > > On Thu, Jun 25, 2020 at 8:19 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Thu, Jun 25, 2020 at 5:24 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > > > >
-> > > > > > > > Under the following conditions:
-> > > > > > > > - driver A is built in and can probe device-A
-> > > > > > > > - driver B is a module and can probe device-B
-> > > > > > > > - device-A is supplier of device-B
-> > > > > > > >
-> > > > > > > > Without this patch:
-> > > > > > > > 1. device-A is added.
-> > > > > > > > 2. device-B is added.
-> > > > > > > > 3. dpm_list is now [device-A, device-B].
-> > > > > > > > 4. driver-A defers probe of device-A.
-> > > > > > > > 5. deferred probe of device-A is reattempted
-> > > > > > > > 6. device-A is moved to end of dpm_list.
-> > > > > > > > 6. dpm_list is now [device-B, device-A].
-> > > > > > > > 7. driver-B is loaded and probes device-B.
-> > > > > > > > 8. dpm_list stays as [device-B, device-A].
-> > > > > > > >
-> > > > > > > > Suspend (which goes in the reverse order of dpm_list) fails because
-> > > > > > > > device-A (supplier) is suspended before device-B (consumer).
-> > > > > > > >
-> > > > > > > > With this patch:
-> > > > > > > > 1. device-A is added.
-> > > > > > > > 2. device-B is added.
-> > > > > > > > 3. dpm_list is now [device-A, device-B].
-> > > > > > > > 4. driver-A defers probe of device-A.
-> > > > > > > > 5. deferred probe of device-A is reattempted later.
-> > > > > > > > 6. dpm_list is now [device-B, device-A].
-> > > > > > > > 7. driver-B is loaded and probes device-B.
-> > > > > > > > 8. dpm_list is now [device-A, device-B].
-> > > > > > > >
-> > > > > > > > Suspend works because device-B (consumer) is suspended before device-A
-> > > > > > > > (supplier).
-> > > > > > > >
-> > > > > > > > Fixes: 494fd7b7ad10 ("PM / core: fix deferred probe breaking suspend resume order")
-> > > > > > > > Fixes: 716a7a259690 ("driver core: fw_devlink: Add support for batching fwnode parsing")
-> > > > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/base/dd.c | 16 ++++++++++++++++
-> > > > > > > >  1 file changed, 16 insertions(+)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > > > > > > > index 9a1d940342ac..52b2148c7983 100644
-> > > > > > > > --- a/drivers/base/dd.c
-> > > > > > > > +++ b/drivers/base/dd.c
-> > > > > > > > @@ -109,6 +109,8 @@ static void deferred_probe_work_func(struct work_struct *work)
-> > > > > > > >                  * probe makes that very unsafe.
-> > > > > > > >                  */
-> > > > > > > >                 device_pm_move_to_tail(dev);
-> > > > > > > > +               /* Greg/Rafael: SHOULD I DELETE THIS? ^^ I think I should, but
-> > > > > > > > +                * I'm worried if it'll have some unintended consequeneces. */
-> > > > > > >
-> > > > > > > Yes, this needs to go away if you make the other change.
-> > > > > > >
-> > > > > > > >
-> > > > > > > >                 dev_dbg(dev, "Retrying from deferred list\n");
-> > > > > > > >                 bus_probe_device(dev);
-> > > > > > > > @@ -557,6 +559,20 @@ static int really_probe(struct device *dev, struct device_driver *drv)
-> > > > > > > >                 goto re_probe;
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > > +       /*
-> > > > > > > > +        * The devices are added to the dpm_list (resume/suspend (reverse
-> > > > > > > > +        * order) list) as they are registered with the driver core. But the
-> > > > > > > > +        * order the devices are added doesn't necessarily match the real
-> > > > > > > > +        * dependency order.
-> > > > > > > > +        *
-> > > > > > > > +        * The successful probe order is a much better signal. If a device just
-> > > > > > > > +        * probed successfully, then we know for sure that all the devices that
-> > > > > > > > +        * probed before it don't depend on the device. So, we can safely move
-> > > > > > > > +        * the device to the end of the dpm_list. As more devices probe,
-> > > > > > > > +        * they'll automatically get ordered correctly.
-> > > > > > > > +        */
-> > > > > > > > +       device_pm_move_to_tail(dev);
-> > > > > > >
-> > > > > > > But it would be good to somehow limit this to the devices affected by
-> > > > > > > deferred probing or we'll end up reordering dpm_list unnecessarily for
-> > > > > > > many times in the actual majority of cases.
-> > > > > >
-> > > > > > Yes, lots of unnecessary reordering, but doing it only for deferred
-> > > > > > probes IS the problem. In the example I gave, the consumer is never
-> > > > > > deferred probe because the supplier happens to finish probing before
-> > > > > > the consumer probe is even attempted.
-> > > > >
-> > > > > But why would the supplier be moved to the end of dpm_list without
-> > > > > moving the consumer along with it?
-> > > >
-> > > > There is no device link between the supplier/consumer in this case.
-> > >
-> > > So this is the real problem, isn't it?
-> > >
-> > > > Sadly there are plenty of cases where device links aren't present to
-> > > > capture supplier/consumer dependencies.
-> > >
-> > > And so that's why you want to add a ton of overhead to driver probing
-> > > in all of the cases in which that is not an issue?
-> >
-> > Well, until all/most of the frameworks add device links or
-> > fw_devlink=on by default, it doesn't hurt to have suspend/resume work
-> > in more platforms.
->
-> In the presence of deferred probing, that is.
->
-> Note that deferred probing gets in the way here and so the problem is
-> related to it.
+On Thu, 2020-06-25 at 09:52 +0200, Hans Verkuil wrote:
+> On 23/06/2020 20:28, Ezequiel Garcia wrote:
+> > The H264 interface is now ready to be part of the official
+> > public API.
+> > 
+> > In addition, sanitize header includes.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/staging/media/hantro/hantro_hw.h                  | 5 ++---
+> >  include/media/v4l2-ctrls.h                                | 3 ++-
+> >  include/media/v4l2-h264.h                                 | 2 +-
+> >  .../{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h}  | 8 ++------
+> >  4 files changed, 7 insertions(+), 11 deletions(-)
+> >  rename include/{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h} (96%)
+> 
+> This isn't quite how this should be done.
+> 
+> The V4L2_PIX_FMT_H264_SLICE define and the V4L2_CTRL_TYPE_H264_* defines should
+> move to videodev2.h.
+> 
 
-I mean, we officially support deferred probing. Shouldn't we fix it so
-that it doesn't break suspend/resume? Also, it's pretty easy to have
-cases where one module probes multiple device instances and loading it
-in one order would break dpm_list order for one device and loading it
-in another order would break it for another device. And there would be
-no "proper" order to load modules (because module order != device
-order).
+OK.
 
-> > What about the option of not adding to dpm_list until a device is
-> > probed? Is it DOA?
->
-> Yes, it is, I'm afraid.  There are devices without drivers. :-)
+> The remaining CID defines and the data structures should be moved to v4l2-controls.h.
+> 
 
-Devices that still suspend/resume without drivers?! I didn't know that
-was possible.
+OK.
 
--Saravana
+> Yes, I know, v4l2-controls.h is getting large. At some point (could actually be
+> done in a follow-up patch) the codec controls in v4l2-controls.h should be split off
+> into their own header (v4l2-codec-controls.h).
+> 
+
+OK, that makes sense.
+
+> One more thing that I was wondering about:
+> 
+> #define V4L2_CID_MPEG_VIDEO_H264_SPS            (V4L2_CID_MPEG_BASE+1000)
+> 
+> These controls are at V4L2_CID_MPEG_BASE+1000. But I was wondering if:
+> 
+> 1) wouldn't it be a good thing to use new CID values since this is the actual
+>    uAPI version? This series changes the layout of several structs, so creating
+>    new CID values to prevent confusion in applications might be a good idea.
+> 
+> 2) related to 1): should we make a new control class for stateless codecs?
+>    Currently it is mixed in with the stateful codec controls, but I am not so
+>    sure that that is such a good idea. Creating a separate stateless codec
+>    control class would be a clean separation of stateful and stateless, and it
+>    would probably improve the documentation as well.
+> 
+
+Good idea.
+
+>    The only 'standard' codec control that is used by stateless codecs is
+>    V4L2_CID_MPEG_VIDEO_H264_PROFILE in hantro, although it is not clear to me
+>    how it is used. It looks like it is just to report the supported profiles?
+>    But it isn't present in the cedrus driver, so it's a bit odd.
+> 
+
+I can take a look and add profiles to cedrus as well.
+
+> Thank you for working on finalizing the H264 API.
+> 
+
+Thanks for the guidelines and feedback.
+
+I will drop this patch for now, since I think we
+now have a clear guideline on how to go public
+(which was the goal of this RFC!).
+
+I will move forward the H264 uAPI changes,
+and then we can try to push H264, MPEG-2 and VP8
+public, as these interfaces are the ones
+that seem stable.
+
+Thanks!
+Ezequiel  
+
+> Regards,
+> 
+> 	Hans
+> 
+> > diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
+> > index 4053d8710e04..48d5be144319 100644
+> > --- a/drivers/staging/media/hantro/hantro_hw.h
+> > +++ b/drivers/staging/media/hantro/hantro_hw.h
+> > @@ -11,9 +11,8 @@
+> >  
+> >  #include <linux/interrupt.h>
+> >  #include <linux/v4l2-controls.h>
+> > -#include <media/h264-ctrls.h>
+> > -#include <media/mpeg2-ctrls.h>
+> > -#include <media/vp8-ctrls.h>
+> > +
+> > +#include <media/v4l2-ctrls.h>
+> >  #include <media/videobuf2-core.h>
+> >  
+> >  #define DEC_8190_ALIGN_MASK	0x07U
+> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> > index f40e2cbb21d3..fc725ba2ebd8 100644
+> > --- a/include/media/v4l2-ctrls.h
+> > +++ b/include/media/v4l2-ctrls.h
+> > @@ -13,13 +13,14 @@
+> >  #include <linux/videodev2.h>
+> >  #include <media/media-request.h>
+> >  
+> > +#include <linux/v4l2-h264-ctrls.h>
+> > +
+> >  /*
+> >   * Include the stateless codec compound control definitions.
+> >   * This will move to the public headers once this API is fully stable.
+> >   */
+> >  #include <media/mpeg2-ctrls.h>
+> >  #include <media/fwht-ctrls.h>
+> > -#include <media/h264-ctrls.h>
+> >  #include <media/vp8-ctrls.h>
+> >  #include <media/hevc-ctrls.h>
+> >  
+> > diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
+> > index f08ba181263d..d2314f4d4490 100644
+> > --- a/include/media/v4l2-h264.h
+> > +++ b/include/media/v4l2-h264.h
+> > @@ -10,7 +10,7 @@
+> >  #ifndef _MEDIA_V4L2_H264_H
+> >  #define _MEDIA_V4L2_H264_H
+> >  
+> > -#include <media/h264-ctrls.h>
+> > +#include <media/v4l2-ctrls.h>
+> >  
+> >  /**
+> >   * struct v4l2_h264_reflist_builder - Reference list builder object
+> > diff --git a/include/media/h264-ctrls.h b/include/uapi/linux/v4l2-h264-ctrls.h
+> > similarity index 96%
+> > rename from include/media/h264-ctrls.h
+> > rename to include/uapi/linux/v4l2-h264-ctrls.h
+> > index 6446ec9f283d..a06f60670d68 100644
+> > --- a/include/media/h264-ctrls.h
+> > +++ b/include/uapi/linux/v4l2-h264-ctrls.h
+> > @@ -2,14 +2,10 @@
+> >  /*
+> >   * These are the H.264 state controls for use with stateless H.264
+> >   * codec drivers.
+> > - *
+> > - * It turns out that these structs are not stable yet and will undergo
+> > - * more changes. So keep them private until they are stable and ready to
+> > - * become part of the official public API.
+> >   */
+> >  
+> > -#ifndef _H264_CTRLS_H_
+> > -#define _H264_CTRLS_H_
+> > +#ifndef __LINUX_V4L2_H264_CONTROLS_H
+> > +#define __LINUX_V4L2_H264_CONTROLS_H
+> >  
+> >  #include <linux/videodev2.h>
+> >  
+> > 
+
+
