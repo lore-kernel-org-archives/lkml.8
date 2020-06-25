@@ -2,167 +2,143 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09371C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1173EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8C5B20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDACB2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knKRqtKF"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YPKqmMuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406166AbgFYSsu (ORCPT
+        id S2406346AbgFYSvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390875AbgFYSst (ORCPT
+        Thu, 25 Jun 2020 14:51:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52386 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405853AbgFYSvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:48:49 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DC0AC08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:48:49 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id g6so4686796qtr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=KSzIS4R7pLrhz4aCSES8O8YLNhHnwl2dEbCnP+qYXsc=;
-        b=knKRqtKFatSe2XltGnadadXYJpHZawUTiMMobs3BChNf5NM/0u4nk3w1QtVHi/2TGJ
-         MGNBG0TtVcq9viEuR8zd0jqEo96IcfEx2gHSvdbcB3ckYEBrQpTXPq6tK7H3viZFPRCh
-         W+tC3F45N6UTYj0fflhVzOdIoHvpOoyhbYthTQDmVfNUqHx0tGPh7vhaiXJwh7WiaksG
-         7Kf5IMLzUrlNU6YJQr6tdlMkp4qTejHrXN7RwXjbYezMfBQiMV6OqL4xP8Ruhg7l7wC+
-         7t2aLAeRG5q6VH6HMvzX+Eg6XRp5dSUfVkt84VBZgheT20HcdfWZHWgyMfgVe44smHLm
-         eYww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=KSzIS4R7pLrhz4aCSES8O8YLNhHnwl2dEbCnP+qYXsc=;
-        b=YWbQbjVmNCm7PrOMsaQQqYKETrVfCeKDLZ5KSSjHRPmWKUWGcmpEOtZazrQl+Oj+f1
-         pvPRxrkkrbfoUalGEr4S5gsH6lrLBadLVCZyRhii8UBNstMRK8urBs9g0ecuXi1QKg0e
-         3mvtRWqcVs9ie8TXJ6MNT06s2EwZ/4oU7CnZ6izKIEvdme9eoF6ocE7wEnynG+kGAgjg
-         evMxCCFVEXS3Gk6dljQxEc0Yt0Z8uWGBUWnVFLWALAN2g3IHcA1bcBvs03Zk7aiSUkuK
-         kP/nBAncFSYB8h7nXrN1Y/JxH8VD22m9coO9PFTrtDYnoRH2vt7Betqs4PlGn7MaJHcI
-         pXaQ==
-X-Gm-Message-State: AOAM533cnm7xhpoKF1QnI5L5kRAdkqTjPSXQOZ6dCOx2sV34+MQ6Issv
-        0DxEHAscByhhcz5IKABGmxtJ+TNZEu8eIAlJJSg=
-X-Google-Smtp-Source: ABdhPJwpHZDZ91owWQoTpMlESBLCeHg8NuUS9EMzPrkO+lVDZd6/NrsL86bqM72qrEUkcdUo9qL+h6YICos7y0g6pbU=
-X-Received: by 2002:ad4:44a6:: with SMTP id n6mr2687847qvt.113.1593110928539;
- Thu, 25 Jun 2020 11:48:48 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 11:47:52 -0700
-In-Reply-To: <20200622231536.7jcshis5mdn3vr54@google.com>
-Message-Id: <20200625184752.73095-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200622231536.7jcshis5mdn3vr54@google.com>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH v2] vmlinux.lds: add PGO and AutoFDO input sections
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "=?UTF-8?q?F=C4=81ng-ru=C3=AC=20S=C3=B2ng?=" <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        stable@vger.kernel.org, Jian Cai <jiancai@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 25 Jun 2020 14:51:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PIftsV071319;
+        Thu, 25 Jun 2020 18:50:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=9RCC71majlIfD6FawW7ZnshWLRSgVrlkvbgIdAMoVZw=;
+ b=YPKqmMuCzSeibFuJ2EeAZ4gdRQIqyXiRa5KI72AzjCKtkQeRVrkm7D7mtr/XwXXk3sgG
+ b4Kp/kXbfDmv3EJdk+QuOx1DrtiJLx+QNbR+/ld1Ahx4hAGSEQbn5IYiIjl5ROTMY/zX
+ kPx9W79pH2gxgDfL4KWPIFMize8ZwgPIyPwgp6UCGn5aaVOWpV/JbZ/SNVAkzjHGHcjt
+ d3NfydLfaKqpjd5N96cOMwrRJUMDrokhUmYa9M2IReA1QbonzF3j8W+iQGBvjmFlbhS/
+ 8rQh7vxZ4N/mhY39jOVxX64bt1qXZHRjnYn9fT0hdQMUT+/AaiUct6sMNFiu2ubohQAU pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 31uustt77f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jun 2020 18:50:36 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PIi0fM071227;
+        Thu, 25 Jun 2020 18:48:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 31uur1n5ke-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 18:48:36 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05PImYeM018585;
+        Thu, 25 Jun 2020 18:48:34 GMT
+Received: from localhost (/10.159.246.176)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 25 Jun 2020 18:48:34 +0000
+Date:   Thu, 25 Jun 2020 11:48:32 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
+Message-ID: <20200625184832.GP7606@magnolia>
+References: <20200625113122.7540-1-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625113122.7540-1-willy@infradead.org>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 mlxscore=0 suspectscore=2 malwarescore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006250112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ cotscore=-2147483648 adultscore=0 bulkscore=0 spamscore=0 phishscore=0
+ suspectscore=2 priorityscore=1501 lowpriorityscore=0 clxscore=1011
+ impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Basically, consider .text.{hot|unlikely|unknown}.* part of .text, too.
+On Thu, Jun 25, 2020 at 12:31:16PM +0100, Matthew Wilcox (Oracle) wrote:
+> I want a memalloc_nowait like we have memalloc_noio and memalloc_nofs
+> for an upcoming patch series, and Jens also wants it for non-blocking
+> io_uring.  It turns out we already have dm-bufio which could benefit
+> from memalloc_nowait, so it may as well go into the tree now.
+> 
+> The biggest problem is that we're basically out of PF_ flags, so we need
+> to find somewhere else to store the PF_MEMALLOC_NOWAIT flag.  It turns
+> out the PF_ flags are really supposed to be used for flags which are
+> accessed from other tasks, and the MEMALLOC flags are only going to
+> be used by this task.  So shuffling everything around frees up some PF
+> flags and generally makes the world a better place.
 
-When compiling with profiling information (collected via PGO
-instrumentations or AutoFDO sampling), Clang will separate code into
-.text.hot, .text.unlikely, or .text.unknown sections based on profiling
-information. After D79600 (clang-11), these sections will have a
-trailing `.` suffix, ie.  .text.hot., .text.unlikely., .text.unknown..
+So, uh, how does this intersect with the patch "xfs: reintroduce
+PF_FSTRANS for transaction reservation recursion protection" that
+re-adds PF_TRANS because uh I guess we lost some subtlety or another at
+some point?
 
-When using -ffunction-sections together with profiling infomation,
-either explicitly (FGKASLR) or implicitly (LTO), code may be placed in
-sections following the convention:
-.text.hot.<foo>, .text.unlikely.<bar>, .text.unknown.<baz>
-where <foo>, <bar>, and <baz> are functions.  (This produces one section
-per function; we generally try to merge these all back via linker script
-so that we don't have 50k sections).
+I don't have any strong opinion on this series one way or another, but
+seeing as that patch was generating discussion about how PF_MEMALLOC_NO*
+is not quite the same as PF_TRANS, I kinda want all these competing PF
+tweaks and reworks to come together into a single series to review,
+rather than the four(?) different people submitting conflicting changes.
 
-For the above cases, we need to teach our linker scripts that such
-sections might exist and that we'd explicitly like them grouped
-together, otherwise we can wind up with code outside of the
-_stext/_etext boundaries that might not be mapped properly for some
-architectures, resulting in boot failures.
+[adding Yafang Shao to cc]
 
-If the linker script is not told about possible input sections, then
-where the section is placed as output is a heuristic-laiden mess that's
-non-portable between linkers (ie. BFD and LLD), and has resulted in many
-hard to debug bugs.  Kees Cook is working on cleaning this up by adding
---orphan-handling=3Dwarn linker flag used in ARCH=3Dpowerpc to additional
-architectures. In the case of linker scripts, borrowing from the Zen of
-Python: explicit is better than implicit.
+--D
 
-Also, ld.bfd's internal linker script considers .text.hot AND
-.text.hot.* to be part of .text, as well as .text.unlikely and
-.text.unlikely.*. I didn't see support for .text.unknown.*, and didn't
-see Clang producing such code in our kernel builds, but I see code in
-LLVM that can produce such section names if profiling information is
-missing. That may point to a larger issue with generating or collecting
-profiles, but I would much rather be safe and explicit than have to
-debug yet another issue related to orphan section placement.
-
-Cc: stable@vger.kernel.org
-Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=3Da=
-dd44f8d5c5c05e08b11e033127a744d61c26aee
-Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommitdiff;h=3D1=
-de778ed23ce7492c523d5850c6c6dbb34152655
-Link: https://reviews.llvm.org/D79600
-Link: https://bugs.chromium.org/p/chromium/issues/detail?id=3D1084760
-Reported-by: Jian Cai <jiancai@google.com>
-Debugged-by: Luis Lozano <llozano@google.com>
-Suggested-by: F=C4=81ng-ru=C3=AC S=C3=B2ng <maskray@google.com>
-Tested-by: Luis Lozano <llozano@google.com>
-Tested-by: Manoj Gupta <manojgupta@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V1 -> V2:
-* Add .text.unknown.*.  It's not strictly necessary for us yet, but I
-  really worry that it could become a problem for us. Either way, I'm
-  happy to drop for a V3, but I'm suggesting we not.
-* Beef up commit message.
-* Drop references to LLD; the LLVM change had nothing to do with LLD.
-  I've realized I have a Pavlovian-response to changes from F=C4=81ng-ru=C3=
-=AC
-  that I associate with LLD.  I'm seeking professional help for my
-  ailment. Forgive me.
-* Add link to now public CrOS bug.
-
- include/asm-generic/vmlinux.lds.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinu=
-x.lds.h
-index d7c7c7f36c4a..245c1af4c057 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -560,7 +560,10 @@
-  */
- #define TEXT_TEXT							\
- 		ALIGN_FUNCTION();					\
--		*(.text.hot TEXT_MAIN .text.fixup .text.unlikely)	\
-+		*(.text.hot .text.hot.*)				\
-+		*(TEXT_MAIN .text.fixup)				\
-+		*(.text.unlikely .text.unlikely.*)			\
-+		*(.text.unknown .text.unknown.*)			\
- 		NOINSTR_TEXT						\
- 		*(.text..refcount)					\
- 		*(.ref.text)						\
---=20
-2.27.0.111.gc72c7da667-goog
-
+> Patch series also available from
+> http://git.infradead.org/users/willy/linux.git/shortlog/refs/heads/memalloc
+> 
+> Matthew Wilcox (Oracle) (6):
+>   mm: Replace PF_MEMALLOC_NOIO with memalloc_noio
+>   mm: Add become_kswapd and restore_kswapd
+>   xfs: Convert to memalloc_nofs_save
+>   mm: Replace PF_MEMALLOC_NOFS with memalloc_nofs
+>   mm: Replace PF_MEMALLOC_NOIO with memalloc_nocma
+>   mm: Add memalloc_nowait
+> 
+>  drivers/block/loop.c           |  3 +-
+>  drivers/md/dm-bufio.c          | 30 ++++--------
+>  drivers/md/dm-zoned-metadata.c |  5 +-
+>  fs/iomap/buffered-io.c         |  2 +-
+>  fs/xfs/kmem.c                  |  2 +-
+>  fs/xfs/libxfs/xfs_btree.c      | 14 +++---
+>  fs/xfs/xfs_aops.c              |  4 +-
+>  fs/xfs/xfs_buf.c               |  2 +-
+>  fs/xfs/xfs_linux.h             |  6 ---
+>  fs/xfs/xfs_trans.c             | 14 +++---
+>  fs/xfs/xfs_trans.h             |  2 +-
+>  include/linux/sched.h          |  7 +--
+>  include/linux/sched/mm.h       | 84 ++++++++++++++++++++++++++--------
+>  kernel/sys.c                   |  8 ++--
+>  mm/vmscan.c                    | 16 +------
+>  15 files changed, 105 insertions(+), 94 deletions(-)
+> 
+> -- 
+> 2.27.0
+> 
