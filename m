@@ -2,165 +2,124 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F42C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07687C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F47F2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F1F2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FdPjgmbH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404568AbgFYMLk (ORCPT
+        id S2404595AbgFYMM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:11:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64868 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404450AbgFYMLg (ORCPT
+        Thu, 25 Jun 2020 08:12:29 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57975 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404397AbgFYMM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:11:36 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PC3NN4160650;
-        Thu, 25 Jun 2020 08:10:34 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31vbmu25d1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 08:10:34 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PC9k6f020517;
-        Thu, 25 Jun 2020 12:10:33 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 31uurt6q4w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 12:10:33 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PCAWVb49611198
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 12:10:32 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B0D9112062;
-        Thu, 25 Jun 2020 12:10:32 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A336112061;
-        Thu, 25 Jun 2020 12:10:32 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jun 2020 12:10:32 +0000 (GMT)
-Subject: Re: [PATCH v5 1/2] acpi: Extend TPM2 ACPI table with missing log
- fields
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Jiandi An <anjiandi@codeaurora.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
- <20200623120636.1453470-2-stefanb@linux.vnet.ibm.com>
- <20200625000021.GC21758@linux.intel.com>
- <9d94c704-5774-ceeb-e4f3-010f74ffe37b@linux.ibm.com>
- <20200625023431.GB270125@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <bbd532a8-c745-00e6-b002-5d092f630ed6@linux.ibm.com>
-Date:   Thu, 25 Jun 2020 08:10:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 25 Jun 2020 08:12:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593087146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0d5k1uyW/+te7o3Y+6MyeKrsTLgzk3JPsSgjnWxQ3DM=;
+        b=FdPjgmbHnASTzsIiTxlwXWPYPDm1H0bqstx+E3BRlzxYnr4eKFZIApKSQKKKYQXnR6rYuX
+        oqRgYg6Ir+IHerW8R/eqs2Qi+zlcos7zRMnT21hR9dWMQMMCb4UIX+Z9/adD8vrpG3okfU
+        2EiBnDQKRFPJzVTuqt3AwRBQrdKtc5Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-460-Cj5RPVAHOmiaPvEnCyYFCw-1; Thu, 25 Jun 2020 08:12:22 -0400
+X-MC-Unique: Cj5RPVAHOmiaPvEnCyYFCw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C4B7100A8E9;
+        Thu, 25 Jun 2020 12:12:21 +0000 (UTC)
+Received: from krava (unknown [10.40.193.172])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7280D1019606;
+        Thu, 25 Jun 2020 12:12:19 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 14:12:18 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 09/13] perf stat: implement control commands handling
+Message-ID: <20200625121218.GG2719003@krava>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <5ed69a1e-052a-9790-7642-cb9c9a53d786@linux.intel.com>
+ <20200623145458.GG2619137@krava>
+ <9bf22a7b-0b56-c55f-c8b2-60c8e6ed0ef9@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200625023431.GB270125@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_05:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 clxscore=1015 cotscore=-2147483648 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006250078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9bf22a7b-0b56-c55f-c8b2-60c8e6ed0ef9@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/20 10:34 PM, Jarkko Sakkinen wrote:
-> On Wed, Jun 24, 2020 at 08:38:25PM -0400, Stefan Berger wrote:
->> On 6/24/20 8:00 PM, Jarkko Sakkinen wrote:
->>> On Tue, Jun 23, 2020 at 08:06:35AM -0400, Stefan Berger wrote:
->>>> From: Stefan Berger <stefanb@linux.ibm.com>
->>>>
->>>> Recent extensions of the TPM2 ACPI table added 3 more fields
->>>> including 12 bytes of start method specific parameters and Log Area
->>>> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
->>>> the existing structure with these fields to allow non-UEFI systems
->>>> to access the TPM2's log.
->>>>
->>>> The specification that has the new fields is the following:
->>>>     TCG ACPI Specification
->>>>     Family "1.2" and "2.0"
->>>>     Version 1.2, Revision 8
->>>>
->>>> Adapt all existing table size calculations to use
->>>> offsetof(struct acpi_table_tpm2, start_method_specific)
->>>> [where start_method_specific is a newly added field]
->>>> rather than sizeof(struct acpi_table_tpm2) so that the addition
->>>> of the new fields does not affect current systems that may not
->>>> have them.
->>>>
->>> I found at least one regression from this patch. Please remove my
->>> reviewed-by comment form the next version.
->>>
->>> Should have:
->>>
->>>     Link: https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
->>>
->>> Please, add this.
->>>
->>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->>>> Cc: linux-acpi@vger.kernel.org
->>>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>>> ---
->>>>    drivers/char/tpm/tpm_crb.c | 13 ++++++++++---
->>>>    drivers/char/tpm/tpm_tis.c |  4 +++-
->>>>    include/acpi/actbl3.h      |  5 +++--
->>>>    3 files changed, 16 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
->>>> index a9dcf31eadd2..0565aa5482f9 100644
->>>> --- a/drivers/char/tpm/tpm_crb.c
->>>> +++ b/drivers/char/tpm/tpm_crb.c
->>>> @@ -669,7 +669,9 @@ static int crb_acpi_add(struct acpi_device *device)
->>>>    	status = acpi_get_table(ACPI_SIG_TPM2, 1,
->>>>    				(struct acpi_table_header **) &buf);
->>>> -	if (ACPI_FAILURE(status) || buf->header.length < sizeof(*buf)) {
->>>> +	if (ACPI_FAILURE(status) || buf->header.length <
->>>> +			offsetof(struct acpi_table_tpm2,
->>>> +				 start_method_specific)) {
->>>>    		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
->>>>    		return -EINVAL;
->>>>    	}
->>>> @@ -684,14 +686,19 @@ static int crb_acpi_add(struct acpi_device *device)
->>>>    		return -ENOMEM;
->>>>    	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
->>>> -		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_smc))) {
->>>> +		if (buf->header.length <
->>>> +			(offsetof(struct acpi_table_tpm2,
->>>> +				  start_method_specific) +
->>> Should be
->>>
->>>     offsetof(struct acpti_table_tpm2, log_area_minimum_length)
->>
->> The old code had sizeof(*buf) with buf being 'struct acpi_table_tpm2' and
->> that was equivalent to offsetof(struct acpi_table_tpm2,
->> start_method_specific) since 'start_method_specific' is the first new field
->> that we are adding right here. Also see 3rd paragraph in the patch
->> description. The replacement rule described there should apply to all
->> sizeof() calculations on 'struct acpi_table_tpm2.'
-> Aren't you ignoring sizeof(*crb_smc) then?
+On Wed, Jun 24, 2020 at 04:39:11PM +0300, Alexey Budankov wrote:
+> 
+> 
+> On 23.06.2020 17:54, Jiri Olsa wrote:
+> > On Wed, Jun 17, 2020 at 11:41:30AM +0300, Alexey Budankov wrote:
+> >>
+> >> Implement handling of 'enable' and 'disable' control commands
+> >> coming from control file descriptor. process_evlist() function
+> >> checks for events on control fds and makes required operations.
+> >> If poll event splits initiated timeout interval then the reminder
+> >> is calculated and still waited in the following poll() syscall.
+> >>
+> >> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> >> ---
+> >>  tools/perf/builtin-stat.c | 67 +++++++++++++++++++++++++++++----------
+> >>  1 file changed, 50 insertions(+), 17 deletions(-)
+> >>
+> >> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> >> index f88d5ee55022..cc56d71a3ed5 100644
+> >> --- a/tools/perf/builtin-stat.c
+> >> +++ b/tools/perf/builtin-stat.c
+> >> @@ -492,6 +492,31 @@ static bool process_timeout(int timeout, unsigned int interval, int *times)
+> >>  	return print_interval(interval, times);
+> >>  }
+> >>  
+> >> +static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
+> >> +{
+> >> +	bool stop = false;
+> >> +	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+> >> +
+> >> +	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
+> >> +		switch (cmd) {
+> >> +		case EVLIST_CTL_CMD_ENABLE:
+> >> +			pr_info(EVLIST_ENABLED_MSG);
+> >> +			stop = print_interval(interval, times);
+> > 
+> > why is interval printed in here?
+> > 
+> >> +			break;
+> >> +		case EVLIST_CTL_CMD_DISABLE:
+> >> +			stop = print_interval(interval, times);
+> > 
+> > and here?
+> > 
+> > it should be called from the main loop when the interval time is elapsed no?
+> 
+> It is called from the main loop too and it is also additionally called here
+> to provide indication and counter values on commands processing times.
 
-It's still there.
+so it prints interval out of order?
 
-
+jirka
 
