@@ -2,177 +2,156 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9559C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C1EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A014E20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29CF20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:42:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C79NzfYI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405252AbgFYRlQ (ORCPT
+        id S2406813AbgFYRmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:41:16 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:17793 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405083AbgFYRlP (ORCPT
+        Thu, 25 Jun 2020 13:42:25 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10680 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405282AbgFYRmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:41:15 -0400
-IronPort-SDR: RmN9LfFRFNe2G7Q0PERxj/pvfRH/4iI8Aj/76yhTph297BRag65e+1JOBL0ikEOTc8z3HPK19/
- rGTNChYx1uj0uTePzJrFejznXqaI1cWTaHC8WKhFQJDyZyBkdwg49/GNA3ByroA1GpL+xpYHVx
- aNYNoQHX+3oa8p9z3ChLrueDgqzkHD6y1kKz+N0419g65RBLV+48WKAwoAhzh8udxpttd66dWY
- m2G5RB833Y/lXUbURApw2E8u7JDsc563BE6V7xGOlQek9SwYnawD+cvYvqew5OVjhxf+y0cmux
- h+k=
-X-IronPort-AV: E=Sophos;i="5.75,280,1589270400"; 
-   d="scan'208";a="50322167"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 25 Jun 2020 09:41:13 -0800
-IronPort-SDR: LWkbEBr2wJvlrPZvGOT4sExRu+WgOSN1jMXf9Jzhe3/acdh+oohcAtfQQpH669DLSKWL4MojVw
- 6vkqHSlueSV5IWJq5/wXJq2UlHwKNDDNC1UfQT2E9usRwfVNTT19wHliXosyyzVELlWuA46Ge+
- AroaIF7bkfkcPIauWop0p6zLdLUv9TYER3VDDDv3yjT6ePpMT12RXPDicMCN83cp93X6niy0AD
- EM6u3MfDrEPFdjKPK7lVj8Cc7Xw63YDyuURMpXZLnp50ZLT0HOzUu3t0ePdvXpqnCpp+g+TKeJ
- 1mg=
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-CC:     Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
-From:   Steve Longerbeam <steve_longerbeam@mentor.com>
-Message-ID: <c57d416d-14d4-6d5d-a281-ddbf3183395a@mentor.com>
-Date:   Thu, 25 Jun 2020 10:41:09 -0700
+        Thu, 25 Jun 2020 13:42:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef4e1a20001>; Thu, 25 Jun 2020 10:40:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 25 Jun 2020 10:42:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 25 Jun 2020 10:42:24 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 25 Jun
+ 2020 17:42:24 +0000
+Subject: Re: [RESEND PATCH 2/3] nouveau: fix mixed normal and device private
+ page migration
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Christoph Hellwig <hch@lst.de>, <nouveau@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, Bharata B Rao <bharata@linux.ibm.com>
+References: <20200622233854.10889-1-rcampbell@nvidia.com>
+ <20200622233854.10889-3-rcampbell@nvidia.com> <20200624072355.GB18609@lst.de>
+ <330f6a82-d01d-db97-1dec-69346f41e707@nvidia.com>
+ <a9aba057-3786-8204-f782-6e8f3c290b35@nvidia.com>
+ <20200625173144.GT6578@ziepe.ca>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <412b3a51-619a-4f94-da96-f4596e5eb510@nvidia.com>
+Date:   Thu, 25 Jun 2020 10:42:24 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200625020138.GW5980@pendragon.ideasonboard.com>
+In-Reply-To: <20200625173144.GT6578@ziepe.ca>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202)
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593106851; bh=dVDtjOJNekdnS7jMIhDZrkR7SUVoPtPB26y7vdiQ8rc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=C79NzfYIZ/4/7K07xyDkDyWF09cLOtFqcAGWDpgLD6fZQTPfIVTxfx1KX73YbBEX5
+         /lPoACQODhbk+hYa01hbXni4W78wr6AcXvVIyzAG0zdQlx2FtFg1fMjGGCHQ9GA8iu
+         ZhYBp+2pngMltPsi9YG3jJwCKSJmCqJAqoXHEQLTZGDGuSNkde/g66HChAung88sMa
+         Yn/fIm7hckavMnJq1E5saPfA+7u/Qkh3aGkER+w3SF8PIYoGYjuHKncp7/+hLfUWWo
+         VokvfaTAX8aR6ZKyk9Guo7o3WeVENV12wbZ5ShgD2PtP+fkIq1KpbhHNNwmfFDGww0
+         OSCwcLhSmr9Vg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent, all,
 
-On 6/24/20 7:01 PM, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
->> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
->>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
->>   +Niklas, +Laurent
+On 6/25/20 10:31 AM, Jason Gunthorpe wrote:
+> On Thu, Jun 25, 2020 at 10:25:38AM -0700, Ralph Campbell wrote:
+>> Making sure to include linux-mm and Bharata B Rao for IBM's
+>> use of migrate_vma*().
 >>
->> Niklas, Laurent, how does this play with CAP_IO_MC ?
-> I don't think it's related to CAP_IO_MC, but I don't think it's a good
-> idea either :-) Routing doesn't go through the subdev [gs]_input
-> operations in MC-based drivers. It should be configured through link
-> setup instead. This patch goes in the wrong direction, sorry Steve.
-
-That's OK! :) I didn't submit this patch, and as stated in the commit 
-header, I never recommended this patch be submitted to upstream in the 
-first place.
-
-Selecting inputs at a subdev should normally make use of media link 
-setup. But for selecting analog signal inputs, such as the ADV748x AFE 
-standard definition inputs, that would  mean there would need to exist 
-source "analog" subdevs that connect to the AFE inputs, if only for the 
-purpose of selecting those inputs, which seems silly IMHO. The ADV748x 
-AFE subdev defines these inputs as media pads, but have no connections, 
-so link setup API can't be used to select those inputs.
-
-So a new subdev pad API is clearly needed, not just to get input status 
-at a subdev pad, but to select/make active such analog inputs without 
-requiring link setup API.
-
-Steve
-
-
-
->
->>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
->>> ioctls for use via v4l2 subdevice node.
+>> On 6/24/20 11:10 AM, Ralph Campbell wrote:
 >>>
->>> This commit should probably not be pushed upstream, because the (old)
->>> idea of video inputs conflicts with the newer concept of establishing
->>> media links between src->sink pads.
+>>> On 6/24/20 12:23 AM, Christoph Hellwig wrote:
+>>>> On Mon, Jun 22, 2020 at 04:38:53PM -0700, Ralph Campbell wrote:
+>>>>> The OpenCL function clEnqueueSVMMigrateMem(), without any flags, will
+>>>>> migrate memory in the given address range to device private memory. T=
+he
+>>>>> source pages might already have been migrated to device private memor=
+y.
+>>>>> In that case, the source struct page is not checked to see if it is
+>>>>> a device private page and incorrectly computes the GPU's physical
+>>>>> address of local memory leading to data corruption.
+>>>>> Fix this by checking the source struct page and computing the correct
+>>>>> physical address.
+>>>>
+>>>> I'm really worried about all this delicate code to fix the mixed
+>>>> ranges.=C2=A0 Can't we make it clear at the migrate_vma_* level if we =
+want
+>>>> to migrate from or two device private memory, and then skip all the wo=
+rk
+>>>> for regions of memory that already are in the right place?=C2=A0 This =
+might be
+>>>> a little more work initially, but I think it leads to a much better
+>>>> API.
+>>>>
 >>>
->>> However it might make sense for some subdevices to support enum/get/set
->>> inputs. One example would be the analog front end subdevice for the
->>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
->>> can be done without requiring the implementation of media entities that
->>> would define the analog source for which to establish a media link.
+>>> The current code does encode the direction with src_owner !=3D NULL mea=
+ning
+>>> device private to system memory and src_owner =3D=3D NULL meaning syste=
+m
+>>> memory to device private memory. This patch would obviously defeat that
+>>> so perhaps a flag could be added to the struct migrate_vma to indicate =
+the
+>>> direction but I'm unclear how that makes things less delicate.
+>>> Can you expand on what you are worried about?
 >>>
->>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>> ---
->>>   drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
->>>   include/media/v4l2-subdev.h           | 11 +++++++++++
->>>   2 files changed, 20 insertions(+)
+>>> The issue with invalidations might be better addressed by letting the d=
+evice
+>>> driver handle device private page TLB invalidations when migrating to
+>>> system memory and changing migrate_vma_setup() to only invalidate CPU
+>>> TLB entries for normal pages being migrated to device private memory.
+>>> If a page isn't migrating, it seems inefficient to invalidate those TLB
+>>> entries.
 >>>
->>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
->>> index 6b989fe..73fbfe9 100644
->>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
->>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
->>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->>>   			return -ENOTTY;
->>>   		return v4l2_querymenu(vfh->ctrl_handler, arg);
->>>
->>> +	case VIDIOC_ENUMINPUT:
->>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
->>> +
->>> +	case VIDIOC_G_INPUT:
->>> +		return v4l2_subdev_call(sd, video, g_input, arg);
->>> +
->>> +	case VIDIOC_S_INPUT:
->>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
->>> +
->>>   	case VIDIOC_G_CTRL:
->>>   		if (!vfh->ctrl_handler)
->>>   			return -ENOTTY;
->>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
->>> index f7fe78a..6e1a9cd 100644
->>> --- a/include/media/v4l2-subdev.h
->>> +++ b/include/media/v4l2-subdev.h
->>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
->>>    * @g_input_status: get input status. Same as the status field in the
->>>    *	&struct &v4l2_input
->>>    *
->>> + * @enuminput: enumerate inputs. Should return the same input status as
->>> + *      @g_input_status if the passed input index is the currently active
->>> + *      input.
->>> + *
->>> + * @g_input: returns the currently active input index.
->>> + *
->>> + * @s_input: set the active input.
->>> + *
->>>    * @s_stream: used to notify the driver that a video stream will start or has
->>>    *	stopped.
->>>    *
->>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
->>>   	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
->>>   	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
->>>   	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
->>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
->>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
->>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
->>>   	int (*s_stream)(struct v4l2_subdev *sd, int enable);
->>>   	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
->>>   	int (*g_frame_interval)(struct v4l2_subdev *sd,
+>>> Any other suggestions?
+>>
+>> After a night's sleep, I think this might work. What do others think?
+>>
+>> 1) Add a new MMU_NOTIFY_MIGRATE enum to mmu_notifier_event.
+>>
+>> 2) Change migrate_vma_collect() to use the new MMU_NOTIFY_MIGRATE event =
+type.
+>>
+>> 3) Modify nouveau_svmm_invalidate_range_start() to simply return (no inv=
+alidations)
+>> for MMU_NOTIFY_MIGRATE mmu notifier callbacks.
+>=20
+> Isn't it a bit of an assumption that migrate_vma_collect() is only
+> used by nouveau itself?
+>=20
+> What if some other devices' device_private pages are being migrated?
+>=20
+> Jason
+>=20
 
+Good point. The driver needs a way of knowing the callback is due its call
+to migrate_vma_setup() and not some other migration invalidation.
+How about adding a void pointer to struct mmu_notifier_range
+which migrate_vma_collect() can set to src_owner. If the event is
+MMU_NOTIFY_MIGRATE and the src_owner matches the void pointer, then the
+callback should be the one the driver initiated.
