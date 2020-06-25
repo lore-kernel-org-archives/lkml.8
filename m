@@ -2,102 +2,116 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9642072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593117379;
-	bh=xHAULP2sx5bSgv96jgAd64VBhDEHqS29bD6Eq8nUFAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fD87EFlto/6IVCxLkxTVt8LoaeFBBfvq0CC4cjehQqZYL6i4BMeolUOzpdqcK7Kg3
-	 qCbXGt+xMqnXEVzPVDBg2vI/m1X1z2Id9eNiGdoF+VnG8TrVqGNYkFnhNhTqCCac4o
-	 cbFbeNvs/SN7Qa6K/bKKyI/8NZ+G68pychNWsMog=
+	by mail.kernel.org (Postfix) with ESMTP id 3075C2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dud3MkEn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407158AbgFYUgQ (ORCPT
+        id S2407165AbgFYUhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:36:16 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:37160 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404952AbgFYUgQ (ORCPT
+        Thu, 25 Jun 2020 16:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404887AbgFYUhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:36:16 -0400
-Received: by mail-ej1-f66.google.com with SMTP id mb16so7275884ejb.4;
-        Thu, 25 Jun 2020 13:36:15 -0700 (PDT)
+        Thu, 25 Jun 2020 16:37:08 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B51C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:37:08 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k1so3326221pls.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=whJHMFEMgjRzi44wy4EIPH6hRXPgVH5q3fW7lz7Bwr8=;
+        b=Dud3MkEn4GePcKidwA+cOtfaGIUA6tPP+wAkhU7r4p6+B8dsqDRYdrbOeiy89w5tBN
+         J/ttvB3Shs/FgX5z0KkbK/lMGUyVGXj9t5dZnEJDa2PvDDYB69a46nEnxVLHVDKm2Nd2
+         unGr9qlIU0vcmSzYZKROIMPoprBh418FIiIBs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rO9wobKDdJfB6GpyJylYAIJ+kYKUiyATVCtaBeDI+fw=;
-        b=uOcxQeelA24/Lg0nZPPuLL/Vwiu4S7nffOhYaeTfohI2o7tubip6D9C0qov+2esBO3
-         XC1/Ht/PduI+y6XOc/sx1zswM093dryH2hqLkl610Mbo2pJ7ejvga5CMmpWcsuOpWiy5
-         Rl1GAA3w8bpUKbnD+/e6sY+qRg1AfsYrYxHfRj0mbhfgSiadnryFU4T7hvpE+QB7Sav9
-         Ist8iBCjuQX8isRIBQ11cbqATUgiXZMaN6hRIyZPcTNP0kMUWb2Nu2TLL3I5B3O+VTrV
-         Rfzcr+V2tvwOXzC7LGRSsa7cxM5VmA61vw3ODM2Q7ZR4BNg5LdzZcxPfXsmWJigMg0io
-         J/zA==
-X-Gm-Message-State: AOAM530xckj2lFofpjmL3fM7Gy/+N6MVVb3VhYbA+/ZLSMGX8D8xt4lJ
-        VLN/CniEQOnnVZXBAzhaHpI=
-X-Google-Smtp-Source: ABdhPJzfhS7g3k5+vRs6JczdAsbHFNdSSLshuu/AhvsQ7cPrZgwO71TfhCq9ltNkBnPaHiW49BYdog==
-X-Received: by 2002:a17:906:4f87:: with SMTP id o7mr30542289eju.233.1593117374457;
-        Thu, 25 Jun 2020 13:36:14 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id bs18sm3790352edb.38.2020.06.25.13.36.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=whJHMFEMgjRzi44wy4EIPH6hRXPgVH5q3fW7lz7Bwr8=;
+        b=Td3ypfvv5W7OeNtcNr0sKpVHvdRZe92rqO0BlCooO9wltx9Eqiq5nlB96rRUP8pyzH
+         8BRD9Thkom94WgKmCjBxzkFmV1B6GTrDSP+unfOJ18VkRVtKAOj5mv2mqPbT13f0oE3a
+         mfF6PhPfDpIi9IDttf7LQ77jrtPOPERaDxn+2Sb+/EiLHjXW5YlU0mQRpDR06VaXC5uS
+         TsHIwVEDZPjaLvepdvLHmELUjczN94hTZ6AAf021S6in+J4Ij4AG1z48yVS/k6yc1US7
+         ECy40ONDHk4fuhuk3RzBGj3bdD7vk6kz2//RiF7TIfFJVNH4PFsl2cmqtSd5lE4mGAH2
+         vspQ==
+X-Gm-Message-State: AOAM532LrTK6HS1l1QfUc2k++34VjIWyDtPYJqvyuP7VnE/0zGIRusbU
+        Dklf0p5M/AiPTXwQ1n7fNkCOGg==
+X-Google-Smtp-Source: ABdhPJweFpJ4U1BCmjhoHhooi1MRUVbsWHQEhCsnDvQRjutUSrEy0423vFl51cCRoGIZsuNSTQGaKA==
+X-Received: by 2002:a17:902:ba81:: with SMTP id k1mr34579262pls.218.1593117428146;
+        Thu, 25 Jun 2020 13:37:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r13sm9278734pfr.181.2020.06.25.13.37.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 13:36:13 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 22:36:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
-Message-ID: <20200625203611.GS1320@dhcp22.suse.cz>
-References: <20200625113122.7540-1-willy@infradead.org>
- <20200625184832.GP7606@magnolia>
+        Thu, 25 Jun 2020 13:37:07 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [PATCH drivers/misc v2 3/4] selftests/lkdtm: Reset WARN_ONCE to avoid false negatives
+Date:   Thu, 25 Jun 2020 13:37:03 -0700
+Message-Id: <20200625203704.317097-4-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200625203704.317097-1-keescook@chromium.org>
+References: <20200625203704.317097-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625184832.GP7606@magnolia>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 25-06-20 11:48:32, Darrick J. Wong wrote:
-> On Thu, Jun 25, 2020 at 12:31:16PM +0100, Matthew Wilcox (Oracle) wrote:
-> > I want a memalloc_nowait like we have memalloc_noio and memalloc_nofs
-> > for an upcoming patch series, and Jens also wants it for non-blocking
-> > io_uring.  It turns out we already have dm-bufio which could benefit
-> > from memalloc_nowait, so it may as well go into the tree now.
-> > 
-> > The biggest problem is that we're basically out of PF_ flags, so we need
-> > to find somewhere else to store the PF_MEMALLOC_NOWAIT flag.  It turns
-> > out the PF_ flags are really supposed to be used for flags which are
-> > accessed from other tasks, and the MEMALLOC flags are only going to
-> > be used by this task.  So shuffling everything around frees up some PF
-> > flags and generally makes the world a better place.
-> 
-> So, uh, how does this intersect with the patch "xfs: reintroduce
-> PF_FSTRANS for transaction reservation recursion protection" that
-> re-adds PF_TRANS because uh I guess we lost some subtlety or another at
-> some point?
+Since we expect to see warnings every time for many tests, just reset
+the WARN_ONCE flags each time the script runs.
 
-This is independent, really. It just relocates the NOFS flag. PF_TRANS
-is reintroduced for a different reason. When I have replaced the
-original PF_TRANS by PF_MEMALLOC_NOFS I didn't realized that xfs doesn't
-need only the NOFS semantic but also the transaction tracking so this
-cannot be a single bit only. So it has to be added back. But
-PF_MEMALLOC_NOFS needs to stay for the scoped NOFS semantic.
+Fixes: 46d1a0f03d66 ("selftests/lkdtm: Add tests for LKDTM targets")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/lkdtm/run.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Hope this clarifies it a bit.
+diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+index ee64ff8df8f4..8383eb89d88a 100755
+--- a/tools/testing/selftests/lkdtm/run.sh
++++ b/tools/testing/selftests/lkdtm/run.sh
+@@ -8,6 +8,7 @@
+ #
+ set -e
+ TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
++CLEAR_ONCE=/sys/kernel/debug/clear_warn_once
+ KSELFTEST_SKIP_TEST=4
+ 
+ # Verify we have LKDTM available in the kernel.
+@@ -67,6 +68,11 @@ cleanup() {
+ }
+ trap cleanup EXIT
+ 
++# Reset WARN_ONCE counters so we trip it each time this runs.
++if [ -w $CLEAR_ONCE ] ; then
++	echo 1 > $CLEAR_ONCE
++fi
++
+ # Save existing dmesg so we can detect new content below
+ dmesg > "$DMESG"
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
