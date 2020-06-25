@@ -2,128 +2,106 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7C22063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466822063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l0NeXiak"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OoGnm8rU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390864AbgFYJYk (ORCPT
+        id S2390873AbgFYJZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:24:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390849AbgFYJYj (ORCPT
+        Thu, 25 Jun 2020 05:25:17 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59863 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390071AbgFYJZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:24:39 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB6B5C061795
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:24:38 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o8so4836499wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 02:24:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=EaOaR3l9HHxJyu97gRJLmzWQVTWMAcMmNEcB1lcmPNM=;
-        b=l0NeXiakjdrXrLaBLIadefKz8F7+uyKt5t8RNkWbO405PGH/BZlG7ucw7IkjzZ9wK5
-         pOFvA45fVJyNpEcvwKTJ4EG0KhFxxfY3pjjhc9JzCoT3kHSe1jOgmHODowQxUGG2FiKI
-         yZKssraojrjtQZI6OtOlcrvQCZo1hNcJlSJyToTanRleQMoy+FooP2BSXH93BwrhKzi0
-         +zryj2eO1f08xEkWifRc0qeLiBx2LzTlRzbY8yPbRKajweEMeycjGzvCiACtHFxLbRLK
-         EgS2b5n252zk49kR0c4T7PyzpHEdZ1+hFE2Hkk25xROet1O/dW+JLLQjtJsCj4GzbSde
-         JvMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=EaOaR3l9HHxJyu97gRJLmzWQVTWMAcMmNEcB1lcmPNM=;
-        b=SgavM76QD6/FLlTwSRaojNarKxw+9e6IpPjjwxpmgK+05PSnoREwxLehgjSgHBJ5X6
-         nNDdTKaLySPSW6d5AsenlIhGAeD1WSuoMoS+EYQab03VBYkydWPvgftOox9NcjuzkYWs
-         x6sb3tYD1OBxDCBoGN4gLvSEu2DOSas/cYgUM3yUcbX2XlA1m6QKHAEKuoG1r+gVoddr
-         w7OUUD446S0ApMczI2gPfcIjRHwXPnYIcL/Vh1hRdNdxiGaVGO9js79NKjQzYqcrS+kj
-         xO3rHkKIewKjIwzwNjLdKHtrK8FF1GmyU84Tr+7cm5EXXDvSTq18c9K0GovuGOmgZIOc
-         V2dA==
-X-Gm-Message-State: AOAM531DuLOsnz0RnW+GmARRLplgXMLcBwH6fe+pIKyatUV/d+AozeGF
-        Br6FwRPypc5xvWEnUqE27keRsA==
-X-Google-Smtp-Source: ABdhPJxraWfUM9OicOYalfWG6fhp1iNyu1akGB9XabtzprNxns7odWMJc425dq+X61YgK7Y4EfXJrw==
-X-Received: by 2002:a1c:f00a:: with SMTP id a10mr2381038wmb.61.1593077077320;
-        Thu, 25 Jun 2020 02:24:37 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 138sm12311705wma.23.2020.06.25.02.24.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 02:24:36 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 10:24:34 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     jingoohan1@gmail.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 1/8] backlight: lms501kf03: Remove unused const variables
-Message-ID: <20200625092434.szrdyt3sxmxmfajg@holly.lan>
-References: <20200624145721.2590327-1-lee.jones@linaro.org>
- <20200624145721.2590327-2-lee.jones@linaro.org>
+        Thu, 25 Jun 2020 05:25:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593077115;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=dVA4/ziNOuhP2UV2s7csHYRpFcncYdcHmNZ/+uSHbaQ=;
+        b=OoGnm8rUeJWvCbnCYOApbO2ZULNVWvP/mV4OwHJ0nmtQbVh1GAgi60NCFsZy1gtYsomFwy
+        elrzdDm295WoAKe/ZiCIrPM2rs6Ca5xrxj1BPPUgGTsmeC+MeYitg2sHEDY8mCOGieX29l
+        gd3qKyWnaHlvPiBo6QH0mCZ7E/XIpLA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-456-vklKhMziMEmviBvmhP0vdQ-1; Thu, 25 Jun 2020 05:25:13 -0400
+X-MC-Unique: vklKhMziMEmviBvmhP0vdQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51599464;
+        Thu, 25 Jun 2020 09:25:12 +0000 (UTC)
+Received: from starship (unknown [10.35.206.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C973612A5;
+        Thu, 25 Jun 2020 09:25:11 +0000 (UTC)
+Message-ID: <a98b0f0ebe0c23615a76f1d23f25fd0c84835e6b.camel@redhat.com>
+Subject: Search function in xconfig is partially broken after recent changes
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Date:   Thu, 25 Jun 2020 12:25:10 +0300
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200624145721.2590327-2-lee.jones@linaro.org>
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 03:57:14PM +0100, Lee Jones wrote:
-> W=1 kernel build reports:
-> 
->  drivers/video/backlight/lms501kf03.c:96:28: warning: ‘seq_sleep_in’ defined but not used [-Wunused-const-variable=]
->  96 | static const unsigned char seq_sleep_in[] = {
->  | ^~~~~~~~~~~~
->  drivers/video/backlight/lms501kf03.c:92:28: warning: ‘seq_up_dn’ defined but not used [-Wunused-const-variable=]
->  92 | static const unsigned char seq_up_dn[] = {
->  | ^~~~~~~~~
-> 
-> Either 'seq_sleep_in' nor 'seq_up_dn' have been used since the
-> driver first landed in 2013.
-> 
-> Cc: <stable@vger.kernel.org>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Hi!
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+I noticed that on recent kernels the search function in xconfig is partially broken.
+This means that when you select a found entry, it is not selected in the main window,
+something that I often do to find some entry near the area I would like to modify,
+and then use main window to navigate/explore that area.
 
+Reverting these commits helps restore the original behavier:
 
-> ---
->  drivers/video/backlight/lms501kf03.c | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/lms501kf03.c b/drivers/video/backlight/lms501kf03.c
-> index 8ae32e3573c1a..c1bd02bb8b2ee 100644
-> --- a/drivers/video/backlight/lms501kf03.c
-> +++ b/drivers/video/backlight/lms501kf03.c
-> @@ -89,14 +89,6 @@ static const unsigned char seq_rgb_gamma[] = {
->  	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
->  };
->  
-> -static const unsigned char seq_up_dn[] = {
-> -	0x36, 0x10,
-> -};
-> -
-> -static const unsigned char seq_sleep_in[] = {
-> -	0x10,
-> -};
-> -
->  static const unsigned char seq_sleep_out[] = {
->  	0x11,
->  };
-> -- 
-> 2.25.1
-> 
+b311142fcfd37b58dfec72e040ed04949eb1ac86 - kconfig: qconf: fix support for the split view mode
+cce1faba82645fee899ccef5b7d3050fed3a3d10 - kconfig: qconf: fix the content of the main widget
+
+I have Qt5 5.13.2 from fedora 31 (5.13.2-1.fc31)
+
+Could you explain what these commits are supposed to fix?
+I mostly use the split view mode too and it does appear to work for me with these commits reverted as well.
+
+Another question is do you know how to run the qconf standalone? It appears to crash when I attempt to do so,
+althought I checked that I pass correct command line to it, and use the same current directory.
+I guess PATH or something is set by the makefile, but I was unable yet to find out what exactly breaks it.
+
+This is what I see:
+
+[mlevitsk@starship ~/UPSTREAM/linux-kernel/src]$./scripts/kconfig/qconf Kconfig
+sh: /scripts/gcc-version.sh: No such file or directory
+init/Kconfig:34: syntax error
+init/Kconfig:33: invalid statement
+init/Kconfig:34: invalid statement
+sh: /scripts/ld-version.sh: No such file or directory
+sh: --version: command not found
+init/Kconfig:39: syntax error
+init/Kconfig:38: invalid statement
+sh: /scripts/clang-version.sh: No such file or directory
+init/Kconfig:49: syntax error
+init/Kconfig:48: invalid statement
+Recursive inclusion detected.
+Inclusion path:
+
+I ended up hacking the Makefile to run gdb on xconfig and I also hacked it to add -g2 to gcc,
+as it looks like CFLAGS and CXXFLAGS don't affect build of xconfig.
+
+I tried to debug this is a bit with mixed success but still I don't see the smoking gun.
+
+Best regards,
+	Maxim Levitsky
+
