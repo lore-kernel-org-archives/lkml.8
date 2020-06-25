@@ -7,96 +7,114 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A840AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3082820709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9021D20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390542AbgFYIDf (ORCPT
+        id S2390600AbgFYIDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:03:35 -0400
-Received: from 8bytes.org ([81.169.241.247]:48846 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390491AbgFYIDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:03:33 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 3895C412; Thu, 25 Jun 2020 10:03:31 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4/4] KVM: SVM: Rename svm_nested_virtualize_tpr() to nested_svm_virtualize_tpr()
-Date:   Thu, 25 Jun 2020 10:03:25 +0200
-Message-Id: <20200625080325.28439-5-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200625080325.28439-1-joro@8bytes.org>
-References: <20200625080325.28439-1-joro@8bytes.org>
+        Thu, 25 Jun 2020 04:03:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44946 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390553AbgFYIDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:03:38 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 466B960EC52E8A581F40;
+        Thu, 25 Jun 2020 16:03:37 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 25 Jun 2020 16:03:26 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <catalin.marinas@arm.com>, <peterz@infradead.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>,
+        <aneesh.kumar@linux.ibm.com>, <akpm@linux-foundation.org>,
+        <npiggin@gmail.com>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
+        <kuhn.chenqun@huawei.com>
+Subject: [RESEND PATCH v5 2/6] arm64: Add level-hinted TLB invalidation helper
+Date:   Thu, 25 Jun 2020 16:03:10 +0800
+Message-ID: <20200625080314.230-3-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200625080314.230-1-yezhenyu2@huawei.com>
+References: <20200625080314.230-1-yezhenyu2@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Marc Zyngier <maz@kernel.org>
 
-Match the naming with other nested svm functions.
+Add a level-hinted TLB invalidation helper that only gets used if
+ARMv8.4-TTL gets detected.
 
-No functional changes.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/x86/kvm/svm/svm.c | 6 +++---
- arch/x86/kvm/svm/svm.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/tlbflush.h | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index e0b0321d95d4..b0d551bcf2a0 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3040,7 +3040,7 @@ static void update_cr8_intercept(struct kvm_vcpu *vcpu, int tpr, int irr)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index bc3949064725..8adbd6fd8489 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -10,6 +10,7 @@
  
--	if (svm_nested_virtualize_tpr(vcpu))
-+	if (nested_svm_virtualize_tpr(vcpu))
- 		return;
+ #ifndef __ASSEMBLY__
  
- 	clr_cr_intercept(svm, INTERCEPT_CR8_WRITE);
-@@ -3234,7 +3234,7 @@ static inline void sync_cr8_to_lapic(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
++#include <linux/bitfield.h>
+ #include <linux/mm_types.h>
+ #include <linux/sched.h>
+ #include <asm/cputype.h>
+@@ -59,6 +60,34 @@
+ 		__ta;						\
+ 	})
  
--	if (svm_nested_virtualize_tpr(vcpu))
-+	if (nested_svm_virtualize_tpr(vcpu))
- 		return;
- 
- 	if (!is_cr_intercept(svm, INTERCEPT_CR8_WRITE)) {
-@@ -3248,7 +3248,7 @@ static inline void sync_lapic_to_cr8(struct kvm_vcpu *vcpu)
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	u64 cr8;
- 
--	if (svm_nested_virtualize_tpr(vcpu) ||
-+	if (nested_svm_virtualize_tpr(vcpu) ||
- 	    kvm_vcpu_apicv_active(vcpu))
- 		return;
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 003e89008331..8907efda0b0a 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -365,7 +365,7 @@ void svm_set_gif(struct vcpu_svm *svm, bool value);
- #define NESTED_EXIT_DONE	1	/* Exit caused nested vmexit  */
- #define NESTED_EXIT_CONTINUE	2	/* Further checks needed      */
- 
--static inline bool svm_nested_virtualize_tpr(struct kvm_vcpu *vcpu)
-+static inline bool nested_svm_virtualize_tpr(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 
++#define TLBI_TTL_MASK	GENMASK_ULL(47, 44)
++
++#define __tlbi_level(op, addr, level) do {			\
++	u64 arg = addr;						\
++								\
++	if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL) &&	\
++	    level) {						\
++		u64 ttl = level;				\
++								\
++		switch (PAGE_SIZE) {				\
++		case SZ_4K:					\
++			ttl |= 1 << 2;				\
++			break;					\
++		case SZ_16K:					\
++			ttl |= 2 << 2;				\
++			break;					\
++		case SZ_64K:					\
++			ttl |= 3 << 2;				\
++			break;					\
++		}						\
++								\
++		arg &= ~TLBI_TTL_MASK;				\
++		arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);		\
++	}							\
++								\
++	__tlbi(op,  arg);					\
++} while (0)
++
+ /*
+  *	TLB Invalidation
+  *	================
 -- 
-2.27.0
+2.26.2
+
 
