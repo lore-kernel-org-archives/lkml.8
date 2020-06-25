@@ -2,168 +2,154 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C24CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41602C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 691E5214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VC01qKk3"
+	by mail.kernel.org (Postfix) with ESMTP id 299E32072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390330AbgFYI7k (ORCPT
+        id S2403829AbgFYI75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:59:40 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59440 "EHLO mail.skyhub.de"
+        Thu, 25 Jun 2020 04:59:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:28658 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389430AbgFYI7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:59:40 -0400
-Received: from zn.tnic (p200300ec2f0ed10059a0945b2d1dc694.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d100:59a0:945b:2d1d:c694])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 697551EC0220;
-        Thu, 25 Jun 2020 10:59:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593075578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=rObu+L/lbl0DmC4rLxAJmp4yw0uI7VSyZYWkbmQZLlc=;
-        b=VC01qKk3xbxxEtMBmhvvd3+fZchSJ8r+9RhuLzxkipm0dHSCR6jAeTlRc8SNiPyQfhmU7p
-        InaYXnEYc3ajYiyVS2854IXmr9hMoRB3601Zp6AJ3x9TbCDHhqj8jcGNuqaWyMeaL4U4FN
-        2Yxq3MCvxUMoVA+IFfoQ2EKG1oaBhD0=
-Date:   Thu, 25 Jun 2020 10:59:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 03/21] x86/mm: x86/sgx: Signal SIGSEGV with PF_SGX
-Message-ID: <20200625085931.GB20319@zn.tnic>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-4-jarkko.sakkinen@linux.intel.com>
+        id S2390799AbgFYI75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:59:57 -0400
+IronPort-SDR: NzKpja60UmIFCrSIA6TVNe6bP9JnZriKccdvruaxk90GAzwt3Gl5S7aKj3bh9kH7s0yyS3WJKJ
+ rJP4U2tQvHOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="143908210"
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="143908210"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 01:59:56 -0700
+IronPort-SDR: NI7sm4ZOpFRULsttxgjrTh7px59jtpVeir7TfQNWM97K7HnZ9T+6/EiB+tB9T76FT7Za3RiUKw
+ 5vPOEJ1DbDyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="275960986"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 25 Jun 2020 01:59:56 -0700
+Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
+        by linux.intel.com (Postfix) with ESMTP id 04F895805B5;
+        Thu, 25 Jun 2020 01:59:52 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
+ <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
+ <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+ <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+ <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <9a8f4a3e-c94a-b5bf-2715-03b0439f9fe7@linux.intel.com>
+Date:   Thu, 25 Jun 2020 16:59:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200617220844.57423-4-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:08:25AM +0300, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> Include SGX bit to the PF error codes and throw SIGSEGV with PF_SGX when
-> a #PF with SGX set happens.
-> 
-> CPU throws a #PF with the SGX bit in the event of Enclave Page Cache Map
-				   ^
-				   set
 
-> (EPCM) conflict. The EPCM is a CPU-internal table, which describes the
-> properties for a enclave page. Enclaves are measured and signed software
-> entities, which SGX hosts. [1]
-> 
-> Although the primary purpose of the EPCM conflict checks  is to prevent
-> malicious accesses to an enclave, an illegit access can happen also for
-> legit reasons.
-> 
-> All SGX reserved memory, including EPCM is encrypted with a transient
-> key that does not survive from the power transition. Throwing a SIGSEGV
-> allows user space software react when this happens (e.g. rec-create the
-			    ^
-			    to				   recreate
 
-> enclave, which was invalidated).
-> 
-> [1] Intel SDM: 36.5.1 Enclave Page Cache Map (EPCM)
-> 
-> Acked-by: Jethro Beekman <jethro@fortanix.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/include/asm/traps.h |  1 +
->  arch/x86/mm/fault.c          | 13 +++++++++++++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-> index 714b1a30e7b0..ee3617b67bf4 100644
-> --- a/arch/x86/include/asm/traps.h
-> +++ b/arch/x86/include/asm/traps.h
-> @@ -58,5 +58,6 @@ enum x86_pf_error_code {
->  	X86_PF_RSVD	=		1 << 3,
->  	X86_PF_INSTR	=		1 << 4,
->  	X86_PF_PK	=		1 << 5,
-> +	X86_PF_SGX	=		1 << 15,
+On 25/6/2020 1:58 pm, Uwe Kleine-König wrote:
+> On Thu, Jun 25, 2020 at 12:23:54PM +0800, Tanwar, Rahul wrote:
+>> Hi Philipp,
+>>
+>> On 18/6/2020 8:25 pm, Philipp Zabel wrote:
+>>> Hi Rahul,
+>>>
+>>> On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
+>>>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>>>> This PWM controller does not have any other consumer, it is a
+>>>> dedicated PWM controller for fan attached to the system. Add
+>>>> driver for this PWM fan controller.
+>>>>
+>>>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>>>> ---
+>>>>  drivers/pwm/Kconfig         |   9 +
+>>>>  drivers/pwm/Makefile        |   1 +
+>>>>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 410 insertions(+)
+>>>>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+>>>>
+>>> [...]
+>>>> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+>>>> new file mode 100644
+>>>> index 000000000000..3c7077acb161
+>>>> --- /dev/null
+>>>> +++ b/drivers/pwm/pwm-intel-lgm.c
+>>>> @@ -0,0 +1,400 @@
+>>> [...]
+>>>> +static int lgm_pwm_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct lgm_pwm_chip *pc;
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	void __iomem *io_base;
+>>>> +	int ret;
+>>>> +
+>>>> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+>>>> +	if (!pc)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	io_base = devm_platform_ioremap_resource(pdev, 0);
+>>>> +	if (IS_ERR(io_base))
+>>>> +		return PTR_ERR(io_base);
+>>>> +
+>>>> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
+>>>> +	if (IS_ERR(pc->regmap)) {
+>>>> +		ret = PTR_ERR(pc->regmap);
+>>>> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	pc->clk = devm_clk_get(dev, NULL);
+>>>> +	if (IS_ERR(pc->clk)) {
+>>>> +		ret = PTR_ERR(pc->clk);
+>>>> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	pc->rst = devm_reset_control_get(dev, NULL);
+>>>> +	if (IS_ERR(pc->rst)) {
+>>>> +		ret = PTR_ERR(pc->rst);
+>>>> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
+>>>> +		return ret;
+>>>> +	}
+>>> Please use devm_reset_control_get_exclusive() to make it explicit an
+>>> that exclusive reset control is requested. Given how the reset control
+>>> is used, I think this driver could also use
+>>> devm_reset_control_get_shared() to potentially allow sharing a reset
+>>> line with other devices.
+>> devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusive().
+>> Code as below:
+>> static inline struct reset_control *devm_reset_control_get(
+>>                                 struct device *dev, const char *id)
+>> {
+>>         return devm_reset_control_get_exclusive(dev, id);
+>> }
+>> Am i missing something else?
+> Obviously you're missing the comment above of_reset_control_get about
+> some functions being compatibility wrappers.
 
-Needs to be added to the doc above it.
+Oops, so sorry totally missed/overlooked that. Will update in v3. Thanks.
 
->  #endif /* _ASM_X86_TRAPS_H */
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 66be9bd60307..25d48aae36c1 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -1055,6 +1055,19 @@ access_error(unsigned long error_code, struct vm_area_struct *vma)
->  	if (error_code & X86_PF_PK)
->  		return 1;
->  
-> +	/*
-> +	 * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
-> +	 * access is allowed by the PTE but not the EPCM. This usually happens
-> +	 * when the EPCM is yanked out from under us, e.g. by hardware after a
-> +	 * suspend/resume cycle. In any case, software, i.e. the kernel, can't
-> +	 * fix the source of the fault as the EPCM can't be directly modified by
-> +	 * software. Handle the fault as an access error in order to signal
-> +	 * userspace so that userspace can rebuild their enclave(s), even though
-> +	 * userspace may not have actually violated access permissions.
-> +	 */
-
-Lemme check whether I understand this correctly: userspace must check
-whether the SIGSEGV is generated on an access to an enclave page?
-
-Also, do I see it correctly that when this happens, dmesg will have
-
-        printk("%s%s[%d]: segfault at %lx ip %px sp %px error %lx",
-
-due to:
-
-       if (likely(show_unhandled_signals))
-               show_signal_msg(regs, error_code, address, tsk);
-
-which does:
-
-        if (!unhandled_signal(tsk, SIGSEGV))
-                return;
-
-or is the task expected to register a SIGSEGV handler so that the
-segfault doesn't land in dmesg?
-
-If so, are we documenting this?
-
-If not, then we should not issue any "segfault" messages to dmesg
-because that would be wrong.
-
-Or maybe I'm not seeing it right but I don't have the hardware to test
-this out...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+Rahul
