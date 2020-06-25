@@ -2,191 +2,116 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F31DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1974C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 100D920709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:47:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I+8PpCU9"
+	by mail.kernel.org (Postfix) with ESMTP id 9AA3820768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406852AbgFYVrK (ORCPT
+        id S2391214AbgFYVuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:47:10 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20234 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404502AbgFYVrJ (ORCPT
+        Thu, 25 Jun 2020 17:50:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58046 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390020AbgFYVuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:47:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593121627;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=kgGg8jMkbvcZ8iFUP5N32zhARfU1/gNnbQngU0bR5Hg=;
-        b=I+8PpCU9yA2Mh31kPUoIdN/acufsAX46PXRvP8YBSJYHxkttreyaQiqczJStojdtH2GWBQ
-        K5c2WYNHsnnwLTXMlvDBLmNMBAwKX51dBsWHDSdtscu6GcA7Q+pE1qvGGldPF1KORG/Gus
-        Tv92WrHld0l3bm2Wiv8FLmDFvAUu9wM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-mZZ0iYCOMZ-QZKedegce-g-1; Thu, 25 Jun 2020 17:47:05 -0400
-X-MC-Unique: mZZ0iYCOMZ-QZKedegce-g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B53F4800C64;
-        Thu, 25 Jun 2020 21:47:04 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-116-4.rdu2.redhat.com [10.10.116.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A9C915C240;
-        Thu, 25 Jun 2020 21:47:01 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 4C3E6220244; Thu, 25 Jun 2020 17:47:01 -0400 (EDT)
-Date:   Thu, 25 Jun 2020 17:47:01 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     virtio-fs@redhat.com, vkuznets@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com
-Subject: [RFC PATCH] kvm,x86: Exit to user space in case of page fault error
-Message-ID: <20200625214701.GA180786@redhat.com>
+        Thu, 25 Jun 2020 17:50:04 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PLWoMX011642;
+        Thu, 25 Jun 2020 17:50:03 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux03y1q7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:50:02 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PLk62X018500;
+        Thu, 25 Jun 2020 21:50:02 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 31uurw32jt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 21:50:01 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PLo1mK41288186
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 21:50:01 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2ADE42805A;
+        Thu, 25 Jun 2020 21:50:01 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A94228065;
+        Thu, 25 Jun 2020 21:50:01 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 21:50:00 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jarkko.sakkinen@linux.intel.com, linux-acpi@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v7 0/2] tpm2: Make TPM2 logs accessible for non-UEFI firmware
+Date:   Thu, 25 Jun 2020 17:49:58 -0400
+Message-Id: <20200625215000.2052086-1-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_19:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 impostorscore=0 cotscore=-2147483648
+ bulkscore=0 adultscore=0 mlxlogscore=641 mlxscore=0 priorityscore=1501
+ spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006250125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Page fault error handling behavior in kvm seems little inconsistent when
-page fault reports error. If we are doing fault synchronously
-then we capture error (-EFAULT) returned by __gfn_to_pfn_memslot() and
-exit to user space and qemu reports error, "error: kvm run failed Bad address".
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-But if we are doing async page fault, then async_pf_execute() will simply
-ignore the error reported by get_user_pages_remote() or
-by kvm_mmu_do_page_fault(). It is assumed that page fault was successful
-and either a page ready event is injected in guest or guest is brought
-out of artificial halt state and run again. In both the cases when guest
-retries the instruction, it takes exit again as page fault was not
-successful in previous attempt. And then this infinite loop continues
-forever.
+This series of patches adds an optional extensions for the TPM2 ACPI table
+with additional fields found in the TPM2 TCG ACPI specification (reference
+is in the patch) that allow access to the log's address and its size. We
+then modify the code that so far only enables access to a TPM 1.2's log for
+a TPM2 as well. This then enables access to the TPM2's log on non-UEFI
+system that for example run SeaBIOS.
 
-Trying fault in a loop will make sense if error is temporary and will
-be resolved on retry. But I don't see any intention in the code to
-determine if error is temporary or not.  Whether to do fault synchronously
-or asynchronously, depends on so many variables but none of the varibales
-is whether error is temporary or not. (kvm_can_do_async_pf()).
+   Stefan
 
-And that makes it very inconsistent or unpredictable to figure out whether
-kvm will exit to qemu with error or it will just retry and go into an
-infinite loop.
+v6->v7:
+ - Added empty lines and R-b.
 
-This patch tries to make this behavior consistent. That is instead of
-getting into infinite loop of retrying page fault, exit to user space
-and stop VM if page fault error happens.
+v5->v6:
+ - Moved extensions of TPM2 table into acpi_tpm2_phy.
 
-In future this can be improved by injecting errors into guest. As of
-now we don't have any race free method to inject errors in guest.
+v4->v5:
+ - Added R-bs and A-bs.
 
-When page fault error happens in async path save that pfn and when next
-time guest retries, do a sync fault instead of async fault. So that if error
-is encountered, we exit to qemu and avoid infinite loop.
+v3->v4:
+  - Repost as one series
 
-As of now only one error pfn is stored and that means it could be
-overwritten before next a retry from guest happens. But this is
-just a hint and if we miss it, some other time we will catch it.
-If this becomes an issue, we could maintain an array of error
-gfn later to help ease the issue.
+v2->v3:
+  - Split the series into two separate patches
+  - Added comments to ACPI table fields
+  - Added check for null pointer to log area and zero log size
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/mmu.h              |  2 +-
- arch/x86/kvm/mmu/mmu.c          |  2 +-
- arch/x86/kvm/x86.c              | 14 +++++++++++---
- 4 files changed, 14 insertions(+), 5 deletions(-)
+v1->v2:
+  - Repost of the series
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index be5363b21540..3c0677b9d3d5 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -778,6 +778,7 @@ struct kvm_vcpu_arch {
- 		unsigned long nested_apf_token;
- 		bool delivery_as_pf_vmexit;
- 		bool pageready_pending;
-+		gfn_t error_gfn;
- 	} apf;
- 
- 	/* OSVW MSRs (AMD only) */
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 444bb9c54548..d0a2a12c7bb6 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -60,7 +60,7 @@ void kvm_init_mmu(struct kvm_vcpu *vcpu, bool reset_roots);
- void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer);
- void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
- 			     bool accessed_dirty, gpa_t new_eptp);
--bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
-+bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn);
- int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
- 				u64 fault_address, char *insn, int insn_len);
- 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 76817d13c86e..a882a6a9f7a7 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4078,7 +4078,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
- 	if (!async)
- 		return false; /* *pfn has correct page already */
- 
--	if (!prefault && kvm_can_do_async_pf(vcpu)) {
-+	if (!prefault && kvm_can_do_async_pf(vcpu, cr2_or_gpa >> PAGE_SHIFT)) {
- 		trace_kvm_try_async_get_page(cr2_or_gpa, gfn);
- 		if (kvm_find_async_pf_gfn(vcpu, gfn)) {
- 			trace_kvm_async_pf_doublefault(cr2_or_gpa, gfn);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3b92db412335..a6af7e9831b9 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10380,7 +10380,9 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
- 	      work->arch.cr3 != vcpu->arch.mmu->get_guest_pgd(vcpu))
- 		return;
- 
--	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true);
-+	r = kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true);
-+	if (r < 0)
-+		vcpu->arch.apf.error_gfn = work->cr2_or_gpa >> PAGE_SHIFT;
- }
- 
- static inline u32 kvm_async_pf_hash_fn(gfn_t gfn)
-@@ -10490,7 +10492,7 @@ static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
- 	return true;
- }
- 
--bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
-+bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	if (unlikely(!lapic_in_kernel(vcpu) ||
- 		     kvm_event_needs_reinjection(vcpu) ||
-@@ -10504,7 +10506,13 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
- 	 * If interrupts are off we cannot even use an artificial
- 	 * halt state.
- 	 */
--	return kvm_arch_interrupt_allowed(vcpu);
-+	if (!kvm_arch_interrupt_allowed(vcpu))
-+		return false;
-+
-+	if (vcpu->arch.apf.error_gfn == gfn)
-+		return false;
-+
-+	return true;
- }
- 
- bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+
+
+Stefan Berger (2):
+  acpi: Extend TPM2 ACPI table with missing log fields
+  tpm: Add support for event log pointer found in TPM2 ACPI table
+
+ drivers/char/tpm/eventlog/acpi.c | 62 +++++++++++++++++++++-----------
+ include/acpi/actbl3.h            |  7 ++++
+ 2 files changed, 48 insertions(+), 21 deletions(-)
+
 -- 
-2.25.4
+2.26.2
 
