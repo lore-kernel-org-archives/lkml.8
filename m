@@ -7,65 +7,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA20C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F851C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 051F22076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BAE52065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BoLnBkwq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmCpEbSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406545AbgFYTRU (ORCPT
+        id S2390996AbgFYTRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35120 "EHLO
+        Thu, 25 Jun 2020 15:17:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390775AbgFYTRR (ORCPT
+        with ESMTP id S2390701AbgFYTRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:17:17 -0400
+        Thu, 25 Jun 2020 15:17:21 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB436C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:16 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so7035222wrm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3814AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:21 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j4so4566808wrp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o1XJQv3xdST2ri9dQSPRqTi+utLoroqVOFsqThWptWg=;
-        b=BoLnBkwqv59Kv2JXYWfehBShW2dawYLjjfGT83f2LDKPJ9DgeFbYuYiBm6hc1IninT
-         NM9ehe+OWD5qfZiGF1uCZ9zhVMIMIyI5CnwksIQFJZV6Pbw5GBXKCGQVq/sv6WhYD/C0
-         bQXZOeTzc7Jzg8nOMOU3Rih1rtIpcJL8Z+xtAw0oodBjpYyJOEB40dl73dwhB8AZa5kY
-         lwv5HZCL81ivLPF8dLnO7OgYWsxtDGdFTuN8lvKVuBb0Ts6cv7B2a7sfnpuxG4qqktkD
-         0+yBMZMag2MBjMaz6Pscwv1+3auLTu8n05bYIQz6+DgEl9C+19kfCrxi3gTSXcsYHul1
-         KQXw==
+        bh=j4djQhcgSgTg/9mtm4BHCd5MDCRCq+1jmLB+caUyB0M=;
+        b=tmCpEbSO5A63g/ncvKbOwmY8ndQGqysFj9YM7YJH9vcFA1KQbqIHeegdH4VZq2Sfzg
+         1nO++r+wXM140SabSVtpFxRLswNTuUsjqQtyAN006BO9tYL+i2dFGpOaF+8aGSmddfwN
+         oDVjX1ZE6aX+Alb9sEJo5Br2x47SYFxxIqHxUVWywWMbDeVeEZbU8szbVjRRUqW+Piyo
+         TbvuDf+7UoMFVYcfhqOpPVKDCg2cVqsPjxvEBI+zrgTresjCjMBgoXwiH8pv0s6yok1v
+         qflrl21jKsf3H2N+5P7wTPXGDnUxTh/TDx75VTRMwjzJsmrxr3Hh3+XnITkjaGmBg4v1
+         RoBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o1XJQv3xdST2ri9dQSPRqTi+utLoroqVOFsqThWptWg=;
-        b=NEn1viVzrcO45+530SVKJ++o6sjPPA1IC54+zz+0Gyl8CqGZ/VQ3YhUR4LmYGkR6Ff
-         SdkW3pmIioFbiZ15OUZwzGZZuT3qTyGF18sh4ECoyqKdLcFik2kUGsKgL6YNQoqDiC0A
-         m24Pdw4Zzc6Iub2NRKfmEnc6qqtHkGkD4Hkh51k7Vfw9sMiopy5ic0iSmuUPf6xOB0Nj
-         /wsbAKo2ZrDRPRs3OgIhimFb11usuy9GZBS2ZrKOsyxx4JfXMZ18x3woSInpsWt7DzMe
-         0LPTHUR5epR07T5ZsD4SYYps6sLARIcPPp8p5tMZIJp8Sgz5RTb1YKifucwbpuSQOouz
-         6WFw==
-X-Gm-Message-State: AOAM5306LJkjBxaTjvAeo6pzL+5fK6ptV3U8VtJ5FKSE/hpQSPddQJXd
-        nd+8r8LouzpRT8wp+dTGdmCHMU8jxQjvJA==
-X-Google-Smtp-Source: ABdhPJxtSqoSA4WAktcHqgHNSJc/uRopu59O8Pv32mWtJTYz7hbM01rHb3X/SSRuT+mhPP39eykD8A==
-X-Received: by 2002:adf:84e2:: with SMTP id 89mr34557885wrg.139.1593112635636;
-        Thu, 25 Jun 2020 12:17:15 -0700 (PDT)
+        bh=j4djQhcgSgTg/9mtm4BHCd5MDCRCq+1jmLB+caUyB0M=;
+        b=ndqxaPnCVXvGab/n9Eg0y1FhkGAUEeOtduyQkRMmbJF4LoBoZ56U7AIeYnd/q4STAe
+         9ed+rZBrLyrf/9MU4bdoDR1CKE1SKmUOy9irkMTfwTpPGkYD2QUnb3rjVSw5oKyuC9HK
+         bsf0oyUof/ReBENqAhWZ10pkX0TZ3aqWggwEMw0RQyt2TzwhcZVK+8r2d/O+584jd/eD
+         ANnZht0zm0lerDM1hFyz6FPRjVDpHZp2hgRi7RNuiGx9CfzYJAwiadqsU99GG0pRpQuQ
+         /iuL4+lxiWGoqw+5GGuqbWfyFYa1xbWppmGftUAKrzDuQHlzwD2xRayHcn3EhwLaefn9
+         43Ug==
+X-Gm-Message-State: AOAM533NCWjBdlfcIp5Lc1nmfznRYqehRnMl8GP6muSsBv8Vap1/WHYy
+        gtp8qWydiG7IicveHSVbaNovFA==
+X-Google-Smtp-Source: ABdhPJxfrQVQDk1A0hJljlXTR/40r15qonzvIABkQ+QNdsonSUnyTjpbtsbUomDnBDW4ZUxRsTCUBg==
+X-Received: by 2002:a05:6000:ca:: with SMTP id q10mr19640747wrx.135.1593112639977;
+        Thu, 25 Jun 2020 12:17:19 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.14
+        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 12:17:15 -0700 (PDT)
+        Thu, 25 Jun 2020 12:17:19 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lgirdwood@gmail.com, broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [RESEND 02/10] regulator: devres: Fix issues with kerneldoc headers
-Date:   Thu, 25 Jun 2020 20:17:00 +0100
-Message-Id: <20200625191708.4014533-3-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [RESEND 05/10] regulator: ab8500: Remove unused embedded struct expand_register
+Date:   Thu, 25 Jun 2020 20:17:03 +0100
+Message-Id: <20200625191708.4014533-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625191708.4014533-1-lee.jones@linaro.org>
 References: <20200625191708.4014533-1-lee.jones@linaro.org>
@@ -76,43 +77,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide descriptions for some missing function args and
-rename others to match the names used.
+Used primarily for the AB8540 which lost support in early 2018.
+It is now deemed safe to remove this legacy data structure.
 
-Fixes the following W=1 warning(s):
+Also fixes W=1 issue:
 
- drivers/regulator/devres.c:187: warning: Function parameter or member 'dev' not described in 'devm_regulator_register'
- drivers/regulator/devres.c:226: warning: Function parameter or member 'dev' not described in 'devm_regulator_unregister'
- drivers/regulator/devres.c:226: warning: Function parameter or member 'rdev' not described in 'devm_regulator_unregister'
- drivers/regulator/devres.c:226: warning: Excess function parameter 'regulator' description in 'devm_regulator_unregister'
+  drivers/regulator/ab8500.c:88: warning: Function parameter or member 'expand_register' not described in 'ab8500_regulator_info'
 
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/regulator/devres.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/regulator/ab8500.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/regulator/devres.c b/drivers/regulator/devres.c
-index 3ea1c170f8402..3f73ce8590007 100644
---- a/drivers/regulator/devres.c
-+++ b/drivers/regulator/devres.c
-@@ -173,6 +173,7 @@ static void devm_rdev_release(struct device *dev, void *res)
+diff --git a/drivers/regulator/ab8500.c b/drivers/regulator/ab8500.c
+index 716ca5bb178e7..47b8b6f7b5715 100644
+--- a/drivers/regulator/ab8500.c
++++ b/drivers/regulator/ab8500.c
+@@ -59,6 +59,7 @@ struct ab8500_shared_mode {
+  * @voltage_bank: bank to control regulator voltage
+  * @voltage_reg: register to control regulator voltage
+  * @voltage_mask: mask to control regulator voltage
++ * @expand_register: 
+  */
+ struct ab8500_regulator_info {
+ 	struct device		*dev;
+@@ -79,12 +80,6 @@ struct ab8500_regulator_info {
+ 	u8 voltage_bank;
+ 	u8 voltage_reg;
+ 	u8 voltage_mask;
+-	struct {
+-		u8 voltage_limit;
+-		u8 voltage_bank;
+-		u8 voltage_reg;
+-		u8 voltage_mask;
+-	} expand_register;
+ };
  
- /**
-  * devm_regulator_register - Resource managed regulator_register()
-+ * @dev:  device to supply
-  * @regulator_desc: regulator to register
-  * @config: runtime configuration for regulator
-  *
-@@ -216,7 +217,8 @@ static int devm_rdev_match(struct device *dev, void *res, void *data)
- 
- /**
-  * devm_regulator_unregister - Resource managed regulator_unregister()
-- * @regulator: regulator to free
-+ * @dev:  device to supply
-+ * @rdev: regulator to free
-  *
-  * Unregister a regulator registered with devm_regulator_register().
-  * Normally this function will not need to be called and the resource
+ /* voltage tables for the vauxn/vintcore supplies */
 -- 
 2.25.1
 
