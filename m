@@ -2,160 +2,277 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE52207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4506920768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="qyHUnORE"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="gN9XWNpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405639AbgFYO7G (ORCPT
+        id S2405720AbgFYO7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:59:06 -0400
-Received: from smtp81.iad3a.emailsrvr.com ([173.203.187.81]:47255 "EHLO
-        smtp81.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405480AbgFYO7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:59:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1593097143;
-        bh=dC98r+6RvKPubtZR6G9FlTj2y2RWC+QNrBt5bA1q3nw=;
-        h=Date:Subject:From:To:From;
-        b=qyHUnORErubwdjmf89kyBJ3FA+qMdS7n2pFDw3iUF+SgNsT6fGCjq9GNXVG4Ko6d9
-         /t/Aod7OufghGrlbZ9LRV8CJ2JPpoAFUsHXUyNT32i1vN0/OrP1Mti7RPMAEeBboiB
-         RiUuPuevv0Ay6ibzHQ3bs8umMguA4N/IULl9G+h0=
-Received: from app3.wa-webapps.iad3a (relay-webapps.rsapps.net [172.27.255.140])
-        by smtp19.relay.iad3a.emailsrvr.com (SMTP Server) with ESMTP id BD3395224;
-        Thu, 25 Jun 2020 10:59:02 -0400 (EDT)
-Received: from deepplum.com (localhost.localdomain [127.0.0.1])
-        by app3.wa-webapps.iad3a (Postfix) with ESMTP id A36D5A14DA;
-        Thu, 25 Jun 2020 10:59:02 -0400 (EDT)
-Received: by apps.rackspace.com
-    (Authenticated sender: dpreed@deepplum.com, from: dpreed@deepplum.com) 
-    with HTTP; Thu, 25 Jun 2020 10:59:02 -0400 (EDT)
-X-Auth-ID: dpreed@deepplum.com
-Date:   Thu, 25 Jun 2020 10:59:02 -0400 (EDT)
-Subject: Re: [PATCH v2] Fix undefined operation VMXOFF during reboot and crash
-From:   "David P. Reed" <dpreed@deepplum.com>
-To:     "David P. Reed" <dpreed@deepplum.com>
-Cc:     "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "X86 ML" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Allison Randal" <allison@lohutok.net>,
-        "Enrico Weigelt" <info@metux.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        "=?utf-8?Q?Peter_Zijlstra_=28Intel=29?=" <peterz@infradead.org>,
-        "Randy Dunlap" <rdunlap@infradead.org>,
-        "Martin Molnar" <martin.molnar.programming@gmail.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Alexandre Chartre" <alexandre.chartre@oracle.com>,
-        "Jann Horn" <jannh@google.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "LKML" <linux-kernel@vger.kernel.org>
+        Thu, 25 Jun 2020 10:59:52 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:39371 "EHLO cmta20.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405378AbgFYO7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:59:52 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id oTLvjwPVKdVYHoTLwj2ekf; Thu, 25 Jun 2020 08:59:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1593097189; bh=kS9SsCkpMQlg1AsMMTel+GfCED0qlRbxQoBGflR0IL8=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=gN9XWNpzAFBoQNiOO3iDqpAgcxZtNuiXNNQNJrP4t5piXhgWa8WwTs5pRlAqEfB8E
+         DRuwY5rLDzyGMVhFfExznXSPdCfP1OtocnwEzkBfUuEn2VPG7h/uQv1bQb7V5cMqMN
+         NpGmXFhAArjP6YQQ75cZXyxCeHjh//xxUrQztED4z00urJ/OM0IkXuzIfTMWnwI4AT
+         6drnuxpn3oai2c/zVC8AV/SZz21KGVDbJfsdsVu7MvPflH58T3D0EAuUjecqsrzwfj
+         dKEGG63i3wF7GTy3gAhScSlBWp0oDLS5jFt+lJurFWnWvFLJVmRkKM1poSDxopoZ72
+         TQSE02NLMUVOg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=Y5CGTSWN c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
+ a=QyXUC8HyAAAA:8 a=LdXAM8slQLsqPH6iZRoA:9 a=IbikBSuLa7uY77AY:21
+ a=ZZ5pfjUoPr37BiCZ:21 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
+Cc:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>, <lenb@kernel.org>
+References: <20200623051233.1419218-1-srinivas.pandruvada@linux.intel.com> <001e01d64976$616de950$2449bbf0$@net>
+In-Reply-To: <001e01d64976$616de950$2449bbf0$@net>
+Subject: RE: [PATCH 1/2] cpufreq: intel_pstate: Allow enable/disable energy efficiency
+Date:   Thu, 25 Jun 2020 07:59:46 -0700
+Message-ID: <000001d64b01$45aceea0$d106cbe0$@net>
 MIME-Version: 1.0
-Content-Type: text/plain;charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Importance: Normal
-X-Priority: 3 (Normal)
-X-Type: plain
-In-Reply-To: <1593096330.105426106@apps.rackspace.com>
-References: <1593096330.105426106@apps.rackspace.com>
-Message-ID: <1593097142.667728396@apps.rackspace.com>
-X-Mailer: webmail/17.3.12-RC
-X-Classification-ID: 1557505d-ce70-4f7c-afe7-581d2aced36c-1-1
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdZJHPAX2aqri8LLTYWzgCMOCZFopAATGg2QAGTxH5A=
+X-CMAE-Envelope: MS4wfNWS11jb4W/IX66r4CSAlgJklVXFs3SWdRTxY+GLmncRQ769HC8/rCumYmR9/RVPChoGzsAUXXxxab79CgPsR+Q/xUIgrpg0ZYW9pJVno1yKuaia5yud
+ WMlUjQjRpkxuEJX9LXOkdkJDhRlwwwMJQM+5wVPEV5lZBi8GmH09DEMWNfge2iXyOBPo6fOHpYNLIF1CT6pEZ/4UWvWldTDWM8l49zqNTXZicAfE0Z0hRnaK
+ SWulSAIQDLfPkNcv3KY25MeMOKIo11mcT3Bdl0fAXJRKjCQE7cujQXqEfpIhrRf6GdzBlv11Mkso1cnmsnLlDHaMAuNP3wNSnArZ73UKkjr7OLaPnvHyc5M6
+ Ws55Cs6A
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correction to my comment below.=0AOn Thursday, June 25, 2020 10:45am, "Davi=
-d P. Reed" <dpreed@deepplum.com> said:=0A=0A> [Sorry: this is resent becaus=
-e my mailer included HTML, rejected by LKML]=0A> Thanks for the response, S=
-ean ... I had thought everyone was too busy to follow up=0A> from the first=
- version.=0A> =C2=A0=0A> I confess I'm not sure why this should be broken u=
-p into a patch series, given=0A> that it is so very small and is all aimed =
-at the same category of bug.=0A> =C2=A0=0A> And the "emergency" path pre-ex=
-isted, I didn't want to propose removing it, since=0A> I assumed it was the=
-re for a reason. I didn't want to include my own judgement as=0A> to whethe=
-r there should only be one path. (I'm pretty sure I didn't find a VMXOFF=0A=
-> in KVM separately from the instance in this include file, but I will chec=
-k).=0AJust checked. Yes, the kvm code's handling of VMXOFF is separate, and=
- though it uses exception masking, seems to do other things, perhaps relate=
-d to nested KVM, but I haven't studied the deep logic of KVM nesting.=0A=0A=
-> =C2=A0=0A> A question: if I make it a series, I have to test each patch d=
-oesn't break=0A> something individually, in order to handle the case where =
-one patch is accepted=0A> and the others are not. Do I need to test each in=
-dividual patch thoroughly as an=0A> independent patch against all those cas=
-es?=0A> I know the combination don't break anything and fixes the issues I'=
-ve discovered=0A> by testing all combinations (and I've done some thorough =
-testing of panics, oopses=0A> crashes, kexec, ... under all combinations of=
- CR4.VMXE enablement and crash source=0A> to verify the fix fixes the probl=
-em's manifestations and to verify that it doesn't=0A> break any of the work=
-ing paths.=0A> =C2=A0=0A> That said, I'm willing to do a v3 "series" based =
-on these suggestions if it will=0A> smooth its acceptance. If it's not goin=
-g to get accepted after doing that, my=0A> motivation is flagging.=0A> On T=
-hursday, June 25, 2020 2:06am, "Sean Christopherson"=0A> <sean.j.christophe=
-rson@intel.com> said:=0A> =0A> =0A> =0A>> On Thu, Jun 11, 2020 at 03:48:18P=
-M -0400, David P. Reed wrote:=0A>> > -/** Disable VMX on the current CPU=0A=
->> > +/* Disable VMX on the current CPU=0A>> > *=0A>> > - * vmxoff causes a=
- undefined-opcode exception if vmxon was not run=0A>> > - * on the CPU prev=
-iously. Only call this function if you know VMX=0A>> > - * is enabled.=0A>>=
- > + * vmxoff causes an undefined-opcode exception if vmxon was not run=0A>=
-> > + * on the CPU previously. Only call this function directly if you know=
- VMX=0A>> > + * is enabled *and* CPU is in VMX root operation.=0A>> > */=0A=
->> > static inline void cpu_vmxoff(void)=0A>> > {=0A>> > - asm volatile ("v=
-mxoff");=0A>> > + asm volatile ("vmxoff" ::: "cc", "memory"); /* clears all=
- flags on success=0A>> */=0A>> > cr4_clear_bits(X86_CR4_VMXE);=0A>> > }=0A>=
-> >=0A>> > @@ -47,17 +47,35 @@ static inline int cpu_vmx_enabled(void)=0A>>=
- > return __read_cr4() & X86_CR4_VMXE;=0A>> > }=0A>> >=0A>> > -/** Disable =
-VMX if it is enabled on the current CPU=0A>> > - *=0A>> > - * You shouldn't=
- call this if cpu_has_vmx() returns 0.=0A>> > +/*=0A>> > + * Safely disable=
- VMX root operation if active=0A>> > + * Note that if CPU is not in VMX roo=
-t operation this=0A>> > + * VMXOFF will fault an undefined operation fault,=
-=0A>> > + * so use the exception masking facility to handle that RARE=0A>> =
-> + * case.=0A>> > + * You shouldn't call this directly if cpu_has_vmx() re=
-turns 0=0A>> > + */=0A>> > +static inline void cpu_vmxoff_safe(void)=0A>> >=
- +{=0A>> > + asm volatile("1:vmxoff\n\t" /* clears all flags on success */=
-=0A>>=0A>> Eh, I wouldn't bother with the comment, there are a million othe=
-r caveats=0A>> with VMXOFF that are far more interesting.=0A>>=0A>> > + "2:=
-\n\t"=0A>> > + _ASM_EXTABLE(1b, 2b)=0A>> > + ::: "cc", "memory");=0A>>=0A>>=
- Adding the memory and flags clobber should be a separate patch.=0A>>=0A>> =
-> + cr4_clear_bits(X86_CR4_VMXE);=0A>> > +}=0A>>=0A>>=0A>> I don't see any =
-value in safe/unsafe variants. The only in-kernel user of=0A>> VMXOFF outsi=
-de of the emergency flows is KVM, which has its own VMXOFF=0A>> helper, i.e=
-. all users of cpu_vmxoff() want the "safe" variant. Just add=0A>> the exce=
-ption fixup to cpu_vmxoff() and call it good.=0A>>=0A>> > +=0A>> > +/*=0A>>=
- > + * Force disable VMX if it is enabled on the current CPU,=0A>> > + * wh=
-en it is unknown whether CPU is in VMX operation.=0A>> > */=0A>> > static i=
-nline void __cpu_emergency_vmxoff(void)=0A>> > {=0A>> > - if (cpu_vmx_enabl=
-ed())=0A>> > - cpu_vmxoff();=0A>> > + if (!cpu_vmx_enabled())=0A>> > + retu=
-rn;=0A>> > + cpu_vmxoff_safe();=0A>>=0A>> Unnecessary churn.=0A>>=0A>> > }=
-=0A>> >=0A>> > -/** Disable VMX if it is supported and enabled on the curre=
-nt CPU=0A>> > +/* Force disable VMX if it is supported on current CPU=0A>> =
-> */=0A>> > static inline void cpu_emergency_vmxoff(void)=0A>> > {=0A>> > d=
-iff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c=0A>> > inde=
-x e040ba6be27b..b0e6b106a67e 100644=0A>> > --- a/arch/x86/kernel/reboot.c=
-=0A>> > +++ b/arch/x86/kernel/reboot.c=0A>> > @@ -540,21 +540,14 @@ static =
-void emergency_vmx_disable_all(void)=0A>> > *=0A>> > * For safety, we will =
-avoid running the nmi_shootdown_cpus()=0A>> > * stuff unnecessarily, but we=
- don't have a way to check=0A>> > - * if other CPUs have VMX enabled. So we=
- will call it only if the=0A>> > - * CPU we are running on has VMX enabled.=
-=0A>> > - *=0A>> > - * We will miss cases where VMX is not enabled on all C=
-PUs. This=0A>> > - * shouldn't do much harm because KVM always enable VMX o=
-n all=0A>> > - * CPUs anyway. But we can miss it on the small window where =
-KVM=0A>> > - * is still enabling VMX.=0A>> > + * if other CPUs have VMX ena=
-bled.=0A>> > */=0A>> > - if (cpu_has_vmx() && cpu_vmx_enabled()) {=0A>> > +=
- if (cpu_has_vmx()) {=0A>> > /* Disable VMX on this CPU. */=0A>> > - cpu_vm=
-xoff();=0A>> > + cpu_emergency_vmxoff();=0A>>=0A>> This also needs to be in=
- a separate patch. And it should use=0A>> __cpu_emergency_vmxoff() instead =
-of cpu_emergency_vmxoff().=0A>>=0A>> >=0A>> > /* Halt and disable VMX on th=
-e other CPUs */=0A>> > nmi_shootdown_cpus(vmxoff_nmi);=0A>> > -=0A>> > }=0A=
->> > }=0A>> >=0A>> > --=0A>> > 2.26.2=0A>> >=0A>>=0A> =0A> =0A
+Hi Srinivas,
+
+I saw your V3.
+I do not understand your reluctance to use
+
+arch/x86/include/asm/msr-index.h
+
+as the place to define anything MSR related.
+Please explain.
+
+One more comment about 1/3 of the way down below.
+
+... Doug
+
+On 2020.06.23 08:53 Doug Smythies wrote:
+> On 2020.06.22 22:13 Srinivas Pandruvada wrote:
+> 
+> > By default intel_pstate driver disables energy efficiency by setting
+> > MSR_IA32_POWER_CTL bit 19 for Kaby Lake desktop CPU model in HWP mode.
+> > This CPU model is also shared by Coffee Lake desktop CPUs. This allows
+> > these systems to reach maximum possible frequency. But this adds power
+> > penalty, which some customers don't want. They want some way to enable/
+> > disable dynamically.
+> >
+> > So, add an additional attribute "energy_efficiency_enable" under
+> > /sys/devices/system/cpu/intel_pstate/ for these CPU models. This allows
+> > to read and write bit 19 ("Disable Energy Efficiency Optimization") in
+> > the MSR IA32_POWER_CTL.
+> >
+> > This attribute is present in both HWP and non-HWP mode as this has an
+> > effect in both modes. Refer to Intel Software Developer's manual for
+> > details. The scope of this bit is package wide.
+> 
+> I do and always have. However these manuals are 1000's of pages,
+> are updated often, and it can be difficult to find the correct page
+> for the correct processor. So it is great that, in general, the same
+> mnemonics are used in the code as the manuals.
+> 
+> >
+> > Suggested-by: Len Brown <lenb@kernel.org>
+> > Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > ---
+> >  Documentation/admin-guide/pm/intel_pstate.rst |  7 +++
+> >  drivers/cpufreq/intel_pstate.c                | 49 ++++++++++++++++++-
+> >  2 files changed, 54 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-
+> > guide/pm/intel_pstate.rst
+> > index 39d80bc29ccd..939bfdc53f4f 100644
+> > --- a/Documentation/admin-guide/pm/intel_pstate.rst
+> > +++ b/Documentation/admin-guide/pm/intel_pstate.rst
+> > @@ -431,6 +431,13 @@ argument is passed to the kernel in the command line.
+> >  	supported in the current configuration, writes to this attribute will
+> >  	fail with an appropriate error.
+> >
+> > +``energy_efficiency_enable``
+> > +	This attribute is only present on platforms, which has CPUs matching
+> > +	Kaby Lake desktop CPU model. By default "energy_efficiency" is disabled
+> 
+> So, why not mention Coffee Lake also, as you did above?
+
+And I still think you need to add "Coffee Lake" here also.
+
+> 
+> > +	on these CPU models in HWP mode by this driver. Enabling energy
+> > +	efficiency may limit maximum operating frequency in both HWP and non
+> > +	HWP mode.
+> > +
+> >  Interpretation of Policy Attributes
+> >  -----------------------------------
+> >
+> > diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> > index 8e23a698ce04..1cf6d06f2314 100644
+> > --- a/drivers/cpufreq/intel_pstate.c
+> > +++ b/drivers/cpufreq/intel_pstate.c
+> > @@ -1218,6 +1218,44 @@ static ssize_t store_hwp_dynamic_boost(struct kobject *a,
+> >  	return count;
+> >  }
+> >
+> > +#define MSR_IA32_POWER_CTL_BIT_EE	19
+> 
+> (same comment as the other day, for another patch) In my opinion and for
+> consistency, this bit should be defined in
+> 
+> arch/x86/include/asm/msr-index.h
+> 
+> like so (I defined the other bits also):
+> 
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index e8370e64a155..1a6084067f18 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -255,6 +255,12 @@
+> 
+>  #define MSR_IA32_POWER_CTL             0x000001fc
+> 
+> +/* POWER_CTL bits (some are model specific): */
+> +
+> +#define POWER_CTL_C1E                  1
+> +#define POWER_CTL_EEO                  19
+> +#define POWER_CTL_RHO                  20
+> +
+>  #define MSR_IA32_MC0_CTL               0x00000400
+>  #define MSR_IA32_MC0_STATUS            0x00000401
+>  #define MSR_IA32_MC0_ADDR              0x00000402
+> 
+> There is another almost identical file at:
+> 
+> tools/arch/x86/include/asm/msr-index.h
+> 
+> and I am not sure which one is the master, but
+> the former contains stuff that the later does not.
+> 
+> I have defined the bits names in a consistent way
+> as observed elsewhere in the file. i.e. drop the
+> "MSR_IA32_" prefix and add the bit.
+> 
+> Now, tying this back to my earlier comment about the
+> manuals:
+> The file "tools/arch/x86/include/asm/msr-index.h"
+> is an excellent gateway reference for those
+> 1000's of pages of software reference manuals.
+> 
+> As a user that uses them all the time, but typically
+> only digs deep into those manuals once every year or
+> two, I find tremendous value added via the msr-index.h
+> file.
+> 
+> > +
+> > +static ssize_t show_energy_efficiency_enable(struct kobject *kobj,
+> > +					     struct kobj_attribute *attr,
+> > +					     char *buf)
+> > +{
+> > +	u64 power_ctl;
+> > +	int enable;
+> > +
+> > +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
+> > +	enable = (power_ctl & BIT(MSR_IA32_POWER_CTL_BIT_EE)) >> MSR_IA32_POWER_CTL_BIT_EE;
+> > +	return sprintf(buf, "%d\n", !enable);
+> > +}
+> > +
+> > +static ssize_t store_energy_efficiency_enable(struct kobject *a,
+> > +					      struct kobj_attribute *b,
+> > +					      const char *buf, size_t count)
+> > +{
+> > +	u64 power_ctl;
+> > +	u32 input;
+> > +	int ret;
+> > +
+> > +	ret = kstrtouint(buf, 10, &input);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mutex_lock(&intel_pstate_driver_lock);
+> > +	rdmsrl(MSR_IA32_POWER_CTL, power_ctl);
+> > +	if (input)
+> > +		power_ctl &= ~BIT(MSR_IA32_POWER_CTL_BIT_EE);
+> > +	else
+> > +		power_ctl |= BIT(MSR_IA32_POWER_CTL_BIT_EE);
+> > +	wrmsrl(MSR_IA32_POWER_CTL, power_ctl);
+> > +	mutex_unlock(&intel_pstate_driver_lock);
+> > +
+> > +	return count;
+> > +}
+> > +
+> >  show_one(max_perf_pct, max_perf_pct);
+> >  show_one(min_perf_pct, min_perf_pct);
+> >
+> > @@ -1228,6 +1266,7 @@ define_one_global_rw(min_perf_pct);
+> >  define_one_global_ro(turbo_pct);
+> >  define_one_global_ro(num_pstates);
+> >  define_one_global_rw(hwp_dynamic_boost);
+> > +define_one_global_rw(energy_efficiency_enable);
+> >
+> >  static struct attribute *intel_pstate_attributes[] = {
+> >  	&status.attr,
+> > @@ -1241,6 +1280,8 @@ static const struct attribute_group intel_pstate_attr_group = {
+> >  	.attrs = intel_pstate_attributes,
+> >  };
+> >
+> > +static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[];
+> > +
+> >  static void __init intel_pstate_sysfs_expose_params(void)
+> >  {
+> >  	struct kobject *intel_pstate_kobject;
+> > @@ -1273,6 +1314,12 @@ static void __init intel_pstate_sysfs_expose_params(void)
+> >  				       &hwp_dynamic_boost.attr);
+> >  		WARN_ON(rc);
+> >  	}
+> > +
+> > +	if (x86_match_cpu(intel_pstate_cpu_ee_disable_ids)) {
+> > +		rc = sysfs_create_file(intel_pstate_kobject,
+> > +				       &energy_efficiency_enable.attr);
+> > +		WARN_ON(rc);
+> > +	}
+> >  }
+> >  /************************** sysfs end ************************/
+> >
+> > @@ -1288,8 +1335,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
+> >  		cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
+> >  }
+> >
+> > -#define MSR_IA32_POWER_CTL_BIT_EE	19
+> > -
+> >  /* Disable energy efficiency optimization */
+> >  static void intel_pstate_disable_ee(int cpu)
+> >  {
+> > --
+> > 2.25.4
+
 
