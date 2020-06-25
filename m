@@ -2,173 +2,187 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E47C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D79C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B6A20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F9920791
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407249AbgFYVfc (ORCPT
+        id S2407252AbgFYVgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:35:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21158 "EHLO mga01.intel.com"
+        Thu, 25 Jun 2020 17:36:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19172 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403961AbgFYVfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:35:31 -0400
-IronPort-SDR: HPmykI6YZnOGrn5sQuoN8thFKQlC5ZHjeg1eDUMSOqMyTFVGhYLSMoPewIAHULdcMpZZwLVIra
- SFL5WZdF+OKg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="163166331"
+        id S2403961AbgFYVgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:36:43 -0400
+IronPort-SDR: 4y+2OUMKHaougP9GJszlcANM/vUPtg/kbOMAympmMAxbv0NfJF6j0jdXBKFoNloV/isoAvh8Hl
+ JFUxvDAPGEdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="133493179"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="163166331"
+   d="scan'208";a="133493179"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:35:30 -0700
-IronPort-SDR: /ij78mFzAEC0wmcngtt+3FRA8yBO6Wxbgay6Vc6+cMMPiGG8kPTfrKU4u8HadKoS2v5AVX81Ml
- 66tH8QOwIjMA==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:36:42 -0700
+IronPort-SDR: XYTf+nAR8gBQmKFSW/9r7Nt1iNG21HoispPXOo8wjUX1ZK79k6ZSE0K/h2bhLQJ6hMaVllWQsB
+ f0J+pfMZj4PA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="479786598"
-Received: from jproldan-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 14:35:27 -0700
-Date:   Fri, 26 Jun 2020 00:35:26 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH v6 2/2] tpm: Add support for event log pointer found in
- TPM2 ACPI table
-Message-ID: <20200625213526.GE20341@linux.intel.com>
-References: <20200625124222.1954580-1-stefanb@linux.vnet.ibm.com>
- <20200625124222.1954580-3-stefanb@linux.vnet.ibm.com>
+   d="scan'208";a="423878481"
+Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 25 Jun 2020 14:36:41 -0700
+Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1joZY0-0001pF-CC; Thu, 25 Jun 2020 21:36:40 +0000
+Date:   Fri, 26 Jun 2020 05:36:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 489eb109cb9da24d05cc23a6c8fa4832766ddcca
+Message-ID: <5ef518e1.Kpq9LqbLbgD8Li8b%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625124222.1954580-3-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:42:22AM -0400, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
-> 
-> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
-> to get the event log from ACPI. If one is found, use it to get the
-> start and length of the log area. This allows non-UEFI systems, such
-> as SeaBIOS, to pass an event log when using a TPM2.
-> 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> ---
->  drivers/char/tpm/eventlog/acpi.c | 59 ++++++++++++++++++++------------
->  1 file changed, 38 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-> index 63ada5e53f13..8b9e33d57f70 100644
-> --- a/drivers/char/tpm/eventlog/acpi.c
-> +++ b/drivers/char/tpm/eventlog/acpi.c
-> @@ -49,9 +49,9 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	void __iomem *virt;
->  	u64 len, start;
->  	struct tpm_bios_log *log;
-> -
-> -	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> -		return -ENODEV;
-> +	struct acpi_table_tpm2 *tbl;
-> +	struct acpi_tpm2_phy *t2phy;
-> +	int format;
->  
->  	log = &chip->log;
->  
-> @@ -61,23 +61,40 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	if (!chip->acpi_dev_handle)
->  		return -ENODEV;
->  
-> -	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> -	status = acpi_get_table(ACPI_SIG_TCPA, 1,
-> -				(struct acpi_table_header **)&buff);
-> -
-> -	if (ACPI_FAILURE(status))
-> -		return -ENODEV;
-> -
-> -	switch(buff->platform_class) {
-> -	case BIOS_SERVER:
-> -		len = buff->server.log_max_len;
-> -		start = buff->server.log_start_addr;
-> -		break;
-> -	case BIOS_CLIENT:
-> -	default:
-> -		len = buff->client.log_max_len;
-> -		start = buff->client.log_start_addr;
-> -		break;
-> +	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> +		status = acpi_get_table("TPM2", 1,
-> +					(struct acpi_table_header **)&tbl);
-> +		if (ACPI_FAILURE(status))
-> +			return -ENODEV;
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 489eb109cb9da24d05cc23a6c8fa4832766ddcca  Merge branch 'WIP.core/headers'
 
-Add empty line.
+elapsed time: 727m
 
-> +		if (tbl->header.length <
-> +				sizeof(*tbl) + sizeof(struct acpi_tpm2_phy))
-> +			return -ENODEV;
+configs tested: 117
+configs skipped: 6
 
-Ditto.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +		t2phy = (void *)tbl + sizeof(*tbl);
-> +		len = t2phy->log_area_minimum_length;
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arc                     haps_hs_smp_defconfig
+powerpc                          g5_defconfig
+mips                        jmr3927_defconfig
+sh                           se7751_defconfig
+arm                       imx_v6_v7_defconfig
+arm                            xcep_defconfig
+arm                      pxa255-idp_defconfig
+arm                          tango4_defconfig
+arm                       mainstone_defconfig
+arm                          moxart_defconfig
+m68k                            q40_defconfig
+sh                          sdk7786_defconfig
+s390                              allnoconfig
+arm                            mps2_defconfig
+arm                             pxa_defconfig
+arm                         lpc18xx_defconfig
+mips                           ip27_defconfig
+arm                     eseries_pxa_defconfig
+mips                      loongson3_defconfig
+i386                             alldefconfig
+nds32                             allnoconfig
+sh                           se7724_defconfig
+mips                     loongson1b_defconfig
+m68k                          amiga_defconfig
+sh                         microdev_defconfig
+microblaze                      mmu_defconfig
+parisc                            allnoconfig
+arm                            lart_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                          rhel-kconfig
+i386                 randconfig-a002-20200624
+i386                 randconfig-a006-20200624
+i386                 randconfig-a003-20200624
+i386                 randconfig-a001-20200624
+i386                 randconfig-a005-20200624
+i386                 randconfig-a004-20200624
+i386                 randconfig-a013-20200624
+i386                 randconfig-a016-20200624
+i386                 randconfig-a012-20200624
+i386                 randconfig-a014-20200624
+i386                 randconfig-a011-20200624
+i386                 randconfig-a015-20200624
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-Ditto.
-
-> +		start = t2phy->log_area_start_address;
-> +		if (!start || !len)
-> +			return -ENODEV;
-
-Ditto.
-
-> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-> +	} else {
-> +		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-> +		status = acpi_get_table(ACPI_SIG_TCPA, 1,
-> +					(struct acpi_table_header **)&buff);
-> +
-
-Remove this empty line.
-
-> +		if (ACPI_FAILURE(status))
-> +			return -ENODEV;
-> +
-> +		switch (buff->platform_class) {
-> +		case BIOS_SERVER:
-> +			len = buff->server.log_max_len;
-> +			start = buff->server.log_start_addr;
-> +			break;
-> +		case BIOS_CLIENT:
-> +		default:
-> +			len = buff->client.log_max_len;
-> +			start = buff->client.log_start_addr;
-> +			break;
-> +		}
-> +		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
->  	}
->  	if (!len) {
->  		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-> @@ -98,7 +115,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
->  	memcpy_fromio(log->bios_event_log, virt, len);
->  
->  	acpi_os_unmap_iomem(virt, len);
-> -	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-> +	return format;
->  
->  err:
->  	kfree(log->bios_event_log);
-> -- 
-> 2.26.2
-
-/Jarkko
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
