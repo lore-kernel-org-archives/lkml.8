@@ -2,73 +2,77 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9325C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B5520706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF73207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405991AbgFYPp3 (ORCPT
+        id S2405959AbgFYPo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:45:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53141 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390568AbgFYPp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:45:26 -0400
-IronPort-SDR: qYM168mb7fqzNYiSlT3cOIGSlkCblynsq86kQ60LwPF5PbrDwg/tCM1sJa9RLvyVNsx0xk9nOX
- MO63iSvpl86Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="125186036"
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="125186036"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 08:45:26 -0700
-IronPort-SDR: 6hat3QxzCrHAtzvAqC+30YG3+TG0IfZV1giYLmqQzMcnJRDab2zndHQQZYp/ICUVmSEMrriBa6
- eSemNFRiEtUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="297570162"
-Received: from xpf-desktop.sh.intel.com ([10.239.13.107])
-  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2020 08:45:24 -0700
-Date:   Thu, 25 Jun 2020 23:55:16 +0800
-From:   Pengfei Xu <pengfei.xu@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Heng Su <heng.su@intel.com>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kai Svahn <kai.svahn@intel.com>
-Subject: Re: [PATCH v2] Kernel selftests: TPM2: upgrade TPM2 tests from
- Python 2 to Python 3
-Message-ID: <20200625155516.GA4415@xpf-desktop.sh.intel.com>
-References: <20200618081502.15302-1-pengfei.xu@intel.com>
- <20200622214613.GA22727@linux.intel.com>
- <20200622214739.GB22727@linux.intel.com>
- <20200623114155.GA15561@xpf-desktop.sh.intel.com>
- <20200624231457.GB21758@linux.intel.com>
+        Thu, 25 Jun 2020 11:44:58 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56893 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405908AbgFYPow (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 11:44:52 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id CCA2A1BF211;
+        Thu, 25 Jun 2020 15:44:49 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, kernel test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH net-next 3/8] net: phy: mscc: ptp: fix a smatch error
+Date:   Thu, 25 Jun 2020 17:42:06 +0200
+Message-Id: <20200625154211.606591-4-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200625154211.606591-1-antoine.tenart@bootlin.com>
+References: <20200625154211.606591-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624231457.GB21758@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-25 at 02:14:57 +0300, Jarkko Sakkinen wrote:
-> On Tue, Jun 23, 2020 at 07:41:55PM +0800, Pengfei Xu wrote:
-> >   I tried to use bytes(parm, encoding='UTF-8') way, it met the situation
-> >   that sometimes parm is string, sometimes parm is bytes.
-> 
-> We need to do right things right, i.e. you should fix in the call site,
-> not in the implementation.
+The following error was reported by smatch:
+vsc85xx_ts_read_csr() error: uninitialized symbol 'blk_hw'.
 
-  Ok, I agree, I will have a try. :)
-  Thanks!
+In practice this is very unlikely, as all the block identifiers given to
+this functions are handled and described in an enum. The smatch error is
+fixed by doing what is already done in vsc85xx_ts_write_csr: using the
+"PROCESSOR" block by default.
 
-> 
-> /Jarkko
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/phy/mscc/mscc_ptp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
+index 17256d85cedf..030a56c9a06d 100644
+--- a/drivers/net/phy/mscc/mscc_ptp.c
++++ b/drivers/net/phy/mscc/mscc_ptp.c
+@@ -75,6 +75,7 @@ static u32 vsc85xx_ts_read_csr(struct phy_device *phydev, enum ts_blk blk,
+ 		blk_hw = base_port ? EGRESS_ENGINE_0 : EGRESS_ENGINE_1;
+ 		break;
+ 	case PROCESSOR:
++	default:
+ 		blk_hw = base_port ? PROCESSOR_0 : PROCESSOR_1;
+ 		break;
+ 	}
+-- 
+2.26.2
+
