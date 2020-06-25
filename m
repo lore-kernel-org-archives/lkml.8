@@ -2,116 +2,201 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB30C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1948206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pDGn5375"
+	by mail.kernel.org (Postfix) with ESMTP id EC524206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406940AbgFYTuj (ORCPT
+        id S2406844AbgFYTw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:50:39 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:60496 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406679AbgFYTui (ORCPT
+        Thu, 25 Jun 2020 15:52:29 -0400
+Received: from smtprelay0038.hostedemail.com ([216.40.44.38]:56156 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406569AbgFYTw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:50:38 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9E8BB20B7186;
-        Thu, 25 Jun 2020 12:50:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E8BB20B7186
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1593114638;
-        bh=6KdwqIpe+kaP7s5nyTEGYePlbPH1qdRK7aqpZGcTNg4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pDGn5375Fx9daXQyMdPSCn/5L5ekY9T+uvCZlcDIz87wHgvQil7yhFmuztTjzL3Pr
-         0Tdt30/25LtWAC8Cuw0wW/weaAtxC8YgQzvrA3pCd6BR7jqc1iDYyyyWhpWCOLN7Nz
-         SVF9SVqocIUDD1LAAHO0bHyfWUg5PDMjvqCXjSlA=
-Date:   Thu, 25 Jun 2020 14:50:17 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 10/12] ima: Move validation of the keyrings conditional
- into ima_validate_rule()
-Message-ID: <20200625195017.GA4694@sequoia>
-References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
- <20200623003236.830149-11-tyhicks@linux.microsoft.com>
+        Thu, 25 Jun 2020 15:52:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 92C37181D3025;
+        Thu, 25 Jun 2020 19:52:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: swing96_4211ca926e4f
+X-Filterd-Recvd-Size: 8103
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 25 Jun 2020 19:52:22 +0000 (UTC)
+Message-ID: <43e55eb146d8e66ba1aaf057b807e6bd6ed16d78.camel@perches.com>
+Subject: Re: [PATCH] platform/chrome: Clarify SPDX license with GPL-2.0-only
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yicheng Li <yichengli@chromium.org>
+Date:   Thu, 25 Jun 2020 12:52:21 -0700
+In-Reply-To: <CAHp75VeZj72VDHSm48Diomz4q0+dJ6gjknqHQpfon3PU9Te5-w@mail.gmail.com>
+References: <20200625170356.225136-1-enric.balletbo@collabora.com>
+         <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com>
+         <026b38ff947e338a468567dfd20fbde1419bb094.camel@perches.com>
+         <CAHp75VcFeCf0vnk2Ea_-QdTW5gyRZvgEXwX7-VSd3rKch7pSwQ@mail.gmail.com>
+         <CAHp75VeZj72VDHSm48Diomz4q0+dJ6gjknqHQpfon3PU9Te5-w@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623003236.830149-11-tyhicks@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-22 19:32:34, Tyler Hicks wrote:
-> Use ima_validate_rule() to ensure that the combination of a hook
-> function and the keyrings conditional is valid and that the keyrings
-> conditional is not specified without an explicit KEY_CHECK func
-> conditional. This is a code cleanup and has no user-facing change.
+On Thu, 2020-06-25 at 22:35 +0300, Andy Shevchenko wrote:
+> On Thu, Jun 25, 2020 at 10:33 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Jun 25, 2020 at 10:29 PM Joe Perches <joe@perches.com> wrote:
+> > > On Thu, 2020-06-25 at 22:06 +0300, Andy Shevchenko wrote:
+> > > > On Thu, Jun 25, 2020 at 9:25 PM Enric Balletbo i Serra
+> > > > <enric.balletbo@collabora.com> wrote:
+> > > > > Remove the ambiguity with GPL-2.0 and use an explicit GPL-2.0-only
+> > > > > tag.
+> > > > 
+> > > > Is there any? Last time IIRC Greg told me that in the kernel the old
+> > > > and new variants are okay.
+> > > 
+> > > If there wasn't any ambiguity, the older license
+> > > style wouldn't be deprecated by SPDX.org.
+> > 
+> > They are _not_ deprecated according to kernel documentation:
+> > https://elixir.bootlin.com/linux/latest/source/LICENSES/preferred/GPL-2.0
+> > 
+> > So, fix documentation in the kernel then.
 > 
-> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_policy.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 514baf24d6a5..ae2ec2a9cdb9 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -999,6 +999,12 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
->  		case KEXEC_KERNEL_CHECK:
->  		case KEXEC_INITRAMFS_CHECK:
->  		case POLICY_CHECK:
-> +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
-> +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
-> +					     IMA_INMASK | IMA_EUID | IMA_PCR |
-> +					     IMA_FSNAME))
+> That said, NAK to the patch as long as in-kernel documentation says it's valid.
 
-I accidentally left these out:
+Maintainers and authors should get to chose whatever
+license text they prefer with the assent of the licensors.
 
- (IMA_DIGSIG_REQUIRED | IMA_PERMIT_DIRECTIO | IMA_MODSIG_ALLOWED | IMA_CHECK_BLACKLIST)
+A NAK here by you doesn't make much sense to me.
 
-I'll add them in v2.
+$ ./scripts/get_maintainer.pl  drivers/platform/chrome/
+Benson Leung <bleung@chromium.org> (maintainer:CHROME HARDWARE PLATFORM SUPPORT)
+Enric Balletbo i Serra <enric.balletbo@collabora.com> (maintainer:CHROME HARDWARE PLATFORM SUPPORT)
+linux-kernel@vger.kernel.org (open list)
 
-Tyler
+$ git log --no-merges --format="%an <%ae>" drivers/platform/chrome | sort | uniq -c | sort -rn
+     53 Enric Balletbo i Serra <enric.balletbo@collabora.com>
+     23 Gwendal Grignou <gwendal@chromium.org>
+     16 Nick Crews <ncrews@chromium.org>
+     15 Dmitry Torokhov <dmitry.torokhov@gmail.com>
+      9 Prashant Malani <pmalani@chromium.org>
+      9 Benson Leung <bleung@chromium.org>
+      8 Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+      6 Shawn Nematbakhsh <shawnn@chromium.org>
+      5 Nick Dyer <nick.dyer@itdev.co.uk>
+      5 Daniel Campello <campello@chromium.org>
+      4 Tzung-Bi Shih <tzungbi@google.com>
+      4 Thierry Escande <thierry.escande@collabora.com>
+      4 Stephen Boyd <swboyd@chromium.org>
+      4 Pi-Hsun Shih <pihsun@chromium.org>
+      4 Olof Johansson <olof@lixom.net>
+      4 Eric Caruso <ejcaruso@chromium.org>
+      4 Douglas Anderson <dianders@chromium.org>
+      4 Bill Richardson <wfrichar@chromium.org>
+      4 Arnd Bergmann <arnd@arndb.de>
+      3 Wolfram Sang <wsa+renesas@sang-engineering.com>
+      3 Stephen Barber <smbarber@chromium.org>
+      3 Raul E Rangel <rrangel@chromium.org>
+      3 Peter Zijlstra <peterz@infradead.org>
+      3 Olof Johansson <olofj@chromium.org>
+      3 Evan Green <evgreen@chromium.org>
+      3 Enrico Granata <egranata@chromium.org>
+      3 Brian Norris <briannorris@chromium.org>
+      2 Jett Rink <jettrink@chromium.org>
+      2 Javier Martinez Canillas <javier@osg.samsung.com>
+      2 Gustavo A. R. Silva <gustavo@embeddedor.com>
+      2 Guenter Roeck <linux@roeck-us.net>
+      2 Gene Chen <gene.chen@intel.com>
+      2 Dan Carpenter <dan.carpenter@oracle.com>
+      2 Christian Engelmayer <cengelma@gmx.at>
+      2 Aaron Durbin <adurbin@chromium.org>
+      1 YueHaibing <yuehaibing@huawei.com>
+      1 Yilun Lin <yllin@chromium.org>
+      1 Yicheng Li <yichengli@chromium.org>
+      1 Wolfram Sang <wsa@the-dreams.de>
+      1 Wen Yang <wenyang@linux.alibaba.com>
+      1 Wenkai Du <wenkai.du@intel.com>
+      1 Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+      1 Vincent Palatin <vpalatin@chromium.org>
+      1 Vic Yang <victoryang@google.com>
+      1 Tomeu Vizoso <tomeu.vizoso@collabora.com>
+      1 Tim Wawrzynczak <twawrzynczak@chromium.org>
+      1 Thomas Gleixner <tglx@linutronix.de>
+      1 Thierry Reding <treding@nvidia.com>
+      1 Simon Que <sque@chromium.org>
+      1 Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+      1 Sarthak Kukreti <sarthakkukreti@chromium.org>
+      1 Salvatore Bellizzi <lkml@seppia.net>
+      1 Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+      1 Robin Schroer <sulamiification@gmail.com>
+      1 Ravi Chandra Sadineni <ravisadineni@chromium.org>
+      1 Rajat Jain <rajatja@google.com>
+      1 Nicolas Boichat <drinkcat@chromium.org>
+      1 Neil Armstrong <narmstrong@baylibre.com>
+      1 Navid Emamdoost <navid.emamdoost@gmail.com>
+      1 Nathan Chancellor <natechancellor@gmail.com>
+      1 Mohammed Habibulla <moch@chromium.org>
+      1 Mika Westerberg <mika.westerberg@linux.intel.com>
+      1 Michael Mullin <masmullin@gmail.com>
+      1 Masahiro Yamada <masahiroy@kernel.org>
+      1 Logan Gunthorpe <logang@deltatee.com>
+      1 Linus Torvalds <torvalds@linux-foundation.org>
+      1 Krzysztof Kozlowski <krzk@kernel.org>
+      1 Kirill Smelkov <kirr@nexedi.com>
+      1 Kees Cook <keescook@chromium.org>
+      1 kbuild test robot <lkp@intel.com>
+      1 kbuild test robot <fengguang.wu@intel.com>
+      1 Joseph Lo <josephl@nvidia.com>
+      1 Jon Flatley <jflat@chromium.org>
+      1 Jeffery Yu <jefferyy@nvidia.com>
+      1 Jarkko Nikula <jarkko.nikula@linux.intel.com>
+      1 Hyungwoo Yang <hyungwoo.yang@intel.com>
+      1 Heiner Kallweit <hkallweit1@gmail.com>
+      1 Guenter Roeck <groeck@chromium.org>
+      1 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+      1 Geliang Tang <geliangtang@163.com>
+      1 Emil Karlson <jekarlson@gmail.com>
+      1 Emilio López <emilio.lopez@collabora.co.uk>
+      1 Colin Ian King <colin.king@canonical.com>
+      1 Clinton Sprain <clintonsprain@gmail.com>
+      1 Chuhong Yuan <hslester96@gmail.com>
+      1 Christoph Hellwig <hch@lst.de>
+      1 Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+      1 Charlie Mooney <charliemooney@chromium.org>
+      1 Bhumika Goyal <bhumirks@gmail.com>
+      1 Bernardo Perez Priego <bernardo.perez.priego@intel.com>
+      1 Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+      1 Archana Patni <archana.patni@intel.com>
+      1 Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+      1 Al Viro <viro@zeniv.linux.org.uk>
 
-> +				return false;
-> +
->  			break;
->  		case KEXEC_CMDLINE:
->  			if (entry->action & ~(MEASURE | DONT_MEASURE))
-> @@ -1026,7 +1032,8 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
->  		default:
->  			return false;
->  		}
-> -	}
-> +	} else if (entry->flags & IMA_KEYRINGS)
-> +		return false;
->  
->  	return true;
->  }
-> @@ -1208,7 +1215,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->  			keyrings_len = strlen(args[0].from) + 1;
->  
->  			if ((entry->keyrings) ||
-> -			    (entry->func != KEY_CHECK) ||
->  			    (keyrings_len < 2)) {
->  				result = -EINVAL;
->  				break;
-> -- 
-> 2.25.1
+
