@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2682C20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F102080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFxssf3R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQkOdBYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403837AbgFYSVk (ORCPT
+        id S2403921AbgFYSVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54736 "EHLO
+        Thu, 25 Jun 2020 14:21:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390692AbgFYSVe (ORCPT
+        with ESMTP id S2389648AbgFYSVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:21:34 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3521FC08C5C1;
-        Thu, 25 Jun 2020 11:21:34 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id e15so4963281edr.2;
-        Thu, 25 Jun 2020 11:21:34 -0700 (PDT)
+        Thu, 25 Jun 2020 14:21:42 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B2C2C08C5DD;
+        Thu, 25 Jun 2020 11:21:42 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dr13so6899864ejc.3;
+        Thu, 25 Jun 2020 11:21:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YaqwY05/r3k7x6kZ9wCj64JmBphdqzDzvJ/AelDNrH0=;
-        b=PFxssf3RlXGeyJBJ+ECNkaj701sCM7ZBUFCmFMpl3rh12c9A4SbniZaMJhSoM1Mqz3
-         BT60kk2A2gL6ffd7Fhc4K09HJTwOlK097dZXipX+Psj8TZkNjnVLibaXoU4uOA6y+rHr
-         gnb0W5YGcu+IxPVKu2ly9wIlgGZroBX8qzgz45rF1zvU3mG7xGxeAU6XcHe4nntUfG/D
-         bHrDi1mL5cvMqzazQOzUA54LtrPElrKPEqtSd3YfhEezkuz3Co/wGZ1fnjMT560oDO3g
-         tABMh7Bi/xYyILxEDoDPG9wFKZUfDxdTAP0yd9ksqRpPadooepDXywf3qpGk/rx76Jty
-         KAlQ==
+        bh=Yupj3iS3btyA2wZn0fmMTSkqzEVTX0a/axIV1WItg/k=;
+        b=OQkOdBYV4hebeU5uEm1XpL7kx4xOFKteMmmJsWVY95CsisG0LCb0nokfsWs1O1yDIF
+         F4wL/YFLnGbTmFYGKoqQGEQuJPa56CGYWvthwErBej6c722+ZrqenmDn1+NHadI5bks1
+         R5SCCtVGKgtUhZIHGxmwBTHnry0q7Zy5C/GoiybTH+Suscii++SH7qk2xfBFOpNTNTcs
+         TiYV7oaLylBKRjtZtTuFhC0sbgvdr4OZ6dAuLYwrZqGaOWwqCoyRQagQ2qmqQ6AYSdQS
+         HOZfoS2DlxO0VRA8VXho5uppu5sYj48hD52K8OspPB2G2PU1jhgPx6RO6gDAjgzmtesP
+         XBNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YaqwY05/r3k7x6kZ9wCj64JmBphdqzDzvJ/AelDNrH0=;
-        b=bWwtqEgr73wOFvdXVyJA2ml9KRC136jLsuQavvTxv3TtOYKLIxYKQKwuBjOTqR+c4o
-         NsThL13vrf8X8oGMgKyoQM5MhdhhfRCJHtfshnTph9Un9xT/8Dh0aeMtT1fQA09chHPB
-         SGQbJWuq6kvcTL9lRohNoLYNfY5x1WkAPVsgka1qPtR+3F2X/UDP553+aJuDE3geouq2
-         vtCbAn+eb4zqMI4KxtsUPXJPL37io8FZxNnrUub8RTxdYo1pHrkIm+CvjkWwwaKpXuXV
-         NXnJ3dQAyJE4HvCrh6gFf4F09dLyQQv3IiZk2+PPnInN8Db7HMhjt2oG4IJiymiU8ejv
-         aypQ==
-X-Gm-Message-State: AOAM532oaMsINTmcl5/xCO6tEqIjHPgoe40TrTaak2ogvQTyIjJpmi19
-        u/0TQkNRrRkJdhRUj3qiVJg=
-X-Google-Smtp-Source: ABdhPJzvKtAlaVB1h7Ydm7JEB71wudwpolP3OO85CN5rGm0JQluKxrmffqXe1sjsV8yiNK/FiCQR4w==
-X-Received: by 2002:aa7:c50e:: with SMTP id o14mr4882629edq.168.1593109292964;
-        Thu, 25 Jun 2020 11:21:32 -0700 (PDT)
+        bh=Yupj3iS3btyA2wZn0fmMTSkqzEVTX0a/axIV1WItg/k=;
+        b=MuGZQ0YiJtqYKGDZColil8WP+eG2VIlL+DPp53I0dgCNOJAPYXwd5N/cP8jGDmPWvp
+         j3Ka7CfH8jvoXNkxdG1AlR+ANCD/Gv2a3u58x1lPv4oEFU6oc5It13VZaWxmDN1laj8l
+         PguN0S9du3n5Q2ak1juDOkALZz1pmu/L7VCNbJyA3W4T2TCcikfCVUq+kMSKb9XAsiNH
+         cYsRquLI4v1V6BhT69Zd9YZiVR2MjRTc09DoqZY2ZkTxW62rp6EEXehsqtu2cYF2GhmU
+         K6PxpAiUWmXc0cGhLvTKK1axkRlou2sc5+memUusmafnloIetWefMup5MCOSAFTckB0X
+         I/Tw==
+X-Gm-Message-State: AOAM530oznwJkf4x3rz0aqEbke5OBxpsfF8E3cQJzFypPPHxc3HNoIg0
+        qnxbl+zYd3tLQOUQKkceEMs=
+X-Google-Smtp-Source: ABdhPJzw2zYBphfNPvy208IquABAp7cP1b1jllZGFHZ7pI8TiV8RVqfTcecfRvJByfEZWyYGPKdJFA==
+X-Received: by 2002:a17:906:2c43:: with SMTP id f3mr6324680ejh.38.1593109300833;
+        Thu, 25 Jun 2020 11:21:40 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.31
+        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:21:32 -0700 (PDT)
+        Thu, 25 Jun 2020 11:21:40 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/13] arm64: dts: qcom: bullhead: Move UART pinctrl to SoC
-Date:   Thu, 25 Jun 2020 20:21:08 +0200
-Message-Id: <20200625182118.131476-5-konradybcio@gmail.com>
+Subject: [PATCH v3 07/13] arm64: dts: qcom: msm8992: Add SPMI PMIC arbiter device
+Date:   Thu, 25 Jun 2020 20:21:11 +0200
+Message-Id: <20200625182118.131476-8-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
 References: <20200625182118.131476-1-konradybcio@gmail.com>
@@ -84,47 +84,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This pinout is common for every 8992-based device and
-should therefore reside in the SoC device tree.
-
-Also convert addresses into phandles.
+Add SPMI PMIC arbiter device to communicate with PMICs
+attached to SPMI bus.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../boot/dts/qcom/msm8992-bullhead-rev-101.dts      | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-index 4f70681e730d..5969b5cfdc85 100644
---- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-@@ -23,15 +23,6 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index aee33ed61858..acce7be22e50 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -290,6 +290,22 @@ restart@fc4ab000 {
+ 			reg = <0xfc4ab000 0x4>;
+ 		};
  
--	soc {
--		serial@f991e000 {
--			status = "okay";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&blsp1_uart2_default>;
--			pinctrl-1 = <&blsp1_uart2_sleep>;
--		};
--	};
--
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-@@ -48,6 +39,10 @@ ramoops@1ff00000 {
- 	};
- };
- 
-+&blsp1_uart2 {
-+	status = "okay";
-+};
++		spmi_bus: spmi@fc4c0000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg = <0xfc4cf000 0x1000>,
++			      <0xfc4cb000 0x1000>,
++			      <0xfc4ca000 0x1000>;
++			reg-names = "core", "intr", "cnfg";
++			interrupt-names = "periph_irq";
++			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
++		};
 +
- &rpm_requests {
- 	pm8994-regulators {
- 		compatible = "qcom,rpm-pm8994-regulators";
+ 		sfpb_mutex_regs: syscon@fd484000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 2.27.0
 
