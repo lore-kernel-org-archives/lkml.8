@@ -2,149 +2,119 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2263C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 845C82076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:32:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bwbItrfx"
+	by mail.kernel.org (Postfix) with ESMTP id B9E7B20773
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593074089;
+	bh=yE7w4pBtr9gWM6b8JXlrez/Wof9L3MU2WqOiRKy3bh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YILwKqg6JPmZUNT872ZLh38CbhSmGAdYzGu1AIlB2TIeiIM6DTO5gUxz2PV0rs3kQ
+	 taSKmr/VzdZZ45VrzwGKStue9f2yK4j4EBi0MRbNX2HMcjyypcOsNku62DG5cNuvt/
+	 PbQtFKaM3n4RaTfJXkCvRaLpveDGxOZfaAy28+cU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390704AbgFYIcc (ORCPT
+        id S2390511AbgFYIes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:32:32 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36748 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389860AbgFYIcc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:32:32 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05P8WA8c010941;
-        Thu, 25 Jun 2020 03:32:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593073930;
-        bh=x+T5cXwZuLi7FDAawNLtBY9/NjQ27gAAnT6luVRlzaE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bwbItrfx66uwIQ5NEVXn/4q16hblTMS4NhuYkCXknoDuCChKfOzTSc0o50+vKhLCI
-         ARLemxLG8RqnvEwLYPxMUzVQxT544jusLeEFbsMExfQ/OMg2sfMd+PiydxtdJVw2p8
-         StjZFTZtGC7uLoMEYFva4mCcIUc3Jkku9CwIWbFs=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05P8WAAR050561
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jun 2020 03:32:10 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 25
- Jun 2020 03:32:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 25 Jun 2020 03:32:10 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05P8W8c4045658;
-        Thu, 25 Jun 2020 03:32:08 -0500
-Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
- initial allowed window
-To:     Jan Kiszka <jan.kiszka@siemens.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <20200624114534.1362-1-t-kristo@ti.com>
- <20200624114534.1362-3-t-kristo@ti.com>
- <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
-Date:   Thu, 25 Jun 2020 11:32:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 25 Jun 2020 04:34:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389497AbgFYIer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:34:47 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 123A820720;
+        Thu, 25 Jun 2020 08:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593074087;
+        bh=yE7w4pBtr9gWM6b8JXlrez/Wof9L3MU2WqOiRKy3bh0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BwbQSy30KnXDM4git3UTct2s83H/Mt5+9CoksJpi55joPEP+L/4ocObw6nhLitLJQ
+         3z9+DHpHhmX6SjuVjOBnrL/ldxbaTXRnlVR7x/UdJpcnp7/DgEkkW6Q3eEEzOX3xB+
+         M/ul54Y2xF+Z5mA+5goaKxP+wtpK/UfbK2wv6reI=
+Date:   Thu, 25 Jun 2020 09:34:41 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        David Brazdil <dbrazdil@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com
+Subject: Re: [PATCH v3 08/15] arm64: kvm: Split hyp/switch.c to VHE/nVHE
+Message-ID: <20200625083441.GB7584@willie-the-truck>
+References: <20200618122537.9625-9-dbrazdil@google.com>
+ <202006251244.YDWclRrq%lkp@intel.com>
+ <d807e83db1f1052378b6998f683e4617@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d807e83db1f1052378b6998f683e4617@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/2020 18:24, Jan Kiszka wrote:
-> On 24.06.20 13:45, Tero Kristo wrote:
->> If the RTI watchdog has been started by someone (like bootloader) when
->> the driver probes, we must adjust the initial ping timeout to match the
->> currently running watchdog window to avoid generating watchdog reset.
->>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
->>
->> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
->> index d456dd72d99a..02ea2b2435f5 100644
->> --- a/drivers/watchdog/rti_wdt.c
->> +++ b/drivers/watchdog/rti_wdt.c
->> @@ -55,11 +55,13 @@ static int heartbeat;
->>    * @base - base io address of WD device
->>    * @freq - source clock frequency of WDT
->>    * @wdd  - hold watchdog device as is in WDT core
->> + * @min_hw_heartbeat_save - save of the min hw heartbeat value
->>    */
->>   struct rti_wdt_device {
->>       void __iomem        *base;
->>       unsigned long        freq;
->>       struct watchdog_device    wdd;
->> +    unsigned int        min_hw_heartbeat_save;
->>   };
->>   static int rti_wdt_start(struct watchdog_device *wdd)
->> @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
->>       /* put watchdog in active state */
->>       writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
->> +    if (wdt->min_hw_heartbeat_save) {
->> +        wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
->> +        wdt->min_hw_heartbeat_save = 0;
->> +    }
->> +
->>       return 0;
->>   }
->> @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device 
->> *pdev)
->>           goto err_iomap;
->>       }
->> +    if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
->> +        u32 time_left;
->> +        u32 heartbeat;
->> +
->> +        set_bit(WDOG_HW_RUNNING, &wdd->status);
->> +        time_left = rti_wdt_get_timeleft(wdd);
->> +        heartbeat = readl(wdt->base + RTIDWDPRLD);
->> +        heartbeat <<= WDT_PRELOAD_SHIFT;
->> +        heartbeat /= wdt->freq;
->> +        if (time_left < heartbeat / 2)
->> +            wdd->min_hw_heartbeat_ms = 0;
->> +        else
->> +            wdd->min_hw_heartbeat_ms =
->> +                (time_left - heartbeat / 2 + 1) * 1000;
->> +
->> +        wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
->> +    }
->> +
->>       ret = watchdog_register_device(wdd);
->>       if (ret) {
->>           dev_err(dev, "cannot register watchdog device\n");
->>
+On Thu, Jun 25, 2020 at 09:16:03AM +0100, Marc Zyngier wrote:
+> On 2020-06-25 06:03, kernel test robot wrote:
+> > Hi David,
+> > 
+> > Thank you for the patch! Perhaps something to improve:
+> > 
+> > [auto build test WARNING on linus/master]
+> > [also build test WARNING on v5.8-rc2 next-20200624]
+> > [cannot apply to kvmarm/next arm64/for-next/core arm-perf/for-next/perf]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use  as documented in
+> > https://git-scm.com/docs/git-format-patch]
+> > 
+> > url:
+> > https://github.com/0day-ci/linux/commits/David-Brazdil/Split-off-nVHE-hyp-code/20200618-203230
+> > base:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> > 1b5044021070efa3259f3e9548dc35d1eb6aa844
+> > config: arm64-randconfig-r021-20200624 (attached as .config)
+> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project
+> > 8911a35180c6777188fefe0954a2451a2b91deaf)
+> > reproduce (this is a W=1 build):
+> >         wget
+> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
+> > -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # install arm64 cross compiling tool for clang build
+> >         # apt-get install binutils-aarch64-linux-gnu
+> >         # save the attached .config to linux build tree
+> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross
+> > ARCH=arm64
+> > 
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > 
+> > All warnings (new ones prefixed by >>):
+> > 
+> > > > arch/arm64/kvm/hyp/nvhe/switch.c:244:28: warning: no previous
+> > > > prototype for function 'hyp_panic' [-Wmissing-prototypes]
+> >    void __hyp_text __noreturn hyp_panic(struct kvm_cpu_context
+> > *host_ctxt)
 > 
-> This assumes that the bootloader also programmed a 50% window, right? 
-> The pending U-Boot patch will do that, but what if that may chance or 
-> someone uses a different setup?
+> I really wish we could turn these warnings off. They don't add much.
+> Or is there an annotation we could stick on the function (something
+> like __called_from_asm_please_leave_me_alone springs to mind...)?
 
-Yes, we assume 50%. I think based on the hw design, 50% is the only sane 
-value to be used, otherwise you just shrink the open window too much and 
-for no apparent reason.
+Agreed, I've caught myself skim-reading the kbuild robot reports now
+because they're often just noise, and then having to force myself to look at
+them properly when I remember. Even just something in the subject to
+say "the only problems are W=1 warnings" would help. Is that possible?
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Will
