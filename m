@@ -2,155 +2,260 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F72C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 243C720789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59497207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otZFkn+x"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="nMN/B0Fu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389902AbgFYFYv (ORCPT
+        id S2389923AbgFYFY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:24:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        Thu, 25 Jun 2020 01:24:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389559AbgFYFYu (ORCPT
+        with ESMTP id S2389904AbgFYFY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 01:24:50 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB3BC061573;
-        Wed, 24 Jun 2020 22:24:50 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f9so2520187pfn.0;
-        Wed, 24 Jun 2020 22:24:50 -0700 (PDT)
+        Thu, 25 Jun 2020 01:24:58 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63F1C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:24:58 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ft14so1463850pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GXdubhTV2rFDKkg/iMiISj5sENkZjDy3A69VIM0beEA=;
-        b=otZFkn+xlIJ6hX0J8f+jfwEquSCD1xAz5RZpMUYHAPHAnVIvN+uW98AINOqq4g+NOm
-         xL4CZPN2A0vT/ab2Jd2XCzsm6Q5/w8wOML61MOiIDVoBMz0OrpivZ0swlsFXgZwZAcwW
-         7DyEZ3/HcKlU1DhOwjTO29PCtzk1lP3TKVS7Lx/82NZEuHIr7JuegxtHHeg4Ha6AI9QG
-         daBSc/WMaTGe71/ywHgvTXa54cykNjtby8nkPFqvB34fchJIGyb42BqUtsasKGCOi50C
-         DFE+jfZGA7VjFK02RrnQRC5elhGL3QxISyOk3L9XjmBFuebg2RHUMANKgHLaVXcl4OpP
-         E8GA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=Z9E9F9Mp7v+/S0R9P1itGC7yBfrOh2oBxXHNGIb7loA=;
+        b=nMN/B0Fu3KjiA2fcg1bSoSKiHUeeBUEEX6Df+GIYXDP3K9uQJYVhGttZqg9RGGgT9E
+         dzb7eTABCsvG2W+a2sbRVqLcsnN92KhwP+n1iwwCfhW4TBK0OIsVFgi6PJTJsKQ3C7kt
+         CHzE19cmYXd8r/gpZdxrlIZS3733JGo/R33+3Oem4pDj0fZAKKnc9uGmzYhaiwvmy0tb
+         idd8R7X8aKvc/LweVdp8wlxq9tkHjB4tlc4gjaQKLLRI9TlhfRyv5biEeeBRNAAF1fig
+         how/gndbd55D2G3Dx7NUays/1hjrm6JI7JSkR5mBxRWdUGKsZcUER9rXlJpE1xySUQjN
+         x0xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GXdubhTV2rFDKkg/iMiISj5sENkZjDy3A69VIM0beEA=;
-        b=KPPb3QshvGySRkFFgd59VqMy0U6S5RZaO/AhcFaBtxv6hb0ZKUq+8RkB2vINk5AnMi
-         8XIP9wgvxS4ILOkdLWgnKJESAPhoQ82FjW3s+kGjmt8yfqvS8w5+eOWtpDRhCL/yeF7R
-         fK0KnzHMeITGoND3DtPOoY/tc8VTZKcMbVJqmAcxHg1tMfdZrfKSwwcVjZHty/D/cLwP
-         uhZXxXqzAioPORvSXPsT8fW3CrdFimYtr5q8cDeOOyu+jpugXfwPg9D+g/Q4Mg7EnBUS
-         aRlc2DF+kvRXS2QZRNfYPx2qvTpfeOV6FXTR7rZ9DdkL0gumQe2TYnB/RrHIkeOXz8ge
-         UmrQ==
-X-Gm-Message-State: AOAM530o6lA9xqgxvw6+nvh8ElPDhpX2KqTq2RGBdSzeHu2GWqa93THp
-        rHXIpcoImjlNs0g+sg3di2o=
-X-Google-Smtp-Source: ABdhPJwXGyiFwlJTNgi0iC6m1Ar4lC3vQXDwOYiT2Ha8Mwjs8VUcVJ7cPdCOD7pg7k+ICwf1UB/M+Q==
-X-Received: by 2002:a05:6a00:7c6:: with SMTP id n6mr30520985pfu.120.1593062689506;
-        Wed, 24 Jun 2020 22:24:49 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id hv15sm6763798pjb.17.2020.06.24.22.24.47
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=Z9E9F9Mp7v+/S0R9P1itGC7yBfrOh2oBxXHNGIb7loA=;
+        b=Sh2tYGdQuzdZNgFNoNrpbaLlYb4Nefi+VUFU+6c05yMitKN+hXbph/+j29Nz+Px8zT
+         RmntnYM2/qnEK3s8aHj7uxpVZ/YLDy9P04RfUkTrmoaBdEL7BX/SHT1Ngv9+sciBPB92
+         g6at6CtB6avYJHNGa0M4Gox7dGwnOngpaj6RriXuFNY1SlnavuEystiexOjcd9jqofRp
+         +mq0hFdWwvhY125hoS5L+wR/XIpxmh6bRJv5Rt/cYvClY+X/bro3Dz+IBOn7+xxZpd4Z
+         MBprysffrrfSOGhDwYseobyC6/Xjn9PXOxtk7CSmW6hBW7ZOthfVNkF5dswCtwWyOE0N
+         6qUw==
+X-Gm-Message-State: AOAM533/6Qd2WryIrBqMOnmX6GvlZH/3iNNlILxuS5Zm3jcmu2t3m0vd
+        UAE0pAc6IXI7GGNQSWGSYstlEg==
+X-Google-Smtp-Source: ABdhPJy0/Ew8K0kL+0NaJpUTAbZiRRvpFcOdugV7uK8nijnLvkus3PLIIi2GICBvKjFEWQSuMYFyfg==
+X-Received: by 2002:a17:902:710d:: with SMTP id a13mr941675pll.71.1593062698219;
+        Wed, 24 Jun 2020 22:24:58 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id gq13sm3288917pjb.7.2020.06.24.22.24.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 22:24:48 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 22:24:46 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com
-Subject: Re: [PATCH v4 4/7] ACPI: button: Use input_device_enabled() helper
-Message-ID: <20200625052446.GF248110@dtor-ws>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <20200608112211.12125-5-andrzej.p@collabora.com>
+        Wed, 24 Jun 2020 22:24:57 -0700 (PDT)
+Message-ID: <5ef43529.1c69fb81.eac8c.85c7@mx.google.com>
+Date:   Wed, 24 Jun 2020 22:24:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608112211.12125-5-andrzej.p@collabora.com>
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Branch: linux-5.6.y
+X-Kernelci-Lab-Name: lab-baylibre
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Kernel: v5.6.19
+Subject: stable-rc/linux-5.6.y bisection: baseline.dmesg.crit on
+ bcm2837-rpi-3-b
+To:     Tejun Heo <tj@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        gtucker@collabora.com, Sasha Levin <sashal@kernel.org>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Li Zefan <lizefan@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 01:22:08PM +0200, Andrzej Pietrasiewicz wrote:
-> A new helper is available, so use it.
-> 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
->  drivers/acpi/button.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-> index ff7ab291f678..4deb2b48d03c 100644
-> --- a/drivers/acpi/button.c
-> +++ b/drivers/acpi/button.c
-> @@ -411,7 +411,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
->  		input = button->input;
->  		if (button->type == ACPI_BUTTON_TYPE_LID) {
->  			mutex_lock(&button->input->mutex);
-> -			users = button->input->users;
-> +			users = input_device_enabled(button->input);
->  			mutex_unlock(&button->input->mutex);
->  			if (users)
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-This chunk (pre-patch) is really wrong. 'users' value is obsolete and
-can not be trusted the moment we unlocked the mutex. "if" needs to be
-inside critical section.
+stable-rc/linux-5.6.y bisection: baseline.dmesg.crit on bcm2837-rpi-3-b
 
->  				acpi_lid_update_state(device, true);
-> @@ -460,7 +460,7 @@ static int acpi_button_resume(struct device *dev)
->  
->  	button->suspended = false;
->  	mutex_lock(&input->mutex);
-> -	if (button->type == ACPI_BUTTON_TYPE_LID && input->users) {
-> +	if (button->type == ACPI_BUTTON_TYPE_LID && input_device_enabled(input)) {
->  		button->last_state = !!acpi_lid_evaluate_state(device);
->  		button->last_time = ktime_get();
->  		acpi_lid_initialize_state(device);
-> -- 
-> 2.17.1
-> 
+Summary:
+  Start:      61aba373f570 Linux 5.6.19
+  Plain log:  https://storage.kernelci.org/stable-rc/linux-5.6.y/v5.6.19/ar=
+m64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.txt
+  HTML log:   https://storage.kernelci.org/stable-rc/linux-5.6.y/v5.6.19/ar=
+m64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.html
+  Result:     9cf5d5444c78 Revert "cgroup: Add memory barriers to plug cgro=
+up_rstat_updated() race window"
 
-Thanks.
+Checks:
+  revert:     PASS
+  verify:     PASS
 
--- 
-Dmitry
+Parameters:
+  Tree:       stable-rc
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-=
+stable-rc.git
+  Branch:     linux-5.6.y
+  Target:     bcm2837-rpi-3-b
+  CPU arch:   arm64
+  Lab:        lab-baylibre
+  Compiler:   gcc-8
+  Config:     defconfig
+  Test case:  baseline.dmesg.crit
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 9cf5d5444c78c14bb9f90dd21cef361ee14ba64b
+Author: Tejun Heo <tj@kernel.org>
+Date:   Thu Apr 9 14:55:35 2020 -0400
+
+    Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race=
+ window"
+    =
+
+    [ Upstream commit d8ef4b38cb69d907f9b0e889c44d05fc0f890977 ]
+    =
+
+    This reverts commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
+    cgroup_rstat_updated() race window").
+    =
+
+    The commit was added in anticipation of memcg rstat conversion which ne=
+eded
+    synchronous accounting for the event counters (e.g. oom kill count). Ho=
+wever,
+    the conversion didn't get merged due to percpu memory overhead concern =
+which
+    couldn't be addressed at the time.
+    =
+
+    Unfortunately, the patch's addition of smp_mb() to cgroup_rstat_updated=
+()
+    meant that every scheduling event now had to go through an additional f=
+ull
+    barrier and Mel Gorman noticed it as 1% regression in netperf UDP_STREA=
+M test.
+    =
+
+    There's no need to have this barrier in tree now and even if we need
+    synchronous accounting in the future, the right thing to do is separati=
+ng that
+    out to a separate function so that hot paths which don't care about
+    synchronous behavior don't have to pay the overhead of the full barrier=
+. Let's
+    revert.
+    =
+
+    Signed-off-by: Tejun Heo <tj@kernel.org>
+    Reported-by: Mel Gorman <mgorman@techsingularity.net>
+    Link: http://lkml.kernel.org/r/20200409154413.GK3818@techsingularity.net
+    Cc: v4.18+
+    Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 6f87352f8219..41ca996568df 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -33,12 +33,9 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+ 		return;
+ =
+
+ 	/*
+-	 * Paired with the one in cgroup_rstat_cpu_pop_updated().  Either we
+-	 * see NULL updated_next or they see our updated stat.
+-	 */
+-	smp_mb();
+-
+-	/*
++	 * Speculative already-on-list test. This may race leading to
++	 * temporary inaccuracies, which is fine.
++	 *
+ 	 * Because @parent's updated_children is terminated with @parent
+ 	 * instead of NULL, we can tell whether @cgrp is on the list by
+ 	 * testing the next pointer for NULL.
+@@ -134,13 +131,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(str=
+uct cgroup *pos,
+ 		*nextp =3D rstatc->updated_next;
+ 		rstatc->updated_next =3D NULL;
+ =
+
+-		/*
+-		 * Paired with the one in cgroup_rstat_cpu_updated().
+-		 * Either they see NULL updated_next or we see their
+-		 * updated stat.
+-		 */
+-		smp_mb();
+-
+ 		return pos;
+ 	}
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [7111951b8d4973bda27ff663f2cf18b663d15b48] Linux 5.6
+git bisect good 7111951b8d4973bda27ff663f2cf18b663d15b48
+# bad: [61aba373f5708f2aebc3f72078e51949a068aa6f] Linux 5.6.19
+git bisect bad 61aba373f5708f2aebc3f72078e51949a068aa6f
+# good: [0bc4d081e87ef8fd43baeed7141267e558896f86] RDMA/cm: Fix an error ch=
+eck in cm_alloc_id_priv()
+git bisect good 0bc4d081e87ef8fd43baeed7141267e558896f86
+# good: [0deceb85de592b89f6476e2bfcb5321a95d23126] dmaengine: owl: Use corr=
+ect lock in owl_dma_get_pchan()
+git bisect good 0deceb85de592b89f6476e2bfcb5321a95d23126
+# bad: [566f16e2d62fb3817529a05147ef46046ecffe6a] io_uring: initialize ctx-=
+>sqo_wait earlier
+git bisect bad 566f16e2d62fb3817529a05147ef46046ecffe6a
+# good: [23952755bc2f839844b5a60c29620cce98c9b09d] riscv: stacktrace: Fix u=
+ndefined reference to `walk_stackframe'
+git bisect good 23952755bc2f839844b5a60c29620cce98c9b09d
+# good: [be31933db49c8e3d81b96ee6bc9933d2adafe13d] drm/amd/display: Fix pot=
+ential integer wraparound resulting in a hang
+git bisect good be31933db49c8e3d81b96ee6bc9933d2adafe13d
+# good: [ee899046f79db390650e546446a7a0196788d39d] esp6: get the right prot=
+o for transport mode in esp6_gso_encap
+git bisect good ee899046f79db390650e546446a7a0196788d39d
+# good: [bdd07c33a3be1896ec1982fab1a2baf986fbe4dc] netfilter: conntrack: co=
+mparison of unsigned in cthelper confirmation
+git bisect good bdd07c33a3be1896ec1982fab1a2baf986fbe4dc
+# bad: [46f4a75fb5034c8d80a5388fe3bb46a8ed05df5b] ARC: [plat-eznps]: Restri=
+ct to CONFIG_ISA_ARCOMPACT
+git bisect bad 46f4a75fb5034c8d80a5388fe3bb46a8ed05df5b
+# good: [960a4cc3ec49f8292d0f837f0a6b28b03c54f042] Linux 5.6.16
+git bisect good 960a4cc3ec49f8292d0f837f0a6b28b03c54f042
+# bad: [9cf5d5444c78c14bb9f90dd21cef361ee14ba64b] Revert "cgroup: Add memor=
+y barriers to plug cgroup_rstat_updated() race window"
+git bisect bad 9cf5d5444c78c14bb9f90dd21cef361ee14ba64b
+# good: [2df9b670ad1a2120f54982e1b1dfd17a6ce3cc0c] x86/syscalls: Revert "x8=
+6/syscalls: Make __X32_SYSCALL_BIT be unsigned long"
+git bisect good 2df9b670ad1a2120f54982e1b1dfd17a6ce3cc0c
+# first bad commit: [9cf5d5444c78c14bb9f90dd21cef361ee14ba64b] Revert "cgro=
+up: Add memory barriers to plug cgroup_rstat_updated() race window"
+---------------------------------------------------------------------------=
+----
