@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD76C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98872C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38D120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BAC20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390770AbgFYSZH (ORCPT
+        id S2390819AbgFYSZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:25:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:43018 "EHLO foss.arm.com"
+        Thu, 25 Jun 2020 14:25:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:43054 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390025AbgFYSZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:25:07 -0400
+        id S2390025AbgFYSZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:25:22 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59F2CD6E;
-        Thu, 25 Jun 2020 11:25:06 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 186B1D6E;
+        Thu, 25 Jun 2020 11:25:22 -0700 (PDT)
 Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3BAE3F71E;
-        Thu, 25 Jun 2020 11:25:04 -0700 (PDT)
-References: <20200624195811.435857-1-maz@kernel.org>
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BF923F71E;
+        Thu, 25 Jun 2020 11:25:20 -0700 (PDT)
+References: <20200624195811.435857-1-maz@kernel.org> <20200624195811.435857-4-maz@kernel.org>
 User-agent: mu4e 0.9.17; emacs 26.3
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     Marc Zyngier <maz@kernel.org>
@@ -39,10 +39,10 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Florian Fainelli <f.fainelli@gmail.com>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
-Subject: Re: [PATCH v2 00/17] arm/arm64: Turning IPIs into normal interrupts
-In-reply-to: <20200624195811.435857-1-maz@kernel.org>
-Date:   Thu, 25 Jun 2020 19:24:59 +0100
-Message-ID: <jhjmu4rgg04.mognet@arm.com>
+Subject: Re: [PATCH v2 03/17] arm64: Allow IPIs to be handled as normal interrupts
+In-reply-to: <20200624195811.435857-4-maz@kernel.org>
+Date:   Thu, 25 Jun 2020 19:25:18 +0100
+Message-ID: <jhjlfkbgfzl.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,57 +50,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
 On 24/06/20 20:57, Marc Zyngier wrote:
-> For as long as SMP ARM has existed, IPIs have been handled as
-> something special. The arch code and the interrupt controller exchange
-> a couple of hooks (one to generate an IPI, another to handle it).
+> @@ -958,9 +958,76 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 >
-> Although this is perfectly manageable, it prevents the use of features
-> that we could use if IPIs were Linux IRQs (such as pseudo-NMIs). It
-> also means that each interrupt controller driver has to follow an
-> architecture-specific interface instead of just implementing the base
-> irqchip functionalities. The arch code also duplicates a number of
-> things that the core irq code already does (such as calling
-> set_irq_regs(), irq_enter()...).
+>       if ((unsigned)ipinr < NR_IPI)
+>               trace_ipi_exit_rcuidle(ipi_types[ipinr]);
+> +}
+> +
+> +/* Legacy version, should go away once all irqchips have been converted */
+> +void handle_IPI(int ipinr, struct pt_regs *regs)
+> +{
+> +	struct pt_regs *old_regs = set_irq_regs(regs);
+> +
+> +	irq_enter();
+> +	do_handle_IPI(ipinr);
+> +	irq_exit();
+> +
+>       set_irq_regs(old_regs);
+>  }
 >
-> This series tries to remedy this on arm/arm64 by offering a new
-> registration interface where the irqchip gives the arch code a range
-> of interrupts to use for IPIs. The arch code requests these as normal
-> per-cpu interrupts.
->
-> The bulk of the work is at the interrupt controller level, where all 5
-> irqchips used on arm+SMP/arm64 get converted.
->
-> Finally, we drop the legacy registration interface as well as the
-> custom statistics accounting.
->
-> Note that I have had a look at providing a "generic" interface by
-> expanding the kernel/irq/ipi.c bag of helpers, but so far all
-> irqchips have very different requirements, so there is hardly anything
-> to consolidate for now. Maybe some as hip04 and the Marvell horror get
-> cleaned up (the latter certainly could do with a good dusting).
->
-> This has been tested on a bunch of 32 and 64bit guests (GICv2, GICv3),
-> as well as 64bit bare metal (GICv3). The RPi part has only been tested
-> in QEMU as a 64bit guest, while the HiSi and Marvell parts have only
-> been compile-tested.
->
+> +static irqreturn_t ipi_handler(int irq, void *data)
+> +{
+> +	do_handle_IPI(irq - ipi_irq_base);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void ipi_send(const struct cpumask *target, unsigned int ipi)
+> +{
+> +	__ipi_send_mask(ipi_desc[ipi], target);
+> +}
+> +
+> +static void ipi_setup(int cpu)
+> +{
+> +	if (ipi_irq_base) {
+> +		int i;
+> +
+> +		for (i = 0; i < nr_ipi; i++)
+> +			enable_percpu_irq(ipi_irq_base + i, 0);
+> +	}
+> +}
 
-I gave that a spin on Juno r0 and HiKey960 (both GICv2), all good! I also
-wanted to try it out on my eMAG (to get some GICv3 airtime) but ran into
-"technical difficulties". I think I'll need to get someone to go poke
-it (most likely next week). I'm pretty sure I'm the one who should be
-asking you for hardware, but if there's anything specific you need me to
-test, please shout.
+Nit: Once we have the irqchip changes in, should we warn & bail out when
+!ipi_irq_base? Ditto for the teardown
 
-I have a few extra nits/comments in some patches, but it's all fairly minor
-so FWIW you can also add, for patches [01-10, 14-15]:
-
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-
-I haven't really looked at those other irqchips, but I can give it a shot
-if no one else shows up. Also I'll most likely look at the arm side, but
-I'm afraid I'm too well-done right now to pay much more attention to
-details.
+> +
+> +static void ipi_teardown(int cpu)
+> +{
+> +	if (ipi_irq_base) {
+> +		int i;
+> +
+> +		for (i = 0; i < nr_ipi; i++)
+> +			disable_percpu_irq(ipi_irq_base + i);
+> +	}
+> +}
