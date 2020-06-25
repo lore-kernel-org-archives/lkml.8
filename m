@@ -2,145 +2,125 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D21C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A001C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C60E22067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="YGmTVosK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cvICLLJK"
+	by mail.kernel.org (Postfix) with ESMTP id 695C020899
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593072968;
+	bh=MPqzxqlkLelCCKm2NSBBivueFsMTrj5zghx/JYvmDos=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n/o3oZH4y+8Koy0kw9HQYclx2Rk43wAH3oapOVJxQ0oeSYbHuvNJWaVQmPD5BPDyS
+	 cJJaf4Gre/dciy1HNQ5R0/flyQghHRWe7uZKIaKuSXzko6LHzE4gkIa+xT96gtIn/J
+	 WybYBlh4Plq3hFnJIe9GstYB6iLKwrUxTGlNLKWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390509AbgFYIPa (ORCPT
+        id S2390576AbgFYIQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:15:30 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:51653 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726930AbgFYIP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:15:29 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id 36E7F5C0129;
-        Thu, 25 Jun 2020 04:15:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 25 Jun 2020 04:15:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        P/eFafOZttAQk1jUfpBb2bbEKVsHkuSm9g64OcFOYWE=; b=YGmTVosK6St1n/Hj
-        MESzAVdtrVJA2OIGxRuTdLd/yrEzpR4Ge8CYTHVSzVA3RjjA5j1yUOV38Y6RAL6z
-        KABOXpds+++j22U6acBfkJ116DjL3mj9XxNaQnGSVDT0iFLZDwJ+LBylG0DJvOA2
-        spWImfZH8CdCyVjQqoBeqA53DxDdC7KwtzmJclN6tPlzDUo8FLQMNZ61fZ0CHvRf
-        3KqVtuqV7p6MP/zeOLpR08Aih6dLmfxwQOOeTUD1wms8S/ulb3fnu9FtQ4eiJOqT
-        uk+UQCp81sRnqeDTm4dFfjc19oOUtl9bsnsaOLZGqkFlG3zQgejJW1xUJmIuEJXM
-        ndtKow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=P/eFafOZttAQk1jUfpBb2bbEKVsHkuSm9g64OcFOY
-        WE=; b=cvICLLJK0oHcBiKIgxnDyKcq9n4BIW959sOPKH7JVpFGP4T/Y9cGqOXwJ
-        2eAmRqi8bP7BZXPsxxCd+rWT/kQZKKtY9uYHnc04k578SEMXPB/+O+nTETsP4kmR
-        fILxQUFao3A3rXPtHXXGqhVnRd727ObKRLNBKpRn80nfgfMiIak2aT11BIISfyFu
-        SG4BFY/gGjPiOrLf55QCfdS4TGJ9aSJRlSWBqH58MjUqecTIlqqC3jCxNnn0eZ+X
-        5twP7eitYh5qplaEN7i9z5HQCPR5awB2gEH8Kvl1ZaCfRC+mfQ3DR4lZuNYFA/ha
-        3Qega9i6bkFK9kt4JhD18hilnzesg==
-X-ME-Sender: <xms:H130Xma7mmdtzJFfxpK3KQqGICrADguVZ3hIQDh9rhYBeM-jaxRV0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekledgtdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
-    phepuddukedrvddtkedrheejrdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:H130XpaKPZ_jfTV3f2kFNiaYHHjavQe9mDSqRPQrqqm36IMoixl_3A>
-    <xmx:H130Xg8eX-W7fOQaY1hNImGaVeFJUVDBVdlHLKjv8retzIaqPN_Ztg>
-    <xmx:H130XoqyOBvYd5_2gjMbhIbb8a6oMUtK9alojs_oWlKPSRnhRCUnng>
-    <xmx:IF30XqC9sX6SmjhqbrifSkxfL7IGquxwJRNHPDk4KDTLoahJnL-tCg>
-Received: from mickey.themaw.net (unknown [118.208.57.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8D6B6306778F;
-        Thu, 25 Jun 2020 04:15:23 -0400 (EDT)
-Message-ID: <ac4a2c133da21856439f907989c3f9d781857cbf.camel@themaw.net>
-Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
- improvement
-From:   Ian Kent <raven@themaw.net>
-To:     Tejun Heo <tj@kernel.org>,
-        Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 25 Jun 2020 16:15:19 +0800
-In-Reply-To: <20200623231348.GD13061@mtj.duckdns.org>
-References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
-         <20200619153833.GA5749@mtj.thefacebook.com>
-         <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
-         <20200619222356.GA13061@mtj.duckdns.org>
-         <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
-         <20200622175343.GC13061@mtj.duckdns.org>
-         <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
-         <20200623231348.GD13061@mtj.duckdns.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 25 Jun 2020 04:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390548AbgFYIQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:16:06 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65BF6207FC;
+        Thu, 25 Jun 2020 08:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593072965;
+        bh=MPqzxqlkLelCCKm2NSBBivueFsMTrj5zghx/JYvmDos=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iL2oGQgxl7cBdkY9GmZCHCXDsYU7SyMCIRn/zVaiJclsOjqSG0cvWh8OH/4Etip+T
+         ysc31KkZoevPkSZHEf1wCj90WehZeMFWM5bLpoFc46CDHeCtYgskvJGZqzlulxmiUo
+         nDbHMuvsM8e7K6B9QsrHQf/2m0ZzO8Gc+WZ89v7E=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1joN3D-006HU5-Ud; Thu, 25 Jun 2020 09:16:04 +0100
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 25 Jun 2020 09:16:03 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     David Brazdil <dbrazdil@google.com>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com
+Subject: Re: [PATCH v3 08/15] arm64: kvm: Split hyp/switch.c to VHE/nVHE
+In-Reply-To: <202006251244.YDWclRrq%lkp@intel.com>
+References: <20200618122537.9625-9-dbrazdil@google.com>
+ <202006251244.YDWclRrq%lkp@intel.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <d807e83db1f1052378b6998f683e4617@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: lkp@intel.com, dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kbuild-all@lists.01.org, clang-built-linux@googlegroups.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-23 at 19:13 -0400, Tejun Heo wrote:
-> Hello, Rick.
+On 2020-06-25 06:03, kernel test robot wrote:
+> Hi David,
 > 
-> On Mon, Jun 22, 2020 at 02:22:34PM -0700, Rick Lindsley wrote:
-> > > I don't know. The above highlights the absurdity of the approach
-> > > itself to
-> > > me. You seem to be aware of it too in writing: 250,000 "devices".
-> > 
-> > Just because it is absurd doesn't mean it wasn't built that way :)
-> > 
-> > I agree, and I'm trying to influence the next hardware design.
-> > However,
+> Thank you for the patch! Perhaps something to improve:
 > 
-> I'm not saying that the hardware should not segment things into
-> however many
-> pieces that it wants / needs to. That part is fine.
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v5.8-rc2 next-20200624]
+> [cannot apply to kvmarm/next arm64/for-next/core 
+> arm-perf/for-next/perf]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use  as documented in
+> https://git-scm.com/docs/git-format-patch]
 > 
-> > what's already out there is memory units that must be accessed in
-> > 256MB
-> > blocks. If you want to remove/add a GB, that's really 4 blocks of
-> > memory
-> > you're manipulating, to the hardware. Those blocks have to be
-> > registered
-> > and recognized by the kernel for that to work.
+> url:
+> https://github.com/0day-ci/linux/commits/David-Brazdil/Split-off-nVHE-hyp-code/20200618-203230
+> base:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> 1b5044021070efa3259f3e9548dc35d1eb6aa844
+> config: arm64-randconfig-r021-20200624 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project
+> 8911a35180c6777188fefe0954a2451a2b91deaf)
+> reproduce (this is a W=1 build):
+>         wget
+> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
+> -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install arm64 cross compiling tool for clang build
+>         # apt-get install binutils-aarch64-linux-gnu
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross 
+> ARCH=arm64
 > 
-> The problem is fitting that into an interface which wholly doesn't
-> fit that
-> particular requirement. It's not that difficult to imagine different
-> ways to
-> represent however many memory slots, right? It'd take work to make
-> sure that
-> integrates well with whatever tooling or use cases but once done this
-> particular problem will be resolved permanently and the whole thing
-> will
-> look a lot less silly. Wouldn't that be better?
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>>> arch/arm64/kvm/hyp/nvhe/switch.c:244:28: warning: no previous 
+>>> prototype for function 'hyp_panic' [-Wmissing-prototypes]
+>    void __hyp_text __noreturn hyp_panic(struct kvm_cpu_context 
+> *host_ctxt)
 
-Well, no, I am finding it difficult to imagine different ways to
-represent this but perhaps that's because I'm blinker eyed on what
-a solution might look like because of my file system focus.
+I really wish we could turn these warnings off. They don't add much.
+Or is there an annotation we could stick on the function (something
+like __called_from_asm_please_leave_me_alone springs to mind...)?
 
-Can "anyone" throw out some ideas with a little more detail than we
-have had so far so we can maybe start to formulate an actual plan of
-what needs to be done.
-
-Ian
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
