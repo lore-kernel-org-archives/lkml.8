@@ -4,105 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99034C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 695462070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E29A2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390586AbgFYKKx (ORCPT
+        id S2403878AbgFYKL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:10:53 -0400
-Received: from mga02.intel.com ([134.134.136.20]:21359 "EHLO mga02.intel.com"
+        Thu, 25 Jun 2020 06:11:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42784 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389568AbgFYKKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:10:52 -0400
-IronPort-SDR: yyu7GAGruH533Zwx5UfwGE6sAo8mZDJmMjQGok03sm18umpc84El3bCwUi+MNfnx/K5yk5xHyW
- pxM5sMCmGRfg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="133259340"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="133259340"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 03:10:46 -0700
-IronPort-SDR: PFsp/SsCVenUnNedV0CEWxdvXRhWP/c8o1xR0H0gXdq1qb/ZBGwr3ItsyEJ1n7PfCmRbKEA+iJ
- IyvEJVEHi9AA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="263887183"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.28.52]) ([10.255.28.52])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 03:10:43 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 6/7] iommu/vt-d: Warn on out-of-range invalidation address
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1592926996-47914-7-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d87d15fd-71d5-6735-74df-583024826ab0@linux.intel.com>
-Date:   Thu, 25 Jun 2020 18:10:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S2389777AbgFYKLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:11:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EE18AB020;
+        Thu, 25 Jun 2020 10:11:21 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 12:11:19 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] lockdep: Move list.h inclusion into lockdep.h
+Message-ID: <20200625101119.GG8444@alley>
+References: <20200621131554.5a662afe@canb.auug.org.au>
+ <20200623102655.6d16e610@canb.auug.org.au>
+ <20200623121637.GA8444@alley>
+ <20200623121937.GA9671@gondor.apana.org.au>
+ <20200623142858.GB8444@alley>
+ <20200624124212.GA17350@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1592926996-47914-7-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624124212.GA17350@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2020/6/23 23:43, Jacob Pan wrote:
-> For guest requested IOTLB invalidation, address and mask are provided as
-> part of the invalidation data. VT-d HW silently ignores any address bits
-> below the mask. SW shall also allow such case but give warning if
-> address does not align with the mask. This patch relax the fault
-> handling from error to warning and proceed with invalidation request
-> with the given mask.
+On Wed 2020-06-24 22:42:12, Herbert Xu wrote:
+> On Tue, Jun 23, 2020 at 04:28:58PM +0200, Petr Mladek wrote:
+> >
+> > My "allmodconfig" build has successfully finished with the following extra
+> >  fix on top of the two patches:
+> > 
+> > diff --git a/include/linux/list.h b/include/linux/list.h
+> > index aff44d34f4e4..6d606c4036ce 100644
+> > --- a/include/linux/list.h
+> > +++ b/include/linux/list.h
+> > @@ -6,7 +6,7 @@
+> >  #include <linux/stddef.h>
+> >  #include <linux/poison.h>
+> >  #include <linux/const.h>
+> > -#include <linux/kernel.h>
+> > +#include <linux/compiler.h>
 > 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   drivers/iommu/intel/iommu.c | 7 +++----
->   1 file changed, 3 insertions(+), 4 deletions(-)
+> Unfortunately this doesn't work because list.h actually does need
+> kernel.h for container_of.
+
+Ah, I see.
+
+> However, we can easily fix the loop another way by removing list.h
+> from lockdep.h as it doesn't actually use any list macros/functions
+> but only the list type which is now in linux/types.h.
 > 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 5ea5732d5ec4..50fc62413a35 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -5439,13 +5439,12 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
->   
->   		switch (BIT(cache_type)) {
->   		case IOMMU_CACHE_INV_TYPE_IOTLB:
-> +			/* HW will ignore LSB bits based on address mask */
->   			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
->   			    size &&
->   			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
-> -				pr_err_ratelimited("Address out of range, 0x%llx, size order %llu\n",
-> -						   inv_info->addr_info.addr, size);
-> -				ret = -ERANGE;
-> -				goto out_unlock;
-> +				WARN_ONCE(1, "Address out of range, 0x%llx, size order %llu\n",
-> +					  inv_info->addr_info.addr, size);
+> We could either fold this into the lockdep_types patch, or fold it
+> into the printk patch, or just leave it as a standalone patch.
+> What do you guys think?
 
-I don't think WARN_ONCE() is suitable here. It makes users think it's a
-kernel bug. How about pr_warn_ratelimited()?
+It logically belongs to the lockdep_types area.
 
-Best regards,
-baolu
+I think that separate patch is the best solution so that Peter does
+not need to rebase tip/locking/header.
 
->   			}
->   
->   			/*
 > 
+> ---8<---
+> Currently lockdep_types.h includes list.h without actually using any
+> of its macros or functions.  All it needs are the type definitions
+> which were moved into types.h long ago.  This potentially causes
+> inclusion loops because both are included by many core header
+> files.
+> 
+> This patch moves the list.h inclusion into lockdep.h.  Note that
+> we could probably remove it completely but that could potentially
+> result in compile failures should any end users not include list.h
+> directly and also be unlucky enough to not get list.h via some other
+> header file.
+> 
+> Reported-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+It works with allmodconfig here, so feel free to use:
+
+Tested-by: Petr Mladek <pmladek@suse.com>
+
+Of course, it does not have much value. There might still be another
+configuration or architecture that does not work but I would leave
+this for test bots.
+
+Best Regards,
+Petr
+
+> 
+> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+> index 3b73cf84f77d..b1ad5c045353 100644
+> --- a/include/linux/lockdep.h
+> +++ b/include/linux/lockdep.h
+> @@ -21,6 +21,7 @@ extern int lock_stat;
+>  #ifdef CONFIG_LOCKDEP
+>  
+>  #include <linux/linkage.h>
+> +#include <linux/list.h>
+>  #include <linux/debug_locks.h>
+>  #include <linux/stacktrace.h>
+>  
+> diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
+> index 7b9350624577..bb35b449f533 100644
+> --- a/include/linux/lockdep_types.h
+> +++ b/include/linux/lockdep_types.h
+> @@ -32,8 +32,6 @@ enum lockdep_wait_type {
+>  
+>  #ifdef CONFIG_LOCKDEP
+>  
+> -#include <linux/list.h>
+> -
+>  /*
+>   * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
+>   * the total number of states... :-(
+> -- 
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
