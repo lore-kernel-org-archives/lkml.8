@@ -2,117 +2,85 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3FC520672
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:38:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VE1H4cUG"
+	by mail.kernel.org (Postfix) with ESMTP id 571C120672
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405132AbgFYNiu (ORCPT
+        id S2405192AbgFYNi7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404890AbgFYNit (ORCPT
+        Thu, 25 Jun 2020 09:38:59 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36989 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405038AbgFYNi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:38:49 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E54C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:38:48 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l17so5615392wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=sChA7GHV4hlkfpK+ozmJjB10++7TNo/bmR1QteXGK7Y=;
-        b=VE1H4cUGZxywExFFi62qrPnBOZqKjdb+jDa5svgWaNo5vczGVwC+hGVzms75r9EN99
-         ynBiDKp6F3K2woAR15eWxxr15ZF4xdwwEPfWFym2I9DYpqJMSRDdlJrwQBX40V5l9/sL
-         flAa+jjvwqAVo6XI0piFN35fypGzChA1muKJAe6FPRiDXu887m2RCtrqeBr9WHsHd1Cy
-         FiJ+TqRXn27CTzQ/X796jPWTUk6NHVjBNuNspEzZBLz2qc9hKqj+5K7v2L5/B/4s5kzp
-         /YMUVNCytsS49H1vFyOy4yXT5ogSKEjAbGv8glKbUpAh6IE8YIbm5n6O8qdk+p2zxJlM
-         fRAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=sChA7GHV4hlkfpK+ozmJjB10++7TNo/bmR1QteXGK7Y=;
-        b=Dka8ee25DhvrLrS4LzIm72DyaWABavUbj46GKp+yA3RyT+hAhh6BH1IOm1NFrms/04
-         iYxaLAXd93MT/rRq2aTv8TbKP1ihcVQ2YVCtT8cogpmljrHg6AgHg/AY8CRCc8Lsx2u9
-         Fg4oyNrcIRgMqUyhDpo/h1vCEzrLMTzAeSqDIGaoPkNBoLoSUbzgYihJvN+BH07e46Ts
-         jbMIcj97tL2Rw2D7S1XxZpZQxr3EGXzOsHls+eHZqSXcEfFYo0ZLG7misqR8puQhgliQ
-         GZlamSjgDonDyfUThi/SrXNSUpw7bt1atPAfhQrA8fQGbtd36HLdnVyeFGAWxnTz/GY0
-         xIyw==
-X-Gm-Message-State: AOAM531jJwuNFksx9FGVDkVAQd/aJafqS/tADJiYLL8nQmtbTXKvBKaO
-        2dnC6+l0ft8jas/0tMXSvLG2Vg==
-X-Google-Smtp-Source: ABdhPJzFZQWGTBTBa4T/1hxiqe1NJvboVg4FHe1xLQbOxZguhizJ0+w360c0uCvspO0ywn5TRE8fXw==
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr3610133wma.66.1593092327610;
-        Thu, 25 Jun 2020 06:38:47 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id l14sm15255159wrn.18.2020.06.25.06.38.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:38:46 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 14:38:45 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH 01/10] mfd: wm8350-core: Supply description
- wm8350_reg_{un}lock args
-Message-ID: <20200625133845.GQ954398@dell>
-References: <20200625064619.2775707-1-lee.jones@linaro.org>
- <20200625064619.2775707-2-lee.jones@linaro.org>
- <20200625065608.GB2789306@kroah.com>
- <20200625071313.GM954398@dell>
- <20200625072449.4d3e3fca@lwn.net>
+        Thu, 25 Jun 2020 09:38:57 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1B2C11BF214;
+        Thu, 25 Jun 2020 13:38:54 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200625072449.4d3e3fca@lwn.net>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200625132226.GC2548@localhost>
+References: <20200623143014.47864-1-antoine.tenart@bootlin.com> <20200623143014.47864-7-antoine.tenart@bootlin.com> <20200625132226.GC2548@localhost>
+Subject: Re: [PATCH net-next v4 6/8] net: phy: mscc: timestamping and PHC support
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        allan.nielsen@microchip.com, foss@0leil.net
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Message-ID: <159309233393.397581.16273630291558095966@kwain>
+Date:   Thu, 25 Jun 2020 15:38:54 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020, Jonathan Corbet wrote:
-> On Thu, 25 Jun 2020 08:13:13 +0100
-> Lee Jones <lee.jones@linaro.org> wrote:
+Hello Richard,
+
+Quoting Richard Cochran (2020-06-25 15:22:26)
+> On Tue, Jun 23, 2020 at 04:30:12PM +0200, Antoine Tenart wrote:
+> > @@ -978,9 +1483,32 @@ static int __vsc8584_init_ptp(struct phy_device *phydev)
+> >  
+> >       vsc85xx_ts_eth_cmp1_sig(phydev);
+> >  
+> > +     vsc8531->mii_ts.rxtstamp = vsc85xx_rxtstamp;
+> > +     vsc8531->mii_ts.txtstamp = vsc85xx_txtstamp;
+> > +     vsc8531->mii_ts.hwtstamp = vsc85xx_hwtstamp;
+> > +     vsc8531->mii_ts.ts_info  = vsc85xx_ts_info;
+> > +     phydev->mii_ts = &vsc8531->mii_ts;
+> > +
+> > +     memcpy(&vsc8531->ptp->caps, &vsc85xx_clk_caps, sizeof(vsc85xx_clk_caps));
+> > +
+> > +     vsc8531->ptp->ptp_clock = ptp_clock_register(&vsc8531->ptp->caps,
+> > +                                                  &phydev->mdio.dev);
+> > +     if (IS_ERR(vsc8531->ptp->ptp_clock))
+> > +             return PTR_ERR(vsc8531->ptp->ptp_clock);
 > 
-> > > Why are all of these documentation fixes for stable?  
-> > 
-> > Because they fix compiler warnings.
-> > 
-> > Not correct?
+> The ptp_clock_register() method can also return NULL:
 > 
-> I am overjoyed to see people fixing docs build warnings, it is work that
-> is desperately needed.
+>  * Returns a valid pointer on success or PTR_ERR on failure.  If PHC
+>  * support is missing at the configuration level, this function
+>  * returns NULL, and drivers are expected to gracefully handle that
+>  * case separately.
 
-I'll do what I can with the time that I have.
+If ptp_clock_register returns NULL because PHC support is missing, the
+clock won't be exported. Beside that, I don't think we can do much in
+the error path, so this should be safe.
 
-The plan is to keep plodding on and seeing how far I can take it.  A
-clean W=1 build sounds like rainbows and unicorns presently, but Rome
-wasn't built in a day.
-
-Tell you the truth, drafting patches (again, after a break) is a
-welcome change/release from digging around and reviewing Android
-Stable patches.  It's the only thing keeping me sane. :)
-
-> That said, these warning fixes are probably not
-> stable material; the problem is bigger and longer-term than that.
-
-Fair enough.
+Thanks,
+Antoine
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
