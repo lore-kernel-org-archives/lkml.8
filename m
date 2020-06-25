@@ -2,107 +2,152 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E82FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F26C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3991720709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB6020709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407269AbgFYVhO (ORCPT
+        id S2407278AbgFYViI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:37:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19238 "EHLO mga02.intel.com"
+        Thu, 25 Jun 2020 17:38:08 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63425 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403961AbgFYVhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:37:13 -0400
-IronPort-SDR: wZzgOCCSU9HONFG6Ay41YdLmcva6n7OOXmYZ/PvUgcQrBBT78/9SeexGrcjN2HyYvN0D39kOGg
- YDkp/6QsoW6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="133493436"
+        id S2403961AbgFYViI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:38:08 -0400
+IronPort-SDR: nJnPDYKoE3ua7Jm2b9sjU8+nkVQNSnC6gPeB3yzmjP1oQKdLwVnOmGiL+z45D4yzgaHSJeP/g6
+ Xpg5rX0r7Vjg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229823169"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="133493436"
+   d="scan'208";a="229823169"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:37:13 -0700
-IronPort-SDR: ZYE4sOE06IOvTvItpR8GtoR8eyOVVzhAYghfwYSFdFMybDF5U6/sjPX2HGzPeVw6MVrlkPSe1y
- kUwKb40kmF+w==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:38:07 -0700
+IronPort-SDR: 0o4IOhTtRnbIFnZPVDgSG6xqIFfkdJFQxupGt9xeh8X+/fJNrIcH8hUWcYqI8d7ew0HXFk5ytD
+ MDfVRAJ6Yf/w==
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="265464116"
-Received: from jproldan-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Jun 2020 14:37:06 -0700
-Date:   Fri, 26 Jun 2020 00:37:05 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Don Porter <porter@cs.unc.edu>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
+   d="scan'208";a="453153185"
+Received: from clittle-mobl1.amr.corp.intel.com (HELO [10.255.1.144]) ([10.255.1.144])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:37:57 -0700
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace (patch
+ v2)
+To:     Borislav Petkov <bp@alien8.de>,
+        Daniel Gutson <daniel@eclypsium.com>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
-        dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-Message-ID: <20200625213705.GF20341@linux.intel.com>
-References: <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
- <7A3EBAB0-B3B3-4CB7-AA6A-FDF29D03E30D@amacapital.net>
- <20200529152756.GA7452@invisiblethingslab.com>
- <ef8bbdff-e891-bee3-677d-3606474ecc10@cs.unc.edu>
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>
+References: <20200625211029.34733-1-daniel.gutson@eclypsium.com>
+ <20200625211453.GS20319@zn.tnic>
+ <CAFmMkTGy5vOiPUpWw6HfQv-JM90JqLBcsKwMpbWdsjaLBw730Q@mail.gmail.com>
+ <20200625212736.GT20319@zn.tnic>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <5b1699b5-6766-b5c8-fe1f-faf5a9b7c97e@intel.com>
+Date:   Thu, 25 Jun 2020 14:37:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef8bbdff-e891-bee3-677d-3606474ecc10@cs.unc.edu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200625212736.GT20319@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 11:27:28AM -0400, Don Porter wrote:
-> On 5/29/20 11:27 AM, Wojtek Porczyk wrote:
-> > On Thu, May 28, 2020 at 11:38:01AM -0700, Andy Lutomirski wrote:
-> > > One useful test for the actual kernel patches would be to run your SGX
-> > > workload on a loaded core.  That is, do something like taskset -c
-> > > 0 graphene_thing and, simultaneously, write a trivial infinite loop program
-> > > and run that under taskset -c 0 as well. For good measure, you could have
-> > > perf top or perf record running at the same time.  Look for kernel errors,
-> > > but also look for any evidence of your workload malfunctioning.
-> > 
-> > We currently run as part of CI several workloads[1], among them LTP tests[2],
-> > and sometimes it's not pretty, because we encounter stability problems in
-> > Graphene+SGX even without the patchset. We'll pick some stable subset and
-> > will let know. Right now we'll have to retool CI for custom kernels, which
-> > will take some back and forth with uni's admins.
-> > 
-> > [1] https://github.com/oscarlab/graphene/tree/master/Examples
-> > [2] https://github.com/oscarlab/graphene/tree/master/LibOS/shim/test/ltp
-> > 
+On 6/25/20 2:27 PM, Borislav Petkov wrote:
+> On Thu, Jun 25, 2020 at 06:16:12PM -0300, Daniel Gutson wrote:
+>> What didn't become clear from the thread last time is the direction to
+>> proceed. Concrete suggestion?
+> Here are two:
 > 
-> Following up: we have been running a patched 5.7 kernel with v12 of this
-> series on one of our CI workers.  As Wojtek mentions, infrastructure and
-> other orthogonal issues took some time.
+> https://lkml.kernel.org/r/20200619161752.GG32683@zn.tnic
+> https://lkml.kernel.org/r/20200619161026.GF32683@zn.tnic
 > 
-> We have run our complete SGX testing pipelines successfully several times
-> with no issues: no errors in Graphene or suspicious kernel messages.
+> but before that happens, I'd like to hear Dave confirm that when we
+> expose all that information to userspace, it will actually be true and
+> show the necessary bits which *actually* tell you that encryption is
+> enabled.
 > 
-> I also did Andy's suggested test:
-> * Graphene running nginx pinned to core 0
-> * infinite loop on core 0
-> * perf top running
-> * Exercised with non-SGX apache bench several times (~10 minutes of testing
-> time) also from core 0
-> 
-> Again, no apparent issues, nothing in dmesg.  I ran a similar setup with our
-> SGX-specific Graphene (PAL) unit tests.  Same story: everything looks good.
-> 
-> Let us know if we can be of any more help here.
-> 
-> Thanks,
-> Don
+> If you're still unclear, go over the thread again pls.
 
-Can unmodified Graphene-SGX used with these changes?
+It boils down to this: we shouldn't expose low-level, vendor-specific
+implementation details if we can avoid it.  Let's expose something that
+app can actually use.
 
-/Jarkko
+Something that will work for all of the TME, MKTME and SEV platforms
+that I know of and continue to work for a while would be to have a
+per-numa-node (/sys/devices/system/node[X]/file) that says: "user data
+on this node is protected by memory encryption".
+
+SEV guests would always have a 1 in all nodes.
+
+TME systems with no platform screwiness like PMEM would always have a 1.
+
+Old systems would have a 0 in there.
+
+TME systems which also have PMEM-only nodes would set 0 in PMEM nodes
+and 1 on DRAM nodes.
+
+Systems with screwy EFI_MEMORY_CPU_CRYPTO mixing within NUMA nodes would
+turn it off for the screwy nodes.
+
+Is that concrete enough?
