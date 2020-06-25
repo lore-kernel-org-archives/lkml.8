@@ -2,326 +2,343 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B94C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECC720781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB74820768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrGoSe8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405756AbgFYPAD (ORCPT
+        id S2405762AbgFYPAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:00:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:54626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405733AbgFYO75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:59:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C65F1045;
-        Thu, 25 Jun 2020 07:59:56 -0700 (PDT)
-Received: from monolith.arm.com (unknown [10.37.8.55])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87E603F6CF;
-        Thu, 25 Jun 2020 07:59:54 -0700 (PDT)
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu
-Cc:     maz@kernel.org, tglx@linutronix.de, jason@lakedaemon.net,
-        yuzenghui@huawei.com, julien.thierry.kdev@gmail.com,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Subject: [PATCH 2/2] irqchip/gic-v3: Support pseudo-NMIs when SCR_EL3.FIQ == 0
-Date:   Thu, 25 Jun 2020 16:00:26 +0100
-Message-Id: <20200625150026.867727-3-alexandru.elisei@arm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625150026.867727-1-alexandru.elisei@arm.com>
-References: <20200625150026.867727-1-alexandru.elisei@arm.com>
+        Thu, 25 Jun 2020 11:00:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22348 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405551AbgFYPAq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 11:00:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593097243;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vaH2XhJqrgmeupOZvHE/JM6nCD/HOI9ko13ymUaYKgc=;
+        b=WrGoSe8uWLEf6bixBo4hc88Nzmq1DSusnWCOANuTMo/N6hLc1FEdabmPGJE7H3Pt9dbld7
+        YH/gwgweYZJv0oyzhYFrK60snVHwZgqRAz3KXUFSaGFteJVddlL+yLJN6QiRdIumVbsl07
+        dNtN862BVrAge0bqwNcEc4eRCPyQp1U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-BsZRdPTVOZ2BB0HH1sIPXw-1; Thu, 25 Jun 2020 11:00:40 -0400
+X-MC-Unique: BsZRdPTVOZ2BB0HH1sIPXw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAD509113A;
+        Thu, 25 Jun 2020 15:00:37 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-65.ams2.redhat.com [10.36.113.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A02C101E670;
+        Thu, 25 Jun 2020 15:00:30 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: [PATCH RFC] s390x/vmem: get rid of memory segment list
+Date:   Thu, 25 Jun 2020 17:00:29 +0200
+Message-Id: <20200625150029.45019-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GIC's internal view of the priority mask register and the assigned
-interrupt priorities are based on whether GIC security is enabled and
-whether firmware routes Group 0 interrupts to EL3. At the moment, we
-support priority masking when ICC_PMR_EL1 and interrupt priorities are
-either both modified by the GIC, or both left unchanged.
+I can't come up with a satisfying reason why we still need the memory
+segment list. We used to represent in the list:
+- boot memory
+- standby memory added via add_memory()
+- loaded dcss segments
 
-Trusted Firmware-A's default interrupt routing model allows Group 0
-interrupts to be delivered to the non-secure world (SCR_EL3.FIQ == 0).
-Unfortunately, this is precisely the case that the GIC driver doesn't
-support: ICC_PMR_EL1 remains unchanged, but the GIC's view of interrupt
-priorities is different from the software programmed values.
+When loading/unloading dcss segments, we already track them in a
+separate list and check for overlaps
+(arch/s390/mm/extmem.c:segment_overlaps_others()) when loading segments.
 
-Support pseudo-NMIs when SCR_EL3.FIQ == 0 by using a different value to
-mask regular interrupts. All the other values remain the same.
+The overlap check was introduced for some segments in
+commit b2300b9efe1b ("[S390] dcssblk: add >2G DCSSs support and stacked
+contiguous DCSSs support.")
+and was extended to cover all dcss segments in
+commit ca57114609d1 ("s390/extmem: remove code for 31 bit addressing
+mode").
 
-Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Although I doubt that overlaps with boot memory and standby memory
+are relevant, let's reshuffle the checks in load_segment() to request
+the resource first. This will bail out in case we have overlaps with
+other resources (esp. boot memory and standby memory). The order
+is now different compared to segment_unload() and segment_unload(), but
+that should not matter.
+
+This smells like a leftover from ancient times, let's get rid of it. We
+can now convert vmem_remove_mapping() into a void function - everybody
+ignored the return value already.
+
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/arm64/include/asm/arch_gicv3.h |  8 ++++-
- arch/arm64/include/asm/daifflags.h  |  4 +--
- arch/arm64/include/asm/irqflags.h   | 14 +++++---
- arch/arm64/include/asm/ptrace.h     | 12 +++++++
- arch/arm64/kernel/entry.S           |  2 +-
- arch/arm64/kvm/hyp/switch.c         |  2 +-
- drivers/irqchip/irq-gic-v3.c        | 52 ++++++++++++++++++++++-------
- 7 files changed, 73 insertions(+), 21 deletions(-)
+ arch/s390/include/asm/pgtable.h |   2 +-
+ arch/s390/mm/extmem.c           |  25 +++----
+ arch/s390/mm/vmem.c             | 115 ++------------------------------
+ 3 files changed, 21 insertions(+), 121 deletions(-)
 
-diff --git a/arch/arm64/include/asm/arch_gicv3.h b/arch/arm64/include/asm/arch_gicv3.h
-index a358e97572c1..c2a67a81e39d 100644
---- a/arch/arm64/include/asm/arch_gicv3.h
-+++ b/arch/arm64/include/asm/arch_gicv3.h
-@@ -162,7 +162,13 @@ static inline void gic_pmr_mask_irqs(void)
- 	 * are applied to IRQ priorities
- 	 */
- 	BUILD_BUG_ON((0x80 | (GICD_INT_DEF_PRI >> 1)) >= GIC_PRIO_IRQON);
--	gic_write_pmr(GIC_PRIO_IRQOFF);
-+	/*
-+	 * Same situation as above, but now we make sure that we can mask
-+	 * regular interrupts.
-+	 */
-+	BUILD_BUG_ON((0x80 | (GICD_INT_DEF_PRI >> 1)) < (GIC_PRIO_IRQOFF_NS |
-+							 GIC_PRIO_PSR_I_SET));
-+	gic_write_pmr(gic_prio_irqoff());
- }
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 19d603bd1f36e..7eb01a5459cdf 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -1669,7 +1669,7 @@ static inline swp_entry_t __swp_entry(unsigned long type, unsigned long offset)
+ #define kern_addr_valid(addr)   (1)
  
- static inline void gic_arch_enable_irqs(void)
-diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
-index ec213b4a1650..3efa240a6c48 100644
---- a/arch/arm64/include/asm/daifflags.h
-+++ b/arch/arm64/include/asm/daifflags.h
-@@ -22,7 +22,7 @@
- static inline void local_daif_mask(void)
- {
- 	WARN_ON(system_has_prio_mask_debugging() &&
--		(read_sysreg_s(SYS_ICC_PMR_EL1) == (GIC_PRIO_IRQOFF |
-+		(read_sysreg_s(SYS_ICC_PMR_EL1) == (gic_prio_irqoff() |
- 						    GIC_PRIO_PSR_I_SET)));
- 
- 	asm volatile(
-@@ -87,7 +87,7 @@ static inline void local_daif_restore(unsigned long flags)
- 			 * asynchronous errors, we can take NMIs
- 			 */
- 			flags &= ~PSR_I_BIT;
--			pmr = GIC_PRIO_IRQOFF;
-+			pmr = gic_prio_irqoff();
- 		} else {
- 			pmr = GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET;
- 		}
-diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
-index aa4b6521ef14..dc68e11c63a1 100644
---- a/arch/arm64/include/asm/irqflags.h
-+++ b/arch/arm64/include/asm/irqflags.h
-@@ -28,10 +28,13 @@
-  */
- static inline void arch_local_irq_enable(void)
- {
-+	u32 pmr_irqon = GIC_PRIO_IRQON;
-+
- 	if (system_has_prio_mask_debugging()) {
- 		u32 pmr = read_sysreg_s(SYS_ICC_PMR_EL1);
-+		u32 pmr_irqoff = gic_prio_irqoff();
- 
--		WARN_ON_ONCE(pmr != GIC_PRIO_IRQON && pmr != GIC_PRIO_IRQOFF);
-+		WARN_ON_ONCE(pmr != pmr_irqon && pmr != pmr_irqoff);
+ extern int vmem_add_mapping(unsigned long start, unsigned long size);
+-extern int vmem_remove_mapping(unsigned long start, unsigned long size);
++extern void vmem_remove_mapping(unsigned long start, unsigned long size);
+ extern int s390_enable_sie(void);
+ extern int s390_enable_skey(void);
+ extern void s390_reset_cmma(struct mm_struct *mm);
+diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
+index 9e0aa7aa03ba4..105c09282f8c5 100644
+--- a/arch/s390/mm/extmem.c
++++ b/arch/s390/mm/extmem.c
+@@ -313,15 +313,10 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+ 		goto out_free;
  	}
  
- 	asm volatile(ALTERNATIVE(
-@@ -39,7 +42,7 @@ static inline void arch_local_irq_enable(void)
- 		__msr_s(SYS_ICC_PMR_EL1, "%0"),
- 		ARM64_HAS_IRQ_PRIO_MASKING)
- 		:
--		: "r" ((unsigned long) GIC_PRIO_IRQON)
-+		: "r" (pmr_irqon)
- 		: "memory");
- 
- 	pmr_sync();
-@@ -47,10 +50,13 @@ static inline void arch_local_irq_enable(void)
- 
- static inline void arch_local_irq_disable(void)
- {
-+	u32 pmr_irqoff = gic_prio_irqoff();
+-	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
+-
+-	if (rc)
+-		goto out_free;
+-
+ 	seg->res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+ 	if (seg->res == NULL) {
+ 		rc = -ENOMEM;
+-		goto out_shared;
++		goto out_free;
+ 	}
+ 	seg->res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
+ 	seg->res->start = seg->start_addr;
+@@ -335,12 +330,17 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+ 	if (rc == SEG_TYPE_SC ||
+ 	    ((rc == SEG_TYPE_SR || rc == SEG_TYPE_ER) && !do_nonshared))
+ 		seg->res->flags |= IORESOURCE_READONLY;
 +
- 	if (system_has_prio_mask_debugging()) {
- 		u32 pmr = read_sysreg_s(SYS_ICC_PMR_EL1);
-+		u32 pmr_irqon = GIC_PRIO_IRQON;
- 
--		WARN_ON_ONCE(pmr != GIC_PRIO_IRQON && pmr != GIC_PRIO_IRQOFF);
-+		WARN_ON_ONCE(pmr != pmr_irqon && pmr != pmr_irqoff);
++	/* Check for overlapping resources before adding the mapping. */
+ 	if (request_resource(&iomem_resource, seg->res)) {
+ 		rc = -EBUSY;
+-		kfree(seg->res);
+-		goto out_shared;
++		goto out_free_resource;
  	}
  
- 	asm volatile(ALTERNATIVE(
-@@ -58,7 +64,7 @@ static inline void arch_local_irq_disable(void)
- 		__msr_s(SYS_ICC_PMR_EL1, "%0"),
- 		ARM64_HAS_IRQ_PRIO_MASKING)
- 		:
--		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
-+		: "r" (pmr_irqoff)
- 		: "memory");
- }
- 
-diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-index 953b6a1ce549..ad58f05544a1 100644
---- a/arch/arm64/include/asm/ptrace.h
-+++ b/arch/arm64/include/asm/ptrace.h
-@@ -32,6 +32,7 @@
-  */
- #define GIC_PRIO_IRQON			0xe0
- #define GIC_PRIO_IRQOFF			(GIC_PRIO_IRQON & ~0x80)
-+#define GIC_PRIO_IRQOFF_NS		0xa0
- #define GIC_PRIO_PSR_I_SET		(1 << 4)
- 
- /* Additional SPSR bits not exposed in the UABI */
-@@ -129,6 +130,17 @@
- #define compat_sp_fiq	regs[29]
- #define compat_lr_fiq	regs[30]
- 
-+#define gic_prio_irqoff()						\
-+	({								\
-+		extern struct static_key_false gic_nonsecure_priorities;\
-+		u8 __prio = GIC_PRIO_IRQOFF;				\
-+									\
-+		if (static_branch_unlikely(&gic_nonsecure_priorities))	\
-+			__prio = GIC_PRIO_IRQOFF_NS;			\
-+									\
-+		__prio;							\
-+	})
++	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
++	if (rc)
++		goto out_resource;
 +
- static inline unsigned long compat_psr_to_pstate(const unsigned long psr)
- {
- 	unsigned long pstate;
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 5304d193c79d..73654234f454 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -643,7 +643,7 @@ alternative_else_nop_endif
- #ifdef CONFIG_ARM64_PSEUDO_NMI
- 	/*
- 	 * When using IRQ priority masking, we can get spurious interrupts while
--	 * PMR is set to GIC_PRIO_IRQOFF. An NMI might also have occurred in a
-+	 * PMR is set to mask interrupts. An NMI might also have occurred in a
- 	 * section with interrupts disabled. Skip tracing in those cases.
- 	 */
- 	test_irqs_unmasked	res=x0, pmr=x20
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index db1c4487d95d..40d1041ab46d 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -870,7 +870,7 @@ int __hyp_text __kvm_vcpu_run_nvhe(struct kvm_vcpu *vcpu)
- 
- 	/* Returning to host will clear PSR.I, remask PMR if needed */
- 	if (system_uses_irq_prio_masking())
--		gic_write_pmr(GIC_PRIO_IRQOFF);
-+		gic_write_pmr(gic_prio_irqoff());
- 
- 	return exit_code;
- }
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 83103277d2a9..012ff8819313 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -75,16 +75,14 @@ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
-  *
-  * If SCR_EL3.FIQ == 1, the values writen to/read from PMR and RPR at non-secure
-  * EL1 are subject to a similar operation thus matching the priorities presented
-- * from the (re)distributor when security is enabled.
-+ * from the (re)distributor when security is enabled. When SCR_EL3.FIQ == 0,
-+ * these values are unchanched by the GIC.
-  *
-  * see GICv3/GICv4 Architecture Specification (IHI0069D):
-  * - section 4.8.1 Non-secure accesses to register fields for Secure interrupt
-  *   priorities.
-  * - Figure 4-7 Secure read of the priority field for a Non-secure Group 1
-  *   interrupt.
-- *
-- * For now, we only support pseudo-NMIs if we have non-secure view of
-- * priorities.
-  */
- static DEFINE_STATIC_KEY_FALSE(supports_pseudo_nmis);
- 
-@@ -97,6 +95,9 @@ static DEFINE_STATIC_KEY_FALSE(supports_pseudo_nmis);
- DEFINE_STATIC_KEY_FALSE(gic_pmr_sync);
- EXPORT_SYMBOL(gic_pmr_sync);
- 
-+DEFINE_STATIC_KEY_FALSE(gic_nonsecure_priorities);
-+EXPORT_SYMBOL(gic_nonsecure_priorities);
-+
- /* ppi_nmi_refs[n] == number of cpus having ppi[n + 16] set as NMI */
- static refcount_t *ppi_nmi_refs;
- 
-@@ -932,14 +933,16 @@ static void gic_cpu_sys_reg_init(void)
- 	/* Set priority mask register */
- 	if (!gic_prio_masking_enabled()) {
- 		write_gicreg(DEFAULT_PMR_VALUE, ICC_PMR_EL1);
--	} else {
-+	} else if (gic_supports_nmi()) {
- 		/*
- 		 * Mismatch configuration with boot CPU, the system is likely
- 		 * to die as interrupt masking will not work properly on all
- 		 * CPUs
- 		 */
--		WARN_ON(gic_supports_nmi() && group0 &&
--			!gic_dist_security_disabled());
-+		if (static_branch_unlikely(&gic_nonsecure_priorities))
-+			WARN_ON(!group0 || gic_dist_security_disabled());
-+		else
-+			WARN_ON(group0 && !gic_dist_security_disabled());
+ 	if (do_nonshared)
+ 		diag_cc = dcss_diag(&loadnsr_scode, seg->dcss_name,
+ 				&start_addr, &end_addr);
+@@ -351,14 +351,14 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+ 		dcss_diag(&purgeseg_scode, seg->dcss_name,
+ 				&dummy, &dummy);
+ 		rc = diag_cc;
+-		goto out_resource;
++		goto out_mapping;
  	}
+ 	if (diag_cc > 1) {
+ 		pr_warn("Loading DCSS %s failed with rc=%ld\n", name, end_addr);
+ 		rc = dcss_diag_translate_rc(end_addr);
+ 		dcss_diag(&purgeseg_scode, seg->dcss_name,
+ 				&dummy, &dummy);
+-		goto out_resource;
++		goto out_mapping;
+ 	}
+ 	seg->start_addr = start_addr;
+ 	seg->end = end_addr;
+@@ -377,11 +377,12 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+ 			(void*) seg->end, segtype_string[seg->vm_segtype]);
+ 	}
+ 	goto out;
++ out_mapping:
++	vmem_remove_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
+  out_resource:
+ 	release_resource(seg->res);
++ out_free_resource:
+ 	kfree(seg->res);
+- out_shared:
+-	vmem_remove_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
+  out_free:
+ 	kfree(seg);
+  out:
+diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+index 8b6282cf7d139..3b9e71654c37b 100644
+--- a/arch/s390/mm/vmem.c
++++ b/arch/s390/mm/vmem.c
+@@ -20,14 +20,6 @@
  
- 	/*
-@@ -1544,11 +1547,6 @@ static void gic_enable_nmi_support(void)
- 	if (!gic_prio_masking_enabled())
- 		return;
+ static DEFINE_MUTEX(vmem_mutex);
  
--	if (gic_has_group0() && !gic_dist_security_disabled()) {
--		pr_warn("SCR_EL3.FIQ is cleared, cannot enable use of pseudo-NMIs\n");
--		return;
+-struct memory_segment {
+-	struct list_head list;
+-	unsigned long start;
+-	unsigned long size;
+-};
+-
+-static LIST_HEAD(mem_segs);
+-
+ static void __ref *vmem_alloc_pages(unsigned int order)
+ {
+ 	unsigned long size = PAGE_SIZE << order;
+@@ -300,94 +292,25 @@ void vmemmap_free(unsigned long start, unsigned long end,
+ {
+ }
+ 
+-/*
+- * Add memory segment to the segment list if it doesn't overlap with
+- * an already present segment.
+- */
+-static int insert_memory_segment(struct memory_segment *seg)
+-{
+-	struct memory_segment *tmp;
+-
+-	if (seg->start + seg->size > VMEM_MAX_PHYS ||
+-	    seg->start + seg->size < seg->start)
+-		return -ERANGE;
+-
+-	list_for_each_entry(tmp, &mem_segs, list) {
+-		if (seg->start >= tmp->start + tmp->size)
+-			continue;
+-		if (seg->start + seg->size <= tmp->start)
+-			continue;
+-		return -ENOSPC;
+-	}
+-	list_add(&seg->list, &mem_segs);
+-	return 0;
+-}
+-
+-/*
+- * Remove memory segment from the segment list.
+- */
+-static void remove_memory_segment(struct memory_segment *seg)
+-{
+-	list_del(&seg->list);
+-}
+-
+-static void __remove_shared_memory(struct memory_segment *seg)
++void vmem_remove_mapping(unsigned long start, unsigned long size)
+ {
+-	remove_memory_segment(seg);
+-	vmem_remove_range(seg->start, seg->size);
+-}
+-
+-int vmem_remove_mapping(unsigned long start, unsigned long size)
+-{
+-	struct memory_segment *seg;
+-	int ret;
+-
+ 	mutex_lock(&vmem_mutex);
+-
+-	ret = -ENOENT;
+-	list_for_each_entry(seg, &mem_segs, list) {
+-		if (seg->start == start && seg->size == size)
+-			break;
 -	}
 -
- 	ppi_nmi_refs = kcalloc(gic_data.ppi_nr, sizeof(*ppi_nmi_refs), GFP_KERNEL);
- 	if (!ppi_nmi_refs)
- 		return;
-@@ -1567,6 +1565,36 @@ static void gic_enable_nmi_support(void)
- 	pr_info("Pseudo-NMIs enabled using %s ICC_PMR_EL1 synchronisation\n",
- 		static_branch_unlikely(&gic_pmr_sync) ? "forced" : "relaxed");
+-	if (seg->start != start || seg->size != size)
+-		goto out;
+-
+-	ret = 0;
+-	__remove_shared_memory(seg);
+-	kfree(seg);
+-out:
++	vmem_remove_range(start, size);
+ 	mutex_unlock(&vmem_mutex);
+-	return ret;
+ }
  
-+	/*
-+	 * How priority values are used by the GIC depends on two things:
-+	 * the security state of the GIC (controlled by the GICD_CTRL.DS bit)
-+	 * and if Group 0 interrupts can be delivered to Linux in the non-secure
-+	 * world as FIQs (controlled by the SCR_EL3.FIQ bit). These affect the
-+	 * the ICC_PMR_EL1 register and the priority that software assigns to
-+	 * interrupts:
-+	 *
-+	 * GICD_CTRL.DS | SCR_EL3.FIQ | ICC_PMR_EL1 | Group 1 priority
-+	 * -----------------------------------------------------------
-+	 *      1       |      -      |  unchanged  |    unchanged
-+	 * -----------------------------------------------------------
-+	 *      0       |      1      |  non-secure |    non-secure
-+	 * -----------------------------------------------------------
-+	 *      0       |      0      |  unchanged  |    non-secure
-+	 *
-+	 * where non-secure means that the value is right-shifted by one and the
-+	 * MSB bit set, to make it fit in the non-secure priority range.
-+	 *
-+	 * In the first two cases, where ICC_PMR_EL1 and the interrupt priority
-+	 * are both either modified, or unchanged, we can use the same set of
-+	 * priorities.
-+	 *
-+	 * In the last case, where only the interrupt priorities are modified to
-+	 * be in the non-secure range, we use a different PMR value to mask IRQs
-+	 * and the rest of the values that we use remain unchanged.
-+	 */
-+	if (gic_has_group0() && !gic_dist_security_disabled())
-+		static_branch_enable(&gic_nonsecure_priorities);
-+
- 	static_branch_enable(&supports_pseudo_nmis);
+ int vmem_add_mapping(unsigned long start, unsigned long size)
+ {
+-	struct memory_segment *seg;
+ 	int ret;
  
- 	if (static_branch_likely(&supports_deactivate_key))
+-	mutex_lock(&vmem_mutex);
+-	ret = -ENOMEM;
+-	seg = kzalloc(sizeof(*seg), GFP_KERNEL);
+-	if (!seg)
+-		goto out;
+-	seg->start = start;
+-	seg->size = size;
+-
+-	ret = insert_memory_segment(seg);
+-	if (ret)
+-		goto out_free;
++	if (start + size > VMEM_MAX_PHYS ||
++	    start + size < start)
++		return -ERANGE;
+ 
++	mutex_lock(&vmem_mutex);
+ 	ret = vmem_add_mem(start, size);
+ 	if (ret)
+-		goto out_remove;
+-	goto out;
+-
+-out_remove:
+-	__remove_shared_memory(seg);
+-out_free:
+-	kfree(seg);
+-out:
++		vmem_remove_range(start, size);
+ 	mutex_unlock(&vmem_mutex);
+ 	return ret;
+ }
+@@ -421,27 +344,3 @@ void __init vmem_map_init(void)
+ 	pr_info("Write protected kernel read-only data: %luk\n",
+ 		(unsigned long)(__end_rodata - _stext) >> 10);
+ }
+-
+-/*
+- * Convert memblock.memory  to a memory segment list so there is a single
+- * list that contains all memory segments.
+- */
+-static int __init vmem_convert_memory_chunk(void)
+-{
+-	struct memblock_region *reg;
+-	struct memory_segment *seg;
+-
+-	mutex_lock(&vmem_mutex);
+-	for_each_memblock(memory, reg) {
+-		seg = kzalloc(sizeof(*seg), GFP_KERNEL);
+-		if (!seg)
+-			panic("Out of memory...\n");
+-		seg->start = reg->base;
+-		seg->size = reg->size;
+-		insert_memory_segment(seg);
+-	}
+-	mutex_unlock(&vmem_mutex);
+-	return 0;
+-}
+-
+-core_initcall(vmem_convert_memory_chunk);
 -- 
-2.27.0
+2.26.2
 
