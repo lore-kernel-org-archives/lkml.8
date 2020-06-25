@@ -2,88 +2,96 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67009C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD2D207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E072082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:27:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593073635;
+	bh=GncOVRnsRbmrObVuGed/d33M2KDkzxTcEILATAJbLBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KPvIUW5Xb9wCnEKMp2Q72gqwkzXj+AFFx22O+XiWItg8KcqU28ixf0E2S7eGyPrSj
+	 wpgXMnQi0zjplBo0ui/FcDYcrHqrjYl7ZoMzzS0uk5jT43wBrOl+nANXb0J3yKzAQJ
+	 5VDahyWGcWhtBSoeMqE+ByRKTSAzbGsqTItfvkXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390624AbgFYI0d (ORCPT
+        id S2390652AbgFYI1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:26:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33578 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389747AbgFYI0d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:26:33 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 427D72A5107
-Subject: Re: [PATCH] platform/chrome: fix a double-unlock issue
-To:     wu000273@umn.edu, bleung@chromium.org
-Cc:     groeck@chromium.org, linux-kernel@vger.kernel.org, kjlu@umn.edu,
-        Jett Rink <jettrink@chromium.org>,
-        Mathew King <mathewk@chromium.org>,
-        Enrico Granata <egranata@chromium.org>
-References: <20200523031608.17918-1-wu000273@umn.edu>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <8d81a91b-4c1d-d0e1-60d0-a68f6ef65bd0@collabora.com>
-Date:   Thu, 25 Jun 2020 10:26:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 04:27:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389747AbgFYI1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:27:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC6FB207E8;
+        Thu, 25 Jun 2020 08:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593073632;
+        bh=GncOVRnsRbmrObVuGed/d33M2KDkzxTcEILATAJbLBA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KLWf/lD9VcylMACtq8p1wJiRL0bWr2kYSku0VKCkfSWkCAqHKhXHxHOSwvWTS7j3l
+         w9u9NiMdpF5uccefpWlPwAM4Q9i0V+Qe7aZAsJdNvHebMPPRWYp9leOEenbVEgwE27
+         4Y8WoUS9Iu/d8VHbgPuJp11WLopn88ZGoDVDvOts=
+Date:   Thu, 25 Jun 2020 09:27:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200625082706.GA7584@willie-the-truck>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <20200624213014.GB26253@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200523031608.17918-1-wu000273@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624213014.GB26253@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qiushi,
-
-Thank you for your patch.
-
-On 23/5/20 5:16, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
+On Wed, Jun 24, 2020 at 02:30:14PM -0700, Sami Tolvanen wrote:
+> On Wed, Jun 24, 2020 at 11:15:40PM +0200, Peter Zijlstra wrote:
+> > On Wed, Jun 24, 2020 at 01:31:38PM -0700, Sami Tolvanen wrote:
+> > > This patch series adds support for building x86_64 and arm64 kernels
+> > > with Clang's Link Time Optimization (LTO).
+> > > 
+> > > In addition to performance, the primary motivation for LTO is to allow
+> > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+> > > Pixel devices have shipped with LTO+CFI kernels since 2018.
+> > > 
+> > > Most of the patches are build system changes for handling LLVM bitcode,
+> > > which Clang produces with LTO instead of ELF object files, postponing
+> > > ELF processing until a later stage, and ensuring initcall ordering.
+> > > 
+> > > Note that first objtool patch in the series is already in linux-next,
+> > > but as it's needed with LTO, I'm including it also here to make testing
+> > > easier.
+> > 
+> > I'm very sad that yet again, memory ordering isn't addressed. LTO vastly
+> > increases the range of the optimizer to wreck things.
 > 
-> In function cros_ec_ishtp_probe(), "up_write" is already called
-> before function "cros_ec_dev_init". But "up_write" will be called
-> again after the calling of the function "cros_ec_dev_init" failed.
-> Thus add a call of the function “down_write” in this if branch
-> for the completion of the exception handling.
-> 
-> Fixes: 26a14267aff2 ("platform/chrome: Add ChromeOS EC ISHTP driver")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> I believe Will has some thoughts about this, and patches, but I'll let
+> him talk about it.
 
-The change looks good to me, but I'd like someone having the hardware giving a
-Tested-by tag, so cc'ing some chromeos people. They must be also interested on
-backport this patch.
+Thanks for reminding me! I will get patches out ASAP (I've been avoiding the
+rebase from hell, but this is the motivation I need).
 
-> ---
->  drivers/platform/chrome/cros_ec_ishtp.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-> index 93a71e93a2f1..41d60af618c9 100644
-> --- a/drivers/platform/chrome/cros_ec_ishtp.c
-> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
-> @@ -660,8 +660,10 @@ static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
->  
->  	/* Register croc_ec_dev mfd */
->  	rv = cros_ec_dev_init(client_data);
-> -	if (rv)
-> +	if (rv) {
-> +		down_write(&init_lock);
->  		goto end_cros_ec_dev_init_error;
-> +	}
->  
->  	return 0;
->  
-> 
+Will
