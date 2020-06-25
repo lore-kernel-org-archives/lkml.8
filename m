@@ -2,120 +2,161 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA222C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1542076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EF3206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593079754;
+	bh=Cy92y6r1Yt4owgPFibHkzccd1AOEkO6XEi4ayppYCCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=juq09o3SXE3vAsmJfh1sZKdvyB9USNEN3Ll2k8P0mLdluAjX1LfifClBWkXHdXrsX
+	 76nBgWvTjDRHUpahE1cdyt5fa6kVlaBQyYH5UWNpNzZngb149ekE9dmmuEmaBOW296
+	 0KlZP7W1UdhmH9pLZaM5XB+WZmYMqtAToYDTGlV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403856AbgFYKF5 (ORCPT
+        id S2390534AbgFYKJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:05:57 -0400
-Received: from mga06.intel.com ([134.134.136.31]:60553 "EHLO mga06.intel.com"
+        Thu, 25 Jun 2020 06:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390534AbgFYKF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:05:56 -0400
-IronPort-SDR: rGH1UWW8A0wyD1E2Qx2UDVU5/U4MQ4EZErbgGTuUiJRwCfFbOE4rvgH+cjsOzlP1bHYX1t/Tx5
- KYzUvDdMLWtA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="206359329"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="206359329"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 03:05:56 -0700
-IronPort-SDR: c+Co+VmB1WTtrlI6kcp0N8A7BmK4d8S1lQJbB+I9/YDZ6Kp89MC7d5jze3qGxeuGGoWNakeL7F
- KQtz8k/Qi/Vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="263886455"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.28.52]) ([10.255.28.52])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 03:05:53 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 4/7] iommu/vt-d: Handle non-page aligned address
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1592926996-47914-5-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <037cb7cf-1336-f546-7f45-c35caf19930f@linux.intel.com>
-Date:   Thu, 25 Jun 2020 18:05:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S2389646AbgFYKJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:09:11 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC8B206B7;
+        Thu, 25 Jun 2020 10:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593079751;
+        bh=Cy92y6r1Yt4owgPFibHkzccd1AOEkO6XEi4ayppYCCs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nZ6fYWNYg6SfIp71nyrsySnIhunLbGo3B9SAH0j3nve41SNS1iWhOEvk5s3RlI+ON
+         8aBbEimSATKaTBLlFiTEeSo201Wg+hyeT13TZ27+7m6dqcRM2QqjgJvint/xey6ehi
+         /w5D+eUGeXov+93v1kKmCIiAnh6wkJqibg9TLv/s=
+Date:   Thu, 25 Jun 2020 13:09:04 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Re: [PATCH v4] IB/sa: Resolving use-after-free in ib_nl_send_msg
+Message-ID: <20200625100904.GE1446285@unreal>
+References: <1592964789-14533-1-git-send-email-divya.indi@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <1592926996-47914-5-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592964789-14533-1-git-send-email-divya.indi@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2020/6/23 23:43, Jacob Pan wrote:
-> From: Liu Yi L <yi.l.liu@intel.com>
-> 
-> Address information for device TLB invalidation comes from userspace
-> when device is directly assigned to a guest with vIOMMU support.
-> VT-d requires page aligned address. This patch checks and enforce
-> address to be page aligned, otherwise reserved bits can be set in the
-> invalidation descriptor. Unrecoverable fault will be reported due to
-> non-zero value in the reserved bits.
-> 
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+On Tue, Jun 23, 2020 at 07:13:09PM -0700, Divya Indi wrote:
+> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
+> -
+> 1. Adds the query to the request list before ib_nl_snd_msg.
+> 2. Moves ib_nl_send_msg out of spinlock, hence safe to use gfp_mask as is.
+>
+> However, if there is a delay in sending out the request (For
+> eg: Delay due to low memory situation) the timer to handle request timeout
+> might kick in before the request is sent out to ibacm via netlink.
+> ib_nl_request_timeout may release the query causing a use after free situation
+> while accessing the query in ib_nl_send_msg.
+>
+> Call Trace for the above race:
+>
+> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+> [rds_rdma]
+> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+> [rds_rdma]
+> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+> [<ffffffff810a68fb>] kthread+0xcb/0xf0
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+> ....
+> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+>
+> To resolve the above issue -
+> 1. Add the req to the request list only after the request has been sent out.
+> 2. To handle the race where response comes in before adding request to
+> the request list, send(rdma_nl_multicast) and add to list while holding the
+> spinlock - request_lock.
+> 3. Use non blocking memory allocation flags for rdma_nl_multicast since it is
+> called while holding a spinlock.
+>
+> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+> before sending")
+>
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
 > ---
->   drivers/iommu/intel/dmar.c | 19 +++++++++++++++++--
->   1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-> index d9f973fa1190..53f4e5003620 100644
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -1455,9 +1455,24 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
->   	 * Max Invs Pending (MIP) is set to 0 for now until we have DIT in
->   	 * ECAP.
->   	 */
-> -	desc.qw1 |= addr & ~mask;
-> -	if (size_order)
-> +	if (addr & ~VTD_PAGE_MASK)
-> +		pr_warn_ratelimited("Invalidate non-page aligned address %llx\n", addr);
-> +
-> +	if (size_order) {
-> +		/* Take page address */
-> +		desc.qw1 |= QI_DEV_EIOTLB_ADDR(addr);
+> v1:
+> - Use flag IB_SA_NL_QUERY_SENT to prevent the use-after-free.
+>
+> v2:
+> - Use atomic bit ops for setting and testing IB_SA_NL_QUERY_SENT.
+> - Rewording and adding comments.
+>
+> v3:
+> - Change approach and remove usage of IB_SA_NL_QUERY_SENT.
+> - Add req to request list only after the request has been sent out.
+> - Send and add to list while holding the spinlock (request_lock).
+> - Overide gfp_mask and use GFP_NOWAIT for rdma_nl_multicast since we
+>   need non blocking memory allocation while holding spinlock.
+>
+> v4:
+> - Formatting changes.
+> - Use GFP_NOWAIT conditionally - Only when GFP_ATOMIC is not provided by caller.
+> ---
+>  drivers/infiniband/core/sa_query.c | 41 ++++++++++++++++++++++----------------
+>  1 file changed, 24 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+> index 74e0058..9066d48 100644
+> --- a/drivers/infiniband/core/sa_query.c
+> +++ b/drivers/infiniband/core/sa_query.c
+> @@ -836,6 +836,10 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+>  	void *data;
+>  	struct ib_sa_mad *mad;
+>  	int len;
+> +	unsigned long flags;
+> +	unsigned long delay;
+> +	gfp_t gfp_flag;
+> +	int ret;
+>
+>  	mad = query->mad_buf->mad;
+>  	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
+> @@ -860,36 +864,39 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+>  	/* Repair the nlmsg header length */
+>  	nlmsg_end(skb, nlh);
+>
+> -	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
+> -}
+> +	gfp_flag = ((gfp_mask & GFP_ATOMIC) == GFP_ATOMIC) ? GFP_ATOMIC :
+> +		GFP_NOWAIT;
 
-If size_order == 0 (that means only a single page is about to be
-invalidated), do you still need to set ADDR field of the descriptor?
+I would say that the better way will be to write something like this:
+gfp_flag |= GFP_NOWAIT;
 
-Best regards,
-baolu
-
-> +		/*
-> +		 * Existing 0s in address below size_order may be the least
-> +		 * significant bit, we must set them to 1s to avoid having
-> +		 * smaller size than desired.
-> +		 */
-> +		desc.qw1 |= GENMASK_ULL(size_order + VTD_PAGE_SHIFT,
-> +					VTD_PAGE_SHIFT);
-> +		/* Clear size_order bit to indicate size */
-> +		desc.qw1 &= ~mask;
-> +		/* Set the S bit to indicate flushing more than 1 page */
->   		desc.qw1 |= QI_DEV_EIOTLB_SIZE;
-> +	}
->   
->   	qi_submit_sync(iommu, &desc, 1, 0);
->   }
-> 
+Thanks
