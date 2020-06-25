@@ -2,167 +2,226 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D14C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE91C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F25462076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:52:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Vqg2LD9D"
+	by mail.kernel.org (Postfix) with ESMTP id 1117A207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593082381;
+	bh=soNUNt6SN0NBZi4lpB0mUfayqf6qO/jv1+DvyYAoyEE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hHsiqtuezafEmvjLzFMr1GTAR1E3RqchhFQOsAzapdFJ5WlM+/hjzf13VTScbCT3z
+	 caedOiv18BM/kWpBhsCG8svbUgO+DuitjKhK5zdhzdX95nkRxnxmzvIq4zaYZw65ON
+	 i6JeEGqL3qCbx6ns74t7IdH2htdvMwuRm+CXdALc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404081AbgFYKwv (ORCPT
+        id S2404106AbgFYKw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403952AbgFYKwu (ORCPT
+        Thu, 25 Jun 2020 06:52:59 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41993 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403952AbgFYKw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:52:50 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A88CC061573;
-        Thu, 25 Jun 2020 03:52:49 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e4so5994160ljn.4;
-        Thu, 25 Jun 2020 03:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0qf+WwjLjZe3vMqS+VrsoQuseqViWgd3zGOf1M8nB9U=;
-        b=Vqg2LD9D0O/2OhntPwkfFH4OpzES5l2IUdWp4EE9OixK9Mfdu1AoSCVbFN6Nbd5Hen
-         5INRLzs9cJR28sG3/hAIdsw2i5VahwO5ToPyhJvIWZxuhBrI/5j232shF+cG9W23QU1t
-         +vQWkwODYHe7hFq4RlZ8V59ZksoWYxyjXROiy9rEpwVzfFZXosVSMrXHfFgG0nSbVdpl
-         9OZysZdpWcNOszUzh/ZNcyDDgYoZe6i6JkLXn2Kl48x9DB7vF9n+Tr3arOswUKnLZLMB
-         ZIlfyCBvXrL2H88rEOjo+OchD4emmXkN3A+PxuGxKTEwdyju2HW2WG+5ej+fDDK8XLeL
-         9HFg==
+        Thu, 25 Jun 2020 06:52:58 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s21so4541261oic.9;
+        Thu, 25 Jun 2020 03:52:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0qf+WwjLjZe3vMqS+VrsoQuseqViWgd3zGOf1M8nB9U=;
-        b=LnMIDEccNW5S9sWvG92X0rjaiKvwd1G+UOFe6I5WLGMVnE4HwPJDnTkmwf46GC0IBw
-         NnEfqKf8d/UVZMQPWIokpltAZwYeh0hxMmBWCcP0Y3mD94bE0r6GxsNoD7Im0AN/Yk+Q
-         Z0m5IU7Q4YGTeEs8CPPCDrm7TxqtCOsWIkBzFv/2Ot7N+yf5bQ+YN7XG+euYUwAUbY3h
-         go8tLV1/cGWTVdqTyjmGx6AB1DyB5AVs51h2aedbYP4gAXtTkIHEiF8X6SIfy01sx5Wj
-         TYvmhoVNF8qyP6o88ouxRifXQBcFU1OS0vSoANlPLr7ptYp5xHkMXXzgvDeZdYl3XUq6
-         7+lA==
-X-Gm-Message-State: AOAM531Rf9eLyzFMt4SkK62rJcBQ69j1snJIyF9744AoymLwABK3scLV
-        SKrUHNIoUphPxYnanPGOwNR/7a4aGVyBM47hiA==
-X-Google-Smtp-Source: ABdhPJwacAJi0USWhyA6c8/w0XjhDAOSmOvEEAf/E2Qkfh26ELP75vacUc++JsD0X1OE2GVKZAfVe6w7qbq1292+z+4=
-X-Received: by 2002:a05:651c:119a:: with SMTP id w26mr1664799ljo.126.1593082367574;
- Thu, 25 Jun 2020 03:52:47 -0700 (PDT)
+        bh=cwIdSXPUuU1uRqpvtJKtzstYQAUArlOMALUNp7co5jM=;
+        b=tMNWIAwmLKevjNxSYczq7350FAkRplHgyVO2Ib5MBFXOQpk6NGLI53pG68xjXSIT9i
+         5ZM0SiUJN8V2V71kjxWJwQPdAuSeLhLogvhhaTLAY1D36O7MY1TGLsUWD8KYs/nkh0BL
+         7UxmMXjgd14veCtKITiI4q5VnMcKiBwNmsELzeuZX/L5bGXVPb4QzyH0gpmcnVioKFdd
+         VOoceNKTqMAfSQAgNffVQaNntBwD55Fu0yvVSY7w5cJfdw6dFegkXDfv98GDqD0ZQfHw
+         pTJfQW9C5XUve3ClM+BYxAjP1vse+k/rQAjCnJ2N0EU74fDiu6ReGIi3bW2vy+Q14/3V
+         encA==
+X-Gm-Message-State: AOAM533sTjVlw5kxuos1rf5CRILy2HmzXRGQ8xqL9V0s57y5M0Z6Mwa5
+        XWajOJz6pBXLC3oV7qcQQRtutaWk5MxsP8nAE/0=
+X-Google-Smtp-Source: ABdhPJwRCQMnCB/bfuvmkARjDAhUHGU6ki0GfoTWamxo9Rq1xfFvWJi8TwqcHRaFJuXBeT1DMVCjbHvWJZL0Eu9jkFE=
+X-Received: by 2002:a54:4585:: with SMTP id z5mr1704626oib.110.1593082376670;
+ Thu, 25 Jun 2020 03:52:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592410366125160@kroah.com> <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
- <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org> <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
-In-Reply-To: <CAEJqkggG2ZB8De_zbP2W7Z9eRYve2br8jALaLRhjC33ksLZpTw@mail.gmail.com>
-From:   Gabriel C <nix.or.die@googlemail.com>
-Date:   Thu, 25 Jun 2020 12:52:21 +0200
-Message-ID: <CAEJqkgj4LS7M3zYK51Vagt4rWC9A7uunA+7CvX0Qv=57Or3Ngg@mail.gmail.com>
-Subject: Re: ath9k broken [was: Linux 5.7.3]
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable <stable@vger.kernel.org>, lwn@lwn.net,
-        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
-        ath9k-devel <ath9k-devel@qca.qualcomm.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <20200623142138.209513-1-qperret@google.com> <20200623142138.209513-3-qperret@google.com>
+ <20200624055023.xofefhohf7wifme5@vireshk-i7> <CAJZ5v0ja_rM7i=psW1HRyzEpW=8QwP2u9p+ihN3FS8_53bbxTQ@mail.gmail.com>
+ <20200624153259.GA2844@google.com> <20200625085052.4ah4wbog3guj74v4@vireshk-i7>
+In-Reply-To: <20200625085052.4ah4wbog3guj74v4@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Jun 2020 12:52:45 +0200
+Message-ID: <CAJZ5v0huMCZcqEkDw2KKp9RMBAU=rpex0zSAw_kK3CqjMyaibw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Quentin Perret <qperret@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Do., 25. Juni 2020 um 12:48 Uhr schrieb Gabriel C
-<nix.or.die@googlemail.com>:
+On Thu, Jun 25, 2020 at 10:50 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> Am Do., 25. Juni 2020 um 06:57 Uhr schrieb Jiri Slaby <jirislaby@kernel.org>:
+> On 24-06-20, 16:32, Quentin Perret wrote:
+> > Right, but I must admit that, looking at this more, I'm getting a bit
+> > confused with the overall locking for governors :/
 > >
-> > On 25. 06. 20, 0:05, Gabriel C wrote:
-> > > Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org>:
-> > >>
-> > >> I'm announcing the release of the 5.7.3 kernel.
-> > >>
-> > >
-> > > Hello Greg,
-> > >
-> > >> Qiujun Huang (5):
-> > >>       ath9k: Fix use-after-free Read in htc_connect_service
-> > >>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-> > >>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-> > >>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-> > >>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-> > >>
-> > >
-> > > We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
-> > > while working fine on <5.7.3.
-> > >
-> > > I don't have myself such HW, and the reported doesn't have any experience
-> > > in bisecting the kernel, so we build kernels, each with one of the
-> > > above commits reverted,
-> > > to find the bad commit.
-> > >
-> > > The winner is:
-> > >
-> > > commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
-> > > Author: Qiujun Huang <hqjagain@gmail.com>
-> > > Date:   Sat Apr 4 12:18:38 2020 +0800
-> > >
-> > >     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-> > >
-> > >     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
-> > > ...
-> > >
-> > > Reverting this one fixed his problem.
+> > When in cpufreq_init_policy() we find a governor using
+> > find_governor(policy->last_governor), what guarantees this governor is
+> > not concurrently unregistered? That is, what guarantees this governor
+> > doesn't go away between that find_governor() call, and the subsequent
+> > call to try_module_get() in cpufreq_set_policy() down the line?
 > >
-> > Obvious question: is 5.8-rc1 (containing the commit) broken too?
+> > Can we somewhat assume that whatever governor is referred to by
+> > policy->last_governor will have a non-null refcount? Or are the
+> > cpufreq_online() and cpufreq_unregister_governor() path mutually
+> > exclusive? Or is there something else?
 >
-> Yes, it does, just checked.
->
-> git tag --contains 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05
-> v5.8-rc1
-> v5.8-rc2
->
+> This should be sufficient to fix pending issues I believe. Based over your
+> patches.
 
-Sorry, I read the wrong, I just woke up.
+LGTM, but can you post it in a new thread to let Patchwork pick it up?
 
-We didn't test 5.8-rc{1,2} yet but we will today and let you know.
-
-> >
-> > I fail to see how the commit could cause an issue like this. Is this
-> > really reproducibly broken with the commit and irreproducible without
-> > it?
+> -------------------------8<-------------------------
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+> Date: Thu, 25 Jun 2020 13:15:23 +0530
+> Subject: [PATCH] cpufreq: Fix locking issues with governors
 >
-> I can't see something obvious wrong either, but yes it's reproducible on his HW.
-> Kernel with this commit breaks the dongle, with the commit reverted it works.
+> The locking around governors handling isn't adequate currently. The list
+> of governors should never be traversed without locking in place. Also we
+> must make sure the governor isn't removed while it is still referenced
+> by code.
 >
-> >As it looks like a USB/wiring problem:
-> > usb 1-2: USB disconnect, device number 2
-> > ath: phy0: Reading Magic # failed
-> > ath: phy0: Unable to initialize hardware; initialization status: -5
-> > ...
-> > usb 1-2: device descriptor read/64, error -110
-> > usb 1-2: device descriptor read/64, error -71
-> >
-> > Ccing ath9k maintainers too.
-> >
-> > > I don't have so much info about the HW, besides a dmesg showing the
-> > > phy breaking.
-> > > I also added the reporter to CC too.
-> > >
-> > > https://gist.github.com/AngryPenguinPL/1e545f0da3c2339e443b9e5044fcccea
-> > >
-> > > If you need more info, please let me know and I'll try my best to get
-> > > it as fast as possible for you.
-> >
+> Reported-by: Quentin Perret <qperret@google.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 59 ++++++++++++++++++++++++---------------
+>  1 file changed, 36 insertions(+), 23 deletions(-)
 >
-> Best Regards,
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 4b1a5c0173cf..dad6b85f4c89 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -624,6 +624,24 @@ static struct cpufreq_governor *find_governor(const char *str_governor)
+>         return NULL;
+>  }
 >
-> Gabriel C
+> +static struct cpufreq_governor *get_governor(const char *str_governor)
+> +{
+> +       struct cpufreq_governor *t;
+> +
+> +       mutex_lock(&cpufreq_governor_mutex);
+> +       t = find_governor(str_governor);
+> +       if (!t)
+> +               goto unlock;
+> +
+> +       if (!try_module_get(t->owner))
+> +               t = NULL;
+> +
+> +unlock:
+> +       mutex_unlock(&cpufreq_governor_mutex);
+> +
+> +       return t;
+> +}
+> +
+>  static unsigned int cpufreq_parse_policy(char *str_governor)
+>  {
+>         if (!strncasecmp(str_governor, "performance", CPUFREQ_NAME_LEN))
+> @@ -643,28 +661,14 @@ static struct cpufreq_governor *cpufreq_parse_governor(char *str_governor)
+>  {
+>         struct cpufreq_governor *t;
+>
+> -       mutex_lock(&cpufreq_governor_mutex);
+> -
+> -       t = find_governor(str_governor);
+> -       if (!t) {
+> -               int ret;
+> -
+> -               mutex_unlock(&cpufreq_governor_mutex);
+> -
+> -               ret = request_module("cpufreq_%s", str_governor);
+> -               if (ret)
+> -                       return NULL;
+> -
+> -               mutex_lock(&cpufreq_governor_mutex);
+> +       t = get_governor(str_governor);
+> +       if (t)
+> +               return t;
+>
+> -               t = find_governor(str_governor);
+> -       }
+> -       if (t && !try_module_get(t->owner))
+> -               t = NULL;
+> -
+> -       mutex_unlock(&cpufreq_governor_mutex);
+> +       if (request_module("cpufreq_%s", str_governor))
+> +               return NULL;
+>
+> -       return t;
+> +       return get_governor(str_governor);
+>  }
+>
+>  /**
+> @@ -818,12 +822,14 @@ static ssize_t show_scaling_available_governors(struct cpufreq_policy *policy,
+>                 goto out;
+>         }
+>
+> +       mutex_lock(&cpufreq_governor_mutex);
+>         for_each_governor(t) {
+>                 if (i >= (ssize_t) ((PAGE_SIZE / sizeof(char))
+>                     - (CPUFREQ_NAME_LEN + 2)))
+> -                       goto out;
+> +                       break;
+>                 i += scnprintf(&buf[i], CPUFREQ_NAME_PLEN, "%s ", t->name);
+>         }
+> +       mutex_unlock(&cpufreq_governor_mutex);
+>  out:
+>         i += sprintf(&buf[i], "\n");
+>         return i;
+> @@ -1060,11 +1066,14 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>  {
+>         struct cpufreq_governor *gov = NULL;
+>         unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
+> +       bool put_governor = false;
+> +       int ret;
+>
+>         if (has_target()) {
+>                 /* Update policy governor to the one used before hotplug. */
+> -               gov = find_governor(policy->last_governor);
+> +               gov = get_governor(policy->last_governor);
+>                 if (gov) {
+> +                       put_governor = true;
+>                         pr_debug("Restoring governor %s for cpu %d\n",
+>                                  policy->governor->name, policy->cpu);
+>                 } else if (default_governor) {
+> @@ -1091,7 +1100,11 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+>                         return -ENODATA;
+>         }
+>
+> -       return cpufreq_set_policy(policy, gov, pol);
+> +       ret = cpufreq_set_policy(policy, gov, pol);
+> +       if (put_governor)
+> +               module_put(gov->owner);
+> +
+> +       return ret;
+>  }
+>
+>  static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cpu)
