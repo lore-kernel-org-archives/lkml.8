@@ -2,29 +2,30 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC36BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5CD820707
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6792076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405213AbgFYNnx (ORCPT
+        id S2405230AbgFYNoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:43:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60012 "EHLO huawei.com"
+        Thu, 25 Jun 2020 09:44:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49350 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404890AbgFYNnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:43:53 -0400
+        id S2405190AbgFYNoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:44:10 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 429DA41853EE28F8554D;
-        Thu, 25 Jun 2020 21:43:50 +0800 (CST)
+        by Forcepoint Email with ESMTP id 6F308B2C6D69505DCE5A;
+        Thu, 25 Jun 2020 21:44:05 +0800 (CST)
 Received: from A190218597.china.huawei.com (10.47.76.118) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 25 Jun 2020 21:43:41 +0800
+ 14.3.487.0; Thu, 25 Jun 2020 21:43:54 +0800
 From:   Salil Mehta <salil.mehta@huawei.com>
 To:     <linux-arm-kernel@lists.infradead.org>
 CC:     <maz@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>,
@@ -37,11 +38,14 @@ CC:     <maz@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>,
         <eric.auger@redhat.com>, <gshan@redhat.com>, <david@redhat.com>,
         <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <mehta.salil.lnk@gmail.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-Subject: [PATCH RFC 0/4] Changes to Support *Virtual* CPU Hotplug for ARM64
-Date:   Thu, 25 Jun 2020 14:37:53 +0100
-Message-ID: <20200625133757.22332-1-salil.mehta@huawei.com>
+        Salil Mehta <salil.mehta@huawei.com>,
+        "Xiongfeng Wang" <wangxiongfeng2@huawei.com>
+Subject: [PATCH RFC 2/4] arm64: kernel: Bound the total(present+disabled) cpus with nr_cpu_ids
+Date:   Thu, 25 Jun 2020 14:37:55 +0100
+Message-ID: <20200625133757.22332-3-salil.mehta@huawei.com>
 X-Mailer: git-send-email 2.8.3
+In-Reply-To: <20200625133757.22332-1-salil.mehta@huawei.com>
+References: <20200625133757.22332-1-salil.mehta@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.47.76.118]
@@ -51,71 +55,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes to support virtual cpu hotplug in QEMU[1] have been introduced to the
-community as RFC. These are under review.
+Bound the total number of identified cpus(including disabled cpus) by
+maximum allowed limit by the kernel. Max value is either specified as
+part of the kernel parameters 'nr_cpus' or specified during compile
+time using CONFIG_NR_CPUS.
 
-To support virtual cpu hotplug guest kernel must:
-1. Identify disabled/present vcpus and set/unset the present mask of the vcpu
-   during initialization and hotplug event. It must also set the possible mask
-   (which includes disabled vcpus) during init of guest kernel.
-2. Provide architecture specific ACPI hooks, for example to map/unmap the
-   logical cpuid to hwids/MPIDR. Linux kernel already has generic ACPI cpu
-   hotplug framework support.
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ arch/arm64/kernel/smp.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-Changes introduced in this patch-set also ensures that initialization of the
-cpus when virtual cpu hotplug is not supported remains un-affected.
-
-Repository:
-(*) Kernel changes are at,
-     https://github.com/salil-mehta/linux.git virt-cpuhp-arm64/rfc-v1
-(*) QEMU changes for vcpu hotplug could be cloned from below site,
-     https://github.com/salil-mehta/qemu.git virt-cpuhp-armv8/rfc-v1
-
-
-THINGS TO DO:
-1. Handling of per-cpu variables especially the first-chunk allocations
-   (which are NUMA aware) when the vcpu is hotplugged needs further attention
-   and review.
-2. NUMA related stuff has not been fully tested both in QEMU and kernel.
-3. Comprehensive Testing including when cpu hotplug is not supported.
-4. Docs
-
-DISCLAIMER:
-This is not a complete work but an effort to present the arm vcpu hotplug
-implementation to the community. This RFC is being used as a way to verify
-the idea mentioned above and to support changes presented for QEMU[1] to
-support vcpu hotplug. As of now this is *not* a production level code and might
-have bugs. Only a basic testing has been done on HiSilicon Kunpeng920 ARM64
-based SoC for Servers to verify the proof-of-concept that has been found working!
-
-Best regards
-Salil.
-
-REFERENCES:
-[1] https://www.mail-archive.com/qemu-devel@nongnu.org/msg712010.html
-[2] https://lkml.org/lkml/2019/6/28/1157
-[3] https://lists.cs.columbia.edu/pipermail/kvmarm/2018-July/032316.html
-
-Organization of Patches:
-[Patch 1-3]
-(*) Changes required during guest boot time to support vcpu hotplug 
-(*) Max cpu overflow checks
-(*) Changes required to pre-setup cpu-operations even for disabled cpus
-[Patch 4]
-(*) Arch changes required by guest kernel ACPI CPU Hotplug framework.
-
-
-Salil Mehta (4):
-  arm64: kernel: Handle disabled[(+)present] cpus in MADT/GICC during
-    init
-  arm64: kernel: Bound the total(present+disabled) cpus with nr_cpu_ids
-  arm64: kernel: Init cpu operations for all possible vcpus
-  arm64: kernel: Arch specific ACPI hooks(like logical cpuid<->hwid
-    etc.)
-
- arch/arm64/kernel/smp.c | 153 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 123 insertions(+), 30 deletions(-)
-
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 51a707928302..864ccd3da419 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -513,6 +513,7 @@ static int __init smp_cpu_setup(int cpu)
+ }
+ 
+ static bool bootcpu_valid __initdata;
++static bool cpus_clipped __initdata = false;
+ static unsigned int cpu_count = 1;
+ static unsigned int disabled_cpu_count;
+ 
+@@ -536,6 +537,11 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_interrupt *processor)
+ 	unsigned int total_cpu_count = disabled_cpu_count + cpu_count;
+ 	u64 hwid = processor->arm_mpidr;
+ 
++	if (total_cpu_count > nr_cpu_ids) {
++		cpus_clipped = true;
++		return;
++	}
++
+ 	if (!(processor->flags & ACPI_MADT_ENABLED)) {
+ #ifndef CONFIG_ACPI_HOTPLUG_CPU
+ 		pr_debug("skipping disabled CPU entry with 0x%llx MPIDR\n", hwid);
+@@ -569,9 +575,6 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_interrupt *processor)
+ 		return;
+ 	}
+ 
+-	if (cpu_count >= NR_CPUS)
+-		return;
+-
+ 	/* map the logical cpu id to cpu MPIDR */
+ 	cpu_logical_map(total_cpu_count) = hwid;
+ 
+@@ -688,8 +691,10 @@ static void __init of_parse_and_init_cpus(void)
+ 			continue;
+ 		}
+ 
+-		if (cpu_count >= NR_CPUS)
++		if (cpu_count >= NR_CPUS) {
++			cpus_clipped = true;
+ 			goto next;
++		}
+ 
+ 		pr_debug("cpu logical map 0x%llx\n", hwid);
+ 		cpu_logical_map(cpu_count) = hwid;
+@@ -710,6 +715,7 @@ static void __init of_parse_and_init_cpus(void)
+  */
+ void __init smp_init_cpus(void)
+ {
++	unsigned int total_cpu_count = disabled_cpu_count + cpu_count;
+ 	int i;
+ 
+ 	if (acpi_disabled)
+@@ -717,9 +723,9 @@ void __init smp_init_cpus(void)
+ 	else
+ 		acpi_parse_and_init_cpus();
+ 
+-	if (cpu_count > nr_cpu_ids)
++	if (cpus_clipped)
+ 		pr_warn("Number of cores (%d) exceeds configured maximum of %u - clipping\n",
+-			cpu_count, nr_cpu_ids);
++			total_cpu_count, nr_cpu_ids);
+ 
+ 	if (!bootcpu_valid) {
+ 		pr_err("missing boot CPU MPIDR, not enabling secondaries\n");
 -- 
 2.17.1
 
