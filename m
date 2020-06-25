@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E83C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D211C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCC8620781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6624A207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phgQEmZB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pnLv+uo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405938AbgFYSV4 (ORCPT
+        id S2406085AbgFYSWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54772 "EHLO
+        Thu, 25 Jun 2020 14:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403908AbgFYSVp (ORCPT
+        with ESMTP id S2405929AbgFYSVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:21:45 -0400
+        Thu, 25 Jun 2020 14:21:55 -0400
 Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71B1C08C5DB;
-        Thu, 25 Jun 2020 11:21:44 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id i14so6873732ejr.9;
-        Thu, 25 Jun 2020 11:21:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8BEC08C5DB;
+        Thu, 25 Jun 2020 11:21:55 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id ga4so6852368ejb.11;
+        Thu, 25 Jun 2020 11:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nINX/kfwXFeE0ZC5NuendZlvDPr7E/82LokYi5uJ2C8=;
-        b=phgQEmZBAGHvF6Yor9+Ner7UPhLMBjeDoTBnlcP5hKjw+/FXyBRbqeQO7UuM4I/fwC
-         m4bUArLisV1M8EBGkYqXiB+rVR+ytGS+Pph9ROOmYIxq3ho0Ui27MvYSwhW0ezhQG2zx
-         Dse2e/Ns0HQnS7ZRh9a4Ucej7p2hA5fMqM18JM7nKoxLYaaQgjypvGO8SNnX9aD1+BB5
-         o2HFiZ+5Ap1Tsuk624bOpisg+utjMrjJcW274L30jZkjGARpu+AWcSLiEj6vYkv9xyTL
-         5tuH/4CaBrsU+V8fjYnRgLvOW2uq8rtbe+Mv7uVv4j8dnOwni05caefJdE1tm8XyfM7m
-         qFSA==
+        bh=dvDLOKRG4O2InrW0PN0HnWa5B+zIHa5l8tfp3eSwRmw=;
+        b=pnLv+uo897hEztVjpRBKULlH7dRVtcVjIv3Qi5nGwjQjc5Uzc/XtJl99LHtuHj5xAo
+         u1M9RltNXi/Hvig1ryncM+MkyS64yYNIL6QIK+T62CaVUZiK8nvR4/ypV+3TD5U99MQy
+         NqWLWKg4vGyIB3W1VcqAVt69t4vXwHwcTI58I5f/9GaBWNj31GogxDRvBgJHbKNTH5m1
+         3l6IKjK/aF98OK/Ci5WuBiWppPHhwN87BN4hjf8/yU77iA8+XrlSuDRzhQgVHPXG2vhO
+         8yvM9ZbnycWwscFos6eP/qo+6qQlRiEZaUPZOWPl/ZOkX3TyidhBwPHvvuB+yZx2Hbc0
+         GEIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nINX/kfwXFeE0ZC5NuendZlvDPr7E/82LokYi5uJ2C8=;
-        b=dQ8/XfiM3ohPPcKY06nkftYBwCe/cmWjMEAdHj7E8ikLK67PiONTt61yuWRIUQPkp5
-         SuG4nUCClDBKSjhtRCVU+cjyGN+3/fG/4P30ro8TgazhhpFORRFVH4FSio2Zssqze6s2
-         anPzCFiotYWYacssI8KcanWwBWu3eYbmvnnNr2nEXqpg5M4fqbatiCrImbDw9qwC8xcI
-         OEXXfO3MeS/J+KTgwr+cQghCdPQ6e5PGLpxR3bgvuE77QZGo+TJokNc7haWqDlfHCrKf
-         DKIDhUGShekLwLc66+SCnaV6PAE6vwyZUJTYcYwfkw4wjhVvAzkjfzeK6XEH0q1xBG6Y
-         er1Q==
-X-Gm-Message-State: AOAM532c/a5Hcd+P8jtw6EybYtBxr/qfgLAEeEEDE6jfr89dZOe4omNt
-        npcp8+2IqoF6MvlEBWvf7ls=
-X-Google-Smtp-Source: ABdhPJySgXDEOreTE6V/aBq8JMuILzmOefyxBwgH84GXUxUtaHRcMT4JFvzsjFHIg2QsVtNzQZUeqw==
-X-Received: by 2002:a17:907:6fc:: with SMTP id yh28mr20251363ejb.267.1593109303497;
-        Thu, 25 Jun 2020 11:21:43 -0700 (PDT)
+        bh=dvDLOKRG4O2InrW0PN0HnWa5B+zIHa5l8tfp3eSwRmw=;
+        b=HMPpPWIAnGYh0aUS4ZsfkuShBGadWxFTZEH4IkKw4KMQWLc6KzurZps8iGFvjEuMfI
+         coenQVPBC6unJstjzW9AcL3FLIy4ixARf/d7xSch9fEN3C65y15NfxlNM20R0FwNf5S5
+         iUQp/F4XszKACURxKJbo2ARTa9UyNEsIklM6bFbkH2jW/7lAt14JyqleizGDgL82QROS
+         VFtrpALn8YbeRhAcYZfS8+S6VAQL0TQBdxGtD3zRIcxGYhVMpGz8+5YSgIb/BGClTfq4
+         h9qqoe6Tv3NQtSGEcYeLVC4BS0bVxn0jQPbblG1QFWxVVjkONuYKIu3H3cWykRFEguY3
+         VSPQ==
+X-Gm-Message-State: AOAM532LpRiHBpfG+8bsMp1p+3LBUkOyKfZMm4O3K8zxAO+A4jO2ERIG
+        DHR1LlzGG6Sivm/3klrQATE=
+X-Google-Smtp-Source: ABdhPJwEJHkfjig6axGgjr08gzQA32UQJA/NuhjtfEXVoTO8EBVIhKmGUjR7nDGJ8GFDiig8syUahg==
+X-Received: by 2002:a17:906:4056:: with SMTP id y22mr29867132ejj.304.1593109313951;
+        Thu, 25 Jun 2020 11:21:53 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.42
+        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:21:43 -0700 (PDT)
+        Thu, 25 Jun 2020 11:21:53 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/13] arm64: dts: qcom: msm8992: Add BLSP2_UART2 and I2C nodes
-Date:   Thu, 25 Jun 2020 20:21:12 +0200
-Message-Id: <20200625182118.131476-9-konradybcio@gmail.com>
+Subject: [PATCH v3 12/13] arm64: dts: qcom: Add Xiaomi Libra (Mi 4C) device tree
+Date:   Thu, 25 Jun 2020 20:21:16 +0200
+Message-Id: <20200625182118.131476-13-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
 References: <20200625182118.131476-1-konradybcio@gmail.com>
@@ -84,202 +84,405 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for I2C to enable support for peripherals
-such as touchscreens or sensors. Also add BLSP_UART2 interface.
+This commit adds support for the Xiaomi Libra (Mi 4C)
+smartphone. It's based on the Qualcomm msm8992 SoC.
 
-Please note that the naming scheme follows downstream and as
-abominable as it is, that's what we get.
+It currently supports:
+* Screen console from bootloader
+* SDHCI
+* Regulator configuration
+* Serial console
+* I2C
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 153 ++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/msm8992-xiaomi-libra.dts    | 364 ++++++++++++++++++
+ 2 files changed, 365 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-xiaomi-libra.dts
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index acce7be22e50..e8b801813f14 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -272,6 +272,101 @@ blsp1_uart2: serial@f991e000 {
- 			status = "disabled";
- 		};
- 
-+		blsp_i2c2: i2c@f9924000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9924000 0x500>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <400000>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c2_default>;
-+			pinctrl-1 = <&i2c2_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 0f2c33d611df..344cdeb68b16 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a5u-eur.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-xiaomi-libra.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-asus-novago-tp370ql.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8992-xiaomi-libra.dts b/arch/arm64/boot/dts/qcom/msm8992-xiaomi-libra.dts
+new file mode 100644
+index 000000000000..ac9b2f325fc1
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8992-xiaomi-libra.dts
+@@ -0,0 +1,364 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2020, Konrad Dybcio
++ */
++
++/dts-v1/;
++
++#include "msm8992.dtsi"
++#include "pm8994.dtsi"
++#include "pmi8994.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/gpio-keys.h>
++
++/ {
++	model = "Xiaomi Mi 4C";
++	compatible = "xiaomi,libra", "qcom,msm8992";
++	/* required for bootloader to select correct board */
++	qcom,msm-id = <251 0 252 0>;
++    qcom,pmic-id = <65545 65546 0 0>;
++	qcom,board-id = <12 0>;
++
++	/* This enables graphical output via bootloader-enabled display */
++	chosen {
++		bootargs = "earlycon=tty0 console=tty0";
++
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		framebuffer0: framebuffer@3404000 {
++			status= "okay";
++			compatible = "simple-framebuffer";
++			reg = <0 0x3404000 0 (1080 * 1920 * 3)>;
++			width = <1080>;
++			height = <1920>;
++			stride = <(1080 * 3)>;
++			format = "r8g8b8";
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		input-name = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		autorepeat;
++
++		button@0 {
++			label = "Volume Up";
++			gpios = <&pm8994_gpios 3 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_VOLUMEUP>;
++			wakeup-source;
++			debounce-interval = <15>;
++		};
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/* This is for getting crash logs using Android downstream kernels */
++		ramoops@dfc00000 {
++			compatible = "ramoops";
++			reg = <0x0 0xdfc00000 0x0 0x40000>;
++			console-size = <0x10000>;
++			record-size = <0x10000>;
++			ftrace-size = <0x10000>;
++			pmsg-size = <0x20000>;
++		};
++
++		continuous_splash: framebuffer@3401000{
++			reg = <0x0 0x3401000 0x0 0x2200000>;
++			no-map;
++		};
++
++		dfps_data_mem: dfps_data_mem@3400000 {
++			reg = <0x0 0x3400000 0x0 0x1000>;
++			no-map;
++		};
++
++		peripheral_region: peripheral_region@7400000 {
++			reg = <0x0 0x7400000 0x0 0x1c00000>;
++			no-map;
++		};
++
++		modem_region: modem_region@9000000 {
++			reg = <0x0 0x9000000 0x0 0x5a00000>;
++			no-map;
++		};
++
++		tzapp: modem_region@ea00000 {
++			reg = <0x0 0xea00000 0x0 0x1900000>;
++			no-map;
++		};
++	};
++};
++
++&blsp_i2c2 {
++	status = "okay";
++
++	/* Atmel or Synaptics touchscreen */
++};
++
++&blsp_i2c5 {
++	status = "okay";
++
++	/* Silabs si4705 FM transmitter */
++};
++
++&blsp_i2c6 {
++	status = "okay";
++
++	/* NCI NFC,
++	 * TI USB320 Type-C controller,
++	 * Pericom 30216a USB (de)mux switch
++	 */
++};
++
++&blsp_i2c7 {
++	status = "okay";
++
++	/* cm36686 proximity and ambient light sensor */
++};
++
++&blsp_i2c13 {
++	status = "okay";
++
++	/* ST lsm6db0 gyro/accelerometer */
++};
++
++&blsp2_uart2 {
++	status = "okay";
++};
++
++&rpm_requests {
++	pm8994-regulators {
++		compatible = "qcom,rpm-pm8994-regulators";
++
++		vdd_l1-supply = <&pm8994_s7>;
++		vdd_l2_26_28-supply = <&pm8994_s3>;
++		vdd_l3_11-supply = <&pm8994_s3>;
++		vdd_l4_27_31-supply = <&pm8994_s3>;
++		vdd_l5_7-supply = <&pm8994_s3>;
++		vdd_l6_12_32-supply = <&pm8994_s5>;
++		vdd_l8_16_30-supply = <&vreg_vph_pwr>;
++		vdd_l9_10_18_22-supply = <&vreg_vph_pwr>;
++		vdd_l13_19_23_24-supply = <&vreg_vph_pwr>;
++		vdd_l14_15-supply = <&pm8994_s5>;
++		vdd_l17_29-supply = <&vreg_vph_pwr>;
++		vdd_l20_21-supply = <&vreg_vph_pwr>;
++		vdd_l25-supply = <&pm8994_s5>;
++		vdd_lvs1_2 = <&pm8994_s4>;
++
++		pm8994_s1: s1 {
++			/* unused */
 +			status = "disabled";
 +		};
 +
-+		/* Somebody was very creative with their numbering scheme downstream... */
-+
-+		blsp_i2c13: i2c@f9927000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9927000 0x500>;
-+			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				<&gcc GCC_BLSP1_QUP5_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <400000>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c13_default>;
-+			pinctrl-1 = <&i2c13_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++		pm8994_s2: s2 {
++			/* unused */
 +			status = "disabled";
 +		};
 +
-+		blsp_i2c6: i2c@f9928000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9928000 0x500>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				<&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <400000>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c6_default>;
-+			pinctrl-1 = <&i2c6_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++		pm8994_s3: s3 {
++			regulator-min-microvolt = <1300000>;
++			regulator-max-microvolt = <1300000>;
++		};
++
++		pm8994_s4: s4 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-allow-set-load;
++			regulator-always-on;
++			regulator-system-load = <325000>;
++		};
++
++		pm8994_s5: s5 {
++			regulator-min-microvolt = <2150000>;
++			regulator-max-microvolt = <2150000>;
++		};
++
++		pm8994_s7: s7 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++
++		pm8994_l1: l1 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++
++		pm8994_l2: l2 {
++			regulator-min-microvolt = <1250000>;
++			regulator-max-microvolt = <1250000>;
++		};
++
++		pm8994_l3: l3 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++		};
++
++		pm8994_l4: l4 {
++			regulator-min-microvolt = <1225000>;
++			regulator-max-microvolt = <1225000>;
++		};
++
++		pm8994_l5: l5 {
++			/* unused */
 +			status = "disabled";
 +		};
 +
-+		blsp2_uart2: serial@f995e000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0xf995e000 0x1000>;
-+			interrupt = <GIC_SPI 146 IRQ_TYPE_LEVEL_LOW>;
-+			clock-names = "core", "iface";
-+			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
-+				<&gcc GCC_BLSP2_AHB_CLK>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&blsp2_uart2_default>;
-+			pinctrl-1 = <&blsp2_uart2_sleep>;
++		pm8994_l6: l6 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8994_l7: l7 {
++			/* unused */
 +			status = "disabled";
 +		};
 +
-+		blsp_i2c7: i2c@f9963000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9963000 0x500>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP2_AHB_CLK>,
-+				<&gcc GCC_BLSP2_QUP1_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <400000>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c7_default>;
-+			pinctrl-1 = <&i2c7_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
++		pm8994_l8: l8 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
 +		};
 +
-+		blsp_i2c5: i2c@f9967000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0xf9967000 0x500>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP2_AHB_CLK>,
-+				<&gcc GCC_BLSP2_QUP5_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency = <100000>;
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c5_default>;
-+			pinctrl-1 = <&i2c5_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
++		pm8994_l9: l9 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
 +		};
 +
- 		gcc: clock-controller@fc400000 {
- 			compatible = "qcom,gcc-msm8994";
- 			#clock-cells = <1>;
-@@ -337,6 +432,20 @@ blsp1_uart2_sleep: blsp1-uart2-sleep {
- 				bias-pull-down;
- 			};
- 
-+			blsp2_uart2_default: blsp2-uart2-default {
-+				function = "blsp_uart8";
-+				pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+				drive-strength = <16>;
-+				bias-disable;
-+			};
++		pm8994_l10: l10 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
 +
-+			blsp2_uart2_sleep: blsp2-uart2-sleep {
-+				function = "gpio";
-+				pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+				drive-strength = <2>;
-+				bias-pull-down;
-+			};
++		pm8994_l11: l11 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++		};
 +
- 			sdc1_clk_on: clk-on {
- 				pins = "sdc1_clk";
- 				bias-disable;
-@@ -397,6 +506,21 @@ i2c2_sleep: i2c2-sleep {
- 				bias-disable;
- 			};
- 
-+			i2c5_default: i2c5-default {
-+				/* Don't be fooled! Nobody knows the reason why though... */
-+				function = "blsp_i2c11";
-+				pins = "gpio83", "gpio84";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
++		pm8994_l12: l12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
 +
-+			i2c5_sleep: i2c5-sleep {
-+				function = "gpio";
-+				pins = "gpio83", "gpio84";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
++		pm8994_l13: l13 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++		};
 +
- 			i2c6_default: i2c6-default {
- 				function = "blsp_i2c6";
- 				pins = "gpio28", "gpio27";
-@@ -410,6 +534,35 @@ i2c6_sleep: i2c6-sleep {
- 				drive-strength = <2>;
- 				bias-disable;
- 			};
++		pm8994_l14: l14 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
 +
-+			i2c7_default: i2c7-default {
-+				function = "blsp_i2c7";
-+				pins = "gpio43", "gpio44";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
++		pm8994_l15: l15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
 +
-+			i2c7_sleep: i2c7-sleep {
-+				function = "gpio";
-+				pins = "gpio43", "gpio44";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
++		pm8994_l16: l16 {
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2700000>;
++		};
 +
-+			i2c13_default: i2c13-default {
-+				/* Not a typo either. */
-+				function = "blsp_i2c5";
-+				pins = "gpio23", "gpio24";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
++		pm8994_l17: l17 {
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2700000>;
++		};
 +
-+			i2c13_sleep: i2c13-sleep {
-+				function = "gpio";
-+				pins = "gpio23", "gpio24";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
- 		};
- 	};
- 
++		pm8994_l18: l18 {
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++			regulator-always-on;
++		};
++
++		pm8994_l19: l19 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
++
++		pm8994_l20: l20 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			regulator-always-on;
++			regulator-boot-on;
++			regulator-allow-set-load;
++			regulator-system-load = <570000>;
++		};
++
++		pm8994_l21: l21 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++			regulator-always-on;
++		};
++
++		pm8994_l22: l22 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++		};
++
++		pm8994_l23: l23 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
++
++		pm8994_l24: l24 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3150000>;
++		};
++
++		pm8994_l25: l25 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++
++		pm8994_l26: l26 {
++			regulator-min-microvolt = <987500>;
++			regulator-max-microvolt = <987500>;
++
++		};
++
++		pm8994_l27: l27 {
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++		};
++
++		pm8994_l28: l28 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++
++		pm8994_l29: l29 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
++
++		pm8994_l30: l30 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8994_l31: l31 {
++			regulator-min-microvolt = <1262500>;
++			regulator-max-microvolt = <1262500>;
++		};
++
++		pm8994_l32: l32 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++	};
++};
++
++&sdhc_1 {
++	status = "okay";
++
++	mmc-hs400-1_8v;
++	vmmc-supply = <&pm8994_l20>;
++	vqmmc-supply = <&pm8994_s4>;
++};
 -- 
 2.27.0
 
