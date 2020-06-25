@@ -3,110 +3,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5F2207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593091737;
-	bh=sIvspruDgC3c46Q5k+WA2w5xOyeXnGW0IUC70LPdIrs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GuhiOJ5VclY+YR2nt96ixglIy8AprVOygXbbPNdjKf5AMIbRXBgFeaoJMe64wmR4B
-	 w0I/wQitJvtWqMTFd0LRlsC9vKIkiHerh3WLdiq+UGSDehu2TbejdxPFBFeESUsuD7
-	 xN6kiBnjO/7JdzXFY4owWKCj12l0T7+zkk74yZlI=
+	by mail.kernel.org (Postfix) with ESMTP id 9F20D20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QoJgdhyB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405046AbgFYN2z (ORCPT
+        id S2405105AbgFYN3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:28:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44391 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404829AbgFYN2z (ORCPT
+        Thu, 25 Jun 2020 09:29:15 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44416 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404990AbgFYN3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:28:55 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 5so3223002oty.11;
-        Thu, 25 Jun 2020 06:28:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OV4WC/OGzJxfoXBFjW4vy0msSEZBQa3DQSv+ctqbI9s=;
-        b=DhoQHM/jsiatijZOLs1g04di4YZlWR0EWuUZi7fCOgrQdIzkch18B46zmWYEqSTIea
-         vOMSIQCH5aUwfzy0GzSK+ZkU4ImvBcW0EywzGJm50UmLn3/uY47qujrmFrUIF9cJjkyj
-         c0Nsj60srsbHOB2uCTMGbDXute1G0Hs2z2bdPDULOaqy7WBU4Dx/hYzVEn4DO6ynv3PS
-         EBV010anE46Io4xaB1/X8o1yx/u2NqWRw6NcSLa6C0jB2jkWc51VRGQ6xrNdba5o+mP7
-         2AwjSe3Uk7G5EEzlDKhBDZhBn4vqLck16D7zewZzFrnFhYHh5v1jmpLrlK/tXH84C30f
-         Gj/Q==
-X-Gm-Message-State: AOAM532f9iw0HwZz59vsi43gjKI0cUjarM7tTUMrt5Y71QYMakepH9L7
-        kzSLDXU6CAGFNB9YKc4FjicaypZlr1VZJQCMYp8=
-X-Google-Smtp-Source: ABdhPJxlUXOc9imwl9lPejVNcyeUZKKYcc4bvi+l4uR/l8F3vA3oLuAVU6XT/a0cSQMG33eUfVPp/S664VWlHO/mRZ4=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr25888354otn.118.1593091734743;
- Thu, 25 Jun 2020 06:28:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623142138.209513-1-qperret@google.com> <20200623142138.209513-3-qperret@google.com>
- <20200625113602.z2xrwebd2gngbww3@vireshk-i7> <CAJZ5v0g=+2OFKVk2ZnmK-33knUwqcaOOQ+q9ZWnmeoBD9KOX9g@mail.gmail.com>
- <20200625115318.GA219598@google.com>
-In-Reply-To: <20200625115318.GA219598@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 Jun 2020 15:28:43 +0200
-Message-ID: <CAJZ5v0jQkeu5dJXxXN2eQ+cAwv8oSK_wZZgTW3cvMZX0ks9jHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] cpufreq: Specify default governor on command line
-To:     Quentin Perret <qperret@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Thu, 25 Jun 2020 09:29:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593091753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dbTwBoD1gpf0C+8LB+fQcdgutOLolzWV3HsBNIH406I=;
+        b=QoJgdhyB4nIUdvX6OHsO/d6oE6f1IuGuwckXk4mH4SNXsrmk+xJm+4iXZxDdb8P0RErTdC
+        uhtvNvJVJdz1Wn2GWSJs+q4aqvw/SMsBKVsMFIq8TcIkn/LExTWJoQOSC1rxY5i71WTp5B
+        seauAWOTMeN0ghfbw31k9geD0LGLmMo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-SKqVoDG7OcijFS7TqHmW5g-1; Thu, 25 Jun 2020 09:29:09 -0400
+X-MC-Unique: SKqVoDG7OcijFS7TqHmW5g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13CAD1005513;
+        Thu, 25 Jun 2020 13:29:07 +0000 (UTC)
+Received: from localhost (ovpn-115-49.ams2.redhat.com [10.36.115.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 844DF5C1BB;
+        Thu, 25 Jun 2020 13:29:06 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 14:29:05 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v4 01/18] nitro_enclaves: Add ioctl interface definition
+Message-ID: <20200625132905.GE221479@stefanha-x1.localdomain>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-2-andraprs@amazon.com>
+ <20200623085617.GE32718@stefanha-x1.localdomain>
+ <60d7d8be-7c8c-964a-a339-8ef7f5bd2fef@amazon.com>
+MIME-Version: 1.0
+In-Reply-To: <60d7d8be-7c8c-964a-a339-8ef7f5bd2fef@amazon.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wTWi5aaYRw9ix9vO"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 1:53 PM Quentin Perret <qperret@google.com> wrote:
->
-> On Thursday 25 Jun 2020 at 13:44:34 (+0200), Rafael J. Wysocki wrote:
-> > On Thu, Jun 25, 2020 at 1:36 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > This change is not right IMO. This part handles the set-policy case,
-> > > where there are no governors. Right now this code, for some reasons
-> > > unknown to me, forcefully uses the default governor set to indicate
-> > > the policy, which is not a great idea in my opinion TBH. This doesn't
-> > > and shouldn't care about governor modules and should only be looking
-> > > at strings instead of governor pointer.
-> >
-> > Sounds right.
-> >
-> > > Rafael, I even think we should remove this code completely and just
-> > > rely on what the driver has sent to us. Using the selected governor
-> > > for set policy drivers is very confusing and also we shouldn't be
-> > > forced to compiling any governor for the set-policy case.
-> >
-> > Well, AFAICS the idea was to use the default governor as a kind of
-> > default policy proxy, but I agree that strings should be sufficient
-> > for that.
->
-> I agree with all the above. I'd much rather not rely on the default
-> governor name to populate the default policy, too, so +1 from me.
+--wTWi5aaYRw9ix9vO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So before this series the default governor was selected at the kernel
-configuration time (pre-build) and was always built-in.  Because it
-could not go away, its name could be used to indicate the default
-policy for the "setpolicy" drivers.
+On Wed, Jun 24, 2020 at 05:02:54PM +0300, Paraschiv, Andra-Irina wrote:
+> On 23/06/2020 11:56, Stefan Hajnoczi wrote:
+> > On Mon, Jun 22, 2020 at 11:03:12PM +0300, Andra Paraschiv wrote:
+> > > +/* User memory region flags */
+> > > +
+> > > +/* Memory region for enclave general usage. */
+> > > +#define NE_DEFAULT_MEMORY_REGION (0x00)
+> > > +
+> > > +/* Memory region to be set for an enclave (write). */
+> > > +struct ne_user_memory_region {
+> > > +=09/**
+> > > +=09 * Flags to determine the usage for the memory region (write).
+> > > +=09 */
+> > > +=09__u64 flags;
+> > Where is the write flag defined?
+> >=20
+> > I guess it's supposed to be:
+> >=20
+> >    #define NE_USER_MEMORY_REGION_FLAG_WRITE (0x01)
+>=20
+> For now, the flags field is included in the NE ioctl interface for
+> extensions, it is not part of the NE PCI device interface yet.
+...
+> Ah, and just as a note, that "read" / "write" in parentheses means that a
+> certain data structure / field is read / written by user space. I updated=
+ to
+> use "in" / "out" instead of "read" / "write" in v5.
 
-After this series, however, it cannot be used this way reliably, but
-you can still pass cpufreq_param_governor to cpufreq_parse_policy()
-instead of def_gov->name in cpufreq_init_policy(), can't you?
+Oops, I got confused. I thought "(write)" was an example of a flag that
+can be set on the memory region. Now I realize "write" means this field
+is an input to the ioctl. :)
+
+Thanks for updating the docs.
+
+Stefan
+
+--wTWi5aaYRw9ix9vO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl70pqEACgkQnKSrs4Gr
+c8gcRQgAmyI2rTGsmEZtaHlxTjz++4tUVP8aA3oeSQfWGC3W37R9QVzDOmezMq2q
+m11OujSJ1Cw19EVQbMVRhaf08SsKzh6OkzjPQPJG4zBR1UsIWhRLicFupo/XsXgO
+lnVv6L0IK1lRLkjnA0IkdojxQ8dNIDg1PRpO+D1v6sicp7J5yx2lBLTJumFGeSmk
+1Sx4NG5bz2Ew2uQv7MecU23IAImlVSpZ6PGt4VnDCZos+IZzx2rECUFWc4HPKwjg
+gZHYm48E4Wtqkmx1r3ZAV2l1Mxh8uRFaihKh2XjXV2aoC61KSq/+sRFh5nG7GB0e
+DHp7m471tw55PBsPaC2mpvs7h2itbw==
+=dth8
+-----END PGP SIGNATURE-----
+
+--wTWi5aaYRw9ix9vO--
+
