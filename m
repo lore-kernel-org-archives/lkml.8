@@ -2,134 +2,114 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C88CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B50C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCF4220885
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:37:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="JMDF18ck"
+	by mail.kernel.org (Postfix) with ESMTP id E0B9020885
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593128256;
+	bh=XPRK0sq0Rv/u4HT/KZE++IRrJWscCGZFPdc0LLn7yJ4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sg81Yt//Ogj1SkAV3KZkOGrbfKoaRhZuQiuR41rukJHh7xEDb6QGWTuJk7vMr4X2Q
+	 s/xuCDwnNrWbAmNDvks5+ftpspmA1yRonFm3/2bgQqdMlVbN5x1oEwooiUj7FFET99
+	 iohGN/2IXAN4pht3r8LxAFy/SGMMUkv1ujBcT358=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgFYXhT (ORCPT
+        id S1726314AbgFYXhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:37:19 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:48715 "EHLO extserv.mm-sol.com"
+        Thu, 25 Jun 2020 19:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgFYXhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:37:18 -0400
-Received: from [192.168.1.4] (212-5-158-60.ip.btc-net.bg [212.5.158.60])
+        id S1725834AbgFYXhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 19:37:34 -0400
+Received: from tleilax.com (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 1957DD003;
-        Fri, 26 Jun 2020 02:37:15 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1593128235; bh=2o4ThUiC17gIWs0ufb7+F/ueW41D7qZqy5puUdqvWU4=;
-        h=From:Subject:To:Cc:Date:From;
-        b=JMDF18ckJMrpFD/qEgYoia47BeQf+czsLXWH61YW/9ZMLflz9MvtqP9LC4K3ID60E
-         A7lYDCSLOscR3e0KyZmgjU4TfRA0XUxH1eQvID65yNOCqxCAGrfObO1Ayfke702/mV
-         p6JaLwnUZgbSWbyfVB1U4caMdIkwo5GNiKYgyF64rQ4KetrdKx/gaHdv5nYtAjQ4bd
-         c5tYHOWB4W93OsSXbcZblT8+GROx0+swJf2goMclZ6GdmfnKJ17B3jW6uM/S8+P2ux
-         p+6THoER8dUfr2A9bTxj5Komen/b6DzV3ahyjT4KjoU1hjNOjKbnMZ5Z9yRDvlfPbu
-         p2HLLXkkT0knA==
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v7 00/12] Multiple fixes in PCIe qcom driver
-To:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200615210608.21469-1-ansuelsmth@gmail.com>
-Message-ID: <1dcf28c4-eb89-a5eb-52d8-b4356c3d0aaf@mm-sol.com>
-Date:   Fri, 26 Jun 2020 02:37:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 008652084D;
+        Thu, 25 Jun 2020 23:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593128253;
+        bh=XPRK0sq0Rv/u4HT/KZE++IRrJWscCGZFPdc0LLn7yJ4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H+OacQV4B6rSiPM6i7vxqwJNYLit5laXMLXIrKiutIqIgWiNcfJv9bDeME2SxDSKX
+         65gr6qKqOguPP+HBR0Uzve0q0x7aYJWyqjfYNWzteAR9EjK21EuJixh4hDk/uQtw8E
+         lakz1y711WfQxXekCriyRE8M23FYwtBi85CUizZs=
+From:   Jeff Layton <jlayton@kernel.org>
+To:     mtk.manpages@gmail.com
+Cc:     linux-man@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ebiggers@kernel.org
+Subject: [PATCH v2] sync.2: syncfs() now returns errors if writeback fails
+Date:   Thu, 25 Jun 2020 19:37:31 -0400
+Message-Id: <20200625233731.61555-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ansuel,
+A patch has been merged for v5.8 that changes how syncfs() reports
+errors. Change the sync() manpage accordingly.
 
-Thank you for the patience.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ man2/sync.2 | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-On 6/16/20 12:05 AM, Ansuel Smith wrote:
-> This contains multiple fix for PCIe qcom driver.
-> Some optional reset and clocks were missing.
-> Fix a problem with no PARF programming that cause kernel lock on load.
-> Add support to force gen 1 speed if needed. (due to hardware limitation)
-> Add ipq8064 rev 2 support that use a different tx termination offset.
-> 
-> v7:
-> * Rework GEN1 patch
-> 
-> v6:
-> * Replace custom define
-> * Move define not used in 07 to 08
-> 
-> v5:
-> * Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
-> 
-> v4:
-> * Fix grammar error across all patch subject
-> * Use bulk api for clks
-> * Program PARF only in ipq8064 SoC
-> * Program tx term only in ipq8064 SoC
-> * Drop configurable tx-dempth rx-eq
-> * Make added clk optional
-> 
-> v3:
-> * Fix check reported by checkpatch --strict
-> * Rename force_gen1 to gen
-> 
-> v2:
-> * Drop iATU programming (already done in pcie init)
-> * Use max-link-speed instead of force-gen1 custom definition
-> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
-> * Introduce a new variant for different revision of ipq8064
-> 
-> Abhishek Sahu (1):
->   PCI: qcom: Change duplicate PCI reset to phy reset
-> 
-> Ansuel Smith (10):
->   PCI: qcom: Add missing ipq806x clocks in PCIe driver
->   dt-bindings: PCI: qcom: Add missing clks
->   PCI: qcom: Add missing reset for ipq806x
->   dt-bindings: PCI: qcom: Add ext reset
->   PCI: qcom: Use bulk clk api and assert on error
->   PCI: qcom: Define some PARF params needed for ipq8064 SoC
->   PCI: qcom: Add support for tx term offset for rev 2.1.0
->   PCI: qcom: Add ipq8064 rev2 variant
->   dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
->   PCI: qcom: Replace define with standard value
-> 
-> Sham Muthayyan (1):
->   PCI: qcom: Support pci speed set for ipq806x
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
->  drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
->  2 files changed, 128 insertions(+), 73 deletions(-)
-> 
+ v2: update the NOTES verbiage according to Eric's suggestion
 
-For the whole set:
-
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-
+diff --git a/man2/sync.2 b/man2/sync.2
+index 7198f3311b05..61e994c5affc 100644
+--- a/man2/sync.2
++++ b/man2/sync.2
+@@ -86,11 +86,26 @@ to indicate the error.
+ is always successful.
+ .PP
+ .BR syncfs ()
+-can fail for at least the following reason:
++can fail for at least the following reasons:
+ .TP
+ .B EBADF
+ .I fd
+ is not a valid file descriptor.
++.TP
++.B EIO
++An error occurred during synchronization.
++This error may relate to data written to any file on the filesystem, or on
++metadata related to the filesytem itself.
++.TP
++.B ENOSPC
++Disk space was exhausted while synchronizing.
++.TP
++.BR ENOSPC ", " EDQUOT
++Data was written to a files on NFS or another filesystem which does not
++allocate space at the time of a
++.BR write (2)
++system call, and some previous write failed due to insufficient
++storage space.
+ .SH VERSIONS
+ .BR syncfs ()
+ first appeared in Linux 2.6.39;
+@@ -121,6 +136,13 @@ or
+ .BR syncfs ()
+ provide the same guarantees as fsync called on every file in
+ the system or filesystem respectively.
++.PP
++In mainline kernel versions prior to 5.8,
++.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
++.BR syncfs ()
++will only fail when passed a bad file descriptor (EBADF). In 5.8
++and later kernels, it will also report an error if one or more inodes failed
++to be written back since the last syncfs call.
+ .SH BUGS
+ Before version 1.3.20 Linux did not wait for I/O to complete
+ before returning.
 -- 
-regards,
-Stan
+2.26.2
+
