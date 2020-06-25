@@ -2,144 +2,140 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7235EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5121B20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mDZm0gGa"
+	by mail.kernel.org (Postfix) with ESMTP id 6C4C720767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406555AbgFYTc0 (ORCPT
+        id S2406582AbgFYTcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406116AbgFYTcZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:32:25 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAD8C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:32:24 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ev7so3050589pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:32:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aiCyaSfPElHdBJ1rU4jQnvBfG3hDID3mTTJS9XuQz+Q=;
-        b=mDZm0gGa4yZbKDGF9rgasIeYxWV9KiHwNiMw4ndiNsCn3uE7R//SGEQLJE3mdDSI9/
-         HpYkrdPyVuwor8peEnUfcbBGXiofFnd9veTD7NWibiAP8Ve8E8gCOzG31rjOvREFV1Bf
-         JgsOujSu3baR0YmlQhh5NEYw2pxgOkuVQSleeQxner2eUY5rh1bZK2fJ9oTRt0snh+M+
-         w5fHbf1pXC29S4Vdgqgal1yygHmQF+xISjlsoEB9iBq9A7j/gBZC02UXmgSOGcV/V0l2
-         EEwNoJRyrtCrwRdjdM5UwbSh/doG0vV/wAS2jKyrjWA8airu6HPV73/rpljmn2VIho8e
-         Lz0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aiCyaSfPElHdBJ1rU4jQnvBfG3hDID3mTTJS9XuQz+Q=;
-        b=nxdIh8rX1PR9Jm0Vp0yqiM6iHssriBlJYuQJkvyVTsKHgP1EkykReDCWaHWrWCNzqh
-         BujMLILa2WoY4X7TQk+5afKS0+p5lTIOUtOhBel7QIT60gNXw3DcpTvwG0JsLY1nkns6
-         X2SXC8MTbxnvqxt3uaOrSzgY3ysEei4/Et7j/dqBw6eTALwUD2PKMJh0ucEcFxiaHOLi
-         GpPMJfs5A/WSZHkr5E7rGl4Twv6dSmtJ6Lwba3e934jJOoGIzUsSyOtXcbA97JbvPdgi
-         CRA38gFDlxL0Ws9ysuzeugiaz93WEXms9Ix2104xAiyoldo2jEhgOXRv1WR8VyynfpaO
-         5Srg==
-X-Gm-Message-State: AOAM533VqTEZjY610Gwc61ejDHvo1zAkwrWsZXFBtZYApKJr4n/vrQMO
-        SnHV1I2MQdzXEt49Ba5bVIoolA==
-X-Google-Smtp-Source: ABdhPJzHjBuSoIFTZJ1sk5l9LqVn8mN4nFIUCyUrTGu3HSZs8Ut1ULHUwpBV+FgkM8L4HnNscu3bNQ==
-X-Received: by 2002:a17:90b:88b:: with SMTP id bj11mr5103958pjb.51.1593113544026;
-        Thu, 25 Jun 2020 12:32:24 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id c141sm9061908pfc.167.2020.06.25.12.32.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 12:32:23 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 12:32:17 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 05/22] kbuild: lto: postpone objtool
-Message-ID: <20200625193217.GA59566@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624203200.78870-6-samitolvanen@google.com>
- <20200624211908.GT4817@hirez.programming.kicks-ass.net>
- <20200624214925.GB120457@google.com>
- <20200625074716.GX4817@hirez.programming.kicks-ass.net>
- <20200625162226.GC173089@google.com>
- <20200625183351.GH4800@hirez.programming.kicks-ass.net>
+        Thu, 25 Jun 2020 15:32:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:51336 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406116AbgFYTcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 15:32:35 -0400
+IronPort-SDR: L87Y24AbTm1zSuo3jM9hq2lwaK+R+LuXj0tjK1R/Yxh4/A8s1zA/o48s3WyMuotBV73RUgCAMC
+ F0OvuO0H4F5Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229771891"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="229771891"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 12:32:35 -0700
+IronPort-SDR: etYHETo53L1uPh13M3zLNlnSPV2BuCw99dFxHIzzOhgBoNotpSxUwwXkOJDL8cbzRwOXGUCVVV
+ jMYptsNm4wjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="479753275"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 12:32:35 -0700
+Received: from [10.249.229.54] (abudanko-mobl.ccr.corp.intel.com [10.249.229.54])
+        by linux.intel.com (Postfix) with ESMTP id DD0915804B4;
+        Thu, 25 Jun 2020 12:32:30 -0700 (PDT)
+Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
+ fdarray__filter() call
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
+ <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
+ <20200625171405.GL2719003@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
+Date:   Thu, 25 Jun 2020 22:32:29 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625183351.GH4800@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200625171405.GL2719003@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:33:51PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 25, 2020 at 09:22:26AM -0700, Sami Tolvanen wrote:
-> > On Thu, Jun 25, 2020 at 09:47:16AM +0200, Peter Zijlstra wrote:
+
+On 25.06.2020 20:14, Jiri Olsa wrote:
+> On Wed, Jun 24, 2020 at 08:19:32PM +0300, Alexey Budankov wrote:
+>>
+>> On 17.06.2020 11:35, Alexey Budankov wrote:
+>>>
+>>> Skip fds with zeroed revents field from count and avoid fds moving
+>>> at fdarray__filter() call so fds indices returned by fdarray__add()
+>>> call stay the same and can be used for direct access and processing
+>>> of fd revents status field at entries array of struct fdarray object.
+>>>
+>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>> ---
+>>>  tools/lib/api/fd/array.c   | 11 +++++------
+>>>  tools/perf/tests/fdarray.c | 20 ++------------------
+>>>  2 files changed, 7 insertions(+), 24 deletions(-)
+>>>
+>>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+>>> index 58d44d5eee31..97843a837370 100644
+>>> --- a/tools/lib/api/fd/array.c
+>>> +++ b/tools/lib/api/fd/array.c
+>>> @@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>>>  		return 0;
+>>>  
+>>>  	for (fd = 0; fd < fda->nr; ++fd) {
+>>> +		if (!fda->entries[fd].revents)
+>>> +			continue;
+>>> +
+>>
+>> So it looks like this condition also filters out non signaling events fds, not only
+>> control and others fds, and this should be somehow avoided so such event related fds
+>> would be counted. Several options have been proposed so far:
+>>
+>> 1) Explicit typing of fds via API extension and filtering based on the types:
+>>    a) with separate fdarray__add_stat() call
+>>    b) with type arg of existing fdarray__add() call
+>>    c) various memory management design is possible
+>>
+>> 2) Playing tricks with fd positions inside entries and assumptions on fdarray API calls ordering
+>>    - looks more like a hack than a designed solution
+>>
+>> 3) Rewrite of fdarray class to allocate separate object for every added fds
+>>    - can be replaced with nonscrewing of fds by __filter()
+>>
+>> 4) Distinct between fds types at fdarray__filter() using .revents == 0 condition
+>>    - seems to have corner cases and thus not applicable
+>>
+>> 5) Extension of fdarray__poll(, *arg_ptr, arg_size) with arg of fds array to atomically poll
+>>    on fdarray_add()-ed fds and external arg fds and then external arg fds processing
+>>
+>> 6) Rewrite of fdarray class on epoll() call basis
+>>    - introduces new scalability restrictions for Perf tool
 > 
-> > > Right, then we need to make --no-vmlinux work properly when
-> > > !DEBUG_ENTRY, which I think might be buggered due to us overriding the
-> > > argument when the objname ends with "vmlinux.o".
-> > 
-> > Right. Can we just remove that and  pass --vmlinux to objtool in
-> > link-vmlinux.sh, or is the override necessary somewhere else?
+> hum, how many fds for polling do you expect in your workloads?
+
+Currently it is several hundreds so default of 1K is easily hit and 
+"Profile a Large Number of PMU Events on Multi-Core Systems" section [1]
+recommends:
+
+soft nofile 65535
+hard nofile 65535
+
+for for /etc/security/limits.conf settings.
+
+~Alexey
+
+[1] https://software.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/configuration-recipes/profiling-hardware-without-sampling-drivers.html
+
 > 
-> Think we can remove it; it was just convenient when running manually.
-
-Great, I'll change this in v2.
-
-> > > > > > +ifdef CONFIG_STACK_VALIDATION
-> > > > > > +ifneq ($(SKIP_STACK_VALIDATION),1)
-> > > > > > +cmd_ld_ko_o +=								\
-> > > > > > +	$(objtree)/tools/objtool/objtool				\
-> > > > > > +		$(if $(CONFIG_UNWINDER_ORC),orc generate,check)		\
-> > > > > > +		--module						\
-> > > > > > +		$(if $(CONFIG_FRAME_POINTER),,--no-fp)			\
-> > > > > > +		$(if $(CONFIG_GCOV_KERNEL),--no-unreachable,)		\
-> > > > > > +		$(if $(CONFIG_RETPOLINE),--retpoline,)			\
-> > > > > > +		$(if $(CONFIG_X86_SMAP),--uaccess,)			\
-> > > > > > +		$(@:.ko=$(prelink-ext).o);
-> > > > > > +
-> > > > > > +endif # SKIP_STACK_VALIDATION
-> > > > > > +endif # CONFIG_STACK_VALIDATION
-> > > > > 
-> > > > > What about the objtool invocation from link-vmlinux.sh ?
-> > > > 
-> > > > What about it? The existing objtool_link invocation in link-vmlinux.sh
-> > > > works fine for our purposes as well.
-> > > 
-> > > Well, I was wondering why you're adding yet another objtool invocation
-> > > while we already have one.
-> > 
-> > Because we can't run objtool until we have compiled bitcode to native
-> > code, so for modules, we're need another invocation after everything has
-> > been compiled.
+> jirka
 > 
-> Well, that I understand, my question was why we need one in
-> scripts/link-vmlinux.sh and an additional one. I think we're just
-> talking past one another and agree we only need one.
-
-We need just one for vmlinux.o, but this rule adds an objtool invocation
-for kernel modules, which we also couldn't check earlier. We link all
-the bitcode for modules into <module>.lto.o and run modpost and objtool
-on that before building the final .ko.
-
-Sami
