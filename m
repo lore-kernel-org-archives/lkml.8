@@ -2,199 +2,151 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27099C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21AF420720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B3020720
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="DXXH1gFU"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dbum92Ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390439AbgFYHwk (ORCPT
+        id S2390452AbgFYHxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 03:52:40 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:39871 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390224AbgFYHwj (ORCPT
+        Thu, 25 Jun 2020 03:53:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390360AbgFYHxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 03:52:39 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id oMgKjfuFybJPcoMgPjELIa; Thu, 25 Jun 2020 09:52:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593071557; bh=Uovi5ivsPdbMDRWtHZmMQPDhROFf0NLd64SF+HCxKWY=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=DXXH1gFU7lomA6wYpYESZKHj2f8FPp8x7XblvxFeDGq6JGTDsDLf4jRgDp0F9udE8
-         1bU7juPJoUHcoWOJVgxc/g2fVhnJWWsNdaPwj46lbew2AXru4c277oEI3Dri9+Gy56
-         XOtBC83aTLU+bKeHvrGMrKAZzPnd9exMD9Zbow/NGtyyvzywQZto6ppqP0NGLr/rIJ
-         Ek1oi+jSh0xCwl2LcFtHec/wGE0gsDN/T7EyxQ4GJG9gnQwvNqeoU2TuVpNrDLnwQa
-         s2U6T90An/SsRSD8deSXLZu7rFPmuwVcwMEZo+kq/1raaIwUl/GbsC5fI86DmxuZO1
-         JQ11BQ5FwrVDg==
-Subject: Re: [RFC 7/7] media: uapi: make H264 stateless codec interface public
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-References: <20200623182809.1375-1-ezequiel@collabora.com>
- <20200623182809.1375-8-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <478a33a8-89e2-7ed8-4efe-76d62ddc223a@xs4all.nl>
-Date:   Thu, 25 Jun 2020 09:52:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 03:53:42 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC4AC061573
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 00:53:41 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 17so4917563wmo.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 00:53:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QhFF+JhtH5OrbA2XVfa4DEMoq1rPmq5A541noBohoEI=;
+        b=dbum92HacgzVfcv5HyBVk4jTj4zjsMSRuPnugG4qBlK9zxfz+PiLRjLwKR6lr2PW+0
+         E8QWSPaMgLpkHkyRw5PCAzc4dC2wDWRk37C+K0E2B7QdTiRDa73eLJG7aZG706RoTmKe
+         4AlhpK9mFuUPoMxycv+1Km95Zufyc/4TO2i0E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=QhFF+JhtH5OrbA2XVfa4DEMoq1rPmq5A541noBohoEI=;
+        b=fyP3Ui73Ro8R8gcoDPOVAibl7Gi93Ss/TwNmgZOnAxtU799FBFQwqSa+YdTBBGos/s
+         5xVniQvAIjhH20aoWTsl8GDyXx6ohOmh2ShJeppbC7tHNrsClPiBCi7PWfCTR6a3T9Pd
+         Z1VIMXx+fQuTbZ3fCkzFxTWc8Gv5WmfxHq/vqrgx1JHXuRSERs+J2sseqiyAZxWmYrWN
+         s2IfZRRZFQiuHWBKr/Z9Og4qGRyK9SFFNODjaYGe7nni97Amwc1eqmkDS2gHTmlugdhT
+         Qh6kz6Q8dKHwSTw0QMQ+M+ssKj0mZVUxhpz1l1NxqJ+aE+6GKYgrqAi3Xwbxk0nT1OWl
+         k7ow==
+X-Gm-Message-State: AOAM5304zccJUhN/myfXAcJ30UL4f+GRwV71Qg00ZZ5KhVlE3s6TgSjh
+        0daGosc96/pi2bS1gumSY+qLUQ==
+X-Google-Smtp-Source: ABdhPJwk5m6H2Tp1NSk8W7Q7efXaGQpX9fClYnMmVqGc/bGphvNrVx6oIBY7RwQwAd9rZkulo8fFvg==
+X-Received: by 2002:a1c:e355:: with SMTP id a82mr1996753wmh.165.1593071620044;
+        Thu, 25 Jun 2020 00:53:40 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id k126sm5848415wme.17.2020.06.25.00.53.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 00:53:39 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 09:53:36 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Yannick FERTRE <yannick.fertre@st.com>
+Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH] drm/bridge: dw-mipi-dsi.c: remove unused header file
+Message-ID: <20200625075336.GB3278063@phenom.ffwll.local>
+Mail-Followup-To: Yannick FERTRE <yannick.fertre@st.com>,
+        Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>
+References: <171ff1fb3918664a570dc8f2f34b446612505f76.1585832665.git.angelo.ribeiro@synopsys.com>
+ <669d5484-b1e5-dd5c-b4e5-f3b5a8b436b4@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200623182809.1375-8-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBvg2zcRvZ/zAJ9eu0/F7hAPLKjUxJS33oB3Xi26sP0tNQcQaf853AwFhx8iZTJJWyty4Eiy4y/9GMs/8Avrr23gT8xlgU5NzzovKYi65CEJP3sDvaap
- RBlZPC9Z+gQYqWXPOhjP+I0y5LsNdiqwuH3JMH+vB+XKcjbKLnshsrK0A4gwrOx0y0HBF2sz37UnjrO9vrJNYOnJlihuXhFqSopUYb/3lNikes3LoJfZ0L2p
- 94RYGGUYC6Zv4GRLN9/kcLnpoINHQbyB3qjajuDN/nhW1qoD0XgWsf2dkFUXXg81Ukz9kY80z7z5lRoJEo2kyHkAuTjrnU73RrszAZW2j+goCf+XscKJPUxv
- dfLwnjaV1sSOHu93UuZdNP0uMOU1z1LRilfgIx7fMLT9kA/P0tqZ3E/uEZ924Ij2P6MSIFXQSNd72R+kOsQQfToiWEOokxZXLRy9ZWFXFOgv6e0l1TadNhtK
- 8XdoZ+fpA8HIfiayH805bwLiKy7A5QYyG0T4MqG3u6ZF9OClgaB6KOQqOGmgaXc9gij4Hn+CdSfKqrCoVpAdtLmKOGmFrmfbVt7lSg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <669d5484-b1e5-dd5c-b4e5-f3b5a8b436b4@st.com>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/06/2020 20:28, Ezequiel Garcia wrote:
-> The H264 interface is now ready to be part of the official
-> public API.
+On Wed, Jun 24, 2020 at 03:08:22PM +0000, Yannick FERTRE wrote:
+> Hello Angelo,
+> thank for patch.
 > 
-> In addition, sanitize header includes.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/hantro/hantro_hw.h                  | 5 ++---
->  include/media/v4l2-ctrls.h                                | 3 ++-
->  include/media/v4l2-h264.h                                 | 2 +-
->  .../{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h}  | 8 ++------
->  4 files changed, 7 insertions(+), 11 deletions(-)
->  rename include/{media/h264-ctrls.h => uapi/linux/v4l2-h264-ctrls.h} (96%)
+> Reviewed-by: Yannick Fertre <yannick.fertre@st.com>
 
-This isn't quite how this should be done.
-
-The V4L2_PIX_FMT_H264_SLICE define and the V4L2_CTRL_TYPE_H264_* defines should
-move to videodev2.h.
-
-The remaining CID defines and the data structures should be moved to v4l2-controls.h.
-
-Yes, I know, v4l2-controls.h is getting large. At some point (could actually be
-done in a follow-up patch) the codec controls in v4l2-controls.h should be split off
-into their own header (v4l2-codec-controls.h).
-
-One more thing that I was wondering about:
-
-#define V4L2_CID_MPEG_VIDEO_H264_SPS            (V4L2_CID_MPEG_BASE+1000)
-
-These controls are at V4L2_CID_MPEG_BASE+1000. But I was wondering if:
-
-1) wouldn't it be a good thing to use new CID values since this is the actual
-   uAPI version? This series changes the layout of several structs, so creating
-   new CID values to prevent confusion in applications might be a good idea.
-
-2) related to 1): should we make a new control class for stateless codecs?
-   Currently it is mixed in with the stateful codec controls, but I am not so
-   sure that that is such a good idea. Creating a separate stateless codec
-   control class would be a clean separation of stateful and stateless, and it
-   would probably improve the documentation as well.
-
-   The only 'standard' codec control that is used by stateless codecs is
-   V4L2_CID_MPEG_VIDEO_H264_PROFILE in hantro, although it is not clear to me
-   how it is used. It looks like it is just to report the supported profiles?
-   But it isn't present in the cedrus driver, so it's a bit odd.
-
-Thank you for working on finalizing the H264 API.
-
-Regards,
-
-	Hans
+Patch applied, thanks.
+-Daniel
 
 > 
-> diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-> index 4053d8710e04..48d5be144319 100644
-> --- a/drivers/staging/media/hantro/hantro_hw.h
-> +++ b/drivers/staging/media/hantro/hantro_hw.h
-> @@ -11,9 +11,8 @@
->  
->  #include <linux/interrupt.h>
->  #include <linux/v4l2-controls.h>
-> -#include <media/h264-ctrls.h>
-> -#include <media/mpeg2-ctrls.h>
-> -#include <media/vp8-ctrls.h>
-> +
-> +#include <media/v4l2-ctrls.h>
->  #include <media/videobuf2-core.h>
->  
->  #define DEC_8190_ALIGN_MASK	0x07U
-> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> index f40e2cbb21d3..fc725ba2ebd8 100644
-> --- a/include/media/v4l2-ctrls.h
-> +++ b/include/media/v4l2-ctrls.h
-> @@ -13,13 +13,14 @@
->  #include <linux/videodev2.h>
->  #include <media/media-request.h>
->  
-> +#include <linux/v4l2-h264-ctrls.h>
-> +
->  /*
->   * Include the stateless codec compound control definitions.
->   * This will move to the public headers once this API is fully stable.
->   */
->  #include <media/mpeg2-ctrls.h>
->  #include <media/fwht-ctrls.h>
-> -#include <media/h264-ctrls.h>
->  #include <media/vp8-ctrls.h>
->  #include <media/hevc-ctrls.h>
->  
-> diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
-> index f08ba181263d..d2314f4d4490 100644
-> --- a/include/media/v4l2-h264.h
-> +++ b/include/media/v4l2-h264.h
-> @@ -10,7 +10,7 @@
->  #ifndef _MEDIA_V4L2_H264_H
->  #define _MEDIA_V4L2_H264_H
->  
-> -#include <media/h264-ctrls.h>
-> +#include <media/v4l2-ctrls.h>
->  
->  /**
->   * struct v4l2_h264_reflist_builder - Reference list builder object
-> diff --git a/include/media/h264-ctrls.h b/include/uapi/linux/v4l2-h264-ctrls.h
-> similarity index 96%
-> rename from include/media/h264-ctrls.h
-> rename to include/uapi/linux/v4l2-h264-ctrls.h
-> index 6446ec9f283d..a06f60670d68 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/uapi/linux/v4l2-h264-ctrls.h
-> @@ -2,14 +2,10 @@
->  /*
->   * These are the H.264 state controls for use with stateless H.264
->   * codec drivers.
-> - *
-> - * It turns out that these structs are not stable yet and will undergo
-> - * more changes. So keep them private until they are stable and ready to
-> - * become part of the official public API.
->   */
->  
-> -#ifndef _H264_CTRLS_H_
-> -#define _H264_CTRLS_H_
-> +#ifndef __LINUX_V4L2_H264_CONTROLS_H
-> +#define __LINUX_V4L2_H264_CONTROLS_H
->  
->  #include <linux/videodev2.h>
->  
 > 
+> 
+> On 4/3/20 3:30 PM, Angelo Ribeiro wrote:
+> > dw-mipi-dsi does not use any definition from drm_probe_helper.
+> > 
+> > Coverity output:
+> > Event unnecessary_header:
+> > Including .../include/drm/drm_probe_helper.h does not provide any
+> > needed symbols.
+> > 
+> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > Cc: Joao Pinto <jpinto@synopsys.com>
+> > Cc: Jose Abreu <jose.abreu@synopsys.com>
+> > Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> > ---
+> >   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 1 -
+> >   1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> > index 024acad..582635d 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> > @@ -27,7 +27,6 @@
+> >   #include <drm/drm_modes.h>
+> >   #include <drm/drm_of.h>
+> >   #include <drm/drm_print.h>
+> > -#include <drm/drm_probe_helper.h>
+> >   
+> >   #define HWVER_131			0x31333100	/* IP version 1.31 */
+> >   
+> > 
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
