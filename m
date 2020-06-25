@@ -2,185 +2,96 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C062C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4048220679
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB1420773
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SNK4VxQ4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DuPj/XWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404067AbgFYK3k (ORCPT
+        id S2403997AbgFYKbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404026AbgFYK3V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:29:21 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22D8C061573;
-        Thu, 25 Jun 2020 03:29:20 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E13F9521;
-        Thu, 25 Jun 2020 12:29:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593080959;
-        bh=fzhwVwT7blmI0ykjwNQs323H5w5gdXRqNujjIggQOA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SNK4VxQ4RVMFiE15hTal6+mfRo2z7GqjOQa22J++z/ckXh+C5mdrobHS3H7YyaNAt
-         8IDbitPUAKPz1m3MkZmOjnpMCzHdyRZFF2XZ2r+jMWPTeoiLcruaVWRVArU5Vmzm68
-         Fo2ZPzlKJMXZ4uYUWMPD2iJMXY9xW7fVfNgwUMCg=
-Date:   Thu, 25 Jun 2020 13:29:17 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-Message-ID: <20200625102701.GG5865@pendragon.ideasonboard.com>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
- <20200625093046.GA91893@vmlxhi-110.adit-jv.com>
- <20200625094724.GE5865@pendragon.ideasonboard.com>
- <20200625101835.GA5081@vmlxhi-110.adit-jv.com>
+        Thu, 25 Jun 2020 06:31:42 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43749 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403816AbgFYKbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:31:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593081100; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=uniitDF92Om9eWqQEbl7z3lfvQkVJMZ8568QaLGavN4=; b=DuPj/XWc4EvYnlqlEUxXaM18ZSiiE/hWnEpbur3QHa9d31i8KJuQ7OWJPazSbS1n8qArmekF
+ Ac2BFNtrU7cLFSJB6r46zSglJZ+6vfRxsaLJVJAzhB9XVDvlkmFN/paxxS5U4dctW832f1NZ
+ 8d2vkocpivrxwfVwHKgFKgNIWvg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
+ 5ef47d090206ad41d1c6c453 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 10:31:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 293E4C433C8; Thu, 25 Jun 2020 10:31:36 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C2EAC433C6;
+        Thu, 25 Jun 2020 10:31:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C2EAC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] arm64: Add KRYO{3,4}XX silver CPU cores to SSB safelist
+Date:   Thu, 25 Jun 2020 16:01:23 +0530
+Message-Id: <20200625103123.7240-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200625101835.GA5081@vmlxhi-110.adit-jv.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ramzi,
+QCOM KRYO{3,4}XX silver/LITTLE CPU cores are based on
+Cortex-A55 and are SSB safe, hence add them to SSB
+safelist -> arm64_ssb_cpus[].
 
-On Thu, Jun 25, 2020 at 12:18:35PM +0200, Ramzi Ben Meftah wrote:
-> On Thu, Jun 25, 2020 at 12:47:24PM +0300, Laurent Pinchart wrote:
-> > On Thu, Jun 25, 2020 at 11:30:46AM +0200, Ramzi Ben Meftah wrote:
-> >> On Thu, Jun 25, 2020 at 05:01:38AM +0300, Laurent Pinchart wrote:
-> >>> On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
-> >>>> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
-> >>>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>> 
-> >>>>  +Niklas, +Laurent
-> >>>> 
-> >>>> Niklas, Laurent, how does this play with CAP_IO_MC ?
-> >>> 
-> >>> I don't think it's related to CAP_IO_MC, but I don't think it's a good
-> >>> idea either :-) Routing doesn't go through the subdev [gs]_input
-> >>> operations in MC-based drivers. It should be configured through link
-> >>> setup instead. This patch goes in the wrong direction, sorry Steve.
-> >> 
-> >> ENUMINPUT ioctl allow to get the input signal status. Is there an alternative
-> >> with Media Controller?
-> > 
-> > No there isn't at the moment. I'm not opposed to adding such a feature,
-> > but VIDIOC_ENUMINPUT isn't the right choice. This would have to be a
-> > subdev pad operation (v4l2_subdev_pad_ops), not a video operation
-> > (v4l2_subdev_video_ops). We also likely shouldn't call it "enum" input,
-> > as it would retrieve properties of the input corresponding to the pad,
-> > not enumerate inputs.
-> 
-> Looking to v4l2_subdev_pad_ops, there is g_input_status which seems to fulfill
-> this need. But, seems this is not expose to user space although many drivers
-> do implememt it.
-> Should I add VIDIOC_SUBDEV_G_INPUT_STATUS?
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ arch/arm64/kernel/cpu_errata.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Isn't g_input_status a video operation ? I would propose adding a
-g_input_status pad operation, and expose that to userspace. We should
-take that as an opportunity to consider designing that new operation
-from scratch (possibly naming it differently) and make sure it could
-address both analog and digital systems (for instance being able to
-report the status of an SDI input).
-
-> >>>>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> >>>>> ioctls for use via v4l2 subdevice node.
-> >>>>>
-> >>>>> This commit should probably not be pushed upstream, because the (old)
-> >>>>> idea of video inputs conflicts with the newer concept of establishing
-> >>>>> media links between src->sink pads.
-> >>>>>
-> >>>>> However it might make sense for some subdevices to support enum/get/set
-> >>>>> inputs. One example would be the analog front end subdevice for the
-> >>>>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> >>>>> can be done without requiring the implementation of media entities that
-> >>>>> would define the analog source for which to establish a media link.
-> >>>>>
-> >>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>>> ---
-> >>>>>  drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
-> >>>>>  include/media/v4l2-subdev.h           | 11 +++++++++++
-> >>>>>  2 files changed, 20 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> index 6b989fe..73fbfe9 100644
-> >>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
-> >>>>>  			return -ENOTTY;
-> >>>>>  		return v4l2_querymenu(vfh->ctrl_handler, arg);
-> >>>>>
-> >>>>> +	case VIDIOC_ENUMINPUT:
-> >>>>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> >>>>> +
-> >>>>> +	case VIDIOC_G_INPUT:
-> >>>>> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> >>>>> +
-> >>>>> +	case VIDIOC_S_INPUT:
-> >>>>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> >>>>> +
-> >>>>>  	case VIDIOC_G_CTRL:
-> >>>>>  		if (!vfh->ctrl_handler)
-> >>>>>  			return -ENOTTY;
-> >>>>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> >>>>> index f7fe78a..6e1a9cd 100644
-> >>>>> --- a/include/media/v4l2-subdev.h
-> >>>>> +++ b/include/media/v4l2-subdev.h
-> >>>>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
-> >>>>>   * @g_input_status: get input status. Same as the status field in the
-> >>>>>   *	&struct &v4l2_input
-> >>>>>   *
-> >>>>> + * @enuminput: enumerate inputs. Should return the same input status as
-> >>>>> + *      @g_input_status if the passed input index is the currently active
-> >>>>> + *      input.
-> >>>>> + *
-> >>>>> + * @g_input: returns the currently active input index.
-> >>>>> + *
-> >>>>> + * @s_input: set the active input.
-> >>>>> + *
-> >>>>>   * @s_stream: used to notify the driver that a video stream will start or has
-> >>>>>   *	stopped.
-> >>>>>   *
-> >>>>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
-> >>>>>  	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>>>  	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>>>  	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> >>>>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> >>>>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> >>>>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
-> >>>>>  	int (*s_stream)(struct v4l2_subdev *sd, int enable);
-> >>>>>  	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
-> >>>>>  	int (*g_frame_interval)(struct v4l2_subdev *sd,
-
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index ad06d6802d2e..cf50c53e9357 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -460,6 +460,8 @@ static const struct midr_range arm64_ssb_cpus[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+ 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+ 	{},
+ };
+ 
 -- 
-Regards,
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Laurent Pinchart
