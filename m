@@ -2,94 +2,81 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D029AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 958B120720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A96206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404745AbgFYMqZ (ORCPT
+        id S2404742AbgFYMsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:46:25 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:64131 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404684AbgFYMqY (ORCPT
+        Thu, 25 Jun 2020 08:48:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46500 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404125AbgFYMsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:46:24 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 25 Jun 2020 05:46:23 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 25 Jun 2020 05:46:22 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 25 Jun 2020 18:15:55 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id EE3B23A43; Thu, 25 Jun 2020 18:15:54 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org, swboyd@chromium.org
-Subject: [v1] drm/msm/dpu: enumerate second cursor pipe for external interface
-Date:   Thu, 25 Jun 2020 18:15:53 +0530
-Message-Id: <1593089153-17811-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 25 Jun 2020 08:48:51 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1joRJ9-0001G3-Pm; Thu, 25 Jun 2020 12:48:48 +0000
+Date:   Thu, 25 Jun 2020 14:48:46 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Serge Hallyn <serge@hallyn.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 3/3] nsproxy: support CLONE_NEWTIME with setns()
+Message-ID: <20200625124846.xhwhzh5q4mqnra44@wittgenstein>
+References: <20200619153559.724863-1-christian.brauner@ubuntu.com>
+ <20200619153559.724863-4-christian.brauner@ubuntu.com>
+ <20200625090618.GC151695@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200625090618.GC151695@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setup an RGB HW pipe as cursor which can be used on
-secondary interface.
+On Thu, Jun 25, 2020 at 02:06:18AM -0700, Andrei Vagin wrote:
+> On Fri, Jun 19, 2020 at 05:35:59PM +0200, Christian Brauner wrote:
+> > So far setns() was missing time namespace support. This was partially due
+> > to it simply not being implemented but also because vdso_join_timens()
+> > could still fail which made switching to multiple namespaces atomically
+> > problematic. This is now fixed so support CLONE_NEWTIME with setns()
+> > 
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> > Cc: Serge Hallyn <serge@hallyn.com>
+> > Cc: Dmitry Safonov <dima@arista.com>
+> > Cc: Andrei Vagin <avagin@gmail.com>
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+> Hi Christian,
+> 
+> I have reviewed this series and it looks good to me.
+> 
+> We decided to not change the return type of vdso_join_timens to avoid
+> conflicts with the arm64 timens patchset. With this change, you can add
+> my Reviewed-by to all patched in this series.
+> 
+> Reviewed-by: Andrei Vagin <avagin@gmail.com>
 
-For SC7180 2 HW pipes are enumerated as cursors
-1 - primary interface
-2 - secondary interface
+Thanks! As discussed in the thread for th arm changes. We'll defer the
+return type changes!
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 8f2357d..23061fd 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -117,10 +117,10 @@
- 		.reg_off = 0x2AC, .bit_off = 0},
- 	.clk_ctrls[DPU_CLK_CTRL_DMA0] = {
- 		.reg_off = 0x2AC, .bit_off = 8},
--	.clk_ctrls[DPU_CLK_CTRL_DMA1] = {
--		.reg_off = 0x2B4, .bit_off = 8},
- 	.clk_ctrls[DPU_CLK_CTRL_CURSOR0] = {
--		.reg_off = 0x2BC, .bit_off = 8},
-+		.reg_off = 0x2B4, .bit_off = 8},
-+	.clk_ctrls[DPU_CLK_CTRL_CURSOR1] = {
-+		.reg_off = 0x2C4, .bit_off = 8},
- 	},
- };
- 
-@@ -272,10 +272,10 @@
- 		sc7180_vig_sblk_0, 0,  SSPP_TYPE_VIG, DPU_CLK_CTRL_VIG0),
- 	SSPP_BLK("sspp_8", SSPP_DMA0, 0x24000,  DMA_SDM845_MASK,
- 		sdm845_dma_sblk_0, 1, SSPP_TYPE_DMA, DPU_CLK_CTRL_DMA0),
--	SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_SDM845_MASK,
--		sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, DPU_CLK_CTRL_DMA1),
-+	SSPP_BLK("sspp_9", SSPP_DMA1, 0x26000,  DMA_CURSOR_SDM845_MASK,
-+		sdm845_dma_sblk_1, 5, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR0),
- 	SSPP_BLK("sspp_10", SSPP_DMA2, 0x28000,  DMA_CURSOR_SDM845_MASK,
--		sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR0),
-+		sdm845_dma_sblk_2, 9, SSPP_TYPE_DMA, DPU_CLK_CTRL_CURSOR1),
- };
- 
- /*************************************************************
--- 
-1.9.1
-
+Christian
