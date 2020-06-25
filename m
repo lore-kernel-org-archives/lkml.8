@@ -2,110 +2,216 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE30C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 628D320781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tdbpncar"
+	by mail.kernel.org (Postfix) with ESMTP id 8BFF22081A
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405026AbgFYNWb (ORCPT
+        id S2404912AbgFYNYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404805AbgFYNW3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:22:29 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFC8C08C5C1;
-        Thu, 25 Jun 2020 06:22:29 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u185so984416pfu.1;
-        Thu, 25 Jun 2020 06:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Mqx674vRJl6DMWpucWWZjOOsJT1naIS1olIEvSAr8p4=;
-        b=tdbpncarE6FmGslXExVp/+CjmFJv4djGCEHuaeweAovTDlt9QcOgvfZKMvyvDjST7+
-         TwBhvjJRFSyJFLgOhZXEOyYmDHYyxGqWT4D/a7C3aW2923kC6i3GAG1atgB+0hsh311u
-         lIGMH4ZhzSTJr7frg/0Cq2ALYnOgkniLPvfDTFg1ZVj3K7vLpOKbywGCYXF26kegOfLn
-         y4qcyIb3EIqaLE4ovEChgNSuNCyUBwHYdb8RBPyow0VnNTDpIU7Noo7ynSPwGgKwrDb1
-         NMbvUAee43WkMSPQMupQtMRQf7FbeYpELqTVOX43DKY+gKFo8p8jChBND9dr3DNFMvsA
-         1FNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mqx674vRJl6DMWpucWWZjOOsJT1naIS1olIEvSAr8p4=;
-        b=coIgcZZye5i0duCE1xilWRoVJS0Kz7wPzoZ9oyRywO4VWl5Cd4r733oErK4qfn1k5E
-         Dctzl6rfxJk4rsvzlnCrjd1K4KR1MT9J9JggWvxUGUEGtCC5Mo8lbEySHlYtERFiLx1U
-         u1PJglcC6lQF6YZvRvJw/SZQUTqFVk0Tq+4jIqGduPX8g1iqES92R32xOubPT7p5gHl7
-         JUOL9wBV+Dp8uRibS9Lm8MhB7ZI55UxPOLzVzZsbn2uvalYqzn97Vbcml3kOekfEGiuF
-         tllX+qxWFqzbzfAhrPo6VpObZPEKJe+xAXK4JsRZCYrKFBK9X0R3HAc9GhljAsVKP0dq
-         vudg==
-X-Gm-Message-State: AOAM532u8UQr+HGtbnUyWdt0lZdIUmSTVPuUOVVf+bLy9kx94JRbbNS1
-        dG970FzzTU2Ms+lWzDKnpiTpVtEA
-X-Google-Smtp-Source: ABdhPJySB6ZtQ7LGWzqOeMOvggerZvrNttDdyUhEPXWL4c5ap6NVFSXsIW0i3yG/I0nwC7/pc5KKOQ==
-X-Received: by 2002:a63:a558:: with SMTP id r24mr26952582pgu.70.1593091349296;
-        Thu, 25 Jun 2020 06:22:29 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id j17sm20332958pgk.66.2020.06.25.06.22.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:22:28 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 06:22:26 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, alexandre.belloni@bootlin.com,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        allan.nielsen@microchip.com, foss@0leil.net
-Subject: Re: [PATCH net-next v4 6/8] net: phy: mscc: timestamping and PHC
- support
-Message-ID: <20200625132226.GC2548@localhost>
-References: <20200623143014.47864-1-antoine.tenart@bootlin.com>
- <20200623143014.47864-7-antoine.tenart@bootlin.com>
+        Thu, 25 Jun 2020 09:24:11 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31089 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404740AbgFYNYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:24:09 -0400
+IronPort-SDR: +tDidLvzPYJbquK0D1mP2uVYc490LpVLEVxXwKbRnDZB+Kiz587/k/bit4fX42ZkYqrR0/CoF1
+ RLUTIirjY/5w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="162967841"
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="162967841"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 06:24:09 -0700
+IronPort-SDR: 2ezmgb/2u+6MiN49NBDP4+M+S621ypojUrDTBgV5HkQXZoiMnzdBYl7br8dvfIWQ31G+v5RuoY
+ 22igJXxP/XdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
+   d="scan'208";a="263919837"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.28.52]) ([10.255.28.52])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 06:24:01 -0700
+Cc:     baolu.lu@linux.intel.com, Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 02/13] iommu/vt-d: Use dev_iommu_priv_get/set()
+To:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org
+References: <20200625130836.1916-1-joro@8bytes.org>
+ <20200625130836.1916-3-joro@8bytes.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <1f6c3feb-d8b0-3ade-db2e-133f40874c30@linux.intel.com>
+Date:   Thu, 25 Jun 2020 21:24:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623143014.47864-7-antoine.tenart@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200625130836.1916-3-joro@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 04:30:12PM +0200, Antoine Tenart wrote:
-> @@ -978,9 +1483,32 @@ static int __vsc8584_init_ptp(struct phy_device *phydev)
->  
->  	vsc85xx_ts_eth_cmp1_sig(phydev);
->  
-> +	vsc8531->mii_ts.rxtstamp = vsc85xx_rxtstamp;
-> +	vsc8531->mii_ts.txtstamp = vsc85xx_txtstamp;
-> +	vsc8531->mii_ts.hwtstamp = vsc85xx_hwtstamp;
-> +	vsc8531->mii_ts.ts_info  = vsc85xx_ts_info;
-> +	phydev->mii_ts = &vsc8531->mii_ts;
-> +
-> +	memcpy(&vsc8531->ptp->caps, &vsc85xx_clk_caps, sizeof(vsc85xx_clk_caps));
-> +
-> +	vsc8531->ptp->ptp_clock = ptp_clock_register(&vsc8531->ptp->caps,
-> +						     &phydev->mdio.dev);
-> +	if (IS_ERR(vsc8531->ptp->ptp_clock))
-> +		return PTR_ERR(vsc8531->ptp->ptp_clock);
+Hi Joerg,
 
-The ptp_clock_register() method can also return NULL:
+On 2020/6/25 21:08, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Remove the use of dev->archdata.iommu and use the private per-device
+> pointer provided by IOMMU core code instead.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>   .../gpu/drm/i915/selftests/mock_gem_device.c   | 10 ++++++++--
+>   drivers/iommu/intel/iommu.c                    | 18 +++++++++---------
 
- * Returns a valid pointer on success or PTR_ERR on failure.  If PHC
- * support is missing at the configuration level, this function
- * returns NULL, and drivers are expected to gracefully handle that
- * case separately.
+For changes in VT-d driver,
 
-Thanks,
-Richard
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Best regards,
+baolu
+
+>   2 files changed, 17 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/selftests/mock_gem_device.c b/drivers/gpu/drm/i915/selftests/mock_gem_device.c
+> index 9b105b811f1f..e08601905a64 100644
+> --- a/drivers/gpu/drm/i915/selftests/mock_gem_device.c
+> +++ b/drivers/gpu/drm/i915/selftests/mock_gem_device.c
+> @@ -24,6 +24,7 @@
+>   
+>   #include <linux/pm_domain.h>
+>   #include <linux/pm_runtime.h>
+> +#include <linux/iommu.h>
+>   
+>   #include <drm/drm_managed.h>
+>   
+> @@ -118,6 +119,9 @@ struct drm_i915_private *mock_gem_device(void)
+>   {
+>   	struct drm_i915_private *i915;
+>   	struct pci_dev *pdev;
+> +#if IS_ENABLED(CONFIG_IOMMU_API) && defined(CONFIG_INTEL_IOMMU)
+> +	struct dev_iommu iommu;
+> +#endif
+>   	int err;
+>   
+>   	pdev = kzalloc(sizeof(*pdev), GFP_KERNEL);
+> @@ -136,8 +140,10 @@ struct drm_i915_private *mock_gem_device(void)
+>   	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+>   
+>   #if IS_ENABLED(CONFIG_IOMMU_API) && defined(CONFIG_INTEL_IOMMU)
+> -	/* hack to disable iommu for the fake device; force identity mapping */
+> -	pdev->dev.archdata.iommu = (void *)-1;
+> +	/* HACK HACK HACK to disable iommu for the fake device; force identity mapping */
+> +	memset(&iommu, 0, sizeof(iommu));
+> +	iommu.priv = (void *)-1;
+> +	pdev->dev.iommu = &iommu;
+>   #endif
+>   
+>   	pci_set_drvdata(pdev, i915);
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index d759e7234e98..2ce490c2eab8 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -372,7 +372,7 @@ struct device_domain_info *get_domain_info(struct device *dev)
+>   	if (!dev)
+>   		return NULL;
+>   
+> -	info = dev->archdata.iommu;
+> +	info = dev_iommu_priv_get(dev);
+>   	if (unlikely(info == DUMMY_DEVICE_DOMAIN_INFO ||
+>   		     info == DEFER_DEVICE_DOMAIN_INFO))
+>   		return NULL;
+> @@ -743,12 +743,12 @@ struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8 bus,
+>   
+>   static int iommu_dummy(struct device *dev)
+>   {
+> -	return dev->archdata.iommu == DUMMY_DEVICE_DOMAIN_INFO;
+> +	return dev_iommu_priv_get(dev) == DUMMY_DEVICE_DOMAIN_INFO;
+>   }
+>   
+>   static bool attach_deferred(struct device *dev)
+>   {
+> -	return dev->archdata.iommu == DEFER_DEVICE_DOMAIN_INFO;
+> +	return dev_iommu_priv_get(dev) == DEFER_DEVICE_DOMAIN_INFO;
+>   }
+>   
+>   /**
+> @@ -2420,7 +2420,7 @@ static inline void unlink_domain_info(struct device_domain_info *info)
+>   	list_del(&info->link);
+>   	list_del(&info->global);
+>   	if (info->dev)
+> -		info->dev->archdata.iommu = NULL;
+> +		dev_iommu_priv_set(info->dev, NULL);
+>   }
+>   
+>   static void domain_remove_dev_info(struct dmar_domain *domain)
+> @@ -2453,7 +2453,7 @@ static void do_deferred_attach(struct device *dev)
+>   {
+>   	struct iommu_domain *domain;
+>   
+> -	dev->archdata.iommu = NULL;
+> +	dev_iommu_priv_set(dev, NULL);
+>   	domain = iommu_get_domain_for_dev(dev);
+>   	if (domain)
+>   		intel_iommu_attach_device(domain, dev);
+> @@ -2599,7 +2599,7 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+>   	list_add(&info->link, &domain->devices);
+>   	list_add(&info->global, &device_domain_list);
+>   	if (dev)
+> -		dev->archdata.iommu = info;
+> +		dev_iommu_priv_set(dev, info);
+>   	spin_unlock_irqrestore(&device_domain_lock, flags);
+>   
+>   	/* PASID table is mandatory for a PCI device in scalable mode. */
+> @@ -4004,7 +4004,7 @@ static void quirk_ioat_snb_local_iommu(struct pci_dev *pdev)
+>   	if (!drhd || drhd->reg_base_addr - vtbar != 0xa000) {
+>   		pr_warn_once(FW_BUG "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n");
+>   		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+> -		pdev->dev.archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
+> +		dev_iommu_priv_set(&pdev->dev, DUMMY_DEVICE_DOMAIN_INFO);
+>   	}
+>   }
+>   DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IOAT_SNB, quirk_ioat_snb_local_iommu);
+> @@ -4043,7 +4043,7 @@ static void __init init_no_remapping_devices(void)
+>   			drhd->ignored = 1;
+>   			for_each_active_dev_scope(drhd->devices,
+>   						  drhd->devices_cnt, i, dev)
+> -				dev->archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
+> +				dev_iommu_priv_set(dev, DUMMY_DEVICE_DOMAIN_INFO);
+>   		}
+>   	}
+>   }
+> @@ -5665,7 +5665,7 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
+>   		return ERR_PTR(-ENODEV);
+>   
+>   	if (translation_pre_enabled(iommu))
+> -		dev->archdata.iommu = DEFER_DEVICE_DOMAIN_INFO;
+> +		dev_iommu_priv_set(dev, DEFER_DEVICE_DOMAIN_INFO);
+>   
+>   	return &iommu->iommu;
+>   }
+> 
