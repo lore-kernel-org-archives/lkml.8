@@ -2,187 +2,115 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28845C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16364207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD50207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="E2FN6syt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbgFYAA2 (ORCPT
+        id S2388297AbgFYADS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:00:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6763 "EHLO mga09.intel.com"
+        Wed, 24 Jun 2020 20:03:18 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:30226 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387823AbgFYAA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 20:00:27 -0400
-IronPort-SDR: FxSabzpGPEY9+GE9Tinq0VaX6p9OZPJcp+g/82LnhL3wwRPIqFqINq+P4qqONmzzCWetkMDnsB
- XMnBMIY9sXXA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146179287"
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="146179287"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 17:00:27 -0700
-IronPort-SDR: pjG5eaLCFNWTd03vuiWSsY/pk4STlnXy2S0/Q2aCFJxPu7F+avONDD3C/RVlvyntbe44QmOLni
- 6/ocnzeLccMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="385319591"
-Received: from hluxenbu-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.218])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jun 2020 17:00:22 -0700
-Date:   Thu, 25 Jun 2020 03:00:21 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Jiandi An <anjiandi@codeaurora.org>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v5 1/2] acpi: Extend TPM2 ACPI table with missing log
- fields
-Message-ID: <20200625000021.GC21758@linux.intel.com>
-References: <20200623120636.1453470-1-stefanb@linux.vnet.ibm.com>
- <20200623120636.1453470-2-stefanb@linux.vnet.ibm.com>
+        id S2387828AbgFYADQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 20:03:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593043396; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=3INbwNDUP/wezgbPwIovPzcDp4TH4ao4dSsadBi2Wxk=; b=E2FN6sytQmCLbkFbbRn+SiHrLDe2W+Mho47q75EuZRIBPiPnhalumbE0gtzMFx1Kq8egp0My
+ /+Z7+NgaNLP4MmDiV5BlYrQbtRgEjCtHpRycrwbvCampRDEFqbHFRsGdKO61VCs48QTF+ZgQ
+ TrGTcxmfRzItl/DzOEgAM2L0FwY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n18.prod.us-east-1.postgun.com with SMTP id
+ 5ef3e9c386de6ccd447a4b4f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 00:03:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA7EEC43391; Thu, 25 Jun 2020 00:03:14 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB0FBC433C8;
+        Thu, 25 Jun 2020 00:03:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB0FBC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v3 2/4] bus: mhi: core: Move MHI_MAX_MTU to external
+ header file
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+References: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
+ <1591899224-3403-3-git-send-email-hemantk@codeaurora.org>
+ <20200619053353.GB3245@Mani-XPS-13-9360>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <a6babc13-e646-d08c-6f53-4d6961745ce0@codeaurora.org>
+Date:   Wed, 24 Jun 2020 17:03:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200623120636.1453470-2-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200619053353.GB3245@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 08:06:35AM -0400, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
+Hi Mani
+
+On 6/18/20 10:33 PM, Manivannan Sadhasivam wrote:
+> On Thu, Jun 11, 2020 at 11:13:42AM -0700, Hemant Kumar wrote:
+>> Currently this macro is defined in internal MHI header as
+>> a TRE length mask. Moving it to external header allows MHI
+>> client drivers to set this upper bound for the transmit
+>> buffer size.
+>>
 > 
-> Recent extensions of the TPM2 ACPI table added 3 more fields
-> including 12 bytes of start method specific parameters and Log Area
-> Minimum Length (u32) and Log Area Start Address (u64). So, we extend
-> the existing structure with these fields to allow non-UEFI systems
-> to access the TPM2's log.
+> So we have 2 definitions for MHI_MAX_MTU now? Why can't you remove the one
+> available internally?
+Good catch, let me fix that in next patch series.
 > 
-> The specification that has the new fields is the following:
->   TCG ACPI Specification
->   Family "1.2" and "2.0"
->   Version 1.2, Revision 8
+> Thanks,
+> Mani
 > 
-> Adapt all existing table size calculations to use
-> offsetof(struct acpi_table_tpm2, start_method_specific)
-> [where start_method_specific is a newly added field]
-> rather than sizeof(struct acpi_table_tpm2) so that the addition
-> of the new fields does not affect current systems that may not
-> have them.
-> 
+>> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+>> ---
+>>   include/linux/mhi.h | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+>> index a39b77d..ce43f74 100644
+>> --- a/include/linux/mhi.h
+>> +++ b/include/linux/mhi.h
+>> @@ -16,6 +16,9 @@
+>>   #include <linux/wait.h>
+>>   #include <linux/workqueue.h>
+>>   
+>> +/* MHI client drivers to set this upper bound for tx buffer */
+>> +#define MHI_MAX_MTU 0xffff
+>> +
+>>   #define MHI_VOTE_BUS BIT(0) /* do not disable the mhi bus */
+>>   #define MHI_VOTE_DEVICE BIT(1) /* prevent mhi device from entering lpm */
+>>   
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
 
-I found at least one regression from this patch. Please remove my
-reviewed-by comment form the next version.
-
-Should have:
-
-  Link: https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
-
-Please, add this.
-
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: linux-acpi@vger.kernel.org
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  drivers/char/tpm/tpm_crb.c | 13 ++++++++++---
->  drivers/char/tpm/tpm_tis.c |  4 +++-
->  include/acpi/actbl3.h      |  5 +++--
->  3 files changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-> index a9dcf31eadd2..0565aa5482f9 100644
-> --- a/drivers/char/tpm/tpm_crb.c
-> +++ b/drivers/char/tpm/tpm_crb.c
-> @@ -669,7 +669,9 @@ static int crb_acpi_add(struct acpi_device *device)
->  
->  	status = acpi_get_table(ACPI_SIG_TPM2, 1,
->  				(struct acpi_table_header **) &buf);
-> -	if (ACPI_FAILURE(status) || buf->header.length < sizeof(*buf)) {
-> +	if (ACPI_FAILURE(status) || buf->header.length <
-> +			offsetof(struct acpi_table_tpm2,
-> +				 start_method_specific)) {
->  		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
->  		return -EINVAL;
->  	}
-> @@ -684,14 +686,19 @@ static int crb_acpi_add(struct acpi_device *device)
->  		return -ENOMEM;
->  
->  	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
-> -		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_smc))) {
-> +		if (buf->header.length <
-> +			(offsetof(struct acpi_table_tpm2,
-> +				  start_method_specific) +
-
-Should be
-
-  offsetof(struct acpti_table_tpm2, log_area_minimum_length)
-
-> +			 sizeof(*crb_smc))) {
->  			dev_err(dev,
->  				FW_BUG "TPM2 ACPI table has wrong size %u for start method type %d\n",
->  				buf->header.length,
->  				ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC);
->  			return -EINVAL;
->  		}
-> -		crb_smc = ACPI_ADD_PTR(struct tpm2_crb_smc, buf, sizeof(*buf));
-> +		crb_smc = ACPI_ADD_PTR(struct tpm2_crb_smc, buf,
-> +			   offsetof(struct acpi_table_tpm2,
-> +				    start_method_specific));
->  		priv->smc_func_id = crb_smc->smc_func_id;
->  	}
->  
-> diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
-> index e7df342a317d..a80f36860bac 100644
-> --- a/drivers/char/tpm/tpm_tis.c
-> +++ b/drivers/char/tpm/tpm_tis.c
-> @@ -111,7 +111,9 @@ static int check_acpi_tpm2(struct device *dev)
->  	 */
->  	st =
->  	    acpi_get_table(ACPI_SIG_TPM2, 1, (struct acpi_table_header **)&tbl);
-> -	if (ACPI_FAILURE(st) || tbl->header.length < sizeof(*tbl)) {
-> +	if (ACPI_FAILURE(st) || tbl->header.length <
-> +			offsetof(struct acpi_table_tpm2,
-> +				 start_method_specific)) {
->  		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
->  		return -EINVAL;
->  	}
-> diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
-> index b0b163b9efc6..8b55426bbcf6 100644
-> --- a/include/acpi/actbl3.h
-> +++ b/include/acpi/actbl3.h
-> @@ -411,8 +411,9 @@ struct acpi_table_tpm2 {
->  	u16 reserved;
->  	u64 control_address;
->  	u32 start_method;
-> -
-> -	/* Platform-specific data follows */
-> +	u8  start_method_specific[12];
-> +	u32 log_area_minimum_length;		/* optional */
-> +	u64 log_area_start_address;		/* optional */
-
-'start_method_specific' is also optional. Please remove the optional
-comments altogether as platform-specific data is by definition optional.
-
->  };
->  
->  /* Values for start_method above */
-> -- 
-> 2.26.2
-> 
-
-Please add this to the next version since we do not want to break ARM
-side:
-
-  Cc: Jiandi An <anjiandi@codeaurora.org>
-
-/Jarkko
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
