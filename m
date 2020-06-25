@@ -3,59 +3,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0339C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F016BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8359320707
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C1920707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407623AbgFYXAQ (ORCPT
+        id S2407637AbgFYXAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41390 "EHLO
+        Thu, 25 Jun 2020 19:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728280AbgFYXAQ (ORCPT
+        with ESMTP id S1728280AbgFYXAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:00:16 -0400
+        Thu, 25 Jun 2020 19:00:38 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C22FC08C5C1;
-        Thu, 25 Jun 2020 16:00:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77538C08C5C1;
+        Thu, 25 Jun 2020 16:00:38 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5228D12740311;
-        Thu, 25 Jun 2020 16:00:13 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 16:00:09 -0700 (PDT)
-Message-Id: <20200625.160009.461208269389991702.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0BF471299BAE1;
+        Thu, 25 Jun 2020 16:00:38 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 16:00:37 -0700 (PDT)
+Message-Id: <20200625.160037.879221379667078763.davem@davemloft.net>
 To:     claudiu.beznea@microchip.com
 Cc:     nicolas.ferre@microchip.com, kuba@kernel.org,
         alexandre.belloni@bootlin.com, antoine.tenart@bootlin.com,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] net: macb: call pm_runtime_put_sync on failure
- path
+Subject: Re: [PATCH v2 2/2] net: macb: free resources on failure path of
+ at91ether_open()
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1592993298-26533-1-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1592993298-26533-2-git-send-email-claudiu.beznea@microchip.com>
 References: <1592993298-26533-1-git-send-email-claudiu.beznea@microchip.com>
+        <1592993298-26533-2-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 25 Jun 2020 16:00:13 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 25 Jun 2020 16:00:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Date: Wed, 24 Jun 2020 13:08:17 +0300
+Date: Wed, 24 Jun 2020 13:08:18 +0300
 
-> Call pm_runtime_put_sync() on failure path of at91ether_open.
+> DMA buffers were not freed on failure path of at91ether_open().
+> Along with changes for freeing the DMA buffers the enable/disable
+> interrupt instructions were moved to at91ether_start()/at91ether_stop()
+> functions and the operations on at91ether_stop() were done in
+> their reverse order (compared with how is done in at91ether_start()):
+> before this patch the operation order on interface open path
+> was as follows:
+> 1/ alloc DMA buffers
+> 2/ enable tx, rx
+> 3/ enable interrupts
+> and the order on interface close path was as follows:
+> 1/ disable tx, rx
+> 2/ disable interrupts
+> 3/ free dma buffers.
 > 
-> Fixes: e6a41c23df0d ("net: macb: ensure interface is not suspended on at91rm9200")
+> Fixes: 7897b071ac3b ("net: macb: convert to phylink")
 > Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Applied and queued up for -stable.
+Also applied and queued up for -stable.
+
+Please submit a proper header posting "[PATCH 0/N] " in the future
+when you submit a patch series.  Thank you.
