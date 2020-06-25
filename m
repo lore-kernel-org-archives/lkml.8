@@ -2,120 +2,94 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B36C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A86C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C64FC20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB601206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405426AbgFYUz2 (ORCPT
+        id S2405495AbgFYVCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:55:28 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59156 "EHLO mga05.intel.com"
+        Thu, 25 Jun 2020 17:02:14 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24444 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405184AbgFYUz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:55:27 -0400
-IronPort-SDR: 3Sem9uUCndJnPauK8KKqZO9ZjjETWW875nGGPmXcJMdvd89i/x0sBkAgCEVUW6s0XXgwhTRI7P
- s1VZ9voSeobA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229804796"
+        id S2405347AbgFYVCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:02:13 -0400
+IronPort-SDR: rMeBkFzC5wHops8amyd9Wwl6u53PjApIFys7KE5fsPc8yENuz8KaP40f7WLnmuYv5GTnBDoijN
+ QbU9bMvK89cw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132511756"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="229804796"
+   d="scan'208";a="132511756"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:55:26 -0700
-IronPort-SDR: H2kX/ypC4IrLeOWQfnoGzaLLbEEfEX8H3LnF0hIq1Olox27cM/jkWYvQNCXBStALC6gfGqaLvt
- DvEMyuswu+Kg==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:02:12 -0700
+IronPort-SDR: BQSROp49MQ9J0Db6XnzAdYU+X7mKN3Pxg8zFxQJi72Ij8XrV4KZV/7+9tF8Ihjw++7hVrRp61R
+ mnZCSkbZZGJQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="479775209"
+   d="scan'208";a="479777206"
 Received: from drews-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.247])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 13:55:16 -0700
-Date:   Thu, 25 Jun 2020 23:55:05 +0300
+  by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 14:02:10 -0700
+Date:   Fri, 26 Jun 2020 00:02:02 +0300
 From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 09/21] x86/sgx: Add __sgx_alloc_epc_page() and
- sgx_free_epc_page()
-Message-ID: <20200625205505.GD15394@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-10-jarkko.sakkinen@linux.intel.com>
- <20200625170648.GH20319@zn.tnic>
+To:     linux-integrity@vger.kernel.org,
+        Kylene Jo Hall <kjhall@us.ibm.com>,
+        "Ferry Toth :" <ferry.toth@elsinga.info>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@osdl.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tpm_tis: Remove the HID IFX0102
+Message-ID: <20200625210202.GA20341@linux.intel.com>
+References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
+ <20200625062150.idm6j3vm2neyt4sh@cantor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625170648.GH20319@zn.tnic>
+In-Reply-To: <20200625062150.idm6j3vm2neyt4sh@cantor>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 07:06:48PM +0200, Borislav Petkov wrote:
-> On Thu, Jun 18, 2020 at 01:08:31AM +0300, Jarkko Sakkinen wrote:
-> > Add __sgx_alloc_epc_page(), which iterates through EPC sections and borrows
-> > a page structure that is not used by anyone else. When a page is no longer
-> > needed it must be released with sgx_free_epc_page(). This function
-> > implicitly calls ENCLS[EREMOVE], which will return the page to the
-> > uninitialized state (i.e. not required from caller part).
+On Wed, Jun 24, 2020 at 11:21:50PM -0700, Jerry Snitselaar wrote:
+> On Thu Jun 25 20, Jarkko Sakkinen wrote:
+> > Acer C720 running Linux v5.3 reports this in klog:
 > > 
-> > Acked-by: Jethro Beekman <jethro@fortanix.com>
-> > Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > tpm_tis: 1.2 TPM (device-id 0xB, rev-id 16)
+> > tpm tpm0: tpm_try_transmit: send(): error -5
+> > tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
+> > tpm_tis tpm_tis: Could not get TPM timeouts and durations
+> > tpm_tis 00:08: 1.2 TPM (device-id 0xB, rev-id 16)
+> > tpm tpm0: tpm_try_transmit: send(): error -5
+> > tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
+> > tpm_tis 00:08: Could not get TPM timeouts and durations
+> > ima: No TPM chip found, activating TPM-bypass!
+> > tpm_inf_pnp 00:08: Found TPM with ID IFX0102
+> > 
+> > % git --no-pager grep IFX0102 drivers/char/tpm
+> > drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
+> > drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
+> > 
+> > Obviously IFX0102 was added to the HID table for the TCG TIS driver by
+> > mistake.
+> > 
+> > Fixes: 93e1b7d42e1e ("[PATCH] tpm: add HID module parameter")
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203877
+> > Cc: Kylene Jo Hall <kjhall@us.ibm.com>
+> > Reported-by: Ferry Toth: <ferry.toth@elsinga.info>
 > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/sgx/main.c | 61 ++++++++++++++++++++++++++++++++++
-> >  arch/x86/kernel/cpu/sgx/sgx.h  |  3 ++
-> >  2 files changed, 64 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-> > index c5831e3db14a..b776d249289f 100644
-> > --- a/arch/x86/kernel/cpu/sgx/main.c
-> > +++ b/arch/x86/kernel/cpu/sgx/main.c
-> > @@ -83,6 +83,67 @@ static bool __init sgx_page_reclaimer_init(void)
-> >  	return true;
-> >  }
-> >  
-> > +static struct sgx_epc_page *__sgx_alloc_epc_page_from_section(struct sgx_epc_section *section)
-> > +{
-> > +	struct sgx_epc_page *page;
-> > +
-> > +	if (list_empty(&section->page_list))
-> > +		return NULL;
-> > +
-> > +	page = list_first_entry(&section->page_list, struct sgx_epc_page, list);
-> > +	list_del_init(&page->list);
 > 
-> <---- newline here.
-> 
-> > +	return page;
-> > +}
-> 
-> Otherwise looks good; nice comments.
+> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-Thanks!
+Bugzilla has an example of similar behavior with v4.15. I'll apply this
+asap.
 
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
-/Jarko
+/Jarkko
