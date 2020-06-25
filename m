@@ -3,102 +3,199 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5937EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 189102137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301CE2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405158AbgFYSfL (ORCPT
+        id S2405288AbgFYSf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:35:11 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46256 "EHLO mga04.intel.com"
+        Thu, 25 Jun 2020 14:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390025AbgFYSfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:35:10 -0400
-IronPort-SDR: 0fQ228rc3r+oWij782i+k//EP0WeBT593xXC90inrqZejb0hmLHVz2CGiU/3OEp+4WanzEf6gt
- EoEV3T+gtG7w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="142530546"
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="142530546"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 11:35:10 -0700
-IronPort-SDR: aL4PASQml7wgyj7szJXhpPrZsa4zbVfKDGQzun7rjRPc6UUnaOODbuZ/RKRusjXTdmgFJsRUHg
- +NFjZpLp2YgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="265427085"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Jun 2020 11:35:09 -0700
-Date:   Thu, 25 Jun 2020 11:34:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200625183448.GG3437@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
- <20200625172319.GJ20319@zn.tnic>
+        id S2405208AbgFYSf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:35:29 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D426520789;
+        Thu, 25 Jun 2020 18:35:26 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 14:35:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jason Behmer <jbehmer@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Clark Williams <williams@redhat.com>,
+        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Darren Hart <dvhart@vmware.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>
+Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
+ running time stamp
+Message-ID: <20200625143525.2f3a2902@oasis.local.home>
+In-Reply-To: <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
+References: <20200625094454.732790f7@oasis.local.home>
+        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625172319.GJ20319@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 07:23:19PM +0200, Borislav Petkov wrote:
-> Also, you had all patches until now split nice and logically doing one
-> thing only.
+On Thu, 25 Jun 2020 13:55:07 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote
+
+> > Here's the design of this solution:
+> > 
+> > All this is per cpu, and only needs to worry about nested events (not
+> > parallel events).
+> > 
+> > The players:
+> > 
+> > write_tail: The index in the buffer where new events can be written to.
+> >     It is incremented via local_add() to reserve space for a new event.
+> > 
+> > before_stamp: A time stamp set by all events before reserving space.
+> > 
+> > write_stamp: A time stamp updated by events after it has successfully
+> >     reserved space.  
 > 
-> But this one is huge. Why?
+> What are the types used for before_stamp and write_stamp ? If those
+> are 64-bit integers, how does sharing them between nested contexts
+> work on 32-bit architectures ?
+
+Well, write_stamp is updated via local64, which I believe handles this
+for us. I probably should make before_stamp handle it as well.
+
 > 
-> Why can't you split out the facilities which the driver uses: encl.[ch]
-> into a patch, then ioctl.c into a separate one and then the driver into
-> a third one? Or do they all belong together inseparably?
+> > 
+> > next_write: A copy of "write_tail" used to help with races.
+> > 
+> >	/* Save the current position of write */
+> > [A]	w = local_read(write_tail);
+> >	barrier();
+> >	/* Read both before and write stamps before touching
+> >	anything */ before = READ_ONCE(before_stamp);
+> >	after = local_read(write_stamp);
+> >	barrier();
+> > 
+> >	/*
+> >	 * If before and after are the same, then this event is not
+> >	 * preempting a time update. If it is, then reserve space
+> >	for adding  
 > 
-> I guess I'll find out eventually but it would've been nice if they were
-> split out...
+> You should use the term "interrupt" rather than "preempting", because
+> as you stated yourself, this algorithm only works with nested
+> interrupts, not with preemption.
 
-Hmm, I think the most reasonable way to break up this beast would be to
-incrementally introduce functionality.  E.g. four or so patches, one for
-each ioctl() of ENCLAVE_CREATE, ENCLAVE_ADD_PAGES, ENCLAVE_INIT and
-ENCLAVE_SET_ATTRIBUTE, in that order.
+The two terms are basically interchangeable here, but for consistency,
+I will update it. Thanks.
 
-Splitting up by file probably wouldn't work very well.  The split is
-pretty arbitrary, e.g. encl.[ch] isn't simply a pure representation of an
-enclave, there is a lot of the driver details/dependencies in there, i.e.
-the functionality between encl/ioctl/driver is all pretty intertwined.
 
-But I think serially introducing each ioctl() would be fairly clean, and
-would help readers/reviewers better understand SGX as the patches would
-naturally document the process of building an enclave, e.g. CREATE the
-enclave, then ADD_PAGES, then INIT the enclave.  SET_ATTRIBUTE is a bit
-of an outlier in that it would be chronologically out of order with
-respect to building the enclave, but I think that's ok. 
+> 
+> >	 * a full time stamp (this can turn into a time extend which
+> >	is
+> >	 * just an extended time delta but fill up the extra space).
+> >	 */
+> >	if (after != before)
+> >		abs = true;
+> > 
+> >	ts = clock();
+> > 
+> >	/* Now update the before_stamp (everyone does this!) */
+> > [B]	WRITE_ONCE(before_stamp, ts);
+> > 
+> >	/* Read the current next_write and update it to what we want
+> >	write
+> >	 * to be after we reserve space. */
+> > 	next = READ_ONCE(next_write);
+> >	WRITE_ONCE(next_write, w + len);
+> > 
+> >	/* Now reserve space on the buffer */
+> > [C]	write = local_add_return(len, write_tail);  
+> 
+> So the reservation is not "just" an add instruction, it's actually an
+> xadd on x86. Is that really faster than a cmpxchg ?
 
-Jarkko, thoughts?
+I believe the answer is still yes. But I can run some benchmarks to
+make sure.
+
+> 
+> > 
+> >	/* Set tail to be were this event's data is */
+> >	tail = write - len;
+> > 
+> > 	if (w == tail) {
+> > 
+> >		/* Nothing preempted this between A and C */
+> > [D]		local_set(write_stamp, ts);
+> >		barrier();
+> > [E]		save_before = READ_ONCE(before_stamp);
+> > 
+> > 		if (!abs) {
+> >			/* This did not preempt a time update */
+> >			delta = ts - a;  
+> 
+> What does "a" refer to ? What triggers its update ?
+
+Oops, When I first wrote this, I used "a" and "b" for "after" and
+"before" and had "after" and "before" be "after_stamp" and
+"before_stamp". I missed this update. Nice catch.
+
+
+> 
+> >		} else {
+> >			/* slow path */
+> >			if (w == next) {  
+> 
+> If it's a slow path, why try to play games with a delta timestamp ?
+> Space should not be an issue for a slow path like this. It would be
+> simpler to just use the full timestamp here.
+
+Hmm, you may be right. Previous iterations of this code had a distinct
+difference here, but after restructuring it, I don't think that
+distinction is valid anymore. If anything, having this at least lets me
+validate that it's doing what I believe it should be doing (as I added
+a ton of trace_printk()s into this).
+
+> 
+> >				/* This event preempted the previous
+> >	event
+> >				 * just after it reserved its
+> >	buffer.  
+> 
+> You mean nesting after [C] but before [D].
+
+Yes. I can add that for clarity, but perhaps I don't need that if I
+merge the two.
+
+> 
+> >				 * It's timestamp should be
+> >	"before_stamp" */  
+> 
+> It's -> Its
+
+;-)
+
+My email client messed up your formatting of the rest of the email, so
+I'll send a separate reply.
+
+-- Steve
