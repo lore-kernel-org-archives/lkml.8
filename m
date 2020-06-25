@@ -2,68 +2,93 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB75C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF20FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 125E82076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912A42076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406047AbgFYVY2 (ORCPT
+        id S2406127AbgFYVZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403817AbgFYVY2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:24:28 -0400
-X-Greylist: delayed 446 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 Jun 2020 14:24:27 PDT
-Received: from herc.mirbsd.org (herc.mirbsd.org [IPv6:2001:470:1f15:10c:202:b3ff:feb7:54e8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 120EAC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:24:26 -0700 (PDT)
-Received: from herc.mirbsd.org (tg@herc.mirbsd.org [192.168.0.82])
-        by herc.mirbsd.org (8.14.9/8.14.5) with ESMTP id 05PLGAuu015400
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 25 Jun 2020 21:16:17 GMT
-Date:   Thu, 25 Jun 2020 21:16:10 +0000 (UTC)
-From:   Thorsten Glaser <tg@debian.org>
-X-X-Sender: tg@herc.mirbsd.org
-To:     Kees Cook <keescook@chromium.org>
-cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Christian Kujau <lists@nerdbynature.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org,
-        klibc@lists.zytor.com, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [klibc] process '/usr/bin/rsync' started with executable stack
-In-Reply-To: <202006251253.2893D4F67@keescook>
-Message-ID: <Pine.BSM.4.64L.2006252115450.4838@herc.mirbsd.org>
-References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
- <20200624165148.GD31008@kadam> <202006241238.E9CB1CE85B@keescook>
- <20200625100429.GB2571@kadam> <202006251253.2893D4F67@keescook>
-Content-Language: de-DE-1901, en-GB
-X-Message-Flag: Your mailer is broken. Get an update at http://www.washington.edu/pine/getpine/pcpine.html for free.
+        Thu, 25 Jun 2020 17:25:09 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48700 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403817AbgFYVZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:25:09 -0400
+IronPort-SDR: 9aj0JHzH+46SYZmpY3zgR4ipms0dJKrn3mtpToH3uuSZJkV6ebLblFTTOgW3XqZyXJr0ZhwFHl
+ UWT36zlniaCw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="124731569"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="124731569"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:25:07 -0700
+IronPort-SDR: JjzDwpV7/tC8ln67VUO2qXVTBl+4LIVaxChS5eHlCy/zuRAKXDUCyNlknQHRYEzQyWbVV0gSlN
+ hSy5cQDguCRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="298925489"
+Received: from gumm-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
+  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2020 14:25:01 -0700
+Date:   Fri, 26 Jun 2020 00:24:53 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: tpm2-space: Resize session and context buffers
+ dynamically
+Message-ID: <20200625212453.GB20341@linux.intel.com>
+References: <20200625042424.370072-1-jarkko.sakkinen@linux.intel.com>
+ <2f8a0127-d2ba-21aa-75b3-2dfccfb52eab@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f8a0127-d2ba-21aa-75b3-2dfccfb52eab@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook dixit:
+On Thu, Jun 25, 2020 at 08:13:09AM -0400, Stefan Berger wrote:
+> On 6/25/20 12:24 AM, Jarkko Sakkinen wrote:
+> > Re-allocate context and session buffers when needed. Scale them in page
+> > increments so that the reallocation is only seldomly required, and thus
+> > causes minimal stress to the system. Add a static maximum limit of four
+> > pages for buffer sizes.
+> > 
+> > Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+> > Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> > Tested only for compilation.
+> >   drivers/char/tpm/tpm2-space.c | 80 ++++++++++++++++++++++++-----------
+> >   include/linux/tpm.h           |  6 ++-
+> >   2 files changed, 59 insertions(+), 27 deletions(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
+> > index 982d341d8837..acb9e82bf9e8 100644
+> > --- a/drivers/char/tpm/tpm2-space.c
+> > +++ b/drivers/char/tpm/tpm2-space.c
+> > @@ -15,6 +15,8 @@
+> >   #include <asm/unaligned.h>
+> >   #include "tpm.h"
+> > +#define TPM2_SPACE_MAX_BUFFER_SIZE	(4 * PAGE_SIZE)
+> 
+> PAGE_SIZE is 64k on ppc64. Rather use 4 * 4096?
 
->3) fix the use of trampolines in klibc
+Better to then just put it as 16384.
 
-AIUI done in klibc, but post-2.0.7
-
-bye,
-//mirabilos
--- 
-FWIW, I'm quite impressed with mksh interactively. I thought it was much
-*much* more bare bones. But it turns out it beats the living hell out of
-ksh93 in that respect. I'd even consider it for my daily use if I hadn't
-wasted half my life on my zsh setup. :-) -- Frank Terbeck in #!/bin/mksh
+/Jarkko
