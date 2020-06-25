@@ -2,143 +2,179 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A473C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3C5204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED31204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:57:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Q0h4au9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406379AbgFYS5w (ORCPT
+        id S2406419AbgFYS55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:57:52 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:44052 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403853AbgFYS5w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:57:52 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 88DBD200DF;
-        Thu, 25 Jun 2020 20:57:47 +0200 (CEST)
-Date:   Thu, 25 Jun 2020 20:57:46 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/8] Fix a bunch of W=1 warnings in Backlight
-Message-ID: <20200625185746.GA1875182@ravnborg.org>
-References: <20200624145721.2590327-1-lee.jones@linaro.org>
- <20200624153216.GA1814806@ravnborg.org>
- <20200624154321.GH954398@dell>
- <20200624162446.GA1815586@ravnborg.org>
- <20200625080337.GN954398@dell>
+        Thu, 25 Jun 2020 14:57:57 -0400
+Received: from mail-mw2nam10on2113.outbound.protection.outlook.com ([40.107.94.113]:42929
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406110AbgFYS5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:57:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gJove7v5tmmGMn4RFJGJ4EPXw/GhEBSgABlZ6Z7G1UKrjnZboSaQ8UiBOOjmwgzt26qgMuIdxlDh4fBZeopMZR3OK6PfYfLTai7FHY51ghu1izLpLlKNJHBtvqDK+zBxc9yj2eiwZ1LoHMQe84lT5E1oWH3jv3+VuPLqTlXnbruGDvHZD6eJxENYJWkC05ZfY9L1jabdpbJJGiJwtcVk336Fe0wT6yYk8CYJEOp5WJeDVtPeg9+zGUR0h7AoS81WPXsv5S4sy4vqanvZHVePUfmqD6IhqIIrwE2yY+q+c+7k6iqtCNzGXqEUL17vTLOq3hOHPF02rLQh1fa8yS+g6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9PX8gpwdqa6XLfdsDog8IV9acID7i4CFhz3jOK+jl94=;
+ b=iLfAPfBNKV0EURIuvkYvGXEF/PyyvDE8I76l1n8IU/C/3bRBjbl5vAdBmiP7WKdZhD9LB8yYOXy2Q7jCacAR/yiBZ3SsfrQoRrdgAoUQS3v2dlYh62A3AUlZTf1XU1rv/DNnVEpLxH9YkPiGG1I6JQ5NgcslZ41Sw5JVBE5jo360AmXnkS1Da7VlkfpKTetM7RTZzvu1l9I6XYSkgwf+E0iKf/S+cTcZcOQapiANWGJnRukeMcTYVxc/fx0jNeVZWeckd3w+fOECTf6lYmyq0ltd3YRoqUNF9XzB7meiHcsuIS+0o4A186UNrQm/3pIlAbAqfYiwgEf0iJOSCZ1KMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9PX8gpwdqa6XLfdsDog8IV9acID7i4CFhz3jOK+jl94=;
+ b=Q0h4au9prFVmCzhC2tRR+dOAKMdCIHTCjUKOsnLU3NaoL+rhhh3zayLwNK6ngJXNPL5muNEXMOZ4I6BY0mQPvUC+XNNiTPZVDdea5oyWv6dV4hBqJb8D+kck9+6PrTNSL/BIdEMyuWJVg8ts0331hHCOF27R/QEwp94vXzBUgJw=
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ (2603:10b6:207:30::18) by BL0PR2101MB0980.namprd21.prod.outlook.com
+ (2603:10b6:207:36::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.2; Thu, 25 Jun
+ 2020 18:57:51 +0000
+Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::421:be5d:ef2e:26d2]) by BL0PR2101MB0930.namprd21.prod.outlook.com
+ ([fe80::421:be5d:ef2e:26d2%4]) with mapi id 15.20.3153.005; Thu, 25 Jun 2020
+ 18:57:51 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Andres Beltran <lkmlabelt@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Thread-Topic: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Thread-Index: AQHWSwaaylt6KwhZwEW4/H3wlYNgFqjprKTQ
+Date:   Thu, 25 Jun 2020 18:57:51 +0000
+Message-ID: <BL0PR2101MB09309FC4BB95D48026DEE99BCA920@BL0PR2101MB0930.namprd21.prod.outlook.com>
+References: <20200625153723.8428-1-lkmlabelt@gmail.com>
+ <20200625153723.8428-4-lkmlabelt@gmail.com>
+In-Reply-To: <20200625153723.8428-4-lkmlabelt@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-25T18:57:49Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c0a1711f-605f-48fd-b5c0-1721e5d1d095;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [96.61.83.132]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 72eb1272-18c6-4b25-64d3-08d81939a8fc
+x-ms-traffictypediagnostic: BL0PR2101MB0980:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR2101MB098060C47C6BFD776D2833A5CA920@BL0PR2101MB0980.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 0445A82F82
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3nWHGcgSiPzSXGFxLpV8opm2WBTX1ZY9e7qbw9bTuLYhJRj1nVqCyu0MzwORr+l7HQnja6xSo6ovCs0q2ni/+LI/yWx2XD/PZ1+BxwHD6Y+vILMFRFaygm23P7LzGl42/N86H51OVpF791WLpCDj8HKLfqLKwMj4kCSLQrscD9IC8Uad6NOkK3i8rpjF+4fkuFzLKVsbZM0zkE+8JfOH3gPYmPBk/QcvAA4fs4gvptqpTfFAkk8X8TAWBfdxQqqV6mm7p3KDZJQLjOBpMC+6knbg+TMw6rUBdpn4TH/iQr+qQe5XMCSOaAsehDOpQrwTwg7NlPpOfl32zJZOKyo4QA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(10290500003)(82950400001)(82960400001)(71200400001)(33656002)(66476007)(316002)(66946007)(76116006)(8936002)(83380400001)(6506007)(8990500004)(186003)(53546011)(26005)(52536014)(110136005)(8676002)(2906002)(54906003)(86362001)(64756008)(66446008)(66556008)(478600001)(5660300002)(9686003)(4326008)(55016002)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: GgV6NCQO3UkSisoATN4cxzmlsNijHE0KpymkWgX6K3j0WDYlIBRXKvTsDGBUfL3g2Cpgx0tiVsy+DqoFmw0EPkAJISqwVkLv/cxaoHZJ/jJ86UeKVrpcBgheljQhcid/xOwauEpbtkZozNElN2KFvQz82snPNEpI7a/SUrFaWgOheMBK37YFIAQehu8drwzGs0hq9f37e1ON39eUEc9tS8bYnhOfNVn+GjT+rlYW4rv03+jAzeWPOijEvnyDcUYi19sKoahOGVwgU8P3P7gI/1KZCOdnO68eIT3ThZdhHpf9loTL/pCEiOS6F4VGQdW95EgTPWVJcSidPCqab1tJJyIIf4JvDt8a3laqH/lxwc54GdaLPemY0I21FLKKgbGzv85Ws9ZKZsv87iN+rE1fNPWCQ0knGOa2Bvt00VHBC7i1eYFccBPct8H/jiZkM8N5GtkNd6UO5O9Wck2+oZzDzCKPGEfV0I8cEqeydf6aTx8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200625080337.GN954398@dell>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=IkcTkHD0fZMA:10 a=7gkXJVJtAAAA:8 a=KKAkSRfTAAAA:8
-        a=dC_rIlIaLDHj5HQ0j38A:9 a=QEXdDO2ut3YA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=cvBusfyB2V15izCimMoJ:22
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72eb1272-18c6-4b25-64d3-08d81939a8fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2020 18:57:51.0769
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NU6++Bet83dBqMy+Ppwd+m0rA2P7bgmkpxoWf7YwqMAxUSplenxo0P4DitVZBbVyiXUXasy5Sb9TT+czumeGFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0980
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee.
 
-On Thu, Jun 25, 2020 at 09:03:37AM +0100, Lee Jones wrote:
-> On Wed, 24 Jun 2020, Sam Ravnborg wrote:
-> 
-> > Hi Lee.
-> > 
-> > On Wed, Jun 24, 2020 at 04:43:21PM +0100, Lee Jones wrote:
-> > > On Wed, 24 Jun 2020, Sam Ravnborg wrote:
-> > > 
-> > > > Hi Lee.
-> > > > 
-> > > > On Wed, Jun 24, 2020 at 03:57:13PM +0100, Lee Jones wrote:
-> > > > > Attempting to clean-up W=1 kernel builds, which are currently
-> > > > > overwhelmingly riddled with niggly little warnings.
-> > > > > 
-> > > > > Lee Jones (8):
-> > > > >   backlight: lms501kf03: Remove unused const variables
-> > > > >   backlight: lcd: Add missing kerneldoc entry for 'struct device parent'
-> > > > 
-> > > > 
-> > > > >   backlight: ili922x: Add missing kerneldoc descriptions for
-> > > > >     CHECK_FREQ_REG() args
-> > > > >   backlight: ili922x: Remove invalid use of kerneldoc syntax
-> > > > >   backlight: ili922x: Add missing kerneldoc description for
-> > > > >     ili922x_reg_dump()'s arg
-> > > > I wonder why these warnings show up as nothing pulls in this .c file.
-> > > > Anyway I would suggest to drop using kerneldoc syntax for single drivers
-> > > > like this - and the benefit here is low.
-> > > > Now they are typed, otherwise this ahd been fine in a single patch.
-> > > 
-> > > What do you mean by 'nothing pulls it in'?
-> > There are no .rst files that includes any:
-> > .. kernel-doc:: drivers/video/backlight/ili922x.c
-> > 
-> > so I do not see how the kernel-doc comments will be used by any
-> > of the generated kernel-docs.
-> 
-> Looks like a common problem (if it is actually a problem):
-> 
->  $ ./scripts/find-unused-docs.sh . | wc -l
->  1476
-> 
-> The role of this patch-set is not to eradicate unused kerneldoc
-> headers, but to ensure they are formatted correctly.  W=1 builds
-> currently complain of ill formatted kerneldocs, which is currently
-> littering the build-log and masking some more important issues (which
-> I'm also trying to fix en route).
 
-My point is that I do not see why we should maintain correct kernel-doc
-style comments for files that are not used to to generate kernel-doc.
-It would serve us better to drop the kernel-doc style comments.
-But thats just my opinion, feel free to ignore.
+> -----Original Message-----
+> From: Andres Beltran <lkmlabelt@gmail.com>
+> Sent: Thursday, June 25, 2020 11:37 AM
+> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> wei.liu@kernel.org
+> Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; Michael
+> Kelley <mikelley@microsoft.com>; parri.andrea@gmail.com; Andres Beltran
+> <lkmlabelt@gmail.com>; David S. Miller <davem@davemloft.net>; Jakub
+> Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
+> Subject: [PATCH 3/3] hv_netvsc: Use vmbus_requestor to generate transacti=
+on
+> IDs for VMBus hardening
+>=20
+> Currently, pointers to guest memory are passed to Hyper-V as
+> transaction IDs in netvsc. In the face of errors or malicious
+> behavior in Hyper-V, netvsc should not expose or trust the transaction
+> IDs returned by Hyper-V to be valid guest memory addresses. Instead,
+> use small integers generated by vmbus_requestor as requests
+> (transaction) IDs.
+>=20
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> ---
+>  drivers/net/hyperv/hyperv_net.h   | 10 +++++
+>  drivers/net/hyperv/netvsc.c       | 75 +++++++++++++++++++++++++------
+>  drivers/net/hyperv/rndis_filter.c |  1 +
+>  include/linux/hyperv.h            |  1 +
+>  4 files changed, 73 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_=
+net.h
+> index abda736e7c7d..14735c98e798 100644
+> --- a/drivers/net/hyperv/hyperv_net.h
+> +++ b/drivers/net/hyperv/hyperv_net.h
+> @@ -847,6 +847,16 @@ struct nvsp_message {
+>=20
+>  #define NETVSC_XDP_HDRM 256
+>=20
+> +#define NETVSC_MIN_OUT_MSG_SIZE (sizeof(struct vmpacket_descriptor) + \
+> +				 sizeof(struct nvsp_message))
+> +#define NETVSC_MIN_IN_MSG_SIZE sizeof(struct vmpacket_descriptor)
+> +
+> +/* Estimated requestor size:
+> + * out_ring_size/min_out_msg_size + in_ring_size/min_in_msg_size
+> + */
+> +#define NETVSC_RQSTOR_SIZE (netvsc_ring_bytes /
+> NETVSC_MIN_OUT_MSG_SIZE + \
+> +			    netvsc_ring_bytes / NETVSC_MIN_IN_MSG_SIZE)
 
-I digged a little and can see we run kernel-doc on all .c files
-when we specify W=1 - which was a suprise to me.
-That explains why I had not seen said warnings in my regular make
-htmldocs runs.
+Please make the variable as the macro parameter for readability:
+#define NETVSC_RQSTOR_SIZE(ringbytes) (ringbytes / NETVSC_MIN_OUT_MSG_SIZE =
+...
 
-	Sam
+Then put the actual variable name when you use the macro.
 
-> 
-> > > > >   backlight: backlight: Supply description for function args in existing
-> > > > >     Kerneldocs
-> > > > >   backlight: lm3630a_bl: Remove invalid checks for unsigned int < 0
-> > > > >   backlight: qcom-wled: Remove unused configs for LED3 and LED4
-> > > > 
-> > > > The other fixes looks good.
-> > > > They are all:
-> > > > Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> > > 
-> > > Thanks (although this should be Reviewed-by).
-> > > 
-> > > > >  drivers/video/backlight/backlight.c  | 2 ++
-> > > > >  drivers/video/backlight/ili922x.c    | 8 ++++++--
-> > > > >  drivers/video/backlight/lcd.c        | 1 +
-> > > > >  drivers/video/backlight/lm3630a_bl.c | 4 ++--
-> > > > >  drivers/video/backlight/lms501kf03.c | 8 --------
-> > > > >  drivers/video/backlight/qcom-wled.c  | 8 --------
-> > > > >  6 files changed, 11 insertions(+), 20 deletions(-)
-> > > > > 
-> > > 
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Senior Technical Lead - Developer Services
-> Linaro.org │ Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+- Haiyang
+
