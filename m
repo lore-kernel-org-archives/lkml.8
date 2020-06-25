@@ -2,86 +2,117 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61CEA20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593092171;
-	bh=mtp7nug8DXnlg3klSnF/L9TcVC11/sBPd5QOTqGfuB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mPregogYm847lG7EFCsIQ1oIKsWEJ4k1K8dOV7UymkGVcK5DRREQ1TPc2eeP4v4uV
-	 lJ9ixGzVput2pXfg7CgIRpFmgG5S38T3tf9iFCb9ZMtjaJzL1cohB2PurXD1+0pIZE
-	 lbJpfoySTc2rX/wQOCPhLJbrllm5iXiJCh2K45ok=
+	by mail.kernel.org (Postfix) with ESMTP id F3FC520672
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VE1H4cUG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405184AbgFYNgJ (ORCPT
+        id S2405132AbgFYNiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:36:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404910AbgFYNgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:36:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FF7720672;
-        Thu, 25 Jun 2020 13:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593092168;
-        bh=mtp7nug8DXnlg3klSnF/L9TcVC11/sBPd5QOTqGfuB4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cEcBD9CMFPVpvmqk5ePBRmi/v2EI0o5geZyyKhMEJey2WC6W6IARCSJ53mDT3LA5C
-         v+ykaRF8klL9RAS1wPEqAoXCaV5kYZMyak7nG9hzQ3USCnPPe5Cj/c9NMOFdMXAWE0
-         D3EOW5mgD77G3q/jn2HHvlgMXBlPFBxNuchSiD0M=
-Date:   Thu, 25 Jun 2020 15:36:04 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Brooke Basile <brookebasile@gmail.com>
-Cc:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
-        rcy@google.com, devel@driverdev.osuosl.org, trivial@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gasket: Convert symbolic permission to octal
-Message-ID: <20200625133604.GA3533051@kroah.com>
-References: <20200625132513.10805-1-brookebasile@gmail.com>
+        Thu, 25 Jun 2020 09:38:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404890AbgFYNit (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:38:49 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E54C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:38:48 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id l17so5615392wmj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:38:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=sChA7GHV4hlkfpK+ozmJjB10++7TNo/bmR1QteXGK7Y=;
+        b=VE1H4cUGZxywExFFi62qrPnBOZqKjdb+jDa5svgWaNo5vczGVwC+hGVzms75r9EN99
+         ynBiDKp6F3K2woAR15eWxxr15ZF4xdwwEPfWFym2I9DYpqJMSRDdlJrwQBX40V5l9/sL
+         flAa+jjvwqAVo6XI0piFN35fypGzChA1muKJAe6FPRiDXu887m2RCtrqeBr9WHsHd1Cy
+         FiJ+TqRXn27CTzQ/X796jPWTUk6NHVjBNuNspEzZBLz2qc9hKqj+5K7v2L5/B/4s5kzp
+         /YMUVNCytsS49H1vFyOy4yXT5ogSKEjAbGv8glKbUpAh6IE8YIbm5n6O8qdk+p2zxJlM
+         fRAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=sChA7GHV4hlkfpK+ozmJjB10++7TNo/bmR1QteXGK7Y=;
+        b=Dka8ee25DhvrLrS4LzIm72DyaWABavUbj46GKp+yA3RyT+hAhh6BH1IOm1NFrms/04
+         iYxaLAXd93MT/rRq2aTv8TbKP1ihcVQ2YVCtT8cogpmljrHg6AgHg/AY8CRCc8Lsx2u9
+         Fg4oyNrcIRgMqUyhDpo/h1vCEzrLMTzAeSqDIGaoPkNBoLoSUbzgYihJvN+BH07e46Ts
+         jbMIcj97tL2Rw2D7S1XxZpZQxr3EGXzOsHls+eHZqSXcEfFYo0ZLG7misqR8puQhgliQ
+         GZlamSjgDonDyfUThi/SrXNSUpw7bt1atPAfhQrA8fQGbtd36HLdnVyeFGAWxnTz/GY0
+         xIyw==
+X-Gm-Message-State: AOAM531jJwuNFksx9FGVDkVAQd/aJafqS/tADJiYLL8nQmtbTXKvBKaO
+        2dnC6+l0ft8jas/0tMXSvLG2Vg==
+X-Google-Smtp-Source: ABdhPJzFZQWGTBTBa4T/1hxiqe1NJvboVg4FHe1xLQbOxZguhizJ0+w360c0uCvspO0ywn5TRE8fXw==
+X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr3610133wma.66.1593092327610;
+        Thu, 25 Jun 2020 06:38:47 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id l14sm15255159wrn.18.2020.06.25.06.38.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 06:38:46 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 14:38:45 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH 01/10] mfd: wm8350-core: Supply description
+ wm8350_reg_{un}lock args
+Message-ID: <20200625133845.GQ954398@dell>
+References: <20200625064619.2775707-1-lee.jones@linaro.org>
+ <20200625064619.2775707-2-lee.jones@linaro.org>
+ <20200625065608.GB2789306@kroah.com>
+ <20200625071313.GM954398@dell>
+ <20200625072449.4d3e3fca@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200625132513.10805-1-brookebasile@gmail.com>
+In-Reply-To: <20200625072449.4d3e3fca@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 09:25:13AM -0400, Brooke Basile wrote:
-> Fixing checkpatch WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+On Thu, 25 Jun 2020, Jonathan Corbet wrote:
+> On Thu, 25 Jun 2020 08:13:13 +0100
+> Lee Jones <lee.jones@linaro.org> wrote:
 > 
-> Signed-off-by: Brooke Basile <brookebasile@gmail.com>
-> ---
->  drivers/staging/gasket/gasket_sysfs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > Why are all of these documentation fixes for stable?  
+> > 
+> > Because they fix compiler warnings.
+> > 
+> > Not correct?
 > 
-> diff --git a/drivers/staging/gasket/gasket_sysfs.h b/drivers/staging/gasket/gasket_sysfs.h
-> index ab5aa351d555..eb0fd3b0490f 100644
-> --- a/drivers/staging/gasket/gasket_sysfs.h
-> +++ b/drivers/staging/gasket/gasket_sysfs.h
-> @@ -71,7 +71,7 @@ struct gasket_sysfs_attribute {
->  
->  #define GASKET_SYSFS_RO(_name, _show_function, _attr_type)                     \
->  	{                                                                      \
-> -		.attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
-> +		.attr = __ATTR(_name, 0444, _show_function, NULL),	       \
->  		.data.attr_type = _attr_type                                   \
->  	}
+> I am overjoyed to see people fixing docs build warnings, it is work that
+> is desperately needed.
 
-Someone else sent this a few days before you did:
-	�https://lore.kernel.org/r/20200622073612.12282-1-rodolfovillordo@gmail.com
+I'll do what I can with the time that I have.
 
-sorry,
+The plan is to keep plodding on and seeing how far I can take it.  A
+clean W=1 build sounds like rainbows and unicorns presently, but Rome
+wasn't built in a day.
 
-greg k-h
+Tell you the truth, drafting patches (again, after a break) is a
+welcome change/release from digging around and reviewing Android
+Stable patches.  It's the only thing keeping me sane. :)
+
+> That said, these warning fixes are probably not
+> stable material; the problem is bigger and longer-term than that.
+
+Fair enough.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
