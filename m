@@ -2,150 +2,141 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B78C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C20C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF61C20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD732137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UjWDyaKo"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IfIPZ6PQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389458AbgFYDYf (ORCPT
+        id S2389589AbgFYD3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 23:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388470AbgFYDYe (ORCPT
+        Wed, 24 Jun 2020 23:29:30 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48767 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388470AbgFYD33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 23:24:34 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DAFC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 20:24:34 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id g6so3120667qtr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 20:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=nb7KRZc1NMpDhOZa08wLKNRZFGJeavE5VbCb55z4mbA=;
-        b=UjWDyaKo6b7a1XX/VMRdzD2WwqSjMIXsv8wqEJ9DUkWtbAZUgvKdeuQ/hCg35QP2Kn
-         CYpaRkMvnYrje1W+8ECjiLPZ3/UcGqA7Zkh7QUGNY91JgKBk/mSfa/dDBefm6nGJ681D
-         jgdyu35BpUmPg06BgHxk2RQ+6WcygzCGdfFSW2mPf1mhygkTkq7F6d9MgYcRb471z/IV
-         TCcAn66IYcsxLcX68IWd94feB7dkOtXEVdVGHbSuNOKN3QbN81Zkhkt6RL3F1ewzvLHp
-         ZRJomnHT+x3PqbR7RXDA9aK7niPAaOwyM7B1bpehLmgM8xcYbCJxoKAWxKa57mOMUWHA
-         ZbqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=nb7KRZc1NMpDhOZa08wLKNRZFGJeavE5VbCb55z4mbA=;
-        b=O4zqV3OE/VQvLy/hzlJKUsk3bCpTeGRaKXC/7cfAsR0m1j/KIAUriL6BQ7ihd1fvOK
-         J0lUX082EVPCH88uiCO6oBHQSn0KgWwTi8kgtpTYgJYNZvgkFn/hd4wdG9cSUPM9EcF1
-         mkFLLu4kM++EwilEIXENdfmZTwkul1KpHfuZpvTCYkYAFgV0+QixDFXhssJ1yG5S8b0y
-         nzETKYcFS3qpaF5wd/rrPGhNhEqaz2DsyPRBr3R0veNJ1fT7G8XliYfezRDYh1rhB0pU
-         //RFxhDzOYv8NNzPYYj562fFt+vMxeZU3jup7cnTU4QnVLK2QHua1iwXnAgOmy3bIgOt
-         wE1Q==
-X-Gm-Message-State: AOAM531tQqEx9kvlQwqmG2HEo4QfSrXA6zGdl3dJtQgOEUz46Z5BHxvk
-        o469Q5xP1ChNvBNuhVdpywR2yjh9wEZEsHA=
-X-Google-Smtp-Source: ABdhPJyW1dErZ8Mb24TYiwYEbKNun9miLJZ/VEdKQda/KyE+XSd3K9hyOX6Z+j5BhCA3dx+Y8NTfxSjUeb/ugU4=
-X-Received: by 2002:a0c:b520:: with SMTP id d32mr9309405qve.6.1593055473102;
- Wed, 24 Jun 2020 20:24:33 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 20:24:30 -0700
-Message-Id: <20200625032430.152447-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH v1] driver core: Fix suspend/resume order issue with deferred probe
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Toan Le <toanle@apm.com>,
-        Feng Kan <fkan@apm.com>, Saravana Kannan <saravanak@google.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>, kernel-team@android.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org
+        Wed, 24 Jun 2020 23:29:29 -0400
+X-UUID: f498513048ee4020b3433167c376d291-20200625
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fENOmocMCM9mBEK5ON5YZH5NV6oEQvRnIxeaSBkgVCI=;
+        b=IfIPZ6PQ5A7++3XjqWHG9l/8AuET2XF7hYLHV2B05fR/IM2rGyJMKUAjijG7kxdEER7oVxFSUupXU1066e2+wD8uqDCnHeqhA0jwVIFaO73Dei8V5U45/Hg+qQs6QWxGJ01UL9JfqEbwZCGl7e6pGkS8xf0azVOj82uo8JVf9Vo=;
+X-UUID: f498513048ee4020b3433167c376d291-20200625
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2081894202; Thu, 25 Jun 2020 11:29:26 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 25 Jun 2020 11:29:23 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by mtkcas08.mediatek.inc
+ (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Jun
+ 2020 11:29:22 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 25 Jun 2020 11:29:22 +0800
+Message-ID: <1593055764.3278.5.camel@mtkswgap22>
+Subject: Re: [PATCH v1 1/3] scsi: ufs: add write booster feature support
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Steev Klimaszewski <steev@kali.org>
+CC:     Kyuho Choi <chlrbgh0@gmail.com>, Avri Altman <Avri.Altman@wdc.com>,
+        "Rob Clark" <robdclark@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Thu, 25 Jun 2020 11:29:24 +0800
+In-Reply-To: <cd531342-cf8a-b3c1-0672-1101f7e4cb52@kali.org>
+References: <cover.1586374414.git.asutoshd@codeaurora.org>
+         <3c186284280c37c76cf77bf482dde725359b8a8a.1586382357.git.asutoshd@codeaurora.org>
+         <CAF6AEGvgmfYoybv4XMVVH85fGMr-eDfpzxdzkFWCx-2N5PEw2w@mail.gmail.com>
+         <SN6PR04MB46402FD7981F9FCA2111AB37FC960@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <20200621075539.GK128451@builder.lan>
+         <CAF6AEGuG3XAqN_sedxk9GRm_9yK+a4OH56CZPmbHx+SW-FNVPQ@mail.gmail.com>
+         <CAP2JTQJ735yQYSeHgDPqnT0mRUTt1uKVAHacOHmSj3WK48PUog@mail.gmail.com>
+         <SN6PR04MB4640DCE37D9D7F4CD99F2195FC940@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <CAP2JTQKu77risdNFBy5zwHoRU3qZw2dMi5Hxfi5Tyf6b9GB3XQ@mail.gmail.com>
+         <9d3afac3-c245-a746-b029-77aa66c93f9d@kali.org>
+         <1592963601.3278.1.camel@mtkswgap22>
+         <cd531342-cf8a-b3c1-0672-1101f7e4cb52@kali.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Under the following conditions:
-- driver A is built in and can probe device-A
-- driver B is a module and can probe device-B
-- device-A is supplier of device-B
-
-Without this patch:
-1. device-A is added.
-2. device-B is added.
-3. dpm_list is now [device-A, device-B].
-4. driver-A defers probe of device-A.
-5. deferred probe of device-A is reattempted
-6. device-A is moved to end of dpm_list.
-6. dpm_list is now [device-B, device-A].
-7. driver-B is loaded and probes device-B.
-8. dpm_list stays as [device-B, device-A].
-
-Suspend (which goes in the reverse order of dpm_list) fails because
-device-A (supplier) is suspended before device-B (consumer).
-
-With this patch:
-1. device-A is added.
-2. device-B is added.
-3. dpm_list is now [device-A, device-B].
-4. driver-A defers probe of device-A.
-5. deferred probe of device-A is reattempted later.
-6. dpm_list is now [device-B, device-A].
-7. driver-B is loaded and probes device-B.
-8. dpm_list is now [device-A, device-B].
-
-Suspend works because device-B (consumer) is suspended before device-A
-(supplier).
-
-Fixes: 494fd7b7ad10 ("PM / core: fix deferred probe breaking suspend resume order")
-Fixes: 716a7a259690 ("driver core: fw_devlink: Add support for batching fwnode parsing")
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/base/dd.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 9a1d940342ac..52b2148c7983 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -109,6 +109,8 @@ static void deferred_probe_work_func(struct work_struct *work)
- 		 * probe makes that very unsafe.
- 		 */
- 		device_pm_move_to_tail(dev);
-+		/* Greg/Rafael: SHOULD I DELETE THIS? ^^ I think I should, but
-+		 * I'm worried if it'll have some unintended consequeneces. */
- 
- 		dev_dbg(dev, "Retrying from deferred list\n");
- 		bus_probe_device(dev);
-@@ -557,6 +559,20 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 		goto re_probe;
- 	}
- 
-+	/*
-+	 * The devices are added to the dpm_list (resume/suspend (reverse
-+	 * order) list) as they are registered with the driver core. But the
-+	 * order the devices are added doesn't necessarily match the real
-+	 * dependency order.
-+	 *
-+	 * The successful probe order is a much better signal. If a device just
-+	 * probed successfully, then we know for sure that all the devices that
-+	 * probed before it don't depend on the device. So, we can safely move
-+	 * the device to the end of the dpm_list. As more devices probe,
-+	 * they'll automatically get ordered correctly.
-+	 */
-+	device_pm_move_to_tail(dev);
-+
- 	pinctrl_init_done(dev);
- 
- 	if (dev->pm_domain && dev->pm_domain->sync)
--- 
-2.27.0.111.gc72c7da667-goog
+SGkgU3RlZXYsDQoNCk9uIFdlZCwgMjAyMC0wNi0yNCBhdCAxMToxNSAtMDUwMCwgU3RlZXYgS2xp
+bWFzemV3c2tpIHdyb3RlOg0KPiBPbiA2LzIzLzIwIDg6NTMgUE0sIFN0YW5sZXkgQ2h1IHdyb3Rl
+Og0KPiA+IEhpIFN0ZWV2LA0KPiA+DQo+ID4gUGxlYXNlIGhlbHAgdHJ5IGJlbG93IHNpbXBsZSBw
+YXRjaCB0byBzZWUgaWYgYWJvdmUgV3JpdGVCb29zdGVyIG1lc3NhZ2VzDQo+ID4gY2FuIGJlIGVs
+aW1pbmF0ZWQuDQo+ID4NCj4gPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hj
+ZC5jIHwgMiArKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+ID4NCj4g
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91
+ZnMvdWZzaGNkLmMNCj4gPiBpbmRleCBmMTczYWQxYmQ3OWYuLjA4OWMwNzg1ZjBiMyAxMDA2NDQN
+Cj4gPiAtLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+ID4gKysrIGIvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnNoY2QuYw0KPiA+IEBAIC02OTg1LDYgKzY5ODUsOCBAQCBzdGF0aWMgaW50IHVm
+c19nZXRfZGV2aWNlX2Rlc2Moc3RydWN0IHVmc19oYmENCj4gPiAqaGJhKQ0KPiA+ICAJICAgIGRl
+dl9pbmZvLT53c3BlY3ZlcnNpb24gPT0gMHgyMjAgfHwNCj4gPiAgCSAgICAoaGJhLT5kZXZfcXVp
+cmtzICYgVUZTX0RFVklDRV9RVUlSS19TVVBQT1JUX0VYVEVOREVEX0ZFQVRVUkVTKSkNCj4gPiAg
+CQl1ZnNoY2Rfd2JfcHJvYmUoaGJhLCBkZXNjX2J1Zik7DQo+ID4gKwllbHNlDQo+ID4gKwkJaGJh
+LT5jYXBzICY9IH5VRlNIQ0RfQ0FQX1dCX0VOOw0KPiA+ICANCj4gPiAgCS8qDQo+ID4gIAkgKiB1
+ZnNoY2RfcmVhZF9zdHJpbmdfZGVzYyByZXR1cm5zIHNpemUgb2YgdGhlIHN0cmluZw0KPiANCj4g
+SGkgU3RhbmxleSwNCj4gDQo+IFRoYXQgd29ya2VkLg0KPiANCj4gDQo+ICAxLg0KPiAgICAgWyAg
+ICAwLjcwNDc3NV0gdWZzaGNkLXFjb20gMWQ4NDAwMC51ZnNoYzogdWZzaGNkX3BvcHVsYXRlX3Zy
+ZWc6DQo+ICAgICBVbmFibGUgdG8gZmluZCB2ZGQtaGJhLXN1cHBseSByZWd1bGF0b3IsIGFzc3Vt
+aW5nIGVuYWJsZWQNCj4gIDIuDQo+ICAgICBbICAgIDAuNzA0NzgxXSB1ZnNoY2QtcWNvbSAxZDg0
+MDAwLnVmc2hjOiB1ZnNoY2RfcG9wdWxhdGVfdnJlZzoNCj4gICAgIFVuYWJsZSB0byBmaW5kIHZj
+Y3Etc3VwcGx5IHJlZ3VsYXRvciwgYXNzdW1pbmcgZW5hYmxlZA0KPiAgMy4NCj4gICAgIFsgICAg
+MC43MDQ3ODNdIHVmc2hjZC1xY29tIDFkODQwMDAudWZzaGM6IHVmc2hjZF9wb3B1bGF0ZV92cmVn
+Og0KPiAgICAgVW5hYmxlIHRvIGZpbmQgdmNjcTItc3VwcGx5IHJlZ3VsYXRvciwgYXNzdW1pbmcg
+ZW5hYmxlZA0KPiAgNC4NCj4gICAgIFsgICAgMC43MDU2MThdIHVmc2hjZC1xY29tIDFkODQwMDAu
+dWZzaGM6IEZvdW5kIFFDIElubGluZSBDcnlwdG8NCj4gICAgIEVuZ2luZSAoSUNFKSB2My4xLjc1
+DQo+ICA1Lg0KPiAgICAgWyAgICAwLjcwNzQ5Nl0gc2NzaSBob3N0MDogdWZzaGNkDQo+ICA2Lg0K
+PiAgICAgWyAgICAwLjcyMDQxNV0gQUxTQSBkZXZpY2UgbGlzdDoNCj4gIDcuDQo+ICAgICBbICAg
+IDAuNzIwNDIyXSAgIE5vIHNvdW5kY2FyZHMgZm91bmQuDQo+ICA4Lg0KPiAgICAgWyAgICAwLjcz
+NDI0NV0gdWZzaGNkLXFjb20gMWQ4NDAwMC51ZnNoYzogdWZzaGNkX3ByaW50X3B3cl9pbmZvOltS
+WCwNCj4gICAgIFRYXTogZ2Vhcj1bMSwgMV0sIGxhbmVbMSwgMV0sIHB3cltTTE9XQVVUT19NT0RF
+LCBTTE9XQVVUT19NT0RFXSwNCj4gICAgIHJhdGUgPSAwDQo+ICA5Lg0KPiAgICAgWyAgICAwLjg0
+NTE1OV0gdWZzaGNkLXFjb20gMWQ4NDAwMC51ZnNoYzogdWZzaGNkX3ByaW50X3B3cl9pbmZvOltS
+WCwNCj4gICAgIFRYXTogZ2Vhcj1bMywgM10sIGxhbmVbMiwgMl0sIHB3cltGQVNUIE1PREUsIEZB
+U1QgTU9ERV0sIHJhdGUgPSAyDQo+IDEwLg0KPiAgICAgWyAgICAwLjg0NjM5OV0gdWZzaGNkLXFj
+b20gMWQ4NDAwMC51ZnNoYzoNCj4gICAgIHVmc2hjZF9maW5kX21heF9zdXBfYWN0aXZlX2ljY19s
+ZXZlbDogUmVndWxhdG9yIGNhcGFiaWxpdHkgd2FzIG5vdA0KPiAgICAgc2V0LCBhY3R2SWNjTGV2
+ZWw9MA0KPiAxMS4NCj4gICAgIFsgICAgMC44NDkyNThdIHNjc2kgMDowOjA6NDk0ODg6IFdlbGwt
+a25vd24gTFVOICAgIFNBTVNVTkcNCj4gICAgICBLTFVERzRVMUVBLUIwQzEgIDA1MDAgUFE6IDAg
+QU5TSTogNg0KPiAxMi4NCj4gICAgIFsgICAgMC44NTMzNzJdIHNjc2kgMDowOjA6NDk0NzY6IFdl
+bGwta25vd24gTFVOICAgIFNBTVNVTkcNCj4gICAgICBLTFVERzRVMUVBLUIwQzEgIDA1MDAgUFE6
+IDAgQU5TSTogNg0KPiAxMy4NCj4gICAgIFsgICAgMC44NTUxMzVdIHNjc2kgMDowOjA6NDk0NTY6
+IFdlbGwta25vd24gTFVOICAgIFNBTVNVTkcNCj4gICAgICBLTFVERzRVMUVBLUIwQzEgIDA1MDAg
+UFE6IDAgQU5TSTogNg0KPiAxNC4NCj4gICAgIFsgICAgMC44NTcwNTBdIHNjc2kgMDowOjA6MDog
+RGlyZWN0LUFjY2VzcyAgICAgU0FNU1VORw0KPiAgICAgIEtMVURHNFUxRUEtQjBDMSAgMDUwMCBQ
+UTogMCBBTlNJOiA2DQo+IDE1Lg0KPiAgICAgWyAgICAwLjg1ODI5N10gc2QgMDowOjA6MDogUG93
+ZXItb24gb3IgZGV2aWNlIHJlc2V0IG9jY3VycmVkDQo+IDE2Lg0KPiAgICAgWyAgICAwLjg1OTk4
+NV0gc2NzaSAwOjA6MDoxOiBEaXJlY3QtQWNjZXNzICAgICBTQU1TVU5HDQo+ICAgICAgS0xVREc0
+VTFFQS1CMEMxICAwNTAwIFBROiAwIEFOU0k6IDYNCj4gMTcuDQo+ICAgICBbICAgIDAuODYwNzAy
+XSBzZCAwOjA6MDowOiBbc2RhXSAyOTc2NTYzMiA0MDk2LWJ5dGUgbG9naWNhbCBibG9ja3M6DQo+
+ICAgICAoMTIyIEdCLzExNCBHaUIpDQo+IA0KPiAoZnVsbCBkbWVzZyBvdXRwdXQgYXQgaHR0cHM6
+Ly9wYXN0ZWJpbi5jb20vUHZmcWU0MlAgKQ0KPiANCj4gSSBndWVzcyB5b3UgY2FuIHRocm93IG15
+IFRlc3RlZC1ieSBvbiB0aGVyZS4NCj4gDQoNClRoYW5rcyBzbyBtdWNoIGZvciB0aGUgdGVzdCEN
+CkkgaGF2ZSByZS1zZW50IHRoZSBwYXRjaCB3aXRoIHlvdXIgIlRlc3RlZC1CeSIgdGFnIDogKQ0K
+DQpUaGFua3MgYSBsb3QsDQpTdGFubGV5IENodQ0KDQoNCg==
 
