@@ -2,132 +2,85 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68211C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE5720709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="L859KQKy"
+	by mail.kernel.org (Postfix) with ESMTP id 9D6F720709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407300AbgFYVkJ (ORCPT
+        id S2407309AbgFYVk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406260AbgFYVkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:40:05 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248B7C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:40:05 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g75so6912914wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:40:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fQ+Pk/YGo7vT5UD1x1N/jzBmkMBTGO2Pa6LVhFRJyFw=;
-        b=L859KQKy8laWnQsH+a6oq9uf01IlkpVCnVGi6rtBf1Zs885cPlBY97FVfLcHe1fP0K
-         69wPXtM36CpX9vKUbxSRRoioox22rD8Etg7RaXEQHngpdZYoX7RdUf/6shdsvsZkELLT
-         jZj8FsrPCunm59/gM5y5dPLuWHljHSo5BVXMyriG8s1uHCai8Qw2pUp8UTtvj3R+4AyR
-         A5piS2E+xN6dW6k1nbjKyPfS+JsIvjgn/t9eRtUtzYhylViFFZ1kv9/VhHdbwo6FXAcA
-         MlIwik49dHYlFnAdo5eyQWZ/50Tq8t6acMw2hnDpPi+ELz9hrRVxB1F59e6ICZWS0GR9
-         6pjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fQ+Pk/YGo7vT5UD1x1N/jzBmkMBTGO2Pa6LVhFRJyFw=;
-        b=P4w3lY8hoZ4W4+MIaGNsSf/K9H3vXasDnVYyVDGdA/6+nJAN3iMng8IC7u/6zlhpE5
-         mB8ORPG4MbS9xvff5x9YQ9DYGdJC2YK/032UOfJuZN46AgaZ2QC7DFi/LjrWebYvtHS0
-         66dnyoq9BVgJYlUVE+rudvTPdM9dyjtf0PLF9JNLI60NlsJI0XP8CrIDuq7AfZi0lsE+
-         mCyet13kZohsP3kXMKfn9Xto2c8GzD8lqnbFhp5p8sWnEqF3Nwf8vSW+5J9GBdcViOtN
-         uDGL24u/G3aTqmJsIIlaML8b7HJzXCBxON4sTL9rQUi1leZ9abNV8/PTKV3iaLzs3UYw
-         naUg==
-X-Gm-Message-State: AOAM5333zvTFv39L1JTNSXqjV4TGaSqCNNC9gq8KM+LCFUqsybp6gQsG
-        0Rl8YjOkwiN7TxoGqBqTzv9ck9EUITvZnXPR/6451A==
-X-Google-Smtp-Source: ABdhPJw5wFghjwcJHH/Vl3khsl/Blx/J1JNPX+KSPBuEhp/1yTGT5oNwfMlrXqJECitwtlgVBTGSW6tmEG2fsepa0wc=
-X-Received: by 2002:a1c:2402:: with SMTP id k2mr68482wmk.138.1593121203747;
- Thu, 25 Jun 2020 14:40:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625211029.34733-1-daniel.gutson@eclypsium.com>
- <20200625211453.GS20319@zn.tnic> <CAFmMkTGy5vOiPUpWw6HfQv-JM90JqLBcsKwMpbWdsjaLBw730Q@mail.gmail.com>
- <20200625212736.GT20319@zn.tnic> <5b1699b5-6766-b5c8-fe1f-faf5a9b7c97e@intel.com>
-In-Reply-To: <5b1699b5-6766-b5c8-fe1f-faf5a9b7c97e@intel.com>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Thu, 25 Jun 2020 14:39:52 -0700
-Message-ID: <CALCETrWLqdmFpGn8r7phKnZOondNRLhKHfe0bmEO=uX1S+xVcQ@mail.gmail.com>
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace (patch v2)
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Daniel Gutson <daniel@eclypsium.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thu, 25 Jun 2020 17:40:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38747 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406260AbgFYVk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:40:58 -0400
+IronPort-SDR: TqsVJQ710ygnsZq2JBDMqDjJ45dY/LOLDJtZMEvndI5Cbn1kpjg5gfd83NlF5lSQUc7LoPvko4
+ VaEeZo2bjI5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="210179206"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="210179206"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:40:58 -0700
+IronPort-SDR: rTsQ9s3TJyNy/6hX2yepi1qKLXFBt48BRME8ZBw7LL3kNnBGaptxxqCEu2+/bGLWCZGVgGaFOp
+ ASKGVX0IWvyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="265464934"
+Received: from jproldan-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Jun 2020 14:40:52 -0700
+Date:   Fri, 26 Jun 2020 00:40:50 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Don Porter <porter@cs.unc.edu>
+Cc:     Sasha Levin <sashal@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Richard Hughes <hughsient@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Message-ID: <20200625214050.GG20341@linux.intel.com>
+References: <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
+ <87h7w7qy18.fsf@nanos.tec.linutronix.de>
+ <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
+ <87d06opd3a.fsf@nanos.tec.linutronix.de>
+ <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
+ <20200528191910.GC2147934@linux.intel.com>
+ <20200528194157.GB1407771@sasha-vm>
+ <20200529030715.GA6182@linux.intel.com>
+ <20200529031016.GB6182@linux.intel.com>
+ <d0db9590-5c0f-d41c-906f-c5cd0981f138@cs.unc.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0db9590-5c0f-d41c-906f-c5cd0981f138@cs.unc.edu>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 2:38 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 6/25/20 2:27 PM, Borislav Petkov wrote:
-> > On Thu, Jun 25, 2020 at 06:16:12PM -0300, Daniel Gutson wrote:
-> >> What didn't become clear from the thread last time is the direction to
-> >> proceed. Concrete suggestion?
-> > Here are two:
-> >
-> > https://lkml.kernel.org/r/20200619161752.GG32683@zn.tnic
-> > https://lkml.kernel.org/r/20200619161026.GF32683@zn.tnic
-> >
-> > but before that happens, I'd like to hear Dave confirm that when we
-> > expose all that information to userspace, it will actually be true and
-> > show the necessary bits which *actually* tell you that encryption is
-> > enabled.
-> >
-> > If you're still unclear, go over the thread again pls.
->
-> It boils down to this: we shouldn't expose low-level, vendor-specific
-> implementation details if we can avoid it.  Let's expose something that
-> app can actually use.
->
-> Something that will work for all of the TME, MKTME and SEV platforms
-> that I know of and continue to work for a while would be to have a
-> per-numa-node (/sys/devices/system/node[X]/file) that says: "user data
-> on this node is protected by memory encryption".
->
-> SEV guests would always have a 1 in all nodes.
->
-> TME systems with no platform screwiness like PMEM would always have a 1.
->
-> Old systems would have a 0 in there.
->
-> TME systems which also have PMEM-only nodes would set 0 in PMEM nodes
-> and 1 on DRAM nodes.
->
-> Systems with screwy EFI_MEMORY_CPU_CRYPTO mixing within NUMA nodes would
-> turn it off for the screwy nodes.
->
-> Is that concrete enough?
+On Thu, Jun 25, 2020 at 11:30:54AM -0400, Don Porter wrote:
+> We are merging the changes to Graphene to run a patched 5.7 kernel with
+> these patches, so it should work for you (or anyone else) once all of the
+> changes are merged.  I'd be happy to talk, perhaps off this thread, about
+> how we can help you with any other SGX-related kernel testing in the future,
+> or issues with running Graphene.
+> 
+> -Don
 
-What about MKTME platforms that (using hypothetical future kernel
-support) have encryption enabled for a node but have disabled it for
-specific pages using madvise()?  Or that have any other nontrivial
-policy like that?
+This is great to hear. And thanks for the proposal. I'll get back to
+you once I have had time to knock the ice myself a bit.
+
+My main interest is not the upstreaming process that we are going
+through right now, but more like post-upstreaming when the code needs to
+be thrown at with arbitrary workloads. I think this will be a perfect
+tool maturizing the code over time.
+
+/Jarkko
