@@ -2,141 +2,86 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C81C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B77DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F20D20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:29:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QoJgdhyB"
+	by mail.kernel.org (Postfix) with ESMTP id 20CCF207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593091836;
+	bh=kTR/iLxjF/lcWHpuVFsRSdgI4rsOP4Auvx2ZjW7rDGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YwQEiPOZ1J/UTFTih3/5CqHrTpfodd0IZrOfZ7Bz1mtj0bj0RDcgJANKIP3/5Dsgz
+	 V52NHveSLw3/vM3d2agfBFk6OqJ0TDnEcvUu2QXdk9MonDA4lqAVOQO8jVY0dERrpf
+	 Wymgf7Wcp3WTP6EUZ+OKXUxTx7WGsRwX0X9sej9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405105AbgFYN3P (ORCPT
+        id S2405069AbgFYNae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:29:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44416 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404990AbgFYN3N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:29:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593091753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dbTwBoD1gpf0C+8LB+fQcdgutOLolzWV3HsBNIH406I=;
-        b=QoJgdhyB4nIUdvX6OHsO/d6oE6f1IuGuwckXk4mH4SNXsrmk+xJm+4iXZxDdb8P0RErTdC
-        uhtvNvJVJdz1Wn2GWSJs+q4aqvw/SMsBKVsMFIq8TcIkn/LExTWJoQOSC1rxY5i71WTp5B
-        seauAWOTMeN0ghfbw31k9geD0LGLmMo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-SKqVoDG7OcijFS7TqHmW5g-1; Thu, 25 Jun 2020 09:29:09 -0400
-X-MC-Unique: SKqVoDG7OcijFS7TqHmW5g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 25 Jun 2020 09:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404872AbgFYNae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:30:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13CAD1005513;
-        Thu, 25 Jun 2020 13:29:07 +0000 (UTC)
-Received: from localhost (ovpn-115-49.ams2.redhat.com [10.36.115.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 844DF5C1BB;
-        Thu, 25 Jun 2020 13:29:06 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 14:29:05 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v4 01/18] nitro_enclaves: Add ioctl interface definition
-Message-ID: <20200625132905.GE221479@stefanha-x1.localdomain>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-2-andraprs@amazon.com>
- <20200623085617.GE32718@stefanha-x1.localdomain>
- <60d7d8be-7c8c-964a-a339-8ef7f5bd2fef@amazon.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id DEC7020781;
+        Thu, 25 Jun 2020 13:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593091834;
+        bh=kTR/iLxjF/lcWHpuVFsRSdgI4rsOP4Auvx2ZjW7rDGo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MyPuup7aPYDP1eQ6soRoVqO18YygUZaMGUGn1S/bd1chk80P7GtowkusO3eV+psAa
+         +MB2c+K66jGTbYx01xCuYJmjVF1LqNTbMc1yDtsRODVO69nDzF5mPgylMOlprrHLli
+         MlaTKVGBDhBUDeyk2WmnT8kSWwzCAgvXMt5JRJ+I=
+Date:   Thu, 25 Jun 2020 15:30:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/477] 5.7.6-rc1 review
+Message-ID: <20200625133030.GA3528477@kroah.com>
+References: <20200623195407.572062007@linuxfoundation.org>
+ <86d738fd-5f5d-9328-6d7b-6f5148bc3e72@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <60d7d8be-7c8c-964a-a339-8ef7f5bd2fef@amazon.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wTWi5aaYRw9ix9vO"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <86d738fd-5f5d-9328-6d7b-6f5148bc3e72@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---wTWi5aaYRw9ix9vO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 24, 2020 at 03:57:39PM -0600, Shuah Khan wrote:
+> On 6/23/20 1:49 PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.6 release.
+> > There are 477 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 25 Jun 2020 19:52:30 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-On Wed, Jun 24, 2020 at 05:02:54PM +0300, Paraschiv, Andra-Irina wrote:
-> On 23/06/2020 11:56, Stefan Hajnoczi wrote:
-> > On Mon, Jun 22, 2020 at 11:03:12PM +0300, Andra Paraschiv wrote:
-> > > +/* User memory region flags */
-> > > +
-> > > +/* Memory region for enclave general usage. */
-> > > +#define NE_DEFAULT_MEMORY_REGION (0x00)
-> > > +
-> > > +/* Memory region to be set for an enclave (write). */
-> > > +struct ne_user_memory_region {
-> > > +=09/**
-> > > +=09 * Flags to determine the usage for the memory region (write).
-> > > +=09 */
-> > > +=09__u64 flags;
-> > Where is the write flag defined?
-> >=20
-> > I guess it's supposed to be:
-> >=20
-> >    #define NE_USER_MEMORY_REGION_FLAG_WRITE (0x01)
->=20
-> For now, the flags field is included in the NE ioctl interface for
-> extensions, it is not part of the NE PCI device interface yet.
-...
-> Ah, and just as a note, that "read" / "write" in parentheses means that a
-> certain data structure / field is read / written by user space. I updated=
- to
-> use "in" / "out" instead of "read" / "write" in v5.
+Thanks for testing all of these and letting me know.
 
-Oops, I got confused. I thought "(write)" was an example of a flag that
-can be set on the memory region. Now I realize "write" means this field
-is an input to the ioctl. :)
-
-Thanks for updating the docs.
-
-Stefan
-
---wTWi5aaYRw9ix9vO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl70pqEACgkQnKSrs4Gr
-c8gcRQgAmyI2rTGsmEZtaHlxTjz++4tUVP8aA3oeSQfWGC3W37R9QVzDOmezMq2q
-m11OujSJ1Cw19EVQbMVRhaf08SsKzh6OkzjPQPJG4zBR1UsIWhRLicFupo/XsXgO
-lnVv6L0IK1lRLkjnA0IkdojxQ8dNIDg1PRpO+D1v6sicp7J5yx2lBLTJumFGeSmk
-1Sx4NG5bz2Ew2uQv7MecU23IAImlVSpZ6PGt4VnDCZos+IZzx2rECUFWc4HPKwjg
-gZHYm48E4Wtqkmx1r3ZAV2l1Mxh8uRFaihKh2XjXV2aoC61KSq/+sRFh5nG7GB0e
-DHp7m471tw55PBsPaC2mpvs7h2itbw==
-=dth8
------END PGP SIGNATURE-----
-
---wTWi5aaYRw9ix9vO--
-
+greg k-h
