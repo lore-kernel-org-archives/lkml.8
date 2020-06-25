@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0221C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34366C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE12206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F45206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j+2JlAdR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oRyYoVKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405471AbgFYOpf (ORCPT
+        id S2405459AbgFYOpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49400 "EHLO
+        Thu, 25 Jun 2020 10:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405428AbgFYOp2 (ORCPT
+        with ESMTP id S2405300AbgFYOpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:45:28 -0400
+        Thu, 25 Jun 2020 10:45:30 -0400
 Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6EEC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 22so5830841wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA832C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:29 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f139so6207638wmf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:45:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PKPieQCHF+nm/iYn6FAQVcl/MzY/rRP6qinUb5RW81I=;
-        b=j+2JlAdRSRFZfAnfxCM0CrpTZ+bahzEHxSfrfwFu0Zuve3qUAEZ4rSirAGqN4PwK1T
-         PpBvFuCOHUh3nOd8Mkrac43OY9760SfUTQnf3fOzt1lJFIkNKC+c/uStRxegVgPN3kv8
-         QSvhUbx2GGGTkgnndzpda8np1tboP8eifIbPrUpgwF+wdUSF0DfOu9GIE4h532YABufs
-         sVboxLHAoWYbp8VU2YKtIBNmZmlVSGGzk1I9wJT/mNusrjWnmwbqqLSKmpQ9kH/GcGDt
-         FBl7MSVOO7DCnSBS301HHbhicSmgV7gmB+L9+rFpLe+cbypd/nCU0EQg7EysRRuCE5yt
-         uwHg==
+        bh=0Jra69YwDnbFj23bZIEwBnJ11u16l+Fe6MOK95QLGj8=;
+        b=oRyYoVKiDYOPz/MygSPwiFQ8U0HicUDNbTICzR95KwCwQ/UAb8EMvC3lfkvissM8Eq
+         2P4kfaKAbu7GXcTuZjj/e+3b/jJatJ76Pb2VdBgf7ve8USRhzHQGzk9EYu7nDWHQL9rn
+         9jHQMm7P0xiMHEQMd4BS8P9biuYGwjy00DmV/uMyDvid0HhhuG5Q71DBV+12s73F7h5H
+         TO60kFDt7rR0PPQX04NYn9QolZwJW4CFe9FgmrNGlTTxm5Ms6sIZiseBlDLbCnJ8iKM3
+         X+NQX3M2aKlrScGQNVmSroLnjtUE+iKlcxflxWFspIguqHprW9IIFB/BCohaNXJ2u3fo
+         D3nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=PKPieQCHF+nm/iYn6FAQVcl/MzY/rRP6qinUb5RW81I=;
-        b=YvXbrk34+n3tRCoxC1+mn5MA0Mv7VG/EIH/5VTdbm42+flUYsMSSKeF6nRLgSlDzk9
-         XtRsmmLe+4jTnjWTBg1anRINaAtPuZIlDwA/UEUC3AlshuOoisJL+x+vMoL544IB0VwE
-         X8urDm3mgpZbaydzlpCGFQ0PAaonEOla9alasUvb5zQTSR7X7iQvfzDEH6NXhaWnXajn
-         T6llQ0tFMVokyycOAZ8voU+jx4h/A/ZmFjl/2Heo7dSWXgde7A5U676isO+FH1CepULL
-         YlUOTN2MfCbS3ZEZdJgQpSSpYHAla2wSWNMJRD+R8tiFlWcBnweq5GUxmuYZ1xe6MH0e
-         AL6g==
-X-Gm-Message-State: AOAM531NxmQZqKPBj+6itrzhyeGZy6wGXA6/khMkL9k/C2DwXlvDYQNX
-        Bt0qREnD/jOXpADER1c4rttG3g==
-X-Google-Smtp-Source: ABdhPJzffN5+QlD/Xdx8ngAfeI3sfiXOJrUqwwi0JLiohDrlOfiAwvWDHzYRVxLJqA5aEL2xZwcwlw==
-X-Received: by 2002:a1c:f003:: with SMTP id a3mr3644775wmb.119.1593096326264;
-        Thu, 25 Jun 2020 07:45:26 -0700 (PDT)
+        bh=0Jra69YwDnbFj23bZIEwBnJ11u16l+Fe6MOK95QLGj8=;
+        b=s99tjEhVY21fDtdDUkoGPsq+sm+vO0lqH5ITCn1YyrYK/ygMizi+qSBGPJ+zDn1mPm
+         NEL8Ztvq7zHvjM7JFVEDiVrMCL72vCaibxTuCrCqFHtIBnflB/flJTyqTI5/WCjP0MRi
+         c0Rn+9pIRUDtgbHdBisjCCG7A1LT9uxvRekZ7pUYUXvznNkVqWu9x3Q8/NIMmmbjxjb0
+         djOuAogmNx5Yl65G3LZhCaDeckkfcUCk8z5ekSRLP9cQnKc7ezNBAc8QSeE8I3POTppV
+         eH+djb+UwXRtOec6zimPbv5TGHmpmCL2NbQGlPJ0OwnBsiCMzN8OvQ05h61udxgCx3I9
+         /CYg==
+X-Gm-Message-State: AOAM5337gpVWW0asDV0kBw8fMVE2+GdTs5Z0OasUXORwXfvJWDOfMIsZ
+        SwZoC1ARCnSNzg4mFU5suhOYcw==
+X-Google-Smtp-Source: ABdhPJwliJFAxqTMtpn1BnBxR/xvCFKfVsrhsF8TrMmIGoZIfkoNW/76g4mrYvVb5oEapQ0pXAoCSQ==
+X-Received: by 2002:a7b:c09a:: with SMTP id r26mr2593246wmh.176.1593096328318;
+        Thu, 25 Jun 2020 07:45:28 -0700 (PDT)
 Received: from localhost.localdomain (lns-bzn-59-82-252-131-168.adsl.proxad.net. [82.252.131.168])
-        by smtp.gmail.com with ESMTPSA id u186sm13062706wmu.10.2020.06.25.07.45.24
+        by smtp.gmail.com with ESMTPSA id u186sm13062706wmu.10.2020.06.25.07.45.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 07:45:25 -0700 (PDT)
+        Thu, 25 Jun 2020 07:45:27 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
 Cc:     srinivas.pandruvada@linux.intel.com, rkumbako@codeaurora.org,
         amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
-Date:   Thu, 25 Jun 2020 16:45:07 +0200
-Message-Id: <20200625144509.17918-3-daniel.lezcano@linaro.org>
+Subject: [PATCH v2 4/5] thermal: core: genetlink support for events/cmd/sampling
+Date:   Thu, 25 Jun 2020 16:45:08 +0200
+Message-Id: <20200625144509.17918-4-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200625144509.17918-1-daniel.lezcano@linaro.org>
 References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
@@ -73,64 +73,864 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to set the scene for the new generic netlink thermal
-management and notifications, let remove the old dead code remaining
-in the uapi headers.
+Initially the thermal framework had a very simple notification
+mechanism to send generic netlink messages to the userspace.
+
+The notification function was never called from anywhere and the
+corresponding dead code was removed. It was probably a first attempt
+to introduce the netlink notification.
+
+At LPC2018, the presentation "Linux thermal: User kernel interface",
+proposed to create the notifications to the userspace via a kfifo.
+
+The advantage of the kfifo is the performance. It is usually used from
+a 1:1 communication channel where a driver captures data and send them
+as fast as possible to an userspace process.
+
+The inconvenient is the process uses the notification channel
+exclusively, thus no other process is allowed to use the channel to
+get temperature or notifications.
+
+The purpose of this series is to provide a fully netlink featured
+thermal management.
+
+This patch is defining a generic netlink API to discover the current
+thermal setup, get events and temperature sampling. As any genetlink
+protocol, it can evolve and the versionning allows to keep the backward
+compatibility.
+
+In order to not flood the user with a single channel data, there are
+two multicast channels, one for the temperature sampling when the
+thermal zone is updated and another one for the events, so the user
+can get the events only without the thermal zone temperature
+sampling. All these events are from the ones presented at the LPC2018.
+
+Also, a list of commands to discover the thermal setup is given and
+can be extended on purpose.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- include/linux/thermal.h      |  5 -----
- include/uapi/linux/thermal.h | 12 +-----------
- 2 files changed, 1 insertion(+), 16 deletions(-)
+ drivers/thermal/Makefile          |   2 +-
+ drivers/thermal/thermal_core.h    |  19 +
+ drivers/thermal/thermal_netlink.c | 645 ++++++++++++++++++++++++++++++
+ include/linux/thermal.h           |  12 -
+ include/uapi/linux/thermal.h      |  80 +++-
+ 5 files changed, 738 insertions(+), 20 deletions(-)
+ create mode 100644 drivers/thermal/thermal_netlink.c
 
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 0c8b84a09b9a..1bbf0805fb04 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -5,7 +5,7 @@
+ 
+ obj-$(CONFIG_THERMAL)		+= thermal_sys.o
+ thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
+-					thermal_helpers.o
++					thermal_helpers.o thermal_netlink.o
+ 
+ # interface to/from other layers providing sensors
+ thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
+diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+index 7e8f45db6bbf..08eb03fe4f69 100644
+--- a/drivers/thermal/thermal_core.h
++++ b/drivers/thermal/thermal_core.h
+@@ -52,6 +52,25 @@ int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
+ 
+ struct thermal_zone_device *thermal_zone_get_by_id(int id);
+ 
++/* Netlink notification function */
++int thermal_notify_tz_create(int tz_id, const char *name);
++int thermal_notify_tz_delete(int tz_id);
++int thermal_notify_tz_enable(int tz_id);
++int thermal_notify_tz_disable(int tz_id);
++int thermal_notify_tz_trip_down(int tz_id, int id);
++int thermal_notify_tz_trip_up(int tz_id, int id);
++int thermal_notify_tz_trip_delete(int tz_id, int id);
++int thermal_notify_tz_trip_add(int tz_id, int id, int type,
++			       int temp, int hyst);
++int thermal_notify_tz_trip_change(int tz_id, int id, int type,
++				  int temp, int hyst);
++int thermal_notify_cdev_update(int cdev_id, int state);
++int thermal_notify_cdev_add(int cdev_id, const char *name,
++			    int min_state, int max_state);
++int thermal_notify_cdev_delete(int cdev_id);
++int thermal_notify_tz_gov_change(int tz_id, const char *name);
++int thermal_genl_sampling_temp(int id, int temp);
++
+ struct thermal_attr {
+ 	struct device_attribute attr;
+ 	char name[THERMAL_NAME_LENGTH];
+diff --git a/drivers/thermal/thermal_netlink.c b/drivers/thermal/thermal_netlink.c
+new file mode 100644
+index 000000000000..a8d6a815a21d
+--- /dev/null
++++ b/drivers/thermal/thermal_netlink.c
+@@ -0,0 +1,645 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2020 Linaro Limited
++ *
++ * Author: Daniel Lezcano <daniel.lezcano@linaro.org>
++ *
++ * Generic netlink for thermal management framework
++ */
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <net/genetlink.h>
++#include <uapi/linux/thermal.h>
++
++#include "thermal_core.h"
++
++static const struct genl_multicast_group thermal_genl_mcgrps[] = {
++	{ .name = THERMAL_GENL_SAMPLING_GROUP_NAME, },
++	{ .name = THERMAL_GENL_EVENT_GROUP_NAME,  },
++};
++
++static const struct nla_policy thermal_genl_policy[THERMAL_GENL_ATTR_MAX + 1] = {
++	/* Thermal zone */
++	[THERMAL_GENL_ATTR_TZ]			= { .type = NLA_NESTED },
++	[THERMAL_GENL_ATTR_TZ_ID]		= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_TEMP]		= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_TRIP]		= { .type = NLA_NESTED },
++	[THERMAL_GENL_ATTR_TZ_TRIP_ID]		= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_TRIP_TEMP]	= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_TRIP_TYPE]	= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_TRIP_HYST]	= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_MODE]		= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_CDEV_WEIGHT]	= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_TZ_NAME]		= { .type = NLA_STRING,
++						    .len = THERMAL_NAME_LENGTH },
++	/* Governor(s) */
++	[THERMAL_GENL_ATTR_TZ_GOV]		= { .type = NLA_NESTED },
++	[THERMAL_GENL_ATTR_TZ_GOV_NAME]		= { .type = NLA_STRING,
++						    .len = THERMAL_NAME_LENGTH },
++	/* Cooling devices */
++	[THERMAL_GENL_ATTR_CDEV]		= { .type = NLA_NESTED },
++	[THERMAL_GENL_ATTR_CDEV_ID]		= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_CDEV_CUR_STATE]	= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_CDEV_MAX_STATE]	= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_CDEV_MIN_STATE]	= { .type = NLA_U32 },
++	[THERMAL_GENL_ATTR_CDEV_NAME]		= { .type = NLA_STRING,
++						    .len = THERMAL_NAME_LENGTH },
++};
++
++struct param {
++	struct nlattr ** attrs;
++	struct sk_buff *msg;
++	const char *name;
++	int tz_id;
++	int cdev_id;
++	int id;
++	int temp;
++	int type;
++	int hyst;
++	int state;
++	int min_state;
++	int max_state;
++};
++
++typedef int (*cb_t)(struct param *);
++
++static struct genl_family thermal_gnl_family;
++
++/************************** Sampling encoding *******************************/
++
++int thermal_genl_sampling_temp(int id, int temp)
++{
++	struct sk_buff *skb;
++	void *hdr;
++
++	skb = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	if (!skb)
++		return -ENOMEM;
++
++	hdr = genlmsg_put(skb, 0, 0, &thermal_gnl_family, 0,
++			  THERMAL_GENL_SAMPLING_TEMP);
++	if (!hdr)
++		return -EMSGSIZE;
++
++	if (nla_put_u32(skb, THERMAL_GENL_ATTR_TZ_ID, id))
++		goto out_cancel;
++
++	if (nla_put_u32(skb, THERMAL_GENL_ATTR_TZ_TEMP, temp))
++		goto out_cancel;
++
++	genlmsg_end(skb, hdr);
++
++	genlmsg_multicast(&thermal_gnl_family, skb, 0, 0, GFP_KERNEL);
++
++	return 0;
++out_cancel:
++	genlmsg_cancel(skb, hdr);
++	nlmsg_free(skb);
++
++	return -EMSGSIZE;
++}
++
++/**************************** Event encoding *********************************/
++
++static int thermal_genl_event_tz_create(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id) ||
++	    nla_put_string(p->msg, THERMAL_GENL_ATTR_TZ_NAME, p->name))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_tz(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_tz_trip_up(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_ID, p->id))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_tz_trip_add(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_ID, p->id) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_TYPE, p->type) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_TEMP, p->temp) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_HYST, p->hyst))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_tz_trip_delete(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_ID, p->id))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_cdev_add(struct param *p)
++{
++	if (nla_put_string(p->msg, THERMAL_GENL_ATTR_CDEV_NAME,
++			   p->name) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID,
++			p->cdev_id) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_MIN_STATE,
++			p->min_state) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_MAX_STATE,
++			p->max_state))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_cdev_delete(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID, p->cdev_id))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_cdev_update(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID, p->cdev_id) ||
++	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_CUR_STATE, p->state))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_event_gov_change(struct param *p)
++{
++	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id) ||
++	    nla_put_string(p->msg, THERMAL_GENL_ATTR_GOV_NAME, p->name))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++int thermal_genl_event_tz_delete(struct param *p)
++	__attribute__((alias("thermal_genl_event_tz")));
++
++int thermal_genl_event_tz_enable(struct param *p)
++	__attribute__((alias("thermal_genl_event_tz")));
++
++int thermal_genl_event_tz_disable(struct param *p)
++	__attribute__((alias("thermal_genl_event_tz")));
++
++int thermal_genl_event_tz_trip_down(struct param *p)
++	__attribute__((alias("thermal_genl_event_tz_trip_up")));
++
++int thermal_genl_event_tz_trip_change(struct param *)
++	__attribute__((alias("thermal_genl_event_tz_trip_add")));
++
++static cb_t event_cb[] = {
++	[THERMAL_GENL_EVENT_TZ_CREATE]		= thermal_genl_event_tz_create,
++	[THERMAL_GENL_EVENT_TZ_DELETE]		= thermal_genl_event_tz_delete,
++	[THERMAL_GENL_EVENT_TZ_ENABLE]		= thermal_genl_event_tz_enable,
++	[THERMAL_GENL_EVENT_TZ_DISABLE]		= thermal_genl_event_tz_disable,
++	[THERMAL_GENL_EVENT_TZ_TRIP_UP]		= thermal_genl_event_tz_trip_up,
++	[THERMAL_GENL_EVENT_TZ_TRIP_DOWN]	= thermal_genl_event_tz_trip_down,
++	[THERMAL_GENL_EVENT_TZ_TRIP_CHANGE]	= thermal_genl_event_tz_trip_change,
++	[THERMAL_GENL_EVENT_TZ_TRIP_ADD]	= thermal_genl_event_tz_trip_add,
++	[THERMAL_GENL_EVENT_TZ_TRIP_DELETE]	= thermal_genl_event_tz_trip_delete,
++	[THERMAL_GENL_EVENT_CDEV_ADD]		= thermal_genl_event_cdev_add,
++	[THERMAL_GENL_EVENT_CDEV_DELETE]	= thermal_genl_event_cdev_delete,
++	[THERMAL_GENL_EVENT_CDEV_UPDATE]	= thermal_genl_event_cdev_update,
++	[THERMAL_GENL_EVENT_TZ_GOV_CHANGE]	= thermal_genl_event_gov_change,
++};
++
++/*
++ * Generic netlink event encoding
++ */
++static int thermal_genl_send_event(enum thermal_genl_event event,
++				   struct param *p)
++{
++	struct sk_buff *msg;
++	int ret = -EMSGSIZE;
++	void *hdr;
++
++        msg = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++	p->msg = msg;
++
++	hdr = genlmsg_put(msg, 0, 0, &thermal_gnl_family, 0, event);
++	if (!hdr)
++		goto out_free_msg;
++
++	ret = event_cb[event](p);
++	if (ret)
++		goto out_cancel_msg;
++
++	genlmsg_end(msg, hdr);
++
++	genlmsg_multicast(&thermal_gnl_family, msg, 0, 1, GFP_KERNEL);
++
++	return 0;
++
++out_cancel_msg:
++	genlmsg_cancel(msg, hdr);
++out_free_msg:
++	nlmsg_free(msg);
++
++	return ret;
++}
++
++int thermal_notify_tz_create(int tz_id, const char *name)
++{
++	struct param p = { .tz_id = tz_id, .name = name };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_CREATE, &p);
++}
++
++int thermal_notify_tz_delete(int tz_id)
++{
++	struct param p = { .tz_id = tz_id };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_DELETE, &p);
++}
++
++int thermal_notify_tz_enable(int tz_id)
++{
++	struct param p = { .tz_id = tz_id };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_ENABLE, &p);
++}
++
++int thermal_notify_tz_disable(int tz_id)
++{
++	struct param p = { .tz_id = tz_id };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_DISABLE, &p);
++}
++
++int thermal_notify_tz_trip_down(int tz_id, int id)
++{
++	struct param p = { .tz_id = tz_id, .id = id };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_DOWN, &p);
++}
++
++int thermal_notify_tz_trip_up(int tz_id, int id)
++{
++	struct param p = { .tz_id = tz_id, .id = id };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_UP, &p);
++}
++
++int thermal_notify_tz_trip_add(int tz_id, int id, int type, int temp, int hyst)
++{
++	struct param p = { .tz_id = tz_id, .id = id, .type = type,
++			   .temp = temp, .hyst = hyst };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_ADD, &p);
++}
++
++int thermal_notify_tz_trip_delete(int tz_id, int id)
++{
++	struct param p = { .tz_id = tz_id, .id = id };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_DELETE, &p);
++}
++
++int thermal_notify_tz_trip_change(int tz_id, int id, int type, int temp, int hyst)
++{
++	struct param p = { .tz_id = tz_id, .id = id, .type = type,
++			   .temp = temp, .hyst = hyst };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_CHANGE, &p);
++}
++
++int thermal_notify_cdev_update(int cdev_id, int state)
++{
++	struct param p = { .cdev_id = cdev_id, .state = state };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_UPDATE, &p);
++}
++
++int thermal_notify_cdev_add(int cdev_id, const char *name,
++			    int min_state, int max_state)
++{
++	struct param p = { .cdev_id = cdev_id, .name = name,
++			   .min_state = min_state, .max_state = max_state };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_ADD, &p);
++}
++
++int thermal_notify_cdev_delete(int cdev_id)
++{
++	struct param p = { .cdev_id = cdev_id };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_DELETE, &p);
++}
++
++int thermal_notify_tz_gov_change(int tz_id, const char *name)
++{
++	struct param p = { .tz_id = tz_id, .name = name };
++
++	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_GOV_CHANGE, &p);
++}
++
++/*************************** Command encoding ********************************/
++
++static int __thermal_genl_cmd_tz_get(struct thermal_zone_device *tz, void *data)
++{
++	struct sk_buff *msg = data;
++
++	if (nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_ID, tz->id) ||
++	    nla_put_string(msg, THERMAL_GENL_ATTR_TZ_NAME, tz->type))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_cmd_tz_get(struct param *p)
++{
++	struct sk_buff *msg = p->msg;
++	struct nlattr *start_tz;
++	int ret;
++
++	start_tz = nla_nest_start(msg, THERMAL_GENL_ATTR_TZ);
++	if (!start_tz)
++		return -EMSGSIZE;
++
++	ret = for_each_thermal_zone(__thermal_genl_cmd_tz_get, msg);
++	if (ret)
++		goto out_cancel_nest;
++
++	nla_nest_end(msg, start_tz);
++
++	return 0;
++
++out_cancel_nest:
++	nla_nest_cancel(msg, start_tz);
++
++	return ret;
++}
++
++static int thermal_genl_cmd_tz_get_trip(struct param *p)
++{
++	struct sk_buff *msg = p->msg;
++	struct thermal_zone_device *tz;
++	struct nlattr *start_trip;
++	int i, id;
++
++	if (!p->attrs[THERMAL_GENL_ATTR_TZ_ID])
++		return -EINVAL;
++
++	id = nla_get_u32(p->attrs[THERMAL_GENL_ATTR_TZ_ID]);
++
++	tz = thermal_zone_get_by_id(id);
++	if (!tz)
++		return -EINVAL;
++
++	start_trip = nla_nest_start(msg, THERMAL_GENL_ATTR_TZ_TRIP);
++	if (!start_trip)
++		return -EMSGSIZE;
++
++	mutex_lock(&tz->lock);
++
++	for (i = 0; i < tz->trips; i++) {
++
++		enum thermal_trip_type type;
++		int temp, hyst;
++
++		tz->ops->get_trip_type(tz, i, &type);
++		tz->ops->get_trip_temp(tz, i, &temp);
++		tz->ops->get_trip_hyst(tz, i, &hyst);
++
++		if (nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_ID, i) ||
++		    nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_TYPE, type) ||
++		    nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_TEMP, temp) ||
++		    nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TRIP_HYST, hyst))
++			goto out_cancel_nest;
++	}
++
++	mutex_unlock(&tz->lock);
++
++	nla_nest_end(msg, start_trip);
++
++	return 0;
++
++out_cancel_nest:
++	mutex_unlock(&tz->lock);
++
++	return -EMSGSIZE;
++}
++
++static int thermal_genl_cmd_tz_get_temp(struct param *p)
++{
++	struct sk_buff *msg = p->msg;
++	struct thermal_zone_device *tz;
++	int temp, ret, id;
++
++	if (!p->attrs[THERMAL_GENL_ATTR_TZ_ID])
++		return -EINVAL;
++
++	id = nla_get_u32(p->attrs[THERMAL_GENL_ATTR_TZ_ID]);
++
++	tz = thermal_zone_get_by_id(id);
++	if (!tz)
++		return -EINVAL;
++
++	ret = thermal_zone_get_temp(tz, &temp);
++	if (ret)
++		return ret;
++
++	if (nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_ID, id) ||
++	    nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_TEMP, temp))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_cmd_tz_get_gov(struct param *p)
++{
++	struct sk_buff *msg = p->msg;
++	struct thermal_zone_device *tz;
++	int id, ret = 0;
++
++	if (!p->attrs[THERMAL_GENL_ATTR_TZ_ID])
++		return -EINVAL;
++
++	id = nla_get_u32(p->attrs[THERMAL_GENL_ATTR_TZ_ID]);
++
++	tz = thermal_zone_get_by_id(id);
++	if (!tz)
++		return -EINVAL;
++
++	mutex_lock(&tz->lock);
++
++	if (nla_put_u32(msg, THERMAL_GENL_ATTR_TZ_ID, id) ||
++	    nla_put_string(msg, THERMAL_GENL_ATTR_TZ_GOV_NAME,
++			   tz->governor->name))
++		ret = -EMSGSIZE;
++
++	mutex_unlock(&tz->lock);
++
++	return ret;
++}
++
++static int __thermal_genl_cmd_cdev_get(struct thermal_cooling_device *cdev,
++				       void *data)
++{
++	struct sk_buff *msg = data;
++
++	if (nla_put_u32(msg, THERMAL_GENL_ATTR_CDEV_ID, cdev->id))
++		return -EMSGSIZE;
++
++	if (nla_put_string(msg, THERMAL_GENL_ATTR_CDEV_NAME, cdev->type))
++		return -EMSGSIZE;
++
++	return 0;
++}
++
++static int thermal_genl_cmd_cdev_get(struct param *p)
++{
++	struct sk_buff *msg = p->msg;
++	struct nlattr *start_cdev;
++	int ret;
++
++	start_cdev = nla_nest_start(msg, THERMAL_GENL_ATTR_CDEV);
++	if (!start_cdev)
++		return -EMSGSIZE;
++
++	ret = for_each_thermal_cooling_device(__thermal_genl_cmd_cdev_get, msg);
++	if (ret)
++		goto out_cancel_nest;
++
++	nla_nest_end(msg, start_cdev);
++
++	return 0;
++out_cancel_nest:
++	nla_nest_cancel(msg, start_cdev);
++
++	return ret;
++}
++
++static cb_t cmd_cb[] = {
++	[THERMAL_GENL_CMD_TZ_GET]	= thermal_genl_cmd_tz_get,
++	[THERMAL_GENL_CMD_TZ_GET_TRIP]	= thermal_genl_cmd_tz_get_trip,
++	[THERMAL_GENL_CMD_TZ_GET_TEMP]	= thermal_genl_cmd_tz_get_temp,
++	[THERMAL_GENL_CMD_TZ_GET_GOV]	= thermal_genl_cmd_tz_get_gov,
++	[THERMAL_GENL_CMD_CDEV_GET]	= thermal_genl_cmd_cdev_get,
++};
++
++static int thermal_genl_cmd_dumpit(struct sk_buff *skb,
++				   struct netlink_callback *cb)
++{
++	struct param p = { .msg = skb };
++	const struct genl_dumpit_info *info = genl_dumpit_info(cb);
++	int cmd = info->ops->cmd;
++	int ret = -EMSGSIZE;
++	void *hdr;
++
++	hdr = genlmsg_put(skb, 0, 0, &thermal_gnl_family, 0, cmd);
++	if (!hdr)
++		return -EMSGSIZE;
++
++	ret = cmd_cb[cmd](&p);
++	if (ret)
++		goto out_cancel_msg;
++
++	genlmsg_end(skb, hdr);
++
++	return 0;
++
++out_cancel_msg:
++	genlmsg_cancel(skb, hdr);
++
++	return ret;
++}
++
++static int thermal_genl_cmd_doit(struct sk_buff *skb,
++				 struct genl_info *info)
++{
++	struct param p = { .attrs = info->attrs };
++	struct sk_buff *msg;
++	void *hdr;
++	int cmd = info->genlhdr->cmd;
++	int ret = -EMSGSIZE;
++
++        msg = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++	p.msg = msg;
++
++        hdr = genlmsg_put_reply(msg, info, &thermal_gnl_family, 0, cmd);
++	if (!hdr)
++		goto out_free_msg;
++
++	ret = cmd_cb[cmd](&p);
++	if (ret)
++		goto out_cancel_msg;
++
++	genlmsg_end(msg, hdr);
++
++	return genlmsg_reply(msg, info);
++
++out_cancel_msg:
++	genlmsg_cancel(msg, hdr);
++out_free_msg:
++	nlmsg_free(msg);
++
++	return ret;
++}
++
++static const struct genl_ops thermal_genl_ops[] = {
++	{
++		.cmd = THERMAL_GENL_CMD_TZ_GET,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.dumpit = thermal_genl_cmd_dumpit,
++	},
++	{
++		.cmd = THERMAL_GENL_CMD_TZ_GET_TRIP,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.doit = thermal_genl_cmd_doit,
++	},
++	{
++		.cmd = THERMAL_GENL_CMD_TZ_GET_TEMP,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.doit = thermal_genl_cmd_doit,
++	},
++	{
++		.cmd = THERMAL_GENL_CMD_TZ_GET_GOV,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.doit = thermal_genl_cmd_doit,
++	},
++	{
++		.cmd = THERMAL_GENL_CMD_CDEV_GET,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.dumpit = thermal_genl_cmd_dumpit,
++	},
++};
++
++static struct genl_family thermal_gnl_family __ro_after_init = {
++	.hdrsize	= 0,
++	.name		= THERMAL_GENL_FAMILY_NAME,
++	.version	= THERMAL_GENL_VERSION,
++	.maxattr	= THERMAL_GENL_ATTR_MAX,
++	.policy		= thermal_genl_policy,
++	.ops		= thermal_genl_ops,
++	.n_ops 		= ARRAY_SIZE(thermal_genl_ops),
++	.mcgrps		= thermal_genl_mcgrps,
++	.n_mcgrps	= ARRAY_SIZE(thermal_genl_mcgrps),
++};
++
++static int __init thermal_netlink_init(void)
++{
++	return genl_register_family(&thermal_gnl_family);
++}
++core_initcall(thermal_netlink_init);
 diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index faf7ad031e42..fc93a6348082 100644
+index fc93a6348082..d92643e310e2 100644
 --- a/include/linux/thermal.h
 +++ b/include/linux/thermal.h
-@@ -302,11 +302,6 @@ struct thermal_zone_params {
- 	int offset;
- };
+@@ -37,18 +37,6 @@ struct thermal_cooling_device;
+ struct thermal_instance;
+ struct thermal_attr;
  
--struct thermal_genl_event {
--	u32 orig;
--	enum events event;
+-enum thermal_device_mode {
+-	THERMAL_DEVICE_DISABLED = 0,
+-	THERMAL_DEVICE_ENABLED,
 -};
 -
- /**
-  * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
-  *
+-enum thermal_trip_type {
+-	THERMAL_TRIP_ACTIVE = 0,
+-	THERMAL_TRIP_PASSIVE,
+-	THERMAL_TRIP_HOT,
+-	THERMAL_TRIP_CRITICAL,
+-};
+-
+ enum thermal_trend {
+ 	THERMAL_TREND_STABLE, /* temperature is stable */
+ 	THERMAL_TREND_RAISING, /* temperature is raising */
 diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
-index 96218378dda8..22df67ed9e9c 100644
+index 22df67ed9e9c..49289f9d993b 100644
 --- a/include/uapi/linux/thermal.h
 +++ b/include/uapi/linux/thermal.h
-@@ -6,21 +6,12 @@
+@@ -4,21 +4,87 @@
  
+ #define THERMAL_NAME_LENGTH	20
+ 
++enum thermal_device_mode {
++	THERMAL_DEVICE_DISABLED = 0,
++	THERMAL_DEVICE_ENABLED,
++};
++
++enum thermal_trip_type {
++	THERMAL_TRIP_ACTIVE = 0,
++	THERMAL_TRIP_PASSIVE,
++	THERMAL_TRIP_HOT,
++	THERMAL_TRIP_CRITICAL,
++};
++
  /* Adding event notification support elements */
- #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
--#define THERMAL_GENL_VERSION                    0x01
-+#define THERMAL_GENL_VERSION                    0x02
- #define THERMAL_GENL_MCAST_GROUP_NAME           "thermal_mc_grp"
+-#define THERMAL_GENL_FAMILY_NAME                "thermal_event"
+-#define THERMAL_GENL_VERSION                    0x02
+-#define THERMAL_GENL_MCAST_GROUP_NAME           "thermal_mc_grp"
++#define THERMAL_GENL_FAMILY_NAME		"thermal"
++#define THERMAL_GENL_VERSION			0x01
++#define THERMAL_GENL_SAMPLING_GROUP_NAME	"sampling"
++#define THERMAL_GENL_EVENT_GROUP_NAME		"event"
  
--/* Events supported by Thermal Netlink */
--enum events {
--	THERMAL_AUX0,
--	THERMAL_AUX1,
--	THERMAL_CRITICAL,
--	THERMAL_DEV_FAULT,
--};
--
- /* attributes of thermal_genl_family */
- enum {
+-/* attributes of thermal_genl_family */
+-enum {
++/* Attributes of thermal_genl_family */
++enum thermal_genl_attr {
  	THERMAL_GENL_ATTR_UNSPEC,
--	THERMAL_GENL_ATTR_EVENT,
++	THERMAL_GENL_ATTR_TZ,
++	THERMAL_GENL_ATTR_TZ_ID,
++	THERMAL_GENL_ATTR_TZ_TEMP,
++	THERMAL_GENL_ATTR_TZ_TRIP,
++	THERMAL_GENL_ATTR_TZ_TRIP_ID,
++	THERMAL_GENL_ATTR_TZ_TRIP_TYPE,
++	THERMAL_GENL_ATTR_TZ_TRIP_TEMP,
++	THERMAL_GENL_ATTR_TZ_TRIP_HYST,
++	THERMAL_GENL_ATTR_TZ_MODE,
++	THERMAL_GENL_ATTR_TZ_NAME,
++	THERMAL_GENL_ATTR_TZ_CDEV_WEIGHT,
++	THERMAL_GENL_ATTR_TZ_GOV,
++	THERMAL_GENL_ATTR_TZ_GOV_NAME,
++	THERMAL_GENL_ATTR_CDEV,
++	THERMAL_GENL_ATTR_CDEV_ID,
++	THERMAL_GENL_ATTR_CDEV_CUR_STATE,
++	THERMAL_GENL_ATTR_CDEV_MAX_STATE,
++	THERMAL_GENL_ATTR_CDEV_MIN_STATE,
++	THERMAL_GENL_ATTR_CDEV_NAME,
++	THERMAL_GENL_ATTR_GOV_NAME,
++
  	__THERMAL_GENL_ATTR_MAX,
  };
  #define THERMAL_GENL_ATTR_MAX (__THERMAL_GENL_ATTR_MAX - 1)
-@@ -28,7 +19,6 @@ enum {
- /* commands supported by the thermal_genl_family */
- enum {
+ 
+-/* commands supported by the thermal_genl_family */
+-enum {
++enum thermal_genl_sampling {
++	THERMAL_GENL_SAMPLING_TEMP,
++	__THERMAL_GENL_SAMPLING_MAX,
++};
++#define THERMAL_GENL_SAMPLING_MAX (__THERMAL_GENL_SAMPLING_MAX - 1)
++
++/* Events of thermal_genl_family */
++enum thermal_genl_event {
++	THERMAL_GENL_EVENT_UNSPEC,
++	THERMAL_GENL_EVENT_TZ_CREATE,		/* Thermal zone creation */
++	THERMAL_GENL_EVENT_TZ_DELETE,		/* Thermal zone deletion */
++	THERMAL_GENL_EVENT_TZ_DISABLE,		/* Thermal zone disabed */
++	THERMAL_GENL_EVENT_TZ_ENABLE,		/* Thermal zone enabled */
++	THERMAL_GENL_EVENT_TZ_TRIP_UP,		/* Trip point crossed the way up */
++	THERMAL_GENL_EVENT_TZ_TRIP_DOWN,	/* Trip point crossed the way down */
++	THERMAL_GENL_EVENT_TZ_TRIP_CHANGE,	/* Trip point changed */
++	THERMAL_GENL_EVENT_TZ_TRIP_ADD,		/* Trip point added */
++	THERMAL_GENL_EVENT_TZ_TRIP_DELETE,	/* Trip point deleted */
++	THERMAL_GENL_EVENT_CDEV_ADD,		/* Cdev bound to the thermal zone */
++	THERMAL_GENL_EVENT_CDEV_DELETE,		/* Cdev unbound */
++	THERMAL_GENL_EVENT_CDEV_UPDATE,		/* Cdev state updated */
++	THERMAL_GENL_EVENT_TZ_GOV_CHANGE,	/* Governor policy changed  */
++	__THERMAL_GENL_EVENT_MAX,
++};
++#define THERMAL_GENL_EVENT_MAX (__THERMAL_GENL_EVENT_MAX - 1)
++
++/* Commands supported by the thermal_genl_family */
++enum thermal_genl_cmd {
  	THERMAL_GENL_CMD_UNSPEC,
--	THERMAL_GENL_CMD_EVENT,
++	THERMAL_GENL_CMD_TZ_GET,	/* List thermal zones id */
++	THERMAL_GENL_CMD_TZ_GET_TRIP,	/* List of thermal trips */
++	THERMAL_GENL_CMD_TZ_GET_TEMP,	/* Get the thermal zone temperature */
++	THERMAL_GENL_CMD_TZ_GET_GOV,	/* Get the thermal zone governor */
++	THERMAL_GENL_CMD_TZ_GET_MODE,	/* Get the thermal zone mode */
++	THERMAL_GENL_CMD_CDEV_GET,	/* List of cdev id */
  	__THERMAL_GENL_CMD_MAX,
  };
  #define THERMAL_GENL_CMD_MAX (__THERMAL_GENL_CMD_MAX - 1)
