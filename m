@@ -2,122 +2,137 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9802C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5792063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B538F20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yBm5DkIh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="uHylQH0y";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="uHylQH0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgFYXaP (ORCPT
+        id S1725806AbgFYXbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:30:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50268 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgFYXaP (ORCPT
+        Thu, 25 Jun 2020 19:31:46 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43730 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725554AbgFYXbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:30:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PNS36k151842;
-        Thu, 25 Jun 2020 23:29:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=CbeDyVYB5S3oRr4NWtBuj8dX4L5T2zsa98Esoc/k5Z4=;
- b=yBm5DkIhgvhKovZ94p1DlYmsJTp6Ydj5zaYkQWZ2pdFD1Q0xbGHtdGtXSfOylQh3mgQZ
- zcWrfv9sfHrEhuLu56ePLqmW5hx3okyDaI8BrwuM8Y6UxQSI6pYD/5YLUamdgwf9h65e
- RZRpiedUPzIuWkX/c1rUIrex6emM0ZHAIbNkJK2GGHi5QsenasWwu1FtMAPrATn5TEzL
- JDkhAg38jDozDVh2vjag5r0Uc/otWmOY3Ur8sjSe8XgV6HyDj4vsWUh6viWdTN+V9o7k
- GqhqvPQRyun2Woi4hwjQXaIRU7mgZt9H0NH95WvszmN5wY9vAskheffDGkxaF3rdmUoc yw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31uusu3aa3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 25 Jun 2020 23:29:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05PNSHWm110879;
-        Thu, 25 Jun 2020 23:29:07 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31uur9r3pr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 23:29:06 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05PNT5AL007704;
-        Thu, 25 Jun 2020 23:29:05 GMT
-Received: from localhost.localdomain (/10.159.236.36)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 25 Jun 2020 23:29:05 +0000
-Subject: Re: [PATCH 0/4] KVM: SVM: Code move follow-up
-To:     Joerg Roedel <joro@8bytes.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-References: <20200625080325.28439-1-joro@8bytes.org>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <a34c61ad-f28f-4560-2918-a826c03cee6b@oracle.com>
-Date:   Thu, 25 Jun 2020 16:29:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200625080325.28439-1-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 25 Jun 2020 19:31:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E43448EE2F6;
+        Thu, 25 Jun 2020 16:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1593127904;
+        bh=3t2rEmrXunzbuoRIHJIfGmnQexOBzUIBYGc01ozpYJQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=uHylQH0yQbxU0l7k9WCjEDc9QURr3VnCrOBLZ3jdZf96C4DzQ1Q3djOdmatw+EU4C
+         VeSmPX7KP1V/FxEMUwDEEvmTAOiD0urCQdMX1IuZdo6pVBWA3fXEJFmF+YJ6x+Kwif
+         hVPS7qHrQJyfk4K69CbssfaIBbGiQjjEMOCwfG28=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id C9twK_fggstL; Thu, 25 Jun 2020 16:31:44 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7FAAB8EE079;
+        Thu, 25 Jun 2020 16:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1593127904;
+        bh=3t2rEmrXunzbuoRIHJIfGmnQexOBzUIBYGc01ozpYJQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=uHylQH0yQbxU0l7k9WCjEDc9QURr3VnCrOBLZ3jdZf96C4DzQ1Q3djOdmatw+EU4C
+         VeSmPX7KP1V/FxEMUwDEEvmTAOiD0urCQdMX1IuZdo6pVBWA3fXEJFmF+YJ6x+Kwif
+         hVPS7qHrQJyfk4K69CbssfaIBbGiQjjEMOCwfG28=
+Message-ID: <1593127902.13253.11.camel@HansenPartnership.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Jerome Forissier <jerome@forissier.org>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Date:   Thu, 25 Jun 2020 16:31:42 -0700
+In-Reply-To: <CAFA6WYMF+JjrB9Cx9TdgDzMeQSvPZfMNapzD-MH4ALVoUoo1sQ@mail.gmail.com>
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+         <20200604175851.758-2-maxim.uvarov@linaro.org>
+         <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+         <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+         <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+         <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
+         <1592507935.15159.5.camel@HansenPartnership.com>
+         <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
+         <1592578844.4369.5.camel@HansenPartnership.com>
+         <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
+         <1593012069.28403.11.camel@HansenPartnership.com>
+         <CAFA6WYMF+JjrB9Cx9TdgDzMeQSvPZfMNapzD-MH4ALVoUoo1sQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006250136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-06-25 at 19:54 +0530, Sumit Garg wrote:
+> On Wed, 24 Jun 2020 at 20:51, James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+> > 
+> > On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
+> > > Apologies for delay in my reply as I was busy with some other
+> > > stuff.
+> > > 
+> > > On Fri, 19 Jun 2020 at 20:30, James Bottomley
+> > > <James.Bottomley@hansenpartnership.com> wrote:
+> > 
+> > [...]
+> > > > it's about consistency with what the kernel types mean.  When
+> > > > some checker detects your using little endian operations on a
+> > > > big endian structure (like in the prink for instance) they're
+> > > > going to keep emailing you about it.
+> > > 
+> > > As mentioned above, using different terminology is meant to cause
+> > > more confusion than just difference in endianness which is
+> > > manageable inside TEE.
+> > > 
+> > > And I think it's safe to say that the kernel implements UUID in
+> > > big endian format and thus uses %pUb whereas OP-TEE implements
+> > > UUID in little endian format and thus uses %pUl.
+> > 
+> > So what I think you're saying is that if we still had uuid_be and
+> > uuid_le you'd use uuid_le, because that's exactly the structure
+> > described in the docs.  But because we renamed
+> > 
+> > uuid_be -> uuid_t
+> > uuid_le -> guid_t
+> > 
+> > You can't use guid_t as a kernel type because it has the wrong
+> > name?
+> 
+> Isn't the rename commit description [1] pretty clear about which is
+> the true UUID type from Linux point of view?
 
-On 6/25/20 1:03 AM, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
->
-> Hi,
->
-> here is small series to follow-up on the review comments for moving
-> the kvm-amd module code to its own sub-directory. The comments were
-> only about renaming structs and symbols, so there are no functional
-> changes in these patches.
->
-> The comments addressed here are all from [1].
->
-> Regards,
->
-> 	Joerg
->
-> [1] https://lore.kernel.org/lkml/87d0917ezq.fsf@vitty.brq.redhat.com/
->
-> Joerg Roedel (4):
->    KVM: SVM: Rename struct nested_state to svm_nested_state
->    KVM: SVM: Add vmcb_ prefix to mark_*() functions
->    KVM: SVM: Add svm_ prefix to set/clr/is_intercept()
->    KVM: SVM: Rename svm_nested_virtualize_tpr() to
->      nested_svm_virtualize_tpr()
->
->   arch/x86/kvm/svm/avic.c   |   2 +-
->   arch/x86/kvm/svm/nested.c |   8 +--
->   arch/x86/kvm/svm/sev.c    |   2 +-
->   arch/x86/kvm/svm/svm.c    | 138 +++++++++++++++++++-------------------
->   arch/x86/kvm/svm/svm.h    |  20 +++---
->   5 files changed, 85 insertions(+), 85 deletions(-)
->
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+I don't think the kernel code takes a position on eternal verity, just
+on logical or arithmetic truth.  We just have to deal with both LE and
+BE UUIDs so we have appropriate types for them and the LE type is now
+named guid_t.  They're both equally correct to use provided the use
+case matches the designed one. So does the name really matter?  If we
+did
+
+#define uuid_le_t guid_t
+
+would you be happy? (not that the kernel cares about karmic emotional
+states either ...)
+
+James
+
