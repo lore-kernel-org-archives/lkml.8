@@ -2,131 +2,89 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A97020720
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A797820709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 09:38:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enr0X+1F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lKS4Qaj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390897AbgFYJgz (ORCPT
+        id S2390907AbgFYJix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 05:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58006 "EHLO
+        Thu, 25 Jun 2020 05:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390074AbgFYJgy (ORCPT
+        with ESMTP id S2390025AbgFYJiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 05:36:54 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACE1C061573;
-        Thu, 25 Jun 2020 02:36:54 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id m2so2968472pjv.2;
-        Thu, 25 Jun 2020 02:36:54 -0700 (PDT)
+        Thu, 25 Jun 2020 05:38:52 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A098C061573;
+        Thu, 25 Jun 2020 02:38:52 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id k6so5136410wrn.3;
+        Thu, 25 Jun 2020 02:38:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4Hd+pWg4j0phB+P+4cJXi8pVMww0fxVhUKsYuMdJ18s=;
-        b=enr0X+1FED05Xcz6nN64RVPCKQ47RKy+c/SSW1KUzuF65KqVqZQZ1BlUj4sTf0Pi3g
-         c2Z5ZeiEiJvS33BtB5m4qA6koS17c/naYxmqaOPMcsml61cvno6t30flHQ6QccESDFaD
-         ePSkzaVYCY4lGQKlR6u/nO8FtMwJjgB8zQfHR6Rwir7F5Oh6SZdAZ19ZsEBrOaE0cYEv
-         t09/3zEO0rMnbKzuShJX5nBB7eygRpsltMrmO0VVCcyii7Sa/5cKd4ebxZjJSGwB/Fen
-         7CbP8Dv/OmN8JH6upHgIcHA7wIvsA0H4IWrAm4LT9jLz9CNN9YaGIdkaHE7fqws8kl3V
-         CIRA==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zNxRmn3oXQvQPjB7Ch6b6fZQc7BLz4rLSsmoLTI2nPY=;
+        b=lKS4Qaj/ub5XvLezXP8/Cf7sSxgPwayRDecrz8KS/oXtkNzg76sf2DQKi/nLG+jrhU
+         VYUkpp+A1AGdumnH95OyRtSjkkPXGw5HTVA9qbeKUFmeEmGEbRbK4377de5u+a09+lSx
+         zt/Pb3DJ64ugNI7N+eD1Bcllqsa05YSqY8q0+I1C76KL5A5pPoVNZ/2oF2hCKKy5zuJP
+         jjO35+38GBSOdXlSrNMbzfKLrNSavV/WPvmyXDG3TJjcfR2DkQ6fAeulywR8zf2JJsw/
+         Hx53gaQJAkAbOw3Ur4CNtpIVqZ65pHmk9kxuIzNTTTi/1KazDo/10Zm8Xe98wPKZhFFY
+         yVdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Hd+pWg4j0phB+P+4cJXi8pVMww0fxVhUKsYuMdJ18s=;
-        b=KsBxvtm1qRiT4p64HR6rceUb4aFRjgavhvX2p1EWuzFWFm3WQ3k9V9q41WMYdJUcbf
-         m+EvxfHbT+kVBXvd6EPTYH4S8g6fC6mksSXCQRB413Bli790EEt9k/CSReJCW5F5Nu1d
-         mcqlr0VyWvKs1uFSRSnYol/9QFo+u6sJpDrTtLoqb5/8uSe+YCmYpJeenGPa0dVtg26d
-         l6F6dUeIOKL2jzJyRlVUhN0Da5IQCMi4waFVAHRlgJX952j4mZYiVPnAqMM/rOCmJNod
-         YyOnRXGeRZ3NUjJ/7A05ZHI1NSD5pc5Gn1RTg79nNoBSfHm2PUkx7V4g8G74GMisESZ2
-         6daw==
-X-Gm-Message-State: AOAM531L2lwOZ9h6/6O+WTvjXJbdU5NVXiE8RDPXkgX+e869jJTK58Qj
-        MYl3jsoepOzLDSdvvTyC47M=
-X-Google-Smtp-Source: ABdhPJzq9uKDmS7mkO+J+x3Wjfo4H1BMgoekKZEO20rs9jBUX3Z4sv4gDrsfMQ8FnpWzD/PT0qyUVg==
-X-Received: by 2002:a17:902:8302:: with SMTP id bd2mr24624555plb.110.1593077814213;
-        Thu, 25 Jun 2020 02:36:54 -0700 (PDT)
-Received: from sol (220-235-108-194.dyn.iinet.net.au. [220.235.108.194])
-        by smtp.gmail.com with ESMTPSA id n189sm22848124pfn.108.2020.06.25.02.36.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Jun 2020 02:36:53 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 17:36:47 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 10/22] gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
-Message-ID: <20200625093647.GA18209@sol>
-References: <20200623040107.22270-1-warthog618@gmail.com>
- <20200623040107.22270-11-warthog618@gmail.com>
- <CAHp75VdG4r95ZU8G9TfL+jkT63+Gppb8w5TRvAtCR_pAk0o=NA@mail.gmail.com>
- <20200624155714.GB8622@sol>
- <20200624225803.GA3600@sol>
- <CAHp75VdCGpvoK8RZGwbehOd3eORE+qwFR31ucFxtU4vdc5pvYg@mail.gmail.com>
- <20200625091307.GA16386@sol>
- <CAHp75VeDOGArs2MxJJRNHbNRsJU4K+KYPY=pF+mgtwbakQf4BQ@mail.gmail.com>
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zNxRmn3oXQvQPjB7Ch6b6fZQc7BLz4rLSsmoLTI2nPY=;
+        b=WOENfeIbPxXGnUz/seYmQMjxozkJwPV2M39Wt6cmXYo4l19fnj3LamoVpTLCOR2FXF
+         XIvSYwG/E86LXOlpoSDaw+4MBhbH4zj6cq6QlnRMZFUj6FolCj+EmE2b9oB6RFNaoiAM
+         nNEeS/Z5Wa21uVUJup/PSAn68t/xKqBwcb4u7dHw1qK2Wjm9H8HRqw3FT9LtbXgT4Fco
+         jCXKPsaN/pWJHPk5NW1gsSpq1RZCMZ48flLoumb+zUFf/BOtCZtPUWWux7qLkbgk+qOF
+         wiCVufqekBYDBKtlmgbnIF7o9UfOODaVZ9WYO1hisqvZ1VNl8MMM/vIDQioSE12bgivg
+         2xUA==
+X-Gm-Message-State: AOAM5319nqAFxmG+V99njp/yUNySlQglNj+9TNZjAWTmrcsjuSx5jwnq
+        c1iXm3JvisGK4MHMBf5Kj/K+9kvA
+X-Google-Smtp-Source: ABdhPJyJN0p/nEuU1WII1iNj+AWgc/Z7rb40FGTjyHUmrtQJYitIfj8xFBhzLKqlHcUiuWeN6cxOFQ==
+X-Received: by 2002:a5d:6a46:: with SMTP id t6mr8911067wrw.374.1593077930656;
+        Thu, 25 Jun 2020 02:38:50 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.85])
+        by smtp.gmail.com with ESMTPSA id v5sm11067282wre.87.2020.06.25.02.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 02:38:50 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH for-5.8 0/2] iopoll fixes pt.1
+Date:   Thu, 25 Jun 2020 12:37:09 +0300
+Message-Id: <cover.1593077359.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeDOGArs2MxJJRNHbNRsJU4K+KYPY=pF+mgtwbakQf4BQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 12:23:49PM +0300, Andy Shevchenko wrote:
-> On Thu, Jun 25, 2020 at 12:13 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > On Thu, Jun 25, 2020 at 11:44:21AM +0300, Andy Shevchenko wrote:
-> > > On Thu, Jun 25, 2020 at 1:58 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > On Wed, Jun 24, 2020 at 11:57:14PM +0800, Kent Gibson wrote:
-> 
-> ...
-> 
-> > > > Perhaps you are referring to the case where the copy_to_user fails?
-> > >
-> > > Yes.
-> > >
-> > > > To be honest I considered that to be so unlikely that I ignored it.
-> > > > Is there a relevant failure mode that I'm missing?
-> > >
-> > > The traditional question for such cases is "what can possibly go wrong?"
-> > > I wouldn't underestimate the probability of failure.
-> > >
-> >
-> > The worst case is the watch is enabled and the userspace gets an
-> > EFAULT so it thinks it failed.  If userspace retries then they get
-> > EBUSY, so userspace accounting gets muddled.
-> >
-> > We can clear the watch bit if the copy_to_user fails - before
-> > returning the EFAULT. Would that be satisfactory?
-> 
-> Perhaps. I didn't check that scenario.
-> 
+Split as requested, this is for 5.8.
 
-To be clear I'm suggesting this:
+The only thing changed is 1 line moved for easier rebasing.
+Yesterday problems were unrelated.
 
-        gpio_desc_to_lineinfo(desc, &lineinfo);
- 
--       if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
-+       if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
-+               clear_bit(lineinfo.offset, gcdev->watched_lines);
-                return -EFAULT;
-+       }
+Pavel Begunkov (2):
+  io_uring: fix hanging iopoll in case of -EAGAIN
+  io_uring: fix current->mm NULL dereference on exit
 
-That undoes the set, returning the watch state to what it was before the
-call.
+ fs/io_uring.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-Cheers,
-Kent.
+-- 
+2.24.0
+
