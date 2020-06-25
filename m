@@ -2,119 +2,145 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB45BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D21C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1F62067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60E22067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="YGmTVosK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cvICLLJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390542AbgFYINR (ORCPT
+        id S2390509AbgFYIPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:13:17 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:34269 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgFYINQ (ORCPT
+        Thu, 25 Jun 2020 04:15:30 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:51653 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726930AbgFYIP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:13:16 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1My6xz-1iv8kf3MyN-00zTAH for <linux-kernel@vger.kernel.org>; Thu, 25 Jun
- 2020 10:13:15 +0200
-Received: by mail-qk1-f172.google.com with SMTP id e11so4550529qkm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 01:13:14 -0700 (PDT)
-X-Gm-Message-State: AOAM533Rg+6Tnx7Ptv5MGyRAbyh2nv/p0t9dJgMfFsnbXuZ8FJHEynDv
-        MX0KwHxkPFCSpf4QVXm50k+/A+oi4/C4EI/z+9M=
-X-Google-Smtp-Source: ABdhPJyQ4Dw0Jl+qFPTW3FnNdbWckzbhZDf0wVOnCuLr26L/KFZZAfwaRwhkmdXaJOf9IoqmqkzMCC1q5edEYB6JOm8=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr16346478qke.286.1593072793699;
- Thu, 25 Jun 2020 01:13:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593044164-32362-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1593044164-32362-1-git-send-email-Anson.Huang@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 25 Jun 2020 10:12:57 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2uh2eBHE+XPt1gUDEj0vnXwES-GmL=rsBRDHpK5HXc0A@mail.gmail.com>
-Message-ID: <CAK8P3a2uh2eBHE+XPt1gUDEj0vnXwES-GmL=rsBRDHpK5HXc0A@mail.gmail.com>
-Subject: Re: [PATCH V2] firmware: imx: Move i.MX SCU soc driver into imx
- firmware folder
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
+        Thu, 25 Jun 2020 04:15:29 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 36E7F5C0129;
+        Thu, 25 Jun 2020 04:15:28 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 25 Jun 2020 04:15:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        P/eFafOZttAQk1jUfpBb2bbEKVsHkuSm9g64OcFOYWE=; b=YGmTVosK6St1n/Hj
+        MESzAVdtrVJA2OIGxRuTdLd/yrEzpR4Ge8CYTHVSzVA3RjjA5j1yUOV38Y6RAL6z
+        KABOXpds+++j22U6acBfkJ116DjL3mj9XxNaQnGSVDT0iFLZDwJ+LBylG0DJvOA2
+        spWImfZH8CdCyVjQqoBeqA53DxDdC7KwtzmJclN6tPlzDUo8FLQMNZ61fZ0CHvRf
+        3KqVtuqV7p6MP/zeOLpR08Aih6dLmfxwQOOeTUD1wms8S/ulb3fnu9FtQ4eiJOqT
+        uk+UQCp81sRnqeDTm4dFfjc19oOUtl9bsnsaOLZGqkFlG3zQgejJW1xUJmIuEJXM
+        ndtKow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=P/eFafOZttAQk1jUfpBb2bbEKVsHkuSm9g64OcFOY
+        WE=; b=cvICLLJK0oHcBiKIgxnDyKcq9n4BIW959sOPKH7JVpFGP4T/Y9cGqOXwJ
+        2eAmRqi8bP7BZXPsxxCd+rWT/kQZKKtY9uYHnc04k578SEMXPB/+O+nTETsP4kmR
+        fILxQUFao3A3rXPtHXXGqhVnRd727ObKRLNBKpRn80nfgfMiIak2aT11BIISfyFu
+        SG4BFY/gGjPiOrLf55QCfdS4TGJ9aSJRlSWBqH58MjUqecTIlqqC3jCxNnn0eZ+X
+        5twP7eitYh5qplaEN7i9z5HQCPR5awB2gEH8Kvl1ZaCfRC+mfQ3DR4lZuNYFA/ha
+        3Qega9i6bkFK9kt4JhD18hilnzesg==
+X-ME-Sender: <xms:H130Xma7mmdtzJFfxpK3KQqGICrADguVZ3hIQDh9rhYBeM-jaxRV0g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudekledgtdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
+    phepuddukedrvddtkedrheejrdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:H130XpaKPZ_jfTV3f2kFNiaYHHjavQe9mDSqRPQrqqm36IMoixl_3A>
+    <xmx:H130Xg8eX-W7fOQaY1hNImGaVeFJUVDBVdlHLKjv8retzIaqPN_Ztg>
+    <xmx:H130XoqyOBvYd5_2gjMbhIbb8a6oMUtK9alojs_oWlKPSRnhRCUnng>
+    <xmx:IF30XqC9sX6SmjhqbrifSkxfL7IGquxwJRNHPDk4KDTLoahJnL-tCg>
+Received: from mickey.themaw.net (unknown [118.208.57.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8D6B6306778F;
+        Thu, 25 Jun 2020 04:15:23 -0400 (EDT)
+Message-ID: <ac4a2c133da21856439f907989c3f9d781857cbf.camel@themaw.net>
+Subject: Re: [PATCH v2 0/6] kernfs: proposed locking and concurrency
+ improvement
+From:   Ian Kent <raven@themaw.net>
+To:     Tejun Heo <tj@kernel.org>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 25 Jun 2020 16:15:19 +0800
+In-Reply-To: <20200623231348.GD13061@mtj.duckdns.org>
+References: <159237905950.89469.6559073274338175600.stgit@mickey.themaw.net>
+         <20200619153833.GA5749@mtj.thefacebook.com>
+         <16d9d5aa-a996-d41d-cbff-9a5937863893@linux.vnet.ibm.com>
+         <20200619222356.GA13061@mtj.duckdns.org>
+         <fa22c563-73b7-5e45-2120-71108ca8d1a0@linux.vnet.ibm.com>
+         <20200622175343.GC13061@mtj.duckdns.org>
+         <82b2379e-36d0-22c2-41eb-71571e992b37@linux.vnet.ibm.com>
+         <20200623231348.GD13061@mtj.duckdns.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:cQde4KPxtx/TpxlseTBsNpVcQ+r1G5tV+dKJec5iKpQlbvTBUC2
- ruItMWeuKhIFvaNESqLvg4b1rTX3QnIl9KXXF8Cq/beIuvmCGib0VTyV7xYkYY+C892UImk
- Nn2bn6UZG0rofBasJkRvZzYZD2Tzn8Xwq8jrRuEazhBns8E+U6WE6Sh8CNKJFyoDnPdxWgA
- gMteFxqxtEzF+6GvARuFg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J2IrnnD4ATI=:GQuCxxa7onu8ha/QgbkYKZ
- L5jJGrKoIksO6H/IpLKTL/n8MAH7VJR/9Bh296W1LZ9Q2p1LM2v4dFKEktIKrfpN3/T2YkyPq
- mtzyN78Vk5Pcl9NNdcjBuzgcdCu3RAHnHAyJsed6Yqz5ikqUb6Y3XnMI9cqVY93tAyIaxH7QD
- +293d8KHjTpd1fFgzw/WA79ODkGNN5CD/n+sIN1VmA+d4MkL2N9bPwRTh3alYVlc/e7QQ+P5i
- 6rTr4GA5FAurBzldlqzwwLBnUv2DJwpZa574lp9urfH/iVlGcMDrU3m0JXSIy08Gw+YrR2ZPy
- ecWzr9jqaTv8J9WJFx1Ve8PoiMayyzutmkKN1T6OsLmVrUQKC+/A/mTfA3eft2ZaxMVKHkxN0
- yx2LRWt4SXfdJw/2Emz4LlQ4AdZx3L6zMiqOj2kMimoAdKdsSIjeASnqsdTqvzvqhv+6bxhXF
- bo99LBLKdQZ+xb89UvzhF1BKtZ3nGc8R9rjwYVVfWKt8uywlRl//YLNYPAcNKfcvURPFAReZ0
- nHB3FJungkOQd3hpTEergKgRDiMwq4nNAxSG+dcqPf18KEX6c4yIXrsky3RRu2o6fLdq7fl3C
- P5bt12bcjhV2/WSkDEfq1Tm7+OuLnvO5vm0c/CADFP46EpdsAcWWal4LmPaByIlX/n4V2rUCP
- HvtC95QKzg2oHkN66jFB/YC/1C6+YWCRaILnEw23OSzuhqP0V37nkSCXD0iIPcXny7B41TpvM
- +O1QJ5houfrFu3M+cTC//+EtBp1k/IVUDR+ELYHKqxzT3GfE3wkFjJdNb3U2t+nOfU+Sx3vRS
- K5gIh8skVdfGuDYtq8s0pFl/v9SqQLtBA22+3eo8w/qSxsLfwc=
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 2:27 AM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> The i.MX SCU soc driver depends on SCU firmware driver, so it has to
-> use platform driver model for proper defer probe operation, since
-> it has no device binding in DT file, a simple platform device is
-> created together inside the platform driver. To make it more clean,
-> we can just move the entire SCU soc driver into imx firmware folder
-> and initialized by i.MX SCU firmware driver.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Tue, 2020-06-23 at 19:13 -0400, Tejun Heo wrote:
+> Hello, Rick.
+> 
+> On Mon, Jun 22, 2020 at 02:22:34PM -0700, Rick Lindsley wrote:
+> > > I don't know. The above highlights the absurdity of the approach
+> > > itself to
+> > > me. You seem to be aware of it too in writing: 250,000 "devices".
+> > 
+> > Just because it is absurd doesn't mean it wasn't built that way :)
+> > 
+> > I agree, and I'm trying to influence the next hardware design.
+> > However,
+> 
+> I'm not saying that the hardware should not segment things into
+> however many
+> pieces that it wants / needs to. That part is fine.
+> 
+> > what's already out there is memory units that must be accessed in
+> > 256MB
+> > blocks. If you want to remove/add a GB, that's really 4 blocks of
+> > memory
+> > you're manipulating, to the hardware. Those blocks have to be
+> > registered
+> > and recognized by the kernel for that to work.
+> 
+> The problem is fitting that into an interface which wholly doesn't
+> fit that
+> particular requirement. It's not that difficult to imagine different
+> ways to
+> represent however many memory slots, right? It'd take work to make
+> sure that
+> integrates well with whatever tooling or use cases but once done this
+> particular problem will be resolved permanently and the whole thing
+> will
+> look a lot less silly. Wouldn't that be better?
 
-Looks good except for one irritating issue:
+Well, no, I am finding it difficult to imagine different ways to
+represent this but perhaps that's because I'm blinker eyed on what
+a solution might look like because of my file system focus.
 
-> index 17ea361..b76acba 100644
-> --- a/drivers/firmware/imx/Makefile
-> +++ b/drivers/firmware/imx/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_IMX_DSP)          += imx-dsp.o
-> -obj-$(CONFIG_IMX_SCU)          += imx-scu.o misc.o imx-scu-irq.o rm.o
-> +obj-$(CONFIG_IMX_SCU)          += imx-scu.o misc.o imx-scu-irq.o rm.o imx-scu-soc.o
->  obj-$(CONFIG_IMX_SCU_PD)       += scu-pd.o
+Can "anyone" throw out some ideas with a little more detail than we
+have had so far so we can maybe start to formulate an actual plan of
+what needs to be done.
 
-This makes separate loadable modules out of the driver when CONFIG_IMX_SCU=m,
-including the badly named misc.ko and rm.ko modules that might conflict
-with other modules of the same name (module names are a global namespace
-for modprobe).
+Ian
 
-The way to make this a single module from four files is
-
-obj-$(CONFIG_IMX_SCU)          += imx-scu-mod.o
-imx-scu-mod-y := imx-scu.o misc.o imx-scu-irq.o rm.o imx-scu-soc.o
-
-> +EXPORT_SYMBOL(imx_scu_soc_init);
-
-Consequently, there should not be an EXPORT_SYMBOL here.
-
-       Arnd
