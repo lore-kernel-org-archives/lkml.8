@@ -7,81 +7,82 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E818EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA652076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FDA20775
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="if8UG9iw"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WjxhY8Yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406449AbgFYQla (ORCPT
+        id S2406417AbgFYQmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39232 "EHLO
+        Thu, 25 Jun 2020 12:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404503AbgFYQla (ORCPT
+        with ESMTP id S2404106AbgFYQmg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:41:30 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39658C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:41:30 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id p11so3252491pff.11
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:41:30 -0700 (PDT)
+        Thu, 25 Jun 2020 12:42:36 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1CDC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:42:36 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q90so2778995pjh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:42:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/9wqHgin8SZEC1IRcBJkZ+xGaXaJroFt05E1wtYvRGA=;
-        b=if8UG9iwCTP3nZiA0F2VMdcBRZeuwQVvgVXAaEKWDJPfVo6fJfEAkRx/WNXyNsrgYZ
-         iIgwIRl3d4sWKo8SwvkN6NBStYjR5PbRqfPn9uZgeW4o8DcGhYU2m21in0ezypaiK8Ch
-         09C4KOqACDxogdhRT8coaptP0PFQm4y6ZH86ALYTEjGMnfV5A+J9lCdqTTsNjI0EYqLf
-         5JeoyxcNpNuXNvI44gLIgUDnsAt0YnIlDgRVM4C0e4wSghb6lCfgHjq9VMpJgtCfMBfq
-         ERQ9XT900CvHXwYSHTZk0SWzt5OdOJ8ulgHaqYzwQBcyyLAcfh9jZlSe0Aa+2/4geBMO
-         qkOw==
+        bh=GrviZJ6eU6hS5ncWY3d15qiqcFrbFlQQ8yXs+/Zv0y4=;
+        b=WjxhY8YdNnls8JN3WEluiSqlPjm6WVExOknCjW4VAt8q7CSZK4OygjWwYGjVfMPRGL
+         0SZ2sXX48hzp6vXEnaaQFan+b8CVCUq/kYJ+XIQHe4S7iMA1BC2FVkn/ZlIRG0knzI50
+         aMjfmlCG2dAKcnX9MxG3V4izN9aGmmciB2QyMHNEjTgWO4juqA516XjClx/XFhB05NYp
+         WUNqS5lGuLV81EnvGsBGqEhskS+vvhNtBwFFKXkggzHTIDmmdAbLpVotiiWaPMlSidai
+         jqdCFDvWXW8zInSVyRNAgg5B3/WjfdNupWezxLveQAAHN2rtoV5GlElXzf361GfIi2GG
+         hueg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/9wqHgin8SZEC1IRcBJkZ+xGaXaJroFt05E1wtYvRGA=;
-        b=hRIujiDkPw8XNRgRate+Rv9E/BNwVS9Oq7DMImgyDcpbNj7AAiUeAhkkcZMVwci0Sk
-         PFg65O4L7lBIUwKSW6JRrG/DuLaYEXR61x8+8kKppTuSreeSJn+BBpLWACU8tgeNTbun
-         rLW+y4mhQiiua6gWjXrvadS8swhtbZQKjKf8zy28CyJvErmyLeh8I7LLtrCm4cKHpSm5
-         FPUeEGdf9Z1BPUQGmnC3/A321HevFM0SKny+AHQEL0cKTW0/qIJjZUNllMGIjyStXVqe
-         BtKdtqhprVFZkBuBU0gmX6+EMlDYTyxTpigLtGTG2EMY1pX7nilHaG+Z4qVW5SHcUGMY
-         1zQg==
-X-Gm-Message-State: AOAM531WGMXnmmFKxzISTk/L9cBFye1OdQqmoKxeT31QXXxjkz/pqJRJ
-        ErouqbFBm4q8O2irlBB6geX5Bw==
-X-Google-Smtp-Source: ABdhPJz0CYUzgtNmucllQ92WqtC92lexQ9rD2FSkyOUGnrzheLOuA1Jm+Vgyd/P+1S14azMq8mQt/w==
-X-Received: by 2002:aa7:8389:: with SMTP id u9mr8053510pfm.269.1593103289412;
-        Thu, 25 Jun 2020 09:41:29 -0700 (PDT)
+        bh=GrviZJ6eU6hS5ncWY3d15qiqcFrbFlQQ8yXs+/Zv0y4=;
+        b=InnncqwyMt43i0cpdPWaqAd0SeTUBR0q0IezxTSUyH4iaQ5W2pMbtpn/n7z9H0G7R2
+         BqJhTygjrcZJ9exUlHoTzYEEuVqISD46Q2ibV9s0nCh7qUSMqL8QO53DE0XLz06NMIHl
+         iEAiaz/i2RClpXPKiLsH/Za+SoyPEjHYujtS6jgHRO3Qetm/9Y/mRjK7qHS8Vb6ZNi+n
+         HXf9lhLtnS66/eUke3p3Ph6n75radPBY2YBCsTnpDRptdJAk8V8r3D3h9KEtQh01QQ3V
+         v3I8SgxsVe0wCGFj67cHgsd+YVgT3ax7mSnKECz24+RgqE4yPJHUM8Hgnpek4xe5AEeE
+         5yOg==
+X-Gm-Message-State: AOAM531nnBo7UziVbrUAgMI5Bso3iwgaovquQNrpRgx8suDE9C1mvLCI
+        aJyv8Lt8imsJHXMsx30Mp4R9Vg==
+X-Google-Smtp-Source: ABdhPJwxqNWTmS/l0zuf3b5jbO07r45hOv0N1z77mn5pLlslP6IvIQF5kgexEoT+CE8WMxg++pkfog==
+X-Received: by 2002:a17:90a:2c48:: with SMTP id p8mr4275164pjm.189.1593103356318;
+        Thu, 25 Jun 2020 09:42:36 -0700 (PDT)
 Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id q39sm9012496pja.30.2020.06.25.09.41.26
+        by smtp.gmail.com with ESMTPSA id a83sm23448474pfa.146.2020.06.25.09.42.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2020 09:41:28 -0700 (PDT)
-Subject: Re: [PATCH 0/3] x86/dumpstack: Print registers with the same log
- level as the backtrace
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
+        Thu, 25 Jun 2020 09:42:35 -0700 (PDT)
+Subject: Re: [PATCH 2/3] x86/dumpstack: Add log_lvl to __show_regs()
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
         Dmitry Safonov <0x7f454c46@gmail.com>,
         Andy Lutomirski <luto@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>,
+        Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>
 References: <20200623162958.331051-1-dima@arista.com>
- <20200624065054.GC8444@alley>
+ <20200623162958.331051-3-dima@arista.com>
+ <CAG48ez3v9dHq1+jvPmvQapFRji=4XhA8iNurTGZeC6xoy7Qc1w@mail.gmail.com>
 From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <86995860-74e7-31fb-5f94-f5b87d6aba07@arista.com>
-Date:   Thu, 25 Jun 2020 17:41:23 +0100
+Message-ID: <a0e7b79b-2ce7-f349-b308-e5329defd3fe@arista.com>
+Date:   Thu, 25 Jun 2020 17:42:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200624065054.GC8444@alley>
+In-Reply-To: <CAG48ez3v9dHq1+jvPmvQapFRji=4XhA8iNurTGZeC6xoy7Qc1w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,8 +91,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/20 7:50 AM, Petr Mladek wrote:
-> On Tue 2020-06-23 17:29:55, Dmitry Safonov wrote:
+On 6/23/20 5:45 PM, Jann Horn wrote:
+> On Tue, Jun 23, 2020 at 6:30 PM Dmitry Safonov <dima@arista.com> wrote:
 >> show_trace_log_lvl() provides x86 platform-specific way to unwind
 >> backtrace with a given log level. Unfortunately, registers dump(s) are
 >> not printed with the same log level - instead, KERN_DEFAULT is always
@@ -108,23 +109,27 @@ On 6/24/20 7:50 AM, Petr Mladek wrote:
 >> the log level should be passed down the stack to register dumping
 >> functions. Besides, I have a potential use-case for printing traces
 >> with KERN_DEBUG level [2] (where registers dump shouldn't appear with
->> higher log level than the backtrace).
+>> higher log level).
 >>
->> Dmitry Safonov (3):
->>   x86/dumpstack: Add log_lvl to show_iret_regs()
->>   x86/dumpstack: Add log_lvl to __show_regs()
->>   x86/dumpstack: Show registers dump with trace's log level
+>> Add log_lvl parameter to __show_regs().
+>> Keep the used log level intact to separate visible change.
 > 
-> The change makes sense. It is natural next step after adding log_lvl
-> parameter for printing stack traces. For the entire patchset:
+> This change seems like a good idea to me; just one small nit:
 > 
-> Acked-by: Petr Mladek <pmladek@suse.com>
+> [...]
+>>  void show_regs(struct pt_regs *regs)
+>>  {
+>> +       int print_kernel_regs;
+>> +
+>>         show_regs_print_info(KERN_DEFAULT);
+>>
+>> -       __show_regs(regs, user_mode(regs) ? SHOW_REGS_USER : SHOW_REGS_ALL);
+>> +       print_kernel_regs = user_mode(regs) ? SHOW_REGS_USER : SHOW_REGS_ALL;
+>> +       __show_regs(regs, print_kernel_regs, KERN_DEFAULT);
+> 
+> print_kernel_regs should probably have type "enum show_regs_mode"? 
 
-I'll address the nit by Jann and resend v2 with your Ack, thanks!
-
-> Are there any plans to add this also for other architectures, please?
-
-Yes, I'll look into that.
+Makes sense, will fix in v2.
 
 Thanks,
           Dmitry
