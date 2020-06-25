@@ -2,139 +2,105 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FF8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF4720773
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2608207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 06:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gc4Yxt3I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CQpjtAeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390058AbgFYGqV (ORCPT
+        id S2390123AbgFYGq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 02:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60086 "EHLO
+        Thu, 25 Jun 2020 02:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389962AbgFYGqU (ORCPT
+        with ESMTP id S2390098AbgFYGqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 02:46:20 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C9E7C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:20 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id r17so4889610ybj.22
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:20 -0700 (PDT)
+        Thu, 25 Jun 2020 02:46:25 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37959C061795
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:25 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id f18so4738763wml.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 23:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:cc;
-        bh=9en45t/QzNaNM6uWfEIwyjVyBid8D5wBKicPYDDrGpo=;
-        b=Gc4Yxt3I7/UcYTu0bsH1RFH6diu2RtYT0O5GLSOd5lrZmADKnymrdsOeLqV7AlTUZP
-         djUwVJ5/iT8vzS/u1jfong1rtooTiqAFZsJNVZ/160i+YN93vacdCFS1xcNRwfGJX5np
-         BfgeCY4eblYzBNNzloHFyKelqnmsz1OWakPsArY7nfTdJSHMhy1F0VirmZLWRc1m9LVu
-         5Rb/mm2BR1sZqZ1pSoqr2TPS/SUpYzn3FuzU74kQWex+UPMJZgn0FzjcI9WiuSuEwNNg
-         TiZC21Nfi2SFU+LhECZz9cL8/tcQ4maAyHFNYis0t157qx0PFD3Ewl/A6us03VBPRj5u
-         fv1A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bd+lgz3kjTKvgNR4P6qCbaJPIOylexTivHrAPmy2slQ=;
+        b=CQpjtAeUs9tpxi/DFdVhV7absTIYqPpnDyK7RXF9pu1rkwLzneDyakWcCdHPogG8rn
+         I1ZozMNlu5QnjYF6skQptFYOz6+57Jx67LbDWluSTZaO9HEQLqNI5MQezYiMd8/iHvo+
+         Lc7F0W/vbj/Kov7LpWJyNaBhMFk5NHAVSUAGehxYXgLtVKEP2YPPSxKFQB2S+Xuiy6RF
+         N19NraUiO7nVRkZqwE3A0Kaw23/5NMzOqN0TVpnlrgfmRZKQNAuNzWljTb+nZlnVdCfG
+         kImSSWzvhXj8Cy5qkIMb69GLSncRyvcHbfsjaRfPFlVag+E1SN2JO5KlTnC7LPv3lpYX
+         zp/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
-        bh=9en45t/QzNaNM6uWfEIwyjVyBid8D5wBKicPYDDrGpo=;
-        b=k1qf7R3DLc2LWvm8c4nhJlQuYo/+xaSSE1rAYBeZXXpWY/2n4ZWlWzv3shTCSrAU9l
-         vNDFHZySP8o0VEMak2fFC5t6Q1aJ+WJO+GE8HIf1vpAoGtCJbMSwe32IZgmvaRb7p6aj
-         tjrKU9DiG8z8PR/WekYhd2os2lAVtBFCzzY/Merc6bBCUHX/0UUEXb/xfQPsL4r0t/TA
-         9/mBX2kjMa2I4QWVZLO40o3/EJ6MPZ0xgCk1Aultheg6wJjV7dz0DUxgM3ea7vj+uMmU
-         vczy2tyxxvDJ7akCSOcbx4PSzXEBsEdnmuOHkwskLyWPq5JQ0maDLc+64sBTH9pcRfXJ
-         cVsw==
-X-Gm-Message-State: AOAM532GXXypNF8zSHTq8AJK/xQ1HzidpYhjPtSsiOOaoPe9qklfZTNz
-        8cUw7/agbhaS4HaWd4dguqiuW6E=
-X-Google-Smtp-Source: ABdhPJyvtkM8ik0DG/iBtJ1DhvVo8taVGremx1Ji24BaU8j0zc+CEhOAi7JnDBoNVfaMjxe8JjbuDbE=
-X-Received: by 2002:a25:be05:: with SMTP id h5mr49833690ybk.131.1593067579604;
- Wed, 24 Jun 2020 23:46:19 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 23:46:14 -0700
-Message-Id: <20200625064614.101183-1-wvw@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] cpufreq: schedutil: force frequency update when limits change
-From:   Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, dsmythies@telus.net,
-        viresh.kumar@linaro.org, Wei Wang <wvw@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bd+lgz3kjTKvgNR4P6qCbaJPIOylexTivHrAPmy2slQ=;
+        b=WQaGA0NH9uw9iqVK7pnla84SdEmdNLC1g4xm/a05vHKZRvfZv7rLdI2NkivEQIlZ9p
+         MKjfZQNmYrx5pvW9bQcMl5kma2oZpxA2sTQR3ocGn9Mt0EPl8FvaarDP6o3Meg2RJRgb
+         a3Sc1R4AfX8B4peABkaz0oFtfrF181FsKkO5bt/XayKR7Kq1vWQTM6IzfiQePFecBY/P
+         5HZaaGyD+Jlwh30GpE8j7JwUU8a25ltYKz/5xxALD4nxBIZ+yTiV0smUdYif73W8jT0f
+         bNPDbHc3ya6ZOY6AMyLJqnVi4Lmn+P0J2JYCUu5/q8T2usmE1Yuavi6IsHYPv9+FI+8c
+         +bXw==
+X-Gm-Message-State: AOAM530wVsuTRPE4R9qIM8Pu1Y48Te6wh87uZDrpwUPUYbdvfRjwGxRd
+        5uEs9CDrHMLMIGi23THLdXL5ISEkybI=
+X-Google-Smtp-Source: ABdhPJxyK/Z8rwiLCunJoRA/5kCyJeebbE8cpPLOPedbLWY3D/+fAvgpoSQmT207s856mFLvjli5Mw==
+X-Received: by 2002:a1c:ac81:: with SMTP id v123mr1605274wme.159.1593067582792;
+        Wed, 24 Jun 2020 23:46:22 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id c20sm27235363wrb.65.2020.06.24.23.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 23:46:22 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     lee.jones@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/10] Fix a bunch more W=1 warnings in MFD
+Date:   Thu, 25 Jun 2020 07:46:09 +0100
+Message-Id: <20200625064619.2775707-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid reducing the frequency of a CPU prematurely, we skip reducing
-the frequency if the CPU had been busy recently.
+Attempting to clean-up W=1 kernel builds, which are currently
+overwhelmingly riddled with niggly little warnings.
 
-This should not be done when the limits of the policy are changed, for
-example due to thermal throttling. We should always get the frequency
-within the new limits as soon as possible.
+Lee Jones (10):
+  mfd: wm8350-core: Supply description wm8350_reg_{un}lock args
+  mfd: mfd-core: Complete kerneldoc header for devm_mfd_add_devices()
+  mfd: db8500-prcmu: Add description for 'reset_reason' in kerneldoc
+  mfd: db8500-prcmu: Remove incorrect function header from .probe()
+    function
+  mfd: omap-usb-host: Remove invalid use of kerneldoc syntax
+  mfd: omap-usb-host: Provide description for 'pdev' argument to
+    .probe()
+  mfd: omap-usb-tll: Provide description for 'pdev' argument to .probe()
+  mfd: atmel-smc: Silence comparison of unsigned expression < 0 is
+    always false warning (W=1)
+  mfd: atmel-smc: Add missing colon(s) for 'conf' arguments
+  mfd: altera-sysmgr: Supply descriptions for 'np' and 'property'
+    function args
 
-There was a fix in
-commit 600f5badb78c ("cpufreq: schedutil: Don't skip freq update when
-limits change") upstream which introduced another flag. However, the
-fix didn't address the case when next_freq is the same as previously
-voted, which is then checked in sugov_update_next_freq. As a result, the
-frequency would be stuck at low until the high demanding workload quits.
+ drivers/mfd/altera-sysmgr.c |  3 +++
+ drivers/mfd/atmel-smc.c     |  8 ++++----
+ drivers/mfd/db8500-prcmu.c  |  6 ++----
+ drivers/mfd/mfd-core.c      | 10 ++++++++++
+ drivers/mfd/omap-usb-host.c |  4 +++-
+ drivers/mfd/omap-usb-tll.c  |  2 ++
+ drivers/mfd/wm8350-core.c   |  4 ++++
+ 7 files changed, 28 insertions(+), 9 deletions(-)
 
-test trace:
-  kworker/u19:0-1872  ( 1872) [002] ....   347.878871: cpu_frequency_limits: min=600000 max=2348000 cpu_id=6
-         dhry64-11525 (11525) [007] d.h2   347.880012: sugov_should_update_freq: thermal limit on policy6
-         dhry64-11525 (11525) [007] d.h2   347.880012: sugov_deferred_update: policy6 skipped update
-         dhry64-11525 (11525) [007] d.h2   347.884040: sugov_deferred_update: policy6 skipped update
-...
-
-This patch fixes this by skipping the check and forcing an update in
-this case. The second flag was kept as the limits_change flag could be
-updated in thermal kworker from another CPU.
-
-Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-Signed-off-by: Wei Wang <wvw@google.com>
----
- kernel/sched/cpufreq_schedutil.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 7fbaee24c824..dc2cd768022e 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -102,11 +102,12 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
- static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
- 				   unsigned int next_freq)
- {
--	if (sg_policy->next_freq == next_freq)
-+	if (!sg_policy->need_freq_update && sg_policy->next_freq == next_freq)
- 		return false;
- 
- 	sg_policy->next_freq = next_freq;
- 	sg_policy->last_freq_update_time = time;
-+	sg_policy->need_freq_update = false;
- 
- 	return true;
- }
-@@ -178,7 +179,6 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
- 	if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
- 		return sg_policy->next_freq;
- 
--	sg_policy->need_freq_update = false;
- 	sg_policy->cached_raw_freq = freq;
- 	return cpufreq_driver_resolve_freq(policy, freq);
- }
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.25.1
 
