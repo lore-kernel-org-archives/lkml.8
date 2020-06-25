@@ -2,206 +2,88 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2263DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59800C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE23820706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FA020706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bDy0Te/4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ro4o+vRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390178AbgFYHHz (ORCPT
+        id S2390235AbgFYHJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 03:07:55 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:36729 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389406AbgFYHHx (ORCPT
+        Thu, 25 Jun 2020 03:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390047AbgFYHJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 03:07:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593068873; x=1624604873;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ocqbu3v4ohPkO/+6EOdwjkOngWeWUMVIVcHb+6aFSJ0=;
-  b=bDy0Te/4bjW/lj/Ipkxu+60DVy0mqpbLmg61SsbXzcfq+w511s36zY9R
-   XbFVv06bJR5bWfGFQ/kKUHWbXsHxkU2ribE2bwhJXYdK/qC4ipIGlicNT
-   yPXZgnKwE9sASs9+XVHd64kxONhckupCYqMIPhguUKrw3k4XR2mHpUTiR
-   mhYImEAnXy+L1Zjq6xGVyXCGv05hKMcDLfMPiZRzony685G0jKtogxLPh
-   Z0Vm1Mlw5TbbgosAWv8IP1OR/5xAIqRdKAJu0JOpbDG6KIU1FHN71EyEx
-   ISYbGHIJZuRuZyLpSPIo908FqHIqOkwg3JJxiGbOxuj3RcgxRh0jRagDu
-   w==;
-IronPort-SDR: Pb9+EQOcuTC16BuOiCqwqF4U/jg0NLGEYbuRye92AjTU7KYN0/a5byV11STKGWZBoweGoRkwOr
- B9AXeAqdP9i5wtwvJPI32Zv2W7yJ+9Zl+w5J5eaigyMZ1f1/v7g830WzBijLyqGdxOH4YEO5ha
- M8C/aromQNReQWIVeJP7PUNbBuYwWeHZNevYChm2BA8oLIiUwLmN7uKdOEuSg2iVbLSzqHmJMU
- tLq0oFqBmmd3ELAyUEA5+t229cW7ROnZE9jit9y3NNBFtSW+dqKndwjlk7yWJ2Ew7HPOHRFyRv
- 4co=
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="80846156"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jun 2020 00:07:52 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 25 Jun 2020 00:07:38 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 25 Jun 2020 00:07:49 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next v2] bridge: mrp: Extend MRP netlink interface with IFLA_BRIDGE_MRP_CLEAR
-Date:   Thu, 25 Jun 2020 09:06:30 +0200
-Message-ID: <20200625070630.3267620-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 25 Jun 2020 03:09:58 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DC3C061573;
+        Thu, 25 Jun 2020 00:09:58 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id q8so4932727iow.7;
+        Thu, 25 Jun 2020 00:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ILGl2P6gAZNjvhIqpYbpGLfnEmwTXhI5fPAT7cUr8bM=;
+        b=ro4o+vRFomBYL8c/AGXuhWfstMGZK/MDst51OfQu3CR55C5NL7DV0mkkxyOlLHleB2
+         D5spbjwJYiiYT+aB1Rrmbt4hdFo3rNQnbND4uAhT2fcSscdFvb3D8NMDShe3v9YmUsqP
+         +j3/0JmWFpTgFHnyYx9mRKkZaTAC6eScMR9xT7pcEM4bhp1D60+w/J98IWdBm1u6uA7f
+         xxYyCpr6U0ONVsSWrmIMwHld7sr1lza8SAoSPWxGrtq1oes4kyDD/RR8I5P3AlWSvM4c
+         wIvrL/b2S+hN6F/sR4sbZ8ozBAJB2vthBqm9btDHT7yYY8YVehsNK+tN8glciCkPmFvr
+         6YKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ILGl2P6gAZNjvhIqpYbpGLfnEmwTXhI5fPAT7cUr8bM=;
+        b=tvo45+yfUdOPcoNjNgwulFpnq845D2CyJMvIJhcfqY95u3z5CiRHan54PhtFl+UH/3
+         F4AvFMdiR6/lCIXD4SG8V97xAcGqgH81VamC6Bg8Smqj1nnkul1HXHBgwQf6+R5nXqOp
+         rzoa93oqss9/KkUglA4d39XDuR1jjwdcnRgrbvxmIP7VYBq/xHCG9eN+nqM4ztczkmy8
+         WcgsLbp3cOc4hBqPQbWUlazCFsKePxgeafcjo23oaCS3VTXuMznYhSOQsw5fEaesCukY
+         PSIazWIuqIHD27ZAi/buvhT8KbC3DPkH5kWXrlnPm6i+Odz19XBtXifpQOgPkV4Ykos7
+         K5tA==
+X-Gm-Message-State: AOAM533g7yPR7la/6YvuOXQEripzvAHOgSZdZphk4KmbS8FwoUwCThjt
+        NCh8gH/JZ+VCL+3Mh5TQ+Iys6p8L3fRYU52ClO4=
+X-Google-Smtp-Source: ABdhPJx+2pEPWZ0Fu1tups2ClfzQZQDXkhcbNDTKmvwtxL5cCnxdnjteu6Yb7ISA8mRm3DAXaIM1/L2fIbzucL0myTE=
+X-Received: by 2002:a05:6602:14d0:: with SMTP id b16mr35701728iow.5.1593068998044;
+ Thu, 25 Jun 2020 00:09:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20200622225728.330-1-gerbilsoft@gerbilsoft.com>
+ <CANq1E4T_SNUrewDQ59bonr7tTKFa=wRYwXLWHMCiNA0KN0H9Aw@mail.gmail.com> <2498150.lGaqSPkdTl@dek-x230>
+In-Reply-To: <2498150.lGaqSPkdTl@dek-x230>
+From:   David Rheinsberg <david.rheinsberg@gmail.com>
+Date:   Thu, 25 Jun 2020 09:09:46 +0200
+Message-ID: <CADyDSO7HKNP8ihsW2-qouG5SYpOJ1LfD2sAbDfRkJ3iSkHvGNg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] HID: wiimote: Initialize the controller LEDs with a
+ device ID value
+To:     David Korth <gerbilsoft@gerbilsoft.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the userspace daemon dies, then when is restarted it doesn't
-know if there are any MRP instances in the kernel. Therefore extend the
-netlink interface to allow the daemon to clear all MRP instances when is
-started.
+Hi
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+On Thu, 25 Jun 2020 at 00:09, David Korth <gerbilsoft@gerbilsoft.com> wrote:
+> I've been manually setting the player IDs on Wii controllers when running
+> multiplayer games by writing to the /sys/class/leds/ directory. Having the
+> hid-wiimote driver do this itself significantly reduces setup time.
 
----
-v2:
-  - use list_for_each_entry_safe instead of list_for_each_entry_rcu
-    when deleting mrp instances
----
- include/uapi/linux/if_bridge.h |  8 ++++++++
- net/bridge/br_mrp.c            | 15 +++++++++++++++
- net/bridge/br_mrp_netlink.c    | 26 ++++++++++++++++++++++++++
- net/bridge/br_private_mrp.h    |  1 +
- 4 files changed, 50 insertions(+)
+What do you mean with "reduces setup time significantly"? Why would it
+take that long to set the LEDs?
 
-diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index caa6914a3e53a..2ae7d0c0d46b8 100644
---- a/include/uapi/linux/if_bridge.h
-+++ b/include/uapi/linux/if_bridge.h
-@@ -166,6 +166,7 @@ enum {
- 	IFLA_BRIDGE_MRP_RING_STATE,
- 	IFLA_BRIDGE_MRP_RING_ROLE,
- 	IFLA_BRIDGE_MRP_START_TEST,
-+	IFLA_BRIDGE_MRP_CLEAR,
- 	__IFLA_BRIDGE_MRP_MAX,
- };
- 
-@@ -228,6 +229,13 @@ enum {
- 
- #define IFLA_BRIDGE_MRP_START_TEST_MAX (__IFLA_BRIDGE_MRP_START_TEST_MAX - 1)
- 
-+enum {
-+	IFLA_BRIDGE_MRP_CLEAR_UNSPEC,
-+	__IFLA_BRIDGE_MRP_CLEAR_MAX,
-+};
-+
-+#define IFLA_BRIDGE_MRP_CLEAR_MAX (__IFLA_BRIDGE_MRP_CLEAR_MAX - 1)
-+
- struct br_mrp_instance {
- 	__u32 ring_id;
- 	__u32 p_ifindex;
-diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-index 24986ec7d38cc..02da4e22d277a 100644
---- a/net/bridge/br_mrp.c
-+++ b/net/bridge/br_mrp.c
-@@ -372,6 +372,21 @@ int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance)
- 	return 0;
- }
- 
-+/* Deletes all MRP instances on the bridge
-+ * note: called under rtnl_lock
-+ */
-+int br_mrp_clear(struct net_bridge *br)
-+{
-+	struct br_mrp *mrp;
-+	struct br_mrp *tmp;
-+
-+	list_for_each_entry_safe(mrp, tmp, &br->mrp_list, list) {
-+		br_mrp_del_impl(br, mrp);
-+	}
-+
-+	return 0;
-+}
-+
- /* Set port state, port state can be forwarding, blocked or disabled
-  * note: already called with rtnl_lock
-  */
-diff --git a/net/bridge/br_mrp_netlink.c b/net/bridge/br_mrp_netlink.c
-index 34b3a8776991f..5e743538464f6 100644
---- a/net/bridge/br_mrp_netlink.c
-+++ b/net/bridge/br_mrp_netlink.c
-@@ -14,6 +14,7 @@ static const struct nla_policy br_mrp_policy[IFLA_BRIDGE_MRP_MAX + 1] = {
- 	[IFLA_BRIDGE_MRP_RING_STATE]	= { .type = NLA_NESTED },
- 	[IFLA_BRIDGE_MRP_RING_ROLE]	= { .type = NLA_NESTED },
- 	[IFLA_BRIDGE_MRP_START_TEST]	= { .type = NLA_NESTED },
-+	[IFLA_BRIDGE_MRP_CLEAR]		= { .type = NLA_NESTED },
- };
- 
- static const struct nla_policy
-@@ -235,6 +236,25 @@ static int br_mrp_start_test_parse(struct net_bridge *br, struct nlattr *attr,
- 	return br_mrp_start_test(br, &test);
- }
- 
-+static const struct nla_policy
-+br_mrp_clear_policy[IFLA_BRIDGE_MRP_CLEAR_MAX + 1] = {
-+	[IFLA_BRIDGE_MRP_CLEAR_UNSPEC]		= { .type = NLA_REJECT },
-+};
-+
-+static int br_mrp_clear_parse(struct net_bridge *br, struct nlattr *attr,
-+			      struct netlink_ext_ack *extack)
-+{
-+	struct nlattr *tb[IFLA_BRIDGE_MRP_START_TEST_MAX + 1];
-+	int err;
-+
-+	err = nla_parse_nested(tb, IFLA_BRIDGE_MRP_CLEAR_MAX, attr,
-+			       br_mrp_clear_policy, extack);
-+	if (err)
-+		return err;
-+
-+	return br_mrp_clear(br);
-+}
-+
- int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 		 struct nlattr *attr, int cmd, struct netlink_ext_ack *extack)
- {
-@@ -301,6 +321,12 @@ int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
- 			return err;
- 	}
- 
-+	if (tb[IFLA_BRIDGE_MRP_CLEAR]) {
-+		err = br_mrp_clear_parse(br, tb[IFLA_BRIDGE_MRP_CLEAR], extack);
-+		if (err)
-+			return err;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-index 33b255e38ffec..25c3b8596c25b 100644
---- a/net/bridge/br_private_mrp.h
-+++ b/net/bridge/br_private_mrp.h
-@@ -36,6 +36,7 @@ struct br_mrp {
- /* br_mrp.c */
- int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance);
- int br_mrp_del(struct net_bridge *br, struct br_mrp_instance *instance);
-+int br_mrp_clear(struct net_bridge *br);
- int br_mrp_set_port_state(struct net_bridge_port *p,
- 			  enum br_mrp_port_state_type state);
- int br_mrp_set_port_role(struct net_bridge_port *p,
--- 
-2.26.2
-
+Thanks
+David
