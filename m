@@ -2,128 +2,98 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F82C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0958820768
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C7520768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405457AbgFYOwY (ORCPT
+        id S2405518AbgFYOwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:52:24 -0400
-Received: from mga18.intel.com ([134.134.136.126]:53483 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405385AbgFYOwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:52:23 -0400
-IronPort-SDR: I5/g2OrUKPHX3/z1mMo+t0vURMI86KgCxJUflk5T+ku6G2nUaVZ4r7OYvJfAuHisPghVytygJE
- +0kvZWL0xY+w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132349991"
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="132349991"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 07:52:21 -0700
-IronPort-SDR: 7/qhnrTE8F52QUrj2cNi185t2jut9xND9SEOHzcRmsPXv5GsfNRw65ZjV2Hr9Xj7SP1LBMcUEk
- oyH+9a10HeSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="312010769"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Jun 2020 07:52:20 -0700
-Received: from [10.249.229.54] (abudanko-mobl.ccr.corp.intel.com [10.249.229.54])
-        by linux.intel.com (Postfix) with ESMTP id D9D195804D6;
-        Thu, 25 Jun 2020 07:52:18 -0700 (PDT)
-Subject: Re: [PATCH v8 09/13] perf stat: implement control commands handling
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
- <5ed69a1e-052a-9790-7642-cb9c9a53d786@linux.intel.com>
- <20200623145458.GG2619137@krava>
- <9bf22a7b-0b56-c55f-c8b2-60c8e6ed0ef9@linux.intel.com>
- <20200625121218.GG2719003@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <b3c7ab03-d2ba-ac60-fd45-42cfb5b57a28@linux.intel.com>
-Date:   Thu, 25 Jun 2020 17:52:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200625121218.GG2719003@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Jun 2020 10:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405451AbgFYOwb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:52:31 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBB4C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:52:31 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 8FFB550C; Thu, 25 Jun 2020 16:52:28 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Qian Cai <cai@lca.pw>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 2/2] iommu/amd: Use 'unsigned long' for domain->pt_root
+Date:   Thu, 25 Jun 2020 16:52:27 +0200
+Message-Id: <20200625145227.4159-3-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200625145227.4159-1-joro@8bytes.org>
+References: <20200625145227.4159-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.06.2020 15:12, Jiri Olsa wrote:
-> On Wed, Jun 24, 2020 at 04:39:11PM +0300, Alexey Budankov wrote:
->>
->>
->> On 23.06.2020 17:54, Jiri Olsa wrote:
->>> On Wed, Jun 17, 2020 at 11:41:30AM +0300, Alexey Budankov wrote:
->>>>
->>>> Implement handling of 'enable' and 'disable' control commands
->>>> coming from control file descriptor. process_evlist() function
->>>> checks for events on control fds and makes required operations.
->>>> If poll event splits initiated timeout interval then the reminder
->>>> is calculated and still waited in the following poll() syscall.
->>>>
->>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>> ---
->>>>  tools/perf/builtin-stat.c | 67 +++++++++++++++++++++++++++++----------
->>>>  1 file changed, 50 insertions(+), 17 deletions(-)
->>>>
->>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->>>> index f88d5ee55022..cc56d71a3ed5 100644
->>>> --- a/tools/perf/builtin-stat.c
->>>> +++ b/tools/perf/builtin-stat.c
->>>> @@ -492,6 +492,31 @@ static bool process_timeout(int timeout, unsigned int interval, int *times)
->>>>  	return print_interval(interval, times);
->>>>  }
->>>>  
->>>> +static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
->>>> +{
->>>> +	bool stop = false;
->>>> +	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
->>>> +
->>>> +	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
->>>> +		switch (cmd) {
->>>> +		case EVLIST_CTL_CMD_ENABLE:
->>>> +			pr_info(EVLIST_ENABLED_MSG);
->>>> +			stop = print_interval(interval, times);
->>>
->>> why is interval printed in here?
->>>
->>>> +			break;
->>>> +		case EVLIST_CTL_CMD_DISABLE:
->>>> +			stop = print_interval(interval, times);
->>>
->>> and here?
->>>
->>> it should be called from the main loop when the interval time is elapsed no?
->>
->> It is called from the main loop too and it is also additionally called here
->> to provide indication and counter values on commands processing times.
-> 
-> so it prints interval out of order?
+From: Joerg Roedel <jroedel@suse.de>
 
-Looks like it does. The only issue with it I see is change in times value.
+Using atomic64_t can be quite expensive, so use unsigned long instead.
+This is safe because the write becomes visible atomically.
 
-~Alexey
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/amd/amd_iommu_types.h |  2 +-
+ drivers/iommu/amd/iommu.c           | 10 ++++++++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-> 
-> jirka
-> 
+diff --git a/drivers/iommu/amd/amd_iommu_types.h b/drivers/iommu/amd/amd_iommu_types.h
+index 30a5d412255a..f6f102282dda 100644
+--- a/drivers/iommu/amd/amd_iommu_types.h
++++ b/drivers/iommu/amd/amd_iommu_types.h
+@@ -468,7 +468,7 @@ struct protection_domain {
+ 				       iommu core code */
+ 	spinlock_t lock;	/* mostly used to lock the page table*/
+ 	u16 id;			/* the domain id written to the device table */
+-	atomic64_t pt_root;	/* pgtable root and pgtable mode */
++	unsigned long pt_root;	/* pgtable root and pgtable mode */
+ 	int glx;		/* Number of levels for GCR3 table */
+ 	u64 *gcr3_tbl;		/* Guest CR3 table */
+ 	unsigned long flags;	/* flags to find out type of domain */
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index 5286ddcfc2f9..b0e1dc58244e 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -156,7 +156,7 @@ static struct protection_domain *to_pdomain(struct iommu_domain *dom)
+ static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
+ 					 struct domain_pgtable *pgtable)
+ {
+-	u64 pt_root = atomic64_read(&domain->pt_root);
++	unsigned long pt_root = domain->pt_root;
+ 
+ 	pgtable->root = (u64 *)(pt_root & PAGE_MASK);
+ 	pgtable->mode = pt_root & 7; /* lowest 3 bits encode pgtable mode */
+@@ -164,7 +164,13 @@ static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
+ 
+ static void amd_iommu_domain_set_pt_root(struct protection_domain *domain, u64 root)
+ {
+-	atomic64_set(&domain->pt_root, root);
++	domain->pt_root = root;
++
++	/*
++	 * The new value needs to be gobally visible in case pt_root gets
++	 * cleared, so that the page-table can be safely freed.
++	 */
++	smp_wmb();
+ }
+ 
+ static void amd_iommu_domain_clr_pt_root(struct protection_domain *domain)
+-- 
+2.27.0
+
