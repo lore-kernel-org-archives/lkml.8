@@ -2,497 +2,183 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6389F20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FS83lsIc"
+	by mail.kernel.org (Postfix) with ESMTP id 4913C20781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405626AbgFYO4k (ORCPT
+        id S2405690AbgFYO4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:56:40 -0400
-Received: from mail.efficios.com ([167.114.26.124]:46788 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405340AbgFYO4j (ORCPT
+        Thu, 25 Jun 2020 10:56:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2314 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405638AbgFYO4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:56:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9C0D02CB43B;
-        Thu, 25 Jun 2020 10:56:36 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id rZpe1Y_wGJPD; Thu, 25 Jun 2020 10:56:35 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id AB0272CB263;
-        Thu, 25 Jun 2020 10:56:35 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com AB0272CB263
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593096995;
-        bh=Y7yOFBtsJX/mxNuN0Qh1BxfaPpf27Jmq6TKM4dXLIz4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=FS83lsIc0kwcvJP1dJgoAwKkWgKoImiXRmUCVfSDaXTf2FnLNMLs7ubpm2Qgyaseg
-         OqeR604jmB6sSGgFQZoRuQ2/KT9/Hteuj4vaOqAe7/Qi+hR0vHLayzr9hva+LXl20s
-         iyKegIst6/1OqBLfgXcUNIsct2tFMf5QpbX3AJx7++dAkct4k77YvYjZ3WtLW2SdEl
-         inU1OUFFwcssU3QV7x3MFYQXE4popdg7w/sbKNn6nNdSHw+SF/9CPAWF+tInUUcJOn
-         DVdKD4Xv+FSGkbTdmb16lSh/S7dlquYLmlUi9XoOY+D97Jim8D0Vx2qf3fSPH3mKJB
-         AZwxNwk2RMidA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id kQDg4OcWMXYk; Thu, 25 Jun 2020 10:56:35 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 8EC892CB68A;
-        Thu, 25 Jun 2020 10:56:35 -0400 (EDT)
-Date:   Thu, 25 Jun 2020 10:56:35 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joelaf@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        rostedt <rostedt@goodmis.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        paulmck <paulmck@kernel.org>, Julien Desfossez <ju@klipix.org>
-Message-ID: <1115572712.12427.1593096995446.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200624195030.GG4800@hirez.programming.kicks-ass.net>
-References: <20200619202516.7109-1-mathieu.desnoyers@efficios.com> <20200624121136.GF4800@hirez.programming.kicks-ass.net> <269292405.11607.1593023493676.JavaMail.zimbra@efficios.com> <20200624195030.GG4800@hirez.programming.kicks-ass.net>
-Subject: Re: [RFC PATCH v2] sched_pair_cpu: Introduce scheduler task pairing
- system call
+        Thu, 25 Jun 2020 10:56:48 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PEWas2084447;
+        Thu, 25 Jun 2020 10:56:45 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyj4e81-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 10:56:45 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PEX0rx086617;
+        Thu, 25 Jun 2020 10:56:45 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyj4e7p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 10:56:45 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PEjcGY031517;
+        Thu, 25 Jun 2020 14:56:44 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma04dal.us.ibm.com with ESMTP id 31uurq81gh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 14:56:44 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PEuhH848824676
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 14:56:43 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ABE8F112064;
+        Thu, 25 Jun 2020 14:56:43 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CE32112061;
+        Thu, 25 Jun 2020 14:56:43 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 14:56:43 +0000 (GMT)
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Subject: Enabling interrupts in QEMU TPM TIS
+Cc:     LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <1ca3a53d-2b83-7522-5ce1-83d9cc2f207d@linux.ibm.com>
+Date:   Thu, 25 Jun 2020 10:56:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: sched_pair_cpu: Introduce scheduler task pairing system call
-Thread-Index: KKF2EJ/UOyY4CnhVA6NZtcIQEi8jPA==
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_10:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ spamscore=0 phishscore=0 suspectscore=0 bulkscore=0 impostorscore=0
+ mlxscore=0 mlxlogscore=872 lowpriorityscore=0 malwarescore=0 adultscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 24, 2020, at 3:50 PM, Peter Zijlstra peterz@infradead.org wrote:
+Hello!
 
-> On Wed, Jun 24, 2020 at 02:31:33PM -0400, Mathieu Desnoyers wrote:
-> 
-[...]
-> 
->> >> +	/*
->> >> +	 * Consume CPU time as long as an associated task is running on another
->> >> +	 * CPU.
->> >> +	 */
->> >> +	while (READ_ONCE(task->pair_cpu_need_worker)
->> >> +	       && !READ_ONCE(cpum->worker_preempted)
->> >> +	       && task->state != TASK_DEAD) {
->> >> +		timeout = ktime_sub(ktime_get(), time_begin) > MAX_SCHED_PAIR_CPU_WORK_NS;
->> >> +		if (timeout)
->> >> +			break;
->> >> +		touch_softlockup_watchdog();
->> >> +		cond_resched();
->> >> +		cpu_relax();
->> >> +	}
->> > 
->> > Why does it have a timeout?
->> 
->> The timeout is used to handle case where the kernel worker thread is handling
->> the per-cpu data of an offline CPU. In that peculiar case, the worker thread
->> will be running on a CPU which is not the offline CPU, so no preemption will
->> set the "worker_preempted" flag in the struct pair_cpu as long as the CPU is
->> offline. The timeout ensures that a single worker task does not stay arbitrarily
->> long as "current", and gets kicked away to leave room for other tasks which may
->> also need to access that offlined cpu's per-cpu data.
-> 
-> But if the CPU is offline, you don't actually need to do anything. So
-> that seems unfortunate.
+  I want to enable IRQs now in QEMU's TPM TIS device model and I need to 
+work with the following patch to Linux TIS. I am wondering whether the 
+changes there look reasonable to you? Windows works with the QEMU 
+modifications as-is, so maybe it's a bug in the TIS code (which I had 
+not run into before).
 
-Quite the opposite: if the CPU is offline, we need to serialize all tasks
-which want to touch its per-cpu data concurrently. So in that situation,
-the kworker thread acts as a request queuing mechanism, allowing only a
-single task to touch that per-cpu data at a given time.
 
-> 
->> > And this is a radically weird approach to
->> > testing if @task is currently running. And if we're the worker, we can't
->> > be preempted, per definition.
->> 
->> Note that the "worker_preempted" test is really testing whether the _worker_
->> has been preempted.
-> 
-> But this is the worker. You cannot know if you are preempted, because if
-> you are, you don't run.
+The point of the loop I need to introduce in the interrupt handler is 
+that while the interrupt handler is running another interrupt may 
+occur/be posted that then does NOT cause the interrupt handler to be 
+invoked again but causes a stall, unless the loop is there.
 
-The worker can check if it _has been_ preempted since it began handling the
-current work item. Setting the "worker_preempted" flag is done by the finish
-task switch code.
+The 'o' in the dmesg log indicates the original IRQ for which the 
+handler was invoked. The interrupt values have the following meaning.
 
-> 
->> If we are the worker, we _can_ and _should_ be preempted if something else
->> needs to be scheduled. We don't want to prevent more important tasks to run.
-> 
-> Sure, you want to allow preemption for both the task and the worker. But
-> having the worker check a variable that says if it is itself preempted
-> makes no bloody sense.
+0x2: STS valid
 
-Fair point.
+0x4: locality changed
 
-> 
->> This implies that whatever the task calling sched_pair_cpu set/clear does
->> between set and clear to touch per-cpu data needs to be done with restartable
->> sequences, so the critical section is aborted if the task is preempted. Same
->> goes if the kworker thread is preempted: it preempts the paired task with an
->> IPI, which immediately prevents its user-space to touch the per-cpu data until
->> the kworker is scheduled back and picks the eventually re-queued work for
->> another round.
-> 
-> Sure, if the worker gets preempted we need to preempt the task, and if
-> the task gets preempted, we need to stop the worker.
+0x80: command ready
 
-I'm starting to grasp where you are getting: this "worker_preempted" flag
-is redundant with the fact that the finish task switch code IPI the paired
-task when it preempts the worker thread. So by side-effect, that paired task
-will set its "need worker" to 0, which will allow the worker thread to exit
-the loop.
+So the first 'looping entry' [in log below] indicates that a locality 
+change interrupt occurred while the interrupt handler was running due to 
+STS_valid + command ready. This sounds reasonable considering that we 
+are frequently acquiring and releasing the locality. The loop then deals 
+with the locality change interrupt and the interrupts then settle.
 
-Indeed, I think I can just remove that worker_preempted flag.
+[  210.365129] tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1, rev-id 1)
+[  210.367124] looping: 0x4  (o: 0x82)
+[  212.375045] looping: 0x80  (o: 0x2)
+[  212.389218] looping: 0x4  (o: 0x82)
+[  212.404161] looping: 0x80  (o: 0x2)
+[  212.526427] looping: 0x4  (o: 0x82)
+[  212.595488] looping: 0x4  (o: 0x82)
+[  212.614357] looping: 0x80  (o: 0x2)
 
-> 
->> > If we're supposed to soak up cycles while @task runs, wth does it allow
->> > scheduling in this loop?
->> > 
->> > Basicaly I think this wants to be something like:
->> > 
->> >	while (READ_ONCE(task->on_cpu) && READ_ONCE(task->pair_cpu) == cpu)
->> >		cpu_relax();
->> > 
->> > Nothing more, nothing less.
->> 
->> The semantic of what you propose is:
->> 
->> - Stop running as soon as @task is not running,
->> - Stop running as soon as @task is not paired with the cpu serviced by this
->> worker thread.
->> 
->> The semantic I need is:
->> 
->> - Stop running as soon as @task does not need the worker thread,
-> 
-> Can be done by setting pair_cpu to -1
+diff --git a/drivers/char/tpm/tpm_tis_core.c 
+b/drivers/char/tpm/tpm_tis_core.c
+index 65ab1b027949..f77544563fb1 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -704,7 +704,7 @@ static irqreturn_t tis_int_handler(int dummy, void 
+*dev_id)
+  {
+      struct tpm_chip *chip = dev_id;
+      struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+-    u32 interrupt;
++    u32 interrupt, o;
+      int i, rc;
 
-The state "pair_cpu >= 0" must last from sched_pair_cpu(SET) to sched_pair_cpu(CLEAR).
+      rc = tpm_tis_read32(priv, TPM_INT_STATUS(priv->locality), &interrupt);
+@@ -715,6 +715,7 @@ static irqreturn_t tis_int_handler(int dummy, void 
+*dev_id)
+          return IRQ_NONE;
 
-The state "need worker" needs to be cleared when the paired task is preempted. It lets the
-worker thread know it must break its loop and stop handling this work, so the paired task
-can enqueue further work for a later attempt. This provides some fairness across multiple
-tasks using sched_pair_cpu on the same cpu number. Otherwise a task could keep the pairing
-set for a very long time and prevent progress from other tasks paired to the same cpu.
+      priv->irq_tested = true;
++again:
+      if (interrupt & TPM_INTF_DATA_AVAIL_INT)
+          wake_up_interruptible(&priv->read_queue);
+      if (interrupt & TPM_INTF_LOCALITY_CHANGE_INT)
+@@ -731,7 +732,12 @@ static irqreturn_t tis_int_handler(int dummy, void 
+*dev_id)
+      if (rc < 0)
+          return IRQ_NONE;
 
-So I'm afraid the two states cannot be easily combined.
++    o = interrupt;
+      tpm_tis_read32(priv, TPM_INT_STATUS(priv->locality), &interrupt);
++    if (interrupt != 0) {
++        printk("looping: 0x%x  (o: 0x%x)\n", interrupt, o);
++        goto again;
++    }
+      return IRQ_HANDLED;
+  }
 
-> 
->> - Stop running as soon as the worker thread is preempted,
-> 
-> This is the bloody worker thread. It cannot know if it is preempted.
+@@ -1062,6 +1068,8 @@ int tpm_tis_core_init(struct device *dev, struct 
+tpm_tis_data *priv, int irq,
+              goto out_err;
+          }
 
-As discussed above, it can know if it _has been_ preempted since beginning of
-work item handling, but this happens to be redundant with checking the "need worker"
-flag, so I'll remove the "worker_preempted" flag.
++        tpm_chip_start(chip);
++        chip->flags |= TPM_CHIP_FLAG_IRQ;
+          if (irq) {
+              tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+                           irq);
+@@ -1074,6 +1082,7 @@ int tpm_tis_core_init(struct device *dev, struct 
+tpm_tis_data *priv, int irq,
+          } else {
+              tpm_tis_probe_irq(chip, intmask);
+          }
++        tpm_chip_stop(chip);
+      }
 
->> - Stop running as soon as @task has exited,
-> 
-> Weirdly enough ->on_cpu is always 0 for dead tasks.
-
-I don't think we can use "->on_cpu == 0" to break the worker thread's loop.
-
-The paired task, before returning to user-space, will enqueue the kwork
-before blocking. Then, the kworker thread will eventually awaken the task.
-However, AFAIU nothing guarantees that the task reaches a ->on_cpu==1 state
-before the kworker thread starts its loop. It may take some time for
-the scheduler to really schedule that task if there are more important things
-to run on that runqueue.
-
-> 
->> - Stop running as soon as timeout is reached.
-> 
-> I still don't get the timeout, if the pair_cpu is offline, the worker
-> simply shouldn't run.
-
-If we don't keep a kworker for offlined cpus, then we need _something else_
-to act as a queue manager, ensuring that only a single queued work is allowed
-at any given time. Because we can have many tasks which try to touch the offline
-CPU's per-cpu data concurrently, and we need to serialize that as if everyone is
-running on the same runqueue.
-
-The simple trick I use here is to keep using the same kworker thread which is
-tied to the offline cpu, and keep it handling work for the offline CPU. I let it
-run wherever it wants.
-
-> 
->> > None of this makes sense; task_cpu() will always be >= 0, and if it
->> > timed out, it can't be on an offline cpu, because offline CPUs don't run
->> > tasks.
->> 
->> There are three scenarios to consider here:
->> 
->> 1) The kernel worker thread is handling a CPU which is offline: This explains
->> the
->>    need for a "timeout", as discussed earlier.
-> 
-> Still doesn't make sense
-
-(replied above)
-
-> 
->> 
->> 2) The paired task was running on @cpu when task_cpu() is issued, but the CPU is
->>    concurrently going offline before we send the IPI: As the comment explains, the
->>    preemption of @task is required in order to allow its CPU to go offline makes
->>    the IPI
->>    redundant.
-> 
-> Tasks' CPU cannot go offline without task beeing preempted. Same for a
-> worker. Either preemption will cycle the state.
-
-Exactly. This is why I comment that a failed IPI is not an issue, because it is
-redundant.
-
-> 
->> 3) The paired task is blocked on @cpu in parallel with the timeout being reached
->> by
->>    the worker thread: AFAIU this would cause cpu < 0. Again in this case, the task
->>    has been preempted, which means our IPI would be redundant.
-> 
-> task_cpu() is never <0. For blocked tasks, task_cpu() is the last cpu
-> they ran on, which must be a valid cpu. We use it for placement on
-> wakeup.
-
-I did not notice this, good point ! I'll fix that.
-
-> 
->> >> +	preempt_disable();
->> >> +	set_current_state(TASK_INTERRUPTIBLE);
->> >> +	trace_printk("notify resume block for cpu %d from task %p state 0x%lx\n",
->> >> task_pair_cpu,
->> >> +	       current, current->state);
->> >> +	WARN_ON_ONCE(current->pair_cpu_worker_active);
->> >> +	WRITE_ONCE(current->pair_cpu_need_worker, 1);
->> >> +	get_task_struct(current);
->> >> +	kthread_init_work(&current->pair_cpu_work, pair_cpu_work_func);
->> >> +	kthread_queue_work(cpum->worker, &current->pair_cpu_work);
->> >> +	current->pair_cpu_queued_work = 1;
->> >> +	preempt_enable();
->> >> +	schedule();
->> > 
->> > Did you consider spurious wakeups? A naked schedule() pretty much always
->> > wrong. They need to come in loops and testing variables.
->> > 
->> > Basically this should be something like:
->> > 
->> >	rcu_wait_event(.., smp_load_acquire(&current->pair_cpu_worker_active),
->> >			TASK_INTERRUPTIBLE);
->> 
->> This schedule() is already in a loop: __sched_pair_cpu_handle_notify_resume()
->> is called from exit_to_usermode_loop().
-> 
-> urgh..
-> 
->> > Also, I can't help but think this should've been a task_work.
->> 
->> "queuing" that work is needed from IPI context and from finish task switch.
->> As long as we can queue task_work from atomic context, we could indeed use
->> that instead. The struct callback_head would sit in the task struct.
-> 
-> It's a cmpxchg add + set_notify_resume() if the list was empty.
-
-That works.
-
-> 
->> Doing that change means that I cannot rely on the return to usermode loop
->> to call this again after schedule, so I should put that in a loop myself.
-> 
-> Yes, using a wait-event style API is much easier to understand.
-
-Changing this custom wait/wakeup to a wait-event API, one question arises:
-Should we use a TASK_INTERRUPTIBLE or TASK_UNINTERRUPTIBLE state ? I especially
-wonder how we should handle interruption by signal within this task_work, given
-that this can be running on top of return to userspace on top of pretty much
-anything, including an interrupt. So returning things like ERESTARTSYS or EINTR
-does not seem possible here.
-
-> 
->> >> +/*
->> >> + * If we preempt the cpu mutex worker, we need to IPI the CPU
->> >> + * running the thread currently associated to it before scheduling
->> >> + * other tasks.
->> >> + *
->> >> + * This only targets pair_cpu worker for online cpus.
->> >> + */
->> >> +static void pair_cpu_finish_switch_worker(struct task_struct *prev)
->> >> +{
->> >> +	struct pair_cpu *cpum = per_cpu_ptr(&pair_cpu, smp_processor_id());
->> >> +	struct task_struct *running_task;
->> >> +	int cpu;
->> >> +
->> >> +	if (!cpum->worker || prev != cpum->worker->task)
->> >> +		return;
->> >> +	running_task = READ_ONCE(cpum->running);
->> >> +	if (!running_task)
->> >> +		return;
->> > 
->> > You're doing this for _every_ context switch, the above is unconditional
->> > new lines touched and a big no-no.
->> 
->> The only state I need to check here is whether the scheduler is preempting a
->> thread which is a pair-cpu kworker thread. This could be a simple
->> flag within an already cache-hot cacheline in the task struct. The rest
->> then becomes a slow-path.
->> 
->> Would that solve your performance concern ?
-> 
-> The other alternative is using a preempt_notifier for the worker I
-> suppose.
-
-Good point!
-
-> 
->> >> +/*
->> >> + * If we preempt a task currently associated with a cpu mutex worker,
->> >> + * we need to tell the worker to stop using cpu time.
->> >> + */
->> >> +static void pair_cpu_finish_switch_task(struct task_struct *prev, long
->> >> prev_state)
->> >> +{
->> >> +	int prev_pair_cpu;
->> >> +
->> >> +	prev_pair_cpu = READ_ONCE(prev->pair_cpu);
->> >> +	if (prev_pair_cpu < 0 || !READ_ONCE(prev->pair_cpu_need_worker)
->> >> +	    || !READ_ONCE(prev->pair_cpu_worker_active))
->> >> +		return;
->> > 
->> > Again, you're doing this every context switch, touching memory we didn't
->> > used to touch.
->> 
->> Same argument about placing this in a single "hot path" flag in the task struct.
->> Would that address your performance concerns ?
-> 
-> preempt_notifier could work here too I suppose, install it on yourself
-> when you do the pear syscall and take it away again when you're finished
-> with it.
-
-Good point, will do!
-
-> 
->> >>  
->> >>  	if (likely(prev != next)) {
->> >>  		rq->nr_switches++;
->> > 
->> > 
->> > I think if you use a task instead of a kthread_work things become much
->> > simpler. Regardless, you have too much state which mightily confuses
->> > things.
->> 
->> Do you mean "use a task_work" or really "use a task" ?
-> 
-> I meant replace the kthread_work with a full kthread, a task.
-> 
->> I used a kthread_work to eliminate the need to re-implement the work
->> handling logic. What would be the benefit of using a task rather than
->> kthread_work here ?
-> 
-> If the worker is a dedicated task, it is much easier to see if it is
-> running, simply look at worker->on_cpu. Similarly, if it is a full task
-> the fact of ->on_cpu being 0 means it has scheduled, which implies
-> barriers.
-> 
-> But I think I see why, you can have multiple tasks requiring the same
-> worker. I'd overlooked that this morning.
-
-OK, so I'll stick with a kworker for now.
-
-> 
->> > As with all the other approaches, I don't love this.. All of this
->> > complexity is because sodding hotplug -- something that should really
->> > never happen.
->> 
->> Actually, it's not only hotplug. It's hotplug _and_ cgroup cpusets.
-> 
-> Argh.. I'd forgotten cpusets again :-(
-
-Yes, cpusets make things "interesting". ;)
-
-> 
->> > - make fcntl(F_*SIG) work on /sys/devices/system/cpu/cpuN/online such
->> >   that we receive a signal when the state changes, and before userspace
->> >   starts. The signal triggers rseq restart.
->> 
->> Just knowing a CPU is offline is not enough. We then need to be able to
->> synchronize concurrent updates to that per-CPU data structure while the
->> CPU is offline, in a way which is also safe against that CPU coming back
->> online again.
-> 
-> That's exactly what that signal would do. It would send SIGIO when the
-> state changes.
-> 
-> So you want to access CPU-n's data, you open that file, register a
-> signal and read it's state, if offline, you good, do the rseq. If it
-> suddenly decides to come back online, you're guaranteed that SIGIO
-> before it reaches userspace.
->
-> The nice thing is that it's all R/O so available to normal users, you
-> don't have to write to the file.
-
-So let's say you have two threads trying to access (offline) CPU-n's data
-with that algorithm concurrently. How are they serialized with each other ?
-
-> 
->> Also it does not solve the issues associated with cgroup cpusets, where
->> a CPU may very well be online, but not part of our thread's allowed cpu
->> mask.
-> 
-> Let's just say I violated the CoC...
-
-:-)
-
-> 
->> We do not want to override the affinity restricted by cgroups because
->> we don't want to hurt performance characteristics of another partition
->> of the system.
->> 
->> The sched_pair_cpu approach has the benefit of allowing us to touch
->> per-cpu data of a given CPU without requiring to run on that CPU, which
->> ensures that we do not thrash the cpu cache of cpus on which a thread
->> is not allowed to run. It takes care of issues caused by both cgroup
->> cpusets and cpu hotplug.
-> 
-> But now I worry that your thing allows escaping the cgroup contraints,
-> you can perturb random CPUs you're not allowed on. That's a really bad
-> 'feature'.
-> 
-> Offline cpus are okay, because you don't actually need to do anything as
-> long as they're offline, but restricted CPUs we really should not be
-> touching, not even a little.
-
-With sched_pair_cpu, the paired task never needs to run on the target CPU.
-The kworker thread runs on the target CPU in the same way other existing
-worker threads run today, e.g. the ones handling RCU callbacks. AFAIK the
-priority of those threads can be configured by a system administrator.
-
-Are there additional steps we should take to minimize the impact of this
-worker thread ? In the same way "no rcu callbacks" CPU can be configured
-at boot time, we could have "no sched pair cpu" configured at boot, which
-would prevent sched_pair_cpu system calls from targeting that CPU entirely,
-and not spawn any kworker on that cpu.
-
-Thanks,
-
-Mathieu
-
+      rc = tpm_chip_register(chip);
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.26.2
+
+    Stefan
+
