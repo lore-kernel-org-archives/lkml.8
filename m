@@ -2,176 +2,475 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34851C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093BA20706
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zl8P0LSa"
+	by mail.kernel.org (Postfix) with ESMTP id BB4C220706
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 00:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388527AbgFYAVR (ORCPT
+        id S2388655AbgFYA1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:21:17 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:42806 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388380AbgFYAVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 20:21:15 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200625002112epoutp01480d2a04d599fb43d2673edc93970a0a~boYHiBLHB1374213742epoutp01h
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 00:21:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200625002112epoutp01480d2a04d599fb43d2673edc93970a0a~boYHiBLHB1374213742epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593044472;
-        bh=9Tvx5LVQ92yDOHnxdae1m8tcACjD0IX4pwyY2EQbYCM=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Zl8P0LSa8/v3Yqw9dIrC8x8Qlf0OzYghUAwUvSLy5fvSCwjMhNyELi2msW5ornFq7
-         ezsslF4sD1miiNS7B0Fn7afWpTqTbY4rUROd7a06Qh9yyVaIR+vkAVs1Yy90KZHvlx
-         vrMn1oDksuuJdhqn7lGe+G/HnbefMepw0Au33O54=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200625002111epcas5p31684db82d7f5e8246f24bbf3792aa8ae~boYHCljLa2533125331epcas5p3I;
-        Thu, 25 Jun 2020 00:21:11 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2C.2A.09467.7FDE3FE5; Thu, 25 Jun 2020 09:21:11 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200625002111epcas5p276f95efdd9e8675b7014b2050a2f0e4a~boYGhZnAJ0922509225epcas5p2F;
-        Thu, 25 Jun 2020 00:21:11 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200625002111epsmtrp2c6d129880dc0084f20367ba47cb16590~boYGdwGHl2241922419epsmtrp2X;
-        Thu, 25 Jun 2020 00:21:11 +0000 (GMT)
-X-AuditID: b6c32a49-a29ff700000024fb-65-5ef3edf7d0c1
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C2.09.08382.7FDE3FE5; Thu, 25 Jun 2020 09:21:11 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200625002107epsmtip1aae9c4ad2d264c605d250d7aecb38d57~boYDWPAYc1560015600epsmtip1E;
-        Thu, 25 Jun 2020 00:21:07 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Vinod Koul'" <vkoul@kernel.org>
-Cc:     "'Kishon Vijay Abraham I'" <kishon@ti.com>, <robh@kernel.org>,
-        <krzk@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
-        <avri.altman@wdc.com>, <stanley.chu@mediatek.com>,
-        <linux-scsi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <cang@codeaurora.org>,
-        <devicetree@vger.kernel.org>, <kwmad.kim@samsung.com>,
-        <linux-kernel@vger.kernel.org>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>
-In-Reply-To: <20200624173000.GJ2324254@vkoul-mobl>
-Subject: RE: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-Date:   Thu, 25 Jun 2020 05:51:06 +0530
-Message-ID: <008b01d64a86$872af1e0$9580d5a0$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQNA14zZ9KpC6NxovY65uGX80LQ4kgIpylB3AdlmWUMBx1WEmQIl7FhyAiYYQSwBBY3htAG7IsXOAfG87UylnQyD8A==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEKsWRmVeSWpSXmKPExsWy7bCmuu73t5/jDBZ2Glq8/HmVzeLT+mWs
-        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
-        P9DNFMAZxWWTkpqTWZZapG+XwJVxdu0i1oLX3BXv9p5nbGA8z9nFyMkhIWAisazhF2sXIxeH
-        kMBuRomne2YxQzifGCWeTFrADuF8Y5R4tHEtUIYDouVfIER8L6PE+mnvoIreMEpMe3KKFWQu
-        m4CuxI7FbWwgtoiAqsSWJw/AbGaBhcwSWxbog9icAkYSa5ccZQSxhQWcJF6v2MMEYrMA1T+8
-        PQFsDq+ApcT+rTuhbEGJkzOfsEDMkZfY/nYOM8QPChI/ny5jhYiLSxz92QN2qIhAlsTTb1Ug
-        t0kIvOCQODf1DxNEvYvEx2db2SFsYYlXx7dA2VISn9/tZYN4MluiZ5cxRLhGYum8YywQtr3E
-        gStzWEBKmAU0Jdbv0ofYyifR+/sJE0Qnr0RHmxBEtapE87urUJ3SEhO7u1khSjwk+ppEJzAq
-        zkLy1iwkb81C8soshF0LGFlWMUqmFhTnpqcWmxYY5qWW6xUn5haX5qXrJefnbmIEJzstzx2M
-        dx980DvEyMTBeIhRgoNZSYQ3xO1TnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFepR9n4oQE0hNL
-        UrNTUwtSi2CyTBycUg1MG7auZ3nE1zRVtUmqxmpu++dbuy22i3saltSs3L1dqpxF6rRBvf3E
-        noaM79ttG249dno76cek7Vc5LV/emhg89dGXpCwT9Ys/k199Kgj53Wkvc0n6sO+RP+wan5TL
-        Mp6ferXtxXGRIrXUJcfFGVhsz/SrrM3z1Dr7P14uL/nuOx6H4zpSiQoXWo4q/pn7Sl3i6Moj
-        KZPPV5//m7fzlugORucfja4fb1kJdE/YeUngisOUA98aZtpvEQj6ylBRtS+AYVn6wTj92ZL3
-        Yl6LnMz5mXfglGGhXHlN0EmGh0HFEfcTZsTe1pLjCu87dIqx88/Xr9FHb3UILed51j6n7X5d
-        ycq02b3F/uk8FWHv5wu3KbEUZyQaajEXFScCACwH/SzlAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsWy7bCSnO73t5/jDC61c1q8/HmVzeLT+mWs
-        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
-        P9DNFMAZxWWTkpqTWZZapG+XwJVxdu0i1oLX3BXv9p5nbGA8z9nFyMEhIWAisexfIIgpJLCb
-        UeJmbRcjJ1BUWuL6xgnsELawxMp/z8FsIYFXjBKHJ1iA2GwCuhI7FrexgdgiAqoSW548ALK5
-        OJgF1jJLzD+0GswREjjLLHHp6WmwKk4BI4m1S44ygtjCAk4Sr1fsYQKxWYC6H96ewApi8wpY
-        SuzfuhPKFpQ4OfMJC8hxzAJ6Em0bwVqZBeQltr+dwwxxnILEz6fLWCHi4hJHf/Ywg5SLCGRJ
-        PP1WNYFReBaSQbMQBs1CMmgWkuYFjCyrGCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGC
-        I1ZLcwfj9lUf9A4xMnEwHmKU4GBWEuENcfsUJ8SbklhZlVqUH19UmpNafIhRmoNFSZz3RuHC
-        OCGB9MSS1OzU1ILUIpgsEwenVANTBf9/L/23vubxtUEs6s99pk/TONAcusD49pZq+VdZe2rr
-        9r7eu+f3v7fvdI2MJkX7hoRFvVow7V/NikubtNOL3r88zDmlKtq6Jq2qI+N1hX3+9M0PtjZU
-        pWzleGCsJaIn/TLj570F21qfxX/1tnNusRU/cDj1/EfHv/Ln5e+kWDjpV9b4mf6eXfzu4aaA
-        lX7LrSJ0XwkGz+DaFd5fw7ePK2eZvPhfx/kXw49dEd6+oP0Wm/yXs7NTKjzn8zQ25FjHy8VL
-        bivPW/ilpdLB8WqytUvbsZNy0iq513304s1euln8nKGuO4UjuTL9X+JkPYuYZ8G7v+xYbHmf
-        ZwJbVbzqVBEN9okNDw8d8FuxYpkSS3FGoqEWc1FxIgBkQA9mRwMAAA==
-X-CMS-MailID: 20200625002111epcas5p276f95efdd9e8675b7014b2050a2f0e4a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200528013223epcas5p2be85fa8803326b49a905fb7225992cad
-References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
-        <20200528011658.71590-1-alim.akhtar@samsung.com>
-        <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
-        <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
-        <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
-        <000001d646a6$6cb5fd70$4621f850$@samsung.com>
-        <20200624102112.GX2324254@vkoul-mobl>
-        <004b01d64a48$8bb87270$a3295750$@samsung.com>
-        <20200624173000.GJ2324254@vkoul-mobl>
+        Wed, 24 Jun 2020 20:27:48 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:50518 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388297AbgFYA1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 20:27:47 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7073B201242;
+        Thu, 25 Jun 2020 02:27:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 49C55201241;
+        Thu, 25 Jun 2020 02:27:35 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 80656402E1;
+        Thu, 25 Jun 2020 08:27:25 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net, peng.fan@nxp.com,
+        aisheng.dong@nxp.com, daniel.baluta@nxp.com,
+        franck.lenormand@nxp.com, arnd@arndb.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] firmware: imx: Move i.MX SCU soc driver into imx firmware folder
+Date:   Thu, 25 Jun 2020 08:16:04 +0800
+Message-Id: <1593044164-32362-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+The i.MX SCU soc driver depends on SCU firmware driver, so it has to
+use platform driver model for proper defer probe operation, since
+it has no device binding in DT file, a simple platform device is
+created together inside the platform driver. To make it more clean,
+we can just move the entire SCU soc driver into imx firmware folder
+and initialized by i.MX SCU firmware driver.
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: 24 June 2020 23:00
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>; robh@kernel.org;
-> krzk@kernel.org; linux-samsung-soc@vger.kernel.org; avri.altman@wdc.com;
-> stanley.chu@mediatek.com; linux-scsi@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; cang@codeaurora.org;
-devicetree@vger.kernel.org;
-> kwmad.kim@samsung.com; linux-kernel@vger.kernel.org; 'Martin K. Petersen'
-> <martin.petersen@oracle.com>
-> Subject: Re: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-> 
-> Hi Alim,
-> 
-> On 24-06-20, 22:27, Alim Akhtar wrote:
-> > > > > Sure, will re-send this series.
-> > >
-> > > But patches have not been sent right, pls send and me/Kishon will
-> > > review
-> > >
-> > Thanks for your kind attention on this series. As per [0] comment from
-> > Kishon, patch 7/10 [1] and probably 6/10 [2] should have been Applied
-> > after
-> > 5.8-rc1 was tagged.
-> 
-> And that is something I am trying atm, but I dont have patches in my
-mailbox, so
-> would you be kind enough to resend me these patches after rebasing to phy-
-> next, also do add acks/reviews collected in previous posts.
-> 
-> I dont think I have seen resend, or maybe I wasnt cced
-> 
-Just noticed you were not CCed.
-I have sent those two patches.
-https://patchwork.kernel.org/patch/11624571/
-https://patchwork.kernel.org/patch/11624569/
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- move soc driver to imx firmware folder instead of merge it into imx firmware driver.
+---
+ arch/arm64/configs/defconfig       |   1 -
+ drivers/firmware/imx/Makefile      |   2 +-
+ drivers/firmware/imx/imx-scu-soc.c | 139 ++++++++++++++++++++++++++++++
+ drivers/firmware/imx/imx-scu.c     |   4 +
+ drivers/soc/imx/Kconfig            |   9 --
+ drivers/soc/imx/Makefile           |   1 -
+ drivers/soc/imx/soc-imx-scu.c      | 172 -------------------------------------
+ include/linux/firmware/imx/sci.h   |   1 +
+ 8 files changed, 145 insertions(+), 184 deletions(-)
+ create mode 100644 drivers/firmware/imx/imx-scu-soc.c
+ delete mode 100644 drivers/soc/imx/soc-imx-scu.c
 
-PTAL,
-
-Thanks,
-
-> 
-> --
-> ~Vinod
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index ae76fae..35f037f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -854,7 +854,6 @@ CONFIG_OWL_PM_DOMAINS=y
+ CONFIG_RASPBERRYPI_POWER=y
+ CONFIG_FSL_DPAA=y
+ CONFIG_FSL_MC_DPIO=y
+-CONFIG_IMX_SCU_SOC=y
+ CONFIG_QCOM_AOSS_QMP=y
+ CONFIG_QCOM_GENI_SE=y
+ CONFIG_QCOM_RMTFS_MEM=m
+diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
+index 17ea361..b76acba 100644
+--- a/drivers/firmware/imx/Makefile
++++ b/drivers/firmware/imx/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_IMX_DSP)		+= imx-dsp.o
+-obj-$(CONFIG_IMX_SCU)		+= imx-scu.o misc.o imx-scu-irq.o rm.o
++obj-$(CONFIG_IMX_SCU)		+= imx-scu.o misc.o imx-scu-irq.o rm.o imx-scu-soc.o
+ obj-$(CONFIG_IMX_SCU_PD)	+= scu-pd.o
+diff --git a/drivers/firmware/imx/imx-scu-soc.c b/drivers/firmware/imx/imx-scu-soc.c
+new file mode 100644
+index 0000000..fab41a8
+--- /dev/null
++++ b/drivers/firmware/imx/imx-scu-soc.c
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 NXP.
++ */
++
++#include <dt-bindings/firmware/imx/rsrc.h>
++#include <linux/firmware/imx/sci.h>
++#include <linux/slab.h>
++#include <linux/sys_soc.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++
++static struct imx_sc_ipc *imx_sc_soc_ipc_handle;
++
++struct imx_sc_msg_misc_get_soc_id {
++	struct imx_sc_rpc_msg hdr;
++	union {
++		struct {
++			u32 control;
++			u16 resource;
++		} __packed req;
++		struct {
++			u32 id;
++		} resp;
++	} data;
++} __packed __aligned(4);
++
++struct imx_sc_msg_misc_get_soc_uid {
++	struct imx_sc_rpc_msg hdr;
++	u32 uid_low;
++	u32 uid_high;
++} __packed;
++
++static int imx_scu_soc_uid(u64 *soc_uid)
++{
++	struct imx_sc_msg_misc_get_soc_uid msg;
++	struct imx_sc_rpc_msg *hdr = &msg.hdr;
++	int ret;
++
++	hdr->ver = IMX_SC_RPC_VERSION;
++	hdr->svc = IMX_SC_RPC_SVC_MISC;
++	hdr->func = IMX_SC_MISC_FUNC_UNIQUE_ID;
++	hdr->size = 1;
++
++	ret = imx_scu_call_rpc(imx_sc_soc_ipc_handle, &msg, true);
++	if (ret) {
++		pr_err("%s: get soc uid failed, ret %d\n", __func__, ret);
++		return ret;
++	}
++
++	*soc_uid = msg.uid_high;
++	*soc_uid <<= 32;
++	*soc_uid |= msg.uid_low;
++
++	return 0;
++}
++
++static int imx_scu_soc_id(void)
++{
++	struct imx_sc_msg_misc_get_soc_id msg;
++	struct imx_sc_rpc_msg *hdr = &msg.hdr;
++	int ret;
++
++	hdr->ver = IMX_SC_RPC_VERSION;
++	hdr->svc = IMX_SC_RPC_SVC_MISC;
++	hdr->func = IMX_SC_MISC_FUNC_GET_CONTROL;
++	hdr->size = 3;
++
++	msg.data.req.control = IMX_SC_C_ID;
++	msg.data.req.resource = IMX_SC_R_SYSTEM;
++
++	ret = imx_scu_call_rpc(imx_sc_soc_ipc_handle, &msg, true);
++	if (ret) {
++		pr_err("%s: get soc info failed, ret %d\n", __func__, ret);
++		return ret;
++	}
++
++	return msg.data.resp.id;
++}
++
++int imx_scu_soc_init(struct device *dev)
++{
++	struct soc_device_attribute *soc_dev_attr;
++	struct soc_device *soc_dev;
++	int id, ret;
++	u64 uid = 0;
++	u32 val;
++
++	ret = imx_scu_get_handle(&imx_sc_soc_ipc_handle);
++	if (ret)
++		return ret;
++
++	soc_dev_attr = devm_kzalloc(dev, sizeof(*soc_dev_attr),
++				    GFP_KERNEL);
++	if (!soc_dev_attr)
++		return -ENOMEM;
++
++	soc_dev_attr->family = "Freescale i.MX";
++
++	ret = of_property_read_string(of_root,
++				      "model",
++				      &soc_dev_attr->machine);
++	if (ret)
++		return ret;
++
++	id = imx_scu_soc_id();
++	if (id < 0)
++		return -EINVAL;
++
++	ret = imx_scu_soc_uid(&uid);
++	if (ret < 0)
++		return -EINVAL;
++
++	/* format soc_id value passed from SCU firmware */
++	val = id & 0x1f;
++	soc_dev_attr->soc_id = devm_kasprintf(dev, GFP_KERNEL, "0x%x", val);
++	if (!soc_dev_attr->soc_id)
++		return -ENOMEM;
++
++	/* format revision value passed from SCU firmware */
++	val = (id >> 5) & 0xf;
++	val = (((val >> 2) + 1) << 4) | (val & 0x3);
++	soc_dev_attr->revision = devm_kasprintf(dev, GFP_KERNEL, "%d.%d",
++						(val >> 4) & 0xf, val & 0xf);
++	if (!soc_dev_attr->revision)
++		return -ENOMEM;
++
++	soc_dev_attr->serial_number = devm_kasprintf(dev, GFP_KERNEL,
++						     "%016llX", uid);
++	if (!soc_dev_attr->serial_number)
++		return -ENOMEM;
++
++	soc_dev = soc_device_register(soc_dev_attr);
++	if (IS_ERR(soc_dev))
++		return PTR_ERR(soc_dev);
++
++	return 0;
++}
++EXPORT_SYMBOL(imx_scu_soc_init);
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index 2ab0482..dca79ca 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -328,6 +328,10 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 
+ 	imx_sc_ipc_handle = sc_ipc;
+ 
++	ret = imx_scu_soc_init(dev);
++	if (ret)
++		dev_warn(dev, "failed to initialize SoC info: %d\n", ret);
++
+ 	ret = imx_scu_enable_general_irq_channel(dev);
+ 	if (ret)
+ 		dev_warn(dev,
+diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
+index d515d2c..d49fa63 100644
+--- a/drivers/soc/imx/Kconfig
++++ b/drivers/soc/imx/Kconfig
+@@ -8,15 +8,6 @@ config IMX_GPCV2_PM_DOMAINS
+ 	select PM_GENERIC_DOMAINS
+ 	default y if SOC_IMX7D
+ 
+-config IMX_SCU_SOC
+-	bool "i.MX System Controller Unit SoC info support"
+-	depends on IMX_SCU
+-	select SOC_BUS
+-	help
+-	  If you say yes here you get support for the NXP i.MX System
+-	  Controller Unit SoC info module, it will provide the SoC info
+-	  like SoC family, ID and revision etc.
+-
+ config SOC_IMX8M
+ 	bool "i.MX8M SoC family support"
+ 	depends on ARCH_MXC || COMPILE_TEST
+diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
+index 4461432..078dc91 100644
+--- a/drivers/soc/imx/Makefile
++++ b/drivers/soc/imx/Makefile
+@@ -5,4 +5,3 @@ endif
+ obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
+ obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) += gpcv2.o
+ obj-$(CONFIG_SOC_IMX8M) += soc-imx8m.o
+-obj-$(CONFIG_IMX_SCU_SOC) += soc-imx-scu.o
+diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
+deleted file mode 100644
+index 92448ca..0000000
+--- a/drivers/soc/imx/soc-imx-scu.c
++++ /dev/null
+@@ -1,172 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright 2019 NXP.
+- */
+-
+-#include <dt-bindings/firmware/imx/rsrc.h>
+-#include <linux/firmware/imx/sci.h>
+-#include <linux/slab.h>
+-#include <linux/sys_soc.h>
+-#include <linux/platform_device.h>
+-#include <linux/of.h>
+-
+-#define IMX_SCU_SOC_DRIVER_NAME		"imx-scu-soc"
+-
+-static struct imx_sc_ipc *soc_ipc_handle;
+-
+-struct imx_sc_msg_misc_get_soc_id {
+-	struct imx_sc_rpc_msg hdr;
+-	union {
+-		struct {
+-			u32 control;
+-			u16 resource;
+-		} __packed req;
+-		struct {
+-			u32 id;
+-		} resp;
+-	} data;
+-} __packed __aligned(4);
+-
+-struct imx_sc_msg_misc_get_soc_uid {
+-	struct imx_sc_rpc_msg hdr;
+-	u32 uid_low;
+-	u32 uid_high;
+-} __packed;
+-
+-static int imx_scu_soc_uid(u64 *soc_uid)
+-{
+-	struct imx_sc_msg_misc_get_soc_uid msg;
+-	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+-	int ret;
+-
+-	hdr->ver = IMX_SC_RPC_VERSION;
+-	hdr->svc = IMX_SC_RPC_SVC_MISC;
+-	hdr->func = IMX_SC_MISC_FUNC_UNIQUE_ID;
+-	hdr->size = 1;
+-
+-	ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
+-	if (ret) {
+-		pr_err("%s: get soc uid failed, ret %d\n", __func__, ret);
+-		return ret;
+-	}
+-
+-	*soc_uid = msg.uid_high;
+-	*soc_uid <<= 32;
+-	*soc_uid |= msg.uid_low;
+-
+-	return 0;
+-}
+-
+-static int imx_scu_soc_id(void)
+-{
+-	struct imx_sc_msg_misc_get_soc_id msg;
+-	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+-	int ret;
+-
+-	hdr->ver = IMX_SC_RPC_VERSION;
+-	hdr->svc = IMX_SC_RPC_SVC_MISC;
+-	hdr->func = IMX_SC_MISC_FUNC_GET_CONTROL;
+-	hdr->size = 3;
+-
+-	msg.data.req.control = IMX_SC_C_ID;
+-	msg.data.req.resource = IMX_SC_R_SYSTEM;
+-
+-	ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
+-	if (ret) {
+-		pr_err("%s: get soc info failed, ret %d\n", __func__, ret);
+-		return ret;
+-	}
+-
+-	return msg.data.resp.id;
+-}
+-
+-static int imx_scu_soc_probe(struct platform_device *pdev)
+-{
+-	struct soc_device_attribute *soc_dev_attr;
+-	struct soc_device *soc_dev;
+-	int id, ret;
+-	u64 uid = 0;
+-	u32 val;
+-
+-	ret = imx_scu_get_handle(&soc_ipc_handle);
+-	if (ret)
+-		return ret;
+-
+-	soc_dev_attr = devm_kzalloc(&pdev->dev, sizeof(*soc_dev_attr),
+-				    GFP_KERNEL);
+-	if (!soc_dev_attr)
+-		return -ENOMEM;
+-
+-	soc_dev_attr->family = "Freescale i.MX";
+-
+-	ret = of_property_read_string(of_root,
+-				      "model",
+-				      &soc_dev_attr->machine);
+-	if (ret)
+-		return ret;
+-
+-	id = imx_scu_soc_id();
+-	if (id < 0)
+-		return -EINVAL;
+-
+-	ret = imx_scu_soc_uid(&uid);
+-	if (ret < 0)
+-		return -EINVAL;
+-
+-	/* format soc_id value passed from SCU firmware */
+-	val = id & 0x1f;
+-	soc_dev_attr->soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "0x%x", val);
+-	if (!soc_dev_attr->soc_id)
+-		return -ENOMEM;
+-
+-	/* format revision value passed from SCU firmware */
+-	val = (id >> 5) & 0xf;
+-	val = (((val >> 2) + 1) << 4) | (val & 0x3);
+-	soc_dev_attr->revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%d.%d",
+-						(val >> 4) & 0xf, val & 0xf);
+-	if (!soc_dev_attr->revision)
+-		return -ENOMEM;
+-
+-	soc_dev_attr->serial_number = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+-						     "%016llX", uid);
+-	if (!soc_dev_attr->serial_number)
+-		return -ENOMEM;
+-
+-	soc_dev = soc_device_register(soc_dev_attr);
+-	if (IS_ERR(soc_dev))
+-		return PTR_ERR(soc_dev);
+-
+-	return 0;
+-}
+-
+-static struct platform_driver imx_scu_soc_driver = {
+-	.driver = {
+-		.name = IMX_SCU_SOC_DRIVER_NAME,
+-	},
+-	.probe = imx_scu_soc_probe,
+-};
+-
+-static int __init imx_scu_soc_init(void)
+-{
+-	struct platform_device *pdev;
+-	struct device_node *np;
+-	int ret;
+-
+-	np = of_find_compatible_node(NULL, NULL, "fsl,imx-scu");
+-	if (!np)
+-		return -ENODEV;
+-
+-	of_node_put(np);
+-
+-	ret = platform_driver_register(&imx_scu_soc_driver);
+-	if (ret)
+-		return ret;
+-
+-	pdev = platform_device_register_simple(IMX_SCU_SOC_DRIVER_NAME,
+-					       -1, NULL, 0);
+-	if (IS_ERR(pdev))
+-		platform_driver_unregister(&imx_scu_soc_driver);
+-
+-	return PTR_ERR_OR_ZERO(pdev);
+-}
+-device_initcall(imx_scu_soc_init);
+diff --git a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/sci.h
+index 3c459f5..22c7657 100644
+--- a/include/linux/firmware/imx/sci.h
++++ b/include/linux/firmware/imx/sci.h
+@@ -20,4 +20,5 @@ int imx_scu_enable_general_irq_channel(struct device *dev);
+ int imx_scu_irq_register_notifier(struct notifier_block *nb);
+ int imx_scu_irq_unregister_notifier(struct notifier_block *nb);
+ int imx_scu_irq_group_enable(u8 group, u32 mask, u8 enable);
++int imx_scu_soc_init(struct device *dev);
+ #endif /* _SC_SCI_H */
+-- 
+2.7.4
 
