@@ -2,166 +2,104 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99190C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DD2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77FB020789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 03:59:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSYYRKAe"
+	by mail.kernel.org (Postfix) with ESMTP id A01B320663
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389598AbgFYD7U (ORCPT
+        id S1726548AbgFYEF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 23:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388485AbgFYD7T (ORCPT
+        Thu, 25 Jun 2020 00:05:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33085 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgFYEF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 23:59:19 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4650FC061573;
-        Wed, 24 Jun 2020 20:59:18 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id j4so2218983plk.3;
-        Wed, 24 Jun 2020 20:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QUMoNwc9dGmOGskLKFiTixLHPu4FnFfX6iAmslzBe2E=;
-        b=gSYYRKAegLzZuWF302Q2DSP+skdY94rm2eB+k3FbsuRKRa0cQAd2qi0cCELsBJ4f8d
-         fbA5YKrBFcFzuBUMva6q5r6PA9h+jACuEtHsPHbtKdIWD5Wd24WyldYR//3I7qh6RW9J
-         s1gI7IXeWdz6ZX6ghCbpblknEZBzLXYrByFGHTQs9V7EWkdY9IlERlg1EzWoupJ7xJZr
-         n7VmGNA1Xu/FTaPBBvX/1muYNf8HCUax2wMjuZri9bJr/xo0F2kUt8Tt2jUSONVDJRiD
-         56Zfh8IphUjvMXFgXkDu4ZRFq5vqEMTRtMjturXrFNTh8OkNrYDoAP3SdqS3L2Q6Spzr
-         wtYg==
+        Thu, 25 Jun 2020 00:05:56 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f9so2434019pfn.0;
+        Wed, 24 Jun 2020 21:05:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QUMoNwc9dGmOGskLKFiTixLHPu4FnFfX6iAmslzBe2E=;
-        b=A0fwxbmFsvoQTmGsODPD2el92zRQcPtWDjm/eYqflJywdoY9kJ+hV/EVI1DA7yHknU
-         sSblhLfbofL+CarlYQUEGOv1qZ6w/PfyH94hhpc/2m6EtRKIqptH7lostLC4O7zU3z+U
-         nrrG6a+//+KS29R9LDzbic4MjlmmYh6Amcnk1B21xneVpERFPfKSF2FdwpC0uwCvk87K
-         zfGGt/yD8IV419ijy/gq2bEoxwJeK/0GyJakNH9DopRzbtXHHdFpDt+l95QVN5qsqMR2
-         HCSzTv8e6+HcQQTtcYBQSe7FpIny7J5YPeTUEYwzqSA56rg0XriD9eGRsLsSYUcG6x6G
-         pNaA==
-X-Gm-Message-State: AOAM533tLxToNUVv31tWAzfW9AmlL261UBbDRR2VqKPZNpMi7MDM2z2N
-        D0b2Mujvmu7Uj6Pz9qMpASYleSx8
-X-Google-Smtp-Source: ABdhPJyHMTMJPUzrhGGnkh3V3vR+R75Gk7LpHdvhxwTsdZjnGQyZfCJ3zxg3ApCDgTu1r3ffjoiBlQ==
-X-Received: by 2002:a17:90b:1981:: with SMTP id mv1mr1112443pjb.41.1593057557595;
-        Wed, 24 Jun 2020 20:59:17 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:cac0])
-        by smtp.gmail.com with ESMTPSA id w203sm11376708pfc.128.2020.06.24.20.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 20:59:16 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 20:59:13 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
-Message-ID: <20200625035913.z4setdowrgt4sqpd@ast-mbp.dhcp.thefacebook.com>
-References: <20200624084524.259560-1-drinkcat@chromium.org>
- <20200624120408.12c8fa0d@oasis.local.home>
- <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
- <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+        h=x-gm-message-state:from:subject:to:references:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4Th1ySPu0Vm274TN6hS4pYdPss9aQtC2GIfpH8g+Qzs=;
+        b=RxkC8utxMw6EqGOS2bPtf8wyREkELqj91izZXOqlHjEn18eIEolo5j5CrJyq89ccNg
+         7b1e66bfYU4+i7T77VgH2D4W8GGWavUpPOe5HUhpruAnG6ql82G9wZbbBCOL4hO1zl94
+         1PkW92Oxz7/lgiswQJnhS8JXy97Wwfj4EMQYbNDu31uP+qfyIpxdA3VD0d0CwEjaiRm4
+         MeghExZCVhKHKA9wB1Y65+n2BtoPhBbQDLq3f9pgtao7soUGL3ji6mwTpJ9fVdMLQeB7
+         moQHSCM9y9bqNFZH91SceYW4YVg9ZRpL6rXwJJ1smskYIVVy81aQqzBOGh5UIirj9yzu
+         HRGw==
+X-Gm-Message-State: AOAM530dX9fTmXx92oEGhGn+1yLr8LeAXU3mJkVmUYbtBczBiseS6kGO
+        nLfLV0vwxp0GPY3kcHyvIzFtdX4z
+X-Google-Smtp-Source: ABdhPJxbOHJBWsjgXqqQU6Bl8VHVLy3W1i7Ax0RG7BuEn+J/+kc6Pv3a7NobvWQt0Scp8ScAE0lFXg==
+X-Received: by 2002:a63:1312:: with SMTP id i18mr24938054pgl.142.1593057955042;
+        Wed, 24 Jun 2020 21:05:55 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id g140sm11384273pfb.48.2020.06.24.21.05.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 21:05:53 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+Subject: Re: KASAN: null-ptr-deref Write in blk_mq_map_swqueue
+To:     syzbot <syzbot+313d95e8a7a49263f88d@syzkaller.appspotmail.com>,
+        a@unstable.cc, axboe@kernel.dk, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, dongli.zhang@oracle.com, hdanton@sina.com,
+        jianchao.w.wang@oracle.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <00000000000006e0ff05a8dfce2d@google.com>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <b30f9b35-1504-a8f6-91cd-828e56c59eef@acm.org>
+Date:   Wed, 24 Jun 2020 21:05:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+In-Reply-To: <00000000000006e0ff05a8dfce2d@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 10:00:09AM +0800, Nicolas Boichat wrote:
-> On Thu, Jun 25, 2020 at 1:25 AM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Wed, Jun 24, 2020 at 9:07 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > On Wed, 24 Jun 2020 16:45:24 +0800
-> > > Nicolas Boichat <drinkcat@chromium.org> wrote:
-> > >
-> > > > trace_printk is only meant as a debugging tool, and should never be
-> > > > compiled into production code without source code changes, as
-> > > > indicated by the warning that shows up on boot if any trace_printk
-> > > > is called:
-> > > >  **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
-> > > >  **                                                      **
-> > > >  ** trace_printk() being used. Allocating extra memory.  **
-> > > >  **                                                      **
-> > > >  ** This means that this is a DEBUG kernel and it is     **
-> > > >  ** unsafe for production use.                           **
-> > > >
-> > > > If this option is set to n, the kernel will generate a build-time
-> > > > error if trace_printk is used.
-> > > >
-> > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > >
-> > > Interesting. Note, this will prevent modules with trace_printk from
-> > > being loaded as well.
-> >
-> > Nack.
-> > The message is bogus. It's used in production kernels.
-> > bpf_trace_printk() calls it.
-> 
-> Interesting. BTW, the same information (trace_printk is for debugging
-> only) is repeated all over the place, including where bpf_trace_printk
-> is documented:
-> https://elixir.bootlin.com/linux/latest/source/include/linux/kernel.h#L757
-> https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/bpf.h#L706
-> https://elixir.bootlin.com/linux/latest/source/kernel/trace/trace.c#L3157
-> 
-> Steven added that warning (2184db46e425c ("tracing: Print nasty banner
-> when trace_printk() is in use")), so maybe he can confirm if it's
-> still relevant.
+On 2020-06-24 20:01, syzbot wrote:
+> This bug is marked as fixed by commit:
+> blk-mq: Fix a recently introduced regression in
+> But I can't find it in any tested tree for more than 90 days.
+> Is it a correct commit? Please update it by replying:
+> #syz fix: exact-commit-title
+> Until then the bug is still considered open and
+> new crashes with the same signature are ignored.
 
-The banner is nasty and it's actively causing harm.
-Every few month I have to explain to users that it's absolulte ok to
-ignore that banner. Nothing bad is happening with the kernel.
-The kernel is still perfectly safe for production use.
-It's not a debug kernel.
+#syz fix: blk-mq: Fix a recently introduced regression in blk_mq_realloc_hw_ctxs()
 
-What bpf_trace_printk() doc is saying that it's not recommended to use
-this helper for production bpf programs. There are better alternatives.
-It is absolutely fine to use bpf_trace_printk() to debug production and
-experimental bpf programs on production servers, android phones and
-everywhere else.
 
-> Also, note that emitting the build error is behind a Kconfig option,
-> you don't have to select it if you don't want to (the default is =y
-> which allows trace_printk).
-> 
-> If the overhead is real, we (Chrome OS) would like to make sure
-> trace_printk does not slip into production kernels (we do want to
-> provide basic tracing support so we can't just remove CONFIG_TRACING
-> as a whole which would make trace_printk no-ops). I could also imagine
-> potential security issues if people print raw pointers/sensitive data
-> in trace_printk, assuming that the code is for debugging only.
-> 
-> Also, the fact that the kernel test robot already found a stray
-> trace_printk in drivers/usb/cdns3/gadget.c makes me think that this
-> change is working as intended ,-) (we're going to need to add a few
-> Kconfig deps though for other debugging options that intentionally use
-> trace_printk).
