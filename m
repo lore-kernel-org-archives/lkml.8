@@ -2,194 +2,278 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C090F206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LK0MxrJ0"
+	by mail.kernel.org (Postfix) with ESMTP id 8CD88206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404614AbgFYMR1 (ORCPT
+        id S2404645AbgFYMRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:17:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47238 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404343AbgFYMR1 (ORCPT
+        Thu, 25 Jun 2020 08:17:32 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:6814 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404343AbgFYMRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:17:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593087445;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/HWznawKndeUwocK8lVeiz1hj7xtjaPca8SP30WJcfg=;
-        b=LK0MxrJ0Ai3EMzl9cgGwZ51f/TAil7Ue2vCQ6GorJdhJ4vW00zXg7Zji/0KoWX5kzEuFMt
-        temKITUuET+dyb+jYX764wuLAffRHCwSnMOxCX2wsLopj7JFsEhBnWAU/nK/O2VpLvh4im
-        jxg9BVoLDzXfD5gBTz3m/E50gvZ+keE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-NF0RNCAGNIWHj2tiCW1fmA-1; Thu, 25 Jun 2020 08:17:23 -0400
-X-MC-Unique: NF0RNCAGNIWHj2tiCW1fmA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4640C80400A;
-        Thu, 25 Jun 2020 12:17:22 +0000 (UTC)
-Received: from krava (unknown [10.40.193.172])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 363625D9C5;
-        Thu, 25 Jun 2020 12:17:20 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 14:17:19 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 04/13] perf stat: factor out body of event handling
- loop for system wide
-Message-ID: <20200625121719.GI2719003@krava>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
- <eeeff629-925a-530b-9803-f274337ae473@linux.intel.com>
- <20200623145630.GK2619137@krava>
- <51d5511a-e9a7-2865-c81b-57488e820f8d@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51d5511a-e9a7-2865-c81b-57488e820f8d@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Thu, 25 Jun 2020 08:17:31 -0400
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 25 Jun 2020 05:17:30 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 25 Jun 2020 05:17:27 -0700
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 25 Jun 2020 17:47:02 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 47F504A5B; Thu, 25 Jun 2020 17:47:02 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org
+Subject: [v2] drm/msm/dpu: add support for dither block in display
+Date:   Thu, 25 Jun 2020 17:46:59 +0530
+Message-Id: <1593087419-903-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 05:27:41PM +0300, Alexey Budankov wrote:
-> 
-> On 23.06.2020 17:56, Jiri Olsa wrote:
-> > On Wed, Jun 17, 2020 at 11:37:43AM +0300, Alexey Budankov wrote:
-> >>
-> >> Introduce process_timeout() and process_interval() functions that
-> >> factor out body of event handling loop for attach and system wide
-> >> monitoring use cases.
-> >>
-> >> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> >> ---
-> >>  tools/perf/builtin-stat.c | 28 ++++++++++++++++++++--------
-> >>  1 file changed, 20 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> >> index 9be020e0098a..31f7ccf9537b 100644
-> >> --- a/tools/perf/builtin-stat.c
-> >> +++ b/tools/perf/builtin-stat.c
-> >> @@ -475,6 +475,23 @@ static void process_interval(void)
-> >>  	print_counters(&rs, 0, NULL);
-> >>  }
-> >>  
-> >> +static bool print_interval(unsigned int interval, int *times)
-> >> +{
-> >> +	if (interval) {
-> >> +		process_interval();
-> >> +		if (interval_count && !(--(*times)))
-> >> +			return true;
-> >> +	}
-> >> +	return false;
-> >> +}
-> >> +
-> >> +static bool process_timeout(int timeout, unsigned int interval, int *times)
-> >> +{
-> >> +	if (timeout)
-> >> +		return true;
-> >> +	return print_interval(interval, times);
-> >> +}
-> > 
-> > I think it's confusing to keep this together, that
-> > process_timeout triggers also interval processing
-> > 
-> > I think you can keep the timeout separated from interval
-> > processing and rename the print_interval to process_interval
-> > and process_interval to __process_interval
-> 
-> Well, ok.
-> 
-> I will rename process_interval() to __process_interval() and
-> then print_interval() to process_interval().
-> 
-> Regarding timeout let's have it like this:
-> 
-> static bool process_timeout(int timeout)
-> {
-> 	return timeout ? true : false;
-> }
+This change enables dither block for primary interface
+in display.
 
-can't this just stay as value check after finished poll?
+Enabled for 6bpc in the current version.
 
-	if (timeout)
-		break;
+Changes in v1:
+ - Remove redundant error checks (Rob).
 
-and then separate call to process_interval(interval, times)?
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c     | 39 +++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c | 63 +++++++++++++++++++++----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h | 28 +++++++++++
+ 3 files changed, 121 insertions(+), 9 deletions(-)
 
-jirka
-
-> 
-> static bool process_timing_settings(int timeout, unsigned int interval, int *times)
-> {
->         bool res = process_timeout(timeout);
->         if (!res)
-> 		res = process_interval(interval, times);
-> 	return res; 
-> }
-> 
-> Ok?
-> 
-> ~Alexey
-> 
-> > 
-> > jirka
-> > 
-> >> +
-> >>  static void enable_counters(void)
-> >>  {
-> >>  	if (stat_config.initial_delay)
-> >> @@ -611,6 +628,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> >>  	struct affinity affinity;
-> >>  	int i, cpu;
-> >>  	bool second_pass = false;
-> >> +	bool stop = false;
-> >>  
-> >>  	if (interval) {
-> >>  		ts.tv_sec  = interval / USEC_PER_MSEC;
-> >> @@ -805,17 +823,11 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> >>  			psignal(WTERMSIG(status), argv[0]);
-> >>  	} else {
-> >>  		enable_counters();
-> >> -		while (!done) {
-> >> +		while (!done && !stop) {
-> >>  			nanosleep(&ts, NULL);
-> >>  			if (!is_target_alive(&target, evsel_list->core.threads))
-> >>  				break;
-> >> -			if (timeout)
-> >> -				break;
-> >> -			if (interval) {
-> >> -				process_interval();
-> >> -				if (interval_count && !(--times))
-> >> -					break;
-> >> -			}
-> >> +			stop = process_timeout(timeout, interval, &times);
-> >>  		}
-> >>  	}
-> >>  
-> >> -- 
-> >> 2.24.1
-> >>
-> >>
-> > 
-> 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 63976dc..14df5ac 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -208,6 +208,36 @@ struct dpu_encoder_virt {
+ 
+ #define to_dpu_encoder_virt(x) container_of(x, struct dpu_encoder_virt, base)
+ 
++static u32 dither_matrix[DITHER_MATRIX_SZ] = {
++	15, 7, 13, 5, 3, 11, 1, 9, 12, 4, 14, 6, 0, 8, 2, 10
++};
++
++static void _dpu_encoder_setup_dither(struct dpu_encoder_phys *phys)
++{
++	struct dpu_hw_dither_cfg dither_cfg = { 0 };
++
++	if (!phys->hw_pp || !phys->hw_pp->ops.setup_dither)
++		return;
++
++	switch (phys->connector->display_info.bpc) {
++	case 6:
++		dither_cfg.c0_bitdepth = 6;
++		dither_cfg.c1_bitdepth = 6;
++		dither_cfg.c2_bitdepth = 6;
++		dither_cfg.c3_bitdepth = 6;
++		dither_cfg.temporal_en = 0;
++		break;
++	default:
++		phys->hw_pp->ops.setup_dither(phys->hw_pp, NULL);
++		return;
++	}
++
++	memcpy(&dither_cfg.matrix, dither_matrix,
++			sizeof(u32) * DITHER_MATRIX_SZ);
++
++	phys->hw_pp->ops.setup_dither(phys->hw_pp, &dither_cfg);
++}
++
+ void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys *phys_enc,
+ 		enum dpu_intr_idx intr_idx)
+ {
+@@ -1082,6 +1112,7 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
+ 	struct dpu_encoder_virt *dpu_enc = NULL;
+ 	struct msm_drm_private *priv;
+ 	struct dpu_kms *dpu_kms;
++	int i;
+ 
+ 	if (!drm_enc || !drm_enc->dev) {
+ 		DPU_ERROR("invalid parameters\n");
+@@ -1104,6 +1135,14 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
+ 				dpu_kms->catalog);
+ 
+ 	_dpu_encoder_update_vsync_source(dpu_enc, &dpu_enc->disp_info);
++
++	if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
++		for (i = 0; i < dpu_enc->num_phys_encs; i++) {
++			struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
++
++			_dpu_encoder_setup_dither(phys);
++		}
++	}
+ }
+ 
+ void dpu_encoder_virt_runtime_resume(struct drm_encoder *drm_enc)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+index d110a40..7411ab6 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+@@ -28,6 +28,16 @@
+ #define PP_FBC_BUDGET_CTL               0x038
+ #define PP_FBC_LOSSY_MODE               0x03C
+ 
++#define PP_DITHER_EN			0x000
++#define PP_DITHER_BITDEPTH		0x004
++#define PP_DITHER_MATRIX		0x008
++
++#define DITHER_DEPTH_MAP_INDEX 9
++
++static u32 dither_depth_map[DITHER_DEPTH_MAP_INDEX] = {
++	0, 0, 0, 0, 0, 0, 0, 1, 2
++};
++
+ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
+ 		const struct dpu_mdss_cfg *m,
+ 		void __iomem *addr,
+@@ -49,6 +59,37 @@ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static void dpu_hw_pp_setup_dither(struct dpu_hw_pingpong *pp,
++				    struct dpu_hw_dither_cfg *cfg)
++{
++	struct dpu_hw_blk_reg_map *c;
++	u32 i, base, data = 0;
++
++	c = &pp->hw;
++	base = pp->caps->sblk->dither.base;
++	if (!cfg) {
++		DPU_REG_WRITE(c, base + PP_DITHER_EN, 0);
++		return;
++	}
++
++	data = dither_depth_map[cfg->c0_bitdepth] & REG_MASK(2);
++	data |= (dither_depth_map[cfg->c1_bitdepth] & REG_MASK(2)) << 2;
++	data |= (dither_depth_map[cfg->c2_bitdepth] & REG_MASK(2)) << 4;
++	data |= (dither_depth_map[cfg->c3_bitdepth] & REG_MASK(2)) << 6;
++	data |= (cfg->temporal_en) ? (1 << 8) : 0;
++
++	DPU_REG_WRITE(c, base + PP_DITHER_BITDEPTH, data);
++
++	for (i = 0; i < DITHER_MATRIX_SZ - 3; i += 4) {
++		data = (cfg->matrix[i] & REG_MASK(4)) |
++			((cfg->matrix[i + 1] & REG_MASK(4)) << 4) |
++			((cfg->matrix[i + 2] & REG_MASK(4)) << 8) |
++			((cfg->matrix[i + 3] & REG_MASK(4)) << 12);
++		DPU_REG_WRITE(c, base + PP_DITHER_MATRIX + i, data);
++	}
++	DPU_REG_WRITE(c, base + PP_DITHER_EN, 1);
++}
++
+ static int dpu_hw_pp_setup_te_config(struct dpu_hw_pingpong *pp,
+ 		struct dpu_hw_tear_check *te)
+ {
+@@ -180,15 +221,19 @@ static u32 dpu_hw_pp_get_line_count(struct dpu_hw_pingpong *pp)
+ 	return line;
+ }
+ 
+-static void _setup_pingpong_ops(struct dpu_hw_pingpong_ops *ops,
+-	const struct dpu_pingpong_cfg *hw_cap)
++static void _setup_pingpong_ops(struct dpu_hw_pingpong *c,
++				unsigned long features)
+ {
+-	ops->setup_tearcheck = dpu_hw_pp_setup_te_config;
+-	ops->enable_tearcheck = dpu_hw_pp_enable_te;
+-	ops->connect_external_te = dpu_hw_pp_connect_external_te;
+-	ops->get_vsync_info = dpu_hw_pp_get_vsync_info;
+-	ops->poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
+-	ops->get_line_count = dpu_hw_pp_get_line_count;
++	c->ops.setup_tearcheck = dpu_hw_pp_setup_te_config;
++	c->ops.enable_tearcheck = dpu_hw_pp_enable_te;
++	c->ops.connect_external_te = dpu_hw_pp_connect_external_te;
++	c->ops.get_vsync_info = dpu_hw_pp_get_vsync_info;
++	c->ops.poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
++	c->ops.get_line_count = dpu_hw_pp_get_line_count;
++
++	if (test_bit(DPU_PINGPONG_DITHER, &features) &&
++		IS_SC7180_TARGET(c->hw.hwversion))
++		c->ops.setup_dither = dpu_hw_pp_setup_dither;
+ };
+ 
+ static struct dpu_hw_blk_ops dpu_hw_ops;
+@@ -212,7 +257,7 @@ struct dpu_hw_pingpong *dpu_hw_pingpong_init(enum dpu_pingpong idx,
+ 
+ 	c->idx = idx;
+ 	c->caps = cfg;
+-	_setup_pingpong_ops(&c->ops, c->caps);
++	_setup_pingpong_ops(c, c->caps->features);
+ 
+ 	dpu_hw_blk_init(&c->base, DPU_HW_BLK_PINGPONG, idx, &dpu_hw_ops);
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
+index d73cb73..065996b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
+@@ -10,6 +10,8 @@
+ #include "dpu_hw_util.h"
+ #include "dpu_hw_blk.h"
+ 
++#define DITHER_MATRIX_SZ 16
++
+ struct dpu_hw_pingpong;
+ 
+ struct dpu_hw_tear_check {
+@@ -35,6 +37,26 @@ struct dpu_hw_pp_vsync_info {
+ };
+ 
+ /**
++ * struct dpu_hw_dither_cfg - dither feature structure
++ * @flags: for customizing operations
++ * @temporal_en: temperal dither enable
++ * @c0_bitdepth: c0 component bit depth
++ * @c1_bitdepth: c1 component bit depth
++ * @c2_bitdepth: c2 component bit depth
++ * @c3_bitdepth: c2 component bit depth
++ * @matrix: dither strength matrix
++ */
++struct dpu_hw_dither_cfg {
++	u64 flags;
++	u32 temporal_en;
++	u32 c0_bitdepth;
++	u32 c1_bitdepth;
++	u32 c2_bitdepth;
++	u32 c3_bitdepth;
++	u32 matrix[DITHER_MATRIX_SZ];
++};
++
++/**
+  *
+  * struct dpu_hw_pingpong_ops : Interface to the pingpong Hw driver functions
+  *  Assumption is these functions will be called after clocks are enabled
+@@ -82,6 +104,12 @@ struct dpu_hw_pingpong_ops {
+ 	 * Obtain current vertical line counter
+ 	 */
+ 	u32 (*get_line_count)(struct dpu_hw_pingpong *pp);
++
++	/**
++	 * Setup dither matix for pingpong block
++	 */
++	void (*setup_dither)(struct dpu_hw_pingpong *pp,
++			struct dpu_hw_dither_cfg *cfg);
+ };
+ 
+ struct dpu_hw_pingpong {
+-- 
+1.9.1
 
