@@ -2,68 +2,111 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B208BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBBDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4EB206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593116121;
-	bh=qwTIv2U439qORpBFj7RnUfDqRszJm9HA0FxIhFmYUvg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=KKpzBNlb+naB80jb9SQw5eAelPy6J4qup2rFSx0h0bvme9HTYdk5EDcBrmZZIKpAb
-	 1FxD1oXiunAjd3dNNcpozQZraAkh+L7Nqq1i8o0tWEIKFP9VH7gCk38IySqlu48qkV
-	 NAuZ3H8IevJX/qqXIYawTA7wPIJVQ53IsSEoi1Pc=
+	by mail.kernel.org (Postfix) with ESMTP id 6F38320767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:16:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuYJ2nON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436530AbgFYUPU (ORCPT
+        id S2405064AbgFYUQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436497AbgFYUPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:15:18 -0400
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593116118;
-        bh=qwTIv2U439qORpBFj7RnUfDqRszJm9HA0FxIhFmYUvg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=HUY1Q/IlS5N8/B/CfNh/LMVSxRTe3zqyHy9l2IDAqi5lPUbybSAPQVGhWq0VLLVoF
-         0nQyUPa+XKuVKRwHz+mqXFEJ3zl1QkKbm+gM9MuujspJe18/7YywNOvtP03Ddv4rFI
-         w22Btc7B4itM7pL7jxX864WaxrAp3X0dWhxJB5cs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200625175610.GA3402155@mellanox.com>
-References: <20200625175610.GA3402155@mellanox.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200625175610.GA3402155@mellanox.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: 38fd98afeeb79d3b148db49f81f2ec6a37a4ee00
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 87d93e9a91c76bcb45112d863ef72aab41e01879
-Message-Id: <159311611861.12359.11117737871815817919.pr-tracker-bot@kernel.org>
-Date:   Thu, 25 Jun 2020 20:15:18 +0000
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Thu, 25 Jun 2020 16:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390554AbgFYUQY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 16:16:24 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B0CC08C5C1;
+        Thu, 25 Jun 2020 13:16:23 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id m21so5213843eds.13;
+        Thu, 25 Jun 2020 13:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4RTgSGzbVQGxe1Wrk0GYD31ifiKnEncm3jN8OFOfbbw=;
+        b=EuYJ2nONckVf78Rh3GH+ZNH4xnD0JE8zSms2QLK7bTykV8otY6jG/MUuLVhMFqha5l
+         q2craLtfjmHwX1TZvMXkLMNWM7EC/cOT1Htvj4TtZA3K0p0pquLOxgLdZH1tHB7/tuz9
+         WNKfVmohSeHM4EzXT5FyDX2KFBYz32uNbzRGka9ack9a70AwwLx0q0783LbGG3NUBj51
+         wBqzy+WDM6e4lvWy+xkbdyKyz7PZO3z6OC+bWJsoGseOWCDo/kOmpU7An8tOMGu/Bxvi
+         /A1ZFw+Xn5fzW4L/8cgokCvg8HsiEIlotnXZBAu4rM+CE4QcPg29kG3kren3LS66dRvq
+         yy4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4RTgSGzbVQGxe1Wrk0GYD31ifiKnEncm3jN8OFOfbbw=;
+        b=VPsKvpQz3kQvRSUe+sE6nLKDTOeZkeh4aWQptDl4gG++hG+cUUR5sQuDrijwioiJiw
+         DsZGIeUIWoBn20r3aUZ6x14VXENE+Yq7ecP49EMM9oobfWxSTNnBlUnt0uSCeuD0MsNn
+         gzt8TdWHdzdTGn2mmcol4xMC+Z/b+DC0qmFI4I8nStgFajnZXb4jfljzGGjgVnNswWRB
+         mQznSP1LViOympV1vR+4keN5M02cB9Xhm/GtHmbfny/BxJwypSJanNCtG+V5C+rDqcvR
+         NMWcM0wp7WLXysVVc5mlka4IrLJVO8KSuizFZnopqMQEWtWyoIa3VRB3m9D9GE+VI6Uk
+         ICoQ==
+X-Gm-Message-State: AOAM531ll2FEDPZQtTnZakBSZuGpMKsXlogQmOezEWrhJv1tJ3qafT+l
+        Y8gBIrtuJkx32QCc5cJ1bKUqCtyhZgU=
+X-Google-Smtp-Source: ABdhPJxE3NAFUgzL3jutxzQiFiUv3EohbFjt7N3ll+3zgLU5YGlUmRf8k9wlQsACF/tfq9SiXqANpg==
+X-Received: by 2002:a05:6402:17ce:: with SMTP id s14mr33350537edy.53.1593116182601;
+        Thu, 25 Jun 2020 13:16:22 -0700 (PDT)
+Received: from localhost.localdomain ([188.24.137.55])
+        by smtp.gmail.com with ESMTPSA id ce15sm3495265ejc.86.2020.06.25.13.16.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 13:16:22 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH 0/3] Add Actions Semi S500 pinctrl support
+Date:   Thu, 25 Jun 2020 23:16:17 +0300
+Message-Id: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 25 Jun 2020 14:56:10 -0300:
+This patchset adds pinctrl support for Actions Semi S500 SoC.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/87d93e9a91c76bcb45112d863ef72aab41e01879
+The pinctrl driver has been verified using RoseapplePi, the SBC for
+which an initial support has been provided via:
+https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
 
-Thank you!
+The DTS related changes, including the required clock support, will be
+available in the upcoming patch series.
+
+Thanks,
+Cristi
+
+Cristian Ciocaltea (3):
+  dt-bindings: pinctrl: Add bindings for Actions S500 SoC
+  pinctrl: actions: Add Actions S500 pinctrl driver
+  MAINTAINERS: Add pinctrl binding entry for Actions Semi S500
+
+ .../pinctrl/actions,s500-pinctrl.yaml         |  228 +++
+ MAINTAINERS                                   |    1 +
+ drivers/pinctrl/actions/Kconfig               |    6 +
+ drivers/pinctrl/actions/Makefile              |    1 +
+ drivers/pinctrl/actions/pinctrl-s500.c        | 1727 +++++++++++++++++
+ 5 files changed, 1963 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.27.0
+
