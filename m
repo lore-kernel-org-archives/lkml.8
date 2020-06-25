@@ -3,45 +3,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E03C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA3EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48FB02072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5BD2081A
+	for <linux-kernel@archiver.kernel.org>; Fri, 26 Jun 2020 00:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgFZAGs (ORCPT
+        id S1726735AbgFZAG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:06:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31310 "EHLO mga02.intel.com"
+        Thu, 25 Jun 2020 20:06:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11576 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgFZAGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:06:46 -0400
-IronPort-SDR: vgG9uCLeWnfnqPDvVdAqwb4r5QYk8dr8xRt9nLflRYsqQJP+pFKDdei+TzALka9QRNg5htNJXT
- 2dWxkYlGxxTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="133533539"
+        id S1726354AbgFZAG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:06:57 -0400
+IronPort-SDR: coOwfxotTKhf5cGzWFt71tnIPGd0g70oPjneoo/WCO4TXR0xEFF/plk2VJLz+4aRkYQOXvlV+L
+ rMX4jXOQkdOw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="229870844"
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="133533539"
+   d="scan'208";a="229870844"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:06:45 -0700
-IronPort-SDR: nXubtfr7BR5Vziq04NpAh0ZbhgYvtfWTrCe9fMe6kL+x4UD/r48AFPklknklMe5ko1OhVtcOPt
- HZLC+2rbNN6Q==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:06:56 -0700
+IronPort-SDR: rnMUlXvABKnvDX7FrKhx1Qg+l4cDNKEf+QmLz7CR9oEO2mUPxBRdSgTIvti8KqG7sE4CxI0ZQX
+ 8cKphOtS+N9Q==
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="479824530"
+   d="scan'208";a="279989435"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:06:45 -0700
-Subject: [PATCH 02/12] ACPI: NFIT: Move bus_dsm_mask out of generic
- nvdimm_bus_descriptor
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 17:06:56 -0700
+Subject: [PATCH 04/12] tools/testing/nvdimm: Cleanup dimm index passing
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-nvdimm@lists.01.org
 Cc:     vishal.l.verma@intel.com, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 25 Jun 2020 16:50:30 -0700
-Message-ID: <159312903093.1850128.17361222769079833899.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 25 Jun 2020 16:50:42 -0700
+Message-ID: <159312904210.1850128.9566374963556922854.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -53,120 +52,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DSMs are strictly an ACPI mechanism, evict the bus_dsm_mask concept from
-the generic 'struct nvdimm_bus_descriptor' object.
-
-As a side effect the test facility ->bus_nfit_cmd_force_en is no longer
-necessary. The test infrastructure can communicate that information
-directly in ->bus_dsm_mask.
+The ND_CMD_CALL path only applies to the nfit_test0 emulated DIMMs.
+Cleanup occurrences of (i - t->dcr_idx) since that offset fixup only
+applies to cases where nfit_test1 needs a bus-local index.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/acpi/nfit/core.c         |    8 ++++----
- drivers/acpi/nfit/nfit.h         |    2 +-
- include/linux/libnvdimm.h        |    1 -
- tools/testing/nvdimm/test/nfit.c |   16 ++++++++--------
- 4 files changed, 13 insertions(+), 14 deletions(-)
+ tools/testing/nvdimm/test/nfit.c |   34 ++++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 1f72ce1a782b..9fdd655bdf0e 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -478,7 +478,7 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 
- 		cmd_name = nvdimm_bus_cmd_name(cmd);
- 		cmd_mask = nd_desc->cmd_mask;
--		dsm_mask = nd_desc->bus_dsm_mask;
-+		dsm_mask = acpi_desc->bus_dsm_mask;
- 		desc = nd_cmd_bus_desc(cmd);
- 		guid = to_nfit_uuid(NFIT_DEV_BUS);
- 		handle = adev->handle;
-@@ -1238,8 +1238,9 @@ static ssize_t bus_dsm_mask_show(struct device *dev,
- {
- 	struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
- 	struct nvdimm_bus_descriptor *nd_desc = to_nd_desc(nvdimm_bus);
-+	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
- 
--	return sprintf(buf, "%#lx\n", nd_desc->bus_dsm_mask);
-+	return sprintf(buf, "%#lx\n", acpi_desc->bus_dsm_mask);
- }
- static struct device_attribute dev_attr_bus_dsm_mask =
- 		__ATTR(dsm_mask, 0444, bus_dsm_mask_show, NULL);
-@@ -2157,7 +2158,6 @@ static void acpi_nfit_init_dsms(struct acpi_nfit_desc *acpi_desc)
- 	int i;
- 
- 	nd_desc->cmd_mask = acpi_desc->bus_cmd_force_en;
--	nd_desc->bus_dsm_mask = acpi_desc->bus_nfit_cmd_force_en;
- 	set_bit(ND_CMD_CALL, &nd_desc->cmd_mask);
- 	set_bit(NVDIMM_BUS_FAMILY_NFIT, &nd_desc->bus_family_mask);
- 
-@@ -2180,7 +2180,7 @@ static void acpi_nfit_init_dsms(struct acpi_nfit_desc *acpi_desc)
- 		(1 << NFIT_CMD_ARS_INJECT_GET);
- 	for_each_set_bit(i, &dsm_mask, BITS_PER_LONG)
- 		if (acpi_check_dsm(adev->handle, guid, 1, 1ULL << i))
--			set_bit(i, &nd_desc->bus_dsm_mask);
-+			set_bit(i, &acpi_desc->bus_dsm_mask);
- }
- 
- static ssize_t range_index_show(struct device *dev,
-diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
-index 5c5e7ebba8dc..da097149d94d 100644
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -237,7 +237,7 @@ struct acpi_nfit_desc {
- 	unsigned long scrub_flags;
- 	unsigned long dimm_cmd_force_en;
- 	unsigned long bus_cmd_force_en;
--	unsigned long bus_nfit_cmd_force_en;
-+	unsigned long bus_dsm_mask;
- 	unsigned int platform_cap;
- 	unsigned int scrub_tmo;
- 	int (*blk_do_io)(struct nd_blk_region *ndbr, resource_size_t dpa,
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index bd39a2cf7972..ad9898ece7d3 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -76,7 +76,6 @@ typedef int (*ndctl_fn)(struct nvdimm_bus_descriptor *nd_desc,
- struct device_node;
- struct nvdimm_bus_descriptor {
- 	const struct attribute_group **attr_groups;
--	unsigned long bus_dsm_mask;
- 	unsigned long cmd_mask;
- 	unsigned long dimm_family_mask;
- 	unsigned long bus_family_mask;
 diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
-index a8ee5c4d41eb..a59174ba1d2a 100644
+index a59174ba1d2a..ddf9b3095bfa 100644
 --- a/tools/testing/nvdimm/test/nfit.c
 +++ b/tools/testing/nvdimm/test/nfit.c
-@@ -2507,10 +2507,10 @@ static void nfit_test0_setup(struct nfit_test *t)
- 	set_bit(ND_CMD_ARS_STATUS, &acpi_desc->bus_cmd_force_en);
- 	set_bit(ND_CMD_CLEAR_ERROR, &acpi_desc->bus_cmd_force_en);
- 	set_bit(ND_CMD_CALL, &acpi_desc->bus_cmd_force_en);
--	set_bit(NFIT_CMD_TRANSLATE_SPA, &acpi_desc->bus_nfit_cmd_force_en);
--	set_bit(NFIT_CMD_ARS_INJECT_SET, &acpi_desc->bus_nfit_cmd_force_en);
--	set_bit(NFIT_CMD_ARS_INJECT_CLEAR, &acpi_desc->bus_nfit_cmd_force_en);
--	set_bit(NFIT_CMD_ARS_INJECT_GET, &acpi_desc->bus_nfit_cmd_force_en);
-+	set_bit(NFIT_CMD_TRANSLATE_SPA, &acpi_desc->bus_dsm_mask);
-+	set_bit(NFIT_CMD_ARS_INJECT_SET, &acpi_desc->bus_dsm_mask);
-+	set_bit(NFIT_CMD_ARS_INJECT_CLEAR, &acpi_desc->bus_dsm_mask);
-+	set_bit(NFIT_CMD_ARS_INJECT_GET, &acpi_desc->bus_dsm_mask);
- 	set_bit(ND_INTEL_FW_GET_INFO, &acpi_desc->dimm_cmd_force_en);
- 	set_bit(ND_INTEL_FW_START_UPDATE, &acpi_desc->dimm_cmd_force_en);
- 	set_bit(ND_INTEL_FW_SEND_DATA, &acpi_desc->dimm_cmd_force_en);
-@@ -2731,11 +2731,11 @@ static int nfit_ctl_test(struct device *dev)
- 			.module = THIS_MODULE,
- 			.provider_name = "ACPI.NFIT",
- 			.ndctl = acpi_nfit_ctl,
--			.bus_dsm_mask = 1UL << NFIT_CMD_TRANSLATE_SPA
--				| 1UL << NFIT_CMD_ARS_INJECT_SET
--				| 1UL << NFIT_CMD_ARS_INJECT_CLEAR
--				| 1UL << NFIT_CMD_ARS_INJECT_GET,
- 		},
-+		.bus_dsm_mask = 1UL << NFIT_CMD_TRANSLATE_SPA
-+			| 1UL << NFIT_CMD_ARS_INJECT_SET
-+			| 1UL << NFIT_CMD_ARS_INJECT_CLEAR
-+			| 1UL << NFIT_CMD_ARS_INJECT_GET,
- 		.dev = &adev->dev,
- 	};
+@@ -1224,6 +1224,11 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
+ 			i = get_dimm(nfit_mem, func);
+ 			if (i < 0)
+ 				return i;
++			if (i >= NUM_DCR) {
++				dev_WARN_ONCE(&t->pdev.dev, 1,
++						"ND_CMD_CALL only valid for nfit_test0\n");
++				return -EINVAL;
++			}
  
+ 			switch (func) {
+ 			case NVDIMM_INTEL_GET_SECURITY_STATE:
+@@ -1252,11 +1257,11 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
+ 				break;
+ 			case NVDIMM_INTEL_OVERWRITE:
+ 				rc = nd_intel_test_cmd_overwrite(t,
+-						buf, buf_len, i - t->dcr_idx);
++						buf, buf_len, i);
+ 				break;
+ 			case NVDIMM_INTEL_QUERY_OVERWRITE:
+ 				rc = nd_intel_test_cmd_query_overwrite(t,
+-						buf, buf_len, i - t->dcr_idx);
++						buf, buf_len, i);
+ 				break;
+ 			case NVDIMM_INTEL_SET_MASTER_PASSPHRASE:
+ 				rc = nd_intel_test_cmd_master_set_pass(t,
+@@ -1272,48 +1277,45 @@ static int nfit_test_ctl(struct nvdimm_bus_descriptor *nd_desc,
+ 				break;
+ 			case ND_INTEL_FW_GET_INFO:
+ 				rc = nd_intel_test_get_fw_info(t, buf,
+-						buf_len, i - t->dcr_idx);
++						buf_len, i);
+ 				break;
+ 			case ND_INTEL_FW_START_UPDATE:
+ 				rc = nd_intel_test_start_update(t, buf,
+-						buf_len, i - t->dcr_idx);
++						buf_len, i);
+ 				break;
+ 			case ND_INTEL_FW_SEND_DATA:
+ 				rc = nd_intel_test_send_data(t, buf,
+-						buf_len, i - t->dcr_idx);
++						buf_len, i);
+ 				break;
+ 			case ND_INTEL_FW_FINISH_UPDATE:
+ 				rc = nd_intel_test_finish_fw(t, buf,
+-						buf_len, i - t->dcr_idx);
++						buf_len, i);
+ 				break;
+ 			case ND_INTEL_FW_FINISH_QUERY:
+ 				rc = nd_intel_test_finish_query(t, buf,
+-						buf_len, i - t->dcr_idx);
++						buf_len, i);
+ 				break;
+ 			case ND_INTEL_SMART:
+ 				rc = nfit_test_cmd_smart(buf, buf_len,
+-						&t->smart[i - t->dcr_idx]);
++						&t->smart[i]);
+ 				break;
+ 			case ND_INTEL_SMART_THRESHOLD:
+ 				rc = nfit_test_cmd_smart_threshold(buf,
+ 						buf_len,
+-						&t->smart_threshold[i -
+-							t->dcr_idx]);
++						&t->smart_threshold[i]);
+ 				break;
+ 			case ND_INTEL_SMART_SET_THRESHOLD:
+ 				rc = nfit_test_cmd_smart_set_threshold(buf,
+ 						buf_len,
+-						&t->smart_threshold[i -
+-							t->dcr_idx],
+-						&t->smart[i - t->dcr_idx],
++						&t->smart_threshold[i],
++						&t->smart[i],
+ 						&t->pdev.dev, t->dimm_dev[i]);
+ 				break;
+ 			case ND_INTEL_SMART_INJECT:
+ 				rc = nfit_test_cmd_smart_inject(buf,
+ 						buf_len,
+-						&t->smart_threshold[i -
+-							t->dcr_idx],
+-						&t->smart[i - t->dcr_idx],
++						&t->smart_threshold[i],
++						&t->smart[i],
+ 						&t->pdev.dev, t->dimm_dev[i]);
+ 				break;
+ 			default:
 
