@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F74C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 375392081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C008207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:14:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PahT+4XI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4sr0o7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436511AbgFYSNt (ORCPT
+        id S2407095AbgFYSOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
+        Thu, 25 Jun 2020 14:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407074AbgFYSNm (ORCPT
+        with ESMTP id S2407069AbgFYSNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:13:42 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1715C08C5C1;
-        Thu, 25 Jun 2020 11:13:41 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id w6so6866237ejq.6;
-        Thu, 25 Jun 2020 11:13:41 -0700 (PDT)
+        Thu, 25 Jun 2020 14:13:32 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857F0C08C5C1;
+        Thu, 25 Jun 2020 11:13:31 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l12so6828540ejn.10;
+        Thu, 25 Jun 2020 11:13:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mLiV2Xm7mdvGns4UhpSRX2p+DTCzoHG++quz1vD7S9o=;
-        b=PahT+4XIh+ZCkxwD159puAV+xtrWhNCRF2idwIMFNsX7193zMKswKCPNBRKW2xj7tB
-         LZ4/AB2z4phuDkBMPsLrrAQzoLhyPfLP4vmCBlsxtDvZqbVUm/ww5gpi0AZghfmwCZ6m
-         DdZNzLh4DiMjxg9Xl2YXU1hYGVl99fFl2KdqoKW5mEXVAsJE6ug3J8un+4JCbS0GQLCH
-         DoVLwccUfDDyxzgaAkRBMvfFiePAV92an1cVfYXfd3JeUHVuyXJSa224WlTW3OKRpua8
-         MbQUe3Py9AtKVAlSbv0B9IXOXuRJ/cLyuRJguGE/kf6nuH5if7Br/RMHW9ZFHZiI5L6z
-         8WcQ==
+        bh=/mdCv9AcSwvn1xJCdZahbAIWOnw7ZszwaJLHBjtLMCw=;
+        b=O4sr0o7iKJjER1cg5Z9cjEYGPFXfor0Na5/b3Tci+fdZy+s83omN4hujU99hlxYtXx
+         Ct1Z+BUQjk4wzvnLjUek6AuvoZEYVcfTmTYkSAFce68BVEERGSZh2QB9vCOM0kZAucoK
+         ylpfBBt/XKzt3nyZUJG9JOsj3dhMlFpJ58717ds82VEpvQH2964MmDBOSUxZiGDC45qr
+         wGAf3bk7AsxHPfFaEWk4o+5wsGD9K2E0RAzHKcadZnqaSJVEN5l4CKYjwQ5R+OTXOdef
+         KI4ShmBSudc21XABGFk7j0GaGhQxCGLpDsd01kjvAx950vp+3ps4+zfZikW15o1h3mEe
+         fO3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mLiV2Xm7mdvGns4UhpSRX2p+DTCzoHG++quz1vD7S9o=;
-        b=Js/D8bwLBImBGyFW4iApF2ZKmPQyOpKnf3YfCPka/WeKhdg+HE1rYtUPPMVcyUmUVe
-         QuSAS8OKkNJeuPdMFwkFB8YiFmeuxJ4hihPobMexD1XzzLoBJQzUwXHpD6o3IG8JZYTb
-         Ot00VFyvu2Yo6pjxFqsq/+Q86Caqxihfjc8Vh7vpeF4TS1Zh+7tBVs7+Sb7T9qhNkLv5
-         R4ULQV0HC4SyMCqglHK38f1R8JWRjTPMAM7ULBzY21jreJZ54AkiUiKgeSBhQKn7SYBZ
-         tMfjy16XjrNV1PR7AIjvm3nCaB8KB5g0PlCKkiTNaEDZVn6QQ4Gb/AQecGwpB2nhGpUl
-         yj6Q==
-X-Gm-Message-State: AOAM5335Ff1+N3QAY+a6RL3MH4zbEX1OiDIGAs7AlMpqVtMp20GkqTcs
-        fzRmqpouJ2B23Ma81+DjPk4=
-X-Google-Smtp-Source: ABdhPJy2gZzpNoq7nCyrGqfwEWjurVYbvJEz6IqA1pvr4ByZjtUDRCTJOHDp4e7Yni+ONXNVzR4zrA==
-X-Received: by 2002:a17:906:fc20:: with SMTP id ov32mr28848453ejb.531.1593108820684;
-        Thu, 25 Jun 2020 11:13:40 -0700 (PDT)
+        bh=/mdCv9AcSwvn1xJCdZahbAIWOnw7ZszwaJLHBjtLMCw=;
+        b=hp1c2s+QteLa4RiWKaaCF2LA+rlKk4b1d0yEIVpJdK2nwDqzE7tm5wx0JaerQN0VpS
+         bmgVinPdmuFRYHhbgxHQGL+40FMGwPBCLCrMK0SUqobsep+jAivgkbL4uishJDy6D8Jr
+         1RXPV0rb00WSFL27XheuMweP5JWPdSy/8XzQevD5Tt2a/xqlJ84OuIc4ss/rwQ2NwKIJ
+         rpezhrxU2N5vo/6xTEgz7unLudo5YddnLPbdD634tuKMqVpquAsWAUPIz6snN6Hw9IcU
+         23KVE31VP962UTWLkFf7nJMl92zPWGjRLJC34YgxxCbtFc5Tb1xWKYXMXdXZ4oud24l4
+         x+Cg==
+X-Gm-Message-State: AOAM533sdmdM9UBV9NUUx3/g8AWwLVqLPJAIsrjov3JtXM2+udKa9zRp
+        B60LJza+hDDLkmtmZsVbYOA=
+X-Google-Smtp-Source: ABdhPJzGhZC4PJgtvWmcTt9l6HMu8biB2dpppct5bxPGSolWyS2E/qfhD0lgDe3WTxfVtHRTRecy5g==
+X-Received: by 2002:a17:906:cc0e:: with SMTP id ml14mr16933281ejb.432.1593108810205;
+        Thu, 25 Jun 2020 11:13:30 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id p4sm19511112edj.64.2020.06.25.11.13.39
+        by smtp.googlemail.com with ESMTPSA id p4sm19511112edj.64.2020.06.25.11.13.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:13:40 -0700 (PDT)
+        Thu, 25 Jun 2020 11:13:29 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -71,9 +71,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/13] arm64: dts: qcom: Add Microsoft Lumia 950 (Talkman) device tree
-Date:   Thu, 25 Jun 2020 20:13:01 +0200
-Message-Id: <20200625181303.129874-14-konradybcio@gmail.com>
+Subject: [PATCH v2 09/13] arm64: dts: msm8992: Add PMU node
+Date:   Thu, 25 Jun 2020 20:12:57 +0200
+Message-Id: <20200625181303.129874-10-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625181303.129874-1-konradybcio@gmail.com>
 References: <20200625181303.129874-1-konradybcio@gmail.com>
@@ -84,86 +84,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree support for the Microsoft Lumia 950 smartphone.
-It is based on msm8992 and supports booting Linux via a custom
-EDK2 port.
-
-Currently it supports:
-* Screen console via EFIFB
-* Booting via EFI_STUB
-* SDHCI
-* I2C
-* PSCI core bringup
-
-Please note that there is an implementation of EL2 startup
-on this board, but it requires the user to resign from
-PSCI and use spin-table instead. This revision sticks with
-PSCI.
+Add the PMU so we can get proper perf event support on this SoC.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../dts/qcom/msm8992-msft-lumia-talkman.dts   | 39 +++++++++++++++++++
- 2 files changed, 40 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 344cdeb68b16..77256eef9520 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a5u-eur.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-msft-lumia-talkman.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-xiaomi-libra.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts b/arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts
-new file mode 100644
-index 000000000000..3cc01f02219d
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, Konrad Dybcio
-+ */
-+
-+/dts-v1/;
-+
-+#include "msm8992.dtsi"
-+#include "pm8994.dtsi"
-+#include "pmi8994.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/gpio-keys.h>
-+
-+/ {
-+	model = "Microsoft Lumia 950";
-+	compatible = "microsoft,talkman", "qcom,msm8992";
-+
-+	/* Most Lumia 950 users use GRUB to load their kernels,
-+	 * hence there is no need for msm-id and friends.
-+	 */
-+
-+	/* This enables graphical output via bootloader-enabled display.
-+	 * acpi=no is required due to WP platforms having ACPI support, but
-+	 * only for Windows-based OSes.
-+	 */
-+	chosen {
-+		bootargs = "earlycon=efifb console=efifb acpi=no";
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index e8b801813f14..c4c9a108ae1e 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -130,6 +130,11 @@ memory {
+ 		reg = <0 0 0 0>;
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
 +	};
-+};
 +
-+&sdhc_1 {
-+	status = "okay";
-+
-+	mmc-hs200-1_8v;
-+};
+ 	reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
 -- 
 2.27.0
 
