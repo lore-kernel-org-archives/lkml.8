@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D79C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F9920791
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0CD420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407252AbgFYVgn (ORCPT
+        id S2407261AbgFYVgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:36:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19172 "EHLO mga02.intel.com"
+        Thu, 25 Jun 2020 17:36:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:51532 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403961AbgFYVgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:36:43 -0400
-IronPort-SDR: 4y+2OUMKHaougP9GJszlcANM/vUPtg/kbOMAympmMAxbv0NfJF6j0jdXBKFoNloV/isoAvh8Hl
- JFUxvDAPGEdA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="133493179"
+        id S2403961AbgFYVgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:36:45 -0400
+IronPort-SDR: UH16P5G8Q4lpWCPWAYgR/Rfr3MjKrmTPXP0vN3aXxuE38shvjx4MU2QIJWAXkeAahyjyaRQFsY
+ ENWyef8aNQrg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="146582706"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="133493179"
+   d="scan'208";a="146582706"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:36:42 -0700
-IronPort-SDR: XYTf+nAR8gBQmKFSW/9r7Nt1iNG21HoispPXOo8wjUX1ZK79k6ZSE0K/h2bhLQJ6hMaVllWQsB
- f0J+pfMZj4PA==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:36:44 -0700
+IronPort-SDR: 6yYv4fTDpqzdy0z6PKTCbN4N4Sy171vsaF1yHXNW/aiW1OefUCPpDek9FpGcKitWF12V2AKNzO
+ ZZ7mmUdaZ8Cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="423878481"
+   d="scan'208";a="264042919"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 25 Jun 2020 14:36:41 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 14:36:43 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1joZY0-0001pF-CC; Thu, 25 Jun 2020 21:36:40 +0000
-Date:   Fri, 26 Jun 2020 05:36:33 +0800
+        id 1joZY2-0001pL-Ia; Thu, 25 Jun 2020 21:36:42 +0000
+Date:   Fri, 26 Jun 2020 05:36:29 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 489eb109cb9da24d05cc23a6c8fa4832766ddcca
-Message-ID: <5ef518e1.Kpq9LqbLbgD8Li8b%lkp@intel.com>
+Subject: [tip:x86/misc] BUILD SUCCESS
+ a7e1f67ed29f0c339e2aa7483d13b085127566ab
+Message-ID: <5ef518dd.4WsMpWNjBDf9b3/6%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,13 +54,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 489eb109cb9da24d05cc23a6c8fa4832766ddcca  Merge branch 'WIP.core/headers'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/misc
+branch HEAD: a7e1f67ed29f0c339e2aa7483d13b085127566ab  x86/msr: Filter MSR writes
 
 elapsed time: 727m
 
-configs tested: 117
-configs skipped: 6
+configs tested: 105
+configs skipped: 94
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -76,31 +76,19 @@ arm64                             allnoconfig
 arc                     haps_hs_smp_defconfig
 powerpc                          g5_defconfig
 mips                        jmr3927_defconfig
-sh                           se7751_defconfig
-arm                       imx_v6_v7_defconfig
-arm                            xcep_defconfig
-arm                      pxa255-idp_defconfig
-arm                          tango4_defconfig
 arm                       mainstone_defconfig
 arm                          moxart_defconfig
 m68k                            q40_defconfig
 sh                          sdk7786_defconfig
 s390                              allnoconfig
 arm                            mps2_defconfig
-arm                             pxa_defconfig
-arm                         lpc18xx_defconfig
-mips                           ip27_defconfig
-arm                     eseries_pxa_defconfig
-mips                      loongson3_defconfig
 i386                             alldefconfig
 nds32                             allnoconfig
 sh                           se7724_defconfig
 mips                     loongson1b_defconfig
-m68k                          amiga_defconfig
-sh                         microdev_defconfig
-microblaze                      mmu_defconfig
 parisc                            allnoconfig
 arm                            lart_defconfig
+mips                      loongson3_defconfig
 i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
@@ -142,9 +130,9 @@ parisc                           allyesconfig
 parisc                           allmodconfig
 powerpc                             defconfig
 powerpc                          allyesconfig
+powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
-powerpc                          rhel-kconfig
 i386                 randconfig-a002-20200624
 i386                 randconfig-a006-20200624
 i386                 randconfig-a003-20200624
