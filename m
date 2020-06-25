@@ -2,101 +2,125 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA895C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C57207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE745207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 08:24:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ibvgrw/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390521AbgFYIYG (ORCPT
+        id S2390574AbgFYIY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:24:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37286 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390460AbgFYIYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:24:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 921C7ACF1;
-        Thu, 25 Jun 2020 08:24:03 +0000 (UTC)
-Message-ID: <600f9f780eae75f47cf6c975dcfe172c6b151ac5.camel@suse.de>
-Subject: Re: [PATCH 50/50] staging: vchiq: Move vchiq.h into include
- directory
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Date:   Thu, 25 Jun 2020 10:24:01 +0200
-In-Reply-To: <20200623164235.29566-51-nsaenzjulienne@suse.de>
-References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
-         <20200623164235.29566-51-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-wf8ryFCmpQGjVNK0SP/1"
-User-Agent: Evolution 3.36.3 
+        Thu, 25 Jun 2020 04:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389522AbgFYIY4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:24:56 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C13C061573;
+        Thu, 25 Jun 2020 01:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3AMdYg8fQNUtXAfj2fZZ8NPZ9U5EFgepOOFBuun2GQY=; b=ibvgrw/6VgAeXKGL/ZvFOV5Ile
+        k/DG2hTUgCNpBFh0SVRZtiOzJ0tqIzRrnNRTZQdCWgPu3f3vKwwqumEO3VAaSPjMg/ls3R3fwVjKM
+        Nhs12sSgDR+t8SDyMh/h3ITlxN3ZcgcTvbI7CAd5D8YCcq8qCphd0KnXhjA+ZVPLtaGvU/eak1k++
+        6iVJ/9DrfMDdhwuZ5/zvsYALWHu77JxkNZKUQ+1riHrSFoU2dIT3hgk0fU4PGeIKpR0kVxQwAc5hC
+        H0eBkD5up1mt7ynRtI/herLh3Yr5SxMM5rpkTFOeHKnOBtnv2OaV3fJ7KHA9qL8uVglbMrLJEM+Gs
+        wUku04xw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1joNBS-0000yr-J3; Thu, 25 Jun 2020 08:24:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2EE4E301A7A;
+        Thu, 25 Jun 2020 10:24:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 234DB2215AD45; Thu, 25 Jun 2020 10:24:33 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 10:24:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 00/22] add support for Clang LTO
+Message-ID: <20200625082433.GC117543@hirez.programming.kicks-ass.net>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200624211540.GS4817@hirez.programming.kicks-ass.net>
+ <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
+ <20200625080313.GY4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625080313.GY4817@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 10:03:13AM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 24, 2020 at 02:31:36PM -0700, Nick Desaulniers wrote:
+> > On Wed, Jun 24, 2020 at 2:15 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Wed, Jun 24, 2020 at 01:31:38PM -0700, Sami Tolvanen wrote:
+> > > > This patch series adds support for building x86_64 and arm64 kernels
+> > > > with Clang's Link Time Optimization (LTO).
+> > > >
+> > > > In addition to performance, the primary motivation for LTO is to allow
+> > > > Clang's Control-Flow Integrity (CFI) to be used in the kernel. Google's
+> > > > Pixel devices have shipped with LTO+CFI kernels since 2018.
+> > > >
+> > > > Most of the patches are build system changes for handling LLVM bitcode,
+> > > > which Clang produces with LTO instead of ELF object files, postponing
+> > > > ELF processing until a later stage, and ensuring initcall ordering.
+> > > >
+> > > > Note that first objtool patch in the series is already in linux-next,
+> > > > but as it's needed with LTO, I'm including it also here to make testing
+> > > > easier.
+> > >
+> > > I'm very sad that yet again, memory ordering isn't addressed. LTO vastly
+> > > increases the range of the optimizer to wreck things.
+> > 
+> > Hi Peter, could you expand on the issue for the folks on the thread?
+> > I'm happy to try to hack something up in LLVM if we check that X does
+> > or does not happen; maybe we can even come up with some concrete test
+> > cases that can be added to LLVM's codebase?
+> 
+> I'm sure Will will respond, but the basic issue is the trainwreck C11
+> made of dependent loads.
+> 
+> Anyway, here's a link to the last time this came up:
+> 
+>   https://lore.kernel.org/linux-arm-kernel/20171116174830.GX3624@linux.vnet.ibm.com/
 
---=-wf8ryFCmpQGjVNK0SP/1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Another good read:
 
-> diff --git a/drivers/staging/vc04_services/vchiq-mmal/Makefile
-> b/drivers/staging/vc04_services/vchiq-mmal/Makefile
-> index f8164c33aec3..b2a830f48acc 100644
-> --- a/drivers/staging/vc04_services/vchiq-mmal/Makefile
-> +++ b/drivers/staging/vc04_services/vchiq-mmal/Makefile
-> @@ -5,4 +5,5 @@ obj-$(CONFIG_BCM2835_VCHIQ_MMAL) +=3D bcm2835-mmal-vchiq.=
-o
-> =20
->  ccflags-y +=3D \
->  	-I$(srctree)/$(src)/.. \
-> +	-I$(srctree)/$(src)/../include \
->  	-D__VCCOREVER__=3D0x04000000
-> diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-> b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-> index 72afa4319bd3..b99b7555a8fb 100644
-> --- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-> +++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-> @@ -23,14 +23,14 @@
->  #include <linux/slab.h>
->  #include <linux/completion.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/raspberrypi/vchiq.h>
->  #include <media/videobuf2-vmalloc.h>
-> +#include <linux/raspberrypi/vchiq.h>
+  https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
 
-Just realised that there an include too many here...
+and having (partially) re-read that, I now worry intensily about things
+like latch_tree_find(), cyc2ns_read_begin, __ktime_get_fast_ns().
 
-Regards,
-Nicolas
+It looks like kernel/time/sched_clock.c uses raw_read_seqcount() which
+deviates from the above patterns by, for some reason, using a primitive
+that includes an extra smp_rmb().
 
-
---=-wf8ryFCmpQGjVNK0SP/1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl70XyEACgkQlfZmHno8
-x/4qEwf+II/T904mwftPXhFlzsBMzhsH4e95IcgFjKlDJDOMXRCNPRwx23g2zSMp
-m4bTDmCFDRbgjRfFp3os5IWQ1pfa/Xi4MpHCjQI1ii2qUok9frDzYXnZLpli+VAu
-JOayUpsvvk5jLD9VgtqYnrBxsVN36tqn+xpc8apdUlbwjNJ1/476fH+dkk78m4cW
-/wWi5DGDpfy1/BaNqxLymd03qYSEUDmRZuCi5lxkHPQM2KKZFOXZ8Ei4sWzsCm8E
-0efl/v13HKW8kZyvHqCTBzQ/ntWhprtiMgHXgvcLsR4M8OHqmdEeVu+bAokcISRV
-GV9iAQjaRnSw8voaJu8tYrfN7nar1w==
-=h21r
------END PGP SIGNATURE-----
-
---=-wf8ryFCmpQGjVNK0SP/1--
-
+And this is just the few things I could remember off the top of my head,
+who knows what else is out there.
