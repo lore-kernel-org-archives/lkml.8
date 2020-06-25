@@ -2,52 +2,81 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9649FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7160C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BE520899
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8158D206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:56:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="su92Psz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406448AbgFYQxR (ORCPT
+        id S2391064AbgFYQ41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
+        Thu, 25 Jun 2020 12:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404001AbgFYQxR (ORCPT
+        with ESMTP id S2390448AbgFYQ4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:53:17 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA12C08C5C1;
-        Thu, 25 Jun 2020 09:53:17 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 27D3D2A0267
-Message-ID: <00b859ea86dc12a7de54bb064fff3c3a08a9c4c4.camel@collabora.com>
-Subject: Re: [RFC 2/7] fixup! media: uapi: h264: update reference lists
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Thu, 25 Jun 2020 13:52:39 -0300
-In-Reply-To: <CAAFQd5DmsE4jvXNWVqRMifx48oLhQohm-sYYJNpsx2_ipb3Niw@mail.gmail.com>
-References: <20200623182809.1375-1-ezequiel@collabora.com>
-         <20200623182809.1375-3-ezequiel@collabora.com>
-         <CAAFQd5DmsE4jvXNWVqRMifx48oLhQohm-sYYJNpsx2_ipb3Niw@mail.gmail.com>
-Organization: Collabora
+        Thu, 25 Jun 2020 12:56:25 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C786C08C5C1;
+        Thu, 25 Jun 2020 09:56:25 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b25so3691539ljp.6;
+        Thu, 25 Jun 2020 09:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=0kEW4FUMP8gt2vgN7gdapk4+2lvhVO5y/7YY3LT5gus=;
+        b=su92Psz+lpCbzJeuoCiRMc152apsXyZ1LjpRXCdjjAvnrvYQhlPecj6k4ivQ4jWun4
+         mYgYD9ZVqbb9M09vLNRWAlXtry6/5dO6ZkQNIzs07dY0tLy3Cn1CAqPzQwMfkKghCH+/
+         pBrpXceZzWb0WQetcGk/G3FatciADmzeR3qq71jFt5fsuPwsdPDu/t36TPSUT42S+oNf
+         Cmqs7qH+hKseTwi2qGYqmMlU8QkIrtdNTY0R5pVHsTUe2Ezin7xWxkxZPXurJruqy3gW
+         L5SQhsba4Kr3JzpCNDSrNErzOePxL8IEuW28Iy5zL3gGyez4jW1PSGofBBOSItRb1Z3U
+         6N+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=0kEW4FUMP8gt2vgN7gdapk4+2lvhVO5y/7YY3LT5gus=;
+        b=ngF3ceGkfSHOH2CAgRKvAdtwyFtUAusln9KXC8YPnNHqX0MXaymDXCen3PClB5Xl/J
+         uQIk1cn2qn3HnZ1e3VxayM9a4g4ykreHmetak0a2DMh+WVdng2nknPsBVsNq28zdEjzc
+         QXZincEBVFV01tQ1rkz/IAMHzkm56j7rPdFsntGyFHBow7xuheexIkDMxkvPvgaB3q5G
+         Dtm9AjY6H0JL7/COsXW2kXEYht6NVIIS+i9lekqhq4mz9H4W37Ze/s/UXgxmjveAW4UV
+         SSFl1R5yK2rr/wDttzXSaal5M32ZWorjNrqlb7Qmh0AkOePxWUUf21OOo2IaIjQ7Hd8p
+         5boQ==
+X-Gm-Message-State: AOAM530SfZswBeYUml4Lk1PQCCpHxz8TX4aXMLInQ/YhcaCdl/O6A4pO
+        rsOd47RRU6guAYEFNa5FF3Q=
+X-Google-Smtp-Source: ABdhPJyL+P6WaNLjzNEOxclDJJRC5dfG5zUMEyFazPEs5YNY1uXRah1xiPoWtO4JE2YP+GH9wOI57w==
+X-Received: by 2002:a2e:7f0f:: with SMTP id a15mr5390539ljd.80.1593104184195;
+        Thu, 25 Jun 2020 09:56:24 -0700 (PDT)
+Received: from im-mac (pool-109-191-188-200.is74.ru. [109.191.188.200])
+        by smtp.gmail.com with ESMTPSA id 193sm7075975lfa.90.2020.06.25.09.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 09:56:23 -0700 (PDT)
+Message-ID: <779b5021239b3713c5f5c0b32a06ff8b132056c6.camel@gmail.com>
+Subject: Re: [PATCH v1] drm/amd/powerplay: Fix NULL dereference in
+ lock_bus() on Vega20 w/o RAS
+From:   Ivan Mironov <mironov.ivan@gmail.com>
+To:     amd-gfx@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, stable@vger.kernel.org,
+        Bjorn Nostvold <bjorn.nostvold@gmail.com>
+Date:   Thu, 25 Jun 2020 21:56:21 +0500
+In-Reply-To: <20200625165042.13708-1-mironov.ivan@gmail.com>
+References: <20200625165042.13708-1-mironov.ivan@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,37 +84,6 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-25 at 17:30 +0200, Tomasz Figa wrote:
-> On Tue, Jun 23, 2020 at 8:29 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > Align v4l2_h264_reference to 32-bits, giving some room
-> > for future extensions.
-> > 
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  .../userspace-api/media/v4l/ext-ctrls-codec.rst  |  3 +++
-> >  drivers/media/v4l2-core/v4l2-ctrls.c             | 16 ++++++++++++++++
-> >  include/media/h264-ctrls.h                       |  7 +++++--
-> >  3 files changed, 24 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > index 6c36d298db20..7af12447a5b0 100644
-> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > @@ -1943,6 +1943,9 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >      * - __u8
-> >        - ``index``
-> >        -
-> > +    * - __u32
-> > +      - ``reserved``
-> > +      - Applications and drivers must set this to zero.
-> 
-> __u16?
-> 
-> 
-
-Indeed :)
-
-Thanks,
-Ezequiel
-
+Issue still reproduces on latest 5.8.0-rc2+
+(8be3a53e18e0e1a98f288f6c7f5e9da3adbe9c49).
 
