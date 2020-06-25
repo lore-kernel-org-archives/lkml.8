@@ -2,118 +2,115 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12066C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC8C12076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:27:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="AaW0I7wf"
+	by mail.kernel.org (Postfix) with ESMTP id EAC6920789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407166AbgFYV1x (ORCPT
+        id S2407206AbgFYV2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:27:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403774AbgFYV1w (ORCPT
+        Thu, 25 Jun 2020 17:28:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60248 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403774AbgFYV17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:27:52 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E249C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:27:52 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f3so3940949pgr.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YwxJgs2ekm2F5i2bbq3bvR99tjvhSs3RBO886udVeFE=;
-        b=AaW0I7wf4VZi0tWYgsg0VXtU1/5OGKDM1/Sk65n9jmsn2IHKE0FgxNJRUXhp2LNS5O
-         VxEWngolyhwIiqJPDqTRL+0wV2tp8Lk2ANlwhpXuC6ha7JwE2aCr7+7ojqIx++AnnoBL
-         0lp82ylALuEFpFZLkRpDZsRyFetD4967ioBXlIWWukROBYsxAjquAShJp8VX+91+6uTD
-         fL9zHCiRxJ5DJME5M77E3XFFnvdAPsV3FoyiFSkA0NDnONfIWKiB+tL2+MOQNanqjWQx
-         FnKzlMURYcU9CGrPQy6PW9nZyRMvNZjdDF7uxzbDMqcSd4L94Vr2KH+717jxAE9Q4b+k
-         mqmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=YwxJgs2ekm2F5i2bbq3bvR99tjvhSs3RBO886udVeFE=;
-        b=U+F+9PJy9fNixJ6jCPaCALlsbj20H0UlpLOh0QzijgCmYOW1iKKq9t+dNItHcPX2ln
-         sVME97c7GC1jrnLwFKNKmLUrKKyWnQpCj1c1QtpEy1bNn2NBG6fm9pmWo84cvEjstgb7
-         UT1vvkxhLXxBLKeyXTOVq9GvsuWQYvuB3+XUqMEjGEkEyUBn7nAZCRDOWNK7cUq9hlRz
-         YHbBnkwAPfcPkK8xqYENQNnqdfsGYkjamzYjL/73WRXx0eU1gFUkUVD9s+KSs58qVN5u
-         3I5e93INdUss/0kp3LHL/oN+w4jfJplNJKW/fSgAEEjrqDoRZkU0TQUetZDIYvka1Tu2
-         9+mQ==
-X-Gm-Message-State: AOAM530Jy0efnx32fvibkCS47c7KzE6hJ6jUYrhbmZ2alCfYT/VeZGEI
-        Jl+eFhEKdazycDCrbdB/+yIQVdUWFiDGPg==
-X-Google-Smtp-Source: ABdhPJyogFv4o4zWEa+ucdAZImpfWIBrztId39Ahncn0ua4AkeSeZAubIKQiOim3F6/RucN0oZ3bQQ==
-X-Received: by 2002:a62:8782:: with SMTP id i124mr35615630pfe.267.1593120471660;
-        Thu, 25 Jun 2020 14:27:51 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id h2sm24673386pfb.175.2020.06.25.14.27.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 14:27:50 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 14:27:50 -0700 (PDT)
-X-Google-Original-Date: Thu, 25 Jun 2020 14:23:09 PDT (-0700)
-Subject:     Re: [PATCH] RISC-V: Use a local variable instead of smp_processor_id()
-In-Reply-To: <20200622234725.92511-1-atish.patra@wdc.com>
-CC:     linux-kernel@vger.kernel.org, greentime.hu@sifive.com,
-        Atish Patra <Atish.Patra@wdc.com>, aou@eecs.berkeley.edu,
-        anup@brainfault.org, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-99e5afcf-d8c7-4660-a9e7-eb515e9aa55b@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
+        Thu, 25 Jun 2020 17:27:59 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PL22R2177561;
+        Thu, 25 Jun 2020 17:27:55 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux08bntc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:27:54 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PL2Fb8178635;
+        Thu, 25 Jun 2020 17:27:54 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux08bnt1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 17:27:54 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PLQ34W023831;
+        Thu, 25 Jun 2020 21:27:53 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01dal.us.ibm.com with ESMTP id 31uurutyvc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 21:27:53 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PLRqXh42467612
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 21:27:52 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7CFBF112062;
+        Thu, 25 Jun 2020 21:27:52 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E902112061;
+        Thu, 25 Jun 2020 21:27:50 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 21:27:50 +0000 (GMT)
+Subject: Re: [PATCH v2] tpm: tpm2-space: Resize session and context buffers
+ dynamically
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Alexey Klimov <aklimov@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
+ <8d19d5e2-91bc-09ad-6b94-d51a7aad6376@linux.ibm.com>
+ <20200625212556.GC20341@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <031020b9-dc0a-3c2f-32e4-4bb2db4b5a2b@linux.ibm.com>
+Date:   Thu, 25 Jun 2020 17:27:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200625212556.GC20341@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_16:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ impostorscore=0 cotscore=-2147483648 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006250120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 16:47:25 PDT (-0700), Atish Patra wrote:
-> From: Greentime Hu <greentime.hu@sifive.com>
->
-> Store the smp_processor_id() in a local variable to save some
-> pointer chasing.
->
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/kernel/smpboot.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index 4e9922790f6e..3e033e97dd08 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -146,6 +146,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
->  asmlinkage __visible void smp_callin(void)
->  {
->  	struct mm_struct *mm = &init_mm;
-> +	unsigned int curr_cpuid = smp_processor_id();
->
->  	if (!IS_ENABLED(CONFIG_RISCV_SBI))
->  		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-> @@ -155,9 +156,9 @@ asmlinkage __visible void smp_callin(void)
->  	current->active_mm = mm;
->
->  	trap_init();
-> -	notify_cpu_starting(smp_processor_id());
-> -	update_siblings_masks(smp_processor_id());
-> -	set_cpu_online(smp_processor_id(), 1);
-> +	notify_cpu_starting(curr_cpuid);
-> +	update_siblings_masks(curr_cpuid);
-> +	set_cpu_online(curr_cpuid, 1);
->  	/*
->  	 * Remote TLB flushes are ignored while the CPU is offline, so emit
->  	 * a local TLB flush right now just in case.
+On 6/25/20 5:25 PM, Jarkko Sakkinen wrote:
+> On Thu, Jun 25, 2020 at 08:41:18AM -0400, Stefan Berger wrote:
+>> On 6/25/20 12:38 AM, Jarkko Sakkinen wrote:
+>>> Re-allocate context and session buffers when needed. Scale them in page
+>>> increments so that the reallocation is only seldomly required, and thus
+>>> causes minimal stress to the system. Add a static maximum limit of four
+>>> pages for buffer sizes.
+>>>
+>>> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+>>> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+>>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>
+>> You don't want to try a fixes tag? None of the previous versions of this
+>> code will work with newer versions of the TPM 2 then...
+> It's not a regression.
 
-Thanks.  This is on for-next.
+Ok, so distros will have to backport it.
+
+
+     Stefan
+
+
