@@ -2,122 +2,105 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D157FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98CCC206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4393206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 16:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oc6Gltle"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e9HsILcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406285AbgFYQcS (ORCPT
+        id S2406298AbgFYQcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:32:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
+        Thu, 25 Jun 2020 12:32:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406180AbgFYQbh (ORCPT
+        with ESMTP id S2406180AbgFYQcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:31:37 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E633C08C5DB
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:31:37 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g18so6532680wrm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:31:37 -0700 (PDT)
+        Thu, 25 Jun 2020 12:32:20 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5F6C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:32:20 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b92so3472952pjc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 09:32:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SPm1NIoii4wp9HC9Gj5qfuMICtlvrSHRycc3QSZfRtM=;
-        b=Oc6Gltle84A86QA8gNtOqEV/3yAOQ2so8xkE1d2LdYXT4/k3U5+r2QEFnPWiDUAccm
-         Uar3DxQDE6xpe12o0ztoVfC2w4xJlXQy7OjCKQS1nQc3oWmmIcUQ47SqdWmiSz1Ljif7
-         34wb61IwWDSmV4datUbi2+aSRTQOQIur0agRCRZVkF/UfvLN02otdpR+TPEyceLkmtHk
-         KXHe4u9ly4IXJZAxe7yi2jK7szMHLCFvfVFcOJnV5lQgE0I2bF1TQpsNfEL4zFqNrH/x
-         fr+jLI6l5RfgtVC7SIsW6zeZMON74CmOvWC2kLyD4PSsoJG7VjMpUehREXD5+rs/X6UR
-         PZoQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d+K5u9P3ZstJbh0afCn3t6yP6SQdou+jClfehHgXvl0=;
+        b=e9HsILcRH/pogv3ijUVs+4/J/zhRS+a9VPMnmgkqWLI/Wu+FCS7PTwh5XhntUipUaZ
+         muZUSvBlz8dSrHWLaOfujK6bPtWafyVrJrYxCM+8aIqsvZMDHI4diUYrrDb5i8alZCZv
+         FGSLp58yBCU8OXO+v0yG+cNH7ms+B6+uw/PkylgoreBkytLJlPBRhTMD2hPnOaaT3ysC
+         RTHlZYauCqEXG4Xu1y7CSuugLAx/j0aOeMMyiFhjvtB1xaC7BmjmSMEDEfp63D5/gfyP
+         idDddczzLeppEbtrkDgp3NRlTH+ZJFsMhpHwzwzlM2Mlvye8SnIf9DDcPZHa0GrBXwhV
+         fcOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SPm1NIoii4wp9HC9Gj5qfuMICtlvrSHRycc3QSZfRtM=;
-        b=eXZdC1UWdAo0x44cYhxzEUsLyuYvq+ETvDsOaprmjvzPo1YSBB2Ps+hsOGTf8Kd0mV
-         wYo7x8qNMEI6c94eQEYbbQqPQQbMB0HbKYu896uG6xqTMOF3rHzgkjsNe+q11n9+YZeW
-         bRnTgQ9Q/J+o/GrTHsZxcH2trsMdHfwcxE8e/qaNCWLtNBcnCJ9DtvrtoKBdAMEivpzd
-         PaYFFKBjXE76yW9Hgfp58SzfmQLaQoUFMiKDB/OQaVHBgzX49V+rWArQuuyLunEgYoe2
-         +DGXGAyqicNykD3+bcq467ZNK6aeMt/ihX9OjU2gHv5xQZGKA3HBQoL1FmKtPBf6xQxA
-         fURg==
-X-Gm-Message-State: AOAM532FPzztfBZDvVO+KJ+cN5ywnyZ86dRbNiDYb21Dr/UwZpS9RhWE
-        xYQHlHNTzrhwPQzd2ezuJXULSg8+kD8=
-X-Google-Smtp-Source: ABdhPJwES1XecqH4cBXo1fQeYPsxoZ0MTBumS6wvW98Pi31ZCdSAaVU/3Nqdi5GIDI6t+uULaWzFkg==
-X-Received: by 2002:adf:8168:: with SMTP id 95mr37262827wrm.104.1593102696010;
-        Thu, 25 Jun 2020 09:31:36 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id l8sm32090847wrq.15.2020.06.25.09.31.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 09:31:35 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     lee.jones@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tony Lindgren <tony@atomide.com>, J Keerthy <j-keerthy@ti.com>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH 02/10] mfd: tps65218: Repair incorrect function argument name 's/tps65218/tps/'
-Date:   Thu, 25 Jun 2020 17:31:19 +0100
-Message-Id: <20200625163127.4000462-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200625163127.4000462-1-lee.jones@linaro.org>
-References: <20200625163127.4000462-1-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d+K5u9P3ZstJbh0afCn3t6yP6SQdou+jClfehHgXvl0=;
+        b=Z6W03W9PQaV1mCrpFKaOvHbc7oo3KphuIx2SplIWX5cfqNqn/a7gjtldh2a0uIXDRv
+         FhxNCCdeDpEjeWxHZvshKPSXPUJFcTCPoveyHcDNJIPYGNsFgfwNij4PU1R/FIDMWKj7
+         +PFubRTqyY2sNrXwWZdwPWkOAH3v/vrVBl30MUQah61QIz1moPKNx0o4CVJpZIIxJ6b2
+         GynkoXLF04gsfbK4UfYTNEeLt8NEU2rQxhYEtEla53NBMnycj2mxFsm0kHJ3yzDHcsNH
+         yyvozsaEEW+yVSPk6b1kamY5+4Hvm2Oi9yu7Y/eNrF6xkHYHolyPirMAlem69HQvoyou
+         i1Zg==
+X-Gm-Message-State: AOAM530B+yJQ5+L9fnYlQwzU4DnPW9Q3q6IFV5YiM/6GjforFp4tXHbc
+        JD7LHCgbEGnr6C5LU/af6Jwo6OXlNNCOp8Ysai/XVQ==
+X-Google-Smtp-Source: ABdhPJytwmdVQWB9BByogkA6BvCJzw6QJUuG4tFembUiKOQGqpiuUYMBGeeEJXdh18HpVLsrJpSQy4yk5BXZNon+nw0=
+X-Received: by 2002:a17:902:b698:: with SMTP id c24mr32946349pls.223.1593102739486;
+ Thu, 25 Jun 2020 09:32:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200624035920.835571-1-natechancellor@gmail.com> <1bbb6956-d9de-e0c8-5b45-20b6fecc2189@infradead.org>
+In-Reply-To: <1bbb6956-d9de-e0c8-5b45-20b6fecc2189@infradead.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 25 Jun 2020 09:32:07 -0700
+Message-ID: <CAKwvOd=5nE6fkwp8iw0JqwQFp5KcUaC7RyEf2L6+tkbp9smsvg@mail.gmail.com>
+Subject: Re: [PATCH] powerpc/boot: Use address-of operator on section symbols
+To:     Geoff Levand <geoff@infradead.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Joel Stanley <joel@jms.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kerneldocs for both tps65218_reg_write() and tps65218_update_bits()
-describe their first arguments as 'tps65218', when in reality these are
-simply called 'tps'.
+On Wed, Jun 24, 2020 at 6:19 PM Geoff Levand <geoff@infradead.org> wrote:
+>
+> Hi Nathan,
+>
+> On 6/23/20 8:59 PM, Nathan Chancellor wrote:
+> > These are not true arrays, they are linker defined symbols, which are
+> > just addresses.  Using the address of operator silences the warning
+> > and does not change the resulting assembly with either clang/ld.lld
+> > or gcc/ld (tested with diff + objdump -Dr).
+>
+> Thanks for your patch.  I tested this patch applied to v5.8-rc2 on a
+> PS3 and it seems OK.
 
-Fixes the following W=1 warnings:
+PS3?  Folks still have ones that can boot Linux?  Those ****ers took
+my Yellow Dog Linux away from me; I enjoyed depositing that settlement
+check!  Hopefully by now, folks have figured out how to roll back the
+system firmware?
 
- drivers/mfd/tps65218.c:58: warning: Function parameter or member 'tps' not described in 'tps65218_reg_write'
- drivers/mfd/tps65218.c:58: warning: Excess function parameter 'tps65218' description in 'tps65218_reg_write'
- drivers/mfd/tps65218.c:90: warning: Function parameter or member 'tps' not described in 'tps65218_update_bits'
- drivers/mfd/tps65218.c:90: warning: Excess function parameter 'tps65218' description in 'tps65218_update_bits'
+>
+> Tested-by: Geoff Levand <geoff@infradead.org>
+>
+>
+> --
 
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: J Keerthy <j-keerthy@ti.com>
-Cc: linux-omap@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/tps65218.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-index a62ea4cb8be7e..d41dd864b472b 100644
---- a/drivers/mfd/tps65218.c
-+++ b/drivers/mfd/tps65218.c
-@@ -48,7 +48,7 @@ static const struct mfd_cell tps65218_cells[] = {
- /**
-  * tps65218_reg_write: Write a single tps65218 register.
-  *
-- * @tps65218: Device to write to.
-+ * @tps: Device to write to.
-  * @reg: Register to write to.
-  * @val: Value to write.
-  * @level: Password protected level
-@@ -79,7 +79,7 @@ EXPORT_SYMBOL_GPL(tps65218_reg_write);
- /**
-  * tps65218_update_bits: Modify bits w.r.t mask, val and level.
-  *
-- * @tps65218: Device to write to.
-+ * @tps: Device to write to.
-  * @reg: Register to read-write to.
-  * @mask: Mask.
-  * @val: Value to write.
 -- 
-2.25.1
-
+Thanks,
+~Nick Desaulniers
