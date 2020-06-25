@@ -2,94 +2,231 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A86C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB601206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE03206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 21:02:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="ga5KarxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405495AbgFYVCO (ORCPT
+        id S2405509AbgFYVCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:02:14 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24444 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405347AbgFYVCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 17:02:13 -0400
-IronPort-SDR: rMeBkFzC5wHops8amyd9Wwl6u53PjApIFys7KE5fsPc8yENuz8KaP40f7WLnmuYv5GTnBDoijN
- QbU9bMvK89cw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132511756"
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="132511756"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 14:02:12 -0700
-IronPort-SDR: BQSROp49MQ9J0Db6XnzAdYU+X7mKN3Pxg8zFxQJi72Ij8XrV4KZV/7+9tF8Ihjw++7hVrRp61R
- mnZCSkbZZGJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="479777206"
-Received: from drews-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.247])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Jun 2020 14:02:10 -0700
-Date:   Fri, 26 Jun 2020 00:02:02 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org,
-        Kylene Jo Hall <kjhall@us.ibm.com>,
-        "Ferry Toth :" <ferry.toth@elsinga.info>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@osdl.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm_tis: Remove the HID IFX0102
-Message-ID: <20200625210202.GA20341@linux.intel.com>
-References: <20200625023111.270458-1-jarkko.sakkinen@linux.intel.com>
- <20200625062150.idm6j3vm2neyt4sh@cantor>
+        Thu, 25 Jun 2020 17:02:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405347AbgFYVCa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 17:02:30 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EC2C08C5C1;
+        Thu, 25 Jun 2020 14:02:30 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 36ED6BD0; Thu, 25 Jun 2020 17:02:29 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 36ED6BD0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1593118949;
+        bh=iST8XkIlQ85fzJAwuiSKyiqDFbh3r31yI6UMz6u1jfs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ga5KarxQmAulkj8m3/QeIx0Fh1gSLWBawXHcXeYj2k8pPTWphFrtUcGwUk3bc5B4i
+         pm8+mXl6Uw9vmL7fl8F4tArNoUkuETLQuqO2B9fvZ6cTFanM5wzc93O+ClIubGCQPL
+         iemdIEQnK8qdJPrEO0e1y7XKN0z5qMcjO/WcFda0=
+Date:   Thu, 25 Jun 2020 17:02:29 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: unable to handle kernel paging request in rb_erase
+Message-ID: <20200625210229.GE6605@fieldses.org>
+References: <0000000000005016dd05a5e6b308@google.com>
+ <20200603043435.13820-1-hdanton@sina.com>
+ <20200603144326.GA2035@fieldses.org>
+ <20200604035359.2516-1-hdanton@sina.com>
+ <20200604215812.GC3458@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625062150.idm6j3vm2neyt4sh@cantor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200604215812.GC3458@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 11:21:50PM -0700, Jerry Snitselaar wrote:
-> On Thu Jun 25 20, Jarkko Sakkinen wrote:
-> > Acer C720 running Linux v5.3 reports this in klog:
+On Thu, Jun 04, 2020 at 05:58:12PM -0400, J. Bruce Fields wrote:
+> On Thu, Jun 04, 2020 at 11:53:59AM +0800, Hillf Danton wrote:
 > > 
-> > tpm_tis: 1.2 TPM (device-id 0xB, rev-id 16)
-> > tpm tpm0: tpm_try_transmit: send(): error -5
-> > tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
-> > tpm_tis tpm_tis: Could not get TPM timeouts and durations
-> > tpm_tis 00:08: 1.2 TPM (device-id 0xB, rev-id 16)
-> > tpm tpm0: tpm_try_transmit: send(): error -5
-> > tpm tpm0: A TPM error (-5) occurred attempting to determine the timeouts
-> > tpm_tis 00:08: Could not get TPM timeouts and durations
-> > ima: No TPM chip found, activating TPM-bypass!
-> > tpm_inf_pnp 00:08: Found TPM with ID IFX0102
+> > On Wed, 3 Jun 2020 12:48:49 -0400 J. Bruce Fields wrote:
+> > > On Wed, Jun 03, 2020 at 10:43:26AM -0400, J. Bruce Fields wrote:
+> > > > On Wed, Jun 03, 2020 at 12:34:35PM +0800, Hillf Danton wrote:
+> > > > > 
+> > > > > On Tue, 2 Jun 2020 17:55:17 -0400 "J. Bruce Fields" wrote:
+> > > > > > 
+> > > > > > As far as I know, this one's still unresolved.  I can't see the bug from
+> > > > > > code inspection, and we don't have a reproducer.  If anyone else sees
+> > > > > > this or has an idea what might be going wrong, I'd be interested.--b.
+> > > > > 
+> > > > > It's a PF reported in the syz-executor.3 context (PID: 8682 on CPU:1),
+> > > > > meanwhile there's another at 
+> > > > > 
+> > > > >  https://lore.kernel.org/lkml/20200603011425.GA13019@fieldses.org/T/#t
+> > > > >  Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
+> > > > > 
+> > > > > in the kworker context, and one of the quick questions is, is it needed
+> > > > > to serialize the two players, say, using a mutex?
+> > > > 
+> > > > nfsd_reply_cache_shutdown() doesn't take any locks.  All the data
+> > > > structures it's tearing down are per-network-namespace, and it's assumed
+> > > > all the users of that structure are gone by the time we get here.
+> > > > 
+> > > > I wonder if that assumption's correct.  Looking at nfsd_exit_net()....
 > > 
-> > % git --no-pager grep IFX0102 drivers/char/tpm
-> > drivers/char/tpm/tpm_infineon.c:	{"IFX0102", 0},
-> > drivers/char/tpm/tpm_tis.c:	{"IFX0102", 0},		/* Infineon */
-> > 
-> > Obviously IFX0102 was added to the HID table for the TCG TIS driver by
-> > mistake.
-> > 
-> > Fixes: 93e1b7d42e1e ("[PATCH] tpm: add HID module parameter")
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203877
-> > Cc: Kylene Jo Hall <kjhall@us.ibm.com>
-> > Reported-by: Ferry Toth: <ferry.toth@elsinga.info>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > IIUC it's correct for the kworker case where the ns in question is on
+> > the cleanup list, and for the syscall as well because the report is
+> > triggered in the error path, IOW the new ns is not yet visible to the
+> > kworker ATM.
 > 
-> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Sorry, I'm not familiar with the namespace code and I'm not following
+> you.
+> 
+> I'm trying to figure out what prevents the network namespace exit method
+> being called while nfsd is still processing an rpc call from that
+> network namespace.
 
-Bugzilla has an example of similar behavior with v4.15. I'll apply this
-asap.
+Looking at this some more:
 
-/Jarkko
+Each server socket (struct svc_xprt) holds a reference on the struct net
+that's not released until svc_xprt_free().
+
+The svc_xprt is itself referenced as long as an rpc for that socket is
+being processed, the referenced released in svc_xprt_release().  Which
+isn't called until the rpc is processed and the reply sent.
+
+So, assuming nfsd_exit_net() can't be called while we're still holding
+references to the struct net, there can't still be any reply cache
+processing going on when nfsd_reply_cache_shutdown() is called.
+
+So, still a mystery to me how this is happening.
+
+--b.
+
+> 
+> 
+> > ---
+> > v2: Use linux/highmem.h instead of asm/cacheflush.sh
+> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > ---
+> > net/sunrpc/svcsock.c | 1 +
+> > 1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> > index 5c4ec9386f81..c537272f9c7e 100644
+> > --- a/net/sunrpc/svcsock.c
+> > +++ b/net/sunrpc/svcsock.c
+> > @@ -44,6 +44,7 @@
+> > #include <net/tcp.h>
+> > #include <net/tcp_states.h>
+> > #include <linux/uaccess.h>
+> > +#include <linux/highmem.h>
+> > #include <asm/ioctls.h>
+> > 
+> > #include <linux/sunrpc/types.h>
+> > -- 
+> > 2.25.0
+> > 
+> 
+> --
+> Chuck Lever
+> 
+> 
+
+> 
+> --b.
+> 
+> > 
+> > Then we can not draw a race between the two parties, and the two reports
+> > are not related... but of independent glitches.
+> > 
+> > > > 
+> > > > nfsd_reply_cache_shutdown() is one of the first things we do, so I think
+> > > > we're depending on the assumption that the interfaces in that network
+> > > > namespace, and anything referencing associated sockets (in particular,
+> > > > any associated in-progress rpc's), must be gone before our net exit
+> > > > method is called.
+> > > > 
+> > > > I wonder if that's a good assumption.
+> > > 
+> > > I think that assumption must be the problem.
+> > > 
+> > > That would explain why the crashes are happening in nfsd_exit_net as
+> > > opposed to somewhere else, and why we're only seeing them since
+> > > 3ba75830ce17 "nfsd4: drc containerization".
+> > > 
+> > > I wonder what *is* safe to assume when the net exit method is called?
+> > > 
+> > > --b.
+> > > 
+> > > > 
+> > > > --b.
+> > > > 
+> > > > > 
+> > > > > 
+> > > > > > On Sun, May 17, 2020 at 11:59:12PM -0700, syzbot wrote:
+> > > > > > > Hello,
+> > > > > > > 
+> > > > > > > syzbot found the following crash on:
+> > > > > > > 
+> > > > > > > HEAD commit:    9b1f2cbd Merge tag 'clk-fixes-for-linus' of git://git.kern..
+> > > > > > > git tree:       upstream
+> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=15dfdeaa100000
+> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c14212794ed9ad24
+> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=0e37e9d19bded16b8ab9
+> > > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > > > > 
+> > > > > > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > > > > > 
+> > > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > > > > Reported-by: syzbot+0e37e9d19bded16b8ab9@syzkaller.appspotmail.com
+> > > > > > > 
+> > > > > > > BUG: unable to handle page fault for address: ffff887ffffffff0
+> > > > > > > #PF: supervisor read access in kernel mode
+> > > > > > > #PF: error_code(0x0000) - not-present page
+> > > > > > > PGD 0 P4D 0 
+> > > > > > > Oops: 0000 [#1] PREEMPT SMP KASAN
+> > > > > > > CPU: 1 PID: 8682 Comm: syz-executor.3 Not tainted 5.7.0-rc5-syzkaller #0
+> > > > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > > > > > RIP: 0010:__rb_erase_augmented include/linux/rbtree_augmented.h:201 [inline]
+> > > > > > > RIP: 0010:rb_erase+0x37/0x18d0 lib/rbtree.c:443
+> > > > > > > Code: 89 f7 41 56 41 55 49 89 fd 48 83 c7 08 48 89 fa 41 54 48 c1 ea 03 55 53 48 83 ec 18 80 3c 02 00 0f 85 89 10 00 00 49 8d 7d 10 <4d> 8b 75 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80
+> > > > > > > RSP: 0018:ffffc900178ffb58 EFLAGS: 00010246
+> > > > > > > RAX: dffffc0000000000 RBX: ffff8880354d0000 RCX: ffffc9000fb6d000
+> > > > > > > RDX: 1ffff10ffffffffe RSI: ffff88800011dfe0 RDI: ffff887ffffffff8
+> > > > > > > RBP: ffff887fffffffb0 R08: ffff888057284280 R09: fffffbfff185d12e
+> > > > > > > R10: ffffffff8c2e896f R11: fffffbfff185d12d R12: ffff88800011dfe0
+> > > > > > > R13: ffff887fffffffe8 R14: 000000000001dfe0 R15: ffff88800011dfe0
+> > > > > > > FS:  00007fa002d21700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > > > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > > > CR2: ffff887ffffffff0 CR3: 00000000a2164000 CR4: 00000000001426e0
+> > > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > > > Call Trace:
+> > > > > > >  nfsd_reply_cache_free_locked+0x198/0x380 fs/nfsd/nfscache.c:127
+> > > > > > >  nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
+> > > > > > >  nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
+> > > > > > >  ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
+> > > > > > >  setup_net+0x50c/0x860 net/core/net_namespace.c:364
+> > > > > > >  copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
+> > > > > > >  create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:108
+> > > > > > >  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:229
+> > > > > > >  ksys_unshare+0x43d/0x8e0 kernel/fork.c:2970
+> > > > > > >  __do_sys_unshare kernel/fork.c:3038 [inline]
+> > > > > > >  __se_sys_unshare kernel/fork.c:3036 [inline]
+> > > > > > >  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3036
+> > > > > > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> > > > > > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
