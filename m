@@ -2,284 +2,272 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC55CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C821DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57EF206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91ADB2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:08:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aagFeOoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405224AbgFYOEj (ORCPT
+        id S2405273AbgFYOIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:04:39 -0400
-Received: from mga09.intel.com ([134.134.136.24]:9128 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405181AbgFYOEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:04:38 -0400
-IronPort-SDR: bMtSNLMSXlNAQl0YVXzGSqC8NvBFXbeR7u831RO/nRcWjHLbB0atq9iFC/e94TMDLp+qYVi/W2
- fnABpnLbTf5g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146386844"
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="146386844"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 06:58:36 -0700
-IronPort-SDR: qAWQgK2JV8WnY+PSLDzvjHI0TQJwiYpSVk1IyimzD3xS5mYJj+OtvkSwuixDmgR4kJpS8xumfF
- s2v7mKOJSOEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,279,1589266800"; 
-   d="scan'208";a="354465173"
-Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 25 Jun 2020 06:58:33 -0700
-Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1joSOe-0001dj-HB; Thu, 25 Jun 2020 13:58:32 +0000
-Date:   Thu, 25 Jun 2020 21:58:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Vitor Massaru Iha <vitor@massaru.org>, kunit-dev@googlegroups.com
-Cc:     kbuild-all@lists.01.org, skhan@linuxfoundation.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        keescook@chromium.org, linux@rasmusvillemoes.dk,
-        davidgow@google.com
-Subject: Re: [RESEND, PATCH v2] lib: overflow-test: add KUnit test of
- check_*_overflow functions
-Message-ID: <202006252130.iJ0yp2Yn%lkp@intel.com>
-References: <20200618140814.135948-1-vitor@massaru.org>
+        Thu, 25 Jun 2020 10:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404890AbgFYOIT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:08:19 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B53C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:08:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z13so5990096wrw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 07:08:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=atgNZ9EJInKqGvpdpvxSAKfzqEVZDOyKFFqDeCoAyPs=;
+        b=aagFeOoXCuolSaMaDqmYiuNxxH6euM5mK3NyhWSyUCk0ircDreMOtMB/8R6z5qseJA
+         h3ixeVLZZnkz/OvGmtFUQxZvENjNt6cDN/74YnAXjBO94h860DIEM/hlqs+ckRGyOIq4
+         9ujsQV9hqnwgRxirZnJKJf+61SzXJsNhQT+lVc4HESJ9nGr0fMYygO865o31OSjGm2a/
+         cCDozX00wq4Rghor4sbouwQXY3ur5BBUG/0LW+hCzS7gZvS/h1dWGQvr80kEI7Xx+B1/
+         klilOsCRVEVjKr8JGtC6EyrAAJzfwpkLOzCEFhlUD75xMaAsFjQOE1wZ+awSPVvAmpc/
+         tjew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=atgNZ9EJInKqGvpdpvxSAKfzqEVZDOyKFFqDeCoAyPs=;
+        b=ax6/rgDrc9Ze18OYdmqoBwQG/Qm+1g9RpxO3rkAkQRZLeO2s5+Bauz/d+g/j6nTITc
+         Ge6n1IafpVft5p8fa97V1a9eLm04AzKh/913ZuqfdFQxyYBg8Y0l7vcPrYXl2d2efoYv
+         pKqbl0CoO3ee2532iYFDhi2wTXjcGVO3ty8hm+zukTUWbUInU/8LLubSoRnGByljfI7K
+         g18BCsKxQ0fBMPuAnKVAlpPEk66VhTeME37B4r875hlWdWovBT60QaKzIvkFyE7BBHU2
+         Gxs0F5ITtYpMqzFjUNjFk+y4BvWSbOvPtQNCJcNvP0cQa1XgTRZh36dBt5UfZVz/lcMb
+         pE7A==
+X-Gm-Message-State: AOAM531lvxV71GjydRyGg7j7Fxxqv++jFd2u4hnZzuOC00VhxR7+ZIvF
+        VAFMPzo1O149ZmVuDMIxQIzT8kTsQGfhzFMVpi06gw==
+X-Google-Smtp-Source: ABdhPJwE5O/Or2NpcZc/Uf3IWvEvm4q78FO4GSYIDKAWh1AA2bVElgrhkCEGLAnpMndAH9RgGn5NtZlX4iU9QCGSdy8=
+X-Received: by 2002:adf:e5d0:: with SMTP id a16mr3791909wrn.48.1593094096181;
+ Thu, 25 Jun 2020 07:08:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618140814.135948-1-vitor@massaru.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200625114718.229911-1-kjain@linux.ibm.com> <20200625114718.229911-2-kjain@linux.ibm.com>
+In-Reply-To: <20200625114718.229911-2-kjain@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 25 Jun 2020 07:08:04 -0700
+Message-ID: <CAP-5=fWG9rxObKJ38dQ=VUf3_mQbNDCTzgU1kkyw=9uVfBa+qw@mail.gmail.com>
+Subject: Re: [RFC 1/3] perf jevents: Add support for parsing perchip/percore events
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Paul Clarke <pc@us.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitor,
+On Thu, Jun 25, 2020 at 4:47 AM Kajol Jain <kjain@linux.ibm.com> wrote:
+>
+> Set up the "PerChip" field  so that perf knows they are
+> per chip events.
+>
+> Set up the "PerCore" field  so that perf knows they are
+> per core events and add these fields to pmu_event structure.
+>
+> Similar to the way we had "PerPkg field
+> to specify perpkg events.
+>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  tools/perf/pmu-events/jevents.c    | 34 ++++++++++++++++++++++++------
+>  tools/perf/pmu-events/jevents.h    |  3 ++-
+>  tools/perf/pmu-events/pmu-events.h |  2 ++
+>  3 files changed, 32 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index fa86c5f997cc..21fd7990ded5 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -323,7 +323,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
+>                                     char *pmu, char *unit, char *perpkg,
+>                                     char *metric_expr,
+>                                     char *metric_name, char *metric_group,
+> -                                   char *deprecated, char *metric_constraint)
+> +                                   char *deprecated, char *perchip, char *percore,
+> +                                   char *metric_constraint)
+>  {
+>         struct perf_entry_data *pd = data;
+>         FILE *outfp = pd->outfp;
+> @@ -357,6 +358,10 @@ static int print_events_table_entry(void *data, char *name, char *event,
+>                 fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
+>         if (deprecated)
+>                 fprintf(outfp, "\t.deprecated = \"%s\",\n", deprecated);
+> +       if (perchip)
+> +               fprintf(outfp, "\t.perchip = \"%s\",\n", perchip);
+> +       if (percore)
+> +               fprintf(outfp, "\t.percore = \"%s\",\n", percore);
+>         if (metric_constraint)
+>                 fprintf(outfp, "\t.metric_constraint = \"%s\",\n", metric_constraint);
+>         fprintf(outfp, "},\n");
+> @@ -378,6 +383,8 @@ struct event_struct {
+>         char *metric_group;
+>         char *deprecated;
+>         char *metric_constraint;
+> +       char *perchip;
+> +       char *percore;
+>  };
+>
+>  #define ADD_EVENT_FIELD(field) do { if (field) {               \
+> @@ -406,6 +413,8 @@ struct event_struct {
+>         op(metric_name);                                        \
+>         op(metric_group);                                       \
+>         op(deprecated);                                         \
+> +       op(perchip);                                            \
+> +       op(percore);                                            \
+>  } while (0)
+>
+>  static LIST_HEAD(arch_std_events);
+> @@ -425,7 +434,8 @@ static int save_arch_std_events(void *data, char *name, char *event,
+>                                 char *desc, char *long_desc, char *pmu,
+>                                 char *unit, char *perpkg, char *metric_expr,
+>                                 char *metric_name, char *metric_group,
+> -                               char *deprecated, char *metric_constraint)
+> +                               char *deprecated, char *perchip, char *percore,
+> +                               char *metric_constraint)
+>  {
+>         struct event_struct *es;
+>
+> @@ -489,7 +499,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+>           char **name, char **long_desc, char **pmu, char **filter,
+>           char **perpkg, char **unit, char **metric_expr, char **metric_name,
+>           char **metric_group, unsigned long long eventcode,
+> -         char **deprecated, char **metric_constraint)
+> +         char **deprecated, char **perchip, char **percore,
+> +         char **metric_constraint)
+>  {
+>         /* try to find matching event from arch standard values */
+>         struct event_struct *es;
+> @@ -518,7 +529,8 @@ int json_events(const char *fn,
+>                       char *pmu, char *unit, char *perpkg,
+>                       char *metric_expr,
+>                       char *metric_name, char *metric_group,
+> -                     char *deprecated, char *metric_constraint),
+> +                     char *deprecated, char *perchip, char *percore,
+> +                     char *metric_constraint),
+>           void *data)
+>  {
+>         int err;
+> @@ -548,6 +560,8 @@ int json_events(const char *fn,
+>                 char *metric_name = NULL;
+>                 char *metric_group = NULL;
+>                 char *deprecated = NULL;
+> +               char *perchip = NULL;
+> +               char *percore = NULL;
+>                 char *metric_constraint = NULL;
+>                 char *arch_std = NULL;
+>                 unsigned long long eventcode = 0;
+> @@ -629,6 +643,10 @@ int json_events(const char *fn,
+>                                 addfield(map, &perpkg, "", "", val);
+>                         } else if (json_streq(map, field, "Deprecated")) {
+>                                 addfield(map, &deprecated, "", "", val);
+> +                       } else if (json_streq(map, field, "PerChip")) {
+> +                               addfield(map, &perchip, "", "", val);
+> +                       } else if (json_streq(map, field, "PerCore")) {
+> +                               addfield(map, &percore, "", "", val);
+>                         } else if (json_streq(map, field, "MetricName")) {
+>                                 addfield(map, &metric_name, "", "", val);
+>                         } else if (json_streq(map, field, "MetricGroup")) {
+> @@ -676,13 +694,15 @@ int json_events(const char *fn,
+>                                         &long_desc, &pmu, &filter, &perpkg,
+>                                         &unit, &metric_expr, &metric_name,
+>                                         &metric_group, eventcode,
+> -                                       &deprecated, &metric_constraint);
+> +                                       &deprecated, &perchip, &percore,
+> +                                       &metric_constraint);
+>                         if (err)
+>                                 goto free_strings;
+>                 }
+>                 err = func(data, name, real_event(name, event), desc, long_desc,
+>                            pmu, unit, perpkg, metric_expr, metric_name,
+> -                          metric_group, deprecated, metric_constraint);
+> +                          metric_group, deprecated, perchip, percore,
+> +                          metric_constraint);
+>  free_strings:
+>                 free(event);
+>                 free(desc);
+> @@ -693,6 +713,8 @@ int json_events(const char *fn,
+>                 free(filter);
+>                 free(perpkg);
+>                 free(deprecated);
+> +               free(perchip);
+> +               free(percore);
+>                 free(unit);
+>                 free(metric_expr);
+>                 free(metric_name);
+> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
+> index 2afc8304529e..3c439ecdac7c 100644
+> --- a/tools/perf/pmu-events/jevents.h
+> +++ b/tools/perf/pmu-events/jevents.h
+> @@ -8,7 +8,8 @@ int json_events(const char *fn,
+>                                 char *pmu,
+>                                 char *unit, char *perpkg, char *metric_expr,
+>                                 char *metric_name, char *metric_group,
+> -                               char *deprecated, char *metric_constraint),
+> +                               char *deprecated, char *perchip, char *percore,
+> +                               char *metric_constraint),
+>                 void *data);
+>  char *get_cpu_str(void);
+>
+> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+> index c8f306b572f4..13d96b732963 100644
+> --- a/tools/perf/pmu-events/pmu-events.h
+> +++ b/tools/perf/pmu-events/pmu-events.h
+> @@ -19,6 +19,8 @@ struct pmu_event {
+>         const char *metric_group;
+>         const char *deprecated;
+>         const char *metric_constraint;
+> +       const char *perchip;
+> +       const char *percore;
 
-Thank you for the patch! Perhaps something to improve:
+(In general this looks good! Some nits)
+Could we document perchip and percore? Agreed that the style here is
+not to comment.
+I'm a little confused as to why these need to be const char* and can't
+just be a bool? Perhaps other variables shouldn't be const char* too.
+Is there ever a case where both perchip and percore could be true?
+Would something like an enum capture this better? I can imagine other
+cases uncore and it seems a little strange to add a new "const char*"
+each time.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.8-rc2]
-[cannot apply to next-20200625]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use  as documented in
-https://git-scm.com/docs/git-format-patch]
+I'm wondering if there needs to be a glossary of terms, so that the
+use of terms like core, chip, thread, socket, cpu, package is kept
+consistent. It's not trivially clear what the difference between a
+chip and a socket is, for example. Mapping terms to other vendors
+commonly used terms, such as "complex" would also be useful.
 
-url:    https://github.com/0day-ci/linux/commits/Vitor-Massaru-Iha/lib-overflow-test-add-KUnit-test-of-check_-_overflow-functions/20200618-221026
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 1b5044021070efa3259f3e9548dc35d1eb6aa844
-compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+Thanks,
+Ian
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-cppcheck warnings: (new ones prefixed by >>)
-
->> lib/overflow-test.c:334:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(1, 0, unsigned int, 1U << 0, false);
-           ^
-   lib/overflow-test.c:335:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(1, 20, unsigned int, 1U << 20, false);
-           ^
-   lib/overflow-test.c:336:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(1, 31, unsigned int, 1U << 31, false);
-           ^
-   lib/overflow-test.c:337:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(0xFFFFU, 16, unsigned int, 0xFFFFU << 16, false);
-           ^
-   lib/overflow-test.c:351:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(0, 31, unsigned int, 0, false);
-           ^
-   lib/overflow-test.c:365:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(1, 32, unsigned int, 0, true);
-           ^
-   lib/overflow-test.c:383:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(2215151766U, 1, unsigned int, 0, true);
-           ^
-   lib/overflow-test.c:415:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(0x100000000ULL, 0, unsigned int, 0, true);
-           ^
-   lib/overflow-test.c:426:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(-10, 0, unsigned int, 0, true);
-           ^
-   lib/overflow-test.c:438:9: warning: Checking if unsigned variable '(unsigned int)-1' is less than zero. [unsignedLessThanZero]
-    err |= TEST_ONE_SHIFT(0, -15, unsigned int, 0, true);
-           ^
-
-vim +334 lib/overflow-test.c
-
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  318  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  319  	/* Sane shifts. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  320  	err |= TEST_ONE_SHIFT(1, 0, u8, 1 << 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  321  	err |= TEST_ONE_SHIFT(1, 4, u8, 1 << 4, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  322  	err |= TEST_ONE_SHIFT(1, 7, u8, 1 << 7, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  323  	err |= TEST_ONE_SHIFT(0xF, 4, u8, 0xF << 4, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  324  	err |= TEST_ONE_SHIFT(1, 0, u16, 1 << 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  325  	err |= TEST_ONE_SHIFT(1, 10, u16, 1 << 10, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  326  	err |= TEST_ONE_SHIFT(1, 15, u16, 1 << 15, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  327  	err |= TEST_ONE_SHIFT(0xFF, 8, u16, 0xFF << 8, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  328  	err |= TEST_ONE_SHIFT(1, 0, int, 1 << 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  329  	err |= TEST_ONE_SHIFT(1, 16, int, 1 << 16, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  330  	err |= TEST_ONE_SHIFT(1, 30, int, 1 << 30, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  331  	err |= TEST_ONE_SHIFT(1, 0, s32, 1 << 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  332  	err |= TEST_ONE_SHIFT(1, 16, s32, 1 << 16, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  333  	err |= TEST_ONE_SHIFT(1, 30, s32, 1 << 30, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01 @334  	err |= TEST_ONE_SHIFT(1, 0, unsigned int, 1U << 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  335  	err |= TEST_ONE_SHIFT(1, 20, unsigned int, 1U << 20, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  336  	err |= TEST_ONE_SHIFT(1, 31, unsigned int, 1U << 31, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  337  	err |= TEST_ONE_SHIFT(0xFFFFU, 16, unsigned int, 0xFFFFU << 16, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  338  	err |= TEST_ONE_SHIFT(1, 0, u32, 1U << 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  339  	err |= TEST_ONE_SHIFT(1, 20, u32, 1U << 20, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  340  	err |= TEST_ONE_SHIFT(1, 31, u32, 1U << 31, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  341  	err |= TEST_ONE_SHIFT(0xFFFFU, 16, u32, 0xFFFFU << 16, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  342  	err |= TEST_ONE_SHIFT(1, 0, u64, 1ULL << 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  343  	err |= TEST_ONE_SHIFT(1, 40, u64, 1ULL << 40, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  344  	err |= TEST_ONE_SHIFT(1, 63, u64, 1ULL << 63, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  345  	err |= TEST_ONE_SHIFT(0xFFFFFFFFULL, 32, u64,
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  346  			      0xFFFFFFFFULL << 32, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  347  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  348  	/* Sane shift: start and end with 0, without a too-wide shift. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  349  	err |= TEST_ONE_SHIFT(0, 7, u8, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  350  	err |= TEST_ONE_SHIFT(0, 15, u16, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  351  	err |= TEST_ONE_SHIFT(0, 31, unsigned int, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  352  	err |= TEST_ONE_SHIFT(0, 31, u32, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  353  	err |= TEST_ONE_SHIFT(0, 63, u64, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  354  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  355  	/* Sane shift: start and end with 0, without reaching signed bit. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  356  	err |= TEST_ONE_SHIFT(0, 6, s8, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  357  	err |= TEST_ONE_SHIFT(0, 14, s16, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  358  	err |= TEST_ONE_SHIFT(0, 30, int, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  359  	err |= TEST_ONE_SHIFT(0, 30, s32, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  360  	err |= TEST_ONE_SHIFT(0, 62, s64, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  361  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  362  	/* Overflow: shifted the bit off the end. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  363  	err |= TEST_ONE_SHIFT(1, 8, u8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  364  	err |= TEST_ONE_SHIFT(1, 16, u16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  365  	err |= TEST_ONE_SHIFT(1, 32, unsigned int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  366  	err |= TEST_ONE_SHIFT(1, 32, u32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  367  	err |= TEST_ONE_SHIFT(1, 64, u64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  368  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  369  	/* Overflow: shifted into the signed bit. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  370  	err |= TEST_ONE_SHIFT(1, 7, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  371  	err |= TEST_ONE_SHIFT(1, 15, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  372  	err |= TEST_ONE_SHIFT(1, 31, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  373  	err |= TEST_ONE_SHIFT(1, 31, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  374  	err |= TEST_ONE_SHIFT(1, 63, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  375  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  376  	/* Overflow: high bit falls off unsigned types. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  377  	/* 10010110 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  378  	err |= TEST_ONE_SHIFT(150, 1, u8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  379  	/* 1000100010010110 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  380  	err |= TEST_ONE_SHIFT(34966, 1, u16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  381  	/* 10000100000010001000100010010110 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  382  	err |= TEST_ONE_SHIFT(2215151766U, 1, u32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  383  	err |= TEST_ONE_SHIFT(2215151766U, 1, unsigned int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  384  	/* 1000001000010000010000000100000010000100000010001000100010010110 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  385  	err |= TEST_ONE_SHIFT(9372061470395238550ULL, 1, u64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  386  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  387  	/* Overflow: bit shifted into signed bit on signed types. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  388  	/* 01001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  389  	err |= TEST_ONE_SHIFT(75, 1, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  390  	/* 0100010001001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  391  	err |= TEST_ONE_SHIFT(17483, 1, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  392  	/* 01000010000001000100010001001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  393  	err |= TEST_ONE_SHIFT(1107575883, 1, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  394  	err |= TEST_ONE_SHIFT(1107575883, 1, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  395  	/* 0100000100001000001000000010000001000010000001000100010001001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  396  	err |= TEST_ONE_SHIFT(4686030735197619275LL, 1, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  397  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  398  	/* Overflow: bit shifted past signed bit on signed types. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  399  	/* 01001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  400  	err |= TEST_ONE_SHIFT(75, 2, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  401  	/* 0100010001001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  402  	err |= TEST_ONE_SHIFT(17483, 2, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  403  	/* 01000010000001000100010001001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  404  	err |= TEST_ONE_SHIFT(1107575883, 2, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  405  	err |= TEST_ONE_SHIFT(1107575883, 2, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  406  	/* 0100000100001000001000000010000001000010000001000100010001001011 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  407  	err |= TEST_ONE_SHIFT(4686030735197619275LL, 2, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  408  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  409  	/* Overflow: values larger than destination type. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  410  	err |= TEST_ONE_SHIFT(0x100, 0, u8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  411  	err |= TEST_ONE_SHIFT(0xFF, 0, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  412  	err |= TEST_ONE_SHIFT(0x10000U, 0, u16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  413  	err |= TEST_ONE_SHIFT(0xFFFFU, 0, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  414  	err |= TEST_ONE_SHIFT(0x100000000ULL, 0, u32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  415  	err |= TEST_ONE_SHIFT(0x100000000ULL, 0, unsigned int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  416  	err |= TEST_ONE_SHIFT(0xFFFFFFFFUL, 0, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  417  	err |= TEST_ONE_SHIFT(0xFFFFFFFFUL, 0, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  418  	err |= TEST_ONE_SHIFT(0xFFFFFFFFFFFFFFFFULL, 0, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  419  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  420  	/* Nonsense: negative initial value. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  421  	err |= TEST_ONE_SHIFT(-1, 0, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  422  	err |= TEST_ONE_SHIFT(-1, 0, u8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  423  	err |= TEST_ONE_SHIFT(-5, 0, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  424  	err |= TEST_ONE_SHIFT(-5, 0, u16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  425  	err |= TEST_ONE_SHIFT(-10, 0, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  426  	err |= TEST_ONE_SHIFT(-10, 0, unsigned int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  427  	err |= TEST_ONE_SHIFT(-100, 0, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  428  	err |= TEST_ONE_SHIFT(-100, 0, u32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  429  	err |= TEST_ONE_SHIFT(-10000, 0, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  430  	err |= TEST_ONE_SHIFT(-10000, 0, u64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  431  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  432  	/* Nonsense: negative shift values. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  433  	err |= TEST_ONE_SHIFT(0, -5, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  434  	err |= TEST_ONE_SHIFT(0, -5, u8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  435  	err |= TEST_ONE_SHIFT(0, -10, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  436  	err |= TEST_ONE_SHIFT(0, -10, u16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  437  	err |= TEST_ONE_SHIFT(0, -15, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  438  	err |= TEST_ONE_SHIFT(0, -15, unsigned int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  439  	err |= TEST_ONE_SHIFT(0, -20, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  440  	err |= TEST_ONE_SHIFT(0, -20, u32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  441  	err |= TEST_ONE_SHIFT(0, -30, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  442  	err |= TEST_ONE_SHIFT(0, -30, u64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  443  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  444  	/* Overflow: shifted at or beyond entire type's bit width. */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  445  	err |= TEST_ONE_SHIFT(0, 8, u8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  446  	err |= TEST_ONE_SHIFT(0, 9, u8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  447  	err |= TEST_ONE_SHIFT(0, 8, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  448  	err |= TEST_ONE_SHIFT(0, 9, s8, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  449  	err |= TEST_ONE_SHIFT(0, 16, u16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  450  	err |= TEST_ONE_SHIFT(0, 17, u16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  451  	err |= TEST_ONE_SHIFT(0, 16, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  452  	err |= TEST_ONE_SHIFT(0, 17, s16, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  453  	err |= TEST_ONE_SHIFT(0, 32, u32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  454  	err |= TEST_ONE_SHIFT(0, 33, u32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  455  	err |= TEST_ONE_SHIFT(0, 32, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  456  	err |= TEST_ONE_SHIFT(0, 33, int, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  457  	err |= TEST_ONE_SHIFT(0, 32, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  458  	err |= TEST_ONE_SHIFT(0, 33, s32, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  459  	err |= TEST_ONE_SHIFT(0, 64, u64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  460  	err |= TEST_ONE_SHIFT(0, 65, u64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  461  	err |= TEST_ONE_SHIFT(0, 64, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  462  	err |= TEST_ONE_SHIFT(0, 65, s64, 0, true);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  463  
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  464  	/*
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  465  	 * Corner case: for unsigned types, we fail when we've shifted
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  466  	 * through the entire width of bits. For signed types, we might
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  467  	 * want to match this behavior, but that would mean noticing if
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  468  	 * we shift through all but the signed bit, and this is not
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  469  	 * currently detected (but we'll notice an overflow into the
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  470  	 * signed bit). So, for now, we will test this condition but
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  471  	 * mark it as not expected to overflow.
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  472  	 */
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  473  	err |= TEST_ONE_SHIFT(0, 7, s8, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  474  	err |= TEST_ONE_SHIFT(0, 15, s16, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  475  	err |= TEST_ONE_SHIFT(0, 31, int, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  476  	err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  477  	err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  478  
-f1362e9519c80f lib/overflow-test.c Vitor Massaru Iha 2020-06-18  479  	KUNIT_EXPECT_FALSE(test, err);
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  480  }
-d36b6ad27c7b95 lib/test_overflow.c Kees Cook         2018-08-01  481  
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>  };
+>
+>  /*
+> --
+> 2.26.2
+>
