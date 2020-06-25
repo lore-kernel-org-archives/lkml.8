@@ -2,57 +2,121 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C757920707
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CD820707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405191AbgFYNmu (ORCPT
+        id S2405213AbgFYNnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:42:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56474 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404923AbgFYNmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:42:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id F0BFFAEF6;
-        Thu, 25 Jun 2020 13:42:48 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 15:42:48 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: Re: [PATCH] hvc: unify console setup naming
-Message-ID: <20200625134248.GI6156@alley>
-References: <20200619172240.754910-1-sergey.senozhatsky@gmail.com>
+        Thu, 25 Jun 2020 09:43:53 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60012 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404890AbgFYNnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 09:43:53 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 429DA41853EE28F8554D;
+        Thu, 25 Jun 2020 21:43:50 +0800 (CST)
+Received: from A190218597.china.huawei.com (10.47.76.118) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 25 Jun 2020 21:43:41 +0800
+From:   Salil Mehta <salil.mehta@huawei.com>
+To:     <linux-arm-kernel@lists.infradead.org>
+CC:     <maz@kernel.org>, <will@kernel.org>, <catalin.marinas@arm.com>,
+        <christoffer.dall@arm.com>, <andre.przywara@arm.com>,
+        <james.morse@arm.com>, <mark.rutland@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <sudeep.holla@arm.com>,
+        <qemu-arm@nongnu.org>, <peter.maydell@linaro.org>,
+        <richard.henderson@linaro.org>, <imammedo@redhat.com>,
+        <mst@redhat.com>, <drjones@redhat.com>, <pbonzini@redhat.com>,
+        <eric.auger@redhat.com>, <gshan@redhat.com>, <david@redhat.com>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <mehta.salil.lnk@gmail.com>,
+        Salil Mehta <salil.mehta@huawei.com>
+Subject: [PATCH RFC 0/4] Changes to Support *Virtual* CPU Hotplug for ARM64
+Date:   Thu, 25 Jun 2020 14:37:53 +0100
+Message-ID: <20200625133757.22332-1-salil.mehta@huawei.com>
+X-Mailer: git-send-email 2.8.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619172240.754910-1-sergey.senozhatsky@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.47.76.118]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2020-06-20 02:22:40, Sergey Senozhatsky wrote:
-> Use the 'common' foo_console_setup() naming scheme. There are 71
-> foo_console_setup() callbacks and only one foo_setup_console().
-> 
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Changes to support virtual cpu hotplug in QEMU[1] have been introduced to the
+community as RFC. These are under review.
 
-This patch is commited in printk/linux.git, branch
-for-5.9-console-return-codes.
+To support virtual cpu hotplug guest kernel must:
+1. Identify disabled/present vcpus and set/unset the present mask of the vcpu
+   during initialization and hotplug event. It must also set the possible mask
+   (which includes disabled vcpus) during init of guest kernel.
+2. Provide architecture specific ACPI hooks, for example to map/unmap the
+   logical cpuid to hwids/MPIDR. Linux kernel already has generic ACPI cpu
+   hotplug framework support.
 
-Best Regards,
-Petr
+Changes introduced in this patch-set also ensures that initialization of the
+cpus when virtual cpu hotplug is not supported remains un-affected.
+
+Repository:
+(*) Kernel changes are at,
+     https://github.com/salil-mehta/linux.git virt-cpuhp-arm64/rfc-v1
+(*) QEMU changes for vcpu hotplug could be cloned from below site,
+     https://github.com/salil-mehta/qemu.git virt-cpuhp-armv8/rfc-v1
+
+
+THINGS TO DO:
+1. Handling of per-cpu variables especially the first-chunk allocations
+   (which are NUMA aware) when the vcpu is hotplugged needs further attention
+   and review.
+2. NUMA related stuff has not been fully tested both in QEMU and kernel.
+3. Comprehensive Testing including when cpu hotplug is not supported.
+4. Docs
+
+DISCLAIMER:
+This is not a complete work but an effort to present the arm vcpu hotplug
+implementation to the community. This RFC is being used as a way to verify
+the idea mentioned above and to support changes presented for QEMU[1] to
+support vcpu hotplug. As of now this is *not* a production level code and might
+have bugs. Only a basic testing has been done on HiSilicon Kunpeng920 ARM64
+based SoC for Servers to verify the proof-of-concept that has been found working!
+
+Best regards
+Salil.
+
+REFERENCES:
+[1] https://www.mail-archive.com/qemu-devel@nongnu.org/msg712010.html
+[2] https://lkml.org/lkml/2019/6/28/1157
+[3] https://lists.cs.columbia.edu/pipermail/kvmarm/2018-July/032316.html
+
+Organization of Patches:
+[Patch 1-3]
+(*) Changes required during guest boot time to support vcpu hotplug 
+(*) Max cpu overflow checks
+(*) Changes required to pre-setup cpu-operations even for disabled cpus
+[Patch 4]
+(*) Arch changes required by guest kernel ACPI CPU Hotplug framework.
+
+
+Salil Mehta (4):
+  arm64: kernel: Handle disabled[(+)present] cpus in MADT/GICC during
+    init
+  arm64: kernel: Bound the total(present+disabled) cpus with nr_cpu_ids
+  arm64: kernel: Init cpu operations for all possible vcpus
+  arm64: kernel: Arch specific ACPI hooks(like logical cpuid<->hwid
+    etc.)
+
+ arch/arm64/kernel/smp.c | 153 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 123 insertions(+), 30 deletions(-)
+
+-- 
+2.17.1
+
+
