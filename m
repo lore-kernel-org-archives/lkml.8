@@ -7,131 +7,112 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA43C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA20C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470322076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051F22076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTFVQpH1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BoLnBkwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406498AbgFYTRT (ORCPT
+        id S2406545AbgFYTRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
+        Thu, 25 Jun 2020 15:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390701AbgFYTRQ (ORCPT
+        with ESMTP id S2390775AbgFYTRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:17:16 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F17A1C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:15 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 22so6643814wmg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:15 -0700 (PDT)
+        Thu, 25 Jun 2020 15:17:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB436C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:16 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so7035222wrm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dg6MQg0di+LqjBqONGXXxyBRvWh5krLOCNnRvvUvfe8=;
-        b=VTFVQpH1dFYRfxcEVx1bIlmWtAfGkxcoZS/nr0pP6c8NX8FurH4xumCl5GhdhERzRX
-         X0KxL66ekXPT18Cyga/sr+tr1CYTt42D4hLtbgE7yywKGiesUCemmKbz+hYBN4VYtJGZ
-         6foOfmsUMOd/k+TR1XAcDur1OD9lKNpjlLA0ho0BMJ9jNKELA52kVOvYCl9NC4jCilog
-         WNN6v9hYwpbq3/rOXyU2k70kRnhyxyodAQLYKiG7muWYTb7nOEGpM7futwBV6jayL3l6
-         6eaeOJE1Xebfw7lDx3cmAjwkTTz0GPJkpiaJsxzbB+es+cm2P0hiSeOKGxuFiSX2ZgOE
-         k+6w==
+        bh=o1XJQv3xdST2ri9dQSPRqTi+utLoroqVOFsqThWptWg=;
+        b=BoLnBkwqv59Kv2JXYWfehBShW2dawYLjjfGT83f2LDKPJ9DgeFbYuYiBm6hc1IninT
+         NM9ehe+OWD5qfZiGF1uCZ9zhVMIMIyI5CnwksIQFJZV6Pbw5GBXKCGQVq/sv6WhYD/C0
+         bQXZOeTzc7Jzg8nOMOU3Rih1rtIpcJL8Z+xtAw0oodBjpYyJOEB40dl73dwhB8AZa5kY
+         lwv5HZCL81ivLPF8dLnO7OgYWsxtDGdFTuN8lvKVuBb0Ts6cv7B2a7sfnpuxG4qqktkD
+         0+yBMZMag2MBjMaz6Pscwv1+3auLTu8n05bYIQz6+DgEl9C+19kfCrxi3gTSXcsYHul1
+         KQXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dg6MQg0di+LqjBqONGXXxyBRvWh5krLOCNnRvvUvfe8=;
-        b=sGa/GQLY5BqXnxsRI+I04uUsManqsKNB1zuT2Ke+W57gtF63QM1OuNuhGEvimuJYlk
-         2mpvC2UyhOYOWZu9HAPzmx5nm6ZsyLsXmoxBSCa0YxDaoYI0tiiot729ol8lR56Jm/M/
-         T63AY0CIv+/hr7xt5lh2Df/CenB6anKUT1vKTcR95I3caH+of1Xt3jLagTUYtQnwJjel
-         YLffhmmrO+4H4Qeowk30hPRasODLQYMtsN+pET95lcT/hpJMPDmpb6ltqgA7dbIWfJKX
-         fUEpLNcMKmlylaM+RtLgE9DXz3SrD3fk+NU6kjU4kiBetueF0nJBrURUYFLKj9mVLm6+
-         lBrg==
-X-Gm-Message-State: AOAM532QD7sLpjzYjeIabW0XFWL6nO4BwIkk+ktPvqWibiebUTy8/CdM
-        wjyajXmPMHRhqbHsE8CEHrA/ZQ==
-X-Google-Smtp-Source: ABdhPJwAKgulgVqfj13NpdmZBph65BTuF2FQs3d33CORBUFhvk4113wi68pqZxuDe+nzewP+3ZAlbw==
-X-Received: by 2002:a7b:c381:: with SMTP id s1mr5308570wmj.25.1593112634724;
-        Thu, 25 Jun 2020 12:17:14 -0700 (PDT)
+        bh=o1XJQv3xdST2ri9dQSPRqTi+utLoroqVOFsqThWptWg=;
+        b=NEn1viVzrcO45+530SVKJ++o6sjPPA1IC54+zz+0Gyl8CqGZ/VQ3YhUR4LmYGkR6Ff
+         SdkW3pmIioFbiZ15OUZwzGZZuT3qTyGF18sh4ECoyqKdLcFik2kUGsKgL6YNQoqDiC0A
+         m24Pdw4Zzc6Iub2NRKfmEnc6qqtHkGkD4Hkh51k7Vfw9sMiopy5ic0iSmuUPf6xOB0Nj
+         /wsbAKo2ZrDRPRs3OgIhimFb11usuy9GZBS2ZrKOsyxx4JfXMZ18x3woSInpsWt7DzMe
+         0LPTHUR5epR07T5ZsD4SYYps6sLARIcPPp8p5tMZIJp8Sgz5RTb1YKifucwbpuSQOouz
+         6WFw==
+X-Gm-Message-State: AOAM5306LJkjBxaTjvAeo6pzL+5fK6ptV3U8VtJ5FKSE/hpQSPddQJXd
+        nd+8r8LouzpRT8wp+dTGdmCHMU8jxQjvJA==
+X-Google-Smtp-Source: ABdhPJxtSqoSA4WAktcHqgHNSJc/uRopu59O8Pv32mWtJTYz7hbM01rHb3X/SSRuT+mhPP39eykD8A==
+X-Received: by 2002:adf:84e2:: with SMTP id 89mr34557885wrg.139.1593112635636;
+        Thu, 25 Jun 2020 12:17:15 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.12
+        by smtp.gmail.com with ESMTPSA id p13sm22693983wrn.0.2020.06.25.12.17.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 12:17:13 -0700 (PDT)
+        Thu, 25 Jun 2020 12:17:15 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     lgirdwood@gmail.com, broonie@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: [RESEND 01/10] regulator: consumer: Supply missing prototypes for 3 core functions
-Date:   Thu, 25 Jun 2020 20:16:59 +0100
-Message-Id: <20200625191708.4014533-2-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>
+Subject: [RESEND 02/10] regulator: devres: Fix issues with kerneldoc headers
+Date:   Thu, 25 Jun 2020 20:17:00 +0100
+Message-Id: <20200625191708.4014533-3-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625191708.4014533-1-lee.jones@linaro.org>
 References: <20200625191708.4014533-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-regulator_suspend_enable(), regulator_suspend_disable() and
-regulator_set_suspend_voltage() are all exported members of the
-API, but are all missing prototypes.
+Provide descriptions for some missing function args and
+rename others to match the names used.
 
 Fixes the following W=1 warning(s):
 
- drivers/regulator/core.c:3805:5: warning: no previous prototype for ‘regulator_suspend_enable’ [-Wmissing-prototypes]
- 3805 | int regulator_suspend_enable(struct regulator_dev *rdev,
- | ^~~~~~~~~~~~~~~~~~~~~~~~
- drivers/regulator/core.c:3812:5: warning: no previous prototype for ‘regulator_suspend_disable’ [-Wmissing-prototypes]
- 3812 | int regulator_suspend_disable(struct regulator_dev *rdev,
- | ^~~~~~~~~~~~~~~~~~~~~~~~~
- drivers/regulator/core.c:3851:5: warning: no previous prototype for ‘regulator_set_suspend_voltage’ [-Wmissing-prototypes]
- 3851 | int regulator_set_suspend_voltage(struct regulator *regulator, int min_uV,
- | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ drivers/regulator/devres.c:187: warning: Function parameter or member 'dev' not described in 'devm_regulator_register'
+ drivers/regulator/devres.c:226: warning: Function parameter or member 'dev' not described in 'devm_regulator_unregister'
+ drivers/regulator/devres.c:226: warning: Function parameter or member 'rdev' not described in 'devm_regulator_unregister'
+ drivers/regulator/devres.c:226: warning: Excess function parameter 'regulator' description in 'devm_regulator_unregister'
 
-Cc: Chunyan Zhang <zhang.chunyan@linaro.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- include/linux/regulator/consumer.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/regulator/devres.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index 6a92fd3105a31..2024944fd2f78 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -32,10 +32,12 @@
- #define __LINUX_REGULATOR_CONSUMER_H_
+diff --git a/drivers/regulator/devres.c b/drivers/regulator/devres.c
+index 3ea1c170f8402..3f73ce8590007 100644
+--- a/drivers/regulator/devres.c
++++ b/drivers/regulator/devres.c
+@@ -173,6 +173,7 @@ static void devm_rdev_release(struct device *dev, void *res)
  
- #include <linux/err.h>
-+#include <linux/suspend.h>
+ /**
+  * devm_regulator_register - Resource managed regulator_register()
++ * @dev:  device to supply
+  * @regulator_desc: regulator to register
+  * @config: runtime configuration for regulator
+  *
+@@ -216,7 +217,8 @@ static int devm_rdev_match(struct device *dev, void *res, void *data)
  
- struct device;
- struct notifier_block;
- struct regmap;
-+struct regulator_dev;
- 
- /*
-  * Regulator operating modes.
-@@ -277,6 +279,14 @@ int regulator_unregister_notifier(struct regulator *regulator,
- void devm_regulator_unregister_notifier(struct regulator *regulator,
- 					struct notifier_block *nb);
- 
-+/* regulator suspend */
-+int regulator_suspend_enable(struct regulator_dev *rdev,
-+			     suspend_state_t state);
-+int regulator_suspend_disable(struct regulator_dev *rdev,
-+			      suspend_state_t state);
-+int regulator_set_suspend_voltage(struct regulator *regulator, int min_uV,
-+				  int max_uV, suspend_state_t state);
-+
- /* driver data - core doesn't touch */
- void *regulator_get_drvdata(struct regulator *regulator);
- void regulator_set_drvdata(struct regulator *regulator, void *data);
+ /**
+  * devm_regulator_unregister - Resource managed regulator_unregister()
+- * @regulator: regulator to free
++ * @dev:  device to supply
++ * @rdev: regulator to free
+  *
+  * Unregister a regulator registered with devm_regulator_register().
+  * Normally this function will not need to be called and the resource
 -- 
 2.25.1
 
