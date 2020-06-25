@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8807C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67F920700
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295B020700
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgFYX5N (ORCPT
+        id S1726627AbgFYX5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 25 Jun 2020 19:57:13 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32905 "EHLO mga01.intel.com"
+Received: from mga04.intel.com ([192.55.52.120]:10736 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgFYX5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:57:13 -0400
-IronPort-SDR: M/FFNP/58ajsH/6+e+L0MIxKwIDQpNfH/sB9Re6yc4Pys1KRCCXc1qpxHE0+WRA5TBj/gVq4bA
- TgOnu6uXMQKQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="163203531"
+        id S1726106AbgFYX5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 19:57:12 -0400
+IronPort-SDR: bqf/d+JKJRAfhAaOKljondbIDX8AOJnrJR6S9TUcaYlmM8rndlCXS7suygcV3Iq7QiXQBVFuE8
+ dbdWoE6wt/Pw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="142632980"
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="163203531"
+   d="scan'208";a="142632980"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 16:57:12 -0700
-IronPort-SDR: 2PprpwLU6vt+8rd54I08UFoRXKAIkHFQRlj2eDmYU9pnSrf7ifu6FbO/5MU0+1tlURkSYc+8gN
- tU3lSVwrfh/g==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 16:57:12 -0700
+IronPort-SDR: d8AfyzoRHf+gU8v/MF7shFOwAVBU0pc/Tury7ONo+71hx4xQfcvoKD1/MDoAhi3c/ECEC2dGSZ
+ fKm8NByBKqTA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,281,1589266800"; 
-   d="scan'208";a="302169039"
+   d="scan'208";a="264072058"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Jun 2020 16:57:11 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 16:57:11 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jobjy-0001su-Px; Thu, 25 Jun 2020 23:57:10 +0000
-Date:   Fri, 26 Jun 2020 07:56:53 +0800
+        id 1jobjy-0001sj-Ii; Thu, 25 Jun 2020 23:57:10 +0000
+Date:   Fri, 26 Jun 2020 07:56:14 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c
-Message-ID: <5ef539c5.yHuGp88WDdmFhgWW%lkp@intel.com>
+Subject: [tip:x86/entry] BUILD SUCCESS
+ 145a773aef83181d47ebab21bb33c89233aadb1e
+Message-ID: <5ef5399e.SQsQzItlFDgAS2jH%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,13 +54,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/core
-branch HEAD: 01e377c539ca52a6c753d0fdbe93b3b8fcd66a1c  sched/core: Remove mmdrop() definition
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  x86/entry
+branch HEAD: 145a773aef83181d47ebab21bb33c89233aadb1e  x86/entry: Fix #UD vs WARN more
 
 elapsed time: 727m
 
-configs tested: 120
-configs skipped: 5
+configs tested: 94
+configs skipped: 4
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -68,33 +68,22 @@ More configs may be tested in the coming days.
 arm                                 defconfig
 arm                              allyesconfig
 arm                              allmodconfig
-arm                               allnoconfig
 arm64                            allyesconfig
 arm64                               defconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
-arc                     haps_hs_smp_defconfig
-s390                             allyesconfig
-powerpc                          g5_defconfig
-mips                        jmr3927_defconfig
+arm                               allnoconfig
 sh                           se7751_defconfig
 arm                       imx_v6_v7_defconfig
 arm                            xcep_defconfig
 arm                      pxa255-idp_defconfig
 arm                          tango4_defconfig
-arm                       mainstone_defconfig
-arm                          moxart_defconfig
-m68k                            q40_defconfig
-sh                          sdk7786_defconfig
-s390                              allnoconfig
-arm                            mps2_defconfig
 arm                             pxa_defconfig
 arm                         lpc18xx_defconfig
 mips                           ip27_defconfig
 arm                     eseries_pxa_defconfig
 mips                      loongson3_defconfig
 i386                             alldefconfig
-nds32                             allnoconfig
 sh                           se7724_defconfig
 mips                     loongson1b_defconfig
 parisc                            allnoconfig
@@ -119,6 +108,7 @@ c6x                              allyesconfig
 c6x                               allnoconfig
 openrisc                         allyesconfig
 nds32                               defconfig
+nds32                             allnoconfig
 csky                             allyesconfig
 csky                                defconfig
 alpha                               defconfig
@@ -138,33 +128,17 @@ mips                             allmodconfig
 parisc                              defconfig
 parisc                           allyesconfig
 parisc                           allmodconfig
-powerpc                             defconfig
 powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
-x86_64               randconfig-a004-20200624
-x86_64               randconfig-a002-20200624
-x86_64               randconfig-a003-20200624
-x86_64               randconfig-a005-20200624
-x86_64               randconfig-a001-20200624
-x86_64               randconfig-a006-20200624
-i386                 randconfig-a002-20200624
-i386                 randconfig-a006-20200624
-i386                 randconfig-a003-20200624
-i386                 randconfig-a001-20200624
-i386                 randconfig-a005-20200624
-i386                 randconfig-a004-20200624
-i386                 randconfig-a013-20200624
-i386                 randconfig-a016-20200624
-i386                 randconfig-a012-20200624
-i386                 randconfig-a014-20200624
-i386                 randconfig-a011-20200624
-i386                 randconfig-a015-20200624
+powerpc                             defconfig
 riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
 riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
 s390                             allmodconfig
 s390                                defconfig
 sparc                            allyesconfig
@@ -173,10 +147,10 @@ sparc64                             defconfig
 sparc64                           allnoconfig
 sparc64                          allyesconfig
 sparc64                          allmodconfig
-um                               allmodconfig
 um                                allnoconfig
-um                               allyesconfig
 um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
 x86_64                               rhel-7.6
 x86_64                    rhel-7.6-kselftests
 x86_64                               rhel-8.3
