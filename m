@@ -2,343 +2,198 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58444C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB74820768
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:00:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrGoSe8u"
+	by mail.kernel.org (Postfix) with ESMTP id 35C0120768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 15:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405762AbgFYPAr (ORCPT
+        id S2405768AbgFYPBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 11:00:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22348 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2405551AbgFYPAq (ORCPT
+        Thu, 25 Jun 2020 11:01:25 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37624 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405502AbgFYPBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 11:00:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593097243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=vaH2XhJqrgmeupOZvHE/JM6nCD/HOI9ko13ymUaYKgc=;
-        b=WrGoSe8uWLEf6bixBo4hc88Nzmq1DSusnWCOANuTMo/N6hLc1FEdabmPGJE7H3Pt9dbld7
-        YH/gwgweYZJv0oyzhYFrK60snVHwZgqRAz3KXUFSaGFteJVddlL+yLJN6QiRdIumVbsl07
-        dNtN862BVrAge0bqwNcEc4eRCPyQp1U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-BsZRdPTVOZ2BB0HH1sIPXw-1; Thu, 25 Jun 2020 11:00:40 -0400
-X-MC-Unique: BsZRdPTVOZ2BB0HH1sIPXw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAD509113A;
-        Thu, 25 Jun 2020 15:00:37 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-65.ams2.redhat.com [10.36.113.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A02C101E670;
-        Thu, 25 Jun 2020 15:00:30 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: [PATCH RFC] s390x/vmem: get rid of memory segment list
-Date:   Thu, 25 Jun 2020 17:00:29 +0200
-Message-Id: <20200625150029.45019-1-david@redhat.com>
+        Thu, 25 Jun 2020 11:01:24 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: nicolas)
+        with ESMTPSA id 73EA82A5609
+Message-ID: <079f79676335c32941e0021b84849164858c09df.camel@collabora.com>
+Subject: Re: [RFC 4/7] media: uapi: h264: increase size of fields
+From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Thu, 25 Jun 2020 11:01:17 -0400
+In-Reply-To: <20200623182809.1375-5-ezequiel@collabora.com>
+References: <20200623182809.1375-1-ezequiel@collabora.com>
+         <20200623182809.1375-5-ezequiel@collabora.com>
+Organization: Collabora
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-9RBrC6l+NKPdk3Yh+xmn"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I can't come up with a satisfying reason why we still need the memory
-segment list. We used to represent in the list:
-- boot memory
-- standby memory added via add_memory()
-- loaded dcss segments
 
-When loading/unloading dcss segments, we already track them in a
-separate list and check for overlaps
-(arch/s390/mm/extmem.c:segment_overlaps_others()) when loading segments.
+--=-9RBrC6l+NKPdk3Yh+xmn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The overlap check was introduced for some segments in
-commit b2300b9efe1b ("[S390] dcssblk: add >2G DCSSs support and stacked
-contiguous DCSSs support.")
-and was extended to cover all dcss segments in
-commit ca57114609d1 ("s390/extmem: remove code for 31 bit addressing
-mode").
+Le mardi 23 juin 2020 =C3=A0 15:28 -0300, Ezequiel Garcia a =C3=A9crit :
+> Slice header syntax element 'first_mb_in_slice' can point
+> to the last macroblock, currently the field can only reference
+> 65536 macroblocks which is insufficient for 8K videos.
+>=20
+> DPB entry PicNum maximum value is 2*MaxFrameNum for interlaced
+> content (field_pic_flag=3D1).
+>=20
+> Therefore, increase 'first_mb_in_slice' and 'pic_num'.
+>=20
+> The v4l2_h264_dpb_entry struct needs to be padded to avoid a hole,
+> which will be useful to allow future uAPI extensions.
+>=20
+> Note that v4l2_ctrl_h264_slice_params struct will be modified
+> in a follow-up commit, and so we defer its 64-bit padding.
 
-Although I doubt that overlaps with boot memory and standby memory
-are relevant, let's reshuffle the checks in load_segment() to request
-the resource first. This will bail out in case we have overlaps with
-other resources (esp. boot memory and standby memory). The order
-is now different compared to segment_unload() and segment_unload(), but
-that should not matter.
+This patch includes two changes, with two distinct rationale. Please
+split in two, I would also add reference to the spec in the commit
+messages. The explanation is also insufficient. Need to mention that
+macro-blocks are 16x16, and the bounds for synthetic value
+MaxFrameNum (derived from bitstream value) has not be mention either.
 
-This smells like a leftover from ancient times, let's get rid of it. We
-can now convert vmem_remove_mapping() into a void function - everybody
-ignored the return value already.
+>=20
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 7 +++++--
+>  drivers/media/v4l2-core/v4l2-ctrls.c                     | 9 +++++++++
+>  include/media/h264-ctrls.h                               | 6 ++++--
+>  include/media/v4l2-h264.h                                | 2 +-
+>  4 files changed, 19 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index 0808a36777b6..e3b5a28fb965 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1772,7 +1772,7 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type =
+-
+>      * - __u32
+>        - ``header_bit_size``
+>        -
+> -    * - __u16
+> +    * - __u32
+>        - ``first_mb_in_slice``
+>        -
+>      * - __u8
+> @@ -2046,7 +2046,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
+ -
+>      * - __u16
+>        - ``frame_num``
+>        -
+> -    * - __u16
+> +    * - __u8
+> +      - ``reserved[6]``
+> +      - Applications and drivers must set this to zero.
+> +    * - __u32
+>        - ``pic_num``
+>        -
+>      * - __s32
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-co=
+re/v4l2-ctrls.c
+> index 6abd023f10c7..a751c14f9c22 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -1734,6 +1734,7 @@ static int std_validate_compound(const struct v4l2_=
+ctrl *ctrl, u32 idx,
+>  	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+> +	struct v4l2_ctrl_h264_decode_params *p_h264_dec_params;
+>  	struct v4l2_ctrl_hevc_sps *p_hevc_sps;
+>  	struct v4l2_ctrl_hevc_pps *p_hevc_pps;
+>  	struct v4l2_ctrl_hevc_slice_params *p_hevc_slice_params;
+> @@ -1808,6 +1809,14 @@ static int std_validate_compound(const struct v4l2=
+_ctrl *ctrl, u32 idx,
+>  		}
+>  		break;
+>  	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
+> +		p_h264_dec_params =3D p;
+> +
+> +		for (i =3D 0; i < V4L2_H264_NUM_DPB_ENTRIES; i++) {
+> +			struct v4l2_h264_dpb_entry *dpb_entry =3D
+> +				&p_h264_dec_params->dpb[i];
+> +
+> +			zero_reserved(*dpb_entry);
+> +		}
+>  		break;
+> =20
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index c6cbf178c1c9..a938d16b901c 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -161,7 +161,8 @@ struct v4l2_ctrl_h264_slice_params {
+>  	/* Offset in bits to slice_data() from the beginning of this slice. */
+>  	__u32 header_bit_size;
+> =20
+> -	__u16 first_mb_in_slice;
+> +	__u32 first_mb_in_slice;
+> +
+>  	__u8 slice_type;
+>  	__u8 pic_parameter_set_id;
+>  	__u8 colour_plane_id;
+> @@ -208,7 +209,8 @@ struct v4l2_ctrl_h264_slice_params {
+>  struct v4l2_h264_dpb_entry {
+>  	__u64 reference_ts;
+>  	__u16 frame_num;
+> -	__u16 pic_num;
+> +	__u8 reserved[6];
+> +	__u32 pic_num;
+>  	/* Note that field is indicated by v4l2_buffer.field */
+>  	__s32 top_field_order_cnt;
+>  	__s32 bottom_field_order_cnt;
+> diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
+> index bc9ebb560ccf..1a5f26fc2a9a 100644
+> --- a/include/media/v4l2-h264.h
+> +++ b/include/media/v4l2-h264.h
+> @@ -33,7 +33,7 @@ struct v4l2_h264_reflist_builder {
+>  	struct {
+>  		s32 pic_order_count;
+>  		int frame_num;
+> -		u16 pic_num;
+> +		u32 pic_num;
+>  		u16 longterm : 1;
+>  	} refs[V4L2_H264_NUM_DPB_ENTRIES];
+>  	s32 cur_pic_order_count;
 
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/include/asm/pgtable.h |   2 +-
- arch/s390/mm/extmem.c           |  25 +++----
- arch/s390/mm/vmem.c             | 115 ++------------------------------
- 3 files changed, 21 insertions(+), 121 deletions(-)
+--=-9RBrC6l+NKPdk3Yh+xmn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 19d603bd1f36e..7eb01a5459cdf 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1669,7 +1669,7 @@ static inline swp_entry_t __swp_entry(unsigned long type, unsigned long offset)
- #define kern_addr_valid(addr)   (1)
- 
- extern int vmem_add_mapping(unsigned long start, unsigned long size);
--extern int vmem_remove_mapping(unsigned long start, unsigned long size);
-+extern void vmem_remove_mapping(unsigned long start, unsigned long size);
- extern int s390_enable_sie(void);
- extern int s390_enable_skey(void);
- extern void s390_reset_cmma(struct mm_struct *mm);
-diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
-index 9e0aa7aa03ba4..105c09282f8c5 100644
---- a/arch/s390/mm/extmem.c
-+++ b/arch/s390/mm/extmem.c
-@@ -313,15 +313,10 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
- 		goto out_free;
- 	}
- 
--	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
--
--	if (rc)
--		goto out_free;
--
- 	seg->res = kzalloc(sizeof(struct resource), GFP_KERNEL);
- 	if (seg->res == NULL) {
- 		rc = -ENOMEM;
--		goto out_shared;
-+		goto out_free;
- 	}
- 	seg->res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
- 	seg->res->start = seg->start_addr;
-@@ -335,12 +330,17 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
- 	if (rc == SEG_TYPE_SC ||
- 	    ((rc == SEG_TYPE_SR || rc == SEG_TYPE_ER) && !do_nonshared))
- 		seg->res->flags |= IORESOURCE_READONLY;
-+
-+	/* Check for overlapping resources before adding the mapping. */
- 	if (request_resource(&iomem_resource, seg->res)) {
- 		rc = -EBUSY;
--		kfree(seg->res);
--		goto out_shared;
-+		goto out_free_resource;
- 	}
- 
-+	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
-+	if (rc)
-+		goto out_resource;
-+
- 	if (do_nonshared)
- 		diag_cc = dcss_diag(&loadnsr_scode, seg->dcss_name,
- 				&start_addr, &end_addr);
-@@ -351,14 +351,14 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
- 		dcss_diag(&purgeseg_scode, seg->dcss_name,
- 				&dummy, &dummy);
- 		rc = diag_cc;
--		goto out_resource;
-+		goto out_mapping;
- 	}
- 	if (diag_cc > 1) {
- 		pr_warn("Loading DCSS %s failed with rc=%ld\n", name, end_addr);
- 		rc = dcss_diag_translate_rc(end_addr);
- 		dcss_diag(&purgeseg_scode, seg->dcss_name,
- 				&dummy, &dummy);
--		goto out_resource;
-+		goto out_mapping;
- 	}
- 	seg->start_addr = start_addr;
- 	seg->end = end_addr;
-@@ -377,11 +377,12 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
- 			(void*) seg->end, segtype_string[seg->vm_segtype]);
- 	}
- 	goto out;
-+ out_mapping:
-+	vmem_remove_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
-  out_resource:
- 	release_resource(seg->res);
-+ out_free_resource:
- 	kfree(seg->res);
-- out_shared:
--	vmem_remove_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
-  out_free:
- 	kfree(seg);
-  out:
-diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
-index 8b6282cf7d139..3b9e71654c37b 100644
---- a/arch/s390/mm/vmem.c
-+++ b/arch/s390/mm/vmem.c
-@@ -20,14 +20,6 @@
- 
- static DEFINE_MUTEX(vmem_mutex);
- 
--struct memory_segment {
--	struct list_head list;
--	unsigned long start;
--	unsigned long size;
--};
--
--static LIST_HEAD(mem_segs);
--
- static void __ref *vmem_alloc_pages(unsigned int order)
- {
- 	unsigned long size = PAGE_SIZE << order;
-@@ -300,94 +292,25 @@ void vmemmap_free(unsigned long start, unsigned long end,
- {
- }
- 
--/*
-- * Add memory segment to the segment list if it doesn't overlap with
-- * an already present segment.
-- */
--static int insert_memory_segment(struct memory_segment *seg)
--{
--	struct memory_segment *tmp;
--
--	if (seg->start + seg->size > VMEM_MAX_PHYS ||
--	    seg->start + seg->size < seg->start)
--		return -ERANGE;
--
--	list_for_each_entry(tmp, &mem_segs, list) {
--		if (seg->start >= tmp->start + tmp->size)
--			continue;
--		if (seg->start + seg->size <= tmp->start)
--			continue;
--		return -ENOSPC;
--	}
--	list_add(&seg->list, &mem_segs);
--	return 0;
--}
--
--/*
-- * Remove memory segment from the segment list.
-- */
--static void remove_memory_segment(struct memory_segment *seg)
--{
--	list_del(&seg->list);
--}
--
--static void __remove_shared_memory(struct memory_segment *seg)
-+void vmem_remove_mapping(unsigned long start, unsigned long size)
- {
--	remove_memory_segment(seg);
--	vmem_remove_range(seg->start, seg->size);
--}
--
--int vmem_remove_mapping(unsigned long start, unsigned long size)
--{
--	struct memory_segment *seg;
--	int ret;
--
- 	mutex_lock(&vmem_mutex);
--
--	ret = -ENOENT;
--	list_for_each_entry(seg, &mem_segs, list) {
--		if (seg->start == start && seg->size == size)
--			break;
--	}
--
--	if (seg->start != start || seg->size != size)
--		goto out;
--
--	ret = 0;
--	__remove_shared_memory(seg);
--	kfree(seg);
--out:
-+	vmem_remove_range(start, size);
- 	mutex_unlock(&vmem_mutex);
--	return ret;
- }
- 
- int vmem_add_mapping(unsigned long start, unsigned long size)
- {
--	struct memory_segment *seg;
- 	int ret;
- 
--	mutex_lock(&vmem_mutex);
--	ret = -ENOMEM;
--	seg = kzalloc(sizeof(*seg), GFP_KERNEL);
--	if (!seg)
--		goto out;
--	seg->start = start;
--	seg->size = size;
--
--	ret = insert_memory_segment(seg);
--	if (ret)
--		goto out_free;
-+	if (start + size > VMEM_MAX_PHYS ||
-+	    start + size < start)
-+		return -ERANGE;
- 
-+	mutex_lock(&vmem_mutex);
- 	ret = vmem_add_mem(start, size);
- 	if (ret)
--		goto out_remove;
--	goto out;
--
--out_remove:
--	__remove_shared_memory(seg);
--out_free:
--	kfree(seg);
--out:
-+		vmem_remove_range(start, size);
- 	mutex_unlock(&vmem_mutex);
- 	return ret;
- }
-@@ -421,27 +344,3 @@ void __init vmem_map_init(void)
- 	pr_info("Write protected kernel read-only data: %luk\n",
- 		(unsigned long)(__end_rodata - _stext) >> 10);
- }
--
--/*
-- * Convert memblock.memory  to a memory segment list so there is a single
-- * list that contains all memory segments.
-- */
--static int __init vmem_convert_memory_chunk(void)
--{
--	struct memblock_region *reg;
--	struct memory_segment *seg;
--
--	mutex_lock(&vmem_mutex);
--	for_each_memblock(memory, reg) {
--		seg = kzalloc(sizeof(*seg), GFP_KERNEL);
--		if (!seg)
--			panic("Out of memory...\n");
--		seg->start = reg->base;
--		seg->size = reg->size;
--		insert_memory_segment(seg);
--	}
--	mutex_unlock(&vmem_mutex);
--	return 0;
--}
--
--core_initcall(vmem_convert_memory_chunk);
--- 
-2.26.2
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXvS8PQAKCRBxUwItrAao
+HFAWAJwJtTQhBZ6Uu12RvpMLRx2LZUXjAgCgweRrhAETGilW6ronzbt8tOxnlMA=
+=rhWe
+-----END PGP SIGNATURE-----
+
+--=-9RBrC6l+NKPdk3Yh+xmn--
 
