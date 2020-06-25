@@ -2,172 +2,143 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB421C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F70AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C32492072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE942072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 02:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lo5wCOnD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jZms4slB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389320AbgFYBwl (ORCPT
+        id S2389174AbgFYCAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:52:41 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:35185 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389143AbgFYBwl (ORCPT
+        Wed, 24 Jun 2020 22:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389070AbgFYCAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:52:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593049960; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=8B6Pxy32SmGdNLfWwVSEcjH7KvONhou3Vtz1xrwMALQ=; b=lo5wCOnDnvSOu/AlzGWamg6PUE+LhE/HaejaOctFGo14qUuyKLFBrp0ksUBu6WbHR8tpPcM8
- I5oC0xSfZjSxbsydGJotnhJ+2J06k9pabGkyc43+vebA4OvbjV0FHGjBK/U1+nU3OD3jszfs
- MJUpU86b/ZRppVrk/JA+D5doVsc=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5ef403570206ad41d12b1015 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 01:52:23
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 58EFBC433C8; Thu, 25 Jun 2020 01:52:22 +0000 (UTC)
-Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70DB7C433C6;
-        Thu, 25 Jun 2020 01:52:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 70DB7C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
-Subject: Re: [PATCH v3 3/4] docs: Add documentation for user space client
- interface
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org, bbhatt@codeaurora.org
-References: <1591899224-3403-1-git-send-email-hemantk@codeaurora.org>
- <1591899224-3403-4-git-send-email-hemantk@codeaurora.org>
- <20200619063948.GC3245@Mani-XPS-13-9360>
-From:   Hemant Kumar <hemantk@codeaurora.org>
-Message-ID: <7b64f78e-40c7-7c65-3832-4bbc5da93674@codeaurora.org>
-Date:   Wed, 24 Jun 2020 18:52:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Jun 2020 22:00:23 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B46C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 19:00:22 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id y3so750194vkg.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 19:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=haPh2Xvd7Zt46zY+ZtekFR/RX9PHzoO9GWj53NuZJAg=;
+        b=jZms4slBsFztIAOUylr/cALBwKqs7LOp4M06UnI3N6wUY7Wx89GY/oUw2v2mCerW3H
+         5VYU6+xD6MkxP/svHFVvqxwXV4xDJvc8HlcmDkIAxQtelVzS5LZM2ZUi7vZIhQNrA7TI
+         WC6isbl6OBTxZEPteEYdHTr5zwUnsKYinCBGI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=haPh2Xvd7Zt46zY+ZtekFR/RX9PHzoO9GWj53NuZJAg=;
+        b=V7nqgzrZOGvwqA5sI1TCcKCIbZ9um1jPEKc/nm6OoaDnQZbNTHNs9Uv30KIa4I336N
+         ePmfjzSN3K7UjFuFxgls3ButmhMMMSG8ldG8MpjZSYvlCEUxkIKgVKEpDm1La3juUxqf
+         SjtJWptbMw8C/A/fxA15xojnz4h3jhpPoAqJZY6aiPjx0h0BgAZ2peHHdqzhN9bw3BJs
+         XMOMRtSjwTk17EkjntdrG7UDv2D5cm0nqir43RqgBC3lzvIPDEhUNiHUSaG1r+E80Dtw
+         s+c5AxXN0Oin1078naGuR1Z3t4LpvK2JEN3hx5c2Tzqbr30atMs1Rnt+WyngO+kRPPCq
+         1Aiw==
+X-Gm-Message-State: AOAM533VVsKwNcLCKP1E6qKLf1Nptasecp9MADhCLqrroVH8yoYXLaJS
+        a55m+sA3i39HGU+AOeH02N/GQMdepHletWkoS/b43A==
+X-Google-Smtp-Source: ABdhPJydWeOY40pKFEMO6Yr41VUFuo4Ro6+kbmxyCIJyVgV0ilXzBlgncKAJwc0X62UvnH7+TKymJSemHdSMrJtHhkg=
+X-Received: by 2002:a1f:1e0b:: with SMTP id e11mr25308230vke.55.1593050420674;
+ Wed, 24 Jun 2020 19:00:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200619063948.GC3245@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200624084524.259560-1-drinkcat@chromium.org>
+ <20200624120408.12c8fa0d@oasis.local.home> <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
+In-Reply-To: <CAADnVQKDJb5EXZtEONaXx4XHtMMgEezPOuRUvEo18Rc7K+2_Pw@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 25 Jun 2020 10:00:09 +0800
+Message-ID: <CANMq1KCAUfxy-njMJj0=+02Jew_1rJGwxLzp6BRTE=9CL2DZNA@mail.gmail.com>
+Subject: Re: [PATCH] kernel/trace: Add TRACING_ALLOW_PRINTK config option
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani,
+On Thu, Jun 25, 2020 at 1:25 AM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Jun 24, 2020 at 9:07 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Wed, 24 Jun 2020 16:45:24 +0800
+> > Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >
+> > > trace_printk is only meant as a debugging tool, and should never be
+> > > compiled into production code without source code changes, as
+> > > indicated by the warning that shows up on boot if any trace_printk
+> > > is called:
+> > >  **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+> > >  **                                                      **
+> > >  ** trace_printk() being used. Allocating extra memory.  **
+> > >  **                                                      **
+> > >  ** This means that this is a DEBUG kernel and it is     **
+> > >  ** unsafe for production use.                           **
+> > >
+> > > If this option is set to n, the kernel will generate a build-time
+> > > error if trace_printk is used.
+> > >
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> >
+> > Interesting. Note, this will prevent modules with trace_printk from
+> > being loaded as well.
+>
+> Nack.
+> The message is bogus. It's used in production kernels.
+> bpf_trace_printk() calls it.
 
-On 6/18/20 11:39 PM, Manivannan Sadhasivam wrote:
-> On Thu, Jun 11, 2020 at 11:13:43AM -0700, Hemant Kumar wrote:
->> MHI user space client driver is creating device file node
->> for user application to perform file operations. File
->> operations are handled by MHI core driver. Currently
->> Loopback MHI channel is supported by this driver.
->>
->> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
->> ---
->>   Documentation/mhi/index.rst |  1 +
->>   Documentation/mhi/uci.rst   | 19 +++++++++++++++++++
->>   2 files changed, 20 insertions(+)
->>   create mode 100644 Documentation/mhi/uci.rst
->>
->> diff --git a/Documentation/mhi/index.rst b/Documentation/mhi/index.rst
->> index 1d8dec3..c75a371 100644
->> --- a/Documentation/mhi/index.rst
->> +++ b/Documentation/mhi/index.rst
->> @@ -9,6 +9,7 @@ MHI
->>   
->>      mhi
->>      topology
->> +   uci
->>   
->>   .. only::  subproject and html
->>   
->> diff --git a/Documentation/mhi/uci.rst b/Documentation/mhi/uci.rst
->> new file mode 100644
->> index 0000000..a5c5c4f
->> --- /dev/null
->> +++ b/Documentation/mhi/uci.rst
->> @@ -0,0 +1,19 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +=================================
->> +User space Client Interface (UCI)
-> 
-> Stick to 'Userspace' everywhere.
-Done.
-> 
->> +=================================
->> +
->> +UCI driver enables user space clients to communicate to external MHI devices
->> +like modem and WLAN. It creates standard character device file nodes for user
-> 
-> UCI driver creates a single char device, isn't it?
-No, it is created per device name. For example Loopback has its own char 
-device file node. if we add another channel for a new mhi device new 
-device file node would be created.
-> 
->> +space clients to perform open, read, write, pool and close file operations.
->> +
-> 
-> poll? Btw, you need to mention explicitly how this char device can be used.
-> You are just mentioning standard file operations.
-Will fix poll.My idea was indeed to mention generic file operations so 
-that we dont have to be specific with use case. Any userspace entity who 
-wants to communicate over mhi can use the driver. Reason we have this 
-driver is to abstract the mhi core specific details. Even for loopback 
-use case, userspace can echo to device file node on one channel and get 
-a same in response from another channel back. I can add more examples of
-other user space drivers use case if that helps.
-> 
->> +Device file node is created with format:-
->> +
->> +/dev/mhi_<controller_name>_<mhi_device_name>
->> +
->> +controller_name is the name of underlying bus used to transfer data.
-> 
-> underlying controller instance.
-Done.
-> 
->> +mhi_device_name is the name of the MHI channel being used by MHI client
-> 
-> What do you mean by MHI client here? Are you referring to userspace client?
-yes. i can say "MHI client in userspace"?
-> 
->> +to send or receive data using MHI protocol. MHI channels are statically
->> +defined by MHI specification. Driver currently supports LOOPBACK channel
->> +index 0 (Host to device) and 1 (Device to Host).
-> 
-> s/index/identifier
-Done.
-> 
-> And explain a bit on how this LOOPBACK channel is getting used.
-Done.
-> 
-> Thanks,
-> Mani
-> 
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+Interesting. BTW, the same information (trace_printk is for debugging
+only) is repeated all over the place, including where bpf_trace_printk
+is documented:
+https://elixir.bootlin.com/linux/latest/source/include/linux/kernel.h#L757
+https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/bpf.h#L706
+https://elixir.bootlin.com/linux/latest/source/kernel/trace/trace.c#L3157
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Steven added that warning (2184db46e425c ("tracing: Print nasty banner
+when trace_printk() is in use")), so maybe he can confirm if it's
+still relevant.
+
+Also, note that emitting the build error is behind a Kconfig option,
+you don't have to select it if you don't want to (the default is =y
+which allows trace_printk).
+
+If the overhead is real, we (Chrome OS) would like to make sure
+trace_printk does not slip into production kernels (we do want to
+provide basic tracing support so we can't just remove CONFIG_TRACING
+as a whole which would make trace_printk no-ops). I could also imagine
+potential security issues if people print raw pointers/sensitive data
+in trace_printk, assuming that the code is for debugging only.
+
+Also, the fact that the kernel test robot already found a stray
+trace_printk in drivers/usb/cdns3/gadget.c makes me think that this
+change is working as intended ,-) (we're going to need to add a few
+Kconfig deps though for other debugging options that intentionally use
+trace_printk).
