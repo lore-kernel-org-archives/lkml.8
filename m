@@ -5,37 +5,37 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F33206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCBD206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436622AbgFYUTN (ORCPT
+        id S2436630AbgFYUTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:19:13 -0400
-Received: from mga18.intel.com ([134.134.136.126]:20502 "EHLO mga18.intel.com"
+        Thu, 25 Jun 2020 16:19:17 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20511 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436565AbgFYUSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2436554AbgFYUSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 25 Jun 2020 16:18:42 -0400
-IronPort-SDR: fs6VCpu+SklCtNdeekw2jwfY8KXjM7IRYXn4Qutvdw1BBKYn6FZln881fDDHvL+P7n6fdCJSDw
- SwY2vnSMIfYg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505292"
+IronPort-SDR: PLiHLbl3I1BrvBt7GT+3xQmRGiTeMxBqAw1kFylEE8cXxnppIPyb63keRjYd4EG1N2gFr6VkNJ
+ v0PcdonAV3IQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="132505271"
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="132505292"
+   d="scan'208";a="132505271"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:40 -0700
-IronPort-SDR: Kk6DpyVQJqAJXF++AIe3VPnRKebmX+PgrOYJgnscvOreJgLE8bb0i59wzBc9avcmxFaKZX9Cqu
- akUboyEUtnoA==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 13:18:39 -0700
+IronPort-SDR: AAgquAkm1l/NqlL9WDyZ0cKvUdTTaegXPTF/KUycK8i/0U8HgUJlW03H6K4RoCnRpmWaIexUWZ
+ R0cE70GNsQvQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
-   d="scan'208";a="453132247"
+   d="scan'208";a="453132234"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:40 -0700
+  by orsmga005.jf.intel.com with ESMTP; 25 Jun 2020 13:18:38 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Joerg Roedel" <joro@8bytes.org>, "Ingo Molnar" <mingo@redhat.com>,
@@ -56,9 +56,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4 09/12] x86/process: Clear PASID state for a newly forked/cloned thread
-Date:   Thu, 25 Jun 2020 13:17:19 -0700
-Message-Id: <1593116242-31507-10-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v4 06/12] x86/msr-index: Define IA32_PASID MSR
+Date:   Thu, 25 Jun 2020 13:17:16 -0700
+Message-Id: <1593116242-31507-7-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
 References: <1593116242-31507-1-git-send-email-fenghua.yu@intel.com>
@@ -67,63 +67,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PASID state has to be cleared on forks, since the child has a
-different address space. The PASID is also cleared for thread clone. While
-it would be correct to inherit the PASID in this case, it is unknown
-whether the new task will use ENQCMD. Giving it the PASID "just in case"
-would have the downside of increased context switch overhead to setting
-the PASID MSR.
+The IA32_PASID MSR (0xd93) contains the Process Address Space Identifier
+(PASID), a 20-bit value. Bit 31 must be set to indicate the value
+programmed in the MSR is valid. Hardware uses PASID to identify process
+address space and direct responses to the right address space.
 
-Since #GP faults have to be handled on any threads that were created before
-the PASID was assigned to the mm of the process, newly created threads
-might as well be treated in a consistent way.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 v2:
-- Modify init_task_pasid().
+- Change "identify process" to "identify process address space" in the
+  commit message (Thomas)
 
- arch/x86/kernel/process.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/x86/include/asm/msr-index.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index f362ce0d5ac0..1b1492e337a6 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -121,6 +121,21 @@ static int set_new_tls(struct task_struct *p, unsigned long tls)
- 		return do_set_thread_area_64(p, ARCH_SET_FS, tls);
- }
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index e8370e64a155..e5f699ff1dd6 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -237,6 +237,9 @@
+ #define MSR_IA32_LASTINTFROMIP		0x000001dd
+ #define MSR_IA32_LASTINTTOIP		0x000001de
  
-+/* Initialize the PASID state for the forked/cloned thread. */
-+static void init_task_pasid(struct task_struct *task)
-+{
-+	struct ia32_pasid_state *ppasid;
++#define MSR_IA32_PASID			0x00000d93
++#define MSR_IA32_PASID_VALID		BIT_ULL(31)
 +
-+	/*
-+	 * Initialize the PASID state so that the PASID MSR will be
-+	 * initialized to its initial state (0) by XRSTORS when the task is
-+	 * scheduled for the first time.
-+	 */
-+	ppasid = get_xsave_addr(&task->thread.fpu.state.xsave, XFEATURE_PASID);
-+	if (ppasid)
-+		ppasid->pasid = INIT_PASID;
-+}
-+
- int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
- 		    unsigned long arg, struct task_struct *p, unsigned long tls)
- {
-@@ -174,6 +189,9 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
- 	task_user_gs(p) = get_user_gs(current_pt_regs());
- #endif
- 
-+	if (static_cpu_has(X86_FEATURE_ENQCMD))
-+		init_task_pasid(p);
-+
- 	/* Set a new TLS for the child thread? */
- 	if (clone_flags & CLONE_SETTLS)
- 		ret = set_new_tls(p, tls);
+ /* DEBUGCTLMSR bits (others vary by model): */
+ #define DEBUGCTLMSR_LBR			(1UL <<  0) /* last branch recording */
+ #define DEBUGCTLMSR_BTF_SHIFT		1
 -- 
 2.19.1
 
