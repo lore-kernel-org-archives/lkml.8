@@ -2,101 +2,115 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96897C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1641E20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIJvDCK8"
+	by mail.kernel.org (Postfix) with ESMTP id 6594820789
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406168AbgFYSnU (ORCPT
+        id S2406227AbgFYSoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbgFYSnU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:43:20 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2685C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:43:19 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o11so6920801wrv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 11:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=okeCMJMAf5i5ORVYX06tV8pNa1ecla2GMYVNKIrW6Y0=;
-        b=xIJvDCK8GjQrMT/UOE+S1I7giNiOrPpSS7M92GJStBOfj/MmOEmlWBfXjawfjqDdU8
-         JjrslXzxzoe2EZuiEH/dA+prZEkwTh+HZfWIHJN6SvxdfLQci1Y1qcRJPr0iqACEC5BT
-         vTHBIHxC+kvIaNS1a4jHawsxj2JbUjxnCgf8YlpEs/E1SXRf9kUZHfC3oEzYNOBkBb1m
-         03E3ahwOiCqdNx5imqwylKUm1vS8RCQQWMCZYoYJ51GsVBhwqq5KfhjhIuTZji6e8Eyp
-         JCdTpfzXNhcV04eJNoMHFs2xQMiHs+zOXl1ZaZvoNtOmqZ0GZu96RtFwW1Pow6MBaWYX
-         iz8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=okeCMJMAf5i5ORVYX06tV8pNa1ecla2GMYVNKIrW6Y0=;
-        b=rBJWrhInqDVsaDDW7jUheRZTREP+gnbNJKdALi25Xyad98gftF6s726L6VG9cQBF7H
-         HQCPcLQD/zCv6uckz+TKeiM3cQIkQdCA4fHNtfi4UdQ3LEqdljktY2RvM3Cc5trhdxVI
-         Lm48mwx8Ao1V2+P6f4xDrbofYJ8ktcP9KmjNzebl6qQXddVuubOL/MBhvkgLrmz5lIUX
-         OZ0A8xdJt8hHtNsdj0NttiCoJjgeso7JqynyHc8DkW14nD3VQRFdeMUeKcpC8HO5VvGn
-         SlyJMNp7+StKaW+xO2GZcZrm7wOoP7cp0wS5PR8c34+huHbj+4txwAXo0O84ueOhuggo
-         0lrg==
-X-Gm-Message-State: AOAM532ls7mWeCLDU2uRkv8T0WAhZ4w+OKlMivG9ND2RyhoOSYXyvw91
-        kezKy2VpDAJtg6GTWrDes/XbprxY6zM=
-X-Google-Smtp-Source: ABdhPJwWsc9NbSQa7POTH3p18880PvT9PYafSzxoGwbfReyl1fQT7OABqG3cUNCRtHc+walAXOZf+g==
-X-Received: by 2002:adf:8b50:: with SMTP id v16mr34995933wra.188.1593110598735;
-        Thu, 25 Jun 2020 11:43:18 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id l1sm34576828wrb.31.2020.06.25.11.43.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:43:18 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 19:43:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/10] regulator: da9063-regulator: Fix .suspend
- 'initialized field overwritten' warnings
-Message-ID: <20200625184316.GW954398@dell>
-References: <20200625163614.4001403-1-lee.jones@linaro.org>
- <20200625163614.4001403-10-lee.jones@linaro.org>
- <20200625174423.GF5686@sirena.org.uk>
+        Thu, 25 Jun 2020 14:44:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33033 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728204AbgFYSoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:44:00 -0400
+IronPort-SDR: rIUllYmNahFG2m25SkZOMUB7eLy6lRlx+DbnbLOlLGyWA7QfPYnUe96q0BbUPdNOOFswlVZIVF
+ efSOtjdcsoGw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="124682849"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="124682849"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 11:44:00 -0700
+IronPort-SDR: 7VFDsXUtH/V25cueaVbWkXpwsCSEhRRssv1kpfVQ8dl/rAyQ5IkKFTU+g1VaMJrYqNZ0OhR3jG
+ /fs6vLc62dpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="319813773"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Jun 2020 11:44:00 -0700
+Received: from [10.249.229.54] (abudanko-mobl.ccr.corp.intel.com [10.249.229.54])
+        by linux.intel.com (Postfix) with ESMTP id 3AE3C5804B4;
+        Thu, 25 Jun 2020 11:43:55 -0700 (PDT)
+Subject: Re: [PATCH v8 04/13] perf stat: factor out body of event handling
+ loop for system wide
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <eeeff629-925a-530b-9803-f274337ae473@linux.intel.com>
+ <20200623145630.GK2619137@krava>
+ <51d5511a-e9a7-2865-c81b-57488e820f8d@linux.intel.com>
+ <20200625121719.GI2719003@krava>
+ <fdaba173-a046-beae-f8f2-07840c879475@linux.intel.com>
+ <20200625171300.GK2719003@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <78a2f7cf-3f5c-decc-fd91-5a2c38548f52@linux.intel.com>
+Date:   Thu, 25 Jun 2020 21:43:54 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200625171300.GK2719003@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200625174423.GF5686@sirena.org.uk>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020, Mark Brown wrote:
 
-> On Thu, Jun 25, 2020 at 05:36:13PM +0100, Lee Jones wrote:
-> > Looks as though 9f75ce666199 ("regulator: da9063: fix suspend") failed
+On 25.06.2020 20:13, Jiri Olsa wrote:
+> On Thu, Jun 25, 2020 at 07:01:08PM +0300, Alexey Budankov wrote:
 > 
-> $ git show 9f75ce666199
-> fatal: ambiguous argument '9f75ce666199': unknown revision or path not in the working tree.
+> SNIP
 > 
-> You should probably CC this to the authors of that commit - a similar
-> thing applies to several of the other patches here.  You probably don't
-> want to CC everyone on everything but OTOH there isn't really any need
-> for things to be bundled up in a series anyway.
+>>>>
+>>>> Well, ok.
+>>>>
+>>>> I will rename process_interval() to __process_interval() and
+>>>> then print_interval() to process_interval().
+>>>>
+>>>> Regarding timeout let's have it like this:
+>>>>
+>>>> static bool process_timeout(int timeout)
+>>>> {
+>>>> 	return timeout ? true : false;
+>>>> }
+>>>
+>>> can't this just stay as value check after finished poll?
+>>>
+>>> 	if (timeout)
+>>> 		break;
+>>>
+>>> and then separate call to process_interval(interval, times)?
+>>
+>> Like this? Still makes sense to have it in a single function.
+>>
+>> static bool process_timing_settings(int timeout, unsigned int interval, int *times)
+>> {
+>> 	bool res = timeout ? true : false;
+>>         if (!res)
+>>  		res = process_interval(interval, times);
+>>  	return res;
+>> }
+> 
+> I don't see the connection between timeout and interval
+> IMO this just complicates things, is there a problem to
+> keep it separated as it is now?
 
-Sounds fair.  Will Cc important people on individual patches.
+Not a problem. Can duplicate it in dispatch_events().
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+~Alexey
