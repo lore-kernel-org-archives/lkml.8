@@ -2,111 +2,97 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B40C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2013D2081A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07173207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Af1xT4Qf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEi9td/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406112AbgFYSWb (ORCPT
+        id S2406147AbgFYSWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54780 "EHLO
+        Thu, 25 Jun 2020 14:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403945AbgFYSVr (ORCPT
+        with ESMTP id S2405815AbgFYSWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 14:21:47 -0400
+        Thu, 25 Jun 2020 14:22:34 -0400
 Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52988C08C5C1;
-        Thu, 25 Jun 2020 11:21:47 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id i14so6873863ejr.9;
-        Thu, 25 Jun 2020 11:21:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1F7C08C5C1;
+        Thu, 25 Jun 2020 11:22:33 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id y10so6909726eje.1;
+        Thu, 25 Jun 2020 11:22:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/mdCv9AcSwvn1xJCdZahbAIWOnw7ZszwaJLHBjtLMCw=;
-        b=Af1xT4Qf6hLDQ2AgmF7osik0DEYmwWAom3u4Kbop7IBcRZ2bWKpdKnl9vxPIaTIA9A
-         jAhgfL/iF4HjPa/4PrHq33hUSIj1462tPvQB2WQ3x2dv/0iwx38C+dgdHLTGf4AoDQ40
-         G2/jZdPODI/+ZaKEhNURAq9Zbk+0uhyk+H9xxO5enxnaSi3xImerXv8TcJ+K9ifC9Lk5
-         3QMP6D4WpXn/H9TMCp8tk6uxwxYoEDPYpxE1NxqFT6Mz4EyUC86mz0LqGaVVTFNk4tiL
-         O5BC/XSHVcC1TzyaWqISdQ0ooNCdRxQUMzMoUhXm4zDlO3YIx0bGMwcBGIztch0mUwUZ
-         69Dw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v8geYdYVNbF2rBwzEMDOXkFAFkAYNm3uyIolEhmynSQ=;
+        b=oEi9td/3wSG1TfTzeZOqQLFC8Rylwdn1Ss0asHlgWIDEr2soxzQ+Q+ppWngvOk6QBj
+         uplo7+7UTdsXYTPdi8xOk5s+qbUPaXTmNG51iKLyGKVvNEV9XNtEg7oQjqFAW6HO6P8J
+         o5JBCvvo5VcoxhsdiWvWqwLDcq49JMPe+JLIYruYt/fodDhauPBz+DDr8UyXVtUzViiY
+         FY7NZckqA10YV2rvfWJ1QHJBPdO0X039l1sqmufVs2JKcSzulo4MUOggJebgrxOQbDgu
+         xpjMwZB7EfXMyuUrCFXLLsxN0MVVY6J5jhcADKKNjIZHpPlnQJhF75aAWcTLUMQw4V6p
+         URMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/mdCv9AcSwvn1xJCdZahbAIWOnw7ZszwaJLHBjtLMCw=;
-        b=jYcUPfUXHdcdh1pTKlh54WHOSadePTJch9yLWQPaMRnOgk1Ag3pBgO3joZr9xPVQZH
-         wfDfqfyD6/j7ICYYW3La5C+ne9+nYa7bWRRsY2DTBLN4xA7h0wWsA47N+ArFpmUw+wEQ
-         s+kymbXWkkaG3zuHGEKh6V6BJXcn8acIZce9c5qstPGKpOnZFI4l1WrnPRDEq8eNoU8B
-         rujGgWJmMstUdB7AaJiYSfD5GKkw+Kv/Cmt0GXsWRCWFxRWeafCLGnZ6auZ4yhdbieJu
-         TDP2vRkdWbzV6Ia5qRis1Vv7nDvn1H8MU9i1SjuvTZgd0DQ+oBbfv6UPiMleOhR+o70n
-         yjxg==
-X-Gm-Message-State: AOAM5320Hfm0+LcmiIdWpOr4THXSXSO+5MA4a3bShDers0vlkAL8z7k0
-        fbusbHiIsyGBtBgYvCM6Eno=
-X-Google-Smtp-Source: ABdhPJy/BAxoS9EjNANTEX6luCA/gG/qgl1OOiKq0JaUAR0A8m5qcHrB6p+S+RbidIPgwyLIlGOKnA==
-X-Received: by 2002:a17:906:eb93:: with SMTP id mh19mr7177128ejb.552.1593109306103;
-        Thu, 25 Jun 2020 11:21:46 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v8geYdYVNbF2rBwzEMDOXkFAFkAYNm3uyIolEhmynSQ=;
+        b=h7eVARcohrumS6VsThxbroop2NQ3LEF+IhoC2Zrt/7MX+R6uKU9RpaoznlL6/qKz+G
+         vBkU3jk/jgAl+VzLqTQRqtKy9ZvmmPqOSwMKUkoQ8/9ALfd3kog8OBLGhclPo5muObhU
+         IOE7wfDCeWy8asp6aVyPTXzSdFtkmKP8K+GIhqzaJ886FJe0S4wKbZ1Sc/4/SxMzyjTp
+         EGb3NVw1DTHOB9CJMIyeUJts3h9Xd0TmAOGf/FVIZQTdkWbM8chfZKjOLvFdDOZTP0Nk
+         ZANAfMqFxv/joM5/VCWAFDk2W6OCJPXmiOsu4wHGGm46om+W4miUlI6cz8sZwh+jxAcl
+         9LrA==
+X-Gm-Message-State: AOAM53302myCh9kQL1B+1wq50Xm5SM2SRIZs9mDQE+j8ny2gOoxt2rfZ
+        ny96wtfuxcTAmTC6/5xC4xo=
+X-Google-Smtp-Source: ABdhPJwYuKHKu8ML78wL+jaQLqXrQCzIvC0LSKLl8JU//05HxvBuQruSWlLJAM3qfISlZB1rhyLmBg==
+X-Received: by 2002:a17:906:da19:: with SMTP id fi25mr9261887ejb.369.1593109352334;
+        Thu, 25 Jun 2020 11:22:32 -0700 (PDT)
+Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id lm22sm1524867ejb.109.2020.06.25.11.22.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:21:45 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/13] arm64: dts: qcom: msm8992: Add PMU node
-Date:   Thu, 25 Jun 2020 20:21:13 +0200
-Message-Id: <20200625182118.131476-10-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
-References: <20200625182118.131476-1-konradybcio@gmail.com>
+        Thu, 25 Jun 2020 11:22:31 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 20:22:23 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Andres Beltran <lkmlabelt@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 0/3] Drivers: hv: vmbus: vmbus_requestor data structure
+Message-ID: <20200625182223.GA318674@andrea>
+References: <20200625153723.8428-1-lkmlabelt@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625153723.8428-1-lkmlabelt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the PMU so we can get proper perf event support on this SoC.
+> Andres Beltran (3):
+>   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
+>     hardening
+>   scsi: storvsc: Use vmbus_requestor to generate transaction ids for
+>     VMBus hardening
+>   hv_netvsc: Use vmbus_requestor to generate transaction ids for VMBus
+>     hardening
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+For the series,
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index e8b801813f14..c4c9a108ae1e 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -130,6 +130,11 @@ memory {
- 		reg = <0 0 0 0>;
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
--- 
-2.27.0
+Tested-by: Andrea Parri <parri.andrea@gmail.com>
 
+Thanks,
+  Andrea
