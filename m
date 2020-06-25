@@ -2,94 +2,97 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A914C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ADFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4338120781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7072076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IJEluxN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406662AbgFYTkj (ORCPT
+        id S2406698AbgFYTl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:40:39 -0400
-Received: from smtprelay0058.hostedemail.com ([216.40.44.58]:53726 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406069AbgFYTkj (ORCPT
+        Thu, 25 Jun 2020 15:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406116AbgFYTl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:40:39 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id EDF0B181D330D;
-        Thu, 25 Jun 2020 19:40:37 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: doll31_0604bd226e4f
-X-Filterd-Recvd-Size: 2852
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 25 Jun 2020 19:40:34 +0000 (UTC)
-Message-ID: <5dbb62beffde43e1049ca37629533db5c7b2e6d6.camel@perches.com>
-Subject: Re: [PATCH] platform/chrome: Clarify SPDX license with GPL-2.0-only
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
-        Daniel Campello <campello@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nick Crews <ncrews@chromium.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Yicheng Li <yichengli@chromium.org>
-Date:   Thu, 25 Jun 2020 12:40:33 -0700
-In-Reply-To: <CAHp75VcFeCf0vnk2Ea_-QdTW5gyRZvgEXwX7-VSd3rKch7pSwQ@mail.gmail.com>
-References: <20200625170356.225136-1-enric.balletbo@collabora.com>
-         <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com>
-         <026b38ff947e338a468567dfd20fbde1419bb094.camel@perches.com>
-         <CAHp75VcFeCf0vnk2Ea_-QdTW5gyRZvgEXwX7-VSd3rKch7pSwQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Thu, 25 Jun 2020 15:41:28 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59382C08C5DB
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:41:28 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h22so682274lji.9
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 12:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0zChu5NuqK8iQIUSN8hc0V6TgI7jS8t8rrc66RrTyMg=;
+        b=IJEluxN5ynq0LgPGOYBOvKULgCl5INb0OLYzWbyx+0W0SCmpcuiXuHILiZ0lMhqt3s
+         GNPoTUQOirD6NBSicG79/NGxt2qaplIrFoe6mGjhqfQ0ChVaghjL+t79fI5t+gn3vIBZ
+         ImuTzMnodSyyKZH1+cAbw/iBrBebnKVEInFUyCQrevpxVTE8ScP/ZpN90ZgYHPo0gSGe
+         ULTzWcwBwlDDvfnWxhTRiTqV6cOxCdGmsiSUcoij1XxBb8H+ZONZNZzAlJBtR9AoJrB2
+         trXlHnAP9U+O2XbsdPn5oAPh026OQG0YbwySQFlt6Tiw8Qttz5s1wD3ghAsLaiM+I0Et
+         X4aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0zChu5NuqK8iQIUSN8hc0V6TgI7jS8t8rrc66RrTyMg=;
+        b=WkbF4BJKXb53fAaFCSveaY02meJP1eVZLDxshzHnd1UOoixEvfBRg7MugkQB7cOZ7K
+         +YZVhU/oKbGADDHJqmizhX2nzcapMGELzf7q4/fT3WLeoTOewehObOkZ3HAKxpAKIaQc
+         5+U97GAoNspO0Cj5D8h0mBc/OoyESHGyVODKph4ieGwb/9gwiECxUKNz7DZov5OOMvmp
+         iww1vvKroxcFPv9I4Lgo3qKNfRSS1EqWxaiF8waxTlaAcf7Vw89s9lhLdcY5jxqWSvgi
+         U2gbkO0EFqvNYuZ7k/Sbm63DKjNYLfhmaprJNkknP+00wXCnV+6ILNozNxO5u658WLdM
+         sgwQ==
+X-Gm-Message-State: AOAM533q9jrrTo9VAoknUg51B9AwYfP1AGVvcFgm84flldWX4PCudaNT
+        blRlw8uoPw23gUcHEQN+fmyIJBNe2do=
+X-Google-Smtp-Source: ABdhPJxWlayAdWCqXaDjcJJF3JFPeAfVeVjewllhoyJZXszj3c3iBM9r3KCGLR2HjEB4QptldoNOFA==
+X-Received: by 2002:a2e:859a:: with SMTP id b26mr17894874lji.191.1593114086377;
+        Thu, 25 Jun 2020 12:41:26 -0700 (PDT)
+Received: from [192.168.1.211] ([188.162.64.162])
+        by smtp.gmail.com with ESMTPSA id f9sm4226746ljf.27.2020.06.25.12.41.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 12:41:25 -0700 (PDT)
+Subject: Re: [PATCH 1/3] phy: qcom-qmp: Allow different values for second lane
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "open list:GENERIC PHY FRAMEWORK" <linux-kernel@vger.kernel.org>
+References: <20200524021416.17049-1-jonathan@marek.ca>
+ <20200524021416.17049-2-jonathan@marek.ca>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <fa5edd52-cce3-e9b6-ec8a-57bb8a676fff@linaro.org>
+Date:   Thu, 25 Jun 2020 22:41:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200524021416.17049-2-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-25 at 22:33 +0300, Andy Shevchenko wrote:
-> On Thu, Jun 25, 2020 at 10:29 PM Joe Perches <joe@perches.com> wrote:
-> > On Thu, 2020-06-25 at 22:06 +0300, Andy Shevchenko wrote:
-> > > On Thu, Jun 25, 2020 at 9:25 PM Enric Balletbo i Serra
-> > > <enric.balletbo@collabora.com> wrote:
-> > > > Remove the ambiguity with GPL-2.0 and use an explicit GPL-2.0-only
-> > > > tag.
-> > > 
-> > > Is there any? Last time IIRC Greg told me that in the kernel the old
-> > > and new variants are okay.
-> > 
-> > If there wasn't any ambiguity, the older license
-> > style wouldn't be deprecated by SPDX.org.
+On 24/05/2020 05:14, Jonathan Marek wrote:
+> The primary USB PHY on sm8250 sets some values differently for the second
+> lane. This makes it possible to represent that.
 > 
-> They are _not_ deprecated according to kernel documentation:
-> https://elixir.bootlin.com/linux/latest/source/LICENSES/preferred/GPL-2.0
-> 
-> So, fix documentation in the kernel then.
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 
-Been there, tried that. Linus is out to lunch IMO.
-
-https://lore.kernel.org/lkml/515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com/
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 
+-- 
+With best wishes
+Dmitry
