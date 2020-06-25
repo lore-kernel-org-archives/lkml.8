@@ -2,173 +2,208 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44485C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3151AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 229C020781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593092109;
-	bh=B+NvDd+iBL3uwIFdsmtKVl+bVtcSaC9CvrV/j5Ezo3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yIO8JByOlCPF88Pje+FrjJoGWIKxpslHdvwmA6REiWefndFw+KUe8mIyuOR0eCpqX
-	 fVaMmsJxn3swGV+r2tWrFKZYKKGqm3hP2Q8krQd3F32uwQpuC7UZqTie/iwG5d4vJb
-	 L+boXGCiApz/mBaJJ/6ddSXBVnwqjJEMfiMrpG6c=
+	by mail.kernel.org (Postfix) with ESMTP id 0710020702
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:35:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsCI98IX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405171AbgFYNfH (ORCPT
+        id S2405180AbgFYNfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:35:07 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33952 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404926AbgFYNfH (ORCPT
+        Thu, 25 Jun 2020 09:35:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404926AbgFYNfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:35:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f7so2876576wrw.1;
-        Thu, 25 Jun 2020 06:35:05 -0700 (PDT)
+        Thu, 25 Jun 2020 09:35:21 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E75EC08C5C1;
+        Thu, 25 Jun 2020 06:35:21 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u5so3030211pfn.7;
+        Thu, 25 Jun 2020 06:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YnBw2TzO+gARDF+ksFnfoxC0mIOwPXnaKGHDEyud/8M=;
+        b=OsCI98IXRRRmr+mhllJZhc20u+ItuQIE2HTmXozBFK3KoN4SadeWRfIBmYIsC5cClu
+         4IpJtEN+Xh6G8tOLcwDEdjF38GzSRcZYoxLEJHDXwmZrxCF/kluL6cOv/MN0TQFFCZqG
+         Zb8qRoa+n6tEb+mtAbyo22C/kQmIJbrKI6ZzNoZW96qMKaWY5V4BaRoAYcZUGwMZXiIF
+         SsWWCjIInFOj0yNQeG1Gv+e0kwhIRWZtjzSJrULCF9yyEqHVuap4W4tpfuWimHC+Gu6+
+         rpgNk6Jm4907hl8f/nsl+sTsQ1ei+464OvTKHkUA18hsOJgRNZfwk/kqkiFFt89E9acA
+         +r+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IgYZrPxHW1Yk3TwSNNUUSYdD36C5CbbVMe0vITplDXw=;
-        b=l9q7AAgALfEqsZH2LniIPsbgf/nk72MJtcRxv57X9inKyshrK2aHeVgKtvAK/OamCJ
-         HeK02zV25X/7jL9Fkletwj8wbGoplY+b0MljuijeGAoVVtYrwbMp9KyCB1Q9zrNcLPFU
-         7Rfl+564+EctTHdF47lGajmoNhpZl9CZBHL/V9tK9YpwMFEIIUkzyEYUzVX2HQBQIcgF
-         Y1QAIzO8XNXKXkTUiHeMBleNxjFFLHBsbrrv4faLdQOeQz2vfeEwQoAqViDLCGLT8Elo
-         0jhxtyoJPvyVBRwOx8XfYy9yuJaI78IwjDqOOhjpXwzJ4bFfnGMsDMbyiMW1VzcVexvh
-         Hzpw==
-X-Gm-Message-State: AOAM532TOT3nFTVq72rTMGzQF5unkpWxwc6syyfZ55TCy8r9doVL0l7N
-        +x6YFWc1okbt4Usj7rjZZsKXhvsf
-X-Google-Smtp-Source: ABdhPJwaddI6ttW180z9XolsU5F/8EUo6u4oLwe5Z7g00mWKYqqFcDJ9Z0yPcz+5CvQGbwEE1bpQkg==
-X-Received: by 2002:a05:6000:18c:: with SMTP id p12mr39132209wrx.66.1593092105200;
-        Thu, 25 Jun 2020 06:35:05 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id c143sm14010709wmd.1.2020.06.25.06.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:35:04 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 15:35:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 4/6] mm: Replace PF_MEMALLOC_NOFS with memalloc_nofs
-Message-ID: <20200625133503.GO1320@dhcp22.suse.cz>
-References: <20200625113122.7540-1-willy@infradead.org>
- <20200625113122.7540-5-willy@infradead.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=YnBw2TzO+gARDF+ksFnfoxC0mIOwPXnaKGHDEyud/8M=;
+        b=Pxjlimqono0uQWscle/vyNJeRNUR4ywF++7j/dSvZaE+b71ohie+xEL/AV+kVB3rM9
+         TncC296XU6s+AtfADd6NsH/jRkkK7RN52jK6zdCXE937mKsEhg8GNDnqd2WI3zFidDV3
+         P0BinHsS7ucX12cveRCAh+mce7Pk1J05oLDR7VaL8EMHKzaNdsg5Xii34FbtBtsniTiA
+         tAZLdcBV+vvP2+6x7QAJaPcmGVW2rbFjbM5wOyuMZGM7FrkCs5HWHkNUWldhc2wFxRJ/
+         iaR+Ujyib17X+q057s/qzHZI5/OovMSZ6fEISsApv3KpJFTreTvAkWvsqxdLIZJOZk3d
+         LM3A==
+X-Gm-Message-State: AOAM533X7cNbvLRef21cBUSYc+HRZ3KQV4Rruq4Tjuc6f/tMZaqSzijY
+        XUNfuJypUDfIbCaa/gzUI+/d/Rhn
+X-Google-Smtp-Source: ABdhPJxc/EQGiI6C+5m8Odj8oTATR4Z9YKWdNne+ihvRVr1D/nNt57facXre9Iy96n5TDYq6g7GX4w==
+X-Received: by 2002:a63:e00c:: with SMTP id e12mr4471253pgh.413.1593092120476;
+        Thu, 25 Jun 2020 06:35:20 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m10sm8427442pjs.27.2020.06.25.06.35.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 06:35:19 -0700 (PDT)
+Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
+ initial allowed window
+To:     Tero Kristo <t-kristo@ti.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+        wim@linux-watchdog.org, linux-watchdog@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200624114534.1362-1-t-kristo@ti.com>
+ <20200624114534.1362-3-t-kristo@ti.com>
+ <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
+ <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
+Date:   Thu, 25 Jun 2020 06:35:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625113122.7540-5-willy@infradead.org>
+In-Reply-To: <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 25-06-20 12:31:20, Matthew Wilcox wrote:
-> We're short on PF_* flags, so make memalloc_nofs its own bit where we
-> have plenty of space.
+On 6/25/20 1:32 AM, Tero Kristo wrote:
+> On 24/06/2020 18:24, Jan Kiszka wrote:
+>> On 24.06.20 13:45, Tero Kristo wrote:
+>>> If the RTI watchdog has been started by someone (like bootloader) when
+>>> the driver probes, we must adjust the initial ping timeout to match the
+>>> currently running watchdog window to avoid generating watchdog reset.
+>>>
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> ---
+>>>   drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
+>>>   1 file changed, 25 insertions(+)
+>>>
+>>> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
+>>> index d456dd72d99a..02ea2b2435f5 100644
+>>> --- a/drivers/watchdog/rti_wdt.c
+>>> +++ b/drivers/watchdog/rti_wdt.c
+>>> @@ -55,11 +55,13 @@ static int heartbeat;
+>>>    * @base - base io address of WD device
+>>>    * @freq - source clock frequency of WDT
+>>>    * @wdd  - hold watchdog device as is in WDT core
+>>> + * @min_hw_heartbeat_save - save of the min hw heartbeat value
+>>>    */
+>>>   struct rti_wdt_device {
+>>>       void __iomem        *base;
+>>>       unsigned long        freq;
+>>>       struct watchdog_device    wdd;
+>>> +    unsigned int        min_hw_heartbeat_save;
+>>>   };
+>>>   static int rti_wdt_start(struct watchdog_device *wdd)
+>>> @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
+>>>       /* put watchdog in active state */
+>>>       writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
+>>> +    if (wdt->min_hw_heartbeat_save) {
+>>> +        wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
+>>> +        wdt->min_hw_heartbeat_save = 0;
+>>> +    }
+>>> +
+>>>       return 0;
+>>>   }
+>>> @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device *pdev)
+>>>           goto err_iomap;
+>>>       }
+>>> +    if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
+>>> +        u32 time_left;
+>>> +        u32 heartbeat;
+>>> +
+>>> +        set_bit(WDOG_HW_RUNNING, &wdd->status);
+>>> +        time_left = rti_wdt_get_timeleft(wdd);
+>>> +        heartbeat = readl(wdt->base + RTIDWDPRLD);
+>>> +        heartbeat <<= WDT_PRELOAD_SHIFT;
+>>> +        heartbeat /= wdt->freq;
+>>> +        if (time_left < heartbeat / 2)
+>>> +            wdd->min_hw_heartbeat_ms = 0;
+>>> +        else
+>>> +            wdd->min_hw_heartbeat_ms =
+>>> +                (time_left - heartbeat / 2 + 1) * 1000;
+>>> +
+>>> +        wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
+>>> +    }
+>>> +
+>>>       ret = watchdog_register_device(wdd);
+>>>       if (ret) {
+>>>           dev_err(dev, "cannot register watchdog device\n");
+>>>
+>>
+>> This assumes that the bootloader also programmed a 50% window, right? The pending U-Boot patch will do that, but what if that may chance or someone uses a different setup?
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-forgot to add
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  fs/iomap/buffered-io.c   |  2 +-
->  include/linux/sched.h    |  2 +-
->  include/linux/sched/mm.h | 13 ++++++-------
->  3 files changed, 8 insertions(+), 9 deletions(-)
+> Yes, we assume 50%. I think based on the hw design, 50% is the only sane value to be used, otherwise you just shrink the open window too much and for no apparent reason.
 > 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index bcfc288dba3f..87d66c13bf5c 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -1502,7 +1502,7 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
->  	 * Given that we do not allow direct reclaim to call us, we should
->  	 * never be called in a recursive filesystem reclaim context.
->  	 */
-> -	if (WARN_ON_ONCE(current->flags & PF_MEMALLOC_NOFS))
-> +	if (WARN_ON_ONCE(current->memalloc_nofs))
->  		goto redirty;
->  
->  	/*
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index cf18a3d2bc4c..eaf36ae1fde2 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -802,6 +802,7 @@ struct task_struct {
->  	unsigned			in_memstall:1;
->  #endif
->  	unsigned			memalloc_noio:1;
-> +	unsigned			memalloc_nofs:1;
->  
->  	unsigned long			atomic_flags; /* Flags requiring atomic access. */
->  
-> @@ -1505,7 +1506,6 @@ extern struct pid *cad_pid;
->  #define PF_NOFREEZE		0x00008000	/* This thread should not be frozen */
->  #define PF_FROZEN		0x00010000	/* Frozen for system suspend */
->  #define PF_KSWAPD		0x00020000	/* I am kswapd */
-> -#define PF_MEMALLOC_NOFS	0x00040000	/* All allocation requests will inherit GFP_NOFS */
->  #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
->  						 * I am cleaning dirty pages from some other bdi. */
->  #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
-> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> index b0089eadc367..08bc9d0606a8 100644
-> --- a/include/linux/sched/mm.h
-> +++ b/include/linux/sched/mm.h
-> @@ -175,20 +175,19 @@ static inline bool in_vfork(struct task_struct *tsk)
->  
->  /*
->   * Applies per-task gfp context to the given allocation flags.
-> - * PF_MEMALLOC_NOFS implies GFP_NOFS
->   * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
->   */
->  static inline gfp_t current_gfp_context(gfp_t flags)
->  {
-> -	if (unlikely(current->flags & (PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA) ||
-> -		     current->memalloc_noio)) {
-> +	if (unlikely((current->flags & PF_MEMALLOC_NOCMA) ||
-> +		     current->memalloc_noio || current->memalloc_nofs)) {
->  		/*
->  		 * NOIO implies both NOIO and NOFS and it is a weaker context
->  		 * so always make sure it makes precedence
->  		 */
->  		if (current->memalloc_noio)
->  			flags &= ~(__GFP_IO | __GFP_FS);
-> -		else if (current->flags & PF_MEMALLOC_NOFS)
-> +		else if (current->memalloc_nofs)
->  			flags &= ~__GFP_FS;
->  #ifdef CONFIG_CMA
->  		if (current->flags & PF_MEMALLOC_NOCMA)
-> @@ -254,8 +253,8 @@ static inline void memalloc_noio_restore(unsigned int flags)
->   */
->  static inline unsigned int memalloc_nofs_save(void)
->  {
-> -	unsigned int flags = current->flags & PF_MEMALLOC_NOFS;
-> -	current->flags |= PF_MEMALLOC_NOFS;
-> +	unsigned int flags = current->memalloc_nofs;
-> +	current->memalloc_nofs = 1;
->  	return flags;
->  }
->  
-> @@ -269,7 +268,7 @@ static inline unsigned int memalloc_nofs_save(void)
->   */
->  static inline void memalloc_nofs_restore(unsigned int flags)
->  {
-> -	current->flags = (current->flags & ~PF_MEMALLOC_NOFS) | flags;
-> +	current->memalloc_nofs = flags ? 1 : 0;
->  }
->  
->  static inline unsigned int memalloc_noreclaim_save(void)
-> -- 
-> 2.27.0
 
--- 
-Michal Hocko
-SUSE Labs
+Not sure if that is a valid assumption. Someone who designs a watchdog
+with such a narrow ping window might as well also use it. The question
+is if you want to rely on that assumption, or check and change it if needed.
+
+Also, I wonder if we should add an API function such as
+"set_last_hw_keepalive()" to avoid all that complexity.
+
+Thanks,
+Guenter
