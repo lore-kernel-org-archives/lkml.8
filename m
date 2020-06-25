@@ -2,128 +2,93 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE91C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF8820702
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FA12076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 10:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593079456;
+	bh=N3g7Ksra9IIJA7B8GTRquVYJxy1/dbhL3PGmoep0y/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2vjCJOT/q5W611rd5HlwYibPNX5s6gTHKxGGRPcnD+/7dYwv41ZcmTYq8E07BwuJ8
+	 o17cnVgIG5DLUoV9T4bIIzYGhv+JCPf/CLbiUX10FB5bjxHU0mjjjLVKkamT5YeAWS
+	 bVFFpB+7wPKeZNc+ZwLdnme6UjvCse+ftc7dIP3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403810AbgFYKCP (ORCPT
+        id S2403822AbgFYKEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:02:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:55512 "EHLO foss.arm.com"
+        Thu, 25 Jun 2020 06:04:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390025AbgFYKCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 06:02:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0CB41F1;
-        Thu, 25 Jun 2020 03:02:12 -0700 (PDT)
-Received: from [10.37.12.83] (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E0EA3F73C;
-        Thu, 25 Jun 2020 03:02:10 -0700 (PDT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
- <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
- <20200623191129.GA4171@kozik-lap>
- <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
- <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
- <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
-Date:   Thu, 25 Jun 2020 11:02:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2390025AbgFYKEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 06:04:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8776120702;
+        Thu, 25 Jun 2020 10:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593079454;
+        bh=N3g7Ksra9IIJA7B8GTRquVYJxy1/dbhL3PGmoep0y/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CrZR2mRISPRewDUMVwxnOooX/hzIpIxSEgyV06dDSG/kbZ86itIUhYqVB2A2tJpjZ
+         j9nRSw3OCuJE9hRB3te+yNys3hPTXstwxypdvAV/thYYTMZHyFLnQI1PWlLpyak98X
+         lRRqpGpmg+rRdmjzqYR5WPFD3+QpKlNOEA6uW6X4=
+Date:   Thu, 25 Jun 2020 12:04:10 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vabhav Sharma <vabhav.sharma@oss.nxp.com>
+Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, v.sethi@nxp.com,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: Re: [PATCH] tty: serial: fsl_lpuart: minimum baud rate support
+Message-ID: <20200625100410.GA3327034@kroah.com>
+References: <1593078545-11272-1-git-send-email-vabhav.sharma@oss.nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1593078545-11272-1-git-send-email-vabhav.sharma@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester,
+On Thu, Jun 25, 2020 at 03:19:05PM +0530, Vabhav Sharma wrote:
+> From: Vabhav Sharma <vabhav.sharma@nxp.com>
+> 
+> The formula for the baud rate is
+> baud rate = "baud clock / ((OSR+1) × SBR)
+> 
+> Algorithm used in function lpuart32_serial_setbrg() only changes
+> the SBR. Even with maxmum value put in, OSR stays at 0x7 and the
+> lowest baud rate would be ~ 2600 bps
+> 
+> Update the algorithm to allow driver operation at 1200,2400 or
+> 600 bps
+> 
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> ---
+>  drivers/tty/serial/fsl_lpuart.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+> index 90298c4..0fd0fa5f 100644
+> --- a/drivers/tty/serial/fsl_lpuart.c
+> +++ b/drivers/tty/serial/fsl_lpuart.c
+> @@ -1925,6 +1925,10 @@ static void __lpuart32_serial_setbrg(struct uart_port *port,
+>  			tmp_sbr++;
+>  		}
+>  
+> +		if (tmp_sbr > UARTBAUD_SBR_MASK) {
+> +			continue;
+> +		}
 
-On 6/24/20 4:11 PM, Sylwester Nawrocki wrote:
-> Hi All,
-> 
-> On 24.06.2020 12:32, Lukasz Luba wrote:
->> I had issues with devfreq governor which wasn't called by devfreq
->> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
->> for it [1]. If the CPU which scheduled the next work went idle, the
->> devfreq workqueue will not be kicked and devfreq governor won't check
->> DMC status and will not decide to decrease the frequency based on low
->> busy_time.
->> The same applies for going up with the frequency. They both are
->> done by the governor but the workqueue must be scheduled periodically.
-> 
-> As I have been working on resolving the video mixer IOMMU fault issue
-> described here: https://patchwork.kernel.org/patch/10861757
-> I did some investigation of the devfreq operation, mostly on Odroid U3.
-> 
-> My conclusions are similar to what Lukasz says above. I would like to add
-> that broken scheduling of the performance counters read and the devfreq
-> updates seems to have one more serious implication. In each call, which
-> normally should happen periodically with fixed interval we stop the counters,
-> read counter values and start the counters again. But if period between
-> calls becomes long enough to let any of the counters overflow, we will
-> get wrong performance measurement results. My observations are that
-> the workqueue job can be suspended for several seconds and conditions for
-> the counter overflow occur sooner or later, depending among others
-> on the CPUs load.
-> Wrong bus load measurement can lead to setting too low interconnect bus
-> clock frequency and then bad things happen in peripheral devices.
-> 
-> I agree the workqueue issue needs to be fixed. I have some WIP code to use
-> the performance counters overflow interrupts instead of SW polling and with
-> that the interconnect bus clock control seems to work much better.
-> 
-
-Thank you for sharing your use case and investigation results. I think
-we are reaching a decent number of developers to maybe address this
-issue: 'workqueue issue needs to be fixed'.
-I have been facing this devfreq workqueue issue ~5 times in different
-platforms.
-
-Regarding the 'performance counters overflow interrupts' there is one
-thing worth to keep in mind: variable utilization and frequency.
-For example, in order to make a conclusion in algorithm deciding that
-the device should increase or decrease the frequency, we fix the period
-of observation, i.e. to 500ms. That can cause the long delay if the
-utilization of the device suddenly drops. For example we set an
-overflow threshold to value i.e. 1000 and we know that at 1000MHz
-and full utilization (100%) the counter will reach that threshold
-after 500ms (which we want, because we don't want too many interrupts
-per sec). What if suddenly utilization drops to 2% (i.e. from 5GB/s
-to 250MB/s (what if it drops to 25MB/s?!)), the counter will reach the
-threshold after 50*500ms = 25s. It is impossible just for the counters
-to predict next utilization and adjust the threshold.
-To address that, we still need to have another mechanism (like watchdog)
-which will be triggered just to check if the threshold needs adjustment.
-This mechanism can be a local timer in the driver or a framework
-timer running kind of 'for loop' on all this type of devices (like
-the scheduled workqueue). In both cases in the system there will be
-interrupts, timers (even at workqueues) and scheduling.
-The approach to force developers to implement their local watchdog
-timers (or workqueues) in drivers is IMHO wrong and that's why we have
-frameworks.
-
-Regards,
-Lukasz
+Always use scripts/checkpatch.pl on your patches so you do not get
+grumpy emails from maintainers telling you to use scripts/checkpatch.pl
+on your patches...
 
