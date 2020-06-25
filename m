@@ -2,140 +2,113 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F99C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD03C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A4F2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:44:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u+xRIflT"
+	by mail.kernel.org (Postfix) with ESMTP id 6F16E2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 20:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391154AbgFYUo1 (ORCPT
+        id S2405025AbgFYUqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 16:44:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391125AbgFYUoY (ORCPT
+        Thu, 25 Jun 2020 16:46:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404043AbgFYUqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 16:44:24 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EE8C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:44:23 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x207so3596723pfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 13:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OJIWob+W3gkDD1uP1ASRGO41yjBk8/1OpCvhfpmJs8w=;
-        b=u+xRIflTTe1eUnFBT4p5WF8e480mirYe7NpkH2bv8nIzTiLuJKFDeofANH1OOeic5x
-         /6LK2tKveHvX+ICIbkWmq08rmtn819jD7iIKFocYGQk/nSgnIbrqYX/AbZdYHeM60SNn
-         CtV1RNdwOPTuN/E8WwRhrKZRTz4WD4vkoDwu5ykRGGc8KcylpXPXSJt7Pdfdn9hj2EXN
-         200SrPmEYQFRASiGasXTcWH+JhpbKs/XvE/RfLKzplaVJtYbAW22CNeSFvqXwX4VCjfA
-         nJSH4Pr22jSucBL9jLDnFEupk/Y8P+6KswwaztgzAHsNJc7X1nmP+6w8E272L9/g+Dod
-         0r9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OJIWob+W3gkDD1uP1ASRGO41yjBk8/1OpCvhfpmJs8w=;
-        b=fjVl/4EufgJyaq6a3GMjRWER9CLmBnrVKtfY91e9Bchc7xs1/pXa8oAuJaiDVmAfvt
-         hb2YBQmRZdyijnWK7lRuXBqvU/Rp/mForMO7tjGp4PvofJnfwJgAO/qACg9SuYgwHnZ1
-         NWAgWNTLiHH5Q7Y6DT/766f1gL5UhndXLmus2dPVeWjf7kqGcNmkHt4LU37ZSztfNxYZ
-         7XZVr5VXQRrxFrHnukXgH9QYKNU4tzPDhA+jLdEhoIG2iWYsgrOUmFxT0WA1FoQ4kLVl
-         pdLva0Pj9ifl4S7/nw0zOJmt1zN7L0rEJAjYmEtQVpYw6Lz2FdRMxkE9ysJbFvR7z4YW
-         c/Pg==
-X-Gm-Message-State: AOAM532Mm9bsLoPcM+qLyGcLv/r6LlNbVH3o3BmbhyRSFmDGz6otbEJ4
-        +s8Fa91hBT5MZ8b08/z0vwaW1Dkc
-X-Google-Smtp-Source: ABdhPJzFhAn2/SSIKUbwB3Gmn1pjQeQ+zba2hlNLxfpD5Z5CUhCeaeWCTeNeW7UCKdcn1Ek5ltUcxQ==
-X-Received: by 2002:a63:a13:: with SMTP id 19mr27225468pgk.100.1593117862934;
-        Thu, 25 Jun 2020 13:44:22 -0700 (PDT)
-Received: from localhost (g2.222-224-226.ppp.wakwak.ne.jp. [222.224.226.2])
-        by smtp.gmail.com with ESMTPSA id 27sm9222139pjg.19.2020.06.25.13.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 13:44:22 -0700 (PDT)
-From:   Stafford Horne <shorne@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Marco Elver <elver@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: [PATCH] init: Align init_task to avoid conflict with MUTEX_FLAGS
-Date:   Fri, 26 Jun 2020 05:44:09 +0900
-Message-Id: <20200625204410.3168791-1-shorne@gmail.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Jun 2020 16:46:12 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PKW7w8021271;
+        Thu, 25 Jun 2020 16:46:08 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts11wct-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 16:46:07 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PKWT0V022398;
+        Thu, 25 Jun 2020 16:46:07 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31vts11wc1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 16:46:07 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PKe74e025831;
+        Thu, 25 Jun 2020 20:46:05 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 31uusk12ee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 20:46:04 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PKk2j936110568
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jun 2020 20:46:02 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E509A4060;
+        Thu, 25 Jun 2020 20:46:02 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5848DA405B;
+        Thu, 25 Jun 2020 20:46:01 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.225])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 25 Jun 2020 20:46:01 +0000 (GMT)
+Message-ID: <1593117960.27152.387.camel@linux.ibm.com>
+Subject: Re: [PATCH 10/12] ima: Move validation of the keyrings conditional
+ into ima_validate_rule()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Thu, 25 Jun 2020 16:46:00 -0400
+In-Reply-To: <20200625195017.GA4694@sequoia>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+         <20200623003236.830149-11-tyhicks@linux.microsoft.com>
+         <20200625195017.GA4694@sequoia>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_16:2020-06-25,2020-06-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ adultscore=0 mlxscore=0 malwarescore=0 clxscore=1015 phishscore=0
+ suspectscore=0 spamscore=0 impostorscore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006250116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting on 32-bit machines (seen on OpenRISC) I saw this warning
-with CONFIG_DEBUG_MUTEXES turned on.
 
-    ------------[ cut here ]------------
-    WARNING: CPU: 0 PID: 0 at kernel/locking/mutex.c:1242 __mutex_unlock_slowpath+0x328/0x3ec
-    DEBUG_LOCKS_WARN_ON(__owner_task(owner) != current)
-    Modules linked in:
-    CPU: 0 PID: 0 Comm: swapper Not tainted 5.8.0-rc1-simple-smp-00005-g2864e2171db4-dirty #179
-    Call trace:
-    [<(ptrval)>] dump_stack+0x34/0x48
-    [<(ptrval)>] __warn+0x104/0x158
-    [<(ptrval)>] ? __mutex_unlock_slowpath+0x328/0x3ec
-    [<(ptrval)>] warn_slowpath_fmt+0x7c/0x94
-    [<(ptrval)>] __mutex_unlock_slowpath+0x328/0x3ec
-    [<(ptrval)>] mutex_unlock+0x18/0x28
-    [<(ptrval)>] __cpuhp_setup_state_cpuslocked.part.0+0x29c/0x2f4
-    [<(ptrval)>] ? page_alloc_cpu_dead+0x0/0x30
-    [<(ptrval)>] ? start_kernel+0x0/0x684
-    [<(ptrval)>] __cpuhp_setup_state+0x4c/0x5c
-    [<(ptrval)>] page_alloc_init+0x34/0x68
-    [<(ptrval)>] ? start_kernel+0x1a0/0x684
-    [<(ptrval)>] ? early_init_dt_scan_nodes+0x60/0x70
-    irq event stamp: 0
+> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> > index 514baf24d6a5..ae2ec2a9cdb9 100644
+> > --- a/security/integrity/ima/ima_policy.c
+> > +++ b/security/integrity/ima/ima_policy.c
+> > @@ -999,6 +999,12 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+> >  		case KEXEC_KERNEL_CHECK:
+> >  		case KEXEC_INITRAMFS_CHECK:
+> >  		case POLICY_CHECK:
+> > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
+> > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
+> > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
+> > +					     IMA_FSNAME))
+> 
+> I accidentally left these out:
+> 
+>  (IMA_DIGSIG_REQUIRED | IMA_PERMIT_DIRECTIO | IMA_MODSIG_ALLOWED | IMA_CHECK_BLACKLIST)
+> 
+> I'll add them in v2.
 
-I traced this to kernel/locking/mutex.c storing 3 bits of MUTEX_FLAGS in
-the task_struct pointer (mutex.owner).  There is a comment saying that
-task_structs are always aligned to L1_CACHE_BYTES.  This is not true for
-the init_task.
+Thanks, I noticed when skimming the patches the first time around.
 
-On 64-bit machines this is not a problem because symbol addresses are
-naturally aligned to 64-bits providing 3 bits for MUTEX_FLAGS.  Howerver,
-for 32-bit machines the symbol address only has 2 bits available.
-
-Fix this by setting init_task alignment to at least L1_CACHE_BYTES.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
- init/init_task.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/init/init_task.c b/init/init_task.c
-index 15089d15010a..d2d2af018d0d 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -64,6 +64,8 @@ unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)]
- struct task_struct init_task
- #ifdef CONFIG_ARCH_TASK_STRUCT_ON_STACK
- 	__init_task_data
-+#else
-+	__aligned(L1_CACHE_BYTES)
- #endif
- = {
- #ifdef CONFIG_THREAD_INFO_IN_TASK
--- 
-2.26.2
-
+Mimi
