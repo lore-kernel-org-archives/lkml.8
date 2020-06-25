@@ -3,142 +3,172 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44485C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDFA20781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V90esOam"
+	by mail.kernel.org (Postfix) with ESMTP id 229C020781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 13:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593092109;
+	bh=B+NvDd+iBL3uwIFdsmtKVl+bVtcSaC9CvrV/j5Ezo3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yIO8JByOlCPF88Pje+FrjJoGWIKxpslHdvwmA6REiWefndFw+KUe8mIyuOR0eCpqX
+	 fVaMmsJxn3swGV+r2tWrFKZYKKGqm3hP2Q8krQd3F32uwQpuC7UZqTie/iwG5d4vJb
+	 L+boXGCiApz/mBaJJ/6ddSXBVnwqjJEMfiMrpG6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405157AbgFYNew (ORCPT
+        id S2405171AbgFYNfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:34:52 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46860 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404883AbgFYNeu (ORCPT
+        Thu, 25 Jun 2020 09:35:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33952 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404926AbgFYNfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 09:34:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593092089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=09+fTYNd95SDGGKDwt8BrhJmqNTFAjuqhVxVc40SVsI=;
-        b=V90esOam2b9nvpySBF/3qNLfisRtWbXS6bDW9x+yrwljorFyPenMX0hvrX7Lmss8ynAVO9
-        fhMI3XX3B+yoizCZ+GXTI/dWXjLHGie09DYgvok89hNxlBLH2n5s1RzSvI6n5BJM7QqOXb
-        MMxDNTLfr5nxupKd4o9X+kcVuqAXe7U=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-2-EHCLg4BkNXypShWPKAECtw-1; Thu, 25 Jun 2020 09:34:47 -0400
-X-MC-Unique: EHCLg4BkNXypShWPKAECtw-1
-Received: by mail-wr1-f71.google.com with SMTP id e11so6873371wrs.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 06:34:47 -0700 (PDT)
+        Thu, 25 Jun 2020 09:35:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f7so2876576wrw.1;
+        Thu, 25 Jun 2020 06:35:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=09+fTYNd95SDGGKDwt8BrhJmqNTFAjuqhVxVc40SVsI=;
-        b=oWjpLZvSOAU7mwIA2GjeRqxGJ9w7T+TcK5OJhyYSzcdmR3Vd8MTpZX18eBZpGbhTUt
-         6mciSTYaH8ki2TNhv+JBgYJg1V2TyQkCknDUtyLvu/L6gwBFxJtPqXUSrPGZhVWvCmVn
-         hgbEITPDN9WHicDuo7Jh+1rxkVu6PV9yXFGf2AQsUrUAL6lnFz/4tjQdi+fLJi+lu6Qa
-         +EiSh0UIpMUYJo/gK+1X1nwmPJ74mmZx8oi0+LcP9OKR2LmcL5z5BU9fAkJZakARETqG
-         Ud9e4/ucSxM3YRSK/FFk8/s/SpjKPlC6mURKcPPpSrudyNE7KHKEvgU3EHl/doYPW1e6
-         HCfg==
-X-Gm-Message-State: AOAM533b43rGYDA6lzw2EqNnezOg28eGCPZeD5keV0/NautKaYKVXmVu
-        A4dFtGR5k/0AQQo0rwh51Bi+Dde4j01Hl9FRdXh8wNrwfD/U9Dzbrl9fmcXrqCVnQiPaQBCQixT
-        2QVmfHERmHRF8sRkPSw2OahoU
-X-Received: by 2002:a5d:4607:: with SMTP id t7mr29457164wrq.251.1593092086511;
-        Thu, 25 Jun 2020 06:34:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyVs80JYUKeuedepRXnHMw9aA0kaFHrIbJMxp3wkfoS+pI6CTS5+7LKDDYqfG3a6oNxXWhJqA==
-X-Received: by 2002:a5d:4607:: with SMTP id t7mr29457132wrq.251.1593092086206;
-        Thu, 25 Jun 2020 06:34:46 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.187.107])
-        by smtp.gmail.com with ESMTPSA id d28sm34118699wrc.50.2020.06.25.06.34.44
+        bh=IgYZrPxHW1Yk3TwSNNUUSYdD36C5CbbVMe0vITplDXw=;
+        b=l9q7AAgALfEqsZH2LniIPsbgf/nk72MJtcRxv57X9inKyshrK2aHeVgKtvAK/OamCJ
+         HeK02zV25X/7jL9Fkletwj8wbGoplY+b0MljuijeGAoVVtYrwbMp9KyCB1Q9zrNcLPFU
+         7Rfl+564+EctTHdF47lGajmoNhpZl9CZBHL/V9tK9YpwMFEIIUkzyEYUzVX2HQBQIcgF
+         Y1QAIzO8XNXKXkTUiHeMBleNxjFFLHBsbrrv4faLdQOeQz2vfeEwQoAqViDLCGLT8Elo
+         0jhxtyoJPvyVBRwOx8XfYy9yuJaI78IwjDqOOhjpXwzJ4bFfnGMsDMbyiMW1VzcVexvh
+         Hzpw==
+X-Gm-Message-State: AOAM532TOT3nFTVq72rTMGzQF5unkpWxwc6syyfZ55TCy8r9doVL0l7N
+        +x6YFWc1okbt4Usj7rjZZsKXhvsf
+X-Google-Smtp-Source: ABdhPJwaddI6ttW180z9XolsU5F/8EUo6u4oLwe5Z7g00mWKYqqFcDJ9Z0yPcz+5CvQGbwEE1bpQkg==
+X-Received: by 2002:a05:6000:18c:: with SMTP id p12mr39132209wrx.66.1593092105200;
+        Thu, 25 Jun 2020 06:35:05 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id c143sm14010709wmd.1.2020.06.25.06.35.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:34:45 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 15:34:43 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Sai Harshini Nimmala <snimmala@codeaurora.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, adharmap@codeaurora.org,
-        shalagra@codeaurora.org, dickey@codeaurora.org,
-        satyap@codeaurora.org, pkondeti@codeaurora.org,
-        clingutla@codeaurora.org, aiquny@codeaurora.org,
-        rgottimu@codeaurora.org, Puja Gupta <pujag@codeaurora.org>
-Subject: Re: [PATCH] Revert "sched/deadline: Remove cpu_active_mask from
- cpudl_find()"
-Message-ID: <20200625133443.GJ5763@localhost.localdomain>
-References: <1593065595-17794-1-git-send-email-snimmala@codeaurora.org>
+        Thu, 25 Jun 2020 06:35:04 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 15:35:03 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 4/6] mm: Replace PF_MEMALLOC_NOFS with memalloc_nofs
+Message-ID: <20200625133503.GO1320@dhcp22.suse.cz>
+References: <20200625113122.7540-1-willy@infradead.org>
+ <20200625113122.7540-5-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1593065595-17794-1-git-send-email-snimmala@codeaurora.org>
+In-Reply-To: <20200625113122.7540-5-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 24/06/20 23:13, Sai Harshini Nimmala wrote:
-> The original commit 9659e1ee removes checking the cpu_active_mask
-> while finding the best cpu to place a deadline task, citing the reason that
-> this mask rarely changes and removing the check will give performance
-> gains.
-> However, on hotplugging, the cpu dying path has a brief duration between
-> the CPUHP_TEARDOWN_CPU and CPUHP_AP_SCHED_STARTING hotplug states where
-> the DL task can be scheduled on this cpu because the corresponding cpu
-> bit in cpu->free_cpus has not been cleared yet. Without the
-> cpu_active_mask check we could end up putting a DL task on such cpus
-> leading to a BUG.
-> The cpu_active_mask will be updated promptly before either of these
-> states and will provide a more accurate check for the use case above.
+On Thu 25-06-20 12:31:20, Matthew Wilcox wrote:
+> We're short on PF_* flags, so make memalloc_nofs its own bit where we
+> have plenty of space.
 > 
-> Signed-off-by: Puja Gupta <pujag@codeaurora.org>
-> Signed-off-by: Sai Harshini Nimmala <snimmala@codeaurora.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+forgot to add
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
->  kernel/sched/cpudeadline.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  fs/iomap/buffered-io.c   |  2 +-
+>  include/linux/sched.h    |  2 +-
+>  include/linux/sched/mm.h | 13 ++++++-------
+>  3 files changed, 8 insertions(+), 9 deletions(-)
 > 
-> diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-> index 5cc4012..0346837 100644
-> --- a/kernel/sched/cpudeadline.c
-> +++ b/kernel/sched/cpudeadline.c
-> @@ -120,7 +120,8 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
->  	const struct sched_dl_entity *dl_se = &p->dl;
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index bcfc288dba3f..87d66c13bf5c 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -1502,7 +1502,7 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+>  	 * Given that we do not allow direct reclaim to call us, we should
+>  	 * never be called in a recursive filesystem reclaim context.
+>  	 */
+> -	if (WARN_ON_ONCE(current->flags & PF_MEMALLOC_NOFS))
+> +	if (WARN_ON_ONCE(current->memalloc_nofs))
+>  		goto redirty;
 >  
->  	if (later_mask &&
-> -	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
-> +	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr) &&
-> +	    cpumask_and(later_mask, later_mask, cpu_active_mask)) {
->  		return 1;
->  	} else {
->  		int best_cpu = cpudl_maximum(cp);
-
-So, I believe the patch you want to revert only removed the condition
-above.
-
-> @@ -128,6 +129,7 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
->  		WARN_ON(best_cpu != -1 && !cpu_present(best_cpu));
+>  	/*
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index cf18a3d2bc4c..eaf36ae1fde2 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -802,6 +802,7 @@ struct task_struct {
+>  	unsigned			in_memstall:1;
+>  #endif
+>  	unsigned			memalloc_noio:1;
+> +	unsigned			memalloc_nofs:1;
 >  
->  		if (cpumask_test_cpu(best_cpu, p->cpus_ptr) &&
-> +		    cpumask_test_cpu(best_cpu, cpu_active_mask) &&
->  		    dl_time_before(dl_se->deadline, cp->elements[0].dl)) {
->  			if (later_mask)
->  				cpumask_set_cpu(best_cpu, later_mask);
+>  	unsigned long			atomic_flags; /* Flags requiring atomic access. */
+>  
+> @@ -1505,7 +1506,6 @@ extern struct pid *cad_pid;
+>  #define PF_NOFREEZE		0x00008000	/* This thread should not be frozen */
+>  #define PF_FROZEN		0x00010000	/* Frozen for system suspend */
+>  #define PF_KSWAPD		0x00020000	/* I am kswapd */
+> -#define PF_MEMALLOC_NOFS	0x00040000	/* All allocation requests will inherit GFP_NOFS */
+>  #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
+>  						 * I am cleaning dirty pages from some other bdi. */
+>  #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index b0089eadc367..08bc9d0606a8 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -175,20 +175,19 @@ static inline bool in_vfork(struct task_struct *tsk)
+>  
+>  /*
+>   * Applies per-task gfp context to the given allocation flags.
+> - * PF_MEMALLOC_NOFS implies GFP_NOFS
+>   * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
+>   */
+>  static inline gfp_t current_gfp_context(gfp_t flags)
+>  {
+> -	if (unlikely(current->flags & (PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA) ||
+> -		     current->memalloc_noio)) {
+> +	if (unlikely((current->flags & PF_MEMALLOC_NOCMA) ||
+> +		     current->memalloc_noio || current->memalloc_nofs)) {
+>  		/*
+>  		 * NOIO implies both NOIO and NOFS and it is a weaker context
+>  		 * so always make sure it makes precedence
+>  		 */
+>  		if (current->memalloc_noio)
+>  			flags &= ~(__GFP_IO | __GFP_FS);
+> -		else if (current->flags & PF_MEMALLOC_NOFS)
+> +		else if (current->memalloc_nofs)
+>  			flags &= ~__GFP_FS;
+>  #ifdef CONFIG_CMA
+>  		if (current->flags & PF_MEMALLOC_NOCMA)
+> @@ -254,8 +253,8 @@ static inline void memalloc_noio_restore(unsigned int flags)
+>   */
+>  static inline unsigned int memalloc_nofs_save(void)
+>  {
+> -	unsigned int flags = current->flags & PF_MEMALLOC_NOFS;
+> -	current->flags |= PF_MEMALLOC_NOFS;
+> +	unsigned int flags = current->memalloc_nofs;
+> +	current->memalloc_nofs = 1;
+>  	return flags;
+>  }
+>  
+> @@ -269,7 +268,7 @@ static inline unsigned int memalloc_nofs_save(void)
+>   */
+>  static inline void memalloc_nofs_restore(unsigned int flags)
+>  {
+> -	current->flags = (current->flags & ~PF_MEMALLOC_NOFS) | flags;
+> +	current->memalloc_nofs = flags ? 1 : 0;
+>  }
+>  
+>  static inline unsigned int memalloc_noreclaim_save(void)
+> -- 
+> 2.27.0
 
-Did you actually experience issues with this second part as well? I'm
-thinking the WARN_ON should have fired in that case, no?
-
-Thanks,
-
-Juri
-
+-- 
+Michal Hocko
+SUSE Labs
