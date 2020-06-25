@@ -3,88 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A914C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54FF2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4338120781
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 19:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406629AbgFYTis (ORCPT
+        id S2406662AbgFYTkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:38:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35500 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406069AbgFYTis (ORCPT
+        Thu, 25 Jun 2020 15:40:39 -0400
+Received: from smtprelay0058.hostedemail.com ([216.40.44.58]:53726 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406069AbgFYTkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:38:48 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05PJWkxr043707;
-        Thu, 25 Jun 2020 15:38:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux03v69j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 15:38:45 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05PJX8sV044689;
-        Thu, 25 Jun 2020 15:38:44 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux03v687-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 15:38:44 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05PJLTAb030530;
-        Thu, 25 Jun 2020 19:38:42 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 31uusjj3dw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jun 2020 19:38:42 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05PJcdvl65470898
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jun 2020 19:38:39 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42EC4A4054;
-        Thu, 25 Jun 2020 19:38:39 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E44ABA405C;
-        Thu, 25 Jun 2020 19:38:38 +0000 (GMT)
-Received: from osiris (unknown [9.171.67.222])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 25 Jun 2020 19:38:38 +0000 (GMT)
-Date:   Thu, 25 Jun 2020 21:38:37 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH RFC] s390x/vmem: get rid of memory segment list
-Message-ID: <20200625193837.GA5050@osiris>
-References: <20200625150029.45019-1-david@redhat.com>
+        Thu, 25 Jun 2020 15:40:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id EDF0B181D330D;
+        Thu, 25 Jun 2020 19:40:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: doll31_0604bd226e4f
+X-Filterd-Recvd-Size: 2852
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 25 Jun 2020 19:40:34 +0000 (UTC)
+Message-ID: <5dbb62beffde43e1049ca37629533db5c7b2e6d6.camel@perches.com>
+Subject: Re: [PATCH] platform/chrome: Clarify SPDX license with GPL-2.0-only
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Yicheng Li <yichengli@chromium.org>
+Date:   Thu, 25 Jun 2020 12:40:33 -0700
+In-Reply-To: <CAHp75VcFeCf0vnk2Ea_-QdTW5gyRZvgEXwX7-VSd3rKch7pSwQ@mail.gmail.com>
+References: <20200625170356.225136-1-enric.balletbo@collabora.com>
+         <CAHp75VdY4TEKfZXDb-f-KC4G2XRJOdB-w4vegSWG9vULLqcUKw@mail.gmail.com>
+         <026b38ff947e338a468567dfd20fbde1419bb094.camel@perches.com>
+         <CAHp75VcFeCf0vnk2Ea_-QdTW5gyRZvgEXwX7-VSd3rKch7pSwQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625150029.45019-1-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-25_15:2020-06-25,2020-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 impostorscore=0 cotscore=-2147483648
- bulkscore=0 adultscore=0 mlxlogscore=911 mlxscore=0 priorityscore=1501
- spamscore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006250115
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 05:00:29PM +0200, David Hildenbrand wrote:
-> This smells like a leftover from ancient times, let's get rid of it. We
-> can now convert vmem_remove_mapping() into a void function - everybody
-> ignored the return value already.
+On Thu, 2020-06-25 at 22:33 +0300, Andy Shevchenko wrote:
+> On Thu, Jun 25, 2020 at 10:29 PM Joe Perches <joe@perches.com> wrote:
+> > On Thu, 2020-06-25 at 22:06 +0300, Andy Shevchenko wrote:
+> > > On Thu, Jun 25, 2020 at 9:25 PM Enric Balletbo i Serra
+> > > <enric.balletbo@collabora.com> wrote:
+> > > > Remove the ambiguity with GPL-2.0 and use an explicit GPL-2.0-only
+> > > > tag.
+> > > 
+> > > Is there any? Last time IIRC Greg told me that in the kernel the old
+> > > and new variants are okay.
+> > 
+> > If there wasn't any ambiguity, the older license
+> > style wouldn't be deprecated by SPDX.org.
+> 
+> They are _not_ deprecated according to kernel documentation:
+> https://elixir.bootlin.com/linux/latest/source/LICENSES/preferred/GPL-2.0
+> 
+> So, fix documentation in the kernel then.
 
-This buys us what? Except that we get rid of a bit of code?
+Been there, tried that. Linus is out to lunch IMO.
+
+https://lore.kernel.org/lkml/515362d10c06567f35f0d5b7c3f2e121769fb04b.camel@perches.com/
+
+
