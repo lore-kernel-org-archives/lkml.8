@@ -2,143 +2,173 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E4EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71682207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593061040;
-	bh=rh2t4ZM9sSp43OqmPhVB9ZMLCRZ3PrCAUtZMZLiH3Ak=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=lLSOB0qTBDrccNZk+tTgecRGKLC/nhY9UunFu5ogv4OGOOqSEMfNTslP+9GUdY/wI
-	 2jCDDDFak2JI5ZCI615ktzQe14s67XuOPpgXK6hMFy6ulLDys9V46ZBVltVXXmWEzB
-	 QqJbxyKCuPSLGrszuH4cPmGtV1PDnLsQ0fognLR0=
+	by mail.kernel.org (Postfix) with ESMTP id E44B820644
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itDE7aS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389775AbgFYE5S (ORCPT
+        id S2389773AbgFYFAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 00:57:18 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:46777 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgFYE5S (ORCPT
+        Thu, 25 Jun 2020 01:00:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgFYFAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 00:57:18 -0400
-Received: by mail-ej1-f65.google.com with SMTP id p20so4575922ejd.13;
-        Wed, 24 Jun 2020 21:57:16 -0700 (PDT)
+        Thu, 25 Jun 2020 01:00:03 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF9AC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:00:03 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a127so2460233pfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gNtbIZ568VO1hTjCxcIyUTJVwIpNwttbY91p1QqsdC4=;
+        b=itDE7aS4I50IkCwOnZKTfUWfju44bYUDoiNCiZT06igwGbt4AypALVfBSnRQE+UE5O
+         MCGjc4V4zkDKnPLjgijrdHTJ1W9zHDPLWbfuOGJwzHDj8Cfc6Pg4ozFdmxpGNbxZbOaH
+         BepHUKCntSEv7ip2c/PQHxRoY4IBIyXZ7/wScKKy1i4F53C+nh5WGOX3P/mudcjMhiyF
+         Z4Ut03GDayTQfhXPOc73e/HyYxqIM0nWdhvySpMedRmW71CvTAc262gqR4SSd+TjboM2
+         FgYNrAJHFaYfO6aj6YB8MIY1vdSB3ZKXjqE4zMmztIgcWQIUE3JV5Ih17HAkWqLE8M9J
+         jzyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hDQOaa5HH/zr8eVIcjkrYiG3AZ14kTxtIgkPZZdVMpc=;
-        b=QBki+8UhP3NaYfdlxlzA3KzSb3f/lVdYFygFwcrg0IvLAb1TB19fa34+dwEHBT6cxp
-         z2mEX7l0iZdv9JaqSrB7ndnHLvJThs3OG8fdlEi4Pk37Kr2n1Q7orwWJeaNbt3RIJiJS
-         oq1aLOWy3dSrNC+Xd3bqo81ZQKFIW7tUUJifZ0KYTwVvCpTytEubFUgjUWJzdU6EFXt+
-         8vyOJ8pMxQcM8ClJvRUdE8C7EFjs3MJqVyKYrFD1qLX1rDzeAJb+wnmn0De+3l7FkLAw
-         ufAZDbmKZOg8ETrKqn+ga2Bc4+0ovHCR2ow1d2SeH1ptW6PxLx/rbgyPMjajmIy0VSFI
-         BeFw==
-X-Gm-Message-State: AOAM5310RYUGQyPlj2NRIe9a6R5iPT+fdB6wiZtyLSwKnbQTKNGVXiSd
-        00vT587SVU9INozhjISak3JggkN4BQ8=
-X-Google-Smtp-Source: ABdhPJyW7oW77/uxdprLrtBZGhiqru+4GXD0IlYicbu4DlhrOTY/ErhsIJMw1leAKmJGzocjCSLoTw==
-X-Received: by 2002:a17:906:e298:: with SMTP id gg24mr27562253ejb.120.1593061035256;
-        Wed, 24 Jun 2020 21:57:15 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id by20sm2857025ejc.119.2020.06.24.21.57.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 21:57:14 -0700 (PDT)
-Subject: ath9k broken [was: Linux 5.7.3]
-To:     Gabriel C <nix.or.die@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable <stable@vger.kernel.org>, lwn@lwn.net,
-        angrypenguinpoland@gmail.com, Qiujun Huang <hqjagain@gmail.com>,
-        ath9k-devel@qca.qualcomm.com,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-References: <1592410366125160@kroah.com>
- <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <b7993e83-1df7-0c93-f6dd-dba9dc10e27a@kernel.org>
-Date:   Thu, 25 Jun 2020 06:57:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gNtbIZ568VO1hTjCxcIyUTJVwIpNwttbY91p1QqsdC4=;
+        b=V6GpWG2BO65lvhIv+alZZn/CDA5vq+D71Gx2n8RoWicb6mSK8B78tq7qfx5laNBMk1
+         urkjiUbrsBONchWtwcvyFNR3M9TfZ9/scwPrP8PUj7nNApraRZbdTCxrgI+3YXu39gTb
+         BU0q68zmX4V9HGu2Hw5QnWgVL+FSt7VO5R6C8nSmmxiIJ53mTk2pDTds4KxdB7MPBJhV
+         1lf8VYDtrOuC/mI3TFg/VpHwkloAXQxwfr5BdnQ5DFBaHeLsd5QyIeQeFEYCj3hUbt7K
+         3Azj2bbXFmZLAK9BlBuO5RFWpnRcAFJtPtvyivDzVuB7D6smHWjWAN1qgJAxFfDpQMp6
+         cBxQ==
+X-Gm-Message-State: AOAM532WzKN0lMGcofIsxw2Kabef7fszCLVXk+l9vW8WAv7UbmfcT6iO
+        XsMFQ7fsbQvNR4tfaVdTOAr4ow==
+X-Google-Smtp-Source: ABdhPJwh9JC1nam0V/DJQyApj/Ye+dnlgpcjMSQVecblYDk0/KQNNSpYA3pCrHD9eiNJbOSmczVeQA==
+X-Received: by 2002:a62:3041:: with SMTP id w62mr31621996pfw.205.1593061202490;
+        Wed, 24 Jun 2020 22:00:02 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v9sm21531382pfe.198.2020.06.24.22.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 22:00:01 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 21:57:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
+        broonie@kernel.org, linux-i2c@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        swboyd@chromium.org, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        mka@chromium.org, dianders@chromium.org, evgreen@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V8 0/8] Add interconnect support to QSPI and QUP drivers
+Message-ID: <20200625045720.GV128451@builder.lan>
+References: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CAEJqkgjV8p6LtBV8YUGbNb0vYzKOQt4-AMAvYw5mzFr3eicyTg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25. 06. 20, 0:05, Gabriel C wrote:
-> Am Mi., 17. Juni 2020 um 18:13 Uhr schrieb Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>:
->>
->> I'm announcing the release of the 5.7.3 kernel.
->>
-> 
-> Hello Greg,
-> 
->> Qiujun Huang (5):
->>       ath9k: Fix use-after-free Read in htc_connect_service
->>       ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
->>       ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
->>       ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
->>       ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
->>
-> 
-> We got a report on IRC about 5.7.3+ breaking a USB ath9k Wifi Dongle,
-> while working fine on <5.7.3.
-> 
-> I don't have myself such HW, and the reported doesn't have any experience
-> in bisecting the kernel, so we build kernels, each with one of the
-> above commits reverted,
-> to find the bad commit.
-> 
-> The winner is:
-> 
-> commit 6602f080cb28745259e2fab1a4cf55eeb5894f93
-> Author: Qiujun Huang <hqjagain@gmail.com>
-> Date:   Sat Apr 4 12:18:38 2020 +0800
-> 
->     ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-> 
->     commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
-> ...
-> 
-> Reverting this one fixed his problem.
+On Tue 23 Jun 03:38 PDT 2020, Akash Asthana wrote:
 
-Obvious question: is 5.8-rc1 (containing the commit) broken too?
-
-I fail to see how the commit could cause an issue like this. Is this
-really reproducibly broken with the commit and irreproducible without
-it? As it looks like a USB/wiring problem:
-usb 1-2: USB disconnect, device number 2
-ath: phy0: Reading Magic # failed
-ath: phy0: Unable to initialize hardware; initialization status: -5
-...
-usb 1-2: device descriptor read/64, error -110
-usb 1-2: device descriptor read/64, error -71
-
-Ccing ath9k maintainers too.
-
-> I don't have so much info about the HW, besides a dmesg showing the
-> phy breaking.
-> I also added the reporter to CC too.
+> This patch series is based on tag "next-20200622" of linux-next tree.
 > 
-> https://gist.github.com/AngryPenguinPL/1e545f0da3c2339e443b9e5044fcccea
-> 
-> If you need more info, please let me know and I'll try my best to get
-> it as fast as possible for you.
 
-thanks,
--- 
-js
+Series applied to the qcom tree, thank you and thanks for the Acks.
+
+Regards,
+Bjorn
+
+> High level design:
+>  - QUP wrapper/common driver.
+>    Vote for QUP core on behalf of earlycon from probe.
+>    Remove BW vote during earlycon exit call
+> 
+>  - SERIAL driver.
+>    Vote only for CPU/CORE path because driver is in FIFO mode only
+>    Vote/unvote from qcom_geni_serial_pm func.
+>    Bump up the CPU vote from set_termios call based on real time need
+> 
+>  - I2C driver.
+>    Vote for CORE/CPU/DDR path
+>    Vote/unvote from runtime resume/suspend callback
+>    As bus speed for I2C is fixed from probe itself no need for bump up.
+> 
+>  - SPI QUP driver.
+>    Vote only for CPU/CORE path because driver is in FIFO mode only
+>    Vote/unvote from runtime resume/suspend callback
+>    Bump up CPU vote based on real time need per transfer.
+> 
+>  - QSPI driver.
+>    Vote only for CPU path
+>    Vote/unvote from runtime resume/suspend callback
+>    Bump up CPU vote based on real time need per transfer.
+> 
+> Changes in V2:
+>  - Add devm_of_icc_get() API interconnect core.
+>  - Add ICC support to common driver to fix earlyconsole crash.
+> 
+> Changes in V3:
+>  - Define common ICC APIs in geni-se driver and use it across geni based
+>    I2C,SPI and UART driver.
+> 
+> Changes in V4:
+>  - Add a patch to ICC core to scale peak requirement
+>    as twice of average if it is not mentioned explicilty.
+> 
+> Changes in V5:
+>  - As per Georgi's suggestion removed patch from ICC core for assuming
+>    peak_bw as twice of average when it's not mentioned, instead assume it
+>    equall to avg_bw and keep this assumption in ICC client itself.
+>  - As per Matthias suggestion use enum for GENI QUP ICC paths.
+> 
+> Changes in V6:
+>  - No Major change
+> 
+> Changes in V7:
+>  - As per Matthias's comment removed usage of peak_bw variable because we don't
+>    have explicit peak requirement, we were voting peak = avg and this can be
+>    tracked using single variable for avg bw.
+>  - As per Matthias's comment improved print log.
+> 
+> Changes in V8:
+>  - Add [PATCH V8 5/8] to factor out common code for clock setting.
+>  - Combine ICC voting and clock setting to single API. [PATCH V8 6/8]
+>  - Add ICC voting per transfer because in case of multi message,
+>    transfer frequency can vary for each message/transfer.[PATCH V8 6/8]
+> 
+> Akash Asthana (7):
+>   soc: qcom: geni: Support for ICC voting
+>   soc: qcom-geni-se: Add interconnect support to fix earlycon crash
+>   i2c: i2c-qcom-geni: Add interconnect support
+>   tty: serial: qcom_geni_serial: Add interconnect support
+>   spi: spi-geni-qcom: Add interconnect support
+>   spi: spi-qcom-qspi: Add interconnect support
+>   arm64: dts: sc7180: Add interconnect for QUP and QSPI
+> 
+> Douglas Anderson (1):
+>   spi: spi-geni-qcom: Combine the clock setting code
+> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi  | 127 ++++++++++++++++++++++++++++
+>  drivers/i2c/busses/i2c-qcom-geni.c    |  26 +++++-
+>  drivers/soc/qcom/qcom-geni-se.c       | 150 ++++++++++++++++++++++++++++++++++
+>  drivers/spi/spi-geni-qcom.c           | 100 +++++++++++++++--------
+>  drivers/spi/spi-qcom-qspi.c           |  56 ++++++++++++-
+>  drivers/tty/serial/qcom_geni_serial.c |  38 ++++++++-
+>  include/linux/qcom-geni-se.h          |  40 +++++++++
+>  7 files changed, 496 insertions(+), 41 deletions(-)
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> 
