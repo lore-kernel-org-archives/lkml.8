@@ -2,150 +2,383 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A512084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593128284;
-	bh=+rJ274nAaeCSx6ZoT5xGykTxK4T6ZZZLmSREOV4fy3c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=uW8N9vKNX1vC1LXD7AacQJ7/LgYDOeWT33IYzjRUSb1NkzcGBt+enwL817INjs4zT
-	 ayliLoof/ery04x/QS1pLqUT+qBCnmSbqPvAwEJijN7qwuyJWLsuLhrgO3dJ9AmLPd
-	 19vgsV23NcpRJ1UXv6YXqQgSOGt5vXhaU2RKA8WE=
+	by mail.kernel.org (Postfix) with ESMTP id A1E712072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 23:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rf/9jOK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgFYXiC (ORCPT
+        id S1726381AbgFYXnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:38:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbgFYXiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 19:38:01 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC6F2084D;
-        Thu, 25 Jun 2020 23:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593128281;
-        bh=+rJ274nAaeCSx6ZoT5xGykTxK4T6ZZZLmSREOV4fy3c=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WBHS2UDCBY4nW2fcA+mei/bKA2n3sGoAUUuQKTcg1/hXLX8ehiuvhEh+rwLQjCfSV
-         PfzCJYLvMRE9+qrLRxavGS5VGaTCy08qJIkxi9ys1tMtQR/U0mEuDLmjdedKFBtaZe
-         2mGa+uUzYJ727wiaPFzAw/A4O3DX8AoYLTJv0i9o=
-Message-ID: <36f0f92ef664b4b62d6b2d06961a548d4dc5527b.camel@kernel.org>
-Subject: Re: [PATCH][man-pages] sync.2: syncfs() now returns errors if
- writeback fails
-From:   Jeff Layton <jlayton@kernel.org>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-man@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 25 Jun 2020 19:37:59 -0400
-In-Reply-To: <54c5ef29-0f12-5f55-8f54-73b20f56925e@gmail.com>
-References: <20200610103347.14395-1-jlayton@kernel.org>
-         <20200610155013.GA1339@sol.localdomain>
-         <fe141babe698296f96fde39a8da85005506fd0f0.camel@kernel.org>
-         <54c5ef29-0f12-5f55-8f54-73b20f56925e@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 25 Jun 2020 19:43:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbgFYXnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 19:43:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003A9C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 16:43:31 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k71so676039pje.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 16:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=79LPjzJfPjrwajexHKM/PvOYmLTuibYRMTBOobWgx1Y=;
+        b=Rf/9jOK3dlutZpsnza2/fBK3E7Q6s44FaXLkBnhwQYGEwt+orT3D4R0Uvi/OmPyAVL
+         3dYf4zEq8oKTNtoeorsoQfnQrw6OhC6P4y5xNGuCCbgrmT0LBC3at+GTcm5AanLn8zeE
+         ZFPv1Lye0N+1/an9ozH+fNr28dHvgWAw5Y2SdysEcoq/IpvqmPG+M654Mo3Av77+b1kr
+         bJ1kEfnSc4VagKeOh3Q1KqWogKH5BJJrfxTNukZJ/uzOiOc5FvkFW9d2Wosa2NO51kAh
+         1RhHlWJ+aJHzx2LEnrX8lRPW1TY/UExJKV0V+E0I8f5R1rFZNrtKWYctXOx3JZIXLqCz
+         /YEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=79LPjzJfPjrwajexHKM/PvOYmLTuibYRMTBOobWgx1Y=;
+        b=uT8uYxXM1SazuKXn7+R8c5IFxSMNXdgOWp6Y1OqEXpLCpr2601mD2+8+zYpkHanS3Y
+         eFGNq1AbKG8ZasL0cWLkgbewLr4CKej4Mt0aHK4KwPJQJvFcR0tyGH1x2wGWdzoMO7RA
+         qso91GOwwutJ6dhbtcU/Q+QqBCphvxsTnmqI0zHeC/mAYcUlahBBh3P3DClMv79wEeiT
+         UmjTvkEY9WyKEfbtzvekUA5XTtMddNwrE+zdTohNxX7R7H0CMZNEL8LiNjNv1z94EXO+
+         u7ApnhsVyYBO1PoYFDHcvrDVfFTIrH+rWbiU7Tx5CKeEVbYrmj8SD6VynqyOAuj0FayV
+         4cTw==
+X-Gm-Message-State: AOAM533BEpvYP8oc5Gy6ZRwMPJdU7W4eyJ545+mJp4ZyTMkatqO8rGeQ
+        hGZA4rUp7XugWyALoioyxG/Dw9R4LcAqKSPc45qpfQ==
+X-Google-Smtp-Source: ABdhPJxA+K5IzMkBnUGuNRnbB4jOLxpSVoyzSeUKYeSjQ7Pzvz8oWYEt89jRlw6W3smv2EYH9cQtyF4bIALEDpRsM44=
+X-Received: by 2002:a17:90b:e01:: with SMTP id ge1mr494886pjb.20.1593128611012;
+ Thu, 25 Jun 2020 16:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200618140814.135948-1-vitor@massaru.org> <202006181949.6402C456@keescook>
+In-Reply-To: <202006181949.6402C456@keescook>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 25 Jun 2020 16:43:20 -0700
+Message-ID: <CAFd5g45gAYxGYekJ-bs-TW9GVorDp7yuoD-UeqnpMVEpts5rZg@mail.gmail.com>
+Subject: Re: [RESEND, PATCH v2] lib: overflow-test: add KUnit test of
+ check_*_overflow functions
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vitor Massaru Iha <vitor@massaru.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-25 at 11:45 +0200, Michael Kerrisk (man-pages) wrote:
-> Hi Jeff,
-> 
-> Any progress with v2 of this patch?
-> 
-> Thanks,
-> 
-> Michael
-> 
+On Thu, Jun 18, 2020 at 8:06 PM Kees Cook <keescook@chromium.org> wrote:
 
-Just sent it. Thanks for the reminder!
+Apologies for just jumping in the middle of this late. Vitor just
+brought something to my attention.
 
-> 
-> On 6/10/20 11:19 PM, Jeff Layton wrote:
-> > On Wed, 2020-06-10 at 08:50 -0700, Eric Biggers wrote:
-> > > On Wed, Jun 10, 2020 at 06:33:47AM -0400, Jeff Layton wrote:
-> > > > A patch has been merged for v5.8 that changes how syncfs() reports
-> > > > errors. Change the sync() manpage accordingly.
-> > > > 
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > >  man2/sync.2 | 24 +++++++++++++++++++++++-
-> > > >  1 file changed, 23 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/man2/sync.2 b/man2/sync.2
-> > > > index 7198f3311b05..27e04cff5845 100644
-> > > > --- a/man2/sync.2
-> > > > +++ b/man2/sync.2
-> > > > @@ -86,11 +86,26 @@ to indicate the error.
-> > > >  is always successful.
-> > > >  .PP
-> > > >  .BR syncfs ()
-> > > > -can fail for at least the following reason:
-> > > > +can fail for at least the following reasons:
-> > > >  .TP
-> > > >  .B EBADF
-> > > >  .I fd
-> > > >  is not a valid file descriptor.
-> > > > +.TP
-> > > > +.B EIO
-> > > > +An error occurred during synchronization.
-> > > > +This error may relate to data written to any file on the filesystem, or on
-> > > > +metadata related to the filesytem itself.
-> > > > +.TP
-> > > > +.B ENOSPC
-> > > > +Disk space was exhausted while synchronizing.
-> > > > +.TP
-> > > > +.BR ENOSPC ", " EDQUOT
-> > > > +Data was written to a files on NFS or another filesystem which does not
-> > > > +allocate space at the time of a
-> > > > +.BR write (2)
-> > > > +system call, and some previous write failed due to insufficient
-> > > > +storage space.
-> > > >  .SH VERSIONS
-> > > >  .BR syncfs ()
-> > > >  first appeared in Linux 2.6.39;
-> > > > @@ -121,6 +136,13 @@ or
-> > > >  .BR syncfs ()
-> > > >  provide the same guarantees as fsync called on every file in
-> > > >  the system or filesystem respectively.
-> > > > +.PP
-> > > > +In mainline kernel versions prior to 5.8,
-> > > > +.\" commit 735e4ae5ba28c886d249ad04d3c8cc097dad6336
-> > > > +.BR syncfs ()
-> > > > +will only fail with EBADF when passed a bad file descriptor. In 5.8
-> > > > +and later kernels, it will also report an error if one or more inodes failed
-> > > > +to be written back since the last syncfs call.
-> > > 
-> > > The sentence "In mainline kernel versions prior to 5.8, syncfs() will only fail
-> > > with EBADF when passed a bad file descriptor" is ambiguous.  It could mean that
-> > > EBADF can now mean other things too.
-> > > 
-> > > Maybe write: "In mainline kernel versions prior to 5.8, syncfs() will only fail
-> > > when passed a bad file descriptor (EBADF)."
-> > > 
-> > > - Eric
-> > 
-> > Good point. Fixed in my tree using your verbiage. I'll send out a v2
-> > patch once I give others a chance to comment.
-> > 
-> > Thanks!
-> > 
-> 
-> 
+> On Thu, Jun 18, 2020 at 11:08:14AM -0300, Vitor Massaru Iha wrote:
+> > This adds the conversion of the runtime tests of check_*_overflow functions,
+> > from `lib/test_overflow.c`to KUnit tests.
+> >
+> > The log similar to the one seen in dmesg running test_overflow.c can be
+> > seen in `test.log`.
+> >
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > Tested-by: David Gow <davidgow@google.com>
+> > ---
+> > v2:
+> >   * moved lib/test_overflow.c to lib/overflow-test.c;
+>
+> I still don't want a dash in the filename, as this creates a difference
+> between the source name and the module name. While I still prefer
+> overflow_kunit.c, I can get over it and accept overflow_test.c :)
+>
+> >     * back to original license;
+> >     * fixed style code;
+> >     * keeps __initconst and added _refdata on overflow_test_cases variable;
+> >     * keeps macros intact making asserts with the variable err;
+> >     * removed duplicate test_s8_overflow();
+> >   * fixed typos on commit message;
+> > ---
+> >  lib/Kconfig.debug                        | 20 +++++++--
+> >  lib/Makefile                             |  2 +-
+> >  lib/{test_overflow.c => overflow-test.c} | 54 +++++++++---------------
+> >  3 files changed, 38 insertions(+), 38 deletions(-)
+> >  rename lib/{test_overflow.c => overflow-test.c} (96%)
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index d74ac0fd6b2d..fb8a3955e969 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2000,9 +2000,6 @@ config TEST_UUID
+> >  config TEST_XARRAY
+> >       tristate "Test the XArray code at runtime"
+> >
+> > -config TEST_OVERFLOW
+> > -     tristate "Test check_*_overflow() functions at runtime"
+> > -
+> >  config TEST_RHASHTABLE
+> >       tristate "Perform selftest on resizable hash table"
+> >       help
+> > @@ -2155,6 +2152,23 @@ config SYSCTL_KUNIT_TEST
+> >
+> >         If unsure, say N.
+> >
+> > +config OVERFLOW_KUNIT_TEST
+> > +     tristate "KUnit test for overflow" if !KUNIT_ALL_TESTS
+> > +     depends on KUNIT
+> > +     default KUNIT_ALL_TESTS
+> > +     help
+> > +       This builds the overflow KUnit tests.
+> > +
+> > +       KUnit tests run during boot and output the results to the debug log
+> > +       in TAP format (http://testanything.org/). Only useful for kernel devs
+> > +       running KUnit test harness and are not for inclusion into a production
+> > +       build.
+> > +
+> > +       For more information on KUnit and unit tests in general please refer
+> > +       to the KUnit documentation in Documentation/dev-tools/kunit/.
+> > +
+> > +       If unsure, say N.
+> > +
+> >  config LIST_KUNIT_TEST
+> >       tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_ALL_TESTS
+> >       depends on KUNIT
+> > diff --git a/lib/Makefile b/lib/Makefile
+> > index b1c42c10073b..3b725c9f92d4 100644
+> > --- a/lib/Makefile
+> > +++ b/lib/Makefile
+> > @@ -75,7 +75,6 @@ obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+> >  obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
+> >  obj-$(CONFIG_TEST_LKM) += test_module.o
+> >  obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+> > -obj-$(CONFIG_TEST_OVERFLOW) += test_overflow.o
+> >  obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+> >  obj-$(CONFIG_TEST_SORT) += test_sort.o
+> >  obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+> > @@ -318,3 +317,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
+> >  # KUnit tests
+> >  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+> >  obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
+> > +obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow-test.o
+> > diff --git a/lib/test_overflow.c b/lib/overflow-test.c
+> > similarity index 96%
+> > rename from lib/test_overflow.c
+> > rename to lib/overflow-test.c
+> > index 7a4b6f6c5473..d40ef06b1ade 100644
+> > --- a/lib/test_overflow.c
+> > +++ b/lib/overflow-test.c
+> > @@ -4,14 +4,11 @@
+> >   */
+> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >
+> > +#include <kunit/test.h>
+> >  #include <linux/device.h>
+> >  #include <linux/init.h>
+> > -#include <linux/kernel.h>
+> >  #include <linux/mm.h>
+> > -#include <linux/module.h>
+> >  #include <linux/overflow.h>
+> > -#include <linux/slab.h>
+> > -#include <linux/types.h>
+> >  #include <linux/vmalloc.h>
+> >
+> >  #define DEFINE_TEST_ARRAY(t)                 \
+> > @@ -270,7 +267,7 @@ DEFINE_TEST_FUNC(u64, "%llu");
+> >  DEFINE_TEST_FUNC(s64, "%lld");
+> >  #endif
+> >
+> > -static int __init test_overflow_calculation(void)
+> > +static void __init overflow_calculation_test(struct kunit *test)
+> >  {
+> >       int err = 0;
+> >
+> > @@ -285,10 +282,10 @@ static int __init test_overflow_calculation(void)
+> >       err |= test_s64_overflow();
+> >  #endif
+> >
+> > -     return err;
+> > +     KUNIT_EXPECT_FALSE(test, err);
+> >  }
+>
+> Ah! Well, yes, I guess that is one way to do it. :) I'm just curious:
+> why the change away from doing EXPECTs on individual tests?
+>
+> >
+> > -static int __init test_overflow_shift(void)
+> > +static void __init overflow_shift_test(struct kunit *test)
+> >  {
+> >       int err = 0;
+> >
+> > @@ -479,7 +476,7 @@ static int __init test_overflow_shift(void)
+> >       err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
+> >       err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
+> >
+> > -     return err;
+> > +     KUNIT_EXPECT_FALSE(test, err);
+> >  }
+> >
+> >  /*
+> > @@ -555,7 +552,7 @@ DEFINE_TEST_ALLOC(kvzalloc_node, kvfree,     0, 1, 1);
+> >  DEFINE_TEST_ALLOC(devm_kmalloc,  devm_kfree, 1, 1, 0);
+> >  DEFINE_TEST_ALLOC(devm_kzalloc,  devm_kfree, 1, 1, 0);
+> >
+> > -static int __init test_overflow_allocation(void)
+> > +static void __init overflow_allocation_test(struct kunit *test)
+> >  {
+> >       const char device_name[] = "overflow-test";
+> >       struct device *dev;
+> > @@ -563,10 +560,8 @@ static int __init test_overflow_allocation(void)
+> >
+> >       /* Create dummy device for devm_kmalloc()-family tests. */
+> >       dev = root_device_register(device_name);
+> > -     if (IS_ERR(dev)) {
+> > -             pr_warn("Cannot register test device\n");
+> > -             return 1;
+> > -     }
+> > +     if (IS_ERR(dev))
+> > +             kunit_warn(test, "Cannot register test device\n");
+> >
+> >       err |= test_kmalloc(NULL);
+> >       err |= test_kmalloc_node(NULL);
+> > @@ -585,30 +580,21 @@ static int __init test_overflow_allocation(void)
+> >
+> >       device_unregister(dev);
+> >
+> > -     return err;
+> > +     KUNIT_EXPECT_FALSE(test, err);
+> >  }
+> >
+> > -static int __init test_module_init(void)
+> > -{
+> > -     int err = 0;
+> > -
+> > -     err |= test_overflow_calculation();
+> > -     err |= test_overflow_shift();
+> > -     err |= test_overflow_allocation();
+> > -
+> > -     if (err) {
+> > -             pr_warn("FAIL!\n");
+> > -             err = -EINVAL;
+> > -     } else {
+> > -             pr_info("all tests passed\n");
+> > -     }
+> > +static struct kunit_case __refdata overflow_test_cases[] = {
+>
+> Erm, __refdata? This seems like it should be __initdata.
+>
+> > +     KUNIT_CASE(overflow_calculation_test),
+> > +     KUNIT_CASE(overflow_shift_test),
+> > +     KUNIT_CASE(overflow_allocation_test),
+> > +     {}
+> > +};
+> >
+> > -     return err;
+> > -}
+> > +static struct kunit_suite overflow_test_suite = {
+>
+> And this.
+>
+> > +     .name = "overflow",
+> > +     .test_cases = overflow_test_cases,
+> > +};
+> >
+> > -static void __exit test_module_exit(void)
+> > -{ }
+> > +kunit_test_suites(&overflow_test_suite);
+>
+> I suspect the problem causing the need for __refdata there is the lack
+> of __init markings on the functions in kunit_test_suites()?
 
--- 
-Jeff Layton <jlayton@kernel.org>
+That is correct, Kees.
 
+This problem goes all the way back to the initial KUnit RFC. I forget
+who first brought it up, but there was an issue that KUnit runs in
+init and consequently has access to __init stuff, but we weren't sure
+that we want to mark *everything* in KUnit as __init. This was for a
+number of reasons: one of these reasons was that we were considering
+allowing KUnit to run at different times; with Alan's KUNIT_DEBUGFS
+patches, this is now a reality. Thus, in some configurations, KUnit
+can run its tests after kernel init is done, but also not as a module.
+
+Sorry for not seeing this before.
+
+> (Or maybe this is explained somewhere else I've missed it.)
+>
+> For example, would this work? (I haven't tested it all.)
+>
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 59f3144f009a..aad746d59d2f 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -233,9 +233,9 @@ size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
+>  unsigned int kunit_test_case_num(struct kunit_suite *suite,
+>                                  struct kunit_case *test_case);
+>
+> -int __kunit_test_suites_init(struct kunit_suite **suites);
+> +int __init __kunit_test_suites_init(struct kunit_suite **suites);
+>
+> -void __kunit_test_suites_exit(struct kunit_suite **suites);
+> +void __exit __kunit_test_suites_exit(struct kunit_suite **suites);
+>
+>  /**
+>   * kunit_test_suites() - used to register one or more &struct kunit_suite
+> @@ -263,8 +263,9 @@ void __kunit_test_suites_exit(struct kunit_suite **suites);
+>   * everything else is definitely initialized.
+>   */
+>  #define kunit_test_suites(suites_list...)                              \
+> -       static struct kunit_suite *suites[] = {suites_list, NULL};      \
+> -       static int kunit_test_suites_init(void)                         \
+> +       static struct kunit_suite *suites[] __initdata =                \
+> +               {suites_list, NULL};                                    \
+> +       static int __init kunit_test_suites_init(void)                  \
+>         {                                                               \
+>                 return __kunit_test_suites_init(suites);                \
+>         }                                                               \
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index c36037200310..bfb0f563721b 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -381,7 +381,7 @@ static void kunit_init_suite(struct kunit_suite *suite)
+>         kunit_debugfs_create_suite(suite);
+>  }
+>
+> -int __kunit_test_suites_init(struct kunit_suite **suites)
+> +int __init __kunit_test_suites_init(struct kunit_suite **suites)
+>  {
+>         unsigned int i;
+>
+> @@ -393,7 +393,7 @@ int __kunit_test_suites_init(struct kunit_suite **suites)
+>  }
+>  EXPORT_SYMBOL_GPL(__kunit_test_suites_init);
+>
+> -static void kunit_exit_suite(struct kunit_suite *suite)
+> +static void __exit kunit_exit_suite(struct kunit_suite *suite)
+>  {
+>         kunit_debugfs_destroy_suite(suite);
+>  }
+>
+> >
+> > -module_init(test_module_init);
+> > -module_exit(test_module_exit);
+> >  MODULE_LICENSE("Dual MIT/GPL");
+> >
+> > base-commit: 7bf200b3a4ac10b1b0376c70b8c66ed39eae7cdd
+> > prerequisite-patch-id: e827b6b22f950b9f69620805a04e4a264cf4cc6a
+> > --
+> > 2.26.2
+> >
+>
+> Thanks again for the conversion!
+>
+> --
+> Kees Cook
