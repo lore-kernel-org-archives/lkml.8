@@ -2,106 +2,81 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3723C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A59C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1AA520578
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ipb/T+/P"
+	by mail.kernel.org (Postfix) with ESMTP id CDEF120578
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 01:15:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593047742;
+	bh=slMjPRa67K16YFPswiAcJrSACF0ga1IiQ1WSlFEumHI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=CGm0UtWo3u9JlntDnWGPP4743gxe3PxMR0W3sownXPV+3Nc73uhzEiQ1n7NivGjwu
+	 MERSrLzCTQmia9y1jb22qvRNAO0msv0eA1vJ6AJwqJ0prBZHOqSy2EvJHs7xHYh61n
+	 BciIzcJ+4nNiTrRYaura6l0zKUBtMJv0Ic0XEr2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389269AbgFYBPh (ORCPT
+        id S2389310AbgFYBPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:15:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388789AbgFYBPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:15:32 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB04C061573;
-        Wed, 24 Jun 2020 18:15:32 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l12so4262382ejn.10;
-        Wed, 24 Jun 2020 18:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9txV8+UtsunFOrtoLHdutZEHp1eFB9eS+2lRDtAa+AQ=;
-        b=Ipb/T+/PQOD8iEc2mPWVFz+T7ZJoH0CNlpXb0xtSG+/h26isdhnuwb0MwgLZGL6DIY
-         NlQXwWf3+zuFZ4zppV8gATYnGYlJpMM/GB3ohBb7to54kzYfnxFM71vxhBTkqoMceL6O
-         A9zU6HmJonH1mBmZuP7ntcT9WekPHvuf3HVV8CkshwdqWY0jTEyGrBGMEBn8VURbqY28
-         uyJouK6DKakDtRsYhc2fE7yEYiX87O1RLQsVnWslMgUs3axEjJAge1tH4PxzzGCz2bSt
-         I1daD05UtisXQSBP50ERwbMk7anAuJIilbOIKO3nTjYIyQQ/ErSpje1QRSntanpXNvF1
-         VKUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=9txV8+UtsunFOrtoLHdutZEHp1eFB9eS+2lRDtAa+AQ=;
-        b=Mku8Y/zoRAjSOScAozZ/kXa4NEiAxoOOu8aCl5xhwh4KiZgFeBtjxgZF//9/XzDPxY
-         YeP2UBilUAH2YXiIf6AuOerPEWEoU0twmgRbP5ybstCMcjE4Pu2ECD2PhW8zYjk52DD/
-         P90LHUZ9Vp3oOjrRcgrCpGn//EIVOKlPgVRUfLLKZckHbKLg1PHKtTdfTUUoB3A8zWTM
-         e3wV6T+BivXAaWIkFsHWZbmtF7ygKOmkMUO7n5YBCAVybksMKYAHOLQ673pHdVzCcmkG
-         MwcmBlgQijPTUffDnmd8h3mHyHV1I6nqeBXP4fDvOFuym8Sz+tZnxpHvCjOrjtvs1dpv
-         h/LQ==
-X-Gm-Message-State: AOAM531TFtAZbskYx7twvjJt7zJhpcwfaBylmzhLgGVHwUDQKVIVfXkc
-        Zv6snGZOQR5intCzqNlQ3uQ=
-X-Google-Smtp-Source: ABdhPJx4qiBEPc216A9Npbe+ubBeAP7uHhlnHopJwmxpEBMcW14CiRpsucd4l6S8REzPEu7/2XtxLg==
-X-Received: by 2002:a17:906:57da:: with SMTP id u26mr10714802ejr.157.1593047730793;
-        Wed, 24 Jun 2020 18:15:30 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l24sm16080423ejb.5.2020.06.24.18.15.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jun 2020 18:15:29 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net 2/3] net: bcmgenet: use __be16 for htons(ETH_P_IP)
-Date:   Wed, 24 Jun 2020 18:14:54 -0700
-Message-Id: <1593047695-45803-3-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593047695-45803-1-git-send-email-opendmb@gmail.com>
-References: <1593047695-45803-1-git-send-email-opendmb@gmail.com>
+        Wed, 24 Jun 2020 21:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389183AbgFYBPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jun 2020 21:15:33 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50ECC20578;
+        Thu, 25 Jun 2020 01:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593047733;
+        bh=slMjPRa67K16YFPswiAcJrSACF0ga1IiQ1WSlFEumHI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ORIO8EoynDIzF4ep5xBiRUWrGI7/V+pgBWZbrlds84dQKm6M3vZj0f4EOlqqGlH0L
+         2ujQ8VsK5WcOcMUV78XQJmb9MN1tWxUiMywbWmNuKJI/sEOPGCyKAGKXVBZEMsvTZS
+         syXLvmJpugcCfTidoJ4ym2XEkVcwxR64pLP5TMnE=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
+References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
+Subject: Re: [PATCH v5 00/27] clk: bcm: rpi: Add support for BCM2711 firmware clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date:   Wed, 24 Jun 2020 18:15:32 -0700
+Message-ID: <159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 16-bit value that holds a short in network byte order should
-be declared as a restricted big endian type to allow type checks
-to succeed during assignment.
+Quoting Maxime Ripard (2020-06-15 01:40:40)
+> Hi,
+>=20
+> Since the whole DRM/HDMI support began to grow fairly big, I've chosen
+> to split away the two discussions between the firmware clocks and the
+> HDMI support.
+>=20
 
-Fixes: 3e370952287c ("net: bcmgenet: add support for ethtool rxnfc flows")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I see one problem.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index f1fa11665319..c63f01e2bb03 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -610,8 +610,9 @@ static int bcmgenet_hfb_create_rxnfc_filter(struct bcmgenet_priv *priv,
- {
- 	struct ethtool_rx_flow_spec *fs = &rule->fs;
- 	int err = 0, offset = 0, f_length = 0;
--	u16 val_16, mask_16;
- 	u8 val_8, mask_8;
-+	__be16 val_16;
-+	u16 mask_16;
- 	size_t size;
- 	u32 *f_data;
- 
--- 
-2.7.4
+WARNING: modpost: missing MODULE_LICENSE() in drivers/clk/bcm/clk-bcm2711-d=
+vp.o
 
+Can you send a followup patch to fix this?
