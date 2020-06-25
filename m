@@ -2,155 +2,158 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0EB0206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3E8204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 12:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LaVKGeIp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ik6IdO4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404819AbgFYMwD (ORCPT
+        id S2404736AbgFYMxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 08:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404650AbgFYMwC (ORCPT
+        Thu, 25 Jun 2020 08:53:52 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30320 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404125AbgFYMxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 08:52:02 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A209C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:52:02 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w2so2440420pgg.10
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 05:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yLpKlluK0xCTBNxUab3MgIjNtLTLogp4EiKdanHoPqo=;
-        b=LaVKGeIpgQB6AcB2k7QauLya2rwFxGE0cxGYK8YnyRUcSnTUIt9ac3qq/6Vs8rJZl4
-         pH5/eDXD0qr681ZEAwW1NJIIqUaRyklOsZLzlXoMwQTj6GhuLgHr8/YBlzaB8TmVYxKB
-         AFXKuayvQCPMDgCsswT+soxzKkmojkzz+vK5gy6LuH6dd8wlqh5rvcNWwSCRqAiKyVGp
-         K2mxL62ylVzJxdCTpNvTfiyz1qOQLGNZfUyT3G7WEXbAxTaO811xprhOBLBYff1nydql
-         pxdcd5uSzzg3CtvXyCISy69c+faxyW3QnPOKtIG6vspEUxdbMegp5QoKYj+mrOA4IEgi
-         C6PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yLpKlluK0xCTBNxUab3MgIjNtLTLogp4EiKdanHoPqo=;
-        b=pCkuktSKRGqotQAMs5w4q9iz38SzGIdMzaMRJX9Hxyv70MpoJofGg5+aQ9CPIJEeMa
-         b2ZAxfu5VfLhAiXYgOa6r8ChyxzoTB8nAlFyq7VvcqsPJ0RveC0w8IOeyF6d2fRu0IM6
-         mTSQe7A7uyxRM16AvXKcKEFCPqIX7nKm56jmYQOoAg8Eq4mMERWZoDtcEVkf75koz5An
-         9ia1bh0N+8Sf6xiYjj0AlZ0xeq8aG9ftOhJjG8vpLhZ2Er6A4acusasVrhbXrToMn1fu
-         5+lJtNg8jD9oG/QBXok6mVYG37H+j+Ppm4GLxQE7kB2Tm183fBXKwJaBwQYcydbdgLTw
-         6Iww==
-X-Gm-Message-State: AOAM530I49x6KtYpi6x4L2MS1j1p9i8HJHXq4tyDU2vcqFlhbmGx4GUZ
-        nNjgOYt4Qw8tZX1b786fc0diM2WCQBVrRDKTmavDDKfCEB0=
-X-Google-Smtp-Source: ABdhPJybZI9FpKDLzQv/5XzuOhZl9DmhSYr8WeJI49d2w+bhzmvrjIAVVUzI8HTMeKWtlHkXDbfw+03v6baP+26QK1w=
-X-Received: by 2002:aa7:9910:: with SMTP id z16mr32601525pff.53.1593089521686;
- Thu, 25 Jun 2020 05:52:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
- <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
- <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
- <CAFA6WYNpVvkzgbBfXc1C10mKC6C6q_G1+c-ypg4s1pb0KDPCvg@mail.gmail.com>
- <1592507935.15159.5.camel@HansenPartnership.com> <CAFA6WYMqOS+P-c4FznQ5vOKvonnKN4Z6BqTipOkrY3gMENLfeA@mail.gmail.com>
- <1592578844.4369.5.camel@HansenPartnership.com> <CAFA6WYPCmZZ1HK-w8fQ2xaNywAZz9W21_fBOnbc35dT30sn7oQ@mail.gmail.com>
- <1593012069.28403.11.camel@HansenPartnership.com> <3aa8705a-0342-25ea-00c4-d5370d91ddb4@forissier.org>
-In-Reply-To: <3aa8705a-0342-25ea-00c4-d5370d91ddb4@forissier.org>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Thu, 25 Jun 2020 15:51:50 +0300
-Message-ID: <CAD8XO3ZDv-RZ-VPv-AFMRkMD_3uW9XYLeZQf0btGVK8m7GX2Dg@mail.gmail.com>
-Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-To:     Jerome Forissier <jerome@forissier.org>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+        Thu, 25 Jun 2020 08:53:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593089631;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T4xXmPkIxrsPbm0aOu6L+HzsSO8+iKexW3Y4z1Z7tVY=;
+        b=ik6IdO4jM6d/H4ImZGx80GUwnztr/e40XZ17xtuqf7o/njdI8gZSpCo5w0E3Ev0HfYdHcl
+        a7p8xq5a90Iy5MrZ4BcVHW19TIskui20JR+Px5MWm/igh6VHivT942gbFt9RPvTouEr4uF
+        BlfROxFpAczlbQeCKNc/gbdxVlmKPgw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-GxNC2wlVONK4C4c8fNHE5A-1; Thu, 25 Jun 2020 08:53:49 -0400
+X-MC-Unique: GxNC2wlVONK4C4c8fNHE5A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A22CE1005512;
+        Thu, 25 Jun 2020 12:53:48 +0000 (UTC)
+Received: from starship (unknown [10.35.206.143])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CA3311010428;
+        Thu, 25 Jun 2020 12:53:47 +0000 (UTC)
+Message-ID: <855fea60f47c1a0dbcf0395a4cdbe5d9c57592c1.camel@redhat.com>
+Subject: Re: Search function in xconfig is partially broken after recent
+ changes
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Thu, 25 Jun 2020 15:53:46 +0300
+In-Reply-To: <20200625131758.52dbdab7@coco.lan>
+References: <a98b0f0ebe0c23615a76f1d23f25fd0c84835e6b.camel@redhat.com>
+         <20200625125906.6b7688eb@coco.lan> <20200625131758.52dbdab7@coco.lan>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 18:44, Jerome Forissier <jerome@forissier.org> wrote:
->
->
->
-> On 6/24/20 5:21 PM, James Bottomley wrote:
-> > On Wed, 2020-06-24 at 16:17 +0530, Sumit Garg wrote:
-> >> Apologies for delay in my reply as I was busy with some other stuff.
-> >>
-> >> On Fri, 19 Jun 2020 at 20:30, James Bottomley
-> >> <James.Bottomley@hansenpartnership.com> wrote:
-> > [...]
-> >>> it's about consistency with what the kernel types mean.  When some
-> >>> checker detects your using little endian operations on a big endian
-> >>> structure (like in the prink for instance) they're going to keep
-> >>> emailing you about it.
-> >>
-> >> As mentioned above, using different terminology is meant to cause
-> >> more confusion than just difference in endianness which is manageable
-> >> inside TEE.
-> >>
-> >> And I think it's safe to say that the kernel implements UUID in big
-> >> endian format and thus uses %pUb whereas OP-TEE implements UUID in
-> >> little endian format and thus uses %pUl.
-> >
-> > So what I think you're saying is that if we still had uuid_be and
-> > uuid_le you'd use uuid_le, because that's exactly the structure
-> > described in the docs.  But because we renamed
-> >
-> > uuid_be -> uuid_t
-> > uuid_le -> guid_t
-> >
-> > You can't use guid_t as a kernel type because it has the wrong name?
->
-> Let me try to clear the confusion that I introduce myself I believe :-/
-> IMO:
->
-> - optee_register_device(const uuid_t *device_uuid) *is* the correct
-> prototype.
-> - device_uuid is *guaranteed* to be BE because OP-TEE makes this
-> guarantee (it converts from its internal LE representation to BE when
-> enumerating the devices, but it doesn't matter to the kernel).
-> - Therefore %pUb is the correct format.
->
-> I'm sorry for doubting the BE order initially. I am so used to OP-TEE
-> using LE internally, that I missed the fact that we have an explicit
-> conversion...
->
-> Does this sound good?
->
+On Thu, 2020-06-25 at 13:17 +0200, Mauro Carvalho Chehab wrote:
+> Em Thu, 25 Jun 2020 12:59:15 +0200
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+> 
+> > Hi Maxim,
+> > 
+> > Em Thu, 25 Jun 2020 12:25:10 +0300
+> > Maxim Levitsky <mlevitsk@redhat.com> escreveu:
+> > 
+> > > Hi!
+> > > 
+> > > I noticed that on recent kernels the search function in xconfig is partially broken.
+> > > This means that when you select a found entry, it is not selected in the main window,
+> > > something that I often do to find some entry near the area I would like to modify,
+> > > and then use main window to navigate/explore that area.
+> > > 
+> > > Reverting these commits helps restore the original behavier:
+> > > 
+> > > b311142fcfd37b58dfec72e040ed04949eb1ac86 - kconfig: qconf: fix support for the split view mode
+> > > cce1faba82645fee899ccef5b7d3050fed3a3d10 - kconfig: qconf: fix the content of the main widget
+> > > 
+> > > I have Qt5 5.13.2 from fedora 31 (5.13.2-1.fc31)
+> > > 
+> > > Could you explain what these commits are supposed to fix?
+> > > I mostly use the split view mode too and it does appear to work for me with these commits reverted as well.
+> > > 
+> > 
+> > There are three view modes for qconf:
+> > 
+> > 	- Single
+> > 	- Split
+> > 	- Full
+> > 
+> > those got broken when gconf was converted to use Qt5, back on Kernel 3.14.
+> > Those patches restore the original behavior.
+You mean xconfig/qconf? (gconf is another program that is GTK based as far as I know).
+
+Could you expalin though what was broken? What exactly didn't work?
+I do seem to be able to select menus on the left and the config items to the right,
+change the config item values, etc, in the split mode at least with these commits reverted.
+
+Could you check that you also have the issue with search in qconf/xconfig?
+
+> > 
+> > > Another question is do you know how to run the qconf standalone? It appears to crash when I attempt to do so,
+> > > althought I checked that I pass correct command line to it, and use the same current directory.
+> > > I guess PATH or something is set by the makefile, but I was unable yet to find out what exactly breaks it.
+> > > 
+> > > This is what I see:
+> > > 
+> > > [mlevitsk@starship ~/UPSTREAM/linux-kernel/src]$./scripts/kconfig/qconf Kconfig
+> > > sh: /scripts/gcc-version.sh: No such file or directory
+> > > init/Kconfig:34: syntax error
+> > > init/Kconfig:33: invalid statement
+> > > init/Kconfig:34: invalid statement
+> > > sh: /scripts/ld-version.sh: No such file or directory
+> > > sh: --version: command not found
+> > > init/Kconfig:39: syntax error
+> > > init/Kconfig:38: invalid statement
+> > > sh: /scripts/clang-version.sh: No such file or directory
+> > > init/Kconfig:49: syntax error
+> > > init/Kconfig:48: invalid statement
+> > > Recursive inclusion detected.
+> > > Inclusion path:
+> > 
+> > It requires some environment vars. This would make it a little better:
+> > 
+> > 
+> > 	export LD=$(which ldd); export CC=$(which gcc); export srctree=$(pwd); scripts/kconfig/gconf Kconfig
+> > 	Recursive inclusion detected.
+> > 	Inclusion path:
+> > 	  current file : arch//Kconfig
+> > 	  included from: arch//Kconfig:10
+> > 
+> > but it seems that something else is also needed.
+> 
+> This worked for me:
+> 
+> 	SRCARCH=x86 LD=$(which ldd) CC=$(which gcc) srctree=$(pwd) scripts/kconfig/gconf Kconfig
+
+Thank you!
+It does work for me as well (except using qconf of course).
+
+Best regards,
+	Maxim Levitsky
+
+
+> 
 > Thanks,
-> --
-> Jerome
+> Mauro
+> 
 
-I think your description is correct. But I think this problem  would
-be solved outside of the current patchset.
-All places should use one single format (LE):
--  internal optee representation;
--  device enumeration pta;
--  this kernel driver which creates sysfs entry and sets
-uid_copy(&optee_device->id.uuid, device_uuid);
--  matching function;
--  drivers use UUID_INIT();
 
-In that way everything will be consistent. But it will require
-changing other pieces, not just the kernel. While
-these patches add functionality to support current device enumeration
-in optee os.
-So I think this version is ok to be applied.
-
-Regards,
-Maxim.
