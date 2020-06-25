@@ -2,114 +2,176 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1352DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C25520709
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:53:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JDz4VRj5"
+	by mail.kernel.org (Postfix) with ESMTP id EFF7E20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 05:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389730AbgFYFxq (ORCPT
+        id S2389916AbgFYF61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:53:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31056 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389239AbgFYFxq (ORCPT
+        Thu, 25 Jun 2020 01:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389600AbgFYF61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 01:53:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593064424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cDJsuG6GtXcaphjSiqDFSb49Cz2RH/+bn5qUN8ueiH8=;
-        b=JDz4VRj5rxRaNAvTGw0dYyupS0052Am6iU3ejJ5/cVp+ttuFhfAvX3D/c0Ypf02dB5NLEF
-        +ha+KLcS6FMBnZcTPiGgjaDMUzsJAeR/0PcuPKJi+VB5eMwXJcUWGeGV+lZWUn26/kF9Qv
-        LZGiPt/LGiAL817TcvSBOzNa1ubcWDs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-s8fBKFQdMT26N4aa6Rwdiw-1; Thu, 25 Jun 2020 01:53:42 -0400
-X-MC-Unique: s8fBKFQdMT26N4aa6Rwdiw-1
-Received: by mail-wr1-f70.google.com with SMTP id i12so6041299wrx.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:53:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=cDJsuG6GtXcaphjSiqDFSb49Cz2RH/+bn5qUN8ueiH8=;
-        b=JtptwE/U1b8+8ZEtNPGX2C8zZcbdo+fNBxVmHoUE82MnCrYRCqPeZ9x7WuuLOcrYvP
-         TkBRan+6y04jjq2Xo/K+Z2JOZD/PWSgNnnjMc2cMaajpeuDIXrwjQrypcgJZCMr5JtxL
-         0SI8RWU187smOhFppwFB4EB2gPocqYrwbCtpGOsfi+L3tLlgNTtTw8xiOJIVXh1KCYA2
-         qgHNFteo6/NBUPaJYDwSnU3fcdX4KKJY/aMo4AduSYkwA5MVpwAZuzAYj+ypyvAJPpkj
-         sNwlNCOhsaKYdORvOqkpsrS4Tkg5YIxSKtONZZkJQxzeCYd2cizhoYGegXcJMJJeYp1z
-         VLQA==
-X-Gm-Message-State: AOAM531DZRYyA5/UVQJ2gGQlzIjbN9nmjpN5/SMWtjejve3VB2mKtmld
-        kkTkYbtasiOGEiZbWx+AfbF3+JTbg/l/2iORHSwbQN2dpklBAgxDPuB/vKpbS30hTtk8F7FpDJu
-        rDP14QYouc6GaDHuEzsOIMcuO
-X-Received: by 2002:adf:ee0f:: with SMTP id y15mr34182290wrn.76.1593064419350;
-        Wed, 24 Jun 2020 22:53:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw5hXGFY3NA9jZVCbIISwv3TbpYhel5ZeXFLWogioG7Fu9BtfYO7azSJNaCynxpxnD7oj6ImA==
-X-Received: by 2002:adf:ee0f:: with SMTP id y15mr34182274wrn.76.1593064419144;
-        Wed, 24 Jun 2020 22:53:39 -0700 (PDT)
-Received: from [192.168.3.122] (p4ff23f47.dip0.t-ipconnect.de. [79.242.63.71])
-        by smtp.gmail.com with ESMTPSA id d28sm32340485wrc.50.2020.06.24.22.53.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 22:53:38 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
-Date:   Thu, 25 Jun 2020 07:53:37 +0200
-Message-Id: <4D73CD59-BFD5-401A-A001-41F7BF5641BA@redhat.com>
-References: <CAPcyv4gMQsBSQ-kXM6H_zz96ZTJ5F0XnDfq6_mZTn4t9JwmEpA@mail.gmail.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>, Baoquan He <bhe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-In-Reply-To: <CAPcyv4gMQsBSQ-kXM6H_zz96ZTJ5F0XnDfq6_mZTn4t9JwmEpA@mail.gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-X-Mailer: iPhone Mail (17F80)
+        Thu, 25 Jun 2020 01:58:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BF9C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jun 2020 22:58:26 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1joKtw-0001Jj-LO; Thu, 25 Jun 2020 07:58:20 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1joKtu-0000Qp-T7; Thu, 25 Jun 2020 07:58:18 +0200
+Date:   Thu, 25 Jun 2020 07:58:18 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
+References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
+ <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
+ <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+ <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xfbgim4wbqyditz2"
+Content-Disposition: inline
+In-Reply-To: <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--xfbgim4wbqyditz2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Am 25.06.2020 um 01:47 schrieb Dan Williams <dan.j.williams@intel.com>:
+On Thu, Jun 25, 2020 at 12:23:54PM +0800, Tanwar, Rahul wrote:
 >=20
-> =EF=BB=BFOn Wed, Jun 24, 2020 at 3:44 PM Wei Yang
-> <richard.weiyang@linux.alibaba.com> wrote:
-> [..]
->>> So, you are right that there is a mismatch here, but I think the
->>> comprehensive fix is to allow early sections to be partially
->>> depopulated/repopulated rather than have section_activate() and
->>> section_deacticate() special case early sections. The special casing
->>> is problematic in retrospect as section_deactivate() can't be
->>> maintained without understand special rules in section_activate().
->>=20
->> Hmm... This means we need to adjust pfn_valid() too, which always return t=
-rue
->> for early sections.
+> Hi Philipp,
 >=20
-> Right, rather than carry workarounds in 3 locations, and the bug that
-> has resulted from then getting out of sync, just teach early section
-> mapping to allow for the subsection populate/depopulate.
+> On 18/6/2020 8:25 pm, Philipp Zabel wrote:
+> > Hi Rahul,
+> >
+> > On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
+> >> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+> >> This PWM controller does not have any other consumer, it is a
+> >> dedicated PWM controller for fan attached to the system. Add
+> >> driver for this PWM fan controller.
+> >>
+> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> >> ---
+> >>  drivers/pwm/Kconfig         |   9 +
+> >>  drivers/pwm/Makefile        |   1 +
+> >>  drivers/pwm/pwm-intel-lgm.c | 400 +++++++++++++++++++++++++++++++++++=
++++++++++
+> >>  3 files changed, 410 insertions(+)
+> >>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+> >>
+> > [...]
+> >> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+> >> new file mode 100644
+> >> index 000000000000..3c7077acb161
+> >> --- /dev/null
+> >> +++ b/drivers/pwm/pwm-intel-lgm.c
+> >> @@ -0,0 +1,400 @@
+> > [...]
+> >> +static int lgm_pwm_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct lgm_pwm_chip *pc;
+> >> +	struct device *dev =3D &pdev->dev;
+> >> +	void __iomem *io_base;
+> >> +	int ret;
+> >> +
+> >> +	pc =3D devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+> >> +	if (!pc)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	io_base =3D devm_platform_ioremap_resource(pdev, 0);
+> >> +	if (IS_ERR(io_base))
+> >> +		return PTR_ERR(io_base);
+> >> +
+> >> +	pc->regmap =3D devm_regmap_init_mmio(dev, io_base, &pwm_regmap_confi=
+g);
+> >> +	if (IS_ERR(pc->regmap)) {
+> >> +		ret =3D PTR_ERR(pc->regmap);
+> >> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	pc->clk =3D devm_clk_get(dev, NULL);
+> >> +	if (IS_ERR(pc->clk)) {
+> >> +		ret =3D PTR_ERR(pc->clk);
+> >> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	pc->rst =3D devm_reset_control_get(dev, NULL);
+> >> +	if (IS_ERR(pc->rst)) {
+> >> +		ret =3D PTR_ERR(pc->rst);
+> >> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
+> >> +		return ret;
+> >> +	}
+> > Please use devm_reset_control_get_exclusive() to make it explicit an
+> > that exclusive reset control is requested. Given how the reset control
+> > is used, I think this driver could also use
+> > devm_reset_control_get_shared() to potentially allow sharing a reset
+> > line with other devices.
 >=20
+> devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusiv=
+e().
+> Code as below:
+> static inline struct reset_control *devm_reset_control_get(
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0 struct device *dev, const char *id)
+> {
+> =A0=A0=A0=A0=A0=A0=A0 return devm_reset_control_get_exclusive(dev, id);
+> }
+> Am i missing something else?
 
-I prefer the easy fix first - IOW what we Here here. Especially, pfn_to_onli=
-ne_page() will need changes as well.
+Obviously you're missing the comment above of_reset_control_get about
+some functions being compatibility wrappers.
 
-At least my ack stands.=
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xfbgim4wbqyditz2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl70PPcACgkQwfwUeK3K
+7AkhKQf+O1Q3b69RDRigsJQ6oPI7YpwFFFIk6H9cC3YPWKTX1Fc/3BGAL2kPX0om
+ASGuU6fBKG1EXvSLQjcQcY03Q2I3B+uCjbH4KpiGlbNeOJ0iYgKNc0OQJ3qDUqJZ
+PqTLKAB1RWap9qT5URgQ/gCI8bkzGgmdamsCWVSRmCn3Sbw/vVybx2SsvOYUk2QJ
+94wrsYQeUi8+FoyF6xE6MT6oOJ8ospIAFekBNZnFHIeGXlcPNqNLH1Djg517SJyE
+mbHmTn7kWKbRV4BiOWIufF5PCyo5Ep0GPK4+nUHTr8mzsfd6ucH46hZVnoeeYfpY
+kwm2SvOhRB6/L3ZiqUL/sg1gO9w48A==
+=I8HR
+-----END PGP SIGNATURE-----
+
+--xfbgim4wbqyditz2--
