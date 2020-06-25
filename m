@@ -2,151 +2,92 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E1B20702
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:30:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="q7j/uHRH"
+	by mail.kernel.org (Postfix) with ESMTP id 501E320768
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 14:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593095677;
+	bh=V1/9Cp9cSTTz+XY27botGdBPhCCehM3RoZuzCXJ/j3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Eh1a58Nzh9qD4Xod/3geOu/89MSR5bDhBeYch2tKndbbDCFjiUtWU0i2dSKRTcl3N
+	 DMvLV+t+EfsKSMM1cT7gh4wiLQmQrTEbLjx3fy1k7PrUfdaeJPaWjD9ATOFQaetojM
+	 1qRe69j40QDq/VySIXDt56UWZFzuQHlNj7Txuz3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405377AbgFYOaF (ORCPT
+        id S2405381AbgFYOeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:30:05 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:13500 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404890AbgFYOaF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 10:30:05 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200625143001epoutp019ac649c4b17befdebdcbac4148ef6a4d~bz9OsGG062885928859epoutp01E
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 14:30:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200625143001epoutp019ac649c4b17befdebdcbac4148ef6a4d~bz9OsGG062885928859epoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593095401;
-        bh=yb0fLVyVEua0dJC2msoZg3DHd9CvKZ5Sy4F7xXski9Y=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=q7j/uHRHGeTQqfkM4GYfV7/Jpi3xdj99xhKXe3du+GhrfOk6U4v22gTk66ZaRijxv
-         IbAPlPLEEWPyYBm+pmDfBBbS7aF0kxzPg7Cpt5CBNU6PgsCvt8pSmW6CnZg3jkSmnm
-         Y+4dp0UnafL2Yq74ZGQuMUo1GTDXAZ8v+LaRSTj0=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200625142959epcas5p40b86f8b9eb0575f8d739dd18b04943b6~bz9NdikQx3276332763epcas5p4S;
-        Thu, 25 Jun 2020 14:29:59 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        87.3B.09475.7E4B4FE5; Thu, 25 Jun 2020 23:29:59 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200625142959epcas5p4ade8c2acb42629c7bdac08f7c50e2fac~bz9M6AuXK1238912389epcas5p4k;
-        Thu, 25 Jun 2020 14:29:59 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200625142959epsmtrp2692bc6759101c49323224c594e358a96~bz9M5ZEVR2752327523epsmtrp2E;
-        Thu, 25 Jun 2020 14:29:59 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-88-5ef4b4e7c25c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BE.26.08303.7E4B4FE5; Thu, 25 Jun 2020 23:29:59 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200625142957epsmtip21e5b2f1faa7d2ba5ff8cae239c067fb6~bz9LQQ12F2817528175epsmtip27;
-        Thu, 25 Jun 2020 14:29:57 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Stephen Rothwell'" <sfr@canb.auug.org.au>,
-        "'James Bottomley'" <James.Bottomley@HansenPartnership.com>
-Cc:     "'Linux Next Mailing List'" <linux-next@vger.kernel.org>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'Seungwon Jeon'" <essuuj@gmail.com>
-In-Reply-To: <20200625134128.3147193f@canb.auug.org.au>
-Subject: RE: linux-next: build warning after merge of the scsi tree
-Date:   Thu, 25 Jun 2020 19:59:55 +0530
-Message-ID: <021f01d64afd$1aabdb20$50039160$@samsung.com>
+        Thu, 25 Jun 2020 10:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405340AbgFYOef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:34:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D80E20767;
+        Thu, 25 Jun 2020 14:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593095674;
+        bh=V1/9Cp9cSTTz+XY27botGdBPhCCehM3RoZuzCXJ/j3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yBuUsZJZbgq0vPFFBZMWiWlVLzW/Emt0078tSAKvMEZuxHSjHl1xl0IqcgYxsCx5S
+         fRB5o25JFGzAc9G0vx8K51i8NwB9CJ+bbRPTMeCbelsYUD/wpOIkejwrrqJ38R+13k
+         CDDbw1MULh1jhgdLpO2d0bQtPlYTUsTmtCr97pDE=
+Date:   Thu, 25 Jun 2020 16:34:30 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     devel@driverdev.osuosl.org, kernel-list@raspberrypi.com,
+        linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/50] staging: vchiq: Getting rid of the vchi/vchiq split
+Message-ID: <20200625143430.GA3898215@kroah.com>
+References: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQGb0mWQCFKEvR5YSDo+VyfiPWseaQJFro6sqUwnliA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsWy7bCmuu7zLV/iDCa9NLBYfmEJk8XGfg6L
-        y7vmsFkcXNjGaLH8+D8mi617r7I7sHk03rjB5rFz1l12j2mTTrF5fHx6i8Xj8ya5ANYoLpuU
-        1JzMstQifbsErozlT+YwF5xmr3i9cD97A+MMti5GDg4JAROJ5pOpXYxcHEICuxklFq3YxALh
-        fGKUOHrmFxuE85lRYuK6NtYuRk6wjon39jBDJHYxSixccJgVwnnDKPH6cwNYFZuArsSOxW1s
-        ILaIQJ5E988XTCBFzAI3GSVWndsMluAUMJdo+n0I7BBhAWeJo80RIGEWAVWJi28mMoPYvAKW
-        Ei9mPGaCsAUlTs58wgJiMwvIS2x/O4cZ4iIFiZ9Pl7FCxMUljv7sYYbYayWx7mgj2AsSAhM5
-        JA4df80E0eAiceXbPKhmYYlXx7ewQ9hSEp/f7YUGTLZEzy5jiHCNxNJ5x1ggbHuJA1fmsICU
-        MAtoSqzfpQ+xlk+i9/cTJohOXomONiGIalWJ5ndXoTqlJSZ2d0PD0EPi9Yx+5gmMirOQPDYL
-        yWOzkDwzC2HZAkaWVYySqQXFuempxaYFxnmp5XrFibnFpXnpesn5uZsYwYlHy3sH46MHH/QO
-        MTJxMB5ilOBgVhLhDXH7FCfEm5JYWZValB9fVJqTWnyIUZqDRUmcV+nHmTghgfTEktTs1NSC
-        1CKYLBMHp1QD04rGavMrWlOWJ2i2WG+r3HrI9qZR+9vs9A8NE9b4XOJ/zFRnv7DouXLnu7fM
-        8z8dNOpre5oedcygN1te9XhOvUG/cFWIEKeR/fZHsYZsJ39e8FGz2dJxxOLun9PzAjadmOea
-        ouopk9OVrNix9Ud6+uRmlax3R4USNilYfJlfL/gx9Grk06dFt32d5/Tq87mUH1c6GfbOVbP4
-        9ryPetwHQgpr/j2eV2asI9DO8cU0MC+Z9+SEH+s5Zr/9zZlREJB4/EpQsHtT2oIz3gr2007+
-        sei9/Gv/e8sb0SHdURvdXXrqcicWCC9Llf03/Q+jvUuEWmTw9OCZB+d6npAK+njQhdu96mpg
-        /OtktiPXLpoosRRnJBpqMRcVJwIALune/asDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsWy7bCSvO7zLV/iDF618lssv7CEyWJjP4fF
-        5V1z2CwOLmxjtFh+/B+Txda9V9kd2Dwab9xg89g56y67x7RJp9g8Pj69xeLxeZNcAGsUl01K
-        ak5mWWqRvl0CV8byJ3OYC06zV7xeuJ+9gXEGWxcjJ4eEgInExHt7mLsYuTiEBHYwSkw+sYkR
-        IiEtcX3jBHYIW1hi5b/n7BBFrxglOj50s4Ak2AR0JXYsbgOaxMEhIpAnseKbPkgNs8BtRomu
-        xTugpnYwSrzp/s0M0sApYC7R9PsQWIOwgLPE0eYIkDCLgKrExTcTwUp4BSwlXsx4zARhC0qc
-        nPmEBaScWUBPom0j2G3MAvIS29/OYYa4TUHi59NlrBBxcYmjP3vA4iICVhLrjjayTWAUnoVk
-        0iyESbOQTJqFpHsBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzg+NHS2sG4Z9UH
-        vUOMTByMhxglOJiVRHhD3D7FCfGmJFZWpRblxxeV5qQWH2KU5mBREuf9OmthnJBAemJJanZq
-        akFqEUyWiYNTqoEpgXH6trOpKZJaucqpxsFufql/5hjeM7mwNuRjodOuOTKOxyZP7vxzKmq3
-        RozfXLFliZ8ZPA8ftbyc9fLuyeI5q9k7Qpt+b/ovyXpdSe6A0sJdulNW7bx9rVYlI3XtfN5k
-        HnZ/HsvWi8VJpyY1XmvXY9konsrGEWlXWrHrsEW2kZCav5vujy/iTL8NjleY971mFC9feC/+
-        +KHFW+9p5O+UXKp91Sy4P4blm4f4vwO7Vi/IPBFzyiLR/8DVF+4r88TUNOLTJC89viERE5PX
-        v9f5lfR052unNR9HnD0qIK3Qls+4ZVO5sO/av9NeSs3ifnnlgnSKxBWWYx5JMsULOtIUd/ru
-        nTS95IfLYQcf+SwlluKMREMt5qLiRACIKf8SDgMAAA==
-X-CMS-MailID: 20200625142959epcas5p4ade8c2acb42629c7bdac08f7c50e2fac
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200625034139epcas5p126a29921cc3f751528786b00f4b2828b
-References: <CGME20200625034139epcas5p126a29921cc3f751528786b00f4b2828b@epcas5p1.samsung.com>
-        <20200625134128.3147193f@canb.auug.org.au>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623164235.29566-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen
+On Tue, Jun 23, 2020 at 06:41:46PM +0200, Nicolas Saenz Julienne wrote:
+> vchi acts as a mid layer between vchiq and its kernel services, while
+> arguably providing little to no benefit: half of the functions exposed
+> are a 1:1 copy of vchiq's, and the rest provide some functionality which
+> can be easly integrated into vchiq without all the churn. Moreover it
+> has been found in the past as a blockage to further fixes in vchiq as
+> every change needed its vchi counterpart, if even possible.
+> 
+> Hence this series, which merges all vchi functionality into vchiq and
+> provies a simpler and more concise API to services.
+> 
+> I'm aware that kernel's vchi API tries to mimic its userspace
+> counterpart (or vice versa). Obviously this breaks the parity, but I
+> don't think it's a sane goal to have. There is little sense or gain from
+> it, and adds impossible constraints to upstreaming the driver.
+> 
+> Overall this fall short of removing 1100 lines of code, which is pretty
+> neat on itself.
+> 
+> So far it has been tested trough bcm2835-camera, audio and vchiq-test. I
+> can't do much about vc-sm-cma for now as it's only available downstream,
+> but I made sure not to break anything and will provide some patches for
+> the RPi devs to pick-up, so as to make their life easier.
+> 
+> Note that in order to keep the divergence between the downstream and
+> upstream versions of this as small as possible I picked up some
+> mmal-vchiq patches that might not be absolutely necessary to the goal of
+> the series.
 
-> -----Original Message-----
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Sent: 25 June 2020 09:11
-> To: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Cc: Linux Next Mailing List <linux-next@vger.kernel.org>; Linux Kernel
-Mailing
-> List <linux-kernel@vger.kernel.org>; Alim Akhtar
-<alim.akhtar@samsung.com>;
-> Martin K. Petersen <martin.petersen@oracle.com>; Seungwon Jeon
-> <essuuj@gmail.com>
-> Subject: linux-next: build warning after merge of the scsi tree
-> 
-> Hi all,
-> 
-> After merging the scsi tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
-> 
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/scsi/ufs/ufs-
-> exynos.o
-> 
-Sorry about that, will send a fix patch soon.
+I took the first 2 patches and will wait for the rest to be resent :)
 
-> Introduced by commit
-> 
->   55f4b1f73631 ("scsi: ufs: ufs-exynos: Add UFS host support for Exynos
-SoCs")
-> 
-> (not sure why I missed this earlier, sorry)
-> 
-> --
-> Cheers,
-> Stephen Rothwell
+thanks,
 
+greg k-h
