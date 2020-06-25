@@ -2,240 +2,222 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36005C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE9420781
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB3F20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 17:52:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sFfFzlBZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406929AbgFYRrn (ORCPT
+        id S2406935AbgFYRw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:47:43 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39174 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405557AbgFYRrm (ORCPT
+        Thu, 25 Jun 2020 13:52:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405562AbgFYRw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 13:47:42 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id 5A28E2A577F
-Message-ID: <1d82609d56690b64d42bf240defb311ca4fa6460.camel@collabora.com>
-Subject: Re: [RFC 2/7] fixup! media: uapi: h264: update reference lists
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Thu, 25 Jun 2020 13:47:35 -0400
-In-Reply-To: <e477f42cd537c6e6e1f707492f6ad8ab6a510e3a.camel@collabora.com>
-References: <20200623182809.1375-1-ezequiel@collabora.com>
-         <20200623182809.1375-3-ezequiel@collabora.com>
-         <27c646c790d6b00b29f4a61c58eb761ceb56179a.camel@collabora.com>
-         <e477f42cd537c6e6e1f707492f6ad8ab6a510e3a.camel@collabora.com>
-Organization: Collabora
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-bs57yxDa808qws5WWLRs"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 25 Jun 2020 13:52:26 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AAF2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 10:52:26 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id d4so6096294otk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jun 2020 10:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yrZ2fY9WrTaypJt+sZgGoNyHFbZy3M4E4I5hfw0mTfw=;
+        b=sFfFzlBZwWpraJ6jRuapOCOKSygjVulQ/rqhqEcZWWtn8I9wPs5SeR64GQBF5ho1TL
+         /7VIWlxCUfCyoMTKA0z7oTM+Qo97sHURB2JuAj5c2xtrTvr0KTKTWqV8R+5pdLVeIcR9
+         rPBfFJHp5ycenXoTB+AmnnzwTCFaKzu4EPpdmU1nDDgkMZGQzHTV3bUg/CtarN1XsfFr
+         pJKnRJKAsbum00k7hz42NJRszPC6yCrmwrUJ32uplle/FL5svBQJ8lfs2R07SCriNOA4
+         fq2Cc1rQxqrDchZSfuQ2qwVdNhy6xikQ9d6ArI4byI93mtxMlHep+rFDNNSzU0ltQMRG
+         pYoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yrZ2fY9WrTaypJt+sZgGoNyHFbZy3M4E4I5hfw0mTfw=;
+        b=WOXQmT6TXmJkmlz7edYuq0BB1VqmMJ33MPuYWKjnfwRextti6kKz97Xxg91fVCpjOr
+         8pqFkibd0oB3MBp1UJOI9SlO8flqfhalZBb8wG8s8bW20R6oaQUKec7l8X1V2ZuyrCO6
+         GqD5DxDFoBxvQThls9ZwVdz0oolXewKUPKLZFTMvFC5Wz+/fTiPPJZ1wS71SWXGiQ6ci
+         G7p4AFMEINkZ2R8NTDi166ujKVDxbG9ucZgUeV9+NIH6JwvqmwPgptLQp5RQAnu7nANl
+         9tBk9hLTZMrViOY04pN1waDLryqerX/V7LFmtPxJdTigkISNuy1ZBniDX/XguDRJkzhd
+         kIow==
+X-Gm-Message-State: AOAM531POpzDhNV7PSEF2zL/tM3XoL1IA6F1CJZbshdltutcrJo5PTDo
+        dxe81OOybH6ZwsmYfTu+SDfaza+JlKK5VdZpfcFv/w==
+X-Google-Smtp-Source: ABdhPJxD72QqOollRgpUr8DNVPYWzzgpfhSVTIHf/kl7SIgKh1cVaA6bqg+8CA5wFpdwWKImIOspyn4RC6QblaLauLQ=
+X-Received: by 2002:a9d:6048:: with SMTP id v8mr29889627otj.231.1593107545163;
+ Thu, 25 Jun 2020 10:52:25 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200625032430.152447-1-saravanak@google.com> <CAJZ5v0h1JHLK2PA45ZfNBeQrRoH+UkEi6-vRR-=HLz7AAnC1vA@mail.gmail.com>
+ <CAGETcx8AQPZ92vKKwq6-U8fbToCWtHvu4OT4hXzOGiCUst15fw@mail.gmail.com>
+ <CAJZ5v0i=riYAA1wnuDBhBLfWQiGnaRW8fxkCU5X-3=noqSEhrQ@mail.gmail.com>
+ <CAGETcx8J5fs42_HMVyYvbX1=gqGTnavEuDOH+LHprZYRbXvUzw@mail.gmail.com>
+ <CAJZ5v0i-ySdNmToh=ExT9H_88bhHVeUNfTNWxXG1SzaP8a5j-w@mail.gmail.com>
+ <CAGETcx9iLH8fBEA0a9=iPsObzaePg9Zj0A9T_7NSKH6KSq3vFg@mail.gmail.com> <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 25 Jun 2020 10:51:49 -0700
+Message-ID: <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
+ deferred probe
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 10:47 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Jun 25, 2020 at 7:09 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Thu, Jun 25, 2020 at 10:03 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Thu, Jun 25, 2020 at 7:01 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > On Thu, Jun 25, 2020 at 9:58 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, Jun 25, 2020 at 6:49 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > > >
+> > > > > > Dropping Feng Kan <fkan@apm.com> and Toan Le <toanle@apm.com> because
+> > > > > > their mails are bouncing.
+> > > > > >
+> > > > > > On Thu, Jun 25, 2020 at 8:19 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Thu, Jun 25, 2020 at 5:24 AM Saravana Kannan <saravanak@google.com> wrote:
+> > > > > > > >
+> > > > > > > > Under the following conditions:
+> > > > > > > > - driver A is built in and can probe device-A
+> > > > > > > > - driver B is a module and can probe device-B
+> > > > > > > > - device-A is supplier of device-B
+> > > > > > > >
+> > > > > > > > Without this patch:
+> > > > > > > > 1. device-A is added.
+> > > > > > > > 2. device-B is added.
+> > > > > > > > 3. dpm_list is now [device-A, device-B].
+> > > > > > > > 4. driver-A defers probe of device-A.
+> > > > > > > > 5. deferred probe of device-A is reattempted
+> > > > > > > > 6. device-A is moved to end of dpm_list.
+> > > > > > > > 6. dpm_list is now [device-B, device-A].
+> > > > > > > > 7. driver-B is loaded and probes device-B.
+> > > > > > > > 8. dpm_list stays as [device-B, device-A].
+> > > > > > > >
+> > > > > > > > Suspend (which goes in the reverse order of dpm_list) fails because
+> > > > > > > > device-A (supplier) is suspended before device-B (consumer).
+> > > > > > > >
+> > > > > > > > With this patch:
+> > > > > > > > 1. device-A is added.
+> > > > > > > > 2. device-B is added.
+> > > > > > > > 3. dpm_list is now [device-A, device-B].
+> > > > > > > > 4. driver-A defers probe of device-A.
+> > > > > > > > 5. deferred probe of device-A is reattempted later.
+> > > > > > > > 6. dpm_list is now [device-B, device-A].
+> > > > > > > > 7. driver-B is loaded and probes device-B.
+> > > > > > > > 8. dpm_list is now [device-A, device-B].
+> > > > > > > >
+> > > > > > > > Suspend works because device-B (consumer) is suspended before device-A
+> > > > > > > > (supplier).
+> > > > > > > >
+> > > > > > > > Fixes: 494fd7b7ad10 ("PM / core: fix deferred probe breaking suspend resume order")
+> > > > > > > > Fixes: 716a7a259690 ("driver core: fw_devlink: Add support for batching fwnode parsing")
+> > > > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > > > > > ---
+> > > > > > > >  drivers/base/dd.c | 16 ++++++++++++++++
+> > > > > > > >  1 file changed, 16 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > > > > > > > index 9a1d940342ac..52b2148c7983 100644
+> > > > > > > > --- a/drivers/base/dd.c
+> > > > > > > > +++ b/drivers/base/dd.c
+> > > > > > > > @@ -109,6 +109,8 @@ static void deferred_probe_work_func(struct work_struct *work)
+> > > > > > > >                  * probe makes that very unsafe.
+> > > > > > > >                  */
+> > > > > > > >                 device_pm_move_to_tail(dev);
+> > > > > > > > +               /* Greg/Rafael: SHOULD I DELETE THIS? ^^ I think I should, but
+> > > > > > > > +                * I'm worried if it'll have some unintended consequeneces. */
+> > > > > > >
+> > > > > > > Yes, this needs to go away if you make the other change.
+> > > > > > >
+> > > > > > > >
+> > > > > > > >                 dev_dbg(dev, "Retrying from deferred list\n");
+> > > > > > > >                 bus_probe_device(dev);
+> > > > > > > > @@ -557,6 +559,20 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+> > > > > > > >                 goto re_probe;
+> > > > > > > >         }
+> > > > > > > >
+> > > > > > > > +       /*
+> > > > > > > > +        * The devices are added to the dpm_list (resume/suspend (reverse
+> > > > > > > > +        * order) list) as they are registered with the driver core. But the
+> > > > > > > > +        * order the devices are added doesn't necessarily match the real
+> > > > > > > > +        * dependency order.
+> > > > > > > > +        *
+> > > > > > > > +        * The successful probe order is a much better signal. If a device just
+> > > > > > > > +        * probed successfully, then we know for sure that all the devices that
+> > > > > > > > +        * probed before it don't depend on the device. So, we can safely move
+> > > > > > > > +        * the device to the end of the dpm_list. As more devices probe,
+> > > > > > > > +        * they'll automatically get ordered correctly.
+> > > > > > > > +        */
+> > > > > > > > +       device_pm_move_to_tail(dev);
+> > > > > > >
+> > > > > > > But it would be good to somehow limit this to the devices affected by
+> > > > > > > deferred probing or we'll end up reordering dpm_list unnecessarily for
+> > > > > > > many times in the actual majority of cases.
+> > > > > >
+> > > > > > Yes, lots of unnecessary reordering, but doing it only for deferred
+> > > > > > probes IS the problem. In the example I gave, the consumer is never
+> > > > > > deferred probe because the supplier happens to finish probing before
+> > > > > > the consumer probe is even attempted.
+> > > > >
+> > > > > But why would the supplier be moved to the end of dpm_list without
+> > > > > moving the consumer along with it?
+> > > >
+> > > > There is no device link between the supplier/consumer in this case.
+> > >
+> > > So this is the real problem, isn't it?
+> > >
+> > > > Sadly there are plenty of cases where device links aren't present to
+> > > > capture supplier/consumer dependencies.
+> > >
+> > > And so that's why you want to add a ton of overhead to driver probing
+> > > in all of the cases in which that is not an issue?
+> >
+> > Well, until all/most of the frameworks add device links or
+> > fw_devlink=on by default, it doesn't hurt to have suspend/resume work
+> > in more platforms.
+>
+> In the presence of deferred probing, that is.
+>
+> Note that deferred probing gets in the way here and so the problem is
+> related to it.
 
---=-bs57yxDa808qws5WWLRs
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I mean, we officially support deferred probing. Shouldn't we fix it so
+that it doesn't break suspend/resume? Also, it's pretty easy to have
+cases where one module probes multiple device instances and loading it
+in one order would break dpm_list order for one device and loading it
+in another order would break it for another device. And there would be
+no "proper" order to load modules (because module order != device
+order).
 
-Le jeudi 25 juin 2020 =C3=A0 14:42 -0300, Ezequiel Garcia a =C3=A9crit :
-> (Adding Jernej, seems I haven't Cced him!)
->=20
-> On Thu, 2020-06-25 at 10:53 -0400, Nicolas Dufresne wrote:
-> > Le mardi 23 juin 2020 =C3=A0 15:28 -0300, Ezequiel Garcia a =C3=A9crit =
-:
-> > > Align v4l2_h264_reference to 32-bits, giving some room
-> > > for future extensions.
-> > >=20
-> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > ---
-> > >  .../userspace-api/media/v4l/ext-ctrls-codec.rst  |  3 +++
-> > >  drivers/media/v4l2-core/v4l2-ctrls.c             | 16 ++++++++++++++=
-++
-> > >  include/media/h264-ctrls.h                       |  7 +++++--
-> > >  3 files changed, 24 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rs=
-t b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > index 6c36d298db20..7af12447a5b0 100644
-> > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > @@ -1943,6 +1943,9 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_t=
-ype -
-> > >      * - __u8
-> > >        - ``index``
-> > >        -
-> > > +    * - __u32
-> > > +      - ``reserved``
-> > > +      - Applications and drivers must set this to zero.
-> >=20
-> > Is that really appropriate ? There was some effort to keep the controls
-> > small. Also, as these are fixed size, they could be extended with
-> > supplementary C arrays of the same size, set in separate control.
-> >=20
->=20
-> That's a very valid concern.
->=20
-> Currently, each of these v4l2_h264_reference take 64 bytes
-> (32 x 2 bytes). So it's 128 bytes of references.
->=20
-> Having the reserved field means 256 bytes instead.
->=20
-> Without the reserved field v4l2_ctrl_h264_slice_params is 936 bytes,
-> the majority of the space taken by v4l2_h264_weight_factors.
-> So, the reserved field accounts for a small increment there.
->=20
-> Another option would be to split the v4l2_h264_reference lists
-> to its own control.
->=20
-> However, given the above, it would have more impact to consider
-> splitting v4l2_h264_pred_weight_table. This table
-> being used or not depends on the bitstream, so there might be
-> some value here.
->=20
-> What do you think?=20
+> > What about the option of not adding to dpm_list until a device is
+> > probed? Is it DOA?
+>
+> Yes, it is, I'm afraid.  There are devices without drivers. :-)
 
-This seems like a good idea, making the weight table it's own control,
-so when the it's not specified in the syntax, we could skip.
+Devices that still suspend/resume without drivers?! I didn't know that
+was possible.
 
->=20
-> > Also, H264 HW is unlikely to evolve, and that covers what DXVA2 and
-> > VAAPI covers already. So it is quite unlikely to ever have to be
-> > extended.
-> >=20
->=20
-> That may be true indeed. Perhaps we can then agree that references
-> only need an index and a flag.
-
-I also see that MVC was never implemented in FFMPEG, I was quite
-surprised. Only left eye playback is there, same in gstreamer-vaapi. It
-leaves me thinking that all this complexity wasn't wanted. A lot of
-stereo movie just make a larger, or higher image to fit the views.
-
->=20
-> Thanks!
-> Ezequiel
->=20
-> > > =20
-> > >  .. _h264_reference_flags:
-> > > =20
-> > > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l=
-2-core/v4l2-ctrls.c
-> > > index 3f3fbcd60cc6..6abd023f10c7 100644
-> > > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > > @@ -1721,6 +1721,8 @@ static void std_log(const struct v4l2_ctrl *ctr=
-l)
-> > > =20
-> > >  #define zero_padding(s) \
-> > >  	memset(&(s).padding, 0, sizeof((s).padding))
-> > > +#define zero_reserved(s) \
-> > > +	memset(&(s).reserved, 0, sizeof((s).reserved))
-> > > =20
-> > >  /*
-> > >   * Compound controls validation requires setting unused fields/flags=
- to zero
-> > > @@ -1731,6 +1733,7 @@ static int std_validate_compound(const struct v=
-4l2_ctrl *ctrl, u32 idx,
-> > >  {
-> > >  	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
-> > >  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
-> > > +	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
-> > >  	struct v4l2_ctrl_hevc_sps *p_hevc_sps;
-> > >  	struct v4l2_ctrl_hevc_pps *p_hevc_pps;
-> > >  	struct v4l2_ctrl_hevc_slice_params *p_hevc_slice_params;
-> > > @@ -1790,7 +1793,20 @@ static int std_validate_compound(const struct =
-v4l2_ctrl *ctrl, u32 idx,
-> > >  	case V4L2_CTRL_TYPE_H264_SPS:
-> > >  	case V4L2_CTRL_TYPE_H264_PPS:
-> > >  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
-> > > +		break;
-> > >  	case V4L2_CTRL_TYPE_H264_SLICE_PARAMS:
-> > > +		p_h264_slice_params =3D p;
-> > > +
-> > > +		for (i =3D 0; i < V4L2_H264_REF_PIC_LIST_LEN; i++) {
-> > > +			struct v4l2_h264_reference *ref0 =3D
-> > > +				&p_h264_slice_params->ref_pic_list0[i];
-> > > +			struct v4l2_h264_reference *ref1 =3D
-> > > +				&p_h264_slice_params->ref_pic_list1[i];
-> > > +
-> > > +			zero_reserved(*ref0);
-> > > +			zero_reserved(*ref1);
-> > > +		}
-> > > +		break;
-> > >  	case V4L2_CTRL_TYPE_H264_DECODE_PARAMS:
-> > >  		break;
-> > > =20
-> > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> > > index 9b1cbc9bc38e..c6cbf178c1c9 100644
-> > > --- a/include/media/h264-ctrls.h
-> > > +++ b/include/media/h264-ctrls.h
-> > > @@ -19,6 +19,8 @@
-> > >   */
-> > >  #define V4L2_H264_NUM_DPB_ENTRIES 16
-> > > =20
-> > > +#define V4L2_H264_REF_PIC_LIST_LEN 32
-> > > +
-> > >  /* Our pixel format isn't stable at the moment */
-> > >  #define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H=
-264 parsed slices */
-> > > =20
-> > > @@ -146,6 +148,7 @@ struct v4l2_h264_pred_weight_table {
-> > >  struct v4l2_h264_reference {
-> > >  	__u8 flags;
-> > >  	__u8 index;
-> > > +	__u16 reserved;
-> > >  };
-> > > =20
-> > >  struct v4l2_ctrl_h264_slice_params {
-> > > @@ -190,8 +193,8 @@ struct v4l2_ctrl_h264_slice_params {
-> > >  	 * Entries on each list are indices into
-> > >  	 * v4l2_ctrl_h264_decode_params.dpb[].
-> > >  	 */
-> > > -	struct v4l2_h264_reference ref_pic_list0[32];
-> > > -	struct v4l2_h264_reference ref_pic_list1[32];
-> > > +	struct v4l2_h264_reference ref_pic_list0[V4L2_H264_REF_PIC_LIST_LEN=
-];
-> > > +	struct v4l2_h264_reference ref_pic_list1[V4L2_H264_REF_PIC_LIST_LEN=
-];
-> > > =20
-> > >  	__u32 flags;
-> > >  };
->=20
->=20
-
---=-bs57yxDa808qws5WWLRs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXvTjNwAKCRBxUwItrAao
-HJMSAKCxHraBF4tvs8q0q0gySla7iT5NnwCfWx3ZPjbabs5Co8gBPDbTeC0HUVg=
-=HLON
------END PGP SIGNATURE-----
-
---=-bs57yxDa808qws5WWLRs--
-
+-Saravana
