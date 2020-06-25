@@ -2,178 +2,96 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB084C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB52AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D039920767
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A959520767
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 22:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593123985;
+	bh=S1U8fm3RinMOZnK4GNXNOMX0hyikWzh9B/PbOPUG65M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dd29mWF0VGsyjhogkEzU8KVZMytxPXDIK6EpKNTXXbI4i6EaWX5rDO3oCyEZfZFWx
+	 TYDDWtGe+PW6Y30VTK+S3y2vTSuWxWPyP0K2xgIWrtf56Iv2jj7qoS2i9DoNKB9Ebk
+	 UJiAlwClwJiSahSg8LEHaAq85c+tbzqM5jGf9wbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406469AbgFYWVy (ORCPT
+        id S2406487AbgFYW0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 18:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54772 "EHLO mail.kernel.org"
+        Thu, 25 Jun 2020 18:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403905AbgFYWVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 18:21:53 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S2403905AbgFYW0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 18:26:22 -0400
+Received: from localhost (p54b332a0.dip0.t-ipconnect.de [84.179.50.160])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3FCB20767;
-        Thu, 25 Jun 2020 22:21:51 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 18:21:49 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [GIT PULL] tracing: Fixes for 5.8-rc2
-Message-ID: <20200625182149.4af86715@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7706620767;
+        Thu, 25 Jun 2020 22:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593123981;
+        bh=S1U8fm3RinMOZnK4GNXNOMX0hyikWzh9B/PbOPUG65M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AUyYaEdVBfVEMd9N9yuKAnXmb/69ZDgtwbqs47UiYNruPIjxgXKilN98rIL1gOIJj
+         QEbufrTI5XUDT7gn3LeuAIfnbSffFNL5R1e/Nmq943u4vXcRStGxRoa2CdaB1Ja4wh
+         EVCW7tYRszGlvoHTiOpwpbpDWtCyzvAxCrKdVUqk=
+Date:   Fri, 26 Jun 2020 00:26:04 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com, joel@jms.id.au
+Subject: Re: [PATCH v2 1/2] i2c: fsi: Fix the port number field in status
+ register
+Message-ID: <20200625222604.GA17905@kunai>
+References: <20200609201555.11401-1-eajames@linux.ibm.com>
+ <20200609201555.11401-2-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
+In-Reply-To: <20200609201555.11401-2-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Linus,
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-tracing: Four small fixes
+On Tue, Jun 09, 2020 at 03:15:54PM -0500, Eddie James wrote:
+> The port number field in the status register was not correct, so fix it.
+>=20
+> Fixes: d6ffb6300116 ("i2c: Add FSI-attached I2C master algorithm")
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 
- - Fixed a ringbuffer bug for nested events having time go backwards
- - Fix a config dependency for boot time tracing to depend on synthetic
-   events instead of histograms.
- - Fix trigger format parsing to handle multiple spaces
- - Fix bootconfig to handle failures in multiple events
-
-
-Please pull the latest trace-v5.8-rc2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.8-rc2
-
-Tag SHA1: 505666efa90d05aaf57972795fcaac6305b40d2a
-Head SHA1: 20dc3847cc2fc886ee4eb9112e6e2fad9419b0c7
+Applied to for-current, thanks!
 
 
-Masami Hiramatsu (2):
-      tracing/boot: Fix config dependency for synthedic event
-      tracing: Fix event trigger to accept redundant spaces
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Sascha Ortmann (1):
-      tracing/boottime: Fix kprobe multiple events
+-----BEGIN PGP SIGNATURE-----
 
-Steven Rostedt (VMware) (1):
-      ring-buffer: Zero out time extend if it is nested and not absolute
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl71JHYACgkQFA3kzBSg
+KbZ78xAAsHf3FMK1Z6NjNDk7Cv6KLeu+HJLgR8G6J0GBLpY5XAkRo61ROEerVfrf
+W+2+8xEVI/ODV9HeBaDQD3FNop5ui5PsdFt81yNrfTAylFSg1oWsSN/h67po6e42
+070v/t1DRAR6gYrged1F+nd0eIQy4b+SP1kOlWPRkCb5tZli2WwlzXAq/k74jemY
+5rBSamNVOltjj/9h4ZJrzO9a3mwc5kAyGDl2ZE/OELpxh1i/AHqMs1xQcccnxnhc
+5QJ6El5AkgX1tKI8UtujDprYV4YeqwuAOx//OICcRc/NyqGr5pXNz1g+qxF7pQrE
+uo6WYdyDtr40NNsHtyc6nk3xLK4pjYEdob6uu/BrMxHbKDG4mXJU8TkutNY0L7xN
+x+kTOEXCy4Qa8fnwBljylRGEinMe9vAuhpkC+5cwIggcaWIJakwZ8XyBNiFaSqcI
++LnuC3oaVlQCHdM1t2XP2P/tbs7RCERxoP0Tm5K5AIMW1tisMtKntQBSlIosrX4T
+3zIwvIqO8N2vzwoFdOtdpDUlg+727xWP9A4g/4dJYHfl6QVYsaC8I3BRDzPTRAt1
+eWRKqZpqtefKWdcfoDaJmQaF/pYAR+7QCCVuk0Hn3NYebDOI+LUI/vMnxY9fnAF4
+9H6kKyyOMMS7geKGY+IiCv5pp9la0RYuEY2nUNk/zj1w6CggSgQ=
+=EG/2
+-----END PGP SIGNATURE-----
 
-----
- kernel/trace/ring_buffer.c          |  2 +-
- kernel/trace/trace_boot.c           | 10 +++++++---
- kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
- 3 files changed, 27 insertions(+), 6 deletions(-)
----------------------------
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index b8e1ca48be50..00867ff82412 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2427,7 +2427,7 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
- 	if (unlikely(info->add_timestamp)) {
- 		bool abs = ring_buffer_time_stamp_abs(cpu_buffer->buffer);
- 
--		event = rb_add_time_stamp(event, info->delta, abs);
-+		event = rb_add_time_stamp(event, abs ? info->delta : delta, abs);
- 		length -= RB_LEN_TIME_EXTEND;
- 		delta = 0;
- 	}
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 9de29bb45a27..fa0fc08c6ef8 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -101,12 +101,16 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- 		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
- 
- 		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
--		if (ret)
-+		if (ret) {
-+			pr_err("Failed to generate probe: %s\n", buf);
- 			break;
-+		}
- 
- 		ret = kprobe_event_gen_cmd_end(&cmd);
--		if (ret)
-+		if (ret) {
- 			pr_err("Failed to add probe: %s\n", buf);
-+			break;
-+		}
- 	}
- 
- 	return ret;
-@@ -120,7 +124,7 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- }
- #endif
- 
--#ifdef CONFIG_HIST_TRIGGERS
-+#ifdef CONFIG_SYNTH_EVENTS
- static int __init
- trace_boot_add_synth_event(struct xbc_node *node, const char *event)
- {
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 3a74736da363..f725802160c0 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -216,11 +216,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
- 
- int trigger_process_regex(struct trace_event_file *file, char *buff)
- {
--	char *command, *next = buff;
-+	char *command, *next;
- 	struct event_command *p;
- 	int ret = -EINVAL;
- 
-+	next = buff = skip_spaces(buff);
- 	command = strsep(&next, ": \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
-+	}
- 	command = (command[0] != '!') ? command : command + 1;
- 
- 	mutex_lock(&trigger_cmd_mutex);
-@@ -630,8 +636,14 @@ event_trigger_callback(struct event_command *cmd_ops,
- 	int ret;
- 
- 	/* separate the trigger from the filter (t:n [if filter]) */
--	if (param && isdigit(param[0]))
-+	if (param && isdigit(param[0])) {
- 		trigger = strsep(&param, " \t");
-+		if (param) {
-+			param = skip_spaces(param);
-+			if (!*param)
-+				param = NULL;
-+		}
-+	}
- 
- 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
- 
-@@ -1368,6 +1380,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
- 	trigger = strsep(&param, " \t");
- 	if (!trigger)
- 		return -EINVAL;
-+	if (param) {
-+		param = skip_spaces(param);
-+		if (!*param)
-+			param = NULL;
-+	}
- 
- 	system = strsep(&trigger, ":");
- 	if (!trigger)
+--qMm9M+Fa2AknHoGS--
