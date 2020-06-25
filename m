@@ -2,201 +2,96 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C67C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9696DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6181206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:14:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ji3T/v5+"
+	by mail.kernel.org (Postfix) with ESMTP id 54602206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 07:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390150AbgFYHOO (ORCPT
+        id S2390191AbgFYHOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 03:14:14 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44683 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726149AbgFYHON (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 03:14:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593069251;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=MVWau0LsYxkoKXpwztTiDi6I+HlC11E2MMspm/P0/vM=;
-        b=Ji3T/v5+UPECQbMISUgafBCvwi+/ZUkBbMxD9tXL3AdNj1W470DmH7YeLf2ZyGNPkhDs2m
-        h6kUbtwuSsrZWJ7ZS+ZQhdWn2odG84cogvIGe2DmUVBdwOoWnrGr183uz9uh6+Jdw10t5g
-        sC5K2qZrJ3FXSKkulr82IImq1rjU4Y4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313--JtxL0ZzMuSh0v9BHsEQ3A-1; Thu, 25 Jun 2020 03:14:09 -0400
-X-MC-Unique: -JtxL0ZzMuSh0v9BHsEQ3A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C0A9107ACCA;
-        Thu, 25 Jun 2020 07:14:08 +0000 (UTC)
-Received: from starship (unknown [10.35.206.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 680EA5BAC7;
-        Thu, 25 Jun 2020 07:14:07 +0000 (UTC)
-Message-ID: <5bd8ffcc829b71651adca7f16cd52c6800508149.camel@redhat.com>
-Subject: Kernel issues with Radeon Pro WX4100 and DP->HDMI dongles
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Date:   Thu, 25 Jun 2020 10:14:06 +0300
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 25 Jun 2020 03:14:50 -0400
+Received: from mga03.intel.com ([134.134.136.65]:13736 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgFYHOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 03:14:50 -0400
+IronPort-SDR: wRUedW7T4//lWZsAOrVJYs7Fv3VzdqOj87YbqEm225Ci7HHDC8U0Fg7Bw5s89N4DhBNPgSujZD
+ JnGsmf17lNJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="144837017"
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="144837017"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 00:14:50 -0700
+IronPort-SDR: w47I9gFwO6EZJAPwFd8bIKjFiO5zXkZG+10Nj28WZ4b0buMefjrHmCJVy58iStzSX96HOxu/LX
+ 2fau0pEKiWjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="263856440"
+Received: from yijiangw-mobl1.ccr.corp.intel.com (HELO [10.255.28.52]) ([10.255.28.52])
+  by fmsmga007.fm.intel.com with ESMTP; 25 Jun 2020 00:14:46 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 1/7] iommu/vt-d: Enforce PASID devTLB field mask
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1592926996-47914-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1592926996-47914-2-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a38e22f0-10a8-8f3a-3e61-e44701aa7e7e@linux.intel.com>
+Date:   Thu, 25 Jun 2020 15:14:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <1592926996-47914-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020/6/23 23:43, Jacob Pan wrote:
+> From: Liu Yi L <yi.l.liu@intel.com>
+> 
+> Set proper masks to avoid invalid input spillover to reserved bits.
+> 
 
-I recently tried to connect my TV and WX4100 via two different DP->HDMI dongles.
-One of them makes my main monitor to go dark, and system to lockup (I haven't yet debugged this futher), and the other one seems to work,
-most of the time, but sometimes causes a kernel panic on 5.8.0-rc1:
-
-
-[  +0.000000] ---[ end trace 0ce8685fac3db6b5 ]---
-[  +2.142125] [drm:dc_link_detect_helper [amdgpu]] *ERROR* No EDID read.
-[  +0.065348] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.001002] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.006310] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.102119] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.000679] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[ +22.037707] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[ +16.202833] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.000685] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.053875] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.000351] [drm] amdgpu_dm_irq_schedule_work FAILED src 8
-[  +0.031764] ------------[ cut here ]------------
-[  +0.000001] WARNING: CPU: 58 PID: 504 at drivers/gpu/drm/amd/amdgpu/../display/dc/gpio/gpio_base.c:66 dal_gpio_open_ex+0x1b/0x40 [amdgpu]
-[  +0.000001] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio xfs rfcomm xt_MASQUERADE xt_conntrack ipt_REJECT iptable_mangle iptable_nat nf_nat ebtable_filter ebtables ip6table_filter
-ip6_tables tun bridge pmbus cmac pmbus_core ee1004 jc42 bnep sunrpc vfat fat dm_mirror dm_region_hash dm_log iwlmvm wmi_bmof mac80211 kvm_amd kvm libarc4 uvcvideo iwlwifi btusb btrtl btbcm btintel
-videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 snd_hda_codec_hdmi videobuf2_common snd_usb_audio bluetooth videodev input_leds snd_hda_intel cfg80211 snd_usbmidi_lib joydev snd_intel_dspcfg
-snd_rawmidi mc snd_hda_codec xpad ff_memless snd_hwdep thunderbolt ecdh_generic snd_seq ecc snd_hda_core irqbypass rfkill i2c_nvidia_gpu efi_pstore pcspkr snd_seq_device bfq snd_pcm snd_timer zenpower
-snd i2c_piix4 rtc_cmos tpm_crb tpm_tis tpm_tis_core tpm wmi button binfmt_misc dm_crypt sd_mod uas usb_storage hid_generic usbhid hid ext4 mbcache jbd2 amdgpu gpu_sched ttm drm_kms_helper syscopyarea
-sysfillrect
-[  +0.000018]  sysimgblt crc32_pclmul ahci crc32c_intel fb_sys_fops libahci igb ccp cec xhci_pci libata i2c_algo_bit rng_core nvme xhci_hcd drm nvme_core t10_pi nbd usbmon it87 hwmon_vid fuse i2c_dev
-i2c_core ipv6 autofs4 [last unloaded: nvidia]
-[  +0.000005] CPU: 58 PID: 504 Comm: kworker/58:1 Tainted: P        W  O      5.8.0-rc1.stable #118
-[  +0.000001] Hardware name: Gigabyte Technology Co., Ltd. TRX40 DESIGNARE/TRX40 DESIGNARE, BIOS F4c 03/05/2020
-[  +0.000000] Workqueue: events dm_irq_work_func [amdgpu]
-[  +0.000001] RIP: 0010:dal_gpio_open_ex+0x1b/0x40 [amdgpu]
-[  +0.000001] Code: 08 89 47 10 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 83 7f 08 00 75 0f 48 83 7f 18 00 74 15 89 77 20 e9 65 07 00 00 <0f> 0b e8 ae 5b 8a e0 b8 05 00 00 00 c3 0f 0b e8 a1
-5b 8a e0 b8 06
-[  +0.000000] RSP: 0018:ffffc90002e93b90 EFLAGS: 00010282
-[  +0.000001] RAX: 0000000000000000 RBX: ffff889fa4736ca0 RCX: 0000000000000000
-[  +0.000000] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff889fa011ff00
-[  +0.000001] RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000231
-[  +0.000000] R10: 000000000000017f R11: ffff889fbeea4b84 R12: ffffc90002e93c74
-[  +0.000000] R13: 0000000000000000 R14: ffff889fa4736ca0 R15: ffff889fb0e2c100
-[  +0.000001] FS:  0000000000000000(0000) GS:ffff889fbee80000(0000) knlGS:0000000000000000
-[  +0.000000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000001] CR2: 00001ee62a52b000 CR3: 000000174d175000 CR4: 0000000000340ea0
-[  +0.000000] Call Trace:
-[  +0.000000]  dal_ddc_open+0x2d/0xe0 [amdgpu]
-[  +0.000001]  ? dm_read_reg_func+0x33/0xa0 [amdgpu]
-[  +0.000000]  dce_aux_transfer_raw+0xb4/0xa30 [amdgpu]
-[  +0.000000]  ? hrtimer_try_to_cancel+0x28/0x100
-[  +0.000001]  dm_dp_aux_transfer+0x8f/0xf0 [amdgpu]
-[  +0.000000]  drm_dp_dpcd_access+0x6b/0x110 [drm_kms_helper]
-[  +0.000000]  drm_dp_dpcd_read+0xb6/0xf0 [drm_kms_helper]
-[  +0.000001]  dm_helpers_dp_read_dpcd+0x28/0x50 [amdgpu]
-[  +0.000000]  core_link_read_dpcd.part.0+0x1f/0x30 [amdgpu]
-[  +0.000000]  read_hpd_rx_irq_data+0x39/0x90 [amdgpu]
-[  +0.000001]  dc_link_handle_hpd_rx_irq+0x74/0x7c0 [amdgpu]
-[  +0.000000]  handle_hpd_rx_irq+0x62/0x2e0 [amdgpu]
-[  +0.000000]  ? __schedule+0x252/0x6a0
-[  +0.000001]  ? finish_task_switch+0x18d/0x280
-[  +0.000000]  dm_irq_work_func+0x43/0x50 [amdgpu]
-[  +0.000000]  process_one_work+0x1d2/0x390
-[  +0.000000]  worker_thread+0x225/0x3b0
-[  +0.000001]  ? process_one_work+0x390/0x390
-[  +0.000000]  kthread+0xf9/0x130
-[  +0.000000]  ? kthread_park+0x90/0x90
-[  +0.000001]  ret_from_fork+0x1f/0x30
-[  +0.000000] ---[ end trace 0ce8685fac3db6b6 ]---
-[  +0.002807] int3: 0000 [#1] SMP
-[  +0.000001] CPU: 58 PID: 504 Comm: kworker/58:1 Tainted: P        W  O      5.8.0-rc1.stable #118
-[  +0.000001] Hardware name: Gigabyte Technology Co., Ltd. TRX40 DESIGNARE/TRX40 DESIGNARE, BIOS F4c 03/05/2020
-[  +0.000000] Workqueue: events dm_irq_work_func [amdgpu]
-[  +0.000001] RIP: 0010:kgdb_breakpoint+0x10/0x20
-[  +0.000001] Code: 4d f9 ff eb c5 cc cc cc cc cc 0f 1f 44 00 00 31 c0 c3 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 f0 ff 05 3c be 3e 01 0f ae f8 cc <0f> ae f8 f0 ff 0d 2e be 3e 01 c3 0f 1f 44 00 00 0f
-1f 44 00 00 e8
-[  +0.000000] RSP: 0018:ffffc90002e93b88 EFLAGS: 00000202
-[  +0.000001] RAX: 0000000000000000 RBX: ffff889fa4736ca0 RCX: 0000000000000000
-[  +0.000001] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff889fa011ff00
-[  +0.000000] RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000231
-[  +0.000001] R10: 000000000000017f R11: ffff889fbeea4b84 R12: ffffc90002e93c74
-[  +0.000000] R13: 0000000000000000 R14: ffff889fa4736ca0 R15: ffff889fb0e2c100
-[  +0.000001] FS:  0000000000000000(0000) GS:ffff889fbee80000(0000) knlGS:0000000000000000
-[  +0.000000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000001] CR2: 00001ee62a52b000 CR3: 000000174d175000 CR4: 0000000000340ea0
-[  +0.000000] Call Trace:
-[  +0.000001]  dal_gpio_open_ex+0x22/0x40 [amdgpu]
-[  +0.000000]  dal_ddc_open+0x2d/0xe0 [amdgpu]
-[  +0.000000]  ? dm_read_reg_func+0x33/0xa0 [amdgpu]
-[  +0.000001]  dce_aux_transfer_raw+0xb4/0xa30 [amdgpu]
-[  +0.000000]  ? hrtimer_try_to_cancel+0x28/0x100
-[  +0.000000]  dm_dp_aux_transfer+0x8f/0xf0 [amdgpu]
-[  +0.000001]  drm_dp_dpcd_access+0x6b/0x110 [drm_kms_helper]
-[  +0.000000]  drm_dp_dpcd_read+0xb6/0xf0 [drm_kms_helper]
-[  +0.000000]  dm_helpers_dp_read_dpcd+0x28/0x50 [amdgpu]
-[  +0.000001]  core_link_read_dpcd.part.0+0x1f/0x30 [amdgpu]
-[  +0.000000]  read_hpd_rx_irq_data+0x39/0x90 [amdgpu]
-[  +0.000000]  dc_link_handle_hpd_rx_irq+0x74/0x7c0 [amdgpu]
-[  +0.000001]  handle_hpd_rx_irq+0x62/0x2e0 [amdgpu]
-[  +0.000000]  ? __schedule+0x252/0x6a0
-[  +0.000000]  ? finish_task_switch+0x18d/0x280
-[  +0.000001]  dm_irq_work_func+0x43/0x50 [amdgpu]
-[  +0.000000]  process_one_work+0x1d2/0x390
-[  +0.000000]  worker_thread+0x225/0x3b0
-[  +0.000001]  ? process_one_work+0x390/0x390
-[  +0.000000]  kthread+0xf9/0x130
-[  +0.000000]  ? kthread_park+0x90/0x90
-[  +0.000001]  ret_from_fork+0x1f/0x30
-[  +0.000000] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio xfs rfcomm xt_MASQUERADE xt_conntrack ipt_REJECT iptable_mangle iptable_nat nf_nat ebtable_filter ebtables ip6table_filter
-ip6_tables tun bridge pmbus cmac pmbus_core ee1004 jc42 bnep sunrpc vfat fat dm_mirror dm_region_hash dm_log iwlmvm wmi_bmof mac80211 kvm_amd kvm libarc4 uvcvideo iwlwifi btusb btrtl btbcm btintel
-videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 snd_hda_codec_hdmi videobuf2_common snd_usb_audio bluetooth videodev input_leds snd_hda_intel cfg80211 snd_usbmidi_lib joydev snd_intel_dspcfg
-snd_rawmidi mc snd_hda_codec xpad ff_memless snd_hwdep thunderbolt ecdh_generic snd_seq ecc snd_hda_core irqbypass rfkill i2c_nvidia_gpu efi_pstore pcspkr snd_seq_device bfq snd_pcm snd_timer zenpower
-snd i2c_piix4 rtc_cmos tpm_crb tpm_tis tpm_tis_core tpm wmi button binfmt_misc dm_crypt sd_mod uas usb_storage hid_generic usbhid hid ext4 mbcache jbd2 amdgpu gpu_sched ttm drm_kms_helper syscopyarea
-sysfillrect
-[  +0.000018]  sysimgblt crc32_pclmul ahci crc32c_intel fb_sys_fops libahci igb ccp cec xhci_pci libata i2c_algo_bit rng_core nvme xhci_hcd drm nvme_core t10_pi nbd usbmon it87 hwmon_vid fuse i2c_dev
-i2c_core ipv6 autofs4 [last unloaded: nvidia]
-[  +0.021468] ---[ end trace 0ce8685fac3db6b7 ]---
-[  +0.000000] RIP: 0010:kgdb_breakpoint+0x10/0x20
-[  +0.000001] Code: 4d f9 ff eb c5 cc cc cc cc cc 0f 1f 44 00 00 31 c0 c3 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 f0 ff 05 3c be 3e 01 0f ae f8 cc <0f> ae f8 f0 ff 0d 2e be 3e 01 c3 0f 1f 44 00 00 0f
-1f 44 00 00 e8
-[  +0.000000] RSP: 0018:ffffc90002e93b88 EFLAGS: 00000202
-[  +0.000001] RAX: 0000000000000000 RBX: ffff889fa4736ca0 RCX: 0000000000000000
-[  +0.000001] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff889fa011ff00
-[  +0.000000] RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000231
-[  +0.000001] R10: 000000000000017f R11: ffff889fbeea4b84 R12: ffffc90002e93c74
-[  +0.000000] R13: 0000000000000000 R14: ffff889fa4736ca0 R15: ffff889fb0e2c100
-[  +0.000001] FS:  0000000000000000(0000) GS:ffff889fbee80000(0000) knlGS:0000000000000000
-[  +0.000000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0.000000] CR2: 00001ee62a52b000 CR3: 000000174d175000 CR4: 0000000000340ea0
-[  +0.000001] Kernel panic - not syncing: Fatal exception in interrupt
-[  +0.001035] Kernel Offset: disabled
-
-
-The 'amdgpu_dm_irq_schedule_work FAILED src 8' errors were from previous plugs of this adapter.
-
-On 5.7-rc7 kernel I also tried booting, I also see the 'amdgpu_dm_irq_schedule_work FAILED' errors
-but it seems for now that the crash doesn't happen, but it might have beeing luck.
-
-On top of all this, I tried a 3rd dongle and it does appear to work flawlessly (no messages in dmesg).
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
 
 Best regards,
-	Maxim Levitsky
+baolu
 
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   include/linux/intel-iommu.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 4100bd224f5c..729386ca8122 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -380,8 +380,8 @@ enum {
+>   
+>   #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+>   #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+> -#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+> -#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
+> +#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
+> +#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
+>   #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
+>   #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
+>   #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
+> 
