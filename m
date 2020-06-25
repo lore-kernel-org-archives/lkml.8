@@ -2,263 +2,405 @@ Return-Path: <SRS0=lrRa=AG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3535C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6566C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03CF20773
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9676B20773
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jun 2020 04:49:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YXCga1QR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389549AbgFYEib (ORCPT
+        id S2389615AbgFYEtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jun 2020 00:38:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:56775 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbgFYEib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jun 2020 00:38:31 -0400
-IronPort-SDR: IQqcOYlNwHW+SNdfgY6No719yDpPM6k6HEHQXrXMM+IC0G+ewkzFPN0AD2/eN9zuz4I1+/C9qv
- ClQIOoSxnojQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="124994916"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="124994916"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 21:38:30 -0700
-IronPort-SDR: rW/QrsxsaBFg9OVp1MNb5hUg5t6x3YkQiPCj0tHP5q2xY+PtkcjnpDLwF7TqLHp6cTEpjwCczq
- hjcK7Z1dubiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="265254035"
-Received: from skurzyno-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.40.230])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Jun 2020 21:38:25 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Alexey Klimov <aklimov@redhat.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] tpm: tpm2-space: Resize session and context buffers dynamically
-Date:   Thu, 25 Jun 2020 07:38:16 +0300
-Message-Id: <20200625043819.376693-1-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 25 Jun 2020 00:49:03 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32384 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389506AbgFYEtC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jun 2020 00:49:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593060541; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=J+YgVxbiCPuM44zJOwLWdnalSiCJ18h1jUiApL65cuQ=;
+ b=YXCga1QRyb3frSFaVEqqzYQM9r8PJZrmuoHFb2sGcTaJAUQSpCvccmczPBOstX0z4+wzGCeP
+ 8/fhaDPnILMDH8Hlr6bASe4CdcZH7DiaQ7/wKckgc4k6jGzeUOHAXGwT3R9/nQ8mhklIgKoM
+ NmcWRhYf/xpEsLhZ9DYxT7Krh9Q=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ef42cbba6e154319f372a81 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 04:48:59
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65B5CC433C8; Thu, 25 Jun 2020 04:48:58 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: dikshita)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C1DCC433C6;
+        Thu, 25 Jun 2020 04:48:56 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 25 Jun 2020 10:18:56 +0530
+From:   dikshita@codeaurora.org
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, majja@codeaurora.org
+Subject: Re: [PATCH] venus: Add platform specific capabilities
+In-Reply-To: <1590736709-508-1-git-send-email-dikshita@codeaurora.org>
+References: <1590736709-508-1-git-send-email-dikshita@codeaurora.org>
+Message-ID: <c73036a9871cddaddb9235453901fb49@codeaurora.org>
+X-Sender: dikshita@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-allocate context and session buffers when needed. Scale them in page
-increments so that the reallocation is only seldomly required, and thus
-causes minimal stress to the system. Add a static maximum limit of four
-pages for buffer sizes.
+Hi Stanimir,
 
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
-Tested only for compilation.
-v2: TPM2_SPACE_DEFAULT_BUFFER_SIZE
- drivers/char/tpm/tpm2-space.c | 87 ++++++++++++++++++++++++-----------
- include/linux/tpm.h           |  6 ++-
- 2 files changed, 64 insertions(+), 29 deletions(-)
+A gentle reminder for the review.
 
-diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
-index 982d341d8837..b8ece01d6afb 100644
---- a/drivers/char/tpm/tpm2-space.c
-+++ b/drivers/char/tpm/tpm2-space.c
-@@ -15,6 +15,9 @@
- #include <asm/unaligned.h>
- #include "tpm.h"
- 
-+#define TPM2_SPACE_DEFAULT_BUFFER_SIZE	PAGE_SIZE
-+#define TPM2_SPACE_MAX_BUFFER_SIZE	(4 * PAGE_SIZE)
-+
- enum tpm2_handle_types {
- 	TPM2_HT_HMAC_SESSION	= 0x02000000,
- 	TPM2_HT_POLICY_SESSION	= 0x03000000,
-@@ -40,16 +43,21 @@ static void tpm2_flush_sessions(struct tpm_chip *chip, struct tpm_space *space)
- 
- int tpm2_init_space(struct tpm_space *space)
- {
--	space->context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->context_buf = kzalloc(TPM2_SPACE_DEFAULT_BUFFER_SIZE,
-+				     GFP_KERNEL);
- 	if (!space->context_buf)
- 		return -ENOMEM;
- 
--	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->session_buf = kzalloc(TPM2_SPACE_DEFAULT_BUFFER_SIZE,
-+				     GFP_KERNEL);
- 	if (space->session_buf == NULL) {
- 		kfree(space->context_buf);
-+		space->context_buf = NULL;
- 		return -ENOMEM;
- 	}
- 
-+	space->context_size = TPM2_SPACE_DEFAULT_BUFFER_SIZE;
-+	space->session_size = TPM2_SPACE_DEFAULT_BUFFER_SIZE;
- 	return 0;
- }
- 
-@@ -116,11 +124,13 @@ static int tpm2_load_context(struct tpm_chip *chip, u8 *buf,
- 	return 0;
- }
- 
--static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
--			     unsigned int buf_size, unsigned int *offset)
-+static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 **buf,
-+			     unsigned int *buf_size, unsigned int *offset)
- {
--	struct tpm_buf tbuf;
-+	unsigned int new_buf_size;
- 	unsigned int body_size;
-+	struct tpm_buf tbuf;
-+	void *new_buf;
- 	int rc;
- 
- 	rc = tpm_buf_init(&tbuf, TPM2_ST_NO_SESSIONS, TPM2_CC_CONTEXT_SAVE);
-@@ -131,31 +141,48 @@ static int tpm2_save_context(struct tpm_chip *chip, u32 handle, u8 *buf,
- 
- 	rc = tpm_transmit_cmd(chip, &tbuf, 0, NULL);
- 	if (rc < 0) {
--		dev_warn(&chip->dev, "%s: failed with a system error %d\n",
--			 __func__, rc);
--		tpm_buf_destroy(&tbuf);
--		return -EFAULT;
-+		rc = -EFAULT;
-+		goto err;
- 	} else if (tpm2_rc_value(rc) == TPM2_RC_REFERENCE_H0) {
--		tpm_buf_destroy(&tbuf);
--		return -ENOENT;
-+		rc = -ENOENT;
-+		goto out;
- 	} else if (rc) {
--		dev_warn(&chip->dev, "%s: failed with a TPM error 0x%04X\n",
--			 __func__, rc);
--		tpm_buf_destroy(&tbuf);
--		return -EFAULT;
-+		rc = -EFAULT;
-+		goto err;
- 	}
- 
- 	body_size = tpm_buf_length(&tbuf) - TPM_HEADER_SIZE;
--	if ((*offset + body_size) > buf_size) {
--		dev_warn(&chip->dev, "%s: out of backing storage\n", __func__);
--		tpm_buf_destroy(&tbuf);
--		return -ENOMEM;
-+	/* We grow the buffer in page increments. */
-+	new_buf_size = PFN_UP(*offset + body_size);
-+
-+	if (new_buf_size > TPM2_SPACE_MAX_BUFFER_SIZE) {
-+		rc = -ENOMEM;
-+		goto err;
- 	}
- 
--	memcpy(&buf[*offset], &tbuf.data[TPM_HEADER_SIZE], body_size);
-+	if (new_buf_size > *buf_size) {
-+		new_buf = krealloc(*buf, new_buf_size, GFP_KERNEL);
-+		if (!new_buf) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+
-+		*buf = new_buf;
-+		*buf_size = new_buf_size;
-+	}
-+
-+	memcpy(*buf + *offset, &tbuf.data[TPM_HEADER_SIZE], body_size);
- 	*offset += body_size;
-+
-+out:
- 	tpm_buf_destroy(&tbuf);
--	return 0;
-+	return rc;
-+
-+err:
-+	dev_warn(&chip->dev, "%s: ret=%d\n", __func__, rc);
-+
-+	tpm_buf_destroy(&tbuf);
-+	return rc;
- }
- 
- void tpm2_flush_space(struct tpm_chip *chip)
-@@ -311,8 +338,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u8 *cmd,
- 	       sizeof(space->context_tbl));
- 	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
--	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
-+	memcpy(chip->work_space.context_buf, space->context_buf,
-+	       space->context_size);
-+	memcpy(chip->work_space.session_buf, space->session_buf,
-+	       space->session_size);
- 
- 	rc = tpm2_load_space(chip);
- 	if (rc) {
-@@ -492,7 +521,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->context_tbl[i],
--				       space->context_buf, PAGE_SIZE,
-+				       &space->context_buf,
-+				       &space->context_size,
- 				       &offset);
- 		if (rc == -ENOENT) {
- 			space->context_tbl[i] = 0;
-@@ -509,7 +539,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->session_tbl[i],
--				       space->session_buf, PAGE_SIZE,
-+				       &space->session_buf,
-+				       &space->session_size,
- 				       &offset);
- 
- 		if (rc == -ENOENT) {
-@@ -557,8 +588,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
- 	       sizeof(space->context_tbl));
- 	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
--	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
-+	memcpy(space->context_buf, chip->work_space.context_buf,
-+	       space->context_size);
-+	memcpy(space->session_buf, chip->work_space.session_buf,
-+	       space->session_size);
- 
- 	return 0;
- out:
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 03e9b184411b..9ea39e8f7162 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -92,10 +92,12 @@ enum tpm_duration {
- #define TPM_PPI_VERSION_LEN		3
- 
- struct tpm_space {
-+	u8  *context_buf;
-+	u8  *session_buf;
-+	u32 context_size;
-+	u32 session_size;
- 	u32 context_tbl[3];
--	u8 *context_buf;
- 	u32 session_tbl[3];
--	u8 *session_buf;
- };
- 
- struct tpm_bios_log {
--- 
-2.25.1
-
+Thanks,
+Dikshita
+On 2020-05-29 12:48, Dikshita Agarwal wrote:
+> Add platform specific capabilities and use them
+> in place of firmware capabilities.
+> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c           |   3 +
+>  drivers/media/platform/qcom/venus/hfi_helper.h     |   3 +-
+>  drivers/media/platform/qcom/venus/hfi_parser.c     |  21 +--
+>  .../media/platform/qcom/venus/hfi_platform_data.c  | 153 
+> ++++++++++++++++++++-
+>  .../media/platform/qcom/venus/hfi_platform_data.h  |  37 ++++-
+>  5 files changed, 193 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c
+> b/drivers/media/platform/qcom/venus/core.c
+> index 4fde4aa..8221e5c 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -273,6 +273,9 @@ static int venus_probe(struct platform_device 
+> *pdev)
+>  	if (ret)
+>  		goto err_venus_shutdown;
+> 
+> +	if (core->hfi_data && core->hfi_data->venus_parse_resources)
+> +		venus_parse_resources(core);
+> +
+>  	ret = hfi_core_init(core);
+>  	if (ret)
+>  		goto err_venus_shutdown;
+> diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h
+> b/drivers/media/platform/qcom/venus/hfi_helper.h
+> index f6613df..1671012 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_helper.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_helper.h
+> @@ -520,7 +520,8 @@
+>  enum hfi_version {
+>  	HFI_VERSION_1XX,
+>  	HFI_VERSION_3XX,
+> -	HFI_VERSION_4XX
+> +	HFI_VERSION_4XX,
+> +	HFI_VERSION_6XX
+>  };
+> 
+>  struct hfi_buffer_info {
+> diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c
+> b/drivers/media/platform/qcom/venus/hfi_parser.c
+> index 7f515a4..b4b60e1 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_parser.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_parser.c
+> @@ -10,30 +10,11 @@
+>  #include "core.h"
+>  #include "hfi_helper.h"
+>  #include "hfi_parser.h"
+> +#include "hfi_platform_data.h"
+> 
+>  typedef void (*func)(struct venus_caps *cap, const void *data,
+>  		     unsigned int size);
+> 
+> -static void init_codecs(struct venus_core *core)
+> -{
+> -	struct venus_caps *caps = core->caps, *cap;
+> -	unsigned long bit;
+> -
+> -	for_each_set_bit(bit, &core->dec_codecs, MAX_CODEC_NUM) {
+> -		cap = &caps[core->codecs_count++];
+> -		cap->codec = BIT(bit);
+> -		cap->domain = VIDC_SESSION_TYPE_DEC;
+> -		cap->valid = false;
+> -	}
+> -
+> -	for_each_set_bit(bit, &core->enc_codecs, MAX_CODEC_NUM) {
+> -		cap = &caps[core->codecs_count++];
+> -		cap->codec = BIT(bit);
+> -		cap->domain = VIDC_SESSION_TYPE_ENC;
+> -		cap->valid = false;
+> -	}
+> -}
+> -
+>  static void for_each_codec(struct venus_caps *caps, unsigned int 
+> caps_num,
+>  			   u32 codecs, u32 domain, func cb, void *data,
+>  			   unsigned int size)
+> diff --git a/drivers/media/platform/qcom/venus/hfi_platform_data.c
+> b/drivers/media/platform/qcom/venus/hfi_platform_data.c
+> index 9d9035f..fc838f5 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_platform_data.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_platform_data.c
+> @@ -5,8 +5,132 @@
+>  #include "hfi_platform_data.h"
+>  #include "core.h"
+> 
+> +void init_codecs(struct venus_core *core)
+> +{
+> +	struct venus_caps *caps = core->caps, *cap;
+> +	unsigned long bit;
+> +
+> +	for_each_set_bit(bit, &core->dec_codecs, MAX_CODEC_NUM) {
+> +		cap = &caps[core->codecs_count++];
+> +		cap->codec = BIT(bit);
+> +		cap->domain = VIDC_SESSION_TYPE_DEC;
+> +		cap->valid = false;
+> +	}
+> +
+> +	for_each_set_bit(bit, &core->enc_codecs, MAX_CODEC_NUM) {
+> +		cap = &caps[core->codecs_count++];
+> +		cap->codec = BIT(bit);
+> +		cap->domain = VIDC_SESSION_TYPE_ENC;
+> +		cap->valid = false;
+> +	}
+> +}
+> +
+> +static void parse_codecs(struct venus_core *core)
+> +{
+> +	const struct venus_hfi_platform_data *hfi_data = core->hfi_data;
+> +	const struct venus_codecs *codecs = hfi_data->venus_codecs;
+> +	unsigned int i, codecs_size;
+> +
+> +	core->enc_codecs = 0;
+> +	core->dec_codecs = 0;
+> +	codecs_size = hfi_data->venus_codecs_size;
+> +
+> +	for (i = 0; i < codecs_size; i++) {
+> +		if (codecs[i].domain == VIDC_SESSION_TYPE_ENC)
+> +			core->enc_codecs |= codecs[i].codecs;
+> +		else
+> +			core->dec_codecs |= codecs[i].codecs;
+> +	}
+> +	init_codecs(core);
+> +}
+> +
+> +static int fill_raw_fmt(struct venus_capability *hfi_data_caps,
+> +			struct venus_caps *core_caps)
+> +{
+> +	if ((core_caps->num_pl + 1) == HFI_MAX_PROFILE_COUNT)
+> +		return -EINVAL;
+> +
+> +	core_caps->fmts[core_caps->num_fmts].buftype =
+> +		hfi_data_caps->capability_type;
+> +	core_caps->fmts[core_caps->num_fmts].fmt =
+> +		hfi_data_caps->defaul_value;
+> +	core_caps->num_fmts += 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int fill_profile(struct venus_capability *hfi_data_caps,
+> +			struct venus_caps *core_caps)
+> +{
+> +	if ((core_caps->num_pl + 1) == HFI_MAX_PROFILE_COUNT)
+> +		return -EINVAL;
+> +
+> +	core_caps->pl[core_caps->num_pl].profile =
+> +		hfi_data_caps->capability_type;
+> +	core_caps->pl[core_caps->num_pl].level = hfi_data_caps->defaul_value;
+> +	core_caps->num_pl += 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int fill_capabilities(struct venus_capability *hfi_data_caps,
+> +			     struct venus_caps *core_caps)
+> +{
+> +	if ((core_caps->num_caps + 1) == MAX_CAP_ENTRIES)
+> +		return -EINVAL;
+> +
+> +	core_caps->caps[core_caps->num_caps].capability_type =
+> +		hfi_data_caps->capability_type;
+> +	core_caps->caps[core_caps->num_caps].min = hfi_data_caps->min;
+> +	core_caps->caps[core_caps->num_caps].max = hfi_data_caps->max;
+> +	core_caps->caps[core_caps->num_caps].step_size =
+> +		hfi_data_caps->step_size;
+> +	core_caps->num_caps += 1;
+> +	return 0;
+> +}
+> +
+> +static int fill_caps(struct venus_capability *hfi_data_caps,
+> +		     struct venus_caps *core_caps)
+> +{
+> +	if (hfi_data_caps->entry_type == CAPABILITY_ENTRY)
+> +		return fill_capabilities(hfi_data_caps, core_caps);
+> +	else if (hfi_data_caps->entry_type == PROFILE_ENTRY)
+> +		return fill_profile(hfi_data_caps, core_caps);
+> +	else
+> +		return fill_raw_fmt(hfi_data_caps, core_caps);
+> +}
+> +
+> +static void parse_capabilities(struct venus_core *core)
+> +{
+> +	unsigned int i, j, ret;
+> +	const struct venus_hfi_platform_data *hfi_data = core->hfi_data;
+> +	struct venus_capability *hfi_data_caps = hfi_data->capabilities;
+> +	unsigned int hfi_data_caps_size = hfi_data->capabilities_size;
+> +	const unsigned int codecs_size = hfi_data->venus_codecs_size;
+> +
+> +	for (i = 0; i < hfi_data_caps_size; i++) {
+> +		for (j = 0; j < codecs_size; j++) {
+> +			if ((hfi_data_caps[i].domain &
+> +				core->caps[j].domain) &&
+> +				(hfi_data_caps[i].codecs &
+> +				core->caps[j].codec)) {
+> +				ret = fill_caps(&hfi_data_caps[i],
+> +						core->caps);
+> +				if (!ret)
+> +					break;
+> +			}
+> +		}
+> +	}
+> +}
+> +
+> +void venus_parse_resources(struct venus_core *core)
+> +{
+> +	parse_codecs(core);
+> +	parse_capabilities(core);
+> +}
+> +
+>  static struct codec_freq_data hfi4_codec_freq_data[] =  {
+> -{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+>  	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
+>  	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+>  	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
+> @@ -16,20 +140,45 @@
+>  	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
+>  };
+> 
+> +static struct venus_codecs default_codecs[] = { {DEC, H264}, {DEC, 
+> HEVC},
+> +	{DEC, VP8}, {DEC, MPEG2}, {ENC, H264}, {ENC, HEVC}, {ENC, VP8},
+> +};
+> +
+> +static struct venus_capability hfi6_capabilities[] = {
+> +	/* {cap_type, codecs, domains, min, max, step_size, default} */
+> +	{ HFI_CAPABILITY_FRAME_WIDTH, CODECS_ALL, DOMAINS_ALL, 96, 5760, 1,
+> +		96, CAPABILITY_ENTRY },
+> +	{ HFI_CAPABILITY_FRAME_HEIGHT, CODECS_ALL, DOMAINS_ALL, 96, 5760, 1,
+> +		96, CAPABILITY_ENTRY },
+> +	{ HFI_CAPABILITY_FRAMERATE, CODECS_ALL, DOMAINS_ALL, 1, 480, 1,
+> +		1, CAPABILITY_ENTRY },
+> +	{ HFI_CAPABILITY_MAX_VIDEOCORES, CODECS_ALL, DOMAINS_ALL, 1, 2, 1,
+> +		1, CAPABILITY_ENTRY },
+> +};
+> +
+>  static const struct venus_hfi_platform_data hfi4_data = {
+>  	.codec_freq_data = hfi4_codec_freq_data,
+>  	.codec_freq_data_size = ARRAY_SIZE(hfi4_codec_freq_data),
+>  };
+> 
+> +static const struct venus_hfi_platform_data hfi6_data = {
+> +	.venus_codecs = default_codecs,
+> +	.venus_codecs_size = ARRAY_SIZE(default_codecs),
+> +	.capabilities = hfi6_capabilities,
+> +	.capabilities_size = ARRAY_SIZE(hfi6_capabilities),
+> +	.venus_parse_resources = venus_parse_resources,
+> +};
+> +
+>  const struct venus_hfi_platform_data *venus_get_hfi_platform
+>  	(enum hfi_version version)
+>  {
+>  	switch (version) {
+>  	case HFI_VERSION_4XX:
+>  		return &hfi4_data;
+> +	case HFI_VERSION_6XX:
+> +		return &hfi6_data;
+>  	default:
+>  		return NULL;
+>  	}
+>  	return NULL;
+>  }
+> -
+> diff --git a/drivers/media/platform/qcom/venus/hfi_platform_data.h
+> b/drivers/media/platform/qcom/venus/hfi_platform_data.h
+> index 1b4bfb6..55de59b 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_platform_data.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_platform_data.h
+> @@ -8,6 +8,19 @@
+> 
+>  #include "core.h"
+> 
+> +#define ENC    VIDC_SESSION_TYPE_ENC
+> +#define DEC    VIDC_SESSION_TYPE_DEC
+> +#define H264 HFI_VIDEO_CODEC_H264
+> +#define MPEG2 HFI_VIDEO_CODEC_MPEG2
+> +#define HEVC HFI_VIDEO_CODEC_HEVC
+> +#define VP8 HFI_VIDEO_CODEC_VP8
+> +#define DOMAINS_ALL    (HFI_DOMAIN_BASE_VENC | HFI_DOMAIN_BASE_VDEC)
+> +#define CODECS_ALL (HFI_VIDEO_CODEC_H264 | HFI_VIDEO_CODEC_H264    \
+> +					| HFI_VIDEO_CODEC_VP8)
+> +#define CAPABILITY_ENTRY	0
+> +#define PROFILE_ENTRY	1
+> +#define FMT_ENTRY	2
+> +
+>  struct codec_freq_data {
+>  	u32 pixfmt;
+>  	u32 session_type;
+> @@ -15,13 +28,35 @@ struct codec_freq_data {
+>  	unsigned long vsp_freq;
+>  };
+> 
+> +struct venus_codecs {
+> +	u32 codecs;
+> +	u32 domain;
+> +};
+> +
+> +struct venus_capability {
+> +	u32 capability_type;
+> +	u32 codecs;
+> +	u32 domain;
+> +	u32 min;
+> +	u32 max;
+> +	u32 step_size;
+> +	u32 defaul_value;
+> +	u32 entry_type;
+> +};
+> +
+>  struct venus_hfi_platform_data {
+>  	const struct codec_freq_data *codec_freq_data;
+>  	unsigned int codec_freq_data_size;
+> +	struct venus_codecs *venus_codecs;
+> +	unsigned int venus_codecs_size;
+> +	struct venus_capability *capabilities;
+> +	unsigned int capabilities_size;
+> +	void (*venus_parse_resources)(struct venus_core *core);
+>  };
+> 
+>  const struct venus_hfi_platform_data *venus_get_hfi_platform
+>  	(enum hfi_version version);
+> +void venus_parse_resources(struct venus_core *core);
+> +void init_codecs(struct venus_core *core);
+> 
+>  #endif
+> -
